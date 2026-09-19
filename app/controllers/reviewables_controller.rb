@@ -8,15 +8,15 @@ class ReviewablesController < ApplicationController
   before_action :version_required, only: %i[update perform]
   before_action :ensure_can_see, except: [:destroy]
 
-  around_action :with_deleted_content,
-                only: %i[index show],
-                if: ->(controller) { controller.guardian.is_staff? }
+  around_action :with_deleted_content, only: %i[index show]
 
   def index
     offset = params[:offset].to_i
 
     if params[:type].present?
-      raise Discourse::InvalidParameters.new(:type) unless Reviewable.valid_type?(params[:type])
+      unless Reviewable.valid_filter_type?(params[:type])
+        raise Discourse::InvalidParameters.new(:type)
+      end
     end
 
     status = (params[:status] || "pending").to_sym
@@ -54,6 +54,7 @@ class ReviewablesController < ApplicationController
       Reviewable.list_for(current_user, **filters.merge(limit: PER_PAGE, offset: offset)).to_a
 
     claimed_topics = ReviewableClaimedTopic.claimed_hash(reviewables.map { |r| r.topic_id }.uniq)
+    Reviewable.preload_author_penalties(reviewables)
 
     # This is a bit awkward, but ActiveModel serializers doesn't seem to serialize STI. Note `hash`
     # is mutated by the serializer and contains the side loaded records which must be merged in the end.
@@ -74,13 +75,17 @@ class ReviewablesController < ApplicationController
         filters.merge(
           total_rows_reviewables: total_rows,
           types: meta_types,
-          reviewable_types: Reviewable.types,
+          reviewable_types:
+            Reviewable.types + Reviewable.custom_filter_type_options.map { |option| option[:id] },
           unknown_reviewable_types_and_sources: Reviewable.unknown_types_and_sources,
           score_types:
             ReviewableScore
               .types
               .filter { |k, v| k != :notify_user }
-              .map { |k, v| { id: v, name: ReviewableScore.type_title(k) } },
+              .map { |k, v| { id: v, name: ReviewableScore.type_title(k) } }
+              .concat(
+                Reviewable.custom_reason_filter_options.map { |option| option.slice(:id, :name) },
+              ),
           reviewable_count: current_user.reviewable_count,
           unseen_reviewable_count: Reviewable.unseen_reviewable_count(current_user),
         ),
@@ -174,16 +179,7 @@ class ReviewablesController < ApplicationController
   end
 
   def destroy
-    user =
-      if is_api?
-        if @guardian.is_admin?
-          fetch_user_from_params
-        else
-          raise Discourse::InvalidAccess
-        end
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     reviewable =
       Reviewable.find_by_flagger_or_queued_post_creator(
@@ -364,6 +360,6 @@ class ReviewablesController < ApplicationController
   end
 
   def with_deleted_content
-    Post.unscoped { Topic.unscoped { PostAction.unscoped { yield } } }
+    Reviewable.with_deleted_content { yield }
   end
 end

@@ -28,11 +28,11 @@ end
 
 extend_content_security_policy(script_src: %w[https://js.stripe.com/v3/ https://hooks.stripe.com])
 
-add_admin_route "discourse_subscriptions.admin_navigation", "discourse-subscriptions.products"
+add_admin_route "discourse_subscriptions.admin_navigation",
+                "discourse-subscriptions",
+                use_new_show_route: true
 
 Discourse::Application.routes.append do
-  get "/admin/plugins/discourse-subscriptions" => "admin/plugins#index",
-      :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/products" => "admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/products/:product_id" => "admin/plugins#index",
@@ -43,10 +43,6 @@ Discourse::Application.routes.append do
         "admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/subscriptions" => "admin/plugins#index",
-      :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/plans" => "admin/plugins#index",
-      :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/plans/:plan_id" => "admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/coupons" => "admin/plugins#index",
       :constraints => AdminConstraint.new
@@ -60,6 +56,8 @@ end
 
 module ::DiscourseSubscriptions
   PLUGIN_NAME = "discourse-subscriptions"
+  CHECKOUT_SESSION_USER_REFERENCE_PURPOSE = "checkout_user"
+  CHECKOUT_SESSION_USER_REFERENCE_EXPIRES_IN = 30.days
 end
 
 require_relative "lib/discourse_subscriptions/engine"
@@ -77,15 +75,33 @@ after_initialize do
 
   Discourse::Application.routes.append { mount DiscourseSubscriptions::Engine, at: "s" }
 
-  add_to_serializer(:site, :show_campaign_banner) do
-    begin
-      enabled = SiteSetting.discourse_subscriptions_enabled
-      campaign_enabled = SiteSetting.discourse_subscriptions_campaign_enabled
-      goal_met = Discourse.redis.get("subscriptions_goal_met_date")
+  add_to_serializer(
+    :current_user,
+    :discourse_subscriptions_checkout_session_user_reference,
+    include_condition: -> do
+      SiteSetting.discourse_subscriptions_enabled &&
+        SiteSetting.discourse_subscriptions_pricing_table_enabled
+    end,
+  ) do
+    object.signed_id(
+      expires_in: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_EXPIRES_IN,
+      purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE,
+    )
+  end
 
-      enabled && campaign_enabled && (!goal_met || 7.days.ago <= Date.parse(goal_met))
-    rescue StandardError
-      false
-    end
+  add_to_serializer(
+    :site,
+    :discourse_subscriptions_stripe_configured,
+    include_condition: -> { scope.is_admin? },
+  ) { DiscourseSubscriptions::Stripe.configured? }
+
+  add_to_serializer(:site, :show_campaign_banner) do
+    enabled = SiteSetting.discourse_subscriptions_enabled
+    campaign_enabled = SiteSetting.discourse_subscriptions_campaign_enabled
+    goal_met = Discourse.redis.get("subscriptions_goal_met_date")
+
+    enabled && campaign_enabled && (!goal_met || 7.days.ago <= Date.parse(goal_met))
+  rescue StandardError
+    false
   end
 end

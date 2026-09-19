@@ -61,34 +61,40 @@ class InlineOneboxer
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
     allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split("|") unless always_allow
 
-    if always_allow || allowed_domains
-      uri =
-        begin
-          URI(url)
-        rescue URI::Error
-        end
+    return nil unless always_allow || allowed_domains
 
-      if uri.present? && uri.hostname.present? &&
-           (always_allow || allowed_domains.include?(uri.hostname)) &&
-           !Onebox::DomainChecker.is_blocked?(uri.hostname)
-        max_redirects = 0 if SiteSetting.block_onebox_on_redirect
-        headers = { "Accept-Language" => Oneboxer.accept_language }
-        if SiteSetting.inline_onebox_user_agent.present?
-          headers["User-Agent"] = SiteSetting.inline_onebox_user_agent
-        end
-        title =
-          RetrieveTitle.crawl(
-            url,
-            max_redirects: max_redirects,
-            initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
-            headers: headers,
-          )
-        title = nil if title && title.length < MIN_TITLE_LENGTH
-        return onebox_for(url, title, opts)
+    uri =
+      begin
+        URI(url)
+      rescue URI::Error
+        nil
       end
+
+    return nil if uri.blank? || uri.hostname.blank?
+    return nil unless always_allow || allowed_domains.include?(uri.hostname)
+    return nil if Onebox::DomainChecker.is_blocked?(uri.hostname)
+
+    if data = Oneboxer.inline_data_for(url)
+      return onebox_for(url, data[:title], opts, css_class: data[:css_class])
     end
 
-    nil
+    max_redirects = 0 if SiteSetting.block_onebox_on_redirect
+    headers = { "Accept-Language" => Oneboxer.accept_language }
+
+    if SiteSetting.inline_onebox_user_agent.present?
+      headers["User-Agent"] = SiteSetting.inline_onebox_user_agent
+    end
+
+    title =
+      RetrieveTitle.crawl(
+        url,
+        max_redirects: max_redirects,
+        initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
+        headers: headers,
+      )
+    title = nil if title && title.length < MIN_TITLE_LENGTH
+
+    onebox_for(url, title, opts)
   end
 
   def self.is_previewing?(user_id)
@@ -105,7 +111,7 @@ class InlineOneboxer
 
   private
 
-  def self.onebox_for(url, title, opts)
+  def self.onebox_for(url, title, opts, css_class: nil)
     title = title && Emoji.gsub_emoji_to_unicode(title)
     if title && opts[:post_number]
       title += " - "
@@ -126,8 +132,12 @@ class InlineOneboxer
     title = WordWatcher.censor_text(title) if title.present?
 
     onebox = { url: url, title: title }
+    onebox[:css_class] = css_class if css_class.present?
 
-    Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
+    if !opts[:skip_cache]
+      ttl = onebox[:title].blank? ? 1.minute : 1.day
+      Discourse.cache.write(cache_key(url), onebox, expires_in: ttl)
+    end
     onebox
   end
 

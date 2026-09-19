@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
-  "Integration | Component | select-kit/category-selector",
+  "Integration | Component | SelectKit | CategorySelector",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -45,7 +45,7 @@ module(
         .hasText("Parent Category× 95");
       assert
         .dom(this.subject.rowByIndex(1).el())
-        .hasText("Parent Category× 95+2 subcategories");
+        .hasText("Parent Category× 95+ Subcategories");
     });
   }
 );

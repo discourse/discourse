@@ -85,3 +85,8 @@ ja:
         title: "ゲーミフィケーション"
         name: "名前"
         period: "期間"
+    discourse_workflows:
+      gamification_score:
+        username: "ユーザー"
+        date: "日付"
+        description: "説明"

@@ -5,7 +5,7 @@ import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
-  "Integration | Component | form-template-field | textarea",
+  "Integration | Component | FormTemplateField | Textarea",
   function (hooks) {
     setupRenderingTest(hooks);
 

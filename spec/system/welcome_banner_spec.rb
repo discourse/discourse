@@ -10,10 +10,7 @@ describe "Welcome banner" do
       Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
     end
 
-    after do
-      TranslationOverride.delete_all
-      I18n.reload!
-    end
+    after { I18n.reload! }
 
     it "shows for logged in and anonymous users" do
       visit "/"
@@ -93,8 +90,6 @@ describe "Welcome banner" do
       visit "/latest"
       expect(banner).to be_visible
       visit "/new"
-      expect(banner).to be_visible
-      visit "/unread"
       expect(banner).to be_visible
       visit "/hot"
       expect(banner).to be_visible
@@ -179,6 +174,7 @@ describe "Welcome banner" do
 
       context "for text color setting" do
         let(:red) { "#ff0000" }
+
         before { SiteSetting.welcome_banner_text_color = red }
 
         it "doesn't set text color without background image" do
@@ -225,7 +221,7 @@ describe "Welcome banner" do
 
         before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
 
-        it "should show on" do
+        it "shows on the homepage, preferences, and messages pages" do
           sign_in(current_user)
 
           visit "/"
@@ -238,7 +234,7 @@ describe "Welcome banner" do
           expect(banner).to be_visible
         end
 
-        it "should NOT show on" do
+        it "hides on authentication and admin pages" do
           visit "/login"
           expect(banner).to be_hidden
 
@@ -266,7 +262,7 @@ describe "Welcome banner" do
         end
       end
 
-      it "should show on discovery routes only" do
+      it "shows only on discovery routes" do
         sign_in(current_user)
         SiteSetting.welcome_banner_page_visibility = "discovery"
 
@@ -277,7 +273,7 @@ describe "Welcome banner" do
         expect(banner).to be_hidden
       end
 
-      it "should show on top menu pages only" do
+      it "shows only on top menu pages" do
         sign_in(current_user)
         SiteSetting.welcome_banner_page_visibility = "top_menu_pages"
         SiteSetting
@@ -292,7 +288,7 @@ describe "Welcome banner" do
         expect(banner).to be_hidden
       end
 
-      it "should show on homepage only" do
+      it "shows only on the homepage" do
         SiteSetting.welcome_banner_page_visibility = "homepage"
 
         visit "/"

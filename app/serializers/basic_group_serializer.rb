@@ -45,8 +45,8 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def bio_cooked
-    if object.automatic
-      return I18n.t("groups.default_descriptions.#{Group::AUTO_GROUP_IDS[object.id]}")
+    if auto_group_name = Group::AUTO_GROUP_IDS[object.id]
+      return I18n.t("groups.default_descriptions.#{auto_group_name}")
     end
 
     object.bio_cooked
@@ -101,7 +101,12 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def can_see_members
-    scope.can_see_group_members?(object)
+    @can_see_members = scope.can_see_group_members?(object) if !defined?(@can_see_members)
+    @can_see_members
+  end
+
+  def include_user_count?
+    can_see_members
   end
 
   private

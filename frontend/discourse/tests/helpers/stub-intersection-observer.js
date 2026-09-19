@@ -6,8 +6,9 @@ import sinon from "sinon";
  * The real one needs viewport scroll state, which the Ember testing container
  * can't reliably provide.
  *
- * @returns {Array<{element, trigger: (overrides?: object) => Promise<void>}>}
- *   Entries appended on each `observe()`.
+ * @returns {Array<{element, options, trigger: (overrides?: object) => Promise<void>}>}
+ *   Entries appended on each `observe()`. `options` is the bag the observer was constructed
+ *   with, so a test can assert how a consumer resolved `root` and `rootMargin`.
  *   `await entry.trigger()` fires an intersection event.
  */
 export default function stubIntersectionObserver() {
@@ -15,13 +16,15 @@ export default function stubIntersectionObserver() {
 
   sinon.stub(window, "IntersectionObserver").value(
     class {
-      constructor(callback) {
+      constructor(callback, options) {
         this.callback = callback;
+        this.options = options;
       }
 
       observe(element) {
         observations.push({
           element,
+          options: this.options,
           trigger: async (overrides = {}) => {
             this.callback([
               { target: element, isIntersecting: true, ...overrides },

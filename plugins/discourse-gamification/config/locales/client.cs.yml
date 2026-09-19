@@ -88,3 +88,8 @@ cs:
         title: "Gamifikace"
         name: "Název"
         period: "Období"
+    discourse_workflows:
+      gamification_score:
+        username: "Uživatel"
+        date: "Datum"
+        description: "Popis"

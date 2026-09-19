@@ -18,19 +18,32 @@ class LetterAvatar
   # BUMP UP if avatar algorithm changes
   VERSION = 5
 
+  VIPS_VERSION = 6
+  private_constant :VIPS_VERSION
+
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
   POINTSIZE = 280
+  DISCOURSE_FONT_PATH = File.join(DiscourseFonts.path_for_fonts, "NotoSans-Regular.woff2")
+  private_constant :DISCOURSE_FONT_PATH
+
+  MACOS_FONT_PATH = "/System/Library/Fonts/Helvetica.ttc"
+  private_constant :MACOS_FONT_PATH
 
   class << self
     def version
-      "#{VERSION}_#{image_magick_version}"
+      if GlobalSetting.enable_vips_image_processing
+        "#{VIPS_VERSION}_#{vips_version}"
+      else
+        "#{VERSION}_#{image_magick_version}"
+      end
     end
 
     def cache_path
       "tmp/letter_avatars/#{version}"
     end
 
+    # Run `script/letter_avatar_pixel_diff` to inspect rendering changes.
     def generate(username, size, opts = nil)
       DistributedMutex.synchronize("letter_avatar_#{version}_#{username}") do
         identity = (opts && opts[:identity]) || LetterAvatar::Identity.from_username(username)
@@ -66,65 +79,98 @@ class LetterAvatar
     end
 
     def generate_fullsize(identity)
-      color = identity.color
-      letter = identity.letter
-
       filename = fullsize_path(identity)
 
-      instructions = %W[
-        -size
-        #{FULLSIZE}x#{FULLSIZE}
-        xc:#{to_rgb(color)}
-        -pointsize
-        #{POINTSIZE}
-        -fill
-        #FFFFFFCC
-        -font
-        NimbusSans-Regular
-        -gravity
-        Center
-        -annotate
-        -0+34
-        #{letter}
-        -depth
-        8
-        #{filename}
-      ]
+      if GlobalSetting.enable_vips_image_processing
+        DiscourseVips.letter_avatar(
+          letter: ERB::Util.html_escape(identity.letter),
+          output_path: filename,
+          background_color: format("%02X%02X%02X", *identity.color),
+          font: "#{font_family} #{POINTSIZE}",
+          font_path:,
+        )
+      else
+        color = identity.color
+        letter = identity.letter
+        font = macos? ? "Helvetica" : "NimbusSans-Regular"
+        vertical_offset = font == "Helvetica" ? 26 : 34
 
-      Discourse::Utils.execute_command("magick", *instructions)
+        ImageMagick.magick(
+          "-size",
+          "#{FULLSIZE}x#{FULLSIZE}",
+          "xc:#{to_rgb(color)}",
+          "-pointsize",
+          POINTSIZE.to_s,
+          "-fill",
+          "#FFFFFFCC",
+          "-font",
+          font,
+          "-gravity",
+          "Center",
+          "-annotate",
+          "-0+#{vertical_offset}",
+          letter,
+          "-depth",
+          "8",
+          filename,
+          operation: :letter_avatar_render,
+          write: [File.dirname(filename)],
+        )
+      end
 
-      ## do not optimize image, it will end up larger than original
       filename
-    end
-
-    def to_rgb(color)
-      r, g, b = color
-      "rgb(#{r},#{g},#{b})"
     end
 
     def image_magick_version
       @image_magick_version ||=
-        begin
-          Thread.new do
-            sleep 2
-            cleanup_old
-          end
-          Digest::MD5.hexdigest(`magick --version` << `magick -list font`)
-        end
+        Digest::MD5.hexdigest(
+          ImageMagick.magick("--version", operation: :letter_avatar_version) << ImageMagick.magick(
+            "-list",
+            "font",
+            operation: :letter_avatar_font_list,
+          ),
+        )
+    end
+
+    def vips_version
+      return @vips_version if @vips_version
+
+      @vips_version = Digest::MD5.hexdigest([DiscourseVips.version, font_version].join("\0"))
     end
 
     def cleanup_old
-      begin
-        skip = File.basename(cache_path)
-        parent_path = File.dirname(cache_path)
-        Dir
-          .entries(parent_path)
-          .each do |path|
-            FileUtils.rm_rf(parent_path + "/" + path) unless %w[. ..].include?(path) || path == skip
-          end
-      rescue Errno::ENOENT
-        # no worries, folder doesn't exists
-      end
+      skip = File.basename(cache_path)
+      parent_path = File.dirname(cache_path)
+      Dir
+        .entries(parent_path)
+        .each do |path|
+          FileUtils.rm_rf(parent_path + "/" + path) unless %w[. ..].include?(path) || path == skip
+        end
+    rescue Errno::ENOENT
+      # no worries, folder doesn't exists
+    end
+
+    private
+
+    def to_rgb(color)
+      red, green, blue = color
+      "rgb(#{red},#{green},#{blue})"
+    end
+
+    def font_path
+      macos? ? MACOS_FONT_PATH : DISCOURSE_FONT_PATH
+    end
+
+    def font_version
+      Digest::MD5.file(font_path).hexdigest
+    end
+
+    def macos?
+      RbConfig::CONFIG["host_os"].match?(/darwin/i)
+    end
+
+    def font_family
+      macos? ? "Helvetica" : "Noto Sans"
     end
   end
 

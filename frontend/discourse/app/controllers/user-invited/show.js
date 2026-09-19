@@ -5,12 +5,12 @@ import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
-import CreateInvite from "discourse/components/modal/create-invite";
 import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import Invite from "discourse/models/invite";
 import { i18n } from "discourse-i18n";
 
@@ -35,6 +35,18 @@ export default class UserInvitedShowController extends Controller {
 
   @tracked _canInviteToForumOverride;
 
+  @computed("currentUser.can_invite_to_forum", "user.profile_hidden")
+  get canInviteToForum() {
+    if (this._canInviteToForumOverride !== undefined) {
+      return this._canInviteToForumOverride;
+    }
+    return this.currentUser?.can_invite_to_forum && !this.user?.profile_hidden;
+  }
+
+  set canInviteToForum(value) {
+    this._canInviteToForumOverride = value;
+  }
+
   @dependentKeyCompat
   get inviteRedeemed() {
     return this.filter === "redeemed";
@@ -50,32 +62,26 @@ export default class UserInvitedShowController extends Controller {
     return this.filter === "pending";
   }
 
-  @computed("currentUser.can_invite_to_forum")
-  get canInviteToForum() {
-    if (this._canInviteToForumOverride !== undefined) {
-      return this._canInviteToForumOverride;
-    }
-    return this.currentUser?.can_invite_to_forum;
+  @computed("user.id", "currentUser.id")
+  get viewingSelf() {
+    return this.user?.id === this.currentUser?.id;
   }
 
-  set canInviteToForum(value) {
-    this._canInviteToForumOverride = value;
+  @computed("canInviteToForum", "viewingSelf")
+  get canCreateInvite() {
+    return this.canInviteToForum && this.viewingSelf;
   }
 
-  @computed("currentUser.admin", "siteSettings.allow_bulk_invite")
+  @computed(
+    "currentUser.admin",
+    "siteSettings.allow_bulk_invite",
+    "viewingSelf"
+  )
   get canBulkInvite() {
-    return this.currentUser?.admin && this.siteSettings?.allow_bulk_invite;
-  }
-
-  @observes("searchTerm")
-  searchTermChanged() {
-    this._searchTermChanged();
-  }
-
-  @debounce(INPUT_DELAY)
-  _searchTermChanged() {
-    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
-      (invites) => this.set("model", invites)
+    return (
+      this.currentUser?.admin &&
+      this.siteSettings?.allow_bulk_invite &&
+      this.viewingSelf
     );
   }
 
@@ -96,9 +102,14 @@ export default class UserInvitedShowController extends Controller {
     return this.invitesCount[this.filter] > 5;
   }
 
+  @observes("searchTerm")
+  searchTermChanged() {
+    this._searchTermChanged();
+  }
+
   @action
   createInvite() {
-    this.modal.show(CreateInvite, { model: { invites: this.model.invites } });
+    showCreateInviteModal(this, { model: { invites: this.model.invites } });
   }
 
   @action
@@ -108,7 +119,7 @@ export default class UserInvitedShowController extends Controller {
 
   @action
   editInvite(invite) {
-    this.modal.show(CreateInvite, { model: { editing: true, invite } });
+    showCreateInviteModal(this, { model: { editing: true, invite } });
   }
 
   @action
@@ -185,5 +196,12 @@ export default class UserInvitedShowController extends Controller {
         this.hasLoadedInitialInvites = true;
       }
     }
+  }
+
+  @debounce(INPUT_DELAY)
+  _searchTermChanged() {
+    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
+      (invites) => this.set("model", invites)
+    );
   }
 }

@@ -14,13 +14,22 @@ if enable_logstash_logger
            customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
          )
 else
-  logger Logger.new(STDOUT)
+  console_logger = Logger.new(STDOUT)
+  if ENV["RAILS_ENV"] != "production"
+    require_relative "../lib/dev_log_formatter"
+    console_logger.formatter = DevLogFormatter.new(color: ENV["NO_COLOR"].nil?)
+
+    # Drop per-worker spawn logs. Summary below covers that.
+    console_logger.level = Logger::WARN
+    STDOUT.puts "Starting Pitchfork..."
+  end
+  logger console_logger
 end
 
 worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 
 # stree-ignore
-listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}", reuseport: true
+listen ENV["UNICORN_LISTENER"] || "#{ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:"}#{(ENV["UNICORN_PORT"] || 3000).to_i}", reuseport: true
 
 if ENV["RAILS_ENV"] == "production"
   # nuke workers after 30 seconds instead of 20 seconds (the default)
@@ -70,6 +79,7 @@ after_mold_fork do |server, mold|
   end
 
   Discourse.redis.close
+  DiscourseVips::Client.use_shared_worker
   Discourse.before_fork
 end
 
@@ -92,6 +102,9 @@ end
 
 before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
+
+  require "demon/discourse_vips"
+  Demon::DiscourseVips.start(logger: server.logger) if GlobalSetting.enable_vips_image_processing
 
   if sidekiqs > 0
     server.logger.info "starting #{sidekiqs} supervised sidekiqs"
@@ -123,7 +136,20 @@ before_service_worker_ready do |server, service_worker|
     demon_class.start(1, logger: server.logger)
   end
 
-  Demon::PluginJsWatcher.start(verbose: true) if Rails.env.development? && !ENV["CI"]
+  if Rails.env.development? && !ENV["CI"]
+    Demon::PluginJsWatcher.start(verbose: false, logger: server.logger)
+  end
+
+  if Rails.env.development?
+    EmberAssets.watch!
+
+    workers = server.worker_processes
+    parts = ["#{workers} worker#{"s" if workers != 1}"]
+    parts << "#{sidekiqs} sidekiq#{"s" if sidekiqs != 1}" if sidekiqs > 0
+    parts.concat(DiscoursePluginRegistry.demon_processes.map(&:prefix))
+    parts << "plugin JS watcher" if !ENV["CI"]
+    STDOUT.puts "Pitchfork ready on http://localhost:#{ENV["UNICORN_PORT"] || 3000} (#{parts.join(", ")})"
+  end
 
   Thread.new do
     while true
@@ -135,6 +161,8 @@ before_service_worker_ready do |server, service_worker|
           Demon::Sidekiq.heartbeat_check
           Demon::Sidekiq.rss_memory_check
         end
+
+        Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
 
         DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
       rescue => e
@@ -159,4 +187,5 @@ if RUBY_PLATFORM.include?("darwin") && ENV["RAILS_ENV"] != "production"
   # macOS doesn't support the default :SOCK_SEQPACKET
   # So we override it to avoid the warning
   Pitchfork.instance_variable_set(:@socket_type, :SOCK_STREAM)
+  require_relative "../lib/freedom_patches/pitchfork_sock_stream"
 end

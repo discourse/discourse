@@ -1,16 +1,15 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isNone } from "@ember/utils";
 import UpsertCategoryPermissionRow from "discourse/admin/components/upsert-category/permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq } from "discourse/truth-helpers";
+import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySecurity extends Component {
@@ -103,8 +102,8 @@ export default class UpsertCategorySecurity extends Component {
     return this.everyonePermission?.permission_type ?? PermissionType.READONLY;
   }
 
-  #setFormPermissions(permissions) {
-    this.args.form.set("permissions", permissions);
+  get canRemoveAllPermissions() {
+    return (this.permissions?.length ?? 0) >= 3;
   }
 
   @action
@@ -112,7 +111,7 @@ export default class UpsertCategorySecurity extends Component {
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name: this.site.groupsById[groupId]?.name,
+        group_name: this.site.groupName(groupId),
         group_id: groupId,
         permission_type: this.minimumPermission,
       },
@@ -121,11 +120,26 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   @action
+  onSecurityAddGroupSet(value) {
+    if (isNone(value)) {
+      return;
+    }
+
+    const groupId = typeof value === "string" ? parseInt(value, 10) : value;
+    this.onSelectGroup(Number.isNaN(groupId) ? value : groupId);
+  }
+
+  @action
   onRemovePermission(groupId) {
     const newPermissions = (this.permissions || []).filter(
       (p) => p.group_id !== groupId
     );
     this.#setFormPermissions(newPermissions);
+  }
+
+  @action
+  onRemoveAllPermissions() {
+    this.#setFormPermissions([]);
   }
 
   @action
@@ -152,110 +166,127 @@ export default class UpsertCategorySecurity extends Component {
     this.#setFormPermissions(newPermissions);
   }
 
+  #setFormPermissions(permissions) {
+    this.args.form.set("permissions", permissions);
+  }
+
   <template>
-    <@form.Section
-      class={{concatClass
-        "edit-category-tab"
-        "edit-category-tab-security"
-        (if (eq @selectedTab "security") "active")
-      }}
-    >
-
-      {{#if @category.is_special}}
-        {{#if @category.isUncategorizedCategory}}
-          <@form.Alert @type="warning">
-            {{i18n "category.uncategorized_security_warning"}}
-          </@form.Alert>
-        {{else}}
-          <@form.Alert @type="warning">
-            {{i18n "category.special_warning"}}
-          </@form.Alert>
-        {{/if}}
-      {{/if}}
-
-      {{#if this.allParentGroupsUsed}}
+    {{#if @category.is_special}}
+      {{#if @category.isUncategorizedCategory}}
         <@form.Alert @type="warning">
-          {{i18n "category.permissions.all_parent_groups_used"}}
+          {{i18n "category.uncategorized_security_warning"}}
+        </@form.Alert>
+      {{else}}
+        <@form.Alert @type="warning">
+          {{i18n "category.special_warning"}}
         </@form.Alert>
       {{/if}}
+    {{/if}}
 
+    {{#if this.allParentGroupsUsed}}
       <@form.Alert @type="warning">
-        {{#if this.everyonePermission}}
-          {{i18n
-            this.everyoneAccessMessageKey
-            everyone_group=this.everyonePermission.group_name
-          }}
-        {{else}}
-          {{i18n "category.permissions.specific_groups_have_access"}}
-        {{/if}}
+        {{i18n "category.permissions.all_parent_groups_used"}}
       </@form.Alert>
+    {{/if}}
 
-      {{#unless @category.is_special}}
-        <@form.Container>
-          <div class="category-permissions-table">
-            <div class="permission-row row-header">
-              <span class="group-name">{{i18n
-                  "category.permissions.group"
-                }}</span>
-              <span class="options">
-                <span class="cell">{{i18n "category.permissions.see"}}</span>
-                <span class="cell">{{i18n "category.permissions.reply"}}</span>
-                <span class="cell">{{i18n "category.permissions.create"}}</span>
-                <span class="cell"></span>
-              </span>
-            </div>
-            {{#each this.permissions as |p|}}
-              <UpsertCategoryPermissionRow
-                @groupId={{p.group_id}}
-                @groupName={{p.group_name}}
-                @type={{p.permission_type}}
-                @everyonePermission={{this.everyonePermission}}
-                @onChangeEveryonePermission={{this.onChangeEveryonePermission}}
-                @onRemovePermission={{this.onRemovePermission}}
-                @onUpdatePermission={{this.onUpdatePermission}}
-              />
-            {{/each}}
+    <@form.Alert @type="warning">
+      {{#if this.everyonePermission}}
+        {{i18n
+          this.everyoneAccessMessageKey
+          everyone_group=this.everyonePermission.group_name
+        }}
+      {{else}}
+        {{i18n "category.permissions.specific_groups_have_access"}}
+      {{/if}}
+    </@form.Alert>
 
-            {{#unless this.permissions}}
-              <div class="permission-row row-empty">
-                {{i18n "category.permissions.no_groups_selected"}}
-              </div>
-            {{/unless}}
-
-            {{#if this.hasAvailableGroups}}
-              <PluginOutlet
-                @name="category-security-permissions-add-group"
-                @outletArgs={{lazyHash
-                  category=@category
-                  availableGroups=this.availableGroups
-                  onSelectGroup=this.onSelectGroup
-                }}
-                @defaultGlimmer={{true}}
-              >
-                <div class="add-group">
-                  <span class="group-name">
-                    <ComboBox
-                      @content={{this.availableGroups}}
-                      @onChange={{this.onSelectGroup}}
-                      @value={{null}}
-                      @valueProperty="id"
-                      @nameProperty="name"
-                      @options={{hash none="category.security_add_group"}}
-                      class="available-groups"
-                    />
-                  </span>
-                </div>
-              </PluginOutlet>
-            {{/if}}
+    {{#unless @category.is_special}}
+      <@form.Container @format="full">
+        <div class="category-permissions-table">
+          <div class="permission-row row-header">
+            <span class="group-name">{{i18n
+                "category.permissions.group"
+              }}</span>
+            <span class="options">
+              <span class="cell">{{i18n "category.permissions.see"}}</span>
+              <span class="cell">{{i18n "category.permissions.reply"}}</span>
+              <span class="cell">{{i18n "category.permissions.create"}}</span>
+              <span class="cell"></span>
+            </span>
           </div>
+          {{#each this.permissions as |p|}}
+            <UpsertCategoryPermissionRow
+              @everyonePermission={{this.everyonePermission}}
+              @groupId={{p.group_id}}
+              @groupName={{p.group_name}}
+              @onChangeEveryonePermission={{this.onChangeEveryonePermission}}
+              @onRemovePermission={{this.onRemovePermission}}
+              @onUpdatePermission={{this.onUpdatePermission}}
+              @type={{p.permission_type}}
+            />
+          {{/each}}
 
-        </@form.Container>
-      {{/unless}}
+          {{#unless this.permissions}}
+            <div class="permission-row row-empty">
+              {{i18n "category.permissions.no_groups_selected"}}
+            </div>
+          {{/unless}}
+          {{#if (or this.hasAvailableGroups this.canRemoveAllPermissions)}}
+            <PluginOutlet
+              @defaultGlimmer={{true}}
+              @name="category-security-permissions-add-group"
+              @outletArgs={{lazyHash
+                category=@category
+                availableGroups=this.availableGroups
+                onSelectGroup=this.onSelectGroup
+                canRemoveAllPermissions=this.canRemoveAllPermissions
+                onRemoveAllPermissions=this.onRemoveAllPermissions
+              }}
+            >
+              <div class="add-group">
+                {{#if this.hasAvailableGroups}}
+                  <span class="group-name">
+                    <@form.Field
+                      @format="max"
+                      @name="security_add_group_id"
+                      @onSet={{this.onSecurityAddGroupSet}}
+                      @showTitle={{false}}
+                      @title={{i18n "category.security_add_group"}}
+                      @type="select"
+                      as |field|
+                    >
+                      <field.Control
+                        class="available-groups"
+                        @nonePlaceholder={{i18n "category.security_add_group"}}
+                        as |select|
+                      >
+                        {{#each this.availableGroups as |group|}}
+                          <select.Option
+                            @value={{group.id}}
+                          >{{group.name}}</select.Option>
+                        {{/each}}
+                      </field.Control>
+                    </@form.Field>
+                  </span>
+                {{/if}}
+                {{#if this.canRemoveAllPermissions}}
+                  <DButton
+                    class="btn-default remove-all-permissions"
+                    @action={{this.onRemoveAllPermissions}}
+                    @label="category.permissions.remove_all"
+                  />
+                {{/if}}
+              </div>
+            </PluginOutlet>
+          {{/if}}
+        </div>
 
-      <PluginOutlet
-        @name="category-custom-security"
-        @outletArgs={{lazyHash category=@category form=@form}}
-      />
-    </@form.Section>
+      </@form.Container>
+    {{/unless}}
+
+    <PluginOutlet
+      @name="category-custom-security"
+      @outletArgs={{lazyHash category=@category form=@form}}
+    />
   </template>
 }

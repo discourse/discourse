@@ -4,12 +4,12 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import TextField from "discourse/components/text-field";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 const States = {
@@ -172,15 +172,15 @@ export default class PublishPageModal extends Component {
 
   <template>
     <DModal
+      class="publish-page-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "topic.publish_page.title"}}
-      class="publish-page-modal"
     >
       <:body>
         {{#if this.unpublished}}
           <p>{{i18n "topic.publish_page.unpublished"}}</p>
         {{else}}
-          <ConditionalLoadingSpinner @condition={{this.initializing}}>
+          <DConditionalLoadingSpinner @condition={{this.initializing}}>
             <p class="publish-description">{{i18n
                 "topic.publish_page.description"
               }}</p>
@@ -188,12 +188,12 @@ export default class PublishPageModal extends Component {
             <form>
               <div class="controls">
                 <label>{{i18n "topic.publish_page.slug"}}</label>
-                <TextField
-                  @value={{this.publishedPage.slug}}
+                <DTextField
+                  class="publish-slug"
+                  @disabled={{this.existing}}
                   @onChange={{this.checkSlug}}
                   @onChangeImmediate={{this.startCheckSlug}}
-                  @disabled={{this.existing}}
-                  class="publish-slug"
+                  @value={{this.publishedPage.slug}}
                 />
               </div>
 
@@ -202,8 +202,8 @@ export default class PublishPageModal extends Component {
 
                 <p class="description">
                   <Input
-                    @type="checkbox"
                     @checked={{readonly this.publishedPage.public}}
+                    @type="checkbox"
                     {{on "click" this.onChangePublic}}
                   />
                   {{i18n "topic.publish_page.public_description"}}
@@ -212,7 +212,7 @@ export default class PublishPageModal extends Component {
             </form>
 
             <div class="publish-url">
-              <ConditionalLoadingSpinner @condition={{this.checking}} />
+              <DConditionalLoadingSpinner @condition={{this.checking}} />
 
               {{#if this.existing}}
                 <div class="current-url">
@@ -220,8 +220,8 @@ export default class PublishPageModal extends Component {
                   <div>
                     <a
                       href={{this.publishedPage.url}}
-                      target="_blank"
                       rel="noopener noreferrer"
+                      target="_blank"
                     >{{this.publishedPage.url}}</a>
                   </div>
                 </div>
@@ -240,38 +240,38 @@ export default class PublishPageModal extends Component {
               {{/if}}
 
             </div>
-          </ConditionalLoadingSpinner>
+          </DConditionalLoadingSpinner>
         {{/if}}
       </:body>
       <:footer>
         {{#if this.showUnpublish}}
           <DButton
-            @label="topic.publish_page.unpublish"
+            class="btn-danger"
+            @action={{this.unpublish}}
             @icon="trash-can"
             @isLoading={{this.unpublishing}}
-            @action={{this.unpublish}}
-            class="btn-danger"
+            @label="topic.publish_page.unpublish"
           />
 
           <DButton
+            class="close-publish-page"
+            @action={{@closeModal}}
             @icon="xmark"
             @label="close"
-            @action={{@closeModal}}
-            class="close-publish-page"
           />
         {{else if this.unpublished}}
           <DButton
-            @label="topic.publish_page.publishing_settings"
             @action={{this.startNew}}
+            @label="topic.publish_page.publishing_settings"
           />
         {{else}}
           <DButton
-            @label="topic.publish_page.publish"
-            @icon="file"
-            @disabled={{this.disabled}}
-            @isLoading={{this.saving}}
-            @action={{this.publish}}
             class="btn-primary publish-page"
+            @action={{this.publish}}
+            @disabled={{this.disabled}}
+            @icon="file"
+            @isLoading={{this.saving}}
+            @label="topic.publish_page.publish"
           />
         {{/if}}
       </:footer>

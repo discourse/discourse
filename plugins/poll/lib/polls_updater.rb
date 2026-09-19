@@ -174,7 +174,7 @@ module DiscoursePoll
     end
 
     def self.publish_changes(post)
-      polls = ::Poll.includes(poll_options: :poll_votes).where(post: post)
+      polls = ::Poll.includes(:closed_by, poll_options: :poll_votes).where(post: post)
       polls =
         ActiveModel::ArraySerializer.new(
           polls,

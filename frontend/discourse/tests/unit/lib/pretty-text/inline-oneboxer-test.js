@@ -3,7 +3,10 @@ import { setupTest } from "ember-qunit";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { module, test } from "qunit";
 import { ajax } from "discourse/lib/ajax";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  middlewareRateLimit,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Pretty Text | Inline Oneboxer", function (hooks) {
   setupTest(hooks);
@@ -19,6 +22,78 @@ module("Unit | Pretty Text | Inline Oneboxer", function (hooks) {
 
   hooks.afterEach(function () {
     links = {};
+  });
+
+  test("applies the css_class returned by the server", async function (assert) {
+    const url = "http://example.com/pr";
+    const link = document.createElement("a");
+    link.classList.add("inline-onebox-loading");
+    link.href = url;
+
+    pretender.get("/inline-onebox", async () =>
+      response({
+        "inline-oneboxes": [
+          { url, title: "PR title", css_class: "--gh-status-merged" },
+        ],
+      })
+    );
+
+    applyInlineOneboxes({ [url]: [link] }, ajax);
+    await settled();
+
+    assert.dom(link).hasClass("inline-onebox");
+    assert.dom(link).hasClass("--gh-status-merged");
+    assert.dom(link).doesNotHaveClass("inline-onebox-loading");
+    assert.dom(link).hasText("PR title");
+  });
+
+  test("stops sending batches once rate limited", async function (assert) {
+    const rateLimitedLinks = {};
+    for (let i = 0; i < 11; i++) {
+      rateLimitedLinks[`http://example.com/limited-${i}`] =
+        document.createElement("DIV");
+    }
+
+    let requestCount = 0;
+    pretender.get("/inline-onebox", () => {
+      requestCount++;
+      return middlewareRateLimit(60);
+    });
+
+    await applyInlineOneboxes(rateLimitedLinks, ajax);
+
+    assert.strictEqual(
+      requestCount,
+      1,
+      "the second batch of the 11 urls is never sent"
+    );
+  });
+
+  test("looks a rate limited url up again", async function (assert) {
+    const url = "http://example.com/rate-limited";
+    const link = document.createElement("a");
+    link.classList.add("inline-onebox-loading");
+    link.href = url;
+
+    let requestCount = 0;
+    pretender.get("/inline-onebox", () => {
+      requestCount++;
+      if (requestCount === 1) {
+        return middlewareRateLimit(60);
+      }
+
+      return response({
+        "inline-oneboxes": [{ url, title: "Retried title" }],
+      });
+    });
+
+    await applyInlineOneboxes({ [url]: [link] }, ajax);
+    assert.dom(link).hasClass("inline-onebox-loading");
+
+    await applyInlineOneboxes({ [url]: [link] }, ajax);
+
+    assert.strictEqual(requestCount, 2, "the rate limited url is retried");
+    assert.dom(link).hasText("Retried title");
   });
 
   test("batches requests when oneboxing more than 10 urls", async function (assert) {

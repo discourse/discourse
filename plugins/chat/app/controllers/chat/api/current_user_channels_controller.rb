@@ -14,4 +14,10 @@ class Chat::Api::CurrentUserChannelsController < Chat::ApiController
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
     end
   end
+
+  private
+
+  def allow_anonymous_public_chat_access?
+    anonymous_public_chat_access_enabled?
+  end
 end

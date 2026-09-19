@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ChatNavbarCloseDrawerButton extends Component {
   @service chat;
@@ -15,10 +15,10 @@ export default class ChatNavbarCloseDrawerButton extends Component {
 
   <template>
     <DButton
-      @icon="xmark"
-      @action={{this.closeDrawer}}
-      @title="chat.close"
       class="btn-transparent no-text c-navbar__close-drawer-button"
+      @action={{this.closeDrawer}}
+      @icon="xmark"
+      @title="chat.close"
     />
   </template>
 }

@@ -2,32 +2,47 @@ import CategoriesDisplay from "discourse/components/discovery/categories-display
 import Layout from "discourse/components/discovery/layout";
 import Navigation from "discourse/components/discovery/navigation";
 import Topics from "discourse/components/discovery/topics";
-import { i18n } from "discourse-i18n";
+import TagInfo from "discourse/components/tag-info";
+import { and } from "discourse/truth-helpers";
 
 export default <template>
   <Layout
-    @model={{@controller.model}}
     @createTopicDisabled={{@controller.createTopicDisabled}}
     @listClass="--topic-list"
+    @model={{@controller.model}}
+    @toggleTagInfo={{@controller.toggleTagInfo}}
   >
+    <:aboveNavigation>
+      {{#if (and @controller.model.tag @controller.showTagInfo)}}
+        <TagInfo
+          @currentUser={{@controller.currentUser}}
+          @loading={{@controller.loadingTagInfo}}
+          @tagInfo={{@controller.tagInfo}}
+        />
+      {{/if}}
+    </:aboveNavigation>
+
     <:navigation>
       <Navigation
-        @category={{@controller.model.category}}
-        @tag={{@controller.model.tag}}
         @additionalTags={{@controller.model.additionalTags}}
-        @filterType={{@controller.model.filterType}}
-        @noSubcategories={{@controller.model.noSubcategories}}
-        @canBulkSelect={{@controller.canBulkSelect}}
         @bulkSelectHelper={{@controller.bulkSelectHelper}}
+        @canBulkSelect={{@controller.canBulkSelect}}
+        @canCreateTopicOnTag={{@controller.model.canCreateTopicOnTag}}
+        @category={{@controller.model.category}}
         @createTopic={{@controller.createTopic}}
         @createTopicDisabled={{@controller.createTopicDisabled}}
-        @canCreateTopicOnTag={{@controller.model.canCreateTopicOnTag}}
-        @tagNotification={{@controller.model.tagNotification}}
+        @dismissRead={{@controller.dismissRead}}
+        @filterType={{@controller.model.filterType}}
+        @loadingTagInfo={{@controller.loadingTagInfo}}
         @model={{@controller.model.list}}
+        @noSubcategories={{@controller.model.noSubcategories}}
+        @resetNew={{@controller.resetNew}}
         @showDismissRead={{@controller.showDismissRead}}
         @showResetNew={{@controller.showResetNew}}
-        @dismissRead={{@controller.dismissRead}}
-        @resetNew={{@controller.resetNew}}
+        @showTagInfo={{@controller.showTagInfo}}
+        @tag={{@controller.model.tag}}
+        @tagNotification={{@controller.model.tagNotification}}
+        @toggleTagInfo={{@controller.toggleTagInfo}}
       />
     </:navigation>
 
@@ -35,31 +50,27 @@ export default <template>
       {{#if @controller.model.subcategoryList.content}}
         <CategoriesDisplay
           @categories={{@controller.model.subcategoryList.content}}
-          @parentCategory={{@controller.model.subcategoryList.parentCategory}}
           @loadMore={{@controller.model.subcategoryList.loadMore}}
+          @parentCategory={{@controller.model.subcategoryList.parentCategory}}
         />
       {{/if}}
     </:header>
 
     <:list>
-      {{#if @controller.showFakeUpcomingChange}}
-        {{i18n "user.upcoming_changes.title"}}
-      {{/if}}
-
       <Topics
-        @period={{@controller.model.list.for_period}}
-        @changePeriod={{@controller.changePeriod}}
-        @model={{@controller.model.list}}
-        @canBulkSelect={{@controller.canBulkSelect}}
         @bulkSelectHelper={{@controller.bulkSelectHelper}}
+        @canBulkSelect={{@controller.canBulkSelect}}
+        @category={{@controller.model.category}}
+        @changeNewListSubset={{@controller.changeNewListSubset}}
+        @changePeriod={{@controller.changePeriod}}
+        @changeSort={{@controller.changeSort}}
+        @dismissRead={{@controller.dismissRead}}
+        @model={{@controller.model.list}}
+        @period={{@controller.model.list.for_period}}
+        @resetNew={{@controller.resetNew}}
         @showDismissRead={{@controller.showDismissRead}}
         @showResetNew={{@controller.showResetNew}}
-        @category={{@controller.model.category}}
         @tag={{@controller.model.tag}}
-        @changeSort={{@controller.changeSort}}
-        @changeNewListSubset={{@controller.changeNewListSubset}}
-        @dismissRead={{@controller.dismissRead}}
-        @resetNew={{@controller.resetNew}}
       />
     </:list>
   </Layout>

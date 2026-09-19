@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import DecoratedHtml from "./decorated-html";
 
 export default class DiscourseBanner extends Component {
   @service currentUser;
@@ -67,10 +67,10 @@ export default class DiscourseBanner extends Component {
             <div class="floated-buttons">
               {{#if this.currentUser.staff}}
                 <a
-                  href={{this.banner.url}}
                   class="btn btn-transparent edit-banner"
+                  href={{this.banner.url}}
                 >
-                  {{icon "pencil"}}
+                  {{dIcon "pencil"}}
                   {{#if this.site.desktopView}}
                     {{trustHTML (i18n "banner.edit")}}
                   {{/if}}
@@ -78,15 +78,15 @@ export default class DiscourseBanner extends Component {
               {{/if}}
 
               <DButton
+                class="btn-transparent close"
                 @action={{this.dismiss}}
+                @ariaLabel="banner.close"
                 @icon="xmark"
                 @title="banner.close"
-                @ariaLabel="banner.close"
-                class="btn-transparent close"
               />
             </div>
 
-            <DecoratedHtml @html={{this.content}} @id="banner-content" />
+            <DDecoratedHtml @html={{this.content}} @id="banner-content" />
           </div>
         </div>
       </div>

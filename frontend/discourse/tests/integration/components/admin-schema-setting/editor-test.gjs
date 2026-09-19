@@ -1,4 +1,11 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  findAll,
+  focus,
+  render,
+  waitFor,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdminSchemaSettingEditor from "discourse/admin/components/schema-setting/editor";
 import SiteSetting from "discourse/admin/models/site-setting";
@@ -8,7 +15,7 @@ import schemaAndData, {
   SCHEMA_MODES,
 } from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -18,19 +25,15 @@ class TreeFromDOM {
   }
 
   refresh() {
-    this.nodes = [
-      ...queryAll(
-        ".schema-setting-editor__tree .schema-setting-editor__tree-node.--parent"
-      ),
-    ].map((container, index) => {
+    this.nodes = findAll(
+      ".schema-setting-editor__tree .schema-setting-editor__tree-node.--parent"
+    ).map((container, index) => {
       const li = container;
       const active = li.classList.contains("--active");
 
-      const children = [
-        ...queryAll(
-          `.schema-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
-        ),
-      ].map((child) => {
+      const children = findAll(
+        `.schema-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
+      ).map((child) => {
         return {
           element: child,
           textElement: child.querySelector(
@@ -39,11 +42,9 @@ class TreeFromDOM {
         };
       });
 
-      const addButtons = [
-        ...queryAll(
-          `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
-        ),
-      ];
+      const addButtons = findAll(
+        `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
+      );
 
       return {
         active,
@@ -65,7 +66,7 @@ class InputFieldsFromDOM {
     this.fields = {};
     this.count = 0;
 
-    [...queryAll(".schema-field")].forEach((field) => {
+    findAll(".schema-field").forEach((field) => {
       this.count += 1;
 
       this.fields[field.dataset.name] = {
@@ -88,7 +89,7 @@ const MOVE_UP_BTN = ".schema-setting-editor__move-up-btn";
 const MOVE_DOWN_BTN = ".schema-setting-editor__move-down-btn";
 
 module(
-  "Integration | Admin | Themes | Component | schema-setting/editor",
+  "Integration | Admin | Themes | Component | SchemaSetting | Editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -99,9 +100,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -120,9 +121,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -170,9 +171,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -273,9 +274,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -315,9 +316,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -349,9 +350,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -416,9 +417,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -445,9 +446,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -520,9 +521,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -581,9 +582,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -654,9 +655,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -706,9 +707,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -769,9 +770,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -809,6 +810,68 @@ module(
       assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
     });
 
+    test("input fields of type icon", async function (assert) {
+      pretender.get("/svg-sprite/picker-search", () =>
+        response(200, {
+          icons: [
+            { id: "gamepad", name: "gamepad" },
+            { id: "heart", name: "heart" },
+          ],
+          has_more: false,
+        })
+      );
+
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            icon_field: {
+              type: "icon",
+            },
+            required_icon_field: {
+              type: "icon",
+              required: true,
+            },
+          },
+        },
+        value: [{ required_icon_field: "heart" }],
+      });
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
+          />
+        </template>
+      );
+
+      const inputFields = new InputFieldsFromDOM();
+
+      assert
+        .dom(
+          `${inputFields.fields.required_icon_field.selector} .d-icon-grid-picker`
+        )
+        .hasAttribute("data-value", "heart");
+
+      assert
+        .dom(`${inputFields.fields.icon_field.selector} .d-icon-grid-picker`)
+        .doesNotHaveAttribute("data-value");
+
+      await click(
+        `${inputFields.fields.icon_field.selector} .d-icon-grid-picker-trigger`
+      );
+      await waitFor("[data-icon-id='gamepad']");
+      await click("[data-icon-id='gamepad']");
+
+      assert
+        .dom(`${inputFields.fields.icon_field.selector} .d-icon-grid-picker`)
+        .hasAttribute("data-value", "gamepad");
+    });
+
     test("input fields of type categories that is not required with min and max validations", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
@@ -839,9 +902,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -923,9 +986,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -962,6 +1025,14 @@ module(
           name: "category",
           identifier: "category",
           properties: {
+            children: {
+              type: "objects",
+              schema: {
+                name: "child",
+                identifier: "category",
+                properties: { category: { type: "categories" } },
+              },
+            },
             category: {
               type: "categories",
               required: true,
@@ -983,6 +1054,7 @@ module(
         value: [
           {
             category: [6, 7],
+            children: [{ category: [7] }],
           },
         ],
       });
@@ -991,9 +1063,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1001,6 +1073,19 @@ module(
       const tree = new TreeFromDOM();
 
       assert.dom(tree.nodes[0].textElement).hasText("support, something");
+
+      assert
+        .dom(tree.nodes[0].children[0].textElement)
+        .hasText("something", "the child uses its own category identifier");
+      await click(tree.nodes[0].children[0].element);
+      assert.dom(".--back-btn").hasText(
+        i18n("admin.customize.schema.back_button", {
+          name: "support, something",
+        }),
+        "the back button uses the parent's category identifier"
+      );
+      await click(".--back-btn");
+      tree.refresh();
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -1054,9 +1139,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1155,9 +1240,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1219,6 +1304,63 @@ module(
         .hasText("You can only select 3 items.");
     });
 
+    test("input fields of type groups filter disallowed groups", async function (assert) {
+      this.site.groups = [
+        { id: 0, name: "everyone" },
+        { id: 1, name: "admins" },
+        { id: 2, name: "moderators" },
+      ];
+
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            group_ids: {
+              type: "groups",
+              disallowed_groups: "0|1",
+            },
+          },
+        },
+        value: [
+          {
+            group_ids: [],
+          },
+        ],
+      });
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
+          />
+        </template>
+      );
+
+      const inputFields = new InputFieldsFromDOM();
+      const groupsSelector = selectKit(
+        `${inputFields.fields.group_ids.selector} .select-kit`
+      );
+
+      await groupsSelector.expand();
+
+      assert.false(
+        groupsSelector.rowByValue("0").exists(),
+        "everyone is not in the list"
+      );
+      assert.false(
+        groupsSelector.rowByValue("1").exists(),
+        "admins is not in the list"
+      );
+      assert.true(
+        groupsSelector.rowByValue("2").exists(),
+        "moderators is in the list"
+      );
+    });
+
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {
       const setting = ThemeSettings.create({
         setting: "objects_setting",
@@ -1268,9 +1410,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1287,6 +1429,13 @@ module(
       tree.refresh();
 
       assert.dom(tree.nodes[1].children[0].textElement).hasText("link 1");
+
+      await click(tree.nodes[0].element);
+      await click(REMOVE_ITEM_BTN);
+      tree.refresh();
+      assert
+        .dom(tree.nodes[0].textElement)
+        .hasText("section 1", "the remaining item is renumbered");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
@@ -1296,9 +1445,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1306,14 +1455,24 @@ module(
       const inputFields = new InputFieldsFromDOM();
       const tree = new TreeFromDOM();
 
+      await focus(inputFields.fields.name.inputElement);
       await fillIn(
         inputFields.fields.name.inputElement,
         "nice section is really nice"
       );
 
       assert
+        .dom(inputFields.fields.name.inputElement)
+        .isFocused("editing preserves the input and its focus");
+      assert
         .dom(tree.nodes[0].textElement)
         .hasText("nice section is really nice");
+
+      assert.strictEqual(
+        setting.value[0].name,
+        "nice section",
+        "unsaved edits do not mutate the setting"
+      );
 
       await click(tree.nodes[0].children[0].element);
 
@@ -1337,9 +1496,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1418,9 +1577,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1437,16 +1596,16 @@ module(
       assert.dom(inputFields.fields.name.labelElement).hasText("name");
     });
 
-    test("adding an object to the root list of objects", async function (assert) {
+    test("adding a parent and multiple nested objects", async function (assert) {
       const setting = schemaAndData(1);
 
       await render(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1464,6 +1623,20 @@ module(
       assert.true(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
+
+      await click(tree.nodes[2].addButtons[0]);
+      await click(TOP_LEVEL_ADD_BTN);
+      tree.refresh();
+
+      assert.strictEqual(
+        tree.nodes.length,
+        3,
+        "both children and the add button are visible"
+      );
+      assert
+        .dom(tree.nodes[1].textElement)
+        .hasText("level2 2", "the second child appears without reopening");
+      assert.true(tree.nodes[1].active, "the second child is selected");
     });
 
     test("adding an object to a child list of objects when an object has multiple objects properties", async function (assert) {
@@ -1510,9 +1683,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1537,9 +1710,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1571,9 +1744,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1595,33 +1768,46 @@ module(
       assert.dom(tree.nodes[3].textElement).hasText("level2 4");
     });
 
-    test("navigating 1 level deep and adding an object to a grandchild list of objects", async function (assert) {
+    test("adding multiple grandchildren to a newly added child", async function (assert) {
       const setting = schemaAndData(1);
 
       await render(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
 
       const tree = new TreeFromDOM();
 
-      await click(tree.nodes[0].children[0].element);
-      tree.refresh();
-
-      assert.dom(tree.nodes[0].addButtons[0]).hasText("level3");
-      assert.strictEqual(tree.nodes[0].children.length, 2);
-
       await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      assert.dom(tree.nodes[2].addButtons[0]).hasText("level3");
+      assert.strictEqual(tree.nodes[2].children.length, 0);
+
+      await click(tree.nodes[2].addButtons[0]);
+      await click(TOP_LEVEL_ADD_BTN);
 
       tree.refresh();
 
-      assert.dom(tree.nodes[2].textElement).hasText("level3 3");
+      assert.strictEqual(
+        tree.nodes.length,
+        3,
+        "both grandchildren and the add button are visible"
+      );
+      const inputFields = new InputFieldsFromDOM();
+      await fillIn(inputFields.fields.name.inputElement, "Second grandchild");
+      assert
+        .dom(tree.nodes[1].textElement)
+        .hasText(
+          "Second grandchild",
+          "the new grandchild is editable and updates its title"
+        );
     });
 
     test("removing an object from the root list of objects", async function (assert) {
@@ -1631,9 +1817,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1674,9 +1860,9 @@ module(
           <DialogHolder />
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1711,9 +1897,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1761,9 +1947,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1801,9 +1987,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1832,9 +2018,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1865,7 +2051,7 @@ module(
 );
 
 module(
-  "Integration | Admin | Plugins | Component | schema-setting/editor",
+  "Integration | Admin | Plugins | Component | SchemaSetting | Editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1890,9 +2076,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1929,9 +2115,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1983,9 +2169,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2032,9 +2218,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2068,9 +2254,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2110,9 +2296,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2184,9 +2370,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2284,9 +2470,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2354,9 +2540,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2384,9 +2570,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2423,9 +2609,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2468,9 +2654,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );

@@ -26,6 +26,7 @@ class UserSilencer
   end
 
   def silence
+    return false if @user.staff?
     hide_posts unless @opts[:keep_posts]
     return false if @user.silenced_till.present?
     @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
@@ -37,7 +38,7 @@ class UserSilencer
       context = "#{message_type}: #{@opts[:reason]}"
 
       if @by_user
-        log_params = { context: context, details: details }
+        log_params = { context: context, details: details, reviewable_id: @opts[:reviewable_id] }
         log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
 
         @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
@@ -89,15 +90,25 @@ class UserSilencer
         .where(user_id: @user.id, post_number: 1)
         .where("created_at > ?", 24.hours.ago)
         .pluck(:topic_id)
-    Topic.where(id: topic_ids).update_all(visible: false) unless topic_ids.empty?
+    unless topic_ids.empty?
+      Topic.where(id: topic_ids).update_all(visible: false)
+      CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
+    end
   end
 
   def unsilence
+    return false if @user.silenced_till.blank?
+
     @user.silenced_till = nil
     if @user.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)
       SystemMessage.create(@user, :unsilenced)
-      StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user
+      if @by_user
+        StaffActionLogger.new(@by_user).log_unsilence_user(
+          @user,
+          reviewable_id: @opts[:reviewable_id],
+        )
+      end
     end
   end
 

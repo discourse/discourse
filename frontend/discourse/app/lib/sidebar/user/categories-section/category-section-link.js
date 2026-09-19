@@ -114,55 +114,8 @@ export default class CategorySectionLink {
     this.refreshCounts();
   }
 
-  #countables() {
-    const countables = [];
-
-    if (this.#newNewViewEnabled) {
-      countables.push(UNREAD_AND_NEW_COUNTABLE);
-    } else {
-      countables.push(...DEFAULT_COUNTABLES);
-    }
-
-    if (customCountables.length > 0) {
-      customCountables.forEach((customCountable) => {
-        if (
-          !customCountable.shouldRegister ||
-          customCountable.shouldRegister({ category: this.category })
-        ) {
-          if (
-            customCountable?.prioritizeOverDefaults({
-              category: this.category,
-              currentUser: this.currentUser,
-            })
-          ) {
-            countables.unshift(customCountable);
-          } else {
-            countables.push(customCountable);
-          }
-        }
-      });
-    }
-
-    return countables;
-  }
-
   get showCount() {
     return this.currentUser?.sidebarShowCountOfNewItems;
-  }
-
-  @bind
-  refreshCounts() {
-    this.countables = this.#countables();
-
-    this.activeCountable = this.countables.find((countable) => {
-      const count = countable.refreshCountFunction({
-        topicTrackingState: this.topicTrackingState,
-        category: this.category,
-      });
-
-      set(this, countable.propertyName, count);
-      return count > 0;
-    });
   }
 
   get name() {
@@ -177,8 +130,10 @@ export default class CategorySectionLink {
     return "discovery.unreadCategory discovery.hotCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
   }
 
+  // The link text already names the category. A title here would only repeat
+  // the description as a mouse-only tooltip that screen readers announce.
   get title() {
-    return this.category.descriptionText;
+    return null;
   }
 
   get text() {
@@ -284,7 +239,54 @@ export default class CategorySectionLink {
     }
   }
 
-  get #newNewViewEnabled() {
-    return !!this.currentUser?.new_new_view_enabled;
+  get #unifiedNewEnabled() {
+    return !!this.currentUser?.unified_new_enabled;
+  }
+
+  @bind
+  refreshCounts() {
+    this.countables = this.#countables();
+
+    this.activeCountable = this.countables.find((countable) => {
+      const count = countable.refreshCountFunction({
+        topicTrackingState: this.topicTrackingState,
+        category: this.category,
+      });
+
+      set(this, countable.propertyName, count);
+      return count > 0;
+    });
+  }
+
+  #countables() {
+    const countables = [];
+
+    if (this.#unifiedNewEnabled) {
+      countables.push(UNREAD_AND_NEW_COUNTABLE);
+    } else {
+      countables.push(...DEFAULT_COUNTABLES);
+    }
+
+    if (customCountables.length > 0) {
+      customCountables.forEach((customCountable) => {
+        if (
+          !customCountable.shouldRegister ||
+          customCountable.shouldRegister({ category: this.category })
+        ) {
+          if (
+            customCountable?.prioritizeOverDefaults({
+              category: this.category,
+              currentUser: this.currentUser,
+            })
+          ) {
+            countables.unshift(customCountable);
+          } else {
+            countables.push(customCountable);
+          }
+        }
+      });
+    }
+
+    return countables;
   }
 }

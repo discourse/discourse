@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
 import { bind } from "discourse/lib/decorators";
 import { highlightPost } from "discourse/lib/utilities";
@@ -58,6 +57,44 @@ export default class DiscourseTopic extends Component {
     set(this, "topic.postStream", value);
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    this.scrollManager.bindScrolling(this);
+    window.addEventListener("resize", this.scrolled);
+    this.element.addEventListener("click", this._trackLinkClick);
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this.scrollManager.unbindScrolling(this);
+    window.removeEventListener("resize", this.scrolled);
+
+    // Unbind link tracking
+    this.element.removeEventListener("click", this._trackLinkClick);
+  }
+
+  gotFocus(hasFocus) {
+    if (hasFocus) {
+      this.scrolled();
+    }
+  }
+
+  // The user has scrolled the window, or it is finished rendering and ready for processing.
+  @bind
+  scrolled() {
+    if (this.isDestroying || this._state !== "inDOM") {
+      return;
+    }
+
+    const offset = window.pageYOffset || document.documentElement.scrollTop;
+    this.set("hasScrolled", offset > 0);
+
+    // Trigger a scrolled event
+    this.appEvents.trigger("topic:scrolled", offset);
+  }
+
   @observes("enteredAt")
   _enteredTopic() {
     // Ember is supposed to only call observers when values change but something
@@ -75,45 +112,10 @@ export default class DiscourseTopic extends Component {
     }
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    this.scrollManager.bindScrolling(this);
-    window.addEventListener("resize", this.scrolled);
-    $(this.element).on(
-      "click.discourse-redirect",
-      ".cooked a, a.track-link",
-      (e) => ClickTrack.trackClick(e, getOwner(this))
-    );
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.scrollManager.unbindScrolling(this);
-    window.removeEventListener("resize", this.scrolled);
-
-    // Unbind link tracking
-    $(this.element).off("click.discourse-redirect", ".cooked a, a.track-link");
-  }
-
-  gotFocus(hasFocus) {
-    if (hasFocus) {
-      this.scrolled();
-    }
-  }
-
-  // The user has scrolled the window, or it is finished rendering and ready for processing.
   @bind
-  scrolled() {
-    if (this.isDestroyed || this.isDestroying || this._state !== "inDOM") {
-      return;
+  _trackLinkClick(event) {
+    if (event.target.closest(".cooked a, a.track-link")) {
+      ClickTrack.trackClick(event, getOwner(this));
     }
-
-    const offset = window.pageYOffset || document.documentElement.scrollTop;
-    this.set("hasScrolled", offset > 0);
-
-    // Trigger a scrolled event
-    this.appEvents.trigger("topic:scrolled", offset);
   }
 }

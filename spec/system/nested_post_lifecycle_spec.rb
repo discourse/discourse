@@ -10,7 +10,10 @@ RSpec.describe "Nested view post lifecycle" do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
+  end
 
   describe "editing a post and saving" do
     fab!(:root_reply) do
@@ -190,7 +193,7 @@ RSpec.describe "Nested view post lifecycle" do
 
         expect(nested_view).to have_deleted_content_visible_for(root_reply)
         expect(page).to have_css(
-          ".nested-post__deleted-content",
+          ".nested-post__placeholder-reveal",
           text: "Secret deleted content here",
         )
       end
@@ -217,12 +220,11 @@ RSpec.describe "Nested view post lifecycle" do
     context "when logged in as regular user" do
       before { sign_in(user) }
 
-      it "does not show an eye button on deleted posts" do
+      it "hides deleted root leaves" do
         root_reply.update!(deleted_at: Time.current)
 
         nested_view.visit_nested(topic)
-        expect(nested_view).to have_deleted_placeholder_for(root_reply)
-        expect(nested_view).to have_no_toggle_deleted_content_button_for(root_reply)
+        expect(nested_view).to have_no_post(root_reply)
       end
     end
   end

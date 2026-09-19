@@ -1,0 +1,8 @@
+en:
+  site_settings:
+    zendesk_jobs_api_token: "Deprecated: Zendesk will permanently deactivate API tokens on April 30, 2027. Configure {{setting:zendesk_oauth_client_id}} and {{setting:zendesk_oauth_client_secret}} to use OAuth instead."
+    zendesk_oauth_client_id: "The unique client ID provided by your Zendesk application, used for the authentication process."
+    zendesk_oauth_client_secret: "Client secret of your Zendesk application."
+  dashboard:
+    problem:
+      zendesk_api_token_deprecation: "The Discourse Zendesk plugin uses deprecated API token authentication. Configure the <a href='%{base_path}/admin/site_settings/category/all_results?filter=zendesk_oauth'>Zendesk OAuth client ID and client secret settings</a> before April 30, 2027."

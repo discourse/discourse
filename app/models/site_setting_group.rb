@@ -27,7 +27,7 @@ class SiteSettingGroup < ActiveRecord::Base
 
   def self.can_access_db?
     !GlobalSetting.skip_redis? && !GlobalSetting.skip_db? &&
-      ActiveRecord::Base.connection.table_exists?(self.table_name)
+      ActiveRecord::Base.connection.table_exists?(table_name)
   end
 end
 

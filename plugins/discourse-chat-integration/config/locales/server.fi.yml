@@ -75,6 +75,8 @@ fi:
       removed: "Poistettiin %{removed}"
     provider:
       slack:
+        errors:
+          action_prohibited: "Botilla ei ole oikeuksia lähettää viestejä tälle kanavalle"
         status:
           header: |
             *Tämän kanavan säännöt*

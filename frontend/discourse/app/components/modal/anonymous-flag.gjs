@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DModal from "discourse/components/d-modal";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class AnonymousFlagModal extends Component {
@@ -26,10 +26,10 @@ export default class AnonymousFlagModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "anonymous_flagging.title"}}
-      @closeModal={{@closeModal}}
-      @bodyClass="anonymous-flag-modal__body"
       class="anonymous-flag-modal"
+      @bodyClass="anonymous-flag-modal__body"
+      @closeModal={{@closeModal}}
+      @title={{i18n "anonymous_flagging.title"}}
     >
       <:body>
         <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>

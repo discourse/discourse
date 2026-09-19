@@ -196,7 +196,7 @@ class DiscourseLti::LtiOmniauthStrategy
     html = <<~HTML
       <html>
         <head>
-          <script src="#{UrlHelper.absolute(script_path, GlobalSetting.cdn_url)}" nonce="#{ContentSecurityPolicy.try(:nonce_placeholder, response_headers)}"></script>
+          <script src="#{UrlHelper.absolute(script_path, GlobalSetting.cdn_url)}" nonce="#{ContentSecurityPolicy.try(:nonce_placeholder, response_headers, request_env: request.env)}"></script>
         </head>
         <body>
           <form method="post">

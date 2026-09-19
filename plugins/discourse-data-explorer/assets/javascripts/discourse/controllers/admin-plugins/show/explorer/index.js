@@ -12,7 +12,6 @@ import { i18n } from "discourse-i18n";
 
 export default class PluginsExplorerController extends Controller {
   @service dialog;
-  @service appEvents;
   @service router;
   @service store;
 
@@ -33,71 +32,23 @@ export default class PluginsExplorerController extends Controller {
     return this.params ? JSON.parse(this.params) : null;
   }
 
+  get _fetchParams() {
+    const params = {};
+    if (this._currentFilter) {
+      params.filter = this._currentFilter;
+    }
+    if (this.sortByProperty !== "last_run_at") {
+      params.order = this.sortByProperty;
+    }
+    if (!this.sortDescending) {
+      params.ascending = "true";
+    }
+    return params;
+  }
+
   addCreatedRecord(record) {
     this.model.content.push(record);
     this.router.transitionTo("adminPlugins.show.explorer.edit", record.id);
-  }
-
-  async _importQuery(file) {
-    const json = await this._readFileAsTextAsync(file);
-    const query = this._parseQuery(json);
-    const record = this.store.createRecord("query", query);
-    const response = await record.save();
-    return response.target;
-  }
-
-  _parseQuery(json) {
-    const parsed = JSON.parse(json);
-    const query = parsed.query;
-    if (!query || !query.sql) {
-      throw new TypeError();
-    }
-    query.id = 0; // 0 means no Id yet
-    return query;
-  }
-
-  _readFileAsTextAsync(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = reject;
-
-      reader.readAsText(file);
-    });
-  }
-
-  @bind
-  dragMove(e) {
-    if (!e.movementY && !e.movementX) {
-      return;
-    }
-
-    const editPane = document.querySelector(".query-editor");
-    const target = editPane.querySelector(".panels-flex");
-    const grippie = editPane.querySelector(".grippie");
-
-    // we need to get the initial height / width of edit pane
-    // before we manipulate the size
-    if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneWidth = target.clientWidth;
-      this.originalPaneHeight = target.clientHeight;
-    }
-
-    const newHeight = Math.max(
-      this.originalPaneHeight,
-      target.clientHeight + e.movementY
-    );
-    const newWidth = Math.max(
-      this.originalPaneWidth,
-      target.clientWidth + e.movementX
-    );
-
-    target.style.height = newHeight + "px";
-    target.style.width = newWidth + "px";
-    grippie.style.width = newWidth + "px";
-    this.appEvents.trigger("ace:resize");
   }
 
   @bind
@@ -163,18 +114,34 @@ export default class PluginsExplorerController extends Controller {
     }
   }
 
-  get _fetchParams() {
-    const params = {};
-    if (this._currentFilter) {
-      params.filter = this._currentFilter;
+  async _importQuery(file) {
+    const json = await this._readFileAsTextAsync(file);
+    const query = this._parseQuery(json);
+    const record = this.store.createRecord("query", query);
+    const response = await record.save();
+    return response.target;
+  }
+
+  _parseQuery(json) {
+    const parsed = JSON.parse(json);
+    const query = parsed.query;
+    if (!query || !query.sql) {
+      throw new TypeError();
     }
-    if (this.sortByProperty !== "last_run_at") {
-      params.order = this.sortByProperty;
-    }
-    if (!this.sortDescending) {
-      params.ascending = "true";
-    }
-    return params;
+    query.id = 0; // 0 means no Id yet
+    return query;
+  }
+
+  _readFileAsTextAsync(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
   }
 
   async _fetchQueries() {

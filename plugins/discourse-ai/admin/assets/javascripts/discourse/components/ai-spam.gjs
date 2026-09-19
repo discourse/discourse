@@ -6,18 +6,19 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DStatTiles from "discourse/components/d-stat-tiles";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DStatTiles from "discourse/ui-kit/d-stat-tiles";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import SpamTestModal from "./modal/spam-test-modal";
 
@@ -52,6 +53,66 @@ export default class AiSpam extends Component {
         },
       });
     }
+  }
+
+  get availableLLMs() {
+    return this.args.model?.available_llms || [];
+  }
+
+  get availableAgents() {
+    return this.args.model?.available_agents || [];
+  }
+
+  get toggleDisabled() {
+    return applyValueTransformer("ai-spam-toggle-disabled", false, {
+      spam: this.args.model,
+    });
+  }
+
+  get llmId() {
+    return this.selectedLLM;
+  }
+
+  get metrics() {
+    const detected = {
+      label: i18n("discourse_ai.spam.spam_detected"),
+      value: this.stats.spam_detected,
+    };
+
+    const falsePositives = {
+      label: i18n("discourse_ai.spam.false_positives"),
+      value: this.stats.false_positives,
+      tooltip: i18n("discourse_ai.spam.stat_tooltips.incorrectly_flagged"),
+    };
+
+    const falseNegatives = {
+      label: i18n("discourse_ai.spam.false_negatives"),
+      value: this.stats.false_negatives,
+      tooltip: i18n("discourse_ai.spam.stat_tooltips.missed_spam"),
+    };
+
+    if (this.args.model.flagging_username) {
+      detected.href = getURL(
+        `/review?flagged_by=${this.args.model.flagging_username}&status=all&sort_order=created_at`
+      );
+
+      falsePositives.href = getURL(
+        `/review?flagged_by=${this.args.model.flagging_username}&status=rejected&sort_order=created_at`
+      );
+
+      falseNegatives.href = getURL(
+        `/review?status=approved&sort_order=created_at&additional_filters={"ai_spam_false_negative":true}&order=created&score_type=${this.args.model.spam_score_type}`
+      );
+    }
+    return [
+      {
+        label: i18n("discourse_ai.spam.scanned_count"),
+        value: this.stats.scanned_count,
+      },
+      detected,
+      falsePositives,
+      falseNegatives,
+    ];
   }
 
   @action
@@ -102,16 +163,12 @@ export default class AiSpam extends Component {
     this.selectedAgentId = model.ai_agent_id;
   }
 
-  get availableLLMs() {
-    return this.args.model?.available_llms || [];
-  }
-
-  get availableAgents() {
-    return this.args.model?.available_agents || [];
-  }
-
   @action
   async toggleEnabled() {
+    if (this.toggleDisabled) {
+      return;
+    }
+
     this.isEnabled = !this.isEnabled;
     const data = { is_enabled: this.isEnabled };
     if (this.autoSelectedLLM) {
@@ -128,10 +185,6 @@ export default class AiSpam extends Component {
       this.isEnabled = !this.isEnabled;
       popupAjaxError(error);
     }
-  }
-
-  get llmId() {
-    return this.selectedLLM;
   }
 
   @action
@@ -174,55 +227,13 @@ export default class AiSpam extends Component {
     });
   }
 
-  get metrics() {
-    const detected = {
-      label: i18n("discourse_ai.spam.spam_detected"),
-      value: this.stats.spam_detected,
-    };
-
-    const falsePositives = {
-      label: i18n("discourse_ai.spam.false_positives"),
-      value: this.stats.false_positives,
-      tooltip: i18n("discourse_ai.spam.stat_tooltips.incorrectly_flagged"),
-    };
-
-    const falseNegatives = {
-      label: i18n("discourse_ai.spam.false_negatives"),
-      value: this.stats.false_negatives,
-      tooltip: i18n("discourse_ai.spam.stat_tooltips.missed_spam"),
-    };
-
-    if (this.args.model.flagging_username) {
-      detected.href = getURL(
-        `/review?flagged_by=${this.args.model.flagging_username}&status=all&sort_order=created_at`
-      );
-
-      falsePositives.href = getURL(
-        `/review?flagged_by=${this.args.model.flagging_username}&status=rejected&sort_order=created_at`
-      );
-
-      falseNegatives.href = getURL(
-        `/review?status=approved&sort_order=created_at&additional_filters={"ai_spam_false_negative":true}&order=created&score_type=${this.args.model.spam_score_type}`
-      );
-    }
-    return [
-      {
-        label: i18n("discourse_ai.spam.scanned_count"),
-        value: this.stats.scanned_count,
-      },
-      detected,
-      falsePositives,
-      falseNegatives,
-    ];
-  }
-
   <template>
     <div class="ai-spam">
       <section class="ai-spam__settings">
         <div class="ai-spam__errors">
           {{#each this.errors as |e|}}
             <div class="alert alert-error">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
               <p>{{e.message}}</p>
               <DButton
                 @action={{e.button.action}}
@@ -232,19 +243,24 @@ export default class AiSpam extends Component {
           {{/each}}
         </div>
         <DPageSubheader
-          @titleLabel={{i18n "discourse_ai.spam.title"}}
           @descriptionLabel={{i18n "discourse_ai.spam.spam_description"}}
+          @titleLabel={{i18n "discourse_ai.spam.title"}}
         />
         <div class="control-group ai-spam__enabled">
           <DToggleSwitch
             class="ai-spam__toggle"
-            @state={{this.isEnabled}}
+            disabled={{this.toggleDisabled}}
             @label="discourse_ai.spam.enable"
+            @state={{this.isEnabled}}
             {{on "click" this.toggleEnabled}}
           />
           <DTooltip
+            @content={{if
+              this.toggleDisabled
+              (i18n "discourse_ai.spam.enabled_locked_tip")
+              (i18n "discourse_ai.spam.spam_tip")
+            }}
             @icon="circle-question"
-            @content={{i18n "discourse_ai.spam.spam_tip"}}
           />
         </div>
 
@@ -254,10 +270,10 @@ export default class AiSpam extends Component {
             }}</label>
           {{#if this.availableLLMs.length}}
             <ComboBox
-              @value={{this.selectedLLM}}
+              class="ai-spam__llm-selector"
               @content={{this.availableLLMs}}
               @onChange={{this.updateLLM}}
-              class="ai-spam__llm-selector"
+              @value={{this.selectedLLM}}
             />
           {{else}}
             <span class="ai-spam__llm-placeholder">
@@ -273,10 +289,10 @@ export default class AiSpam extends Component {
               "discourse_ai.spam.select_agent"
             }}</label>
           <ComboBox
-            @value={{this.selectedAgentId}}
+            class="ai-spam__agent-selector"
             @content={{this.availableAgents}}
             @onChange={{this.updateAgent}}
-            class="ai-spam__agent-selector"
+            @value={{this.selectedAgentId}}
           />
         </div>
 
@@ -284,8 +300,8 @@ export default class AiSpam extends Component {
           <label class="ai-spam__instructions-label">
             {{i18n "discourse_ai.spam.custom_instructions"}}
             <DTooltip
-              @icon="circle-question"
               @content={{i18n "discourse_ai.spam.custom_instructions_help"}}
+              @icon="circle-question"
             />
           </label>
           <textarea
@@ -296,30 +312,30 @@ export default class AiSpam extends Component {
             {{on "input" (withEventValue (fn (mut this.customInstructions)))}}
           >{{this.customInstructions}}</textarea>
           <DButton
+            class="ai-spam__instructions-save btn-primary"
             @action={{this.save}}
             @label="discourse_ai.spam.save_button"
-            class="ai-spam__instructions-save btn-primary"
           />
           <DButton
+            class="btn-default"
             @action={{this.showTestModal}}
             @label="discourse_ai.spam.test_button"
-            class="btn-default"
           />
         </div>
       </section>
 
       <AdminConfigAreaCard
-        @heading="discourse_ai.spam.last_seven_days"
         class="ai-spam__stats"
+        @heading="discourse_ai.spam.last_seven_days"
       >
         <:content>
           <DStatTiles as |tiles|>
             {{#each this.metrics as |metric|}}
               <tiles.Tile
                 @label={{metric.label}}
+                @tooltip={{metric.tooltip}}
                 @url={{metric.href}}
                 @value={{metric.value}}
-                @tooltip={{metric.tooltip}}
               />
             {{/each}}
           </DStatTiles>

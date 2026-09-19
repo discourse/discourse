@@ -1,10 +1,10 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import BasicTopicList from "discourse/components/basic-topic-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import withEventValue from "discourse/helpers/with-event-value";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -12,49 +12,51 @@ export default <template>
     <div class="topic-search-div">
       <div class="inline-form full-width">
         <Input
-          {{on "input" (withEventValue @controller.onChangeFilter)}}
-          @value={{readonly @controller.search}}
-          @type="search"
-          placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
           autocomplete="off"
           class="no-blur"
+          placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
+          @type="search"
+          @value={{readonly @controller.search}}
+          {{on "input" (withEventValue @controller.onChangeFilter)}}
         />
       </div>
     </div>
 
-    <LoadMore
-      @selector=".paginated-topics-list .topic-list tr"
-      @action={{@controller.loadMore}}
+    <DLoadMore
       class="paginated-topics-list"
+      @action={{@controller.loadMore}}
+      @selector=".paginated-topics-list .topic-list tr"
     >
       <BasicTopicList
-        @topicList={{@controller.model}}
-        @hideCategory={{@controller.hideCategory}}
-        @showPosters={{@controller.showPosters}}
-        @bulkSelectEnabled={{@controller.bulkSelectEnabled}}
-        @canBulkSelect={{@controller.canBulkSelect}}
-        @selected={{@controller.selected}}
-        @hasIncoming={{@controller.hasIncoming}}
-        @incomingCount={{@controller.incomingCount}}
-        @showInserted={{@controller.showInserted}}
-        @tagsForUser={{@controller.tagsForUser}}
-        @changeSort={{@controller.changeSort}}
-        @toggleBulkSelect={{@controller.toggleBulkSelect}}
         @bulkSelectAction={{@controller.refresh}}
+        @bulkSelectEnabled={{@controller.bulkSelectEnabled}}
         @bulkSelectHelper={{@controller.bulkSelectHelper}}
-        @unassign={{@controller.unassign}}
-        @reassign={{@controller.reassign}}
-        @onScroll={{@controller.saveScrollPosition}}
-        @scrollOnLoad={{true}}
+        @canBulkSelect={{@controller.canBulkSelect}}
+        @changeSort={{@controller.changeSort}}
+        @hasIncoming={{@controller.hasIncoming}}
+        @hideCategory={{@controller.hideCategory}}
+        @incomingCount={{@controller.incomingCount}}
         @listContext="assigned"
+        @onScroll={{@controller.saveScrollPosition}}
+        @reassign={{@controller.reassign}}
+        @scrollOnLoad={{true}}
+        @selected={{@controller.selected}}
+        @showInserted={{@controller.showInserted}}
+        @showPosters={{@controller.showPosters}}
+        @tagsForUser={{@controller.tagsForUser}}
+        @toggleBulkSelect={{@controller.toggleBulkSelect}}
+        @topicList={{@controller.model}}
+        @unassign={{@controller.unassign}}
       />
 
-      <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
-    </LoadMore>
+      <DConditionalLoadingSpinner
+        @condition={{@controller.model.loadingMore}}
+      />
+    </DLoadMore>
   {{else}}
-    <EmptyState
-      @title={{i18n "discourse_assign.group_no_assignments_title"}}
+    <DEmptyState
       @body={{i18n "discourse_assign.group_no_assignments_body"}}
+      @title={{i18n "discourse_assign.group_no_assignments_title"}}
     />
   {{/if}}
 </template>

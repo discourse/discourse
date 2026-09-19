@@ -5,11 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function isColorOverriden(color) {
@@ -20,6 +20,26 @@ const Picker = class extends Component {
   @service toasts;
 
   @tracked invalid = false;
+
+  get displayedColor() {
+    const color = this.args.color.hex;
+    return normalizeHex(color);
+  }
+
+  get activeValue() {
+    const color = this.args.color.hex;
+
+    if (color) {
+      return `#${normalizeHex(color)}`;
+    }
+  }
+
+  get disabledEditForSystemDescription() {
+    if (!this.args.system) {
+      return null;
+    }
+    return i18n("admin.config_areas.color_palettes.blocked_edit_for_system");
+  }
 
   @action
   onInput(event) {
@@ -131,29 +151,9 @@ const Picker = class extends Component {
     }
   }
 
-  get displayedColor() {
-    const color = this.args.color.hex;
-    return normalizeHex(color);
-  }
-
-  get activeValue() {
-    const color = this.args.color.hex;
-
-    if (color) {
-      return `#${normalizeHex(color)}`;
-    }
-  }
-
-  get disabledEditForSystemDescription() {
-    if (!this.args.system) {
-      return null;
-    }
-    return i18n("admin.config_areas.color_palettes.blocked_edit_for_system");
-  }
-
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "color-palette-editor__picker"
         "form-kit__control-input"
         (if this.invalid "--invalid")
@@ -162,22 +162,22 @@ const Picker = class extends Component {
       <input
         class="color-palette-editor__input"
         data-position={{@position}}
-        type="color"
-        value={{this.activeValue}}
         disabled={{or @system @disabled}}
         title={{this.disabledEditForSystemDescription}}
+        type="color"
+        value={{this.activeValue}}
         {{on "input" this.onInput}}
         {{on "change" this.onChange}}
       />
       <div class="color-palette-editor__input-wrapper">
-        {{icon "hashtag" class="color-palette-editor__icon"}}
+        {{dIcon "hashtag" class="color-palette-editor__icon"}}
         <input
           class="color-palette-editor__text-input"
           data-position={{@position}}
-          type="text"
-          maxlength="6"
           disabled={{or @system @disabled}}
+          maxlength="6"
           title={{this.disabledEditForSystemDescription}}
+          type="text"
           value={{this.displayedColor}}
           {{on "keypress" this.onTextKeypress}}
           {{on "change" this.onTextChange}}
@@ -206,8 +206,8 @@ export default class ColorPaletteEditor extends Component {
       <div class="color-palette-editor__colors-list">
         {{#each @colors as |color index|}}
           <div
-            data-color-name={{color.name}}
             class="color-palette-editor__colors-item"
+            data-color-name={{color.name}}
           >
             <div class="color-palette-editor__color-info">
               <div
@@ -228,22 +228,22 @@ export default class ColorPaletteEditor extends Component {
             <div class="color-palette-editor__color-controls">
               <Picker
                 @color={{color}}
-                @position={{index}}
-                @totalColors={{@colors.length}}
+                @disabled={{@disabled}}
                 @editorElement={{this.editorElement}}
                 @onChange={{fn @onColorChange color}}
+                @position={{index}}
                 @system={{@system}}
-                @disabled={{@disabled}}
+                @totalColors={{@colors.length}}
               />
               {{#unless @disabled}}
                 <DButton
-                  class={{concatClass
+                  class={{dConcatClass
                     "btn-flat"
                     "color-palette-editor__revert"
                     (unless (isColorOverriden color) "--hidden")
                   }}
-                  @icon="arrow-rotate-left"
                   @action={{fn this.revert color}}
+                  @icon="arrow-rotate-left"
                 />
               {{/unless}}
             </div>

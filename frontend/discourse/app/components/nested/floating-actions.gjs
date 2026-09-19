@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class NestedFloatingActions extends Component {
@@ -17,12 +18,25 @@ export default class NestedFloatingActions extends Component {
   topicRoute = getOwner(this).lookup("route:topic");
 
   get canCreatePost() {
-    return this.currentUser && this.args.topic?.details?.can_create_post;
+    return this.args.topic?.details?.can_create_post;
+  }
+
+  get showReplyButton() {
+    return !this.currentUser || this.canCreatePost;
+  }
+
+  @action
+  reply() {
+    if (!this.currentUser) {
+      return getOwner(this).lookup("route:application").send("showLogin");
+    }
+
+    return this.args.replyAction?.();
   }
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "nested-view__floating-actions"
         (if this.composer.visible "--hidden")
       }}
@@ -33,33 +47,33 @@ export default class NestedFloatingActions extends Component {
       />
 
       {{#if this.currentUser}}
-        <TopicNotificationsButton @topic={{@topic}} @expanded={{false}} />
+        <TopicNotificationsButton @expanded={{false}} @topic={{@topic}} />
       {{/if}}
 
       <TopicAdminMenu
-        @topic={{@topic}}
-        @toggleMultiSelect={{this.topicController.toggleMultiSelect}}
+        @convertToPrivateMessage={{this.topicController.convertToPrivateMessage}}
+        @convertToPublicTopic={{this.topicController.convertToPublicTopic}}
         @deleteTopic={{this.topicController.deleteTopic}}
         @recoverTopic={{this.topicController.recoverTopic}}
-        @toggleClosed={{this.topicController.toggleClosed}}
-        @toggleArchived={{this.topicController.toggleArchived}}
-        @toggleVisibility={{this.topicController.toggleVisibility}}
         @resetBumpDate={{this.topicController.resetBumpDate}}
-        @convertToPublicTopic={{this.topicController.convertToPublicTopic}}
-        @convertToPrivateMessage={{this.topicController.convertToPrivateMessage}}
+        @showChangeTimestamp={{this.topicRoute.showChangeTimestamp}}
+        @showFeatureTopic={{this.topicRoute.showFeatureTopic}}
         @showTopicSlowModeUpdate={{this.topicRoute.showTopicSlowModeUpdate}}
         @showTopicTimerModal={{this.topicRoute.showTopicTimerModal}}
-        @showFeatureTopic={{this.topicRoute.showFeatureTopic}}
-        @showChangeTimestamp={{this.topicRoute.showChangeTimestamp}}
+        @toggleArchived={{this.topicController.toggleArchived}}
+        @toggleClosed={{this.topicController.toggleClosed}}
+        @toggleMultiSelect={{this.topicController.toggleMultiSelect}}
+        @toggleVisibility={{this.topicController.toggleVisibility}}
+        @topic={{@topic}}
       />
 
-      {{#if this.canCreatePost}}
+      {{#if this.showReplyButton}}
         <DButton
           class="btn-primary nested-view__floating-reply"
-          @action={{@replyAction}}
+          title={{i18n "topic.reply.help"}}
+          @action={{this.reply}}
           @icon="reply"
           @label="topic.reply.title"
-          title={{i18n "topic.reply.help"}}
         />
       {{/if}}
     </div>

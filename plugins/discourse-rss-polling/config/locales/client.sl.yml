@@ -11,3 +11,13 @@ sl:
         feed_url: URL
         discourse_category: Kategorija
         discourse_tags: Oznake
+        feeds:
+          edit: Uredi
+          delete: Izbriši
+          save: Shrani
+        test:
+          title: Predogled
+          dismiss: Opusti
+        status:
+          enabled: Vključeno
+          disabled: Onemogočeno

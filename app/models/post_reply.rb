@@ -11,7 +11,7 @@ class PostReply < ActiveRecord::Base
 
   def ensure_same_topic
     if post.topic_id != reply.topic_id
-      self.errors.add(:base, I18n.t("activerecord.errors.models.post_reply.base.different_topic"))
+      errors.add(:base, I18n.t("activerecord.errors.models.post_reply.base.different_topic"))
     end
   end
 end
@@ -20,9 +20,9 @@ end
 #
 # Table name: post_replies
 #
-#  post_id       :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  post_id       :integer
 #  reply_post_id :integer
 #
 # Indexes

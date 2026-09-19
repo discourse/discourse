@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "使用 Apple 登錄"
+        sr_title: "使用 Apple 登錄"
+        message: "使用 Apple 進行身份驗證"

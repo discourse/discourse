@@ -2,15 +2,17 @@ import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import AdComponent from "./ad-component";
 
 const adIndex = {
+  above_site_header: null,
   topic_list_top: null,
   topic_above_post_stream: null,
   topic_above_suggested: null,
   post_bottom: null,
   topic_list_between: null,
+  nested_roots_between: null,
 };
 
 @tagName("")
@@ -36,40 +38,34 @@ export default class HouseAd extends AdComponent {
     return this.showAd ? `house-${this.placement}` : "";
   }
 
-  @computed(
-    "showToGroups",
-    "showAfterPost",
-    "showAfterTopicListItem",
-    "showOnCurrentPage"
-  )
+  @computed("showToGroups", "showAfterPlacement", "showOnCurrentPage")
   get showAd() {
     return (
-      this.showToGroups &&
-      (this.showAfterPost || this.showAfterTopicListItem) &&
-      this.showOnCurrentPage
+      this.showToGroups && this.showAfterPlacement && this.showOnCurrentPage
     );
   }
 
-  @computed("postNumber", "placement")
-  get showAfterPost() {
-    if (!this.postNumber && this.placement !== "topic-list-between") {
-      return true;
+  @computed("placement", "postNumber", "indexNumber")
+  get showAfterPlacement() {
+    if (this.placement === "topic-list-between") {
+      return this.isNthTopicListItem(
+        parseInt(this.site.get("house_creatives.settings.after_nth_topic"), 10)
+      );
     }
 
-    return this.isNthPost(
-      parseInt(this.site.get("house_creatives.settings.after_nth_post"), 10)
-    );
-  }
-
-  @computed("placement")
-  get showAfterTopicListItem() {
-    if (this.placement !== "topic-list-between") {
-      return true;
+    if (this.placement === "nested-roots-between") {
+      return this.isNthTopicListItem(
+        parseInt(this.site.get("house_creatives.settings.after_nth_root"), 10)
+      );
     }
 
-    return this.isNthTopicListItem(
-      parseInt(this.site.get("house_creatives.settings.after_nth_topic"), 10)
-    );
+    if (this.postNumber) {
+      return this.isNthPost(
+        parseInt(this.site.get("house_creatives.settings.after_nth_post"), 10)
+      );
+    }
+
+    return true;
   }
 
   chooseAdHtml() {
@@ -188,7 +184,7 @@ export default class HouseAd extends AdComponent {
   }
 
   <template>
-    <div class={{concatClass "house-creative" this.adUnitClass}} ...attributes>
+    <div class={{dConcatClass "house-creative" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
         {{trustHTML this.adHtml}}
       {{/if}}

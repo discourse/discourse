@@ -1,12 +1,12 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import ScreenedIpAddressForm from "discourse/admin/components/screened-ip-address-form";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import TextField from "discourse/components/text-field";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,26 +18,26 @@ export default <template>
 
   <div class="screened-ip-controls">
     <div class="filter-screened-ip-address inline-form">
-      <TextField
-        @value={{@controller.filter}}
-        @placeholderKey="admin.logs.screened_ips.form.filter"
-        @autocorrect="off"
-        @autocapitalize="off"
+      <DTextField
         class="ip-address-input"
+        @autocapitalize="off"
+        @autocorrect="off"
+        @placeholderKey="admin.logs.screened_ips.form.filter"
+        @value={{@controller.filter}}
       />
       <DButton
+        class="btn-default"
         @action={{@controller.exportScreenedIpList}}
         @icon="download"
-        @title="admin.export_csv.button_title.screened_ip"
         @label="admin.export_csv.button_text"
-        class="btn-default"
+        @title="admin.export_csv.button_title.screened_ip"
       />
     </div>
 
     <ScreenedIpAddressForm @action={{@controller.recordAdded}} />
   </div>
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     {{#if @controller.model.length}}
       <table class="admin-logs-table screened-ip-addresses grid">
         <thead class="heading-container">
@@ -61,15 +61,15 @@ export default <template>
             <tr class="admin-list-item">
               <td class="col first ip_address">
                 {{#if item.editing}}
-                  <TextField
-                    @value={{item.ip_address}}
+                  <DTextField
                     @autofocus="autofocus"
+                    @value={{item.ip_address}}
                   />
                 {{else}}
                   <a
+                    class="inline-editable-field"
                     href
                     {{on "click" (fn @controller.edit item)}}
-                    class="inline-editable-field"
                   >
                     {{#if item.isRange}}
                       <strong>{{item.ip_address}}</strong>
@@ -81,9 +81,9 @@ export default <template>
               </td>
               <td class="col action">
                 {{#if item.isBlocked}}
-                  {{icon "ban"}}
+                  {{dIcon "ban"}}
                 {{else}}
-                  {{icon "check"}}
+                  {{dIcon "check"}}
                 {{/if}}
                 {{item.actionName}}
               </td>
@@ -93,50 +93,50 @@ export default <template>
               </td>
               <td class="col created_at">
                 <div class="label">{{i18n "admin.logs.created_at"}}</div>
-                {{ageWithTooltip item.created_at}}
+                {{dAgeWithTooltip item.created_at}}
               </td>
               <td class="col last_match_at">
                 {{#if item.last_match_at}}
                   <div class="label">{{i18n "admin.logs.last_match_at"}}</div>
-                  {{ageWithTooltip item.last_match_at}}
+                  {{dAgeWithTooltip item.last_match_at}}
                 {{/if}}
               </td>
               <td class="col actions">
                 {{#if item.editing}}
                   <DButton
+                    class="btn-default"
                     @action={{fn @controller.save item}}
                     @label="admin.logs.save"
-                    class="btn-default"
                   />
                   <DButton
+                    class="btn-flat"
                     @action={{fn @controller.cancel item}}
                     @translatedLabel={{i18n "cancel"}}
-                    class="btn-flat"
                   />
                 {{else}}
                   <DButton
+                    class="btn-default btn-danger"
                     @action={{fn @controller.destroyRecord item}}
                     @icon="trash-can"
-                    class="btn-default btn-danger"
                   />
                   <DButton
+                    class="btn-default"
                     @action={{fn @controller.edit item}}
                     @icon="pencil"
-                    class="btn-default"
                   />
                   {{#if item.isBlocked}}
                     <DButton
+                      class="btn-default"
                       @action={{fn @controller.allow item}}
                       @icon="check"
                       @label="admin.logs.screened_ips.actions.do_nothing"
-                      class="btn-default"
                     />
                   {{else}}
                     <DButton
+                      class="btn-default"
                       @action={{fn @controller.block item}}
                       @icon="ban"
                       @label="admin.logs.screened_ips.actions.block"
-                      class="btn-default"
                     />
                   {{/if}}
                 {{/if}}
@@ -148,5 +148,5 @@ export default <template>
     {{else}}
       {{i18n "search.no_results"}}
     {{/if}}
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

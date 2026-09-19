@@ -81,30 +81,30 @@ export default class ReviewableNoteForm extends Component {
   <template>
     <div class="reviewable-note-form">
       <Form
-        @data={{hash content=""}}
-        @onSubmit={{this.onSubmit}}
-        @onRegisterApi={{this.registerApi}}
-        @onDirtyCheck={{this.onDirtyCheck}}
         class="reviewable-note-form__form"
+        @data={{hash content=""}}
+        @onDirtyCheck={{this.onDirtyCheck}}
+        @onRegisterApi={{this.registerApi}}
+        @onSubmit={{this.onSubmit}}
         as |form|
       >
         <form.Field
-          @name="content"
-          @type="textarea"
-          @title={{i18n "review.notes.add_note_description"}}
           @format="full"
+          @name="content"
+          @title={{i18n "review.notes.add_note_description"}}
+          @type="textarea"
           @validation="required:trim|length:1,2000"
           as |field|
         >
           <div class="reviewable-note-form__textarea-wrapper">
             <field.Control
-              @height={{80}}
-              placeholder={{i18n "review.notes.placeholder"}}
               class="reviewable-note-form__textarea"
+              placeholder={{i18n "review.notes.placeholder"}}
+              @height={{80}}
             />
             <PluginOutlet
-              @name="reviewable-note-form-after-note"
               @connectorTagName="div"
+              @name="reviewable-note-form-after-note"
               @outletArgs={{lazyHash form=form reviewable=@reviewable}}
             />
           </div>
@@ -112,8 +112,8 @@ export default class ReviewableNoteForm extends Component {
 
         <form.Actions>
           <form.Submit
-            @label="review.notes.add_note_button"
             class="btn-small btn-primary"
+            @label="review.notes.add_note_button"
           />
         </form.Actions>
       </Form>

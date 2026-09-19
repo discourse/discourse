@@ -28,6 +28,21 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       expect(result).to eq({ "result" => "ok" })
     end
 
+    it "combines multiple LLM text blocks before returning them to scripts" do
+      tool.update!(script: <<~JS)
+          function invoke() {
+            return { result: llm.generate("Generate a greeting") };
+          }
+        JS
+      result = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([["hello ", "world"]]) do
+        runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+        result = runner.invoke
+      end
+
+      expect(result["result"]).to eq("hello world")
+    end
+
     it "exposes discourse.baseUrl" do
       tool.update!(script: "function invoke() { return { baseUrl: discourse.baseUrl }; }")
       runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)

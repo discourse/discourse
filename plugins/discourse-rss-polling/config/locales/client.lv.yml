@@ -11,3 +11,13 @@ lv:
         feed_url: URL
         discourse_category: Sadaļa
         discourse_tags: Birkas
+        feeds:
+          edit: Labot
+          delete: Dzēst
+          save: Saglabāt
+        test:
+          title: Priekšskatījums
+          dismiss: Nerādīt
+        status:
+          enabled: Ieslēgts
+          disabled: Atslēgt

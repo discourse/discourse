@@ -17,7 +17,6 @@ sv:
     openid_connect_allow_association_change: "Tillåt att användare kopplar från och återansluter sina Discourse-konton hos OpenID Connect-leverantören"
     openid_connect_verbose_logging: "Logga detaljerad openid-connect-autentiseringsinformation i `/logs`. Låt detta förbli inaktiverat under normal användning."
     openid_connect_authorize_parameters: "URL-parametrar som kommer att omfattas i omdirigeringen från /auth/oidc till IDP:ns auktoriseringsslutpunkt"
-    openid_connect_overrides_email: "Vid varje inloggning, åsidosätt användarens e-postadress med hjälp av värdet för openid-connect. Fungerar precis som inställningen 'auth_overrides_email', men är specifik för OpenID Connect-inloggningar."
     openid_connect_claims: "Definiera uttryckligen kraven för användning av leverantörer som inte skickar tillbaka data baserat på omfång. (JSON)"
   login:
     omniauth_error:

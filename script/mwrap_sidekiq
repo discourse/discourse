@@ -84,7 +84,7 @@ def mwrap_log
 end
 
 Thread.new do
-  begin
+  
     puts "Starting Logging Thread"
     path = "/tmp/mwrap_#{Process.pid}"
     `mkdir -p #{path}`
@@ -99,7 +99,7 @@ Thread.new do
   rescue => e
     STDERR.puts "ERROR crashed logger #{e}"
     STDERR.puts e.backtrace
-  end
+  
 end
 
 Thread.new do

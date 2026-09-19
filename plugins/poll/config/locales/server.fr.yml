@@ -41,6 +41,8 @@ fr:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Vous ne pouvez pas modifier un sondage après les %{minutes} premières minutes."
       cannot_edit_named_poll_with_votes: "Vous ne pouvez pas modifier le nom du sondage <strong>${name}</strong> après les %{minutes} premières minutes."
+    dynamic_poll:
+      enabled_hint: "Des options peuvent être ajoutées ou supprimées."
     no_poll_with_this_name: "Aucun sondage nommé <strong>%{name}</strong> n'est associé à ce message."
     post_is_deleted: "Impossible d'agir sur un message supprimé."
     user_cant_post_in_topic: "Vous ne pouvez pas voter parce que vous ne pouvez pas publier dans ce sujet."

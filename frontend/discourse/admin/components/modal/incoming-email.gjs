@@ -1,13 +1,13 @@
 import { Textarea } from "@ember/component";
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const IncomingEmail = <template>
   <DModal
     class="admin-incoming-email-modal"
-    @title={{i18n "admin.email.incoming_emails.modal.title"}}
-    @closeModal={{@closeModal}}
     @bodyClass="incoming-emails"
+    @closeModal={{@closeModal}}
+    @title={{i18n "admin.email.incoming_emails.modal.title"}}
   >
     <:body>
       {{#if @model.error}}
@@ -33,7 +33,7 @@ const IncomingEmail = <template>
       <div class="control-group">
         <label>{{i18n "admin.email.incoming_emails.modal.headers"}}</label>
         <div class="controls">
-          <Textarea @value={{@model.headers}} wrap="off" />
+          <Textarea wrap="off" @value={{@model.headers}} />
         </div>
       </div>
 

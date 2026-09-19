@@ -37,6 +37,27 @@ RSpec.describe UserSuspender do
       }.from(0).to(1)
     end
 
+    it "links the staff action log to the reviewable when passed via opts" do
+      reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
+      suspender =
+        UserSuspender.new(
+          user,
+          suspended_till: 5.hours.from_now,
+          reason: "because",
+          by_user: admin,
+          post_id: post.id,
+          message: "you have been suspended",
+          reviewable_id: reviewable.id,
+        )
+
+      expect { suspender.suspend }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:suspend_user],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
     it "logs the user out" do
       messages = MessageBus.track_publish("/logout/#{user.id}") { suspend_user }
       expect(messages.size).to eq(1)

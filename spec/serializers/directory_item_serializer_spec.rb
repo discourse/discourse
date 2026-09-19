@@ -91,7 +91,11 @@ RSpec.describe DirectoryItemSerializer do
   private
 
   def serialized_payload(serializer_opts)
-    serializer = DirectoryItemSerializer.new(DirectoryItem.find_by(user: user), serializer_opts)
+    serializer =
+      DirectoryItemSerializer.new(
+        DirectoryItem.find_by(user: user),
+        serializer_opts.merge(scope: Guardian.new(user)),
+      )
     serializer.as_json.dig(:directory_item, :user, :user_fields)
   end
 end

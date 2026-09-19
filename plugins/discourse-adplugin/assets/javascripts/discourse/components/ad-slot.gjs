@@ -37,12 +37,14 @@ const adConfig = EmberObject.create({
     enabledSetting: false,
     nthPost: "amazon_nth_post_code",
     desktop: {
+      "above-site-header": "amazon_above_site_header_src_code",
       "topic-list-top": "amazon_topic_list_top_src_code",
       "post-bottom": "amazon_post_bottom_src_code",
       "topic-above-post-stream": "amazon_topic_above_post_stream_src_code",
       "topic-above-suggested": "amazon_topic_above_suggested_src_code",
     },
     mobile: {
+      "above-site-header": "amazon_mobile_above_site_header_src_code",
       "topic-list-top": "amazon_mobile_topic_list_top_src_code",
       "post-bottom": "amazon_mobile_post_bottom_src_code",
       "topic-above-post-stream":
@@ -54,6 +56,7 @@ const adConfig = EmberObject.create({
     settingPrefix: "carbonads",
     enabledSetting: "carbonads_serve_id",
     desktop: {
+      "above-site-header": "carbonads_above_site_header_enabled",
       "topic-list-top": "carbonads_topic_list_top_enabled",
       "post-bottom": false,
       "topic-above-post-stream": "carbonads_above_post_stream_enabled",
@@ -64,12 +67,14 @@ const adConfig = EmberObject.create({
     settingPrefix: "adbutler",
     enabledSetting: "adbutler_publisher_id",
     desktop: {
+      "above-site-header": "adbutler_above_site_header_zone_id",
       "topic-list-top": "adbutler_topic_list_top_zone_id",
       "post-bottom": "adbutler_post_bottom_zone_id",
       "topic-above-post-stream": "adbutler_topic_above_post_stream_zone_id",
       "topic-above-suggested": "adbutler_topic_above_suggested_zone_id",
     },
     mobile: {
+      "above-site-header": "adbutler_mobile_above_site_header_zone_id",
       "topic-list-top": "adbutler_mobile_topic_list_top_zone_id",
       "post-bottom": "adbutler_mobile_post_bottom_zone_id",
       "topic-above-post-stream":
@@ -137,10 +142,18 @@ export function slotContenders(
         indexNumber
       );
 
+    const canBePlacedInBetweenNestedRoots =
+      placeUnderscored === "nested_roots_between" &&
+      isNthTopicListItem(
+        parseInt(houseAds.settings.after_nth_root, 10),
+        indexNumber
+      );
+
     if (
       adAvailable &&
       (notPlacingBetweenTopics ||
         canBePlacedInBetweenTopics ||
+        canBePlacedInBetweenNestedRoots ||
         isNthPost(parseInt(houseAds.settings.after_nth_post, 10), postNumber))
     ) {
       types.push("house-ad");
@@ -149,8 +162,7 @@ export function slotContenders(
 
   Object.keys(adConfig).forEach((adNetwork) => {
     const config = adConfig[adNetwork];
-    let settingNames = null,
-      name;
+    let settingNames, name;
 
     if (
       _isNetworkAvailable(siteSettings, config.enabledSetting) &&
@@ -214,16 +226,31 @@ export default class AdSlot extends AdComponent {
    */
   @computed("placement", "availableAdTypes", "router.currentRoute")
   get adComponentNames() {
-    if (
-      !this.availableAdTypes.includes("house-ad") ||
-      this.availableAdTypes.length === 1
-    ) {
-      // Current behaviour is to allow multiple ads from different networks
-      // to show in the same place. We could change this to choose one somehow.
+    if (!this.availableAdTypes.includes("house-ad")) {
+      // No house ads here -- network ads are shown as-is. Current behaviour
+      // is to allow multiple ads from different networks to show in the
+      // same place.
       return this.availableAdTypes;
     }
 
     const houseAds = this.site.get("house_creatives");
+
+    // House ads are the only configured ad type in this slot. Honour
+    // house_ads_frequency as a probability of showing an ad at all, so a
+    // site running only house ads can have them appear some of the time
+    // rather than every eligible slot (avoiding banner-blindness). When
+    // networks are also available the ratio logic below applies instead.
+    if (this.availableAdTypes.length === 1) {
+      const frequency = houseAds.settings.house_ads_frequency ?? 100;
+      if (frequency >= 100) {
+        return ["house-ad"];
+      }
+      if (frequency <= 0) {
+        return [];
+      }
+      return Math.random() * 100 < frequency ? ["house-ad"] : [];
+    }
+
     let houseAdsSkipped = false;
 
     if (houseAds.settings.house_ads_frequency === 100) {
@@ -262,12 +289,12 @@ export default class AdSlot extends AdComponent {
       {{! Trick to force full destroy/re-render of component when route changes }}
       {{#each (array this.router.currentRoute)}}
         <Ad
-          @placement={{this.placement}}
           @category={{this.category}}
-          @postNumber={{this.postNumber}}
-          @indexNumber={{this.indexNumber}}
-          @tagName={{this.childTagName}}
           @colspan={{this.colspan}}
+          @indexNumber={{this.indexNumber}}
+          @placement={{this.placement}}
+          @postNumber={{this.postNumber}}
+          @tagName={{this.childTagName}}
         />
       {{/each}}
     {{/each}}

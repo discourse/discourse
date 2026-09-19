@@ -75,6 +75,8 @@ hu:
         close: "Rögzített üzenetek bezárása"
         pinned_by_you: "Általad rögzített"
         pinned_by_user: "%{username} által rögzítve"
+      pinned_bar:
+        title: "Kiemelt"
       no_pinned_messages: "Nincs rögzített üzenet ebben a csatornában."
       pin_message: "Üzenet rögzítése"
       unpin_message: "Üzenet rögzítésének feloldása"
@@ -134,7 +136,7 @@ hu:
         process_started: "A csatorna törlése megkezdődött. Ez a kérdésablak hamarosan bezárul, és már nem fogja látni a törölt csatornát."
       channels_list_popup:
         browse: "Csatornák böngészése"
-        create: "Új csatorna"
+        create: "Új csatorna..."
       close: "Lezárás"
       remove: "Eltávolítás"
       collapse: "Csevegési fiók összecsukása"
@@ -149,8 +151,6 @@ hu:
       muted: "némítva"
       joined: "csatlakozott"
       empty_state:
-        direct_message_cta: "Személyes csevegés indítása"
-        direct_message: "Személyes csevegést is indíthat egy vagy több felhasználóval."
         title: "Nem található csatorna"
         my_threads: "Még nincsenek szálai. A szálak, amelyekben részt vesz, itt fognak megjelenni."
       email_frequency:
@@ -166,12 +166,6 @@ hu:
         never: "Soha"
       separate_sidebar_mode:
         title: "Külön oldalsávos módok megjelenítése a fórum és a chat számára"
-      send_shortcut:
-        title: "Parancsikon küldése"
-        enter:
-          label: "Küldés Enterrel"
-        meta_enter:
-          label: "Küldés %{meta_key} + Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Megjelölés"
       emoji: "Emodzsi beszúrása"
@@ -214,8 +208,6 @@ hu:
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       chat_notifications_title: "Csevegési értesítések"
-      only_chat_push_notifications:
-        title: "Csak csevegési leküldéses értesítések küldése"
       personalization_title: "Személyre szabás"
       ignore_channel_wide_mention:
         title: "A csatornaszintű említések figyelmen kívül hagyása"
@@ -264,8 +256,6 @@ hu:
         title: "Asztali csevegőértesítés hangja"
       sounds:
         none: "Egyik sem"
-        bell: "Harang"
-        ding: "Csengettyű"
       title: "csevegés"
       title_capitalized: "Csevegés"
       upload: "Fájl csatolása"
@@ -296,6 +286,8 @@ hu:
         filter_closed: Lezárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint
+        filter_joined_all: "Összes"
+        filter_joined_joined: "Csatlakozott"
       chat_message_separator:
         today: Ma
         yesterday: Tegnap
@@ -346,8 +338,6 @@ hu:
         input_placeholder: Név hozzáadása
         slug_description: Az URL-ben a csatornanév helyett egy csatorna azonosító szerepel
         name: Csatorna neve
-        slug: Csatornaazonosító (nem kötelező)
-        emoji: Csatorna emoji (opcionális)
         reset_emoji: Emoji visszaállítása
       channel_edit_description_modal:
         title: Leírás szerkesztése
@@ -369,6 +359,9 @@ hu:
         memberships_count:
           one: "%{count} tag"
           other: "%{count} tag"
+        preview_card:
+          log_in: "Bejelentkezés"
+          sign_up: "Regisztráció"
       create_channel:
         threading:
           label: "Szálak engedélyezése"
@@ -405,16 +398,14 @@ hu:
             one: 'A %{group} és a %{count} egyéb csoport felhasználói a <a href="%{settingLink}" target="_blank">biztonsági beállítások</a> szerint hozzáférhetnek ehhez a csatornához.'
             other: 'A %{group} és a %{count} egyéb csoport felhasználói a <a href="%{settingLink}" target="_blank">biztonsági beállítások</a> szerint hozzáférhetnek ehhez a csatornához.'
         create: "Csatorna létrehozása"
-        description: "Leírás (nem kötelező)"
+        description: "Leírás"
         name: "Csatorna neve"
-        slug: "Csatornaazonosító (nem kötelező)"
         title: "Új csatorna"
         type: "Típus"
         types:
           category: "Kategória"
           topic: "Téma"
         emoji:
-          label: "Csatorna emoji (opcionális)"
           reset: "Emoji visszaállítása"
       reviewable:
         type: "Csevegőüzenet"
@@ -496,14 +487,19 @@ hu:
       direct_messages:
         title: "PÜ-k"
         aria_label: "Váltás privát üzenetekre"
-        new: "Személyes csevegés létrehozása"
+        new_group: "Új csoportos csevegés"
         create: "Ugrás"
-        leave: "Személyes csevegés elhagyása"
-        close: "Személyes csevegés bezárása"
+        leave: "Csatorna elhagyása"
+        close: "Csatorna bezárása"
         cannot_create: "Sajnos nem tud közvetlen üzeneteket küldeni."
       channel_list:
         title: "Csatornák"
         aria_label: "Váltás a csatornalistára"
+        options:
+          filter: "Szűr"
+        filter:
+          all: "Összes csatorna"
+          mentions: "Említések"
       incoming_webhooks:
         back: "Vissza"
         channel_placeholder: "Válasszon csatornát"
@@ -658,11 +654,6 @@ hu:
           direct_html: '<span>%{username}</span> <span>megemlítette Önt a következő csatornán: „%{channel}”</span>'
           other_plain: 'megemlítette %{identifier} felhasználót a következő csatornán: „%{channel}”'
           other_html: '<span>%{username}</span> <span>megemlítette %{identifier} felhasználót a következő csatornán: „%{channel}”</span>'
-        direct_message_chat_mention:
-          direct: "megemlítette Önt egy személyes csevegésben"
-          direct_html: "<span>%{username}</span> <span>megemlítette Önt egy személyes csevegésben</span>"
-          other_plain: "megemlítette %{identifier} felhasználót egy személyes csevegésben"
-          other_html: "<span>%{username}</span> <span>megemlítette %{identifier} felhasználót egy személyes csevegésben</span>"
         chat_message: "Új csevegőüzenet"
         chat_quoted: "%{username} idézte a csevegőüzenetét"
       titles:
@@ -732,9 +723,24 @@ hu:
         chat:
           title: Csevegés
     sidebar:
-      start_new_dm:
-        text: Új privát beszélgetés
-        title: Személyes csevegés létrehozása
       panels:
         chat:
           label: "Csevegés"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Csevegőüzenet küldése"
+      chat_message_created:
+        channel_id: "Csatorna"
+      send_chat_message:
+        channel_id: "Csatorna"
+        message: "Üzenet"
+      chat_approval:
+        message: "Üzenet"
+        buttons: "Gombok"
+        value: "Érték"
+        style: "Stílus"
+        style_default: "Alapértelmezett"
+        style_primary: "Elsődleges"
+        style_success: "Sikeres"
+        icon: "Ikon"
+        channel_id: "Csatorna"

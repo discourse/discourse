@@ -1,10 +1,10 @@
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import TextField from "discourse/components/text-field";
 import { resetSiteDirForTesting } from "discourse/lib/text-direction";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DTextField from "discourse/ui-kit/d-text-field";
 
-module("Integration | Component | text-field", function (hooks) {
+module("Integration | Component | TextField", function (hooks) {
   setupRenderingTest(hooks);
 
   let originalHtmlDir;
@@ -27,14 +27,14 @@ module("Integration | Component | text-field", function (hooks) {
   });
 
   test("renders correctly with no properties set", async function (assert) {
-    await render(<template><TextField /></template>);
+    await render(<template><DTextField /></template>);
 
     assert.dom("input[type=text]").exists();
   });
 
   test("support a placeholder", async function (assert) {
     await render(
-      <template><TextField @placeholderKey="placeholder.i18n.key" /></template>
+      <template><DTextField @placeholderKey="placeholder.i18n.key" /></template>
     );
 
     assert.dom("input[type=text]").exists();
@@ -43,11 +43,54 @@ module("Integration | Component | text-field", function (hooks) {
       .hasAttribute("placeholder", "[en.placeholder.i18n.key]");
   });
 
+  test("falls back to the placeholder key when the placeholder argument is empty", async function (assert) {
+    await render(
+      <template>
+        <DTextField
+          @placeholder={{null}}
+          @placeholderKey="placeholder.i18n.key"
+        />
+      </template>
+    );
+
+    assert
+      .dom("input[type=text]")
+      .hasAttribute("placeholder", "[en.placeholder.i18n.key]");
+  });
+
+  test("falls back to the placeholder key regardless of argument order", async function (assert) {
+    await render(
+      <template>
+        <DTextField
+          @placeholder={{null}}
+          @placeholderKey="placeholder.i18n.key"
+        />
+      </template>
+    );
+
+    assert
+      .dom("input[type=text]")
+      .hasAttribute("placeholder", "[en.placeholder.i18n.key]");
+  });
+
+  test("prefers an explicit placeholder over the placeholder key", async function (assert) {
+    await render(
+      <template>
+        <DTextField
+          @placeholder="Explicit"
+          @placeholderKey="placeholder.i18n.key"
+        />
+      </template>
+    );
+
+    assert.dom("input[type=text]").hasAttribute("placeholder", "Explicit");
+  });
+
   test("sets the dir attribute to auto when mixed text direction enabled", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
 
     await render(
-      <template><TextField @value="זהו שם עברי עם מקום עברי" /></template>
+      <template><DTextField @value="זהו שם עברי עם מקום עברי" /></template>
     );
 
     assert.dom("input").hasAttribute("dir", "auto");
@@ -59,7 +102,7 @@ module("Integration | Component | text-field", function (hooks) {
     document.documentElement.classList.add("rtl");
     resetSiteDirForTesting();
 
-    await render(<template><TextField /></template>);
+    await render(<template><DTextField /></template>);
 
     assert.dom("input").hasAttribute("dir", "rtl");
 
@@ -84,10 +127,10 @@ module("Integration | Component | text-field", function (hooks) {
 
     await render(
       <template>
-        <TextField
+        <DTextField
           class="tf-test"
-          @value={{this.value}}
           @onChange={{this.changed}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -111,10 +154,10 @@ module("Integration | Component | text-field", function (hooks) {
 
     await render(
       <template>
-        <TextField
+        <DTextField
           class="tf-test"
-          @value={{this.value}}
           @onChangeImmediate={{this.changed}}
+          @value={{this.value}}
         />
       </template>
     );

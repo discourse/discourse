@@ -124,14 +124,14 @@ end
 # Table name: permalinks
 #
 #  id           :integer          not null, primary key
+#  external_url :string(1000)
 #  url          :string(1000)     not null
-#  topic_id     :integer
-#  post_id      :integer
-#  category_id  :integer
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  external_url :string(1000)
+#  category_id  :integer
+#  post_id      :integer
 #  tag_id       :integer
+#  topic_id     :integer
 #  user_id      :integer
 #
 # Indexes

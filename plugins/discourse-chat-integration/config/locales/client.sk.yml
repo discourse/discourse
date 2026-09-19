@@ -219,3 +219,8 @@ sk:
               description: "Názov kanála nájdete v nastaveniach integrácie chatu"
             provider:
               label: Poskytovateľ
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanál"
+        configure: "Konfigurovať"
+        message: "Správa"

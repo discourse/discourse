@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UserUpdater
+  LEGACY_SHOW_ORIGINAL_CONTENT_ATTR = :show_original_content
+  TIMESTAMP_COLUMNS = %w[created_at updated_at].freeze
+
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
@@ -25,7 +28,6 @@ class UserUpdater
     external_links_in_new_tab
     enable_quoting
     enable_smart_lists
-    enable_defer
     enable_markdown_monospace_font
     color_scheme_id
     dark_scheme_id
@@ -40,6 +42,8 @@ class UserUpdater
     email_in_reply_to
     like_notification_frequency
     notify_on_linked_posts
+    push_notification_level
+    enable_upcoming_change_available_notifications
     include_tl0_in_digests
     theme_ids
     allow_private_messages
@@ -57,16 +61,17 @@ class UserUpdater
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     watched_precedence_over_muted
-    topics_unread_when_closed
     composition_mode
-    show_original_content
+    send_shortcut
+    automatically_translate
+    understood_languages
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
     attrs = [:enabled]
     7.times do |n|
-      attrs.push("day_#{n}_start_time".to_sym)
-      attrs.push("day_#{n}_end_time".to_sym)
+      attrs.push(:"day_#{n}_start_time")
+      attrs.push(:"day_#{n}_end_time")
     end
     { user_notification_schedule: attrs }
   end.call
@@ -79,6 +84,12 @@ class UserUpdater
   end
 
   def update(attributes = {})
+    if attributes.key?(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+      attributes[:automatically_translate] = attributes[LEGACY_SHOW_ORIGINAL_CONTENT_ATTR].to_s !=
+        "true" unless attributes.key?(:automatically_translate)
+      attributes.delete(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+    end
+
     user_profile = user.user_profile
     user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[
       :dismissed_banner_key
@@ -95,18 +106,22 @@ class UserUpdater
       user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     end
 
-    if attributes[:profile_background_upload_url] == "" ||
-         !guardian.can_upload_profile_header?(user)
-      user_profile.profile_background_upload_id = nil
-    elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
-      user_profile.profile_background_upload_id = upload.id
+    if attributes.key?(:profile_background_upload_url)
+      if attributes[:profile_background_upload_url] == "" ||
+           !guardian.can_upload_profile_header?(user)
+        user_profile.profile_background_upload_id = nil
+      elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
+        user_profile.profile_background_upload_id = upload.id
+      end
     end
 
-    if attributes[:card_background_upload_url] == "" ||
-         !guardian.can_upload_user_card_background?(user)
-      user_profile.card_background_upload_id = nil
-    elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
-      user_profile.card_background_upload_id = upload.id
+    if attributes.key?(:card_background_upload_url)
+      if attributes[:card_background_upload_url] == "" ||
+           !guardian.can_upload_user_card_background?(user)
+        user_profile.card_background_upload_id = nil
+      elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
+        user_profile.card_background_upload_id = upload.id
+      end
     end
 
     if attributes[:user_notification_schedule]
@@ -234,10 +249,7 @@ class UserUpdater
         SidebarSectionLinksUpdater.update_tag_section_links(
           user,
           tag_ids:
-            DiscourseTagging
-              .filter_visible(Tag, @user_guardian)
-              .where(name: attributes[:sidebar_tag_names])
-              .pluck(:id),
+            Tag.browsable(@user_guardian).where(name: attributes[:sidebar_tag_names]).pluck(:id),
         )
       end
 
@@ -251,17 +263,15 @@ class UserUpdater
           (user_notification_schedule.nil? || user_notification_schedule.save) &&
           user_profile.save && user.save
 
-      if saved && (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
+      if saved && name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0
         StaffActionLogger.new(@actor).log_name_change(
           user.id,
           old_user_name,
           attributes.fetch(:name) { "" },
         )
       end
+
       DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
-    rescue Addressable::URI::InvalidURIError
-      # Prevent 500 for crazy url input
-      return saved
     end
 
     if saved
@@ -272,7 +282,7 @@ class UserUpdater
           user_notification_schedule.destroy_scheduled_timings
         end
       end
-      DiscourseEvent.trigger(:user_updated, user)
+      DiscourseEvent.trigger(:user_updated, user, changed_columns(user, user_profile))
 
       if attributes[:custom_fields].present? && user.needs_required_fields_check?
         UserHistory.create!(
@@ -283,6 +293,10 @@ class UserUpdater
     end
 
     saved
+  end
+
+  def changed_columns(user, user_profile)
+    (user.saved_changes.keys | user_profile.saved_changes.keys) - TIMESTAMP_COLUMNS
   end
 
   def update_muted_users(usernames)
@@ -373,6 +387,10 @@ class UserUpdater
 
   def format_url(website)
     return nil if website.blank?
-    website =~ /\Ahttp/ ? website : "http://#{website}"
+
+    uri = URI.parse(website)
+    "#{"http://" if uri.scheme.blank?}#{website}"
+  rescue URI::Error
+    website
   end
 end

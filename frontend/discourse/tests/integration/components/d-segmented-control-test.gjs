@@ -4,7 +4,7 @@ import DSegmentedControl from "discourse/components/d-segmented-control";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { i18n } from "discourse-i18n";
 
-module("Integration | Component | d-segmented-control", function (hooks) {
+module("Integration | Component | DSegmentedControl", function (hooks) {
   setupRenderingTest(hooks);
 
   const ITEMS = [
@@ -20,10 +20,10 @@ module("Integration | Component | d-segmented-control", function (hooks) {
     await render(
       <template>
         <DSegmentedControl
-          @name="period"
           @items={{ITEMS}}
-          @value={{this.selected}}
+          @name="period"
           @onSelect={{handleSelect}}
+          @value={{this.selected}}
         />
       </template>
     );
@@ -45,10 +45,10 @@ module("Integration | Component | d-segmented-control", function (hooks) {
     await render(
       <template>
         <DSegmentedControl
-          @name="period"
           @items={{ITEMS}}
-          @value="day"
           @label="test.periodLabel"
+          @name="period"
+          @value="day"
         />
       </template>
     );
@@ -62,10 +62,10 @@ module("Integration | Component | d-segmented-control", function (hooks) {
     await render(
       <template>
         <DSegmentedControl
-          @name="period"
           @items={{ITEMS}}
-          @value="day"
+          @name="period"
           @translatedLabel="Time period"
+          @value="day"
         />
       </template>
     );

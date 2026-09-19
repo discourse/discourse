@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import avatar from "discourse/helpers/bound-avatar-template";
 import getURL from "discourse/lib/get-url";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class FBFF extends Component {
@@ -21,7 +21,7 @@ export default class FBFF extends Component {
       <div class="rewind-report-container">
         <div class="rewind-card">
           <div class="fbff-avatar-container">
-            {{avatar
+            {{dBoundAvatarTemplate
               @report.data.fbff.avatar_template
               "huge"
               (hash title=@report.data.fbff.username)
@@ -35,7 +35,7 @@ export default class FBFF extends Component {
             />
           </div>
           <div class="fbff-avatar-container">
-            {{avatar
+            {{dBoundAvatarTemplate
               @report.data.yourself.avatar_template
               "huge"
               (hash title=@report.data.yourself.username)

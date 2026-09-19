@@ -49,7 +49,7 @@ module DiscourseChatIntegration
           embeds: [
             {
               title:
-                "#{topic.title} #{(category == "[uncategorized]") ? "" : category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}",
+                "#{topic.title} #{(category == "[uncategorized]") ? "" : category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
               url: post.full_url,
               description:
                 post.excerpt(

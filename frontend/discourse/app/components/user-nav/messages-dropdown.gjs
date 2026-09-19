@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class MessagesDropdown extends Component {
@@ -33,38 +33,38 @@ export default class MessagesDropdown extends Component {
   <template>
     <DMenu
       @icon={{this.currentSelection.icon}}
-      @label={{this.currentSelection.name}}
-      @title={{i18n "user.messages.all"}}
       @identifier="messages-dropdown"
+      @label={{this.currentSelection.name}}
       @onRegisterApi={{this.onRegisterApi}}
+      @title={{i18n "user.messages.all"}}
       @triggerClass="btn-default"
     >
       <:trigger>
         {{#if this.currentSelection.showUnreadIcon}}
-          {{icon "circle" class="d-icon-d-unread"}}
+          {{dIcon "circle" class="d-icon-d-unread"}}
         {{/if}}
-        {{icon "angle-down"}}
+        {{dIcon "angle-down"}}
       </:trigger>
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each @content as |item|}}
             <dropdown.item>
               <DButton
-                @translatedLabel={{item.name}}
-                @icon={{item.icon}}
                 class={{if
                   (eq this.currentSelection.name item.name)
                   "is-selected"
                 }}
                 @action={{this.openInbox item.id}}
+                @icon={{item.icon}}
+                @translatedLabel={{item.name}}
               >
                 {{#if item.showUnreadIcon}}
-                  {{icon "circle" class="d-icon-d-unread"}}
+                  {{dIcon "circle" class="d-icon-d-unread"}}
                 {{/if}}
               </DButton>
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

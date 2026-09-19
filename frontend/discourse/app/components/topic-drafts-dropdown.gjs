@@ -3,15 +3,17 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DComboButton from "discourse/components/d-combo-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
+import getURL from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DComboButton from "discourse/ui-kit/d-combo-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 const DRAFTS_LIMIT = 4;
@@ -45,13 +47,17 @@ export default class TopicDraftsDropdown extends Component {
   }
 
   draftIcon(item) {
+    let icon;
+
     if (item.draft_key.startsWith(NEW_TOPIC_KEY)) {
-      return "layer-group";
+      icon = "layer-group";
     } else if (item.draft_key.startsWith(NEW_PRIVATE_MESSAGE_KEY)) {
-      return "envelope";
+      icon = "envelope";
     } else {
-      return "reply";
+      icon = "reply";
     }
+
+    return applyValueTransformer("draft-icon", icon, { draft: item });
   }
 
   @action
@@ -99,64 +105,63 @@ export default class TopicDraftsDropdown extends Component {
 
   <template>
     <DComboButton
-      class={{if @showDrafts "--has-menu"}}
       aria-label={{i18n "topic.create_group"}}
+      class="topic-create-button__combo"
       ...attributes
+      @btnTypeClass={{@btnTypeClass}}
+      @hasMenu={{@showDrafts}}
       as |combo|
     >
       <combo.Button
-        @action={{@action}}
-        @label={{@label}}
-        @ariaLabel={{@label}}
-        @icon="far-pen-to-square"
-        id={{@btnId}}
         class={{@btnClasses}}
+        id={{@btnId}}
+        @action={{@action}}
+        @ariaLabel={{@label}}
+        @icon={{or @icon "far-pen-to-square"}}
+        @label={{@label}}
       />
 
-      {{#if @showDrafts}}
-        <combo.Menu
-          @identifier="topic-drafts-menu"
-          @title={{i18n "drafts.dropdown.title"}}
-          @onShow={{this.onShowMenu}}
-          @onRegisterApi={{this.onRegisterApi}}
-          @modalForMobile={{true}}
-          aria-label={{i18n "drafts.dropdown.title"}}
-          class={{@btnTypeClass}}
-        >
-          <DropdownMenu as |dropdown|>
-            {{#each this.drafts as |draft|}}
-              <dropdown.item class="topic-drafts-item">
-                <DButton
-                  @action={{fn this.resumeDraft draft}}
-                  @icon={{this.draftIcon draft}}
-                  @translatedLabel={{or
-                    draft.title
-                    (i18n "drafts.dropdown.untitled")
-                  }}
-                  class="btn-secondary"
-                />
-              </dropdown.item>
-            {{/each}}
+      <combo.Menu
+        aria-label={{i18n "drafts.dropdown.title"}}
+        class={{@draftMenuClasses}}
+        @identifier="topic-drafts-menu"
+        @modalForMobile={{true}}
+        @onRegisterApi={{this.onRegisterApi}}
+        @onShow={{this.onShowMenu}}
+        @title={{i18n "drafts.dropdown.title"}}
+      >
+        <DDropdownMenu as |dropdown|>
+          {{#each this.drafts as |draft|}}
+            <dropdown.item class="topic-drafts-item">
+              <DButton
+                @action={{fn this.resumeDraft draft}}
+                @icon={{this.draftIcon draft}}
+                @translatedLabel={{or
+                  draft.title
+                  (i18n "drafts.dropdown.untitled")
+                }}
+              />
+            </dropdown.item>
+          {{/each}}
 
-            {{#if this.showViewAll}}
-              <dropdown.divider />
+          {{#if this.showViewAll}}
+            <dropdown.divider />
 
-              <dropdown.item>
-                <DButton
-                  @href="/my/activity/drafts"
-                  @model={{this.currentUser}}
-                  class="btn-link view-all-drafts"
-                >
-                  <span
-                    data-other-drafts={{this.otherDraftsCount}}
-                  >{{this.otherDraftsText}}</span>
-                  <span>{{i18n "drafts.dropdown.view_all"}}</span>
-                </DButton>
-              </dropdown.item>
-            {{/if}}
-          </DropdownMenu>
-        </combo.Menu>
-      {{/if}}
+            <dropdown.item>
+              <DButton
+                class="btn-link view-all-drafts"
+                @href={{getURL "/my/activity/drafts"}}
+                @model={{this.currentUser}}
+              >
+                <span
+                  data-other-drafts={{this.otherDraftsCount}}
+                >{{this.otherDraftsText}}</span>
+                <span>{{i18n "drafts.dropdown.view_all"}}</span>
+              </DButton>
+            </dropdown.item>
+          {{/if}}
+        </DDropdownMenu>
+      </combo.Menu>
     </DComboButton>
   </template>
 }

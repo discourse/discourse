@@ -3,7 +3,7 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class PredefinedTopicOptions extends Component {
@@ -36,18 +36,18 @@ export default class PredefinedTopicOptions extends Component {
   <template>
     <DModal
       class="predefined-topic-options-modal"
-      @title={{i18n "admin_onboarding_banner.start_posting.predefined_topics"}}
+      @closeModal={{@closeModal}}
       @subtitle={{i18n
         "admin_onboarding_banner.start_posting.predefined_topics_subtitle"
       }}
-      @closeModal={{@closeModal}}
+      @title={{i18n "admin_onboarding_banner.start_posting.predefined_topics"}}
     >
       <:body>
         <div class="predefined-topic-options-modal__list">
           {{#each this.icebreakerTopics as |topic|}}
             <button
-              type="button"
               class="predefined-topic-options-modal__card"
+              type="button"
               {{on "click" (fn this.handleSelectTopic topic)}}
             >
               <span class="predefined-topic-options-modal__title">

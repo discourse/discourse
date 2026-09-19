@@ -85,6 +85,7 @@ The above schema definition states that the `link` object has a `name` property 
 - `categories`: Value of property is an array of valid category ids.
 - `groups`: Value of property is an array of valid group ids.
 - `tags`: Value of property is an array of valid tag names.
+- `icon`: Value of property is the name of a single icon from the Discourse icon set. Selected icons are automatically added to the sprite sheet, so they can be rendered without being registered separately.
 
 With the schema defined, the default value of the setting can now be set by defining a array in yaml like so:
 
@@ -159,6 +160,42 @@ links:
 
 - `min`: Minimum number of records for the property. Value of the keyword has to be an integer.
 - `max`: Maximum number of records for the property. Value of the keyword has to be an integer.
+
+#### Resolving group membership
+
+Object settings can resolve `type: groups` properties to a boolean for the current user. This is useful when theme code only needs to know whether the current user is in one of the configured groups, because `currentUser.groups` only includes groups that are visible to the user.
+
+Add `resolve_group_membership: true` to the `groups` property:
+
+```yaml
+menu_sections:
+  type: objects
+  default:
+    - name: section 1
+      groups:
+        - 1
+        - 3
+  schema:
+    name: menu section
+    properties:
+      name:
+        type: string
+      groups:
+        type: groups
+        resolve_group_membership: true
+```
+
+The admin UI and stored setting value still use the original `groups` array. In the frontend runtime `settings` object, Discourse removes the group IDs from each object and adds a boolean with the same property name prefixed by `user_in_`:
+
+```gjs
+for (const section of settings.menu_sections) {
+  if (section.user_in_groups) {
+    // User is in at least one selected group for this section.
+  }
+}
+```
+
+This option is only valid on object schema properties with `type: groups`. It also works on nested object schemas and with automatic groups such as `logged_in_users` and `anonymous_users`.
 
 #### Nested objects structure
 

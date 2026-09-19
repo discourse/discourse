@@ -4,84 +4,86 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import FilterInput from "discourse/components/filter-input";
-import { translateModKey } from "discourse/lib/utilities";
+import { formatShortcut } from "discourse/lib/shortcut-format";
+import { capabilities } from "discourse/services/capabilities";
 import { extraKeyboardShortcutsHelp } from "discourse/services/keyboard-shortcuts";
+import { eq } from "discourse/truth-helpers";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import DModal from "discourse/ui-kit/d-modal";
+import DShortcut from "discourse/ui-kit/d-shortcut";
 import { i18n } from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
-const SHIFT = i18n("shortcut_modifier_key.shift");
-const ALT = translateModKey("Alt");
-const META = translateModKey("Meta");
-const CTRL = i18n("shortcut_modifier_key.ctrl");
-const ENTER = i18n("shortcut_modifier_key.enter");
-const ESC = i18n("shortcut_modifier_key.esc");
-const COMMA = i18n(`${KEY}.shortcut_key_delimiter_comma`);
 
-const translationForExtraShortcuts = {
-  shift: SHIFT,
-  alt: ALT,
-  meta: META,
-  ctrl: CTRL,
-  enter: ENTER,
-  comma: COMMA,
+const SHIFT = "shift";
+const ALT = "alt";
+const META = "mod";
+const CTRL = "ctrl";
+const ENTER = "enter";
+const ESC = "esc";
+
+/** The search alias set(s) a canonical key contributes to the filter index. */
+const SEARCH_ALIAS_KEYS = {
+  Shift: ["shift"],
+  Alt: ["alt"],
+  Meta: ["meta"],
+  Control: ["ctrl"],
+  Enter: ["enter"],
+  Escape: ["esc"],
 };
 
-function buildHTML(keys1, keys2, shortcutsDelimiter) {
-  const allKeys = [keys1, keys2]
-    .filter((keys) => keys.length !== 0)
-    .map((keys) =>
-      keys
-        .map((key) => {
-          // Turns e.g. c into C and esc into Esc
-          key = key.charAt(0).toUpperCase() + key.slice(1);
-          return `<kbd>${key}</kbd>`;
-        })
-        .join(" ")
-    )
-    .map((keys) =>
-      shortcutsDelimiter !== "space" && shortcutsDelimiter !== "newline"
-        ? wrapInSpan(keys, shortcutsDelimiter)
-        : keys
-    );
+function searchAliases(key) {
+  const aliasKeys = [...(SEARCH_ALIAS_KEYS[key] ?? [])];
 
-  const [shortcut1, shortcut2] = allKeys;
-
-  if (allKeys.length === 1) {
-    return shortcut1;
-  } else if (shortcutsDelimiter === "or") {
-    return i18n(`${KEY}.shortcut_delimiter_or`, { shortcut1, shortcut2 });
-  } else if (shortcutsDelimiter === "slash") {
-    return i18n(`${KEY}.shortcut_delimiter_slash`, { shortcut1, shortcut2 });
-  } else if (shortcutsDelimiter === "space") {
-    return wrapInSpan(
-      i18n(`${KEY}.shortcut_delimiter_space`, { shortcut1, shortcut2 }),
-      shortcutsDelimiter
-    );
-  } else if (shortcutsDelimiter === "newline") {
-    return wrapInSpan(
-      i18n(`${KEY}.shortcut_delimiter_newline`, {
-        shortcut1,
-        shortcut2,
-      }),
-      shortcutsDelimiter
-    );
+  // Where the platform modifier draws as Control, the semantic names of both
+  // keys must stay searchable, since a user may type either.
+  if (key === "Control" && !capabilities.isApple) {
+    aliasKeys.push("meta");
   }
+
+  return aliasKeys.map((aliasKey) => i18n(`${KEY}.search_aliases.${aliasKey}`));
 }
 
-function wrapInSpan(shortcut, delimiter) {
-  return `<span class="delimiter-${delimiter}" dir="ltr">${shortcut}</span>`;
+function buildSearchText(keys) {
+  return formatShortcut(keys.join("+"))
+    .keys.flatMap((key) => [
+      key.label,
+      key.name !== key.label ? key.name : null,
+      ...searchAliases(key.key),
+    ])
+    .filter(Boolean)
+    .join(" ");
 }
+
+/** How two key groups of one help entry relate; anything else falls back to "or". */
+const SHORTCUT_DELIMITERS = ["or", "slash", "space", "newline"];
 
 function buildShortcut(
   key,
   { keys1 = [], keys2 = [], shortcutsDelimiter = "or" }
 ) {
-  const context = {
-    shortcut: buildHTML(keys1, keys2, shortcutsDelimiter),
+  const groups = [keys1, keys2].filter((keys) => keys.length > 0);
+  const delimiter = SHORTCUT_DELIMITERS.includes(shortcutsDelimiter)
+    ? shortcutsDelimiter
+    : "or";
+
+  // "space"/"newline" mean keys1 then keys2 are pressed in sequence — one
+  // searchable combination. "or"/"slash" mean alternatives — each group
+  // searched independently so tokens can't span alternatives
+  // (e.g. "ctrl /" must not match a "/ or Ctrl+Alt+F" shortcut).
+  const isSequence = delimiter === "space" || delimiter === "newline";
+  const shortcutTexts = isSequence
+    ? [buildSearchText(groups.flat())]
+    : groups.map(buildSearchText);
+
+  return {
+    keys1: groups[0]?.join("+"),
+    keys2: groups[1]?.join("+"),
+    delimiter,
+    shortcutTexts,
+    description: i18n(`${KEY}.${key}`, { shortcut: "" }).trim(),
   };
-  return i18n(`${KEY}.${key}`, context);
 }
 
 export default class KeyboardShortcutsHelp extends Component {
@@ -299,15 +301,15 @@ export default class KeyboardShortcutsHelp extends Component {
       search_menu: {
         shortcuts: {
           prev_next: buildShortcut("search_menu.prev_next", {
-            keys1: ["&uarr;"],
-            keys2: ["&darr;"],
+            keys1: ["up"],
+            keys2: ["down"],
             shortcutsDelimiter: "slash",
           }),
           insert_url: buildShortcut("search_menu.insert_url", {
             keys1: ["a"],
           }),
           full_page_search: buildShortcut("search_menu.full_page_search", {
-            keys1: [META, "Enter"],
+            keys1: [META, ENTER],
           }),
         },
       },
@@ -319,12 +321,12 @@ export default class KeyboardShortcutsHelp extends Component {
           keys1: [META, "/"],
         }),
         admin_search_prev_next: buildShortcut("admin.search_prev_next", {
-          keys1: ["&uarr;"],
-          keys2: ["&darr;"],
+          keys1: ["up"],
+          keys2: ["down"],
           shortcutsDelimiter: "slash",
         }),
         admin_search_full_page: buildShortcut("admin.search_full_page", {
-          keys1: ["Enter"],
+          keys1: [ENTER],
         }),
       },
     };
@@ -334,22 +336,34 @@ export default class KeyboardShortcutsHelp extends Component {
     return shortcuts;
   }
 
-  @action
-  filterShortcuts(event) {
-    this.searchTerm = event.target.value.toLowerCase().trim();
-  }
-
   get filteredShortcuts() {
+    const searchTokens = this.searchTerm.trim().split(/\s+/).filter(Boolean);
     return Object.entries(this.shortcuts).reduce(
       (acc, [category, shortcutCategory]) => {
         const filteredShortcuts = Object.entries(
           shortcutCategory.shortcuts
         ).reduce((shortcutsAcc, [name, shortcut]) => {
-          if (
-            this.searchTerm === "" ||
-            name.toLowerCase().includes(this.searchTerm) ||
-            shortcut.toLowerCase().includes(this.searchTerm)
-          ) {
+          const nameLower = name.toLowerCase();
+          const descriptionLower = shortcut.description.toLowerCase();
+
+          // For shortcuts with alternative key groups, all tokens must satisfy
+          // within a single group (plus name/description) so that tokens can't
+          // span alternatives.
+          const matches =
+            searchTokens.length === 0 ||
+            shortcut.shortcutTexts.some((text) => {
+              const lower = text.toLowerCase();
+              const compact = lower.replace(/\s+/g, "");
+              return searchTokens.every(
+                (token) =>
+                  nameLower.includes(token) ||
+                  descriptionLower.includes(token) ||
+                  lower.includes(token) ||
+                  compact.includes(token)
+              );
+            });
+
+          if (matches) {
             shortcutsAcc[name] = shortcut;
           }
           return shortcutsAcc;
@@ -367,6 +381,11 @@ export default class KeyboardShortcutsHelp extends Component {
     );
   }
 
+  @action
+  filterShortcuts(event) {
+    this.searchTerm = event.target.value.toLowerCase();
+  }
+
   _buildExtraShortcuts(shortcuts) {
     for (const [category, helps] of Object.entries(
       extraKeyboardShortcutsHelp
@@ -382,7 +401,7 @@ export default class KeyboardShortcutsHelp extends Component {
 
         shortcuts[category].shortcuts[help.name] = buildShortcut(
           help.name,
-          this._transformExtraDefinition(help.definition)
+          help.definition
         );
       });
     }
@@ -394,37 +413,6 @@ export default class KeyboardShortcutsHelp extends Component {
         shortcutCategory.shortcuts
       ).length;
     }
-  }
-
-  _transformExtraDefinition(definition) {
-    if (definition.keys1) {
-      definition.keys1 = definition.keys1.map((key) =>
-        this._translateKeys(key)
-      );
-    }
-    if (definition.keys2) {
-      definition.keys2 = definition.keys2.map((key) =>
-        this._translateKeys(key)
-      );
-    }
-    if (definition.keysDelimiter) {
-      definition.keysDelimiter = this._translateKeys(definition.keysDelimiter);
-    }
-    if (definition.shortcutsDelimiter) {
-      definition.shortcutsDelimiter = this._translateKeys(
-        definition.shortcutsDelimiter
-      );
-    }
-    return definition;
-  }
-
-  _translateKeys(string) {
-    for (const [matcher, replacement] of Object.entries(
-      translationForExtraShortcuts
-    )) {
-      string = string.replace(matcher, replacement);
-    }
-    return string;
   }
 
   _buildJumpToSection() {
@@ -454,17 +442,21 @@ export default class KeyboardShortcutsHelp extends Component {
 
   <template>
     <DModal
-      @title={{i18n "keyboard_shortcuts_help.title"}}
+      class="keyboard-shortcuts-modal --max"
       @closeModal={{@closeModal}}
-      class="keyboard-shortcuts-modal -max"
+      @title={{i18n "keyboard_shortcuts_help.title"}}
     >
       <:body>
         <div id="keyboard-shortcuts-help">
 
-          <FilterInput
+          <label class="sr-only" for="keyboard-shortcuts-help-search">
+            {{i18n "keyboard_shortcuts_help.search_label"}}
+          </label>
+          <DFilterInput
+            id="keyboard-shortcuts-help-search"
+            placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
             @filterAction={{this.filterShortcuts}}
             @value={{this.searchTerm}}
-            placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
           />
 
           <div class="keyboard-shortcuts-help__container">
@@ -476,14 +468,81 @@ export default class KeyboardShortcutsHelp extends Component {
                 class="shortcut-category span-{{shortcutCategory.count}}
                   shortcut-category-{{category}}"
               >
-                <h2>{{i18n
+                <h2 id="shortcut-category-{{category}}-heading">{{i18n
                     (concat "keyboard_shortcuts_help." category ".title")
                   }}</h2>
-                <ul>
-                  {{#each-in shortcutCategory.shortcuts as |name shortcut|}}
-                    <li>{{trustHTML shortcut}}</li>
-                  {{/each-in}}
-                </ul>
+                <table aria-labelledby="shortcut-category-{{category}}-heading">
+                  <thead class="sr-only">
+                    <tr>
+                      <th scope="col">{{i18n
+                          "keyboard_shortcuts_help.description_header"
+                        }}</th>
+                      <th scope="col">{{i18n
+                          "keyboard_shortcuts_help.key_header"
+                        }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each-in shortcutCategory.shortcuts as |name pair|}}
+                      <tr>
+                        <td class="shortcut-description">{{trustHTML
+                            pair.description
+                          }}</td>
+                        <td class="shortcut-key">
+                          {{#if pair.keys2}}
+                            {{#if (eq pair.delimiter "space")}}
+                              <span class="delimiter-space" dir="ltr">
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys1}}
+                                />
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys2}}
+                                />
+                              </span>
+                            {{else if (eq pair.delimiter "newline")}}
+                              <span class="delimiter-newline" dir="ltr">
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys1}}
+                                />
+                                <br />
+                                <DShortcut
+                                  @always={{true}}
+                                  @keys={{pair.keys2}}
+                                />
+                              </span>
+                            {{else}}
+                              <DInterpolatedTranslation
+                                @key={{concat
+                                  "keyboard_shortcuts_help.shortcut_delimiter_"
+                                  pair.delimiter
+                                }}
+                                as |Placeholder|
+                              >
+                                <Placeholder @name="shortcut1">
+                                  <DShortcut
+                                    @always={{true}}
+                                    @keys={{pair.keys1}}
+                                  />
+                                </Placeholder>
+                                <Placeholder @name="shortcut2">
+                                  <DShortcut
+                                    @always={{true}}
+                                    @keys={{pair.keys2}}
+                                  />
+                                </Placeholder>
+                              </DInterpolatedTranslation>
+                            {{/if}}
+                          {{else}}
+                            <DShortcut @always={{true}} @keys={{pair.keys1}} />
+                          {{/if}}
+                        </td>
+                      </tr>
+                    {{/each-in}}
+                  </tbody>
+                </table>
               </section>
             {{/each-in}}
           </div>

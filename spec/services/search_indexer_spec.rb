@@ -26,6 +26,41 @@ RSpec.describe SearchIndexer do
     expect(post_search_data.search_data).to eq("'世界':2 '你好':1")
   end
 
+  it "applies post search text modifiers with locale", :aggregate_failures do
+    cooked = "<p>hello</p>"
+    modifier_block =
+      proc do |text, modifier_post_id, modifier_cooked, locale|
+        expect(modifier_post_id).to eq(post_id)
+        expect(modifier_cooked).to eq(cooked)
+        expect(locale).to eq("ja")
+
+        "#{text} extra indexed text"
+      end
+
+    plugin_instance = Plugin::Instance.new
+    plugin_instance.register_modifier(:post_search_index_text, &modifier_block)
+
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "",
+      category_name: "",
+      topic_tags: "",
+      cooked: cooked,
+      private_message: false,
+      locale: "ja",
+    )
+
+    expect(PostSearchData.find_by(post_id: post_id).raw_data).to eq("hello extra indexed text")
+  ensure
+    if plugin_instance
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :post_search_index_text,
+        &modifier_block
+      )
+    end
+  end
+
   it "extract youtube title" do
     html =
       "<div class=\"lazy-video-container\" data-video-id=\"lmFgeFh2nlw\" data-video-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-provider-name=\"youtube\"></div>"
@@ -127,7 +162,7 @@ RSpec.describe SearchIndexer do
     let(:topic) { Fabricate(:topic, title: "this is a title that I am testing") }
     let(:post) { Fabricate(:post, topic: topic) }
 
-    it "should index posts correctly" do
+    it "indexes post content" do
       expect { post }.to change { PostSearchData.count }.by(1)
 
       expect { post.update!(raw: "this is new content") }.to change {
@@ -139,7 +174,7 @@ RSpec.describe SearchIndexer do
       }
     end
 
-    it "should work with edge case domain names" do
+    it "indexes edge-case domain names" do
       # 00E5A4 stems to 00e5 and a4, which is odd, but by-design
       # this may cause internal indexing to fail due to indexes not aligning
       # when stuffing terms for domains
@@ -157,7 +192,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should work with invalid HTML" do
+    it "handles invalid HTML" do
       post.update!(cooked: "<FD>" * Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH)
 
       SearchIndexer.update_posts_index(
@@ -170,14 +205,14 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should not index posts with empty raw" do
+    it "does not index posts with empty raw content" do
       expect do
         post = Fabricate.build(:post, raw: "", post_type: Post.types[:small_action])
         post.save!(validate: false)
       end.to_not change { PostSearchData.count }
     end
 
-    it "should not tokenize urls and duplicate title and href in <a>" do
+    it "does not duplicate anchor titles and URLs as tokens" do
       post.update!(raw: <<~RAW)
       https://meta.discourse.org/some.png
       RAW
@@ -192,7 +227,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should not tokenize versions" do
+    it "does not tokenize version numbers" do
       post.update!(raw: "123.223")
 
       expect(post.post_search_data.search_data).to eq(
@@ -207,7 +242,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should tokenize host of a URL and removes query string" do
+    it "tokenizes URL hosts without query strings" do
       category = Fabricate(:category, name: "awesome category")
       topic = Fabricate(:topic, category: category, title: "this is a test topic")
 
@@ -234,7 +269,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should not include lightbox in search" do
+    it "excludes lightbox markup from search" do
       Jobs.run_immediately!
       SiteSetting.max_image_width = 1
 
@@ -257,7 +292,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should strips audio and videos URLs from raw data" do
+    it "strips audio and video URLs from raw content" do
       SiteSetting.authorized_extensions = "mp4"
       Fabricate(:video_upload)
 
@@ -280,7 +315,7 @@ RSpec.describe SearchIndexer do
       )
     end
 
-    it "should unaccent indexed content" do
+    it "removes accents from indexed content" do
       SiteSetting.search_ignore_accents = true
       post.update!(raw: "Cette oeuvre d'art n'est pas une œuvre")
       post.post_search_data.reload
@@ -344,7 +379,7 @@ RSpec.describe SearchIndexer do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
-    it "should reset the version of search data for all posts in the topic" do
+    it "resets search-data versions for every post in the topic" do
       post2 = Fabricate(:post)
 
       SearchIndexer.queue_post_reindex(topic.id)
@@ -359,7 +394,7 @@ RSpec.describe SearchIndexer do
     let!(:user) { Fabricate(:user) }
     let!(:user2) { Fabricate(:user) }
 
-    it "should reset the version of search data for all users" do
+    it "resets search-data versions for every user" do
       SearchIndexer.index(user, force: true)
       SearchIndexer.index(user2, force: true)
       SearchIndexer.queue_users_reindex([user.id])

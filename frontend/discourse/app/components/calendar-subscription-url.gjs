@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import icon from "discourse/helpers/d-icon";
 import { clipboardCopy } from "discourse/lib/utilities";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CalendarSubscriptionUrl extends Component {
@@ -40,11 +40,11 @@ export default class CalendarSubscriptionUrl extends Component {
 
       <div class="calendar-subscription-url__actions">
         <a
+          class="btn btn-default btn-small"
           href={{@url}}
           {{on "click" this.copy}}
-          class="btn btn-default btn-small"
         >
-          {{icon (if this.copied "check" "copy")}}
+          {{dIcon (if this.copied "check" "copy")}}
           {{if
             this.copied
             (i18n "user.calendar_subscriptions.copied")
@@ -52,25 +52,25 @@ export default class CalendarSubscriptionUrl extends Component {
           }}
         </a>
         <a
-          href={{this.googleCalendarUrl}}
-          target="_blank"
-          rel="noopener noreferrer"
           class="btn btn-flat btn-small"
+          href={{this.googleCalendarUrl}}
+          rel="noopener noreferrer"
+          target="_blank"
         >
-          {{icon "fab-google"}}
+          {{dIcon "fab-google"}}
           {{i18n "user.calendar_subscriptions.add_to_google"}}
         </a>
         <a
-          href={{this.outlookCalendarUrl}}
-          target="_blank"
-          rel="noopener noreferrer"
           class="btn btn-flat btn-small"
+          href={{this.outlookCalendarUrl}}
+          rel="noopener noreferrer"
+          target="_blank"
         >
-          {{icon "fab-microsoft"}}
+          {{dIcon "fab-microsoft"}}
           {{i18n "user.calendar_subscriptions.add_to_outlook"}}
         </a>
-        <a href={{this.webcalUrl}} class="btn btn-flat btn-small">
-          {{icon "fab-apple"}}
+        <a class="btn btn-flat btn-small" href={{this.webcalUrl}}>
+          {{dIcon "fab-apple"}}
           {{i18n "user.calendar_subscriptions.add_to_apple"}}
         </a>
       </div>

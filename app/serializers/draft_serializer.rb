@@ -47,8 +47,12 @@ class DraftSerializer < ApplicationSerializer
     object.display_user&.name
   end
 
+  def include_name?
+    SiteSetting.enable_names?
+  end
+
   def title
-    object.topic&.title
+    ContentLocalization.translated_topic_title(object.topic, scope) || object.topic&.title
   end
 
   def slug

@@ -1,0 +1,767 @@
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import {
+  click,
+  find,
+  focus,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
+import { module, test } from "qunit";
+import noop from "discourse/helpers/noop";
+import { forceMobile } from "discourse/lib/mobile";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+
+module("Integration | ui-kit | DModal", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("title and subtitle", async function (assert) {
+    await render(
+      <template>
+        <DModal
+          @inline={{true}}
+          @subtitle="Modal Subtitle"
+          @title="Modal Title"
+        />
+      </template>
+    );
+    assert.dom(".d-modal .d-modal__title-text").hasText("Modal Title");
+    assert.dom(".d-modal .d-modal__subtitle-text").hasText("Modal Subtitle");
+  });
+
+  test("modal-name-oracle: title references respect header visibility", async function (assert) {
+    await render(
+      <template>
+        <DModal
+          @hideHeader={{true}}
+          @inline={{true}}
+          @title="admin.search.modal_title"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-modal[role='dialog']")
+      .exists("the hidden-header dialog renders");
+    assert.dom(".d-modal__header").doesNotExist("the header is not rendered");
+    assert
+      .dom(".d-modal[role='dialog']")
+      .doesNotHaveAttribute(
+        "aria-labelledby",
+        "a hidden-header dialog does not reference an unrendered title"
+      );
+
+    await render(
+      <template>
+        <DModal @hideHeader={{false}} @inline={{true}} @title="Modal Title" />
+      </template>
+    );
+
+    assert
+      .dom(".d-modal[role='dialog']")
+      .hasAttribute(
+        "aria-labelledby",
+        "discourse-modal-title",
+        "a visible-header dialog retains its title reference"
+      );
+    assert
+      .dom(".d-modal__header .d-modal__title-text")
+      .hasText("Modal Title", "the visible header renders the title");
+    assert.strictEqual(
+      document.getElementById(
+        find(".d-modal[role='dialog']").getAttribute("aria-labelledby")
+      ),
+      find(".d-modal__header .d-modal__title-text"),
+      "the visible-header dialog's label reference resolves to its rendered title"
+    );
+  });
+
+  test("named blocks", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:aboveHeader>aboveHeaderContent</:aboveHeader>
+          <:headerAboveTitle>headerAboveTitleContent</:headerAboveTitle>
+          <:headerBelowTitle>headerBelowTitleContent</:headerBelowTitle>
+          <:belowHeader>belowHeaderContent</:belowHeader>
+          <:body>bodyContent</:body>
+          <:footer>footerContent</:footer>
+          <:belowFooter>belowFooterContent</:belowFooter>
+        </DModal>
+      </template>
+    );
+
+    assert.dom(".d-modal").includesText("aboveHeaderContent");
+    assert.dom(".d-modal").includesText("headerAboveTitleContent");
+    assert.dom(".d-modal").includesText("headerBelowTitleContent");
+    assert.dom(".d-modal").includesText("belowHeaderContent");
+    assert.dom(".d-modal").includesText("bodyContent");
+    assert.dom(".d-modal").includesText("footerContent");
+    assert.dom(".d-modal").includesText("belowFooterContent");
+  });
+
+  test("headerPrimaryAction block", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="test">
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
+
+    assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
+
+    await render(
+      <template>
+        <DModal @closeModal={{noop}} @inline={{true}} @title="test">
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
+
+    assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
+
+    forceMobile();
+
+    await render(
+      <template>
+        <DModal @closeModal={{noop}} @inline={{true}} @title="test">
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
+
+    assert.dom(".d-modal").includesText("headerPrimaryActionContent");
+    assert.dom(".d-modal__dismiss-action-button").exists();
+
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="test">
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
+
+    assert.dom(".d-modal__dismiss-action-button").doesNotExist();
+  });
+
+  test("flash", async function (assert) {
+    await render(
+      <template><DModal @flash="Some message" @inline={{true}} /></template>
+    );
+    assert.dom(".d-modal .alert").hasText("Some message");
+  });
+
+  test("flash type", async function (assert) {
+    await render(
+      <template>
+        <DModal @flash="Some message" @flashType="success" @inline={{true}} />
+      </template>
+    );
+    assert.dom(".d-modal .alert").hasClass("alert-success");
+  });
+
+  test("dismissable", async function (assert) {
+    class TestState {
+      @tracked dismissable;
+
+      @action
+      closeModal() {
+        this.closeModalCalled = true;
+      }
+    }
+    const testState = new TestState();
+    testState.dismissable = false;
+
+    await render(
+      <template>
+        <DModal
+          @closeModal={{testState.closeModal}}
+          @dismissable={{testState.dismissable}}
+          @inline={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-modal .modal-close")
+      .doesNotExist("close button is not shown when dismissable=false");
+
+    testState.dismissable = true;
+    await settled();
+    assert
+      .dom(".d-modal .modal-close")
+      .exists("close button is visible when dismissable=true");
+
+    await click(".d-modal .modal-close");
+    assert.true(
+      testState.closeModalCalled,
+      "closeModal is called when close button clicked"
+    );
+  });
+
+  test("beforeClose can abort closing", async function (assert) {
+    let allowClose = false;
+    const closeModal = () => assert.step("closeModal");
+    const beforeClose = ({ initiatedBy }) => {
+      assert.strictEqual(initiatedBy, "initiatedByCloseButton");
+      assert.step("beforeClose");
+      return allowClose;
+    };
+
+    await render(
+      <template>
+        <DModal
+          @beforeClose={{beforeClose}}
+          @closeModal={{closeModal}}
+          @inline={{true}}
+        />
+      </template>
+    );
+
+    await click(".d-modal .modal-close");
+    assert.verifySteps(
+      ["beforeClose"],
+      "closeModal is not called when beforeClose returns false"
+    );
+
+    allowClose = true;
+    await click(".d-modal .modal-close");
+    assert.verifySteps(
+      ["beforeClose", "closeModal"],
+      "closeModal is called when beforeClose returns true"
+    );
+  });
+
+  test("header and body classes", async function (assert) {
+    await render(
+      <template>
+        <DModal
+          @bodyClass="my-body-class"
+          @headerClass="my-header-class"
+          @inline={{true}}
+          @title="Hello world"
+        />
+      </template>
+    );
+
+    assert.dom(".d-modal .d-modal__header").hasClass("my-header-class");
+    assert.dom(".d-modal .d-modal__body").hasClass("my-body-class");
+  });
+
+  test("as a form", async function (assert) {
+    let submittedFormData;
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      submittedFormData = new FormData(event.currentTarget);
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}} @tagName="form" {{on "submit" handleSubmit}}>
+          <:body>
+            <input name="name" type="text" value="John Doe" />
+          </:body>
+          <:footer>
+            <button type="submit">Submit</button>
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    assert.dom("form.d-modal").exists();
+    await click(".d-modal button[type=submit]");
+    assert.deepEqual(submittedFormData.get("name"), "John Doe");
+  });
+
+  test("default action on enter", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    // From a text input rather than the body element. The modal autofocuses, so
+    // with nothing else focusable the focus would land on the footer button
+    // itself, where Enter belongs to that button rather than to the modal.
+    await focus(".body-input");
+    await triggerKeyEvent(".body-input", "keydown", "Enter");
+
+    assert.true(actionCalled, "pressing enter triggers the default button");
+  });
+
+  test("enter with nothing focusable in the body is left to the autofocused button", async function (assert) {
+    let calls = 0;
+    const someAction = () => {
+      calls++;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <p class="body-text">Nothing focusable here.</p>
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "btn-primary",
+        "with nothing focusable in the body, the modal autofocuses the footer button"
+      );
+
+    // Captured on the footer rather than the document: the modal listens on the
+    // root in the capture phase, so this runs after it and before the button's
+    // own handler, which prevents the default itself.
+    let defaultPrevented = null;
+    const footer = find(".d-modal__footer");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    footer.addEventListener("keydown", observe, { capture: true });
+    try {
+      await triggerKeyEvent(".btn-primary", "keydown", "Enter");
+    } finally {
+      footer.removeEventListener("keydown", observe, { capture: true });
+    }
+
+    // The focused button acts on Enter itself. The modal clicking it as well
+    // would run the action twice, and swallowing the key would stop it running
+    // at all.
+    assert.strictEqual(
+      calls,
+      1,
+      "the focused button runs its action exactly once"
+    );
+    assert.false(
+      defaultPrevented,
+      "and the modal leaves the key alone rather than claiming it"
+    );
+  });
+
+  test("enter on a focused button triggers that button, not the default action", async function (assert) {
+    const calls = [];
+    const onBody = () => calls.push("body");
+    const onFooter = () => calls.push("footer");
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <DButton
+              class="body-button"
+              @action={{onBody}}
+              @translatedLabel="Body action"
+            />
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{onFooter}}
+              @translatedLabel="Perform action"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-button");
+    await triggerKeyEvent(".body-button", "keydown", "Enter");
+
+    // The modal listens on the document in the capture phase, so it sees Enter
+    // before the button does. Without an exemption it submits the modal out from
+    // under any body control a keyboard user is standing on.
+    assert.deepEqual(
+      calls,
+      ["body"],
+      "the focused button runs its own action and the modal is not submitted"
+    );
+  });
+
+  test("enter on a focused link is left to the link", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+
+            <a class="body-link" href="#somewhere">A link</a>
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-link");
+    await triggerKeyEvent(".body-link", "keydown", "Enter");
+
+    assert.false(
+      actionCalled,
+      "the link is what the user is standing on, so the modal is not submitted out from under it"
+    );
+  });
+
+  test("enter with no primary button is left to the browser", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton class="btn-danger" @translatedLabel="Not primary" />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    let defaultPrevented = null;
+    const bodyInput = find(".body-input");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    bodyInput.addEventListener("keydown", observe);
+    try {
+      await focus(".body-input");
+      await triggerKeyEvent(".body-input", "keydown", "Enter");
+    } finally {
+      bodyInput.removeEventListener("keydown", observe);
+    }
+
+    assert.false(
+      defaultPrevented,
+      "with nothing to submit, the key is left alone rather than swallowed"
+    );
+  });
+
+  test("enter does not fall through a disabled primary to the next one", async function (assert) {
+    const calls = [];
+    const onUpload = () => calls.push("upload");
+    const onClose = () => calls.push("close");
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{onUpload}}
+              @disabled={{true}}
+              @translatedLabel="Upload"
+            />
+            <DButton
+              class="btn-primary"
+              @action={{onClose}}
+              @translatedLabel="Close"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-input");
+    await triggerKeyEvent(".body-input", "keydown", "Enter");
+
+    // The first primary is the modal's primary action whether or not it can act.
+    // Skipping past it lands the press on a different button entirely, which in
+    // a real footer is the one that closes the modal.
+    assert.deepEqual(
+      calls,
+      [],
+      "a disabled primary means nothing to submit, not submit the next thing along"
+    );
+  });
+
+  test("enter is not claimed for a primary disabled by an ancestor fieldset", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <fieldset disabled>
+              <DButton class="btn-primary" @translatedLabel="Perform action" />
+            </fieldset>
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    let defaultPrevented = null;
+    const bodyInput = find(".body-input");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    bodyInput.addEventListener("keydown", observe);
+    try {
+      await focus(".body-input");
+      await triggerKeyEvent(".body-input", "keydown", "Enter");
+    } finally {
+      bodyInput.removeEventListener("keydown", observe);
+    }
+
+    // Asserted on the key rather than the action: the browser suppresses a click
+    // on a fieldset-disabled control anyway, so whether the action ran says
+    // nothing about whether the modal thought it had something to submit.
+    // Claiming the key is the part that is actually the modal's doing.
+    assert.false(
+      defaultPrevented,
+      "a control inside a disabled fieldset carries no attribute of its own, and is still nothing to submit"
+    );
+  });
+
+  test("enter does not run a disabled primary rendered as a link", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{someAction}}
+              @disabled={{true}}
+              @href="/somewhere"
+              @translatedLabel="Perform action"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-input");
+    await triggerKeyEvent(".body-input", "keydown", "Enter");
+
+    // An anchor is not a form control, so it never matches `:disabled` however
+    // it was marked. The attribute is what is actually there.
+    assert.false(
+      actionCalled,
+      "a primary marked unavailable is not clicked, whichever tag it renders as"
+    );
+  });
+
+  test("enter on a focused select still submits the modal", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+
+            <select class="body-select">
+              <option value="a">A</option>
+            </select>
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-select");
+    await triggerKeyEvent(".body-select", "keydown", "Enter");
+
+    // A select does nothing with Enter of its own outside a form, so exempting
+    // it would take the key from the modal and hand it to nothing.
+    assert.true(
+      actionCalled,
+      "the modal keeps the key, because the select has no use for it"
+    );
+  });
+
+  test("enter on a focused file input is left to the file input", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-file" type="file" />
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{someAction}}
+              @translatedLabel="Upload"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-file");
+    await triggerKeyEvent(".body-file", "keydown", "Enter");
+
+    // Enter on a file input opens its picker, so the modal must not take the key
+    // and submit instead.
+    assert.false(
+      actionCalled,
+      "the file input keeps the key rather than the modal submitting under it"
+    );
+  });
+
+  test("enter with a primary that cannot be clicked is left to the browser", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @disabled={{true}}
+              @translatedLabel="Upload"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    let defaultPrevented = null;
+    const bodyInput = find(".body-input");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    bodyInput.addEventListener("keydown", observe);
+    try {
+      await focus(".body-input");
+      await triggerKeyEvent(".body-input", "keydown", "Enter");
+    } finally {
+      bodyInput.removeEventListener("keydown", observe);
+    }
+
+    // Clicking a disabled primary does nothing, so claiming the key for it
+    // spends the press on nothing at all.
+    assert.false(
+      defaultPrevented,
+      "a primary that cannot act is not something to claim the key for"
+    );
+  });
+
+  test("enter inside select-kit does not trigger default action", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <div class="select-kit">
+              <input class="filter-input" type="text" />
+            </div>
+          </:body>
+          <:footer>
+            <DButton
+              class="btn-primary"
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await triggerKeyEvent(".filter-input", "keydown", "Enter");
+
+    assert.false(
+      actionCalled,
+      "pressing enter inside select-kit does not trigger the default button"
+    );
+  });
+
+  test("does not swallow keystrokes aimed at a modal stacked above it", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="Underlying modal" />
+        <DModal @inline={{true}} @title="Stacked modal">
+          <:body>
+            <input class="stacked-modal-input" type="text" />
+          </:body>
+        </DModal>
+      </template>
+    );
+
+    const inputElement = document.querySelector(".stacked-modal-input");
+    inputElement.focus();
+
+    const event = new KeyboardEvent("keydown", {
+      key: "a",
+      bubbles: true,
+      cancelable: true,
+    });
+    inputElement.dispatchEvent(event);
+
+    assert.false(
+      event.defaultPrevented,
+      "the underlying modal does not preventDefault keystrokes aimed at the modal stacked above it"
+    );
+  });
+});

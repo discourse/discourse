@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
+import { languageSwitcherEnabled } from "discourse/lib/content-localization";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
@@ -61,6 +62,7 @@ export default class Icons extends Component {
 
   get showSearchButton() {
     if (
+      !this.site.can_search ||
       this.header.headerButtonsHidden.includes("search") ||
       ALL_PAGES_EXCLUDED_ROUTES.some(
         (name) => name === this.router.currentRouteName
@@ -81,19 +83,15 @@ export default class Icons extends Component {
   }
 
   get showLanguageSwitcher() {
-    if (!this.siteSettings.content_localization_enabled) {
+    if (!languageSwitcherEnabled(this.siteSettings)) {
       return false;
     }
 
-    const has_locales =
-      !!this.siteSettings.content_localization_supported_locales;
     switch (this.siteSettings.content_localization_language_switcher) {
-      case "none":
-        return false;
       case "anonymous":
-        return !this.currentUser && has_locales;
+        return !this.currentUser;
       case "all":
-        return has_locales;
+        return true;
       default:
         return false;
     }
@@ -114,25 +112,25 @@ export default class Icons extends Component {
         {{#if (eq entry.key "search")}}
           {{#if this.showSearchButton}}
             <Dropdown
-              @title="search.title"
+              class="search-dropdown"
+              @active={{this.search.visible}}
+              @href={{getURL "/search"}}
               @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
               @onClick={{@toggleSearchMenu}}
               @onWillDestroy={{fn @toggleSearchMenu null false}}
-              @active={{this.search.visible}}
-              @href={{getURL "/search"}}
-              class="search-dropdown"
+              @title="search.title"
             />
           {{/if}}
         {{else if (eq entry.key "hamburger")}}
           {{#if this.showHamburger}}
             <Dropdown
-              @title="hamburger_menu"
+              class="hamburger-dropdown"
+              @active={{this.header.hamburgerVisible}}
               @icon="bars"
               @iconId="toggle-hamburger-menu"
-              @active={{this.header.hamburgerVisible}}
               @onClick={{this.toggleHamburger}}
-              class="hamburger-dropdown"
+              @title="hamburger_menu"
             />
           {{/if}}
         {{else if (eq entry.key "user-menu")}}
@@ -150,7 +148,9 @@ export default class Icons extends Component {
           {{/if}}
         {{else if (eq entry.key "language-switcher")}}
           {{#if this.showLanguageSwitcher}}
-            <LanguageSwitcher />
+            <li class="header-dropdown-toggle language-switcher">
+              <LanguageSwitcher />
+            </li>
           {{/if}}
         {{else if entry.value}}
           <entry.value />

@@ -1,21 +1,17 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import UserNote from "../user-note";
 
 export default class UserNotesModal extends Component {
   @service dialog;
   @service store;
-
-  #refreshCount() {
-    this.args.model.callback?.(this.args.model.note.length);
-  }
 
   get subtitle() {
     return applyValueTransformer("user-notes-modal-subtitle", "", {
@@ -77,31 +73,35 @@ export default class UserNotesModal extends Component {
     });
   }
 
+  #refreshCount() {
+    this.args.model.callback?.(this.args.model.note.length);
+  }
+
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "user_notes.title"}}
-      @subtitle={{this.subtitle}}
       class="user-notes-modal"
+      @closeModal={{@closeModal}}
+      @subtitle={{this.subtitle}}
+      @title={{i18n "user_notes.title"}}
     >
       <Form
-        @onSubmit={{this.onSubmit}}
         @onRegisterApi={{this.registerApi}}
+        @onSubmit={{this.onSubmit}}
         as |form|
       >
         <form.Field
+          @format="full"
           @name="content"
           @title={{i18n "user_notes.attach_note_description"}}
-          @format="full"
-          @validation="required:trim"
           @type="textarea"
+          @validation="required:trim"
           as |field|
         >
           <field.Control />
         </form.Field>
 
         <form.Actions>
-          <form.Submit @label="user_notes.attach" class="btn-primary" />
+          <form.Submit class="btn-primary" @label="user_notes.attach" />
         </form.Actions>
       </Form>
 

@@ -5,17 +5,17 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import element from "discourse/helpers/element";
 import elementClass from "discourse/helpers/element-class";
 import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse/lib/helpers";
 import highlightHTML from "discourse/lib/highlight-html";
 import { postUrl } from "discourse/lib/utilities";
 import { eq } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import PostCookedHtml from "./cooked-html";
 
 export default class PostQuotedContent extends Component {
@@ -126,7 +126,7 @@ export default class PostQuotedContent extends Component {
   }
 
   get OptionalWrapperComponent() {
-    return this.args.wrapperElement ? element("") : element("aside");
+    return this.args.wrapperElement ? dElement("") : dElement("aside");
   }
 
   @action
@@ -167,21 +167,22 @@ export default class PostQuotedContent extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-unnecessary-concat }}
     <this.OptionalWrapperComponent
       ...attributes
-      role="none"
-      class={{concatClass
+      class={{dConcatClass
         "quote"
         (if @quotedPostNotFound "quote-post-not-found")
         (if this.isQuotedPostIgnored "ignored-user")
       }}
       {{! forced quotes in the data-attributes below to cast the boolean values to string }}
+      {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
       data-expanded="{{this.expanded}}"
+      {{! eslint-disable-next-line ember/template-no-unnecessary-concat }}
       data-full="{{@fullQuote}}"
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
       data-username={{@quotedUsername}}
+      role="none"
     >
       {{#if @wrapperElement}}
         {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
@@ -193,9 +194,9 @@ export default class PostQuotedContent extends Component {
       {{/if}}
       <div
         class="title"
-        data-has-quote-controls={{this.shouldDisplayQuoteControls}}
-        data-can-toggle-quote={{this.shouldDisplayToggleButton}}
         data-can-navigate-to-post={{this.shouldDisplayNavigateToPostButton}}
+        data-can-toggle-quote={{this.shouldDisplayToggleButton}}
+        data-has-quote-controls={{this.shouldDisplayQuoteControls}}
         {{(if
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
@@ -230,19 +231,19 @@ export default class PostQuotedContent extends Component {
               >
                 {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                     extra whitespace that will interfere with the text captured when quoting a quoted content }}
-                {{~icon this.toggleIcon~}}
+                {{~dIcon this.toggleIcon~}}
               </DButton>
             {{~/if~}}
             {{~#if this.shouldDisplayNavigateToPostButton~}}
               <DButton
                 class="btn-flat back"
+                @ariaLabel="post.follow_quote"
                 @href={{this.quotedPostUrl}}
                 @title="post.follow_quote"
-                @ariaLabel="post.follow_quote"
               >
                 {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                     extra whitespace that will interfere with the text captured when quoting a quoted content }}
-                {{~icon this.navigateToPostIcon~}}
+                {{~dIcon this.navigateToPostIcon~}}
               </DButton>
             {{~/if~}}
           </div>
@@ -251,7 +252,7 @@ export default class PostQuotedContent extends Component {
       <blockquote id={{@id}}>
         {{~#unless this.isQuotedPostIgnored~}}
           {{~#if this.expanded~}}
-            <AsyncContent
+            <DAsyncContent
               @asyncData={{this.loadQuotedPost}}
               @context={{hash
                 topicNumber=@quotedTopicId
@@ -263,10 +264,10 @@ export default class PostQuotedContent extends Component {
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
                     @className="post__contents-cooked-quote"
-                    @post={{expandedPost}}
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
+                    @post={{expandedPost}}
                     @selectionBarrier={{false}}
                     @streamElement={{@streamElement}}
                   />
@@ -275,11 +276,11 @@ export default class PostQuotedContent extends Component {
               <:error as |error AsyncContentInlineErrorMessage|>
                 {{~#if (eq error.jqXHR.status 403)~}}
                   <div class="quote-error expanded-quote icon-only">
-                    {{~icon "lock"~}}
+                    {{~dIcon "lock"~}}
                   </div>
                 {{~else if (eq error.jqXHR.status 404)~}}
                   <div class="quote-error expanded-quote icon-only">
-                    {{~icon "trash-can"~}}
+                    {{~dIcon "trash-can"~}}
                   </div>
                 {{~else~}}
                   <div class="quote-error expanded-quote">
@@ -287,15 +288,15 @@ export default class PostQuotedContent extends Component {
                   </div>
                 {{~/if~}}
               </:error>
-            </AsyncContent>
+            </DAsyncContent>
           {{~else~}}
             <PostCookedHtml
               @className="post__contents-cooked-quote"
-              @post={{@post}}
               @cooked={{@collapsedContent}}
               @decoratorState={{@decoratorState}}
               @extraDecorators={{this.extraDecorators}}
               @highlightTerm={{@highlightTerm}}
+              @post={{@post}}
               @selectionBarrier={{false}}
               @streamElement={{@streamElement}}
             />

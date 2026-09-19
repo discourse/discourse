@@ -1,0 +1,121 @@
+{
+  "name": "Auto-tag new topics",
+  "description": "Automatically adds tags to new topics based on their category.",
+  "nodes": [
+    {
+      "id": "topic-created",
+      "type": "trigger:topic_created",
+      "typeVersion": "1.0",
+      "name": "Topic created",
+      "parameters": {},
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 12,
+        "y": 22
+      }
+    },
+    {
+      "id": "check-category",
+      "type": "condition:if",
+      "typeVersion": "1.0",
+      "name": "Check category",
+      "parameters": {
+        "combinator": "and",
+        "conditions": [
+          {
+            "id": "a1404264-d341-43a9-84b8-d7d6c67e477d",
+            "operator": {
+              "type": "number",
+              "operation": "equals",
+              "singleValue": false
+            },
+            "leftValue": "={{ $json.topic.category_id }}",
+            "rightValue": ""
+          }
+        ]
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 252,
+        "y": 17
+      }
+    },
+    {
+      "id": "topic-tags",
+      "type": "action:topic_tags",
+      "typeVersion": "1.0",
+      "name": "Topic tags",
+      "parameters": {
+        "topic_id": "={{ $json.topic.id }} "
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 492,
+        "y": 12
+      }
+    },
+    {
+      "id": "sticky-note-category",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double click Check category to set the category id you want to auto tag",
+        "width": 248.7421875,
+        "height": 172.73046875,
+        "color": "green"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 193.94921875,
+        "y": -49.4921875
+      }
+    },
+    {
+      "id": "sticky-note-tags",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double click Topic tags to define the tags you want to apply",
+        "width": 209.0859375,
+        "height": 213.1796875,
+        "color": "blue"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 484.63671875,
+        "y": -104.71875
+      }
+    }
+  ],
+  "connections": {
+    "Topic created": {
+      "main": [
+        [
+          {
+            "node": "Check category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check category": {
+      "main": [
+        [
+          {
+            "node": "Topic tags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

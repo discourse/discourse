@@ -28,7 +28,8 @@ module Chat
 
     def self.users_with_unreads
       groups_join_sql =
-        if Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone])
+        if Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+             Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
           ""
         else
           "JOIN group_users gu ON gu.user_id = u.id AND gu.group_id IN (#{Chat.allowed_group_ids.join(",")})"

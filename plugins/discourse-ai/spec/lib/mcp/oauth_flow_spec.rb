@@ -324,6 +324,59 @@ RSpec.describe DiscourseAi::Mcp::OAuthFlow do
         I18n.t("discourse_ai.mcp_servers.errors.oauth_refresh_token_required"),
       )
     end
+
+    it "uses persisted client_secret_post token auth methods" do
+      ai_mcp_server.update!(
+        oauth_client_registration: "manual",
+        oauth_client_id: "client-id",
+        oauth_client_secret_ai_secret_id: oauth_client_secret.id,
+      )
+      ai_mcp_server.store_oauth_discovery!(
+        DiscourseAi::Mcp::OAuthDiscovery::Result.new(
+          resource: ai_mcp_server.url,
+          resource_metadata_url: "#{ai_mcp_server.url}/.well-known/oauth-protected-resource",
+          issuer: "https://auth.example.com",
+          authorization_endpoint: "https://auth.example.com/authorize",
+          token_endpoint: "https://auth.example.com/token",
+          revocation_endpoint: nil,
+          registration_endpoint: nil,
+          token_endpoint_auth_methods_supported: %w[client_secret_post],
+        ),
+      )
+
+      state = SecureRandom.hex(32)
+      Rails.cache.write(
+        "discourse-ai:mcp-oauth-state:#{state}",
+        {
+          "ai_mcp_server_id" => ai_mcp_server.id,
+          "user_id" => user.id,
+          "code_verifier" => "test-verifier",
+        },
+        expires_in: 10.minutes,
+      )
+
+      stub_request(:post, "https://auth.example.com/token")
+        .with do |request|
+          decoded_body = Rack::Utils.parse_nested_query(request.body)
+          request.headers["Authorization"].blank? &&
+            decoded_body["client_secret"] == oauth_client_secret.secret
+        end
+        .to_return(
+          status: 200,
+          body: {
+            access_token: "fresh-access-token",
+            refresh_token: "fresh-refresh-token",
+            token_type: "Bearer",
+          }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+      described_class.complete!(params: { state: state, code: "auth-code" }, current_user: user)
+
+      expect(ai_mcp_server.reload.oauth_token.access_token).to eq("fresh-access-token")
+    end
   end
 
   describe ".refresh!" do

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  include TagParamLimit
+
   # Bug with Rails 7+
   # see https://github.com/rails/rails/issues/44867
   self._flash_types -= [:notice]
@@ -41,55 +43,28 @@ class PostsController < ApplicationController
   end
 
   def latest
+    discourse_expires_in 1.minute
+
     params.permit(:before)
     last_post_id = params[:before].to_i
     last_post_id = nil if last_post_id <= 0
 
     if params[:id] == "private_posts"
       raise Discourse::NotFound if current_user.nil?
-
-      allowed_private_topics = TopicAllowedUser.where(user_id: current_user.id).select(:topic_id)
-
-      allowed_groups = GroupUser.where(user_id: current_user.id).select(:group_id)
-      allowed_private_topics_by_group =
-        TopicAllowedGroup.where(group_id: allowed_groups).select(:topic_id)
-
-      all_allowed =
-        Topic
-          .where(id: allowed_private_topics)
-          .or(Topic.where(id: allowed_private_topics_by_group))
-          .select(:id)
-
       posts =
-        Post
-          .private_posts
-          .where(post_type: Topic.visible_post_types(current_user))
-          .order(id: :desc)
-          .includes(topic: :category)
-          .includes(user: %i[primary_group flair_group])
-          .includes(:reply_to_user)
-          .limit(50)
+        LatestPostsQuery.new(user: current_user, guardian:).private_posts(
+          before_post_id: last_post_id,
+        )
       rss_description = I18n.t("rss_description.private_posts")
-
-      posts = posts.where(topic_id: all_allowed) if !current_user.admin?
     else
       posts =
-        Post
-          .public_posts
-          .visible
-          .where(post_type: Post.types[:regular])
-          .order(id: :desc)
-          .includes(topic: :category)
-          .includes(user: %i[primary_group flair_group])
-          .includes(:reply_to_user)
-          .where("categories.id" => Category.secured(guardian).select(:id))
-          .limit(50)
+        LatestPostsQuery.new(user: current_user, guardian:).public_posts(
+          before_post_id: last_post_id,
+        )
 
       rss_description = I18n.t("rss_description.posts")
       @use_canonical = true
     end
-
-    posts = posts.where("posts.id < ?", last_post_id) if last_post_id
 
     posts = posts.to_a
 
@@ -114,6 +89,7 @@ class PostsController < ApplicationController
             add_excerpt: true,
             add_title: true,
             all_post_actions: counts,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
           ),
         )
       end
@@ -149,7 +125,15 @@ class PostsController < ApplicationController
       end
 
       format.json do
-        render_json_dump(serialize_data(posts, PostSerializer, scope: guardian, add_excerpt: true))
+        render_json_dump(
+          serialize_data(
+            posts,
+            PostSerializer,
+            scope: guardian,
+            add_excerpt: true,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
+          ),
+        )
       end
     end
   end
@@ -161,6 +145,7 @@ class PostsController < ApplicationController
   def raw_email
     params.require(:id)
     post = Post.unscoped.find(params[:id].to_i)
+    guardian.ensure_can_see!(post)
     guardian.ensure_can_view_raw_email!(post)
     text, html = Email.extract_parts(post.raw_email)
     render json: { raw_email: post.raw_email, text_part: text, html_part: html }
@@ -181,6 +166,8 @@ class PostsController < ApplicationController
   end
 
   def create
+    return if reject_too_many_tags!(:tags)
+
     manager_params = create_params
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
@@ -232,6 +219,10 @@ class PostsController < ApplicationController
       locale: params[:post][:locale],
     }
 
+    if params[:post].key?(:reply_to_post_number)
+      changes[:reply_to_post_number] = params[:post][:reply_to_post_number]
+    end
+
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
     # keep `raw_old` for backwards compatibility
@@ -242,7 +233,10 @@ class PostsController < ApplicationController
 
     # to stay consistent with the create api, we allow for title & category changes here
     if post.is_first_post?
-      changes[:title] = params[:title] if params[:title]
+      if params[:title]
+        guardian.ensure_can_edit_topic!(post.topic) if params[:title] != post.topic.title
+        changes[:title] = params[:title]
+      end
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
 
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
@@ -567,22 +561,22 @@ class PostsController < ApplicationController
   def revert
     raise Discourse::NotFound unless guardian.is_staff?
 
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
-    raise Discourse::NotFound unless post_revision
-
     post = find_post_from_params
     raise Discourse::NotFound if post.blank?
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
+    raise Discourse::NotFound unless post_revision
 
     post_revision.post = post
     guardian.ensure_can_see!(post_revision)
     guardian.ensure_can_edit!(post)
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
          post_revision.modifications["category_id"].blank? &&
-         post_revision.modifications["tags"].blank?
+         post_revision.modifications["tags"].blank? &&
+         post_revision.modifications["reply_to_post_number"].blank?
       return render_json_error(I18n.t("revert_version_same"))
     end
 
@@ -592,6 +586,10 @@ class PostsController < ApplicationController
     changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications[
       "raw"
     ].present? && post_revision.modifications["raw"][0] != post.raw
+    if post_revision.modifications["reply_to_post_number"].present? &&
+         post_revision.modifications["reply_to_post_number"][0] != post.reply_to_post_number
+      changes[:reply_to_post_number] = post_revision.modifications["reply_to_post_number"][0]
+    end
     if post.is_first_post?
       changes[:title] = post_revision.modifications["title"][0] if post_revision.modifications[
         "title"
@@ -698,6 +696,8 @@ class PostsController < ApplicationController
 
     post.revise(current_user, wiki: params[:wiki])
 
+    return render_json_error(post) if post.errors.present?
+
     render body: nil
   end
 
@@ -705,9 +705,16 @@ class PostsController < ApplicationController
     guardian.ensure_can_change_post_type!
     post = find_post_from_params
     params.require(:post_type)
-    raise Discourse::InvalidParameters.new(:post_type) if Post.types[params[:post_type].to_i].blank?
+    post_type = params[:post_type].to_i
+    unless PostRevisor.valid_post_type?(post_type)
+      raise Discourse::InvalidParameters.new(:post_type)
+    end
 
-    post.revise(current_user, post_type: params[:post_type].to_i)
+    if post.is_first_post? && post_type == Post.types[:whisper]
+      raise Discourse::InvalidParameters.new(:post_type)
+    end
+
+    post.revise(current_user, post_type: post_type)
 
     render body: nil
   end
@@ -790,29 +797,30 @@ class PostsController < ApplicationController
   end
 
   def find_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
+    post = find_post_from_params
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision
   end
 
   def find_latest_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
+    post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post_id).order(:number)
+    finder = PostRevision.where(post_id: post.id).order(:number)
     finder = finder.where(hidden: false) unless guardian.is_staff?
     post_revision = finder.last
 
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision
@@ -1071,6 +1079,7 @@ class PostsController < ApplicationController
       post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
       if post_revision
         guardian.ensure_can_see!(post_revision)
+        guardian.ensure_can_view_post_version!(post, version)
         post.revert_to(version)
       end
     end
@@ -1088,9 +1097,12 @@ class PostsController < ApplicationController
   end
 
   def find_post_from_params_by_date
+    topic = Topic.with_deleted.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless guardian.can_see?(topic)
+
     by_date_finder =
       TopicView
-        .new(params[:topic_id], current_user)
+        .new(topic, current_user)
         .filtered_posts
         .where("created_at >= ?", Time.zone.parse(params[:date]))
         .order("created_at ASC")
@@ -1110,7 +1122,7 @@ class PostsController < ApplicationController
       raise Discourse::NotFound unless guardian.can_moderate_topic?(post.topic)
     end
 
-    guardian.ensure_can_see!(post)
+    raise Discourse::NotFound unless guardian.can_see?(post)
 
     post
   end

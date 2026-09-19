@@ -24,14 +24,16 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
   describe "logged in user" do
     before { sign_in(user) }
+
     describe "default_subcategory_on_read_only_category setting enabled and can't post on parent category" do
       before { SiteSetting.default_subcategory_on_read_only_category = true }
 
       describe "default_composer_category set" do
         before { SiteSetting.default_composer_category = default_latest_category.id }
+
         describe "Can't post on parent category" do
           describe "Category has subcategory" do
-            it "should have 'New Topic' button enabled and default Subcategory set in the composer" do
+            it "enables New Topic and selects the default subcategory" do
               category_page.visit(category)
               expect(category_page).to have_button("New Topic", disabled: false)
               category_page.new_topic_button.click
@@ -40,8 +42,9 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
               expect(select_kit).to have_selected_value(subcategory.id)
             end
           end
+
           describe "Category does not have subcategory" do
-            it "should have the 'New Topic' button enabled and no category set in the composer" do
+            it "enables New Topic without selecting a category" do
               category_page.visit(category_with_no_subcategory)
               expect(category_page).to have_button("New Topic", disabled: false)
 
@@ -49,12 +52,13 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
               select_kit =
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
 
-              expect(select_kit).to have_selected_name("category&hellip;")
+              expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
             end
           end
         end
+
         describe "Can post on home page" do
-          it "should have the default category set in the composer" do
+          it "selects the default category in the composer" do
             page.visit("latest")
             expect(page).to have_button("New Topic", disabled: false)
             page.find("#create-topic").click
@@ -70,6 +74,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
           SiteSetting.default_composer_category = ""
           SiteSetting.allow_uncategorized_topics = false
         end
+
         describe "Can't post on parent category" do
           describe "Category does not have subcategory" do
             it "opens composer with no category selected" do
@@ -79,10 +84,11 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
               category_page.new_topic_button.click
               select_kit =
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-              expect(select_kit).to have_selected_name("category&hellip;")
+              expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
             end
           end
         end
+
         describe "Can post on home page" do
           it "composer should open" do
             page.visit("latest")
@@ -91,7 +97,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
             select_kit =
               PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-            expect(select_kit).to have_selected_name("category&hellip;")
+            expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
           end
         end
       end
@@ -109,7 +115,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
         page.find("#create-topic").click
         select_kit = PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-        expect(select_kit).to have_selected_name("category&hellip;")
+        expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
       end
     end
   end

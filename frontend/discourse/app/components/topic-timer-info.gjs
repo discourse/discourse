@@ -5,12 +5,12 @@ import { cancel, next } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
-import DButton from "discourse/components/d-button";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -25,21 +25,9 @@ export default class TopicTimerInfo extends Component {
   removeTopicTimer = null;
   _delayedRerender = null;
 
-  @on("didReceiveAttrs")
-  setupRenderer() {
-    this.renderTopicTimer();
-  }
-
-  @on("willDestroyElement")
-  cancelDelayedRenderer() {
-    if (this._delayedRerender) {
-      cancel(this._delayedRerender);
-    }
-  }
-
-  @computed
+  @computed("currentUser.canSetTopicTimer")
   get canModifyTimer() {
-    return this.currentUser && this.currentUser.get("canManageTopic");
+    return this.currentUser?.get("canSetTopicTimer");
   }
 
   @computed("canModifyTimer", "removeTopicTimer")
@@ -50,6 +38,18 @@ export default class TopicTimerInfo extends Component {
   @computed("canModifyTimer", "showTopicTimerModal")
   get showEdit() {
     return this.canModifyTimer && this.showTopicTimerModal;
+  }
+
+  @on("didReceiveAttrs")
+  setupRenderer() {
+    this.renderTopicTimer();
+  }
+
+  @on("willDestroyElement")
+  cancelDelayedRenderer() {
+    if (this._delayedRerender) {
+      cancel(this._delayedRerender);
+    }
   }
 
   additionalOpts() {
@@ -179,18 +179,18 @@ export default class TopicTimerInfo extends Component {
           <div class="topic-timer-modify">
             {{#if this.showEdit}}
               <DButton
-                @title="post.controls.edit_timer"
-                @icon="pencil"
-                @action={{this.showTopicTimerModal}}
                 class="topic-timer-edit no-text"
+                @action={{this.showTopicTimerModal}}
+                @icon="pencil"
+                @title="post.controls.edit_timer"
               />
             {{/if}}
             {{#if this.showTrashCan}}
               <DButton
-                @title="post.controls.remove_timer"
-                @icon="trash-can"
-                @action={{this.removeTopicTimer}}
                 class="topic-timer-remove no-text"
+                @action={{this.removeTopicTimer}}
+                @icon="trash-can"
+                @title="post.controls.remove_timer"
               />
             {{/if}}
           </div>

@@ -1,0 +1,1496 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { cancel, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
+import Form from "discourse/components/form";
+import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import SecondFactorForm from "discourse/components/second-factor-form";
+import SecurityKeyForm from "discourse/components/security-key-form";
+import UserField from "discourse/components/user-field";
+import WelcomeHeader from "discourse/components/welcome-header";
+import lazyHash from "discourse/helpers/lazy-hash";
+import valueEntered from "discourse/helpers/value-entered";
+import { ajax } from "discourse/lib/ajax";
+import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import discourseDebounce from "discourse/lib/debounce";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
+import PasswordValidationHelper from "discourse/lib/password-validation-helper";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
+import DiscourseURL from "discourse/lib/url";
+import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
+import { emailValid } from "discourse/lib/utilities";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
+import User, { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DOtp from "discourse/ui-kit/d-otp";
+import DPasswordField from "discourse/ui-kit/d-password-field";
+import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
+import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+
+const RESEND_COOLDOWN_SECONDS = 30;
+const SIGNUP_CONTINUATION_KEY = "email-code-signup-continuation";
+
+export default class CodeLoginForm extends Component {
+  @service login;
+  @service site;
+  @service siteSettings;
+  @service modal;
+  @service sessionStore;
+
+  @tracked email = this.args.initialEmail ?? "";
+  @tracked verifying = false;
+  @tracked codeError;
+  @tracked notice;
+  @tracked resendCooldown = 0;
+  @tracked otpGeneration = 0;
+  @tracked newAccount;
+  @tracked accountUser;
+  @tracked name = "";
+  @tracked accountPassword = "";
+  @tracked showOptionalPassword = false;
+  @tracked maskPassword = true;
+  @tracked capsLockOn = false;
+  @tracked nameRequired = false;
+  @tracked signupToken;
+  @tracked nameError;
+  @tracked username = "";
+  @tracked usernameAvailable = false;
+  @tracked usernameChecking = false;
+  @tracked usernameError;
+  @tracked usernameEditable = true;
+  @tracked regenerating = false;
+  @tracked avatarTemplate;
+  @tracked avatarDetailsLoaded = false;
+  @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
+  @tracked secondFactorToken;
+  @tracked securityKeyCredential;
+  @tracked totpEnabled = false;
+  @tracked backupCodesEnabled = false;
+  @tracked securityKeyRequired = false;
+  @tracked securityKeyChallenge;
+  @tracked securityKeyAllowedCredentialIds;
+  code = "";
+  passwordValidationHelper = new PasswordValidationHelper(this);
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    getUserFields: () =>
+      this.site.get("user_fields")?.filter((f) => f.show_on_signup),
+    getAccountPassword: () => this.accountPassword,
+    showValidationOnInit: false,
+  });
+  #cooldownTimer;
+  #draftEmail;
+  #postSignupRedirectUrl;
+  #usernameCheckSeq = 0;
+  @tracked _step;
+
+  constructor() {
+    super(...arguments);
+    if (this.isSignup && this.#restoreSignupContinuation()) {
+      return;
+    }
+
+    this._step = this.args.initialStep ?? "email";
+    if (this.isCodeStep) {
+      this.startResendCooldown();
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this.#cooldownTimer);
+  }
+
+  // Tracked-backed so the parent can react to step transitions via onStepChange.
+  get step() {
+    return this._step;
+  }
+
+  set step(value) {
+    this._step = value;
+    this.args.onStepChange?.(value);
+  }
+
+  get isSignup() {
+    return this.args.context === "signup";
+  }
+
+  get isInvite() {
+    return this.args.context === "invite";
+  }
+
+  get isPasswordReset() {
+    return this.args.context === "password-reset";
+  }
+
+  get isInviteEmailLocked() {
+    return this.isInvite && this.args.emailLocked;
+  }
+
+  get isEmailStep() {
+    return this.step === "email";
+  }
+
+  get isCodeStep() {
+    return this.step === "code";
+  }
+
+  get isSecondFactorStep() {
+    return this.step === "second-factor";
+  }
+
+  // Whether a second factor other than the security key is available to fall
+  // back to (TOTP or backup codes).
+  get otherSecondFactorAllowed() {
+    return this.totpEnabled || this.backupCodesEnabled;
+  }
+
+  get isUserFieldsStep() {
+    return this.step === "user-fields";
+  }
+
+  get isCompleteStep() {
+    return this.step === "complete";
+  }
+
+  get isAccountDetailsStep() {
+    return this.step === "account-details";
+  }
+
+  get isPendingApprovalStep() {
+    return this.step === "pending-approval";
+  }
+
+  get heading() {
+    if (this.isAccountDetailsStep) {
+      return {
+        title: i18n("code_login.account_details_title"),
+        subtitle: i18n("code_login.account_details_instructions"),
+      };
+    }
+
+    if (this.isPendingApprovalStep) {
+      return {
+        title: i18n("code_login.pending_approval_title"),
+        subtitle: i18n("code_login.pending_approval_instructions"),
+      };
+    }
+
+    if (!this.isSignup) {
+      return null;
+    }
+
+    switch (this.step) {
+      case "code":
+        return {
+          title: i18n("code_login.check_your_email"),
+          subtitle: this.codeInstructions,
+        };
+      case "user-fields":
+        return {
+          title: i18n("code_login.user_fields_title"),
+          subtitle: i18n("code_login.user_fields_instructions"),
+        };
+      case "complete":
+        return {
+          title: i18n("code_login.account_ready_title"),
+          subtitle: this.usernameEditable
+            ? i18n("code_login.account_ready_edit")
+            : null,
+        };
+      case "second-factor":
+        return { title: i18n("login.second_factor_title"), subtitle: null };
+      default:
+        return { title: i18n("code_login.signup_title"), subtitle: null };
+    }
+  }
+
+  get continueDisabled() {
+    if (this.verifying || this.passwordValidation.failed) {
+      return true;
+    }
+    // When the username can't be changed there's nothing to validate.
+    if (!this.usernameEditable) {
+      return false;
+    }
+    return !this.usernameAvailable || this.usernameChecking;
+  }
+
+  get userFields() {
+    return this.userFieldsValidationHelper.userFields;
+  }
+
+  get accountEmail() {
+    return this.email;
+  }
+
+  get accountName() {
+    return this.name;
+  }
+
+  get accountUsername() {
+    return this.username;
+  }
+
+  get passwordRequired() {
+    return this.accountPassword.length > 0;
+  }
+
+  get passwordValidation() {
+    return this.passwordValidationHelper.passwordValidation;
+  }
+
+  get showPasswordValidation() {
+    return this.accountPassword.length > 0 && this.passwordValidation.reason;
+  }
+
+  // Re-rendering DOtp with a fresh identity is the only way to clear it
+  get otpGenerationArray() {
+    return [this.otpGeneration];
+  }
+
+  get codeInstructions() {
+    if (this.isPasswordReset) {
+      return i18n("forgot_password.code_instructions");
+    }
+
+    return trustHTML(
+      i18n("code_login.code_instructions", { email: escape(this.email) })
+    );
+  }
+
+  get resendLabel() {
+    if (this.resendCooldown > 0) {
+      return i18n("code_login.resend_countdown", {
+        count: this.resendCooldown,
+      });
+    }
+    return i18n("code_login.resend");
+  }
+
+  get resendDisabled() {
+    return this.resendCooldown > 0 || this.verifying;
+  }
+
+  @action
+  validateEmail(name, value, { addError }) {
+    if (value && !emailValid(value)) {
+      addError("email", {
+        title: i18n("code_login.email_label"),
+        message: i18n("user.email.invalid"),
+      });
+    }
+  }
+
+  @action
+  async submitEmail(data) {
+    this.email = data.email.trim();
+    await this.sendCode();
+  }
+
+  @action
+  captureEmail(event) {
+    this.#draftEmail = event.currentTarget
+      .closest(".code-login-form")
+      .querySelector('input[type="email"]')?.value;
+  }
+
+  @action
+  usePassword() {
+    this.args.onUsePassword?.(this.#draftEmail ?? this.email);
+  }
+
+  @action
+  async requestCode() {
+    if (this.verifying) {
+      return;
+    }
+
+    this.verifying = true;
+    await this.sendCode();
+    this.verifying = false;
+  }
+
+  @action
+  async resendCode() {
+    if (this.resendDisabled) {
+      return;
+    }
+
+    if (await this.sendCode()) {
+      this.notice = i18n("code_login.code_resent");
+      this.code = "";
+      this.otpGeneration++;
+    }
+  }
+
+  @action
+  changeEmail() {
+    cancel(this.#cooldownTimer);
+    this.accountPassword = "";
+    this.showOptionalPassword = false;
+    this.resendCooldown = 0;
+    this.code = "";
+    this.codeError = null;
+    this.notice = null;
+    this.otpGeneration++;
+    this.#clearSignupContinuation();
+    this.step = "email";
+    this.args.onChangeEmail?.();
+  }
+
+  @action
+  codeChanged(value) {
+    this.code = value;
+    this.codeError = null;
+  }
+
+  @action
+  async verifyCode(code) {
+    if (typeof code === "string") {
+      this.code = code;
+    }
+
+    if (this.code.length < 6 || this.verifying) {
+      return;
+    }
+
+    this.verifying = true;
+    this.codeError = null;
+    this.notice = null;
+
+    const data = {
+      email: this.email,
+      code: this.code,
+      timezone: moment.tz.guess(),
+    };
+
+    if (this.isInvite) {
+      data.invite_key = this.args.inviteKey;
+    }
+
+    if (this.isSecondFactorStep) {
+      data.second_factor_token =
+        this.securityKeyCredential || this.secondFactorToken;
+      data.second_factor_method = this.secondFactorMethod;
+    }
+
+    if (
+      !this.isPasswordReset &&
+      (this.isUserFieldsStep || this.#prefillUserFields())
+    ) {
+      data.user_fields = {};
+      this.userFields.forEach((f) => (data.user_fields[f.field.id] = f.value));
+      if (this.nameRequired) {
+        data.name = this.name.trim();
+      }
+    }
+
+    try {
+      const endpoint = this.isPasswordReset
+        ? "/session/password-reset-code/verify"
+        : "/session/login-code/verify";
+      const verify = () =>
+        ajax(endpoint, {
+          type: "POST",
+          data,
+        });
+      const result =
+        this.isSignup && this.isCodeStep
+          ? await applyBehaviorTransformer("create-account", verify)
+          : await verify();
+
+      if (
+        (result?.user_fields_required || result?.name_required) &&
+        !this.isUserFieldsStep
+      ) {
+        this.nameRequired = !!result.name_required;
+        this.step = "user-fields";
+        return;
+      }
+
+      if (result?.second_factor_required && !this.isSecondFactorStep) {
+        this.totpEnabled = result.totp_enabled;
+        this.backupCodesEnabled = result.backup_codes_enabled;
+        this.securityKeyRequired = result.security_key_required;
+        this.securityKeyChallenge = result.challenge;
+        this.securityKeyAllowedCredentialIds = result.allowed_credential_ids;
+        this.secondFactorMethod = result.security_key_required
+          ? SECOND_FACTOR_METHODS.SECURITY_KEY
+          : SECOND_FACTOR_METHODS.TOTP;
+        this.step = "second-factor";
+        return;
+      }
+
+      if (result?.error) {
+        if (this.isSecondFactorStep) {
+          this.securityKeyCredential = null;
+          this.codeError = result.error;
+        } else if (this.isUserFieldsStep) {
+          this.codeError = result.error;
+        } else {
+          this.codeError = result.error;
+          this.code = "";
+          this.otpGeneration++;
+        }
+        return;
+      }
+
+      if (this.isPasswordReset) {
+        DiscourseURL.redirectTo(result.redirect_url);
+        return;
+      }
+
+      if (result?.signup_details_required) {
+        this.#setupSignupContinuation(result);
+        this.step = "account-details";
+        return;
+      }
+
+      if (result?.pending_approval) {
+        this.#clearSignupContinuation();
+        this.step = "pending-approval";
+        return;
+      }
+
+      if (result?.account_created) {
+        this.setupNewAccount(result);
+        this.step = "complete";
+        return;
+      }
+
+      this.redirectAfterLogin(result?.redirect_url);
+    } catch (e) {
+      if (isReadOnlyError(e)) {
+        this.codeError = this.login.readOnlyLoginMessage;
+      } else {
+        popupAjaxError(e);
+      }
+    } finally {
+      this.verifying = false;
+    }
+  }
+
+  @action
+  nameChanged(event) {
+    this.name = event.target.value;
+    this.nameError = null;
+  }
+
+  @action
+  revealOptionalPassword() {
+    this.showOptionalPassword = true;
+  }
+
+  @action
+  passwordChanged(event) {
+    this.accountPassword = event.target.value;
+    this.codeError = null;
+  }
+
+  @action
+  togglePasswordMask() {
+    this.maskPassword = !this.maskPassword;
+  }
+
+  @action
+  async submitUserFields() {
+    this.userFieldsValidationHelper.validationVisible = true;
+    if (this.nameRequired && !this.name.trim()) {
+      this.nameError = i18n("user.name.required");
+    }
+    if (
+      this.nameError ||
+      this.userFieldsValidationHelper.userFieldsValidation.failed
+    ) {
+      return;
+    }
+    return this.verifyCode();
+  }
+
+  // The account is logged in server-side but the app is still in its anonymous
+  // boot state, so username/avatar are edited through authenticated requests on
+  // a User model built from the verify response rather than the current user.
+  setupNewAccount(result) {
+    const user = result.user;
+    this.newAccount = user;
+    // can_upload_avatar isn't in UserSerializer, so carry it from the response.
+    this.accountUser = User.create({
+      ...user,
+      can_upload_avatar: result.can_upload_avatar,
+    });
+    this.usernameEditable = result.can_edit_username;
+    this.username = result.prefill_username ? user.username : "";
+    this.avatarTemplate = user.avatar_template;
+    // Set when the server held back a DiscourseConnect provider handoff so this
+    // step could run; continuing resumes it.
+    this.#postSignupRedirectUrl = result.redirect_url;
+
+    if (this.usernameEditable && this.username) {
+      this.checkUsernameAvailability();
+    }
+  }
+
+  @action
+  async regenerateUsername() {
+    if (this.regenerating) {
+      return;
+    }
+
+    this.regenerating = true;
+    try {
+      const before = this.username;
+      // Hold the rolling state for at least one animation cycle so a fast
+      // response doesn't cut the dice spin (and the text fade) short.
+      const [result] = await Promise.all([
+        ajax("/u/random-username.json", {
+          headers: { "X-Discourse-Signup-Token": this.signupToken },
+        }),
+        new Promise((resolve) => discourseLater(resolve, 400)),
+      ]);
+
+      // Don't touch state (or fire the availability check) if the component
+      // was torn down mid-roll, or clobber a name the user typed while the
+      // request was in flight.
+      if (this.isDestroying || this.username !== before) {
+        return;
+      }
+
+      this.username = result.username;
+      this.avatarTemplate = result.avatar_template;
+      this.usernameError = null;
+      this.usernameAvailable = false;
+      await this.checkUsernameAvailability();
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.regenerating = false;
+    }
+  }
+
+  @action
+  usernameChanged(event) {
+    this.username = event.target.value;
+    this.usernameAvailable = false;
+    this.usernameError = null;
+    discourseDebounce(this, this.checkUsernameAvailability, 350);
+  }
+
+  async checkUsernameAvailability() {
+    const username = this.username?.trim();
+    if (!username) {
+      this.usernameAvailable = false;
+      this.usernameError = null;
+      return;
+    }
+
+    // Ignore responses that arrive out of order behind a newer check.
+    const seq = ++this.#usernameCheckSeq;
+    this.usernameChecking = true;
+    try {
+      const result = await User.checkUsername(
+        username,
+        this.email,
+        this.newAccount?.id
+      );
+
+      if (seq !== this.#usernameCheckSeq) {
+        return;
+      }
+
+      if (result.available) {
+        this.usernameAvailable = true;
+        this.usernameError = null;
+      } else {
+        this.usernameAvailable = false;
+        this.usernameError =
+          result.errors?.join(" ") ||
+          (result.suggestion
+            ? i18n("code_login.username_unavailable", {
+                suggestion: result.suggestion,
+              })
+            : i18n("code_login.username_taken"));
+      }
+    } catch {
+      if (seq === this.#usernameCheckSeq) {
+        this.usernameAvailable = false;
+      }
+    } finally {
+      if (seq === this.#usernameCheckSeq) {
+        this.usernameChecking = false;
+      }
+    }
+  }
+
+  @action
+  async changeAvatar() {
+    try {
+      // The picker needs the gravatar/system/upload state, loaded on demand.
+      if (!this.avatarDetailsLoaded) {
+        await this.accountUser.findDetails();
+        this.avatarDetailsLoaded = true;
+      }
+    } catch (e) {
+      return popupAjaxError(e);
+    }
+
+    this.modal.show(AvatarSelectorModal, {
+      model: {
+        user: this.accountUser,
+        onAvatarChange: () => this.avatarChanged(),
+      },
+    });
+  }
+
+  async avatarChanged() {
+    // pickAvatar doesn't update the model, so reload to show the new avatar.
+    try {
+      await this.accountUser.findDetails();
+      this.avatarTemplate = this.accountUser.avatar_template;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async submitAccountDetails() {
+    this.userFieldsValidationHelper.validationVisible = true;
+    if (this.site.full_name_required_for_signup && !this.name.trim()) {
+      this.nameError = i18n("user.name.required");
+    }
+    if (
+      this.continueDisabled ||
+      this.nameError ||
+      this.userFieldsValidationHelper.userFieldsValidation.failed
+    ) {
+      return;
+    }
+
+    this.verifying = true;
+    this.codeError = null;
+
+    const data = {
+      signup_token: this.signupToken,
+      username: this.username.trim(),
+      user_fields: {},
+    };
+    if (this.site.full_name_visible_in_signup) {
+      data.name = this.name.trim();
+    }
+    if (this.accountPassword) {
+      data.password = this.accountPassword;
+    }
+    this.userFields.forEach((field) => {
+      data.user_fields[field.field.id] = field.value;
+    });
+
+    try {
+      const result = await ajax("/session/login-code/verify", {
+        type: "POST",
+        data,
+      });
+
+      if (result?.pending_approval) {
+        this.accountPassword = "";
+        this.#clearSignupContinuation();
+        this.step = "pending-approval";
+      } else if (result?.error) {
+        if (result.password_error && this.accountPassword) {
+          this.passwordValidationHelper.rejectedPasswords.push(
+            this.accountPassword
+          );
+          this.passwordValidationHelper.rejectedPasswordsMessages.set(
+            this.accountPassword,
+            result.password_error
+          );
+        }
+        this.codeError = result.error;
+      } else {
+        this.redirectAfterLogin(result?.redirect_url);
+      }
+    } catch (e) {
+      if (isReadOnlyError(e)) {
+        this.codeError = this.login.readOnlyLoginMessage;
+      } else {
+        popupAjaxError(e);
+      }
+    } finally {
+      this.verifying = false;
+    }
+  }
+
+  @action
+  async continueAfterSignup() {
+    if (this.continueDisabled) {
+      return;
+    }
+
+    this.verifying = true;
+
+    const username = this.username.trim();
+    if (
+      this.usernameEditable &&
+      username.toLowerCase() !== this.newAccount.username.toLowerCase()
+    ) {
+      try {
+        await this.accountUser.changeUsername(username);
+      } catch (e) {
+        this.verifying = false;
+        popupAjaxError(e);
+        return;
+      }
+    }
+
+    // Leave the button disabled and spinning through the redirect so it doesn't
+    // flash back to its idle state before the page navigates away.
+    this.redirectAfterLogin(this.#postSignupRedirectUrl);
+  }
+
+  @action
+  submitSecondFactor() {
+    this.securityKeyCredential = null;
+    return this.verifyCode();
+  }
+
+  @action
+  secondFactorTokenChanged(value) {
+    this.secondFactorToken = value;
+    this.codeError = null;
+  }
+
+  @action
+  setShowSecurityKey(value) {
+    this.securityKeyRequired = value;
+  }
+
+  @action
+  setSecondFactorMethod(value) {
+    this.secondFactorMethod = value;
+  }
+
+  @action
+  authenticateSecurityKey() {
+    getWebauthnCredential(
+      this.securityKeyChallenge,
+      this.securityKeyAllowedCredentialIds,
+      (credentialData) => {
+        this.securityKeyCredential = credentialData;
+        this.verifyCode();
+      },
+      (errorMessage) => {
+        this.codeError = errorMessage;
+      }
+    );
+  }
+
+  async sendCode() {
+    this.codeError = null;
+    this.notice = null;
+
+    try {
+      if (this.isPasswordReset) {
+        await ajax("/session/forgot_password", {
+          type: "POST",
+          data: { login: this.email.trim() },
+        });
+        this.startResendCooldown();
+        return true;
+      }
+
+      const honeypot = await ajax("/session/hp.json");
+      const result = await ajax("/session/login-code", {
+        type: "POST",
+        data: {
+          email: this.email,
+          signup: this.isSignup,
+          invite_key: this.isInvite ? this.args.inviteKey : undefined,
+          password_confirmation: honeypot.value,
+          challenge: honeypot.challenge.split("").reverse().join(""),
+        },
+      });
+
+      if (result?.error) {
+        this.codeError = result.error;
+        return false;
+      }
+
+      this.step = "code";
+      this.startResendCooldown();
+      return true;
+    } catch (e) {
+      popupAjaxError(e);
+      return false;
+    }
+  }
+
+  redirectAfterLogin(redirectUrl) {
+    const destinationUrl = cookie("destination_url");
+    if (redirectUrl) {
+      window.location.assign(redirectUrl);
+    } else if (destinationUrl) {
+      removeCookie("destination_url");
+      window.location.assign(destinationUrl);
+    } else {
+      window.location.assign(getURL("/"));
+    }
+  }
+
+  startResendCooldown() {
+    cancel(this.#cooldownTimer);
+    this.resendCooldown = RESEND_COOLDOWN_SECONDS;
+    this.tickCooldown();
+  }
+
+  tickCooldown() {
+    if (this.resendCooldown <= 0) {
+      return;
+    }
+
+    this.#cooldownTimer = discourseLater(() => {
+      this.resendCooldown -= 1;
+      this.tickCooldown();
+    }, 1000);
+  }
+
+  #setupSignupContinuation(result) {
+    this.signupToken = result.signup_token;
+    this.username = result.username || "";
+    this.usernameAvailable = false;
+    this.usernameError = null;
+    this.nameRequired = this.site.full_name_required_for_signup;
+
+    this.sessionStore.setObject({
+      key: SIGNUP_CONTINUATION_KEY,
+      value: {
+        email: this.email,
+        expiresAt: Date.now() + result.expires_in * 1000,
+        signupToken: this.signupToken,
+        username: this.username,
+      },
+    });
+
+    if (this.username) {
+      this.checkUsernameAvailability();
+    }
+  }
+
+  #restoreSignupContinuation() {
+    const continuation = this.sessionStore.getObject(SIGNUP_CONTINUATION_KEY);
+    if (
+      !continuation?.email ||
+      !continuation.signupToken ||
+      !continuation.expiresAt ||
+      continuation.expiresAt <= Date.now()
+    ) {
+      this.#clearSignupContinuation();
+      return false;
+    }
+
+    this.email = continuation.email;
+    this.signupToken = continuation.signupToken;
+    this.username = continuation.username || "";
+    this.nameRequired = this.site.full_name_required_for_signup;
+    this._step = "account-details";
+    schedule("afterRender", () => {
+      if (!this.isDestroying) {
+        this.args.onStepChange?.(this.step);
+      }
+    });
+    if (this.username) {
+      this.checkUsernameAvailability();
+    }
+    return true;
+  }
+
+  #clearSignupContinuation() {
+    this.signupToken = null;
+    this.sessionStore.remove(SIGNUP_CONTINUATION_KEY);
+  }
+
+  // A signup flow can gather the required signup fields before the code is
+  // verified — a themed landing page that asks for them up front, say. Taking
+  // those answers here lets the extra step be skipped entirely.
+  //
+  // Returns whether they can be submitted along with the code. The server
+  // reads any `user_fields` it receives as the complete answer, so a partial
+  // set would fail the signup outright rather than prompting for the rest:
+  // hold them back unless every required field ends up answered.
+  #prefillUserFields() {
+    const values = applyValueTransformer(
+      "code-login-user-field-values",
+      {},
+      { signup: this.isSignup }
+    );
+
+    if (!values || Object.keys(values).length === 0) {
+      return false;
+    }
+
+    let prefilled = false;
+
+    this.userFields.forEach((f) => {
+      const value = values[f.field.id];
+
+      if (value !== undefined) {
+        f.value = value;
+        prefilled = true;
+      }
+    });
+
+    return (
+      prefilled &&
+      this.userFields.every(
+        (f) => !f.field.required || (f.value && f.value !== "false")
+      )
+    );
+  }
+
+  <template>
+    <div class="code-login-form">
+      {{#if this.heading}}
+        {{! Plugins can replace this via the signup-heading outlet. }}
+        <PluginOutlet
+          @name="signup-heading"
+          @outletArgs={{lazyHash
+            step=this.step
+            context=@context
+            title=this.heading.title
+            subtitle=this.heading.subtitle
+          }}
+        >
+          <WelcomeHeader
+            id="create-account-title"
+            @header={{this.heading.title}}
+          >
+            {{#if this.heading.subtitle}}
+              <p class="login-subheader">{{this.heading.subtitle}}</p>
+            {{/if}}
+          </WelcomeHeader>
+        </PluginOutlet>
+      {{/if}}
+
+      {{#unless this.isEmailStep}}
+        {{! Steps replace each other in the DOM, so without this hidden field
+        password managers lose track of which account is authenticating once
+        the email input unmounts. }}
+        <input
+          aria-hidden="true"
+          autocomplete="username"
+          class="code-login-form__hidden-email sr-only"
+          name="email"
+          readonly={{true}}
+          tabindex="-1"
+          type="email"
+          value={{this.email}}
+        />
+      {{/unless}}
+
+      {{#if this.isEmailStep}}
+        {{#if this.isInviteEmailLocked}}
+          <div class="code-login-form__email-step">
+            <p class="code-login-form__instructions">
+              {{i18n "invites.code_instructions" email=this.email}}
+            </p>
+            <DButton
+              class="btn-primary code-login-form__continue"
+              @action={{this.requestCode}}
+              @isLoading={{this.verifying}}
+              @label="invites.send_code"
+            />
+            {{#if this.codeError}}
+              <div class="code-login-form__error" role="alert">
+                {{this.codeError}}
+              </div>
+            {{/if}}
+          </div>
+        {{else}}
+          {{#if this.isSignup}}
+            <p class="code-login-form__instructions">
+              {{i18n "code_login.signup_instructions"}}
+            </p>
+          {{/if}}
+
+          <Form
+            class="code-login-form__email-step"
+            @data={{hash email=this.email}}
+            @onSubmit={{this.submitEmail}}
+            as |form|
+          >
+            <form.Field
+              @format="full"
+              @name="email"
+              @title={{i18n "code_login.email_label"}}
+              @type="input-email"
+              @validate={{this.validateEmail}}
+              @validation="required"
+              as |field|
+            >
+              <field.Control autocomplete="username" autofocus="autofocus" />
+            </form.Field>
+
+            {{! Lets a signup flow add its own fields to this form — an agreement
+            it needs accepted before the account exists, say — so they are
+            validated and submitted together with the email. }}
+            <PluginOutlet
+              @name="code-login-email-step-fields"
+              @outletArgs={{lazyHash form=form context=@context}}
+            />
+
+            {{#if this.codeError}}
+              <div
+                aria-live="polite"
+                class="code-login-form__error"
+                role="alert"
+              >
+                {{this.codeError}}
+              </div>
+            {{/if}}
+
+            <div class="code-login-form__email-actions">
+              <form.Submit
+                class="btn-primary code-login-form__continue"
+                @label="code_login.continue_button"
+              />
+
+              {{#if @onUsePassword}}
+                <DButton
+                  class="btn-flat code-login-form__password-toggle"
+                  @action={{this.usePassword}}
+                  @label={{or
+                    @usePasswordLabel
+                    "code_login.use_password_instead"
+                  }}
+                  {{on "click" this.captureEmail}}
+                />
+              {{/if}}
+            </div>
+          </Form>
+        {{/if}}
+      {{else if this.isCodeStep}}
+        <div class="code-login-form__code-step">
+          {{#unless this.isSignup}}
+            <h2 class="code-login-form__title">
+              {{i18n "code_login.check_your_email"}}
+            </h2>
+            <p class="code-login-form__instructions">
+              {{this.codeInstructions}}
+            </p>
+          {{/unless}}
+
+          {{#if this.isSignup}}
+            <PluginOutlet
+              @name="code-login-after-code"
+              @outletArgs={{lazyHash context=@context}}
+            />
+          {{/if}}
+
+          {{#each this.otpGenerationArray as |generation|}}
+            <DOtp
+              id="code-login-otp-{{generation}}"
+              @onChange={{this.codeChanged}}
+              @onFill={{this.verifyCode}}
+            />
+          {{/each}}
+
+          <div aria-live="polite" class="code-login-form__error" role="alert">
+            {{this.codeError}}
+          </div>
+
+          {{#if this.notice}}
+            <p aria-live="polite" class="code-login-form__notice">
+              {{this.notice}}
+            </p>
+          {{/if}}
+
+          <DButton
+            class="btn-primary code-login-form__verify"
+            type="submit"
+            @action={{this.verifyCode}}
+            @isLoading={{this.verifying}}
+            @label="code_login.verify_button"
+          />
+
+          <div class="code-login-form__actions">
+            <DButton
+              class="btn-flat code-login-form__resend"
+              @action={{this.resendCode}}
+              @disabled={{this.resendDisabled}}
+              @translatedLabel={{this.resendLabel}}
+            />
+            {{#unless this.isInviteEmailLocked}}
+              <DButton
+                class="btn-flat code-login-form__change-email"
+                @action={{this.changeEmail}}
+                @label="code_login.use_different_email"
+              />
+            {{/unless}}
+          </div>
+        </div>
+      {{else if this.isAccountDetailsStep}}
+        <div class="code-login-form__account-details-step">
+          <div
+            class="code-login-form__account-fields
+              {{if
+                this.siteSettings.enable_random_usernames
+                '--with-username-generator'
+              }}"
+          >
+            <div class="code-login-form__username-field">
+              <label for="code-login-username">
+                {{i18n "code_login.username_label"}}
+              </label>
+              <div class="code-login-form__username-input">
+                <input
+                  aria-describedby="code-login-username-error"
+                  aria-invalid={{if this.usernameError "true"}}
+                  autocomplete="username"
+                  class="code-login-form__new-account-username
+                    {{if this.regenerating '--swapping'}}"
+                  id="code-login-username"
+                  name="username"
+                  placeholder={{i18n "code_login.username_placeholder"}}
+                  type="text"
+                  value={{this.username}}
+                  {{on "input" this.usernameChanged}}
+                />
+                {{#if this.siteSettings.enable_random_usernames}}
+                  <DButton
+                    aria-busy={{if this.regenerating "true"}}
+                    class="btn-default code-login-form__username-regen
+                      {{if this.regenerating '--rolling'}}"
+                    @action={{this.regenerateUsername}}
+                    @ariaLabel="code_login.regenerate_username"
+                    @icon="dice"
+                    @title="code_login.regenerate_username"
+                  />
+                {{/if}}
+              </div>
+              <div
+                aria-live="polite"
+                class="code-login-form__error"
+                id="code-login-username-error"
+                role="alert"
+              >
+                {{this.usernameError}}
+              </div>
+            </div>
+
+            {{#if this.site.full_name_visible_in_signup}}
+              <div class="code-login-form__name-field">
+                <label for="code-login-name">
+                  {{i18n "user.name.title"}}
+                </label>
+                <input
+                  aria-describedby="code-login-name-error"
+                  aria-invalid={{if this.nameError "true"}}
+                  autocomplete="name"
+                  class="code-login-form__name"
+                  id="code-login-name"
+                  maxlength="255"
+                  name="name"
+                  type="text"
+                  value={{this.name}}
+                  {{on "input" this.nameChanged}}
+                />
+                <div
+                  aria-live="polite"
+                  class="code-login-form__error"
+                  id="code-login-name-error"
+                  role="alert"
+                >
+                  {{this.nameError}}
+                </div>
+              </div>
+            {{/if}}
+
+            {{#if this.showOptionalPassword}}
+              <div
+                class="input-group create-account__password code-login-form__password-field"
+              >
+                <DPasswordField
+                  aria-describedby="password-validation password-validation-more-info"
+                  aria-invalid={{this.passwordValidation.failed}}
+                  autocomplete="new-password"
+                  id="new-account-password"
+                  type={{if this.maskPassword "password" "text"}}
+                  @capsLockOn={{this.capsLockOn}}
+                  @value={{this.accountPassword}}
+                  {{on "input" this.passwordChanged}}
+                />
+                <label class="alt-placeholder" for="new-account-password">
+                  {{i18n "user.password.title"}}
+                </label>
+                <DTogglePasswordMask
+                  @maskPassword={{this.maskPassword}}
+                  @togglePasswordMask={{this.togglePasswordMask}}
+                />
+                <div class="create-account__password-info">
+                  <div class="create-account__password-tip-validation">
+                    {{#if this.showPasswordValidation}}
+                      <DInputTip
+                        id="password-validation"
+                        @validation={{this.passwordValidation}}
+                      />
+                    {{else if
+                      this.siteSettings.show_signup_form_password_instructions
+                    }}
+                      <span
+                        class="more-info"
+                        id="password-validation-more-info"
+                      >
+                        {{this.passwordValidationHelper.passwordInstructions}}
+                      </span>
+                    {{/if}}
+                    <div
+                      class="caps-lock-warning
+                        {{unless this.capsLockOn 'hidden'}}"
+                    >
+                      {{dIcon "triangle-exclamation"}}
+                      {{i18n "login.caps_lock_warning"}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{else}}
+              <DButton
+                class="btn-link code-login-form__create-password"
+                @action={{this.revealOptionalPassword}}
+                @label="code_login.create_password_optional"
+              />
+            {{/if}}
+
+          </div>
+          <div class="user-fields">
+            {{#each this.userFields as |f|}}
+              <div class="input-group">
+                <UserField
+                  class={{valueEntered f.value}}
+                  @field={{f.field}}
+                  @validation={{f.validation}}
+                  @value={{f.value}}
+                />
+              </div>
+            {{/each}}
+          </div>
+
+          <div aria-live="polite" class="code-login-form__error" role="alert">
+            {{this.codeError}}
+          </div>
+
+          <div class="code-login-form__actions">
+            <DButton
+              class="btn-primary code-login-form__submit-approval"
+              @action={{this.submitAccountDetails}}
+              @disabled={{this.continueDisabled}}
+              @isLoading={{this.verifying}}
+              @label="code_login.submit_for_approval"
+            />
+          </div>
+        </div>
+      {{else if this.isPendingApprovalStep}}
+        <div class="code-login-form__pending-approval-step" role="status"></div>
+      {{else if this.isCompleteStep}}
+        <div class="code-login-form__complete-step">
+          {{#unless this.isSignup}}
+            <h2 class="code-login-form__title">
+              {{i18n "code_login.account_ready_title"}}
+            </h2>
+            {{#if this.usernameEditable}}
+              <p class="code-login-form__instructions">
+                {{i18n "code_login.account_ready_edit"}}
+              </p>
+            {{/if}}
+          {{/unless}}
+
+          <div class="code-login-form__new-account">
+            <button
+              class="code-login-form__avatar"
+              title={{i18n "code_login.change_avatar"}}
+              type="button"
+              {{on "click" this.changeAvatar}}
+            >
+              {{dBoundAvatarTemplate this.avatarTemplate "huge"}}
+              <span class="code-login-form__avatar-edit">
+                {{dIcon "pencil"}}
+              </span>
+            </button>
+
+            {{#if this.usernameEditable}}
+              <div class="code-login-form__username-field">
+                <label for="code-login-username">
+                  {{i18n "code_login.username_label"}}
+                </label>
+                <div class="code-login-form__username-input">
+                  <input
+                    aria-describedby="code-login-username-error"
+                    aria-invalid={{if this.usernameError "true"}}
+                    autocomplete="off"
+                    class="code-login-form__new-account-username
+                      {{if this.regenerating '--swapping'}}"
+                    id="code-login-username"
+                    name="username"
+                    placeholder={{i18n "code_login.username_placeholder"}}
+                    type="text"
+                    value={{this.username}}
+                    {{on "input" this.usernameChanged}}
+                  />
+                  {{#if this.siteSettings.enable_random_usernames}}
+                    <DButton
+                      aria-busy={{if this.regenerating "true"}}
+                      class="btn-default code-login-form__username-regen
+                        {{if this.regenerating '--rolling'}}"
+                      @action={{this.regenerateUsername}}
+                      @ariaLabel="code_login.regenerate_username"
+                      @icon="dice"
+                      @title="code_login.regenerate_username"
+                    />
+                  {{/if}}
+                </div>
+                <div
+                  aria-live="polite"
+                  class="code-login-form__error"
+                  id="code-login-username-error"
+                  role="alert"
+                >
+                  {{this.usernameError}}
+                </div>
+              </div>
+            {{else}}
+              <div class="code-login-form__new-account-username">
+                {{this.newAccount.username}}
+              </div>
+            {{/if}}
+          </div>
+
+          <DButton
+            class="btn-large btn-primary code-login-form__continue-to-site"
+            @action={{this.continueAfterSignup}}
+            @disabled={{this.continueDisabled}}
+            @isLoading={{this.verifying}}
+            @label="code_login.account_ready_continue"
+          />
+        </div>
+      {{else if this.isUserFieldsStep}}
+        <div class="code-login-form__user-fields-step">
+          {{#unless this.isSignup}}
+            <h2 class="code-login-form__title">
+              {{i18n "code_login.user_fields_title"}}
+            </h2>
+            <p class="code-login-form__instructions">
+              {{i18n "code_login.user_fields_instructions"}}
+            </p>
+          {{/unless}}
+
+          {{#if this.nameRequired}}
+            <div class="code-login-form__name-field">
+              <label for="code-login-name">
+                {{i18n "user.name.title"}}
+              </label>
+              <input
+                aria-describedby="code-login-name-error"
+                aria-invalid={{if this.nameError "true"}}
+                autocomplete="name"
+                class="code-login-form__name"
+                id="code-login-name"
+                maxlength="255"
+                name="name"
+                type="text"
+                value={{this.name}}
+                {{on "input" this.nameChanged}}
+              />
+              <div
+                aria-live="polite"
+                class="code-login-form__error"
+                id="code-login-name-error"
+                role="alert"
+              >
+                {{this.nameError}}
+              </div>
+            </div>
+          {{/if}}
+
+          <div class="user-fields">
+            {{#each this.userFields as |f|}}
+              <div class="input-group">
+                <UserField
+                  class={{valueEntered f.value}}
+                  @field={{f.field}}
+                  @validation={{f.validation}}
+                  @value={{f.value}}
+                />
+              </div>
+            {{/each}}
+          </div>
+
+          <div aria-live="polite" class="code-login-form__error" role="alert">
+            {{this.codeError}}
+          </div>
+
+          <DButton
+            class="btn-primary code-login-form__verify"
+            type="submit"
+            @action={{this.submitUserFields}}
+            @isLoading={{this.verifying}}
+            @label="code_login.continue_button"
+          />
+        </div>
+      {{else}}
+        <div class="code-login-form__second-factor-step">
+          {{#if this.codeError}}
+            <div class="code-login-form__error" role="alert">
+              {{this.codeError}}
+            </div>
+          {{/if}}
+
+          {{#if this.securityKeyRequired}}
+            <SecurityKeyForm
+              @action={{this.authenticateSecurityKey}}
+              @backupEnabled={{this.backupCodesEnabled}}
+              @otherMethodAllowed={{this.otherSecondFactorAllowed}}
+              @setSecondFactorMethod={{this.setSecondFactorMethod}}
+              @setShowSecurityKey={{this.setShowSecurityKey}}
+              @totpEnabled={{this.totpEnabled}}
+            />
+          {{else}}
+            <SecondFactorForm
+              @backupEnabled={{this.backupCodesEnabled}}
+              @isLogin={{true}}
+              @secondFactorMethod={{this.secondFactorMethod}}
+              @secondFactorToken={{this.secondFactorToken}}
+              @totpEnabled={{this.totpEnabled}}
+            >
+              <DSecondFactorInput
+                value={{this.secondFactorToken}}
+                @onChange={{this.secondFactorTokenChanged}}
+                @secondFactorMethod={{this.secondFactorMethod}}
+              />
+            </SecondFactorForm>
+
+            <DButton
+              class="btn-primary code-login-form__verify"
+              type="submit"
+              @action={{this.submitSecondFactor}}
+              @isLoading={{this.verifying}}
+              @label="email_login.confirm_button"
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+  </template>
+}

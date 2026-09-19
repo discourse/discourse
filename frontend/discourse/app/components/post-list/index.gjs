@@ -35,13 +35,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import PostListBulkControls from "discourse/components/post-list/bulk-controls";
 import PostListItem from "discourse/components/post-list/item";
-import concatClass from "discourse/helpers/concat-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { addUniqueValuesToArray } from "../../lib/array-tools";
 
@@ -89,18 +89,18 @@ export default class PostList extends Component {
       {{hideApplicationFooter}}
     {{/if}}
 
-    <LoadMore @action={{this.loadMore}}>
+    <DLoadMore @action={{this.loadMore}}>
       {{#if @bulkSelectEnabled}}
         {{#if @bulkSelectHelper.hasSelection}}
           <PostListBulkControls
-            @bulkSelectHelper={{@bulkSelectHelper}}
             @bulkActions={{@bulkActions}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
           />
         {{/if}}
       {{/if}}
 
       <div
-        class={{concatClass
+        class={{dConcatClass
           "post-list"
           (if @bulkSelectEnabled "post-list--bulk-select")
         }}
@@ -108,18 +108,18 @@ export default class PostList extends Component {
       >
         {{#each @posts as |post|}}
           <PostListItem
-            @post={{post}}
-            @idPath={{@idPath}}
-            @urlPath={{@urlPath}}
-            @titlePath={{@titlePath}}
-            @usernamePath={{@usernamePath}}
             @additionalItemClasses={{@additionalItemClasses}}
-            @titleAriaLabel={{@titleAriaLabel}}
-            @showUserInfo={{@showUserInfo}}
-            @resumeDraft={{@resumeDraft}}
-            @removeDraft={{@removeDraft}}
             @bulkSelectEnabled={{@bulkSelectEnabled}}
             @bulkSelectHelper={{@bulkSelectHelper}}
+            @idPath={{@idPath}}
+            @post={{post}}
+            @removeDraft={{@removeDraft}}
+            @resumeDraft={{@resumeDraft}}
+            @showUserInfo={{@showUserInfo}}
+            @titleAriaLabel={{@titleAriaLabel}}
+            @titlePath={{@titlePath}}
+            @urlPath={{@urlPath}}
+            @usernamePath={{@usernamePath}}
           >
             <:abovePostItemHeader>
               {{yield post to="abovePostItemHeader"}}
@@ -140,7 +140,7 @@ export default class PostList extends Component {
           {{/unless}}
         {{/each}}
       </div>
-      <ConditionalLoadingSpinner @condition={{this.loading}} />
-    </LoadMore>
+      <DConditionalLoadingSpinner @condition={{this.loading}} />
+    </DLoadMore>
   </template>
 }

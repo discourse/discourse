@@ -88,10 +88,8 @@ class NewPostManager
 
     return :email_spam if manager.args[:email_spam]
 
-    if (
-         user.trust_level <= TrustLevel.levels[:basic] &&
-           (user.post_count + user.topic_count) < SiteSetting.approve_post_count
-       )
+    if user.trust_level <= TrustLevel.levels[:basic] &&
+         (user.post_count + user.topic_count) < SiteSetting.approve_post_count
       return :post_count
     end
 
@@ -99,10 +97,8 @@ class NewPostManager
       return :group
     end
 
-    if (
-         manager.args[:title].present? && !user.staged? &&
-           !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
-       )
+    if manager.args[:title].present? && !user.staged? &&
+         !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
       return :new_topics_unless_allowed_groups
     end
 
@@ -118,14 +114,17 @@ class NewPostManager
 
     return :category if post_needs_approval_in_its_category?(manager)
 
-    if (
-         manager.args[:image_sizes].present? &&
-           !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
-       )
-      return :contains_media
+    unless user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+      return :contains_media if contains_embedded_media?(manager.args)
     end
 
     :skip
+  end
+
+  def self.contains_embedded_media?(args)
+    return true if args[:image_sizes].present?
+
+    Post.new(raw: args[:raw], topic_id: args[:topic_id]).embedded_media_count.positive?
   end
 
   def self.post_needs_approval_in_its_category?(manager)
@@ -169,38 +168,48 @@ class NewPostManager
       end
     elsif manager.args[:category]
       category = Category.find_by(id: manager.args[:category])
+      skip_topic_validations =
+        manager.args[:via_email] && manager.user.staged? && manager.args[:skip_validations]
 
-      unless manager.user.guardian.can_create_topic_on_category?(category)
+      unless skip_topic_validations || manager.user.guardian.can_create_topic_on_category?(category)
         result = NewPostResult.new(:created_post, false)
         result.errors.add(:base, I18n.t("js.errors.reasons.forbidden"))
         return result
       end
     end
 
-    result = manager.enqueue(reason)
+    creator_opts = skip_topic_validations ? { skip_validations: true } : {}
+    result = manager.enqueue(reason, creator_opts: creator_opts)
 
-    I18n.with_locale(SiteSetting.default_locale) do
-      if is_fast_typer?(manager)
-        UserSilencer.auto_silence(
-          manager.user,
-          Discourse.system_user,
-          keep_posts: true,
-          reason: I18n.t("user.new_user_typed_too_fast"),
-        )
-      elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
-        UserSilencer.auto_silence(
-          manager.user,
-          Discourse.system_user,
-          keep_posts: true,
-          reason: I18n.t("user.content_matches_auto_silence_regex"),
-        )
-      elsif reason == :email_spam && is_first_post?(manager)
-        UserSilencer.auto_silence(
-          manager.user,
-          Discourse.system_user,
-          keep_posts: true,
-          reason: I18n.t("user.email_in_spam_header"),
-        )
+    if result.success? || (reason == :email_spam && is_first_post?(manager))
+      reviewable_id = result.reviewable&.id
+
+      I18n.with_locale(SiteSetting.default_locale) do
+        if is_fast_typer?(manager)
+          UserSilencer.auto_silence(
+            manager.user,
+            Discourse.system_user,
+            keep_posts: true,
+            reason: I18n.t("user.new_user_typed_too_fast"),
+            reviewable_id:,
+          )
+        elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
+          UserSilencer.auto_silence(
+            manager.user,
+            Discourse.system_user,
+            keep_posts: true,
+            reason: I18n.t("user.content_matches_auto_silence_regex"),
+            reviewable_id:,
+          )
+        elsif reason == :email_spam && is_first_post?(manager)
+          UserSilencer.auto_silence(
+            manager.user,
+            Discourse.system_user,
+            keep_posts: true,
+            reason: I18n.t("user.email_in_spam_header"),
+            reviewable_id:,
+          )
+        end
       end
     end
 
@@ -209,13 +218,9 @@ class NewPostManager
 
   def self.queue_enabled?
     SiteSetting.approve_post_count > 0 ||
-      !(
-        SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0])
-      ) ||
-      !(
-        SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
-          Group::AUTO_GROUPS[:trust_level_0],
-        )
+      !SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0]) ||
+      !SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
+        Group::AUTO_GROUPS[:trust_level_0],
       ) || SiteSetting.approve_unless_staged ||
       WordWatcher.words_for_action_exist?(:require_approval) || handlers.size > 1
   end

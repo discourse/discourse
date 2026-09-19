@@ -36,7 +36,31 @@ describe DiscourseAi::Completions::CancelManager do
     expect(cancel_manager.monitor_thread).to be_nil
   end
 
-  it "should do nothing when cancel manager is already cancelled" do
+  it "waits until timeout when not cancelled" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new
+
+    expect(cancel_manager.wait_for_cancel(0.001)).to eq(false)
+  end
+
+  it "wakes waiters when cancelled" do
+    cancel_manager = DiscourseAi::Completions::CancelManager.new
+    waiting = Queue.new
+
+    waiter =
+      Thread.new do
+        waiting << true
+        cancel_manager.wait_for_cancel(60)
+      end
+
+    waiting.pop
+    cancel_manager.cancel!
+
+    expect(waiter.join(1)).to eq(waiter)
+  ensure
+    waiter&.kill
+  end
+
+  it "does nothing when the cancel manager is already cancelled" do
     cancel_manager = DiscourseAi::Completions::CancelManager.new
     cancel_manager.cancel!
 
@@ -51,7 +75,7 @@ describe DiscourseAi::Completions::CancelManager do
     expect(result).to be_nil
   end
 
-  it "should be able to cancel a completion" do
+  it "cancels a completion" do
     # Start an HTTP server that hangs indefinitely
     server = TCPServer.new("127.0.0.1", 0)
     port = server.addr[1]
@@ -60,14 +84,12 @@ describe DiscourseAi::Completions::CancelManager do
       thread =
         Thread.new do
           loop do
-            begin
-              _client = server.accept
-              sleep(30) # Hold the connection longer than the test will run
-              break
-            rescue StandardError
-              # Server closed
-              break
-            end
+            _client = server.accept
+            sleep(30) # Hold the connection longer than the test will run
+            break
+          rescue StandardError
+            # Server closed
+            break
           end
         end
 

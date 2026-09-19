@@ -17,16 +17,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
           token: ${{ secrets.GH_PUSH_TOKEN }}
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v5
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
@@ -37,8 +37,8 @@ jobs:
 
       - name: Git push
         run: |
-          git config --global user.email "ci@ci.invalid"
-          git config --global user.name "Discourse CI"
+          git config --global user.email "team@discourse.org"
+          git config --global user.name "discoursebot"
           git add pnpm-lock.yaml
           git status
           git commit -m "pnpm dedupe [dependabot skip]" && git push || echo "done"

@@ -31,3 +31,8 @@ pl_PL:
       recalculate_scores_remaining: "Osiągnięto maksymalną liczbę przeliczanych wyników. Poczekaj %{time_left} przed ponowną próbą."
   errors:
     leaderboard_positions_not_ready: "Generujemy Twoją tabelę wyników. Spróbuj ponownie za kilka minut."
+  discourse_gamification:
+    discourse_workflows:
+      gamification_score:
+        invalid_points: "Punkty muszą być liczbą całkowitą różną od zera, otrzymano: %{points}"
+        invalid_date: "Nieprawidłowa data: %{date}"

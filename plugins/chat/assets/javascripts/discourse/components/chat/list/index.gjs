@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import EmptyState from "./empty-state";
 import Item from "./item";
 
@@ -37,23 +37,34 @@ export default class List extends Component {
     return this.args.itemComponent ?? Item;
   }
 
+  get collectionItemsMaybeFiltered() {
+    const collection = this.args.collection;
+    const filterFn = this.args.filterFn;
+
+    if (filterFn) {
+      return filterFn(collection.items);
+    } else {
+      return collection.items;
+    }
+  }
+
   @action
   loadCollection() {
     discourseDebounce(this, this.debouncedLoadCollection, INPUT_DELAY);
   }
 
   async debouncedLoadCollection() {
-    await this.args.collection.load({ limit: 10 });
+    await this.args.collection.load({ limit: 10 }).catch(() => {});
   }
 
   <template>
     <div class="c-list">
       <div
         class={{if @collection.fetchedOnce "--loaded"}}
-        {{this.fill}}
         ...attributes
+        {{this.fill}}
       >
-        {{#each @collection.items as |item|}}
+        {{#each this.collectionItemsMaybeFiltered as |item|}}
           {{yield (hash Item=(component this.itemComponent item=item))}}
         {{else}}
           {{#if @collection.fetchedOnce}}
@@ -66,7 +77,7 @@ export default class List extends Component {
         <br />
       </div>
 
-      <ConditionalLoadingSpinner @condition={{@collection.loading}} />
+      <DConditionalLoadingSpinner @condition={{@collection.loading}} />
     </div>
   </template>
 }

@@ -1,0 +1,799 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { array, concat } from "@ember/helper";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import { i18n } from "discourse-i18n";
+import {
+  ExecutionProgressStream,
+  formatDuration,
+  isLive,
+  isPending,
+  isRunning,
+} from "../../../lib/workflows/execution-progress";
+import {
+  localeKeyPart,
+  propertyOptionLabel,
+} from "../../../lib/workflows/property-engine";
+
+function formatJson(data) {
+  if (Array.isArray(data) && data.length === 0) {
+    return "[]";
+  }
+
+  if (!data || Object.keys(data).length === 0) {
+    return "{}";
+  }
+  return JSON.stringify(data, null, 2);
+}
+
+function isTruncationMarker(value) {
+  return value?.__truncated === true && value.__reason;
+}
+
+function truncationLabel(kind) {
+  return i18n(`discourse_workflows.executions.truncated.${kind}`);
+}
+
+function truncationDetails(marker) {
+  const details = [];
+
+  if (marker.__original_bytes) {
+    details.push(
+      i18n("discourse_workflows.executions.truncated.original_bytes", {
+        count: marker.__original_bytes,
+      })
+    );
+  }
+
+  if (marker.__original_size) {
+    details.push(
+      i18n("discourse_workflows.executions.truncated.original_size", {
+        count: marker.__original_size,
+      })
+    );
+  }
+
+  if (marker.__max_bytes) {
+    details.push(
+      i18n("discourse_workflows.executions.truncated.max_bytes", {
+        count: marker.__max_bytes,
+      })
+    );
+  }
+
+  return details.length ? ` (${details.join(", ")})` : "";
+}
+
+function formatTruncationMarker(marker, kind = "value") {
+  return `${truncationLabel(kind)}${truncationDetails(marker)}`;
+}
+
+function replaceTruncationMarkers(value) {
+  if (isTruncationMarker(value)) {
+    return formatTruncationMarker(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(replaceTruncationMarkers);
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nestedValue]) => [
+        key,
+        replaceTruncationMarkers(nestedValue),
+      ])
+    );
+  }
+
+  return value;
+}
+
+function formatStepData(data, kind = "value") {
+  if (isTruncationMarker(data)) {
+    return formatTruncationMarker(data, kind);
+  }
+
+  data = replaceTruncationMarkers(data);
+
+  if (!Array.isArray(data) || !data.every((i) => i?.json)) {
+    return formatJson(data);
+  }
+  return formatJson(data.length === 1 ? data[0].json : data.map((i) => i.json));
+}
+
+function formatInputData(data) {
+  return formatStepData(data, "input");
+}
+
+function formatOutputData(data) {
+  return formatStepData(data, "output");
+}
+
+function itemCount(data) {
+  return Array.isArray(data) && data.length > 1 && data.every((i) => i?.json)
+    ? data.length
+    : null;
+}
+
+function stepDuration(step, currentTime) {
+  return formatDuration(
+    step.started_at,
+    step.finished_at,
+    step.status === "running" ? currentTime : null
+  );
+}
+
+function formatValue(value) {
+  if (Array.isArray(value)) {
+    return JSON.stringify(value);
+  }
+  if (value === null || value === undefined) {
+    return "null";
+  }
+  return String(value);
+}
+
+function conditionOperatorLabel(operator) {
+  return i18n(`discourse_workflows.if.operators.${localeKeyPart(operator)}`);
+}
+
+function formatLogs(logs) {
+  return logs
+    .map((entry) => {
+      if (typeof entry === "string") {
+        return entry;
+      }
+      const prefix =
+        entry.level === "error"
+          ? "[error] "
+          : entry.level === "warn"
+            ? "[warn] "
+            : "";
+      if (entry.key !== undefined) {
+        return `${prefix}${entry.key}: ${entry.value}`;
+      }
+      return `${prefix}${entry.message}`;
+    })
+    .join("\n");
+}
+
+function nodeKind(nodeType) {
+  return nodeType?.split(":")[0] || "action";
+}
+
+const KIND_ICONS = {
+  trigger: "bolt",
+  condition: "arrows-split-up-and-left",
+  action: "gear",
+  flow: "arrows-split-up-and-left",
+};
+
+function kindIcon(nodeType) {
+  return KIND_ICONS[nodeKind(nodeType)] || "gear";
+}
+
+function stepSummary(step) {
+  if (!step.error) {
+    return null;
+  }
+  return String(step.error);
+}
+
+function hasNoOutput(step) {
+  return (
+    step.status === "success" &&
+    Array.isArray(step.output) &&
+    step.output.length === 0
+  );
+}
+
+function isFilterStep(step) {
+  return step.node_type === "condition:filter";
+}
+
+function isConditionStep(step) {
+  return step.node_type?.startsWith("condition:");
+}
+
+function conditionPassed(step) {
+  return step.status === "success";
+}
+
+export default class ExecutionDetail extends Component {
+  @service messageBus;
+  @service workflowsNodeTypes;
+
+  @tracked liveExecution;
+
+  operationLabel = (step) => {
+    const value = step?.metadata?.operation;
+    if (!value) {
+      return null;
+    }
+
+    // Read tracked state so the template re-renders once node types load.
+    if (!this.workflowsNodeTypes.nodeTypes) {
+      return String(value);
+    }
+
+    const definition = this.workflowsNodeTypes.findNodeType(step.node_type);
+    if (!definition) {
+      return String(value);
+    }
+
+    return propertyOptionLabel(definition, "operation", { value });
+  };
+
+  #progress;
+
+  #refreshing = false;
+
+  #refreshRequested = false;
+
+  #refreshToken = 0;
+
+  constructor() {
+    super(...arguments);
+    this.#progress = new ExecutionProgressStream(this.messageBus, {
+      onMessage: (message) => this.#applyProgress(message),
+      onGap: () => this.#resyncExecution(),
+      onRetry: () => this.#refreshExecution(),
+    });
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#refreshToken++;
+    this.#progress.destroy();
+  }
+
+  get execution() {
+    return this.liveExecution?.id === this.args.execution.id
+      ? this.liveExecution
+      : this.args.execution;
+  }
+
+  set execution(value) {
+    this.liveExecution = value;
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
+  }
+
+  get isPending() {
+    return isPending(this.execution);
+  }
+
+  get isRunning() {
+    return isRunning(this.execution);
+  }
+
+  get isActive() {
+    return this.isPending || this.isRunning;
+  }
+
+  get isLive() {
+    return isLive(this.execution);
+  }
+
+  @action
+  async initialize() {
+    this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
+    this.#syncLiveUpdates();
+    await this.workflowsNodeTypes.load();
+  }
+
+  @action
+  executionChanged() {
+    this.#refreshToken++;
+    this.#refreshing = false;
+    this.#refreshRequested = false;
+    this.#progress.resetRetry();
+    this.liveExecution = null;
+    this.#progress.unsubscribe();
+    this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
+    this.#syncLiveUpdates();
+  }
+
+  @action
+  exportAsText() {
+    const execution = this.execution;
+    const lines = [];
+
+    lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
+    lines.push(`Execution ID: ${execution.id}`);
+    lines.push(`Status: ${execution.status}`);
+    lines.push(`Started: ${execution.started_at ?? "—"}`);
+    lines.push(`Finished: ${execution.finished_at ?? "—"}`);
+    lines.push(
+      `Total time: ${formatDuration(
+        execution.started_at,
+        execution.finished_at,
+        this.isRunning ? this.currentTime : null
+      )}`
+    );
+
+    if (execution.error) {
+      lines.push(`\nError: ${execution.error}`);
+    }
+
+    lines.push("\n" + "=".repeat(60));
+
+    execution.steps?.forEach((step, index) => {
+      lines.push(`\nStep ${index + 1}: ${step.node_name}`);
+      lines.push(`  Type: ${step.node_type}`);
+      const operationLabel = this.operationLabel(step);
+      if (operationLabel) {
+        lines.push(`  Operation: ${operationLabel}`);
+      }
+      lines.push(`  Status: ${step.status}`);
+      lines.push(
+        `  Duration: ${formatDuration(step.started_at, step.finished_at)}${step.metadata?.js_elapsed_ms ? ` (javascript: ${step.metadata.js_elapsed_ms}ms)` : ""}`
+      );
+
+      if (step.metadata?.conditions) {
+        lines.push("  Conditions:");
+        step.metadata.conditions.forEach((c) => {
+          const result = c.passed ? "PASS" : "FAIL";
+          const expr = c.leftExpression ? `${c.leftExpression} ` : "";
+          lines.push(
+            `    [${result}] ${expr}${formatValue(c.left)} ${c.operator} ${c.right != null ? formatValue(c.right) : ""}`
+          );
+        });
+      }
+
+      if (step.metadata?.logs?.length) {
+        lines.push("  Console:");
+        lines.push(
+          ...formatLogs(step.metadata.logs)
+            .split("\n")
+            .map((l) => `    ${l}`)
+        );
+      }
+
+      if (step.input && Object.keys(step.input).length > 0) {
+        lines.push(
+          `  Input: ${formatInputData(step.input).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.output && Object.keys(step.output).length > 0) {
+        lines.push(
+          `  Output: ${formatOutputData(step.output).replace(/\n/g, "\n    ")}`
+        );
+      }
+
+      if (step.error) {
+        const label = step.status === "skipped" ? "Reason" : "Error";
+        lines.push(`  ${label}: ${step.error}`);
+      }
+
+      lines.push("-".repeat(60));
+    });
+
+    const text = lines.join("\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `discourse-workflows-execution-${execution.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  #syncLiveUpdates() {
+    if (this.isLive) {
+      this.#progress.subscribe(
+        `/discourse-workflows/execution/${this.execution.id}`
+      );
+    } else {
+      this.#progress.unsubscribe();
+    }
+
+    if (this.isRunning) {
+      this.#progress.startTicker();
+    } else {
+      this.#progress.stopTicker();
+    }
+  }
+
+  #applyProgress(message) {
+    if (
+      message.type !== "execution_progress" ||
+      message.execution?.id !== this.execution.id
+    ) {
+      return;
+    }
+
+    if (this.#refreshing && message.refresh) {
+      this.#refreshRequested = true;
+    }
+
+    const steps = [...(this.execution.steps || [])];
+    if (message.step) {
+      const index = steps.findIndex(
+        (step) => step.position === message.step.position
+      );
+      if (index === -1) {
+        steps.push(message.step);
+      } else {
+        steps[index] = { ...steps[index], ...message.step };
+      }
+    }
+
+    this.execution = {
+      ...this.execution,
+      ...message.execution,
+      steps,
+    };
+
+    if (message.refresh) {
+      this.#refreshExecution();
+    } else {
+      this.#syncLiveUpdates();
+    }
+  }
+
+  #resyncExecution() {
+    this.#progress.unsubscribe();
+    this.#refreshExecution();
+  }
+
+  async #refreshExecution() {
+    if (this.#refreshing) {
+      this.#refreshRequested = true;
+      return;
+    }
+
+    const executionId = this.execution.id;
+    const refreshToken = ++this.#refreshToken;
+    this.#refreshing = true;
+    try {
+      const result = await ajax(
+        `/admin/plugins/discourse-workflows/executions/${executionId}`
+      );
+      if (
+        this.isDestroying ||
+        refreshToken !== this.#refreshToken ||
+        executionId !== this.execution.id
+      ) {
+        return;
+      }
+
+      this.execution = {
+        ...result.execution,
+        message_bus_last_id: result.meta?.message_bus_last_id ?? 0,
+      };
+      this.#progress.lastMessageId = this.execution.message_bus_last_id;
+      this.#progress.resetRetry();
+      this.#syncLiveUpdates();
+    } catch (error) {
+      if (!this.isDestroying && refreshToken === this.#refreshToken) {
+        this.#progress.scheduleRetry(error);
+      }
+    } finally {
+      if (refreshToken === this.#refreshToken) {
+        this.#refreshing = false;
+        if (this.#refreshRequested && !this.isDestroying) {
+          this.#refreshRequested = false;
+          this.#refreshExecution();
+        }
+      }
+    }
+  }
+
+  <template>
+    <div
+      class="workflows-execution-detail"
+      {{didInsert this.initialize}}
+      {{didUpdate this.executionChanged @execution}}
+    >
+      {{#if this.isActive}}
+        <div class="workflows-execution-detail__progress">
+          {{#if this.isRunning}}
+            {{dLoadingSpinner size="small"}}
+          {{else}}
+            {{dIcon "clock"}}
+          {{/if}}
+          <span class="workflows-execution-detail__progress-label">
+            {{i18n
+              (concat
+                "discourse_workflows.executions.statuses." this.execution.status
+              )
+            }}
+          </span>
+          <span class="workflows-execution-detail__progress-time">
+            {{formatDuration
+              this.execution.started_at
+              this.execution.finished_at
+              this.currentTime
+            }}
+          </span>
+        </div>
+      {{/if}}
+
+      {{#if this.execution.workflow_call_caller}}
+        <div class="workflows-execution-detail__workflow-call --caller">
+          <div class="workflows-execution-detail__workflow-call-main">
+            <span class="workflows-execution-detail__workflow-call-label">
+              {{i18n "discourse_workflows.executions.workflow_call_called_by"}}
+            </span>
+            <span class="workflows-execution-detail__workflow-call-name">
+              {{#if this.execution.workflow_call_caller.workflow_name}}
+                {{this.execution.workflow_call_caller.workflow_name}}
+              {{else}}
+                {{i18n
+                  "discourse_workflows.executions.workflow_call_workflow"
+                  id=this.execution.workflow_call_caller.workflow_id
+                }}
+              {{/if}}
+            </span>
+          </div>
+
+          {{#if this.execution.workflow_call_caller.execution_url}}
+            <DButton
+              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
+              @icon="up-right-from-square"
+              @label="discourse_workflows.executions.workflow_call_open_parent"
+              @route="adminPlugins.show.discourse-workflows.show.executions.show"
+              @routeModels={{array
+                this.execution.workflow_call_caller.workflow_id
+                this.execution.workflow_call_caller.execution_id
+              }}
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+
+      <div class="workflows-execution-detail__steps">
+        {{#each this.execution.steps as |step|}}
+          <div
+            class="workflows-execution-detail__step --{{step.status}}
+              --kind-{{nodeKind step.node_type}}"
+          >
+            <div class="workflows-execution-detail__step-header">
+              <span class="workflows-execution-detail__step-icon">
+                {{dIcon (kindIcon step.node_type)}}
+              </span>
+              <span class="workflows-execution-detail__step-name">
+                {{step.node_name}}
+              </span>
+              {{#let (this.operationLabel step) as |operationLabel|}}
+                {{#if operationLabel}}
+                  <span
+                    class="workflows-execution-detail__step-operation"
+                  >{{operationLabel}}</span>
+                {{/if}}
+              {{/let}}
+              <span
+                class="workflows-execution-detail__kind-badge --{{nodeKind
+                    step.node_type
+                  }}"
+              >
+                {{i18n
+                  (concat
+                    "discourse_workflows.executions.kinds."
+                    (nodeKind step.node_type)
+                  )
+                }}
+              </span>
+              <span
+                class="workflows-execution-detail__step-badge --{{step.status}}"
+              >
+                {{#if (isFilterStep step)}}
+                  {{if
+                    (conditionPassed step)
+                    (i18n "discourse_workflows.executions.statuses.kept")
+                    (i18n "discourse_workflows.executions.statuses.rejected")
+                  }}
+                {{else if (isConditionStep step)}}
+                  {{if
+                    (conditionPassed step)
+                    (i18n "discourse_workflows.branch.true")
+                    (i18n "discourse_workflows.branch.false")
+                  }}
+                {{else}}
+                  {{i18n
+                    (concat
+                      "discourse_workflows.executions.statuses." step.status
+                    )
+                  }}
+                {{/if}}
+              </span>
+              <span class="workflows-execution-detail__step-time">
+                {{stepDuration step this.currentTime}}
+                {{#if step.metadata.js_elapsed_ms}}
+                  <span
+                    class="workflows-execution-detail__step-js-time"
+                  >(javascript: {{step.metadata.js_elapsed_ms}}ms)</span>
+                {{/if}}
+              </span>
+            </div>
+
+            {{#if (stepSummary step)}}
+              <div class="workflows-execution-detail__step-summary">
+                {{stepSummary step}}
+              </div>
+            {{/if}}
+
+            <div class="workflows-execution-detail__step-body">
+              {{#if (hasNoOutput step)}}
+                <div
+                  class="alert alert-info workflows-execution-detail__no-output"
+                >
+                  {{i18n "discourse_workflows.executions.no_output_data"}}
+                </div>
+              {{/if}}
+
+              {{#if step.metadata.conditions}}
+                <div class="workflows-execution-detail__conditions">
+                  {{#each step.metadata.conditions as |condition|}}
+                    <div
+                      class={{dConcatClass
+                        "workflows-execution-detail__condition"
+                        (if condition.passed "--passed" "--failed")
+                      }}
+                    >
+                      <span
+                        class="workflows-execution-detail__condition-result"
+                      >{{if condition.passed "✓" "✗"}}</span>
+                      <span class="workflows-execution-detail__condition-value">
+                        {{#if condition.leftExpression}}
+                          <code
+                            class="workflows-execution-detail__condition-field"
+                          >{{condition.leftExpression}}</code>
+                          <span
+                            class="workflows-execution-detail__condition-operator"
+                          >{{i18n
+                              "discourse_workflows.executions.with_value"
+                            }}</span>
+                        {{/if}}
+                        <code>{{formatValue condition.left}}</code>
+                      </span>
+                      <span
+                        class="workflows-execution-detail__condition-operator"
+                      >{{conditionOperatorLabel condition.operator}}</span>
+                      {{#if condition.right}}
+                        <span
+                          class="workflows-execution-detail__condition-value"
+                        >
+                          <code>{{formatValue condition.right}}</code>
+                        </span>
+                      {{/if}}
+                    </div>
+                  {{/each}}
+                </div>
+              {{/if}}
+
+              {{#if step.metadata.logs}}
+                <details class="workflows-execution-detail__step-section" open>
+                  <summary>{{i18n
+                      "discourse_workflows.executions.logs"
+                    }}</summary>
+                  <pre>{{formatLogs step.metadata.logs}}</pre>
+                </details>
+              {{/if}}
+
+              {{#if step.workflow_call_run}}
+                <div class="workflows-execution-detail__workflow-call">
+                  <div class="workflows-execution-detail__workflow-call-main">
+                    <span
+                      class="workflows-execution-detail__workflow-call-icon"
+                    >
+                      {{dIcon "arrows-turn-to-dots"}}
+                    </span>
+                    <span
+                      class="workflows-execution-detail__workflow-call-content"
+                    >
+                      <span
+                        class="workflows-execution-detail__workflow-call-label"
+                      >
+                        {{i18n "discourse_workflows.executions.workflow_call"}}
+                      </span>
+                      <span
+                        class="workflows-execution-detail__workflow-call-name"
+                      >
+                        {{#if step.workflow_call_run.workflow_name}}
+                          {{step.workflow_call_run.workflow_name}}
+                        {{else}}
+                          {{i18n
+                            "discourse_workflows.executions.workflow_call_workflow"
+                            id=step.workflow_call_run.workflow_id
+                          }}
+                        {{/if}}
+                      </span>
+                    </span>
+                  </div>
+
+                  <span
+                    class="workflows-execution-detail__step-badge --{{step.workflow_call_run.status}}"
+                  >
+                    {{i18n
+                      (concat
+                        "discourse_workflows.executions.statuses."
+                        step.workflow_call_run.status
+                      )
+                    }}
+                  </span>
+
+                  {{#if step.workflow_call_run.execution_url}}
+                    <DButton
+                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
+                      @icon="up-right-from-square"
+                      @label="discourse_workflows.executions.workflow_call_open"
+                      @route="adminPlugins.show.discourse-workflows.show.executions.show"
+                      @routeModels={{array
+                        step.workflow_call_run.workflow_id
+                        step.workflow_call_run.execution_id
+                      }}
+                    />
+                  {{/if}}
+
+                  {{#if step.workflow_call_run.error}}
+                    <div
+                      class="workflows-execution-detail__workflow-call-error"
+                    >
+                      {{step.workflow_call_run.error}}
+                    </div>
+                  {{/if}}
+                </div>
+              {{/if}}
+
+              <details class="workflows-execution-detail__step-section">
+                <summary>
+                  {{i18n "discourse_workflows.executions.input"}}
+                  {{#if (itemCount step.input)}}
+                    <span
+                      class="workflows-execution-detail__item-count"
+                    >{{itemCount step.input}}
+                      {{i18n "discourse_workflows.executions.items"}}</span>
+                  {{/if}}
+                </summary>
+                <pre>{{formatInputData step.input}}</pre>
+              </details>
+              <details class="workflows-execution-detail__step-section">
+                <summary>
+                  {{i18n "discourse_workflows.executions.output"}}
+                  {{#if (itemCount step.output)}}
+                    <span
+                      class="workflows-execution-detail__item-count"
+                    >{{itemCount step.output}}
+                      {{i18n "discourse_workflows.executions.items"}}</span>
+                  {{/if}}
+                </summary>
+                <pre>{{formatOutputData step.output}}</pre>
+              </details>
+            </div>
+          </div>
+        {{/each}}
+
+        <div class="workflows-execution-detail__footer">
+          <div class="workflows-execution-detail__total">
+            {{i18n "discourse_workflows.executions.total_time"}}
+            {{formatDuration
+              this.execution.started_at
+              this.execution.finished_at
+              (if this.isRunning this.currentTime)
+            }}
+          </div>
+          <DButton
+            class="btn-default btn-small"
+            @action={{this.exportAsText}}
+            @icon="download"
+            @label="discourse_workflows.executions.export"
+          />
+        </div>
+      </div>
+    </div>
+  </template>
+}

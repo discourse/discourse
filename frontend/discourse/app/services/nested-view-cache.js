@@ -41,7 +41,7 @@ export default class NestedViewCacheService extends Service {
     this.#forceUseCache = true;
   }
 
-  consumeTraversal() {
+  consumeTraversal(options = null) {
     if (this.#forceUseCache) {
       this.#forceUseCache = false;
       this.#lastNavigationType = null;
@@ -49,21 +49,14 @@ export default class NestedViewCacheService extends Service {
       return true;
     }
 
-    // Prefer Navigation API (explicit traversal type) when available
-    if (this.#lastNavigationType != null) {
-      const result = this.#lastNavigationType === "traverse";
-      this.#lastNavigationType = null;
-      this.#popstateTime = null;
-      return result;
+    const traversalSignal = this.#consumeTraversalSignal();
+    if (options) {
+      return Boolean(
+        options.isPoppedState || (options.allowLocalSignal && traversalSignal)
+      );
     }
 
-    // Fallback: popstate fires for back/forward in all browsers
-    if (this.#popstateTime && Date.now() - this.#popstateTime < 1000) {
-      this.#popstateTime = null;
-      return true;
-    }
-    this.#popstateTime = null;
-    return false;
+    return traversalSignal;
   }
 
   save(key, entry) {
@@ -88,6 +81,38 @@ export default class NestedViewCacheService extends Service {
     this.#cache.delete(key);
   }
 
+  buildKey(topicId, params) {
+    const parts = [topicId];
+    if (params.sort) {
+      parts.push(`s=${params.sort}`);
+    }
+    if (params.post_number) {
+      parts.push(`p=${params.post_number}`);
+    }
+    if (params.context != null) {
+      parts.push(`c=${params.context}`);
+    }
+    return parts.join(":");
+  }
+
+  #consumeTraversalSignal() {
+    // Prefer Navigation API (explicit traversal type) when available
+    if (this.#lastNavigationType != null) {
+      const result = this.#lastNavigationType === "traverse";
+      this.#lastNavigationType = null;
+      this.#popstateTime = null;
+      return result;
+    }
+
+    // Fallback: popstate fires for back/forward in all browsers
+    if (this.#popstateTime && Date.now() - this.#popstateTime < 1000) {
+      this.#popstateTime = null;
+      return true;
+    }
+    this.#popstateTime = null;
+    return false;
+  }
+
   #evict() {
     const now = Date.now();
     for (const [k, v] of this.#cache) {
@@ -105,19 +130,5 @@ export default class NestedViewCacheService extends Service {
         this.#cache.delete(entries[i][0]);
       }
     }
-  }
-
-  buildKey(topicId, params) {
-    const parts = [topicId];
-    if (params.sort) {
-      parts.push(`s=${params.sort}`);
-    }
-    if (params.post_number) {
-      parts.push(`p=${params.post_number}`);
-    }
-    if (params.context != null) {
-      parts.push(`c=${params.context}`);
-    }
-    return parts.join(":");
   }
 }

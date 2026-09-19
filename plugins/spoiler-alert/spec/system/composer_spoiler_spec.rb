@@ -84,16 +84,11 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
 
     composer.type_content("This is secret text here")
 
-    # Select "secret" and trigger applySurround — the same path plugin toolbar buttons use
     select_text_range(".ProseMirror p", 8, 6)
 
-    page.evaluate_async_script(<<~JS)
-      const done = arguments[arguments.length - 1];
-      setTimeout(() => {
-        const appEvents = Discourse.__container__.lookup("service:app-events");
-        appEvents.trigger("composer:apply-surround", "[spoiler]", "[/spoiler]", "spoiler_text", { multiline: false });
-        done();
-      }, 100);
+    page.execute_script(<<~JS)
+      const appEvents = Discourse.__container__.lookup("service:app-events");
+      appEvents.trigger("composer:apply-surround", "[spoiler]", "[/spoiler]", "spoiler_text", { multiline: false });
     JS
 
     expect(rich).to have_css("span.spoiled", text: "secret")
@@ -101,6 +96,28 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
 
     composer.toggle_rich_editor
     expect(composer).to have_value("This is [spoiler]secret[/spoiler] text here")
+  end
+
+  it "preserves paragraphs when applying a block spoiler through the plugin API" do
+    open_composer
+    composer.type_content("First paragraph")
+    composer.send_keys(:enter)
+    composer.type_content("Second paragraph")
+    composer.select_all
+
+    page.execute_script(<<~JS)
+      const appEvents = Discourse.__container__.lookup("service:app-events");
+      appEvents.trigger("composer:apply-surround", "[spoiler]", "[/spoiler]", "spoiler_text", { multiline: false });
+    JS
+
+    expect(rich).to have_css("div.spoiled p", text: "First paragraph")
+    expect(rich).to have_css("div.spoiled p", text: "Second paragraph")
+    expect(rich).to have_no_css("span.spoiled")
+
+    composer.toggle_rich_editor
+    expect(composer).to have_value(
+      "[spoiler]\nFirst paragraph\n\nSecond paragraph\n\n[/spoiler]\n\n",
+    )
   end
 
   it "wraps selected text in block spoiler when selection spans multiple paragraphs" do
@@ -189,7 +206,6 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
   end
 
   it "breaks out of inline spoiler when pressing Enter" do
-    skip_on_ci!("Flaky test - breaking out of inline spoiler when pressing Enter")
     open_composer
 
     composer.type_content("Test ")
@@ -206,19 +222,21 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
 
     expect(rich).to have_css("span.spoiled.spoiler-blurred", text: "hello")
 
-    composer.send_keys(:left)
-    composer.send_keys(:left)
+    composer.send_keys(:left, :left)
 
     expect(rich).to have_css("span.spoiled:not(.spoiler-blurred)", text: "hello")
 
-    # ENTER at the end of the node
     composer.send_keys(:enter)
+    expect(rich).to have_css("p:has(span.spoiled) + p", text: "X")
 
-    # Backspace, position cursor at hell|o, ENTER
     composer.send_keys(:backspace)
-    composer.send_keys(:left)
-    composer.send_keys(:left)
-    sleep 0.01
+    expect(rich).to have_no_css("p + p")
+
+    # Position cursor at "hell|o"
+    select_text_range(".ProseMirror span.spoiled", 4, 0)
+
+    expect(rich).to have_css("span.spoiled:not(.spoiler-blurred)", text: "hello")
+
     composer.send_keys(:enter)
 
     expect(rich).to have_css("p", text: "Test")
@@ -238,9 +256,11 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
 
     expect(rich).to have_css("span.spoiled", text: "hello")
 
-    composer.send_keys(:control, :left)
+    # Position cursor at start of "hello" inside the spoiler — :control, :left has
+    # platform-dependent behavior (word-jump on Linux/Windows, line-jump on macOS).
+    select_text_range(".ProseMirror span.spoiled", 0, 0)
+
     composer.send_keys(:backspace)
-    sleep 0.01
     composer.send_keys(:enter)
 
     expect(rich).to have_css("p:not(:has(span.spoiled)) + p:has(span.spoiled)", text: "hello")

@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    lazy_videos_enabled: "啟用 Lazy Videos 外掛"
+    lazy_youtube_enabled: "啟用 YouTube 嵌入內容的延遲載入"
+    lazy_vimeo_enabled: "啟用 Vimeo 嵌入內容的延遲載入"
+    lazy_tiktok_enabled: "啟用 TikTok 嵌入內容的延遲載入（實驗性）"

@@ -72,10 +72,7 @@ describe "Embed mode" do
   context "when logged in" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-    before do
-      SiteSetting.rich_editor = true
-      sign_in(user)
-    end
+    before { sign_in(user) }
 
     context "with a topic that has no replies" do
       fab!(:no_reply_topic, :topic)
@@ -132,6 +129,22 @@ describe "Embed mode" do
         find(".embed-mode-composer .docked-composer__submit-btn").click
 
         expect(page).to have_css(".topic-post", text: "Hello from the docked composer")
+      end
+
+      it "edits a post through the docked composer" do
+        own_post = Fabricate(:post, topic: topic, user: user, raw: "Original content")
+        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+        find("#post_#{own_post.post_number} button.edit").click
+
+        expect(page).to have_css(".embed-mode-composer__editing")
+        expect(page).to have_no_css("#reply-control.composer-action-edit")
+
+        find(".embed-mode-composer .d-editor-input").fill_in(with: "Edited content")
+        find(".embed-mode-composer .docked-composer__submit-btn").click
+
+        expect(page).to have_no_css(".embed-mode-composer__editing")
+        expect(page).to have_css("#post_#{own_post.post_number}", text: "Edited content")
       end
 
       context "with many replies" do

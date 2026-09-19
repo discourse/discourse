@@ -1,0 +1,8 @@
+.chat-disabled {
+  display: flex;
+  min-height: calc(100vh - var(--main-outlet-offset, 4em));
+
+  .empty-state__container {
+    margin: auto;
+  }
+}

@@ -8,7 +8,7 @@ Discourse is highly customizable, enabling you to modify almost any aspect of it
 
 To maintain compatibility with ongoing Discourse updates and new features, all themes require occasional maintenance. The frequency of maintenance depends on the customization complexity and type. You can minimize maintenance efforts for your theme by following these guidelines:
 
-- Check for official [themes](https://meta.discourse.org/tags/c/theme/61/none/official) or [theme components](https://meta.discourse.org/tags/c/theme-component/120/none/official) that match your desired functionality. These are updated alongside Discourse. These can also serve as examples of how to approach your own customizations.
+- Check for official [themes](https://meta.discourse.org/tags/c/customization/theme/61/none/official) or [theme components](https://meta.discourse.org/tags/c/customization/theme-component/120/none/official) that match your desired functionality. These are updated alongside Discourse. These can also serve as examples of how to approach your own customizations.
 - Replace interface text using the admin → customize → text feature by searching for the specific text and updating it there.
 - Theme CSS is additive, allowing you to override default styles without editing them directly. This approach improves CSS maintainability and minimizes conflicts with updates.
 - Use a version control system like Git with GitHub, GitLab, or Bitbucket for tracking changes. While the HTML and CSS editor at admin → customize → themes is convenient for minor adjustments, version control systems can make it easier to track and troubleshoot more complex changes.

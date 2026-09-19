@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { action, computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import RadioButton from "discourse/components/radio-button";
 import { topicLevels } from "discourse/lib/notification-levels";
+import DButton from "discourse/ui-kit/d-button";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
 import { i18n } from "discourse-i18n";
 
 // Support for changing the notification level of various topics
@@ -37,10 +37,10 @@ export default class NotificationLevel extends Component {
       {{#each this.notificationLevels as |level|}}
         <div class="controls">
           <label class="radio notification-level-radio checkbox-label">
-            <RadioButton
-              @value={{level.id}}
+            <DRadioButton
               @name="notification_level"
               @selection={{this.notificationLevelId}}
+              @value={{level.id}}
             />
             <strong>{{level.name}}</strong>
             <div class="description">{{trustHTML level.description}}</div>
@@ -50,8 +50,8 @@ export default class NotificationLevel extends Component {
     </div>
 
     <DButton
-      @disabled={{this.disabled}}
       @action={{this.changeNotificationLevel}}
+      @disabled={{this.disabled}}
       @label="topics.bulk.change_notification_level"
     />
   </template>

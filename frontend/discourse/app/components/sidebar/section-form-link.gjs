@@ -5,12 +5,13 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DIconGridPicker from "discourse/components/d-icon-grid-picker";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseLater from "discourse/lib/later";
+import DButton from "discourse/ui-kit/d-button";
+import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
@@ -78,86 +79,100 @@ export default class SectionFormLink extends Component {
   }
 
   <template>
-    <div
-      {{on "dragstart" this.dragHasStarted}}
-      {{on "dragover" this.dragOver}}
-      {{on "dragenter" this.dragEnter}}
-      {{on "dragleave" this.dragLeave}}
-      {{on "dragend" this.dragEnd}}
-      {{on "drop" this.dropItem}}
-      role="row"
-      data-row-id={{@link.objectId}}
-      draggable="true"
-      class={{concatClass
-        "sidebar-section-form-link"
-        "row-wrapper"
-        this.dragCssClass
-      }}
-    >
-      {{#if this.site.desktopView}}
-        <div class="draggable" data-link-name={{@link.name}}>
-          {{icon "grip-lines"}}
+    <div class="sidebar-section-form-link-wrapper" role="rowgroup">
+      <div
+        class={{dConcatClass
+          "sidebar-section-form-link"
+          "row-wrapper"
+          this.dragCssClass
+        }}
+        data-row-id={{@link.objectId}}
+        role="row"
+        {{on "dragover" this.dragOver}}
+        {{on "dragenter" this.dragEnter}}
+        {{on "dragleave" this.dragLeave}}
+        {{on "dragend" this.dragEnd}}
+        {{on "drop" this.dropItem}}
+      >
+        {{#if this.site.desktopView}}
+          <div
+            class="draggable"
+            data-link-name={{@link.name}}
+            draggable="true"
+            {{on "dragstart" this.dragHasStarted}}
+          >
+            {{dIcon "grip-lines"}}
+          </div>
+        {{/if}}
+
+        <div class="input-group" role="cell">
+          <DIconGridPicker
+            aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
+            @btnClass={{dConcatClass "btn-default" @link.iconCssClass}}
+            @onChange={{fn (mut @link.icon)}}
+            @showCaret={{true}}
+            @value={{@link.icon}}
+          />
+
+          {{#if @link.invalidIconMessage}}
+            <div aria-live="assertive" class="icon warning" role="alert">
+              {{@link.invalidIconMessage}}
+            </div>
+          {{/if}}
         </div>
-      {{/if}}
 
-      <div class="input-group" role="cell">
-        <DIconGridPicker
-          @value={{@link.icon}}
-          @onChange={{fn (mut @link.icon)}}
-          @showCaret={{true}}
-          @btnClass={{@link.iconCssClass}}
-          aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
+        <div class="input-group" role="cell">
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <Input
+            aria-label={{i18n "sidebar.sections.custom.links.name.label"}}
+            class={{@link.nameCssClass}}
+            data-1p-ignore
+            name="link-name"
+            @type="text"
+            @value={{@link.name}}
+            {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
+            {{on "input" (withEventValue (fn (mut @link.name)))}}
+          />
+
+          {{#if @link.invalidNameMessage}}
+            <div aria-live="assertive" class="name warning" role="alert">
+              {{@link.invalidNameMessage}}
+            </div>
+          {{/if}}
+        </div>
+
+        <div class="input-group" role="cell">
+          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+          <Input
+            aria-label={{i18n "sidebar.sections.custom.links.value.label"}}
+            class={{@link.valueCssClass}}
+            name="link-url"
+            @type="text"
+            @value={{@link.value}}
+            {{on "input" (withEventValue (fn (mut @link.value)))}}
+          />
+
+          {{#if @link.invalidValueMessage}}
+            <div aria-live="assertive" class="value warning" role="alert">
+              {{@link.invalidValueMessage}}
+            </div>
+          {{else if @duplicateValue}}
+            {{! Not announced assertively: nothing is wrong yet, and the row
+                still saves. }}
+            <div class="value warning duplicate-link">
+              {{i18n "sidebar.sections.custom.links.value.duplicate"}}
+            </div>
+          {{/if}}
+        </div>
+
+        <DButton
+          class="btn-flat delete-link"
+          role="cell"
+          @action={{fn @deleteLink @link}}
+          @icon="trash-can"
+          @title="sidebar.sections.custom.links.delete"
         />
-
-        {{#if @link.invalidIconMessage}}
-          <div class="icon warning" role="alert" aria-live="assertive">
-            {{@link.invalidIconMessage}}
-          </div>
-        {{/if}}
       </div>
-
-      <div class="input-group" role="cell">
-        <Input
-          {{on "input" (withEventValue (fn (mut @link.name)))}}
-          @type="text"
-          @value={{@link.name}}
-          name="link-name"
-          aria-label={{i18n "sidebar.sections.custom.links.name.label"}}
-          class={{@link.nameCssClass}}
-          data-1p-ignore
-        />
-
-        {{#if @link.invalidNameMessage}}
-          <div role="alert" aria-live="assertive" class="name warning">
-            {{@link.invalidNameMessage}}
-          </div>
-        {{/if}}
-      </div>
-
-      <div class="input-group" role="cell">
-        <Input
-          {{on "input" (withEventValue (fn (mut @link.value)))}}
-          @type="text"
-          @value={{@link.value}}
-          name="link-url"
-          aria-label={{i18n "sidebar.sections.custom.links.value.label"}}
-          class={{@link.valueCssClass}}
-        />
-
-        {{#if @link.invalidValueMessage}}
-          <div role="alert" aria-live="assertive" class="value warning">
-            {{@link.invalidValueMessage}}
-          </div>
-        {{/if}}
-      </div>
-
-      <DButton
-        @icon="trash-can"
-        @action={{fn @deleteLink @link}}
-        @title="sidebar.sections.custom.links.delete"
-        role="cell"
-        class="btn-flat delete-link"
-      />
     </div>
   </template>
 }

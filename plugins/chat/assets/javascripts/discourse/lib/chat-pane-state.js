@@ -4,7 +4,10 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import userPresent, {
+  browserAttention,
+  onBrowserAttentionChange as addBrowserAttentionChangeCallback,
   onPresenceChange,
+  removeOnBrowserAttentionChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
 import { maintainScrollPosition } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
@@ -13,6 +16,8 @@ const CHAT_PRESENCE_OPTIONS = {
   userUnseenTime: 1 * 60 * 1000,
   browserHiddenTime: 0,
 };
+
+const LIVE_EDGE_THRESHOLD_PIXELS = 10;
 
 /**
  * Shared state and helpers for chat panes (channel and thread).
@@ -43,6 +48,10 @@ export default class ChatPaneState {
    * @type {boolean}
    */
   @tracked userIsPresent = true;
+  @tracked isDocumentFocused = true;
+  @tracked isDocumentVisible = true;
+  @tracked wasAtLiveEdge = true;
+  @tracked isAtLiveEdge = true;
 
   /**
    * Whether there is pending content below the current scroll position.
@@ -78,18 +87,12 @@ export default class ChatPaneState {
     this.contextKey = options.contextKey;
     this.#onUserPresent = options.onUserPresent ?? null;
     this.userIsPresent = userPresent(CHAT_PRESENCE_OPTIONS);
+    this.#refreshDocumentAttention();
     onPresenceChange({
       callback: this.onPresenceChangeCallback,
       ...CHAT_PRESENCE_OPTIONS,
     });
-  }
-
-  /**
-   * Cleanup presence tracking. Call from component teardown (e.g. willDestroy).
-   */
-  teardown() {
-    removeOnPresenceChange(this.onPresenceChangeCallback);
-    this.clearPendingMessages();
+    addBrowserAttentionChangeCallback(this.onBrowserAttentionChange);
   }
 
   /**
@@ -100,6 +103,209 @@ export default class ChatPaneState {
    */
   get hasPendingMessages() {
     return this.chatPanePendingManager.hasPending(this.contextKey);
+  }
+
+  get isActiveReader() {
+    return (
+      this.userIsPresent && this.isDocumentFocused && this.isDocumentVisible
+    );
+  }
+
+  /**
+   * Cleanup presence tracking. Call from component teardown (e.g. willDestroy).
+   */
+  teardown() {
+    removeOnPresenceChange(this.onPresenceChangeCallback);
+    removeOnBrowserAttentionChange(this.onBrowserAttentionChange);
+    this.clearPendingMessages();
+  }
+
+  updateLiveEdgeFromScrollState(state) {
+    this.updateLiveEdgeFromDistance(state?.distanceToBottom?.pixels ?? 0);
+  }
+
+  updateLiveEdgeFromDistance(distanceToBottomPixels) {
+    this.isAtLiveEdge = distanceToBottomPixels <= LIVE_EDGE_THRESHOLD_PIXELS;
+  }
+
+  /**
+   * Update pending content state from a scroll event's state object.
+   * Use this in scroll handlers that already have distanceToBottom computed.
+   *
+   * @param {object} options
+   * @param {HTMLElement | null} options.scroller
+   * @param {boolean} options.fetchedOnce
+   * @param {boolean} options.canLoadMoreFuture
+   * @param {object} options.state - Scroll state with distanceToBottom
+   * @param {number} [options.distanceThresholdPixels]
+   */
+  updatePendingContentFromScrollState(options) {
+    const {
+      scroller,
+      fetchedOnce,
+      canLoadMoreFuture,
+      state,
+      distanceThresholdPixels,
+    } = options;
+
+    this.updateLiveEdgeFromScrollState(state);
+
+    this.#updateHasPendingContentBelow({
+      scroller,
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceToBottomPixels: state?.distanceToBottom?.pixels ?? 0,
+      distanceThresholdPixels,
+    });
+  }
+
+  /**
+   * Update pending content state by reading current scroller position.
+   * Use this when you need to recompute after a resize or similar event.
+   *
+   * @param {object} options
+   * @param {HTMLElement | null} options.scroller
+   * @param {boolean} options.fetchedOnce
+   * @param {boolean} options.canLoadMoreFuture
+   * @param {number} [options.distanceThresholdPixels]
+   */
+  updatePendingContentFromScrollerPosition(options) {
+    const {
+      scroller,
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceThresholdPixels,
+    } = options;
+
+    if (!scroller) {
+      this.hasPendingContentBelow = false;
+      return;
+    }
+
+    const distanceToBottomPixels = -scroller.scrollTop;
+    this.updateLiveEdgeFromDistance(distanceToBottomPixels);
+
+    this.#updateHasPendingContentBelow({
+      scroller,
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceToBottomPixels,
+      distanceThresholdPixels,
+    });
+  }
+
+  /**
+   * Callback for presence change events. Updates userIsPresent and
+   * triggers onUserPresent callback when user returns.
+   *
+   * @param {boolean} present
+   */
+  @bind
+  onPresenceChangeCallback(present) {
+    const wasActiveReader = this.isActiveReader;
+    this.userIsPresent = present;
+    this.#handleActiveReaderTransition(wasActiveReader);
+  }
+
+  @bind
+  onBrowserAttentionChange(attention = browserAttention()) {
+    const wasActiveReader = this.isActiveReader;
+    this.#refreshDocumentAttention(attention);
+    this.#handleActiveReaderTransition(wasActiveReader);
+  }
+
+  /**
+   * Handle an incoming message by either auto-scrolling or preserving viewport.
+   *
+   * If shouldAutoScroll is true, adds the message and scrolls to show it.
+   * Otherwise, preserves the current scroll position and tracks the message as pending.
+   *
+   * @param {object} options
+   * @param {HTMLElement | null} options.scroller - The scrollable container
+   * @param {boolean} options.shouldAutoScroll - Whether to auto-scroll to the new message
+   * @param {Function} options.addMessage - Function that adds the message to the list
+   * @param {Function} [options.onAutoAdd] - Callback after auto-adding (e.g. to scroll)
+   * @param {number} [options.messageCount=1] - Number of messages being added
+   */
+  handleIncomingMessage(options = {}) {
+    const {
+      scroller,
+      shouldAutoScroll,
+      addMessage,
+      onAutoAdd,
+      messageCount = 1,
+    } = options;
+
+    if (shouldAutoScroll) {
+      addMessage?.();
+      this.clearPendingMessages();
+      onAutoAdd?.();
+      return;
+    }
+
+    maintainScrollPosition(scroller, addMessage);
+    this.addPendingMessages(messageCount);
+
+    schedule("afterRender", () => {
+      const owner = getOwner(this);
+      if (owner.isDestroying) {
+        return;
+      }
+
+      this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
+        scroller,
+        false
+      );
+    });
+  }
+
+  shouldAutoScrollIncomingMessage({ isAtLiveEdge, isOwnMessage = false } = {}) {
+    if (!isAtLiveEdge) {
+      return false;
+    }
+
+    if (isOwnMessage) {
+      return true;
+    }
+
+    if (this.isActiveReader) {
+      return true;
+    }
+
+    if (!this.isDocumentVisible) {
+      return false;
+    }
+
+    if (this.isDocumentFocused) {
+      return false;
+    }
+
+    return this.#shouldContinueLiveFollowing();
+  }
+
+  shouldMarkRead() {
+    return this.isActiveReader;
+  }
+
+  /**
+   * Add pending messages to the count for this context.
+   *
+   * @param {number} [count=1] - Number of messages to add
+   */
+  addPendingMessages(count = 1) {
+    if (this.contextKey && count > 0) {
+      this.chatPanePendingManager.add(this.contextKey, count);
+    }
+  }
+
+  /**
+   * Clear all pending messages for this context and reset pending content state.
+   */
+  clearPendingMessages() {
+    if (this.contextKey) {
+      this.chatPanePendingManager.clear(this.contextKey);
+    }
+    this.hasPendingContentBelow = false;
   }
 
   /**
@@ -162,126 +368,25 @@ export default class ChatPaneState {
     );
   }
 
-  /**
-   * Update pending content state from a scroll event's state object.
-   * Use this in scroll handlers that already have distanceToBottom computed.
-   *
-   * @param {object} options
-   * @param {HTMLElement | null} options.scroller
-   * @param {boolean} options.fetchedOnce
-   * @param {boolean} options.canLoadMoreFuture
-   * @param {object} options.state - Scroll state with distanceToBottom
-   * @param {number} [options.distanceThresholdPixels]
-   */
-  updatePendingContentFromScrollState(options) {
-    const {
-      scroller,
-      fetchedOnce,
-      canLoadMoreFuture,
-      state,
-      distanceThresholdPixels,
-    } = options;
-
-    this.#updateHasPendingContentBelow({
-      scroller,
-      fetchedOnce,
-      canLoadMoreFuture,
-      distanceToBottomPixels: state?.distanceToBottom?.pixels ?? 0,
-      distanceThresholdPixels,
-    });
+  #refreshDocumentAttention(attention = browserAttention()) {
+    this.isDocumentFocused = attention.focused;
+    this.isDocumentVisible = attention.visible;
   }
 
-  /**
-   * Update pending content state by reading current scroller position.
-   * Use this when you need to recompute after a resize or similar event.
-   *
-   * @param {object} options
-   * @param {HTMLElement | null} options.scroller
-   * @param {boolean} options.fetchedOnce
-   * @param {boolean} options.canLoadMoreFuture
-   * @param {number} [options.distanceThresholdPixels]
-   */
-  updatePendingContentFromScrollerPosition(options) {
-    const {
-      scroller,
-      fetchedOnce,
-      canLoadMoreFuture,
-      distanceThresholdPixels,
-    } = options;
+  #handleActiveReaderTransition(wasActiveReader) {
+    const isActiveReader = this.isActiveReader;
 
-    if (!scroller) {
-      this.hasPendingContentBelow = false;
-      return;
+    if (wasActiveReader && !isActiveReader) {
+      this.wasAtLiveEdge = this.isAtLiveEdge;
     }
 
-    const distanceToBottomPixels = -scroller.scrollTop;
-
-    this.#updateHasPendingContentBelow({
-      scroller,
-      fetchedOnce,
-      canLoadMoreFuture,
-      distanceToBottomPixels,
-      distanceThresholdPixels,
-    });
-  }
-
-  /**
-   * Callback for presence change events. Updates userIsPresent and
-   * triggers onUserPresent callback when user returns.
-   *
-   * @param {boolean} present
-   */
-  @bind
-  onPresenceChangeCallback(present) {
-    this.userIsPresent = present;
-    if (present) {
+    if (!wasActiveReader && isActiveReader) {
       this.#onUserPresent?.();
     }
   }
 
-  /**
-   * Handle an incoming message by either auto-scrolling or preserving viewport.
-   *
-   * If shouldAutoScroll is true, adds the message and scrolls to show it.
-   * Otherwise, preserves the current scroll position and tracks the message as pending.
-   *
-   * @param {object} options
-   * @param {HTMLElement | null} options.scroller - The scrollable container
-   * @param {boolean} options.shouldAutoScroll - Whether to auto-scroll to the new message
-   * @param {Function} options.addMessage - Function that adds the message to the list
-   * @param {Function} [options.onAutoAdd] - Callback after auto-adding (e.g. to scroll)
-   * @param {number} [options.messageCount=1] - Number of messages being added
-   */
-  handleIncomingMessage(options = {}) {
-    const {
-      scroller,
-      shouldAutoScroll,
-      addMessage,
-      onAutoAdd,
-      messageCount = 1,
-    } = options;
-
-    if (shouldAutoScroll) {
-      addMessage?.();
-      this.clearPendingMessages();
-      onAutoAdd?.();
-      return;
-    }
-
-    maintainScrollPosition(scroller, addMessage);
-    this.addPendingMessages(messageCount);
-
-    schedule("afterRender", () => {
-      const owner = getOwner(this);
-      if (owner.isDestroying || owner.isDestroyed) {
-        return;
-      }
-
-      this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
-        scroller,
-        false
-      );
-    });
+  #shouldContinueLiveFollowing() {
+    return this.wasAtLiveEdge;
   }
 
   /**
@@ -295,26 +400,5 @@ export default class ChatPaneState {
     return (
       this.#canScroll(scroller) && (this.hasPendingMessages || isScrolledAway)
     );
-  }
-
-  /**
-   * Add pending messages to the count for this context.
-   *
-   * @param {number} [count=1] - Number of messages to add
-   */
-  addPendingMessages(count = 1) {
-    if (this.contextKey && count > 0) {
-      this.chatPanePendingManager.add(this.contextKey, count);
-    }
-  }
-
-  /**
-   * Clear all pending messages for this context and reset pending content state.
-   */
-  clearPendingMessages() {
-    if (this.contextKey) {
-      this.chatPanePendingManager.clear(this.contextKey);
-    }
-    this.hasPendingContentBelow = false;
   }
 }

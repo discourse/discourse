@@ -4,10 +4,6 @@ module PageObjects
     class TopicBulkActions < PageObjects::Modals::Base
       MODAL_SELECTOR = ".topic-bulk-actions-modal"
 
-      def tag_selector
-        PageObjects::Components::SelectKit.new(".tag-chooser")
-      end
-
       def category_selector
         PageObjects::Components::SelectKit.new(".category-chooser")
       end
@@ -18,10 +14,6 @@ module PageObjects
 
       def click_dismiss_confirm
         find("#dismiss-read-confirm").click
-      end
-
-      def click_notify
-        find("#topic-bulk-action-options__notify").click
       end
 
       def fill_in_close_note(message)

@@ -5,11 +5,11 @@ import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const BULK_DELETE_CHANNEL = "/bulk-user-delete";
@@ -38,25 +38,6 @@ export default class BulkUserDeleteConfirmation extends Component {
       "admin.users.bulk_actions.delete.confirmation_modal.confirmation_phrase",
       { count: this.args.model.userIds.length }
     );
-  }
-
-  #logError(line) {
-    this.#log(line, "error");
-  }
-
-  #logSuccess(line) {
-    this.#log(line, "success");
-  }
-
-  #logNeutral(line) {
-    this.#log(line, "neutral");
-  }
-
-  #log(line, type) {
-    this.logs.push({
-      line,
-      type,
-    });
   }
 
   @bind
@@ -134,13 +115,32 @@ export default class BulkUserDeleteConfirmation extends Component {
   closeModal() {
     this.args.closeModal();
     if (this.callAfterBulkDelete) {
-      this.args.model?.afterBulkDelete();
+      this.args.model?.afterBulkAction();
     }
   }
 
   @action
   toggleBlockIpAndEmail(event) {
     this.blockIpAndEmail = event.target.checked;
+  }
+
+  #logError(line) {
+    this.#log(line, "error");
+  }
+
+  #logSuccess(line) {
+    this.#log(line, "success");
+  }
+
+  #logNeutral(line) {
+    this.#log(line, "neutral");
+  }
+
+  #log(line, type) {
+    this.logs.push({
+      line,
+      type,
+    });
   }
 
   <template>
@@ -175,14 +175,14 @@ export default class BulkUserDeleteConfirmation extends Component {
           </p>
           <input
             class="confirmation-phrase"
-            type="text"
             placeholder={{this.confirmDeletePhrase}}
+            type="text"
             {{on "input" this.onPromptInput}}
           />
           <label class="checkbox-label">
             <input
-              type="checkbox"
               class="block-ip-and-email"
+              type="checkbox"
               {{on "change" this.toggleBlockIpAndEmail}}
             />
             {{i18n
@@ -194,15 +194,15 @@ export default class BulkUserDeleteConfirmation extends Component {
       <:footer>
         <DButton
           class="confirm-delete btn-danger"
+          @action={{this.startDelete}}
+          @disabled={{this.confirmButtonDisabled}}
           @icon="trash-can"
           @label="admin.users.bulk_actions.delete.confirmation_modal.confirm"
-          @disabled={{this.confirmButtonDisabled}}
-          @action={{this.startDelete}}
         />
         <DButton
           class="btn-default"
-          @label="admin.users.bulk_actions.delete.confirmation_modal.close"
           @action={{this.closeModal}}
+          @label="admin.users.bulk_actions.delete.confirmation_modal.close"
         />
       </:footer>
     </DModal>

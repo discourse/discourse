@@ -54,6 +54,57 @@ describe UsersController do
     end
   end
 
+  describe "#update" do
+    fab!(:user)
+    fab!(:other_user, :user)
+
+    before { sign_in(user) }
+
+    it "persists chat channel list preferences while chat is disabled" do
+      SiteSetting.chat_enabled = false
+
+      put "/u/#{user.username}.json",
+          params: {
+            chat_channel_list_filter: "unread",
+            chat_channel_list_sort: "priority",
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(user.user_option.reload).to have_attributes(
+        chat_channel_list_filter: "unread",
+        chat_channel_list_sort: "priority",
+      )
+    end
+
+    it "rejects invalid chat channel list preferences" do
+      put "/u/#{user.username}.json",
+          params: {
+            chat_channel_list_filter: "invalid",
+            chat_channel_list_sort: "priority",
+          }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(user.user_option.reload).to have_attributes(
+        chat_channel_list_filter: "all",
+        chat_channel_list_sort: "alphabetical",
+      )
+    end
+
+    it "rejects an invalid sort preference" do
+      put "/u/#{user.username}.json", params: { chat_channel_list_sort: "invalid" }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(user.user_option.reload.chat_channel_list_sort).to eq("alphabetical")
+    end
+
+    it "does not allow another user to update the preferences" do
+      put "/u/#{other_user.username}.json", params: { chat_channel_list_filter: "unread" }
+
+      expect(response).to have_http_status(:forbidden)
+      expect(other_user.user_option.reload.chat_channel_list_filter).to eq("all")
+    end
+  end
+
   describe "#show_card" do
     fab!(:user)
     fab!(:another_user, :user)
@@ -62,6 +113,23 @@ describe UsersController do
       SiteSetting.chat_enabled = true
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
       SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    end
+
+    context "when the card owner excludes the current user from their PM allowlist" do
+      fab!(:allowed_user, :user)
+
+      before do
+        user.user_option.update!(enable_allowed_pm_users: true, chat_enabled: true)
+        AllowedPmUser.create!(user: user, allowed_pm_user: allowed_user)
+        sign_in(another_user)
+      end
+
+      it "returns that the current user cannot chat with the card owner" do
+        get "/u/#{user.username}/card.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.dig("user", "can_chat_user")).to eq(false)
+      end
     end
 
     context "when the card belongs to the current user" do

@@ -12,11 +12,9 @@ class SeedData::Refresher
       # Not that reset_column_information is not thread safe so we have to be careful
       # not to run it concurrently within the same process.
       ActiveRecord::Base.connection.tables.each do |table|
-        begin
-          table.classify.constantize.reset_column_information
-        rescue StandardError
-          nil
-        end
+        table.classify.constantize.reset_column_information
+      rescue StandardError
+        nil
       end
 
       @refreshed = true

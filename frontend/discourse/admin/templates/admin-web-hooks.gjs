@@ -1,26 +1,26 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="admin-webhooks admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.webhooks.title"}}
       @descriptionLabel={{i18n "admin.config.webhooks.header_description"}}
       @hideTabs={{true}}
+      @titleLabel={{i18n "admin.config.webhooks.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/api/web_hooks"
           @label={{i18n "admin.config.webhooks.title"}}
+          @path="/admin/api/web_hooks"
         />
       </:breadcrumbs>
       <:actions as |actions|>
         <actions.Primary
-          @route="adminWebHooks.new"
           @label="admin.web_hooks.add"
+          @route="adminWebHooks.new"
         />
       </:actions>
     </DPageHeader>

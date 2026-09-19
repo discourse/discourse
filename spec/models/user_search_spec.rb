@@ -55,7 +55,7 @@ RSpec.describe UserSearch do
       expect(results).to eq [user.username]
     end
 
-    it "will lookup the category from the topic id" do
+    it "finds the category from the topic ID" do
       topic = Fabricate(:topic, category: category)
       Fabricate(:post, user: topic.user, topic: topic)
 
@@ -64,13 +64,13 @@ RSpec.describe UserSearch do
       expect(results).to eq [topic.user, user].map(&:username)
     end
 
-    it "will raise an error if the user cannot see the category" do
+    it "raises an error when the user cannot see the category" do
       expect do
         search_for("", searching_user: Fabricate(:user), category_id: category.id)
       end.to raise_error(Discourse::InvalidAccess)
     end
 
-    it "will respect the group member visibility setting" do
+    it "respects the group member visibility setting" do
       group.update(members_visibility_level: Group.visibility_levels[:owners])
       results = search_for("", searching_user: searching_user, category_id: category.id)
       expect(results).to be_blank
@@ -112,6 +112,68 @@ RSpec.describe UserSearch do
 
     results = search_for("sam", groups: [group_1, group_2])
     expect(results).to eq [sam, samantha].map(&:username)
+  end
+
+  it "raises when filtering by a group the user cannot see, even if its members are public" do
+    hidden =
+      Fabricate(
+        :group,
+        visibility_level: Group.visibility_levels[:logged_on_users],
+        members_visibility_level: Group.visibility_levels[:public],
+      )
+    hidden.add(Fabricate(:user, username: "hiddenmember"))
+
+    expect { search_for("hiddenmember", groups: [hidden]) }.to raise_error(Discourse::InvalidAccess)
+
+    expect(search_for("hiddenmember", groups: [hidden], searching_user: Fabricate(:user))).to eq(
+      ["hiddenmember"],
+    )
+  end
+
+  it "raises when a non-staff user filters by a group only staff can see" do
+    staff_only =
+      Fabricate(
+        :group,
+        visibility_level: Group.visibility_levels[:staff],
+        members_visibility_level: Group.visibility_levels[:public],
+      )
+    staff_only.add(Fabricate(:user, username: "staffgroupmember"))
+
+    expect {
+      search_for("staffgroupmember", groups: [staff_only], searching_user: Fabricate(:user))
+    }.to raise_error(Discourse::InvalidAccess)
+
+    expect(search_for("staffgroupmember", groups: [staff_only], searching_user: admin)).to eq(
+      ["staffgroupmember"],
+    )
+  end
+
+  it "checks each group's visibility independently for mixed-visibility filters" do
+    member = Fabricate(:user, username: "mixedmember")
+    public_group = Fabricate(:group, visibility_level: Group.visibility_levels[:public])
+    logged_on_group = Fabricate(:group, visibility_level: Group.visibility_levels[:logged_on_users])
+    public_group.add(member)
+    logged_on_group.add(member)
+
+    expect(
+      search_for(
+        "mixedmember",
+        groups: [public_group, logged_on_group],
+        searching_user: Fabricate(:user),
+      ),
+    ).to eq(["mixedmember"])
+  end
+
+  it "does not let membership in one group grant visibility into a co-filtered hidden group" do
+    searcher = Fabricate(:user)
+    visible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:public])
+    hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+    visible_group.add(searcher)
+    hidden_group.add(searcher)
+
+    expect {
+      search_for("searcher", groups: [visible_group, hidden_group], searching_user: searcher)
+    }.to raise_error(Discourse::InvalidAccess)
   end
 
   context "with seed data" do
@@ -292,11 +354,24 @@ RSpec.describe UserSearch do
       expect(results).to be_blank
 
       results = search_for(staged.username, include_staged_users: true)
+      expect(results).to be_blank
+
+      results = search_for(staged.username, include_staged_users: true, searching_user: admin)
+      expect(results).to eq [staged.username]
+
+      results = search_for(staged.username, include_staged_users: true, user_directory_search: true)
       expect(results).to eq [staged.username]
 
       # mrb is omitted since they're the searching user
       results = search_for("", topic_id: topic.id, searching_user: mr_b)
       expect(results).to eq [mr_pink, mr_orange].map(&:username)
+    end
+
+    it "does not return last-seen suggestions when staged users are included" do
+      results =
+        search_for("", include_staged_users: true, last_seen_users: true, searching_user: admin)
+
+      expect(results).to be_blank
     end
 
     it "works with last_seen_users option" do
@@ -306,6 +381,30 @@ RSpec.describe UserSearch do
       expect(results[0]).to eq("mrbrown")
       expect(results[1]).to eq("mrpink")
       expect(results[2]).to eq("mrorange")
+    end
+  end
+
+  context "with the search_custom_fields option" do
+    fab!(:searchable_field) { Fabricate(:user_field, searchable: true, show_on_profile: true) }
+    fab!(:member) { Fabricate(:user, username: "memberx", name: "Member X") }
+
+    before do
+      member.set_user_field(searchable_field.id, "Acme-Corp")
+      member.save_custom_fields
+      SearchIndexer.index(member.reload, force: true)
+    end
+
+    it "matches a custom field value containing `_`, `.` or `-` when the option is set" do
+      expect(search_for("Acme-Corp", search_custom_fields: true)).to include("memberx")
+    end
+
+    it "matches a custom field value when the option is set and `enable_names` is disabled" do
+      SiteSetting.enable_names = false
+      expect(search_for("Acme-Corp", search_custom_fields: true)).to include("memberx")
+    end
+
+    it "does not match custom fields for `_`, `.` or `-` terms without the option" do
+      expect(search_for("Acme-Corp")).not_to include("memberx")
     end
   end
 end

@@ -7,10 +7,10 @@ import { tagName } from "@ember-decorators/component";
 import GoogleIcon from "discourse/components/google-icon";
 import PasskeyLoginButton from "discourse/components/passkey-login-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -46,47 +46,47 @@ export default class LoginButtons extends Component {
 
   <template>
     <div
-      id="login-buttons"
-      class={{concatClass
+      class={{dConcatClass
         (if this.hidden "hidden")
         (if this.multiple "multiple")
       }}
+      id="login-buttons"
       ...attributes
     >
       {{#each this.buttons as |b|}}
         {{#if b.isDiscourseID}}
           <div class="discourse-id__wrapper">
             <button
-              type="button"
-              class="btn btn-social {{b.name}}"
-              {{on "click" (fn this.externalLogin b)}}
               aria-label={{b.screenReaderTitle}}
+              class="btn btn-social {{b.name}}"
+              type="button"
+              {{on "click" (fn this.externalLogin b)}}
             >
-              {{icon b.icon}}
+              {{dIcon b.icon}}
               <span class="btn-social-title">{{b.title}}</span>
             </button>
             <div class="btn-discourse-id__suffix">
               <span class="btn-discourse-id__description">
                 {{i18n "login.works_with"}}</span>
-              {{icon "fab-google"}}
-              {{icon "fab-apple"}}
-              {{icon "fab-facebook"}}
-              {{icon "fab-github"}}
+              {{dIcon "fab-google"}}
+              {{dIcon "fab-apple"}}
+              {{dIcon "fab-facebook"}}
+              {{dIcon "fab-github"}}
             </div>
           </div>
         {{else}}
           <button
-            type="button"
-            class="btn btn-social {{b.name}}"
-            {{on "click" (fn this.externalLogin b)}}
             aria-label={{b.screenReaderTitle}}
+            class="btn btn-social {{b.name}}"
+            type="button"
+            {{on "click" (fn this.externalLogin b)}}
           >
             {{#if b.isGoogle}}
               <GoogleIcon />
             {{else if b.icon}}
-              {{icon b.icon}}
+              {{dIcon b.icon}}
             {{else}}
-              {{icon "right-to-bracket"}}
+              {{dIcon "right-to-bracket"}}
             {{/if}}
             <span class="btn-social-title">{{b.title}}</span>
           </button>

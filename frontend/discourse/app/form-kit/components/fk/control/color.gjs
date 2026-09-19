@@ -5,8 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import {
   isValidHex,
   normalizeHex,
@@ -14,6 +12,8 @@ import {
 } from "discourse/lib/color-transformations";
 import getUrl from "discourse/lib/get-url";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function isColorUsed(usedColors, color) {
@@ -182,42 +182,42 @@ export default class FKControlColor extends FKBaseControl {
           <span class="form-kit__control-color-input-prefix">#</span>
         {{/if}}
         <input
-          type="text"
-          value={{this.bareValue}}
-          maxlength={{this.maxLength}}
+          aria-describedby={{@field.describedBy}}
+          aria-invalid={{if @field.error "true"}}
           class="form-kit__control-color-input-hex"
           disabled={{@field.disabled}}
           id={{@field.id}}
+          maxlength={{this.maxLength}}
           name={{@field.name}}
-          aria-invalid={{if @field.error "true"}}
-          aria-describedby={{if @field.error @field.errorId}}
+          type="text"
+          value={{this.bareValue}}
+          ...attributes
           {{on "input" this.handleTextInput}}
           {{on "blur" this.handleBlur}}
           {{on "paste" this.handlePaste}}
-          ...attributes
         />
         <span
-          class={{concatClass
+          class={{dConcatClass
             "form-kit__control-color-picker-wrapper"
             this.pickerIconClass
           }}
         >
           <input
-            type="color"
-            value={{this.normalizedValueForPicker}}
             class="form-kit__control-color-input-picker"
             disabled={{@field.disabled}}
+            type="color"
+            value={{this.normalizedValueForPicker}}
             {{on "input" this.handlePickerInput}}
           />
-          {{icon "eye-dropper"}}
+          {{dIcon "eye-dropper"}}
         </span>
         {{#if (and @colors @collapseSwatches)}}
           <DMenu
-            @identifier="color-swatches-menu"
-            @icon="palette"
-            @title={{@collapseSwatchesLabel}}
-            @modalForMobile={{true}}
             class="btn-default form-kit__control-color-swatches-btn"
+            @icon="palette"
+            @identifier="color-swatches-menu"
+            @modalForMobile={{true}}
+            @title={{@collapseSwatchesLabel}}
           >
             <:content as |args|>
               <div class="form-kit__control-color-swatches" role="group">
@@ -225,10 +225,10 @@ export default class FKControlColor extends FKBaseControl {
                   {{i18n "form_kit.color.available_presets"}}
                   {{#if this.currentUser.admin}}
                     <a
+                      class="form-kit__control-color-edit-presets"
                       href={{getUrl
                         "/admin/site_settings/category/all_results?filter=category_colors"
                       }}
-                      class="form-kit__control-color-edit-presets"
                       title={{i18n "form_kit.color.edit_presets"}}
                     >
                       {{i18n "edit"}}
@@ -237,11 +237,11 @@ export default class FKControlColor extends FKBaseControl {
                 </div>
                 {{#each this.unusedColors as |color|}}
                   <button
-                    type="button"
-                    style={{colorStyle color}}
-                    class="form-kit__control-color-swatch"
                     aria-label={{colorLabel @usedColors color}}
+                    class="form-kit__control-color-swatch"
                     data-color={{color}}
+                    style={{colorStyle color}}
+                    type="button"
                     {{on "click" (fn this.selectColor color args.close)}}
                   ></button>
                 {{/each}}
@@ -256,15 +256,15 @@ export default class FKControlColor extends FKBaseControl {
                   </div>
                   {{#each this.usedColorsFromPalette as |color|}}
                     <button
-                      type="button"
-                      style={{colorStyle color}}
-                      class={{concatClass
+                      aria-label={{colorLabel @usedColors color}}
+                      class={{dConcatClass
                         "form-kit__control-color-swatch"
                         "is-used"
                       }}
-                      title={{i18n "category.already_used"}}
-                      aria-label={{colorLabel @usedColors color}}
                       data-color={{color}}
+                      style={{colorStyle color}}
+                      title={{i18n "category.already_used"}}
+                      type="button"
                       {{on "click" (fn this.selectColor color args.close)}}
                     >
                     </button>
@@ -281,24 +281,24 @@ export default class FKControlColor extends FKBaseControl {
           <div class="form-kit__control-color-swatches" role="group">
             {{#each this.sortedColors as |color|}}
               <button
-                type="button"
-                style={{colorStyle color}}
-                class={{concatClass
+                aria-label={{colorLabel @usedColors color}}
+                class={{dConcatClass
                   "form-kit__control-color-swatch"
                   (if (isColorUsed @usedColors color) "is-used")
                   (colorLuminanceClass color)
                 }}
+                data-color={{color}}
+                disabled={{@field.disabled}}
+                style={{colorStyle color}}
                 title={{if
                   (isColorUsed @usedColors color)
                   (i18n "category.already_used")
                 }}
-                aria-label={{colorLabel @usedColors color}}
-                data-color={{color}}
-                disabled={{@field.disabled}}
+                type="button"
                 {{on "click" (fn this.selectColor color)}}
               >
                 {{#if (isColorUsed @usedColors color)}}
-                  {{icon "check"}}
+                  {{dIcon "check"}}
                 {{/if}}
               </button>
             {{/each}}

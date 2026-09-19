@@ -19,6 +19,8 @@ describe "Admin Customize Themes Config Area Page" do
   it "has an install button in the subheader" do
     config_area.visit
 
+    screenshot_marker(label: "admin-themes", only: "desktop")
+
     install_modal = config_area.click_install_button
     expect(install_modal.popular_options.first).to have_text("Graceful")
   end

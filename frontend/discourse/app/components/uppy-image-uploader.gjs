@@ -8,14 +8,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import PickFilesButton from "discourse/components/pick-files-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DButton from "discourse/ui-kit/d-button";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 // Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled, allowVideo, previewSize
@@ -165,12 +165,12 @@ export default class UppyImageUploader extends Component {
 
   <template>
     <div
-      id={{@id}}
       class="file-uploader {{if @imageUrl 'has-image' 'no-image'}}"
+      id={{@id}}
       ...attributes
     >
       <div
-        class={{concatClass
+        class={{dConcatClass
           "file-uploader__preview input-xxlarge"
           this.previewSizeClass
         }}
@@ -203,11 +203,11 @@ export default class UppyImageUploader extends Component {
             </div>
           {{else}}
             <a
-              {{this.applyLightbox}}
-              href={{this.imageCdnUrl}}
-              title={{this.imageFilename}}
-              rel="nofollow ugc noopener"
               class="lightbox"
+              href={{this.imageCdnUrl}}
+              rel="nofollow ugc noopener"
+              title={{this.imageFilename}}
+              {{this.applyLightbox}}
             >
               <div class="meta">
                 <span class="informations">
@@ -219,10 +219,10 @@ export default class UppyImageUploader extends Component {
 
             <div class="expand-overlay">
               <DButton
+                class="btn-default btn-small image-uploader-lightbox-btn"
                 @action={{this.toggleLightbox}}
                 @icon="discourse-expand"
                 @title="expand"
-                class="btn-default btn-small image-uploader-lightbox-btn"
               />
             </div>
           {{/if}}
@@ -232,17 +232,17 @@ export default class UppyImageUploader extends Component {
               class="btn btn-transparent
                 {{if this.disabled 'disabled'}}
                 {{if this.uppyUpload.uploading 'hidden'}}"
-              title={{this.disabledReason}}
               for={{this.computedId}}
               tabindex="0"
+              title={{this.disabledReason}}
               {{on "keydown" this.handleKeyboardActivation}}
             >
-              {{icon "upload"}}
-              <PickFilesButton
-                @registerFileInput={{this.uppyUpload.setup}}
-                @fileInputDisabled={{this.disabled}}
+              {{dIcon "upload"}}
+              <DPickFilesButton
                 @acceptedFormatsOverride={{this.acceptedFormats}}
+                @fileInputDisabled={{this.disabled}}
                 @fileInputId={{this.computedId}}
+                @registerFileInput={{this.uppyUpload.setup}}
               />
               {{i18n "upload_selector.select_file"}}
             </label>
@@ -254,8 +254,8 @@ export default class UppyImageUploader extends Component {
               <div
                 aria-label="{{i18n 'upload_selector.uploading'}}
               {{this.uppyUpload.uploadProgress}}%"
-                role="progressbar"
                 class="progress-bar-container"
+                role="progressbar"
               >
                 <div class="progress-bar" style={{this.progressBarStyle}}></div>
               </div>
@@ -273,26 +273,26 @@ export default class UppyImageUploader extends Component {
         <div class="file-uploader__controls">
           <label
             class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
-            title={{this.disabledReason}}
             for={{this.computedId}}
             tabindex="0"
+            title={{this.disabledReason}}
             {{on "keydown" this.handleKeyboardActivation}}
           >
-            {{icon "upload"}}
-            <PickFilesButton
-              @registerFileInput={{this.uppyUpload.setup}}
-              @fileInputDisabled={{this.disabled}}
+            {{dIcon "upload"}}
+            <DPickFilesButton
               @acceptedFormatsOverride={{this.acceptedFormats}}
+              @fileInputDisabled={{this.disabled}}
               @fileInputId={{this.computedId}}
+              @registerFileInput={{this.uppyUpload.setup}}
             />
             {{i18n "upload_selector.change"}}
           </label>
           <DButton
-            @action={{@onUploadDeleted}}
-            @icon="trash-can"
-            @disabled={{this.disabled}}
-            @label="upload_selector.delete"
             class="btn-danger btn-small"
+            @action={{@onUploadDeleted}}
+            @disabled={{this.disabled}}
+            @icon="trash-can"
+            @label="upload_selector.delete"
           />
         </div>
       {{/if}}

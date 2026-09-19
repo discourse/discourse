@@ -5,14 +5,14 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DModal, {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_CLICK_OUTSIDE,
   CLOSE_INITIATED_BY_ESC,
   CLOSE_INITIATED_BY_MODAL_SHOW,
-} from "discourse/components/d-modal";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
+} from "discourse/ui-kit/d-modal";
 
 class MyModalClass extends Component {
   <template>
@@ -24,8 +24,8 @@ class MyModalClass extends Component {
       Modal content is
       {{@model.text}}
       <button
-        type="button"
         class="custom-data"
+        type="button"
         {{on "click" this.closeWithCustomData}}
       ></button>
     </DModal>
@@ -165,8 +165,8 @@ acceptance("Modal service: component-based API", function () {
       {{#if testState.showDeclarativeModal}}
         <DModal
           class="declarative-modal"
-          @title="Declarative modal"
           @closeModal={{closeModal}}
+          @title="Declarative modal"
         >
           <span class="declarative-modal-content">Declarative modal content</span>
         </DModal>

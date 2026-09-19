@@ -16,16 +16,16 @@ export default class GroupField extends BaseField {
   <template>
     <section class="field group-field" {{didInsert this.loadUserFields}}>
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <MultiSelect
-            @value={{@field.metadata.value}}
             @content={{this.allCustomFields}}
-            @onChange={{this.mutValue}}
             @nameProperty={{null}}
-            @valueProperty={{null}}
+            @onChange={{this.mutValue}}
             @options={{hash allowAny=false disabled=@field.isDisabled}}
+            @value={{@field.metadata.value}}
+            @valueProperty={{null}}
           />
           <DAFieldDescription @description={{@description}} />
         </div>

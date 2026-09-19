@@ -109,6 +109,18 @@ RSpec.describe GroupSmtpMailer do
     )
   end
 
+  it "lets admins add the site name to the sender name via the email_from_group override" do
+    TranslationOverride.upsert!(
+      SiteSetting.default_locale,
+      "email_from_group",
+      "%{group_name} via %{site_name}",
+    )
+
+    mail = GroupSmtpMailer.send_mail(group, user.email, Fabricate(:post))
+
+    expect(mail[:from].display_names).to eql(["Testers Group via #{Email.site_title}"])
+  end
+
   it "uses the login SMTP authentication method for office365" do
     group.update!(smtp_server: "smtp.office365.com")
     mail = GroupSmtpMailer.send_mail(group, user.email, Fabricate(:post))

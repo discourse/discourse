@@ -4,7 +4,7 @@ module BackupRestore
   class LocalBackupStore < BackupStore
     def self.base_directory(db: nil, root_directory: nil)
       current_db = db || RailsMultisite::ConnectionManagement.current_db
-      root_directory ||= File.join(Rails.root, "public", "backups")
+      root_directory ||= Rails.public_path.join("backups").to_s
 
       base_directory = File.join(root_directory, current_db)
       FileUtils.mkdir_p(base_directory) unless Dir.exist?(base_directory)
@@ -43,7 +43,9 @@ module BackupRestore
 
     def download_file(filename, destination, failure_message = "")
       path = path_from_filename(filename)
-      Discourse::Utils.execute_command("cp", path, destination, failure_message: failure_message)
+      FileUtils.cp(path, destination)
+    rescue SystemCallError => error
+      raise [failure_message, error.message].filter(&:present?).join("\n")
     end
 
     private
@@ -55,7 +57,14 @@ module BackupRestore
     end
 
     def path_from_filename(filename)
-      File.join(@base_directory, filename)
+      path = File.expand_path(File.join(@base_directory, filename))
+      base_directory = File.expand_path(@base_directory)
+
+      if path.start_with?("#{base_directory}#{File::SEPARATOR}")
+        path
+      else
+        raise Discourse::InvalidParameters.new(:filename)
+      end
     end
 
     def create_file_from_path(path, include_download_source = false)

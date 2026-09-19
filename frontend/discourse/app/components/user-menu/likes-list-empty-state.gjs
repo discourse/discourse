@@ -1,17 +1,17 @@
 import { trustHTML } from "@ember/template";
-import EmptyState from "discourse/components/empty-state";
 import getUrl from "discourse/lib/get-url";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
 import { i18n } from "discourse-i18n";
 
 const LikesListEmptyState = <template>
-  <EmptyState
-    @title={{i18n "user.no_likes_title"}}
+  <DEmptyState
     @body={{trustHTML
       (i18n
         "user.no_likes_body"
         preferencesUrl=(getUrl "/my/preferences/notifications")
       )
     }}
+    @title={{i18n "user.no_likes_title"}}
   />
 </template>;
 

@@ -96,6 +96,9 @@ export default (inboxType, path, filter) => {
       const pmSearchContext = {
         ...this.controllerFor("user").get("model.searchContext"),
         type: "private_messages",
+        // set by the group inbox subclass in `afterModel`, so a consumer can
+        // scope to that inbox rather than to every message the user can see
+        group: this.group,
       };
       this.searchService.searchContext = pmSearchContext;
     }

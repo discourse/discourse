@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -44,14 +44,6 @@ export default class TimeOfDayActivity extends Component {
       plotWidth: this.SVG_WIDTH - this.SVG_PADDING * 2,
       plotHeight: this.SVG_HEIGHT - this.SVG_PADDING * 2,
     };
-  }
-
-  calculatePoint(hour) {
-    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
-    const count = this.activityByHour[hour] || 0;
-    const x = padding + (hour / 23) * plotWidth;
-    const y = height - padding - (count / this.maxActivity) * plotHeight;
-    return { x, y };
   }
 
   get personalizedAudioParams() {
@@ -164,20 +156,28 @@ export default class TimeOfDayActivity extends Component {
     return { x, y };
   }
 
-  formatHour(hour) {
-    const hourNum = parseInt(hour, 10);
-    const period = hourNum >= 12 ? "PM" : "AM";
-    const displayHour =
-      hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
-    return `${displayHour}${period}`;
-  }
-
   get playButtonText() {
     return i18nForOwner(
       "discourse_rewind.reports.time_of_day_activity.play_button",
       this.args.isOwnRewind,
       { username: this.args.user?.username }
     );
+  }
+
+  calculatePoint(hour) {
+    const { height, padding, plotWidth, plotHeight } = this.plotDimensions;
+    const count = this.activityByHour[hour] || 0;
+    const x = padding + (hour / 23) * plotWidth;
+    const y = height - padding - (count / this.maxActivity) * plotHeight;
+    return { x, y };
+  }
+
+  formatHour(hour) {
+    const hourNum = parseInt(hour, 10);
+    const period = hourNum >= 12 ? "PM" : "AM";
+    const displayHour =
+      hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
+    return `${displayHour}${period}`;
   }
 
   @action
@@ -380,26 +380,26 @@ export default class TimeOfDayActivity extends Component {
             {{if this.isGlitching '--glitching'}}"
         >
           <DButton
-            @action={{this.playWaveform}}
-            @icon={{if this.isPlaying "volume-xmark" "volume-high"}}
             class="oscilloscope__play-btn {{if this.isPlaying '--playing'}}"
             title={{if
               this.isPlaying
               (i18n "discourse_rewind.reports.time_of_day_activity.stop_button")
               this.playButtonText
             }}
+            @action={{this.playWaveform}}
+            @icon={{if this.isPlaying "volume-xmark" "volume-high"}}
           />
-          <svg viewBox="0 0 1200 200" class="oscilloscope__svg">
+          <svg class="oscilloscope__svg" viewBox="0 0 1200 200">
             <defs>
               <filter id="glow">
-                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                <feGaussianBlur result="coloredBlur" stdDeviation="2" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
               <filter id="glow-strong">
-                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feGaussianBlur result="coloredBlur" stdDeviation="4" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
                   <feMergeNode in="coloredBlur" />
@@ -410,49 +410,49 @@ export default class TimeOfDayActivity extends Component {
 
             {{#each this.gridLines as |gridLine|}}
               <line
-                x1="40"
-                y1={{gridLine.y}}
-                x2="1160"
-                y2={{gridLine.y}}
                 class="oscilloscope__grid-line"
                 style={{gridLine.style}}
+                x1="40"
+                x2="1160"
+                y1={{gridLine.y}}
+                y2={{gridLine.y}}
               />
             {{/each}}
 
             {{#each this.waveformPoints as |point|}}
               {{#if point.showLabel}}
                 <line
-                  x1={{point.x}}
-                  y1="40"
-                  x2={{point.x}}
-                  y2="160"
                   class="oscilloscope__grid-line --vertical"
+                  x1={{point.x}}
+                  x2={{point.x}}
+                  y1="40"
+                  y2="160"
                 />
                 <text
+                  class="oscilloscope__time-label"
                   x={{point.x}}
                   y="180"
-                  class="oscilloscope__time-label"
                 >{{this.formatHour point.hour}}</text>
               {{/if}}
             {{/each}}
 
-            <path d={{this.waveformPath}} class="oscilloscope__waveform" />
+            <path class="oscilloscope__waveform" d={{this.waveformPath}} />
 
             {{#each this.waveformPoints as |point|}}
               <circle
+                class={{point.class}}
                 cx={{point.x}}
                 cy={{point.y}}
                 r={{point.radius}}
-                class={{point.class}}
               />
             {{/each}}
 
             {{#if this.playbackPosition}}
               <circle
+                class="oscilloscope__playback-dot"
                 cx={{this.playbackPosition.x}}
                 cy={{this.playbackPosition.y}}
                 r="12"
-                class="oscilloscope__playback-dot"
               />
             {{/if}}
           </svg>

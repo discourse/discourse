@@ -47,6 +47,45 @@ RSpec.describe UserBadgesController do
       get "/user_badges.json"
       expect(response.status).to eq(400)
     end
+
+    it "does not disclose badges when public profiles are hidden" do
+      SiteSetting.hide_user_profiles_from_public = true
+
+      get "/user_badges.json", params: { badge_id: badge.id, username: user.username }
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(user.username)
+    end
+
+    it "returns not found for hidden new user profiles" do
+      hidden_user = Fabricate(:trust_level_0)
+      hidden_user.user_stat.update!(post_count: 1)
+      Fabricate(:user_badge, user: hidden_user, badge: badge)
+
+      get "/user_badges.json", params: { badge_id: badge.id, username: hidden_user.username }
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(hidden_user.username)
+    end
+
+    it "returns badges for visible inactive profiles" do
+      inactive_user = Fabricate(:user, active: false)
+      inactive_user.user_stat.update!(post_count: 1)
+      Fabricate(:user_badge, user: inactive_user, badge: badge)
+
+      get "/user_badges.json", params: { badge_id: badge.id, username: inactive_user.username }
+
+      expect(response.status).to eq(200)
+
+      parsed_body = response.parsed_body
+      aggregate_failures do
+        expect(parsed_body["user_badge_info"]["grant_count"]).to eq(1)
+        expect(parsed_body["user_badge_info"]["username"]).to eq(inactive_user.username)
+        expect(parsed_body["user_badge_info"]["user_badges"].first["user_id"]).to eq(
+          inactive_user.id,
+        )
+      end
+    end
   end
 
   describe "#show" do
@@ -54,6 +93,7 @@ RSpec.describe UserBadgesController do
     fab!(:private_message_post)
     let(:topic) { post.topic }
     let(:private_message_topic) { private_message_post.topic }
+
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
     fab!(:restricted_topic) { Fabricate(:topic, category: private_category) }
@@ -69,6 +109,15 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["user_badges"].length).to eq(1)
+    end
+
+    it "does not disclose a user's badges when public profiles are hidden" do
+      SiteSetting.hide_user_profiles_from_public = true
+
+      get "/user-badges/#{user.username}.json"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(user_badge.badge.name)
     end
 
     it "returns user_badges for a user with period in username" do
@@ -256,7 +305,7 @@ RSpec.describe UserBadgesController do
       )
     end
 
-    it "will trigger :user_badge_granted" do
+    it "triggers user_badge_granted" do
       sign_in(Fabricate(:admin))
 
       events =
@@ -314,6 +363,26 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(200)
     end
 
+    it "grants badge when a nested-view post link is given in reason" do
+      post = create_post
+      topic = post.topic
+      nested_url = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{post.post_number}"
+
+      sign_in(admin)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             reason: nested_url,
+           }
+
+      expect(response.status).to eq(200)
+      expect(UserBadge.exists?(badge_id: badge.id, post_id: post.id, granted_by: admin.id)).to eq(
+        true,
+      )
+    end
+
     describe "with relative_url_root" do
       it "grants badge when valid post/topic link is given in reason" do
         set_subfolder "/discuss"
@@ -362,7 +431,7 @@ RSpec.describe UserBadgesController do
       expect(UserHistory.where(acting_user: admin, target_user: user).count).to eq(1)
     end
 
-    it "will trigger :user_badge_removed" do
+    it "triggers user_badge_removed" do
       sign_in(Fabricate(:admin))
 
       events =

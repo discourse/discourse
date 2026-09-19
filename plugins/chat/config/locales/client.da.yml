@@ -46,6 +46,8 @@ da:
       cancel: "Annuller"
       cancel_reply: "Annuller svar"
       chat_channels: "Kanaler"
+      pinned_bar:
+        title: "Fastgjort"
       pinned: "Fastgjort"
       browse_all_channels: "Gennemse alle kanaler"
       move_to_channel:
@@ -75,7 +77,7 @@ da:
         confirm_channel_name: "Indtast kanalnavn"
       channels_list_popup:
         browse: "Gennemse kanaler"
-        create: "Ny kanal"
+        create: "Ny kanal..."
       close: "Luk"
       remove: "Fjern"
       deleted:
@@ -87,7 +89,6 @@ da:
       muted: "stille!"
       joined: "tilmeldt"
       empty_state:
-        direct_message_cta: "Start en personlig chat"
         title: "Ingen kanaler fundet"
       email_frequency:
         never: "Aldrig"
@@ -127,8 +128,6 @@ da:
       select: "Vælg"
       sounds:
         none: "Ingen"
-        bell: "Klokke"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Vedhæft en fil"
@@ -150,6 +149,8 @@ da:
         filter_open: Åbn
         filter_closed: Lukket
         filter_archived: Arkiveret
+        filter_joined_all: "Alle"
+        filter_joined_joined: "Tilmeldt"
       chat_message_separator:
         today: I dag
         yesterday: I går
@@ -180,12 +181,15 @@ da:
         title: Ny Besked
         prefix: "Til:"
         no_results: Ingen resultater
+      channel:
+        preview_card:
+          log_in: "Log ind"
       create_channel:
         choose_category:
           label: "Vælg en kategori"
           none: "vælg en..."
         create: "Opret kanal"
-        description: "Beskrivelse (valgfrit)"
+        description: "Beskrivelse"
         name: "Kanal navn"
         title: "Ny kanal"
         type: "Type"
@@ -230,6 +234,13 @@ da:
         sort:
           relevance: "Relevans"
           latest: "Seneste"
+      direct_messages:
+        close: "Luk kanal"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Omtaler"
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"
@@ -293,9 +304,6 @@ da:
         chat_mention:
           direct_html: '<span>%{username}</span> <span>nævnte dig i "%{channel}"</span>'
           other_html: '<span>%{username}</span> <span>nævnte %{identifier} i "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct_html: "<span>%{username}</span> <span>nævnte dig i personlig chat</span>"
-          other_html: "<span>%{username}</span> <span>nævnte %{identifier} i personlig chat</span>"
         chat_message: "Ny chatbesked"
         chat_quoted: "%{username} citerede din chatbesked"
     action_codes:
@@ -332,3 +340,19 @@ da:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Meddelelse"
+      chat_approval:
+        message: "Meddelelse"
+        buttons: "Knapper"
+        value: "værdi"
+        style: "Stil"
+        style_default: "Standard"
+        style_primary: "Primær"
+        style_success: "Succes"
+        icon: "Ikon"
+        channel_id: "Kanal"

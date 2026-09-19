@@ -1,11 +1,11 @@
 import { fn } from "@ember/helper";
-import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
+import PushNotificationSelect from "discourse/components/push-notification-select";
 import UserNotificationSchedule from "discourse/components/user-notification-schedule";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,20 +18,20 @@ export default <template>
     >
       <label>{{i18n "user.like_notification_frequency.title"}}</label>
       <ComboBox
-        @valueProperty="value"
         @content={{@controller.likeNotificationFrequencies}}
-        @value={{@controller.model.user_option.like_notification_frequency}}
         @onChange={{fn
           (mut @controller.model.user_option.like_notification_frequency)
         }}
+        @value={{@controller.model.user_option.like_notification_frequency}}
+        @valueProperty="value"
       />
     </div>
 
     <PreferenceCheckbox
-      @labelKey="user.notify_on_linked_posts"
-      @checked={{@controller.model.user_option.notify_on_linked_posts}}
-      data-setting-name="user-notify-on-linked-posts"
       class="pref-notify-on-linked-posts"
+      data-setting-name="user-notify-on-linked-posts"
+      @checked={{@controller.model.user_option.notify_on_linked_posts}}
+      @labelKey="user.notify_on_linked_posts"
     />
   </div>
 
@@ -43,26 +43,41 @@ export default <template>
       <label class="control-label">{{i18n
           "user.desktop_notifications.label"
         }}</label>
-      <DesktopNotificationConfig />
+      <PushNotificationSelect @model={{@controller.model}} />
       <div class="instructions">{{i18n
           "user.desktop_notifications.each_browser_note"
         }}</div>
       <span>
         <PluginOutlet
-          @name="user-preferences-desktop-notifications"
           @connectorTagName="div"
+          @name="user-preferences-desktop-notifications"
           @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
         />
       </span>
     </div>
   {{/unless}}
 
+  {{#if @controller.model.admin}}
+    <div class="control-group upcoming-changes">
+      <label class="control-label">{{i18n
+          "user.upcoming_changes.title"
+        }}</label>
+
+      <PreferenceCheckbox
+        class="pref-enable-upcoming-change-available-notifications"
+        data-setting-name="user-enable-upcoming-change-available-notifications"
+        @checked={{@controller.model.user_option.enable_upcoming_change_available_notifications}}
+        @labelKey="user.upcoming_changes.enable_available_notifications"
+      />
+    </div>
+  {{/if}}
+
   <UserNotificationSchedule @model={{@controller.model}} />
 
   <span>
     <PluginOutlet
-      @name="user-preferences-notifications"
       @connectorTagName="div"
+      @name="user-preferences-notifications"
       @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
     />
   </span>
@@ -71,15 +86,15 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   </span>
 
-  <SaveControls
-    @model={{@controller.model}}
+  <DSaveControls
     @action={{@controller.save}}
+    @model={{@controller.model}}
     @saved={{@controller.saved}}
   />
 </template>

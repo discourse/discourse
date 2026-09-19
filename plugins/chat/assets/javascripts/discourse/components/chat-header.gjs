@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatHeader extends Component {
@@ -50,15 +50,15 @@ export default class ChatHeader extends Component {
     {{#if this.shouldRender}}
       <div class="c-header">
         <a
-          href={{this.forumLink}}
           class="btn-flat back-to-forum"
+          href={{this.forumLink}}
           title={{this.title}}
         >
-          {{icon "arrow-left"}}
+          {{dIcon "arrow-left"}}
           {{this.title}}
         </a>
 
-        <LinkTo @route="chat.index" class="c-heading">{{this.heading}}</LinkTo>
+        <LinkTo class="c-heading" @route="chat.index">{{this.heading}}</LinkTo>
       </div>
     {{else}}
       {{yield}}

@@ -28,6 +28,14 @@ RSpec.describe Jobs::DiscourseTopicVoting::VoteReclaim do
       }.from(true).to(false)
     end
 
+    it "enqueues the backfill badges job" do
+      Fabricate(:topic_voting_votes, topic:, archive: true)
+      expect { Jobs::DiscourseTopicVoting::VoteReclaim.new.execute(topic_id: topic.id) }.to change(
+        Jobs::DiscourseTopicVoting::BackfillBadges.jobs,
+        :size,
+      ).by(1)
+    end
+
     context "when the topic is deleted" do
       before { topic.trash! }
 

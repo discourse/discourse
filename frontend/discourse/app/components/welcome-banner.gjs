@@ -1,17 +1,21 @@
 import Component from "@glimmer/component";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
+import getURL from "discourse/lib/get-url";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
 export const ALL_PAGES_EXCLUDED_ROUTES = [
@@ -28,24 +32,55 @@ export const ALL_PAGES_EXCLUDED_ROUTES = [
 
 export default class WelcomeBanner extends Component {
   @service router;
+  @service site;
   @service siteSettings;
   @service currentUser;
   @service appEvents;
   @service search;
 
   checkViewport = modifier((element) => {
+    if (!this.site.can_search) {
+      this.search.welcomeBannerSearchInViewport = false;
+      return;
+    }
+
+    const searchMenu =
+      element.querySelector(".welcome-banner__search-menu") ?? element;
+
     const checkVisibility = () => {
       // Use getBoundingClientRect for reliable visibility detection.
       // IntersectionObserver's isIntersecting can return stale values during
       // SPA navigation, but getBoundingClientRect is always accurate.
-      const { top, bottom } = element.getBoundingClientRect();
-      const isFullyVisible = top >= 0 && bottom <= window.innerHeight;
-      this.search.welcomeBannerSearchInViewport = isFullyVisible;
+      // The banner search stays the only visible search bar while any part of
+      // it peeks below the header; the header search replaces it exactly when
+      // it is fully tucked away, so the two are never both usable.
+      const isUsable =
+        searchMenu.getBoundingClientRect().bottom > headerOffset();
+
+      const previousInputId = this.search.currentSearchInputId;
+      this.search.welcomeBannerSearchInViewport = isUsable;
+
+      if (
+        this.search.currentSearchInputId !== previousInputId &&
+        document.activeElement?.id === previousInputId
+      ) {
+        next(() => {
+          if (this.isDestroying) {
+            return;
+          }
+          this.search.focusSearchInput();
+          if (document.activeElement?.tagName !== "INPUT") {
+            document.getElementById(previousInputId)?.focus();
+          }
+        });
+      }
     };
 
     // Use IntersectionObserver only as a trigger for when to check visibility,
-    // not to determine actual visibility state.
-    const threshold = 1.0;
+    // not to determine actual visibility state. The handoff happens partway
+    // through the banner's crossing, so trigger throughout the crossing rather
+    // than only at full visibility.
+    const threshold = Array.from({ length: 101 }, (_, i) => i / 100);
     const observer = new IntersectionObserver(checkVisibility, { threshold });
     observer.observe(element);
 
@@ -59,7 +94,29 @@ export default class WelcomeBanner extends Component {
     };
   });
 
+  handoffFocus = modifier((element) => {
+    const onFocusin = (event) => {
+      if (event.target.id !== "welcome-banner-search-input") {
+        return;
+      }
+
+      const activeInput = document.getElementById(
+        this.search.currentSearchInputId
+      );
+      if (activeInput && activeInput !== event.target) {
+        activeInput.focus();
+      }
+    };
+
+    element.addEventListener("focusin", onFocusin);
+    return () => element.removeEventListener("focusin", onFocusin);
+  });
+
   handleKeyboardShortcut = modifier(() => {
+    if (!this.site.can_search) {
+      return;
+    }
+
     const cb = (appEvent) => {
       if (
         appEvent.type === "search" &&
@@ -94,30 +151,12 @@ export default class WelcomeBanner extends Component {
     );
   }
 
-  #shouldDisplayForRoute(
-    welcome_banner_page_visibility,
-    top_menu,
-    currentRouteName
-  ) {
-    switch (welcome_banner_page_visibility) {
-      case "top_menu_pages":
-        return top_menu
-          .split("|")
-          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
-      case "homepage":
-        return currentRouteName === `discovery.${defaultHomepage()}`;
-      case "discovery":
-        return currentRouteName.startsWith("discovery.");
-      case "all_pages":
-        return (
-          !currentRouteName.startsWith("admin") &&
-          !ALL_PAGES_EXCLUDED_ROUTES.some(
-            (routeName) => routeName === currentRouteName
-          )
-        );
-      default:
-        return false;
-    }
+  // The icon is a shortcut to advanced search; a consumer that has made the
+  // input mean more than searching can drop it.
+  get showAdvancedSearchIcon() {
+    return applyValueTransformer("search-advanced-icon-enabled", true, {
+      location: "welcome-banner",
+    });
   }
 
   get headerText() {
@@ -197,16 +236,43 @@ export default class WelcomeBanner extends Component {
     }
   }
 
+  #shouldDisplayForRoute(
+    welcome_banner_page_visibility,
+    top_menu,
+    currentRouteName
+  ) {
+    switch (welcome_banner_page_visibility) {
+      case "top_menu_pages":
+        return top_menu
+          .split("|")
+          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
+      case "homepage":
+        return currentRouteName === `discovery.${defaultHomepage()}`;
+      case "discovery":
+        return currentRouteName.startsWith("discovery.");
+      case "all_pages":
+        return (
+          !currentRouteName.startsWith("admin") &&
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
+        );
+      default:
+        return false;
+    }
+  }
+
   <template>
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "welcome-banner"
           this.locationClass
           this.bgImgClass
         }}
         {{this.checkViewport}}
+        {{this.handoffFocus}}
         {{this.handleKeyboardShortcut}}
       >
         <div
@@ -225,19 +291,24 @@ export default class WelcomeBanner extends Component {
             {{/if}}
           </div>
           <PluginOutlet @name="welcome-banner-below-headline" />
-          <div class="search-menu welcome-banner__search-menu">
-            <DButton
-              @icon="magnifying-glass"
-              @title="search.open_advanced"
-              @href="/search?expanded=true"
-              class="search-icon"
-            />
-            <SearchMenu
-              @location="welcome-banner"
-              @searchInputId="welcome-banner-search-input"
-              @searchInputPlaceholder="welcome_banner.search_placeholder"
-            />
-          </div>
+          {{#if this.site.can_search}}
+            <div class="search-menu welcome-banner__search-menu">
+              {{#if this.showAdvancedSearchIcon}}
+                <DButton
+                  class="search-icon"
+                  @href={{getURL "/search?expanded=true"}}
+                  @icon="magnifying-glass"
+                  @title="search.open_advanced"
+                />
+              {{/if}}
+              <SearchMenu
+                @hideResults={{not this.search.welcomeBannerSearchInViewport}}
+                @location="welcome-banner"
+                @searchInputId="welcome-banner-search-input"
+                @searchInputPlaceholder="welcome_banner.search_placeholder"
+              />
+            </div>
+          {{/if}}
           <PluginOutlet @name="welcome-banner-below-input" />
         </div>
       </div>

@@ -13,6 +13,10 @@ import Collection from "../lib/collection";
 export default class ChatApi extends Service {
   @service chatChannelsManager;
 
+  get #basePath() {
+    return "/chat/api";
+  }
+
   channel(channelId) {
     return this.#getRequest(`/channels/${channelId}`);
   }
@@ -464,6 +468,13 @@ export default class ChatApi extends Service {
     });
   }
 
+  messageReactionsUsers(channelId, messageId, { page = 0, limit, emoji } = {}) {
+    return ajax(`/chat/${channelId}/${messageId}/reactions-users`, {
+      type: "GET",
+      data: { page, limit, emoji },
+    });
+  }
+
   /**
    * Restores a single deleted chat message in a channel.
    *
@@ -652,10 +663,6 @@ export default class ChatApi extends Service {
 
   markPinsAsRead(channelId) {
     return this.#putRequest(`/channels/${channelId}/pins/read`);
-  }
-
-  get #basePath() {
-    return "/chat/api";
   }
 
   #getRequest(endpoint, data = {}) {

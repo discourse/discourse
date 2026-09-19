@@ -8,11 +8,7 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ChooseMessage from "discourse/components/choose-message";
 import ChooseTopic from "discourse/components/choose-topic";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RadioButton from "discourse/components/radio-button";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -21,6 +17,10 @@ import { mergeTopic, movePosts } from "discourse/models/topic";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
@@ -210,34 +210,34 @@ export default class MoveToTopic extends Component {
 
   <template>
     <DModal
-      id="choosing-topic"
-      @title={{i18n "topic.move_to.title"}}
-      @closeModal={{@closeModal}}
       class="choose-topic-modal"
+      id="choosing-topic"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType="error"
+      @title={{i18n "topic.move_to.title"}}
     >
       <:body>
         {{#if @model.topic.isPrivateMessage}}
           <div class="radios">
             {{#if this.canSplitToPM}}
               <label class="radio-label" for="move-to-new-message">
-                <RadioButton
+                <DRadioButton
                   id="move-to-new-message"
                   @name="move-to-entity"
-                  @value="new_message"
                   @selection={{this.selection}}
+                  @value="new_message"
                 />
                 {{i18n "topic.move_to_new_message.radio_label"}}
               </label>
             {{/if}}
 
             <label class="radio-label" for="move-to-existing-message">
-              <RadioButton
+              <DRadioButton
                 id="move-to-existing-message"
                 @name="move-to-entity"
-                @value="existing_message"
                 @selection={{this.selection}}
+                @value="existing_message"
               />
               {{i18n "topic.move_to_existing_message.radio_label"}}
             </label>
@@ -257,10 +257,10 @@ export default class MoveToTopic extends Component {
                 <label>{{i18n
                     "topic.move_to_new_message.message_title"
                   }}</label>
-                <TextField
-                  @value={{this.topicName}}
-                  @placeholderKey="composer.title_placeholder"
+                <DTextField
                   id="split-topic-name"
+                  @placeholderKey="composer.title_placeholder"
+                  @value={{this.topicName}}
                 />
 
                 {{#if this.canTagMessages}}
@@ -283,24 +283,24 @@ export default class MoveToTopic extends Component {
             <form>
               <ChooseMessage
                 @currentTopicId={{@model.topic.id}}
-                @setSelectedTopicId={{fn (mut this.selectedTopic)}}
                 @selectedTopicId={{this.selectedTopic.id}}
+                @setSelectedTopicId={{fn (mut this.selectedTopic)}}
               />
 
               <label>{{i18n "topic.move_to_new_message.participants"}}</label>
               <EmailGroupUserChooser
                 class="participant-selector"
-                @value={{this.participants}}
                 @onChange={{fn (mut this.participants)}}
+                @value={{this.participants}}
               />
 
               {{#if this.selectedTopic}}
                 <hr />
-                <label for="chronological-order" class="checkbox-label">
+                <label class="checkbox-label" for="chronological-order">
                   <Input
                     id="chronological-order"
-                    @type="checkbox"
                     @checked={{this.chronologicalOrder}}
+                    @type="checkbox"
                   />
                   {{i18n "topic.merge_topic.chronological_order"}}
                 </label>
@@ -312,33 +312,33 @@ export default class MoveToTopic extends Component {
           <div class="radios">
             {{#if this.canSplitTopic}}
               <label class="radio-label" for="move-to-new-topic">
-                <RadioButton
+                <DRadioButton
                   id="move-to-new-topic"
                   @name="move-to-entity"
-                  @value="new_topic"
                   @selection={{this.selection}}
+                  @value="new_topic"
                 />
                 {{i18n "topic.split_topic.radio_label"}}
               </label>
             {{/if}}
 
             <label class="radio-label" for="move-to-existing-topic">
-              <RadioButton
+              <DRadioButton
                 id="move-to-existing-topic"
                 @name="move-to-entity"
-                @value="existing_topic"
                 @selection={{this.selection}}
+                @value="existing_topic"
               />
               {{i18n "topic.merge_topic.radio_label"}}
             </label>
 
             {{#if this.canSplitToPM}}
               <label class="radio-label" for="move-to-new-message">
-                <RadioButton
+                <DRadioButton
                   id="move-to-new-message"
                   @name="move-to-entity"
-                  @value="new_message"
                   @selection={{this.selection}}
+                  @value="new_message"
                 />
                 {{i18n "topic.move_to_new_message.radio_label"}}
               </label>
@@ -358,18 +358,18 @@ export default class MoveToTopic extends Component {
             </p>
             <form>
               <ChooseTopic
-                @topicChangedCallback={{this.newTopicSelected}}
                 @currentTopicId={{@model.topic.id}}
                 @selectedTopicId={{this.selectedTopic.id}}
+                @topicChangedCallback={{this.newTopicSelected}}
               />
 
               {{#if this.selectedTopic}}
                 <hr />
-                <label for="chronological-order" class="checkbox-label">
+                <label class="checkbox-label" for="chronological-order">
                   <Input
                     id="chronological-order"
-                    @type="checkbox"
                     @checked={{this.chronologicalOrder}}
+                    @type="checkbox"
                   />
                   {{i18n "topic.merge_topic.chronological_order"}}
                 </label>
@@ -390,10 +390,10 @@ export default class MoveToTopic extends Component {
               <form class="split-new-topic-form">
                 <div class="control-group">
                   <label>{{i18n "topic.split_topic.topic_name"}}</label>
-                  <TextField
-                    @value={{this.topicName}}
-                    @placeholderKey="composer.title_placeholder"
+                  <DTextField
                     id="split-topic-name"
+                    @placeholderKey="composer.title_placeholder"
+                    @value={{this.topicName}}
                   />
                   <PluginOutlet
                     @name="split-new-topic-title-after"
@@ -407,9 +407,9 @@ export default class MoveToTopic extends Component {
                 <div class="control-group">
                   <label>{{i18n "categories.category"}}</label>
                   <CategoryChooser
-                    @value={{this.categoryId}}
                     class="small"
                     @onChange={{fn (mut this.categoryId)}}
+                    @value={{this.categoryId}}
                   />
                   <PluginOutlet
                     @name="split-new-topic-category-after"
@@ -424,8 +424,8 @@ export default class MoveToTopic extends Component {
                   <div class="control-group">
                     <label>{{i18n "tagging.tags"}}</label>
                     <TagChooser
-                      @tags={{this.tags}}
                       @categoryId={{this.categoryId}}
+                      @tags={{this.tags}}
                     />
                     <PluginOutlet
                       @name="split-new-topic-tag-after"
@@ -433,6 +433,7 @@ export default class MoveToTopic extends Component {
                         selectedPosts=@model.selectedPosts
                         updateTags=this.updateTags
                         tags=this.tags
+                        categoryId=this.categoryId
                       }}
                     />
                   </div>
@@ -455,10 +456,10 @@ export default class MoveToTopic extends Component {
                 <label>{{i18n
                     "topic.move_to_new_message.message_title"
                   }}</label>
-                <TextField
-                  @value={{this.topicName}}
-                  @placeholderKey="composer.title_placeholder"
+                <DTextField
                   id="split-topic-name"
+                  @placeholderKey="composer.title_placeholder"
+                  @value={{this.topicName}}
                 />
 
                 {{#if this.canTagMessages}}
@@ -473,8 +474,8 @@ export default class MoveToTopic extends Component {
       <:footer>
         <DButton
           class="btn-primary"
-          @disabled={{this.buttonDisabled}}
           @action={{this.performMove}}
+          @disabled={{this.buttonDisabled}}
           @icon="right-from-bracket"
           @label={{this.buttonTitle}}
         />

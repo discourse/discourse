@@ -9,4 +9,5 @@ sr:
     discourse_local_dates:
       create:
         form:
+          save: Sačuvaj
           time_title: Vreme

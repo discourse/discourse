@@ -53,7 +53,7 @@ module DiscourseAi
         exclude_category_ids: nil,
         exclude_tags: nil,
         top_p: 0.1,
-        temperature: 0.2,
+        temperature: nil,
         suppress_notifications: false,
         automation: nil
       )
@@ -153,10 +153,12 @@ module DiscourseAi
         buffer_blk =
           Proc.new do |partial, _, type|
             if type == :structured_output
-              read_chunk = partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
-
-              print read_chunk if Rails.env.development? && @debug_mode
-              result << read_chunk if read_chunk.present?
+              partial.read_buffered_property_chunk(
+                json_summary_schema_key["key"]&.to_sym,
+              ) do |read_chunk|
+                print read_chunk if Rails.env.development? && @debug_mode
+                result << read_chunk
+              end
             elsif type.blank?
               # Assume response is a regular completion.
               print partial if Rails.env.development? && @debug_mode

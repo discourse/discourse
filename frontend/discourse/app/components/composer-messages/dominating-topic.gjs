@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import ComposerTipCloseButton from "discourse/components/composer-tip-close-button";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class DominatingTopicComposerMessage extends Component {
   @service currentUser;
@@ -16,10 +16,10 @@ export default class DominatingTopicComposerMessage extends Component {
 
       {{#if this.currentUser.can_invite_to_forum}}
         <DButton
-          @label="footer_nav.share"
-          @icon="link"
-          @action={{@shareModal}}
           class="btn-primary"
+          @action={{@shareModal}}
+          @icon="link"
+          @label="footer_nav.share"
         />
       {{/if}}
     </div>

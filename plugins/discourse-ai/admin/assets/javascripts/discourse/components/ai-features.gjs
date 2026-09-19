@@ -3,63 +3,69 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DSelect from "discourse/components/d-select";
-import FilterInput from "discourse/components/filter-input";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiFeaturesList from "./ai-features-list";
 
 const ALL = "all";
-const CONFIGURED = "configured";
-const UNCONFIGURED = "unconfigured";
+const ENABLED = "enabled";
+const NOT_ENABLED = "not enabled";
 
 export default class AiFeatures extends Component {
   @service adminPluginNavManager;
+  @service store;
 
   @tracked filterValue = "";
-  @tracked selectedFeatureGroup = CONFIGURED;
+  @tracked selectedFeatureGroup = ENABLED;
+  @tracked refreshedFeatures = null;
 
   constructor() {
     super(...arguments);
 
     // if there are features but none are configured, show unconfigured
-    if (this.args.features?.length > 0) {
-      const configuredCount = this.args.features.filter(
+    if (this.features?.length > 0) {
+      const configuredCount = this.features.filter(
         (f) => f.module_enabled === true
       ).length;
       if (configuredCount === 0) {
-        this.selectedFeatureGroup = UNCONFIGURED;
+        this.selectedFeatureGroup = NOT_ENABLED;
       }
     }
+  }
+
+  get features() {
+    return this.refreshedFeatures ?? this.args.features;
   }
 
   get featureGroupOptions() {
     return [
       { value: ALL, label: i18n("discourse_ai.features.filters.all") },
       {
-        value: CONFIGURED,
-        label: i18n("discourse_ai.features.nav.configured"),
+        value: ENABLED,
+        label: i18n("discourse_ai.features.nav.enabled"),
       },
       {
-        value: UNCONFIGURED,
-        label: i18n("discourse_ai.features.nav.unconfigured"),
+        value: NOT_ENABLED,
+        label: i18n("discourse_ai.features.nav.not_enabled"),
       },
     ];
   }
 
   get filteredFeatures() {
-    if (!this.args.features || this.args.features.length === 0) {
+    if (!this.features || this.features.length === 0) {
       return [];
     }
 
-    let features = this.args.features;
+    let features = this.features;
 
-    if (this.selectedFeatureGroup === CONFIGURED) {
+    if (this.selectedFeatureGroup === ENABLED) {
       features = features.filter((feature) => feature.module_enabled === true);
-    } else if (this.selectedFeatureGroup === UNCONFIGURED) {
+    } else if (this.selectedFeatureGroup === NOT_ENABLED) {
       features = features.filter((feature) => feature.module_enabled === false);
     }
 
@@ -164,27 +170,33 @@ export default class AiFeatures extends Component {
   @action
   resetAndFocus() {
     this.filterValue = "";
-    this.selectedFeatureGroup = CONFIGURED;
+    this.selectedFeatureGroup = ENABLED;
     document.querySelector(".admin-filter__input").focus();
+  }
+
+  @action
+  async refreshFeatures() {
+    const features = await this.store.findAll("ai-feature");
+    this.refreshedFeatures = features.content;
   }
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-features"
       @label={{i18n "discourse_ai.features.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-features"
     />
     <section class="ai-features admin-detail">
       <DPageSubheader
-        @titleLabel={{i18n "discourse_ai.features.short_title"}}
         @descriptionLabel={{i18n "discourse_ai.features.description"}}
         @learnMoreUrl="todo"
+        @titleLabel={{i18n "discourse_ai.features.short_title"}}
       />
 
       <div class="ai-features__controls">
-        <DSelect
-          @value={{this.selectedFeatureGroup}}
+        <DNativeSelect
           @includeNone={{false}}
           @onChange={{this.onFeatureGroupChange}}
+          @value={{this.selectedFeatureGroup}}
           as |select|
         >
           {{#each this.featureGroupOptions as |option|}}
@@ -192,18 +204,18 @@ export default class AiFeatures extends Component {
               {{option.label}}
             </select.Option>
           {{/each}}
-        </DSelect>
+        </DNativeSelect>
 
-        <FilterInput
+        <DFilterInput
+          class="admin-filter__input"
           placeholder={{i18n "discourse_ai.features.filters.text"}}
           @filterAction={{this.onFilterChange}}
-          @value={{this.filterValue}}
-          class="admin-filter__input"
           @icons={{hash left="magnifying-glass"}}
+          @value={{this.filterValue}}
         />
       </div>
 
-      <AiDefaultLlmSelector />
+      <AiDefaultLlmSelector @onChange={{this.refreshFeatures}} />
 
       {{#if this.filteredFeatures.length}}
         <AiFeaturesList @modules={{this.filteredFeatures}} />
@@ -211,10 +223,10 @@ export default class AiFeatures extends Component {
         <div class="ai-features__no-results">
           <h3>{{i18n "discourse_ai.features.filters.no_results"}}</h3>
           <DButton
+            class="btn-default"
+            @action={{this.resetAndFocus}}
             @icon="arrow-rotate-left"
             @label="discourse_ai.features.filters.reset"
-            @action={{this.resetAndFocus}}
-            class="btn-default"
           />
         </div>
       {{/if}}

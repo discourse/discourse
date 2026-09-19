@@ -1,8 +1,5 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DecoratedHtml, {
-  applyHtmlDecorators,
-} from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
@@ -10,6 +7,9 @@ import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import highlightHTML from "discourse/lib/highlight-html";
+import DDecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePost extends Component {
@@ -60,7 +60,10 @@ export default class ReviewablePost extends Component {
       <div class="review-item__meta-label">{{this.userLabel}}</div>
 
       <div class="review-item__meta-flagged-user">
-        <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+        <ReviewableCreatedBy
+          @penalties={{@reviewable.author_penalties}}
+          @user={{@reviewable.target_created_by}}
+        />
       </div>
     </div>
 
@@ -71,18 +74,18 @@ export default class ReviewablePost extends Component {
             <p>{{i18n "review.deleted_post"}}</p>
           </div>
         {{else}}
-          <DecoratedHtml
+          <DDecoratedHtml
             @className="review-item__post-content"
-            @html={{trustHTML @reviewable.cooked}}
             @decorate={{this.decorate}}
+            @html={{trustHTML @reviewable.cooked}}
             @model={{@reviewable}}
           />
         {{/if}}
 
         <span>
           <PluginOutlet
-            @name={{this.pluginOutletName}}
             @connectorTagName="div"
+            @name={{this.pluginOutletName}}
             @outletArgs={{lazyHash model=@reviewable}}
           />
         </span>

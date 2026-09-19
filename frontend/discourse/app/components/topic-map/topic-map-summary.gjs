@@ -5,21 +5,21 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMapLink from "discourse/components/topic-map/topic-map-link";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import TopicViews from "discourse/components/topic-map/topic-views";
 import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/bound-avatar-template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 const TRUNCATED_LINKS_LIMIT = 5;
@@ -71,6 +71,14 @@ export default class TopicMapSummary extends Component {
     return this.args.postStream?.summary;
   }
 
+  get shouldShowReplyCount() {
+    return this.args.topic.is_nested_view;
+  }
+
+  get replyCount() {
+    return this.args.topic.replyCount;
+  }
+
   get topRepliesTitle() {
     if (this.topRepliesSummaryEnabled) {
       return;
@@ -90,7 +98,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get loneStat() {
-    if (this.args.topic.has_summary) {
+    if (this.args.topic.has_summary || this.shouldShowReplyCount) {
       return false;
     }
     return [this.hasLikes, this.hasUsers, this.hasLinks].every((stat) => !stat);
@@ -237,7 +245,7 @@ export default class TopicMapSummary extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "topic-map__stats"
         (if this.loneStat "--single-stat")
         (if this.manyStats "--many-stats")
@@ -245,105 +253,127 @@ export default class TopicMapSummary extends Component {
     >
       <DMenu
         @arrow={{true}}
+        @groupIdentifier="topic-map"
         @identifier="topic-map__views"
+        @inline={{true}}
         @interactive={{true}}
         @modalForMobile={{true}}
-        @placement="right"
-        @groupIdentifier="topic-map"
-        @inline={{true}}
         @onShow={{this.fetchViews}}
+        @placement="right"
       >
         <:trigger>
-          {{number this.minViewsCount noTitle="true"}}
+          {{dNumber this.minViewsCount noTitle="true"}}
           <span class="topic-map__stat-label">
             {{i18n "views_lowercase" count=this.minViewsCount}}
           </span>
         </:trigger>
         <:content>
           <h3>{{i18n "topic_map.menu_titles.views"}}</h3>
-          <ConditionalLoadingSpinner @condition={{this.loading}}>
+          <DConditionalLoadingSpinner @condition={{this.loading}}>
             {{#if this.shouldShowViewsChart}}
               <TopicViewsChart
-                @views={{this.views}}
                 @created={{@topic.created_at}}
+                @views={{this.views}}
               />
             {{else}}
               <TopicViews @views={{this.views}} />
             {{/if}}
-          </ConditionalLoadingSpinner>
+          </DConditionalLoadingSpinner>
         </:content>
       </DMenu>
 
+      {{#if this.shouldShowReplyCount}}
+        <div class="topic-map__stat topic-map__replies">
+          {{dNumber this.replyCount noTitle="true"}}
+          <span class="topic-map__stat-label">
+            {{i18n "replies_lowercase" count=this.replyCount}}
+          </span>
+        </div>
+      {{/if}}
+
       {{#if this.hasLikes}}
-        <DMenu
-          @arrow={{true}}
-          @identifier="topic-map__likes"
-          @interactive={{true}}
-          @modalForMobile={{true}}
-          @placement="right"
-          @groupIdentifier="topic-map"
-          @inline={{true}}
-          @autofocus={{true}}
-        >
-          <:trigger>
-            {{number @topic.like_count noTitle="true"}}
+        {{#if this.site.can_search}}
+          <DMenu
+            @arrow={{true}}
+            @autofocus={{true}}
+            @groupIdentifier="topic-map"
+            @identifier="topic-map__likes"
+            @inline={{true}}
+            @interactive={{true}}
+            @modalForMobile={{true}}
+            @placement="right"
+          >
+            <:trigger>
+              {{dNumber @topic.like_count noTitle="true"}}
+              <span class="topic-map__stat-label">
+                {{i18n "likes_lowercase" count=@topic.like_count}}
+              </span>
+            </:trigger>
+            <:content>
+              <h3 {{didInsert this.fetchMostLiked}}>{{i18n
+                  "topic_map.menu_titles.replies"
+                }}</h3>
+              <DConditionalLoadingSpinner @condition={{this.loading}}>
+                <PluginOutlet
+                  @name="most-liked-replies"
+                  @outletArgs={{lazyHash
+                    posts=this.top3LikedPosts
+                    postUrl=this.postUrl
+                  }}
+                >
+                  <ul>
+                    {{#each this.top3LikedPosts as |post|}}
+                      <li>
+                        <a href={{this.postUrl post}}>
+                          <span class="like-section__user">
+                            {{dBoundAvatarTemplate
+                              post.avatar_template
+                              "tiny"
+                              (hash title=post.username)
+                            }}
+                            {{post.username}}
+                          </span>
+                          <span class="like-section__likes">
+                            {{post.like_count}}
+                            {{dIcon "heart"}}</span>
+                          <p>
+                            {{trustHTML (emojiUnescape post.blurb)}}
+                          </p>
+                        </a>
+                      </li>
+                    {{/each}}
+                  </ul>
+                </PluginOutlet>
+              </DConditionalLoadingSpinner>
+            </:content>
+          </DMenu>
+        {{else}}
+          <div class="topic-map__stat topic-map__likes">
+            {{dNumber @topic.like_count noTitle="true"}}
             <span class="topic-map__stat-label">
               {{i18n "likes_lowercase" count=@topic.like_count}}
             </span>
-          </:trigger>
-          <:content>
-            <h3 {{didInsert this.fetchMostLiked}}>{{i18n
-                "topic_map.menu_titles.replies"
-              }}</h3>
-            <ConditionalLoadingSpinner @condition={{this.loading}}>
-              <PluginOutlet
-                @name="most-liked-replies"
-                @outletArgs={{lazyHash
-                  posts=this.top3LikedPosts
-                  postUrl=this.postUrl
-                }}
-              >
-                <ul>
-                  {{#each this.top3LikedPosts as |post|}}
-                    <li>
-                      <a href={{this.postUrl post}}>
-                        <span class="like-section__user">
-                          {{avatar
-                            post.avatar_template
-                            "tiny"
-                            (hash title=post.username)
-                          }}
-                          {{post.username}}
-                        </span>
-                        <span class="like-section__likes">
-                          {{post.like_count}}
-                          {{icon "heart"}}</span>
-                        <p>
-                          {{trustHTML (emojiUnescape post.blurb)}}
-                        </p>
-                      </a>
-                    </li>
-                  {{/each}}
-                </ul>
-              </PluginOutlet>
-            </ConditionalLoadingSpinner>
-          </:content>
-        </DMenu>
+          </div>
+        {{/if}}
       {{/if}}
 
       {{#if this.linksCount}}
         <DMenu
           @arrow={{true}}
+          @autofocus={{true}}
+          @groupIdentifier="topic-map"
           @identifier="topic-map__links"
+          @inline={{true}}
           @interactive={{true}}
           @modalForMobile={{true}}
-          @groupIdentifier="topic-map"
           @placement="right"
-          @inline={{true}}
-          @autofocus={{true}}
         >
           <:trigger>
-            {{number this.linksCount maxDisplay=LINKS_THRESHOLD noTitle="true"}}
+            {{dNumber
+              this.linksCount
+              maxDisplay=LINKS_THRESHOLD
+              noTitle="true"
+            }}
             <span class="topic-map__stat-label">
               {{i18n "links_lowercase" count=this.linksCount}}
             </span>
@@ -355,11 +385,11 @@ export default class TopicMapSummary extends Component {
                 <li>
                   <TopicMapLink
                     @attachment={{link.attachment}}
-                    @title={{link.title}}
+                    @clickCount={{link.clicks}}
                     @rootDomain={{link.root_domain}}
+                    @title={{link.title}}
                     @url={{link.url}}
                     @userId={{link.user_id}}
-                    @clickCount={{link.clicks}}
                   />
                 </li>
               {{/each}}
@@ -367,10 +397,10 @@ export default class TopicMapSummary extends Component {
             </ul>
             {{#if this.hasMoreLinks}}
               <DButton
-                @action={{this.showAllLinks}}
-                @title="topic_map.links_shown"
-                @icon="chevron-down"
                 class="link-summary btn-flat"
+                @action={{this.showAllLinks}}
+                @icon="chevron-down"
+                @title="topic_map.links_shown"
               />
 
             {{/if}}
@@ -381,25 +411,25 @@ export default class TopicMapSummary extends Component {
       {{#if this.hasUsers}}
         <DMenu
           @arrow={{true}}
-          @identifier="topic-map__users"
-          @interactive={{true}}
-          @placement="right"
-          @modalForMobile={{true}}
-          @groupIdentifier="topic-map"
-          @inline={{true}}
           @autofocus={{true}}
+          @groupIdentifier="topic-map"
+          @identifier="topic-map__users"
+          @inline={{true}}
+          @interactive={{true}}
+          @modalForMobile={{true}}
+          @placement="right"
         >
           <:trigger>
-            {{number @topic.participant_count noTitle="true"}}
+            {{dNumber @topic.participant_count noTitle="true"}}
             <span class="topic-map__stat-label">
               {{i18n "users_lowercase" count=@topic.participant_count}}
             </span>
           </:trigger>
           <:content>
             <TopicParticipants
+              @participants={{@topicDetails.participants}}
               @title={{i18n "topic_map.participants_title"}}
               @userFilters={{@postStream.userFilters}}
-              @participants={{@topicDetails.participants}}
             />
           </:content>
         </DMenu>
@@ -428,15 +458,15 @@ export default class TopicMapSummary extends Component {
         {{#if @topic.has_summary}}
           <div class="summarization-button">
             <DButton
+              class="btn-default top-replies"
               @action={{if
                 @postStream.summary
                 this.cancelFilter
                 this.showTopReplies
               }}
-              @translatedTitle={{this.topRepliesTitle}}
-              @translatedLabel={{this.topRepliesLabel}}
               @icon={{this.topRepliesIcon}}
-              class="btn-default top-replies"
+              @translatedLabel={{this.topRepliesLabel}}
+              @translatedTitle={{this.topRepliesTitle}}
             />
           </div>
         {{/if}}

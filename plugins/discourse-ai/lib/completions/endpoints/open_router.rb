@@ -4,8 +4,31 @@ module DiscourseAi
   module Completions
     module Endpoints
       class OpenRouter < OpenAi
+        OPEN_ROUTER_REASONING_EFFORTS = %w[none minimal low medium high xhigh max].freeze
+
         def self.can_contact?(llm_model)
           llm_model.provider == "open_router"
+        end
+
+        def resolve_thinking_config(model_params)
+          effort =
+            DiscourseAi::Completions::ThinkingConfig.normalize_effort(
+              model_params[:thinking_effort],
+            )
+          effort ||= legacy_reasoning_effort
+
+          return DiscourseAi::Completions::ThinkingConfig.disabled if effort.blank?
+
+          if !OPEN_ROUTER_REASONING_EFFORTS.include?(effort)
+            return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+          end
+
+          DiscourseAi::Completions::ThinkingConfig.new(
+            canonical_effort: effort,
+            provider_effort: effort,
+            enabled: effort != "none",
+            explicit_none: effort == "none",
+          )
         end
 
         def normalize_model_params(model_params)
@@ -35,6 +58,8 @@ module DiscourseAi
 
         def prepare_payload(prompt, model_params, dialect)
           payload = super
+          payload.delete(:reasoning_effort)
+          payload[:reasoning] = { effort: thinking_config.provider_effort } if thinking_configured?
 
           if quantizations = llm_model.provider_params["provider_quantizations"].presence
             options = quantizations.split(",").map(&:strip)
@@ -49,6 +74,13 @@ module DiscourseAi
           end
 
           payload
+        end
+
+        private
+
+        def legacy_reasoning_effort
+          effort = llm_model.lookup_custom_param("reasoning_effort")
+          effort if OPEN_ROUTER_REASONING_EFFORTS.include?(effort)
         end
       end
     end

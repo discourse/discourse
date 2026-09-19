@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Discourse
-  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
+  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+|-latest(\.\d+)?)?\z/
   VERSION_COMPATIBILITY_FILENAME = ".discourse-compatibility"
 
   class InvalidVersionListError < StandardError
@@ -28,6 +28,8 @@ module Discourse
       version_list = YAML.safe_load(version_list)
     rescue Psych::SyntaxError, Psych::DisallowedClass
     end
+
+    return if version_list.blank?
 
     raise InvalidVersionListError unless version_list.is_a?(Hash)
 
@@ -90,7 +92,9 @@ module Discourse
     compat_branch = "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
     remote_branch_ref = "refs/remotes/origin/#{compat_branch}"
 
-    Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
+    # Verify the branch exists locally; return a ref that git can resolve.
+    Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref)
+    "origin/#{compat_branch}"
   rescue Discourse::Utils::CommandError
   end
 
@@ -98,8 +102,8 @@ module Discourse
   def self.find_compatible_git_resource(path)
     return unless File.directory?("#{path}/.git")
 
-    if compat_branch_sha = find_compatible_git_branch(path)
-      return compat_branch_sha
+    if compatible_branch = find_compatible_git_branch(path)
+      return compatible_branch
     end
 
     tree_info =

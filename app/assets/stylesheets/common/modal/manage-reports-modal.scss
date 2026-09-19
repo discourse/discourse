@@ -1,0 +1,13 @@
+@use "lib/viewport";
+
+.manage-reports {
+  .manageable-row-list__description {
+    text-transform: capitalize;
+  }
+
+  .de-cta__description {
+    @include viewport.until(sm) {
+      display: none;
+    }
+  }
+}

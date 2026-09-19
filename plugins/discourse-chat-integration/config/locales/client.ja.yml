@@ -221,3 +221,8 @@ ja:
               description: "チャンネル名はチャット統合の設定で確認できます"
             provider:
               label: プロバイダー
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "チャンネル"
+        configure: "構成"
+        message: "メッセージ"

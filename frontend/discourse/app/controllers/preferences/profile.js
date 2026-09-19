@@ -5,6 +5,7 @@ import { compare, isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
@@ -16,6 +17,8 @@ export default class ProfileController extends Controller {
 
   calendarOptions = [
     { name: i18n("download_calendar.google"), value: "google" },
+    { name: i18n("download_calendar.outlook"), value: "outlook" },
+    { name: i18n("download_calendar.apple"), value: "apple" },
     { name: i18n("download_calendar.ics"), value: "ics" },
   ];
 
@@ -112,15 +115,6 @@ export default class ProfileController extends Controller {
     document.querySelector(".feature-topic-on-profile-btn")?.focus();
   }
 
-  _missingRequiredFields(siteFields, userFields) {
-    return siteFields
-      .filter(
-        (siteField) =>
-          siteField.requirement === "for_all_users" && !userFields[siteField.id]
-      )
-      .map((field) => EmberObject.create({ field, value: "" }));
-  }
-
   @action
   clearFeaturedTopicFromProfile() {
     this.dialog.yesNoConfirm({
@@ -140,24 +134,6 @@ export default class ProfileController extends Controller {
   @action
   useCurrentTimezone() {
     this.model.set("user_option.timezone", moment.tz.guess(true));
-  }
-
-  @action
-  _updateUserFields() {
-    const model = this.model,
-      userFields = this.userFields;
-
-    if (!isEmpty(userFields)) {
-      const modelFields = model.get("user_fields");
-      if (!isEmpty(modelFields)) {
-        userFields.forEach(function (uf) {
-          const value = uf.get("value");
-          modelFields[uf.get("field.id").toString()] = isEmpty(value)
-            ? null
-            : value;
-        });
-      }
-    }
   }
 
   @action
@@ -183,7 +159,40 @@ export default class ProfileController extends Controller {
         this.model.set("bio_cooked", user.bio_cooked);
         this.currentUser.set("needs_required_fields_check", false);
         this.set("saved", true);
+
+        const destinationUrl = cookie("destination_url");
+        if (destinationUrl) {
+          removeCookie("destination_url", { path: "/" });
+          window.location.href = destinationUrl;
+        }
       })
       .catch(popupAjaxError);
+  }
+
+  _missingRequiredFields(siteFields, userFields) {
+    return siteFields
+      .filter(
+        (siteField) =>
+          siteField.requirement === "for_all_users" && !userFields[siteField.id]
+      )
+      .map((field) => EmberObject.create({ field, value: "" }));
+  }
+
+  @action
+  _updateUserFields() {
+    const model = this.model,
+      userFields = this.userFields;
+
+    if (!isEmpty(userFields)) {
+      const modelFields = model.get("user_fields");
+      if (!isEmpty(modelFields)) {
+        userFields.forEach(function (uf) {
+          const value = uf.get("value");
+          modelFields[uf.get("field.id").toString()] = isEmpty(value)
+            ? null
+            : value;
+        });
+      }
+    }
   }
 }

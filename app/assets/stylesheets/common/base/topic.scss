@@ -28,11 +28,6 @@
 
   .topic-navigation {
     overflow-anchor: none;
-
-    .btn-toggle-localized-content.--active {
-      --d-button-default-icon-color: var(--tertiary);
-      --d-button-default-icon-color--hover: var(--primary-low);
-    }
   }
 
   // timeline
@@ -262,6 +257,15 @@
     .select-kit .category-row {
       max-width: unset;
     }
+
+    .editing-localization-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      margin-bottom: -0.5em; // matches the flex gap of the edit-title__wrapper
+    }
   }
 
   .edit-title__wrapper {
@@ -270,15 +274,6 @@
     #edit-title {
       width: 100%;
       margin: 0;
-    }
-
-    .editing-localization-indicator {
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-      margin: var(--space-1);
-      font-size: var(--font-down-1);
-      color: var(--primary-medium);
     }
   }
 

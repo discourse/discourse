@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import { headerActionComponentForPlugin } from "discourse/lib/admin-plugin-header-actions";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
 
@@ -18,6 +18,10 @@ export default class AdminPluginConfigPage extends Component {
     return headerActionComponentForPlugin(this.args.plugin.dasherizedName);
   }
 
+  get hideTabs() {
+    return this.adminPluginNavManager.currentConfigNav.links.length <= 1;
+  }
+
   linkText(navLink) {
     if (navLink.label) {
       return i18n(navLink.label);
@@ -29,20 +33,21 @@ export default class AdminPluginConfigPage extends Component {
   <template>
     <div class="admin-plugin-config-page">
       <DPageHeader
-        @titleLabel={{@plugin.nameTitleized}}
         @descriptionLabel={{@plugin.about}}
-        @learnMoreUrl={{@plugin.linkUrl}}
         @headerActionComponent={{this.headerActionComponent}}
+        @hideTabs={{this.hideTabs}}
+        @learnMoreUrl={{@plugin.linkUrl}}
+        @titleLabel={{@plugin.nameTitleized}}
       >
         <:breadcrumbs>
-          <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+          <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
           <DBreadcrumbsItem
-            @path="/admin/plugins"
             @label={{i18n "admin.plugins.title"}}
+            @path="/admin/plugins"
           />
           <DBreadcrumbsItem
-            @path="/admin/plugins/{{@plugin.name}}"
             @label={{@plugin.nameTitleized}}
+            @path="/admin/plugins/{{@plugin.name}}"
           />
         </:breadcrumbs>
         <:tabs>
@@ -50,14 +55,15 @@ export default class AdminPluginConfigPage extends Component {
             this.adminPluginNavManager.currentConfigNav.links
             as |navLink|
           }}
-            <NavItem
-              @route={{navLink.route}}
-              @i18nLabel={{this.linkText navLink}}
-              title={{this.linkText navLink}}
+            <DNavItem
               class="admin-plugin-config-page__top-nav-item"
+              title={{this.linkText navLink}}
+              @currentWhen={{navLink.currentWhen}}
+              @i18nLabel={{this.linkText navLink}}
+              @route={{navLink.route}}
             >
               {{this.linkText navLink}}
-            </NavItem>
+            </DNavItem>
           {{/each}}
         </:tabs>
       </DPageHeader>

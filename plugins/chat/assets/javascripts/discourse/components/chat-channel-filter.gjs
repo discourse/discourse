@@ -5,15 +5,15 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import FilterInput from "discourse/components/filter-input";
 import closeOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import autoFocus from "discourse/modifiers/auto-focus";
 import { gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class ChatChannelFilter extends Component {
@@ -149,14 +149,14 @@ export default class ChatChannelFilter extends Component {
         {{didInsert this.clearFilteringState}}
       >
         <div>
-          <FilterInput
-            {{autoFocus}}
-            {{closeOnEscape @onToggleFilter}}
-            @value={{this.currentChannelFilter}}
+          <DFilterInput
+            class="no-blur"
             placeholder={{i18n "chat.search.title"}}
             @filterAction={{this.loadSearchResults}}
-            class="no-blur"
             @onClearInput={{this.clearInput}}
+            @value={{this.currentChannelFilter}}
+            {{dAutoFocus}}
+            {{closeOnEscape @onToggleFilter}}
           />
 
           {{#if this.channelFilterResults.length}}
@@ -172,21 +172,21 @@ export default class ChatChannelFilter extends Component {
 
             {{#if (gt this.channelFilterResults.length 1)}}
               <DButton
+                class="btn-small btn-flat chat-channel__prev-result"
                 @action={{this.navigateToPreviousResult}}
                 @icon="chevron-up"
-                class="btn-small btn-flat chat-channel__prev-result"
               />
               <DButton
+                class="btn-small btn-flat chat-channel__next-result"
                 @action={{this.navigateToNextResult}}
                 @icon="chevron-down"
-                class="btn-small btn-flat chat-channel__next-result"
               />
             {{/if}}
           {{/if}}
 
           <DButton
-            @action={{@onToggleFilter}}
             class="btn-small btn-flat"
+            @action={{@onToggleFilter}}
             @label="done"
           />
         </div>

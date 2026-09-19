@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export const CLOSE_STATUS_TYPE = "close";
@@ -116,44 +116,6 @@ export default class EditTopicTimer extends Component {
     return types;
   }
 
-  _setTimer(time, durationMinutes, statusType, basedOnLastPost, categoryId) {
-    this.loading = true;
-
-    TopicTimer.update(
-      this.args.model.topic.id,
-      time,
-      basedOnLastPost,
-      statusType,
-      categoryId,
-      durationMinutes
-    )
-      .then((result) => {
-        if (time || durationMinutes) {
-          this.args.model.updateTopicTimerProperty(
-            "execute_at",
-            result.execute_at
-          );
-          this.args.model.updateTopicTimerProperty(
-            "duration_minutes",
-            result.duration_minutes
-          );
-          this.args.model.updateTopicTimerProperty(
-            "category_id",
-            result.category_id
-          );
-          this.args.model.updateTopicTimerProperty("closed", result.closed);
-          this.args.closeModal();
-        } else {
-          const topicTimer = this.createDefaultTimer();
-          this.topicTimer = topicTimer;
-          this.args.model.setTopicTimer(topicTimer);
-          this.onChangeInput(null, null);
-        }
-      })
-      .catch(popupAjaxError)
-      .finally(() => (this.loading = false));
-  }
-
   @action
   createDefaultTimer() {
     const defaultTimer = TopicTimer.create({
@@ -250,33 +212,71 @@ export default class EditTopicTimer extends Component {
     this.topicTimer.execute_at = null;
   }
 
+  _setTimer(time, durationMinutes, statusType, basedOnLastPost, categoryId) {
+    this.loading = true;
+
+    TopicTimer.update(
+      this.args.model.topic.id,
+      time,
+      basedOnLastPost,
+      statusType,
+      categoryId,
+      durationMinutes
+    )
+      .then((result) => {
+        if (time || durationMinutes) {
+          this.args.model.updateTopicTimerProperty(
+            "execute_at",
+            result.execute_at
+          );
+          this.args.model.updateTopicTimerProperty(
+            "duration_minutes",
+            result.duration_minutes
+          );
+          this.args.model.updateTopicTimerProperty(
+            "category_id",
+            result.category_id
+          );
+          this.args.model.updateTopicTimerProperty("closed", result.closed);
+          this.args.closeModal();
+        } else {
+          const topicTimer = this.createDefaultTimer();
+          this.topicTimer = topicTimer;
+          this.args.model.setTopicTimer(topicTimer);
+          this.onChangeInput(null, null);
+        }
+      })
+      .catch(popupAjaxError)
+      .finally(() => (this.loading = false));
+  }
+
   <template>
     <DModal
-      @title={{i18n "topic.topic_status_update.title"}}
-      @flash={{this.flash}}
-      @closeModal={{@closeModal}}
       autoFocus="false"
-      id="topic-timer-modal"
       class="edit-topic-timer-modal"
+      id="topic-timer-modal"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @title={{i18n "topic.topic_status_update.title"}}
     >
       <:body>
         {{#if this.topicTimer}}
           <EditTopicTimerForm
+            @onChangeInput={{this.onChangeInput}}
+            @onChangeStatusType={{this.onChangeStatusType}}
+            @timerTypes={{this.publicTimerTypes}}
             @topic={{@model.topic}}
             @topicTimer={{this.topicTimer}}
-            @timerTypes={{this.publicTimerTypes}}
-            @onChangeStatusType={{this.onChangeStatusType}}
-            @onChangeInput={{this.onChangeInput}}
           />
         {{/if}}
       </:body>
       <:footer>
         <DButton
           class="btn-primary"
-          @disabled={{this.saveDisabled}}
-          @label="topic.topic_status_update.save"
           @action={{this.saveTimer}}
+          @disabled={{this.saveDisabled}}
           @isLoading={{this.loading}}
+          @label="topic.topic_status_update.save"
         />
         {{#if this.topicTimer.execute_at}}
           <DButton

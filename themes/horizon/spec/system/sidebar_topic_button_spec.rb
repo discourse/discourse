@@ -2,6 +2,7 @@
 
 RSpec.describe "Sidebar New Topic Button" do
   before { upload_theme }
+
   fab!(:group)
   fab!(:user) { Fabricate(:user, trust_level: 3, groups: [group]) }
   fab!(:category)
@@ -55,6 +56,20 @@ RSpec.describe "Sidebar New Topic Button" do
       visit("/c/#{category.slug}/#{category.id}")
 
       expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
+    end
+  end
+
+  context "when another panel has taken over the sidebar" do
+    fab!(:admin)
+
+    before { sign_in(admin) }
+
+    it "hides the button in the admin sidebar and brings it back on the way out" do
+      visit("/admin")
+      expect(page).to have_no_css(".sidebar-new-topic-button__wrapper")
+
+      visit("/latest")
+      expect(page).to have_css(".sidebar-new-topic-button__wrapper")
     end
   end
 

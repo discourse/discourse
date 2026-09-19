@@ -5,8 +5,8 @@ import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -83,14 +83,16 @@ export default class CategoriesOnly extends Component {
             </div>
           {{else}}
             <table class="category-list {{if this.showTopics 'with-topics'}}">
-              <thead>
+              <thead class="category-list-header">
                 <tr>
-                  <th class="category"><span
-                      role="heading"
+                  <th class="category topic-list-data default"><span
                       aria-level="2"
                       id="categories-only-category"
+                      role="heading"
                     >{{i18n "categories.category"}}</span></th>
-                  <th class="topics">{{i18n "categories.topics"}}</th>
+                  <th class="topics topic-list-data num">{{i18n
+                      "categories.topics"
+                    }}</th>
                   {{#if this.showTopics}}
                     <th class="latest">{{i18n "categories.latest"}}</th>
                   {{/if}}
@@ -111,15 +113,15 @@ export default class CategoriesOnly extends Component {
         {{#if this.mutedCategories}}
           <div class="muted-categories">
             <a
-              href
               class="muted-categories-link"
+              href
               {{on "click" this.toggleShowMuted}}
             >
               <h3 class="muted-categories-heading">{{i18n
                   "categories.muted"
                 }}</h3>
               {{#if this.mutedToggleIcon}}
-                {{icon this.mutedToggleIcon}}
+                {{dIcon this.mutedToggleIcon}}
               {{/if}}
             </a>
             {{#if this.site.mobileView}}
@@ -131,8 +133,8 @@ export default class CategoriesOnly extends Component {
                 {{#each this.mutedCategories as |c|}}
                   <ParentCategoryRow
                     @category={{c}}
-                    @showTopics={{this.showTopics}}
                     @listType="muted"
+                    @showTopics={{this.showTopics}}
                   />
                 {{/each}}
               </div>
@@ -145,9 +147,9 @@ export default class CategoriesOnly extends Component {
                 <thead>
                   <tr>
                     <th class="category"><span
-                        role="heading"
                         aria-level="2"
                         id="categories-only-category-muted"
+                        role="heading"
                       >{{i18n "categories.category"}}</span></th>
                     <th class="topics">{{i18n "categories.topics"}}</th>
                     {{#if this.showTopics}}
@@ -159,8 +161,8 @@ export default class CategoriesOnly extends Component {
                   {{#each this.categories as |category|}}
                     <ParentCategoryRow
                       @category={{category}}
-                      @showTopics={{this.showTopics}}
                       @listType="muted"
+                      @showTopics={{this.showTopics}}
                     />
                   {{/each}}
                 </tbody>
@@ -172,8 +174,8 @@ export default class CategoriesOnly extends Component {
     </PluginOutlet>
 
     <PluginOutlet
-      @name="below-categories-only"
       @connectorTagName="div"
+      @name="below-categories-only"
       @outletArgs={{lazyHash
         categories=this.categories
         showTopics=this.showTopics

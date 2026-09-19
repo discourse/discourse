@@ -1,10 +1,93 @@
 # frozen_string_literal: true
 
 describe DiscourseDataExplorer::DataExplorer do
+  describe ".strip_comments" do
+    it "removes line comments, keeping the newline" do
+      expect(described_class.strip_comments("SELECT 1 -- hi\nFROM t")).to eq("SELECT 1 \nFROM t")
+    end
+
+    it "removes nested block comments" do
+      expect(described_class.strip_comments("SELECT /* a /* b */ c */ 1")).to eq("SELECT   1")
+    end
+
+    it "keeps comment markers inside quoted identifiers" do
+      expect(described_class.strip_comments(%{SELECT 1 AS "-- a"})).to eq(%{SELECT 1 AS "-- a"})
+    end
+
+    it "keeps comment markers inside dollar-quoted strings" do
+      expect(described_class.strip_comments("SELECT $q$-- a$q$")).to eq("SELECT $q$-- a$q$")
+    end
+
+    it "does not let an escaped quote in an E'' string swallow a comment" do
+      expect(described_class.strip_comments("SELECT E'a\\'b' -- c")).to eq("SELECT E'a\\'b' ")
+    end
+
+    it "passes unterminated literals through" do
+      expect(described_class.strip_comments("SELECT 'a -- b")).to eq("SELECT 'a -- b")
+    end
+  end
+
+  describe ".rewrite_to_binds" do
+    it "rewrites a code-position parameter to a positional placeholder" do
+      sql, binds = described_class.rewrite_to_binds("SELECT :id", { "id" => 7 })
+
+      expect(sql).to eq("SELECT $1")
+      expect(binds).to eq([{ value: "7", type: 20 }])
+    end
+
+    it "reuses one placeholder and one bind for a repeated parameter" do
+      sql, binds = described_class.rewrite_to_binds("SELECT :id, :id", { "id" => 7 })
+
+      expect(sql).to eq("SELECT $1, $1")
+      expect(binds.size).to eq(1)
+    end
+
+    it "expands a list parameter into a run of placeholders" do
+      sql, binds = described_class.rewrite_to_binds("WHERE id IN (:ids)", { "ids" => [1, 2, 3] })
+
+      expect(sql).to eq("WHERE id IN ($1, $2, $3)")
+      expect(binds.map { |bind| bind[:value] }).to eq(%w[1 2 3])
+    end
+
+    it "emits NULL without consuming bind slots and reuses mixed list placeholders" do
+      sql, binds =
+        described_class.rewrite_to_binds(
+          "SELECT :missing, :ids, :name, :ids, :missing",
+          { "missing" => nil, "ids" => [1, nil, 2], "name" => "NULL" },
+        )
+
+      expect(sql).to eq("SELECT NULL, $1, NULL, $2, $3, $1, NULL, $2, NULL")
+      expect(binds.map { |bind| bind[:value] }).to eq(%w[1 2 NULL])
+    end
+
+    it "leaves a marker inside a string literal untouched" do
+      sql, binds = described_class.rewrite_to_binds("SELECT ':id'", { "id" => 7 })
+
+      expect(sql).to eq("SELECT ':id'")
+      expect(binds).to be_empty
+    end
+
+    it "ignores dollar-quote syntax that appears inside a string literal" do
+      sql, binds = described_class.rewrite_to_binds("SELECT '$sql$:id$sql$'", { "id" => 7 })
+
+      expect(sql).to eq("SELECT '$sql$:id$sql$'")
+      expect(binds).to be_empty
+    end
+
+    it "rejects a parameter inside a dollar-quoted literal" do
+      expect {
+        described_class.rewrite_to_binds("SELECT $sql$:id$sql$", { "id" => 7 })
+      }.to raise_error(
+        DiscourseDataExplorer::ValidationError,
+        "Parameters cannot be used inside dollar-quoted literals",
+      )
+    end
+  end
+
   describe ".run_query" do
     fab!(:topic)
 
-    it "should run a query that includes PG template patterns" do
+    it "runs a query that includes PostgreSQL template patterns" do
       sql = <<~SQL
       WITH query AS (
         SELECT TO_CHAR(created_at, 'yyyy:mm:dd') AS date FROM topics
@@ -19,7 +102,7 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["date"]).to eq(topic.created_at.strftime("%Y:%m:%d"))
     end
 
-    it "should run a query containing a question mark in the comment" do
+    it "runs a query containing a question mark in a comment" do
       sql = <<~SQL
       WITH query AS (
         SELECT id FROM topics -- some SQL ? comment ?
@@ -56,6 +139,238 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:error]).to eq(nil)
       expect(result[:pg_result].to_a.size).to eq(1)
       expect(result[:pg_result][0]["id"]).to eq(topic2.id)
+    end
+
+    it "runs a list parameter through an IN clause" do
+      topic2 = Fabricate(:topic)
+      topic3 = Fabricate(:topic)
+
+      query = DiscourseDataExplorer::Query.create!(name: "list query", sql: <<~SQL)
+            -- [params]
+            -- int_list :ids
+            SELECT id FROM topics WHERE id IN (:ids) ORDER BY id
+          SQL
+
+      result = described_class.run_query(query, { "ids" => "#{topic.id},#{topic3.id}" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to eq([topic.id, topic3.id].sort)
+    end
+
+    it "runs a query that checks a declared string parameter against IS NULL, with no cast needed" do
+      query = DiscourseDataExplorer::Query.create!(name: "is null query", sql: <<~SQL)
+            -- [params]
+            -- string :site = hosted
+            SELECT (:site) IS NULL AS is_null
+          SQL
+
+      result = described_class.run_query(query, { "site" => "hosted" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["is_null"]).to eq(false)
+    end
+
+    %w[text date datetime time boolean user_id int_list string_list].each do |type|
+      it "uses an untyped NULL for a missing #{type} parameter" do
+        query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
+              -- [params]
+              -- null #{type} :value
+              SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
+            SQL
+
+        result = described_class.run_query(query)
+
+        expect(result[:error]).to eq(nil)
+        expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+      end
+    end
+
+    it "lets each occurrence of a null parameter infer its own type" do
+      query = DiscourseDataExplorer::Query.create!(name: "null inference", sql: <<~SQL)
+            -- [params]
+            -- null int :value
+            SELECT :value IS NULL AS is_null,
+                   COALESCE(:value, 'all') AS label,
+                   round(1.234::numeric, COALESCE(:value, 2)) AS rounded
+          SQL
+
+      result = described_class.run_query(query)
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a).to eq(
+        [{ "is_null" => true, "label" => "all", "rounded" => BigDecimal("1.23") }],
+      )
+    end
+
+    it "preserves numeric precision in a null double parameter's fallback" do
+      query = DiscourseDataExplorer::Query.create!(name: "numeric fallback", sql: <<~SQL)
+            -- [params]
+            -- null double :value
+            SELECT COALESCE(:value, 9007199254740993::numeric) AS value
+          SQL
+
+      result = described_class.run_query(query)
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq(BigDecimal("9007199254740993"))
+      expect(result[:pg_result].ftype(0)).to eq(1700)
+    end
+
+    it "preserves null elements in an integer list" do
+      query = DiscourseDataExplorer::Query.create!(name: "nullable list", sql: <<~SQL)
+            -- [params]
+            -- int_list :ids
+            SELECT unnest(ARRAY[:ids]) AS id
+          SQL
+
+      result = described_class.run_query(query, { "ids" => "1,#null,2" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to eq([1, nil, 2])
+    end
+
+    it "runs optional filters when a null integer is checked before its column comparison" do
+      query = DiscourseDataExplorer::Query.create!(name: "optional filters", sql: <<~SQL)
+            -- [params]
+            -- null text :username
+            -- null text :email
+            -- null int :user_id
+            -- null text :external_id
+            SELECT id FROM users
+            WHERE (:username IS NOT NULL OR :email IS NOT NULL OR :user_id IS NOT NULL OR :external_id IS NOT NULL)
+              AND (username = :username OR :username IS NULL)
+              AND (id = :user_id OR :user_id IS NULL)
+          SQL
+
+      result = described_class.run_query(query, { "username" => topic.user.username })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to eq([topic.user_id])
+    end
+
+    it "still compares a declared date parameter against a timestamp column with no cast" do
+      query = DiscourseDataExplorer::Query.create!(name: "date compare query", sql: <<~SQL)
+            -- [params]
+            -- date :start_date
+            SELECT id FROM topics WHERE created_at >= :start_date ORDER BY id
+          SQL
+
+      result = described_class.run_query(query, { "start_date" => "2020-01-01" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to include(topic.id)
+    end
+
+    it "rejects, without executing, a parameter inside a dollar-quoted literal" do
+      query = DiscourseDataExplorer::Query.create!(name: "dollar query", sql: <<~SQL)
+            -- [params]
+            -- string :value
+            SELECT $sql$:value$sql$ AS value
+          SQL
+
+      result = described_class.run_query(query, { "value" => "harmless$sql$) SELECT 1 --" })
+
+      expect(result[:error]).to be_a(DiscourseDataExplorer::ValidationError)
+      expect(result[:error].message).to eq(
+        "Parameters cannot be used inside dollar-quoted literals",
+      )
+      expect(result[:pg_result]).to eq(nil)
+    end
+
+    it "adds query instrumentation after removing stored comments" do
+      user = Fabricate(:user)
+      query =
+        DiscourseDataExplorer::Query.create!(
+          name: "instrumented query",
+          sql: "-- removable annotation\nSELECT current_query() AS sql",
+        )
+
+      result = described_class.run_query(query, {}, { current_user: user })
+      executed_sql = result[:pg_result][0]["sql"]
+
+      expect(result[:error]).to eq(nil)
+      expect(executed_sql).to include(
+        "DiscourseDataExplorer Query",
+        "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
+        "Started by: #{user.username}",
+      )
+      expect(executed_sql).not_to include("removable annotation")
+    end
+
+    it "keeps comment markers that are part of a string literal" do
+      query =
+        DiscourseDataExplorer::Query.create!(
+          name: "some query",
+          sql: "SELECT '-- not /* a comment' AS value",
+        )
+
+      result = described_class.run_query(query)
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq("-- not /* a comment")
+    end
+
+    it "interpolates each parameter once" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- string :selected
+            -- string :other
+            SELECT :selected AS value
+          SQL
+
+      result =
+        described_class.run_query(query, { "selected" => ":other", "other" => "other value" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq(":other")
+    end
+
+    it "interpolates a parameter whose name is a prefix of another" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- int :topic
+            -- int :topic_id
+            SELECT :topic AS a, :topic_id AS b
+          SQL
+
+      result = described_class.run_query(query, { "topic" => "1", "topic_id" => "2" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a).to eq([{ "a" => 1, "b" => 2 }])
+    end
+
+    it "leaves undeclared parameters alone" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- string :declared
+            SELECT :declared AS a, ':undeclared' AS b
+          SQL
+
+      result = described_class.run_query(query, { "declared" => "value" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a).to eq([{ "a" => "value", "b" => ":undeclared" }])
+    end
+
+    it "does not let a parameter break out of a string literal via another parameter" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- string :selected
+            -- string :other
+            SELECT :selected AS value
+          SQL
+
+      result =
+        described_class.run_query(
+          query,
+          {
+            "selected" => "x:other",
+            "other" => "'||(SELECT users.username FROM users LIMIT 1)||'",
+          },
+        )
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq("x:other")
     end
 
     describe "current_user_id parameter" do
@@ -117,11 +432,12 @@ describe DiscourseDataExplorer::DataExplorer do
         SQL
         query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
         result = described_class.run_query(query)
-        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
         expect(colrender).to eq({ 1 => "json" })
       end
 
-      it "treats columns with the actual json data type as 'json'" do
+      it "treats columns with the actual json or jsonb data type as 'json'" do
         ApiKeyScope.create(
           resource: "topics",
           action: "update",
@@ -135,8 +451,174 @@ describe DiscourseDataExplorer::DataExplorer do
         SQL
         query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
         result = described_class.run_query(query)
-        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
         expect(colrender).to eq({ 1 => "json" })
+      end
+
+      it "treats jsonb columns as 'json'" do
+        query =
+          DiscourseDataExplorer::Query.create!(
+            name: "some query",
+            sql: "SELECT '[{\"key\": \"value\"}]'::jsonb AS response_format",
+          )
+        result = described_class.run_query(query)
+
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
+
+        expect(colrender).to eq({ 0 => "json" })
+      end
+
+      it "treats json and jsonb array columns as 'json'" do
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: <<~SQL)
+              SELECT
+                ARRAY['{\"key\": \"value\"}'::json] AS json_values,
+                ARRAY['{\"key\": \"value\"}'::jsonb] AS jsonb_values
+            SQL
+        result = described_class.run_query(query)
+
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
+
+        expect(colrender).to eq({ 0 => "json", 1 => "json" })
+      end
+
+      it "limits relation resolution to the query result limit per relation type" do
+        SiteSetting.data_explorer_query_result_limit = 2
+        topics = Fabricate.times(4, :topic)
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: <<~SQL)
+              SELECT #{topics[0].id} AS topic_id, #{topics[2].id} AS related_topic_id
+              UNION ALL
+              SELECT #{topics[1].id} AS topic_id, #{topics[3].id} AS related_topic_id
+            SQL
+
+        pg_result = described_class.run_query(query)[:pg_result]
+        relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
+
+        expect(relations[:topic].as_json.size).to eq(2)
+      end
+
+      it "does not rewrite fancy_title when serializing topic relations" do
+        Topic.where(id: topic.id).update_all(fancy_title: "sentinel")
+        query = Fabricate(:query, sql: "SELECT #{topic.id} AS topic_id")
+
+        relations, _ =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: nil,
+          )
+        relations[:topic].as_json
+
+        expect(Topic.where(id: topic.id).pick(:fancy_title)).to eq("sentinel")
+      end
+
+      it "classifies id columns" do
+        query = Fabricate(:query, sql: <<~SQL)
+          SELECT
+            1 AS "html$post_id",
+            1 AS user_badge_id,
+            1 AS group_user_id,
+            1 AS topic_user_id,
+            1 AS category_user_id,
+            1 AS topic_allowed_user_id,
+            1 AS topic_allowed_group_id,
+            1 AS associated_group_id,
+            1 AS watched_word_group_id,
+            1 AS badge_id,
+            1 AS card_image_badge_id,
+            1 AS acting_user_id,
+            1 AS topic_id,
+            1 AS tag_group_id,
+            1 AS quoted_post_id,
+            1 AS deleted_by_id,
+            1 AS last_editor_id,
+            1 AS group_id,
+            1 AS category_id,
+            1 AS "author$user_id"
+        SQL
+
+        relations, colrender =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: nil,
+          )
+
+        expect(colrender).to eq(
+          {
+            0 => :html,
+            9 => :badge,
+            10 => :badge,
+            11 => :user,
+            12 => :topic,
+            13 => :tag_group,
+            14 => :post,
+            15 => :user,
+            16 => :user,
+            17 => :group,
+            18 => :category,
+            19 => :user,
+          },
+        )
+        expect(relations.keys).not_to include(:group, :category)
+      end
+
+      it "reports relations hidden by the guardian" do
+        SiteSetting.detailed_404 = true
+        pm_post = Fabricate(:private_message_post)
+        pm = pm_post.topic
+        query =
+          Fabricate(
+            :query,
+            sql:
+              "SELECT #{pm.id} AS topic_id, #{pm_post.id} AS post_id, #{topic.id} AS other_topic_id",
+          )
+
+        relations, _, hidden =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: Fabricate(:user).guardian,
+          )
+
+        expect(hidden).to eq({ topic: [pm.id], post: [pm_post.id] })
+        expect(relations[:topic].as_json.map { |t| t[:id] }).to eq([topic.id])
+      end
+
+      it "does not report hidden relations when detailed 404s are disabled" do
+        SiteSetting.detailed_404 = false
+        pm_post = Fabricate(:private_message_post)
+        query =
+          Fabricate(:query, sql: "SELECT #{pm_post.topic_id} AS topic_id, #{pm_post.id} AS post_id")
+
+        relations, _, hidden =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: Fabricate(:user).guardian,
+          )
+
+        expect(hidden).to eq({})
+        expect(relations[:post].as_json).to be_empty
+      end
+
+      it "resolves post visibility without a query per post" do
+        query_counts =
+          [2, 8].map do |post_count|
+            posts = Fabricate.times(post_count, :private_message_post)
+            query = Fabricate(:query, sql: "SELECT unnest(ARRAY#{posts.map(&:id)}) AS post_id")
+            pg_result = described_class.run_query(query)[:pg_result]
+            guardian = Fabricate(:user).guardian
+            relations = nil
+
+            queries =
+              track_sql_queries do
+                relations, _ = described_class.add_extra_data(pg_result, guardian:)
+              end
+
+            expect(relations[:post].as_json).to be_empty
+            queries.size
+          end
+
+        expect(query_counts.first).to eq(query_counts.last)
       end
 
       describe "serializing models to serializer" do
@@ -145,7 +627,8 @@ describe DiscourseDataExplorer::DataExplorer do
           query = Fabricate(:query, sql: "SELECT id AS topic_id FROM topics WHERE id = #{topic.id}")
 
           pg_result = described_class.run_query(query)[:pg_result]
-          relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+          relations, _ =
+            DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
 
           expect {
             records = relations[:topic].object
@@ -154,6 +637,22 @@ describe DiscourseDataExplorer::DataExplorer do
 
           json = relations[:topic].as_json
           expect(json).to include(BasicTopicSerializer.new(topic, root: false).as_json)
+        end
+
+        it "serializes badge relations with their type and image" do
+          badge = Fabricate(:badge, image_upload: Fabricate(:upload))
+          query = Fabricate(:query, sql: "SELECT #{badge.id} AS badge_id")
+
+          pg_result = described_class.run_query(query)[:pg_result]
+          relations, _ =
+            DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
+
+          expect(MultiJson.load(relations[:badge].to_json)).to include(
+            include(
+              "image_url" => badge.image_url,
+              "badge_type" => include("id" => badge.badge_type_id, "name" => badge.badge_type.name),
+            ),
+          )
         end
 
         it "chooses the correct serializer for tag_group" do
@@ -165,7 +664,8 @@ describe DiscourseDataExplorer::DataExplorer do
           query = Fabricate(:query, sql: "SELECT tag_id, tag_group_id FROM tag_group_memberships")
 
           pg_result = described_class.run_query(query)[:pg_result]
-          relations, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+          relations, colrender =
+            DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
 
           expect(colrender).to eq({ 1 => :tag_group })
           expect(relations[:tag_group].as_json).to include(
@@ -173,6 +673,19 @@ describe DiscourseDataExplorer::DataExplorer do
           )
         end
       end
+    end
+  end
+
+  describe "schema hints" do
+    it "only names existing columns" do
+      schema_columns = DB.query_single(<<~SQL)
+        SELECT table_name || '.' || column_name
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE table_schema = 'public'
+      SQL
+
+      expect(described_class.foreign_keys.keys - schema_columns).to be_empty
+      expect(described_class.sensitive_column_names - schema_columns).to be_empty
     end
   end
 end

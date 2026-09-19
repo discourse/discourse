@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export const ORDER_BY_ACTIVITY_FILTER = "activity";
@@ -65,8 +65,8 @@ export default class PostVotingAnswerHeader extends Component {
 
   <template>
     <nav
-      class="post-voting-answers-header"
       aria-label={{i18n "post_voting.topic.sort_by"}}
+      class="post-voting-answers-header"
     >
       <h5 class="post-voting-answers-header__count">
         {{i18n "post_voting.topic.answer_count" count=this.answersCount}}
@@ -74,12 +74,12 @@ export default class PostVotingAnswerHeader extends Component {
       <ul class="nav-pills post-voting-answers-header__sort">
         <li>
           <a
-            href={{this.votesUrl}}
-            class={{concatClass
+            aria-current={{unless this.sortedByActivity "true"}}
+            class={{dConcatClass
               "--votes"
               (unless this.sortedByActivity "active")
             }}
-            aria-current={{unless this.sortedByActivity "true"}}
+            href={{this.votesUrl}}
             {{on "click" this.orderByVotes}}
           >
             {{i18n "post_voting.topic.votes"}}
@@ -87,12 +87,12 @@ export default class PostVotingAnswerHeader extends Component {
         </li>
         <li>
           <a
-            href={{this.activityUrl}}
-            class={{concatClass
+            aria-current={{if this.sortedByActivity "true"}}
+            class={{dConcatClass
               "--activity"
               (if this.sortedByActivity "active")
             }}
-            aria-current={{if this.sortedByActivity "true"}}
+            href={{this.activityUrl}}
             {{on "click" this.orderByActivity}}
           >
             {{i18n "post_voting.topic.activity"}}

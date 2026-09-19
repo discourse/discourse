@@ -5,11 +5,11 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import DatePickerPast from "discourse/components/date-picker-past";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 // Modal related to changing the timestamp of posts
@@ -64,9 +64,9 @@ export default class ChangeTimestamp extends Component {
         </p>
         <form>
           <DatePickerPast
-            @value={{readonly this.date}}
             @containerId="date-container"
             @onSelect={{fn (mut this.date)}}
+            @value={{readonly this.date}}
           />
           <Input @type="time" @value={{this.time}} />
         </form>
@@ -75,8 +75,8 @@ export default class ChangeTimestamp extends Component {
       <:footer>
         <DButton
           class="btn-primary"
-          @disabled={{this.buttonDisabled}}
           @action={{this.changeTimestamp}}
+          @disabled={{this.buttonDisabled}}
           @label={{if this.saving "saving" "topic.change_timestamp.action"}}
         />
       </:footer>

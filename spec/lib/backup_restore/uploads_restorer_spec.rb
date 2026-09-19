@@ -99,7 +99,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
   def uploads_path(database)
     path = File.join("uploads", database)
 
-    path = File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
+    path = File.join(path, "test_#{Discourse.test_env_number}")
 
     "/#{path}/"
   end
@@ -634,6 +634,38 @@ RSpec.describe BackupRestore::UploadsRestorer do
     ) do |directory|
       FileUtils.mkdir_p(File.join(directory, "uploads", "PaxHeaders.27134"))
       FileUtils.mkdir_p(File.join(directory, "uploads", ".hidden"))
+    end
+  end
+
+  describe "length-constrained columns during remap" do
+    it "passes skip_max_length_violations to DbHelper.remap" do
+      DbHelper
+        .expects(:remap)
+        .with { |_from, _to, args| args[:skip_max_length_violations] == true }
+        .at_least_once
+
+      with_temp_uploads_directory(name: "foo") do |directory|
+        Discourse.store.class.any_instance.stubs(:copy_from)
+        BackupMetadata.create!(name: "db_name", value: "foo")
+        restorer.restore(directory)
+      end
+    end
+
+    it "passes skip_max_length_violations to DbHelper.regexp_replace" do
+      DbHelper.stubs(:remap)
+      DbHelper
+        .expects(:regexp_replace)
+        .with { |_from, _to, args| args[:skip_max_length_violations] == true }
+        .at_least_once
+
+      with_temp_uploads_directory(name: "default") do |directory|
+        Discourse.store.class.any_instance.stubs(:copy_from)
+        BackupMetadata.create!(
+          name: "s3_base_url",
+          value: "//old-bucket.s3.dualstack.us-west-2.amazonaws.com",
+        )
+        restorer.restore(directory)
+      end
     end
   end
 end

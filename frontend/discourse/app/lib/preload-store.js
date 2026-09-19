@@ -1,8 +1,9 @@
 //  We can insert data into the PreloadStore when the document is loaded.
 // The data can be accessed once by a key, after which it is removed
 import { Promise } from "rsvp";
+import { isTesting } from "discourse/lib/environment";
 
-export default {
+const PreloadStore = {
   data: new Map(),
 
   store(key, value) {
@@ -56,3 +57,37 @@ export default {
     this.data = new Map();
   },
 };
+
+export function readPreloadedData() {
+  const element = document.getElementById("data-preloaded");
+  if (!element) {
+    return;
+  }
+
+  return JSON.parse(element.textContent);
+}
+
+export function populatePreloadStore() {
+  let setupData;
+  const setupDataElement = document.getElementById("data-discourse-setup");
+  if (setupDataElement) {
+    setupData = setupDataElement.dataset;
+  }
+
+  const preloaded = readPreloadedData();
+  const keys = preloaded ? Object.keys(preloaded) : [];
+  if (keys.length === 0 && !isTesting()) {
+    throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
+  }
+
+  keys.forEach(function (key) {
+    PreloadStore.store(key, JSON.parse(preloaded[key]));
+
+    if (setupData.debugPreloadedAppData === "true") {
+      // eslint-disable-next-line no-console
+      console.log(key, PreloadStore.get(key));
+    }
+  });
+}
+
+export default PreloadStore;

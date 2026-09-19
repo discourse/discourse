@@ -1,5 +1,5 @@
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 /** @type {RichEditorExtension} */
@@ -49,7 +49,7 @@ const extension = {
               : null;
 
             metaElement.innerHTML = i18n("chat.quote.original_channel", {
-              channel: replaceEmoji(node.attrs.channel),
+              channel: dReplaceEmoji(node.attrs.channel),
               channelLink,
             });
           } else {
@@ -58,7 +58,7 @@ const extension = {
             channelLinkElement.href = getURL(
               `/chat/c/-/${node.attrs.channelId}`
             );
-            channelLinkElement.innerHTML = `#${replaceEmoji(
+            channelLinkElement.innerHTML = `#${dReplaceEmoji(
               node.attrs.channel
             )}`;
           }
@@ -72,10 +72,15 @@ const extension = {
         const formattedDateTime = moment(node.attrs.datetime).format(
           i18n("dates.long_no_year")
         );
-        userElement.innerHTML = `
-          <span class="chat-transcript-username">${node.attrs.username}</span>
-          <span class="chat-transcript-datetime">${formattedDateTime}</span>
-        `;
+        const usernameElement = document.createElement("span");
+        usernameElement.classList.add("chat-transcript-username");
+        usernameElement.textContent = node.attrs.username;
+        userElement.appendChild(usernameElement);
+
+        const datetimeElement = document.createElement("span");
+        datetimeElement.classList.add("chat-transcript-datetime");
+        datetimeElement.textContent = formattedDateTime;
+        userElement.appendChild(datetimeElement);
 
         const messagesElement = document.createElement("div");
         messagesElement.classList.add("chat-transcript-messages");
@@ -104,7 +109,7 @@ const extension = {
             "chat-transcript-thread-header__title"
           );
           threadTitleElement.innerHTML = node.attrs.threadTitle
-            ? replaceEmoji(node.attrs.threadTitle)
+            ? dReplaceEmoji(node.attrs.threadTitle)
             : i18n("chat.quote.default_thread_title");
 
           threadHeaderElement.appendChild(threadTitleElement);

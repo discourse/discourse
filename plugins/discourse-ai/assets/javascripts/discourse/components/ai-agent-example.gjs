@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AiAgentCollapsableExample extends Component {
@@ -12,6 +12,12 @@ export default class AiAgentCollapsableExample extends Component {
 
   get caretIcon() {
     return this.collapsed ? "angle-right" : "angle-down";
+  }
+
+  get exampleTitle() {
+    return i18n("discourse_ai.ai_agent.examples.collapsable_title", {
+      number: this.args.exampleNumber + 1,
+    });
   }
 
   @action
@@ -25,29 +31,23 @@ export default class AiAgentCollapsableExample extends Component {
     this.args.examplesCollection.remove(this.args.exampleNumber);
   }
 
-  get exampleTitle() {
-    return i18n("discourse_ai.ai_agent.examples.collapsable_title", {
-      number: this.args.exampleNumber + 1,
-    });
-  }
-
   <template>
     <div role="button" {{on "click" this.toggleExample}}>
-      <span>{{icon this.caretIcon}}</span>
+      <span>{{dIcon this.caretIcon}}</span>
       {{this.exampleTitle}}
     </div>
     {{#unless this.collapsed}}
       <@examplesCollection.Collection as |exPair pairIdx|>
         <exPair.Field
+          @disabled={{@system}}
           @title={{i18n
             (concat
               "discourse_ai.ai_agent.examples."
               (if (eq pairIdx 0) "user" "model")
             )
           }}
-          @validation="required|length:1,5000"
-          @disabled={{@system}}
           @type="textarea"
+          @validation="required|length:1,5000"
           as |field|
         >
           <field.Control />
@@ -57,9 +57,9 @@ export default class AiAgentCollapsableExample extends Component {
       {{#unless @system}}
         <@form.Container>
           <@form.Button
+            class="ai-agent-editor__delete_example btn-danger"
             @action={{this.deletePair}}
             @label="discourse_ai.ai_agent.examples.remove"
-            class="ai-agent-editor__delete_example btn-danger"
           />
         </@form.Container>
       {{/unless}}

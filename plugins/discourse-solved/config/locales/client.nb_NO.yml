@@ -5,6 +5,23 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Godtatte løsninger"
+        sections:
+          support:
+            answerers:
+              staff: "Stab"
+              member: "Medlemmer"
+              basic: "Basic"
+            response_time:
+              buckets:
+                lt_1h: "< 1 time"
+                gt_24h: "> 24 timer"
   js:
     notifications:
       alt:
@@ -27,9 +44,17 @@ nb_NO:
       move_post_cancel: "Avbryt"
       confirm_solved_removal_confirm: "Bekreft"
       confirm_solved_removal_cancel: "Avbryt"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "Dette emnet har en løsning"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Emne"
+            category: "Kategori"
     discourse_automation:
       triggerables:
         first_accepted_solution:

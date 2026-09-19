@@ -2,6 +2,28 @@ import Component from "@glimmer/component";
 import I18n from "discourse-i18n";
 
 export default class TopicViews extends Component {
+  get updatedStats() {
+    const adjustedStats = this.adjustAggregatedData(this.args.views.stats);
+
+    let stats = adjustedStats.map((stat) => {
+      const statDate = new Date(`${stat.viewed_at}T00:00:00`).getTime();
+      const localStatDate = new Date(statDate);
+
+      return {
+        ...stat,
+        statDate: localStatDate,
+        label: this.formatDate(localStatDate),
+      };
+    });
+
+    // today should always have at least 1 view
+    // because it's being viewed right now
+    const lastStat = stats[stats.length - 1];
+    lastStat.views = Math.max(lastStat.views, 1);
+
+    return stats;
+  }
+
   adjustAggregatedData(stats) {
     const adjustedStats = [];
 
@@ -42,28 +64,6 @@ export default class TopicViews extends Component {
       month: "2-digit",
       day: "2-digit",
     });
-  }
-
-  get updatedStats() {
-    const adjustedStats = this.adjustAggregatedData(this.args.views.stats);
-
-    let stats = adjustedStats.map((stat) => {
-      const statDate = new Date(`${stat.viewed_at}T00:00:00`).getTime();
-      const localStatDate = new Date(statDate);
-
-      return {
-        ...stat,
-        statDate: localStatDate,
-        label: this.formatDate(localStatDate),
-      };
-    });
-
-    // today should always have at least 1 view
-    // because it's being viewed right now
-    const lastStat = stats[stats.length - 1];
-    lastStat.views = Math.max(lastStat.views, 1);
-
-    return stats;
   }
 
   <template>

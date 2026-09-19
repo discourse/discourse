@@ -75,7 +75,12 @@ namespace :release do
       puts "Tag #{current_version.tag_name} already exists, skipping"
     else
       puts "Tagging release #{current_version.tag_name}"
-      ReleaseUtils.git "tag", "-a", current_version.tag_name, "-m", "version #{current_version}"
+      ReleaseUtils.git "tag",
+                       "-a",
+                       current_version.tag_name,
+                       "-m",
+                       "version #{current_version}",
+                       check_ref.to_s
 
       if ReleaseUtils.dry_run?
         puts "[DRY RUN] Skipping pushing tag to origin"
@@ -107,7 +112,7 @@ namespace :release do
           else
             "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_RELEASE_TAG}` tag"
           end
-        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f", check_ref.to_s
       end
       if ReleaseUtils.dry_run?
         puts "[DRY RUN] Skipping pushing #{ReleaseUtils::RELEASE_TAGS.inspect} tags to origin"
@@ -131,7 +136,7 @@ namespace :release do
           else
             "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_ESR_TAG}` tag"
           end
-        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f", check_ref.to_s
       end
       if ReleaseUtils.dry_run?
         puts "[DRY RUN] Skipping pushing #{ReleaseUtils::ESR_TAGS.inspect} tags to origin"
@@ -221,8 +226,12 @@ namespace :release do
 
     selected =
       if (ghsa_ids = ENV["SECURITY_FIX_GHSA_IDS"])
-        requested = ghsa_ids.split(",").map(&:strip)
-        choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"]) }
+        requested = ghsa_ids.split(",").map(&:strip).map(&:downcase)
+        matched =
+          choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"].downcase) }
+        missing = requested - matched.map { |pr| pr["ghsa_id"].downcase }
+        raise "No matching PR found for requested GHSA(s): #{missing.join(", ")}" if missing.any?
+        matched
       else
         prompt = TTY::Prompt.new
         prompt_choices =
@@ -249,7 +258,7 @@ namespace :release do
 
         ReleaseUtils.git "merge", "--squash", "privatemirror/#{pr["headRefName"]}"
 
-        commit_message = "#{pr["title"]}\n\n#{pr["body"]}".strip
+        commit_message = pr["title"].strip
         author =
           ReleaseUtils.git(
             "log",

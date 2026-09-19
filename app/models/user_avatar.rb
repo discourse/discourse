@@ -8,7 +8,7 @@ class UserAvatar < ActiveRecord::Base
 
   after_save do
     if saved_change_to_custom_upload_id? || saved_change_to_gravatar_upload_id?
-      upload_ids = [self.custom_upload_id, self.gravatar_upload_id]
+      upload_ids = [custom_upload_id, gravatar_upload_id]
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -27,66 +27,64 @@ class UserAvatar < ActiveRecord::Base
 
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user_id}") do
-      begin
-        self.update!(last_gravatar_download_attempt: Time.zone.now)
+      update!(last_gravatar_download_attempt: Time.zone.now)
 
-        max = Discourse.avatar_sizes.max
+      max = Discourse.avatar_sizes.max
 
-        # The user could be deleted before this executes
-        return if user.blank? || user.primary_email.blank?
+      # The user could be deleted before this executes
+      return if user.blank? || user.primary_email.blank?
 
-        email_hash = @@custom_user_gravatar_email_hash[user_id] || user.email_hash
-        gravatar_url =
-          "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404&reset_cache=#{SecureRandom.urlsafe_base64(5)}"
+      email_hash = @@custom_user_gravatar_email_hash[user_id] || user.email_hash
+      gravatar_url =
+        "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404&reset_cache=#{SecureRandom.urlsafe_base64(5)}"
 
-        if SiteSetting.verbose_upload_logging
-          Rails.logger.warn("Verbose Upload Logging: Downloading gravatar from #{gravatar_url}")
-        end
+      if SiteSetting.verbose_upload_logging
+        Rails.logger.warn("Verbose Upload Logging: Downloading gravatar from #{gravatar_url}")
+      end
 
-        # follow redirects in case gravatar change rules on us
-        tempfile =
-          FileHelper.download(
-            gravatar_url,
-            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-            tmp_file_name: "gravatar",
-            skip_rate_limit: true,
-            verbose: false,
-            follow_redirect: true,
-          )
+      # follow redirects in case gravatar change rules on us
+      tempfile =
+        FileHelper.download(
+          gravatar_url,
+          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+          tmp_file_name: "gravatar",
+          skip_rate_limit: true,
+          verbose: false,
+          follow_redirect: true,
+        )
 
-        if tempfile
-          ext = File.extname(tempfile)
-          ext = ".png" if ext.blank?
+      if tempfile
+        ext = File.extname(tempfile)
+        ext = ".png" if ext.blank?
 
-          upload =
-            UploadCreator.new(
-              tempfile,
-              "gravatar#{ext}",
-              origin: gravatar_url,
-              type: "avatar",
-              for_gravatar: true,
-            ).create_for(user_id)
+        upload =
+          UploadCreator.new(
+            tempfile,
+            "gravatar#{ext}",
+            origin: gravatar_url,
+            type: "avatar",
+            for_gravatar: true,
+          ).create_for(user_id)
 
-          if gravatar_upload_id != upload.id
-            User.transaction do
-              if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
-                user.update!(uploaded_avatar_id: upload.id)
-              end
-
-              self.update!(gravatar_upload: upload)
+        if gravatar_upload_id != upload.id
+          User.transaction do
+            if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
+              user.update!(uploaded_avatar_id: upload.id)
             end
+
+            update!(gravatar_upload: upload)
           end
         end
-      rescue OpenURI::HTTPError => e
-        raise e if e.io&.status&.[](0).to_i != 404
-      ensure
-        tempfile&.close!
       end
+    rescue OpenURI::HTTPError => e
+      raise e if e.io&.status&.[](0).to_i != 404
+    ensure
+      tempfile&.close!
     end
   end
 
   def self.local_avatar_url(hostname, username, upload_id, size)
-    self.local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
+    local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
   end
 
   def self.local_avatar_template(hostname, username, upload_id)
@@ -95,7 +93,7 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.external_avatar_url(user_id, upload_id, size)
-    self.external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
+    external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
   end
 
   def self.external_avatar_template(user_id, upload_id)
@@ -199,14 +197,12 @@ class UserAvatar < ActiveRecord::Base
     warnings_reported = 0
 
     ids.each do |id|
-      begin
-        OptimizedImage.find(id).destroy!
-      rescue ActiveRecord::RecordNotFound
-      rescue => e
-        if warnings_reported < 10
-          Discourse.warn_exception(e, message: "Failed to remove optimized image")
-          warnings_reported += 1
-        end
+      OptimizedImage.find(id).destroy!
+    rescue ActiveRecord::RecordNotFound
+    rescue => e
+      if warnings_reported < 10
+        Discourse.warn_exception(e, message: "Failed to remove optimized image")
+        warnings_reported += 1
       end
     end
   end
@@ -217,12 +213,12 @@ end
 # Table name: user_avatars
 #
 #  id                             :integer          not null, primary key
-#  user_id                        :integer          not null
-#  custom_upload_id               :integer
-#  gravatar_upload_id             :integer
 #  last_gravatar_download_attempt :datetime
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
+#  custom_upload_id               :integer
+#  gravatar_upload_id             :integer
+#  user_id                        :integer          not null
 #
 # Indexes
 #

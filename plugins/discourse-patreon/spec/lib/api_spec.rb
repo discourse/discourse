@@ -15,13 +15,13 @@ RSpec.describe Patreon::Api do
 
     before { SiteSetting.patreon_api_version = "1" }
 
-    it "should add admin warning message for invalid api response" do
+    it "adds an admin warning for an invalid API response" do
       stub_url(401, url)
       described_class.campaign_data
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(1)
     end
 
-    it "should add warning log" do
+    it "logs a warning" do
       stub_url(500, url)
       Discourse.expects(:warn_exception).once
       described_class.campaign_data
@@ -45,21 +45,37 @@ RSpec.describe Patreon::Api do
 
     before { SiteSetting.patreon_api_version = "2" }
 
-    it "should add admin warning message for invalid api response" do
+    it "adds an admin warning for an invalid API response" do
       stub_url(401, url)
       described_class.campaign_data
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(1)
-      expect(AdminNotice.find_by(identifier: :access_token_invalid).message).to eq(
-        I18n.t("dashboard.problem.access_token_invalid", base_path: Discourse.base_path),
+      expect(AdminNotice.find_by(identifier: :access_token_invalid).message).to include(
+        "www.patreon.com/platform/documentation/clients",
       )
     end
 
-    it "should not add admin warning message for valid api response" do
+    it "does not add an admin warning for a valid API response" do
       stub_url(200, url)
+      described_class.campaign_data
+
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(0)
+      expect(AdminNotice.find_by(identifier: :access_token_invalid)).to eq(nil)
     end
 
-    it "should add warning log" do
+    it "clears the admin warning when the API responds again" do
+      stub_url(401, url)
+      described_class.campaign_data
+      expect(AdminNotice.find_by(identifier: :access_token_invalid)).to be_present
+
+      stub_url(200, url)
+      described_class.campaign_data
+
+      expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(0)
+      expect(ProblemCheckTracker[:access_token_invalid]).to be_passing
+      expect(AdminNotice.find_by(identifier: :access_token_invalid)).to eq(nil)
+    end
+
+    it "logs a warning" do
       stub_url(500, url)
       Discourse.expects(:warn_exception).once
       expect(described_class.campaign_data).to eq(error: I18n.t(described_class::INVALID_RESPONSE))

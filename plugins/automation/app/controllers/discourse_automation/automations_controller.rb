@@ -7,7 +7,9 @@ module DiscourseAutomation
 
     def trigger
       automation = DiscourseAutomation::Automation.find(params[:id])
-      automation.trigger_in_background!(params.merge(kind: DiscourseAutomation::Triggers::API_CALL))
+      automation.trigger_in_background!(
+        params.to_unsafe_h.merge(kind: DiscourseAutomation::Triggers::API_CALL),
+      )
       render json: success_json
     end
   end

@@ -13,7 +13,9 @@ nl:
   js:
     styleguide:
       title: "Stijlgids"
-      welcome: "Kies een sectie in het menu links om te beginnen."
+      example:
+        kind:
+          component: "Onderdeel"
       categories:
         syntax: Syntax
         atoms: Atomen
@@ -30,6 +32,10 @@ nl:
           title: "Datum-/tijdinvoer"
         menus:
           title: "Menu's"
+        context_menu:
+          actions:
+            duplicate: "Dupliceren"
+            delete: "Verwijderen"
         multi_select:
           title: "Meervoudige selectie"
         toasts:
@@ -38,6 +44,10 @@ nl:
           title: "Lettertypesysteem"
         colors:
           title: "Kleuren"
+        dialog:
+          title: "Dialoog"
+        drag_and_drop:
+          locked: "Vergrendeld"
         icons:
           title: "Pictogrammen"
           full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"
@@ -59,6 +69,8 @@ nl:
           title: "Navigatie gestapeld"
         categories_list:
           title: "Categorieënlijst"
+        topic_link:
+          title: "Topiclink en -status"
         topic_list_item:
           title: "Topiclijstitem"
         topic_statuses:
@@ -81,6 +93,8 @@ nl:
           title: "Berichtenlijst"
           empty_example: "<PostList /> lege toestand"
           populated_example: "<PostList /> gevulde toestand"
+        post_oneboxes:
+          title: "Oneboxes plaatsen"
         topic_map:
           title: "Topickaart"
         site_header:
@@ -89,6 +103,31 @@ nl:
           title: "Meer topics"
         post_menu:
           title: "Berichtmenu"
+        roving_focus:
+          toolbar:
+            copy: "Kopiëren"
+          tags:
+            remove: "%{tag} verwijderen"
+            design: "Ontwerp"
+            support: "Steunen"
+          adjacent:
+            label: "Filters"
+            field: "Zoeken"
+            placeholder: "Topics zoeken"
+            open: "Openen"
+            recent: "Recent"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Dagelijks"
+            weekly: "Wekelijks"
+            monthly: "Maandelijks"
+            never: "Nooit"
+          tree:
+            components: "Onderdelen"
+            select: "Selecteren"
+        docked_composer:
+          title: "Gedockte editor"
         modal:
           title: "Modaal"
           header: "Modaaltitel"
@@ -99,6 +138,8 @@ nl:
           title: "Koptekstpictogrammen"
         spinners:
           title: "Kringvelden"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Lege toestand"
         tooltips:
@@ -109,3 +150,5 @@ nl:
         char_counter:
           title: "Tekensteller"
           placeholder: "Voer hier je tekst in..."
+        segmented_control:
+          title: "Gesegmenteerde bediening (knopschakelgroep)"

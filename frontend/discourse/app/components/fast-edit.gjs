@@ -2,23 +2,33 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { translateModKey } from "discourse/lib/utilities";
-import autoFocus from "discourse/modifiers/auto-focus";
+import { formatShortcut } from "discourse/lib/shortcut-format";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import DButton from "discourse/ui-kit/d-button";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class FastEdit extends Component {
+  @service capabilities;
+
   @tracked isSaving = false;
   @tracked value = this.args.newValue || this.args.initialValue;
 
-  buttonTitle = i18n("composer.title", {
-    modifier: translateModKey("Meta+"),
-  });
+  shortcut = formatShortcut("mod+enter");
+
+  get buttonTitle() {
+    if (!this.capabilities.hasKeyboard) {
+      return;
+    }
+    return i18n("composer.submit_shortcut_title", {
+      shortcut: this.shortcut.label,
+    });
+  }
 
   get disabled() {
     return this.value === this.args.initialValue;
@@ -71,30 +81,33 @@ export default class FastEdit extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
       <textarea
-        {{on "input" this.updateValue}}
         id="fast-edit-input"
+        {{on "input" this.updateValue}}
         {{preventScrollOnFocus}}
-        {{autoFocus}}
+        {{dAutoFocus}}
       >{{this.value}}</textarea>
 
       <div class="fast-edit-container__footer">
         <DButton
+          aria-keyshortcuts={{if
+            this.capabilities.hasKeyboard
+            this.shortcut.aria
+          }}
           class="btn-small btn-primary save-fast-edit"
           @action={{this.save}}
+          @disabled={{this.disabled}}
           @icon="pencil"
+          @isLoading={{this.isSaving}}
           @label="composer.save_edit"
           @translatedTitle={{this.buttonTitle}}
-          @isLoading={{this.isSaving}}
-          @disabled={{this.disabled}}
         />
 
         <PluginOutlet
-          @name="fast-edit-footer-after"
           @defaultGlimmer={{true}}
+          @name="fast-edit-footer-after"
           @outletArgs={{lazyHash
             initialValue=@initialValue
             newValue=@newValue

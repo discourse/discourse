@@ -46,6 +46,76 @@ RSpec.describe SiteSetting::UpsertGroups do
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
     end
 
+    context "when the setting is an upcoming change with allow_enabled_for restrictions" do
+      let(:setting) { "enable_form_templates" }
+
+      context "when allow_enabled_for is [everyone]" do
+        before do
+          mock_upcoming_change_metadata(
+            enable_form_templates: {
+              impact: "feature,all_members",
+              status: :experimental,
+              impact_type: "feature",
+              impact_role: "all_members",
+              allow_enabled_for: [:everyone],
+            },
+          )
+        end
+
+        it { is_expected.to fail_a_policy(:allowed_enabled_for_target) }
+
+        context "when group_names is empty" do
+          let(:group_names) { [] }
+
+          it { is_expected.to run_successfully }
+        end
+      end
+
+      context "when allow_enabled_for is [staff]" do
+        before do
+          mock_upcoming_change_metadata(
+            enable_form_templates: {
+              impact: "feature,all_members",
+              status: :experimental,
+              impact_type: "feature",
+              impact_role: "all_members",
+              allow_enabled_for: [:staff],
+            },
+          )
+        end
+
+        context "with only the staff group" do
+          let(:group_names) { ["staff"] }
+
+          it { is_expected.to run_successfully }
+        end
+
+        context "with non-staff groups" do
+          let(:group_names) { %w[trust_level_0 admins] }
+
+          it { is_expected.to fail_a_policy(:allowed_enabled_for_target) }
+        end
+      end
+
+      context "when allow_enabled_for is [staff, specific_groups]" do
+        before do
+          mock_upcoming_change_metadata(
+            enable_form_templates: {
+              impact: "feature,all_members",
+              status: :experimental,
+              impact_type: "feature",
+              impact_role: "all_members",
+              allow_enabled_for: %i[staff specific_groups],
+            },
+          )
+        end
+
+        let(:group_names) { %w[trust_level_0 admins] }
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when an admin user upserts groups for a setting" do
       it { is_expected.to run_successfully }
 

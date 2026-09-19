@@ -296,6 +296,8 @@ def insert_automatic_group_users
   Group::AUTO_GROUPS.each do |group_name, group_id|
     user_condition =
       case group_name
+      when :anonymous_users, :logged_in_users
+        next
       when :everyone
         "TRUE"
       when :admins
@@ -422,12 +424,14 @@ def update_topics
                   FROM posts
                  WHERE NOT hidden
                    AND deleted_at IS NULL
+                   AND #{Topic.public_post_types_sql}
                    AND topic_id = p.topic_id
               ORDER BY post_number DESC
                  LIMIT 1) last_poster
         FROM posts p
        WHERE NOT hidden
          AND deleted_at IS NULL
+         AND #{Topic.public_post_types_sql}
     GROUP BY topic_id
   )
   UPDATE topics
@@ -591,32 +595,30 @@ task "import:remap_old_phpbb_permalinks" => :environment do
   Post
     .where("raw LIKE ?", "%discussions.example.com%")
     .each do |p|
-      begin
-        new_raw = p.raw.dup
-        # \((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)
-        new_raw.gsub!(%r{\((https?://discussions\.example\.com/\S*-t\d+.html)\)}) do
-          normalized_url = Permalink.normalize_url($1)
-          permalink =
-            begin
-              Permalink.find_by_url(normalized_url)
-            rescue StandardError
-              nil
-            end
-          if permalink && permalink.target_url
-            "(#{permalink.target_url})"
-          else
-            "(#{$1})"
+      new_raw = p.raw.dup
+      # \((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)
+      new_raw.gsub!(%r{\((https?://discussions\.example\.com/\S*-t\d+.html)\)}) do
+        normalized_url = Permalink.normalize_url($1)
+        permalink =
+          begin
+            Permalink.find_by_url(normalized_url)
+          rescue StandardError
+            nil
           end
+        if permalink && permalink.target_url
+          "(#{permalink.target_url})"
+        else
+          "(#{$1})"
         end
-
-        if new_raw != p.raw
-          p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
-          putc "."
-          i += 1
-        end
-      rescue StandardError
-        # skip
       end
+
+      if new_raw != p.raw
+        p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
+        putc "."
+        i += 1
+      end
+    rescue StandardError
+      # skip
     end
 
   log "Done! #{i} posts remapped."

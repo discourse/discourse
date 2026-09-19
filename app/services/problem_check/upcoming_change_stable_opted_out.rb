@@ -5,9 +5,11 @@ class ProblemCheck::UpcomingChangeStableOptedOut < ProblemCheck
   self.targets = -> { SiteSetting.upcoming_change_site_settings }
 
   def call
+    return no_problem if !UpcomingChanges::ConditionalDisplay.should_display?(target)
+
     # If the site setting is enabled, then the change is opted in, either
     # manually or automatically, so we skip it.
-    return no_problem if SiteSetting.send(target)
+    return no_problem if UpcomingChanges.enabled?(target)
 
     # Don't care about any changes that are not yet stable, admins can opt
     # in and out of these without worry.

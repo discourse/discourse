@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SingleSelectHeaderComponent from "discourse/select-kit/components/select-kit/single-select-header";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("dropdown-select-box-header")
 @classNameBindings("btnClassName", "btnStyleClass", "btnCustomClasses")
@@ -49,22 +49,22 @@ export default class DropdownSelectBoxHeader extends SingleSelectHeaderComponent
 
   <template>
     <div class="select-kit-header-wrapper">
-      {{#each this.icons as |iconName|}} {{icon iconName}} {{/each}}
+      {{#each this.icons as |iconName|}} {{dIcon iconName}} {{/each}}
 
       {{#let
         (resolveComponent this this.selectKit.options.selectedNameComponent)
         as |SelectedNameComponent|
       }}
         <SelectedNameComponent
-          @tabindex={{this.tabindex}}
           @item={{this.selectedContent}}
           @selectKit={{this.selectKit}}
           @shouldDisplayClearableButton={{this.shouldDisplayClearableButton}}
+          @tabindex={{this.tabindex}}
         />
       {{/let}}
 
       {{#if this.selectKit.options.showCaret}}
-        {{icon this.caretIcon class="angle-icon"}}
+        {{dIcon this.caretIcon class="angle-icon"}}
       {{/if}}
       &#8203;
       {{! Zero-width space character, so icon-only button height = regular button height }}

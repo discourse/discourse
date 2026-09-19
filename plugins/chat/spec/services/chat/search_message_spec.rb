@@ -24,6 +24,7 @@ RSpec.describe Chat::SearchMessage do
     before do
       SearchIndexer.enable
       SiteSetting.chat_enabled = true
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     end
 
     context "when contract is not valid" do
@@ -41,6 +42,21 @@ RSpec.describe Chat::SearchMessage do
 
       context "when the user cannot view the channel" do
         fab!(:channel, :direct_message_channel)
+
+        it { is_expected.to fail_a_policy(:can_view_channel) }
+      end
+
+      context "when the user can only see a readonly category channel" do
+        fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+        fab!(:channel) do
+          category =
+            Fabricate(
+              :private_category,
+              group: readonly_group,
+              permission_type: CategoryGroup.permission_types[:readonly],
+            )
+          Fabricate(:category_channel, chatable: category)
+        end
 
         it { is_expected.to fail_a_policy(:can_view_channel) }
       end

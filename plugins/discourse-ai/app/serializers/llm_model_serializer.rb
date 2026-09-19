@@ -18,6 +18,8 @@ class LlmModelSerializer < ApplicationSerializer
              :url,
              :provider_params,
              :vision_enabled,
+             :vision_mode,
+             :vision_llm_model_id,
              :input_cost,
              :output_cost,
              :cached_input_cost,
@@ -40,7 +42,7 @@ class LlmModelSerializer < ApplicationSerializer
   def used_by
     llm_usage =
       (
-        if (scope && scope[:llm_usage])
+        if scope && scope[:llm_usage]
           scope[:llm_usage]
         else
           DiscourseAi::Configuration::LlmEnumerator.global_usage

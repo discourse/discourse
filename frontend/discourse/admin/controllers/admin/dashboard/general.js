@@ -1,4 +1,3 @@
-import { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
@@ -16,9 +15,8 @@ function staticReport(reportType) {
 }
 
 export default class AdminDashboardGeneralController extends AdminDashboardTabController {
-  @service router;
   @service siteSettings;
-  @controller("exception") exceptionController;
+  @service exception;
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -108,7 +106,13 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   @computed
   get siteTrafficOptions() {
     return {
-      stackedChart: { hiddenLabels: ["page_view_other", "page_view_crawler"] },
+      stackedChart: {
+        hiddenLabels: [
+          "page_view_other",
+          "page_view_crawler",
+          "page_view_embed",
+        ],
+      },
     };
   }
 
@@ -164,8 +168,7 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
           });
         })
         .catch((e) => {
-          this.exceptionController.set("thrown", e.jqXHR);
-          this.router.replaceWith("exception");
+          this.exception.show(e.jqXHR);
         })
         .finally(() => this.set("isLoading", false));
     }

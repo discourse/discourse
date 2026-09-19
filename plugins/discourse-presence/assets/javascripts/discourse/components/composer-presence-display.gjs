@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
 import helperFn from "discourse/helpers/helper-fn";
 import Composer from "discourse/models/composer";
 import { gt } from "discourse/truth-helpers";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerPresenceDisplay extends Component {
@@ -150,9 +150,9 @@ export default class ComposerPresenceDisplay extends Component {
         <div class="presence-users">
           <div class="presence-avatars">
             {{#each this.users as |user|}}
-              <UserLink @user={{user}}>
-                {{avatar user imageSize="small"}}
-              </UserLink>
+              <DUserLink @user={{user}}>
+                {{dAvatar user imageSize="small"}}
+              </DUserLink>
             {{/each}}
           </div>
 

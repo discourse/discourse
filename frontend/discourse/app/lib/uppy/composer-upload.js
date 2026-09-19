@@ -13,10 +13,10 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import {
   bindFileInputChangeListener,
-  displayErrorForBulkUpload,
-  displayErrorForUpload,
+  displayUploadErrors,
   getUploadMarkdown,
   isImage,
+  rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
@@ -85,18 +85,6 @@ export default class UppyComposerUpload {
     this.fileUploadElementId = fileUploadElementId;
   }
 
-  @bind
-  _cancelUpload(data) {
-    if (data) {
-      // Single file
-      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
-    } else {
-      // All files
-      this.#userCancelled = true;
-      this.uppyWrapper.uppyInstance.cancelAll();
-    }
-  }
-
   teardown() {
     if (!this.#uploadTargetBound) {
       return;
@@ -128,13 +116,11 @@ export default class UppyComposerUpload {
     this.#uploadTargetBound = false;
   }
 
-  #abortAndReset() {
-    this.appEvents.trigger(`${this.composerEventPrefix}:uploads-aborted`);
-    this.#reset();
-    return false;
-  }
-
   setup(element) {
+    if (this.#uploadTargetBound) {
+      this.teardown();
+    }
+
     this.#editorEl = element;
     this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 
@@ -269,7 +255,7 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       run(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.composer.isDestroying) {
           return;
         }
 
@@ -301,7 +287,7 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("upload-progress", (file, progress) => {
       run(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         const upload = this.#inProgressUploads.find(
@@ -312,6 +298,10 @@ export default class UppyComposerUpload {
             (progress.bytesUploaded / progress.bytesTotal) * 100
           );
           upload.set("progress", percentage);
+          this.appEvents.trigger(
+            `composer:upload-progress:${file.id}`,
+            percentage
+          );
         }
       });
     });
@@ -398,7 +388,10 @@ export default class UppyComposerUpload {
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
 
-              this.#displayBufferedErrors();
+              displayUploadErrors(
+                this.#bufferedUploadErrors,
+                this.siteSettings
+              );
               this.#reset();
             }
           }
@@ -425,43 +418,23 @@ export default class UppyComposerUpload {
 
     this.#uploadTargetBound = true;
     this.#bindMobileUploadButton();
+
+    // Signals that the uploader is bound and ready to accept files via the
+    // `${composerEventPrefix}:add-files` event, e.g. for content shared into
+    // the composer through the Web Share Target.
+    this.appEvents.trigger(`${this.composerEventPrefix}:uploader-ready`);
   }
 
-  @bind
-  _handleUploadError(file, error, response) {
-    this.#removeInProgressUpload(file.id);
-    this.#resetUpload(file);
-
-    file.meta.error = error;
-
-    if (!this.#userCancelled) {
-      this.#bufferUploadError(response || error, file.name);
-      this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
-    }
-    if (this.#inProgressUploads.length === 0) {
-      this.#displayBufferedErrors();
-      this.#reset();
-    }
+  #abortAndReset() {
+    this.appEvents.trigger(`${this.composerEventPrefix}:uploads-aborted`);
+    this.#reset();
+    return false;
   }
 
   #removeInProgressUpload(fileId) {
     this.#inProgressUploads = this.#inProgressUploads.filter(
       (upl) => upl.id !== fileId
     );
-  }
-
-  #displayBufferedErrors() {
-    if (this.#bufferedUploadErrors.length === 0) {
-      return;
-    } else if (this.#bufferedUploadErrors.length === 1) {
-      displayErrorForUpload(
-        this.#bufferedUploadErrors[0].data,
-        this.siteSettings,
-        this.#bufferedUploadErrors[0].fileName
-      );
-    } else {
-      displayErrorForBulkUpload(this.#bufferedUploadErrors);
-    }
   }
 
   #bufferUploadError(data, fileName) {
@@ -522,7 +495,7 @@ export default class UppyComposerUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
-      shouldRetry: () => false,
+      ...rateLimitRetryOptions,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -548,11 +521,66 @@ export default class UppyComposerUpload {
     this.textManipulation.placeholder.cancel(file);
   }
 
+  #bindMobileUploadButton() {
+    if (this.site.mobileView) {
+      this.mobileUploadButton = document.getElementById(
+        this.mobileFileUploaderId
+      );
+      this.mobileUploadButton?.addEventListener(
+        "click",
+        this._mobileUploadButtonEventListener,
+        false
+      );
+    }
+  }
+
+  #unbindMobileUploadButton() {
+    this.mobileUploadButton?.removeEventListener(
+      "click",
+      this._mobileUploadButtonEventListener
+    );
+  }
+
+  #findMatchingUploadHandler(fileName) {
+    return this.uploadHandlers.find((handler) => {
+      const ext = handler.extensions.join("|");
+      const regex = new RegExp(`\\.(${ext})$`, "i");
+      return regex.test(fileName);
+    });
+  }
+
+  @bind
+  _cancelUpload(data) {
+    if (data) {
+      // Single file
+      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+    } else {
+      // All files
+      this.#userCancelled = true;
+      this.uppyWrapper.uppyInstance.cancelAll();
+    }
+  }
+
+  @bind
+  _handleUploadError(file, error, response) {
+    this.#removeInProgressUpload(file.id);
+    this.#resetUpload(file);
+
+    file.meta.error = error;
+
+    if (!this.#userCancelled) {
+      this.#bufferUploadError(response || error, file.name);
+      this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
+    }
+    if (this.#inProgressUploads.length === 0) {
+      displayUploadErrors(this.#bufferedUploadErrors, this.siteSettings);
+      this.#reset();
+    }
+  }
+
   @bind
   _pasteEventListener(event) {
-    if (
-      !document.querySelector(this.editorInputClass)?.contains(event.target)
-    ) {
+    if (!event.target.closest(this.editorInputClass)) {
       return;
     }
 
@@ -601,36 +629,8 @@ export default class UppyComposerUpload {
     }
   }
 
-  #bindMobileUploadButton() {
-    if (this.site.mobileView) {
-      this.mobileUploadButton = document.getElementById(
-        this.mobileFileUploaderId
-      );
-      this.mobileUploadButton?.addEventListener(
-        "click",
-        this._mobileUploadButtonEventListener,
-        false
-      );
-    }
-  }
-
   @bind
   _mobileUploadButtonEventListener() {
     this.#fileInputEl.click();
-  }
-
-  #unbindMobileUploadButton() {
-    this.mobileUploadButton?.removeEventListener(
-      "click",
-      this._mobileUploadButtonEventListener
-    );
-  }
-
-  #findMatchingUploadHandler(fileName) {
-    return this.uploadHandlers.find((handler) => {
-      const ext = handler.extensions.join("|");
-      const regex = new RegExp(`\\.(${ext})$`, "i");
-      return regex.test(fileName);
-    });
   }
 }

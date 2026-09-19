@@ -9,6 +9,10 @@ describe "OAuth2 Overrides Email", type: :request do
   end
 
   before do
+    SiteSetting.oauth2_client_id = "id"
+    SiteSetting.oauth2_client_secret = "secret"
+    SiteSetting.oauth2_authorize_url = "https://provider.com/authorize"
+    SiteSetting.oauth2_token_url = "https://provider.com/token"
     SiteSetting.oauth2_enabled = true
     SiteSetting.oauth2_callback_user_id_path = "uid"
     SiteSetting.oauth2_fetch_user_details = false
@@ -34,6 +38,30 @@ describe "OAuth2 Overrides Email", type: :request do
     expect(session[:current_user_id]).to eq(user.id)
 
     expect(user.reload.email).to eq(initial_email)
+  end
+
+  it "doesn't link an unverified provider account to a matching email" do
+    SiteSetting.oauth2_email_verified = false
+    OmniAuth.config.mock_auth[:oauth2_basic] = OmniAuth::AuthHash.new(
+      provider: "oauth2_basic",
+      uid: "unverified-provider-uid",
+      info: OmniAuth::AuthHash::InfoHash.new(email: user.email, email_verified: "pending"),
+      extra: OmniAuth::AuthHash.new,
+      credentials: OmniAuth::AuthHash.new,
+    )
+
+    get "/auth/oauth2_basic/callback"
+
+    expect(response.status).to eq(302)
+    expect(response.body).to be_blank
+    expect(session[:current_user_id]).to be_nil
+    expect(
+      UserAssociatedAccount.exists?(
+        provider_name: "oauth2_basic",
+        provider_uid: "unverified-provider-uid",
+        user: user,
+      ),
+    ).to eq(false)
   end
 
   it "updates user email if enabled" do

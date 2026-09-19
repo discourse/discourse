@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import categoryLink from "discourse/helpers/category-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 import getTagName from "../lib/utilities";
 
@@ -57,7 +57,7 @@ export default class RuleRow extends Component {
         </div>
         {{#if this.isCategory}}
           {{#if @rule.category}}
-            {{categoryLink
+            {{dCategoryLink
               @rule.category
               allowUncategorized="true"
               link="false"
@@ -93,16 +93,16 @@ export default class RuleRow extends Component {
 
       <td class="d-table__cell --controls">
         <DButton
+          class="btn-default btn-small edit"
+          @action={{fn @edit @rule}}
           @icon="pencil"
           @title="chat_integration.rule_table.edit_rule"
-          @action={{fn @edit @rule}}
-          class="btn-default btn-small edit"
         />
         <DButton
+          class="btn-danger btn-small delete"
+          @action={{fn this.delete @rule}}
           @icon="trash-can"
           @title="chat_integration.rule_table.delete_rule"
-          @action={{fn this.delete @rule}}
-          class="btn-danger btn-small delete"
         />
       </td>
     </tr>

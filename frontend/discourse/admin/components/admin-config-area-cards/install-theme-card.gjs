@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class InstallThemeCard extends Component {
@@ -52,23 +52,23 @@ export default class InstallThemeCard extends Component {
         <div class="theme-install-card__external-links">
           {{#each this.externalResources as |resource|}}
             <a
-              href={{resource.link}}
               class="external-link"
+              href={{resource.link}}
               rel="noopener noreferrer"
               target="_blank"
             >
               {{i18n resource.key}}
-              {{icon "up-right-from-square"}}
+              {{dIcon "up-right-from-square"}}
             </a>
           {{/each}}
         </div>
         <DButton
           class="btn-primary theme-install-card__install-button"
+          @action={{@openModal}}
+          @icon="upload"
           @translatedLabel={{i18n
             "admin.config_areas.themes_and_components.install"
           }}
-          @icon="upload"
-          @action={{@openModal}}
         />
       </:content>
     </AdminConfigAreaCard>

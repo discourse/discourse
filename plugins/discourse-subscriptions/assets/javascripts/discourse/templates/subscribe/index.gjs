@@ -7,7 +7,7 @@ export default <template>
   {{/unless}}
 
   <ProductList
-    @products={{@controller.model}}
     @isLoggedIn={{@controller.isLoggedIn}}
+    @products={{@controller.model}}
   />
 </template>

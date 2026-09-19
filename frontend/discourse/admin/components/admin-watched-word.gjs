@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { eq, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class AdminWatchedWord extends Component {
@@ -29,9 +29,9 @@ export default class AdminWatchedWord extends Component {
   <template>
     <div class="watched-word">
       <DButton
+        class="btn-transparent delete-word-record"
         @action={{this.deleteWord}}
         @icon="xmark"
-        class="btn-transparent delete-word-record"
       />
 
       <span class="watched-word__content">{{@word.word}}</span>

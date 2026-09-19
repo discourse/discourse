@@ -4,15 +4,18 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import SidebarEditNavigationMenuTagsModal from "discourse/components/sidebar/edit-navigation-menu/tags-modal";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllTagsSectionLink from "../common/all-tags-section-link";
 import Section from "../section";
 import SectionLink from "../section-link";
 
 export default class SidebarUserTagsSection extends Component {
+  @service router;
   @service currentUser;
   @service modal;
   @service site;
@@ -34,6 +37,11 @@ export default class SidebarUserTagsSection extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.topicTrackingState.offStateChange(this.callbackId);
+  }
+
+  @cached
+  get activeLink() {
+    return findActiveLink(this.sectionLinks, this.router);
   }
 
   @cached
@@ -84,8 +92,9 @@ export default class SidebarUserTagsSection extends Component {
 
   <template>
     <Section
-      @sectionName="tags"
-      @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
+      @activeLink={{this.activeLink}}
+      @collapsable={{@collapsable}}
+      @expandWhenActive={{@expandActiveSection}}
       @headerActions={{array
         (hash
           action=this.showModal
@@ -93,37 +102,44 @@ export default class SidebarUserTagsSection extends Component {
         )
       }}
       @headerActionsIcon="pencil"
-      @collapsable={{@collapsable}}
+      @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
+      @sectionName="tags"
     >
       {{#each this.sectionLinks as |sectionLink|}}
         <SectionLink
-          @route={{sectionLink.route}}
-          @title={{sectionLink.title}}
+          data-tag-name={{sectionLink.tagName}}
+          @badgeText={{sectionLink.badgeText}}
           @content={{sectionLink.text}}
           @currentWhen={{sectionLink.currentWhen}}
+          @models={{sectionLink.models}}
+          @prefixColor={{sectionLink.prefixColor}}
           @prefixType={{sectionLink.prefixType}}
           @prefixValue={{sectionLink.prefixValue}}
-          @prefixColor={{sectionLink.prefixColor}}
-          @badgeText={{sectionLink.badgeText}}
-          @models={{sectionLink.models}}
+          @route={{sectionLink.route}}
+          @scrollIntoView={{and
+            @scrollActiveLinkIntoView
+            (eq sectionLink.name this.activeLink.name)
+          }}
           @suffixCSSClass={{sectionLink.suffixCSSClass}}
-          @suffixValue={{sectionLink.suffixValue}}
           @suffixType={{sectionLink.suffixType}}
-          data-tag-name={{sectionLink.tagName}}
+          @suffixValue={{sectionLink.suffixValue}}
+          @title={{sectionLink.title}}
         />
       {{/each}}
 
-      <AllTagsSectionLink />
+      <AllTagsSectionLink
+        @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+      />
 
       {{#if this.shouldDisplayDefaultConfig}}
         <SectionLink
-          @linkName="configure-default-navigation-menu-tags"
           @content={{i18n "sidebar.sections.tags.configure_defaults"}}
+          @linkName="configure-default-navigation-menu-tags"
+          @model="sidebar"
           @prefixType="icon"
           @prefixValue="wrench"
-          @route="adminSiteSettingsCategory"
-          @model="sidebar"
           @query={{hash filter="default_navigation_menu_tags"}}
+          @route="adminSiteSettingsCategory"
         />
       {{/if}}
     </Section>

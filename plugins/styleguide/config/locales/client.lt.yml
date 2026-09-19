@@ -8,7 +8,9 @@ lt:
   js:
     styleguide:
       title: "Stiliaus vadovas"
-      welcome: "Norėdami pradėti, kairėje esančiame meniu pasirinkite skyrių."
+      example:
+        kind:
+          component: "Komponentas"
       categories:
         atoms: Atomai
         molecules: Molekulės
@@ -20,6 +22,9 @@ lt:
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tai yra minim man, bet tai, kad pratimas gali būti ne taip, kaip jis gali būti susijęs su pasekmėmis. Duis aute irure dolor in reprehenderit in voluptate velit esse lum dolore eu fugiat nulla pariatur. Išskirtinis yra ne proident occaecat cupidatat, kuri yra oficiali, bet kurioje vietoje yra darbo vietoje."
         date_time_inputs:
           title: "Įvesties data/laikas"
+        context_menu:
+          actions:
+            delete: "Pašalinti"
         font_scale:
           title: "Šriftų sistema"
         colors:
@@ -61,6 +66,22 @@ lt:
           title: "Svetainės antraštė"
         more_topics:
           title: "Daugiau Temų"
+        roving_focus:
+          toolbar:
+            copy: "Kopijuoti"
+          adjacent:
+            label: "Filtrai"
+            field: "Paieška"
+            open: "Atidaryti"
+            recent: "Naujausios"
+          combobox:
+            daily: "Kasdien"
+            weekly: "Kas savaitę"
+            monthly: "Kas mėnesį"
+            never: "Niekada"
+          tree:
+            components: "Komponentai"
+            select: "Pasirinkite"
         modal:
           title: "Modalinis"
           header: "Modalinis pavadinimas"

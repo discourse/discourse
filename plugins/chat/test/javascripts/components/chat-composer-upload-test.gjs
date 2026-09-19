@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
 
-module("Component | chat-composer-upload", function (hooks) {
+module("Component | ChatComposerUpload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("file - uploading in progress", async function (assert) {
@@ -133,8 +133,8 @@ module("Component | chat-composer-upload", function (hooks) {
       <template>
         <ChatComposerUpload
           @isDone={{true}}
-          @upload={{this.upload}}
           @onCancel={{fn this.removeUpload this.upload}}
+          @upload={{this.upload}}
         />
       </template>
     );
@@ -158,8 +158,8 @@ module("Component | chat-composer-upload", function (hooks) {
     await render(
       <template>
         <ChatComposerUpload
-          @upload={{this.upload}}
           @onCancel={{fn this.removeUpload this.upload}}
+          @upload={{this.upload}}
         />
       </template>
     );

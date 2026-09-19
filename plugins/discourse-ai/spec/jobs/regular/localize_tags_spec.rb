@@ -76,10 +76,10 @@ describe Jobs::LocalizeTags do
       .with(tag, "zh_CN", has_entries(short_text_llm_model: anything))
       .once
 
-    job.execute({ limit: 10 })
+    job.execute({ limit: 1 })
   end
 
-  it "limits the number of localizations" do
+  it "limits the number of tags" do
     SiteSetting.content_localization_supported_locales = "pt"
 
     6.times { Fabricate(:tag, locale: "en") }
@@ -106,6 +106,55 @@ describe Jobs::LocalizeTags do
       .never
 
     job.execute({ limit: 10 })
+  end
+
+  it "retranslates existing localizations for a requested tag" do
+    localize_all_tags("pt_BR", "zh_CN")
+    tag = Fabricate(:tag, locale: "en", description: "Source description")
+    localizations =
+      %w[pt_BR zh_CN].map do |locale|
+        Fabricate(
+          :tag_localization,
+          tag:,
+          locale:,
+          name: "old-name",
+          description: "Old description",
+        )
+      end
+
+    allow(DiscourseAi::Translation::ShortTextTranslator).to receive(:new) do |text:, **|
+      translated = text == tag.name ? "new-name" : "New description"
+      instance_double(DiscourseAi::Translation::ShortTextTranslator, translate: translated)
+    end
+
+    job.execute({ limit: 1, tag_id: tag.id, fields: ["description"], force: true })
+
+    expect(
+      TagLocalization.where(id: localizations.map(&:id)).pluck(:name, :description),
+    ).to contain_exactly(["old-name", "New description"], ["old-name", "New description"])
+  end
+
+  it "clears existing localized descriptions when the source description is blank" do
+    tag = Fabricate(:tag, locale: "en", description: "")
+    localizations =
+      %w[pt_BR zh_CN].map do |locale|
+        Fabricate(
+          :tag_localization,
+          tag:,
+          locale:,
+          name: "old-name",
+          description: "Old description",
+        )
+      end
+
+    allow(DiscourseAi::Translation::ShortTextTranslator).to receive(:new)
+
+    job.execute({ limit: 1, tag_id: tag.id, fields: ["description"], force: true })
+
+    expect(
+      TagLocalization.where(id: localizations.map(&:id)).pluck(:name, :description),
+    ).to contain_exactly(["old-name", nil], ["old-name", nil])
+    expect(DiscourseAi::Translation::ShortTextTranslator).not_to have_received(:new)
   end
 
   it "handles translation errors gracefully" do

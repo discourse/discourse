@@ -10,9 +10,15 @@ zh_CN:
       site_settings:
         categories:
           poll: "Discourse 投票"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "投票已关闭"
+            poll_opened: "投票已开放"
   js:
     poll:
       title: "投票"
+      closed_by: "由 %{username} 关闭"
       dynamic:
         enabled_hint: "可以添加或移除选项。"
       voters:
@@ -45,9 +51,20 @@ zh_CN:
           x_options:
             other: "选择 <strong>%{count} 个选项</strong>。"
           between_min_and_max_options: "选择 <strong>%{min} 到 %{max} 个选项</strong>。"
+      vote_recorded: "您的投票已记录。"
+      voted_choices:
+        title: "您投票给了："
       cast-votes:
         title: "投票"
         label: "立即投票！"
+        update_title: "更新您的投票"
+        update_label: "更新投票"
+      amend-vote:
+        title: "更改您的投票"
+        label: "更改投票"
+      keep-vote:
+        title: "无需更改投票即可返回"
+        label: "返回"
       show-results:
         title: "显示投票结果"
         label: "结果"
@@ -110,6 +127,7 @@ zh_CN:
       error_while_fetching_voters: "抱歉，显示投票人时出错。"
       error_while_exporting_results: "抱歉，导出投票结果时出错。"
       ui_builder:
+        edit: 编辑投票
         title: 构建投票
         insert: 插入投票
         help:
@@ -147,10 +165,9 @@ zh_CN:
           label: 允许在发布后添加或删除选项
         poll_title:
           label: 标题（可选）
+          placeholder: 投票标题
         poll_options:
           label: 选项（每行一个）
           add: 添加选项
         automatic_close:
           label: 自动关闭投票
-        show_advanced: "显示高级选项"
-        hide_advanced: "隐藏高级选项"

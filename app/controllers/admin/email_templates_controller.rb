@@ -14,11 +14,13 @@ class Admin::EmailTemplatesController < Admin::AdminController
         custom_invite_forum_mailer
         custom_invite_mailer
         download_backup_mailer
+        email_login_code_mailer
         invite_forum_mailer
         invite_mailer
         invite_password_instructions
         new_version_mailer
         new_version_mailer_with_notes
+        password_reset_code_mailer
         system_messages.backup_failed
         system_messages.backup_succeeded
         system_messages.bulk_invite_failed
@@ -30,6 +32,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.email_reject_attachment
         system_messages.email_reject_auto_generated
         system_messages.email_reject_bad_destination_address
+        system_messages.email_reject_email_alias
         system_messages.email_reject_empty
         system_messages.email_reject_inactive_user
         system_messages.email_reject_insufficient_trust_level
@@ -161,12 +164,8 @@ class Admin::EmailTemplatesController < Admin::AdminController
         rest_serializer: true,
       )
     else
-      TranslationOverride.upsert!(
-        I18n.locale,
-        "#{key}.subject_template",
-        subject_result[:old_value],
-      )
-      TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", body_result[:old_value])
+      restore_key(subject_result)
+      restore_key(body_result)
 
       render_json_error(error_messages)
     end
@@ -199,12 +198,23 @@ class Admin::EmailTemplatesController < Admin::AdminController
 
   def update_key(key, value)
     old_value = I18n.t(key)
+    has_override = TranslationOverride.exists?(locale: I18n.locale, translation_key: key)
 
     unless old_value.is_a?(Hash)
       translation_override = TranslationOverride.upsert!(I18n.locale, key, value)
     end
 
-    { key:, old_value:, error_messages: translation_override&.errors&.full_messages }
+    { key:, old_value:, has_override:, error_messages: translation_override&.errors&.full_messages }
+  end
+
+  def restore_key(update_result)
+    return if update_result[:old_value].is_a?(Hash)
+
+    if update_result[:has_override]
+      TranslationOverride.upsert!(I18n.locale, update_result[:key], update_result[:old_value])
+    else
+      TranslationOverride.revert!(I18n.locale, update_result[:key])
+    end
   end
 
   def revert_and_log(*keys)

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatNavbarClosePinsButton extends Component {
@@ -13,11 +13,11 @@ export default class ChatNavbarClosePinsButton extends Component {
     {{#if this.site.desktopView}}
       <LinkTo
         class="c-navbar__close-pins-button btn-transparent btn btn-icon no-text"
-        @route="chat.channel"
-        @models={{@channel.routeModels}}
         title={{this.closeButtonTitle}}
+        @models={{@channel.routeModels}}
+        @route="chat.channel"
       >
-        {{icon "xmark"}}
+        {{dIcon "xmark"}}
       </LinkTo>
     {{/if}}
   </template>

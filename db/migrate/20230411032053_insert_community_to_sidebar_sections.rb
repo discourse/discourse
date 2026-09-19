@@ -13,6 +13,8 @@ class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
     { name: "Badges", path: "/badges", icon: "certificate", segment: 1 },
   ]
   def up
+    return if Migration::Helpers.new_site?
+
     result = DB.query <<~SQL
       INSERT INTO sidebar_sections(user_id, title, public, section_type, created_at, updated_at)
       VALUES (-1, 'Community', true, 0, now(), now())

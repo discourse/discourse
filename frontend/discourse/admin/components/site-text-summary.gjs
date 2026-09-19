@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import highlightHTML from "discourse/lib/highlight-html";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class SiteTextSummary extends Component {
   @action
@@ -45,14 +45,14 @@ export default class SiteTextSummary extends Component {
 
   <template>
     <div
-      class={{concatClass "site-text" (if @siteText.overridden "overridden")}}
-      {{didInsert this.highlightSearchTerm}}
+      class={{dConcatClass "site-text" (if @siteText.overridden "overridden")}}
       data-site-text-id={{@siteText.id}}
+      {{didInsert this.highlightSearchTerm}}
     >
       <DButton
-        @label="admin.site_text.edit"
-        @action={{fn @editAction @siteText}}
         class="btn-default site-text-edit"
+        @action={{fn @editAction @siteText}}
+        @label="admin.site_text.edit"
       />
       <h3 class="site-text-id">{{@siteText.id}}</h3>
       <div class="site-text-value">{{@siteText.value}}</div>

@@ -6,11 +6,11 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
@@ -46,6 +46,7 @@ export default class ChatThread extends Component {
   @service capabilities;
   @service chatApi;
   @service chatDraftsManager;
+  @service chatNewMessageAnnouncer;
   @service chatThreadComposer;
   @service chatThreadPane;
   @service dialog;
@@ -60,13 +61,8 @@ export default class ChatThread extends Component {
 
   paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
-    onUserPresent: this.debouncedUpdateLastReadMessage,
+    onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
-
-  @action
-  registerScroller(element) {
-    this.scroller = element;
-  }
 
   @cached
   get messagesLoader() {
@@ -87,20 +83,27 @@ export default class ChatThread extends Component {
   }
 
   @action
+  registerScroller(element) {
+    this.scroller = element;
+  }
+
+  @action
   setup(element) {
     this.uploadDropZone = element;
 
     this.messagesManager.clear();
-    this.args.thread.draft =
-      this.chatDraftsManager.get(
-        this.args.thread.channel?.id,
-        this.args.thread.id
-      ) ||
-      ChatMessage.createDraftMessage(this.args.thread.channel, {
-        user: this.currentUser,
-        thread: this.args.thread,
-      });
-    this.chatThreadComposer.focus();
+    if (this.currentUser) {
+      this.args.thread.draft =
+        this.chatDraftsManager.get(
+          this.args.thread.channel?.id,
+          this.args.thread.id
+        ) ||
+        ChatMessage.createDraftMessage(this.args.thread.channel, {
+          user: this.currentUser,
+          thread: this.args.thread,
+        });
+      this.chatThreadComposer.focus();
+    }
     this.loadMessages();
   }
 
@@ -127,7 +130,7 @@ export default class ChatThread extends Component {
         state,
       });
       this.isScrolling = true;
-      this.debouncedUpdateLastReadMessage();
+      this.maybeDebouncedUpdateLastReadMessage();
 
       if (
         state.atTop ||
@@ -146,8 +149,11 @@ export default class ChatThread extends Component {
   onScrollEnd(state) {
     this.isScrolling = false;
     this.atBottom = state.atBottom;
+    this.paneState.updateLiveEdgeFromScrollState(state);
 
     if (state.atBottom) {
+      // Visible but unfocused panes can passively live-follow. Clear their
+      // pending affordance at the bottom while keeping hidden/away panes pending.
       if (this.paneState.userIsPresent) {
         this.paneState.clearPendingMessages();
       }
@@ -163,6 +169,13 @@ export default class ChatThread extends Component {
   }
 
   @bind
+  maybeDebouncedUpdateLastReadMessage() {
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
+  }
+
+  @bind
   debouncedUpdateLastReadMessage() {
     this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
@@ -173,7 +186,7 @@ export default class ChatThread extends Component {
 
   @bind
   updateLastReadMessage() {
-    if (!this.paneState.userIsPresent) {
+    if (!this.paneState.shouldMarkRead()) {
       return;
     }
 
@@ -219,7 +232,7 @@ export default class ChatThread extends Component {
   didResizePane() {
     this._ignoreNextScroll = true;
     this.debounceFillPaneAttempt();
-    this.debouncedUpdateLastReadMessage();
+    this.maybeDebouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
 
     this.paneState.updatePendingContentFromScrollerPosition({
@@ -295,11 +308,13 @@ export default class ChatThread extends Component {
   }
 
   @action
-  scrollToLatestMessage() {
+  async scrollToLatestMessage() {
     if (this.messagesLoader.canLoadMoreFuture) {
-      this.fetchMessages();
+      await this.fetchMessages({
+        target_message_id: this.args.thread.lastMessageId,
+      });
     } else if (this.messagesManager.messages.length > 0) {
-      this.scrollToBottom();
+      await this.scrollToBottom();
     }
   }
 
@@ -344,18 +359,31 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
+    const isOwnMessage = message.user.id === this.currentUser.id;
+
+    if (!isOwnMessage) {
+      this.chatNewMessageAnnouncer.notify(message, {
+        visible: this.paneState.isDocumentVisible,
+        active: this.paneState.isActiveReader,
+      });
+    }
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
-      shouldAutoScroll: this.paneState.userIsPresent && this.atBottom,
+      shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({
+        isAtLiveEdge: this.paneState.isAtLiveEdge,
+        isOwnMessage,
+      }),
       addMessage: () => this.messagesManager.addMessages([message]),
-      onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
+      onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
+      isOwnMessage,
     });
   }
 
   @bind
   processMessages(thread, result) {
     const messages = result.messages.map((messageData) => {
-      const ignored = this.currentUser.ignored_users || [];
+      const ignored = this.currentUser?.ignored_users || [];
       const hidden = ignored.includes(messageData.user.username);
 
       return ChatMessage.create(thread.channel, {
@@ -437,6 +465,44 @@ export default class ChatThread extends Component {
     );
   }
 
+  @action
+  async scrollToBottom() {
+    this._ignoreNextScroll = true;
+    await scrollListToBottom(this.scroller);
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
+    this.paneState.clearPendingMessages();
+  }
+
+  @action
+  async scrollToTop() {
+    this._ignoreNextScroll = true;
+    await scrollListToTop(this.scroller);
+  }
+
+  @action
+  resendStagedMessage(stagedMessage) {
+    this.chatThreadPane.sending = true;
+
+    stagedMessage.error = null;
+
+    this.chatApi
+      .sendMessage(this.args.thread.channel.id, {
+        cooked: stagedMessage.cooked,
+        message: stagedMessage.message,
+        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
+        staged_id: stagedMessage.id,
+        thread_id: this.args.thread.id,
+      })
+      .catch((error) => {
+        stagedMessage.setSendError(error);
+      })
+      .finally(() => {
+        this.chatThreadPane.sending = false;
+      });
+  }
+
   async #sendNewMessage(message) {
     if (this.chatThreadPane.sending) {
       return;
@@ -510,32 +576,10 @@ export default class ChatThread extends Component {
     }
   }
 
-  @action
-  async scrollToBottom() {
-    this._ignoreNextScroll = true;
-    await scrollListToBottom(this.scroller);
-    this.paneState.clearPendingMessages();
-  }
-
-  @action
-  async scrollToTop() {
-    this._ignoreNextScroll = true;
-    await scrollListToTop(this.scroller);
-  }
-
-  @action
-  resendStagedMessage() {}
-
   #onSendError(stagedId, error) {
     const stagedMessage =
       this.args.thread.messagesManager.findStagedMessage(stagedId);
-    if (stagedMessage) {
-      if (error.jqXHR?.responseJSON?.errors?.length) {
-        stagedMessage.error = error.jqXHR.responseJSON.errors[0];
-      } else {
-        stagedMessage.error = "network_error";
-      }
-    }
+    stagedMessage?.setSendError(error);
 
     this.resetComposerMessage();
   }
@@ -548,7 +592,7 @@ export default class ChatThread extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "chat-thread"
         (if this.messagesLoader.loading "--loading")
         (if this.messagesLoader.fetchedOnce "--loaded")
@@ -565,11 +609,11 @@ export default class ChatThread extends Component {
         <ChatMessagesContainer @didResizePane={{this.didResizePane}}>
           {{#each this.messagesManager.messages key="id" as |message|}}
             <Message
-              @message={{message}}
-              @disableMouseEvents={{this.isScrolling}}
-              @resendStagedMessage={{this.resendStagedMessage}}
-              @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="thread"
+              @disableMouseEvents={{this.isScrolling}}
+              @fetchMessagesByDate={{this.fetchMessagesByDate}}
+              @message={{message}}
+              @resendStagedMessage={{this.resendStagedMessage}}
             />
           {{/each}}
 
@@ -584,14 +628,15 @@ export default class ChatThread extends Component {
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
-        @onScrollToBottom={{this.scrollToLatestMessage}}
         @isVisible={{this.paneState.hasPendingContentBelow}}
+        @onScrollToBottom={{this.scrollToLatestMessage}}
       />
 
       {{#if this.chatThreadPane.selectingMessages}}
         <ChatSelectionManager
-          @pane={{this.chatThreadPane}}
+          @channel={{@thread.channel}}
           @messagesManager={{this.messagesManager}}
+          @pane={{this.chatThreadPane}}
         />
       {{else}}
         {{#if this.showChannelPreview}}
@@ -599,10 +644,10 @@ export default class ChatThread extends Component {
         {{else}}
           <ChatComposerThread
             @channel={{@channel}}
-            @thread={{@thread}}
             @onSendMessage={{this.onSendMessage}}
-            @uploadDropZone={{this.uploadDropZone}}
             @scroller={{this.scroller}}
+            @thread={{@thread}}
+            @uploadDropZone={{this.uploadDropZone}}
           />
         {{/if}}
       {{/if}}

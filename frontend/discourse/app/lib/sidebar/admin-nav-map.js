@@ -31,7 +31,8 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_all_site_settings",
         route: "adminSiteSettingsCategory",
-        routeModels: ["all_settings"],
+        routeModels: ["all_results"],
+        currentWhen: "adminSiteSettingsCategory",
         label: "admin.config.site_settings.title",
         description: "admin.config.site_settings.header_description",
         icon: "gear",
@@ -98,6 +99,16 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.content.header_description",
         keywords: "admin.config.content.keywords",
         icon: "pencil",
+        settings_area: "categories_and_tags",
+        multi_tabbed: true,
+      },
+      {
+        name: "admin_category_management",
+        route: "adminConfig.categoryManagement",
+        label: "admin.config.category_management.title",
+        description: "admin.config.category_management.header_description",
+        keywords: "admin.config.category_management.keywords",
+        icon: "folder",
         settings_area: "categories_and_tags",
         multi_tabbed: true,
       },
@@ -241,6 +252,13 @@ export const ADMIN_NAV_MAP = [
   {
     name: "appearance",
     label: "admin.config_sections.appearance.title",
+    headerActions: [
+      {
+        id: "design_wizard",
+        icon: "wand-magic",
+        label: "design_wizard.launch",
+      },
+    ],
     links: [
       {
         name: "admin_logo",
@@ -536,6 +554,52 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.developer.header_description",
         icon: "keyboard",
         settings_category: "developer",
+      },
+      {
+        name: "admin_mcp",
+        route: "adminConfig.mcp.index",
+        label: "admin.config.mcp.title",
+        description: "admin.config.mcp.header_description",
+        icon: "plug",
+        multi_tabbed: true,
+        links: [
+          {
+            name: "admin_mcp_capabilities",
+            route: "adminConfig.mcp.capabilities",
+            label: "admin.config.mcp.tabs.capabilities",
+            description: "admin.config.mcp.capabilities.description",
+          },
+          {
+            name: "admin_mcp_access",
+            route: "adminConfig.mcp.access",
+            label: "admin.config.mcp.tabs.access",
+            description: "admin.config.mcp.access.description",
+          },
+          {
+            name: "admin_mcp_clients",
+            route: "adminConfig.mcp.clients",
+            label: "admin.config.mcp.tabs.clients",
+            description: "admin.config.mcp.clients.description",
+          },
+          {
+            name: "admin_mcp_authorizations",
+            route: "adminConfig.mcp.authorizations",
+            label: "admin.config.mcp.tabs.authorizations",
+            description: "admin.config.mcp.authorizations.description",
+          },
+          {
+            name: "admin_mcp_activity",
+            route: "adminConfig.mcp.activity",
+            label: "admin.config.mcp.tabs.activity",
+            description: "admin.config.mcp.activity.description",
+          },
+          {
+            name: "admin_mcp_settings",
+            route: "adminConfig.mcp.settings",
+            label: "settings",
+            description: "admin.config.mcp.settings.description",
+          },
+        ],
       },
       {
         name: "admin_embedding",

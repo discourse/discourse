@@ -18,35 +18,35 @@ export default class SuggestedTopics extends Component {
 
   <template>
     <div
-      role="complementary"
       aria-labelledby="suggested-topics-title"
-      id="suggested-topics"
       class="more-topics__list"
+      id="suggested-topics"
+      role="complementary"
     >
       <UserTip
-        @id="suggested_topics"
-        @titleText={{i18n "user_tips.suggested_topics.title"}}
         @contentText={{i18n "user_tips.suggested_topics.content"}}
+        @id="suggested_topics"
         @placement="top-start"
         @priority={{700}}
+        @titleText={{i18n "user_tips.suggested_topics.title"}}
       />
 
-      <h3 id="suggested-topics-title" class="more-topics__list-title">
+      <h3 class="more-topics__list-title" id="suggested-topics-title">
         {{this.suggestedTitle}}
       </h3>
 
       <div class="topics">
         {{#if @topic.isPrivateMessage}}
           <BasicTopicList
-            @topics={{@topic.suggestedTopics}}
             @hideCategory={{true}}
-            @showPosters={{true}}
             @listContext="suggested"
+            @showPosters={{true}}
+            @topics={{@topic.suggestedTopics}}
           />
         {{else}}
           <BasicTopicList
-            @topics={{@topic.suggestedTopics}}
             @listContext="suggested"
+            @topics={{@topic.suggestedTopics}}
           />
         {{/if}}
       </div>

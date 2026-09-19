@@ -3,7 +3,17 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
   def self.base_attrs
-    %i[topic_id post_id category_id context subject ip_address previous_value new_value]
+    %i[
+      topic_id
+      post_id
+      category_id
+      context
+      subject
+      ip_address
+      previous_value
+      new_value
+      reviewable_id
+    ]
   end
 
   def initialize(admin)
@@ -91,6 +101,29 @@ class StaffActionLogger
       params(opts).merge(
         action: UserHistory.actions[opts[:permanent] ? :delete_post_permanently : :delete_post],
         post_id: deleted_post.id,
+        details: details.join("\n"),
+      ),
+    )
+  end
+
+  def log_post_recover(post)
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+
+    user = post.user ? "#{post.user.username} (#{post.user.name})" : "(deleted user)"
+    topic = post.topic || Topic.with_deleted.find_by(id: post.topic_id)
+
+    details = [
+      "id: #{post.id}",
+      "created_at: #{post.created_at}",
+      "user: #{user}",
+      "raw: #{truncate(post.raw)}",
+    ]
+
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:recover_post],
+        topic_id: topic&.id,
+        post_id: post.id,
         details: details.join("\n"),
       ),
     )
@@ -286,6 +319,46 @@ class StaffActionLogger
     )
   end
 
+  def log_admin_onboarding_step_completed(step, opts = {})
+    raise Discourse::InvalidParameters.new(:step) if step.blank?
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:admin_onboarding_step_completed],
+        subject: step,
+      ),
+    )
+  end
+
+  def log_admin_onboarding_completed(opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:admin_onboarding_completed]),
+    )
+  end
+
+  def log_admin_onboarding_dismissed(opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:admin_onboarding_dismissed]),
+    )
+  end
+
+  def log_update_site_setting_localizations(locale:, setting_names:, opts: {})
+    raise Discourse::InvalidParameters.new(:locale) if locale.blank?
+    raise Discourse::InvalidParameters.new(:setting_names) if setting_names.blank?
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:custom_staff],
+        custom_type: "update_site_setting_localizations",
+        details:
+          {
+            locale:,
+            setting_names: Array(setting_names).map(&:to_s).uniq.sort.join("|"),
+          }.map { |key, value| "#{key}: #{truncate(value.to_s)}" }.join("\n"),
+      ),
+    )
+  end
+
   def log_site_setting_groups_change(setting_name, previous_value, new_value, opts = {})
     unless setting_name.present? && SiteSetting.respond_to?(setting_name)
       raise Discourse::InvalidParameters.new(:setting_name)
@@ -296,6 +369,34 @@ class StaffActionLogger
         subject: setting_name,
         previous_value: previous_value&.to_s,
         new_value: new_value&.to_s,
+      ),
+    )
+  end
+
+  def log_access_control_list_permission_change(
+    target,
+    previous_permissions,
+    new_permissions,
+    opts = {}
+  )
+    previous_permissions_details =
+      previous_permissions.map { |permission_name, permission| <<~STR }.join("\n")
+     #{permission_name}:
+     -> #{permission.map { |k, v| "#{k}: #{v.join(", ")}" }.join(",")}
+    STR
+
+    new_permissions_details =
+      new_permissions.map { |permission_name, permission| <<~STR }.join("\n")
+      #{permission_name}:
+      -> #{permission.map { |k, v| "#{k}: #{v.join(", ")}" }.join(",")}
+    STR
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:change_access_control_list_permissions],
+        subject: "#{target.class.polymorphic_name} (#{target.id})",
+        previous_value: previous_permissions_details,
+        new_value: new_permissions_details,
       ),
     )
   end
@@ -814,6 +915,13 @@ class StaffActionLogger
     )
   end
 
+  def log_removed_avatar(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:removed_avatar], target_user_id: user.id),
+    )
+  end
+
   def log_user_deactivate(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(
@@ -893,6 +1001,7 @@ class StaffActionLogger
         details: details.join("\n"),
         topic_id: topic&.id,
         category_id: reviewable.category_id,
+        reviewable_id: reviewable.id,
       ),
     )
   end
@@ -1060,6 +1169,18 @@ class StaffActionLogger
     )
   end
 
+  def log_group_creation(group)
+    raise Discourse::InvalidParameters.new(:group) if group.nil?
+
+    details = ["name: #{group.name}", "full_name: #{group.full_name}", "id: #{group.id}"]
+
+    UserHistory.create!(
+      acting_user_id: @admin.id,
+      action: UserHistory.actions[:create_group],
+      details: details.join(", "),
+    )
+  end
+
   def log_permanently_delete_post_revisions(post)
     raise Discourse::InvalidParameters.new(:post) if post.nil?
 
@@ -1185,7 +1306,12 @@ class StaffActionLogger
 
   def params(opts = nil)
     opts ||= {}
-    { acting_user_id: @admin.id, context: opts[:context], details: opts[:details] }
+    {
+      acting_user_id: @admin.id,
+      context: opts[:context],
+      details: opts[:details],
+      reviewable_id: opts[:reviewable_id],
+    }
   end
 
   def validate_category(category)

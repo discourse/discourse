@@ -1,6 +1,11 @@
 en:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            assign:
+              assign: "Assign/Unassign topics or posts."
       site_settings:
         categories:
           discourse_assign: "Discourse Assign"
@@ -25,6 +30,8 @@ en:
       status_change: "Changed assignment status for %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
+      additional_assign_allowed_groups: "Additional groups with assignment permission"
+      additional_assign_allowed_groups_description: "Members of these groups can assign topics in this category. Groups already allowed globally are shown and cannot be removed here. Parent category settings do not apply to subcategories."
       cant_act: "You cannot act on flags that have been assigned to other users"
       cant_act_unclaimed: "You must claim this topic before acting on flags."
       topic_search_placeholder: "Search topics by title or post content"
@@ -197,3 +204,43 @@ en:
       title: "Edit assignments"
       topic: "Topic"
       post: "Post"
+    discourse_workflows:
+      node_unavailable:
+        requires_assign: "Requires the Assign plugin to be enabled"
+      nodes:
+        "action:assign_topic": "Assign topic or post"
+        "action:check_assignment": "Check assignment"
+        "trigger:assigned": "Assigned"
+        "trigger:unassigned": "Unassigned"
+      node_descriptions:
+        "action:assign_topic": "Assign or unassign a topic or post"
+        "action:check_assignment": "Check whether a user or group is assigned to a topic or post"
+        "trigger:assigned": "Fires when a topic or post is assigned"
+        "trigger:unassigned": "Fires when a topic or post is unassigned"
+      assign_topic:
+        resource: "Resource"
+        resources:
+          topic: "Topic"
+          post: "Post"
+        operation: "Operation"
+        operations:
+          assign: "Assign"
+          unassign: "Unassign"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
+        assignee: "Assignee"
+        replace_existing: "Replace existing assignment"
+      check_assignment:
+        target_type: "Target type"
+        target_types:
+          topic: "Topic"
+          post: "Post"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
+        assignee: "Assignee"
+      assigned:
+        topic_assignments_only: "Only trigger when the assignment target is the topic, not an individual post"
+        topic_assignments_only_description: "Topic assignments only"
+      unassigned:
+        topic_assignments_only: "Only trigger when the assignment target is the topic, not an individual post"
+        topic_assignments_only_description: "Topic assignments only"

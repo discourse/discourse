@@ -79,6 +79,8 @@ ar:
         close: "إغلاق الرسائل المثبتة"
         pinned_by_you: "أنت ثبتها"
         pinned_by_user: "ثبتها %{username}"
+      pinned_bar:
+        title: "مثبَّت"
       no_pinned_messages: "لا توجد رسائل مثبتة في هذه القناة."
       pin_message: "تثبيت الرسالة"
       unpin_message: "إلغاء تثبيت الرسالة"
@@ -146,7 +148,6 @@ ar:
         process_started: "لقد بدأت عملية حذف القناة. سيتم إغلاق هذا النموذج بعد قليل، ولن يصبح بإمكانك رؤية القناة المحذوفة في أي مكان."
       channels_list_popup:
         browse: "استعراض القنوات"
-        create: "قناة جديدة"
       close: "إغلاق"
       remove: "إزالة"
       collapse: "طي ساحب الدردشة"
@@ -165,8 +166,6 @@ ar:
       muted: "تم كتمه"
       joined: "انضم"
       empty_state:
-        direct_message_cta: "بدء دردشة شخصية"
-        direct_message: "يمكنك أيضًا بدء دردشة شخصية مع أحد المستخدمين أو أكثر."
         title: "لم يتم العثور على أي قناة"
         my_threads: "ليس لديك أي سلاسل دردشة حتى الآن. سيتم عرض سلاسل الدردشة التي تشارك فيها هنا."
       email_frequency:
@@ -182,12 +181,6 @@ ar:
         never: "أبدًا"
       separate_sidebar_mode:
         title: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة"
-      send_shortcut:
-        title: "إرسال اختصار"
-        enter:
-          label: "الإرسال بواسطة مفتاح Enter"
-        meta_enter:
-          label: "الإرسال بواسطة مفتاحَي %{meta_key} + Enter"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
@@ -293,17 +286,57 @@ ar:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          zero: "%{count} رسائل جديدة"
+          one: "رسالة جديدة %{count}"
+          two: "رسالتان جديدتان %{count}"
+          few: "%{count} رسائل جديدة"
+          many: "%{count} رسالة جديدة"
+          other: "%{count} رسائل جديدة"
+        new_image:
+          zero: "لم يرسل %{username} أي صور"
+          one: "أرسل %{username} صورة"
+          two: "أرسل %{username} صورتين"
+          few: "أرسل %{username} %{count} صور"
+          many: "أرسل %{username} %{count} صورةً"
+          other: "أرسل %{username} %{count} صورة"
+        new_attachment:
+          zero: "لم يرسل %{username} أي مرفقات"
+          one: "أرسل %{username} مرفقًا"
+          two: "أرسل %{username} مرفقين"
+          few: "أرسل %{username} %{count} مرفقات"
+          many: "أرسل %{username} %{count} مرفقًا"
+          other: "أرسل %{username} %{count} مرفق"
+        new_message_with_image:
+          zero: "%{username}: %{message} (لا تتضمَّن أي صور)"
+          one: "%{username}: %{message} (تتضمَّن صورة)"
+          two: "%{username}: %{message} (تتضمَّن صورتين)"
+          few: "%{username}: %{message} (تتضمَّن %{count} صور)"
+          many: "%{username}: %{message} (تتضمَّن %{count} صورةً)"
+          other: "%{username}: %{message} (تتضمَّن %{count} صورة)"
+        new_message_with_attachment:
+          zero: "%{username}: %{message} (لا تتضمَّن أي مرفقات)"
+          one: "%{username}: %{message} (تتضمَّن مرفقًا)"
+          two: "%{username}: %{message} (تتضمَّن مرفقين)"
+          few: "%{username}: %{message} (تتضمَّن %{count} مرفقات)"
+          many: "%{username}: %{message} (تتضمَّن %{count} مرفقًا)"
+          other: "%{username}: %{message} (تتضمَّن %{count} مرفق)"
       no_direct_message_channels: "لم تنضم إلى أي رسائل مباشرة بعد‎!"
       no_direct_message_channels_cta: "بدء محادثة"
       no_public_channels: "لم تنضم إلى أي قنوات بعد‎!"
       no_public_channels_cta: "تصفح القنوات"
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       chat_notifications_title: "إشعارات الدردشة"
-      only_chat_push_notifications:
-        title: "إرسال الإشعارات الفورية للدردشة فقط"
       personalization_title: "التخصيص"
+      accessibility_title: "إمكانية الوصول"
       ignore_channel_wide_mention:
         title: "تجاهل الإشارات على مستوى القناة"
+      announce_new_messages:
+        title: "الإعلان عن رسائل جديدة لقارئات الشاشة"
+      new_message_sound:
+        title: "تشغيل أصوات للرسائل الجديدة بينما تكون نافذة الدردشة مفتوحة في الواجهة الأمامية"
       show_thread_title_prompts:
         title: "إظهار مطالبات عنوان سلسلة الدردشة"
         description: "إظهار مطالبات لتعيين عنوان للموضوعات الجديدة"
@@ -349,14 +382,28 @@ ar:
         other: "لديك %{count} مناقشة غير مقروءة"
       scroll_to_bottom: "التمرير إلى الأسفل"
       scroll_to_new_messages: "عرض الرسائل الجديدة"
+      new_messages:
+        zero: "%{count} من الرسائل الجديدة"
+        one: "رسالة جديدة %{count}"
+        two: "رسالتان جديدتان %{count}"
+        few: "%{count} رسائل جديدة"
+        many: "%{count} رسالة جديدة"
+        other: "%{count} رسالة جديدة"
       sound:
         title: "صوت إشعارات دردشة سطح المكتب"
       sounds:
         none: "لا يوجد"
-        bell: "جرس"
-        ding: "قرع"
+        classic: "كلاسيكي ونقي"
+        soft: "ماريمبا هادئة"
+        retro: "ريترو 8-بت"
+        bubble: "فقاعة لعوبة"
+        ethereal: "زجاج أثيري"
       title: "دردشة"
       title_capitalized: "الدردشة"
+      disabled:
+        title: "لقد عطَّلت الدردشة"
+        body: "فعِّلها مرة أخرى لعرض القنوات والرسائل."
+        cta: "تفضيلات الدردشة الخاصة بي"
       upload: "إرفاق ملف"
       upload_to_channel: "التحميل إلى %{title}"
       upload_to_thread: "التحميل إلى سلسلة دردشة"
@@ -389,6 +436,9 @@ ar:
         filter_closed: مغلقة
         filter_archived: مؤرشفة
         filter_input_placeholder: البحث عن القناة بالاسم
+        filter_joined_all: "الكل"
+        filter_joined_joined: "تاريخ الانضمام"
+        filter_joined_not_joined: "لم تنضم إليها"
       chat_message_separator:
         today: اليوم
         yesterday: الأمس
@@ -439,8 +489,8 @@ ar:
         input_placeholder: أضِف اسمًا
         slug_description: يتم استخدام مسار للقناة في عنوان URL بدلًا من اسم القناة
         name: اسم القناة
-        slug: مسار القناة (اختياري)
-        emoji: رمز تعبيري للقناة (اختياري)
+        slug: مسار القناة
+        emoji: الرمز التعبيري للقناة
         reset_emoji: إعادة تعيين الرمز التعبيري
       channel_edit_description_modal:
         title: تعديل الوصف
@@ -470,6 +520,27 @@ ar:
           few: "%{count} أعضاء"
           many: "%{count} عضوًا"
           other: "%{count} عضوًا"
+        empty_state:
+          title: "هذه هي بداية %{channelName}"
+          joined_title: "أنت أول المنضمين إلى %{channelName}"
+          guest_tip: "أنت تقرأ كزائر. تبدأ المحادثة من لحظة نشر الأعضاء لمشاركاتهم - انضم إليهم لتصبح واحدًا منهم."
+          joined_tip: "كُن أول من ينشر ويبدأ المحادثة."
+          members_here:
+            zero: "لا يوجد أعضاء هنا"
+            one: "<strong>عضو واحد (%{count})</strong> هنا"
+            two: "<strong>عضوان (%{count})</strong> هنا"
+            few: "<strong>%{count} أعضاء</strong> هنا"
+            many: "<strong>%{count} عضوًا</strong> هنا"
+            other: "<strong>%{count} عضو</strong> هنا"
+          no_other_members: "لا يوجد أعضاء آخرين بعد"
+        preview_card:
+          guest_title: "انضم إلى %{channelName} لبدء الدردشة"
+          guest_body: "القراءة مجانًا للجميع. سجِّل الآن لتتمكن من النشر والتفاعل والرد - تستغرق العملية 30 ثانية تقريبًا."
+          join_body: "ستتمكن من النشر والرد، وستظهر القناة في قائمة قنواتك."
+          no_access_title: "لا يمكنك الانضمام إلى %{channelName}"
+          no_access_body: "هذه القناة غير مفتوحة للأعضاء الجُدد في الوقت الحالي."
+          log_in: "تسجيل الدخول"
+          sign_up: "الاشتراك"
       create_channel:
         threading:
           label: "تفعيل سلاسل الدردشة"
@@ -518,16 +589,16 @@ ar:
             many: 'سيتمكن المستخدمون في %{group} و%{count} مجموعة أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
             other: 'سيتمكن المستخدمون في %{group} و%{count} مجموعة أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
         create: "إنشاء قناة"
-        description: "الوصف (اختياري)"
+        description: "الوصف"
         name: "اسم القناة"
-        slug: "مسار القناة (اختياري)"
+        slug: "مسار القناة"
         title: "قناة جديدة"
         type: "النوع"
         types:
           category: "الفئة"
           topic: "الموضوع"
         emoji:
-          label: "رمز تعبيري للقناة (اختياري)"
+          label: "الرمز التعبيري للقناة"
           reset: "إعادة تعيين الرمز التعبيري"
       reviewable:
         type: "رسالة دردشة"
@@ -545,6 +616,14 @@ ar:
           other: "<span>لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري </span>:%{emoji}:"
         single_user: "<span>لقد تفاعل %{username} بالرمز التعبيري </span>:%{emoji}:"
         multiple_users: "<span>لقد تفاعل %{commaSeparatedUsernames} و%{username} بالرمز التعبيري </span>:%{emoji}:"
+        users_popup:
+          title:
+            zero: "%{count} تفاعل"
+            one: "تفاعل واحد (%{count})"
+            two: "تفاعلان (%{count})"
+            few: "%{count} تفاعلات"
+            many: "%{count} تفاعلًا"
+            other: "%{count} تفاعل"
         multiple_users_and_more:
           zero: "<span>لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري </span>:%{emoji}:"
           one: "<span>لقد تفاعل %{commaSeparatedUsernames} ومستخدم واحد (%{count}) آخر بالرمز التعبيري </span>:%{emoji}:"
@@ -617,14 +696,18 @@ ar:
       direct_messages:
         title: "الرسائل المباشرة"
         aria_label: "التبديل إلى الرسائل المباشرة"
-        new: "إنشاء دردشة شخصية"
+        new_group: "دردشة جماعية جديدة"
         create: "إنشاء"
-        leave: "مغادرة هذه الدردشة الشخصية"
-        close: "إغلاق هذه الدردشة الشخصية"
         cannot_create: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
       channel_list:
         title: "القنوات"
         aria_label: "التبديل إلى قائمة القنوات"
+        options:
+          filter: "عامل التصفية"
+        filter:
+          mentions: "الإشارات"
+        sort:
+          priority: "الأولوية"
       incoming_webhooks:
         back: "العودة"
         channel_placeholder: "اختيار قناة"
@@ -730,7 +813,7 @@ ar:
       flagging:
         action: "الإبلاغ عن الرسالة"
       emoji_picker:
-        favorites: "المستخدمة بشكلٍٍ متكرر"
+        favorites: "المستخدمة بشكلٍ متكرر"
         smileys_&_emotion: "الرموز التعبيرية"
         objects: "الأشياء"
         people_&_body: "الأشخاص والجسم"
@@ -815,11 +898,6 @@ ar:
           direct_html: 'أشار <span>%{username}</span> <span>إليك في "%{channel}"</span>'
           other_plain: 'أشار إلى %{identifier} في "%{channel}"'
           other_html: 'أشار <span>%{username}</span> <span>إلى %{identifier} في "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "أشار إليك في دردشة شخصية"
-          direct_html: "أشار <span>%{username}</span> <span>إليك في دردشة شخصية</span>"
-          other_plain: "أشار إلى %{identifier} في دردشة شخصية"
-          other_html: "أشار <span>%{username}</span> <span>إلى %{identifier} في دردشة شخصية</span>"
         chat_message: "رسالة دردشة جديدة"
         chat_quoted: "اقتبس %{username} رسالة الدردشة الخاصة بك"
       titles:
@@ -863,7 +941,7 @@ ar:
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"
           composer_italic: "%{shortcut} مائل (أداة الإنشاء فقط)"
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"
-          drawer_toggle: "%{shortcut} لتبديل لوحة الدردشة"
+          drawer_toggle: "%{shortcut} لتفعيل/إيقاف لوحة الدردشة"
           drawer_close: "%{shortcut} إغلاق درج الدردشة"
           mark_all_channels_read: "%{shortcut} وضع علامة \"مقروءة\" على كل القنوات"
     topic_statuses:
@@ -893,9 +971,44 @@ ar:
         chat:
           title: الدردشة
     sidebar:
-      start_new_dm:
-        text: بدء رسالة مباشرة جديدة
-        title: إنشاء دردشة شخصية
       panels:
         chat:
           label: "الدردشة"
+    discourse_workflows:
+      node_unavailable:
+        requires_chat: "يتطلَّب تفعيل المكوِّن الإضافي للدردشة"
+      nodes:
+        "action:send_chat_message": "إرسال رسالة دردشة"
+        "action:chat_approval": "الموافقة على الدردشة"
+        "trigger:chat_message_created": "إنشاء رسالة دردشة"
+      node_descriptions:
+        "action:send_chat_message": "أرسل رسالة إلى قناة دردشة"
+        "action:chat_approval": "أرسل طلب موافقة إلى قناة دردشة وانتظار ردًا"
+        "trigger:chat_message_created": "يتم تشغيله عند إنشاء رسالة دردشة جديدة"
+      chat_message_created:
+        channel_id: "القناة"
+        channel_id_description: "اترك هذا الحقل فارغًا للتطبيق على جميع قنوات الدردشة."
+      send_chat_message:
+        channel_id: "القناة"
+        message: "الرسالة"
+      chat_approval:
+        message: "الرسالة"
+        buttons: "الأزرار"
+        value: "القيمة"
+        style: "النمط"
+        style_default: "افتراضي"
+        style_primary: "أساسي"
+        style_success: "تم بنجاح"
+        icon: "الأيقونة"
+        approve_label: "تسمية زر الموافقة"
+        approve_label_description: "يتم تعيين الاسم الافتراضي إلى \"موافقة\" إذا تم تركه فارغًا."
+        deny_label: "تسمية زر الرفض"
+        deny_label_description: "يتم تعيين الاسم الافتراضي إلى \"رفض\" إذا تم تركه فارغًا."
+        channel_id: "القناة"
+        channel_id_description: "قناة الدردشة التي سيتم إرسال رسالة الموافقة إليها."
+        timeout_minutes: "المهلة الزمنية (بالدقائق)"
+        timeout_minutes_description: "اترك هذا الحقل فارغًا لعدم تعيين مهلة زمنية."
+        timeout_action: "عند انتهاء المهلة"
+        timeout_action_description: "ماذا يحدث عند انتهاء المهلة الزمنية للموافقة."
+        timeout_action_deny: "المتابعة كمرفوض"
+        timeout_action_fail: "إفشال سير العمل"

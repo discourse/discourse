@@ -28,6 +28,24 @@ describe LocalizationGuardian do
     end
   end
 
+  describe "#can_localize_site_settings?" do
+    it "returns false when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      expect(Guardian.new(admin).can_localize_site_settings?).to eq(false)
+    end
+
+    it "returns true for admins when content localization is enabled" do
+      expect(Guardian.new(admin).can_localize_site_settings?).to eq(true)
+    end
+
+    it "returns false for regular users" do
+      SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+
+      expect(Guardian.new(user).can_localize_site_settings?).to eq(false)
+    end
+  end
+
   describe "#can_localize_post?" do
     it "returns false when content localization is disabled" do
       SiteSetting.content_localization_enabled = false

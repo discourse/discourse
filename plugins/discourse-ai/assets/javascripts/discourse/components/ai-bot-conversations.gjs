@@ -12,13 +12,12 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -29,8 +28,11 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { clipboardHelpers } from "discourse/lib/utilities";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import { clipboardHelpers, slugify } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
 
@@ -39,6 +41,7 @@ export default class AiBotConversations extends Component {
   @service aiCredits;
   @service aiBotConversationsHiddenSubmit;
   @service capabilities;
+  @service currentUser;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
@@ -47,6 +50,9 @@ export default class AiBotConversations extends Component {
   @tracked creditStatus = null;
   @tracked selectedLlmId = null;
   @tracked uploads = trackedArray();
+
+  shiftHeldOnEnter = false;
+
   // Don't track this directly - we'll get it from uppyUpload
 
   textarea = null;
@@ -171,6 +177,12 @@ export default class AiBotConversations extends Component {
     return this.creditStatus?.hard_limit_reached === true;
   }
 
+  get sendOnMetaEnter() {
+    return (
+      this.currentUser?.user_option?.send_shortcut === SEND_SHORTCUT_META_ENTER
+    );
+  }
+
   @action
   async setAgentId(id) {
     this.aiBotConversationsHiddenSubmit.agentId = id;
@@ -187,23 +199,14 @@ export default class AiBotConversations extends Component {
     await this.#checkCreditStatus(llmModelId, "llm");
   }
 
-  async #checkCreditStatus(id, type) {
-    // Clear status immediately to prevent stale data
-    this.creditStatus = null;
-
-    if (!id) {
+  @action
+  onSelectionChanged({ agentName, llmName }) {
+    if (!this.controller) {
       return;
     }
 
-    try {
-      this.creditStatus =
-        type === "agent"
-          ? await this.aiCredits.getAgentCreditStatus(id)
-          : await this.aiCredits.getLlmModelCreditStatus(id);
-    } catch {
-      // Fail open - allow usage if credit check fails
-      this.creditStatus = null;
-    }
+    this.controller.agent = agentName ? slugify(agentName) || agentName : null;
+    this.controller.llm = llmName ? slugify(llmName) || llmName : null;
   }
 
   @action
@@ -223,9 +226,40 @@ export default class AiBotConversations extends Component {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey) {
-      this.prepareAndSubmitToBot();
+    if (event.key === "Enter") {
+      // Meta/ctrl+Enter never produces an insertLineBreak beforeinput, so it
+      // must be handled here rather than in handleBeforeInput.
+      if (
+        this.sendOnMetaEnter &&
+        !event.isComposing &&
+        (event.metaKey || event.ctrlKey)
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.prepareAndSubmitToBot();
+        return;
+      }
+      this.shiftHeldOnEnter = event.shiftKey;
     }
+  }
+
+  @action
+  handleBeforeInput(event) {
+    // Real Enter on a textarea inserts a line break; IME-confirming Enter
+    // inserts composition text. Reading inputType is deterministic across
+    // browsers regardless of compositionend/keydown ordering quirks.
+    const shiftHeld = this.shiftHeldOnEnter;
+    this.shiftHeldOnEnter = false;
+    if (
+      event.inputType !== "insertLineBreak" ||
+      shiftHeld ||
+      this.sendOnMetaEnter
+    ) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    this.prepareAndSubmitToBot();
   }
 
   @action
@@ -253,7 +287,7 @@ export default class AiBotConversations extends Component {
     }
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -295,7 +329,7 @@ export default class AiBotConversations extends Component {
     const hashtagConfig = this.site.hashtag_configurations["topic-composer"];
 
     const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    DAutocompleteModifier.setupAutocomplete(
+    dAutocomplete.setupAutocomplete(
       getOwner(this),
       textarea,
       autocompleteHandler,
@@ -353,6 +387,25 @@ export default class AiBotConversations extends Component {
     }
   }
 
+  async #checkCreditStatus(id, type) {
+    // Clear status immediately to prevent stale data
+    this.creditStatus = null;
+
+    if (!id) {
+      return;
+    }
+
+    try {
+      this.creditStatus =
+        type === "agent"
+          ? await this.aiCredits.getAgentCreditStatus(id)
+          : await this.aiCredits.getLlmModelCreditStatus(id);
+    } catch {
+      // Fail open - allow usage if credit check fails
+      this.creditStatus = null;
+    }
+  }
+
   _autoExpandTextarea() {
     this.textarea.style.height = "auto";
     this.textarea.style.height = this.textarea.scrollHeight + "px";
@@ -371,17 +424,10 @@ export default class AiBotConversations extends Component {
   <template>
     <div class="ai-bot-conversations" ...attributes>
       {{bodyClass "ai-bot-conversations-page"}}
-      <AiAgentLlmSelector
-        @showLabels={{true}}
-        @setAgentId={{this.setAgentId}}
-        @setLlmId={{this.setLlmId}}
-        @setTargetRecipient={{this.setTargetRecipient}}
-        @agentName={{@controller.agent}}
-        @llmName={{@controller.llm}}
-      />
 
       <div class="ai-bot-conversations__content-wrapper">
         <div class="ai-bot-conversations__title">
+          {{dIcon "far-discobot"}}
           {{i18n "discourse_ai.ai_bot.conversations.header"}}
         </div>
         <PluginOutlet
@@ -391,46 +437,63 @@ export default class AiBotConversations extends Component {
             submit=this.prepareAndSubmitToBot
           }}
         />
+        <div class="ai-bot-conversations__input-container">
+          <div
+            class={{dConcatClass
+              "ai-bot-conversations__input-wrapper"
+              (if this.isSubmitDisabled "--disabled")
+            }}
+            {{this.creditLimitTooltipModifier}}
+          >
+            <DButton
+              class="btn btn-transparent ai-bot-upload-btn"
+              @action={{unless this.isSubmitDisabled this.openFileUpload}}
+              @disabled={{this.isSubmitDisabled}}
+              @icon="upload"
+              @title="discourse_ai.ai_bot.conversations.upload_files"
+            />
+            <textarea
+              autofocus={{unless this.isSubmitDisabled "true"}}
+              disabled={{if this.isSubmitDisabled true this.loading}}
+              id="ai-bot-conversations-input"
+              minlength="10"
+              placeholder={{i18n
+                "discourse_ai.ai_bot.conversations.placeholder"
+              }}
+              rows="1"
+              {{didInsert this.setTextArea}}
+              {{on "input" this.updateInputValue}}
+              {{on "keydown" this.handleKeyDown}}
+              {{on "beforeinput" this.handleBeforeInput}}
+            />
+            <DButton
+              class="ai-bot-button btn-transparent ai-conversation-submit"
+              @action={{unless
+                this.isSubmitDisabled
+                this.prepareAndSubmitToBot
+              }}
+              @disabled={{this.isSubmitDisabled}}
+              @icon="paper-plane"
+              @isLoading={{unless this.isSubmitDisabled this.loading}}
+              @title="discourse_ai.ai_bot.conversations.header"
+            />
+            <input
+              class="hidden-upload-field"
+              id="ai-bot-file-uploader"
+              multiple="multiple"
+              type="file"
+              {{didInsert this.registerFileInput}}
+            />
+          </div>
 
-        <div
-          {{this.creditLimitTooltipModifier}}
-          class={{concatClass
-            "ai-bot-conversations__input-wrapper"
-            (if this.isSubmitDisabled "--disabled")
-          }}
-        >
-          <DButton
-            @icon="upload"
-            @action={{unless this.isSubmitDisabled this.openFileUpload}}
-            @disabled={{this.isSubmitDisabled}}
-            @title="discourse_ai.ai_bot.conversations.upload_files"
-            class="btn btn-transparent ai-bot-upload-btn"
-          />
-          <textarea
-            {{didInsert this.setTextArea}}
-            {{on "input" this.updateInputValue}}
-            {{on "keydown" this.handleKeyDown}}
-            id="ai-bot-conversations-input"
-            autofocus={{unless this.isSubmitDisabled "true"}}
-            placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
-            minlength="10"
-            disabled={{if this.isSubmitDisabled true this.loading}}
-            rows="1"
-          />
-          <DButton
-            @action={{unless this.isSubmitDisabled this.prepareAndSubmitToBot}}
-            @icon="paper-plane"
-            @disabled={{this.isSubmitDisabled}}
-            @isLoading={{unless this.isSubmitDisabled this.loading}}
-            @title="discourse_ai.ai_bot.conversations.header"
-            class="ai-bot-button btn-transparent ai-conversation-submit"
-          />
-          <input
-            type="file"
-            id="ai-bot-file-uploader"
-            class="hidden-upload-field"
-            multiple="multiple"
-            {{didInsert this.registerFileInput}}
+          <AiAgentLlmSelector
+            @agentName={{@controller.agent}}
+            @llmName={{@controller.llm}}
+            @onSelectionChanged={{this.onSelectionChanged}}
+            @setAgentId={{this.setAgentId}}
+            @setLlmId={{this.setLlmId}}
+            @setTargetRecipient={{this.setTargetRecipient}}
+            @showLabels={{true}}
           />
         </div>
 
@@ -446,9 +509,9 @@ export default class AiBotConversations extends Component {
                   {{upload.original_filename}}
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.removeUpload upload}}
                   class="btn-transparent ai-bot-upload__remove"
+                  @action={{fn this.removeUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}
@@ -460,9 +523,9 @@ export default class AiBotConversations extends Component {
                   {{upload.progress}}%
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.cancelUpload upload}}
                   class="btn-flat ai-bot-upload__cancel"
+                  @action={{fn this.cancelUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}

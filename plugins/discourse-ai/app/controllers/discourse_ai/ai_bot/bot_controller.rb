@@ -12,7 +12,13 @@ module DiscourseAi
         log = AiApiAuditLog.find(params[:id])
         raise Discourse::NotFound if !log.topic
 
-        guardian.ensure_can_debug_ai_bot_conversation!(log.topic)
+        if log.post_id.present?
+          raise Discourse::NotFound if !log.post
+
+          guardian.ensure_can_debug_ai_bot_conversation!(log.post)
+        else
+          guardian.ensure_can_debug_ai_bot_conversation!(log.topic)
+        end
         render json: AiApiAuditLogSerializer.new(log, root: false), status: :ok
       end
 
@@ -22,11 +28,21 @@ module DiscourseAi
 
         posts =
           Post
+            .secured(guardian)
             .where("post_number <= ?", post.post_number)
             .where(topic_id: post.topic_id)
             .order("post_number DESC")
 
-        debug_info = AiApiAuditLog.where(post: posts).order(created_at: :desc).first
+        visible_post_ids = posts.select(:id)
+
+        # topic-scoped logs (eg. title generation) are created after the reply's
+        # own log, so prefer the clicked post's log over plain recency
+        debug_info =
+          AiApiAuditLog
+            .where(topic_id: post.topic_id)
+            .where("post_id IS NULL OR post_id IN (?)", visible_post_ids)
+            .order(Arel.sql("post_id = #{post.id.to_i} DESC NULLS LAST"), created_at: :desc)
+            .first
 
         render json: AiApiAuditLogSerializer.new(debug_info, root: false), status: :ok
       end
@@ -65,11 +81,18 @@ module DiscourseAi
 
         agent_id = retry_agent_id(post, prompt_post)
         llm_model_id = post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD]
+        authorization_user_id =
+          post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD].presence
+        authorization_user_id = authorization_user_id.to_i if authorization_user_id
+        authorization_user_id ||= prompt_post.topic.user_id
+        raise Discourse::InvalidAccess if authorization_user_id.blank?
 
         args = {
           post_id: prompt_post.id,
           bot_user_id: post.user_id,
           agent_id: agent_id,
+          authorization_user_id: authorization_user_id,
+          visibility_user_id: current_user.id,
           reply_post_id: post.id,
         }
 

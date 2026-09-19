@@ -184,7 +184,7 @@ RSpec.describe Admin::ApiController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "works" do
+      it "deletes the API key and logs the action" do
         expect(ApiKey.exists?(key1.id)).to eq(true)
 
         delete "/admin/api/keys/#{key1.id}.json"
@@ -243,6 +243,21 @@ RSpec.describe Admin::ApiController do
 
         expect(UserHistory.last.action).to eq(UserHistory.actions[:api_key_create])
         expect(UserHistory.last.subject).to eq(key.truncated_key)
+      end
+
+      it "rejects read-only keys without scopes" do
+        expect {
+          post "/admin/api/keys.json",
+               params: {
+                 key: {
+                   description: "read-only key description",
+                   scope_mode: "read_only",
+                 },
+               }
+        }.not_to change(ApiKey, :count)
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
       end
 
       it "can create a user-specific key" do

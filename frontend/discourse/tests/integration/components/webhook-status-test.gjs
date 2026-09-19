@@ -5,7 +5,7 @@ import WebhookStatus from "discourse/admin/components/webhook-status";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | webhook-status", function (hooks) {
+module("Integration | Component | WebhookStatus", function (hooks) {
   setupRenderingTest(hooks);
 
   const DELIVERY_STATUSES = [

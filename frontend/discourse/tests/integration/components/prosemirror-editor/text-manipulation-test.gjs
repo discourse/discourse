@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { render, settled, waitFor } from "@ember/test-helpers";
+import { closeHistory, undo } from "prosemirror-history";
 import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
@@ -17,7 +18,7 @@ async function setupEditor() {
 
   await render(
     <template>
-      <ProsemirrorEditor @value={{state.value}} @onSetup={{handleSetup}} />
+      <ProsemirrorEditor @onSetup={{handleSetup}} @value={{state.value}} />
     </template>
   );
 
@@ -60,7 +61,7 @@ function getMarkdown(state) {
 }
 
 module(
-  "Integration | Component | prosemirror-editor | text-manipulation - applySurround",
+  "Integration | Component | ProsemirrorEditor | Text manipulation | applySurround",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -89,6 +90,38 @@ module(
       );
 
       assert.strictEqual(getMarkdown(state).trim(), "~~hello world~~");
+    });
+
+    test("preserves link attributes detected from markup", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applySurroundSelection(
+        "[",
+        "](https://example.com)",
+        "link_text"
+      );
+
+      assert
+        .dom(".ProseMirror a")
+        .hasAttribute(
+          "href",
+          "https://example.com",
+          "the detected link keeps its destination"
+        );
+    });
+
+    test("preserves combined marks in the fallback", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applySurroundSelection("**_", "_**", "bold_text");
+
+      assert
+        .dom(".ProseMirror strong em, .ProseMirror em strong")
+        .hasText("hello world", "both marks are applied");
     });
 
     test("removes mark when already applied", async function (assert) {
@@ -128,7 +161,7 @@ module(
 );
 
 module(
-  "Integration | Component | prosemirror-editor | text-manipulation - applyList",
+  "Integration | Component | ProsemirrorEditor | Text manipulation | applyList",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -141,6 +174,63 @@ module(
       state.textManipulation.applyList(sel, "* ", "list_item");
 
       assert.strictEqual(getMarkdown(state).trim(), "* hello world");
+    });
+
+    test("creates a list item for each selected line", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "first line\nsecond line");
+      selectAll(state);
+
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "* ",
+        "list_item"
+      );
+
+      assert
+        .dom(".ProseMirror li")
+        .exists({ count: 2 }, "each line becomes a separate list item");
+      assert.strictEqual(
+        getMarkdown(state).trim(),
+        "* first line\n* second line",
+        "both lines are preserved"
+      );
+    });
+
+    test("switching list type is undone in one step", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "* first\n* second");
+      const { view } = state.textManipulation;
+      const list = view.state.doc.firstChild;
+      const from = TextSelection.atStart(list).from + 1;
+      const to = TextSelection.atEnd(list).to + 1;
+      view.dispatch(
+        closeHistory(
+          view.state.tr.setSelection(
+            TextSelection.create(view.state.doc, from, to)
+          )
+        )
+      );
+
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "1. ",
+        "list_item"
+      );
+      assert.strictEqual(
+        getMarkdown(state).trim(),
+        "1. first\n2. second",
+        "switching preserves both items"
+      );
+      assert
+        .dom(".ProseMirror ol li")
+        .exists({ count: 2 }, "both items change type");
+      undo(view.state, view.dispatch);
+      assert.strictEqual(
+        getMarkdown(state).trim(),
+        "* first\n* second",
+        "one undo restores the original list"
+      );
     });
 
     test("applies ordered list with function head", async function (assert) {

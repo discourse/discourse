@@ -27,6 +27,17 @@ module PageObjects
         self
       end
 
+      def click_review_queue_tab
+        click_link("user-menu-button-review-queue")
+        has_css?("#quick-access-review-queue")
+        self
+      end
+
+      def click_reviewable(reviewable)
+        find("#quick-access-review-queue a[href$='/review/#{reviewable.id}']").click
+        self
+      end
+
       def click_logout_button
         find("#quick-access-profile .logout .btn").click
         has_css?(".d-header .login-button")
@@ -35,6 +46,11 @@ module PageObjects
 
       def click_bookmark(bookmark)
         find("#quick-access-bookmarks .bookmark a[href='#{bookmark.bookmarkable.url}']").click
+        self
+      end
+
+      def click_notification_with_href(href_substring)
+        find(".user-menu .notification a[href*='#{href_substring}']").click
         self
       end
 

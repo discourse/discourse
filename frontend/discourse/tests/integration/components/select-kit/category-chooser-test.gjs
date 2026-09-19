@@ -2,18 +2,49 @@ import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import CategoryRow from "discourse/select-kit/components/category-row";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | select-kit/category-chooser",
+  "Integration | Component | SelectKit | CategoryChooser",
   function (hooks) {
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
       this.set("subject", selectKit());
+    });
+
+    test("suppresses hover during teardown", function (assert) {
+      const item = { id: 1 };
+      const selectKitApi = {
+        onHover() {
+          assert.step("hover");
+        },
+      };
+      const context = {
+        args: { item, selectKit: selectKitApi },
+        isDestroyed: false,
+        isDestroying: false,
+        rowValue: item.id,
+        site: { mobileView: false },
+      };
+      const handleMouseEnter = Object.getOwnPropertyDescriptor(
+        CategoryRow.prototype,
+        "handleMouseEnter"
+      ).get.call(context);
+
+      handleMouseEnter();
+      context.isDestroying = true;
+      handleMouseEnter();
+
+      assert.verifySteps(
+        ["hover"],
+        "dispatches hover only while the row is live"
+      );
     });
 
     test("with value", async function (assert) {
@@ -31,8 +62,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash excludeCategoryId=2}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -46,8 +77,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash scopedCategoryId=2}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -77,8 +108,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash prioritizedCategoryId=5}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -115,14 +146,17 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
+            @value={{this.value}}
           />
         </template>
       );
 
       assert.strictEqual(this.subject.header().value(), null);
-      assert.strictEqual(this.subject.header().label(), "category…");
+      assert.strictEqual(
+        this.subject.header().label(),
+        i18n("category.choose").replace("&hellip;", "…")
+      );
     });
 
     test("with allowUncategorized=null and defaultComposerCategory present", async function (assert) {
@@ -132,8 +166,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -149,14 +183,17 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
+            @value={{this.value}}
           />
         </template>
       );
 
       assert.strictEqual(this.subject.header().value(), null);
-      assert.strictEqual(this.subject.header().label(), "category…");
+      assert.strictEqual(
+        this.subject.header().label(),
+        i18n("category.choose").replace("&hellip;", "…")
+      );
     });
 
     test("with allowUncategorized=null none=true", async function (assert) {
@@ -165,8 +202,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null none=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -182,8 +219,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null none="test.root"}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -198,8 +235,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -214,8 +251,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=true none=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -231,8 +268,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=true none="test.root"}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -288,8 +325,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash scopedCategoryId=1}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -299,6 +336,41 @@ module(
       assert
         .dom(".category-desc", this.subject.rowByIndex(0).el())
         .hasText('baz "bar ‘foo’');
+    });
+
+    test("applies the category-description-text value transformer", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "category-description-text",
+          ({ value, context }) =>
+            value[0] + "-" + context.category.id + "-transformed"
+        );
+      });
+
+      const store = getOwner(this).lookup("service:store");
+      store.createRecord("category", {
+        id: 1,
+        name: "cat-with-description",
+        description_text: "A description",
+      });
+
+      await render(
+        <template>
+          <CategoryChooser
+            @options={{hash scopedCategoryId=1}}
+            @value={{this.value}}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      assert
+        .dom(".category-desc", this.subject.rowByIndex(0).el())
+        .hasText(
+          "A-1-transformed",
+          "it transforms the category description text"
+        );
     });
   }
 );

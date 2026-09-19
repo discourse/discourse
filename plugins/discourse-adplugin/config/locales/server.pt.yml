@@ -8,6 +8,8 @@ pt:
   site_settings:
     discourse_adplugin_enabled: Habilite o plug-in do discurso.
     dfp_through_trust_level: "Mostre os seus anúncios aos utilizadores com base nos níveis de confiança. Os utilizadores com nível de confiança superior a este valor não irão ver anúncios."
+    dfp_target_above_site_header_key_code: "Inserir valores de segmentação personalizados — Nível de Inventário"
+    dfp_target_above_site_header_value_code: "Inserir valores de segmentação personalizados — Nível de Inventário"
     dfp_topic_list_top_ad_sizes: "Escolha o tamanho do bloco publicitário acima da lista dos tópicos. "
     dfp_mobile_topic_list_top_ad_sizes: "Escolha o seu tamanho do anúncio para a unidade do anúncio por cima das listas do tópico na visualização de móvel. "
     dfp_target_topic_list_top_key_code: "Inserir valores de segmentação personalizados - Nível de Inventário"
@@ -22,6 +24,8 @@ pt:
     dfp_target_post_bottom_key_code: "Inserir valores de segmentação personalizados - Nível de Inventário"
     dfp_target_post_bottom_value_code: "Inserir valores de segmentação personalizados - Nível de Inventário"
     adsense_through_trust_level: "Mostre os seus anúncios aos utilizadores com base nos níveis de confiança. Os utilizadores com nível de confiança superior a este valor não irão ver anúncios."
+    adsense_above_site_header_ad_sizes: "Escolha o tamanho do seu anúncio"
+    adsense_mobile_above_site_header_ad_size: "Escolha o tamanho do seu anúncio"
     adsense_mobile_topic_list_top_code: "Insira o código da unidade de anúncios para exibir os anúncios móveis na localização do topo da lista. Este é o número atribuído à unidade de anúncios, não o código JavaScript."
     adsense_topic_list_top_ad_sizes: "Escolha o tamanho do seu anúncio"
     adsense_mobile_topic_list_top_ad_size: "Escolha o tamanho do seu anúncio"
@@ -34,6 +38,10 @@ pt:
     adsense_mobile_post_bottom_ad_size: "Escolha o tamanho do seu anúncio"
     adsense_nth_post_code: "Mostre um anúncio depois de cada N mensagens, onde N é este valor."
     amazon_through_trust_level: "Mostre os seus anúncios aos utilizadores com base nos níveis de confiança. Os utilizadores com nível de confiança superior a este valor não irão ver anúncios."
+    amazon_above_site_header_ad_width_code: "Insira a largura do seu anúncio"
+    amazon_above_site_header_ad_height_code: "Insira a altura do seu anúncio"
+    amazon_mobile_above_site_header_ad_width_code: "Insira a largura do seu anúncio (móvel)"
+    amazon_mobile_above_site_header_ad_height_code: "Insira a altura do seu anúncio (móvel)"
     amazon_topic_list_top_ad_width_code: "Insira a largura do seu anúncio"
     amazon_topic_list_top_ad_height_code: "Insira a altura do seu anúncio"
     amazon_mobile_topic_list_top_ad_width_code: "Insira a largura do seu anúncio (móvel)"

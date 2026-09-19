@@ -5,11 +5,19 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Déclencher une automatisation via l'API"
   js:
     admin:
       logs:
         staff_actions:
           actions:
+            create_automation: créer une automatisation
             update_automation: mettre à jour l'automatisation
             delete_automation: supprimer l'automatisation
     discourse_automation:
@@ -68,8 +76,10 @@ fr:
           fields:
             categories:
               label: Catégories
+              description: Déclencher uniquement lorsque le sujet signalé appartient à ces catégories
             tags:
               label: Étiquettes
+              description: Déclencher uniquement lorsque le sujet signalé comporte l'une de ces étiquettes.
         not_found: Impossible de trouver le déclencheur « %{trigger} » pour l'automatisation « %{automation} ». Assurez-vous que l'extension associée est installée
         user_badge_granted:
           fields:
@@ -205,6 +215,9 @@ fr:
               description: "Facultatif, limitez le déclenchement aux seules publications dotées de ces caractéristiques"
           created: Créé
           edited: Modifié
+          topics: Sujets (toutes les catégories)
+          personal_messages: Messages personnels uniquement
+          public_topics: Sujets (catégories publiques uniquement)
           with_images: Images
           with_links: Liens
           with_code: Code
@@ -277,6 +290,14 @@ fr:
               label: Étiquettes
               description: Facultatif, ne se déclenchera que si la publication contient l'une de ces étiquettes
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Modèle d'e-mail
+              description: Prend en charge les variables de remplacement des automatisations
+            recipients:
+              label: Destinataires
+              description: Utilisateurs ou adresses e-mail à notifier
         not_found: Impossible de trouver le script « %{script} » pour l'automatisation « %{automation} », assurez-vous que l'extension associée est installée
         zapier_webhook:
           fields:
@@ -299,6 +320,12 @@ fr:
             tags:
               label: Étiquettes
               description: Liste des étiquettes à ajouter au sujet.
+            closed_automatically:
+              label: Sujets fermés automatiquement
+              description: Ajoutez des étiquettes aux sujets automatiquement fermés.
+            closed_manually:
+              label: Sujets fermés manuellement
+              description: Ajoutez des étiquettes aux sujets fermés manuellement.
         post:
           fields:
             creator:
@@ -426,6 +453,11 @@ fr:
               label: "Nom du champ personnalisé de l'utilisateur"
         set_topic_timer:
           title: Planifier une action
+          fields:
+            type:
+              label: Type de minuterie
+            duration:
+              label: Durée du minuteur
       unnamed_automation: "Automatisation sans nom"
       models:
         script:
@@ -438,6 +470,9 @@ fr:
           runs_today: "%{count} aujourd'hui"
           runs_this_week: "%{count} cette semaine"
           runs_this_month: "%{count} ce mois-ci"
+          recent_errors:
+            one: "%{count} erreur récemment"
+            other: "%{count} erreurs récemment"
           runs:
             label: Exécutions
           name:

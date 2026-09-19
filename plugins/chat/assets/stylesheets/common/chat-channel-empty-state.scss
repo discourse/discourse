@@ -1,0 +1,81 @@
+.chat-channel {
+  &.is-empty .chat-messages-scroller {
+    justify-content: center;
+  }
+
+  .empty-state {
+    max-width: 60ch;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-4);
+    margin-inline: auto;
+
+    &__image {
+      margin-top: 0; // specific chat overrule for default Emptystate component
+
+      svg,
+      img {
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: var(--space-4);
+      }
+    }
+
+    &__title {
+      font-size: var(--font-up-3);
+      font-weight: 700;
+    }
+
+    &__body {
+      color: var(--primary-high);
+    }
+
+    &__tip {
+      position: relative; // overrule for core component being pos abs
+      bottom: 0; // overrule for core component being pos abs
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    &__tip-text {
+      margin: 0;
+      color: var(--primary-medium);
+    }
+
+    &__members-facepile {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-border-radius-pill);
+
+      &.--with-avatars {
+        padding-inline-start: var(--space-1);
+      }
+    }
+
+    &__members-avatars {
+      display: flex;
+
+      .avatar {
+        border: 2px solid var(--secondary);
+
+        &:not(:first-child) {
+          margin-inline-start: -8px;
+        }
+      }
+    }
+
+    &__members-count {
+      font-size: var(--font-down-1-rem);
+
+      strong {
+        color: var(--primary-high);
+      }
+    }
+  }
+}

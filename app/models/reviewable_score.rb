@@ -97,6 +97,21 @@ class ReviewableScore < ActiveRecord::Base
     return if meta_topic.blank?
     Reviewable::Conversation.new(meta_topic)
   end
+
+  def notify_moderators_flag_message?
+    return false unless meta_topic&.private_message? && meta_topic.notify_moderators?
+    return false unless reviewable.target.is_a?(Post)
+
+    PostAction
+      .with_deleted
+      .where(
+        post_id: reviewable.target_id,
+        user_id: user_id,
+        post_action_type_id: reviewable_score_type,
+        related_post_id: Post.where(topic_id: meta_topic_id).select(:id),
+      )
+      .exists?
+  end
 end
 
 # == Schema Information
@@ -104,20 +119,20 @@ end
 # Table name: reviewable_scores
 #
 #  id                    :bigint           not null, primary key
-#  reviewable_id         :integer          not null
-#  user_id               :integer          not null
+#  context               :string
+#  reason                :string
 #  reviewable_score_type :integer          not null
-#  status                :integer          not null
-#  score                 :float            default(0.0), not null
-#  take_action_bonus     :float            default(0.0), not null
-#  reviewed_by_id        :integer
 #  reviewed_at           :datetime
-#  meta_topic_id         :integer
+#  score                 :float            default(0.0), not null
+#  status                :integer          not null
+#  take_action_bonus     :float            default(0.0), not null
+#  user_accuracy_bonus   :float            default(0.0), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  reason                :string
-#  user_accuracy_bonus   :float            default(0.0), not null
-#  context               :string
+#  meta_topic_id         :integer
+#  reviewable_id         :integer          not null
+#  reviewed_by_id        :integer
+#  user_id               :integer          not null
 #
 # Indexes
 #

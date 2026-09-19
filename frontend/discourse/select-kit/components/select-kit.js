@@ -127,6 +127,7 @@ function protoProp(prototype, key, descriptor) {
 @classNameBindings(
   "selectKit.isLoading:is-loading",
   "selectKit.isExpanded:is-expanded",
+  "selectKit.isPlacedAbove:is-placed-above",
   "selectKit.options.disabled:is-disabled",
   "selectKit.isHidden:is-hidden",
   "selectKit.hasSelection:has-selection"
@@ -161,6 +162,7 @@ function protoProp(prototype, key, descriptor) {
   autofocus: false,
   placementStrategy: null,
   mobilePlacementStrategy: null,
+  mobilePlacement: null,
   desktopPlacementStrategy: null,
   hiddenValues: null,
   disabled: false,
@@ -188,6 +190,12 @@ export default class SelectKit extends Component {
   @autoTrackedArray mainCollection = null;
   @autoTrackedArray errorsCollection = null;
 
+  _handleNativeToggle = () => {
+    if (this.element.open !== this.selectKit.isExpanded) {
+      this.element.open ? this._open() : this._close();
+    }
+  };
+
   init() {
     super.init(...arguments);
 
@@ -214,6 +222,7 @@ export default class SelectKit extends Component {
         isLoading: false,
         isHidden: false,
         isExpanded: false,
+        isPlacedAbove: false,
         isFilterExpanded: false,
         enterDisabled: false,
         hasSelection: false,
@@ -266,48 +275,28 @@ export default class SelectKit extends Component {
     );
   }
 
-  _modifyComponentForRowWrapper(collection, item) {
-    let component = this.modifyComponentForRow(collection, item);
-    return component || SelectKitRow;
+  @computed("content.[]", "selectKit.filter")
+  get autoFilterable() {
+    return (
+      this.selectKit.filter &&
+      this.options.autoFilterable &&
+      this.content.length >= FILTER_VISIBILITY_THRESHOLD
+    );
+  }
+
+  @computed("selectedContent.[]", "mainCollection.[]", "errorsCollection.[]")
+  get collections() {
+    return this._collections.map((identifier) => {
+      return {
+        identifier,
+        content: this.selectKit.modifyContentForCollection(identifier),
+      };
+    });
   }
 
   modifyComponentForRow() {}
 
-  _modifyContentForCollectionWrapper(identifier) {
-    let collection = this.modifyContentForCollection(identifier);
-
-    if (!collection) {
-      switch (identifier) {
-        case ERRORS_COLLECTION:
-          collection = this.errorsCollection;
-          break;
-        default:
-          collection = this.mainCollection;
-          break;
-      }
-    }
-
-    return collection;
-  }
-
   modifyContentForCollection() {}
-
-  _modifyComponentForCollectionWrapper(identifier) {
-    let component = this.modifyComponentForCollection(identifier);
-
-    if (!component) {
-      switch (identifier) {
-        case ERRORS_COLLECTION:
-          component = ErrorsCollection;
-          break;
-        default:
-          component = SelectKitCollection;
-          break;
-      }
-    }
-
-    return component;
-  }
 
   modifyComponentForCollection() {}
 
@@ -325,6 +314,8 @@ export default class SelectKit extends Component {
       this,
       this.updateFloatingUiPosition
     );
+
+    this.element.addEventListener("toggle", this._handleNativeToggle);
 
     if (this.selectKit.options.expandedOnInsert) {
       next(() => {
@@ -348,6 +339,8 @@ export default class SelectKit extends Component {
       this,
       this.updateFloatingUiPosition
     );
+
+    this.element.removeEventListener("toggle", this._handleNativeToggle);
 
     this.cleanupFloatingUi?.();
   }
@@ -414,25 +407,6 @@ export default class SelectKit extends Component {
     }
   }
 
-  @computed("content.[]", "selectKit.filter")
-  get autoFilterable() {
-    return (
-      this.selectKit.filter &&
-      this.options.autoFilterable &&
-      this.content.length >= FILTER_VISIBILITY_THRESHOLD
-    );
-  }
-
-  @computed("selectedContent.[]", "mainCollection.[]", "errorsCollection.[]")
-  get collections() {
-    return this._collections.map((identifier) => {
-      return {
-        identifier,
-        content: this.selectKit.modifyContentForCollection(identifier),
-      };
-    });
-  }
-
   createContentFromInput(input) {
     return input;
   }
@@ -471,7 +445,7 @@ export default class SelectKit extends Component {
   }
 
   clearErrors() {
-    if (!this.element || this.isDestroyed || this.isDestroying) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -498,6 +472,276 @@ export default class SelectKit extends Component {
   insertAfterCollection(identifier, insertedIdentifier) {
     const index = this._collections.indexOf(identifier);
     this.insertCollectionAtIndex(insertedIdentifier, index + 1);
+  }
+
+  modifyContent(content) {
+    return content;
+  }
+
+  modifyNoSelection() {
+    if (this.selectKit.options.translatedNone) {
+      return this.defaultItem(null, this.selectKit.options.translatedNone);
+    }
+
+    let none = this.selectKit.options.none;
+    if (isNone(none) && !this.selectKit.options.allowAny) {
+      return null;
+    }
+
+    if (
+      isNone(none) &&
+      this.selectKit.options.allowAny &&
+      !this.selectKit.isExpanded
+    ) {
+      return null;
+    }
+
+    let item;
+    switch (typeof none) {
+      case "string":
+        item = this.defaultItem(null, i18n(none));
+        break;
+      default:
+        item = none;
+    }
+
+    return item;
+  }
+
+  modifySelection(item) {
+    return item;
+  }
+
+  deselect() {
+    this.clearErrors();
+    this.selectKit.change(null, null);
+  }
+
+  deselectByValue(value) {
+    if (isNone(value)) {
+      return;
+    }
+
+    const item = this.itemForValue(value, this.selectedContent);
+    this.deselect(item);
+  }
+
+  append() {
+    // do nothing on general case
+  }
+
+  search(filter) {
+    let content = this.content || [];
+    if (filter) {
+      filter = this._normalize(filter);
+      content = content.filter((c) => {
+        const name = this._normalize(this.getName(c));
+        return name?.includes(filter);
+      });
+    }
+    return content;
+  }
+
+  triggerSearch(filter) {
+    this._searchPromise && cancel(this._searchPromise);
+
+    this._searchPromise = this._searchWrapper(filter || this.selectKit.filter);
+  }
+
+  select(value, item) {
+    if (typeof item?.onSelect === "function") {
+      item.onSelect(this.selectKit, item);
+      return;
+    }
+
+    // A row may explicitly carry a blank value (e.g. "use the default");
+    // selecting it is a real selection, not a clear.
+    if (!isPresent(value) && !(value === "" && item)) {
+      this._onClearSelection();
+    } else {
+      const existingItem = this.findValue(this.mainCollection, item);
+      if (existingItem) {
+        if (!this.validateSelect(item)) {
+          return;
+        }
+      }
+
+      this.selectKit.change(value, item || this.defaultItem(value, value));
+    }
+  }
+
+  updateFloatingUiPosition() {
+    const referenceElement = this.getHeader();
+    const floatingElement = this._bodyElement();
+
+    const strategy = this._computePlacementStrategy();
+    floatingElement.style.position = strategy;
+
+    let width;
+    let minWidth;
+
+    const middleware = [
+      {
+        name: "minWidth",
+        fn: (state) => {
+          if (window.innerWidth <= 450) {
+            return state;
+          }
+
+          return size({
+            apply({ rects }) {
+              minWidth = `${Math.max(Math.round(rects.reference.width), 220)}px`;
+            },
+          }).fn(state);
+        },
+      },
+      {
+        name: "flip",
+        fn: (state) => {
+          const top =
+            this.selectKit.options.verticalOffset +
+            (parseInt(
+              document.documentElement.style.getPropertyValue(
+                "--header-offset"
+              ),
+              10
+            ) || 0);
+
+          let bottom = this.selectKit.options.verticalOffset;
+          if (this.capabilities.isIOS) {
+            bottom +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--safe-area-inset-bottom")
+                  .trim(),
+                10
+              ) || 0;
+          }
+          if (this.site.mobileView) {
+            bottom +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--footer-nav-height")
+                  .trim(),
+                10
+              ) || 0;
+          }
+
+          return flip({
+            padding: { top, bottom },
+            fallbackStrategy: "initialPlacement",
+          }).fn(state);
+        },
+      },
+      shift({ limiter: limitShift() }),
+      offset(this.selectKit.options.verticalOffset),
+      {
+        name: "applySmallScreenOffset",
+        fn: (state) => {
+          if (window.innerWidth > 450) {
+            return state;
+          }
+
+          let { x } = state.elements.reference.getBoundingClientRect();
+          if (strategy === "fixed") {
+            return { x: 10, y: state.y };
+          } else {
+            return { x: -x + 10, y: state.y };
+          }
+        },
+      },
+      {
+        name: "applySmallScreenMaxWidth",
+        fn: (state) => {
+          if (window.innerWidth <= 450) {
+            width = `${window.innerWidth - 20}px`;
+          }
+
+          return state;
+        },
+      },
+      hide(),
+    ];
+
+    return computePosition(referenceElement, floatingElement, {
+      placement: this._computePlacement(),
+      strategy,
+      middleware,
+    }).then(({ x, y, placement, middlewareData }) => {
+      const style = {
+        width,
+        minWidth,
+        top: "0",
+        left: "0",
+        transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
+      };
+
+      if (middlewareData.hide && !this.capabilities.isIOS) {
+        if (middlewareData.hide.referenceHidden) {
+          style.visibility = "hidden";
+          style.pointerEvents = "none";
+        } else {
+          style.visibility = "visible";
+          style.pointerEvents = "auto";
+        }
+      }
+
+      this.selectKit.set("isPlacedAbove", placement.startsWith("top"));
+      Object.assign(floatingElement.style, style);
+    });
+  }
+
+  getFilterInput() {
+    return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
+  }
+
+  getHeader() {
+    return document.querySelector(`#${this.selectKit.uniqueID}-header`);
+  }
+
+  handleDeprecations() {
+    this._deprecateValueAttribute();
+    this._deprecateMutations();
+    this._handleDeprecatedArgs();
+  }
+
+  _modifyComponentForRowWrapper(collection, item) {
+    let component = this.modifyComponentForRow(collection, item);
+    return component || SelectKitRow;
+  }
+
+  _modifyContentForCollectionWrapper(identifier) {
+    let collection = this.modifyContentForCollection(identifier);
+
+    if (!collection) {
+      switch (identifier) {
+        case ERRORS_COLLECTION:
+          collection = this.errorsCollection;
+          break;
+        default:
+          collection = this.mainCollection;
+          break;
+      }
+    }
+
+    return collection;
+  }
+
+  _modifyComponentForCollectionWrapper(identifier) {
+    let component = this.modifyComponentForCollection(identifier);
+
+    if (!component) {
+      switch (identifier) {
+        case ERRORS_COLLECTION:
+          component = ErrorsCollection;
+          break;
+        default:
+          component = SelectKitCollection;
+          break;
+      }
+    }
+
+    return component;
   }
 
   _onInput(event) {
@@ -547,8 +791,14 @@ export default class SelectKit extends Component {
       }
 
       if (this.singleSelect) {
-        value = isPresent(value.firstObject) ? value.firstObject : null;
-        items = isPresent(items.firstObject) ? items.firstObject : null;
+        const firstValue = value.firstObject;
+        const firstItem = items.firstObject;
+
+        value =
+          isPresent(firstValue) || (firstValue === "" && firstItem)
+            ? firstValue
+            : null;
+        items = isPresent(firstItem) ? firstItem : null;
       }
 
       this._boundaryActionHandler("onChange", value, items);
@@ -557,7 +807,7 @@ export default class SelectKit extends Component {
 
       resolve(items);
     }).finally(() => {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         if (
           this.selectKit.options.closeOnChange ||
           (isPresent(value) && this.selectKit.options.maximum === 1)
@@ -580,50 +830,12 @@ export default class SelectKit extends Component {
     return applyContentPluginApiCallbacks(content, this);
   }
 
-  modifyContent(content) {
-    return content;
-  }
-
   _modifyNoSelectionWrapper() {
     return this.modifyNoSelection();
   }
 
-  modifyNoSelection() {
-    if (this.selectKit.options.translatedNone) {
-      return this.defaultItem(null, this.selectKit.options.translatedNone);
-    }
-
-    let none = this.selectKit.options.none;
-    if (isNone(none) && !this.selectKit.options.allowAny) {
-      return null;
-    }
-
-    if (
-      isNone(none) &&
-      this.selectKit.options.allowAny &&
-      !this.selectKit.isExpanded
-    ) {
-      return null;
-    }
-
-    let item;
-    switch (typeof none) {
-      case "string":
-        item = this.defaultItem(null, i18n(none));
-        break;
-      default:
-        item = none;
-    }
-
-    return item;
-  }
-
   _modifySelectionWrapper(item) {
     return this.modifySelection(item);
-  }
-
-  modifySelection(item) {
-    return item;
   }
 
   _onKeydownWrapper(event) {
@@ -651,7 +863,7 @@ export default class SelectKit extends Component {
   }
 
   _boundaryActionHandler(actionName, ...params) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -678,44 +890,8 @@ export default class SelectKit extends Component {
     return boundaryAction;
   }
 
-  deselect() {
-    this.clearErrors();
-    this.selectKit.change(null, null);
-  }
-
-  deselectByValue(value) {
-    if (isNone(value)) {
-      return;
-    }
-
-    const item = this.itemForValue(value, this.selectedContent);
-    this.deselect(item);
-  }
-
-  append() {
-    // do nothing on general case
-  }
-
-  search(filter) {
-    let content = this.content || [];
-    if (filter) {
-      filter = this._normalize(filter);
-      content = content.filter((c) => {
-        const name = this._normalize(this.getName(c));
-        return name?.includes(filter);
-      });
-    }
-    return content;
-  }
-
-  triggerSearch(filter) {
-    this._searchPromise && cancel(this._searchPromise);
-
-    this._searchPromise = this._searchWrapper(filter || this.selectKit.filter);
-  }
-
   _searchWrapper(filter) {
-    if (this.isDestroyed || this.isDestroying) {
+    if (this.isDestroying) {
       return Promise.resolve([]);
     }
 
@@ -730,7 +906,7 @@ export default class SelectKit extends Component {
 
     return Promise.resolve(this.search(filter))
       .then((result) => {
-        if (this.isDestroyed || this.isDestroying) {
+        if (this.isDestroying) {
           return [];
         }
 
@@ -761,7 +937,11 @@ export default class SelectKit extends Component {
         ) {
           filter = this.createContentFromInput(filter);
           if (this.validateCreate(filter, content)) {
-            this.selectKit.set("newItem", this.defaultItem(filter, filter));
+            const newItem = this.defaultItem(filter, filter);
+            if (typeof newItem === "object" && newItem !== null) {
+              newItem.isNew = true;
+            }
+            this.selectKit.set("newItem", newItem);
             content.unshift(this.selectKit.newItem);
           }
         }
@@ -795,7 +975,7 @@ export default class SelectKit extends Component {
         });
       })
       .finally(() => {
-        if (this.isDestroyed || this.isDestroying) {
+        if (this.isDestroying) {
           return;
         }
         this.set("selectKit.enterDisabled", false);
@@ -804,7 +984,7 @@ export default class SelectKit extends Component {
 
   _safeAfterRender(fn) {
     next(() => {
-      if (!this.element || this.isDestroyed || this.isDestroying) {
+      if (!this.element || this.isDestroying) {
         return;
       }
 
@@ -902,21 +1082,6 @@ export default class SelectKit extends Component {
     }
   }
 
-  select(value, item) {
-    if (!isPresent(value)) {
-      this._onClearSelection();
-    } else {
-      const existingItem = this.findValue(this.mainCollection, item);
-      if (existingItem) {
-        if (!this.validateSelect(item)) {
-          return;
-        }
-      }
-
-      this.selectKit.change(value, item || this.defaultItem(value, value));
-    }
-  }
-
   _onClearSelection() {
     this.selectKit.change(null, null);
   }
@@ -959,6 +1124,7 @@ export default class SelectKit extends Component {
 
     this.selectKit.setProperties({
       isExpanded: false,
+      isPlacedAbove: false,
       filter: null,
     });
   }
@@ -972,16 +1138,12 @@ export default class SelectKit extends Component {
     this.clearErrors();
     this.selectKit.onOpen(event);
 
-    if (this.site.desktopView) {
-      this.cleanupFloatingUi?.();
-      this.cleanupFloatingUi = autoUpdate(
-        this.getHeader(),
-        this._bodyElement(),
-        () => this.updateFloatingUiPosition()
-      );
-    } else {
-      this.updateFloatingUiPosition();
-    }
+    this.cleanupFloatingUi?.();
+    this.cleanupFloatingUi = autoUpdate(
+      this.getHeader(),
+      this._bodyElement(),
+      () => this.updateFloatingUiPosition()
+    );
 
     this.selectKit.setProperties({
       isExpanded: true,
@@ -998,126 +1160,6 @@ export default class SelectKit extends Component {
     this._safeAfterRender(() => {
       this._focusFilter();
       this._scrollToCurrent();
-    });
-  }
-
-  updateFloatingUiPosition() {
-    const referenceElement = this.getHeader();
-    const floatingElement = this._bodyElement();
-
-    const strategy = this._computePlacementStrategy();
-    floatingElement.style.position = strategy;
-
-    let width;
-    let minWidth;
-
-    const middleware = [
-      {
-        name: "minWidth",
-        fn: (state) => {
-          if (window.innerWidth <= 450) {
-            return state;
-          }
-
-          return size({
-            apply({ rects }) {
-              minWidth = `${Math.max(Math.round(rects.reference.width), 220)}px`;
-            },
-          }).fn(state);
-        },
-      },
-      {
-        name: "flip",
-        fn: (state) => {
-          const top =
-            this.selectKit.options.verticalOffset +
-            (parseInt(
-              document.documentElement.style.getPropertyValue(
-                "--header-offset"
-              ),
-              10
-            ) || 0);
-
-          let bottom = this.selectKit.options.verticalOffset;
-          if (this.capabilities.isIOS) {
-            bottom +=
-              parseInt(
-                getComputedStyle(document.documentElement)
-                  .getPropertyValue("--safe-area-inset-bottom")
-                  .trim(),
-                10
-              ) || 0;
-          }
-          if (this.site.mobileView) {
-            bottom +=
-              parseInt(
-                getComputedStyle(document.documentElement)
-                  .getPropertyValue("--footer-nav-height")
-                  .trim(),
-                10
-              ) || 0;
-          }
-
-          return flip({
-            padding: { top, bottom },
-            fallbackStrategy: "initialPlacement",
-          }).fn(state);
-        },
-      },
-      shift({ limiter: limitShift() }),
-      offset(this.selectKit.options.verticalOffset),
-      {
-        name: "applySmallScreenOffset",
-        fn: (state) => {
-          if (window.innerWidth > 450) {
-            return state;
-          }
-
-          let { x } = state.elements.reference.getBoundingClientRect();
-          if (strategy === "fixed") {
-            return { x: 10, y: state.y };
-          } else {
-            return { x: -x + 10, y: state.y };
-          }
-        },
-      },
-      {
-        name: "applySmallScreenMaxWidth",
-        fn: (state) => {
-          if (window.innerWidth <= 450) {
-            width = `${window.innerWidth - 20}px`;
-          }
-
-          return state;
-        },
-      },
-      hide(),
-    ];
-
-    computePosition(referenceElement, floatingElement, {
-      placement: this.selectKit.options.placement,
-      strategy,
-      middleware,
-    }).then(({ x, y, middlewareData }) => {
-      const style = {
-        width,
-        minWidth,
-        top: "0",
-        left: "0",
-        transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
-      };
-
-      if (middlewareData.hide && !this.capabilities.isIOS) {
-        if (middlewareData.hide.referenceHidden) {
-          style.visibility = "hidden";
-          style.pointerEvents = "none";
-        } else {
-          style.visibility = "visible";
-          style.pointerEvents = "auto";
-        }
-      }
-
-      Object.assign(floatingElement.style, style);
     });
   }
 
@@ -1180,20 +1222,6 @@ export default class SelectKit extends Component {
     }
   }
 
-  getFilterInput() {
-    return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
-  }
-
-  getHeader() {
-    return document.querySelector(`#${this.selectKit.uniqueID}-header`);
-  }
-
-  handleDeprecations() {
-    this._deprecateValueAttribute();
-    this._deprecateMutations();
-    this._handleDeprecatedArgs();
-  }
-
   _computePlacementStrategy() {
     let placementStrategy = this.selectKit.options.placementStrategy;
 
@@ -1210,6 +1238,14 @@ export default class SelectKit extends Component {
     }
 
     return placementStrategy;
+  }
+
+  _computePlacement() {
+    if (this.site.mobileView && this.selectKit.options.mobilePlacement) {
+      return this.selectKit.options.mobilePlacement;
+    }
+
+    return this.selectKit.options.placement;
   }
 
   _deprecated(text) {
@@ -1276,7 +1312,7 @@ export default class SelectKit extends Component {
           `The \`${from}\` attribute is deprecated. Use \`${to}\` instead`
         );
 
-        resolvedDeprecations[(to, this.get(from))];
+        resolvedDeprecations[to] = this.get(from);
       }
     });
 

@@ -47,9 +47,47 @@ RSpec.describe Onebox::Engine do
   end
 
   describe "origins_to_regexes" do
-    it "converts URLs to regexes" do
+    it "converts host-only URLs to regexes with URL boundaries" do
       result = Onebox::Engine.origins_to_regexes(%w[https://example.com https://example2.com])
-      expect(result).to eq([%r{\Ahttps://example\.com}i, %r{\Ahttps://example2\.com}i])
+      expect(result).to eq(
+        [
+          %r{\Ahttps://example\.com(?::\d+(?:[/?#]|\z)|[/?#]|\z)}i,
+          %r{\Ahttps://example2\.com(?::\d+(?:[/?#]|\z)|[/?#]|\z)}i,
+        ],
+      )
+    end
+
+    it "matches host-only URLs only at URL boundaries" do
+      regex = Onebox::Engine.origins_to_regexes(["https://example.com"]).first
+
+      %w[
+        https://example.com
+        https://example.com/embed
+        https://example.com?foo=bar
+        https://example.com#fragment
+        https://example.com:3000/embed
+      ].each { |url| expect(url).to match(regex) }
+
+      %w[
+        https://example.com.attacker.example/embed
+        https://example.com:3000.attacker.example/embed
+      ].each { |url| expect(url).not_to match(regex) }
+    end
+
+    it "limits wildcard origins to a single URL authority" do
+      regex = Onebox::Engine.origins_to_regexes(["https://*.example.com"]).first
+
+      %w[https://embed.example.com/player https://deep.embed.example.com/player].each do |url|
+        expect(url).to match(regex)
+      end
+
+      %w[
+        https://attacker.example/path.example.com/player
+        https://attacker.example?.example.com/
+        https://attacker.example#.example.com/
+        https://attacker.example\\@embed.example.com/player
+        https://embed.example.com.attacker.example/player
+      ].each { |url| expect(url).not_to match(regex) }
     end
 
     it "treats '*' as a catch-all" do
@@ -94,11 +132,11 @@ RSpec.describe Onebox::Engine do
 
     let(:onebox_name) { ScopeForTemplateName::TemplateNameOnebox.onebox_name }
 
-    it "should not include the scope" do
+    it "omits the scope" do
       expect(onebox_name).not_to include("ScopeForTemplateName", "scopefortemplatename")
     end
 
-    it "should not include the word Onebox" do
+    it "omits the word Onebox" do
       expect(onebox_name).not_to include("onebox", "Onebox")
     end
   end

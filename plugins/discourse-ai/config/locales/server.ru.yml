@@ -26,10 +26,6 @@ ru:
       llm_triage:
         title: Сортировка публикаций с помощью AI
         description: "Сортировка публикаций с использованием большой языковой модели"
-        flagged_post: |
-          <div>Ответ от модели:</div>
-          <p>%{llm_response}</p>
-          <b>Срабатывает по правилу <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Ваш пост был временно удален для проверки"
           body: |
@@ -46,6 +42,7 @@ ru:
         description: "Автоматически отмечать темы с помощью ИИ"
   site_settings:
     discourse_ai_enabled: "Включить плагин AI для Discourse."
+    enable_ai_bot_starred_conversations: "Предоставьте пользователям возможность отмечать диалоги с ИИ-ботами звездочкой и отображать их в боковой панели в разделе «Избранное»."
     ai_default_llm_model: "Модель LLM по умолчанию для всех AI-функций"
     ai_artifact_security: "Система AI-артефактов генерирует IFRAME с исполняемым кодом. В режиме Strict требуется дополнительный клик для запуска кода. В режиме Lax код запускается сразу. В режиме Hybrid пользователь может указать data-ai-artifact-autorun, чтобы запускать код автоматически. В режиме Disabled система артефактов не используется."
     ai_toxicity_enabled: "Включить модуль проверки на токсичность."
@@ -64,7 +61,6 @@ ru:
     ai_sentiment_enabled: "Включить модуль оценки настроения."
     ai_sentiment_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля оценки настроения"
     ai_sentiment_inference_service_api_key: "API-ключ для API оценки настроения"
-    ai_sentiment_models: "Модели, используемые для оценки. Настроение публикации определяется как позитивное, нейтральное или негативное. Эмоции распределяются по следующим категориям: гнев, отвращение, страх, радость, нейтральность, печаль, удивление."
     ai_nsfw_detection_enabled: "Включить модуль проверки на NSFW-контент."
     ai_nsfw_inference_service_api_endpoint: "URL-адрес, по которому работает API для модуля проверки на NSFW-контент"
     ai_nsfw_inference_service_api_key: "API-ключ для API проверки на NSFW-контент"
@@ -84,10 +80,8 @@ ru:
     ai_helper_allowed_in_pm: "Включить AI-помощник для редактора в личных сообщениях."
     ai_helper_automatic_chat_thread_title_delay: "Задержка в минутах, прежде чем AI-помощник автоматически установит заголовок темы чата."
     ai_helper_automatic_chat_thread_title: "Автоматически устанавливать заголовки тем чата в зависимости от содержимого темы."
-    ai_helper_enabled_features: "Выберите функции, которые нужно включить в AI-помощнике."
     post_ai_helper_allowed_groups: "Группы пользователей, которым разрешен доступ к функциям AI-помощника в публикациях"
     ai_embeddings_selected_model: "Использовать выбранную модель для создания встраиваний."
-    ai_embeddings_generate_for_pms: "Генерировать векторные представления для личных сообщений."
     ai_embeddings_semantic_related_topics_enabled: "Использовать семантический поиск для связанных тем."
     ai_embeddings_semantic_related_topics: "Максимальное количество тем для показа в разделе связанных тем."
     ai_embeddings_backfill_batch_size: "Количество векторных представлений для обратного заполнения каждые 15 минут."
@@ -96,16 +90,18 @@ ru:
     ai_embeddings_semantic_quick_search_enabled: "Включить опцию семантического поиска во всплывающем меню поиска."
     ai_embeddings_semantic_related_include_closed_topics: "Включать в результаты семантического поиска закрытые темы"
     ai_embeddings_per_post_enabled: Генерировать эмбеддинги для каждой публикации
+    ai_admin_dashboard_enabled: "Включите функции искусственного интеллекта на панели администратора."
+    ai_admin_dashboard_highlights_agent: "Агент, который объясняет важные изменения в сообществе на панели администратора."
     ai_summarization_enabled: "Включить функцию резюмирования"
     ai_summarization_agent: "Агент для использования функции суммирования"
     ai_pm_summarization_allowed_groups: "Группам разрешено создавать и просматривать сводки в личных сообщениях."
     ai_summary_gists_enabled: "Автоматически создает краткие сводки последних ответов в темах"
-    ai_summary_backfill_maximum_topics_per_hour: "Число сводок по теме для заполнения за час."
     ai_bot_enabled: "Включить модуль AI-бота."
     ai_bot_allowed_groups: "Если у GPT-бота есть доступ к личным сообщениям, он будет отвечать участникам указанных групп."
     ai_bot_debugging_allowed_groups: "Разрешить этим группам видеть в публикациях кнопку отладки, которая отображает необработанный запрос и ответ AI."
     ai_bot_public_sharing_allowed_groups: "Разрешить этим группам делиться личными сообщениями AI с общественностью по уникальной общедоступной ссылке. Примечание: если ваш сайт требует входа, для доступа также потребуется вход."
     ai_bot_github_access_token: "Токен доступа к GitHub для использования с инструментами GitHub AI (требуется для поддержки поиска)"
+    ai_bot_enable_docked_composer: "Вместо стандартного плавающего редактора диалогов с ИИ-ботами используйте закрепленный редактор в стиле чата."
     ai_discover_enabled: "Включить функцию поиска по обнаруженным данным"
     ai_discover_agent: "Агент для использования в функции поиска."
     ai_google_custom_search_api_key: "API-ключ для API программируемого поиска Google — см. https://developers.google.com/custom-search"
@@ -116,10 +112,7 @@ ru:
     ai_discord_search_mode: "Выберите режим поиска, который будет использоваться при поиске в Discord"
     ai_discord_search_agent: "Агент для поиска в Discord."
     ai_discord_allowed_guilds: "Серверы Discord (гильдии), на которых боту разрешено выполнять поиск"
-    ai_translation_target_categories: "Переводу подлежат только материалы из выбранных категорий. Подкатегории необходимо добавлять отдельно. Оставьте поле пустым, чтобы отключить перевод тем в категориях."
     ai_translation_personal_messages: "Управляет тем, какие личные сообщения будут переводиться. 'none' отключает перевод личных сообщений. 'group' переводит только групповые личные сообщения. 'all' переводит все личные сообщения."
-    ai_translation_max_post_length: "Максимальное количество символов для перевода сообщения. Сообщения длиннее этого значения не будут переведены."
-    ai_translation_backfill_max_age_days: "Максимальный возраст публикации и темы для перевода. Публикации и темы старше этого значения переводиться не будут. Значение 0 отключает перевод старого контента, но не отключает перевод новых публикаций."
   reviewables:
     reasons:
       flagged_by_toxicity: Плагин AI определил этот контент как токсичный и отправил жалобу.
@@ -130,7 +123,6 @@ ru:
       description: "В этом отчете представлен анализ настроений публикаций по категориям: для каждой публикации и категории указываются положительные, отрицательные и нейтральные оценки."
     overall_sentiment:
       title: "Общее настроение"
-      description: 'На диаграмме сравнивается количество публикаций, классифицированных как позитивные или негативные на основе того, превышают ли их оценки установленные пороговые значения. Нейтральные публикации и личные сообщения (ЛС) в расчет не включаются. Классификация выполнена с помощью модели "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Позитивные(%)"
       yaxis: "Дата"
     emotion_admiration:
@@ -266,15 +258,12 @@ ru:
         unknown_error: "При создании эскизов произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз."
       prompts:
         translate: Перевести на %{language}
-        generate_titles: Предложить названия для темы
         proofread: Вычитать текст
         markdown_table: Сгенерировать таблицу в формате Markdown
         custom_prompt: "Пользовательский запрос"
         explain: "Объяснить"
         illustrate_post: "Проиллюстрировать публикацию"
         replace_dates: "Умные даты"
-      image_caption:
-        attribution: "Подпись к изображению от AI"
     share_ai:
       read_more: "Прочитать полное содержимое"
       onebox_title: "Разговор AI с пользователем %{llm_name}"
@@ -294,11 +283,33 @@ ru:
       configuration_missing: "Отсутствует конфигурация AI-системы обнаружения спама. Перед включением добавьте конфигурацию в разделе «Администрирование > Плагины > AI для Discourse > Спам»."
       logging_subject: "Обнаружение спама"
     ai_bot:
+      navigation:
+        settings:
+          title: "Настройки сайта"
+        users:
+          title: "По пользователям"
+        groups:
+          title: "Группы"
+        review:
+          title: "Очередь проверки"
+        categories:
+          title: "Категории"
+        tags:
+          title: "Теги"
+        themes:
+          title: "тем"
+        authentication:
+          title: "Вход и аутентификация"
+        backups:
+          title: "Резервные копии"
       reply_error: "Извините, похоже, наша система столкнулась с неожиданной проблемой при попытке ответить.\n\n[details='Сведения об ошибке']\n%{details}\n[/details]"
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
+      read_post:
+        unknown_post: "публикация"
       agents:
-        default_llm_required: "Для включения чата требуется модель LLM по умолчанию"
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
+        admin_dashboard_highlights:
+          description: "Составляет краткий отчет, отображаемый в верхней части административной панели, с объяснением изменений и моментов, заслуживающих внимания в этот период."
         github_helper:
           name: "Помощник по GitHub"
           description: "AI-бот, специализирующийся на оказании помощи в решении задач и вопросов, связанных с GitHub"
@@ -444,7 +455,11 @@ ru:
         random_picker: "Случайный выбор"
         categories: "Вывод списка категорий"
         flag_post: "Пометить публикацию"
+        suspend_user: "Заблокировать пользователя"
+        silence_user: "Заморозка пользователя"
         edit_post: "Редактировать пост"
+        edit_tag: "Редактировать тег"
+        create_category: "Создать категорию"
         search: "Искать"
         tags: "Вывод списка тегов"
         time: "Время"
@@ -475,7 +490,8 @@ ru:
         categories: "Вывод всех общедоступных категорий на форуме"
         flag_post: "Пометить текущую публикацию для проверки сотрудниками"
         delete_topic: "Удаление темы"
-        edit_category: "Переместить тему в другую категорию"
+        create_category: "Создать новую категорию"
+        change_topic_category: "Переместить тему в другую категорию"
         set_slow_mode: "Включить или отключить медленный режим для темы"
         move_posts: "Переместить сообщения в новую или существующую тему"
         grant_badge: "Назначение награды пользователю"
@@ -513,8 +529,8 @@ ru:
         lock_post: "Блокировка поста %{post_id} (заблокировано: %{locked})"
         delete_topic: "Удаление темы %{topic_id} (удалено: %{deleted})"
         edit_post: "Редактирование поста %{post_id}"
-        edit_tags: "Редактирование тегов по теме %{topic_id}: %{tags}"
-        edit_category: "Переместить тему %{topic_id} в категорию %{category_id}"
+        change_topic_tags: "Редактирование тегов по теме %{topic_id}: %{tags}"
+        change_topic_category: "Переместить тему %{topic_id} в категорию %{category_id}"
         set_topic_timer: "Установка таймера %{timer_type} для темы %{topic_id} (%{duration_hours}ч)"
         set_slow_mode: "Установка медленного режима для темы %{topic_id} (%{slow_mode_seconds}с)"
         move_posts: "Перемещение сообщений %{post_ids} из темы %{topic_id}"
@@ -570,9 +586,6 @@ ru:
           few: "Найдено %{count} результата по запросу «%{query}»"
           many: "Найдено %{count} результатов по запросу «%{query}»"
           other: "Найдено %{count} результата по запросу «%{query}»"
-      discoveries:
-        continue_conversation:
-          raw: "Во время поиска «%{query}» вы предоставили мне следующие сведения:\n\n%{context}\n\nДавайте продолжим разговор."
       flag_post:
         already_flagged: "Сообщение уже помечено для проверки."
         flagged: "Сообщение помечено для проверки."
@@ -583,6 +596,12 @@ ru:
           not_allowed: "Закрывать или открывать эту тему запрещено."
           no_reason: "Для закрытия или открытия темы необходимо указать причину."
         success: "Тема успешно обновлена."
+      suspend_user:
+        errors:
+          not_found: "Пользователь не найден."
+      silence_user:
+        errors:
+          not_found: "Пользователь не найден."
       unlist_topic:
         errors:
           not_found: "Тема не найдена."
@@ -607,14 +626,23 @@ ru:
           not_allowed: "Вам не разрешено редактировать этот пост."
           no_reason: "Необходимо указать причину редактирования."
         success: "Пост успешно отредактирован."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Тема не найдена."
           not_allowed: "Вам не разрешено редактировать теги в этой теме."
           no_reason: "Для редактирования тегов необходима причина."
           tagging_disabled: "На этом сайте функция добавления тегов отключена."
         success: "Теги успешно обновлены."
+      create_tag:
+        errors:
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
+      edit_tag:
+        errors:
+          tagging_disabled: "На этом сайте функция добавления тегов отключена."
       edit_category:
+        errors:
+          not_found: "Категория не найдена."
+      change_topic_category:
         errors:
           not_found: "Тема не найдена."
           not_allowed: "Вам не разрешено перемещать эту тему."
@@ -705,6 +733,7 @@ ru:
         disable_modules_first: "Сначала необходимо отключить эти модули: %{settings}"
         set_llm_first: "Сначала задайте %{setting}"
         model_unreachable: "Мы не смогли получить ответ от этой модели. Проверьте настройки."
+        empty_response: "Модель вернула пустой ответ."
         invalid_seeded_model: "Эту модель нельзя использовать с этой функцией"
         invalid_agent_response_format: "Выбранный агент должен иметь формат ответа с логическим полем, содержащим имя «спам»."
         must_select_model: "Сначала вам нужно выбрать LLM"
@@ -749,14 +778,12 @@ ru:
       limit_exceeded_admin: "Вы достигли лимита кредитов ИИ. Пожалуйста, попробуйте снова через %{reset_time}."
     errors:
       quota_exceeded: "Вы превысили квоту для этой модели. Повторите попытку через %{relative_time}."
-      quota_required: "Необходимо указать максимальное количество токенов или использований для этой модели"
       no_query_specified: Параметр запроса обязателен, укажите его.
       no_user_for_agent: Указанный агент не имеет связанного с ним пользователя.
-      agent_not_found: "Указанный агент не существует. Проверьте параметры agent_name или agent_id (устаревшие: agent_name или agent_id)."
+      agent_not_found: "Указанный агент не существует. Проверьте параметры agent_name или agent_id (устаревшие: persona_name или persona_id)."
       no_user_specified: Параметры user_unique_id или username обязательны, укажите нужное.
       user_not_found: Указанный пользователь не существует. Проверьте параметр username.
-      agent_disabled: "Указанный агент отключен. Проверьте параметры agent_name или agent_id (устаревшие: agent_name или agent_id)."
-      no_default_llm: У агента должен быть определен параметр default_llm.
+      agent_disabled: "Указанный агент отключен. Проверьте параметры agent_name или agent_id (устаревшие: persona_name или persona_id)."
       user_not_allowed: Пользователю не разрешено участвовать в теме.
       prompt_message_length: Сообщение %{idx} превышает ограничение в 1000 символов.
       agent_already_exists: Агент с именем %{name} уже существует.

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, get, hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class MergeUsersPrompt extends Component {
@@ -19,10 +19,10 @@ export default class MergeUsersPrompt extends Component {
 
   <template>
     <DModal
+      @closeModal={{@closeModal}}
       @title={{trustHTML
         (i18n "admin.user.merge.prompt.title" username=@model.user.username)
       }}
-      @closeModal={{@closeModal}}
     >
       <:body>
         <p>
@@ -34,11 +34,11 @@ export default class MergeUsersPrompt extends Component {
           }}
         </p>
         <EmailGroupUserChooser
-          @value={{this.targetUsername}}
           @options={{hash
             maximum=1
             filterPlaceholder="admin.user.merge.prompt.target_username_placeholder"
           }}
+          @value={{this.targetUsername}}
         />
       </:body>
       <:footer>
@@ -48,8 +48,8 @@ export default class MergeUsersPrompt extends Component {
             @model.showMergeConfirmation
             (get this.targetUsername "0")
           }}
-          @icon="trash-can"
           @disabled={{this.mergeDisabled}}
+          @icon="trash-can"
           @translatedLabel={{i18n
             "admin.user.merge.confirmation.transfer_and_delete"
             username=@model.user.username

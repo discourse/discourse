@@ -5,6 +5,17 @@ require "fastimage"
 class UploadCreator
   TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
+  ADMIN_ASSET_TYPES = %w[
+    badge_image
+    branding
+    custom_emoji
+    category_background
+    category_background_dark
+    category_logo
+    category_logo_dark
+    group_flair
+  ].each(&:freeze)
+
   ALLOWED_SVG_ELEMENTS = %w[
     circle
     clipPath
@@ -70,6 +81,12 @@ class UploadCreator
       rescue StandardError
         nil
       end
+
+    if @opts[:type] == "avatar" && @image_info&.type == :ico
+      @upload.errors.add(:base, I18n.t("upload.ico_as_avatar"))
+      return @upload
+    end
+
     is_image = FileHelper.is_supported_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
@@ -89,22 +106,21 @@ class UploadCreator
     sha1_before_changes = Upload.generate_digest(@file) if @file
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
-      # We need to convert HEIFs early because FastImage does not consider them as images
-      if convert_heif_to_jpeg? && !external_upload_too_big
-        convert_heif!
-        is_image = FileHelper.is_supported_image?("test.#{@image_info.type}")
-      end
-
       if is_image && !external_upload_too_big
         extract_image_info!
         return @upload if @upload.errors.present?
 
         if @image_info.type == :svg
           clean_svg!
-        elsif @image_info.type == :ico
-          convert_favicon_to_png!
-        elsif !Rails.env.test? || @opts[:force_optimize]
-          convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
+        elsif @image_info.type != :ico && (!Rails.env.test? || @opts[:force_optimize])
+          case @image_info.type
+          when :heic, :heif
+            convert_heif!
+          when :png
+            convert_png_to_jpeg! if convert_png_to_jpeg?
+          when :jpeg
+            reencode_jpeg! if should_alter_jpeg_quality?
+          end
           fix_orientation! if should_fix_orientation?
           crop! if should_crop?
           optimize! if should_optimize?
@@ -169,7 +185,7 @@ class UploadCreator
       @upload.filesize = filesize
       @upload.sha1 =
         (
-          if (SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail)
+          if SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail
             unique_hash
           else
             sha1
@@ -184,23 +200,31 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           w, h = [0, 0]
 
-          # identify can behave differently depending on how it's compiled and
-          # what programs (e.g. inkscape) are installed on your system.
-          # 'MSVG:' forces ImageMagick to use internal routines and behave
-          # consistently whether it's running from our docker container or not
           begin
             w, h =
-              Discourse::Utils
-                .execute_command(
-                  "identify",
-                  "-ping",
-                  "-format",
-                  "%w %h",
-                  "MSVG:#{@file.path}",
+              if GlobalSetting.enable_vips_image_processing
+                DiscourseVips.svg_dimensions(
+                  input_path: @file.path,
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
-                .split(" ")
-                .map(&:to_i)
+              else
+                # identify can behave differently depending on how it's compiled and
+                # what programs (e.g. inkscape) are installed on your system.
+                # 'MSVG:' forces ImageMagick to use internal routines and behave
+                # consistently whether it's running from our docker container or not
+                ImageMagick
+                  .identify(
+                    "-ping",
+                    "-format",
+                    "%w %h",
+                    "MSVG:#{@file.path}",
+                    operation: :upload_svg_dimensions,
+                    read: [@file.path],
+                    timeout: Upload::MAX_IDENTIFY_SECONDS,
+                  )
+                  .split(" ")
+                  .map(&:to_i)
+              end
           rescue StandardError
             # use default 0, 0
           end
@@ -319,91 +343,8 @@ class UploadCreator
 
   MIN_PIXELS_TO_CONVERT_TO_JPEG = 1280 * 720
 
-  def convert_png_to_jpeg?
-    return false unless @image_info.type == :png
-    return true if @opts[:pasted]
-    return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
-    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
-  end
-
   MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
-
-  def convert_favicon_to_png!
-    png_tempfile = Tempfile.new(%w[image .png])
-
-    from = @file.path
-    to = png_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
-
-    opts = { flatten: false } # Preserve transparency
-
-    begin
-      execute_convert(from, to, opts)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
-    end
-
-    @file.respond_to?(:close!) ? @file.close! : @file.close
-    @file = png_tempfile
-    extract_image_info!
-  end
-
-  def convert_to_jpeg!
-    return if @opts[:for_site_setting]
-    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
-
-    jpeg_tempfile = Tempfile.new(%w[image .jpg])
-
-    from = @file.path
-    to = jpeg_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    opts = {}
-
-    desired_quality = [
-      SiteSetting.ImageQuality.png_to_jpg_quality,
-      SiteSetting.ImageQuality.recompress_original_jpg_quality,
-    ].compact.min
-
-    target_quality = @upload.target_image_quality(from, desired_quality)
-    opts = { quality: target_quality } if target_quality
-
-    begin
-      execute_convert(from, to, opts)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
-    end
-
-    new_size = File.size(jpeg_tempfile.path)
-
-    keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
-    keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
-
-    if keep_jpeg
-      @file.respond_to?(:close!) ? @file.close! : @file.close
-      @file = jpeg_tempfile
-      extract_image_info!
-    else
-      jpeg_tempfile.close!
-    end
-  end
-
-  def convert_heif_to_jpeg?
-    File.extname(@filename).downcase.match?(/\.hei(f|c)\z/)
-  end
 
   def convert_heif!
     jpeg_tempfile = Tempfile.new(%w[image .jpg])
@@ -411,46 +352,50 @@ class UploadCreator
     to = jpeg_tempfile.path
     OptimizedImage.ensure_safe_paths!(from, to)
 
-    begin
-      execute_convert(from, to)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, { debug: true })
+    read = [@file.path]
+    write = [jpeg_tempfile.path]
+
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.heif_to_jpeg(
+        input_path: from,
+        output_path: to,
+        quality: SiteSetting.image_quality,
+        timeout: MAX_CONVERT_FORMAT_SECONDS,
+        read:,
+        write:,
+      )
+    else
+      begin
+        execute_convert(from, to, {}, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, to, { debug: true }, read:, write:)
+      end
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = jpeg_tempfile
     extract_image_info!
+  ensure
+    jpeg_tempfile&.close! if jpeg_tempfile != @file
   end
 
   MAX_CONVERT_FORMAT_SECONDS = 20
-  def execute_convert(from, to, opts = {})
-    command = ["magick", from, "-auto-orient", "-background", "white", "-interlace", "none"]
+  def execute_convert(from, to, opts = {}, read: [], write: [])
+    command = [from, "-auto-orient", "-background", "white", "-interlace", "none"]
     command << "-flatten" unless opts[:flatten] == false
     command << "-debug" << "all" if opts[:debug]
     command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
 
-    Discourse::Utils.execute_command(
+    ImageMagick.magick(
       *command,
+      operation: :upload_format_conversion,
+      read:,
+      write:,
       failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
       timeout: MAX_CONVERT_FORMAT_SECONDS,
     )
-  end
-
-  def should_alter_quality?
-    return false if animated?
-
-    desired_quality =
-      (
-        if @image_info.type == :png
-          SiteSetting.ImageQuality.png_to_jpg_quality
-        else
-          SiteSetting.ImageQuality.recompress_original_jpg_quality
-        end
-      )
-
-    @upload.target_image_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?
@@ -467,7 +412,13 @@ class UploadCreator
 
       OptimizedImage.ensure_safe_paths!(from, to)
 
-      OptimizedImage.downsize(from, to, "50%", scale_image: true, raise_on_error: true)
+      OptimizedImage.downsize(
+        from: from,
+        to: to,
+        scale: 0.5,
+        scale_image: true,
+        raise_on_error: true,
+      )
 
       @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = down_tempfile
@@ -507,15 +458,19 @@ class UploadCreator
 
   def clean_svg!
     doc = Nokogiri.XML(@file)
+    doc.internal_subset&.remove
+    doc.external_subset&.remove
     doc.xpath(svg_allowlist_xpath).remove
     doc.xpath("//@*[starts-with(name(), 'on')]").remove
+    doc.traverse { |node| node.remove if node.type == Nokogiri::XML::Node::ENTITY_REF_NODE }
     doc
       .css("use")
       .each do |use_el|
-        if use_el.attr("href")
-          use_el.remove_attribute("href") unless use_el.attr("href").starts_with?("#")
+        use_el.attribute_nodes.each do |attribute|
+          next if attribute.name != "href" && attribute.name != "xlink:href"
+
+          attribute.remove unless attribute.value.starts_with?("#")
         end
-        use_el.remove_attribute("xlink:href")
       end
 
     File.write(@file.path, doc.to_s)
@@ -523,9 +478,10 @@ class UploadCreator
   end
 
   def should_fix_orientation?
+    # FastImage only detects orientation for JPEG among supported image uploads.
     # orientation is between 1 and 8, 1 being the default
     # cf. http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
-    @image_info.orientation.to_i > 1
+    @image_info.type == :jpeg && @image_info.orientation.to_i > 1
   end
 
   MAX_FIX_ORIENTATION_TIME = 5
@@ -535,13 +491,26 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    Discourse::Utils.execute_command(
-      "magick",
-      path,
-      "-auto-orient",
-      path,
-      timeout: MAX_FIX_ORIENTATION_TIME,
-    )
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.reencode_jpeg(
+        input_path: @file.path,
+        output_path: @file.path,
+        quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+        timeout: MAX_FIX_ORIENTATION_TIME,
+        read: [@file.path],
+        write: [@file.path],
+      )
+    else
+      ImageMagick.magick(
+        path,
+        "-auto-orient",
+        path,
+        operation: :upload_auto_orient,
+        read: [@file.path],
+        write: [@file.path, File.dirname(@file.path)],
+        timeout: MAX_FIX_ORIENTATION_TIME,
+      )
+    end
 
     extract_image_info!
   end
@@ -578,9 +547,10 @@ class UploadCreator
           max_height: max_width,
         )
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{width}x#{height}\>",
+        from: @file.path,
+        to: @file.path,
+        width: width,
+        height: height,
         filename: filename_with_correct_ext,
       )
     when "card_background"
@@ -593,16 +563,18 @@ class UploadCreator
           max_height: max_width,
         )
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{width}x#{height}\>",
+        from: @file.path,
+        to: @file.path,
+        width: width,
+        height: height,
         filename: filename_with_correct_ext,
       )
     when "custom_emoji"
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "100x100\>",
+        from: @file.path,
+        to: @file.path,
+        width: 100,
+        height: 100,
         filename: filename_with_correct_ext,
       )
     end
@@ -659,6 +631,85 @@ class UploadCreator
 
   private
 
+  def convert_png_to_jpeg?
+    return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
+    @opts[:pasted] || pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
+  end
+
+  def should_alter_jpeg_quality?
+    return false if GlobalSetting.enable_vips_image_processing
+
+    @upload.target_jpeg_image_quality(
+      @file.path,
+      SiteSetting.ImageQuality.recompress_original_jpg_quality,
+    ).present?
+  end
+
+  def convert_png_to_jpeg!
+    replace_with_jpeg_if_sufficiently_smaller!(
+      quality: SiteSetting.ImageQuality.png_to_jpg_quality,
+      vips_method: :png_to_jpeg,
+    )
+  end
+
+  def reencode_jpeg!
+    replace_with_jpeg_if_sufficiently_smaller!(
+      quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+      vips_method: :reencode_jpeg,
+    )
+  end
+
+  def replace_with_jpeg_if_sufficiently_smaller!(quality:, vips_method:)
+    return if @opts[:type] == "topic_og_image"
+    return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
+    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
+    jpeg_tempfile = Tempfile.new(%w[image .jpg])
+
+    from = @file.path
+    to = jpeg_tempfile.path
+
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.public_send(
+        vips_method,
+        input_path: from,
+        output_path: to,
+        quality:,
+        timeout: MAX_CONVERT_FORMAT_SECONDS,
+        read: [from],
+        write: [jpeg_tempfile.path],
+      )
+    else
+      from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
+      to = OptimizedImage.prepend_decoder!(to)
+      opts = { quality: }
+      read = [@file.path]
+      write = [jpeg_tempfile.path]
+
+      begin
+        execute_convert(from, to, opts, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, to, opts.merge(debug: true), read:, write:)
+      end
+    end
+
+    new_size = File.size(jpeg_tempfile.path)
+
+    keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
+    keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
+    if keep_jpeg
+      @file.respond_to?(:close!) ? @file.close! : @file.close
+      @file = jpeg_tempfile
+      extract_image_info!
+    end
+  ensure
+    jpeg_tempfile&.close! unless @file.equal?(jpeg_tempfile)
+  end
+
   def animated?
     return @animated if @animated != nil
 
@@ -674,15 +725,23 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          command = ["identify", "-ping", "-format", "%n\\n", @file.path]
-          frames =
-            begin
-              Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i
-            rescue StandardError
-              1
+          begin
+            if GlobalSetting.enable_vips_image_processing
+              DiscourseVips.animated?(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+            else
+              ImageMagick.identify(
+                "-ping",
+                "-format",
+                "%n\\n",
+                @file.path,
+                operation: :upload_animation_probe,
+                read: [@file.path],
+                timeout: Upload::MAX_IDENTIFY_SECONDS,
+              ).to_i > 1
             end
-
-          frames > 1
+          rescue StandardError
+            false
+          end
         else
           false
         end

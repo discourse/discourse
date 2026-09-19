@@ -10,11 +10,12 @@ RSpec.describe SiteSettingRenameMigrationGenerator, type: :generator do
     silence_stdout do
       described_class.start(
         %w[site_description contact_email],
-        destination_root: "#{Rails.root}/tmp",
+        destination_root: "#{Rails.root.join("tmp")}",
       )
     end
 
-    file_path = "#{Rails.root}/tmp/db/migrate/20100101120000_rename_site_description_setting.rb"
+    file_path =
+      "#{Rails.root.join("tmp/db/migrate/20100101120000_rename_site_description_setting.rb")}"
     expected_content = <<~EXPECTED_CONTENT
       # frozen_string_literal: true
 

@@ -1,15 +1,21 @@
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-const ChatNavbarFilter = <template>
-  <DButton
-    @icon="discourse-chat-search"
-    @action={{@onToggleFilter}}
-    class={{concatClass
-      "btn-transparent c-navbar__filter"
-      (if @isFiltering "active")
-    }}
-  />
-</template>;
+export default class ChatNavbarFilter extends Component {
+  @service chatStateManager;
 
-export default ChatNavbarFilter;
+  <template>
+    {{#unless this.chatStateManager.isDrawerCollapsed}}
+      <DButton
+        class={{dConcatClass
+          "btn-transparent c-navbar__filter"
+          (if @isFiltering "active")
+        }}
+        @action={{@onToggleFilter}}
+        @icon="discourse-chat-search"
+      />
+    {{/unless}}
+  </template>
+}

@@ -12,7 +12,7 @@ class FinalizeAiAgentsSchema < ActiveRecord::Migration[7.2]
     "ai_helper_translator_persona" => "ai_helper_translator_agent",
     "ai_helper_markdown_tables_persona" => "ai_helper_markdown_tables_agent",
     "ai_helper_custom_prompt_persona" => "ai_helper_custom_prompt_agent",
-    "ai_helper_image_caption_persona" => "ai_helper_image_caption_agent",
+    "ai_helper_image_caption_persona" => "ai_image_caption_agent",
     "ai_helper_chat_thread_title_persona" => "ai_helper_chat_thread_title_agent",
     "ai_embeddings_semantic_search_hyde_persona" => "ai_embeddings_semantic_search_hyde_agent",
     "ai_summarization_persona" => "ai_summarization_agent",

@@ -14,14 +14,16 @@ const CREATE_ATTRIBUTES = [
   "priority",
   "top_p",
   "temperature",
+  "thinking_effort",
   "user_id",
   "default_llm_id",
   "force_default_llm",
   "user",
-  "max_context_posts",
   "vision_enabled",
   "vision_max_pixels",
   "rag_uploads",
+  "rag_document_sources",
+  "rag_document_sources_attributes",
   "rag_chunk_tokens",
   "rag_chunk_overlap_tokens",
   "rag_conversation_chunks",
@@ -34,7 +36,7 @@ const CREATE_ATTRIBUTES = [
   "allow_chat_direct_messages",
   "mcp_server_ids",
   "mcp_server_tool_names",
-  "execution_mode",
+  "subagent_ids",
   "max_turn_tokens",
 
   "compression_threshold",
@@ -54,22 +56,23 @@ const SYSTEM_ATTRIBUTES = [
   "default_llm_id",
   "force_default_llm",
   "user",
-  "max_context_posts",
   "vision_enabled",
   "vision_max_pixels",
   "rag_uploads",
+  "rag_document_sources",
+  "rag_document_sources_attributes",
   "rag_chunk_tokens",
   "rag_chunk_overlap_tokens",
   "rag_conversation_chunks",
   "rag_llm_model_id",
   "show_thinking",
+  "thinking_effort",
   "allow_personal_messages",
   "allow_topic_mentions",
   "allow_chat_channel_mentions",
   "allow_chat_direct_messages",
   "mcp_server_ids",
   "mcp_server_tool_names",
-  "execution_mode",
   "max_turn_tokens",
 
   "compression_threshold",
@@ -144,16 +147,41 @@ export default class AiAgent extends RestModel {
       ? this.getProperties(SYSTEM_ATTRIBUTES)
       : this.getProperties(CREATE_ATTRIBUTES);
     attrs.id = this.id;
+    delete attrs.rag_document_sources;
 
     return attrs;
   }
 
   createProperties() {
-    return this.getProperties(CREATE_ATTRIBUTES);
+    const attrs = this.getProperties(CREATE_ATTRIBUTES);
+    delete attrs.rag_document_sources;
+    return attrs;
   }
 
   fromPOJO(data) {
     const dataClone = toPlainObject(data);
+    const configuredSources = dataClone.rag_document_sources || [];
+    const configuredSourceIds = new Set(
+      configuredSources.map((source) => source.id).filter(Boolean)
+    );
+
+    dataClone.rag_document_sources_attributes = configuredSources.map(
+      (source) => ({
+        id: source.id,
+        url: source.url,
+        refresh_interval_hours: source.refresh_interval_hours,
+      })
+    );
+
+    (this.rag_document_sources || []).forEach((source) => {
+      if (source.id && !configuredSourceIds.has(source.id)) {
+        dataClone.rag_document_sources_attributes.push({
+          id: source.id,
+          _destroy: true,
+        });
+      }
+    });
+    delete dataClone.rag_document_sources;
 
     const agent = AiAgent.create(dataClone);
     agent.tools = this.flattenedToolStructure(dataClone);
@@ -166,9 +194,12 @@ export default class AiAgent extends RestModel {
     this.populateTools(attrs);
     attrs.mcp_server_ids = attrs.mcp_server_ids || [];
     attrs.mcp_server_tool_names = attrs.mcp_server_tool_names || {};
+    attrs.subagent_ids = attrs.subagent_ids || [];
     attrs.forced_tool_count = this.forced_tool_count || -1;
+    attrs.thinking_effort = attrs.thinking_effort || "default";
     attrs.response_format = attrs.response_format || [];
     attrs.examples = attrs.examples || [];
+    attrs.rag_document_sources = attrs.rag_document_sources || [];
     // FormKit uses Immer proxies which cause issues when passed to upload handlers.
     // Convert to plain objects to ensure compatibility.
     if (attrs.rag_uploads?.length > 0) {

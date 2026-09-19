@@ -3,11 +3,11 @@ import Component from "@ember/component";
 import { action, computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DTextarea from "discourse/components/d-textarea";
 import ShareSource from "discourse/components/share-source";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
+import DTextarea from "discourse/ui-kit/d-textarea";
 import { i18n } from "discourse-i18n";
 
 export default class SharePanel extends Component {
@@ -100,14 +100,14 @@ export default class SharePanel extends Component {
 
     <div class="body">
       <DTextarea
-        @value={{this.shareUrl}}
-        @aria-label={{i18n "share.url"}}
         class="topic-share-url"
+        @aria-label={{i18n "share.url"}}
+        @value={{this.shareUrl}}
       />
 
       <div class="sources">
         {{#each this.sources as |source|}}
-          <ShareSource @source={{source}} @action={{this.share}} />
+          <ShareSource @action={{this.share}} @source={{source}} />
         {{/each}}
       </div>
     </div>

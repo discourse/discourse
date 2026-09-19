@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 // Modal that displays confirmation text when user deletes a topic
@@ -29,10 +29,10 @@ export default class DeleteTopicConfirm extends Component {
 
   <template>
     <DModal
-      @title={{i18n "topic.actions.delete"}}
-      @closeModal={{@closeModal}}
       class="delete-topic-confirm-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "topic.actions.delete"}}
     >
       <:body>
         <p>
@@ -44,6 +44,7 @@ export default class DeleteTopicConfirm extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-danger"
           @action={{this.deleteTopic}}
           @disabled={{this.deletingTopic}}
           @label={{if
@@ -51,12 +52,11 @@ export default class DeleteTopicConfirm extends Component {
             "deleting"
             "post.controls.delete_topic_confirm_modal_yes"
           }}
-          class="btn-danger"
         />
         <DButton
+          class="btn-primary"
           @action={{@closeModal}}
           @label="post.controls.delete_topic_confirm_modal_no"
-          class="btn-primary"
         />
       </:footer>
     </DModal>

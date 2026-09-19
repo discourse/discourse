@@ -2,7 +2,7 @@ import DiscourseURL from "discourse/lib/url";
 
 const MOUSE_EVENT_PRIMARY_BUTTON_ID = 0;
 
-export function wantsNewWindow(e) {
+export function wantsNewWindow(e, link = e.currentTarget) {
   return (
     e.defaultPrevented ||
     e.isDefaultPrevented?.() ||
@@ -10,7 +10,7 @@ export function wantsNewWindow(e) {
     e.metaKey ||
     e.ctrlKey ||
     (e.button && e.button !== MOUSE_EVENT_PRIMARY_BUTTON_ID) ||
-    e.currentTarget?.target === "_blank"
+    link?.target === "_blank"
   );
 }
 

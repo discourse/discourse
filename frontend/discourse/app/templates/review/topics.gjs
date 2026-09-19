@@ -1,25 +1,25 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import NavItem from "discourse/components/nav-item";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import TopicStatus from "discourse/components/topic-status";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <HorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
-    <NavItem @route="review.index" @label="review.view_all" />
-    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+  <DHorizontalOverflowNav class="reviewable-title" @ariaLabel="Review">
+    <DNavItem @label="review.view_all" @route="review.index" />
+    <DNavItem @label="review.grouped_by_topic" @route="review.topics" />
     {{#if @controller.currentUser.admin}}
-      <NavItem
-        @route="review.settings"
-        @label="review.settings.title"
+      <DNavItem
         @icon="wrench"
+        @label="review.settings.title"
+        @route="review.settings"
       />
     {{/if}}
-  </HorizontalOverflowNav>
+  </DHorizontalOverflowNav>
 
   {{#if @controller.reviewableTopics.content}}
     <table class="reviewable-topics">
@@ -39,7 +39,7 @@ export default <template>
                   href={{rt.relative_url}}
                   rel="noopener noreferrer"
                   target="_blank"
-                >{{replaceEmoji rt.title}}</a>
+                >{{dReplaceEmoji rt.title}}</a>
               </div>
             </td>
             <td class="reviewable-count">
@@ -50,16 +50,16 @@ export default <template>
             </td>
             <td class="reviewable-details">
               <ReviewableClaimedTopic
-                @topicId={{rt.id}}
                 @claimedBy={{rt.claimed_by}}
                 @onClaim={{fn (mut rt.claimed_by)}}
+                @topicId={{rt.id}}
               />
               <LinkTo
-                @route="review.index"
-                @query={{hash topic_id=rt.id}}
                 class="btn btn-primary btn-small"
+                @query={{hash topic_id=rt.id}}
+                @route="review.index"
               >
-                {{icon "list"}}
+                {{dIcon "list"}}
                 <span>{{i18n "review.topics.details"}}</span>
               </LinkTo>
             </td>

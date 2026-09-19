@@ -9,6 +9,16 @@ RSpec.describe UpcomingChanges::Toggle do
     subject(:result) { described_class.call(params:, **dependencies, options:) }
 
     fab!(:admin)
+
+    before do
+      mock_upcoming_change_metadata(
+        enable_form_templates: {
+          impact: "feature,all_members",
+          status: :experimental,
+        },
+      )
+    end
+
     let(:params) { { setting_name:, enabled: } }
     let(:enabled) { true }
     let(:setting_name) { :enable_form_templates }
@@ -28,6 +38,12 @@ RSpec.describe UpcomingChanges::Toggle do
       it { is_expected.to fail_a_policy(:setting_is_available) }
     end
 
+    context "when setting_name is not an upcoming change" do
+      let(:setting_name) { :notify_changed! }
+
+      it { is_expected.to fail_a_policy(:setting_is_available) }
+    end
+
     context "when a non-admin user tries to change a setting" do
       let(:guardian) { Guardian.new }
 
@@ -37,7 +53,7 @@ RSpec.describe UpcomingChanges::Toggle do
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
-      context "when disallow_enabled_for_groups is true" do
+      context "when allow_enabled_for restricts to [everyone]" do
         before do
           mock_upcoming_change_metadata(
             enable_form_templates: {
@@ -45,7 +61,7 @@ RSpec.describe UpcomingChanges::Toggle do
               status: :experimental,
               impact_type: "feature",
               impact_role: "all_members",
-              disallow_enabled_for_groups: true,
+              allow_enabled_for: [:everyone],
             },
           )
         end
@@ -82,13 +98,64 @@ RSpec.describe UpcomingChanges::Toggle do
           end
         end
 
-        context "when toggling with no existing groups" do
+        context "when toggling on with no existing groups" do
           let(:enabled) { true }
 
           before { SiteSetting.enable_form_templates = false }
 
           it { is_expected.to run_successfully }
         end
+      end
+
+      context "when allow_enabled_for is [staff, specific_groups]" do
+        before do
+          mock_upcoming_change_metadata(
+            enable_form_templates: {
+              impact: "feature,all_members",
+              status: :experimental,
+              impact_type: "feature",
+              impact_role: "all_members",
+              allow_enabled_for: %i[staff specific_groups],
+            },
+          )
+          SiteSetting.enable_form_templates = false
+        end
+
+        context "when toggling on with no existing groups (target would be everyone)" do
+          let(:enabled) { true }
+
+          it { is_expected.to fail_a_policy(:allowed_enabled_for_target) }
+        end
+
+        context "when toggling on with existing groups configured" do
+          let(:enabled) { true }
+
+          fab!(:site_setting_group) do
+            Fabricate(:site_setting_group, name: "enable_form_templates", group_ids: "1|2")
+          end
+
+          it { is_expected.to run_successfully }
+
+          it "preserves the SiteSettingGroup record" do
+            expect { result }.not_to change {
+              SiteSettingGroup.where(name: "enable_form_templates").count
+            }
+          end
+        end
+
+        context "when toggling off" do
+          let(:enabled) { false }
+
+          it { is_expected.to run_successfully }
+        end
+      end
+
+      context "when allow_enabled_for is omitted" do
+        let(:enabled) { true }
+
+        before { SiteSetting.enable_form_templates = false }
+
+        it { is_expected.to run_successfully }
       end
 
       context "when log_change is true" do

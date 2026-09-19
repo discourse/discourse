@@ -67,6 +67,23 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       );
     });
 
+    test("throws the decorator error for a missing class", function (assert) {
+      // A bad or circular import hands `undefined` to `api.registerBlock()`.
+      // That must surface the actionable decorator message, not a raw
+      // property-access failure from an uncaught TypeError.
+      assert.throws(
+        () => _registerBlock(undefined),
+        /must be decorated with @block/
+      );
+    });
+
+    test("throws the decorator error for a null class", function (assert) {
+      assert.throws(
+        () => _registerBlock(null),
+        /must be decorated with @block/
+      );
+    });
+
     test("throws for duplicate block name", function (assert) {
       @block("duplicate-block")
       class FirstBlock extends Component {}
@@ -325,6 +342,27 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       await assert.rejects(
         resolveBlock("not-a-block"),
+        /did not return a valid @block-decorated class/
+      );
+    });
+
+    test("reports a missing return value as an invalid factory result", async function (assert) {
+      // A factory that forgets to return anything resolves to `undefined`; it
+      // must still produce the actionable "invalid factory result" message
+      // rather than surfacing a raw property-access failure.
+      _registerBlockFactory("empty-factory", async () => {});
+
+      await assert.rejects(
+        resolveBlock("empty-factory"),
+        /did not return a valid @block-decorated class/
+      );
+    });
+
+    test("reports a null return value as an invalid factory result", async function (assert) {
+      _registerBlockFactory("null-factory", async () => null);
+
+      await assert.rejects(
+        resolveBlock("null-factory"),
         /did not return a valid @block-decorated class/
       );
     });

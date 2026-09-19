@@ -63,13 +63,5 @@
     .d-icon {
       font-size: var(--font-down-1);
     }
-
-    @include viewport.until(sm) {
-      position: absolute;
-      bottom: 3rem;
-      margin-inline: auto;
-      margin-top: 0;
-      left: 0;
-    }
   }
 }

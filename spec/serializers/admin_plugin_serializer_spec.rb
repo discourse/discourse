@@ -3,7 +3,9 @@
 RSpec.describe AdminPluginSerializer do
   subject(:serializer) { described_class.new(instance) }
 
-  let(:all_test_plugins) { Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins") }
+  let(:all_test_plugins) do
+    Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")
+  end
   let(:instance) { all_test_plugins.find { |plugin| plugin.name == "color_definition" } }
 
   describe "admin_route" do
@@ -74,14 +76,14 @@ RSpec.describe AdminPluginSerializer do
   end
 
   describe "enabled_setting" do
-    it "should return the right value" do
+    it "returns the expected value" do
       instance.enabled_site_setting("test")
       expect(serializer.enabled_setting).to eq("test")
     end
   end
 
   describe "commit_hash" do
-    it "should return commit_hash and commit_url" do
+    it "returns commit_hash and commit_url" do
       git_repo = instance.git_repo
       git_repo.stubs(:latest_local_commit).returns("123456")
       git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")

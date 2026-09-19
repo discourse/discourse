@@ -54,6 +54,8 @@ tr_TR:
       cast-votes:
         title: "Oylarınızı kullanın"
         label: "Hemen oy verin!"
+      keep-vote:
+        label: "Geri"
       show-results:
         title: "Anket sonuçlarını göster"
         label: "Sonuçlar"
@@ -160,5 +162,3 @@ tr_TR:
           add: Seçenek ekle
         automatic_close:
           label: Anketi otomatik olarak kapat
-        show_advanced: "Gelişmiş Seçenekleri Göster"
-        hide_advanced: "Gelişmiş Seçenekleri Gizle"

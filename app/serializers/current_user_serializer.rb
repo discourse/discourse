@@ -24,10 +24,10 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
+             :can_create_admin_invite,
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
-             :can_toggle_nested_mode,
              :can_ignore_users,
              :can_edit_tags,
              :can_delete_all_posts_and_topics,
@@ -54,6 +54,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :flair_group_id,
              :can_create_topic,
+             :can_set_topic_timer,
              :can_create_category,
              :can_create_group,
              :link_posting_access,
@@ -74,7 +75,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_tags,
              :sidebar_category_ids,
              :sidebar_sections,
-             :new_new_view_enabled?,
+             :unified_new_enabled?,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
@@ -84,8 +85,10 @@ class CurrentUserSerializer < BasicUserSerializer
              :effective_locale,
              :can_see_ip,
              :is_impersonating,
+             :impersonation_expires_at,
              :can_change_post_owner,
-             :show_site_owner_onboarding
+             :show_site_owner_onboarding,
+             :can_run_design_wizard
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -107,6 +110,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def is_impersonating
     !!object.is_impersonating
+  end
+
+  def impersonation_expires_at
+    object.impersonation_expires_at
   end
 
   def include_can_change_post_owner?
@@ -141,6 +148,10 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_create_topic?(nil)
   end
 
+  def can_set_topic_timer
+    scope.can_set_topic_timer?
+  end
+
   def can_create_category
     true
   end
@@ -165,10 +176,22 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
+  # The wizard only offers the core themes and rewrites the site's design in one
+  # pass, so it stops being useful once a site has been customized past what it
+  # covers.
+  def include_can_run_design_wizard?
+    object.admin? && Theme::CORE_THEMES.value?(SiteSetting.default_theme_id) &&
+      !Theme.where.not(id: Theme::CORE_THEMES.values).exists?
+  end
+
+  def can_run_design_wizard
+    true
+  end
+
   def include_show_site_owner_onboarding?
     SiteSetting.enable_site_owner_onboarding && object.admin? &&
       User.where(admin: true).human_users.minimum(:id) == object.id &&
-      Topic.minimum(:created_at)&.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
+      object.created_at.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
   end
 
   def show_site_owner_onboarding
@@ -189,10 +212,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def has_new_upcoming_changes
     last_visited = object.custom_fields["last_visited_upcoming_changes_at"]
-
-    scope = UpcomingChangeEvent.added
-    scope = scope.where("created_at > ?", Time.zone.parse(last_visited)) if last_visited.present?
-    scope.exists?
+    return false if last_visited.blank? && object.created_at < Discourse.site_creation_date + 1.hour
+    cutoff = last_visited.present? ? Time.zone.parse(last_visited) : object.created_at
+    UpcomingChangeEvent.added.not_backfilled.where("created_at > ?", cutoff).exists?
   end
 
   def can_post_anonymously
@@ -200,20 +222,12 @@ class CurrentUserSerializer < BasicUserSerializer
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
   end
 
-  def can_toggle_nested_mode
-    object.in_any_groups?(SiteSetting.nested_replies_toggle_mode_groups_map)
-  end
-
-  def include_can_toggle_nested_mode?
-    SiteSetting.nested_replies_enabled
-  end
-
   def can_ignore_users
     scope.can_ignore_users?
   end
 
   def can_delete_all_posts_and_topics
-    object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+    scope.can_delete_all_posts_and_topics?
   end
 
   def can_upload_avatar
@@ -234,6 +248,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_invite_to_forum?
     scope.can_invite_to_forum?
+  end
+
+  def can_create_admin_invite
+    true
+  end
+
+  def include_can_create_admin_invite?
+    scope.can_create_admin_invite?
   end
 
   def no_password
@@ -359,6 +381,10 @@ class CurrentUserSerializer < BasicUserSerializer
     object.totp_enabled? || object.security_keys_enabled?
   end
 
+  def include_featured_topic?
+    scope.can_see_topic?(object.user_profile.featured_topic)
+  end
+
   def featured_topic
     BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
   end
@@ -368,7 +394,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_view_raw_email
-    scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+    scope.can_view_raw_emails?
   end
 
   def do_not_disturb_channel_position

@@ -1,4 +1,5 @@
 import { schema } from "prosemirror-markdown";
+import { isListTight } from "discourse/lib/list-utils";
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -6,8 +7,17 @@ const extension = {
     bullet_list: {
       ...schema.nodes.bullet_list.spec,
 
-      // All we are doing here is overriding the tight list default to `true`.
       attrs: { tight: { default: true } },
+      parseDOM: [
+        {
+          tag: "ul",
+          getAttrs(dom) {
+            return {
+              tight: dom.hasAttribute("data-tight") || isListTight(dom),
+            };
+          },
+        },
+      ],
     },
   },
 };

@@ -205,9 +205,9 @@ RSpec.describe PostCreator do
         Jobs.run_immediately!
         UserActionManager.enable
 
-        admin = Fabricate(:user)
+        admin = Fabricate(:user, refresh_auto_groups: true)
         admin.grant_admin!
-        other_admin = Fabricate(:user)
+        other_admin = Fabricate(:user, refresh_auto_groups: true)
         other_admin.grant_admin!
 
         cat = Fabricate(:category)
@@ -255,8 +255,8 @@ RSpec.describe PostCreator do
         admin_ids = [Group[:admins].id]
         expect(
           messages.any? do |m|
-            m.group_ids != admin_ids &&
-              (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id))
+            m.group_ids != admin_ids && !m.user_ids.include?(other_admin.id) &&
+              !m.user_ids.include?(admin.id)
           end,
         ).to eq(false)
       end
@@ -661,7 +661,7 @@ RSpec.describe PostCreator do
             end
 
             context "with regular expressions" do
-              it "works" do
+              it "applies regular-expression tag rules" do
                 SiteSetting.watched_words_regular_expressions = true
                 Fabricate(
                   :watched_word,
@@ -692,20 +692,22 @@ RSpec.describe PostCreator do
   describe "whisper" do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
+    before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
+
     it "whispers do not mess up the public view" do
       freeze_time_safe
 
-      first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
+      first = PostCreator.new(admin, topic_id: topic.id, raw: "this is the first post").create
 
       freeze_time 1.year.from_now
 
-      user_stat = user.user_stat
+      user_stat = admin.user_stat
 
       whisper =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
-          reply_to_post_number: 1,
+          reply_to_post_number: first.post_number,
           post_type: Post.types[:whisper],
           raw: "this is a whispered reply",
         ).create
@@ -718,7 +720,7 @@ RSpec.describe PostCreator do
 
       whisper_reply =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
           reply_to_post_number: whisper.post_number,
           post_type: Post.types[:regular],
@@ -730,8 +732,8 @@ RSpec.describe PostCreator do
 
       expect(user_stat.reload.post_count).to eq(0)
 
-      user.reload
-      expect(user.last_posted_at).to eq_time(1.year.ago)
+      admin.reload
+      expect(admin.last_posted_at).to eq_time(1.year.ago)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -875,8 +877,8 @@ RSpec.describe PostCreator do
       GroupMessage
         .expects(:create)
         .with do |group_name, msg_type, params|
-          group_name == (Group[:moderators].name) && msg_type == (:spam_post_blocked) &&
-            params[:user].id == (user.id)
+          group_name == Group[:moderators].name && msg_type == :spam_post_blocked &&
+            params[:user].id == user.id
         end
       creator.create
     end
@@ -1172,9 +1174,20 @@ RSpec.describe PostCreator do
       PostCreator.create!(admin2, raw: "I am also an admin, and a mod", topic_id: post.topic_id)
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
+
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      PostCreator.create!(
+        tl0_user,
+        raw: "Automated support reply",
+        topic_id: post.topic_id,
+        guardian: Discourse.system_user.guardian,
+        skip_staff_author_pm_membership_sync: true,
+      )
+
+      expect(post.topic.topic_allowed_users.where(user_id: tl0_user.id).count).to eq(0)
     end
 
-    it "does not add whisperers to allowed users of the topic" do
+    it "does not add whisper authors to the topic's allowed users" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       unrelated_user.update!(admin: true)
 
@@ -1192,7 +1205,7 @@ RSpec.describe PostCreator do
       )
     end
 
-    it "does not add whisperers to allowed users of the topic" do
+    it "does not add small-action authors to the topic's allowed users" do
       unrelated_user.update!(admin: true)
 
       PostCreator.create!(
@@ -1222,7 +1235,7 @@ RSpec.describe PostCreator do
         expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
-      expect(topic.word_count).to eq(0)
+      expect(topic.word_count).to be_nil
 
       p2 = Fabricate(:post, topic: topic)
       Topic.reset_highest(topic.id)
@@ -1237,7 +1250,7 @@ RSpec.describe PostCreator do
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
 
-    it "does not bump highest_post_number for small_action posts in PMs" do
+    it "does not bump any post number counter for small_action posts" do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
       Fabricate(:post, topic: topic)
       topic.reload
@@ -1256,7 +1269,7 @@ RSpec.describe PostCreator do
       topic.reload
 
       expect(topic.highest_post_number).to eq(1)
-      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.highest_staff_post_number).to eq(1)
     end
   end
 
@@ -1602,7 +1615,7 @@ RSpec.describe PostCreator do
   end
 
   describe "read credit for creator" do
-    it "should give credit to creator" do
+    it "records reading credit for the creator" do
       post = create_post
       expect(
         PostTiming.find_by(
@@ -1793,7 +1806,7 @@ RSpec.describe PostCreator do
   end
 
   describe "#create!" do
-    it "should return the post if it was successfully created" do
+    it "returns the newly created post" do
       title = "This is a valid title"
       raw = "This is a really awesome post"
 
@@ -1805,7 +1818,7 @@ RSpec.describe PostCreator do
       expect(post.raw).to eq(raw)
     end
 
-    it "should raise an error when post fails to be created" do
+    it "raises an error when the post cannot be created" do
       post_creator = PostCreator.new(user, title: "", raw: "")
       expect { post_creator.create! }.to raise_error(ActiveRecord::RecordNotSaved)
     end
@@ -1839,12 +1852,49 @@ RSpec.describe PostCreator do
     end
   end
 
+  describe "skip_rate_limits" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true, trust_level: TrustLevel[4]) }
+    fab!(:topic)
+
+    before do
+      RateLimiter.enable
+      SiteSetting.rate_limit_create_post = 5
+    end
+
+    it "rate limits a non-staff author by default" do
+      PostCreator.create!(author, topic_id: topic.id, raw: "the first post from this author")
+
+      expect {
+        PostCreator.create!(author, topic_id: topic.id, raw: "a second post moments later")
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
+    it "does not rate limit when skip_rate_limits is set" do
+      PostCreator.create!(author, topic_id: topic.id, raw: "the first post from this author")
+
+      expect {
+        PostCreator.create!(
+          author,
+          topic_id: topic.id,
+          raw: "a second post moments later",
+          skip_rate_limits: true,
+        )
+      }.not_to raise_error
+    end
+
+    it "still validates content when only rate limits are skipped" do
+      expect {
+        PostCreator.create!(author, topic_id: topic.id, raw: "", skip_rate_limits: true)
+      }.to raise_error(ActiveRecord::RecordNotSaved)
+    end
+  end
+
   describe "private message to a user that has disabled private messages" do
     fab!(:another_user) { Fabricate(:user, username: "HelloWorld") }
 
     before { another_user.user_option.update!(allow_private_messages: false) }
 
-    it "should not be valid" do
+    it "rejects the private message" do
       post_creator =
         PostCreator.new(
           user,
@@ -1861,7 +1911,7 @@ RSpec.describe PostCreator do
       )
     end
 
-    it "should not be valid if the name is downcased" do
+    it "rejects the private message when the username is lowercase" do
       post_creator =
         PostCreator.new(
           user,
@@ -1879,7 +1929,7 @@ RSpec.describe PostCreator do
     fab!(:muted_me) { evil_trout }
     fab!(:another_user, :user)
 
-    it "should fail" do
+    it "rejects the private message" do
       updater = UserUpdater.new(muted_me, muted_me)
       updater.update_muted_users("#{user.username}")
 
@@ -1925,7 +1975,7 @@ RSpec.describe PostCreator do
     context "when post author is ignored" do
       let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: user) }
 
-      it "should fail" do
+      it "rejects the private message" do
         pc =
           PostCreator.new(
             user,
@@ -1970,7 +2020,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
       end
 
-      it "should succeed" do
+      it "accepts the private message" do
         allowed_user.user_option.update!(enable_allowed_pm_users: true)
 
         pc =
@@ -1992,7 +2042,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
       end
 
-      it "should fail" do
+      it "rejects the private message" do
         allowed_user.user_option.update!(allow_private_messages: false)
         allowed_user.user_option.update!(enable_allowed_pm_users: true)
 
@@ -2023,7 +2073,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: not_allowed_user, allowed_pm_user: allowed_user)
       end
 
-      it "should fail" do
+      it "rejects the private message" do
         not_allowed_user.user_option.update!(enable_allowed_pm_users: true)
 
         pc =
@@ -2041,7 +2091,7 @@ RSpec.describe PostCreator do
         )
       end
 
-      it "should succeed when not enabled" do
+      it "accepts the private message when allow-list enforcement is disabled" do
         not_allowed_user.user_option.update!(enable_allowed_pm_users: false)
 
         pc =
@@ -2091,7 +2141,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
       end
 
-      it "should fail" do
+      it "rejects the private message" do
         allowed_user.user_option.update!(enable_allowed_pm_users: true)
         not_allowed_user.user_option.update!(enable_allowed_pm_users: true)
 

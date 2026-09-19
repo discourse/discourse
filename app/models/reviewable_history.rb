@@ -15,13 +15,13 @@ end
 # Table name: reviewable_histories
 #
 #  id                      :bigint           not null, primary key
-#  reviewable_id           :integer          not null
+#  edited                  :json
 #  reviewable_history_type :integer          not null
 #  status                  :integer          not null
-#  created_by_id           :integer          not null
-#  edited                  :json
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  created_by_id           :integer          not null
+#  reviewable_id           :integer          not null
 #
 # Indexes
 #

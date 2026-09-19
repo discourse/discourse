@@ -28,7 +28,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     expect(bookmark3.reminder_last_sent_at).not_to eq(nil)
   end
 
-  it "will not send a reminder for a bookmark in the future" do
+  it "does not remind the user about a future bookmark" do
     freeze_time
     bookmark4 = Fabricate(:bookmark, reminder_at: 1.day.from_now)
     expect { job.execute }.to change { Notification.where(user: user).count }.by(3)
@@ -50,17 +50,15 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
 
   context "when the number of notifications exceed max_reminder_notifications_per_run" do
     it "does not send them in the current run, but will send them in the next" do
-      begin
-        Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
-        job.execute
-        expect(bookmark1.reload.reminder_last_sent_at).not_to eq(nil)
-        expect(bookmark2.reload.reminder_last_sent_at).not_to eq(nil)
-        expect(bookmark3.reload.reminder_last_sent_at).to eq(nil)
-      end
+      Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
+      job.execute
+      expect(bookmark1.reload.reminder_last_sent_at).not_to eq(nil)
+      expect(bookmark2.reload.reminder_last_sent_at).not_to eq(nil)
+      expect(bookmark3.reload.reminder_last_sent_at).to eq(nil)
     end
   end
 
-  it "will not send notification when topic is not available" do
+  it "does not notify when the topic is unavailable" do
     bookmark1.bookmarkable.topic.destroy
     bookmark2.bookmarkable.topic.destroy
     bookmark3.bookmarkable.topic.destroy

@@ -2,7 +2,10 @@
 
 RSpec.describe Chat::UpsertDraft do
   describe described_class::Contract, type: :model do
+    subject(:contract) { described_class.new(channel_id: 1) }
+
     it { is_expected.to validate_presence_of :channel_id }
+    it { is_expected.to validate_length_of(:data).is_at_most(SiteSetting.max_chat_draft_length) }
   end
 
   describe ".call" do

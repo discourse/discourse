@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PostMetaDataPosterName from "discourse/components/post/meta-data/poster-name";
-import UserAvatar from "discourse/components/user-avatar";
 import DiscourseURL from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class PostFilteredNotice extends Component {
@@ -53,8 +53,8 @@ export default class PostFilteredNotice extends Component {
         <span class="filtered-replies-viewing">
           {{i18n "post.filtered_replies.viewing_subset"}}
           <FilterShowAllBtn
-            @streamFilters={{@streamFilters}}
             @cancelFilter={{@cancelFilter}}
+            @streamFilters={{@streamFilters}}
           />
         </span>
       {{else if this.isViewingRepliesToPostNumber}}
@@ -66,20 +66,20 @@ export default class PostFilteredNotice extends Component {
         </span>
         <span class="filtered-user-row">
           <span class="filtered-avatar">
-            <UserAvatar @size="small" @user={{this.sourcePost}} />
+            <DUserAvatar @size="small" @user={{this.sourcePost}} />
           </span>
           <DButton
             class="filtered-jump-to-post"
+            @action={{this.jumpToPost}}
             @translatedLabel={{i18n
               "post.filtered_replies.post_number"
               username=this.sourcePost.username
               post_number=@streamFilters.replies_to_post_number
             }}
-            @action={{this.jumpToPost}}
           />
           <FilterShowAllBtn
-            @streamFilters={{@streamFilters}}
             @cancelFilter={{@cancelFilter}}
+            @streamFilters={{@streamFilters}}
           />
         </span>
       {{else if this.isViewingSummary}}
@@ -87,8 +87,8 @@ export default class PostFilteredNotice extends Component {
           {{i18n "post.filtered_replies.viewing_summary"}}
         </span>
         <FilterShowAllBtn
-          @streamFilters={{@streamFilters}}
           @cancelFilter={{@cancelFilter}}
+          @streamFilters={{@streamFilters}}
         />
       {{else if this.isViewingPostsByUsername}}
         <span class="filtered-replies-viewing">
@@ -98,12 +98,12 @@ export default class PostFilteredNotice extends Component {
           }}
         </span>
         <span class="filtered-avatar">
-          <UserAvatar @size="small" @user={{this.firstUserPost}} />
+          <DUserAvatar @size="small" @user={{this.firstUserPost}} />
         </span>
         <PostMetaDataPosterName @post={{this.firstUserPost}} />
         <FilterShowAllBtn
-          @streamFilters={{@streamFilters}}
           @cancelFilter={{@cancelFilter}}
+          @streamFilters={{@streamFilters}}
         />
       {{/if}}
     </div>
@@ -125,9 +125,9 @@ class FilterShowAllBtn extends Component {
   <template>
     <DButton
       class="btn-primary filtered-replies-show-all"
+      @action={{this.showAll}}
       @icon="up-down"
       @label="post.filtered_replies.show_all"
-      @action={{this.showAll}}
     />
   </template>
 }

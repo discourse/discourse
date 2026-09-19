@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class Dropdown extends Component {
@@ -28,18 +28,18 @@ export default class Dropdown extends Component {
 
   <template>
     <li
-      class={{concatClass (if @active "active") "header-dropdown-toggle"}}
+      class={{dConcatClass (if @active "active") "header-dropdown-toggle"}}
       ...attributes
     >
       <DButton
-        class="icon btn-flat"
         aria-expanded={{@active}}
         aria-haspopup="true"
-        @translatedTitle={{i18n @title}}
         aria-label={{i18n @title}}
+        class="icon btn-flat"
         id={{@iconId}}
         @icon={{@icon}}
         @translatedLabel={{@contents}}
+        @translatedTitle={{i18n @title}}
         {{on "click" this.click}}
       />
 

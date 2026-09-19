@@ -3,11 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
@@ -18,6 +15,9 @@ import {
   NOT_BOOKMARKED,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BookmarkMenu extends Component {
@@ -31,20 +31,6 @@ export default class BookmarkMenu extends Component {
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
   bookmarkCreatePromise = null;
-
-  @action
-  setReminderShortcuts() {
-    this.reminderAtOptions = [
-      this.timeShortcuts.twoHours(),
-      this.timeShortcuts.tomorrow(),
-      this.timeShortcuts.threeDays(),
-    ];
-
-    const custom = this.timeShortcuts.custom();
-    custom.label = "time_shortcut.more_options";
-    custom.icon = "far-calendar-plus";
-    this.reminderAtOptions.push(custom);
-  }
 
   get bookmarkManager() {
     return this.args.bookmarkManager;
@@ -120,6 +106,20 @@ export default class BookmarkMenu extends Component {
     } else {
       return i18n("bookmarked.title");
     }
+  }
+
+  @action
+  setReminderShortcuts() {
+    this.reminderAtOptions = [
+      this.timeShortcuts.twoHours(),
+      this.timeShortcuts.tomorrow(),
+      this.timeShortcuts.threeDays(),
+    ];
+
+    const custom = this.timeShortcuts.custom();
+    custom.label = "time_shortcut.more_options";
+    custom.icon = "far-calendar-plus";
+    this.reminderAtOptions.push(custom);
   }
 
   @action
@@ -266,21 +266,21 @@ export default class BookmarkMenu extends Component {
   <template>
     <DMenu
       ...attributes
-      @identifier="bookmark-menu"
       class={{this.buttonClasses}}
-      @title={{this.buttonTitle}}
-      @label={{this.buttonLabel}}
-      @icon={{this.buttonIcon}}
-      @onClose={{this.onCloseMenu}}
-      @onShow={{this.onShowMenu}}
-      @onRegisterApi={{this.onRegisterApi}}
       @arrow={{false}}
+      @icon={{this.buttonIcon}}
+      @identifier="bookmark-menu"
+      @label={{this.buttonLabel}}
+      @onClose={{this.onCloseMenu}}
+      @onRegisterApi={{this.onRegisterApi}}
+      @onShow={{this.onShowMenu}}
+      @title={{this.buttonTitle}}
     >
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#unless this.showEditDeleteMenu}}
             <dropdown.item class="bookmark-menu__title">
-              {{icon "circle-check"}}
+              {{dIcon "circle-check"}}
               <span>{{i18n "bookmarks.bookmarked_success"}}</span>
             </dropdown.item>
           {{/unless}}
@@ -291,46 +291,46 @@ export default class BookmarkMenu extends Component {
               data-menu-option-id="edit"
             >
               <DButton
+                class="bookmark-menu__row-btn btn-transparent"
+                @action={{this.onEditBookmark}}
                 @icon="pencil"
                 @label="edit"
-                @action={{this.onEditBookmark}}
-                class="bookmark-menu__row-btn btn-transparent"
               />
             </dropdown.item>
 
             {{#if this.existingBookmark.reminderAt}}
               <dropdown.item
                 class="bookmark-menu__row --clear-reminder"
+                data-menu-option-id="clear-reminder"
                 role="button"
                 tabindex="0"
-                data-menu-option-id="clear-reminder"
               >
                 <DButton
+                  class="bookmark-menu__row-btn btn-transparent"
+                  @action={{this.onClearReminder}}
                   @icon="bell-slash"
                   @label="bookmarks.clear_reminder"
-                  @action={{this.onClearReminder}}
-                  class="bookmark-menu__row-btn btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
 
             <dropdown.item
               class="bookmark-menu__row --remove"
+              data-menu-option-id="delete"
               role="button"
               tabindex="0"
-              data-menu-option-id="delete"
             >
               <DButton
+                class="bookmark-menu__row-btn --danger"
+                @action={{this.onRemoveBookmark}}
                 @icon="trash-can"
                 @label="delete"
-                @action={{this.onRemoveBookmark}}
-                class="bookmark-menu__row-btn --danger"
               />
             </dropdown.item>
 
           {{else}}
             <dropdown.item class="bookmark-menu__row-title">
-              {{icon "bell"}}
+              {{dIcon "bell"}}
               {{i18n "bookmarks.also_set_reminder"}}
             </dropdown.item>
 
@@ -342,16 +342,16 @@ export default class BookmarkMenu extends Component {
                 data-menu-option-id={{option.id}}
               >
                 <DButton
+                  class="bookmark-menu__row-btn btn-transparent"
+                  @action={{fn this.onChooseReminderOption option}}
+                  @icon={{option.icon}}
                   @label={{option.label}}
                   @translatedTitle={{this.reminderShortcutTimeTitle option}}
-                  @action={{fn this.onChooseReminderOption option}}
-                  class="bookmark-menu__row-btn btn-transparent"
-                  @icon={{option.icon}}
                 />
               </dropdown.item>
             {{/each}}
           {{/if}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

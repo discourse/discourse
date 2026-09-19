@@ -63,6 +63,17 @@ module Jobs
             end
           )
 
+        # On brand new sites (< 1h old), seed every admin's last viewed date to
+        # the newest item so they don't get a back-catalog notification covering
+        # features that pre-date the site. Genuinely new features arriving later
+        # will still notify normally.
+        if Migration::Helpers.new_site? && !Rails.env.development?
+          admin_ids.each do |admin_id|
+            DiscourseUpdates.bump_last_viewed_feature_date(admin_id, most_recent_created_at)
+          end
+          return
+        end
+
         admin_ids.each do |admin_id|
           admin_last_viewed_feature_date = DiscourseUpdates.get_last_viewed_feature_date(admin_id)
           if admin_last_viewed_feature_date.blank? ||

@@ -28,6 +28,8 @@ module Chat
     end
 
     def can_create_chat_message?
+      return false if anonymous?
+
       !SpamRule::AutoSilence.prevent_posting?(@user)
     end
 
@@ -61,7 +63,9 @@ module Chat
       return true if is_staff?
       return false if !target.user_option.allow_private_messages
 
-      !is_ignored_by_user?(target) && !is_muted_by_user?(target) && !target.suspended?
+      user_comm_screener = UserCommScreener.new(acting_user: @user, target_user_ids: target.id)
+
+      !user_comm_screener.disallowing_pms_from_actor?(target.id) && !target.suspended?
     end
 
     def hidden_tag_names
@@ -146,7 +150,22 @@ module Chat
 
     def can_preview_chat_channel?(chat_channel)
       return false if !chat_channel&.chatable
+
       can_see_chatable?(chat_channel.chatable)
+    end
+
+    def can_preview_anonymous_public_chat_channel?(chat_channel)
+      return false if !Chat.anonymous_public_channel_access_allowed?
+      return false if !chat_channel&.category_channel?
+
+      Guardian.new(nil).can_preview_chat_channel?(chat_channel)
+    end
+
+    def can_see_chat_message?(message)
+      return false if !can_preview_chat_channel?(message.chat_channel)
+      return true if !message.trashed?
+
+      message.user_id == @user.id || is_staff?
     end
 
     def can_join_chat_channel?(chat_channel, post_allowed_category_ids: nil)
@@ -219,6 +238,7 @@ module Chat
     def can_delete_chat?(message, chatable)
       return false if @user.silenced?
       return false if !can_modify_channel_message?(message.chat_channel)
+      return false if !is_admin? && !can_preview_chat_channel?(message.chat_channel)
 
       if message.user_id == current_user.id
         can_delete_own_chats?(chatable)
@@ -241,7 +261,9 @@ module Chat
     end
 
     def can_restore_chat?(message, chatable)
+      return false if @user.silenced?
       return false if !can_modify_channel_message?(message.chat_channel)
+      return false if !is_admin? && !can_preview_chat_channel?(message.chat_channel)
 
       if message.user_id == current_user.id
         case chatable
@@ -260,6 +282,8 @@ module Chat
     end
 
     def can_edit_chat?(message)
+      return false if !can_preview_chat_channel?(message.chat_channel)
+
       (message.user_id == @user.id && !@user.silenced?) || is_admin?
     end
 

@@ -21,6 +21,3 @@ tr_TR:
     other: "%{count} yanıt"
   theme_metadata:
     description: "Discourse siteleri için kullanıma hazır deneyimi geliştiren basit ve güzel bir tema."
-    settings:
-      topic_card_high_context:
-        description: "Etkinleştirildiğinde, etiketler, alıntılar, çözülmüş durum, atanan kullanıcılar ve oy sayıları (deneysel) dahil olmak üzere konu kartlarında ek bağlam bilgileri görüntülenir."

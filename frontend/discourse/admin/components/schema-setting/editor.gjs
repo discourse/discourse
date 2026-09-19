@@ -1,18 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { isArray } from "@ember/array";
-import { fn } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import Tree from "discourse/admin/components/schema-setting/editor/tree";
 import FieldInput from "discourse/admin/components/schema-setting/field";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
 import { gt, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class SchemaSettingNewEditor extends Component {
@@ -26,49 +25,12 @@ export default class SchemaSettingNewEditor extends Component {
   @autoTrackedArray activeSchemaPaths = [];
   @autoTrackedArray history = [];
 
-  inputFieldObserver = new Map();
-  data = this.#trackNestedArrays(cloneJSON(this.args.setting.value));
   schema = this.args.schema;
-
-  @action
-  onChildClick(index, propertyName, parentNodeIndex) {
-    this.history.push({
-      dataPaths: [...this.activeDataPaths],
-      schemaPaths: [...this.activeSchemaPaths],
-      index: this.activeIndex,
-    });
-
-    this.activeIndex = index;
-    this.activeDataPaths.push(parentNodeIndex, propertyName);
-    this.activeSchemaPaths.push(propertyName);
-    this.inputFieldObserver.clear();
-  }
-
-  @action
-  updateIndex(index) {
-    this.activeIndex = index;
-  }
-
-  @action
-  generateSchemaTitle(object, schema, index) {
-    let title;
-
-    if (schema.properties[schema.identifier]?.type === "categories") {
-      title = this.activeData[index][schema.identifier]
-        ?.map((categoryId) => {
-          return (
-            this.args.setting.metadata?.categories?.[categoryId]?.name ||
-            Category.findById(categoryId)?.name
-          );
-        })
-        .filter(Boolean)
-        .join(", ");
-    } else {
-      title = object[schema.identifier];
-    }
-
-    return title || `${schema.name} ${index + 1}`;
-  }
+  data = trackedArray(
+    cloneJSON(this.args.setting.value).map((object) =>
+      this.#prepareObject(object, this.schema)
+    )
+  );
 
   get backButtonText() {
     if (this.history.length === 0) {
@@ -90,41 +52,82 @@ export default class SchemaSettingNewEditor extends Component {
     return this.#resolveDataFromPaths(this.activeDataPaths);
   }
 
-  #resolveDataFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.data;
-    }
-
-    let data = this.data;
-
-    paths.forEach((path) => {
-      data = data[path];
-    });
-
-    return data;
+  get activeObject() {
+    return this.activeData[this.activeIndex];
   }
 
   get activeSchema() {
     return this.#resolveSchemaFromPaths(this.activeSchemaPaths);
   }
 
-  #resolveSchemaFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.schema;
+  get fields() {
+    const list = [];
+
+    if (!this.activeObject) {
+      return list;
     }
 
-    let schema = this.schema;
+    for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
+      if (spec.type === "objects") {
+        continue;
+      }
 
-    paths.forEach((path) => {
-      schema = schema.properties[path].schema;
-    });
+      list.push({
+        name,
+        spec,
+        description: this.fieldDescription(name, spec),
+        label: this.fieldLabel(name, spec),
+      });
+    }
 
-    return schema;
+    return list;
+  }
+
+  get canMoveUp() {
+    return this.activeIndex > 0;
+  }
+
+  get canMoveDown() {
+    return this.activeIndex < this.activeData.length - 1;
   }
 
   @action
-  registerInputFieldObserver(index, callback) {
-    this.inputFieldObserver[index] = callback;
+  onChildClick(index, propertyName, parentNodeIndex) {
+    this.history.push({
+      dataPaths: [...this.activeDataPaths],
+      schemaPaths: [...this.activeSchemaPaths],
+      index: this.activeIndex,
+    });
+
+    this.activeIndex = index;
+    this.activeDataPaths.push(parentNodeIndex, propertyName);
+    this.activeSchemaPaths.push(propertyName);
+  }
+
+  @action
+  updateIndex(index) {
+    this.activeIndex = index;
+  }
+
+  @action
+  generateSchemaTitle(object, schema, index) {
+    let title;
+
+    if (schema.properties[schema.identifier]?.type === "categories") {
+      title = object[schema.identifier]
+        ?.map((categoryId) => {
+          return (
+            this.args.setting.metadata?.categories?.[categoryId]?.name ||
+            Category.findById(categoryId)?.name
+          );
+        })
+        .filter(Boolean)
+        .join(", ");
+    } else {
+      title = object[schema.identifier];
+    }
+
+    return title || `${schema.name} ${index + 1}`;
   }
 
   descriptions(fieldName, key) {
@@ -159,29 +162,6 @@ export default class SchemaSettingNewEditor extends Component {
     return this.descriptions(fieldName, "description") || spec?.description;
   }
 
-  get fields() {
-    const list = [];
-    const activeObject = this.activeData[this.activeIndex];
-
-    if (activeObject) {
-      for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
-        if (spec.type === "objects") {
-          continue;
-        }
-
-        list.push({
-          name,
-          spec,
-          value: activeObject[name],
-          description: this.fieldDescription(name, spec),
-          label: this.fieldLabel(name, spec),
-        });
-      }
-    }
-
-    return list;
-  }
-
   @action
   clickBack() {
     const {
@@ -193,12 +173,13 @@ export default class SchemaSettingNewEditor extends Component {
     this.activeDataPaths = lastDataPaths;
     this.activeSchemaPaths = lastSchemaPaths;
     this.activeIndex = lastIndex;
-    this.inputFieldObserver.clear();
   }
 
   @action
   addChildItem(propertyName, parentNodeIndex) {
-    this.activeData[parentNodeIndex][propertyName].push({});
+    this.activeData[parentNodeIndex][propertyName].push(
+      this.#prepareObject({}, this.activeSchema.properties[propertyName].schema)
+    );
 
     this.onChildClick(
       this.activeData[parentNodeIndex][propertyName].length - 1,
@@ -209,7 +190,7 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   addItem() {
-    this.activeData.push({});
+    this.activeData.push(this.#prepareObject({}, this.activeSchema));
     this.activeIndex = this.activeData.length - 1;
   }
 
@@ -238,11 +219,7 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   inputFieldChanged(field, newVal) {
-    this.activeData[this.activeIndex][field.name] = newVal;
-
-    if (field.name === this.activeSchema.identifier) {
-      this.inputFieldObserver[this.activeIndex]();
-    }
+    this.activeObject[field.name] = newVal;
   }
 
   @action
@@ -259,28 +236,6 @@ export default class SchemaSettingNewEditor extends Component {
       this.#swapAdjacentItems(this.activeIndex, this.activeIndex + 1);
       this.activeIndex = this.activeIndex + 1;
     }
-  }
-
-  #swapAdjacentItems(fromIndex, toIndex) {
-    const item = this.activeData[fromIndex];
-    const fromCallback = this.inputFieldObserver[fromIndex];
-    const toCallback = this.inputFieldObserver[toIndex];
-
-    // Move the data
-    this.activeData.splice(fromIndex, 1);
-    this.activeData.splice(toIndex, 0, item);
-
-    // Swap the observer callbacks to match new positions
-    this.inputFieldObserver[toIndex] = fromCallback;
-    this.inputFieldObserver[fromIndex] = toCallback;
-  }
-
-  get canMoveUp() {
-    return this.activeIndex > 0;
-  }
-
-  get canMoveDown() {
-    return this.activeIndex < this.activeData.length - 1;
   }
 
   @action
@@ -304,6 +259,57 @@ export default class SchemaSettingNewEditor extends Component {
       .finally(() => (this.saveButtonDisabled = false));
   }
 
+  #resolveDataFromPaths(paths) {
+    if (paths.length === 0) {
+      return this.data;
+    }
+
+    let data = this.data;
+
+    paths.forEach((path) => {
+      data = data[path];
+    });
+
+    return data;
+  }
+
+  #resolveSchemaFromPaths(paths) {
+    if (paths.length === 0) {
+      return this.schema;
+    }
+
+    let schema = this.schema;
+
+    paths.forEach((path) => {
+      schema = schema.properties[path].schema;
+    });
+
+    return schema;
+  }
+
+  #swapAdjacentItems(fromIndex, toIndex) {
+    const item = this.activeData[fromIndex];
+
+    this.activeData.splice(fromIndex, 1);
+    this.activeData.splice(toIndex, 0, item);
+  }
+
+  #prepareObject(object, schema) {
+    for (const [name, spec] of Object.entries(schema.properties)) {
+      if (spec.type === "objects") {
+        object[name] = trackedArray(
+          (object[name] || []).map((child) =>
+            this.#prepareObject(child, spec.schema)
+          )
+        );
+      } else if (Array.isArray(object[name])) {
+        object[name] = trackedArray(object[name]);
+      }
+    }
+
+    return trackedObject(object);
+  }
+
   async _confirmRemove(warning) {
     return new Promise((resolve) => {
       this.dialog.deleteConfirm({
@@ -313,36 +319,6 @@ export default class SchemaSettingNewEditor extends Component {
         didConfirm: () => resolve(true),
       });
     });
-  }
-
-  /**
-   * Recursively converts nested arrays to TrackedArrays for reactivity
-   *
-   * @param {*} input - The input value to convert
-   * @returns {TrackedArray|*} The converted value with TrackedArrays
-   *
-   * @private
-   */
-  #trackNestedArrays(input) {
-    // Return early if input is null/undefined/empty
-    if (!input) {
-      return input;
-    }
-
-    // If input is an array, convert it to a TrackedArray and recursively convert its items
-    if (isArray(input)) {
-      return trackedArray(input.map((item) => this.#trackNestedArrays(item)));
-    }
-
-    // If input is an object, recursively convert its values
-    if (typeof input === "object") {
-      Object.keys(input).forEach((key) => {
-        input[key] = this.#trackNestedArrays(input[key]);
-      });
-    }
-
-    // Return the input after converting any arrays to TrackedArrays
-    return input;
   }
 
   <template>
@@ -358,25 +334,24 @@ export default class SchemaSettingNewEditor extends Component {
       <div class="schema-setting-editor__wrapper">
         <div class="schema-setting-editor__navigation">
           <Tree
-            @data={{this.activeData}}
-            @schema={{this.activeSchema}}
-            @onChildClick={{this.onChildClick}}
-            @clickBack={{this.clickBack}}
-            @backButtonText={{this.backButtonText}}
             @activeIndex={{this.activeIndex}}
-            @updateIndex={{this.updateIndex}}
-            @addItem={{this.addItem}}
             @addChildItem={{this.addChildItem}}
+            @addItem={{this.addItem}}
+            @backButtonText={{this.backButtonText}}
+            @clickBack={{this.clickBack}}
+            @data={{this.activeData}}
             @generateSchemaTitle={{this.generateSchemaTitle}}
-            @registerInputFieldObserver={{this.registerInputFieldObserver}}
+            @onChildClick={{this.onChildClick}}
+            @schema={{this.activeSchema}}
+            @updateIndex={{this.updateIndex}}
           />
 
           <div class="schema-setting-editor__footer">
             <DButton
-              @disabled={{this.saveButtonDisabled}}
-              @action={{this.saveChanges}}
-              @label="save"
               class="btn-primary"
+              @action={{this.saveChanges}}
+              @disabled={{this.saveButtonDisabled}}
+              @label="save"
             />
           </div>
         </div>
@@ -384,37 +359,37 @@ export default class SchemaSettingNewEditor extends Component {
         <div class="schema-setting-editor__fields">
           {{#each this.fields as |field|}}
             <FieldInput
-              @name={{field.name}}
-              @value={{field.value}}
-              @spec={{field.spec}}
-              @onValueChange={{fn this.inputFieldChanged field}}
               @description={{field.description}}
               @label={{field.label}}
+              @name={{field.name}}
+              @onValueChange={{fn this.inputFieldChanged field}}
               @setting={{@setting}}
+              @spec={{field.spec}}
+              @value={{get this.activeObject field.name}}
             />
           {{/each}}
 
           <div class="schema-setting-editor__field-actions">
             <DButton
-              @action={{this.moveUp}}
-              @icon="chevron-up"
-              @disabled={{not this.canMoveUp}}
-              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
               class="btn-default schema-setting-editor__move-up-btn"
+              @action={{this.moveUp}}
+              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
+              @disabled={{not this.canMoveUp}}
+              @icon="chevron-up"
             />
             <DButton
-              @action={{this.moveDown}}
-              @icon="chevron-down"
-              @disabled={{not this.canMoveDown}}
-              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
               class="btn-default schema-setting-editor__move-down-btn"
+              @action={{this.moveDown}}
+              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
+              @disabled={{not this.canMoveDown}}
+              @icon="chevron-down"
             />
 
             {{#if (gt this.fields.length 0)}}
               <DButton
+                class="btn-danger schema-setting-editor__remove-btn"
                 @action={{this.removeItem}}
                 @icon="trash-can"
-                class="btn-danger schema-setting-editor__remove-btn"
               />
             {{/if}}
           </div>

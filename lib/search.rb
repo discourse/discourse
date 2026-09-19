@@ -206,7 +206,7 @@ class Search
       return Time.zone.now.beginning_of_week(str.downcase.to_sym)
     end
 
-    if idx = (Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase))
+    if idx = Date::MONTHNAMES.find_index(titlecase) || Date::ABBR_MONTHNAMES.find_index(titlecase)
       delta = Time.zone.now.month - idx
       delta += 12 if delta < 0
       Time.zone.now.beginning_of_month.months_ago(delta)
@@ -323,7 +323,7 @@ class Search
   end
 
   def self.execute(term, opts = nil)
-    self.new(term, opts).execute
+    new(term, opts).execute
   end
 
   # Query a term
@@ -336,6 +336,7 @@ class Search
           ip_address: @opts[:ip_address],
           user_agent: @opts[:user_agent],
           user_id: @opts[:user_id],
+          session_id: @opts[:session_id],
         )
       @results.search_log_id = search_log_id unless status == :error
     end
@@ -374,6 +375,8 @@ class Search
 
     Search.preload(@results, self)
 
+    trigger_user_search_event(readonly_mode)
+
     @results
   end
 
@@ -386,7 +389,8 @@ class Search
   end
 
   def self.advanced_filter(trigger, name: nil, enabled: -> { true }, &block)
-    advanced_filters[trigger] = { block:, name:, enabled: }
+    case_insensitive_matcher = Regexp.new(trigger.source, trigger.options | Regexp::IGNORECASE)
+    advanced_filters[trigger] = { block:, name:, enabled:, case_insensitive_matcher: }
   end
 
   def self.advanced_filters
@@ -677,7 +681,7 @@ class Search
       # try a possible tag match
       tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
       tag_id = target_tag_id || tag_id
-      if (tag_id)
+      if tag_id
         posts.where(<<~SQL, tag_id)
           topics.id IN (
             SELECT DISTINCT(tt.topic_id)
@@ -786,7 +790,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -796,7 +800,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at > ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -988,16 +992,14 @@ class Search
 
         found = false
 
-        Search.advanced_filters.each do |matcher, options|
+        cleaned = word.gsub(/["']/, "")
+
+        Search.advanced_filters.each_value do |options|
           block = options[:block]
           name = options[:name]
           next unless options[:enabled].call
 
-          case_insensitive_matcher =
-            Regexp.new(matcher.source, matcher.options | Regexp::IGNORECASE)
-
-          cleaned = word.gsub(/["']/, "")
-          if cleaned =~ case_insensitive_matcher
+          if cleaned =~ options[:case_insensitive_matcher]
             (@filters ||= []) << [block, $1]
             @matched_advanced_filter_names << name if name
             found = true
@@ -1108,6 +1110,7 @@ class Search
     end
 
     return nil unless @guardian.can_see?(post)
+    return nil if @opts[:exclude_private_messages] && post.topic.private_message?
 
     @results.add(post)
     @results
@@ -1198,17 +1201,15 @@ class Search
 
   def tags_search
     return unless SiteSetting.tagging_enabled
-    tags =
-      Tag
-        .includes(:tag_search_data)
-        .where("tag_search_data.search_data @@ #{ts_query}")
-        .references(:tag_search_data)
-        .order("name asc")
-        .limit(limit)
 
-    hidden_tag_names = DiscourseTagging.hidden_tag_names(@guardian)
-
-    tags.each { |tag| @results.add(tag) if !hidden_tag_names.include?(tag.name) }
+    Tag
+      .browsable(@guardian)
+      .includes(:tag_search_data)
+      .where("tag_search_data.search_data @@ #{ts_query}")
+      .references(:tag_search_data)
+      .order("name asc")
+      .limit(limit)
+      .each { |tag| @results.add(tag) }
   end
 
   def exclude_topics_search
@@ -1287,6 +1288,9 @@ class Search
     end
 
     posts = apply_filters(posts)
+    if @opts[:exclude_private_messages]
+      posts = posts.where.not(topics: { archetype: Archetype.private_message })
+    end
 
     # If we have a search context, prioritize those posts first
     posts =
@@ -1477,7 +1481,7 @@ class Search
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter, prefix_match: true)
-    "'#{self.escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
+    "'#{escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
   end
 
   def self.escape_string(term)
@@ -1651,6 +1655,15 @@ class Search
   def log_query?(readonly_mode)
     SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode &&
       @opts[:type_filter] != "exclude_topics"
+  end
+
+  def trigger_user_search_event(readonly_mode)
+    return if @clean_term.blank?
+    return if @opts[:search_type].blank?
+    return if readonly_mode
+    return if @opts[:type_filter] == "exclude_topics"
+
+    DiscourseEvent.trigger(:user_search, @clean_term, continue_on_error: true)
   end
 
   def filter_short_terms(term_string)

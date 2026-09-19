@@ -258,5 +258,47 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
         GlobalPath.full_cdn_url(user.user_profile.card_background_upload.url),
       )
     end
+
+    it "evaluates every configured optional claim independently" do
+      user.update!(uploaded_avatar: Fabricate(:upload))
+      user.user_profile.update!(
+        profile_background_upload: Fabricate(:upload),
+        card_background_upload: Fabricate(:upload),
+      )
+
+      optional_claims = {
+        "name" => user.name,
+        "email" => user.email,
+        "admin" => user.admin?,
+        "moderator" => user.moderator?,
+        "groups" => user.groups.pluck(:name).join(","),
+        "avatar_url" => GlobalPath.full_cdn_url(user.uploaded_avatar.url),
+        "profile_background_url" =>
+          GlobalPath.full_cdn_url(user.user_profile.profile_background_upload.url),
+        "card_background_url" =>
+          GlobalPath.full_cdn_url(user.user_profile.card_background_upload.url),
+      }
+
+      optional_claims.each do |claim, expected_value|
+        SiteSetting.discourse_connect_provider_claims = claim
+        request = create_request("")
+        action = create_instance(user, request)
+        redirect_url = action.second_factor_auth_completed!(payload: sso.payload)[:sso_redirect_url]
+        response_payload = ::DiscourseConnectProvider.parse(URI(redirect_url).query)
+
+        actual_claims =
+          optional_claims.keys.index_with do |optional_claim|
+            response_payload.public_send(optional_claim)
+          end
+        expected_claims = optional_claims.keys.index_with(nil)
+        expected_claims[claim] = expected_value
+
+        expect(actual_claims).to eq(expected_claims)
+        expect(response_payload).to have_attributes(
+          external_id: user.id.to_s,
+          username: user.username,
+        )
+      end
+    end
   end
 end

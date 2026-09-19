@@ -12,6 +12,7 @@ class HtmlToMarkdown
 
     remove_not_allowed!(@doc)
     remove_hidden!(@doc)
+    nest_sibling_lists!(@doc)
     hoist_line_breaks!(@doc)
     remove_whitespaces!(@doc)
   end
@@ -42,6 +43,15 @@ class HtmlToMarkdown
     @doc.css("[hidden]").remove
     @doc.css("img[width]").each { |n| n.remove if n["width"].to_i <= 0 }
     @doc.css("img[height]").each { |n| n.remove if n["height"].to_i <= 0 }
+  end
+
+  def nest_sibling_lists!(doc)
+    doc
+      .css("ul > ul, ul > ol, ol > ul, ol > ol")
+      .each do |list|
+        previous = list.previous_element
+        previous.add_child(list) if previous&.name == "li"
+      end
   end
 
   # When there's a <br> inside an inline element, split the inline element around the <br>
@@ -310,7 +320,8 @@ class HtmlToMarkdown
   LISTS.each do |tag|
     define_method("visit_#{tag}") do |node|
       prefix = block?(node.previous_element) ? "" : "\n"
-      suffix = node.ancestors("ul, ol, li").size > 0 ? "" : "\n"
+      nested = node.ancestors("ul, ol, li").present?
+      suffix = nested && node.next_element.nil? ? "" : "\n"
       "#{prefix}#{traverse(node)}#{suffix}"
     end
   end

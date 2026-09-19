@@ -162,6 +162,39 @@ module("Unit | Service | nested-view-cache", function (hooks) {
     assert.false(cache.consumeTraversal());
   });
 
+  test("consumeTraversal follows explicit popped-state outside nested topic transitions", function (assert) {
+    const cache = getService(this);
+
+    assert.true(
+      cache.consumeTraversal({ allowLocalSignal: false, isPoppedState: true }),
+      "uses the caller's popped-state signal for browser forward/back restoration"
+    );
+  });
+
+  test("consumeTraversal ignores stale popstate when local signals are not allowed", function (assert) {
+    const cache = getService(this);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+
+    assert.false(
+      cache.consumeTraversal({ allowLocalSignal: false, isPoppedState: false }),
+      "does not restore from cache after returning to a non-nested topic path"
+    );
+    assert.false(
+      cache.consumeTraversal(),
+      "clears the stale popstate signal after rejecting it"
+    );
+  });
+
+  test("consumeTraversal uses local popstate when local signals are allowed", function (assert) {
+    const cache = getService(this);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+
+    assert.true(
+      cache.consumeTraversal({ allowLocalSignal: true, isPoppedState: false }),
+      "restores cache for browser traversal within nested topic paths"
+    );
+  });
+
   test("consumeTraversal prefers forceUseCache over navigation type", function (assert) {
     const cache = getService(this);
     cache.useNextTransition();

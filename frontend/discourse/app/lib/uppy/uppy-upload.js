@@ -16,6 +16,8 @@ import { deepMerge } from "discourse/lib/object";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
+  displayUploadErrors,
+  rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
@@ -102,6 +104,8 @@ export default class UppyUpload {
 
   uppyWrapper;
 
+  #bufferedUploadErrors = [];
+
   #fileInputEventListener;
   #usingS3Uploads;
 
@@ -112,6 +116,22 @@ export default class UppyUpload {
     this.uppyWrapper = new UppyWrapper(owner);
     this.config = lazyMergeConfig(config);
     validateConfig(this.config);
+  }
+
+  get #resolvedAdditionalParams() {
+    if (typeof this.config.additionalParams === "function") {
+      return this.config.additionalParams();
+    } else {
+      return this.config.additionalParams;
+    }
+  }
+
+  get #resolvedDropTargetOptions() {
+    if (typeof this.config.uploadDropTargetOptions === "function") {
+      return this.config.uploadDropTargetOptions();
+    } else {
+      return this.config.uploadDropTargetOptions;
+    }
   }
 
   teardown() {
@@ -130,7 +150,7 @@ export default class UppyUpload {
         `upload-mixin:${this.config.id}:cancel-upload`,
         this.cancelSingleUpload
       );
-      this.uppyWrapper.uppyInstance.close?.();
+      this.uppyWrapper.uppyInstance.destroy();
     }
   }
 
@@ -176,7 +196,7 @@ export default class UppyUpload {
       },
 
       onBeforeUpload: (files) => {
-        let tooMany = false;
+        let tooMany;
         const fileCount = Object.keys(files).length;
         const maxFiles =
           this.config.maxFiles || this.siteSettings.simultaneous_uploads;
@@ -264,8 +284,10 @@ export default class UppyUpload {
             }
           })
           .catch((errResponse) => {
-            displayErrorForUpload(errResponse, this.siteSettings, file.name);
-            this.#triggerInProgressUploadsEvent();
+            this.#removeInProgressUpload(file.id);
+            this.#bufferUploadError(errResponse, file.name);
+
+            this.#finishBatch();
           });
       } else {
         this.#removeInProgressUpload(file.id);
@@ -287,12 +309,10 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on(
       "upload-error",
       (file, error, response) => {
-        if (response.aborted) {
-          return; // User cancelled the upload
-        }
         this.#removeInProgressUpload(file.id);
-        displayErrorForUpload(response || error, this.siteSettings, file.name);
-        this.#reset();
+        this.#bufferUploadError(response || error, file.name);
+
+        this.#finishBatch();
       }
     );
 
@@ -380,14 +400,6 @@ export default class UppyUpload {
     this._fileInputEl.click();
   }
 
-  #triggerInProgressUploadsEvent() {
-    this.config.onProgressUploadsChanged?.(this.inProgressUploads);
-    this.appEvents.trigger(
-      `upload-mixin:${this.config.id}:in-progress-uploads`,
-      this.inProgressUploads
-    );
-  }
-
   /**
    * If auto upload is disabled, use this function to start the upload process.
    */
@@ -402,10 +414,60 @@ export default class UppyUpload {
     return this.uppyWrapper.uppyInstance?.upload();
   }
 
+  @bind
+  cancelSingleUpload(data) {
+    this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+    this.#removeInProgressUpload(data.fileId);
+    this.#finishBatch();
+  }
+
+  @bind
+  cancelAllUploads() {
+    this.uppyWrapper.uppyInstance?.cancelAll();
+    this.inProgressUploads.length = 0;
+    this.#triggerInProgressUploadsEvent();
+    this.#finishBatch();
+  }
+
+  @bind
+  async addFiles(files, opts = {}) {
+    if (!this.session.csrfToken) {
+      await updateCsrfToken();
+    }
+
+    files = Array.isArray(files) ? files : [files];
+
+    try {
+      this.uppyWrapper.uppyInstance.addFiles(
+        files.map((file) => {
+          return {
+            source: this.config.id,
+            name: file.name,
+            type: file.type,
+            data: file,
+            meta: { pasted: opts.pasted },
+          };
+        })
+      );
+    } catch (err) {
+      warn(`error adding files to uppy: ${err}`, {
+        id: "discourse.upload.uppy-add-files-error",
+      });
+    }
+  }
+
+  #triggerInProgressUploadsEvent() {
+    this.config.onProgressUploadsChanged?.(this.inProgressUploads);
+    this.appEvents.trigger(
+      `upload-mixin:${this.config.id}:in-progress-uploads`,
+      this.inProgressUploads
+    );
+  }
+
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: this.#xhrUploadUrl(),
-      shouldRetry: () => false,
+      ...rateLimitRetryOptions,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -478,46 +540,6 @@ export default class UppyUpload {
     );
   }
 
-  @bind
-  cancelSingleUpload(data) {
-    this.uppyWrapper.uppyInstance.removeFile(data.fileId);
-    this.#removeInProgressUpload(data.fileId);
-  }
-
-  @bind
-  cancelAllUploads() {
-    this.uppyWrapper.uppyInstance?.cancelAll();
-    this.inProgressUploads.length = 0;
-    this.#triggerInProgressUploadsEvent();
-  }
-
-  @bind
-  async addFiles(files, opts = {}) {
-    if (!this.session.csrfToken) {
-      await updateCsrfToken();
-    }
-
-    files = Array.isArray(files) ? files : [files];
-
-    try {
-      this.uppyWrapper.uppyInstance.addFiles(
-        files.map((file) => {
-          return {
-            source: this.config.id,
-            name: file.name,
-            type: file.type,
-            data: file,
-            meta: { pasted: opts.pasted },
-          };
-        })
-      );
-    } catch (err) {
-      warn(`error adding files to uppy: ${err}`, {
-        id: "discourse.upload.uppy-add-files-error",
-      });
-    }
-  }
-
   #completeExternalUpload(file) {
     return ajax(`${this.config.uploadRootPath}/complete-external-upload`, {
       type: "POST",
@@ -528,20 +550,17 @@ export default class UppyUpload {
     });
   }
 
-  get #resolvedAdditionalParams() {
-    if (typeof this.config.additionalParams === "function") {
-      return this.config.additionalParams();
-    } else {
-      return this.config.additionalParams;
-    }
+  #bufferUploadError(data, fileName) {
+    this.#bufferedUploadErrors.push({ data, fileName });
   }
 
-  get #resolvedDropTargetOptions() {
-    if (typeof this.config.uploadDropTargetOptions === "function") {
-      return this.config.uploadDropTargetOptions();
-    } else {
-      return this.config.uploadDropTargetOptions;
+  #finishBatch() {
+    if (this.inProgressUploads.length > 0) {
+      return;
     }
+
+    displayUploadErrors(this.#bufferedUploadErrors, this.siteSettings);
+    this.#reset();
   }
 
   #reset() {
@@ -553,6 +572,7 @@ export default class UppyUpload {
       uploadProgress: 0,
       filesAwaitingUpload: false,
     });
+    this.#bufferedUploadErrors = [];
     if (this._fileInputEl) {
       this._fileInputEl.value = "";
     }
@@ -568,13 +588,14 @@ export default class UppyUpload {
   }
 
   #allUploadsComplete() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
     this.appEvents.trigger(
       `upload-mixin:${this.config.id}:all-uploads-complete`
     );
-    this.#reset();
+
+    this.#finishBatch();
   }
 }

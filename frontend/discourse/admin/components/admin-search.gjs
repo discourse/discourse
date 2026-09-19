@@ -5,13 +5,13 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { escapeExpression } from "discourse/lib/utilities";
-import autoFocus from "discourse/modifiers/auto-focus";
 import { and, not } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSearch extends Component {
@@ -39,6 +39,10 @@ export default class AdminSearch extends Component {
     return i18n("admin.search.no_results", {
       filter: escapeExpression(this.filter),
     });
+  }
+
+  get showLoadingSpinner() {
+    return this.filter !== "" && (this.loading || !this.dataReady);
   }
 
   @action
@@ -119,10 +123,6 @@ export default class AdminSearch extends Component {
     this.loading = false;
   }
 
-  get showLoadingSpinner() {
-    return this.filter !== "" && (this.loading || !this.dataReady);
-  }
-
   <template>
     <div
       class="admin-search__input-container
@@ -131,19 +131,19 @@ export default class AdminSearch extends Component {
       {{didUpdate this.initialFilterUpdated @initialFilter}}
     >
       <div class="admin-search__input-group">
-        {{icon "magnifying-glass" class="admin-search__input-icon"}}
+        {{dIcon "magnifying-glass" class="admin-search__input-icon"}}
         <input
-          type="text"
           class="admin-search__input-field"
+          placeholder={{i18n "admin.search.instructions"}}
+          type="text"
           value={{this.filter}}
-          {{autoFocus}}
+          {{dAutoFocus}}
           {{on "input" this.changeSearchTerm}}
           {{on "keydown" this.handleSearchKeyDown}}
-          placeholder={{i18n "admin.search.instructions"}}
         />
       </div>
     </div>
-    <div class="sr-only" aria-live="polite" role="status">
+    <div aria-live="polite" class="sr-only" role="status">
       {{#if this.searchResults}}
         {{i18n
           "admin.search.result_count"
@@ -168,25 +168,25 @@ export default class AdminSearch extends Component {
         (not this.showLoadingSpinner)
       )
     }}
-      <p class="admin-search__no-results" aria-live="polite" role="status">
+      <p aria-live="polite" class="admin-search__no-results" role="status">
         {{this.noResultsDescription}}
       </p>
     {{/if}}
     <div
       class="admin-search__results {{if this.searchResults '--has-results'}}"
     >
-      <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
+      <DConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result" data-result-type={{result.type}}>
             <a
-              href={{result.url}}
-              {{on "keydown" this.handleResultKeyDown}}
               class="admin-search__result-link"
+              href={{result.url}}
               tabindex="0"
+              {{on "keydown" this.handleResultKeyDown}}
             >
               <div class="admin-search__result-name">
                 {{#if result.icon}}
-                  {{icon result.icon}}
+                  {{dIcon result.icon}}
                 {{/if}}
                 <span
                   class="admin-search__result-name-label"
@@ -200,7 +200,7 @@ export default class AdminSearch extends Component {
             </a>
           </div>
         {{/each}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   </template>
 }

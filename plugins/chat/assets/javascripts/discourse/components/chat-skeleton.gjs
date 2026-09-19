@@ -19,7 +19,7 @@ export default class ChatSkeleton extends Component {
   }
 
   <template>
-    <div class="chat-skeleton -animation">
+    <div class="chat-skeleton --animation">
       {{#each this.placeholders as |placeholder|}}
         <div class="chat-skeleton__body">
           <div class="chat-skeleton__message">

@@ -16,10 +16,17 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   model = null;
   filters = null;
   userHistoryActions = null;
+
   /** @type {moment.Moment | null} */
   startDate = null;
+
   /** @type {moment.Moment | null} */
   endDate = null;
+
+  @computed("model")
+  get initialModelLoading() {
+    return !this.model?.content;
+  }
 
   @computed("filters.action_name")
   get actionFilter() {
@@ -31,34 +38,6 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @computed("filters")
   get filtersExists() {
     return this.filters && Object.keys(this.filters).length > 0;
-  }
-
-  _refresh() {
-    this.store
-      .findAll("staff-action-log", {
-        ...this.filters,
-        start_date: this.startDate?.toISOString(),
-        end_date: this.endDate?.toISOString(),
-      })
-      .then((result) => {
-        this.set("model", result);
-
-        if (!this.userHistoryActions) {
-          this.set(
-            "userHistoryActions",
-            result.extras.user_history_actions
-              .map((historyAction) => ({
-                id: historyAction.id,
-                action_id: historyAction.action_id,
-                name: i18n(
-                  "admin.logs.staff_actions.actions." + historyAction.id
-                ),
-                name_raw: historyAction.id,
-              }))
-              .sort((a, b) => a.name.localeCompare(b.name))
-          );
-        }
-      });
   }
 
   scheduleRefresh() {
@@ -204,5 +183,33 @@ export default class AdminLogsStaffActionLogsController extends Controller {
     this.set("endDate", to);
     this.set("model", EmberObject.create({ loadingMore: true }));
     this.scheduleRefresh();
+  }
+
+  _refresh() {
+    this.store
+      .findAll("staff-action-log", {
+        ...this.filters,
+        start_date: this.startDate?.toISOString(),
+        end_date: this.endDate?.toISOString(),
+      })
+      .then((result) => {
+        this.set("model", result);
+
+        if (!this.userHistoryActions) {
+          this.set(
+            "userHistoryActions",
+            result.extras.user_history_actions
+              .map((historyAction) => ({
+                id: historyAction.id,
+                action_id: historyAction.action_id,
+                name: i18n(
+                  "admin.logs.staff_actions.actions." + historyAction.id
+                ),
+                name_raw: historyAction.id,
+              }))
+              .sort((a, b) => a.name.localeCompare(b.name))
+          );
+        }
+      });
   }
 }

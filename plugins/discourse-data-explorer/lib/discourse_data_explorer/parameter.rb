@@ -223,7 +223,7 @@ module DiscourseDataExplorer
         value = object.id
       when :user_id, :post_id, :topic_id, :group_id, :badge_id
         if string.gsub(/[ _]/, "") =~ /^-?\d+$/
-          klass_name = (/^(.*)_id$/.match(type.to_s)[1].classify.to_sym)
+          klass_name = /^(.*)_id$/.match(type.to_s)[1].classify.to_sym
           begin
             finder =
               if type == :post_id || type == :topic_id

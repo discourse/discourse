@@ -74,12 +74,13 @@ module Jobs
         payload = {
           notification_type: ::Notification.types[:chat_mention],
           username: @creator.username,
+          chat_message_id: @chat_message.id,
           tag: ::Chat::Notifier.push_notification_tag(:mention, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
           post_url: post_url,
           channel_id: @chat_channel.id,
           is_direct_message_channel: @is_direct_message_channel,
-        }
+        }.merge(::Chat::Notifier.push_notification_reply_action(@chat_message, membership.user))
 
         translation_prefix =
           (

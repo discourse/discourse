@@ -5,8 +5,13 @@ import { LinkTo } from "@ember/routing";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
-import { optionalRequire } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title" with {
+  discourseImport: "optional",
+};
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
+  discourseImport: "optional",
+};
 import ModelAccuracies from "../model-accuracies";
 
 export default class ReviewableRefreshAiChatMessage extends Component {
@@ -16,10 +21,6 @@ export default class ReviewableRefreshAiChatMessage extends Component {
       return;
     }
 
-    const ChatChannel = optionalRequire(
-      "discourse/plugins/chat/discourse/models/chat-channel"
-    );
-
     return ChatChannel.create(this.args.reviewable.chat_channel);
   }
 
@@ -27,12 +28,6 @@ export default class ReviewableRefreshAiChatMessage extends Component {
     return (
       this.args.reviewable.payload?.message_cooked ||
       this.args.reviewable.cooked
-    );
-  }
-
-  get ChannelTitle() {
-    return optionalRequire(
-      "discourse/plugins/chat/discourse/components/channel-title"
     );
   }
 
@@ -45,14 +40,14 @@ export default class ReviewableRefreshAiChatMessage extends Component {
       <div class="review-item__meta-topic-title">
         {{#if this.channel}}
           <LinkTo
-            @route="chat.channel.near-message"
             @models={{array
               this.channel.slugifiedTitle
               this.channel.id
               @reviewable.target_id
             }}
+            @route="chat.channel.near-message"
           >
-            <this.ChannelTitle @channel={{this.channel}} />
+            <ChannelTitle @channel={{this.channel}} />
           </LinkTo>
         {{else}}
           <ReviewableTopicLink @reviewable={{@reviewable}} />
@@ -62,7 +57,10 @@ export default class ReviewableRefreshAiChatMessage extends Component {
       <div class="review-item__meta-label">{{i18n "review.review_user"}}</div>
 
       <div class="review-item__meta-flagged-user">
-        <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+        <ReviewableCreatedBy
+          @penalties={{@reviewable.author_penalties}}
+          @user={{@reviewable.target_created_by}}
+        />
       </div>
     </div>
 
@@ -74,9 +72,9 @@ export default class ReviewableRefreshAiChatMessage extends Component {
           {{#if @reviewable.payload.transcript_topic_id}}
             <div class="transcript">
               <LinkTo
-                @route="topic"
-                @models={{array "-" @reviewable.payload.transcript_topic_id}}
                 class="btn btn-default btn-small"
+                @models={{array "-" @reviewable.payload.transcript_topic_id}}
+                @route="topic"
               >
                 {{i18n "review.transcript.view"}}
               </LinkTo>

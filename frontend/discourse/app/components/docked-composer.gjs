@@ -1,23 +1,25 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DEditor from "discourse/components/d-editor";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DEditor from "discourse/ui-kit/d-editor";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 // Reusable chat-style "docked" composer. There is deliberately no
@@ -31,6 +33,7 @@ import { i18n } from "discourse-i18n";
 // the live API surface.
 export default class DockedComposer extends Component {
   @service capabilities;
+  @service currentUser;
   @service keyValueStore;
   @service mediaOptimizationWorker;
   @service siteSettings;
@@ -39,14 +42,13 @@ export default class DockedComposer extends Component {
   @tracked reply = "";
   @tracked uploads = trackedArray();
 
-  textarea = null;
+  inputElement = null;
   uppyUpload = null;
   fileInputEl = null;
-  #dragStart = null;
   #rootElement = null;
 
   #handlePaste = (event) => {
-    if (!this.textarea || document.activeElement !== this.textarea) {
+    if (!this.inputElement || document.activeElement !== this.inputElement) {
       return;
     }
     const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
@@ -68,7 +70,9 @@ export default class DockedComposer extends Component {
       return;
     }
 
-    const submitOnEnter = this.args.submitOnEnter ?? true;
+    const submitOnEnter =
+      this.args.submitOnEnter ??
+      this.currentUser?.user_option?.send_shortcut !== SEND_SHORTCUT_META_ENTER;
 
     if (submitOnEnter) {
       if (
@@ -89,6 +93,22 @@ export default class DockedComposer extends Component {
       }
     }
   };
+
+  get autoResize() {
+    return this.args.autoResize ?? false;
+  }
+
+  get resizable() {
+    return (this.args.resizable ?? false) && !this.autoResize;
+  }
+
+  get maxResizeOffset() {
+    return this.args.maxResizeOffset ?? null;
+  }
+
+  get resizeAriaMax() {
+    return this.maxResizeOffset ?? 400;
+  }
 
   get show() {
     return this.args.show ?? true;
@@ -145,16 +165,24 @@ export default class DockedComposer extends Component {
 
   @action
   setupEditor(textManipulation) {
-    this.textarea =
+    this.inputElement?.removeEventListener(
+      "keydown",
+      this.#handleKeyDown,
+      true
+    );
+    this.inputElement?.removeEventListener("paste", this.#handlePaste);
+
+    this.inputElement =
       textManipulation?.textarea ??
       // Scope the fallback to this instance's root so multiple docked
       // composers on the same page can't cross-wire.
       this.#rootElement?.querySelector(".d-editor-input") ??
       null;
-    if (this.textarea) {
+    if (this.inputElement) {
       // capture phase so Enter-to-send wins over ItsATrap / smart-list handlers
-      this.textarea.addEventListener("keydown", this.#handleKeyDown, true);
-      this.textarea.addEventListener("paste", this.#handlePaste);
+      this.inputElement.addEventListener("keydown", this.#handleKeyDown, true);
+      this.inputElement.addEventListener("paste", this.#handlePaste);
+      this.syncAutoResizeHeight();
     }
   }
 
@@ -163,6 +191,7 @@ export default class DockedComposer extends Component {
     const saved = this.keyValueStore.get(this.draftKey);
     if (saved) {
       this.reply = saved;
+      this.syncAutoResizeHeight();
     }
   }
 
@@ -180,11 +209,28 @@ export default class DockedComposer extends Component {
     const value = event?.target?.value ?? "";
     this.reply = value;
     this.persistDraft(value);
+    this.syncAutoResizeHeight();
+  }
+
+  @action
+  updateMaxResizeOffset() {
+    this.#rootElement?.style.setProperty(
+      "--docked-composer-max-resize-offset",
+      `${this.maxResizeOffset ?? 400}px`
+    );
+  }
+
+  @action
+  setReply(value) {
+    this.reply = value ?? "";
+    this.persistDraft(this.reply);
   }
 
   @action
   setupContainer(element) {
     this.#rootElement = element;
+    this.updateMaxResizeOffset();
+    this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
     this.loadDraft();
 
     this.uppyUpload = new UppyUpload(getOwner(this), {
@@ -204,12 +250,20 @@ export default class DockedComposer extends Component {
         this.uploads.push(upload);
       },
     });
+
+    if (this.fileInputEl) {
+      this.uppyUpload.setup(this.fileInputEl);
+    }
   }
 
   @action
   teardown() {
-    this.textarea?.removeEventListener("keydown", this.#handleKeyDown, true);
-    this.textarea?.removeEventListener("paste", this.#handlePaste);
+    this.inputElement?.removeEventListener(
+      "keydown",
+      this.#handleKeyDown,
+      true
+    );
+    this.inputElement?.removeEventListener("paste", this.#handlePaste);
     this.uppyUpload?.teardown();
     this.#rootElement = null;
   }
@@ -270,7 +324,8 @@ export default class DockedComposer extends Component {
       this.reply = "";
       this.uploads = trackedArray();
       this.persistDraft("");
-      schedule("afterRender", () => this.textarea?.focus());
+      this.syncAutoResizeHeight();
+      schedule("afterRender", () => this.inputElement?.focus());
     } catch (error) {
       // Consumers can opt into custom error handling; otherwise we
       // fall back to the generic ajax-error popup for network failures.
@@ -284,72 +339,39 @@ export default class DockedComposer extends Component {
 
   @action
   focus() {
-    this.textarea?.focus();
+    this.inputElement?.focus();
   }
 
   @action
-  onResizeStart(event) {
-    event.preventDefault();
-    this.#dragStart = {
-      clientY: event.clientY,
-      offset: this.dragOffset,
-    };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-
-  @action
-  onResizeMove(event) {
-    if (!this.#dragStart || !this.#rootElement?.isConnected) {
+  syncAutoResizeHeight() {
+    if (!this.autoResize || this.inputElement?.tagName !== "TEXTAREA") {
       return;
     }
-    // dragging UP should grow the composer, so invert
-    const delta = this.#dragStart.clientY - event.clientY;
-    this.dragOffset = Math.max(0, this.#dragStart.offset + delta);
-    this.#rootElement.style.setProperty(
-      "--docked-composer-drag-offset",
-      `${this.dragOffset}px`
-    );
+
+    schedule("afterRender", () => {
+      if (!this.inputElement?.isConnected) {
+        return;
+      }
+
+      // CSS `field-sizing: content` handles modern browsers using the same
+      // mechanism as ExpandingTextArea. This fallback keeps older browsers
+      // usable without affecting the RTE, which naturally grows with content.
+      if (globalThis.CSS?.supports?.("field-sizing", "content")) {
+        return;
+      }
+
+      this.inputElement.style.height = "auto";
+      this.inputElement.style.height = `${this.inputElement.scrollHeight}px`;
+    });
   }
 
   @action
-  onResizeKeyDown(event) {
-    // Arrow keys nudge height; Home/End snap to bounds. We mirror the
-    // dragOffset state so the keyboard interaction stays in sync with
-    // pointer drags.
-    const STEP = 16;
-    const MAX_OFFSET = 400;
-    let next = this.dragOffset;
-    switch (event.key) {
-      case "ArrowUp":
-        next = Math.min(MAX_OFFSET, this.dragOffset + STEP);
-        break;
-      case "ArrowDown":
-        next = Math.max(0, this.dragOffset - STEP);
-        break;
-      case "Home":
-        next = 0;
-        break;
-      case "End":
-        next = MAX_OFFSET;
-        break;
-      default:
-        return;
-    }
-    event.preventDefault();
-    this.dragOffset = next;
+  onResize(offset) {
+    this.dragOffset = offset;
     this.#rootElement?.style.setProperty(
       "--docked-composer-drag-offset",
-      `${next}px`
+      `${offset}px`
     );
-  }
-
-  @action
-  onResizeEnd(event) {
-    if (!this.#dragStart) {
-      return;
-    }
-    this.#dragStart = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
   }
 
   <template>
@@ -358,45 +380,46 @@ export default class DockedComposer extends Component {
         {{bodyClass @bodyClassName}}
       {{/if}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "docked-composer"
-          (if @resizable "docked-composer--resizable")
+          (if this.resizable "docked-composer--resizable")
+          (if this.autoResize "docked-composer--auto-resize")
           @class
         }}
         ...attributes
         {{didInsert this.setupContainer}}
+        {{didUpdate this.updateMaxResizeOffset this.maxResizeOffset}}
         {{willDestroy this.teardown}}
       >
-        {{#if @resizable}}
-          <div
+        {{#if this.resizable}}
+          <DResizeSeparator
             class="docked-composer__resize-handle"
-            role="separator"
-            aria-orientation="horizontal"
-            aria-label={{i18n "composer.resize"}}
-            aria-valuenow={{this.dragOffset}}
-            aria-valuemin="0"
-            aria-valuemax="400"
-            tabindex="0"
-            {{! template-lint-disable no-pointer-down-event-binding }}
-            {{on "pointerdown" this.onResizeStart}}
-            {{on "pointermove" this.onResizeMove}}
-            {{on "pointerup" this.onResizeEnd}}
-            {{on "pointercancel" this.onResizeEnd}}
-            {{on "keydown" this.onResizeKeyDown}}
-          ></div>
+            @axis="vertical"
+            @label={{i18n "composer.resize"}}
+            @max={{this.resizeAriaMax}}
+            @min={{0}}
+            @onResize={{this.onResize}}
+            @side="end"
+            @value={{this.dragOffset}}
+          />
+        {{/if}}
+        {{#if (has-block "header")}}
+          <div class="docked-composer__header">
+            {{yield to="header"}}
+          </div>
         {{/if}}
         <div class="docked-composer__inner">
           <div class="docked-composer__editor">
             <DEditor
-              @value={{this.reply}}
-              @change={{this.onReplyChange}}
-              @onSetup={{this.setupEditor}}
-              @extraButtons={{this.addToolbarButtons}}
-              @composerEvents={{this.composerEvents}}
-              @topicId={{@topicId}}
               @categoryId={{@categoryId}}
-              @processPreview={{false}}
+              @change={{this.onReplyChange}}
+              @composerEvents={{this.composerEvents}}
+              @extraButtons={{this.addToolbarButtons}}
+              @onSetup={{this.setupEditor}}
               @placeholder={{@placeholder}}
+              @processPreview={{false}}
+              @topicId={{@topicId}}
+              @value={{this.reply}}
             >
               {{#if (has-block "submit")}}
                 {{yield
@@ -409,22 +432,22 @@ export default class DockedComposer extends Component {
                 }}
               {{else}}
                 <DButton
-                  @icon="reply"
+                  class="docked-composer__submit-btn"
                   @action={{this.submit}}
                   @disabled={{this.submitDisabled}}
+                  @icon="reply"
                   @isLoading={{@isSubmitting}}
                   @title={{@submitTitle}}
-                  class="docked-composer__submit-btn"
                 />
               {{/if}}
             </DEditor>
           </div>
 
           <input
-            type="file"
-            id={{this.uploaderId}}
             class="hidden-upload-field"
+            id={{this.uploaderId}}
             multiple="multiple"
+            type="file"
             {{didInsert this.registerFileInput}}
           />
         </div>
@@ -437,9 +460,9 @@ export default class DockedComposer extends Component {
                   {{upload.original_filename}}
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.removeUpload upload}}
                   class="btn-transparent docked-composer__upload-remove"
+                  @action={{fn this.removeUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}
@@ -454,9 +477,9 @@ export default class DockedComposer extends Component {
                   {{upload.progress}}%
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.cancelUpload upload}}
                   class="btn-flat docked-composer__upload-cancel"
+                  @action={{fn this.cancelUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}

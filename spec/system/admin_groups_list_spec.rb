@@ -14,18 +14,18 @@ describe "Admin Users Page" do
     admin_groups_page.visit
 
     expect(admin_groups_page).to have_groups(
-      %w[
-        admins
-        group_a
-        group_b
-        group_c
-        moderators
-        staff
-        trust_level_0
-        trust_level_1
-        trust_level_2
-        trust_level_3
-        trust_level_4
+      [
+        "Admins",
+        "group_a",
+        "group_b",
+        "group_c",
+        "Moderators",
+        "Staff",
+        "Trust level 0",
+        "Trust level 1",
+        "Trust level 2",
+        "Trust level 3",
+        "Trust level 4",
       ],
     )
 

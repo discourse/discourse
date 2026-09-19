@@ -27,6 +27,34 @@ function openComposer(opts) {
   return composer;
 }
 
+async function editTopicViaComposer(opts = {}) {
+  const store = getOwner(this).lookup("service:store");
+  const { topicProps = {}, ...composerProps } = opts;
+
+  const composer = createComposer.call(this, {
+    action: EDIT,
+    post: store.createRecord("post", { id: 123, post_number: 1 }),
+    topic: store.createRecord("topic", {
+      id: 456,
+      title: "a title",
+      details: { can_edit: true },
+      ...topicProps,
+    }),
+    title: "a title",
+    reply: "the body",
+    ...composerProps,
+  });
+
+  let payload;
+  pretender.put("/t/topic/456", (request) => {
+    payload = JSON.parse(request.requestBody);
+    return response({ basic_topic: { title: composer.title } });
+  });
+
+  await composer.editPost({});
+  return payload;
+}
+
 module("Unit | Model | composer", function (hooks) {
   setupTest(hooks);
 
@@ -132,6 +160,25 @@ module("Unit | Model | composer", function (hooks) {
       composer.missingReplyCharacters,
       0,
       "don't require any post content"
+    );
+  });
+
+  test("fires composer:category-changed when the category changes", function (assert) {
+    const composer = createComposer.call(this, { action: CREATE_TOPIC });
+    const appEvents = getOwner(this).lookup("service:app-events");
+
+    let firedWith;
+    appEvents.on("composer:category-changed", (model) => (firedWith = model));
+
+    composer.set("categoryId", 12345);
+    assert.strictEqual(firedWith, composer, "fires with the composer model");
+
+    firedWith = undefined;
+    composer.set("categoryId", 12345);
+    assert.strictEqual(
+      firedWith,
+      undefined,
+      "does not fire when the category is unchanged"
     );
   });
 
@@ -294,6 +341,8 @@ module("Unit | Model | composer", function (hooks) {
       reply: "asdf2",
       post: store.createRecord("post", { id: 1 }),
       title: "wat",
+      reply_to_post_number: 3,
+      reply_to_user: { username: "alice" },
     });
 
     composer.clearState();
@@ -302,6 +351,70 @@ module("Unit | Model | composer", function (hooks) {
     assert.blank(composer.reply);
     assert.blank(composer.post);
     assert.blank(composer.title);
+    assert.blank(composer.reply_to_post_number);
+    assert.blank(composer.reply_to_user);
+  });
+
+  test("setReplyTo and replyOptions live updates in edit mode", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      topic: store.createRecord("topic", { id: 1, title: "t" }),
+      post: store.createRecord("post", {
+        id: 1,
+        post_number: 3,
+        avatar_template: "/a.png",
+        username: "bob",
+        name: "Bob",
+      }),
+      reply_to_post_number: 2,
+      reply_to_user: {
+        username: "alice",
+        avatar_template: "/alice.png",
+      },
+    });
+
+    assert.strictEqual(
+      composer.replyOptions.originalUser?.username,
+      "alice",
+      "originalUser reflects composer state on open"
+    );
+
+    composer.setReplyTo(null, null);
+    assert.strictEqual(composer.reply_to_post_number, null);
+    assert.strictEqual(composer.reply_to_user, null);
+    assert.strictEqual(
+      composer.replyOptions.originalUser,
+      null,
+      "originalUser clears after removing reply target"
+    );
+
+    composer.setReplyTo(1, {
+      username: "carol",
+      avatar_template: "/carol.png",
+    });
+    assert.strictEqual(composer.reply_to_post_number, 1);
+    assert.strictEqual(
+      composer.replyOptions.originalUser?.username,
+      "carol",
+      "originalUser reflects the newly chosen target"
+    );
+  });
+
+  test("reply_to edits are serialized into drafts", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      topic: store.createRecord("topic", { id: 1 }),
+      post: store.createRecord("post", { id: 1, post_number: 3 }),
+      reply_to_post_number: 2,
+      reply_to_user: { username: "alice", avatar_template: "/alice.png" },
+    });
+
+    const draft = composer.serializeDraftData();
+
+    assert.strictEqual(draft.reply_to_post_number, 2);
+    assert.strictEqual(draft.reply_to_user.username, "alice");
   });
 
   test("initial category when uncategorized is allowed", function (assert) {
@@ -491,8 +604,6 @@ module("Unit | Model | composer", function (hooks) {
   });
 
   test("composerVersion is correct when using modern 'rich text' composer", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const composer = createComposer.call(this, {});
     composer.currentUser = User.current();
     composer.currentUser.set(
@@ -581,5 +692,66 @@ module("Unit | Model | composer", function (hooks) {
     assert.false(post.staged);
     assert.strictEqual(composer.composeState, "open");
     assert.true(composer.editConflict);
+  });
+
+  test("editPost sends the topic edit-conflict fields", async function (assert) {
+    const payload = await editTopicViaComposer.call(this, {
+      topicProps: { title: "the original title" },
+      title: "a brand new title",
+      originalTitle: "the original title",
+      originalTags: [{ id: 7, name: "bug" }],
+    });
+
+    assert.strictEqual(
+      payload.original_title,
+      "the original title",
+      "sends original_title so the server can detect a conflict"
+    );
+    assert.deepEqual(
+      payload.original_tags,
+      [{ id: 7, name: "bug" }],
+      "sends original_tags so the server can detect a conflict"
+    );
+  });
+
+  test("editPost omits the edit-conflict fields when overwriting edits", async function (assert) {
+    const payload = await editTopicViaComposer.call(this, {
+      topicProps: { title: "the original title" },
+      title: "a brand new title",
+      originalTitle: "the original title",
+      originalTags: [{ id: 7, name: "bug" }],
+      editConflict: true,
+    });
+
+    assert.false(
+      "original_title" in payload,
+      "lets the overwrite go through instead of conflicting again"
+    );
+    assert.false("original_tags" in payload, "same for the tags");
+  });
+
+  test("editPost only sends featured_link when it changed", async function (assert) {
+    const cleared = await editTopicViaComposer.call(this, {
+      topicProps: { featured_link: "https://discourse.org" },
+      featuredLink: null,
+    });
+    assert.strictEqual(
+      cleared.featured_link,
+      null,
+      "sends an explicit null when the link was cleared"
+    );
+    assert.false(
+      "featuredLink" in cleared,
+      "never sends the camelCase key the server ignores"
+    );
+
+    const unchanged = await editTopicViaComposer.call(this, {
+      topicProps: { featured_link: "https://discourse.org" },
+      featuredLink: "https://discourse.org",
+    });
+    assert.false(
+      "featured_link" in unchanged,
+      "leaves the link alone when it didn't change"
+    );
   });
 });

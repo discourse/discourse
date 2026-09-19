@@ -19,6 +19,8 @@ sw:
       cast-votes:
         title: "Piga kura zako"
         label: "Piga kura sasa!"
+      keep-vote:
+        label: "Iliyopita"
       show-results:
         title: "Onyesha matokeo ya uchaguzi"
         label: "Majibu"

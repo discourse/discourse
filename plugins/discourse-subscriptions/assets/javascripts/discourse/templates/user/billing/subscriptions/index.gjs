@@ -1,6 +1,6 @@
-import DButton from "discourse/components/d-button";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import formatUnixDate from "../../../../helpers/format-unix-date";
 
@@ -33,7 +33,7 @@ export default <template>
             <td>{{formatUnixDate subscription.created}}</td>
             <td class="td-right">
               {{#if subscription.loading}}
-                {{loadingSpinner size="small"}}
+                {{dLoadingSpinner size="small"}}
               {{else}}
                 {{#if subscription.canceled_at}}
                   <DButton
@@ -42,15 +42,15 @@ export default <template>
                   />
                 {{else}}
                   <DButton
+                    class="btn no-text btn-icon"
                     @action={{routeAction "updateCard" subscription.id}}
                     @icon="far-pen-to-square"
-                    class="btn no-text btn-icon"
                   />
                   <DButton
                     class="btn-danger btn no-text btn-icon"
-                    @icon="trash-can"
-                    @disabled={{subscription.canceled_at}}
                     @action={{routeAction "cancelSubscription" subscription}}
+                    @disabled={{subscription.canceled_at}}
+                    @icon="trash-can"
                   />
                 {{/if}}
               {{/if}}

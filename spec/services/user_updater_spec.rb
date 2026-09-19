@@ -46,6 +46,54 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
+    it "reports what changed on :user_updated, across the user and its profile" do
+      updater = UserUpdater.new(user, user)
+
+      bio = DiscourseEvent.track_events(:user_updated) { updater.update(bio_raw: "New bio") }.first
+      name = DiscourseEvent.track_events(:user_updated) { updater.update(name: "Jim Tom") }.first
+
+      expect(bio[:params].last).to include("bio_raw")
+      expect(bio[:params].last).not_to include("updated_at")
+      expect(name[:params].last).to contain_exactly("name")
+    end
+
+    it "preserves explicitly submitted understood languages when the interface locale changes" do
+      user.update!(locale: "en")
+
+      UserUpdater.new(user, user).update(locale: "ja", understood_languages: %w[ja de])
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(%w[ja de])
+    end
+
+    it "preserves understood languages when only the interface locale changes" do
+      user.update!(locale: "en")
+      user.user_option.update!(understood_languages: ["de"])
+
+      UserUpdater.new(user, user).update(locale: "ja")
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(["de"])
+    end
+
+    it "preserves explicitly submitted understood languages when user locales are disabled" do
+      SiteSetting.default_locale = "en"
+      SiteSetting.allow_user_locale = false
+      user.update!(locale: "fr")
+
+      UserUpdater.new(user, user).update(understood_languages: %w[en ja])
+
+      expect(user.user_option.understood_languages).to eq(%w[en ja])
+    end
+
+    it "adapts legacy show-original updates to the positive preference" do
+      UserUpdater.new(user, user).update(show_original_content: true)
+      expect(user.reload.user_option.automatically_translate).to eq(false)
+
+      UserUpdater.new(user, user).update(show_original_content: true, automatically_translate: true)
+      expect(user.reload.user_option.automatically_translate).to eq(true)
+    end
+
     describe "the within_user_updater_transaction event" do
       it "allows plugins to perform additional updates" do
         update_attributes = { name: "Jimmmy Johnny" }
@@ -241,6 +289,39 @@ RSpec.describe UserUpdater do
       expect(user.card_background_upload).to eq(nil)
     end
 
+    context "with profile and card backgrounds" do
+      fab!(:profile_background, :upload)
+      fab!(:card_background, :upload)
+      fab!(:target, :user)
+      fab!(:other, :user)
+
+      before do
+        target.user_profile.update!(
+          profile_background_upload_id: profile_background.id,
+          card_background_upload_id: card_background.id,
+        )
+      end
+
+      it "keeps them when the update does not mention them" do
+        UserUpdater.new(other, target).update(bio_raw: "edited by someone else")
+
+        target.user_profile.reload
+        expect(target.user_profile.profile_background_upload_id).to eq(profile_background.id)
+        expect(target.user_profile.card_background_upload_id).to eq(card_background.id)
+      end
+
+      it "still clears them when the update asks and the actor may not upload" do
+        UserUpdater.new(other, target).update(
+          profile_background_upload_url: profile_background.url,
+          card_background_upload_url: card_background.url,
+        )
+
+        target.user_profile.reload
+        expect(target.user_profile.profile_background_upload_id).to be_nil
+        expect(target.user_profile.card_background_upload_id).to be_nil
+      end
+    end
+
     it "disables email_digests when enabling mailing_list_mode" do
       updater = UserUpdater.new(acting_user, user)
       SiteSetting.disable_mailing_list_mode = false
@@ -346,6 +427,7 @@ RSpec.describe UserUpdater do
     context "when sso overrides bio" do
       it "does not change bio" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_bio = true
 
@@ -361,6 +443,7 @@ RSpec.describe UserUpdater do
     context "when sso overrides location" do
       it "does not change location" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_location = true
 
@@ -376,6 +459,7 @@ RSpec.describe UserUpdater do
     context "when sso overrides website" do
       it "does not change website" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_website = true
 
@@ -556,12 +640,35 @@ RSpec.describe UserUpdater do
     end
 
     context "when website does not include http" do
-      it "adds http before updating" do
+      it "adds http before updating if no scheme" do
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: "example.com")
 
         expect(user.reload.user_profile.website).to eq "http://example.com"
+      end
+
+      it "returns an error for non-http scheme" do
+        updater = UserUpdater.new(acting_user, user)
+
+        expect(updater.update(website: "ftp://example.com")).to eq false
+        expect(updater.update(website: "file://example.com")).to eq false
+        expect(updater.update(website: "mailto://example.com")).to eq false
+        expect(updater.update(website: "something://example.com")).to eq false
+      end
+    end
+
+    context "when website includes http but with uppercase" do
+      it "does not add an additional http:// before" do
+        updater = UserUpdater.new(acting_user, user)
+        updater.update(website: "Http://example.com")
+        expect(user.reload.user_profile.website).to eq "Http://example.com"
+        updater.update(website: "hTtp://example.com")
+        expect(user.reload.user_profile.website).to eq "hTtp://example.com"
+        updater.update(website: "HTTP://example.com")
+        expect(user.reload.user_profile.website).to eq "HTTP://example.com"
+        updater.update(website: "HttpS://example.com")
+        expect(user.reload.user_profile.website).to eq "HttpS://example.com"
       end
     end
 
@@ -569,7 +676,8 @@ RSpec.describe UserUpdater do
       it "returns an error" do
         updater = UserUpdater.new(acting_user, user)
 
-        expect(updater.update(website: "ʔ<")).to eq nil
+        expect(updater.update(website: "ʔ<")).to eq false
+        expect(updater.update(website: "http://bad-domain-no-period")).to eq false
       end
     end
 

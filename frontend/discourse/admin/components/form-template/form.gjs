@@ -7,10 +7,10 @@ import FormTemplateValidationOptionsModal from "discourse/admin/components/modal
 import { templateFormFields } from "discourse/admin/lib/template-form-fields";
 import FormTemplate from "discourse/admin/models/form-template";
 import AceEditor from "discourse/components/ace-editor";
-import DButton from "discourse/components/d-button";
 import FormTemplateFormPreview from "discourse/components/modal/form-template-form-preview";
-import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class FormTemplateForm extends Component {
@@ -157,11 +157,11 @@ export default class FormTemplateForm extends Component {
         <label for="template-name">
           {{i18n "admin.form_templates.new_template_form.name.label"}}
         </label>
-        <TextField
-          @value={{this.templateName}}
+        <DTextField
+          class="form-templates__form-name-input"
           @name="template-name"
           @placeholderKey="admin.form_templates.new_template_form.name.placeholder"
-          class="form-templates__form-name-input"
+          @value={{this.templateName}}
         />
       </div>
       <div class="control-group form-templates__editor">
@@ -171,57 +171,58 @@ export default class FormTemplateForm extends Component {
           </span>
           {{#each this.quickInsertFields as |field|}}
             <DButton
+              class="btn-flat btn-icon-text quick-insert-{{field.type}}"
+              @action={{fn this.onInsertField field.type}}
               @icon={{field.icon}}
               @label="admin.form_templates.quick_insert_fields.{{field.type}}"
-              @action={{fn this.onInsertField field.type}}
-              class="btn-flat btn-icon-text quick-insert-{{field.type}}"
             />
           {{/each}}
           <DButton
-            @label="admin.form_templates.validations_modal.button_title"
-            @icon="circle-check"
-            @action={{this.showValidationOptionsModal}}
             class="btn-flat btn-icon-text form-templates__validations-modal-button"
+            @action={{this.showValidationOptionsModal}}
+            @icon="circle-check"
+            @label="admin.form_templates.validations_modal.button_title"
           />
         </div>
         <DButton
-          @icon="eye"
-          @label="admin.form_templates.new_template_form.preview"
+          class="btn-default form-templates__preview-button"
           @action={{this.showPreview}}
           @disabled={{this.disablePreviewButton}}
-          class="form-templates__preview-button"
+          @icon="eye"
+          @label="admin.form_templates.new_template_form.preview"
         />
       </div>
 
       <div class="control-group">
         <AceEditor
           @content={{this.templateContent}}
-          @onChange={{fn (mut this.templateContent)}}
           @mode="yaml"
+          @onChange={{fn (mut this.templateContent)}}
         />
       </div>
 
       <div class="footer-buttons">
         <DButton
-          @label="admin.form_templates.new_template_form.submit"
-          @icon="check"
+          class="btn-primary"
           @action={{this.onSubmit}}
           @disabled={{this.disableSubmitButton}}
-          class="btn-primary"
+          @icon="check"
+          @label="admin.form_templates.new_template_form.submit"
         />
 
         <DButton
-          @label="admin.form_templates.new_template_form.cancel"
-          @icon="xmark"
+          class="btn-default"
           @action={{this.onCancel}}
+          @icon="xmark"
+          @label="admin.form_templates.new_template_form.cancel"
         />
 
         {{#if this.isEditing}}
           <DButton
-            @label="admin.form_templates.view_template.delete"
-            @icon="trash-can"
-            @action={{this.onDelete}}
             class="btn-danger"
+            @action={{this.onDelete}}
+            @icon="trash-can"
+            @label="admin.form_templates.view_template.delete"
           />
         {{/if}}
       </div>

@@ -6,7 +6,7 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
@@ -21,17 +21,19 @@ import { i18n } from "discourse-i18n";
 
 export default class LoginPageController extends Controller {
   @service siteSettings;
+
   @service capabilities;
   @service dialog;
   // eslint-disable-next-line discourse/no-unused-services
   @service site; // used in the route template
   @service login;
   @service modal;
-
   @controller application;
 
   @tracked loggingIn = false;
+
   @tracked loggedIn = false;
+  @tracked codeLoginSelected = false;
   @tracked showLoginButtons = true;
   @tracked showLogin = true;
   @tracked showSecondFactor = false;
@@ -49,10 +51,27 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
+  @tracked loginMode = null;
+  queryParams = [{ loginMode: "mode" }];
 
   @computed("siteSettings.enable_local_logins")
   get canLoginLocal() {
     return this.siteSettings.enable_local_logins;
+  }
+
+  get canUseCodeLogin() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.siteSettings.enable_local_logins
+    );
+  }
+
+  get showCodeLoginForm() {
+    return (
+      this.canUseCodeLogin &&
+      (this.codeLoginSelected || this.loginMode === "code")
+    );
   }
 
   @computed("siteSettings.enable_local_logins_via_email")
@@ -90,6 +109,9 @@ export default class LoginPageController extends Controller {
     if (this.showSecondFactor || this.showSecurityKey) {
       classes.push("second-factor");
     }
+    if (this.showCodeLoginForm) {
+      classes.push("code-login");
+    }
     return classes.join(" ");
   }
 
@@ -115,10 +137,6 @@ export default class LoginPageController extends Controller {
 
   get showSignupLink() {
     return this.application.canSignUp && !this.showSecondFactor;
-  }
-
-  get adminLoginPath() {
-    return getURL("/u/admin-login");
   }
 
   @action
@@ -156,6 +174,22 @@ export default class LoginPageController extends Controller {
       }
     } catch (e) {
       popupAjaxError(e);
+    }
+  }
+
+  @action
+  showCodeLogin() {
+    this.codeLoginSelected = true;
+  }
+
+  @action
+  usePassword(email) {
+    if (typeof email === "string") {
+      this.loginName = email;
+    }
+    this.codeLoginSelected = false;
+    if (this.loginMode === "code") {
+      this.loginMode = "password";
     }
   }
 
@@ -295,11 +329,8 @@ export default class LoginPageController extends Controller {
       this.flashType = "error";
       if (e.jqXHR?.status === 429) {
         this.flash = i18n("login.rate_limit");
-      } else if (
-        e.jqXHR?.status === 503 &&
-        e.jqXHR?.responseJSON?.error_type === "read_only"
-      ) {
-        this.flash = i18n("read_only_mode.login_disabled");
+      } else if (isReadOnlyError(e)) {
+        this.flash = this.login.readOnlyLoginMessage;
       } else if (!areCookiesEnabled()) {
         this.flash = i18n("login.cookies_error");
       } else {

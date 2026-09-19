@@ -4,7 +4,6 @@ import { trustHTML } from "@ember/template";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import CategoryUnread from "discourse/components/category-unread";
-import DecoratedHtml from "discourse/components/decorated-html";
 import MobileCategoryTopic from "discourse/components/mobile-category-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubCategoryItem from "discourse/components/sub-category-item";
@@ -12,12 +11,20 @@ import SubCategoryRow from "discourse/components/sub-category-row";
 import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { gt } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
 
 export default class ParentCategoryRow extends CategoryListItem {
+  get hiddenSubcategoryCount() {
+    return (
+      (this.category.subcategory_count ?? 0) -
+      this.displayedSubcategories.length
+    );
+  }
+
   <template>
     {{#unless this.isHidden}}
       <PluginOutlet
@@ -35,10 +42,10 @@ export default class ParentCategoryRow extends CategoryListItem {
           }}
         />
         <div
+          class="category-list-item category {{if this.isMuted 'muted'}}"
           data-category-id={{this.category.id}}
           data-notification-level={{this.category.notificationLevelString}}
           style={{borderColor this.category.color}}
-          class="category-list-item category {{if this.isMuted 'muted'}}"
         >
           <table class="topic-list">
             <tbody>
@@ -54,8 +61,8 @@ export default class ParentCategoryRow extends CategoryListItem {
               {{#if this.category.description_excerpt}}
                 <tr class="category-description">
                   <td colspan="3">
-                    <DecoratedHtml
-                      @html={{dirSpan
+                    <DDecoratedHtml
+                      @html={{dDirSpan
                         this.category.description_excerpt
                         htmlSafe="true"
                       }}
@@ -70,18 +77,18 @@ export default class ParentCategoryRow extends CategoryListItem {
                   {{/each}}
                 {{/if}}
               {{/unless}}
-              {{#if this.category.isGrandParent}}
-                {{#each this.category.subcategories as |subcategory|}}
+              {{#if this.showsGrandchildren}}
+                {{#each this.displayedSubcategories as |subcategory|}}
                   <SubCategoryRow
                     @category={{subcategory}}
                     @listType={{this.listType}}
                   />
                 {{/each}}
-              {{else if this.category.subcategories}}
+              {{else if this.displayedSubcategories}}
                 <tr class="subcategories-list">
                   <td>
                     <div class="subcategories">
-                      {{#each this.category.subcategories as |subcategory|}}
+                      {{#each this.displayedSubcategories as |subcategory|}}
                         <SubCategoryItem
                           @category={{subcategory}}
                           @listType={{this.listType}}
@@ -111,8 +118,6 @@ export default class ParentCategoryRow extends CategoryListItem {
       {{else}}
 
         <tr
-          data-category-id={{this.category.id}}
-          data-notification-level={{this.category.notificationLevelString}}
           class="{{if
               this.category.description_excerpt
               'has-description'
@@ -124,6 +129,8 @@ export default class ParentCategoryRow extends CategoryListItem {
               (hash category=this.category)
             }}
             {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
+          data-category-id={{this.category.id}}
+          data-notification-level={{this.category.notificationLevelString}}
         >
 
           <PluginOutlet
@@ -140,15 +147,15 @@ export default class ParentCategoryRow extends CategoryListItem {
           >
             <CategoryTitleLink @category={{this.category}} />
             <PluginOutlet
-              @name="below-category-title-link"
               @connectorTagName="div"
+              @name="below-category-title-link"
               @outletArgs={{lazyHash category=this.category}}
             />
 
             {{#if this.category.description_excerpt}}
               <div class="category-description">
-                <DecoratedHtml
-                  @html={{dirSpan
+                <DDecoratedHtml
+                  @html={{dDirSpan
                     this.category.description_excerpt
                     htmlSafe="true"
                   }}
@@ -156,40 +163,40 @@ export default class ParentCategoryRow extends CategoryListItem {
               </div>
             {{/if}}
 
-            {{#if this.category.isGrandParent}}
+            {{#if this.showsGrandchildren}}
               <table class="category-list subcategories-with-subcategories">
                 <tbody>
-                  {{#each this.category.subcategories as |subcategory|}}
+                  {{#each this.displayedSubcategories as |subcategory|}}
                     <SubCategoryRow
                       @category={{subcategory}}
                       @listType={{this.listType}}
                     />
                   {{/each}}
-                  {{#if (gt this.category.unloadedSubcategoryCount 0)}}
+                  {{#if (gt this.hiddenSubcategoryCount 0)}}
                     {{i18n
                       "category_row.subcategory_count"
-                      count=this.category.unloadedSubcategoryCount
+                      count=this.hiddenSubcategoryCount
                     }}
                   {{/if}}
                 </tbody>
               </table>
-            {{else if this.category.subcategories}}
+            {{else if this.displayedSubcategories}}
               <div class="subcategories">
-                {{#each this.category.subcategories as |subcategory|}}
+                {{#each this.displayedSubcategories as |subcategory|}}
                   <SubCategoryItem
                     @category={{subcategory}}
                     @listType={{this.listType}}
                   />
                 {{/each}}
-                {{#if (gt this.category.unloadedSubcategoryCount 0)}}
+                {{#if (gt this.hiddenSubcategoryCount 0)}}
                   <div class="subcategories__more-subcategories">
                     <LinkTo
-                      @route="discovery.subcategories"
                       @model={{this.slugPath}}
+                      @route="discovery.subcategories"
                     >
                       {{i18n
                         "category_row.subcategory_count"
-                        count=this.category.unloadedSubcategoryCount
+                        count=this.hiddenSubcategoryCount
                       }}
                     </LinkTo>
                   </div>
@@ -207,16 +214,16 @@ export default class ParentCategoryRow extends CategoryListItem {
             @name="category-list-topics-wrapper"
             @outletArgs={{lazyHash category=this.category}}
           >
-            <td class="topics">
+            <td class="topics topic-list-data num">
               <div title={{this.category.statTitle}}>{{trustHTML
                   this.category.stat
                 }}</div>
               <CategoryUnread
+                class="unread-new"
                 @category={{this.category}}
+                @newTopicsCount={{this.newTopicsCount}}
                 @tagName="div"
                 @unreadTopicsCount={{this.unreadTopicsCount}}
-                @newTopicsCount={{this.newTopicsCount}}
-                class="unread-new"
               />
             </td>
           </PluginOutlet>

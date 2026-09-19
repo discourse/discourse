@@ -41,6 +41,8 @@ nl:
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Je kunt een poll niet wijzigen na de eerste %{minutes} minuten."
       cannot_edit_named_poll_with_votes: "Je kunt de pollnaam <strong>${name}</strong> niet wijzigen na de eerste %{minutes} minuten."
+    dynamic_poll:
+      enabled_hint: "Opties kunnen worden toegevoegd of verwijderd."
     no_poll_with_this_name: "Er is geen poll met de naam <strong>%{name}</strong> aan dit bericht gekoppeld."
     post_is_deleted: "Dit kan niet bij een verwijderd bericht."
     user_cant_post_in_topic: "Je kunt niet stemmen, omdat je geen berichten in dit topic kunt plaatsen."

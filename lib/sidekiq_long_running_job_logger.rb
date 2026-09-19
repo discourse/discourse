@@ -20,7 +20,7 @@ class SidekiqLongRunningJobLogger
 
         Thread.new do
           loop do
-            break if self.stop_requested?
+            break if stop_requested?
 
             begin
               current_long_running_jobs = Set.new

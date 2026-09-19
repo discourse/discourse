@@ -55,6 +55,19 @@ RSpec.describe DiscourseRewind::Action::BestTopics do
       end
     end
 
+    context "when a topic is unlisted" do
+      before do
+        topic_1.update!(visible: false)
+        TopTopic.find_by(topic_id: topic_1.id).update!(yearly_score: 99)
+      end
+
+      it "does not expose the topic title or excerpt" do
+        topic_ids = call_report[:data].map { |topic| topic[:topic_id] }
+
+        expect(topic_ids).not_to include(topic_1.id)
+      end
+    end
+
     context "when a topic belongs to another user" do
       before { topic_1.update!(user: Fabricate(:user)) }
 

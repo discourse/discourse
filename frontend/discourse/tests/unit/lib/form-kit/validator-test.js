@@ -99,6 +99,20 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       [],
       "it returns no errors when the value is valid"
     );
+
+    errors = await new Validator("", {
+      between: { min: 1, max: 5 },
+    }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is an empty string"
+    );
+
+    errors = await new Validator(null, {
+      between: { min: 1, max: 5 },
+    }).validate();
+    assert.deepEqual(errors, [], "it returns no errors when the value is null");
   });
 
   test("integer", async function (assert) {

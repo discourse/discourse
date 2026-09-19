@@ -15,13 +15,18 @@ tr_TR:
       title: RSS Anketi
     admin:
       rss_polling:
-        feed: Akış Ayarları
-        discourse: Discourse Ayarları
         author: Yazar
         feed_url: URL
         discourse_category: Kategori
         discourse_tags: Etiketler
-        feed_category_filter: Kategori Filtresi
-        documentation: RSS Anketi yapılandırma belgeleri
-        destroy_feed:
-          confirm: "Bu akışı silmek istediğinizden emin misiniz?"
+        feeds:
+          edit: Düzenle
+          delete: Sil
+          save: Kaydet
+          confirm_delete: "Bu akışı silmek istediğinizden emin misiniz?"
+        test:
+          title: Ön izle
+          dismiss: Kapat
+        status:
+          enabled: Etkin mi
+          disabled: Devre Dışı

@@ -43,6 +43,38 @@ describe "discourse login client auth" do
         signup_form.open.click_social_button("discourse_id")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
+
+      context "when full_name_requirement is required_at_signup" do
+        before { SiteSetting.full_name_requirement = "required_at_signup" }
+
+        it "shows the signup form when name is not provided by the provider" do
+          visit("/")
+          signup_form.open.click_social_button("discourse_id")
+          expect(signup_form).to be_open
+          expect(page).to have_css("#new-account-name")
+        end
+
+        context "when name is provided by the provider" do
+          before do
+            OmniAuth.config.mock_auth[:discourse_id] = OmniAuth::AuthHash.new(
+              provider: "discourse_id",
+              uid: OmniauthHelpers::UID,
+              info:
+                OmniAuth::AuthHash::InfoHash.new(
+                  email: OmniauthHelpers::EMAIL,
+                  nickname: OmniauthHelpers::USERNAME,
+                  name: "John Doe",
+                ),
+            )
+          end
+
+          it "skips the signup form and creates the account directly" do
+            visit("/")
+            signup_form.open.click_social_button("discourse_id")
+            expect(page).to have_css(".header-dropdown-toggle.current-user")
+          end
+        end
+      end
     end
   end
 

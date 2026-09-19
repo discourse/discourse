@@ -11,13 +11,13 @@ class StringSettingValidator
   def valid_value?(val)
     return true if !val.present?
 
-    if (@opts[:min] && @opts[:min].to_i > (val.length)) ||
-         (@opts[:max] && @opts[:max].to_i < (val.length))
+    if (@opts[:min] && @opts[:min].to_i > val.length) ||
+         (@opts[:max] && @opts[:max].to_i < val.length)
       @length_fail = true
       return false
     end
 
-    return valid_json?(val) if (@opts[:json_schema])
+    return valid_json?(val) if @opts[:json_schema]
 
     regex_match?(val)
   end

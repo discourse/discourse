@@ -247,3 +247,8 @@ es:
               description: "Puedes encontrar el nombre del canal en los ajustes de Chat Integration"
             provider:
               label: Proveedor
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Canal"
+        configure: "Configurar"
+        message: "Mensaje"

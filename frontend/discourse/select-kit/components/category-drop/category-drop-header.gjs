@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import ComboBoxSelectBoxHeaderComponent from "discourse/select-kit/components/combo-box/combo-box-header";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("category-drop-header")
 export default class CategoryDropHeader extends ComboBoxSelectBoxHeaderComponent {
@@ -23,14 +23,14 @@ export default class CategoryDropHeader extends ComboBoxSelectBoxHeaderComponent
         as |SelectedNameComponent|
       }}
         <SelectedNameComponent
-          @tabindex={{this.tabindex}}
           @item={{this.selectedContent}}
           @selectKit={{this.selectKit}}
           @shouldDisplayClearableButton={{this.shouldDisplayClearableButton}}
+          @tabindex={{this.tabindex}}
         />
       {{/let}}
 
-      {{icon this.caretIcon class="angle-icon"}}
+      {{dIcon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

@@ -12,6 +12,7 @@ class ClicksController < ApplicationController
       topic_id: params[:topic_id],
       ip: request.remote_ip,
       user_id: current_user&.id,
+      guardian: guardian,
     )
 
     render json: success_json

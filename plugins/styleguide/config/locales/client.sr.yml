@@ -8,7 +8,6 @@ sr:
   js:
     styleguide:
       title: "Uputstvo za stilove"
-      welcome: "Kako biste počeli, odaberite sekciju iz menija sa leve strane."
       categories:
         atoms: Атоми
         molecules: Molekuli
@@ -20,6 +19,9 @@ sr:
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Unos datuma/vremena"
+        context_menu:
+          actions:
+            delete: "Obriši"
         font_scale:
           title: "Систем фонтова"
         colors:
@@ -69,6 +71,19 @@ sr:
           title: "Više tema"
         post_menu:
           title: "Meni za post"
+        roving_focus:
+          toolbar:
+            copy: "Kopija"
+          adjacent:
+            field: "Pretraži"
+            open: "Otvori"
+          combobox:
+            daily: "Top dnevne"
+            weekly: "Top nedeljne"
+            monthly: "Top mesečne"
+            never: "Nikad"
+          tree:
+            select: "Odaberite"
         modal:
           title: "Модал"
           header: "Naslov modala"

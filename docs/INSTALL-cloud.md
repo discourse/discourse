@@ -1,6 +1,6 @@
 # Install Discourse on a Cloud Server
 
-> To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting takes care of everything for you.
+> To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting plans (Free, Pro, Business or Enterprise) take care of everything for you.
 >
 > [Learn more about Discourse hosting](https://discourse.org/pricing)
 
@@ -319,7 +319,7 @@ After installation, you can enable additional features:
 - [Facebook Login](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
 - [Twitter/X Login](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395)
 - [Single Sign-On (SSO)](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045)
-- [More auth plugins on meta.discourse.org](https://meta.discourse.org/tags/c/plugin/22/auth-plugins)
+- [More auth plugins on meta.discourse.org](https://meta.discourse.org/tags/c/customization/plugin/22/auth-plugins)
 
 
 ### Email & Notifications

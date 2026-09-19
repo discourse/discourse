@@ -252,7 +252,7 @@ module Service
     def run
       run!
     rescue Failure => exception
-      raise if context.object_id != exception.context.object_id
+      raise if !context.equal?(exception.context)
     end
 
     # @!visibility private

@@ -79,18 +79,22 @@ class RagDocumentFragment < ActiveRecord::Base
       return [] if upload_ids.empty?
 
       query_vector = DiscourseAi::Embeddings::Vector.instance.vector_from(query)
+      phrase_pattern = "(^|[^[:alnum:]_])#{Regexp.escape(query.strip)}($|[^[:alnum:]_])"
       fragment_ids =
-        DiscourseAi::Embeddings::Schema
-          .for(self)
-          .asymmetric_similarity_search(query_vector, limit: limit, offset: 0) do |builder|
-            builder.join(<<~SQL, target_id: target_id, target_type: target_type)
-              rag_document_fragments ON
-                rag_document_fragments.id = rag_document_fragment_id AND
-                rag_document_fragments.target_id = :target_id AND
-                rag_document_fragments.target_type = :target_type
-            SQL
-          end
-          .map(&:rag_document_fragment_id)
+        ranked_fragment_ids(
+          query_vector,
+          target_id:,
+          target_type:,
+          upload_ids:,
+          limit:,
+          phrase_pattern:,
+        )
+
+      if fragment_ids.length < limit
+        semantic_fragment_ids =
+          ranked_fragment_ids(query_vector, target_id:, target_type:, upload_ids:, limit:)
+        fragment_ids = (fragment_ids + semantic_fragment_ids).uniq.take(limit)
+      end
 
       uploads_by_id = Upload.where(id: upload_ids).pluck(:id, :original_filename).to_h
       fragments =
@@ -149,6 +153,31 @@ class RagDocumentFragment < ActiveRecord::Base
 
     private
 
+    def ranked_fragment_ids(
+      query_vector,
+      target_id:,
+      target_type:,
+      upload_ids:,
+      limit:,
+      phrase_pattern: nil
+    )
+      DiscourseAi::Embeddings::Schema
+        .for(self)
+        .asymmetric_similarity_search(query_vector, limit:, offset: 0) do |builder|
+          builder.join(<<~SQL, target_id:, target_type:)
+            rag_document_fragments ON
+              rag_document_fragments.id = rag_document_fragment_id AND
+              rag_document_fragments.target_id = :target_id AND
+              rag_document_fragments.target_type = :target_type
+          SQL
+          builder.where("rag_document_fragments.upload_id IN (:upload_ids)", upload_ids:)
+          if phrase_pattern
+            builder.where("rag_document_fragments.fragment ~* :phrase_pattern", phrase_pattern:)
+          end
+        end
+        .map(&:rag_document_fragment_id)
+    end
+
     def upload_ids_for(target_id:, target_type:, filenames: nil)
       upload_ids =
         UploadReference.where(target_id: target_id, target_type: target_type).pluck(:upload_id)
@@ -168,13 +197,13 @@ end
 #
 #  id              :bigint           not null, primary key
 #  fragment        :text             not null
-#  upload_id       :integer          not null
 #  fragment_number :integer          not null
+#  metadata        :text
+#  target_type     :string(800)      not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  metadata        :text
 #  target_id       :bigint           not null
-#  target_type     :string(800)      not null
+#  upload_id       :integer          not null
 #
 # Indexes
 #

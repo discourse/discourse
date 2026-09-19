@@ -11,7 +11,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
   test("renders new education text when newFilter is true", async function (assert) {
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{false}} @newFilter={{true}} />
+        <EmptyTopicFilter @newFilter={{true}} @unreadFilter={{false}} />
       </template>
     );
 
@@ -20,24 +20,24 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
       .hasText(i18n("topics.none.education.new"));
   });
 
-  test("renders new_new education text when newFilter is true and new_new_view_enabled", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+  test("renders unified_new education text when newFilter is true and unified_new_enabled", async function (assert) {
+    this.currentUser.unified_new_enabled = true;
 
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{false}} @newFilter={{true}} />
+        <EmptyTopicFilter @newFilter={{true}} @unreadFilter={{false}} />
       </template>
     );
 
     assert
       .dom(".empty-topic-filter__text")
-      .hasText(i18n("topics.none.education.new_new"));
+      .hasText(i18n("topics.none.education.unified_new"));
   });
 
   test("renders unread education text when unreadFilter is true", async function (assert) {
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{true}} @newFilter={{false}} />
+        <EmptyTopicFilter @newFilter={{false}} @unreadFilter={{true}} />
       </template>
     );
 
@@ -49,7 +49,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
   test("renders generic education text when neither newFilter nor unreadFilter is true", async function (assert) {
     await render(
       <template>
-        <EmptyTopicFilter @unreadFilter={{false}} @newFilter={{false}} />
+        <EmptyTopicFilter @newFilter={{false}} @unreadFilter={{false}} />
       </template>
     );
 

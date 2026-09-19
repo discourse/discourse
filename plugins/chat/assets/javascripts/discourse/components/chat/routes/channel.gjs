@@ -12,13 +12,12 @@ export default class ChatRoutesChannel extends Component {
   @service chat;
   @service chatHistory;
   @service chatTrackingStateManager;
+  @service currentUser;
 
   @tracked isFiltering = false;
 
-  @action
-  toggleIsFiltering() {
-    this.isFiltering = !this.isFiltering;
-    this.chat.activeMessage = null;
+  get canSearchChat() {
+    return this.currentUser && this.siteSettings.chat_search_enabled;
   }
 
   get getChannelsRoute() {
@@ -59,21 +58,27 @@ export default class ChatRoutesChannel extends Component {
     });
   }
 
+  @action
+  toggleIsFiltering() {
+    this.isFiltering = !this.isFiltering;
+    this.chat.activeMessage = null;
+  }
+
   <template>
     <div class="c-routes --channel">
       <Navbar as |navbar|>
         {{#if this.site.mobileView}}
           <navbar.BackButton
-            @route={{this.getChannelsRoute}}
-            @urgentCount={{this.otherChannelsUrgentCount}}
-            @unreadCount={{this.otherChannelsUnreadCount}}
-            @mentionCount={{this.otherChannelsMentionCount}}
             @hasUnreadThreads={{this.otherChannelsHasUnreadThreads}}
+            @mentionCount={{this.otherChannelsMentionCount}}
+            @route={{this.getChannelsRoute}}
+            @unreadCount={{this.otherChannelsUnreadCount}}
+            @urgentCount={{this.otherChannelsUrgentCount}}
           />
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
         <navbar.Actions as |a|>
-          {{#if this.siteSettings.chat_search_enabled}}
+          {{#if this.canSearchChat}}
             <a.Filter
               @channel={{@channel}}
               @isFiltering={{this.isFiltering}}
@@ -88,10 +93,10 @@ export default class ChatRoutesChannel extends Component {
       </Navbar>
 
       <FullPageChat
-        @isFiltering={{this.isFiltering}}
         @channel={{@channel}}
-        @targetMessageId={{@targetMessageId}}
+        @isFiltering={{this.isFiltering}}
         @onToggleFilter={{this.toggleIsFiltering}}
+        @targetMessageId={{@targetMessageId}}
       />
     </div>
 

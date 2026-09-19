@@ -100,7 +100,6 @@ fi
 docker run -d \
     -p $local_publish:8025:8025 \
     -p $local_publish:3000:3000 \
-    -p $local_publish:4200:4200 \
     -p $local_publish:9292:9292 \
     -p $local_publish:9405:9405 \
     -v "$DATA_DIR:/shared/postgres_data:delegated" \
@@ -128,4 +127,3 @@ if [ "${initialize}" = "initialize" ]; then
     echo "Creating admin user..."
     "${SCRIPTPATH}/rake" admin:create
 fi
-

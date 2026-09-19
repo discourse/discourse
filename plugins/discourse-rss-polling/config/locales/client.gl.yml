@@ -12,3 +12,13 @@ gl:
         feed_url: URL
         discourse_category: Categoría
         discourse_tags: Etiquetas
+        feeds:
+          edit: Editar
+          delete: Eliminar
+          save: Gardar
+        test:
+          title: Visualizar
+          dismiss: Desbotar
+        status:
+          enabled: Activado
+          disabled: Desactivado

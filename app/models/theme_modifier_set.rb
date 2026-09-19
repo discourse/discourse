@@ -6,7 +6,7 @@ class ThemeModifierSet < ActiveRecord::Base
   belongs_to :theme
 
   def self.modifiers
-    @modifiers ||= self.load_modifiers
+    @modifiers ||= load_modifiers
   end
 
   validate :type_validator
@@ -38,11 +38,10 @@ class ThemeModifierSet < ActiveRecord::Base
   # Given the ids of multiple active themes / theme components, this function
   # will combine them into a 'resolved' behavior
   def self.resolve_modifier_for_themes(theme_ids, modifier_name)
-    return nil if !(config = self.modifiers[modifier_name])
+    return nil if !(config = modifiers[modifier_name])
 
     all_values =
-      self
-        .where(theme_id: theme_ids)
+      where(theme_id: theme_ids)
         .where.not(modifier_name => nil)
         .map { |s| s.public_send(modifier_name) }
     case config[:type]
@@ -81,13 +80,13 @@ class ThemeModifierSet < ActiveRecord::Base
 
   def add_theme_setting_modifier(modifier_name, setting_name)
     self.theme_setting_modifiers ||= {}
-    self.theme_setting_modifiers[modifier_name] = setting_name
+    theme_setting_modifiers[modifier_name] = setting_name
   end
 
   def refresh_theme_setting_modifiers(target_setting_name: nil, target_setting_value: nil)
     changed = false
-    if self.theme_setting_modifiers.present?
-      self.theme_setting_modifiers.each do |modifier_name, setting_name|
+    if theme_setting_modifiers.present?
+      theme_setting_modifiers.each do |modifier_name, setting_name|
         modifier_name = modifier_name.to_sym
         setting_name = setting_name.to_sym
 

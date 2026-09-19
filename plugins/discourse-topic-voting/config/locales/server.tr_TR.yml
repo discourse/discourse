@@ -11,7 +11,6 @@ tr_TR:
       title: "fikirler"
       description: "Üyelerin fikirlerini paylaşabileceği ve en çok istedikleri fikirler için oy verebileceği bir platform."
   site_settings:
-    enable_ideas_category_type_setup: "Kategori oluşturma ayarları sırasında \"Fikirler\" kategori türü seçeneğini etkinleştirir. Bunun geçerli olabilmesi için \"basitleştirilmiş kategori oluşturma\" seçeneğinin etkinleştirilmiş olması gerektiğini unutmayın."
     topic_voting_enabled: 'Kullanıcıların konularda oy kullanmasına izin verilsin mi?'
     topic_voting_enable_vote_limits: 'Güven düzeyine bağlı olarak kullanıcı başına oy sayısını sınırlayın.'
     topic_voting_tl0_vote_limit: 'GS0 kullanıcılara kaç aktif oy izni veriliyor?'

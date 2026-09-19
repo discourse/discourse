@@ -77,11 +77,11 @@ export default class AdminConfigAreasFlags extends Component {
         <tbody class="d-table__body">
           {{#each this.flags as |flag|}}
             <AdminFlagItem
-              @flag={{flag}}
-              @moveFlagCallback={{this.moveFlagCallback}}
               @deleteFlagCallback={{this.deleteFlagCallback}}
+              @flag={{flag}}
               @isFirstFlag={{this.isFirstFlag flag}}
               @isLastFlag={{this.isLastFlag flag}}
+              @moveFlagCallback={{this.moveFlagCallback}}
             />
           {{/each}}
         </tbody>

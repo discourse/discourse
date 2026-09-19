@@ -1,14 +1,14 @@
 .d-multi-select-trigger {
   @include form-item-sizing;
   display: inline-flex;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-input-border-radius);
   cursor: pointer;
   align-items: center;
   gap: 0.25em;
   line-height: normal;
   box-sizing: border-box;
   width: 200px;
-  border: 1px solid var(--primary-medium);
+  border: var(--d-input-border);
   justify-content: space-between;
 
   &.-expanded {
@@ -57,6 +57,7 @@
   display: flex;
   flex-direction: column;
   padding: 0.25em;
+  margin: 0;
   gap: 0.25em;
   height: 150px;
 }
@@ -73,6 +74,7 @@
   align-items: center;
   border-radius: var(--d-border-radius);
   background-color: var(--primary-low);
+  gap: var(--space-1);
 
   &:hover {
     background-color: var(--primary-low-mid);
@@ -80,8 +82,12 @@
 
   .d-multi-select-trigger__selection-label {
     @include ellipsis;
-    max-width: 3.5em;
+    max-width: 5em;
   }
+}
+
+.d-multi-select-trigger__remove-selection-icon {
+  font-size: var(--font-down-1);
 }
 
 .d-multi-select-trigger__expand-btn {

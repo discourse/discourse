@@ -24,7 +24,7 @@ class ProblemCheck::UnreachableThemes < ProblemCheck
       <ul>#{
       unreachable_themes
         .map do |name, id|
-          "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
+          "<li><a href=\"#{Discourse.base_path}/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
         end
         .join("\n")
     }</ul>

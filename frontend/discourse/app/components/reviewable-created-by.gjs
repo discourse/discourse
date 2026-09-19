@@ -1,18 +1,18 @@
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const ReviewableCreatedBy = <template>
   <div class="created-by">
     {{#if @user}}
-      <UserLink @user={{@user}}>
-        {{avatar @user imageSize=(if @avatarSize @avatarSize "large")}}
+      <DUserLink @user={{@user}}>
+        {{dAvatar @user imageSize=(if @avatarSize @avatarSize "large")}}
         {{#if @showUsername}}
           <span class="username">{{@user.username}}</span>
         {{/if}}
-      </UserLink>
+      </DUserLink>
     {{else}}
-      {{icon "trash-can" class="deleted-user-avatar"}}
+      {{dIcon "trash-can" class="deleted-user-avatar"}}
     {{/if}}
   </div>
 </template>;

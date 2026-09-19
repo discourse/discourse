@@ -4,11 +4,12 @@ import { Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DModal from "discourse/components/d-modal";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import withEventValue from "discourse/helpers/with-event-value";
 import { getLoadedFaker } from "discourse/lib/load-faker";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
@@ -16,7 +17,7 @@ import Row from "discourse/plugins/styleguide/discourse/components/styleguide/co
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class extends Component {
-  @tracked inline = true;
+  @tracked open = false;
   @tracked hideHeader = false;
   @tracked dismissable = true;
   @tracked modalTagName = "div";
@@ -35,21 +36,8 @@ export default class extends Component {
   }
 
   @action
-  toggleInline() {
-    this.inline = !this.inline;
-    if (!this.inline) {
-      // Make sure there is a way to dismiss the modal
-      this.dismissable = true;
-    }
-  }
-
-  @action
   toggleDismissable() {
     this.dismissable = !this.dismissable;
-    if (!this.dismissable) {
-      // Make sure there is a way to dismiss the modal
-      this.inline = true;
-    }
   }
 
   @action
@@ -57,30 +45,46 @@ export default class extends Component {
     this.showFooter = !this.showFooter;
   }
 
+  @action
+  openModal() {
+    this.open = true;
+  }
+
+  @action
+  closeModal() {
+    this.open = false;
+  }
+
   <template>
-    {{! template-lint-disable no-potential-path-strings}}
+    {{! eslint-disable ember/template-no-potential-path-strings }}
 
     <StyleguideExample @title="<DModal>">
       <StyleguideComponent>
-        <DModal
-          @closeModal={{fn (mut this.inline) true}}
-          @hideHeader={{this.hideHeader}}
-          @inline={{this.inline}}
-          @title={{this.title}}
-          @subtitle={{this.subtitle}}
-          @flash={{this.flash}}
-          @flashType={{this.flashType}}
-          @errors={{this.errors}}
-          @dismissable={{this.dismissable}}
-        >
-          <:body>
-            {{this.body}}
-          </:body>
+        <DButton
+          @action={{this.openModal}}
+          @label="styleguide.sections.modal.open"
+        />
 
-          <:footer>
-            {{i18n "styleguide.sections.modal.footer"}}
-          </:footer>
-        </DModal>
+        {{#if this.open}}
+          <DModal
+            @closeModal={{this.closeModal}}
+            @dismissable={{this.dismissable}}
+            @errors={{this.errors}}
+            @flash={{this.flash}}
+            @flashType={{this.flashType}}
+            @hideHeader={{this.hideHeader}}
+            @subtitle={{this.subtitle}}
+            @title={{this.title}}
+          >
+            <:body>
+              {{this.body}}
+            </:body>
+
+            <:footer>
+              {{i18n "styleguide.sections.modal.footer"}}
+            </:footer>
+          </DModal>
+        {{/if}}
       </StyleguideComponent>
 
       <Controls>
@@ -88,12 +92,6 @@ export default class extends Component {
           <DToggleSwitch
             @state={{this.hideHeader}}
             {{on "click" this.toggleHeader}}
-          />
-        </Row>
-        <Row @name="@inline">
-          <DToggleSwitch
-            @state={{this.inline}}
-            {{on "click" this.toggleInline}}
           />
         </Row>
         <Row @name="@dismissable">
@@ -104,25 +102,25 @@ export default class extends Component {
         </Row>
         <Row @name="@tagName">
           <ComboBox
-            @value={{this.modalTagName}}
             @content={{this.modalTagNames}}
-            @onChange={{fn (mut this.modalTagName)}}
-            @valueProperty={{null}}
             @nameProperty={{null}}
+            @onChange={{fn (mut this.modalTagName)}}
+            @value={{this.modalTagName}}
+            @valueProperty={{null}}
           />
         </Row>
         <Row @name="@title">
           <input
-            {{on "input" (withEventValue (fn (mut this.title)))}}
             type="text"
             value={{this.title}}
+            {{on "input" (withEventValue (fn (mut this.title)))}}
           />
         </Row>
         <Row @name="@subtitle">
           <input
-            {{on "input" (withEventValue (fn (mut this.subtitle)))}}
             type="text"
             value={{this.subtitle}}
+            {{on "input" (withEventValue (fn (mut this.subtitle)))}}
           />
         </Row>
         <Row @name="<:body>">
@@ -130,18 +128,18 @@ export default class extends Component {
         </Row>
         <Row @name="@flash">
           <input
-            {{on "input" (withEventValue (fn (mut this.flash)))}}
             type="text"
             value={{this.flash}}
+            {{on "input" (withEventValue (fn (mut this.flash)))}}
           />
         </Row>
         <Row @name="@flashType">
           <ComboBox
-            @value={{this.flashType}}
             @content={{this.flashTypes}}
-            @onChange={{fn (mut this.flashType)}}
-            @valueProperty={{null}}
             @nameProperty={{null}}
+            @onChange={{fn (mut this.flashType)}}
+            @value={{this.flashType}}
+            @valueProperty={{null}}
           />
         </Row>
       </Controls>

@@ -6,6 +6,10 @@
 
 cs:
   accepted_answer: "Přijatá odpověď"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Povolit vlastníkovi tématu a správcům označit odpověď jako řešení"
   site_settings:
     solved_enabled: "Zapnout plugin \"vyřešeno\", povolit uživatelům zvolit řešení témat"
     allow_solved_on_all_topics: "Povolit uživatelům výběr řešení pro všechna témata (pokud není zaškrtnuto, lze povolit řešení pro jednotlivé kategorie nebo štítky)."

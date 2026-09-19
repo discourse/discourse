@@ -7,7 +7,7 @@ if GlobalSetting.skip_redis?
   return
 end
 
-if (Rails.env.local?) && ENV["FORCE_RAILS_LOGS_STDOUT"] == "1"
+if Rails.env.local? && ENV["FORCE_RAILS_LOGS_STDOUT"] == "1"
   Rails.logger = Logger.new(STDOUT)
   return
 end
@@ -16,7 +16,9 @@ if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
   Rails.application.config.after_initialize do
     console = ActiveSupport::Logger.new(STDOUT)
     original_logger = Rails.logger.broadcasts.first
-    console.formatter = original_logger.formatter
+    formatter = original_logger.formatter
+    console.formatter =
+      formatter.is_a?(DevLogFormatter) && ENV["NO_COLOR"].nil? ? formatter.colored : formatter
     console.level = original_logger.level
 
     unless ActiveSupport::Logger.logger_outputs_to?(original_logger, STDOUT)
@@ -135,7 +137,7 @@ Discourse.plugins.each do |plugin|
   next if !plugin.metadata.url
 
   Logster.config.project_directories << {
-    path: "#{Rails.root}/plugins/#{plugin.directory_name}",
+    path: "#{Rails.root.join("plugins/#{plugin.directory_name}")}",
     url: plugin.metadata.url,
   }
 end

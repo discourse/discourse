@@ -83,10 +83,10 @@ end
 # Table name: quoted_posts
 #
 #  id             :integer          not null, primary key
-#  post_id        :integer          not null
-#  quoted_post_id :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  post_id        :integer          not null
+#  quoted_post_id :integer          not null
 #
 # Indexes
 #

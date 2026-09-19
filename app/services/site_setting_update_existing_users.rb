@@ -4,7 +4,7 @@ class SiteSettingUpdateExistingUsers
   def self.call(id, value, previous_value)
     new_value = value.nil? ? "" : value
 
-    if (user_option = self.user_options[id.to_sym]).present?
+    if (user_option = user_options[id.to_sym]).present?
       if user_option == "text_size_key"
         previous_value = UserOption.text_sizes[previous_value.to_sym]
         new_value = UserOption.text_sizes[new_value.to_sym]
@@ -37,7 +37,7 @@ class SiteSettingUpdateExistingUsers
         status: "enqueued",
         group_ids: [Group::AUTO_GROUPS[:admins]],
       )
-    elsif self.is_sidebar_default_setting?(id)
+    elsif is_sidebar_default_setting?(id)
       Jobs.enqueue(
         :backfill_sidebar_site_settings,
         setting_name: id,
@@ -58,7 +58,6 @@ class SiteSettingUpdateExistingUsers
       default_email_in_reply_to: "email_in_reply_to",
       default_other_enable_quoting: "enable_quoting",
       default_other_enable_smart_lists: "enable_smart_lists",
-      default_other_enable_defer: "enable_defer",
       default_other_external_links_in_new_tab: "external_links_in_new_tab",
       default_other_dynamic_favicon: "dynamic_favicon",
       default_other_new_topic_duration_minutes: "new_topic_duration_minutes",

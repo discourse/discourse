@@ -22,7 +22,7 @@ module PageObjects
       end
 
       def filter_badges(text)
-        page.fill_in(class: "admin-filter-controls__input", with: text)
+        page.fill_in(class: "d-filter-controls__input", with: text)
         self
       end
 
@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def has_no_badges_found_message?
-        page.has_css?(".admin-filter-controls__no-results")
+        page.has_css?(".d-filter-controls__no-results")
       end
 
       def has_saved_form?
@@ -54,7 +54,7 @@ module PageObjects
 
       def choose_icon(name)
         form.choose_conditional("choose-icon")
-        form.field("icon").select("truck-medical")
+        form.field("icon").select(name)
         self
       end
 

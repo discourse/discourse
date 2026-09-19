@@ -67,6 +67,8 @@ module Jobs
       entity[:method] = :"#{entity[:name]}_export"
       raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
 
+      Guardian.new(@current_user).ensure_can_export_entity!(@entity, nil, @extra)
+
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
       entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
         "#{@extra[:name].dasherize}-#{@timestamp}"
@@ -87,30 +89,7 @@ module Jobs
 
       zip_filename = write_to_csv_and_zip(filename, entity)
 
-      # create upload
-      upload = nil
-
-      if File.exist?(zip_filename)
-        File.open(zip_filename) do |file|
-          upload =
-            UploadCreator.new(
-              file,
-              File.basename(zip_filename),
-              type: "csv_export",
-              for_export: "true",
-            ).create_for(@current_user.id)
-
-          if upload.persisted?
-            user_export.update_columns(upload_id: upload.id)
-          else
-            Rails.logger.warn(
-              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
-            )
-          end
-        end
-
-        File.delete(zip_filename)
-      end
+      upload = user_export.attach_upload(zip_filename, @current_user.id)
     ensure
       post = notify_user(upload, export_title)
 
@@ -195,11 +174,13 @@ module Jobs
       @extra[:filters] = {}
       @extra[:filters][:category] = @extra[:category].to_i if @extra[:category].present?
       @extra[:filters][:group] = @extra[:group].to_i if @extra[:group].present?
+      @extra[:filters][:category_ids] = @extra[:category_ids] if @extra[:category_ids].present?
+      @extra[:filters][:groups] = @extra[:groups] if @extra[:groups].present?
       @extra[:filters][:include_subcategories] = !!ActiveRecord::Type::Boolean.new.cast(
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?
 
-      report = Report.find(@extra[:name], @extra)
+      report = Report.find(@extra[:name], @extra.merge(guardian: @current_user&.guardian))
 
       header = []
       titles = {}
@@ -266,10 +247,6 @@ module Jobs
 
     private
 
-    def escape_comma(string)
-      string&.include?(",") ? %Q|"#{string}"| : string
-    end
-
     def get_base_user_array(user)
       # preloading scopes is hard, do this by hand
       secondary_emails = []
@@ -285,10 +262,10 @@ module Jobs
 
       [
         user.id,
-        escape_comma(user.name),
+        user.name,
         user.username,
         primary_email,
-        escape_comma(user.title),
+        user.title,
         user.created_at,
         user.last_seen_at,
         user.last_posted_at,
@@ -311,7 +288,7 @@ module Jobs
         user.user_stat.post_count,
         user.user_stat.likes_given,
         user.user_stat.likes_received,
-        escape_comma(user.user_profile.location),
+        user.user_profile.location,
         user.user_profile.website,
         user.user_profile.views,
       ]
@@ -323,7 +300,7 @@ module Jobs
           user.single_sign_on_record.external_id,
           user.single_sign_on_record.external_email,
           user.single_sign_on_record.external_username,
-          escape_comma(user.single_sign_on_record.external_name),
+          user.single_sign_on_record.external_name,
           user.single_sign_on_record.external_avatar_url,
         )
       else
@@ -334,25 +311,20 @@ module Jobs
 
     def add_custom_fields(user, user_info_array, user_field_ids)
       if user_field_ids.present?
-        user.user_fields.each do |custom_field|
-          user_info_array << escape_comma(custom_field[1].to_s)
-        end
+        user.user_fields.each { |custom_field| user_info_array << custom_field[1].to_s }
       end
       user_info_array
     end
 
     def add_group_names(user, user_info_array)
-      group_names = user.groups.map { |g| g.name }.join(";")
-      if group_names.present?
-        user_info_array << escape_comma(group_names)
-      else
-        user_info_array << nil
-      end
+      group_names = user.groups.map(&:name).join(";")
+      user_info_array << group_names.presence
       user_info_array
     end
 
     def get_staff_action_fields(staff_action)
       staff_action_array = []
+      can_see_content = staff_action_log_guardian.can_see_staff_action_log_content?(staff_action)
 
       HEADER_ATTRS_FOR["staff_action"].each do |attr|
         data =
@@ -368,6 +340,8 @@ module Jobs
             else
               "#{user.username} #{staff_action.attributes[attr]}"
             end
+          elsif %w[details context].include?(attr) && !can_see_content
+            attr == "details" ? I18n.t("staff_action_logs.redacted") : nil
           else
             staff_action.attributes[attr]
           end
@@ -429,6 +403,10 @@ module Jobs
       screened_url_array
     end
 
+    def staff_action_log_guardian
+      @staff_action_log_guardian ||= Guardian.new(@current_user)
+    end
+
     def notify_user(upload, export_title)
       post = nil
 
@@ -454,6 +432,7 @@ module Jobs
       FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
       begin
         CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
+          csv.to_io.write(Encodings::BOM)
           csv << get_header(entity[:name]) if entity[:name] != "report"
           public_send(entity[:method]) { |d| csv << d }
         end

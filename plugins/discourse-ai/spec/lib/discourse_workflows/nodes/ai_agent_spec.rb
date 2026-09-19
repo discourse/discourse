@@ -1,0 +1,512 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
+  fab!(:llm_model) { Fabricate(:llm_model, display_name: "Workflow LLM", vision_enabled: true) }
+  fab!(:site_llm_model) { Fabricate(:llm_model, display_name: "Site LLM") }
+  fab!(:agent) do
+    Fabricate(
+      :ai_agent,
+      name: "Workflow agent",
+      enabled: true,
+      vision_enabled: true,
+      default_llm_id: llm_model.id,
+    )
+  end
+
+  let(:bot) { instance_double(DiscourseAi::Agents::Bot) }
+  let(:bot_as_users) { [] }
+  let(:bot_contexts) { [] }
+  let(:bot_models) { [] }
+  let(:prompts) { [] }
+
+  before do
+    SiteSetting.discourse_ai_enabled = true
+
+    allow(DiscourseAi::Agents::Bot).to receive(:as) do |user, agent:, model:|
+      bot_as_users << user
+      bot_models << model
+      bot
+    end
+    allow(bot).to receive(:reply) do |bot_context, &block|
+      prompt = bot_context.messages.first[:content]
+
+      bot_contexts << bot_context
+      prompts << prompt
+      block.call("Reply to #{prompt}", nil, nil)
+    end
+  end
+
+  describe ".load_options_context" do
+    fab!(:disabled_agent) { Fabricate(:ai_agent, name: "Disabled agent", enabled: false) }
+    fab!(:matching_agent) do
+      Fabricate(:ai_agent, name: "Alpha agent", enabled: true, default_llm_id: llm_model.id)
+    end
+    fab!(:other_agent) do
+      Fabricate(:ai_agent, name: "Gamma agent", enabled: true, default_llm_id: llm_model.id)
+    end
+
+    def load_options(method_name: "agents", filter: nil, parameters: {})
+      context =
+        DiscourseWorkflows::LoadOptionsContext.new(
+          method_name: method_name,
+          filter: filter,
+          parameters: parameters,
+          node_class: described_class,
+        )
+
+      described_class.load_options_context(context)
+    end
+
+    it "returns enabled AI agents for the chooser and includes resolved LLM metadata" do
+      option_ids = [agent.id, disabled_agent.id]
+      options = load_options.select { |option| option_ids.include?(option[:id]) }
+
+      expect(options).to contain_exactly(
+        {
+          id: agent.id,
+          name: agent.name,
+          default_llm_id: llm_model.id,
+          force_default_llm: false,
+          resolved_llm_id: llm_model.id,
+          resolved_llm_name: llm_model.display_name,
+          response_format: [],
+        },
+      )
+    end
+
+    it "includes the site default LLM in agent metadata when the agent has no default" do
+      agent.update!(default_llm_id: nil)
+      SiteSetting.stubs(:ai_default_llm_model).returns(site_llm_model.id)
+
+      option = load_options.find { |agent_option| agent_option[:id] == agent.id }
+
+      expect(option).to include(
+        name: agent.name,
+        default_llm_id: nil,
+        resolved_llm_id: site_llm_model.id,
+        resolved_llm_name: site_llm_model.display_name,
+      )
+    end
+
+    it "filters AI agents by the filter term" do
+      option_ids = [matching_agent.id, other_agent.id]
+      options = load_options(filter: "alpha").select { |option| option_ids.include?(option[:id]) }
+
+      expect(options.first[:id]).to eq(matching_agent.id)
+    end
+
+    it "returns LLM models for the override chooser" do
+      override_model = Fabricate(:llm_model, display_name: "Override LLM")
+
+      expect(load_options(method_name: "llm_models").pluck(:id)).to include(
+        llm_model.id,
+        site_llm_model.id,
+        override_model.id,
+      )
+    end
+  end
+
+  it "runs the agent once per input item with item-specific parameters" do
+    items =
+      execute_node_output(
+        configuration: {
+          "agent_id" => agent.id,
+          "prompt" => "={{ 'Prompt ' + $json.name }}",
+        },
+        input_items: [{ "json" => { "name" => "Ada" } }, { "json" => { "name" => "Grace" } }],
+      ).first
+
+    expect(prompts).to eq(["Prompt Ada", "Prompt Grace"])
+    expect(items.map { |item| item["json"]["result"] }).to eq(
+      ["Reply to Prompt Ada", "Reply to Prompt Grace"],
+    )
+    expect(items.map { |item| item["pairedItem"] }).to eq([{ "item" => 0 }, { "item" => 1 }])
+    expect(bot).to have_received(:reply).twice
+  end
+
+  describe "run once for all items" do
+    it "makes a single request no matter how many items arrive" do
+      items =
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "mode" => "runOnceForAllItems",
+            "prompt" => "={{ 'Report about ' + $json.name }}",
+          },
+          input_items: [
+            { "json" => { "name" => "Ada" } },
+            { "json" => { "name" => "Grace" } },
+            { "json" => { "name" => "Alan" } },
+          ],
+        ).first
+
+      expect(prompts).to eq(["Report about Ada"])
+      expect(items.length).to eq(1)
+      expect(items.first["json"]["result"]).to eq("Reply to Report about Ada")
+      expect(items.first["pairedItem"]).to eq([{ "item" => 0 }, { "item" => 1 }, { "item" => 2 }])
+      expect(bot).to have_received(:reply).once
+    end
+
+    it "defaults to per-item so existing workflows keep their behaviour" do
+      execute_node_output(
+        configuration: {
+          "agent_id" => agent.id,
+          "prompt" => "Hello",
+        },
+        input_items: [{ "json" => {} }, { "json" => {} }],
+      )
+
+      expect(bot).to have_received(:reply).twice
+    end
+
+    it "raises a node error for an unknown mode" do
+      expect {
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "mode" => "whenever",
+            "prompt" => "Hello",
+          },
+        )
+      }.to raise_error(DiscourseWorkflows::NodeError, /not a supported AI agent execution mode/)
+    end
+  end
+
+  it "uses the system user as the default runner" do
+    execute_node_output(configuration: { "agent_id" => agent.id, "prompt" => "Hello" })
+
+    expect(bot_as_users).to eq([Discourse.system_user])
+    expect(bot_contexts.last.user).to eq(Discourse.system_user)
+    expect(bot_contexts.last.guardian.user).to eq(Discourse.system_user)
+  end
+
+  it "uses a specific configured runner for agent context and permissions" do
+    runner = Fabricate(:user)
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "runner_username" => runner.username,
+        "prompt" => "Hello",
+      },
+    )
+
+    expect(bot_contexts.last.user).to eq(runner)
+    expect(bot_contexts.last.guardian.user).to eq(runner)
+  end
+
+  it "supports anonymous as the configured runner" do
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "runner_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+        "prompt" => "Hello",
+      },
+    )
+
+    expect(bot_contexts.last.user).to be_a(DiscourseWorkflows::AnonymousActor)
+    expect(bot_contexts.last.guardian).to be_anonymous
+  end
+
+  it "passes configured upload IDs to the agent prompt" do
+    upload = Fabricate(:image_upload)
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "prompt" => "Review the screenshot",
+        "upload_ids" => "={{ $json.upload_ids }}",
+      },
+      input_items: [{ "json" => { "upload_ids" => [upload.id] } }],
+    )
+
+    expect(prompts).to eq([["Review the screenshot", { upload_id: upload.id }]])
+  end
+
+  describe "uploads that cannot reach the model" do
+    def expect_not_sent(upload_id, reason, runner: "system")
+      expect {
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "runner_username" => runner,
+            "prompt" => "Review",
+            "upload_ids" => [upload_id],
+          },
+        )
+      }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /did not receive every upload.*#{Regexp.escape(reason)}/,
+      )
+    end
+
+    it "raises before calling the agent when the agent cannot see images" do
+      agent.update!(vision_enabled: false)
+      upload = Fabricate(:image_upload)
+
+      expect_not_sent(upload.id, "Upload #{upload.id} is an image and agent 'Workflow agent'")
+      expect(bot).not_to have_received(:reply)
+    end
+
+    it "raises when the LLM cannot see images" do
+      llm_model.update!(vision_enabled: false)
+      upload = Fabricate(:image_upload)
+
+      expect_not_sent(upload.id, "Upload #{upload.id} is an image and LLM 'Workflow LLM'")
+    end
+
+    it "raises when the runner cannot see an upload" do
+      owner = Fabricate(:user)
+      private_topic = Fabricate(:private_message_topic, user: owner, recipient: Fabricate(:user))
+      private_post = Fabricate(:post, topic: private_topic, user: owner)
+      upload = Fabricate(:image_upload, access_control_post_id: private_post.id)
+      runner = Fabricate(:user)
+
+      expect_not_sent(
+        upload.id,
+        "#{runner.username} cannot see upload #{upload.id}",
+        runner: runner.username,
+      )
+    end
+
+    it "raises when an upload does not exist" do
+      missing_id = Upload.maximum(:id).to_i + 1
+
+      expect_not_sent(missing_id, "Upload #{missing_id} was not found")
+    end
+
+    it "raises when the LLM accepts no attachments" do
+      SiteSetting.authorized_extensions += "|pdf"
+      upload = Fabricate(:upload, original_filename: "report.pdf", extension: "pdf")
+
+      expect_not_sent(upload.id, "Upload #{upload.id} is a document and LLM 'Workflow LLM'")
+    end
+
+    it "raises when the image format is not supported" do
+      upload = Fabricate(:image_upload, extension: "heic", original_filename: "photo.heic")
+
+      expect_not_sent(upload.id, "Upload #{upload.id} is not a supported image format")
+    end
+
+    it "raises when encoding drops an upload after the agent ran" do
+      upload = Fabricate(:image_upload)
+      allow(bot).to receive(:reply) do |bot_context, &block|
+        bot_context.execution_context.upload_skips << {
+          upload_id: upload.id,
+          filename: upload.original_filename,
+          message: "could not be converted to png",
+        }
+        block.call("Looks fine", nil, nil)
+      end
+
+      expect_not_sent(upload.id, "was not sent: could not be converted to png")
+    end
+  end
+
+  it "resolves runner expressions per item" do
+    runner = Fabricate(:user)
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "runner_username" => "={{ $json.runner_username }}",
+        "prompt" => "Review the screenshot",
+      },
+      input_items: [{ "json" => { "runner_username" => runner.username } }],
+    )
+
+    expect(bot_contexts.last.user).to eq(runner)
+  end
+
+  it "normalizes comma-separated and JSON upload ID values" do
+    first_upload = Fabricate(:image_upload)
+    second_upload = Fabricate(:image_upload)
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "prompt" => "Review the uploads",
+        "upload_ids" => "#{first_upload.id}, not-an-id, #{second_upload.id}",
+      },
+    )
+
+    expect(prompts).to eq(
+      [["Review the uploads", { upload_id: first_upload.id }, { upload_id: second_upload.id }]],
+    )
+
+    prompts.clear
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "prompt" => "Review the uploads",
+        "upload_ids" =>
+          "[#{first_upload.id}, {\"id\": #{second_upload.id}}, true, \"#{second_upload.id}\"]",
+      },
+    )
+
+    expect(prompts).to eq(
+      [["Review the uploads", { upload_id: first_upload.id }, { upload_id: second_upload.id }]],
+    )
+  end
+
+  it "passes document upload IDs when the selected LLM supports their attachment type" do
+    llm_model.update!(allowed_attachment_types: ["pdf"])
+    SiteSetting.authorized_extensions += "|pdf"
+    agent.update!(vision_enabled: false)
+    upload = Fabricate(:upload, original_filename: "report.pdf", extension: "pdf")
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "prompt" => "Review the document",
+        "upload_ids" => [upload.id],
+      },
+    )
+
+    expect(prompts).to eq([["Review the document", { upload_id: upload.id }]])
+  end
+
+  describe "structured output" do
+    let(:response_format) do
+      [
+        { "key" => "verdict", "type" => "string" },
+        { "key" => "confident", "type" => "boolean" },
+        { "key" => "reasons", "type" => "array", "array_type" => "string" },
+      ]
+    end
+
+    before do
+      agent.update!(response_format: response_format)
+      allow(bot).to receive(:reply) do |_bot_context, &block|
+        structured =
+          DiscourseAi::Completions::StructuredOutput.new(
+            DiscourseAi::Agents::Bot.json_schema_properties(response_format),
+          )
+        structured << { verdict: "reject", confident: true, reasons: %w[nsfw] }.to_json
+        structured.finish
+        block.call(structured, nil, :structured_output)
+      end
+    end
+
+    it "emits each response format field next to the raw result" do
+      item = execute_node(configuration: { "agent_id" => agent.id, "prompt" => "Check" })
+
+      expect(item).to eq(
+        "result" => { verdict: "reject", confident: true, reasons: %w[nsfw] }.to_json,
+        "verdict" => "reject",
+        "confident" => true,
+        "reasons" => %w[nsfw],
+      )
+      expect(item).to match_node_output_schema(
+        described_class,
+        configuration: {
+          "agent_response_format" => response_format,
+        },
+      )
+    end
+
+    it "declares the picked agent's response format fields in the output schema" do
+      schema = described_class.output_schemas({ "agent_response_format" => response_format }).first
+
+      expect(schema["properties"]).to eq(
+        "result" => {
+          "type" => "string",
+        },
+        "verdict" => {
+          "type" => "string",
+        },
+        "confident" => {
+          "type" => "boolean",
+        },
+        "reasons" => {
+          "type" => "array",
+          "items" => {
+            "type" => "string",
+          },
+        },
+      )
+      expect(
+        described_class.output_schemas({ "agent_response_format" => "" }).first["properties"].keys,
+      ).to eq(["result"])
+      expect(
+        described_class.output_schemas(
+          { "agent_response_format" => [{ "type" => "string" }] },
+        ).first[
+          "properties"
+        ].keys,
+      ).to eq(["result"])
+    end
+  end
+
+  it "uses an empty string when the optional prompt is blank" do
+    items = execute_node_output(configuration: { "agent_id" => agent.id }).first
+
+    expect(prompts).to eq([""])
+    expect(items.first["json"]["result"]).to eq("Reply to ")
+  end
+
+  it "uses the selected LLM override when the agent does not force its default LLM" do
+    override_model = Fabricate(:llm_model, display_name: "Override LLM")
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "llm_model_id" => override_model.id,
+        "prompt" => "Hello",
+      },
+    )
+
+    expect(bot_models).to contain_exactly(override_model)
+  end
+
+  it "ignores the selected LLM override when the agent forces its default LLM" do
+    override_model = Fabricate(:llm_model, display_name: "Override LLM")
+    agent.update!(force_default_llm: true)
+
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "llm_model_id" => override_model.id,
+        "prompt" => "Hello",
+      },
+    )
+
+    expect(bot_models).to contain_exactly(llm_model)
+  end
+
+  it "raises when the selected LLM override does not exist" do
+    expect do
+      execute_node_output(
+        configuration: {
+          "agent_id" => agent.id,
+          "llm_model_id" => -999,
+          "prompt" => "Hello",
+        },
+      )
+    end.to raise_error(DiscourseWorkflows::NodeError, /LLM model with id -999 not found/)
+  end
+
+  it "raises when a forced agent has no valid default LLM" do
+    agent.update_columns(force_default_llm: true, default_llm_id: -999)
+
+    expect do
+      execute_node_output(configuration: { "agent_id" => agent.id, "prompt" => "Hello" })
+    end.to raise_error(
+      DiscourseWorkflows::NodeError,
+      /locked to its default LLM, but no valid default LLM is configured/,
+    )
+  end
+
+  it "raises when no selected, agent, or site default LLM is configured" do
+    agent.update!(default_llm_id: nil)
+    SiteSetting.stubs(:ai_default_llm_model).returns(nil)
+
+    expect do
+      execute_node_output(configuration: { "agent_id" => agent.id, "prompt" => "Hello" })
+    end.to raise_error(
+      DiscourseWorkflows::NodeError,
+      /No LLM is configured for agent '#{agent.name}'/,
+    )
+  end
+end

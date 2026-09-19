@@ -28,11 +28,12 @@ class GroupPostSerializer < ApplicationSerializer
   has_one :topic, serializer: BasicTopicSerializer, embed: :object
 
   def topic_title
-    object.topic.title
+    ContentLocalization.translated_topic_title(object.topic, scope) || object.topic.title
   end
 
   def topic_html_title
-    object.topic.fancy_title
+    ContentLocalization.translated_topic_fancy_title(object.topic, scope) ||
+      object.topic.fancy_title
   end
 
   def topic_slug
@@ -43,7 +44,7 @@ class GroupPostSerializer < ApplicationSerializer
     object.topic.posts_count
   end
 
-  def include_user_long_name?
+  def include_name?
     SiteSetting.enable_names?
   end
 

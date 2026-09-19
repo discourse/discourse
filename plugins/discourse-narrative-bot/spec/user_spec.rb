@@ -3,14 +3,7 @@
 RSpec.describe User do
   let(:user) { Fabricate(:user) }
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
-
-  def i18n_post_args(extra = {})
-    { base_uri: "" }.merge(extra)
-  end
-
-  def i18n_t(key, params = {})
-    I18n.t(key, i18n_post_args.merge(params))
-  end
+  let(:i18n_post_args) { { base_uri: "" } }
 
   before do
     stub_image_size
@@ -20,14 +13,15 @@ RSpec.describe User do
   end
 
   describe "when a user is created" do
-    it "should initiate the bot" do
+    it "starts the bot tutorial" do
       NotificationEmailer.expects(:process_notification).never
 
       user
 
       expected_raw =
-        i18n_t(
+        I18n.t(
           "discourse_narrative_bot.new_user_narrative.hello.message",
+          **i18n_post_args,
           username: user.username,
           title: SiteSetting.title,
         )
@@ -39,7 +33,7 @@ RSpec.describe User do
       context "when disabled" do
         before { SiteSetting.disable_discourse_narrative_bot_welcome_post = true }
 
-        it "should not initiate the bot" do
+        it "does not start the bot tutorial" do
           expect { user }.to_not change { Post.count }
         end
       end
@@ -54,10 +48,10 @@ RSpec.describe User do
           expect { user }.to change { Topic.count }.by(1)
 
           expect(Topic.last.title).to eq(
-            i18n_t("discourse_narrative_bot.new_user_narrative.hello.title").gsub(
-              /:robot:/,
-              "",
-            ).strip,
+            I18n
+              .t("discourse_narrative_bot.new_user_narrative.hello.title", **i18n_post_args)
+              .gsub(/:robot:/, "")
+              .strip,
           )
         end
       end
@@ -69,18 +63,22 @@ RSpec.describe User do
           expect { user }.to change { Topic.count }.by(1)
 
           expect(Topic.last.title).to eq(
-            i18n_t("discourse_narrative_bot.new_user_narrative.hello.title"),
+            I18n.t("discourse_narrative_bot.new_user_narrative.hello.title", **i18n_post_args),
           )
         end
 
         describe "when send welcome message is selected" do
           before { SiteSetting.discourse_narrative_bot_welcome_post_type = "welcome_message" }
 
-          it "should send the right welcome message" do
+          it "sends the configured welcome message" do
             expect { user }.to change { Topic.count }.by(1)
 
             expect(Topic.last.title).to eq(
-              i18n_t("system_messages.welcome_user.subject_template", site_name: SiteSetting.title),
+              I18n.t(
+                "system_messages.welcome_user.subject_template",
+                **i18n_post_args,
+                site_name: SiteSetting.title,
+              ),
             )
           end
         end
@@ -88,7 +86,7 @@ RSpec.describe User do
         describe "when welcome message is configured to be delayed" do
           before { SiteSetting.discourse_narrative_bot_welcome_post_delay = 100 }
 
-          it "should delay the welcome post until user logs in" do
+          it "delays the welcome post until the user logs in" do
             user
 
             expect(Jobs::NarrativeInit.jobs.count).to eq(0)
@@ -100,7 +98,7 @@ RSpec.describe User do
     context "when user is staged" do
       let(:user) { Fabricate(:user, staged: true) }
 
-      it "should not initiate the bot" do
+      it "does not start the bot tutorial" do
         expect { user }.to_not change { Post.count }
       end
     end
@@ -108,7 +106,7 @@ RSpec.describe User do
     context "when user skipped the new user tips" do
       let(:user) { Fabricate(:user) }
 
-      it "should not initiate the bot" do
+      it "does not start the bot tutorial" do
         SiteSetting.default_other_skip_new_user_tips = true
         expect { user }.to_not change { Post.count }
       end
@@ -117,7 +115,7 @@ RSpec.describe User do
     context "when user is anonymous?" do
       before { SiteSetting.allow_anonymous_mode = true }
 
-      it "should initiate bot for real user only" do
+      it "starts the bot only for the real user" do
         user = Fabricate(:user, trust_level: 1)
         Group.refresh_automatic_groups!
         shadow = AnonymousShadowCreator.get(user)
@@ -133,7 +131,7 @@ RSpec.describe User do
       before { SiteSetting.discourse_narrative_bot_ignored_usernames = "discourse|test" }
 
       %w[discourse test].each do |username|
-        it "should not initiate the bot" do
+        it "does not start the bot tutorial" do
           expect { user.update!(username: username) }.to_not change { Post.count }
         end
       end
@@ -141,7 +139,7 @@ RSpec.describe User do
   end
 
   describe "when a user has been destroyed" do
-    it "should clean up plugin's store" do
+    it "removes the user's plugin-store data" do
       DiscourseNarrativeBot::Store.set(user.id, "test")
 
       user.destroy!

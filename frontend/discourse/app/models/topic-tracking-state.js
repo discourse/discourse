@@ -13,6 +13,7 @@ import Site from "discourse/models/site";
 
 function isNew(topic) {
   return (
+    !topic.deleted &&
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
       topic.notification_level >= NotificationLevels.TRACKING) &&
@@ -23,6 +24,7 @@ function isNew(topic) {
 
 function isUnread(topic) {
   return (
+    !topic.deleted &&
     topic.last_read_post_number !== null &&
     topic.last_read_post_number < topic.highest_post_number &&
     topic.notification_level >= NotificationLevels.TRACKING
@@ -83,6 +85,24 @@ export default class TopicTrackingState extends EmberObject {
     this.messageBus.unsubscribe("/delete", this.onDeleteMessage);
     this.messageBus.unsubscribe("/recover", this.onRecoverMessage);
     this.messageBus.unsubscribe("/destroy", this.onDestroyMessage);
+  }
+
+  get mutedTopics() {
+    return this.currentUser?.muted_topics || [];
+  }
+
+  get unmutedTopics() {
+    return this.currentUser?.unmuted_topics || [];
+  }
+
+  /**
+   * Used to determine whether to show the message at the top of the topic list
+   * e.g. "see 1 new or updated topic"
+   *
+   * @method hasIncoming
+   */
+  get hasIncoming() {
+    return this.incomingCount > 0;
   }
 
   /**
@@ -147,6 +167,9 @@ export default class TopicTrackingState extends EmberObject {
   @bind
   onDeleteMessage(msg) {
     this.modifyStateProp(msg, "deleted", true);
+    if (this.newIncoming) {
+      this.clearIncoming([msg.topic_id]);
+    }
     this.messageCount++;
   }
 
@@ -167,14 +190,6 @@ export default class TopicTrackingState extends EmberObject {
     ) {
       DiscourseURL.redirectTo("/");
     }
-  }
-
-  get mutedTopics() {
-    return this.currentUser?.muted_topics || [];
-  }
-
-  get unmutedTopics() {
-    return this.currentUser?.unmuted_topics || [];
   }
 
   trackMutedOrUnmutedTopic(data) {
@@ -296,7 +311,7 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     const unreadRecipients = ["all", "unread", "unseen"];
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       unreadRecipients.push("new");
     }
     // count an unread topic as incoming
@@ -402,16 +417,6 @@ export default class TopicTrackingState extends EmberObject {
     this.filterTagId = tagId;
     this.filter = filter;
     this.incomingCount = 0;
-  }
-
-  /**
-   * Used to determine whether to show the message at the top of the topic list
-   * e.g. "see 1 new or updated topic"
-   *
-   * @method hasIncoming
-   */
-  get hasIncoming() {
-    return this.incomingCount > 0;
   }
 
   /**
@@ -535,10 +540,6 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     this.messageCount++;
-  }
-
-  _generateCallbackId() {
-    return Math.random().toString(12).slice(2, 11);
   }
 
   onStateChange(cb) {
@@ -705,7 +706,7 @@ export default class TopicTrackingState extends EmberObject {
         noSubcategories,
         customFilterFn,
       });
-      if (!this.currentUser?.new_new_view_enabled) {
+      if (!this.currentUser?.unified_new_enabled) {
         count += this.lookupCount({
           type: "unread",
           category,
@@ -726,7 +727,7 @@ export default class TopicTrackingState extends EmberObject {
         noSubcategories,
         customFilterFn,
       });
-      if (this.currentUser?.new_new_view_enabled) {
+      if (this.currentUser?.unified_new_enabled) {
         count += this.countUnread({
           categoryId,
           tagId,
@@ -764,6 +765,26 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
+  modifyState(topic, data) {
+    this._setState({ topic, data });
+  }
+
+  modifyStateProp(topic, prop, data) {
+    const state = this.findState(topic);
+    if (state) {
+      state[prop] = data;
+      this._afterStateChange();
+    }
+  }
+
+  findState(topicOrId) {
+    return this.states.get(this._stateKey(topicOrId));
+  }
+
+  _generateCallbackId() {
+    return Math.random().toString(12).slice(2, 11);
+  }
+
   _setState({ topic, data, skipAfterStateChange }) {
     const stateKey = this._stateKey(topic);
     const oldState = this.states.get(stateKey);
@@ -779,22 +800,6 @@ export default class TopicTrackingState extends EmberObject {
     } else {
       return false;
     }
-  }
-
-  modifyState(topic, data) {
-    this._setState({ topic, data });
-  }
-
-  modifyStateProp(topic, prop, data) {
-    const state = this.findState(topic);
-    if (state) {
-      state[prop] = data;
-      this._afterStateChange();
-    }
-  }
-
-  findState(topicOrId) {
-    return this.states.get(this._stateKey(topicOrId));
   }
 
   /*
@@ -816,7 +821,7 @@ export default class TopicTrackingState extends EmberObject {
         state &&
         state.last_read_post_number > 0 &&
         (topic.last_read_post_number === 0 ||
-          !this.currentUser?.new_new_view_enabled)
+          !this.currentUser?.unified_new_enabled)
       ) {
         if (filter === "new") {
           list.topics.splice(index, 1);

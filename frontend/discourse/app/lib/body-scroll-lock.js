@@ -5,12 +5,24 @@
  */
 
 const isServer = () => typeof window === "undefined";
+const isDiscourseIOS = () => {
+  if (typeof document === "undefined") {
+    return false;
+  }
+
+  const html = document.documentElement;
+  return (
+    html.classList.contains("ios-device") ||
+    html.classList.contains("ipados-device")
+  );
+};
 const detectOS = (ua) => {
+  const uaProvided = Boolean(ua);
   ua = ua || navigator.userAgent;
   const ipad = /(iPad).*OS\s([\d_]+)/.test(ua);
   const iphone = !ipad && /(iPhone\sOS)\s([\d_]+)/.test(ua);
   const android = /(Android);?[\s/]+([\d.]+)?/.test(ua);
-  const ios = iphone || ipad;
+  const ios = iphone || ipad || (!uaProvided && isDiscourseIOS());
   return { ios, android };
 };
 function getEventListenerOptions(options) {
@@ -110,6 +122,45 @@ function getLockState(options) {
 }
 getLockState.lockState = initialLockState;
 
+// The locked element is not necessarily the one under the finger: its content can
+// hold nested scrollers, which are read as sitting at both of their edges on the
+// axis they don't scroll, and so never get to move. Resolve the scroller the
+// gesture would actually travel on instead. Scrollers with no room left in the
+// gesture's direction are skipped so the gesture still chains outwards to the
+// locked element, matching how a swipe is deferred to scrollable modal content.
+function scrollerUnderTouch(
+  event,
+  targetElement,
+  isVertical,
+  clientX,
+  clientY
+) {
+  let element = event.target instanceof Element ? event.target : null;
+
+  while (element && element !== targetElement) {
+    const { overflowX, overflowY } = window.getComputedStyle(element);
+    const overflow = isVertical ? overflowY : overflowX;
+
+    if (overflow === "auto" || overflow === "scroll") {
+      const hasRoomToScroll = isVertical
+        ? clientY > 0
+          ? element.scrollTop > 0
+          : element.scrollTop + element.clientHeight + 1 < element.scrollHeight
+        : clientX > 0
+          ? element.scrollLeft > 0
+          : element.scrollLeft + element.clientWidth + 1 < element.scrollWidth;
+
+      if (hasRoomToScroll) {
+        return element;
+      }
+    }
+
+    element = element.parentElement;
+  }
+
+  return targetElement;
+}
+
 function handleScroll(
   event,
   targetElement,
@@ -120,6 +171,16 @@ function handleScroll(
   }
 ) {
   if (targetElement) {
+    const clientX = event.targetTouches[0].clientX - initialClientPos.clientX;
+    const clientY = event.targetTouches[0].clientY - initialClientPos.clientY;
+    const isVertical = Math.abs(clientY) > Math.abs(clientX);
+    const scroller = scrollerUnderTouch(
+      event,
+      targetElement,
+      isVertical,
+      clientX,
+      clientY
+    );
     const {
       scrollTop,
       scrollLeft,
@@ -127,11 +188,12 @@ function handleScroll(
       scrollHeight,
       clientWidth,
       clientHeight,
-    } = targetElement;
-    const { reverseColumn = false, reverseRow = false } = options;
-    const clientX = event.targetTouches[0].clientX - initialClientPos.clientX;
-    const clientY = event.targetTouches[0].clientY - initialClientPos.clientY;
-    const isVertical = Math.abs(clientY) > Math.abs(clientX);
+    } = scroller;
+    // the reverse flags describe the locked element's own layout, so they no
+    // longer hold once the gesture resolves to a nested scroller
+    const isLockedElement = scroller === targetElement;
+    const reverseColumn = isLockedElement && (options.reverseColumn ?? false);
+    const reverseRow = isLockedElement && (options.reverseRow ?? false);
     let isOnTop, isOnBottom, isOnLeft, isOnRight;
     if (reverseColumn) {
       isOnTop = clientY > 0 && scrollTop + clientHeight + 1 >= scrollHeight;

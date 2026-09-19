@@ -276,7 +276,7 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
 
         expect(response).to be_successful
         expect(response.parsed_body["success"]).to eq(false)
-        expect(response.parsed_body["error"]).to eq(error_message.to_json)
+        expect(response.parsed_body["error"]).to eq(error_message[:error])
       end
     end
   end

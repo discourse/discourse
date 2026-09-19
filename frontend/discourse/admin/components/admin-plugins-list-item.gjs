@@ -5,11 +5,12 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PluginCommitHash from "./plugin-commit-hash";
 
@@ -18,21 +19,6 @@ export default class AdminPluginsListItem extends Component {
   @service currentUser;
   @service sidebarState;
   @service router;
-
-  @action
-  async togglePluginEnabled(plugin) {
-    const oldValue = plugin.enabled;
-    const newValue = !oldValue;
-
-    try {
-      plugin.enabled = newValue;
-      await SiteSetting.update(plugin.enabledSetting, newValue);
-      this.session.requiresRefresh = true;
-    } catch (err) {
-      plugin.enabled = oldValue;
-      popupAjaxError(err);
-    }
-  }
 
   get isAdminSearchFiltered() {
     if (!this.sidebarState.filter) {
@@ -72,24 +58,47 @@ export default class AdminPluginsListItem extends Component {
 
     if (this.args.plugin.useNewShowRoute) {
       return this.router.urlFor("adminPlugins.show", this.args.plugin);
-    } else {
-      return this.router.urlFor(
-        "adminSiteSettingsCategory",
-        this.args.plugin.settingCategoryName,
-        {
-          queryParams: { filter: `plugin:${this.args.plugin.name}` },
-        }
-      );
+    }
+
+    // Plugins that predate the show route keep their config UI on their own
+    // route, so the settings category is only a fallback for plugins that have
+    // no config UI at all.
+    const { adminRoute } = this.args.plugin;
+    if (adminRoute && adminRouteValid(this.router, adminRoute)) {
+      return this.router.urlFor(adminRoute.full_location);
+    }
+
+    return this.router.urlFor(
+      "adminSiteSettingsCategory",
+      this.args.plugin.settingCategoryName,
+      {
+        queryParams: { filter: `plugin:${this.args.plugin.name}` },
+      }
+    );
+  }
+
+  @action
+  async togglePluginEnabled(plugin) {
+    const oldValue = plugin.enabled;
+    const newValue = !oldValue;
+
+    try {
+      plugin.enabled = newValue;
+      await SiteSetting.update(plugin.enabledSetting, newValue);
+      this.session.requiresRefresh = true;
+    } catch (err) {
+      plugin.enabled = oldValue;
+      popupAjaxError(err);
     }
   }
 
   <template>
     <tr
-      data-plugin-name={{@plugin.name}}
       class={{concat
         "d-table__row admin-plugins-list__row"
         (if this.isAdminSearchFiltered "-admin-search-filtered")
       }}
+      data-plugin-name={{@plugin.name}}
     >
       <td class="d-table__cell --overview admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
@@ -115,8 +124,8 @@ export default class AdminPluginsListItem extends Component {
           </div>
 
           <PluginOutlet
-            @name="admin-plugin-list-name-badge-after"
             @connectorTagName="span"
+            @name="admin-plugin-list-name-badge-after"
             @outletArgs={{lazyHash plugin=@plugin}}
           />
         </div>
@@ -127,12 +136,12 @@ export default class AdminPluginsListItem extends Component {
           {{@plugin.about}}
           {{#if @plugin.linkUrl}}
             <a
+              class="admin-plugins-list__about-link"
               href={{@plugin.linkUrl}}
               rel="noopener noreferrer"
               target="_blank"
-              class="admin-plugins-list__about-link"
             >
-              {{icon "up-right-from-square"}}
+              {{dIcon "up-right-from-square"}}
               {{i18n "admin.plugins.learn_more"}}
             </a>
           {{/if}}
@@ -172,7 +181,7 @@ export default class AdminPluginsListItem extends Component {
               {{on "click" (fn this.togglePluginEnabled @plugin)}}
             />
           {{else}}
-            <DToggleSwitch @state={{@plugin.enabled}} disabled={{true}} />
+            <DToggleSwitch disabled={{true}} @state={{@plugin.enabled}} />
           {{/if}}
         </PluginOutlet>
       </td>
@@ -185,23 +194,23 @@ export default class AdminPluginsListItem extends Component {
             {{#if @plugin.useNewShowRoute}}
               <LinkTo
                 class="btn btn-default btn-text btn-small"
-                @route="adminPlugins.show"
-                @model={{@plugin}}
-                @disabled={{this.disablePluginSettingsButton}}
-                title={{this.settingsButtonTitle}}
                 data-plugin-setting-button={{@plugin.name}}
+                title={{this.settingsButtonTitle}}
+                @disabled={{this.disablePluginSettingsButton}}
+                @model={{@plugin}}
+                @route="adminPlugins.show"
               >
                 {{i18n "admin.plugins.change_settings_short"}}
               </LinkTo>
             {{else}}
               <LinkTo
                 class="btn btn-default btn-text btn-small"
-                @route="adminSiteSettingsCategory"
+                data-plugin-setting-button={{@plugin.name}}
+                title={{this.settingsButtonTitle}}
+                @disabled={{this.disablePluginSettingsButton}}
                 @model={{@plugin.settingCategoryName}}
                 @query={{hash filter=(concat "plugin:" @plugin.name)}}
-                @disabled={{this.disablePluginSettingsButton}}
-                title={{this.settingsButtonTitle}}
-                data-plugin-setting-button={{@plugin.name}}
+                @route="adminSiteSettingsCategory"
               >
                 {{i18n "admin.plugins.change_settings_short"}}
               </LinkTo>

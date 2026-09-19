@@ -1,17 +1,13 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class BestTopics extends Component {
-  rankClass(idx) {
-    return `rank-${idx + 1}`;
-  }
-
   get titleText() {
     return i18nForOwner(
       "discourse_rewind.reports.best_topics.title",
@@ -21,6 +17,10 @@ export default class BestTopics extends Component {
         username: this.args.user?.username,
       }
     );
+  }
+
+  rankClass(idx) {
+    return `rank-${idx + 1}`;
   }
 
   <template>
@@ -33,15 +33,15 @@ export default class BestTopics extends Component {
           <div class="rewind-card">
             {{#each @report.data as |topic idx|}}
               <div
-                class={{concatClass "best-topics__topic" (this.rankClass idx)}}
+                class={{dConcatClass "best-topics__topic" (this.rankClass idx)}}
               >
                 <span class="best-topics --rank"></span>
                 <span class="best-topics --rank"></span>
-                <h2 class="best-topics__header">{{replaceEmoji
+                <h2 class="best-topics__header">{{dReplaceEmoji
                     topic.title
                   }}</h2>
                 <span class="best-topics__excerpt">
-                  {{replaceEmoji (trustHTML topic.excerpt)}}
+                  {{dReplaceEmoji (trustHTML topic.excerpt)}}
                 </span>
 
                 <div class="best-topics__metadata">

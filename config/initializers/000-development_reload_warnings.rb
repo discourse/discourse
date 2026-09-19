@@ -6,15 +6,15 @@
 if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.running_in_rack? &&
      !ENV["CI"]
   paths = [
-    *Dir["#{Rails.root}/app/*"].reject { |path| path.end_with? "/assets" },
-    "#{Rails.root}/config",
-    "#{Rails.root}/lib",
-    "#{Rails.root}/plugins",
+    *Dir["#{Rails.root.join("app/*")}"].reject { |path| path.end_with? "/assets" },
+    "#{Rails.root.join("config")}",
+    "#{Rails.root.join("lib")}",
+    "#{Rails.root.join("plugins")}",
   ]
 
   # Find symlinked plugins, and add their real paths to the watch list.
   paths +=
-    Dir["#{Rails.root}/plugins/*"]
+    Dir["#{Rails.root.join("plugins/*")}"]
       .select { |path| File.symlink? path }
       .map { |path| File.expand_path(File.readlink(path), File.dirname(path)) }
 

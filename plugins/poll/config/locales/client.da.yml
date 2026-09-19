@@ -33,6 +33,8 @@ da:
       cast-votes:
         title: "Afgiv dine stemmer"
         label: "Stem nu!"
+      keep-vote:
+        label: "Tilbage"
       show-results:
         title: "Vis afstemningsresultat"
         label: "Resultater"
@@ -116,5 +118,3 @@ da:
           add: Tilføj mulighed
         automatic_close:
           label: Luk afstemning automatisk
-        show_advanced: "Vis Avancerede Indstillinger"
-        hide_advanced: "Skjul Avancerede Indstillinger"

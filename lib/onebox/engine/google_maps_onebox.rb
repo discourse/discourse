@@ -171,29 +171,25 @@ module Onebox
       end
 
       def follow_redirect!
+        http =
+          FinalDestination::HTTP.start(
+            uri.host,
+            uri.port,
+            use_ssl: uri.scheme == "https",
+            open_timeout: timeout,
+            read_timeout: timeout,
+          )
+
+        response = http.head(uri.path)
+        raise "unexpected response code #{response.code}" if %w[200 301 302].exclude?(response.code)
+
+        @url = response.code == "200" ? uri.to_s : response["Location"]
+        @uri = URI(@url)
+      ensure
         begin
-          http =
-            FinalDestination::HTTP.start(
-              uri.host,
-              uri.port,
-              use_ssl: uri.scheme == "https",
-              open_timeout: timeout,
-              read_timeout: timeout,
-            )
-
-          response = http.head(uri.path)
-          if %w[200 301 302].exclude?(response.code)
-            raise "unexpected response code #{response.code}"
-          end
-
-          @url = response.code == "200" ? uri.to_s : response["Location"]
-          @uri = URI(@url)
-        ensure
-          begin
-            http.finish
-          rescue StandardError
-            nil
-          end
+          http.finish
+        rescue StandardError
+          nil
         end
       end
     end

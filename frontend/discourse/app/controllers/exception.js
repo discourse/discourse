@@ -1,14 +1,15 @@
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed, set } from "@ember/object";
+import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 /**
  * You can throw an instance of this error during a route's beforeModel/model/afterModel hooks.
- * It will be caught by the top-level ApplicationController, and cause this Exception controller/template
- * to be rendered without changing the URL.
+ * It will be caught by the application route's error handler, and cause this Exception
+ * controller/template to be rendered without changing the URL.
  */
 export class RouteException {
   status;
@@ -23,57 +24,49 @@ export class RouteException {
 
 // The controller for the nice error page
 export default class ExceptionController extends Controller {
-  thrown;
-  lastTransition;
+  @service exception;
 
   // Handling for the detailed_404 setting (which actually creates 403s)
 
   // TODO
   // make ajax requests to /srv/status with exponential backoff
   // if one succeeds, set networkFixed to true, which puts a "Fixed!" message on the page
-  networkFixed = false;
+  @tracked networkFixed = false;
 
-  loading = false;
+  @tracked loading = false;
 
-  @computed("thrown.status")
+  get thrown() {
+    return this.exception.thrown;
+  }
+
+  get lastTransition() {
+    return this.exception.lastTransition;
+  }
+
   get isNotFound() {
     return this.thrown?.status === 404;
   }
 
-  @computed("thrown.status")
   get isForbidden() {
     return this.thrown?.status === 403;
   }
 
-  @computed("thrown.status")
   get isServer() {
     return this.thrown?.status >= 500;
   }
 
-  @computed("isNetwork")
   get isUnknown() {
     return this.isNetwork == null;
   }
 
-  @computed("thrown.responseJSON.extras.html")
   get errorHtml() {
     return this.thrown?.responseJSON?.extras?.html;
   }
 
-  set errorHtml(value) {
-    set(this, "thrown.responseJSON.extras.html", value);
-  }
-
-  @computed("thrown.requestedUrl")
   get requestUrl() {
     return this.thrown?.requestedUrl;
   }
 
-  set requestUrl(value) {
-    set(this, "thrown.requestedUrl", value);
-  }
-
-  @computed("thrown")
   get isNetwork() {
     // never made it on the wire
     if (this.thrown && this.thrown.readyState === 0) {
@@ -88,7 +81,6 @@ export default class ExceptionController extends Controller {
     return false;
   }
 
-  @computed("isNetwork", "thrown.status", "thrown")
   get reason() {
     if (this.thrown?.reason) {
       return this.thrown.reason;
@@ -100,21 +92,11 @@ export default class ExceptionController extends Controller {
       return i18n("errors.reasons.not_found");
     } else if (this.thrown?.status === 403) {
       return i18n("errors.reasons.forbidden");
-    } else if (this.thrown === null) {
-      return i18n("errors.reasons.unknown");
     } else {
-      // TODO
       return i18n("errors.reasons.unknown");
     }
   }
 
-  @computed(
-    "networkFixed",
-    "isNetwork",
-    "thrown.status",
-    "thrown.statusText",
-    "thrown"
-  )
   get desc() {
     if (this.thrown?.desc) {
       return this.thrown.desc;
@@ -130,10 +112,7 @@ export default class ExceptionController extends Controller {
       return i18n("errors.desc.server", {
         status: this.thrown?.status + " " + this.thrown?.statusText,
       });
-    } else if (this.thrown === null) {
-      return i18n("errors.desc.unknown");
     } else {
-      // TODO
       return i18n("errors.desc.unknown");
     }
   }
@@ -165,7 +144,6 @@ export default class ExceptionController extends Controller {
     };
   }
 
-  @computed("networkFixed", "isNetwork", "lastTransition")
   get enabledButtons() {
     if (this.networkFixed) {
       return [this.buttons.ButtonLoadPage];
@@ -183,7 +161,7 @@ export default class ExceptionController extends Controller {
     // Strip off subfolder
     const currentURL = DiscourseURL.router.location.getURL();
     if (this.lastTransition?.method === "replace") {
-      this.setProperties({ lastTransition: null, thrown: null });
+      this.exception.clear();
       // Can't use routeTo because it handles navigation to the same page
       DiscourseURL.handleURL(currentURL);
     } else {
@@ -193,13 +171,13 @@ export default class ExceptionController extends Controller {
 
   @action
   tryLoading() {
-    this.set("loading", true);
+    this.loading = true;
 
     schedule("afterRender", () => {
       const transition = this.lastTransition;
-      this.setProperties({ lastTransition: null, thrown: null });
+      this.exception.clear();
       transition.retry();
-      this.set("loading", false);
+      this.loading = false;
     });
   }
 }

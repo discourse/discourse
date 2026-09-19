@@ -18,10 +18,6 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     Jobs.run_immediately!
   end
 
-  def accept_policy(post)
-    [user1, user2].each { |u| PolicyUser.add!(u, post.post_policy) }
-  end
-
   it "correctly renews policies with no renew-start" do
     freeze_time Time.utc(2019)
 
@@ -34,7 +30,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post = create_post(raw: raw, user: Fabricate(:admin))
 
     freeze_time Time.utc(2021)
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time Time.utc(2022)
     job.execute
@@ -61,7 +57,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post = create_post(raw: raw, user: Fabricate(:admin))
 
     freeze_time Time.utc(2021)
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time Time.utc(2022)
     PolicyUser.where(user_id: user2.id).update(accepted_at: Time.now)
@@ -90,8 +86,8 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post2 = create_post(raw: raw2, user: Fabricate(:admin))
 
     freeze_time Time.utc(2021)
-    accept_policy(post)
-    accept_policy(post2)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post2.post_policy) }
 
     freeze_time Time.utc(2022)
     job.execute
@@ -112,7 +108,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
 
     post = create_post(raw: raw, user: Fabricate(:admin))
 
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time Time.utc(2020)
     job.execute
@@ -128,7 +124,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post.reload
     expect(post.post_policy.accepted_by).to be_empty
 
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time(Time.utc(2020, 10, 17) + 101.days)
 
@@ -161,7 +157,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
 
       post = create_post(raw: raw, user: Fabricate(:admin))
 
-      accept_policy(post)
+      [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
       freeze_time Time.utc(2020, 10, 17)
 
@@ -201,7 +197,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
 
       post = create_post(raw: raw, user: Fabricate(:admin))
 
-      accept_policy(post)
+      [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
       freeze_time Time.utc(2020, 10, 30)
 
@@ -220,7 +216,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     end
   end
 
-  it "will correctly notify users with high priority notifications" do
+  it "sends high-priority notifications to users" do
     Jobs.run_immediately!
     freeze_time
 
@@ -264,7 +260,44 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     expect(user2_notifications.first.high_priority).to eq(true)
   end
 
-  it "will delete the existing policy reminder notification before creating a new one" do
+  context "when the policy topic is restricted" do
+    it "creates reminders only for users who can see it" do
+      freeze_time
+
+      policy_user_with_topic_access = Fabricate(:user)
+      policy_user_without_topic_access = Fabricate(:user)
+
+      policy_target_group = Fabricate(:group)
+      policy_target_group.add(policy_user_with_topic_access)
+      policy_target_group.add(policy_user_without_topic_access)
+
+      private_category_access_group = Fabricate(:group)
+      private_category_access_group.add(policy_user_with_topic_access)
+      private_category = Fabricate(:private_category, group: private_category_access_group)
+
+      raw = <<~MD
+        [policy group=#{policy_target_group.name} reminder=weekly]
+        I always open **doors**!
+        [/policy]
+      MD
+
+      post = create_post(raw: raw, user: Fabricate(:admin), category: private_category)
+
+      freeze_time 2.weeks.from_now
+
+      job.execute
+
+      expect(
+        Notification.where(
+          notification_type: Notification.types[:topic_reminder],
+          topic_id: post.topic_id,
+          post_number: 1,
+        ).pluck(:user_id),
+      ).to contain_exactly(policy_user_with_topic_access.id)
+    end
+  end
+
+  it "replaces the existing policy reminder notification" do
     Jobs.run_immediately!
     freeze_time
 

@@ -4,10 +4,10 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
-import DButton from "discourse/components/d-button";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import discourseLater from "discourse/lib/later";
+import DButton from "discourse/ui-kit/d-button";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -37,25 +37,25 @@ export default class SignupCta extends Component {
       {{#if this.session.hideSignupCta}}
         <h3>{{i18n "signup_cta.hidden_for_session"}}</h3>
       {{else}}
-        <h3>{{replaceEmoji (trustHTML (i18n "signup_cta.intro"))}}</h3>
-        <p>{{replaceEmoji (trustHTML (i18n "signup_cta.value_prop"))}}</p>
+        <h3>{{dReplaceEmoji (trustHTML (i18n "signup_cta.intro"))}}</h3>
+        <p>{{dReplaceEmoji (trustHTML (i18n "signup_cta.value_prop"))}}</p>
 
         <div class="buttons">
           <DButton
-            @action={{routeAction "showCreateAccount"}}
-            @label="signup_cta.sign_up"
-            @icon="user"
             class="btn-primary"
+            @action={{routeAction "showCreateAccount"}}
+            @icon="user"
+            @label="signup_cta.sign_up"
           />
           <DButton
+            class="btn-default no-icon"
             @action={{this.hideForSession}}
             @label="signup_cta.hide_session"
-            class="btn-default no-icon"
           />
           <DButton
+            class="no-icon btn-flat"
             @action={{this.hideForever}}
             @label="signup_cta.hide_forever"
-            class="no-icon btn-flat"
           />
         </div>
       {{/if}}

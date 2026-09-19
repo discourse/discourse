@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class FKControlMenuItem extends Component {
   @action
@@ -19,10 +19,10 @@ export default class FKControlMenuItem extends Component {
   <template>
     <@item class="form-kit__control-menu-item" data-value={{@value}}>
       <DButton
-        @action={{this.handleInput}}
         class="btn-flat"
-        @icon={{@icon}}
         ...attributes
+        @action={{this.handleInput}}
+        @icon={{@icon}}
       >
         {{yield}}
       </DButton>

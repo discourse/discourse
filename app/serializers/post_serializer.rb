@@ -12,9 +12,10 @@ class PostSerializer < BasicPostSerializer
     all_post_actions
     add_excerpt
     notice_created_by_users
+    ignored_user_like_counts
   ]
 
-  INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
+  INSTANCE_VARS.each { |v| public_send(:attr_accessor, v) }
 
   attributes :post_number,
              :post_type,
@@ -92,6 +93,7 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_count,
              :reviewable_score_pending_count,
              :user_suspended,
+             :user_locale,
              :user_status,
              :mentioned_users,
              :post_url,
@@ -100,13 +102,14 @@ class PostSerializer < BasicPostSerializer
              :locale,
              :is_localized,
              :language,
-             :localization_outdated
+             :localization_outdated,
+             :localized_oneboxes
 
   def initialize(object, opts)
     super(object, opts)
 
     PostSerializer::INSTANCE_VARS.each do |name|
-      self.public_send("#{name}=", opts[name]) if opts.include? name
+      public_send("#{name}=", opts[name]) if opts.include? name
     end
   end
 
@@ -143,11 +146,18 @@ class PostSerializer < BasicPostSerializer
   end
 
   def topic_title
-    topic&.title
+    ContentLocalization.translated_topic_title(topic, scope) || topic&.title
   end
 
   def topic_html_title
-    topic&.fancy_title
+    ContentLocalization.translated_topic_fancy_title(topic, scope) || topic&.fancy_title
+  end
+
+  def excerpt
+    translated_cooked = ContentLocalization.translated_post_cooked(object, scope)
+    return object.excerpt if !translated_cooked
+
+    Post.excerpt(translated_cooked, nil, post: object)
   end
 
   def posts_count
@@ -159,15 +169,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def moderator?
-    !!(object&.user&.moderator?)
+    !!object&.user&.moderator?
   end
 
   def admin?
-    !!(object&.user&.admin?)
+    !!object&.user&.admin?
   end
 
   def staff?
-    !!(object&.user&.staff?)
+    !!object&.user&.staff?
   end
 
   def group_moderator
@@ -176,12 +186,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_group_moderator?
     @group_moderator ||=
-      begin
-        if @topic_view
-          @topic_view.category_group_moderator_user_ids.include?(object.user_id)
-        else
-          object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
-        end
+      if @topic_view
+        @topic_view.category_group_moderator_user_ids.include?(object.user_id)
+      else
+        object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
       end
   end
 
@@ -278,6 +286,16 @@ class PostSerializer < BasicPostSerializer
     end
   end
 
+  def localized_oneboxes
+    @topic_view.localized_oneboxes[object.id]
+  end
+
+  def include_localized_oneboxes?
+    SiteSetting.content_localization_enabled && @topic_view.present? &&
+      ContentLocalization.automatically_translate?(scope) &&
+      @topic_view.localized_oneboxes[object.id].present?
+  end
+
   def read
     @topic_view.read?(object.post_number)
   end
@@ -303,12 +321,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reply_to_user
-    {
-      id: object.reply_to_user.id,
-      username: object.reply_to_user.username,
-      name: object.reply_to_user.name,
-      avatar_template: object.reply_to_user.avatar_template,
-    }
+    BasicUserSerializer.new(object.reply_to_user, root: false).as_json
   end
 
   def deleted_by
@@ -335,11 +348,13 @@ class PostSerializer < BasicPostSerializer
       @topic_view ? @topic_view.post_action_type_view : PostActionTypeView.new
 
     public_flag_types = @post_action_type_view.public_types
+    ignored_like_count = ignored_like_count_for_viewer
 
     @post_action_type_view.types.each do |sym, id|
-      count_col = "#{sym}_count".to_sym
+      count_col = :"#{sym}_count"
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
+      count = [count.to_i - ignored_like_count, 0].max if count && sym == :like
       summary = { id: id, count: count }
 
       if scope.post_can_act?(
@@ -389,6 +404,22 @@ class PostSerializer < BasicPostSerializer
     result
   end
 
+  def ignored_like_count_for_viewer
+    return 0 if scope.user.blank?
+    return @topic_view.ignored_user_like_counts[object.id].to_i if @topic_view
+    return @ignored_user_like_counts[object.id].to_i if @ignored_user_like_counts
+
+    ignored_ids = scope.user.ignored_user_ids
+    return 0 if ignored_ids.empty?
+
+    PostAction.where(
+      post_id: object.id,
+      user_id: ignored_ids,
+      post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+      deleted_at: nil,
+    ).count
+  end
+
   def include_draft_sequence?
     @draft_sequence.present?
   end
@@ -402,6 +433,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_link_counts?
+    return false if object.hidden? && !scope.can_see_hidden_post?(object)
     return true if @single_post_link_counts.present?
 
     @topic_view.present? && @topic_view.link_counts.present? &&
@@ -630,6 +662,14 @@ class PostSerializer < BasicPostSerializer
     object.user&.suspended?
   end
 
+  def user_locale
+    object.user&.locale
+  end
+
+  def include_user_locale?
+    SiteSetting.allow_user_locale && scope.is_admin? && user_locale.present?
+  end
+
   def include_user_status?
     SiteSetting.enable_user_status && object.user&.has_status? &&
       scope&.can_see_user_status?(object.user)
@@ -714,7 +754,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable
-    @reviewable ||= Reviewable.where(target: object).includes(:reviewable_scores).first
+    @reviewable ||=
+      Reviewable
+        .where(target: object, type: Reviewable.sti_names)
+        .includes(:reviewable_scores)
+        .first
   end
 
   def reviewable_scores
@@ -722,7 +766,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_custom_fields_object
-    (@topic_view&.user_custom_fields || @options[:user_custom_fields] || {})
+    @topic_view&.user_custom_fields || @options[:user_custom_fields] || {}
   end
 
   def topic

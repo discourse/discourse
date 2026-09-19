@@ -6,17 +6,17 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import CookText from "discourse/components/cook-text";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { smartShortDate } from "discourse/lib/formatter";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DCookText from "discourse/ui-kit/d-cook-text";
+import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiSummarySkeleton from "../../components/ai-summary-skeleton";
 import {
@@ -56,6 +56,18 @@ export default class AiSummaryModal extends Component {
     return outdatedText;
   }
 
+  get topRepliesSummaryEnabled() {
+    return this.args.model.postStream.summary;
+  }
+
+  get topicId() {
+    return this.args.model.topic.id;
+  }
+
+  get baseSummarizationURL() {
+    return `/discourse-ai/summarization/t/${this.topicId}`;
+  }
+
   resetSummary() {
     this.smoothStreamer.resetStreaming();
     this.currentIndex = 0;
@@ -67,18 +79,6 @@ export default class AiSummaryModal extends Component {
     this.canRegenerate = false;
     this.loading = false;
     this._channel = null;
-  }
-
-  get topRepliesSummaryEnabled() {
-    return this.args.model.postStream.summary;
-  }
-
-  get topicId() {
-    return this.args.model.topic.id;
-  }
-
-  get baseSummarizationURL() {
-    return `/discourse-ai/summarization/t/${this.topicId}`;
   }
 
   @bind
@@ -99,34 +99,47 @@ export default class AiSummaryModal extends Component {
 
   @action
   generateSummary() {
-    let fetchURL = this.baseSummarizationURL;
+    let ajaxOpts = {};
 
-    if (this.currentUser) {
-      fetchURL += `?stream=true`;
+    if (this.currentUser && !this.args.model.topic.has_cached_summary) {
+      ajaxOpts.type = "POST";
+      ajaxOpts.data = { stream: true };
     }
 
-    return this._requestSummary(fetchURL);
+    return this._requestSummary(this.baseSummarizationURL, ajaxOpts);
   }
 
   @action
   regenerateSummary() {
-    let fetchURL = this.baseSummarizationURL;
+    let ajaxOpts = {};
 
     if (this.currentUser) {
-      fetchURL += `?stream=true`;
+      ajaxOpts.type = "POST";
+      ajaxOpts.data = { stream: true };
 
       if (this.canRegenerate) {
-        fetchURL += "&skip_age_check=true";
+        ajaxOpts.data.skip_age_check = true;
       }
     }
 
     // ensure summary is reset before requesting a new one:
     this.resetSummary();
-    return this._requestSummary(fetchURL);
+    return this._requestSummary(this.baseSummarizationURL, ajaxOpts);
   }
 
   @action
-  _requestSummary(url) {
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
+  @action
+  handleClose() {
+    this.modal.triggerElement = null; // prevent refocus of trigger, which changes scroll position
+    this.args.closeModal();
+  }
+
+  @action
+  _requestSummary(url, ajaxOpts = {}) {
     if (this.loading || (this.text && !this.canRegenerate)) {
       return;
     }
@@ -134,7 +147,7 @@ export default class AiSummaryModal extends Component {
     this.loading = true;
     this.summarizedOn = null;
 
-    return ajax(url)
+    return ajax(url, ajaxOpts)
       .then((data) => {
         if (data?.ai_topic_summary?.summarized_text) {
           data.done = true;
@@ -180,33 +193,22 @@ export default class AiSummaryModal extends Component {
     }
   }
 
-  @action
-  onRegisterApi(api) {
-    this.dMenu = api;
-  }
-
-  @action
-  handleClose() {
-    this.modal.triggerElement = null; // prevent refocus of trigger, which changes scroll position
-    this.args.closeModal();
-  }
-
   <template>
     <DModal
-      @title={{i18n "discourse_ai.summarization.topic.title"}}
-      @closeModal={{this.handleClose}}
-      @bodyClass="ai-summary-modal__body"
       class="ai-summary-modal"
+      @bodyClass="ai-summary-modal__body"
+      @closeModal={{this.handleClose}}
+      @hideFooter={{not this.summarizedOn}}
+      @title={{i18n "discourse_ai.summarization.topic.title"}}
       {{didInsert this.subscribe @model.topic.id}}
       {{didUpdate this.subscribe @model.topic.id}}
       {{willDestroy this.unsubscribe}}
-      @hideFooter={{not this.summarizedOn}}
     >
       <:body>
         {{htmlClass "scrollable-modal"}}
         <div class="ai-summary-container" {{didInsert this.generateSummary}}>
           <article
-            class={{concatClass
+            class={{dConcatClass
               "ai-summary-box"
               "streamable-content"
               (if this.smoothStreamer.isStreaming "streaming")
@@ -216,7 +218,7 @@ export default class AiSummaryModal extends Component {
               <AiSummarySkeleton />
             {{else}}
               <div class="generated-summary cooked">
-                <CookText @rawText={{this.smoothStreamer.renderedText}} />
+                <DCookText @rawText={{this.smoothStreamer.renderedText}} />
               </div>
             {{/if}}
           </article>
@@ -227,7 +229,7 @@ export default class AiSummaryModal extends Component {
           {{i18n "summary.summarized_on" date=this.summarizedOn}}
           <DTooltip @placements={{array "top-end"}}>
             <:trigger>
-              {{icon "circle-info"}}
+              {{dIcon "circle-info"}}
             </:trigger>
             <:content>
               {{i18n "summary.model_used" model=this.summarizedBy}}
@@ -239,10 +241,10 @@ export default class AiSummaryModal extends Component {
         {{/if}}
         {{#if this.canRegenerate}}
           <DButton
-            @label="summary.buttons.regenerate"
-            @title="summary.buttons.regenerate"
             @action={{this.regenerateSummary}}
             @icon="arrows-rotate"
+            @label="summary.buttons.regenerate"
+            @title="summary.buttons.regenerate"
           />
         {{/if}}
       </:footer>

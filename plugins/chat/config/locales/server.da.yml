@@ -61,10 +61,17 @@ da:
         other_type: "%{username} nævnte %{identifier} i personlig chat"
       new_chat_message: '%{username} sendte en besked i "%{channel}"'
       new_direct_chat_message: "%{username} sendte en besked i personlig chat"
+    actions:
+      chat_reply:
+        title: Svar
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Send chatbesked
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Godkend"
+      default_deny_label: "Nægt"
   reviewable_score_types:
     needs_review:
       title: "Behøver Gennemgang"

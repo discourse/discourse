@@ -7,10 +7,10 @@ import { action } from "@ember/object";
 import { throttle } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const plusOne = helper(([val]) => val + 1);
@@ -21,7 +21,6 @@ const getAspectRatio = helper(([width, height]) => {
 });
 
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
-const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 10;
 
 export default class ImageCarousel extends Component {
@@ -38,6 +37,7 @@ export default class ImageCarousel extends Component {
     this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
+    // Reconcile after scrolling settles so intermediate positions cannot undo navigation.
     const updateIndex = () => {
       const newIndex = this.#calculateNearestIndex(element);
       if (newIndex !== this.currentIndex) {
@@ -49,11 +49,6 @@ export default class ImageCarousel extends Component {
     let scrollStopTimer;
 
     const onScroll = () => {
-      // Optimistic update while scrolling for real-time dot feedback
-      if (!isTesting()) {
-        throttle(this, updateIndex, SCROLL_THROTTLE_MS);
-      }
-
       // Fallback for browsers without scrollend support (Safari < 17.4)
       if (!supportsScrollEnd) {
         clearTimeout(scrollStopTimer);
@@ -78,27 +73,6 @@ export default class ImageCarousel extends Component {
 
   #trackDirection = 1;
   #slides = new Map();
-
-  #calculateNearestIndex(track) {
-    if (!track) {
-      return this.currentIndex;
-    }
-
-    const trackCenter = track.scrollLeft + track.clientWidth / 2;
-    let bestIndex = 0;
-    let minDistance = Infinity;
-
-    this.#slides.forEach((slide, index) => {
-      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
-      const distance = Math.abs(slideCenter - trackCenter);
-      if (distance < minDistance) {
-        minDistance = distance;
-        bestIndex = index;
-      }
-    });
-
-    return bestIndex;
-  }
 
   get #scrollBehavior() {
     return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
@@ -147,11 +121,6 @@ export default class ImageCarousel extends Component {
     }
   }
 
-  #navigateByKey(direction) {
-    const goNext = (direction === "right") === (this.#trackDirection === 1);
-    this.scrollToIndex(goNext ? this.nextIndex : this.prevIndex);
-  }
-
   @action
   onKeyDown(event) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
@@ -163,9 +132,35 @@ export default class ImageCarousel extends Component {
     throttle(this, this.#navigateByKey, direction, KEYBOARD_THROTTLE_MS);
   }
 
+  #calculateNearestIndex(track) {
+    if (!track) {
+      return this.currentIndex;
+    }
+
+    const trackCenter = track.scrollLeft + track.clientWidth / 2;
+    let bestIndex = 0;
+    let minDistance = Infinity;
+
+    this.#slides.forEach((slide, index) => {
+      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+      const distance = Math.abs(slideCenter - trackCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        bestIndex = index;
+      }
+    });
+
+    return bestIndex;
+  }
+
+  #navigateByKey(direction) {
+    const goNext = (direction === "right") === (this.#trackDirection === 1);
+    this.scrollToIndex(goNext ? this.nextIndex : this.prevIndex);
+  }
+
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "d-image-carousel"
         (if @data.mode (concat "d-image-carousel--" @data.mode))
         (if this.isSingle "d-image-carousel--single")
@@ -179,7 +174,7 @@ export default class ImageCarousel extends Component {
       >
         {{#each this.items as |item index|}}
           <div
-            class={{concatClass
+            class={{dConcatClass
               "d-image-carousel__slide"
               (if (eq this.currentIndex index) "is-active")
             }}
@@ -195,29 +190,29 @@ export default class ImageCarousel extends Component {
       {{#unless this.isSingle}}
         <div class="d-image-carousel__controls">
           <button
-            type="button"
+            aria-label={{i18n "carousel.previous"}}
             class="d-image-carousel__nav d-image-carousel__nav--prev"
             title={{i18n "carousel.previous"}}
-            aria-label={{i18n "carousel.previous"}}
+            type="button"
             {{on "click" (fn this.scrollToIndex this.prevIndex)}}
           >
-            {{icon "chevron-left"}}
+            {{dIcon "chevron-left"}}
           </button>
 
           {{#if this.showDots}}
             <div class="d-image-carousel__dots">
               {{#each this.items as |_item index|}}
                 <button
-                  type="button"
-                  class={{concatClass
-                    "d-image-carousel__dot"
-                    (if (eq this.currentIndex index) "active")
-                  }}
+                  aria-current={{if (eq this.currentIndex index) "true"}}
                   aria-label={{i18n
                     "carousel.go_to_slide"
                     index=(plusOne index)
                   }}
-                  aria-current={{if (eq this.currentIndex index) "true"}}
+                  class={{dConcatClass
+                    "d-image-carousel__dot"
+                    (if (eq this.currentIndex index) "active")
+                  }}
+                  type="button"
                   {{on "click" (fn this.scrollToIndex index)}}
                 ></button>
               {{/each}}
@@ -227,13 +222,13 @@ export default class ImageCarousel extends Component {
           {{/if}}
 
           <button
-            type="button"
+            aria-label={{i18n "carousel.next"}}
             class="d-image-carousel__nav d-image-carousel__nav--next"
             title={{i18n "carousel.next"}}
-            aria-label={{i18n "carousel.next"}}
+            type="button"
             {{on "click" (fn this.scrollToIndex this.nextIndex)}}
           >
-            {{icon "chevron-right"}}
+            {{dIcon "chevron-right"}}
           </button>
         </div>
       {{/unless}}

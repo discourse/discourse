@@ -27,7 +27,7 @@ RSpec.describe ProblemCheckTracker do
   end
 
   describe ".[]" do
-    before { Fabricate(:problem_check_tracker, identifier: "twitter_login") }
+    fab!(:twitter_login_tracker) { Fabricate(:problem_check_tracker, identifier: "twitter_login") }
 
     context "when the problem check tracker already exists" do
       it { expect(described_class[:twitter_login]).not_to be_new_record }
@@ -39,10 +39,8 @@ RSpec.describe ProblemCheckTracker do
   end
 
   describe "#check" do
-    before do
-      Fabricate(:problem_check_tracker, identifier: "twitter_login")
-      Fabricate(:problem_check_tracker, identifier: "missing_check")
-    end
+    fab!(:twitter_login_tracker) { Fabricate(:problem_check_tracker, identifier: "twitter_login") }
+    fab!(:missing_check_tracker) { Fabricate(:problem_check_tracker, identifier: "missing_check") }
 
     context "when the tracker has a corresponding check" do
       it { expect(described_class[:twitter_login].check.new).to be_a(ProblemCheck) }
@@ -294,8 +292,7 @@ RSpec.describe ProblemCheckTracker do
 
     context "when there's an alarm sounding for multi-target trackers" do
       let(:blips) { 1 }
-
-      before do
+      let!(:existing_admin_notice) do
         Fabricate(
           :admin_notice,
           subject: "problem",

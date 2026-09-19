@@ -4,10 +4,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import {
   EXISTING_TOPIC_SELECTION,
@@ -86,7 +86,9 @@ export default class ChatModalArchiveChannel extends Component {
     if (this.newTopic) {
       data.title = this.topicTitle;
       data.category_id = this.categoryId;
-      data.tags = this.tags;
+      data.tags = (this.tags ?? []).map((tag) =>
+        typeof tag === "string" ? tag : tag.name
+      );
     }
     if (this.existingTopic) {
       data.topic_id = this.selectedTopicId;
@@ -120,35 +122,35 @@ export default class ChatModalArchiveChannel extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-archive-channel"
-      @inline={{@inline}}
-      @title={{i18n "chat.channel_archive.title"}}
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
+      @inline={{@inline}}
+      @title={{i18n "chat.channel_archive.title"}}
     >
       <:body>
         <p class="chat-modal-archive-channel__instructions">
           {{this.instructionsText}}
         </p>
         <ChatToTopicSelector
-          @selection={{this.selection}}
-          @topicTitle={{this.topicTitle}}
+          @allowNewMessage={{false}}
           @categoryId={{this.categoryId}}
+          @instructionLabels={{this.instructionLabels}}
+          @selectedTopicId={{this.selectedTopicId}}
+          @selection={{this.selection}}
           @tags={{this.tags}}
           @topicChangedCallback={{this.newTopicSelected}}
-          @selectedTopicId={{this.selectedTopicId}}
-          @instructionLabels={{this.instructionLabels}}
-          @allowNewMessage={{false}}
+          @topicTitle={{this.topicTitle}}
         />
       </:body>
       <:footer>
         <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.archiveChannel}}
-          @label="chat.channel_archive.title"
-          id="chat-confirm-archive-channel"
           class="btn-primary"
+          id="chat-confirm-archive-channel"
+          @action={{this.archiveChannel}}
+          @disabled={{this.buttonDisabled}}
+          @label="chat.channel_archive.title"
         />
       </:footer>
     </DModal>

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "final_destination"
+require "image_processing/instrumentation"
 require "mini_mime"
 require "open-uri"
 
@@ -55,7 +56,7 @@ class FileHelper
   end
 
   class FakeIO
-    attr_accessor :status
+    attr_accessor :status, :meta
   end
 
   def self.download(
@@ -96,6 +97,7 @@ class FileHelper
             # attempt error API compatibility
             io = FakeIO.new
             io.status = [response.code, ""]
+            io.meta = response.each_header.to_h
             raise OpenURI::HTTPError.new("#{response.code} Error", io)
           else
             log(:error, "FinalDestination did not work for: #{url}") if verbose
@@ -131,10 +133,12 @@ class FileHelper
   end
 
   def self.optimize_image!(filename, allow_pngquant: false)
-    image_optim(
-      allow_pngquant: allow_pngquant,
-      strip_image_metadata: SiteSetting.strip_image_metadata,
-    ).optimize_image!(filename)
+    ImageProcessing::Instrumentation.instrument(operation: :image_optim) do
+      image_optim(
+        allow_pngquant: allow_pngquant,
+        strip_image_metadata: SiteSetting.strip_image_metadata,
+      ).optimize_image!(filename)
+    end
   end
 
   def self.image_optim(allow_pngquant: false, strip_image_metadata: true)
@@ -180,7 +184,7 @@ class FileHelper
   end
 
   def self.supported_images
-    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp avif]
+    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp avif heic heif jxl]
   end
 
   def self.inline_images

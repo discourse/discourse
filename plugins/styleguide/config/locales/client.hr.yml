@@ -8,7 +8,9 @@ hr:
   js:
     styleguide:
       title: "Vodič za stil"
-      welcome: "Da biste započeli, odaberite odjeljak s izbornika s lijeve strane."
+      example:
+        kind:
+          component: "Komponenta"
       categories:
         atoms: Atomi
         molecules: Molekule
@@ -20,6 +22,10 @@ hr:
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud istezanje ullamco Laboris nisi ut aliquip ex ea commodo posljedica. Duis aute irure dolor in rephenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est Laborum."
         date_time_inputs:
           title: "Unosi datuma/vremena"
+        context_menu:
+          actions:
+            duplicate: "Dupliciraj"
+            delete: "Izbriši"
         font_scale:
           title: "Sustav fonta"
         colors:
@@ -69,6 +75,21 @@ hr:
           title: "Više tema"
         post_menu:
           title: "Izbornik objava"
+        roving_focus:
+          toolbar:
+            copy: "Kopija"
+          adjacent:
+            label: "Filteri"
+            field: "Pretraživanje"
+            open: "Otvori"
+          combobox:
+            daily: "Dnevno"
+            weekly: "Tjedno"
+            monthly: "Mjesečno"
+            never: "nikada"
+          tree:
+            components: "Komponente"
+            select: "Odaberite"
         modal:
           title: "Modalni"
           header: "Modalni naslov"

@@ -31,31 +31,11 @@
     }
   }
 
-  .bookmark-name-wrap {
-    display: inline-flex;
-    width: 100%;
-    align-items: end;
-  }
-
-  .bookmark-options-button {
-    margin-left: 0.5em;
-    margin-bottom: 0.5em;
-  }
-
   .bookmark-options-panel {
     margin-bottom: 18px;
 
     .select-kit {
       width: 100%;
-    }
-
-    label {
-      display: flex;
-
-      span {
-        display: block;
-        flex: 1;
-      }
     }
   }
 }

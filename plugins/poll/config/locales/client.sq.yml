@@ -17,6 +17,8 @@ sq:
       cast-votes:
         title: "Jepni votën tuaj"
         label: "Voto Tani"
+      keep-vote:
+        label: "Kthehu mbrapa"
       show-results:
         title: "Display the poll results"
         label: "Results"

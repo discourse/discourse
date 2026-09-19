@@ -27,14 +27,14 @@ export default class AdminConfigAreasEmojisNew extends Component {
   }
 
   <template>
-    <BackButton @route="adminEmojis.index" @label="admin.emoji.back" />
+    <BackButton @label="admin.emoji.back" @route="adminEmojis.index" />
     <div class="admin-config-area">
       <div class="admin-config-area__primary-content admin-emoji-form">
         <AdminConfigAreaCard @heading="admin.emoji.add">
           <:content>
             <EmojiUploader
-              @emojiGroups={{this.emojiGroups}}
               @done={{this.emojiUploaded}}
+              @emojiGroups={{this.emojiGroups}}
             />
           </:content>
         </AdminConfigAreaCard>

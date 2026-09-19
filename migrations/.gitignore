@@ -8,3 +8,6 @@
 /private/
 
 /tmp/
+
+# Each gem resolves its own lockfile for the isolated spec suite (not committed)
+/*/Gemfile.lock

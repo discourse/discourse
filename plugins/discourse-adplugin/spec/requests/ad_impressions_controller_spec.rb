@@ -7,6 +7,88 @@ describe AdPlugin::AdImpressionsController do
   before { enable_current_plugin }
 
   describe "#create" do
+    before { SiteSetting.ad_plugin_enable_tracking = true }
+
+    context "when ad_plugin_enable_tracking is disabled" do
+      before { SiteSetting.ad_plugin_enable_tracking = false }
+
+      it "rejects impression creation with 403" do
+        expect {
+          post "/ad_plugin/ad_impressions.json",
+               params: {
+                 ad_plugin_impression: {
+                   ad_type: AdPlugin::AdType.types[:house],
+                   placement: "topic_list_top",
+                   ad_plugin_house_ad_id: house_ad.id,
+                 },
+               }
+        }.not_to change { AdPlugin::AdImpression.count }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when rate limited" do
+      before { RateLimiter.enable }
+
+      it "rate limits anonymous impression creation by IP" do
+        stub_const(described_class, "CREATE_RATE_LIMIT_PER_MINUTE", 1) do
+          post "/ad_plugin/ad_impressions.json",
+               params: {
+                 ad_plugin_impression: {
+                   ad_type: AdPlugin::AdType.types[:house],
+                   placement: "topic_list_top",
+                   ad_plugin_house_ad_id: house_ad.id,
+                 },
+               }
+
+          expect(response.status).to eq(200)
+
+          post "/ad_plugin/ad_impressions.json",
+               params: {
+                 ad_plugin_impression: {
+                   ad_type: AdPlugin::AdType.types[:house],
+                   placement: "topic_list_top",
+                   ad_plugin_house_ad_id: house_ad.id,
+                 },
+               }
+        end
+
+        expect(response.status).to eq(429)
+      end
+
+      it "does not rate limit logged in users based on anonymous traffic from the same IP" do
+        ip_address = "1.2.3.4"
+
+        stub_const(described_class, "CREATE_RATE_LIMIT_PER_MINUTE", 1) do
+          RateLimiter.new(
+            nil,
+            "#{described_class::CREATE_RATE_LIMIT_KEY}-#{ip_address}",
+            described_class::CREATE_RATE_LIMIT_PER_MINUTE,
+            described_class::CREATE_RATE_LIMIT_SECONDS,
+          ).performed!
+
+          sign_in(user)
+
+          expect {
+            post "/ad_plugin/ad_impressions.json",
+                 params: {
+                   ad_plugin_impression: {
+                     ad_type: AdPlugin::AdType.types[:house],
+                     placement: "topic_list_top",
+                     ad_plugin_house_ad_id: house_ad.id,
+                   },
+                 },
+                 env: {
+                   "REMOTE_ADDR" => ip_address,
+                 }
+          }.to change { AdPlugin::AdImpression.count }.by(1)
+
+          expect(response.status).to eq(200)
+        end
+      end
+    end
+
     context "when creating house ad impression" do
       it "creates impression for logged in user" do
         sign_in(user)

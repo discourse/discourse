@@ -51,7 +51,7 @@ ru:
           edit: "Изменить"
           tabs:
             ads: "Реклама"
-            settings: "настроек"
+            settings: "Настроек"
           topic_list_top:
             title: "Список рекламных объявлений"
             description: "Объявления для показа над списком тем."

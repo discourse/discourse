@@ -20,10 +20,6 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     await visit("/g/alternative-group/manage/interaction");
 
     assert
-      .dom(".groups-form-visibility-level")
-      .exists("displays visibility level selector");
-
-    assert
       .dom(".groups-form-mentionable-level")
       .exists("displays mentionable level selector");
 
@@ -48,10 +44,6 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     });
 
     await visit("/g/discourse/manage/interaction");
-
-    assert
-      .dom(".groups-form-visibility-level")
-      .doesNotExist("does not display visibility level selector");
 
     assert
       .dom(".groups-form-mentionable-level")

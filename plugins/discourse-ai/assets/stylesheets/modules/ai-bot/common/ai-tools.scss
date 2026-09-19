@@ -198,9 +198,7 @@
   }
 
   &__parameters {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @include unstyled-list;
     display: grid;
     gap: 0.75rem;
   }

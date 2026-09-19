@@ -9,7 +9,7 @@ RSpec.describe TopicTrackingState do
   let(:topic) { post.topic }
 
   shared_examples "does not publish message for private topics" do |method|
-    it "should not publish any message for a private topic" do
+    it "does not publish a message for a private topic" do
       messages =
         MessageBus.track_publish { described_class.public_send(method, private_message_topic) }
 
@@ -33,7 +33,7 @@ RSpec.describe TopicTrackingState do
       Fabricate(:topic, category: read_restricted_category_with_no_groups)
     end
 
-    it "should publish message to everyone for a topic in a category that is not read restricted" do
+    it "publishes to everyone for a publicly readable category" do
       message =
         MessageBus
           .track_publish(message_bus_channel) do
@@ -48,7 +48,7 @@ RSpec.describe TopicTrackingState do
       expect(message.user_ids).to eq(nil)
     end
 
-    it "should publish message only to admin group and groups that have permission to read a category when topic is in category that is restricted to certain groups" do
+    it "publishes only to administrators and groups with category access" do
       message =
         MessageBus
           .track_publish(message_bus_channel) do
@@ -63,7 +63,7 @@ RSpec.describe TopicTrackingState do
       expect(message.user_ids).to eq(nil)
     end
 
-    it "should publish message only to admin group when topic is in category that is read restricted but no groups have been granted access" do
+    it "publishes only to administrators when no group has category access" do
       message =
         MessageBus
           .track_publish(message_bus_channel) do
@@ -199,8 +199,9 @@ RSpec.describe TopicTrackingState do
 
   describe "#publish_unread" do
     let(:other_user) { Fabricate(:user) }
-
-    before { Fabricate(:topic_user_watching, topic: topic, user: other_user) }
+    let!(:other_user_watching_topic) do
+      Fabricate(:topic_user_watching, topic: topic, user: other_user)
+    end
 
     it "can correctly publish unread" do
       message =
@@ -318,7 +319,7 @@ RSpec.describe TopicTrackingState do
         )
       end
 
-      it "should not publish any message" do
+      it "does not publish a message" do
         messages =
           MessageBus.track_publish { TopicTrackingState.publish_unread(private_message_post) }
 
@@ -368,14 +369,14 @@ RSpec.describe TopicTrackingState do
       expect(muted_message.data["message_type"]).to eq(described_class::MUTED_MESSAGE_TYPE)
     end
 
-    it "should not publish any message when notification level is not muted" do
+    it "does not publish when the notification level is not muted" do
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_muted(topic) }
       muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
 
       expect(muted_messages).to eq([])
     end
 
-    it "should not publish any message when the user was not seen in the last 7 days" do
+    it "does not publish when the user was absent for seven days" do
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
       post.user.update(last_seen_at: 8.days.ago)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_muted(topic) }
@@ -407,7 +408,7 @@ RSpec.describe TopicTrackingState do
       expect(unmuted_message.data["message_type"]).to eq(described_class::UNMUTED_MESSAGE_TYPE)
     end
 
-    it "should not publish any message when notification level is not muted" do
+    it "does not publish when the notification level is not muted" do
       SiteSetting.mute_all_categories_by_default = true
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_unmuted(topic) }
@@ -416,7 +417,7 @@ RSpec.describe TopicTrackingState do
       expect(unmuted_messages).to eq([])
     end
 
-    it "should not publish any message when the user was not seen in the last 7 days" do
+    it "does not publish when the user was absent for seven days" do
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 1)
       post.user.update(last_seen_at: 8.days.ago)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_unmuted(topic) }
@@ -521,7 +522,7 @@ RSpec.describe TopicTrackingState do
         expect(messages).to be_empty
       end
 
-      it "publish a read count update to every client" do
+      it "publishes a read count update to every client" do
         message =
           MessageBus
             .track_publish(read_post_key) do
@@ -533,7 +534,8 @@ RSpec.describe TopicTrackingState do
             end
             .first
 
-        expect(message.data[:type]).to eq :read
+        expect(message.data[:type]).to eq(:read)
+        expect(message.data[:readers_count]).to eq(post_2.readers_count)
       end
     end
   end
@@ -761,7 +763,9 @@ RSpec.describe TopicTrackingState do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
-      expect(row.tags.map { |t| t["name"] }).to contain_exactly("apples", "bananas")
+      expect(row.tags.map { |t| t["id"] }).to contain_exactly(
+        *Tag.where(name: %w[apples bananas]).pluck(:id),
+      )
     end
   end
 
@@ -813,6 +817,20 @@ RSpec.describe TopicTrackingState do
     expect(TopicTrackingState.report(user)).to be_empty
   end
 
+  it "does not report a topic as unread when its only new post is a small action" do
+    TopicUser.change(
+      user.id,
+      topic.id,
+      notification_level: TopicUser.notification_levels[:tracking],
+      last_read_post_number: 1,
+    )
+
+    topic.add_small_action(Discourse.system_user, "closed.enabled")
+
+    expect(topic.reload.highest_post_number).to eq(1)
+    expect(TopicTrackingState.report(user).map(&:topic_id)).not_to include(topic.id)
+  end
+
   describe ".report" do
     it "correctly reports topics with staff posts" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
@@ -836,51 +854,51 @@ RSpec.describe TopicTrackingState do
   describe ".report_totals" do
     fab!(:user2, :user)
 
-    it "correctly returns new/unread totals" do
+    it "correctly returns combined new + unread totals" do
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0 })
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 0 })
+      expect(report).to eq({ new: 1 })
 
       create_post(user: user, topic: post.topic)
 
-      # when user replies, they have 0 new count
+      # when user replies, they have 0 combined new+unread count
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0 })
 
-      # when we reply the poster will have an unread item
+      # when we reply the poster will have one combined new+unread item
       report = TopicTrackingState.report_totals(post.user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 1 })
 
       create_post(user: user2, topic: post.topic)
 
-      # when a third user replies, the original user should have an unread item
+      # when a third user replies, the original user should have one combined new+unread item
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 1 })
 
-      # the post user still has one unread
+      # the post user still has one combined new+unread item
       report = TopicTrackingState.report_totals(post.user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 1 })
 
       post2 = create_post
       post2.topic.notifier.watch_topic!(user.id)
 
-      # watching another new topic bumps the new count
+      # watching another new topic bumps the combined new+unread count
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 1 })
+      expect(report).to eq({ new: 2 })
     end
 
     it "respects treat_as_new_topic_start_date user option" do
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0 })
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 0 })
+      expect(report).to eq({ new: 1 })
 
       user.user_option.new_topic_duration_minutes = 5
       user.user_option.save
@@ -888,31 +906,7 @@ RSpec.describe TopicTrackingState do
       post.topic.save
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
-    end
-
-    it "respects new_new_view_enabled" do
-      new_new_group = Fabricate(:group)
-      SiteSetting.experimental_new_new_view_groups = new_new_group.name
-      user.groups << new_new_group
-
-      report = TopicTrackingState.report_totals(user)
       expect(report).to eq({ new: 0 })
-
-      post.topic.notifier.watch_topic!(post.topic.user_id)
-
-      post2 = create_post
-      Fabricate(:post, topic: post2.topic)
-
-      tracking = {
-        notification_level: TopicUser.notification_levels[:tracking],
-        last_read_post_number: 1,
-      }
-
-      TopicUser.change(user.id, post2.topic_id, tracking)
-
-      report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 2 })
     end
   end
 

@@ -1,0 +1,71 @@
+.workflows-form-page {
+  display: flex;
+  justify-content: center;
+  padding: 4em 1em;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.workflows-form {
+  max-width: 500px;
+  width: 100%;
+  padding: 2em 2.5em;
+  box-sizing: border-box;
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: 12px;
+  box-shadow: var(--shadow-footer-nav);
+  align-self: flex-start;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 1.5em;
+  }
+
+  &__test-banner {
+    margin: 0 0 var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--workflow-status-running);
+    border-radius: var(--d-border-radius);
+    background: var(--workflow-status-running-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    text-align: center;
+  }
+
+  &__title {
+    margin: 0 0 0.25em;
+    font-size: var(--font-up-3);
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    margin: 0;
+  }
+
+  .form-kit__section {
+    margin-bottom: 0;
+  }
+
+  &__complete,
+  &__error {
+    text-align: center;
+    padding: 2em 0;
+  }
+
+  &__error {
+    color: var(--workflow-status-error);
+  }
+
+  &__completion-title {
+    margin-bottom: 0.5em;
+    font-size: var(--font-up-2);
+    font-weight: 700;
+    line-height: var(--line-height-medium);
+  }
+
+  &__completion-message,
+  &__completion-text {
+    color: var(--primary);
+  }
+}

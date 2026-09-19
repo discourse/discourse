@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import Channel from "./channel";
 import Group from "./group";
@@ -61,21 +61,21 @@ export default class List extends Component {
           <ul class="chat-message-creator__list">
             {{#each @items as |item|}}
               <li
-                class={{concatClass
+                class={{dConcatClass
                   "chat-message-creator__list-item"
                   (if
                     (eq item.identifier @highlightedItem.identifier)
                     "-highlighted"
                   )
                 }}
+                data-identifier={{item.identifier}}
+                id={{item.id}}
+                role="button"
+                tabindex="0"
                 {{on "click" (fn this.handleClick item)}}
                 {{on "keypress" (fn this.handleEnter item)}}
                 {{on "mousemove" (fn @onHighlight item)}}
                 {{on "mouseleave" (fn @onHighlight null)}}
-                role="button"
-                tabindex="0"
-                data-identifier={{item.identifier}}
-                id={{item.id}}
               >
                 {{component
                   (this.componentForItem item.type)

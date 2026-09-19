@@ -33,6 +33,7 @@ class AiUsageSerializer < ApplicationSerializer
           total_cache_write_tokens
           total_request_tokens
           total_response_tokens
+          total_spending
           input_spending
           output_spending
           cache_read_spending
@@ -90,6 +91,7 @@ class AiUsageSerializer < ApplicationSerializer
         output_spending: user.output_spending,
         cache_read_spending: user.cache_read_spending,
         cache_write_spending: user.cache_write_spending,
+        total_spending: user.total_spending,
       }
     end
   end
@@ -126,6 +128,7 @@ class AiUsageSerializer < ApplicationSerializer
       :total_cache_write_tokens => row.total_cache_write_tokens,
       :total_request_tokens => row.total_request_tokens,
       :total_response_tokens => row.total_response_tokens,
+      :total_spending => row.total_spending,
       :input_spending => row.input_spending,
       :output_spending => row.output_spending,
       :cache_read_spending => row.cache_read_spending,

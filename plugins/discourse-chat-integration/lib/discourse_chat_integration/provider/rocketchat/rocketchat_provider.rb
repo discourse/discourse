@@ -19,7 +19,7 @@ module DiscourseChatIntegration::Provider::RocketchatProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"
@@ -43,7 +43,7 @@ module DiscourseChatIntegration::Provider::RocketchatProvider
         ),
       mrkdwn_in: ["text"],
       title:
-        "#{topic.title} #{category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}",
+        "#{topic.title} #{category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
       title_link: post.full_url,
     }
 
@@ -81,7 +81,7 @@ module DiscourseChatIntegration::Provider::RocketchatProvider
     channel_id = channel.data["identifier"]
     message = rocketchat_message(post, channel_id)
 
-    self.send_via_webhook(message)
+    send_via_webhook(message)
   end
 
   def self.get_channel_by_name(name)

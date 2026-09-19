@@ -5,9 +5,30 @@ import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKObject from "discourse/form-kit/components/fk/object";
-import element from "discourse/helpers/element";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
 export default class FKCollection extends Component {
+  get collectionData() {
+    return (this.args.data.get(this.name) ?? []).map((item, index) => {
+      return {
+        identifier: `${this.name}-${index}`,
+        item,
+      };
+    });
+  }
+
+  get name() {
+    return this.args.name
+      ? `${this.args.parentName ? this.args.parentName + "." : ""}${
+          this.args.name
+        }`
+      : this.args.parentName;
+  }
+
+  get tagName() {
+    return this.args.tagName || "div";
+  }
+
   @action
   remove(index) {
     this.args.remove(this.name, index);
@@ -39,31 +60,10 @@ export default class FKCollection extends Component {
     return curryComponent(componentClass, baseArguments, getOwner(this));
   }
 
-  get collectionData() {
-    return this.args.data.get(this.name).map((item, index) => {
-      return {
-        identifier: `${this.name}-${index}`,
-        item,
-      };
-    });
-  }
-
-  get name() {
-    return this.args.name
-      ? `${this.args.parentName ? this.args.parentName + "." : ""}${
-          this.args.name
-        }`
-      : this.args.parentName;
-  }
-
-  get tagName() {
-    return this.args.tagName || "div";
-  }
-
   <template>
     {{#if this.collectionData.length}}
-      {{#let (element this.tagName) as |Wrapper|}}
-        <Wrapper class="form-kit__collection">
+      {{#let (dElement this.tagName) as |Wrapper|}}
+        <Wrapper class="form-kit__collection" ...attributes>
           {{#each this.collectionData key="identifier" as |data index|}}
             {{yield
               (hash

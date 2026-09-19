@@ -58,6 +58,65 @@ RSpec.describe DiscourseGamification::Solutions do
 
       expect(query_results).to be_empty
     end
+
+    context "with multiple solutions enabled" do
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      it "scores additional solutions when querying with :since after first solution" do
+        freeze_time DateTime.parse("2024-01-01 12:00")
+
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: answer_post.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        freeze_time DateTime.parse("2024-01-03 12:00")
+        answer_post_2 = Fabricate(:post, topic: topic, user: answer_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: answer_post_2.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        expect(DB.query(described_class.query, since: 1.day.ago)).to contain_exactly(
+          have_attributes(
+            user_id: answer_user.id,
+            date: Date.parse("2024-01-03").beginning_of_day,
+            points: 5.0,
+          ),
+        )
+      end
+
+      it "scores multiple accepted solutions by the same user" do
+        freeze_time DateTime.parse("2024-01-01 12:00")
+
+        answer_post_2 = Fabricate(:post, topic: topic, user: answer_user)
+
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: answer_post.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: answer_post_2.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        expect(query_results).to contain_exactly(
+          have_attributes(
+            user_id: answer_user.id,
+            date: Time.current.beginning_of_day,
+            points: 10.0,
+          ),
+        )
+      end
+    end
   end
 
   it "is disabled when solved plugin is disabled" do

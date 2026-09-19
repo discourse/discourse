@@ -5,11 +5,18 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import Blurb from "discourse/components/search-menu/results/blurb";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import { and } from "discourse/truth-helpers";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+
+const MaybeAnchor = <template>
+  {{#if @href}}
+    <a href={{@href}}>{{yield}}</a>
+  {{else}}
+    {{yield}}
+  {{/if}}
+</template>;
 
 export default class Results extends Component {
   @service siteSettings;
@@ -19,30 +26,30 @@ export default class Results extends Component {
     return this.args.result.topic.isPrivateMessage && !this.args.isPMOnly;
   }
 
+  get useHeadline() {
+    return (
+      this.siteSettings.use_pg_headlines_for_excerpt &&
+      this.args.result.topic_title_headline
+    );
+  }
+
   <template>
     <span class="topic">
       <span class="first-line">
         <TopicStatus
-          @topic={{@result.topic}}
-          @disableActions={{true}}
           @context="topic-view-title"
+          @disableActions={{true}}
           @showPrivateMessageIcon={{this.shouldShowPrivateMessageIcon}}
+          @topic={{@result.topic}}
         />
         <span class="topic-title" data-topic-id={{@result.topic.id}}>
-          {{#if
-            (and
-              this.siteSettings.use_pg_headlines_for_excerpt
-              @result.topic_title_headline
-            )
-          }}
-            <a href={{if @withTopicUrl @result.url}}>
-              {{replaceEmoji (trustHTML @result.topic_title_headline)}}
-            </a>
-          {{else}}
-            <a href={{if @withTopicUrl @result.url}}>
+          <MaybeAnchor @href={{if @withTopicUrl @result.url}}>
+            {{#if this.useHeadline}}
+              {{dReplaceEmoji (trustHTML @result.topic_title_headline)}}
+            {{else}}
               <HighlightedSearch @string={{@result.topic.fancyTitle}} />
-            </a>
-          {{/if}}
+            {{/if}}
+          </MaybeAnchor>
           <PluginOutlet
             @name="search-menu-results-topic-title-suffix"
             @outletArgs={{lazyHash topic=@result.topic}}
@@ -50,12 +57,12 @@ export default class Results extends Component {
         </span>
       </span>
       <span class="second-line">
-        {{categoryLink
+        {{dCategoryLink
           @result.topic.category
           link=(if @withTopicUrl true false)
         }}
         {{#if this.siteSettings.tagging_enabled}}
-          {{discourseTags @result.topic tagName="span"}}
+          {{dDiscourseTags @result.topic tagName="span"}}
         {{/if}}
       </span>
     </span>

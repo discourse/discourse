@@ -9,6 +9,7 @@ class ReviewableUserSerializer < ReviewableSerializer
     :name,
     :bio,
     :website,
+    :avatar_url,
     :scrubbed_by,
     :scrubbed_reason,
     :scrubbed_at,

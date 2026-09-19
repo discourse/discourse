@@ -16,15 +16,14 @@ describe "Category moderator self-lockout warning" do
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:permission_row) { PageObjects::Components::CategoryPermissionRow.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
-  let(:group_chooser) { PageObjects::Components::SelectKit.new(".available-groups") }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before { SiteSetting.moderators_manage_categories = true }
 
   def remove_everyone_and_add_restricted_group
     category_page.visit_security(category)
     permission_row.remove_group_permission("everyone")
-    group_chooser.expand
-    group_chooser.select_row_by_name(restricted_group.name)
+    form.field("security_add_group_id").select(restricted_group.id)
   end
 
   context "when moderator would lose access" do

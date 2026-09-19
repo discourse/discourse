@@ -23,9 +23,52 @@ class ApplicationRequest < ActiveRecord::Base
          page_view_anon_browser_mobile_beacon: 18,
          page_view_logged_in_browser_beacon: 19,
          page_view_logged_in_browser_mobile_beacon: 20,
+         page_view_embed: 21,
        }
 
   include CachedCounting
+
+  BROWSER_PAGEVIEW_TRANSPORTS = {
+    "page_view_anon_browser" => "page_view_anon_browser_beacon",
+    "page_view_logged_in_browser" => "page_view_logged_in_browser_beacon",
+  }.freeze
+
+  # Browser pageviews arrive through two transports: a beacon request and,
+  # historically, a piggybacked header on regular requests. Both can record the
+  # same visit, so counts are read from beacons whenever they recorded traffic
+  # and fall back to the piggyback counters when they did not. Anonymous and
+  # logged in visitors are decided separately, because either cohort can be the
+  # only one a beacon saw on a given day.
+  def self.browser_pageviews
+    conditions =
+      BROWSER_PAGEVIEW_TRANSPORTS.map do |legacy_type, beacon_type|
+        legacy_id, beacon_id = req_types.values_at(legacy_type, beacon_type)
+
+        <<~SQL
+          (
+            application_requests.req_type IN (#{legacy_id}, #{beacon_id})
+            AND (application_requests.req_type = #{beacon_id}) = EXISTS (
+              SELECT 1
+              FROM application_requests beacons
+              WHERE beacons.date = application_requests.date
+                AND beacons.req_type = #{beacon_id}
+                AND beacons.count > 0
+            )
+          )
+        SQL
+      end
+
+    where(req_type: req_types.values_at(*BROWSER_PAGEVIEW_TRANSPORTS.to_a.flatten)).where(
+      conditions.join(" OR "),
+    )
+  end
+
+  def self.browser_pageview_count_for_period(type, since)
+    browser_pageviews
+      .where(req_type: [type, "#{type}_beacon"])
+      .where("date >= ?", since)
+      .sum(:count)
+  end
 
   def self.disable
     @disabled = true
@@ -54,8 +97,8 @@ class ApplicationRequest < ActiveRecord::Base
   def self.stats
     s = ActiveSupport::HashWithIndifferentAccess.new({})
 
-    self.req_types.each do |key, i|
-      query = self.where(req_type: i)
+    req_types.each do |key, i|
+      query = where(req_type: i)
       s["#{key}_total"] = query.sum(:count)
       s["#{key}_30_days"] = query.where("date > ?", 30.days.ago).sum(:count)
       s["#{key}_28_days"] = query.where("date > ?", 28.days.ago).sum(:count)
@@ -66,14 +109,14 @@ class ApplicationRequest < ActiveRecord::Base
   end
 
   def self.request_type_count_for_period(type, since)
-    id = self.req_types[type]
+    id = req_types[type]
     if !id
       raise ArgumentError.new(
               "unknown request type #{type.inspect} in ApplicationRequest.req_types",
             )
     end
 
-    self.where(req_type: id).where("date >= ?", since).sum(:count)
+    where(req_type: id).where("date >= ?", since).sum(:count)
   end
 end
 
@@ -82,9 +125,9 @@ end
 # Table name: application_requests
 #
 #  id       :integer          not null, primary key
+#  count    :integer          default(0), not null
 #  date     :date             not null
 #  req_type :integer          not null
-#  count    :integer          default(0), not null
 #
 # Indexes
 #

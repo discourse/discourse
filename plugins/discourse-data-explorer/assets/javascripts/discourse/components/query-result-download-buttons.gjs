@@ -1,28 +1,45 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import DButton from "discourse/components/d-button";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import { QUERY_RESULT_MAX_LIMIT } from "discourse/plugins/discourse-data-explorer/discourse/lib/constants";
 
 export default class QueryResultDownloadButtons extends Component {
+  get hasResults() {
+    return !!this.args.content?.rows?.length;
+  }
+
   get params() {
-    return this.args.content.params;
+    return this.args.content?.params;
   }
 
   get explainText() {
-    return this.args.content.explain;
+    return this.args.content?.explain;
   }
 
   @action
-  downloadResultJson() {
+  downloadQueryJson(dMenu) {
+    window.open(this.args.query.downloadUrl, "_blank");
+    dMenu?.close();
+  }
+
+  @action
+  downloadResultJson(dMenu) {
     this._downloadResult("json");
+    dMenu?.close();
   }
 
   @action
-  downloadResultCsv() {
+  downloadResultCsv(dMenu) {
     this._downloadResult("csv");
+    dMenu?.close();
   }
 
   _downloadUrl() {
@@ -76,19 +93,47 @@ export default class QueryResultDownloadButtons extends Component {
   }
 
   <template>
-    <div class="query-result-download-buttons" ...attributes>
-      <DButton
-        @action={{this.downloadResultJson}}
-        @icon="download"
-        @label="explorer.download_json"
-      />
-
-      <DButton
-        @action={{this.downloadResultCsv}}
-        @icon="download"
-        @label="explorer.download_csv"
-      />
-    </div>
+    <DMenu
+      ...attributes
+      @identifier="query-result-export"
+      @placement="bottom-end"
+      @triggerClass="btn-default query-result-export__trigger query-result-download-buttons"
+    >
+      <:trigger>
+        {{dIcon "download"}}
+        <span>{{i18n "explorer.export_as.label"}}</span>
+        {{dIcon "angle-down"}}
+      </:trigger>
+      <:content as |dMenu|>
+        <DDropdownMenu as |dropdown|>
+          {{#if this.hasResults}}
+            <dropdown.item>
+              <DButton
+                class="btn-transparent query-result-export__results-json"
+                @action={{fn this.downloadResultJson dMenu}}
+                @label="explorer.export_as.results_json"
+              />
+            </dropdown.item>
+            <dropdown.item>
+              <DButton
+                class="btn-transparent query-result-export__results-csv"
+                @action={{fn this.downloadResultCsv dMenu}}
+                @label="explorer.export_as.results_csv"
+              />
+            </dropdown.item>
+          {{/if}}
+          {{#if @includeQueryExport}}
+            <dropdown.item>
+              <DButton
+                class="btn-transparent query-result-export__query-json"
+                @action={{fn this.downloadQueryJson dMenu}}
+                @label="explorer.export_as.query_json"
+              />
+            </dropdown.item>
+          {{/if}}
+        </DDropdownMenu>
+      </:content>
+    </DMenu>
   </template>
 }
 

@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import WebhookEventChooser from "discourse/admin/components/webhook-event-chooser";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -14,6 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import { eq } from "discourse/truth-helpers";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasWebhookForm extends Component {
@@ -54,27 +54,6 @@ export default class AdminConfigAreasWebhookForm extends Component {
     };
   }
 
-  async #loadExtras() {
-    try {
-      this.loadingExtras = true;
-
-      const webhooks = await this.store.findAll("web-hook");
-
-      this.groupedEventTypes = webhooks.extras.grouped_event_types;
-      this.defaultEventTypes = webhooks.extras.default_event_types;
-      this.contentTypes = webhooks.extras.content_types;
-      this.deliveryStatuses = webhooks.extras.delivery_statuses;
-
-      if (this.webhook.isNew) {
-        this.webhookEventTypes = [...this.defaultEventTypes];
-      } else {
-        this.webhookEventTypes = [...this.webhook.web_hook_event_types];
-      }
-    } finally {
-      this.loadingExtras = false;
-    }
-  }
-
   get showTagsFilter() {
     return this.siteSettings.tagging_enabled;
   }
@@ -107,26 +86,47 @@ export default class AdminConfigAreasWebhookForm extends Component {
     }
   }
 
+  async #loadExtras() {
+    try {
+      this.loadingExtras = true;
+
+      const webhooks = await this.store.findAll("web-hook");
+
+      this.groupedEventTypes = webhooks.extras.grouped_event_types;
+      this.defaultEventTypes = webhooks.extras.default_event_types;
+      this.contentTypes = webhooks.extras.content_types;
+      this.deliveryStatuses = webhooks.extras.delivery_statuses;
+
+      if (this.webhook.isNew) {
+        this.webhookEventTypes = [...this.defaultEventTypes];
+      } else {
+        this.webhookEventTypes = [...this.webhook.web_hook_event_types];
+      }
+    } finally {
+      this.loadingExtras = false;
+    }
+  }
+
   <template>
-    <BackButton @route="adminWebHooks.index" @label="admin.web_hooks.back" />
+    <BackButton @label="admin.web_hooks.back" @route="adminWebHooks.index" />
 
     <div class="admin-config-area user-field">
       <div class="admin-config-area__primary-content">
         <div class="admin-config-area-card">
           <div class="web-hook-container">
-            <ConditionalLoadingSection @isLoading={{this.loadingExtras}}>
+            <DConditionalLoadingSection @isLoading={{this.loadingExtras}}>
               <p>{{i18n "admin.web_hooks.detailed_instruction"}}</p>
               <Form
-                @onSubmit={{this.save}}
                 @data={{this.formData}}
+                @onSubmit={{this.save}}
                 as |form transientData|
               >
                 <form.Field
+                  @format="large"
                   @name="payload_url"
                   @title={{i18n "admin.web_hooks.payload_url"}}
-                  @format="large"
-                  @validation="required|url"
                   @type="input"
+                  @validation="required|url"
                   as |field|
                 >
                   <field.Control
@@ -137,11 +137,11 @@ export default class AdminConfigAreasWebhookForm extends Component {
                 </form.Field>
 
                 <form.Field
+                  @format="large"
                   @name="content_type"
                   @title={{i18n "admin.web_hooks.content_type"}}
-                  @format="large"
-                  @validation="required"
                   @type="select"
+                  @validation="required"
                   as |field|
                 >
                   <field.Control as |select|>
@@ -154,24 +154,24 @@ export default class AdminConfigAreasWebhookForm extends Component {
                 </form.Field>
 
                 <form.Field
-                  @name="secret"
-                  @title={{i18n "admin.web_hooks.secret"}}
                   @description={{i18n "admin.web_hooks.secret_placeholder"}}
                   @format="large"
-                  @validation="length:12"
+                  @name="secret"
+                  @title={{i18n "admin.web_hooks.secret"}}
                   @type="input"
+                  @validation="length:12"
                   as |field|
                 >
                   <field.Control />
                 </form.Field>
 
                 <form.Field
-                  @name="wildcard"
-                  @title={{i18n "admin.web_hooks.event_chooser"}}
-                  @validation="required"
-                  @onSet={{this.setRequirement}}
                   @format="full"
+                  @name="wildcard"
+                  @onSet={{this.setRequirement}}
+                  @title={{i18n "admin.web_hooks.event_chooser"}}
                   @type="radio-group"
+                  @validation="required"
                   as |field|
                 >
                   <field.Control as |radioGroup|>
@@ -192,9 +192,9 @@ export default class AdminConfigAreasWebhookForm extends Component {
                             }}
                             {{#each eventTypes as |type|}}
                               <WebhookEventChooser
-                                @type={{type}}
-                                @group={{group}}
                                 @eventTypes={{this.webhookEventTypes}}
+                                @group={{group}}
+                                @type={{type}}
                               />
                             {{/each}}
                           </div>
@@ -208,12 +208,12 @@ export default class AdminConfigAreasWebhookForm extends Component {
                 </form.Field>
 
                 <form.Field
-                  @name="categories"
-                  @title={{i18n "admin.web_hooks.categories_filter"}}
                   @description={{i18n
                     "admin.web_hooks.categories_filter_instructions"
                   }}
                   @format="large"
+                  @name="categories"
+                  @title={{i18n "admin.web_hooks.categories_filter"}}
                   @type="custom"
                   as |field|
                 >
@@ -227,52 +227,52 @@ export default class AdminConfigAreasWebhookForm extends Component {
 
                 {{#if this.showTagsFilter}}
                   <form.Field
-                    @name="tags"
-                    @title={{i18n "admin.web_hooks.tags_filter"}}
                     @description={{i18n
                       "admin.web_hooks.tags_filter_instructions"
                     }}
                     @format="large"
+                    @name="tags"
+                    @title={{i18n "admin.web_hooks.tags_filter"}}
                     @type="tag-chooser"
                     as |field|
                   >
                     <field.Control
-                      @showAllTags={{true}}
                       @excludeSynonyms={{true}}
+                      @showAllTags={{true}}
                     />
                   </form.Field>
                 {{/if}}
 
                 <form.Field
-                  @name="group_names"
-                  @title={{i18n "admin.web_hooks.groups_filter"}}
                   @description={{i18n
                     "admin.web_hooks.groups_filter_instructions"
                   }}
                   @format="large"
+                  @name="group_names"
+                  @title={{i18n "admin.web_hooks.groups_filter"}}
                   @type="custom"
                   as |field|
                 >
                   <field.Control>
                     <GroupSelector
-                      @groupNames={{field.value}}
                       @groupFinder={{this.webhook.groupFinder}}
+                      @groupNames={{field.value}}
                       @onChange={{field.set}}
                     />
                   </field.Control>
                 </form.Field>
 
                 <PluginOutlet
-                  @name="web-hook-fields"
                   @connectorTagName="div"
+                  @name="web-hook-fields"
                   @outletArgs={{lazyHash model=this.webhook}}
                 />
 
                 <form.Field
-                  @name="verify_certificate"
-                  @title={{i18n "admin.web_hooks.verify_certificate"}}
-                  @showTitle={{false}}
                   @format="large"
+                  @name="verify_certificate"
+                  @showTitle={{false}}
+                  @title={{i18n "admin.web_hooks.verify_certificate"}}
                   @type="checkbox"
                   as |field|
                 >
@@ -280,10 +280,10 @@ export default class AdminConfigAreasWebhookForm extends Component {
                 </form.Field>
 
                 <form.Field
-                  @name="active"
-                  @title={{i18n "admin.web_hooks.active"}}
-                  @showTitle={{false}}
                   @format="large"
+                  @name="active"
+                  @showTitle={{false}}
+                  @title={{i18n "admin.web_hooks.active"}}
                   @type="checkbox"
                   as |field|
                 >
@@ -293,13 +293,13 @@ export default class AdminConfigAreasWebhookForm extends Component {
                 <form.Actions>
                   <form.Submit class="save" @label={{this.saveButtonLabel}} />
                   <form.Button
-                    @route="adminWebHooks.index"
-                    @label="admin.web_hooks.cancel"
                     class="btn-default"
+                    @label="admin.web_hooks.cancel"
+                    @route="adminWebHooks.index"
                   />
                 </form.Actions>
               </Form>
-            </ConditionalLoadingSection>
+            </DConditionalLoadingSection>
           </div>
         </div>
       </div>

@@ -14,6 +14,7 @@ RSpec.describe DiscourseAi::AgentExporter do
 
       it "returns JSON containing the agent and its custom tool" do
         expect(export_json["agent"]["name"]).to eq(ai_agent.name)
+        expect(export_json["agent"]["allowed_group_ids"]).to eq(ai_agent.allowed_group_ids)
         expect(export_json["agent"]["tools"].first.first).to eq("custom-#{ai_tool.tool_name}")
 
         custom_tool = export_json["custom_tools"].first
@@ -29,6 +30,23 @@ RSpec.describe DiscourseAi::AgentExporter do
 
       it "returns JSON with an empty custom_tools array" do
         expect(export_json["custom_tools"]).to eq([])
+      end
+    end
+
+    context "when the agent has subagents" do
+      fab!(:first_subagent) { Fabricate(:ai_agent, name: "zebra") }
+      fab!(:second_subagent) { Fabricate(:ai_agent, name: "Alpha") }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          subagent_ids: [first_subagent.id, second_subagent.id, first_subagent.id],
+        )
+      end
+
+      let(:exporter) { described_class.new(agent: ai_agent) }
+
+      it "preserves subagent selection order" do
+        expect(export_json["agent"]["subagents"]).to eq(%w[zebra Alpha])
       end
     end
 

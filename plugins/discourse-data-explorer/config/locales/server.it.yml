@@ -15,6 +15,7 @@ it:
         title: Pianifica un messaggio a un argomento con i risultati di Data Explorer
         description: Ricevi report programmati pubblicati su un argomento specifico
   data_explorer:
+    admin_dashboard_label: "Data Explorer"
     report_generator:
       private_message:
         title: "Report programmato per %{query_name}"

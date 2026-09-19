@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import icon from "discourse/helpers/d-icon";
 import {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
 } from "discourse/select-kit/components/category-drop";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryDropMoreCollection extends Component {
@@ -38,14 +38,14 @@ export default class CategoryDropMoreCollection extends Component {
         </span>
 
         {{#if @selectKit.options.parentCategory}}
-          <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+          <LinkTo @model={{this.slugPath}} @route="discovery.subcategories">
             {{i18n "categories.view_all"}}
-            {{icon "up-right-from-square"}}
+            {{dIcon "up-right-from-square"}}
           </LinkTo>
         {{else}}
           <LinkTo @route="discovery.categories">
             {{i18n "categories.view_all"}}
-            {{icon "up-right-from-square"}}
+            {{dIcon "up-right-from-square"}}
           </LinkTo>
         {{/if}}
       </div>

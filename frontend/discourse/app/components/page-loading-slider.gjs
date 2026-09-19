@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class PageLoadingSlider extends Component {
   @service loadingSlider;
@@ -29,6 +29,11 @@ export default class PageLoadingSlider extends Component {
     }
   }
 
+  get containerStyle() {
+    const duration = this.loadingSlider.averageLoadingDuration.toFixed(2);
+    return trustHTML(`--loading-duration: ${duration}s`);
+  }
+
   @bind
   stateChanged(loading) {
     if (this._deferredStateChange) {
@@ -46,11 +51,6 @@ export default class PageLoadingSlider extends Component {
     } else {
       this.state = "done";
     }
-  }
-
-  get containerStyle() {
-    const duration = this.loadingSlider.averageLoadingDuration.toFixed(2);
-    return trustHTML(`--loading-duration: ${duration}s`);
   }
 
   @action
@@ -77,17 +77,17 @@ export default class PageLoadingSlider extends Component {
   <template>
     {{#if (eq this.loadingSlider.mode "slider")}}
       <div
-        {{on "transitionend" this.onContainerTransitionEnd}}
-        style={{this.containerStyle}}
-        class={{concatClass
+        class={{dConcatClass
           "loading-indicator-container"
           this.state
           (if this.capabilities.isAppWebview "discourse-hub-webview")
         }}
+        style={{this.containerStyle}}
+        {{on "transitionend" this.onContainerTransitionEnd}}
       >
         <div
-          {{on "transitionend" this.onBarTransitionEnd}}
           class="loading-indicator"
+          {{on "transitionend" this.onBarTransitionEnd}}
         >
         </div>
       </div>

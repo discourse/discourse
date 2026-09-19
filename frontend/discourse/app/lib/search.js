@@ -16,11 +16,11 @@ import Post from "discourse/models/post";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 const translateResultsCallbacks = [];
-const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
+export const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
 
 const logSearchLinkClickedCallbacks = [];
 
@@ -105,10 +105,11 @@ export function translateResults(results, opts) {
     .map(function (tag) {
       const id = tag.id;
       const name = escapeExpression(tag.name);
+      const slug = tag.slug || `${id}-tag`;
       return EmberObject.create({
         id,
         name,
-        url: getURL("/tag/" + name),
+        url: getURL(`/tag/${slug}/${id}`),
       });
     })
     .filter((item) => item != null);
@@ -188,7 +189,14 @@ export function searchForTerm(term, opts) {
     };
   }
 
-  let ajaxPromise = ajax("/search/query", { data });
+  const sessionId = document.querySelector(
+    "meta[name=discourse-track-view-session-id]"
+  )?.content;
+  const headers = sessionId
+    ? { "Discourse-Pageview-Session-Id": sessionId }
+    : {};
+
+  let ajaxPromise = ajax("/search/query", { data, headers });
   const promise = ajaxPromise.then((res) => translateResults(res, opts));
   promise.abort = ajaxPromise.abort;
   return promise;
@@ -228,6 +236,15 @@ export function getSearchKey(args) {
 const MIN_LENGTH_BYPASS_PATTERN =
   /^(l|r)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
 
+// Filters that scope the search to private messages. Mirrors the server-side
+// set in lib/search.rb (`in:personal`, `in:messages`, `in:personal-direct`,
+// `in:all-pms` — all of which set @search_pms = true).
+const PM_FILTER_PATTERN = /\bin:(personal|messages|personal-direct|all-pms)\b/i;
+
+export function searchTermScopesToPMs(searchTerm) {
+  return PM_FILTER_PATTERN.test(searchTerm || "");
+}
+
 export function isValidSearchTerm(searchTerm, siteSettings) {
   if (!searchTerm) {
     return false;
@@ -247,25 +264,20 @@ export function applySearchAutocomplete(inputElement, siteSettings, owner) {
   const modifiers = [];
 
   modifiers.push(
-    DAutocompleteModifier.setupAutocomplete(
-      owner,
-      inputElement,
-      autocompleteHandler,
-      {
-        component: HashtagAutocompleteResults,
-        key: HashtagAutocompleteResults.TRIGGER_KEY,
-        autoSelectFirstSuggestion: false,
-        transformComplete: (obj) => obj.text,
-        dataSource: (term) => searchCategoryTag(term, siteSettings),
-        fixedTextareaPosition: true,
-        offset: 2,
-      }
-    )
+    dAutocomplete.setupAutocomplete(owner, inputElement, autocompleteHandler, {
+      component: HashtagAutocompleteResults,
+      key: HashtagAutocompleteResults.TRIGGER_KEY,
+      autoSelectFirstSuggestion: false,
+      transformComplete: (obj) => obj.text,
+      dataSource: (term) => searchCategoryTag(term, siteSettings),
+      fixedTextareaPosition: true,
+      offset: 2,
+    })
   );
 
   if (siteSettings.enable_mentions) {
     modifiers.push(
-      DAutocompleteModifier.setupAutocomplete(
+      dAutocomplete.setupAutocomplete(
         owner,
         inputElement,
         autocompleteHandler,
@@ -303,6 +315,16 @@ export function updateRecentSearches(currentUser, term) {
 
   recentSearches.unshift(term);
   currentUser.set("recent_searches", recentSearches);
+
+  // kept in step so a just-run search orders against other histories by time
+  const detailed = (currentUser.recent_searches_detailed || []).filter(
+    (entry) => entry.term !== term
+  );
+  detailed.unshift({ term, at: new Date().toISOString() });
+  currentUser.set(
+    "recent_searches_detailed",
+    detailed.slice(0, MAX_RECENT_SEARCHES)
+  );
 }
 
 export function logSearchLinkClick(params) {

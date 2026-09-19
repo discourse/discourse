@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AdminEditLeaderboard from "discourse/plugins/discourse-gamification/admin/components/admin-edit-leaderboard";
 
 module(
-  "Discourse Gamification | Integration | Component | admin-edit-leaderboard",
+  "Discourse Gamification | Integration | Component | AdminEditLeaderboard",
   function (hooks) {
     setupRenderingTest(hooks);
 

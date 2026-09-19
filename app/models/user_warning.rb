@@ -11,11 +11,11 @@ end
 # Table name: user_warnings
 #
 #  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  user_id       :integer          not null
-#  created_by_id :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  created_by_id :integer          not null
+#  topic_id      :integer          not null
+#  user_id       :integer          not null
 #
 # Indexes
 #

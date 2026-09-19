@@ -6,7 +6,6 @@ import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
-import concatClass from "discourse/helpers/concat-class";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -17,7 +16,8 @@ import {
   shouldCloseMenu,
 } from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import swipe from "discourse/modifiers/swipe";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import Header from "./header";
 import ImpersonationNotice from "./impersonation-notice";
 
@@ -101,7 +101,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   recalculateHeaderOffset() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -213,33 +213,6 @@ export default class GlimmerSiteHeader extends Component {
     this.recalculateHeaderOffset();
   }
 
-  _handleArrowKeysNav(event) {
-    const activeTab = document.querySelector(
-      ".menu-tabs-container .btn.active"
-    );
-    if (activeTab) {
-      let activeTabNumber = Number(
-        document.activeElement.dataset.tabNumber || activeTab.dataset.tabNumber
-      );
-      const maxTabNumber =
-        document.querySelectorAll(".menu-tabs-container .btn").length - 1;
-      const isNext = event.key === "ArrowDown";
-      let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
-      if (isNext && nextTab > maxTabNumber) {
-        nextTab = 0;
-      }
-      if (!isNext && nextTab < 0) {
-        nextTab = maxTabNumber;
-      }
-      event.preventDefault();
-      document
-        .querySelector(
-          `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
-        )
-        .focus();
-    }
-  }
-
   @action
   animateMenu() {
     const menuPanels = document.querySelectorAll(".menu-panel");
@@ -264,7 +237,7 @@ export default class GlimmerSiteHeader extends Component {
       panel.classList.add(viewMode);
 
       if (this._animate) {
-        let animationFinished = null;
+        let animationFinished;
         let finalPosition = PANEL_WIDTH;
         this._swipeMenuOrigin = "right";
         if (
@@ -299,62 +272,6 @@ export default class GlimmerSiteHeader extends Component {
 
       this._animate = false;
     });
-  }
-
-  @bind
-  _animateOpening(panel, event = null) {
-    const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
-    if (event && this.pxClosed > 0) {
-      durationMs = getMaxAnimationTimeMs(
-        this.pxClosed / Math.abs(event.velocityX)
-      );
-    }
-    const timing = {
-      duration: durationMs > 0 ? durationMs : 0,
-      fill: "forwards",
-      easing: "ease-out",
-    };
-    panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
-    cloakElement?.animate?.([{ opacity: 1 }], timing);
-    this.pxClosed = null;
-  }
-
-  @bind
-  _animateClosing(event, panel, menuOrigin) {
-    this._animate = true;
-    const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
-    if (event && this.pxClosed > 0) {
-      const distancePx = PANEL_WIDTH - this.pxClosed;
-      durationMs = getMaxAnimationTimeMs(
-        distancePx / Math.abs(event.velocityX)
-      );
-    }
-    const timing = {
-      duration: durationMs > 0 ? durationMs : 0,
-      fill: "forwards",
-    };
-
-    let endPosition = -PANEL_WIDTH; //origin left
-    if (menuOrigin === "right") {
-      endPosition = PANEL_WIDTH;
-    }
-    panel.animate(
-      [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
-      timing
-    );
-    if (cloakElement) {
-      cloakElement.animate([{ opacity: 0 }], timing);
-      cloakElement.style.display = "none";
-
-      // to ensure that the cloak is cleared after animation we need to toggle any active menus
-      if (this.header.hamburgerVisible || this.header.userVisible) {
-        this.header.hamburgerVisible = false;
-        this.header.userVisible = false;
-      }
-    }
-    this.pxClosed = null;
   }
 
   @bind
@@ -430,14 +347,97 @@ export default class GlimmerSiteHeader extends Component {
     );
   }
 
+  _handleArrowKeysNav(event) {
+    const activeTab = document.querySelector(
+      ".menu-tabs-container .btn.active"
+    );
+    if (activeTab) {
+      let activeTabNumber = Number(
+        document.activeElement.dataset.tabNumber || activeTab.dataset.tabNumber
+      );
+      const maxTabNumber =
+        document.querySelectorAll(".menu-tabs-container .btn").length - 1;
+      const isNext = event.key === "ArrowDown";
+      let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
+      if (isNext && nextTab > maxTabNumber) {
+        nextTab = 0;
+      }
+      if (!isNext && nextTab < 0) {
+        nextTab = maxTabNumber;
+      }
+      event.preventDefault();
+      document
+        .querySelector(
+          `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
+        )
+        .focus();
+    }
+  }
+
+  @bind
+  _animateOpening(panel, event = null) {
+    const cloakElement = document.querySelector(".header-cloak");
+    let durationMs = getMaxAnimationTimeMs();
+    if (event && this.pxClosed > 0) {
+      durationMs = getMaxAnimationTimeMs(
+        this.pxClosed / Math.abs(event.velocityX)
+      );
+    }
+    const timing = {
+      duration: durationMs > 0 ? durationMs : 0,
+      fill: "forwards",
+      easing: "ease-out",
+    };
+    panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
+    cloakElement?.animate?.([{ opacity: 1 }], timing);
+    this.pxClosed = null;
+  }
+
+  @bind
+  _animateClosing(event, panel, menuOrigin) {
+    this._animate = true;
+    const cloakElement = document.querySelector(".header-cloak");
+    let durationMs = getMaxAnimationTimeMs();
+    if (event && this.pxClosed > 0) {
+      const distancePx = PANEL_WIDTH - this.pxClosed;
+      durationMs = getMaxAnimationTimeMs(
+        distancePx / Math.abs(event.velocityX)
+      );
+    }
+    const timing = {
+      duration: durationMs > 0 ? durationMs : 0,
+      fill: "forwards",
+    };
+
+    let endPosition = -PANEL_WIDTH; //origin left
+    if (menuOrigin === "right") {
+      endPosition = PANEL_WIDTH;
+    }
+    panel.animate(
+      [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
+      timing
+    );
+    if (cloakElement) {
+      cloakElement.animate([{ opacity: 0 }], timing);
+      cloakElement.style.display = "none";
+
+      // to ensure that the cloak is cleared after animation we need to toggle any active menus
+      if (this.header.hamburgerVisible || this.header.userVisible) {
+        this.header.hamburgerVisible = false;
+        this.header.userVisible = false;
+      }
+    }
+    this.pxClosed = null;
+  }
+
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         (unless this.slideInMode "drop-down-mode")
         "d-header-wrap"
       }}
       {{didInsert this.setupHeader}}
-      {{swipe
+      {{dSwipe
         onDidStartSwipe=this.onSwipeStart
         onDidEndSwipe=this.onSwipeEnd
         onDidCancelSwipe=this.onSwipeCancel
@@ -449,13 +449,13 @@ export default class GlimmerSiteHeader extends Component {
         <ImpersonationNotice />
       {{/if}}
       <Header
+        @animateMenu={{this.animateMenu}}
         @canSignUp={{@canSignUp}}
+        @showCreateAccount={{@showCreateAccount}}
+        @showLogin={{@showLogin}}
         @showSidebar={{@showSidebar}}
         @sidebarEnabled={{@sidebarEnabled}}
         @toggleSidebar={{@toggleSidebar}}
-        @showCreateAccount={{@showCreateAccount}}
-        @showLogin={{@showLogin}}
-        @animateMenu={{this.animateMenu}}
         @topicInfo={{this.header.topicInfo}}
         @topicInfoVisible={{this.header.topicInfoVisible}}
       />

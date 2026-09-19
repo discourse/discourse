@@ -4,7 +4,7 @@ class TagGroupSerializer < ApplicationSerializer
   attributes :id, :name, :tags, :parent_tag, :one_per_topic, :permissions
 
   def tags
-    object.tags.base_tags.order(:name).map { |t| { id: t.id, name: t.name, slug: t.slug_for_url } }
+    object.base_tags.order(:name).map { |t| { id: t.id, name: t.name, slug: t.slug_for_url } }
   end
 
   def parent_tag

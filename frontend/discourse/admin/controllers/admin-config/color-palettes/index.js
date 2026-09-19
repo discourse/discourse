@@ -31,37 +31,8 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
   _initialDefaultThemeLightColorSchemeId = null;
   _initialDefaultThemeDarkColorSchemeId = null;
 
-  canPreviewColorScheme(mode) {
-    const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
-
-    // -1 means they're using the theme default scheme
-    const usingDefaultLightScheme =
-      this._initialUserLightColorSchemeId === -1 ||
-      this._initialUserLightColorSchemeId ===
-        this._initialDefaultThemeLightColorSchemeId;
-    const usingDefaultDarkScheme =
-      this._initialUserDarkColorSchemeId === -1 ||
-      this._initialUserDarkColorSchemeId ===
-        this._initialDefaultThemeDarkColorSchemeId;
-
-    return (
-      usingDefaultTheme &&
-      ((mode === "dark" && this.isUsingDarkMode && usingDefaultDarkScheme) ||
-        (mode === "light" && !this.isUsingDarkMode && usingDefaultLightScheme))
-    );
-  }
-
   get allBaseColorSchemes() {
     return this.model?.filter((scheme) => scheme.is_base) || [];
-  }
-
-  _captureInitialState() {
-    this._initialUserLightColorSchemeId = this.session.userColorSchemeId;
-    this._initialUserDarkColorSchemeId = this.session.userDarkSchemeId;
-    this._initialDefaultThemeLightColorSchemeId =
-      this.defaultTheme?.color_scheme_id;
-    this._initialDefaultThemeDarkColorSchemeId =
-      this.defaultTheme?.dark_color_scheme_id;
   }
 
   get userColorSchemeDifferences() {
@@ -175,6 +146,26 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
         filterFn: (scheme) => scheme.theme_id,
       },
     ];
+  }
+
+  canPreviewColorScheme(mode) {
+    const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
+
+    // -1 means they're using the theme default scheme
+    const usingDefaultLightScheme =
+      this._initialUserLightColorSchemeId === -1 ||
+      this._initialUserLightColorSchemeId ===
+        this._initialDefaultThemeLightColorSchemeId;
+    const usingDefaultDarkScheme =
+      this._initialUserDarkColorSchemeId === -1 ||
+      this._initialUserDarkColorSchemeId ===
+        this._initialDefaultThemeDarkColorSchemeId;
+
+    return (
+      usingDefaultTheme &&
+      ((mode === "dark" && this.isUsingDarkMode && usingDefaultDarkScheme) ||
+        (mode === "light" && !this.isUsingDarkMode && usingDefaultLightScheme))
+    );
   }
 
   @action
@@ -294,5 +285,14 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
         },
       });
     });
+  }
+
+  _captureInitialState() {
+    this._initialUserLightColorSchemeId = this.session.userColorSchemeId;
+    this._initialUserDarkColorSchemeId = this.session.userDarkSchemeId;
+    this._initialDefaultThemeLightColorSchemeId =
+      this.defaultTheme?.color_scheme_id;
+    this._initialDefaultThemeDarkColorSchemeId =
+      this.defaultTheme?.dark_color_scheme_id;
   }
 }

@@ -100,6 +100,42 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
       end
     end
 
+    context "when public content is hidden from normal viewers" do
+      fab!(:public_category, :category)
+      fab!(:hidden_post_topic) { Fabricate(:topic, user: user, category: public_category) }
+      fab!(:hidden_post) do
+        Fabricate(
+          :post,
+          created_at: random_datetime,
+          user: user,
+          post_number: 2,
+          topic: hidden_post_topic,
+          hidden: true,
+          like_count: 99,
+        )
+      end
+      fab!(:unlisted_topic) do
+        Fabricate(:topic, user: user, category: public_category, visible: false)
+      end
+      fab!(:unlisted_topic_post) do
+        Fabricate(
+          :post,
+          created_at: random_datetime,
+          user: user,
+          post_number: 2,
+          topic: unlisted_topic,
+          like_count: 98,
+        )
+      end
+
+      it "does not include hidden posts or posts in unlisted topics" do
+        topic_ids = call_report[:data].map { |d| d[:topic_id] }
+
+        expect(topic_ids).not_to include(hidden_post_topic.id)
+        expect(topic_ids).not_to include(unlisted_topic.id)
+      end
+    end
+
     context "when a post is a whisper" do
       fab!(:whisper_post) do
         Fabricate(

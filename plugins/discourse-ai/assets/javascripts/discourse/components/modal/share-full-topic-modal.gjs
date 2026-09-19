@@ -4,12 +4,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ShareModal extends Component {
@@ -30,6 +30,12 @@ export default class ShareModal extends Component {
       context.push(post.cooked);
     });
     return trustHTML(context.join("\n"));
+  }
+
+  get primaryLabel() {
+    return this.shareKey
+      ? "discourse_ai.ai_bot.share_full_topic_modal.update"
+      : "discourse_ai.ai_bot.share_full_topic_modal.share";
   }
 
   async generateShareURL() {
@@ -54,12 +60,6 @@ export default class ShareModal extends Component {
       popupAjaxError(e);
       return;
     }
-  }
-
-  get primaryLabel() {
-    return this.shareKey
-      ? "discourse_ai.ai_bot.share_full_topic_modal.update"
-      : "discourse_ai.ai_bot.share_full_topic_modal.share";
   }
 
   @action
@@ -119,32 +119,32 @@ export default class ShareModal extends Component {
   <template>
     <DModal
       class="ai-share-full-topic-modal"
-      @title={{i18n "discourse_ai.ai_bot.share_full_topic_modal.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.ai_bot.share_full_topic_modal.title"}}
     >
       <:body>
-        {{! template-lint-disable no-invalid-interactive }}
+        {{! eslint-disable ember/template-no-invalid-interactive }}
         <div
           class="ai-share-full-topic-modal__body"
           {{on "click" this.maybeCopyEmbed}}
         >
           {{this.htmlContext}}
         </div>
-        {{! template-lint-enable}}
+        {{! eslint-enable }}
       </:body>
 
       <:footer>
         <DButton
           class="btn-primary confirm"
-          @icon="copy"
           @action={{this.share}}
+          @icon="copy"
           @label={{this.primaryLabel}}
         />
         {{#if this.shareKey}}
           <DButton
             class="btn-danger"
-            @icon="far-trash-can"
             @action={{this.deleteLink}}
+            @icon="far-trash-can"
             @label="discourse_ai.ai_bot.share_full_topic_modal.delete"
           />
         {{/if}}

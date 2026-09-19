@@ -36,7 +36,7 @@ acceptance("Admin - Permalinks", function (needs) {
 
   test("search permalinks with result", async function (assert) {
     await visit("/admin/config/permalinks");
-    await fillIn(".permalink-search input", "feature");
+    await fillIn(".d-filter-controls__input", "feature");
 
     assert
       .dom(".permalink-results span[title='c/feature/announcements']")
@@ -45,12 +45,14 @@ acceptance("Admin - Permalinks", function (needs) {
 
   test("search permalinks without results", async function (assert) {
     await visit("/admin/config/permalinks");
-    await fillIn(".permalink-search input", "garboogle");
+    await fillIn(".d-filter-controls__input", "garboogle");
 
     assert
-      .dom(".permalink-results__no-result")
+      .dom(".d-filter-controls__no-results")
       .exists("no results message shown");
 
-    assert.dom(".permalink-search").exists("search input still visible");
+    assert
+      .dom(".d-filter-controls__input")
+      .exists("search input still visible");
   });
 });

@@ -1,0 +1,107 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  module Nodes
+    module PostEdited
+      class V1 < NodeType
+        POST_SCOPE_OPTIONS = %w[first_post replies all_posts].freeze
+
+        description(
+          name: "trigger:post_edited",
+          version: "1.0",
+          defaults: {
+            icon: "comment",
+            color: "violet",
+          },
+          group: "discourse_triggers",
+          event: :post_edited,
+          output_contracts: [
+            {
+              schema:
+                Schema.merge(
+                  Schema::POST_SCHEMA,
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::USER_SCHEMA,
+                  Schema.document(
+                    "editor" => {
+                      "type" => %w[object null],
+                      "description" => "User who performed the edit, when available",
+                      "properties" => Schema::USER_PROPERTIES,
+                    },
+                  ),
+                ),
+            },
+          ],
+          properties: {
+            post_scope: {
+              type: :options,
+              required: true,
+              default: "first_post",
+              options: POST_SCOPE_OPTIONS,
+            },
+            **CATEGORY_FILTER_PROPERTIES,
+            **TAG_FILTER_PROPERTIES,
+            trust_levels: {
+              type: :multi_options,
+              required: false,
+              options: trust_level_options,
+            },
+          },
+        )
+
+        def initialize(post, topic_changed_or_cooked = nil, revisor = nil, *)
+          super(parameters: {})
+          @post = post
+          @cooked = topic_changed_or_cooked.is_a?(String) ? topic_changed_or_cooked : post&.cooked
+          @revisor = revisor
+        end
+
+        def valid?
+          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
+            !@revisor&.opts&.dig(:skip_workflows)
+        end
+
+        def output
+          {
+            post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
+            topic: topic_data(@post.topic),
+            user: serialize_user(@post.user),
+            editor: serialize_user(@revisor&.editor),
+          }
+        end
+
+        def matches?(trigger_ctx)
+          matches_post_scope?(trigger_ctx.get_node_parameter("post_scope", "first_post")) &&
+            matches_category_ids?(
+              @post.topic.category_id,
+              category_ids_parameter(trigger_ctx),
+              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
+            ) &&
+            matches_tags?(
+              @post.topic,
+              normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")),
+            ) && matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
+        end
+
+        private
+
+        def matches_post_scope?(post_scope)
+          case post_scope
+          when "all_posts"
+            true
+          when "replies"
+            @post.post_number > 1
+          else
+            @post.post_number == 1
+          end
+        end
+
+        def matches_trust_level?(trust_levels)
+          trust_levels =
+            Array.wrap(trust_levels).filter_map { |trust_level| trust_level.presence&.to_i }
+          trust_levels.empty? || trust_levels.include?(@post.user.trust_level)
+        end
+      end
+    end
+  end
+end

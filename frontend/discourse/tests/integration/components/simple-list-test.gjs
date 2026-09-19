@@ -11,7 +11,7 @@ import { module, test } from "qunit";
 import SimpleList from "discourse/admin/components/simple-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | simple-list", function (hooks) {
+module("Integration | Component | SimpleList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
@@ -47,9 +47,9 @@ module("Integration | Component | simple-list", function (hooks) {
     await render(
       <template>
         <SimpleList
-          @values={{values}}
           @allowAny={{false}}
           @choices={{choices}}
+          @values={{values}}
         />
       </template>
     );
@@ -74,7 +74,7 @@ module("Integration | Component | simple-list", function (hooks) {
 
     await render(
       <template>
-        <SimpleList @values={{values}} @onChange={{onChange}} />
+        <SimpleList @onChange={{onChange}} @values={{values}} />
       </template>
     );
 
@@ -102,7 +102,7 @@ module("Integration | Component | simple-list", function (hooks) {
   test("delimiter support", async function (assert) {
     await render(
       <template>
-        <SimpleList @values="vinkas|osama" @inputDelimiter="|" />
+        <SimpleList @inputDelimiter="|" @values="vinkas|osama" />
       </template>
     );
 
@@ -125,7 +125,7 @@ module("Integration | Component | simple-list", function (hooks) {
 
     await render(
       <template>
-        <SimpleList @values={{state.values}} @inputDelimiter="|" />
+        <SimpleList @inputDelimiter="|" @values={{state.values}} />
       </template>
     );
 

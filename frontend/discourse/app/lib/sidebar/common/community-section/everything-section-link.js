@@ -15,22 +15,6 @@ export default class EverythingSectionLink extends BaseSectionLink {
     this.#refreshCounts();
   }
 
-  onTopicTrackingStateChange() {
-    this.#refreshCounts();
-  }
-
-  #refreshCounts() {
-    if (!this.currentUser) {
-      return;
-    }
-
-    this.totalUnread = this.topicTrackingState.countUnread();
-
-    if (this.totalUnread === 0 || this.#newNewViewEnabled) {
-      this.totalNew = this.topicTrackingState.countNew();
-    }
-  }
-
   get showCount() {
     return this.currentUser?.sidebarShowCountOfNewItems;
   }
@@ -63,7 +47,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
       return;
     }
 
-    if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
+    if (this.#unifiedNewEnabled && this.#unreadAndNewCount > 0) {
       return this.#unreadAndNewCount.toString();
     } else if (this.totalUnread > 0) {
       return i18n("sidebar.unread_count", {
@@ -78,7 +62,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
   get route() {
     if (this.currentUser?.sidebarLinkToFilteredList) {
-      if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
+      if (this.#unifiedNewEnabled && this.#unreadAndNewCount > 0) {
         return "discovery.new";
       } else if (this.totalUnread > 0) {
         return "discovery.unread";
@@ -111,7 +95,23 @@ export default class EverythingSectionLink extends BaseSectionLink {
     return this.totalUnread + this.totalNew;
   }
 
-  get #newNewViewEnabled() {
-    return !!this.currentUser?.new_new_view_enabled;
+  get #unifiedNewEnabled() {
+    return !!this.currentUser?.unified_new_enabled;
+  }
+
+  onTopicTrackingStateChange() {
+    this.#refreshCounts();
+  }
+
+  #refreshCounts() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.totalUnread = this.topicTrackingState.countUnread();
+
+    if (this.totalUnread === 0 || this.#unifiedNewEnabled) {
+      this.totalNew = this.topicTrackingState.countNew();
+    }
   }
 }

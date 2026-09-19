@@ -85,7 +85,7 @@ RSpec.describe Jobs::ProcessPost do
       expect(post.cooked).to eq(cooked)
     end
 
-    it "updates the topic excerpt when first post" do
+    it "updates first post caches only for the OP" do
       post = Fabricate(:post, raw: "Some OP content", cooked: "")
       post.topic.update_excerpt("Incorrect")
 

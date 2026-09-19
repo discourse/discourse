@@ -15,7 +15,7 @@
     "tsconfig-plugin.json"
   ],
   "scripts": {
-    "compile-dts-generator": "tsc dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
+    "compile-dts-generator": "tsc --ignoreConfig --types node dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
     "generate-external-types": "node generate-external-types.js",
     "generate-external": "pnpm compile-dts-generator && pnpm generate-external-types"
   },
@@ -36,15 +36,27 @@
     "./select-kit/*": {
       "types": "./declarations/select-kit/*.d.ts"
     },
+    "./truth-helpers": {
+      "types": "./declarations/truth-helpers/index.d.ts"
+    },
     "./truth-helpers/*": {
       "types": "./declarations/truth-helpers/*.d.ts"
+    },
+    "./blocks": {
+      "types": "./declarations/app/blocks/index.d.ts"
+    },
+    "./blocks/conditions": {
+      "types": "./declarations/app/blocks/conditions/index.d.ts"
+    },
+    "./lib/blocks": {
+      "types": "./declarations/app/lib/blocks/index.d.ts"
     },
     "./*": {
       "types": "./declarations/app/*.d.ts"
     }
   },
   "devDependencies": {
-    "@types/node": "^25.3.3",
+    "@types/node": "^26.4.0",
     "compare-versions": "^6.1.1"
   },
   "engines": {

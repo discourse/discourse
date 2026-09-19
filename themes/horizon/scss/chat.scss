@@ -65,7 +65,8 @@ body.has-full-page-chat {
   }
 }
 
-.fk-d-menu[data-identifier="usercard"] {
+.fk-d-menu[data-identifier="usercard"],
+.fk-d-menu[data-identifier="chat-message-reaction-users"] {
   .has-drawer-chat & {
     z-index: z("modal", "dialog");
   }

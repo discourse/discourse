@@ -7,7 +7,7 @@ RSpec.describe Jobs::OpenTopic do
 
   before { topic.update!(closed: true) }
 
-  it "should work" do
+  it "opens the topic when the timer expires" do
     freeze_time(61.minutes.from_now) do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
 
@@ -19,7 +19,10 @@ RSpec.describe Jobs::OpenTopic do
 
   it "publishes to the topic message bus so the topic status reloads" do
     MessageBus.expects(:publish).at_least_once
-    MessageBus.expects(:publish).with("/topic/#{topic.id}", reload_topic: true).once
+    MessageBus
+      .expects(:publish)
+      .with("/topic/#{topic.id}", { reload_topic: true }, topic.secure_audience_publish_messages)
+      .once
     freeze_time(61.minutes.from_now) do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
     end
@@ -32,7 +35,7 @@ RSpec.describe Jobs::OpenTopic do
 
     fab!(:topic) { Fabricate(:topic, category: category, closed: true) }
 
-    it "should restore the category's auto close timer" do
+    it "restores the category's auto close timer" do
       Fabricate(:topic_timer, status_type: TopicTimer.types[:open], topic: topic, user: admin)
 
       freeze_time(61.minutes.from_now) do
@@ -48,12 +51,33 @@ RSpec.describe Jobs::OpenTopic do
     end
   end
 
+  describe "when user is allowed to set topic timers" do
+    fab!(:user)
+    fab!(:group)
+    fab!(:topic) { Fabricate(:topic_timer, status_type: TopicTimer.types[:open], user: user).topic }
+
+    before do
+      topic.update!(closed: true)
+      group.add(user)
+      user.reload
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+    end
+
+    it "opens the topic" do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+      expect(topic.reload.open?).to eq(true)
+    end
+  end
+
   describe "when user is no longer authorized to open topics" do
     fab!(:user)
 
     fab!(:topic) { Fabricate(:topic_timer, user: user).topic }
 
-    it "should destroy the topic timer" do
+    it "destroys the topic timer" do
       topic.update!(closed: true)
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
@@ -64,7 +88,7 @@ RSpec.describe Jobs::OpenTopic do
       expect(topic.reload.open?).to eq(false)
     end
 
-    it "should reconfigure topic timer if category's topics are set to autoclose" do
+    it "reconfigures the timer when the category's topics close automatically" do
       category = Fabricate(:category, auto_close_based_on_last_post: true, auto_close_hours: 5)
 
       topic = Fabricate(:topic, category: category)

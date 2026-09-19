@@ -1,7 +1,6 @@
 import { action, computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   getEditCategoryUrl,
@@ -16,6 +15,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 import CategoryDropHeader from "./category-drop/category-drop-header";
 
@@ -73,16 +73,6 @@ export default class CategoryDrop extends ComboBoxComponent {
   @computed("siteSettings.allow_uncategorized_topics")
   get allowUncategorized() {
     return this.siteSettings.allow_uncategorized_topics;
-  }
-
-  modifyComponentForCollection(collection) {
-    if (collection === MORE_COLLECTION) {
-      return CategoryDropMoreCollection;
-    }
-  }
-
-  modifyComponentForRow() {
-    return CategoryRow;
   }
 
   @computed("selectKit.options.noSubcategories")
@@ -149,6 +139,31 @@ export default class CategoryDrop extends ComboBoxComponent {
     return this.shortcuts.concat(results);
   }
 
+  @computed("parentCategoryName", "selectKit.options.subCategory")
+  get allCategoriesLabel() {
+    if (this.editingCategory) {
+      return this.noCategoriesLabel;
+    }
+
+    if (this.selectKit.options.subCategory) {
+      return i18n("categories.remove_filter", {
+        categoryName: this.parentCategoryName,
+      });
+    }
+
+    return i18n("categories.all");
+  }
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_COLLECTION) {
+      return CategoryDropMoreCollection;
+    }
+  }
+
+  modifyComponentForRow() {
+    return CategoryRow;
+  }
+
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
       return this.defaultItem(
@@ -179,21 +194,6 @@ export default class CategoryDrop extends ComboBoxComponent {
     }
 
     return content;
-  }
-
-  @computed("parentCategoryName", "selectKit.options.subCategory")
-  get allCategoriesLabel() {
-    if (this.editingCategory) {
-      return this.noCategoriesLabel;
-    }
-
-    if (this.selectKit.options.subCategory) {
-      return i18n("categories.remove_filter", {
-        categoryName: this.parentCategoryName,
-      });
-    }
-
-    return i18n("categories.all");
   }
 
   async search(filter) {

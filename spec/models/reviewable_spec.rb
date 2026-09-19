@@ -42,7 +42,7 @@ RSpec.describe Reviewable, type: :model do
     fab!(:admin)
     fab!(:user)
 
-    it "will return a new reviewable the first them, and re-use the second time" do
+    it "creates a reviewable on the first call and reuses it on the second" do
       r0 = ReviewableUser.needs_review!(target: user, created_by: admin)
       expect(r0).to be_present
 
@@ -53,14 +53,14 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
-    it "will add a topic and category from a post" do
+    it "adds the topic and category from the post" do
       post = Fabricate(:post)
       reviewable = ReviewableFlaggedPost.needs_review!(target: post, created_by: Fabricate(:user))
       expect(reviewable.topic).to eq(post.topic)
       expect(reviewable.category).to eq(post.topic.category)
     end
 
-    it "will update the category if the topic category changes" do
+    it "updates the category when the topic's category changes" do
       post = Fabricate(:post)
       moderator = Fabricate(:moderator, refresh_auto_groups: true)
       reviewable = PostActionCreator.spam(moderator, post).reviewable
@@ -96,12 +96,133 @@ RSpec.describe Reviewable, type: :model do
       expect(r0.pending?).to eq(false)
     end
 
-    it "will create a new reviewable when an existing reviewable exists the same target with different type" do
+    it "creates a new reviewable when the target has a reviewable of another type" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)
 
       r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
       expect(r1.pending?).to eq(true)
+    end
+
+    it "preserves an approved queued reviewable when reusing the target's flagged reviewable" do
+      r0 = Fabricate(:reviewable_queued_post)
+      r0.perform(admin, :approve_post)
+      expect(r0.reload.status).to eq("approved")
+
+      r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+      expect(r1.pending?).to eq(true)
+
+      ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+
+      expect(r1.reload.pending?).to eq(true)
+      expect(r0.reload.status).to eq("approved")
+    end
+  end
+
+  describe ".viewable_by" do
+    fab!(:admin)
+    fab!(:pm_author, :user)
+    fab!(:pm_recipient, :user)
+    fab!(:outsider_moderator, :moderator)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_author, recipient: pm_recipient) }
+    fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_author) }
+    fab!(:reviewable) do
+      ReviewablePost.needs_review!(
+        target: pm_post,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+      )
+    end
+
+    it "excludes private-message reviewables from moderators outside the conversation" do
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for admins" do
+      expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
+    end
+
+    it "includes flagged private messages for moderators outside the conversation" do
+      flagged_reviewable =
+        Fabricate(:reviewable_flagged_post, target: pm_post, topic: pm_topic, category: nil)
+
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: flagged_reviewable.id)
+    end
+
+    it "includes private-message reviewables for participating moderators" do
+      participant_moderator = Fabricate(:moderator)
+      participant_topic =
+        Fabricate(:private_message_topic, user: pm_author, recipient: participant_moderator)
+      participant_post = Fabricate(:post, topic: participant_topic, user: pm_author)
+      participant_reviewable =
+        ReviewablePost.needs_review!(
+          target: participant_post,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+
+      expect(described_class.viewable_by(participant_moderator)).to exist(
+        id: participant_reviewable.id,
+      )
+    end
+  end
+
+  describe ".viewable_by with post targets" do
+    fab!(:group)
+    fab!(:reviewer) { Fabricate(:user, groups: [group]) }
+    fab!(:category)
+    fab!(:moderation_group) { Fabricate(:category_moderation_group, category:, group:) }
+    fab!(:topic) { Fabricate(:topic, category:) }
+    fab!(:post) { Fabricate(:post, topic:) }
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: post, topic:, category:) }
+
+    before { SiteSetting.enable_category_group_moderation = true }
+
+    it "checks whisper group membership" do
+      post.update!(post_type: Post.types[:whisper])
+      expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+
+      SiteSetting.whispers_allowed_groups = group.id.to_s
+      expect(described_class.viewable_by(reviewer)).to exist(id: reviewable.id)
+    end
+
+    it "excludes shared drafts the reviewer cannot see" do
+      Fabricate(:shared_draft, topic:)
+
+      expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+    end
+
+    it "excludes targets moved to categories the reviewer does not moderate" do
+      [
+        Fabricate(:category),
+        Fabricate(:private_category, group: Fabricate(:group)),
+      ].each do |other_category|
+        topic.update_columns(category_id: other_category.id)
+
+        expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+      end
+    end
+
+    it "checks the target's current private-message topic when reviewable metadata is stale" do
+      post.update_columns(topic_id: Fabricate(:private_message_topic).id)
+
+      expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+    end
+
+    it "loads hidden and deleted targets only within an explicit deleted-content scope" do
+      post.update!(hidden: true)
+      post.trash!
+      topic.trash!
+
+      loaded =
+        described_class.with_deleted_content do
+          described_class.viewable_by(reviewer).find(reviewable.id)
+        end
+
+      expect(loaded.target).to eq(post)
+      expect(loaded.topic).to eq(topic)
+      expect(described_class.find(reviewable.id).target).to be_nil
+      expect(described_class.find(reviewable.id).topic).to be_nil
     end
   end
 
@@ -254,6 +375,7 @@ RSpec.describe Reviewable, type: :model do
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       let(:topic) { Fabricate(:topic, category: category) }
       let(:post) { Fabricate(:post, topic: topic) }
+
       fab!(:moderator)
       fab!(:admin)
 
@@ -352,6 +474,35 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "loading a reviewable whose type is no longer defined" do
+    fab!(:admin)
+    fab!(:reviewable, :reviewable_flagged_post)
+
+    before { reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin") }
+
+    it "loads it as an unknown type instead of raising" do
+      unknown = Reviewable.find(reviewable.id)
+
+      expect(unknown).to be_a(Reviewable::UnknownType)
+      expect(unknown.type).to eq("ReviewableDoesntExist")
+      expect(unknown.actions_for(admin.guardian).to_a).to be_empty
+    end
+
+    it "keeps the type and source when transitioned" do
+      unknown = Reviewable.find(reviewable.id)
+
+      expect(unknown.transition_to(:ignored, admin)).to eq(true)
+
+      expect(Reviewable.where(id: reviewable.id).pick(:type, :type_source)).to eq(
+        %w[ReviewableDoesntExist some-plugin],
+      )
+    end
+
+    it "is excluded from the review queue" do
+      expect(Reviewable.list_for(admin)).to be_empty
+    end
+  end
+
   describe ".unknown_types_and_sources" do
     it "returns an empty array when no unknown types are present" do
       expect(Reviewable.unknown_types_and_sources).to eq([])
@@ -444,9 +595,44 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#update_fields" do
+    it "rejects edits to an inaccessible target before changing its payload" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      reviewable.target.topic.update_columns(category_id: private_category.id)
+      original_payload = reviewable.payload.deep_dup
+
+      expect do
+        reviewable.update_fields({ payload: { raw: "Updated content" } }, Fabricate(:moderator))
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(reviewable.reload.payload).to eq(original_payload)
+    end
+  end
+
   describe "#perform" do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
+
+    it "hides actions and denies execution for an inaccessible target" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      reviewable.target.topic.update_columns(category_id: private_category.id)
+
+      expect(reviewable.actions_for(moderator.guardian).bundles).to be_empty
+      expect { reviewable.perform(moderator, :ignore) }.to raise_error(Reviewable::InvalidAction)
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "allows moderators to review flagged private messages outside their conversations" do
+      topic = Fabricate(:private_message_topic)
+      reviewable =
+        Fabricate(:reviewable_flagged_post, target: Fabricate(:post, topic:), topic:, category: nil)
+
+      reviewable.perform(moderator, :ignore)
+
+      expect(reviewable.reload).to be_ignored
+    end
 
     it "rolls back the transaction when the action fails" do
       reviewable = Fabricate(:reviewable_queued_post)
@@ -535,6 +721,20 @@ RSpec.describe Reviewable, type: :model do
       )
     end
 
+    it "keeps the reviewable in the queue when the action leaves it pending" do
+      reviewable =
+        PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post).reviewable
+      UserSilencer.silence(post.user, moderator, post_id: post.id)
+
+      perform_result = nil
+      expect { perform_result = reviewable.perform(moderator, :unsilence_user) }.not_to change {
+        Jobs::NotifyReviewable.jobs.size
+      }
+
+      expect(reviewable.reload).to be_pending
+      expect(perform_result.remove_reviewable_ids).to be_empty
+    end
+
     it "triggers a notification on approve -> reject to update status" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
 
@@ -560,6 +760,40 @@ RSpec.describe Reviewable, type: :model do
 
       expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
       expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+    end
+  end
+
+  describe "#transition_to" do
+    fab!(:moderator)
+    fab!(:topic)
+    let(:reviewable) { Fabricate(:reviewable_queued_post, topic:) }
+
+    it "releases a manual claim on the topic when the reviewable is resolved" do
+      SiteSetting.reviewable_claiming = "optional"
+      Fabricate(:reviewable_claimed_topic, topic:, user: moderator)
+
+      reviewable.transition_to(:approved, moderator)
+
+      expect(ReviewableClaimedTopic.exists?(topic_id: topic.id)).to eq(false)
+      expect(reviewable.history.unclaimed.size).to eq(1)
+    end
+
+    it "silently releases a manual claim when claiming is disabled so it cannot resurface when re-enabled" do
+      SiteSetting.reviewable_claiming = "disabled"
+      Fabricate(:reviewable_claimed_topic, topic:, user: moderator)
+
+      reviewable.transition_to(:ignored, moderator)
+
+      expect(ReviewableClaimedTopic.exists?(topic_id: topic.id)).to eq(false)
+      expect(reviewable.history.unclaimed).to be_empty
+    end
+
+    it "leaves an automatic claim for the acting moderator to release" do
+      claim = Fabricate(:reviewable_claimed_topic, topic:, user: moderator, automatic: true)
+
+      reviewable.transition_to(:approved, moderator)
+
+      expect(ReviewableClaimedTopic.exists?(claim.id)).to eq(true)
     end
   end
 
@@ -596,7 +830,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".score_required_to_hide_post" do
-    it "will return the default visibility if it's higher" do
+    it "returns the default visibility when it is higher" do
       described_class.set_priorities(low: 40.0, high: 100.0)
       SiteSetting.hide_post_sensitivity = described_class.sensitivities[:high]
       expect(described_class.score_required_to_hide_post).to eq(40.0)
@@ -714,7 +948,7 @@ RSpec.describe Reviewable, type: :model do
       expect(Reviewable.min_score_for_priority(:high)).to eq(123.45)
     end
 
-    it "will return the default priority if none supplied" do
+    it "returns the default priority when none is supplied" do
       Reviewable.set_priorities(medium: 12.3, high: 45.6)
       expect(Reviewable.min_score_for_priority).to eq(0.0)
       SiteSetting.reviewable_default_visibility = "medium"
@@ -728,9 +962,10 @@ RSpec.describe Reviewable, type: :model do
     after { Reviewable.clear_custom_filters! }
 
     it "correctly add a new filter" do
-      Reviewable.add_custom_filter([:assigned_to, Proc.new { |results, value| results }])
+      custom_filter = [:assigned_to, Proc.new { |results, value| results }]
+      Reviewable.add_custom_filter(custom_filter)
 
-      expect(Reviewable.custom_filters.size).to eq(1)
+      expect(Reviewable.custom_filters).to include(custom_filter)
     end
 
     it "applies the custom filter" do
@@ -747,8 +982,67 @@ RSpec.describe Reviewable, type: :model do
       expect(results.first).to eq first_reviewable
     end
 
+    it "exposes a custom filter through the Type and Reason filters" do
+      admin = Fabricate(:admin)
+      type_reviewable = Fabricate(:reviewable)
+      reason_reviewable = Fabricate(:reviewable)
+
+      Reviewable.add_custom_filter(
+        [:source, Proc.new { |results, value| results.where(id: value) }],
+        type_filter: {
+          id: "custom_source",
+          value: type_reviewable.id,
+        },
+        reason_filters: -> do
+          [{ id: "custom_source:reason", name: "Custom reason", value: reason_reviewable.id }]
+        end,
+      )
+
+      expect(Reviewable.valid_type?("custom_source")).to eq(false)
+      expect(Reviewable.valid_filter_type?("custom_source")).to eq(true)
+      expect(Reviewable.custom_filter_type_options).to include(
+        { id: "custom_source", value: type_reviewable.id, filter: :source },
+      )
+      expect(Reviewable.custom_reason_filter_options).to include(
+        {
+          id: "custom_source:reason",
+          name: "Custom reason",
+          value: reason_reviewable.id,
+          filter: :source,
+        },
+      )
+      expect(Reviewable.list_for(admin, type: "custom_source")).to contain_exactly(type_reviewable)
+      expect(Reviewable.list_for(admin, score_type: "custom_source:reason")).to contain_exactly(
+        reason_reviewable,
+      )
+    end
+
+    it "composes multiple custom filters" do
+      admin = Fabricate(:admin)
+      first_reviewable = Fabricate(:reviewable)
+      second_reviewable = Fabricate(:reviewable)
+
+      Reviewable.add_custom_filter(
+        [:first_id, Proc.new { |results, value| results.where(id: value) }],
+      )
+      Reviewable.add_custom_filter(
+        [:second_id, Proc.new { |results, value| results.where(id: value) }],
+      )
+
+      results =
+        Reviewable.list_for(
+          admin,
+          additional_filters: {
+            first_id: first_reviewable.id,
+            second_id: second_reviewable.id,
+          },
+        )
+
+      expect(results).to be_empty
+    end
+
     context "when listing for a moderator with a custom filter that joins tables with same named columns" do
-      it "should not error" do
+      it "handles joins with matching column names without error" do
         first_reviewable = Fabricate(:reviewable)
         second_reviewable = Fabricate(:reviewable)
         custom_filter = [
@@ -789,12 +1083,14 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
-      expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
-        ["approve_post"],
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-approve_post", "#{reviewable.id}-reject-post"],
       )
       expect(
-        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+        actions.bundles.find { |b| b.bundle_id == "approve_post" }.actions.map(&:action_name),
+      ).to eq(["approve_post"])
+      expect(
+        actions.bundles.find { |b| b.bundle_id == "reject-post" }.actions.map(&:action_name),
       ).to eq(%w[reject_post revise_and_reject_post])
     end
 

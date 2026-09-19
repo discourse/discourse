@@ -7,6 +7,7 @@ RSpec.describe "CSV Exports" do
 
   before do
     Jobs.run_immediately!
+    admin.update!(last_seen_at: 1.day.ago)
     sign_in(admin)
   end
 

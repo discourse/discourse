@@ -1,3 +1,7 @@
 en:
   site_settings:
     checklist_enabled: "Enable checklist plugin?"
+  checklist:
+    checkboxes_changed: "This post changed since it was loaded. Refresh and try again."
+    checkbox_locked: "This checklist item cannot be changed."
+    revision_failed: "The checkbox could not be updated."

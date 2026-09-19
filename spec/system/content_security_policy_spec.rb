@@ -12,7 +12,8 @@ describe "Content security policy" do
   end
 
   it "can boot the application in strict_dynamic mode even with invalid directives from CSP extensions" do
-    plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+    plugin =
+      plugin_class.new(nil, "#{Rails.root.join("spec/fixtures/plugins/csp_extension/plugin.rb")}")
 
     plugin.activate!
     Discourse.plugins << plugin
@@ -41,8 +42,8 @@ describe "Content security policy" do
     expect(response.headers["Content-Security-Policy"]).to include("'strict-dynamic'")
 
     visit "/nonexistent"
-    expect(page).not_to have_css("body.no-ember")
     expect(page).to have_css("#site-logo")
+    expect(page).not_to have_css("body.no-ember")
   end
 
   it "can boot logster in strict_dynamic mode" do

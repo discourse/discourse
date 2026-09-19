@@ -175,6 +175,43 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
   });
 });
 
+acceptance("Composer - Messages - Education", function (needs) {
+  needs.user();
+
+  test("shows wait_for_typing message only once", async function (assert) {
+    pretender.get("/composer_messages", () =>
+      response({
+        composer_messages: [
+          {
+            id: "education",
+            templateName: "education",
+            wait_for_typing: true,
+            body: "Education message",
+          },
+        ],
+      })
+    );
+
+    await visit("/t/internationalization-localization/280");
+    await click("button.create");
+
+    await triggerEvent("#reply-control", "transitionend", {
+      propertyName: "height",
+    });
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+    assert.dom(".composer-popup").exists("shows composer warning message");
+
+    await click(".composer-popup .close");
+    assert.dom(".composer-popup").doesNotExist("composer warning is closed");
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning does not show again");
+  });
+});
+
 acceptance("Composer - Messages - Private Messages", function (needs) {
   needs.user({
     id: 32,
@@ -290,5 +327,41 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
       .doesNotExist(
         "do not show it when the current user is just one of the target recipients"
       );
+  });
+});
+
+acceptance("Composer - Messages - Similar topics", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: 1,
+    default_composer_category: 1,
+  });
+  needs.site({
+    categories: [{ id: 1, name: "General", slug: "general", permission: 1 }],
+  });
+
+  test("a key release survives a category that carries no form template ids", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    // Asserted, not assumed: the lookup returns early without a topic being
+    // created, and never reaches the guard without a category.
+    const { model } = this.container.lookup("service:composer");
+    assert.true(model.creatingTopic, "a topic is being created");
+    assert.true(!!model.category, "the composer has a category");
+    assert.strictEqual(
+      model.category.form_template_ids,
+      undefined,
+      "whose payload carries no form template ids"
+    );
+
+    // Only a real key release schedules the lookup, so `fillIn` cannot stand in
+    // here. The releases in the modules above go to a private message, which the
+    // lookup declines before reaching this guard.
+    await triggerKeyEvent(".d-editor-input", "keyup", "A");
+
+    assert
+      .dom("#reply-control")
+      .exists("the scheduled lookup runs without throwing");
   });
 });

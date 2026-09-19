@@ -4,6 +4,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ListReviewables do
   fab!(:llm_model)
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:admin)
 
   before do
@@ -53,6 +54,26 @@ RSpec.describe DiscourseAi::Agents::Tools::ListReviewables do
       expect(item[:type]).to eq("ReviewableFlaggedPost")
       expect(item[:status]).to eq("pending")
       expect(item[:post_id]).to eq(post.id)
+    end
+
+    it "includes the content and title of deleted posts and topics" do
+      topic = post.topic
+      post_reviewable =
+        ReviewablePost.needs_review!(
+          target: post,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+      post.trash!
+      topic.trash!
+
+      result = tool({}).invoke
+
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        item = result[:reviewables].find { |entry| entry[:id] == reviewable.id }
+        expect(item[:post_excerpt]).to be_present
+        expect(item[:topic_title]).to eq(topic.title)
+      end
     end
 
     it "filters by type" do
@@ -117,6 +138,37 @@ RSpec.describe DiscourseAi::Agents::Tools::ListReviewables do
       item = result[:reviewables].first
       expect(item[:scores]).to be_present
       expect(item[:scores].first[:user]).to eq("system")
+    end
+
+    it "includes existing notes" do
+      flagged_reviewable.reviewable_notes.create!(user: admin, content: "Earlier judgment")
+
+      result = tool({}).invoke
+
+      item = result[:reviewables].first
+      expect(item[:notes].size).to eq(1)
+      expect(item[:notes].first[:content]).to eq("Earlier judgment")
+      expect(item[:notes].first[:user]).to eq(admin.username)
+    end
+
+    it "filters out items with notes when has_notes is false" do
+      result = tool(has_notes: false).invoke
+      expect(result[:reviewables].size).to eq(1)
+
+      flagged_reviewable.reviewable_notes.create!(user: admin, content: "Reviewed")
+
+      result = tool(has_notes: false).invoke
+      expect(result[:reviewables]).to be_empty
+    end
+
+    it "returns only items with notes when has_notes is true" do
+      result = tool(has_notes: true).invoke
+      expect(result[:reviewables]).to be_empty
+
+      flagged_reviewable.reviewable_notes.create!(user: admin, content: "Reviewed")
+
+      result = tool(has_notes: true).invoke
+      expect(result[:reviewables].size).to eq(1)
     end
   end
 end

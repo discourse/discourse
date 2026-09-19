@@ -10,12 +10,6 @@ export default class PostVotingCommentComposer extends Component {
 
   @tracked value = this.args.raw ?? "";
 
-  @action
-  onInput(event) {
-    this.value = event.target.value;
-    this.args.onInput?.(event.target.value);
-  }
-
   get errorMessage() {
     if (this.value.length < this.siteSettings.min_post_length) {
       return i18n("post_voting.post.post_voting_comment.composer.too_short", {
@@ -38,14 +32,20 @@ export default class PostVotingCommentComposer extends Component {
     );
   }
 
+  @action
+  onInput(event) {
+    this.value = event.target.value;
+    this.args.onInput?.(event.target.value);
+  }
+
   <template>
     <div class="post-voting-comments__composer">
       <textarea
         class="post-voting-comments__composer-textarea"
+        maxlength={{this.siteSettings.post_voting_comment_max_raw_length}}
         value={{this.value}}
         {{on "input" this.onInput}}
         {{on "keydown" @onKeyDown}}
-        maxlength={{this.siteSettings.post_voting_comment_max_raw_length}}
       ></textarea>
 
       {{#if this.value.length}}

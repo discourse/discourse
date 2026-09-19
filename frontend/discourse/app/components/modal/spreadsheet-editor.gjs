@@ -4,11 +4,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import TextField from "discourse/components/text-field";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -17,6 +12,11 @@ import {
   replaceTableRaw,
   tokenRange,
 } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class SpreadsheetEditor extends Component {
@@ -29,6 +29,7 @@ export default class SpreadsheetEditor extends Component {
   defaultColWidth = 150;
   isEditingTable = !!this.args.model.tableTokens;
   alignments = null;
+  initialSnapshot = null;
 
   constructor() {
     super(...arguments);
@@ -61,6 +62,13 @@ export default class SpreadsheetEditor extends Component {
     }
   }
 
+  get hasChanges() {
+    return (
+      this.initialSnapshot !== null &&
+      this.captureSnapshot() !== this.initialSnapshot
+    );
+  }
+
   @action
   createSpreadsheet(spreadsheet) {
     this.spreadsheet = spreadsheet;
@@ -70,6 +78,8 @@ export default class SpreadsheetEditor extends Component {
     } else {
       this.buildNewTable();
     }
+
+    this.initialSnapshot = this.captureSnapshot();
   }
 
   @action
@@ -78,13 +88,19 @@ export default class SpreadsheetEditor extends Component {
   }
 
   @action
-  interceptCloseModal() {
-    if (this._hasChanges()) {
-      this.dialog.yesNoConfirm({
-        message: i18n("table_builder.modal.confirm_close"),
-        didConfirm: () => this.args.closeModal(),
-      });
-    } else {
+  confirmClose() {
+    if (!this.hasChanges) {
+      return true;
+    }
+
+    return this.dialog.yesNoConfirm({
+      message: i18n("table_builder.modal.confirm_close"),
+    });
+  }
+
+  @action
+  async cancelClose() {
+    if (await this.confirmClose()) {
       this.args.closeModal();
     }
   }
@@ -106,31 +122,17 @@ export default class SpreadsheetEditor extends Component {
     }
   }
 
-  _hasChanges() {
-    if (this.isEditingTable) {
-      const originalSpreadsheetData = this.extractTableContent(
-        tokenRange(this.args.model.tableTokens, "tr_open", "tr_close")
-      );
-      const currentHeaders = this.spreadsheet.getHeaders().split(",");
-      const currentRows = this.spreadsheet.getData();
-      const currentSpreadsheetData = currentHeaders.concat(currentRows.flat());
-
-      return (
-        JSON.stringify(currentSpreadsheetData) !==
-        JSON.stringify(originalSpreadsheetData)
-      );
-    } else {
-      return this.spreadsheet
-        .getData()
-        .flat()
-        .some((element) => element !== "");
-    }
+  captureSnapshot() {
+    return JSON.stringify({
+      headers: this.spreadsheet.getHeaders(),
+      data: this.spreadsheet.getData(),
+    });
   }
 
   async loadJspreadsheet() {
     const [jspreadsheetModule] = await waitForPromise(
       Promise.all([
-        import("jspreadsheet-ce"),
+        import(/* dynamicChunkName: "jspreadsheet" */ "jspreadsheet-ce"),
         import("jspreadsheet-ce/dist/jspreadsheet.css"),
         import("jsuites/dist/jsuites.css"),
       ])
@@ -353,54 +355,55 @@ export default class SpreadsheetEditor extends Component {
 
   <template>
     <DModal
-      @title={{i18n this.modalAttributes.title}}
-      @closeModal={{this.interceptCloseModal}}
       class="insert-table-modal"
+      @beforeClose={{this.confirmClose}}
+      @closeModal={{@closeModal}}
+      @title={{i18n this.modalAttributes.title}}
     >
       <:body>
-        <ConditionalLoadingSpinner @condition={{this.loading}}>
+        <DConditionalLoadingSpinner @condition={{this.loading}}>
           <div
-            {{didInsert this.createSpreadsheet}}
-            tabindex="1"
             class="jexcel_container"
+            tabindex="1"
+            {{didInsert this.createSpreadsheet}}
           ></div>
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:body>
 
       <:footer>
         {{#unless this.loading}}
           <div class="primary-actions">
             <DButton
-              @label={{this.modalAttributes.insertTable.title}}
-              @icon={{this.modalAttributes.insertTable.icon}}
-              @action={{this.insertTable}}
               class="btn-insert-table"
+              @action={{this.insertTable}}
+              @icon={{this.modalAttributes.insertTable.icon}}
+              @label={{this.modalAttributes.insertTable.title}}
             />
 
-            <DModalCancel @close={{this.interceptCloseModal}} />
+            <DModalCancel @close={{this.cancelClose}} />
           </div>
 
           <div class="secondary-actions">
             {{#if this.isEditingTable}}
               <div class="edit-reason">
                 <DButton
+                  class="btn-edit-reason"
+                  @action={{this.showEditReasonField}}
                   @icon="circle-info"
                   @title="table_builder.edit.modal.trigger_reason"
-                  @action={{this.showEditReasonField}}
-                  class="btn-edit-reason"
                 />
                 {{#if this.showEditReason}}
-                  <TextField
-                    @value={{this.editReason}}
+                  <DTextField
                     @placeholderKey="table_builder.edit.modal.reason"
+                    @value={{this.editReason}}
                   />
                 {{/if}}
               </div>
             {{/if}}
             <DTooltip
-              @icon="question"
-              @arrow={{false}}
               class="btn btn-icon no-text"
+              @arrow={{false}}
+              @icon="question"
             >
               <ul>
                 <h4>{{i18n "table_builder.modal.help.title"}}</h4>

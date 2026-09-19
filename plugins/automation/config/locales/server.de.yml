@@ -7,6 +7,7 @@
 de:
   site_settings:
     discourse_automation_enabled: "discourse-automation-Plug-in aktivieren"
+    discourse_automation_max_recursion_depth: "Maximale Automatisierungsrekursionstiefe"
   discourse_automation:
     staff_action_logs:
       empty_value: "(leer)"
@@ -45,6 +46,7 @@ de:
         description: Wenn eine Kategorie erstellt oder bearbeitet wird, wird die Automatisierung ausgelöst
       recurring:
         title: Wiederkehrend
+        invalid_interval: Das Intervall muss eine positive Zahl sein.
       point_in_time:
         title: Zeitpunkt
         description: Wenn das Datum erreicht ist, wird die Automatisierung ausgelöst

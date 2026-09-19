@@ -73,11 +73,11 @@ end
 # Table name: topic_groups
 #
 #  id                    :bigint           not null, primary key
-#  group_id              :integer          not null
-#  topic_id              :integer          not null
 #  last_read_post_number :integer          default(0), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  group_id              :integer          not null
+#  topic_id              :integer          not null
 #
 # Indexes
 #

@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { isEmpty } from "@ember/utils";
-import DropdownMenu from "discourse/components/dropdown-menu";
+import curryComponent from "ember-curry-component";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
+import { and } from "discourse/truth-helpers";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import MoreSectionLink from "./more-section-link";
 import MoreSectionTrigger from "./more-section-trigger";
 import SectionLinkButton from "./section-link-button";
@@ -27,8 +30,12 @@ export default class SidebarMoreSectionLinks extends Component {
     this.router.off("routeDidChange", this, this.#setActiveSectionLink);
   }
 
+  get hoistActiveLink() {
+    return this.args.hoistActiveLink ?? true;
+  }
+
   get sectionLinks() {
-    if (this.activeSectionLink) {
+    if (this.hoistActiveLink && this.activeSectionLink) {
       return this.#filterActiveSectionLink(this.args.sectionLinks);
     } else {
       return this.args.sectionLinks;
@@ -36,35 +43,26 @@ export default class SidebarMoreSectionLinks extends Component {
   }
 
   get secondarySectionLinks() {
-    if (this.activeSectionLink) {
+    if (this.hoistActiveLink && this.activeSectionLink) {
       return this.#filterActiveSectionLink(this.args.secondarySectionLinks);
     } else {
       return this.args.secondarySectionLinks;
     }
   }
 
-  #filterActiveSectionLink(sectionLinks) {
-    return sectionLinks.filter((sectionLink) => {
-      return sectionLink.name !== this.activeSectionLink.name;
-    });
-  }
-
-  #setActiveSectionLink() {
-    this.activeSectionLink = this.args.sectionLinks.find((sectionLink) => {
-      const args = [sectionLink.route];
-
-      if (sectionLink.model) {
-        args.push(sectionLink.model);
-      } else if (sectionLink.models) {
-        args.push(...sectionLink.models);
-      }
-
-      if (!isEmpty(sectionLink.query)) {
-        args.push({ queryParams: sectionLink.query });
-      }
-
-      return this.router.isActive(...args) && sectionLink;
-    });
+  @cached
+  get triggerComponent() {
+    return curryComponent(
+      MoreSectionTrigger,
+      {
+        text: this.args.triggerText,
+        prefixType: this.args.triggerPrefixType,
+        prefixValue: this.args.triggerPrefixValue,
+        suffixType: this.args.triggerSuffixType,
+        suffixValue: this.args.triggerSuffixValue,
+      },
+      getOwner(this)
+    );
   }
 
   @action
@@ -76,28 +74,44 @@ export default class SidebarMoreSectionLinks extends Component {
     }
   }
 
+  #filterActiveSectionLink(sectionLinks) {
+    return sectionLinks.filter((sectionLink) => {
+      return sectionLink.name !== this.activeSectionLink.name;
+    });
+  }
+
+  #setActiveSectionLink() {
+    this.activeSectionLink = findActiveLink(
+      this.args.sectionLinks,
+      this.router
+    );
+  }
+
   <template>
-    {{#if this.activeSectionLink}}
-      <MoreSectionLink @sectionLink={{this.activeSectionLink}} />
+    {{#if (and this.hoistActiveLink this.activeSectionLink)}}
+      <MoreSectionLink
+        @scrollIntoView={{@scrollActiveLinkIntoView}}
+        @sectionLink={{this.activeSectionLink}}
+      />
     {{/if}}
 
     <li class="sidebar-section-link-wrapper">
       <DMenu
-        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
-        @modalForMobile={{true}}
         @autofocus={{true}}
-        @placement="bottom"
+        @identifier={{if @identifier @identifier "sidebar-more-section"}}
         @inline={{true}}
-        @identifier="sidebar-more-section"
-        @triggerComponent={{MoreSectionTrigger}}
+        @modalForMobile={{true}}
+        @placement="bottom"
+        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
+        @triggerComponent={{this.triggerComponent}}
       >
 
         <:content as |menu|>
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             {{#each this.sectionLinks as |sectionLink|}}
               <MoreSectionLink
-                @sectionLink={{sectionLink}}
                 class="dropdown-menu__item"
+                @sectionLink={{sectionLink}}
                 {{on "click" (fn this.closeMenu menu)}}
               />
             {{/each}}
@@ -109,13 +123,13 @@ export default class SidebarMoreSectionLinks extends Component {
                 <SectionLinkButton
                   @action={{@moreButtonAction}}
                   @icon={{@moreButtonIcon}}
-                  @text={{@moreButtonText}}
                   @name="customize"
+                  @text={{@moreButtonText}}
                   @toggleNavigationMenu={{@toggleNavigationMenu}}
                 />
               </dropdown.item>
             {{/if}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     </li>

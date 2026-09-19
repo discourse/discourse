@@ -12,14 +12,10 @@ describe DiscourseDataExplorer::ResultFormatConverter do
 
   describe ".convert" do
     context "for csv files" do
-      it "format results as a csv table with headers and columns" do
+      it "format results as a csv table with a BOM and a header row" do
         result = described_class.convert(:csv, query_result)
 
-        table = <<~CSV
-          liker_user_id,liked_user_id,count
-        CSV
-
-        expect(result).to include(table)
+        expect(result).to start_with("#{Encodings::BOM}liker_user_id,liked_user_id,count\n")
       end
     end
 

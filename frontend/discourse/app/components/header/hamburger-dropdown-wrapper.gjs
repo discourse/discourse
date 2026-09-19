@@ -9,7 +9,7 @@ import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import closeOnClickOutside from "../../modifiers/close-on-click-outside";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
 
 const CLOSE_ON_CLICK_SELECTORS =
@@ -17,6 +17,17 @@ const CLOSE_ON_CLICK_SELECTORS =
 
 export default class HamburgerDropdownWrapper extends Component {
   @service navigationMenu;
+
+  get forceMainSidebarPanel() {
+    // NOTE: In this scenario, we are forcing the sidebar to be shown
+    // when the navigation mode is hamburger. We still need to show the
+    // main panel in the hamburger menu, regardless of what is in the sidebar.
+    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
+      return true;
+    }
+
+    return false;
+  }
 
   @action
   toggleNavigation() {
@@ -78,32 +89,21 @@ export default class HamburgerDropdownWrapper extends Component {
     }
   }
 
-  get forceMainSidebarPanel() {
-    // NOTE: In this scenario, we are forcing the sidebar to be shown
-    // when the navigation mode is hamburger. We still need to show the
-    // main panel in the hamburger menu, regardless of what is in the sidebar.
-    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
-      return true;
-    }
-
-    return false;
-  }
-
   <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="hamburger-dropdown-wrapper"
-      {{! template-lint-disable no-invalid-interactive }}
+      ...attributes
       {{on "click" this.click}}
       {{! we don't want to close the hamburger dropdown when clicking on the hamburger dropdown itself
         so we use the secondaryTargetSelector to prevent that }}
-      {{closeOnClickOutside
+      {{dCloseOnClickOutside
         this.clickOutside
         (hash
           targetSelector=".hamburger-panel"
           secondaryTargetSelector=".hamburger-dropdown"
         )
       }}
-      ...attributes
     >
       <SidebarHamburgerDropdown
         @forceMainSidebarPanel={{this.forceMainSidebarPanel}}

@@ -1,5 +1,6 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { attributeBindings, classNames } from "@ember-decorators/component";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -21,6 +22,7 @@ import TagChooserRow from "./tag-chooser-row";
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
   valueProperty: "id",
+  prioritizeRecentTags: false,
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
@@ -41,14 +43,6 @@ export default class TagChooser extends MultiSelectComponent {
       termMatchesForbidden: false,
       termMatchErrorMessage: null,
     });
-  }
-
-  modifyComponentForRow(collection, item) {
-    if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return SelectKitRow;
-    }
-
-    return TagChooserRow;
   }
 
   @computed("site.can_create_tag", "allowCreate")
@@ -93,18 +87,25 @@ export default class TagChooser extends MultiSelectComponent {
           // numeric ID - use as both id and name until we can look up the actual name
           return this.defaultItem(t, t);
         }
-        return this.defaultItem(t.id, t.name);
+        const item = this.defaultItem(t.id, t.name);
+        if (t.isNew) {
+          item.isNew = true;
+        }
+        return item;
       })
     );
   }
 
-  @action
-  _onChange(value, items) {
-    if (this.onChange) {
-      this.onChange(items);
-    } else {
-      this.set("tags", items);
+  get _normalizedBlockedTags() {
+    return makeArray(this.blockedTags).filter(Boolean);
+  }
+
+  modifyComponentForRow(collection, item) {
+    if (this.getValue(item) === this.selectKit.filter && !item.count) {
+      return SelectKitRow;
     }
+
+    return TagChooserRow;
   }
 
   validateCreate(filter, content) {
@@ -130,6 +131,7 @@ export default class TagChooser extends MultiSelectComponent {
 
   search(query) {
     const selectedTags = makeArray(this.tags).filter(Boolean);
+    const blockedTags = this._normalizedBlockedTags;
 
     const data = {
       q: query,
@@ -137,9 +139,9 @@ export default class TagChooser extends MultiSelectComponent {
       categoryId: this.categoryId,
     };
 
-    if (selectedTags.length || this.blockedTags.length) {
+    if (selectedTags.length || blockedTags.length) {
       const allTags = uniqueItemsFromArray(
-        selectedTags.concat(this.blockedTags)
+        selectedTags.concat(blockedTags)
       ).slice(0, 100);
 
       // Extract IDs for objects, keep strings for legacy/blocked tags
@@ -166,16 +168,32 @@ export default class TagChooser extends MultiSelectComponent {
       data.excludeHasSynonyms = true;
     }
 
-    return this.tagUtils.searchTags(
-      "/tags/filter/search",
-      data,
-      this._transformJson
+    const prioritizeRecentTags =
+      this.selectKit.options.prioritizeRecentTags &&
+      this.siteSettings.prioritize_recently_used_tags &&
+      isEmpty(query);
+
+    if (prioritizeRecentTags) {
+      data.prioritizeRecentTags = true;
+    }
+
+    return this.tagUtils.searchTags("/tags/filter/search", data, (json) =>
+      this._transformJson(json, { skipSort: prioritizeRecentTags })
     );
   }
 
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      this.onChange(items);
+    } else {
+      this.set("tags", items);
+    }
+  }
+
   @bind
-  _transformJson(json) {
-    if (this.isDestroyed || this.isDestroying) {
+  _transformJson(json, { skipSort = false } = {}) {
+    if (this.isDestroying) {
       return [];
     }
 
@@ -186,9 +204,9 @@ export default class TagChooser extends MultiSelectComponent {
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (this.blockedTags) {
-      // extract names from blockedTags (may be strings or objects)
-      const blockedNames = this.blockedTags.map((t) =>
+    const blockedTags = this._normalizedBlockedTags;
+    if (blockedTags.length) {
+      const blockedNames = blockedTags.map((t) =>
         typeof t === "string" ? t : t.name
       );
       results = results.filter((result) => {
@@ -196,9 +214,7 @@ export default class TagChooser extends MultiSelectComponent {
       });
     }
 
-    if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.name > b.name);
-    }
+    results = skipSort ? results : this.tagUtils.sortSearchResults(results);
 
     return uniqueItemsFromArray(results, "name");
   }

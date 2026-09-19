@@ -1,7 +1,7 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const FormTemplateFieldInput = <template>
   <div class="control-group form-template-field" data-field-type="input">
@@ -9,7 +9,7 @@ const FormTemplateFieldInput = <template>
       <label class="form-template-field__label">
         {{@attributes.label}}
         {{#if @validations.required}}
-          {{icon "asterisk" class="form-template-field__required-indicator"}}
+          {{dIcon "asterisk" class="form-template-field__required-indicator"}}
         {{/if}}
       </label>
     {{/if}}
@@ -21,16 +21,16 @@ const FormTemplateFieldInput = <template>
     {{/if}}
 
     <Input
-      name={{@id}}
       class="form-template-field__input"
-      @value={{@value}}
-      @type={{if @validations.type @validations.type "text"}}
+      disabled={{@attributes.disabled}}
+      maxlength={{@validations.maximum}}
+      minlength={{@validations.minimum}}
+      name={{@id}}
+      pattern={{@validations.pattern}}
       placeholder={{@attributes.placeholder}}
       required={{if @validations.required "required" ""}}
-      pattern={{@validations.pattern}}
-      minlength={{@validations.minimum}}
-      maxlength={{@validations.maximum}}
-      disabled={{@attributes.disabled}}
+      @type={{if @validations.type @validations.type "text"}}
+      @value={{@value}}
       {{on "input" @onChange}}
     />
   </div>

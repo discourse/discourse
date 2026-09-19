@@ -5,7 +5,7 @@ require "file_helper"
 class UploadValidator < ActiveModel::Validator
   def validate(upload)
     # staff can upload any file in PM
-    if (upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm)
+    if upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm
       return true if upload.user&.staff?
     end
 

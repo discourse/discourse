@@ -3,14 +3,14 @@ import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import StaffActions from "discourse/admin/components/staff-actions";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
-import LoadMore from "discourse/components/load-more";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -19,56 +19,56 @@ export default <template>
       {{#if @controller.filtersExists}}
         <div class="staff-action-logs-filters">
           <DButton
+            class="clear-filters filter btn-default"
             @action={{@controller.clearAllFilters}}
             @label="admin.logs.staff_actions.clear_filters"
-            class="clear-filters filter btn-default"
           />
           {{#if @controller.actionFilter}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "actionFilter"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.action")
                 ": "
                 @controller.actionFilter
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
           {{#if @controller.filters.acting_user}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "acting_user"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.staff_actions.staff_user")
                 ": "
                 @controller.filters.acting_user
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
           {{#if @controller.filters.target_user}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "target_user"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.staff_actions.target_user")
                 ": "
                 @controller.filters.target_user
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
           {{#if @controller.filters.subject}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "subject"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.staff_actions.subject")
                 ": "
                 @controller.filters.subject
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
         </div>
@@ -76,30 +76,30 @@ export default <template>
         {{i18n "admin.logs.staff_actions.filter"}}
         <ComboBox
           @content={{@controller.userHistoryActions}}
-          @value={{@controller.filterActionId}}
+          @id="staff-action-logs-action-filter"
           @onChange={{@controller.filterActionIdChanged}}
           @options={{hash none="admin.logs.staff_actions.all"}}
-          @id="staff-action-logs-action-filter"
+          @value={{@controller.filterActionId}}
         />
       {{/if}}
 
       <div class="date-filter-container">
-        <DateTimeInputRange
+        <DDateTimeInputRange
           @from={{@controller.startDate}}
-          @to={{@controller.endDate}}
           @onChange={{@controller.onChangeDateRange}}
           @showFromTime={{false}}
           @showToTime={{false}}
+          @to={{@controller.endDate}}
         />
       </div>
     </div>
 
     <div class="staff-action-logs-controls__right">
       <DButton
-        @action={{@controller.exportStaffActionLogs}}
-        @label="admin.export_csv.button_text"
-        @icon="download"
         class="btn-default export-staff-action-logs"
+        @action={{@controller.exportStaffActionLogs}}
+        @icon="download"
+        @label="admin.export_csv.button_text"
       />
     </div>
   </div>
@@ -107,7 +107,10 @@ export default <template>
   <div class="clearfix"></div>
 
   <StaffActions>
-    <LoadMore @action={{@controller.loadMore}}>
+    <DLoadMore
+      @action={{@controller.loadMore}}
+      @isLoading={{@controller.initialModelLoading}}
+    >
       {{#if @controller.model.content}}
         <table class="table staff-logs grid">
           <thead>
@@ -124,8 +127,8 @@ export default <template>
                 <td class="staff-users">
                   <div class="staff-user">
                     {{#if item.acting_user}}
-                      <LinkTo @route="adminUser" @model={{item.acting_user}}>
-                        {{avatar item.acting_user imageSize="tiny"}}
+                      <LinkTo @model={{item.acting_user}} @route="adminUser">
+                        {{dAvatar item.acting_user imageSize="tiny"}}
                         {{item.acting_user.username}}
                       </LinkTo>
                     {{else}}
@@ -133,7 +136,7 @@ export default <template>
                         class="deleted-user"
                         title={{i18n "admin.user.deleted"}}
                       >
-                        {{icon "trash-can"}}
+                        {{dIcon "trash-can"}}
                       </span>
                     {{/if}}
                   </div>
@@ -148,9 +151,9 @@ export default <template>
                   <div class="subject">
                     {{#if item.target_user}}
                       <LinkTo
-                        @route="adminUser"
                         @model={{item.target_user}}
-                      >{{avatar item.target_user imageSize="tiny"}}</LinkTo>
+                        @route="adminUser"
+                      >{{dAvatar item.target_user imageSize="tiny"}}</LinkTo>
                       <a
                         href
                         {{on
@@ -162,16 +165,16 @@ export default <template>
                     {{#if item.subject}}
                       <a
                         href
+                        title={{item.subject}}
                         {{on
                           "click"
                           (fn @controller.filterBySubject item.subject)
                         }}
-                        title={{item.subject}}
                       >{{item.subject}}</a>
                     {{/if}}
                   </div>
                 </td>
-                <td class="col value created-at">{{ageWithTooltip
+                <td class="col value created-at">{{dAgeWithTooltip
                     item.created_at
                   }}</td>
                 <td class="col value details">
@@ -184,14 +187,14 @@ export default <template>
                           "click"
                           (fn @controller.showCustomDetailsModal item)
                         }}
-                      >{{icon "circle-info"}}
+                      >{{dIcon "circle-info"}}
                         {{i18n "admin.logs.staff_actions.show"}}</a>
                     {{/if}}
                     {{#if item.useModalForDetails}}
                       <a
                         href
                         {{on "click" (fn @controller.showDetailsModal item)}}
-                      >{{icon "circle-info"}}
+                      >{{dIcon "circle-info"}}
                         {{i18n "admin.logs.staff_actions.show"}}</a>
                     {{/if}}
                   </div>
@@ -208,12 +211,12 @@ export default <template>
           </tbody>
         </table>
       {{else if @controller.model.loadingMore}}
-        <ConditionalLoadingSpinner
+        <DConditionalLoadingSpinner
           @condition={{@controller.model.loadingMore}}
         />
       {{else}}
         {{i18n "search.no_results"}}
       {{/if}}
-    </LoadMore>
+    </DLoadMore>
   </StaffActions>
 </template>

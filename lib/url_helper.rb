@@ -78,7 +78,7 @@ class UrlHelper
   end
 
   def self.absolute_without_cdn(url)
-    self.absolute(url, nil)
+    absolute(url, nil)
   end
 
   def self.schemaless(url)
@@ -86,7 +86,7 @@ class UrlHelper
   end
 
   def self.secure_proxy_without_cdn(url)
-    self.absolute(Upload.secure_uploads_url_from_upload_url(url), nil)
+    absolute(Upload.secure_uploads_url_from_upload_url(url), nil)
   end
 
   def self.normalized_encode(uri)

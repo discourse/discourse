@@ -6,7 +6,6 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
@@ -35,6 +34,7 @@ import TagRow from "./tag-row";
   useHeaderFilter: false,
   valueProperty: "id",
   nameProperty: "name",
+  prioritizeRecentTags: false,
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
 export default class MiniTagChooser extends MultiSelectComponent {
@@ -68,27 +68,6 @@ export default class MiniTagChooser extends MultiSelectComponent {
     return makeArray(this.value);
   }
 
-  modifyComponentForRow(collection, item) {
-    if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return SelectKitRow;
-    }
-
-    return TagRow;
-  }
-
-  modifyNoSelection() {
-    if (this.selectKit.options.minimum > 0) {
-      return this.defaultItem(
-        null,
-        i18n("tagging.choose_for_topic_required", {
-          count: this.selectKit.options.minimum,
-        })
-      );
-    } else {
-      return this.defaultItem(null, i18n("tagging.choose_for_topic"));
-    }
-  }
-
   @computed("value.[]", "content.[]")
   get caretIcon() {
     const maximum = this.selectKit.options.maximum;
@@ -111,18 +90,38 @@ export default class MiniTagChooser extends MultiSelectComponent {
     }
     return tags.map((t) => {
       if (typeof t === "object" && t !== null) {
-        return this.defaultItem(t.id, t.name);
+        const item = this.defaultItem(t.id, t.name);
+        if (t.isNew) {
+          item.isNew = true;
+        }
+        return item;
       }
       return this.defaultItem(t, t);
     });
   }
 
-  @action
-  _onChange(value, items) {
-    if (this.onChange) {
-      this.onChange(items);
+  modifyComponentForRow(collection, item) {
+    if (typeof item?.onSelect === "function") {
+      return SelectKitRow;
+    }
+
+    if (this.getValue(item) === this.selectKit.filter && !item.count) {
+      return SelectKitRow;
+    }
+
+    return TagRow;
+  }
+
+  modifyNoSelection() {
+    if (this.selectKit.options.minimum > 0) {
+      return this.defaultItem(
+        null,
+        i18n("tagging.choose_for_topic_required", {
+          count: this.selectKit.options.minimum,
+        })
+      );
     } else {
-      this.set("value", items);
+      return this.defaultItem(null, i18n("tagging.choose_for_topic"));
     }
   }
 
@@ -169,32 +168,44 @@ export default class MiniTagChooser extends MultiSelectComponent {
 
     if (!this.selectKit.options.everyTag) {
       data.filterForInput = true;
-      data.excludeSynonyms = true;
     }
 
-    return this.tagUtils.searchTags(
-      "/tags/filter/search",
-      data,
-      this._transformJson
+    const prioritizeRecentTags =
+      this.selectKit.options.prioritizeRecentTags &&
+      this.siteSettings.prioritize_recently_used_tags &&
+      isEmpty(filter);
+
+    if (prioritizeRecentTags) {
+      data.prioritizeRecentTags = true;
+    }
+
+    return this.tagUtils.searchTags("/tags/filter/search", data, (json) =>
+      this._transformJson(json, { skipSort: prioritizeRecentTags })
     );
   }
 
-  @bind
-  _transformJson(json) {
-    if (this.isDestroyed || this.isDestroying) {
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      this.onChange(items);
+    } else {
+      this.set("value", items);
+    }
+  }
+
+  _transformJson(json, { skipSort = false } = {}) {
+    if (this.isDestroying) {
       return [];
     }
-
-    let results = json.results;
 
     this.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (this.siteSettings.tags_sort_alphabetically) {
-      results = results.sort((a, b) => a.name.localeCompare(b.name));
-    }
+    let results = skipSort
+      ? json.results
+      : this.tagUtils.sortSearchResults(json.results);
 
     if (json.required_tag_group) {
       this.set(

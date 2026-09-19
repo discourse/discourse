@@ -29,6 +29,38 @@ RSpec.describe Flag, type: :model do
     flag.destroy!
   end
 
+  it "generates a unique, non-empty name key for non-ASCII names" do
+    flag1 = Fabricate(:flag, name: "测试举报一")
+    flag2 = Fabricate(:flag, name: "测试举报二")
+    flag3 = Fabricate(:flag, name: "测试举报三")
+
+    keys = [flag1, flag2, flag3].map(&:name_key)
+    expect(keys).to eq(%w[custom_flag custom_flag_2 custom_flag_3])
+    expect(keys.uniq.size).to eq(3)
+
+    [flag1, flag2, flag3].each(&:destroy!)
+  end
+
+  it "generates a unique name key when distinct names normalize identically" do
+    flag1 = Fabricate(:flag, name: "Spam!")
+    flag2 = Fabricate(:flag, name: "Spam?")
+
+    expect(flag1.name_key).to eq("custom_spam")
+    expect(flag2.name_key).to eq("custom_spam_2")
+
+    [flag1, flag2].each(&:destroy!)
+  end
+
+  it "keeps the name key stable when the name does not change" do
+    flag = Fabricate(:flag, name: "测试举报一")
+    expect(flag.name_key).to eq("custom_flag")
+
+    flag.update!(enabled: false)
+    expect(flag.reload.name_key).to eq("custom_flag")
+
+    flag.destroy!
+  end
+
   it "updates post action types when created, modified or destroyed" do
     expect(PostActionType.flag_types.keys).to eq(
       %i[notify_user off_topic inappropriate spam illegal notify_moderators],

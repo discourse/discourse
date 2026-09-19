@@ -2,14 +2,15 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
+import UserMcpAuthorizations from "discourse/components/user-preferences/user-mcp-authorizations";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,12 +19,12 @@ export default <template>
       <label class="control-label">{{i18n "user.password.title"}}</label>
       <div class="controls">
         <button
-          {{on "click" @controller.changePassword}}
-          disabled={{not @controller.canResetPassword}}
           class="btn btn-default"
+          disabled={{not @controller.canResetPassword}}
           id="change-password-button"
+          {{on "click" @controller.changePassword}}
         >
-          {{icon "envelope"}}
+          {{dIcon "envelope"}}
           {{#if @controller.model.no_password}}
             {{i18n "user.change_password.set_password"}}
           {{else}}
@@ -43,13 +44,13 @@ export default <template>
       {{#unless @controller.model.no_password}}
         <div class="controls">
           <button
-            {{on "click" @controller.removePassword}}
+            class="btn btn-danger"
             disabled={{not @controller.canRemovePassword}}
             hidden={{@controller.removePasswordInProgress}}
-            class="btn btn-danger"
             id="remove-password-link"
+            {{on "click" @controller.removePassword}}
           >
-            {{icon "trash-can"}}
+            {{dIcon "trash-can"}}
             {{i18n "user.change_password.remove"}}
           </button>
         </div>
@@ -78,10 +79,10 @@ export default <template>
 
         <div class="controls pref-second-factor">
           <DButton
+            class="btn-default btn-second-factor"
             @action={{@controller.manage2FA}}
             @icon="lock"
             @label="user.second_factor.enable"
-            class="btn-default btn-second-factor"
           />
         </div>
       </div>
@@ -102,12 +103,12 @@ export default <template>
       <div class="auth-tokens">
         {{#each @controller.authTokens as |token|}}
           <div class="row auth-token">
-            <div class="auth-token-icon">{{icon token.icon}}</div>
+            <div class="auth-token-icon">{{dIcon token.icon}}</div>
             {{#unless token.is_active}}
               <AuthTokenDropdown
-                @token={{token}}
                 @revokeAuthToken={{@controller.revokeAuthToken}}
                 @showToken={{@controller.showToken}}
+                @token={{token}}
               />
             {{/unless}}
             <div class="auth-token-first">
@@ -130,7 +131,7 @@ export default <template>
                   (i18n
                     "user.auth_tokens.browser_last_seen"
                     browser=token.browser
-                    date=(formatDate token.seen_at)
+                    date=(dFormatDate token.seen_at)
                   )
                 }}
               {{/if}}
@@ -142,10 +143,10 @@ export default <template>
       {{#if @controller.canShowAllAuthTokens}}
         <a href {{on "click" @controller.toggleShowAllAuthTokens}}>
           {{#if @controller.showAllAuthTokens}}
-            {{icon "angle-up"}}
+            {{dIcon "angle-up"}}
             <span>{{i18n "user.auth_tokens.show_few"}}</span>
           {{else}}
-            {{icon "angle-down"}}
+            {{dIcon "angle-down"}}
             <span>
               {{i18n
                 "user.auth_tokens.show_all"
@@ -157,11 +158,11 @@ export default <template>
       {{/if}}
 
       <a
+        class="pull-right text-danger"
         href
         {{on "click" (fn @controller.revokeAuthToken null)}}
-        class="pull-right text-danger"
       >
-        {{icon "right-from-bracket"}}
+        {{dIcon "right-from-bracket"}}
         <span>
           {{i18n "user.auth_tokens.log_out_all"}}
         </span>
@@ -170,11 +171,12 @@ export default <template>
   {{/if}}
 
   <UserApiKeys @model={{@model}} />
+  <UserMcpAuthorizations @model={{@model}} />
 
   <span>
     <PluginOutlet
-      @name="user-preferences-security"
       @connectorTagName="div"
+      @name="user-preferences-security"
       @outletArgs={{lazyHash model=@controller.model save=this.save}}
     />
   </span>
@@ -183,8 +185,8 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   </span>

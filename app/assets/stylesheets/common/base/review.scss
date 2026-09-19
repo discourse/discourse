@@ -196,6 +196,10 @@
     border-bottom: 1px solid var(--content-border-color);
   }
 
+  .reviewable-penalty-icon {
+    color: var(--danger);
+  }
+
   &__meta-content {
     display: grid;
     gap: var(--space-4);
@@ -264,6 +268,11 @@
       padding: var(--review-item-padding);
       border-radius: var(--d-border-radius);
 
+      img:not(.avatar, .emoji) {
+        max-width: 100%;
+        height: auto;
+      }
+
       .lightbox-wrapper img {
         display: block;
       }
@@ -320,9 +329,14 @@
   &__insights {
     padding-inline: var(--review-item-padding);
 
+    // The border goes on the nav, not the ul: the ul is the strip's scroller
+    // and its edge fade would mask a border painted there.
+    .horizontal-overflow-nav {
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
     .nav-pills.action-list {
       margin-bottom: 0;
-      border-bottom: 1px solid var(--content-border-color);
     }
   }
 
@@ -486,11 +500,17 @@
   }
 }
 
+.review-item__secondary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--content-border-color);
+}
+
 .review-resources {
   &__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include unstyled-list;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -654,6 +674,9 @@
 
   &__textarea-wrapper {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
   textarea {

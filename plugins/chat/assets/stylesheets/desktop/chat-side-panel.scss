@@ -2,7 +2,11 @@
   min-height: 0;
   display: grid;
   grid-template-areas: "main threads";
-  grid-template-columns: 1fr auto;
+
+  // minmax(0, …) lets the main area shrink below its content's min-content
+  // (e.g. the pinned-message bar's text), so the side-panel divider can be
+  // dragged freely instead of stopping at the widest no-wrap content.
+  grid-template-columns: minmax(0, 1fr) auto;
 }
 
 .chat-side-panel {

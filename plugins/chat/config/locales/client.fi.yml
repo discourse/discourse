@@ -64,6 +64,8 @@ fi:
       cancel: "Peruuta"
       cancel_reply: "Peruuta vastaus"
       chat_channels: "Kanavat"
+      pinned_bar:
+        title: "Kiinnitetty"
       pinned: "Kiinnitetty"
       browse_all_channels: "Selaa kaikkia kanavia"
       see_in: "Katso:"
@@ -114,7 +116,7 @@ fi:
         process_started: "Kanavan poistoprosessi on alkanut. Tämä modaalinen ikkuna sulkeutuu pian, etkä näe enää poistettua kanavaa missään."
       channels_list_popup:
         browse: "Selaa kanavia"
-        create: "Uusi kanava"
+        create: "Uusi kanava..."
       close: "Sulje"
       remove: "Poista"
       collapse: "Tiivistä chat-laatikko"
@@ -129,8 +131,6 @@ fi:
       muted: "vaimennettu"
       joined: "liittyi"
       empty_state:
-        direct_message_cta: "Aloita henkilökohtainen chat"
-        direct_message: "Voit myös aloittaa henkilökohtaisen chatin yhden tai useamman käyttäjän kanssa."
         title: "Kanavia ei löytynyt"
         my_threads: "Sinulla ei ole vielä ketjuja. Ketjut, joihin osallistut, näytetään täällä."
       email_frequency:
@@ -145,11 +145,6 @@ fi:
         never: "Ei koskaan"
       separate_sidebar_mode:
         title: "Näytä erilliset sivupalkkitilat foorumille ja chatille"
-      send_shortcut:
-        enter:
-          label: "Lähetä painamalla Enter-näppäintä"
-        meta_enter:
-          label: "Lähetä painamalla %{meta_key} + Enter"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"
@@ -192,8 +187,6 @@ fi:
       no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       chat_notifications_title: "Chat-ilmoitukset"
-      only_chat_push_notifications:
-        title: "Lähetä vain chatin push-ilmoituksia"
       ignore_channel_wide_mention:
         title: "Ohita kanavanlaajuiset maininnat"
       show_thread_title_prompts:
@@ -241,8 +234,6 @@ fi:
         title: "Työpöytälaitteen chat-ilmoitusääni"
       sounds:
         none: "Ei mitään"
-        bell: "Kello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Liitä tiedosto"
@@ -273,6 +264,8 @@ fi:
         filter_closed: Suljettu
         filter_archived: Arkistoitu
         filter_input_placeholder: Hae kanavaa nimellä
+        filter_joined_all: "Kaikki"
+        filter_joined_joined: "Liittyi"
       chat_message_separator:
         today: Tänään
         yesterday: Eilen
@@ -319,7 +312,6 @@ fi:
         input_placeholder: Lisää nimi
         slug_description: URL-osoitteessa käytetään kanavan polkutunnusta kanavan nimen sijaan
         name: Kanavan nimi
-        slug: Kanavan polkutunnus (valinnainen)
       channel_edit_description_modal:
         title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus
@@ -340,6 +332,9 @@ fi:
         memberships_count:
           one: "%{count} jäsen"
           other: "%{count} jäsentä"
+        preview_card:
+          log_in: "Kirjaudu"
+          sign_up: "Rekisteröityminen"
       create_channel:
         threading:
           label: "Käytä ketjutusta"
@@ -376,9 +371,8 @@ fi:
             one: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
             other: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
         create: "Luo kanava"
-        description: "Kuvaus (valinnainen)"
+        description: "Kuvaus"
         name: "Kanavan nimi"
-        slug: "Kanavan polkutunnus (valinnainen)"
         title: "Uusi kanava"
         type: "Tyyppi"
         types:
@@ -461,14 +455,21 @@ fi:
       direct_messages:
         title: "Yksityisviestit"
         aria_label: "Vaihda yksityisviesteihin"
-        new: "Luo yksityis-chat"
+        new_group: "Uusi ryhmäkeskustelu"
         create: "Siirry"
-        leave: "Poistu tästä henkilökohtaisesta chatista"
-        close: "Sulje tämä henkilökohtainen chat"
+        leave: "Poistu kanavalta"
+        close: "Sulje kanava"
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."
       channel_list:
         title: "Kanavat"
         aria_label: "Vaihda kanavaluetteloon"
+        options:
+          filter: "Suodatin"
+        filter:
+          all: "Kaikki kanavat"
+          mentions: "Maininnat"
+        sort:
+          priority: "Prioriteetti"
       incoming_webhooks:
         back: "Takaisin"
         channel_placeholder: "Valitse kanava"
@@ -618,11 +619,6 @@ fi:
           direct_html: '<span>%{username}</span> <span>mainitsi sinut kanavalla "%{channel}"</span>'
           other_plain: 'mainitsi kohteen %{identifier} kanavalla "%{channel}"'
           other_html: '<span>%{username}</span> <span>mainitsi kohteen %{identifier} kanavalla "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "mainitsi sinut henkilökohtaisessa chatissa"
-          direct_html: "<span>%{username}</span> <span>mainitsi sinut henkilökohtaisessa chatissa</span>"
-          other_plain: "mainitsi kohteen %{identifier} henkilökohtaisessa chatissa"
-          other_html: "<span>%{username}</span> <span>mainitsi kohteen %{identifier} henkilökohtaisessa chatissa</span>"
         chat_message: "Uusi chat-viesti"
         chat_quoted: "%{username} lainasi chat-viestiäsi"
       titles:
@@ -691,8 +687,24 @@ fi:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        title: Luo yksityis-chat
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Lähetä chat-viesti"
+      chat_message_created:
+        channel_id: "Kanava"
+      send_chat_message:
+        channel_id: "Kanava"
+        message: "Viesti"
+      chat_approval:
+        message: "Viesti"
+        buttons: "Painikkeet"
+        value: "Arvo"
+        style: "Tyyli"
+        style_default: "Oletus"
+        style_primary: "Ensisijainen"
+        style_success: "Onnistui"
+        icon: "Kuvake"
+        channel_id: "Kanava"

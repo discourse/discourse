@@ -136,8 +136,8 @@ ensure
   FileUtils.rm_rf(DOWNLOAD_EXTRACT_DIR) if File.exist?(DOWNLOAD_EXTRACT_DIR)
 end
 
-build_cmd = %w[pnpm ember build]
-build_env = { "CI" => "1" }
+build_cmd = %w[pnpm build]
+build_env = { "CI" => "1", "SKIP_DB_AND_REDIS" => "1" }
 
 if Etc.nprocessors > 2
   # Anything more than 2 doesn't seem to improve build times
@@ -151,8 +151,6 @@ if low_memory_environment?
   build_env["JOBS"] = "1"
 end
 
-build_cmd << "-prod" if resolved_ember_env == "production"
-
 core_build_reusable =
   existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
 
@@ -164,10 +162,19 @@ else
   File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
 end
 
-system("bin/rake", "assets:precompile:build_plugins", exception: true)
+build_plugin_env = { "SKIP_DB_AND_REDIS" => "1" }
+
+# Plugin JS usually comes from a prebuilt bundle. When there's no bundle, e.g.
+# in a theme's CI running against a custom core ref, we build it here instead.
+build_plugin_env["LOAD_PLUGINS"] = ENV.fetch("LOAD_PLUGINS", "1")
+
+system(build_plugin_env, "bin/rake", "assets:precompile:build_plugins", exception: true)
 
 if ARGV.include?("--compress")
-  files = [*Dir.glob("#{EMBER_APP_DIR}/dist/**/*.js"), *Dir.glob("app/assets/generated/**/*.js")]
+  files = [
+    *Dir.glob("#{EMBER_APP_DIR}/dist/**/*.{js,wasm}"),
+    *Dir.glob("app/assets/generated/**/*.{js,wasm}"),
+  ]
   Parallel.map(files, in_threads: 4) do |file|
     next if File.exist?("#{file}.gz") && File.exist?("#{file}.br")
 

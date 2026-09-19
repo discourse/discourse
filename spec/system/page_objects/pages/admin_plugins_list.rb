@@ -16,12 +16,8 @@ module PageObjects
         ".admin-plugins-list .admin-plugins-list__row[data-plugin-name=\"#{plugin}\"]"
       end
 
-      def has_plugin_tab?(plugin)
-        page.has_css?(plugin_nav_tab_selector(plugin))
-      end
-
-      def plugin_nav_tab_selector(plugin)
-        ".d-nav-submenu__tabs .admin-plugin-tab-nav-item[data-plugin-nav-tab-id=\"#{plugin}\"]"
+      def click_plugin_name(plugin)
+        find_plugin(plugin).find(".admin-plugins-list__name").click
       end
     end
   end

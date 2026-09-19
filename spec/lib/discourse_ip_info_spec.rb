@@ -1,10 +1,50 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseIpInfo do
+  describe ".get" do
+    let(:ip) { "81.2.69.142" }
+    let(:expected_ip_info) do
+      {
+        city: "London",
+        country: "United Kingdom",
+        country_code: "GB",
+        geoname_ids: [6_255_148, 2_635_167, 2_643_743, 6_269_131],
+        location: "London, England, United Kingdom",
+        region: "England",
+        latitude: 51.5142,
+        longitude: -0.0931,
+      }
+    end
+
+    before { described_class.open_db(Rails.root.join("spec/fixtures/mmdb").to_s) }
+
+    it "returns IP info without hostname when reverse DNS is interrupted" do
+      Resolv::DNS.any_instance.stubs(:getname).with(ip).raises(Timeout::Error)
+
+      result = described_class.get(ip, resolve_hostname: true)
+
+      expect(result).to eq(expected_ip_info)
+    end
+
+    it "sets a timeout for reverse DNS" do
+      resolver = Resolv::DNS.new
+      resolver
+        .expects(:timeouts=)
+        .with { |timeouts| Array(timeouts).present? && Array(timeouts).sum <= 5 }
+      resolver.stubs(:getname).with(ip).raises(Resolv::ResolvError)
+
+      Resolv::DNS.stubs(:new).returns(resolver)
+
+      result = described_class.get(ip, resolve_hostname: true)
+
+      expect(result).to eq(expected_ip_info)
+    end
+  end
+
   describe ".mmdb_download" do
     before { Discourse::Utils.stubs(:execute_command) }
 
-    it "should download the MaxMind databases from MaxMind's download permalinks when `maxmind_license_key` and `maxmind_account_id` global setting has been set" do
+    it "downloads MaxMind databases from permalinks when the license key and account ID are set" do
       global_setting :maxmind_license_key, "license_key"
       global_setting :maxmind_account_id, "account_id"
 
@@ -28,7 +68,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should download the MaxMind databases from MaxMind's undocumented download URL when `maxmind_license_key` global setting has been set but not `maxmind_account_id` for backwards compatibility reasons" do
+    it "uses the legacy MaxMind download URL when only the license key is set" do
       global_setting :maxmind_license_key, "license_key"
 
       stub_request(
@@ -39,7 +79,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should download the MaxMind databases from the right URL when `maxmind_mirror_url` global setting has been configured" do
+    it "downloads MaxMind databases from the configured mirror" do
       global_setting :maxmind_mirror_url, "https://b.www.example.com/mirror"
 
       stub_request(:get, "https://b.www.example.com/mirror/GeoLite2-City.tar.gz").to_return(
@@ -50,7 +90,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should download the MaxMind databases from the right URL when `maxmind_mirror_url` global setting has been configured and has a trailing slash" do
+    it "downloads MaxMind databases from a mirror URL with a trailing slash" do
       global_setting :maxmind_mirror_url, "https://b.www.example.com/mirror/"
 
       stub_request(:get, "https://b.www.example.com/mirror/GeoLite2-City.tar.gz").to_return(
@@ -61,7 +101,7 @@ RSpec.describe DiscourseIpInfo do
       described_class.mmdb_download("GeoLite2-City")
     end
 
-    it "should not throw an error and instead log the exception when database file fails to download" do
+    it "logs database download exceptions without raising them" do
       fake_logger = FakeLogger.new
       Rails.logger.broadcast_to(fake_logger)
 

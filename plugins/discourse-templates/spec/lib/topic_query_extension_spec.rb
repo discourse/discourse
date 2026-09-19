@@ -186,9 +186,9 @@ describe DiscourseTemplates::TopicQueryExtension do
       expect(topics.size).to eq(0)
     end
 
-    it "won't list private messages received as templates" do
+    it "does not list received private messages as templates" do
       topics = topic_query.list_private_templates.topics
-      expect(((topics.map(&:id) & private_messages_from_user_a.map(&:id)).any?)).to eq(false)
+      expect((topics.map(&:id) & private_messages_from_user_a.map(&:id)).any?).to eq(false)
     end
   end
 end

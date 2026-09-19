@@ -24,6 +24,7 @@ import Composer from "discourse/models/composer";
   "currentUserPrimaryGroupClass"
 )
 export default class ComposerBody extends Component {
+  @service appEvents;
   @service capabilities;
 
   elementId = "reply-control";
@@ -65,15 +66,8 @@ export default class ComposerBody extends Component {
     }, 1000);
   }
 
-  @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
-  _triggerComposerResized() {
-    schedule("afterRender", () => {
-      discourseDebounce(this, this.composerResized, 300);
-    });
-  }
-
   composerResized() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -83,17 +77,15 @@ export default class ComposerBody extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    const triggerOpen = () => {
-      if (this.get("composer.composeState") === Composer.OPEN) {
-        this.appEvents.trigger("composer:opened");
-      }
-    };
-    triggerOpen();
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
+    }
 
     this.element.addEventListener("transitionend", (event) => {
-      if (event.propertyName === "height") {
-        triggerOpen();
-      } else if (event.propertyName === "max-width") {
+      if (
+        event.propertyName === "height" ||
+        event.propertyName === "max-width"
+      ) {
         this.composerResized();
       }
     });
@@ -121,6 +113,20 @@ export default class ComposerBody extends Component {
       // so use Alt+Enter
       e.preventDefault();
       this.save(undefined, e);
+    }
+  }
+
+  @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
+  _triggerComposerResized() {
+    schedule("afterRender", () => {
+      discourseDebounce(this, this.composerResized, 300);
+    });
+  }
+
+  @observes("composeState")
+  _onComposerOpen() {
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
     }
   }
 }

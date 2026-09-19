@@ -2,6 +2,8 @@
 
 class PopulateImageQualitySetting < ActiveRecord::Migration[8.0]
   def up
+    return if Migration::Helpers.new_site?
+
     execute(<<~SQL)
       WITH src AS (
         SELECT

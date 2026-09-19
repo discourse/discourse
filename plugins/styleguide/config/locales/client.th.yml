@@ -8,6 +8,9 @@ th:
   js:
     styleguide:
       sections:
+        context_menu:
+          actions:
+            delete: "ลบ"
         colors:
           title: "สี"
         categories:
@@ -20,6 +23,17 @@ th:
           title: "โพสต์"
         more_topics:
           title: "กระทู้อื่น"
+        roving_focus:
+          toolbar:
+            copy: "คัดลอก"
+          adjacent:
+            field: "ค้นหา"
+            open: "เปิด"
+          combobox:
+            daily: "วัน"
+            weekly: "รายสัปดาห์"
+            monthly: "รายเดือน"
+            never: "ไม่เคย"
         tooltips:
           description: "รายละเอียด"
           header: "Header"

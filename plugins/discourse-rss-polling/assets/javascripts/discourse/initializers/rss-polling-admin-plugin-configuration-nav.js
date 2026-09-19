@@ -13,6 +13,13 @@ export default {
 
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "rss");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
+        {
+          label: "admin.rss_polling.feeds.title",
+          route: "adminPlugins.show.discourse-rss-polling-feeds",
+          description: "admin.rss_polling.feeds.nav_description",
+        },
+      ]);
     });
   },
 };

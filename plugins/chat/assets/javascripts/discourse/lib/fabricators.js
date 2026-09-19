@@ -84,6 +84,7 @@ export default class ChatFabricators {
       meta: { can_delete_self: true, ...(args.meta || {}) },
       archive_failed: args.archive_failed ?? false,
       memberships_count: args.memberships_count ?? 0,
+      emoji: args.emoji ?? null,
     });
 
     channel.lastMessage = this.message({ channel });

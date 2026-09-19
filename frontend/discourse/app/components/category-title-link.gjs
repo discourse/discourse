@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import dirSpan from "discourse/helpers/dir-span";
-import element from "discourse/helpers/element";
 import { or } from "discourse/truth-helpers";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
+import dElement from "discourse/ui-kit/helpers/d-element";
 
 export default class CategoryTitleLink extends Component {
   get displayName() {
     if (this.args.unstyled === true) {
-      return dirSpan(this.args.category.displayName);
+      return dDirSpan(this.args.category.displayName);
     }
 
     const categoryBadge = categoryBadgeHTML(this.args.category, {
@@ -17,11 +17,11 @@ export default class CategoryTitleLink extends Component {
       link: false,
     });
 
-    return dirSpan(categoryBadge, { htmlSafe: "true" });
+    return dDirSpan(categoryBadge, { htmlSafe: "true" });
   }
 
   <template>
-    {{#let (element (or @tagName "h3")) as |TagName|}}
+    {{#let (dElement (or @tagName "h3")) as |TagName|}}
       <TagName>
         <a class="category-title-link" href={{@category.url}}>
           <div class="category-text-title">

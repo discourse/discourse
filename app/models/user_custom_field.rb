@@ -29,5 +29,10 @@ end
 #
 # Indexes
 #
-#  index_user_custom_fields_on_user_id_and_name  (user_id,name)
+#  idx_user_custom_fields_last_reminded_at          (name,user_id) UNIQUE WHERE ((name)::text = 'last_reminded_at'::text)
+#  idx_user_custom_fields_on_holiday                (name,user_id) UNIQUE WHERE ((name)::text = 'on_holiday'::text)
+#  idx_user_custom_fields_remind_assigns_frequency  (name,user_id) UNIQUE WHERE ((name)::text = 'remind_assigns_frequency'::text)
+#  idx_user_custom_fields_user_notes_count          (name,user_id) UNIQUE WHERE ((name)::text = 'user_notes_count'::text)
+#  index_user_custom_fields_on_user_id_and_name     (user_id,name)
+#  index_user_custom_fields_on_value                (value) UNIQUE WHERE ((name)::text = 'ai-stream-conversation-unique-id'::text)
 #

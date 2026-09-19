@@ -9,6 +9,7 @@ module DiscourseAi
         plugin.add_report("overall_sentiment") do |report|
           report.modes = [:stacked_chart]
           threshold = SENTIMENT_THRESHOLD
+          model_name = DiscourseAi::Sentiment::PostClassification.active_model_name_for(:sentiment)
 
           sentiment_count_sql = Proc.new { |sentiment| <<~SQL }
             COUNT(
@@ -30,7 +31,7 @@ module DiscourseAi
             WHERE
               t.archetype = 'regular' AND
               p.user_id > 0 AND
-              cr.model_used = 'cardiffnlp/twitter-roberta-base-sentiment-latest' AND
+              cr.model_used = :model_name AND
               (p.created_at > :report_start AND p.created_at < :report_end)
             GROUP BY DATE_TRUNC('day', p.created_at)
             ORDER BY 1 ASC
@@ -38,6 +39,7 @@ module DiscourseAi
               report_start: report.start_date,
               report_end: report.end_date,
               threshold: threshold,
+              model_name: model_name,
             )
 
           return report if grouped_sentiments.empty?

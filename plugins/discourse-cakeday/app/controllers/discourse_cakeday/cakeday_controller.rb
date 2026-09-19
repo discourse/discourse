@@ -37,7 +37,7 @@ module DiscourseCakeday
         end.to_date
 
       if apply_timezone && @timezone.present? && @timezone != "UTC"
-        if (iana_timezone = ActiveSupport::TimeZone[@timezone]&.tzinfo&.identifier)
+        if (iana_timezone = ActiveSupport::TimeZone[@timezone]&.tzinfo&.canonical_identifier)
           quoted_timezone = ActiveRecord::Base.connection.quote(iana_timezone)
           column_sql = "#{column_sql} AT TIME ZONE 'UTC' AT TIME ZONE #{quoted_timezone}"
         end

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class GroupDefaultNotifications extends Component {
@@ -17,8 +17,8 @@ export default class GroupDefaultNotifications extends Component {
 
   <template>
     <DModal
-      @title={{i18n "groups.default_notifications.modal_title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "groups.default_notifications.modal_title"}}
     >
       <:body>
         {{i18n
@@ -28,9 +28,9 @@ export default class GroupDefaultNotifications extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.updateExistingUsers}}
           @label="groups.default_notifications.modal_yes"
-          class="btn-primary"
         />
         <DButton
           @action={{this.cancel}}

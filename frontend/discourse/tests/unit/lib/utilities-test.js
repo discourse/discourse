@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import {
   arrayToTable,
   caretRowCol,
@@ -17,18 +18,25 @@ import {
   initializeDefaultHomepage,
   mergeSortedLists,
   replaceTableRaw,
+  selectedHTML,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
   toAsciiPrintable,
+  translateModKey,
   unicodeSlugify,
 } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
 import {
   mdTable,
   mdTableNonUniqueHeadings,
   mdTableSpecialChars,
 } from "discourse/tests/fixtures/md-table";
 import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Unit | Utilities", function (hooks) {
   setupTest(hooks);
@@ -108,6 +116,48 @@ module("Unit | Utilities", function (hooks) {
       "top",
       "default homepage is the first item in the top_menu site setting"
     );
+  });
+
+  test("defaultHomepage prefers the default_homepage site setting", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    siteSettings.default_homepage = "hot";
+    initializeDefaultHomepage(siteSettings);
+
+    assert.strictEqual(
+      defaultHomepage(),
+      "hot",
+      "default homepage is pulled from the default_homepage site setting"
+    );
+  });
+
+  test("defaultHomepage ignores a default_homepage value that is no longer an eligible choice", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    siteSettings.default_homepage = "votes";
+
+    const site = Site.current();
+    const originalChoices = site.homepage_choices;
+
+    try {
+      site.set("homepage_choices", ["latest", "top", "hot"]);
+      initializeDefaultHomepage(siteSettings);
+      assert.strictEqual(
+        defaultHomepage(),
+        "top",
+        "an ineligible value falls back to the first top_menu item"
+      );
+
+      site.set("homepage_choices", ["latest", "top", "hot", "votes"]);
+      initializeDefaultHomepage(siteSettings);
+      assert.strictEqual(
+        defaultHomepage(),
+        "votes",
+        "an eligible value is used"
+      );
+    } finally {
+      site.set("homepage_choices", originalChoices);
+    }
   });
 
   test("setDefaultHomepage", function (assert) {
@@ -294,6 +344,113 @@ module("Unit | Utilities", function (hooks) {
   });
 });
 
+module("Unit | Utilities | selectedHTML", function (hooks) {
+  setupTest(hooks);
+
+  test("drops a trailing empty block left by a triple-click selection", function (assert) {
+    const container = document.createElement("div");
+    container.classList.add("cooked");
+    // Whitespace text nodes between/inside blocks mirror real cooked HTML.
+    container.innerHTML =
+      "<p>Contribute by commenting and offering feedback.</p>\n" +
+      "<blockquote>\n<p>If you need help, contact the admins.</p></blockquote>";
+    document.body.appendChild(container);
+
+    try {
+      const paragraph = container.querySelector("p");
+      const innerParagraph = container.querySelector("blockquote p");
+
+      // A real triple-click on the paragraph over-extends the selection to
+      // offset 0 of the next block's first child, so cloneContents() yields a
+      // trailing <blockquote>\n<p></p></blockquote> (verified in Chromium).
+      const range = document.createRange();
+      range.setStart(paragraph.firstChild, 0);
+      range.setEnd(innerParagraph, 0);
+
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      const html = selectedHTML();
+
+      assert.true(
+        html.includes("Contribute by commenting"),
+        "keeps the selected paragraph"
+      );
+      assert.false(
+        html.includes("blockquote"),
+        `drops the trailing empty blockquote (got: ${html})`
+      );
+    } finally {
+      window.getSelection().removeAllRanges();
+      container.remove();
+    }
+  });
+
+  test("keeps a trailing block that wraps media", function (assert) {
+    const container = document.createElement("div");
+    container.classList.add("cooked");
+    container.innerHTML =
+      "<p>Intro.</p>" + "<p><img src='/uploads/cat.png' alt='cat'>caption</p>";
+    document.body.appendChild(container);
+
+    try {
+      const paragraph = container.querySelector("p");
+      const caption = container.querySelectorAll("p")[1].childNodes[1];
+
+      // Selection ends at offset 0 of the caption text, so the second paragraph
+      // clones to <p><img></p> — text-empty but still carrying the image.
+      const range = document.createRange();
+      range.setStart(paragraph.firstChild, 0);
+      range.setEnd(caption, 0);
+
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      const html = selectedHTML();
+
+      assert.true(
+        html.includes("cat.png"),
+        `keeps a text-empty block that wraps media (got: ${html})`
+      );
+    } finally {
+      window.getSelection().removeAllRanges();
+      container.remove();
+    }
+  });
+
+  test("does not trim when the selection ends mid-content", function (assert) {
+    const container = document.createElement("div");
+    container.classList.add("cooked");
+    container.innerHTML = "<p>First paragraph.</p><p>Second paragraph.</p>";
+    document.body.appendChild(container);
+
+    try {
+      const [first, second] = container.querySelectorAll("p");
+
+      // endOffset !== 0: a normal selection, never treated as over-extension.
+      const range = document.createRange();
+      range.setStart(first.firstChild, 0);
+      range.setEnd(second.firstChild, 6);
+
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      const html = selectedHTML();
+
+      assert.true(
+        html.includes("Second"),
+        `keeps the partially-selected trailing block (got: ${html})`
+      );
+    } finally {
+      window.getSelection().removeAllRanges();
+      container.remove();
+    }
+  });
+});
+
 module("Unit | Utilities | clipboard", function (hooks) {
   setupTest(hooks);
 
@@ -456,7 +613,7 @@ module("Unit | Utilities | table-builder", function (hooks) {
     );
   });
 
-  test("arrayToTable should escape `|`", function (assert) {
+  test("arrayToTable escapes `|` in headings and cells", function (assert) {
     const tableData = [
       {
         col0: "`a|b`",
@@ -467,8 +624,8 @@ module("Unit | Utilities | table-builder", function (hooks) {
       { col0: "1|1", col1: "2|2", col2: "3|3", col3: "4|4" },
     ];
     assert.strictEqual(
-      arrayToTable(tableData, ["Col 1", "Col 2", "Col 3", "Col 4"]),
-      "|Col 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
+      arrayToTable(tableData, ["Col | 1", "Col 2", "Col 3", "Col 4"]),
+      "|Col \\| 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
       "it creates a valid table"
     );
   });
@@ -536,6 +693,47 @@ Random extras
       ignoreUploads.match(findTableRegex()).length,
       1,
       "finds on table, ignoring upload markup"
+    );
+  });
+});
+
+module("Unit | Utilities | translateModKey", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    disableRaiseOnDeprecation();
+    this.warnStub = sinon.stub(console, "warn");
+  });
+
+  hooks.afterEach(function () {
+    this.warnStub.restore();
+    enableRaiseOnDeprecation();
+  });
+
+  test("warns that it is deprecated", function (assert) {
+    translateModKey("Shift+Ctrl+A");
+
+    assert.strictEqual(this.warnStub.callCount, 1, "warns once per call");
+    const warning = this.warnStub.firstCall.args[0];
+    assert.true(
+      warning.includes("DShortcut"),
+      "points at the component that draws a shortcut"
+    );
+    assert.true(
+      warning.includes("formatShortcut"),
+      "and at the helper, for a caller that only wants the string"
+    );
+  });
+
+  test("still translates while deprecated", function (assert) {
+    const translated = withSilencedDeprecations(
+      "discourse.translate-mod-key",
+      () => translateModKey("Shift+Alt+A")
+    );
+
+    assert.true(
+      translated.includes("⇧"),
+      "keeps replacing modifier names with their platform spelling"
     );
   });
 });

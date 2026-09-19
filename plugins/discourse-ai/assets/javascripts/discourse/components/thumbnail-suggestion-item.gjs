@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ThumbnailSuggestionItem extends Component {
   @tracked selected = false;
@@ -27,16 +27,16 @@ export default class ThumbnailSuggestionItem extends Component {
   <template>
     <div class="ai-thumbnail-suggestions__item">
       <DButton
+        class={{if this.selected "btn-primary"}}
+        @action={{fn this.toggleSelection @thumbnail}}
         @icon={{this.selectIcon}}
         @label={{this.selectLabel}}
-        @action={{fn this.toggleSelection @thumbnail}}
-        class={{if this.selected "btn-primary"}}
       />
       <img
-        src={{@thumbnail.url}}
-        loading="lazy"
-        width={{@thumbnail.thumbnail_width}}
         height={{@thumbnail.thumbnail_height}}
+        loading="lazy"
+        src={{@thumbnail.url}}
+        width={{@thumbnail.thumbnail_width}}
       />
     </div>
   </template>

@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -29,13 +29,13 @@ export default class AdminEditableField extends Component {
     <div class="field">{{i18n this.name}}</div>
     <div class="value">
       {{#if this.editing}}
-        <TextField
-          @value={{this.buffer}}
-          @autofocus="autofocus"
+        <DTextField
           @autocomplete="off"
+          @autofocus="autofocus"
+          @value={{this.buffer}}
         />
       {{else}}
-        <a href {{on "click" this.edit}} class="inline-editable-field">
+        <a class="inline-editable-field" href {{on "click" this.edit}}>
           <span>{{this.value}}</span>
         </a>
       {{/if}}

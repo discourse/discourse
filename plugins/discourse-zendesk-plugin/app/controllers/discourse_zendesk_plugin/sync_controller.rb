@@ -25,7 +25,6 @@ module DiscourseZendeskPlugin
       raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
       return if !DiscourseZendeskPlugin::Helper.autogeneration_category?(topic.category_id)
 
-      user = User.find_by_email(params[:email]) || Discourse.system_user
       latest_comment = get_latest_comment(ticket_id)
       if latest_comment.present?
         existing_comment =
@@ -35,6 +34,7 @@ module DiscourseZendeskPlugin
           ).first
 
         if existing_comment.blank?
+          user = User.find_by_email(params[:email]) || Discourse.system_user
           post = topic.posts.create!(user: user, raw: latest_comment.body)
           update_post_custom_fields(post, latest_comment)
         end

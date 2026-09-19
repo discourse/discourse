@@ -175,3 +175,7 @@ sw:
           fields:
             provider:
               label: Mkimu
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Chaneli"
+        message: "Ujumbe"

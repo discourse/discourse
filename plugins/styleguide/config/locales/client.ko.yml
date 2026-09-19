@@ -8,7 +8,9 @@ ko:
   js:
     styleguide:
       title: "스타일 가이드"
-      welcome: "시작하려면 왼쪽 메뉴에서 섹션을 선택하세요."
+      example:
+        kind:
+          component: "구성 요소"
       categories:
         atoms: Atoms
         molecules: 분자
@@ -20,6 +22,9 @@ ko:
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "날짜/시간 입력"
+        context_menu:
+          actions:
+            delete: "삭제"
         font_scale:
           title: "글꼴 시스템"
         colors:
@@ -69,6 +74,22 @@ ko:
           title: "더 많은 글"
         post_menu:
           title: "글쓰기 메뉴"
+        roving_focus:
+          toolbar:
+            copy: "복사"
+          adjacent:
+            label: "필터"
+            field: "검색"
+            open: "열기"
+            recent: "최근"
+          combobox:
+            daily: "일"
+            weekly: "주"
+            monthly: "월"
+            never: "알림 받지 않기"
+          tree:
+            components: "구성 요소"
+            select: "선택"
         modal:
           title: "모달"
           header: "모달 제목"

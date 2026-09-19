@@ -81,3 +81,7 @@ th:
               label: ข้อความ
             url:
               label: URL
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "ช่องทาง"
+        message: "ข้อความ"

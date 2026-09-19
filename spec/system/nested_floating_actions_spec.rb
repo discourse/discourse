@@ -9,7 +9,10 @@ RSpec.describe "Nested view floating actions" do
   let(:nested_view) { PageObjects::Pages::NestedView.new }
   let(:composer) { PageObjects::Components::Composer.new }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
+  end
 
   describe "as admin" do
     before { sign_in(admin) }
@@ -70,10 +73,10 @@ RSpec.describe "Nested view floating actions" do
   end
 
   describe "as anonymous user" do
-    it "does not show notification button or reply button" do
+    it "does not show notification button but does show login reply button" do
       nested_view.visit_nested(topic)
       expect(nested_view).to have_no_notification_button
-      expect(nested_view).to have_no_floating_reply_button
+      expect(nested_view).to have_floating_reply_button
     end
   end
 

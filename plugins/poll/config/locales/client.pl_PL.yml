@@ -10,9 +10,15 @@ pl_PL:
       site_settings:
         categories:
           poll: "Ankieta Discourse"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Głosowanie zakończone"
+            poll_opened: "Głosowanie rozpoczęte"
   js:
     poll:
       title: "Ankieta"
+      closed_by: "Zamknięto przez %{username}"
       dynamic:
         enabled_hint: "Można dodawać i usuwać opcje."
       voters:
@@ -63,9 +69,20 @@ pl_PL:
             many: "Wybierz <strong>%{count} opcji</strong>."
             other: "Wybierz <strong>%{count} opcji</strong>."
           between_min_and_max_options: "Wybierz pomiędzy <strong>%{min} a %{max} opcjami</strong>."
+      vote_recorded: "Twój głos został zarejestrowany."
+      voted_choices:
+        title: "Głosowałeś na:"
       cast-votes:
         title: "Oddaj głos"
         label: "Oddaj głos!"
+        update_title: "Zaktualizuj swój głos"
+        update_label: "Zaktualizuj głos"
+      amend-vote:
+        title: "Zmień swój głos"
+        label: "Zmień głos"
+      keep-vote:
+        title: "Wstecz bez zmiany swojego głosu"
+        label: "Wstecz"
       show-results:
         title: "Wyświetl wyniki ankiety"
         label: "Wyniki"
@@ -134,6 +151,7 @@ pl_PL:
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
       error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
       ui_builder:
+        edit: Edytuj ankietę
         title: Skonstruuj ankietę
         insert: Wstaw ankietę
         help:
@@ -171,10 +189,9 @@ pl_PL:
           label: Zezwól na dodawanie lub usuwanie opcji po opublikowaniu
         poll_title:
           label: Tytuł (opcjonalnie)
+          placeholder: Tytuł ankiety
         poll_options:
           label: Opcje (jedna na wiersz)
           add: Dodaj opcję
         automatic_close:
           label: Automatycznie zamknij ankietę
-        show_advanced: "Pokaż opcje zaawansowane"
-        hide_advanced: "Ukryj opcje zaawansowane"

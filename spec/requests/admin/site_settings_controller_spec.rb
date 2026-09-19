@@ -27,6 +27,17 @@ RSpec.describe Admin::SiteSettingsController do
           response.parsed_body["site_settings"].find { |s| s["setting"] == "max_category_nesting" },
         ).to be_nil
       end
+
+      it "does not return settings from non-configurable plugins" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+        get "/admin/site_settings.json"
+
+        expect(response.status).to eq(200)
+        site_setting_names =
+          response.parsed_body["site_settings"].map { |setting| setting["setting"] }
+        expect(site_setting_names).not_to include("plugin_setting")
+      end
     end
 
     shared_examples "site settings inaccessible" do
@@ -64,7 +75,7 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.status).to eq(404)
       end
 
-      it "should return correct user count for default categories change" do
+      it "returns the affected user count for a default-category change" do
         category_id = Fabricate(:category).id
 
         put "/admin/site_settings/default_categories_watching/user_count.json",
@@ -84,7 +95,7 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
       end
 
-      it "should return correct user count for default tags change" do
+      it "returns the affected user count for a default-tag change" do
         tag = Fabricate(:tag)
 
         put "/admin/site_settings/default_tags_watching/user_count.json",
@@ -170,7 +181,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.parsed_body["user_count"]).to eq(1)
         end
 
-        it "should return correct user count for boolean setting" do
+        it "returns the affected user count for a boolean setting" do
           expect_user_count(
             site_setting_name: "default_other_external_links_in_new_tab",
             user_setting_name: "external_links_in_new_tab",
@@ -179,7 +190,7 @@ RSpec.describe Admin::SiteSettingsController do
           )
         end
 
-        it "should return correct user count for 'text_size_key'" do
+        it "returns the affected user count for text_size_key" do
           expect_user_count(
             site_setting_name: "default_text_size",
             user_setting_name: "text_size_key",
@@ -190,7 +201,7 @@ RSpec.describe Admin::SiteSettingsController do
           )
         end
 
-        it "should return correct user count for 'title_count_mode_key'" do
+        it "returns the affected user count for title_count_mode_key" do
           expect_user_count(
             site_setting_name: "default_title_count_mode",
             user_setting_name: "title_count_mode_key",
@@ -344,7 +355,7 @@ RSpec.describe Admin::SiteSettingsController do
         let!(:user1) { Fabricate(:user) }
         let!(:user2) { Fabricate(:user) }
 
-        it "should update all existing user options" do
+        it "updates every existing user option" do
           SiteSetting.default_email_in_reply_to = true
 
           user2.user_option.email_in_reply_to = true
@@ -360,7 +371,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(user2.user_option.email_in_reply_to).to eq(false)
         end
 
-        it "should not update existing user options" do
+        it "does not update existing user options" do
           expect {
             put "/admin/site_settings/default_email_in_reply_to.json",
                 params: {
@@ -369,7 +380,7 @@ RSpec.describe Admin::SiteSettingsController do
           }.not_to change { UserOption.where(email_in_reply_to: false).count }
         end
 
-        it "should update `email_digests` column in existing user options" do
+        it "updates email_digests in existing user options" do
           UserOption.last.update(email_digests: false)
 
           expect {
@@ -464,7 +475,7 @@ RSpec.describe Admin::SiteSettingsController do
           )
         end
 
-        it "should update existing users user preference" do
+        it "updates existing users' category preferences" do
           put "/admin/site_settings/default_categories_watching.json",
               params: {
                 default_categories_watching: category_ids.last(2).join("|"),
@@ -499,7 +510,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should not update existing users user preference" do
+        it "does not update existing users' category preferences" do
           expect {
             put "/admin/site_settings/default_categories_watching.json",
                 params: {
@@ -537,7 +548,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should publish a MessageBus informing the correct groups" do
+        it "publishes the affected groups through MessageBus" do
           messages =
             MessageBus.track_publish("/site_setting/default_categories_watching/process") do
               put "/admin/site_settings/default_categories_watching.json",
@@ -547,8 +558,8 @@ RSpec.describe Admin::SiteSettingsController do
                   }
             end
 
-          expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
-          expect(messages[0][:data][:status]).to eq("enqueued")
+          expect(messages[0].data[:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+          expect(messages[0].data[:status]).to eq("enqueued")
         end
       end
 
@@ -566,7 +577,7 @@ RSpec.describe Admin::SiteSettingsController do
           TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
         end
 
-        it "should update existing users user preference" do
+        it "updates existing users' tag preferences" do
           put "/admin/site_settings/default_tags_watching.json",
               params: {
                 default_tags_watching: tags.last(2).pluck(:name).join("|"),
@@ -585,7 +596,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should not update existing users user preference" do
+        it "does not update existing users' tag preferences" do
           expect {
             put "/admin/site_settings/default_tags_watching.json",
                 params: {
@@ -607,7 +618,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(204)
         end
 
-        it "should publish a MessageBus informing the correct groups" do
+        it "publishes the affected groups through MessageBus" do
           messages =
             MessageBus.track_publish("/site_setting/default_tags_watching/process") do
               put "/admin/site_settings/default_tags_watching.json",
@@ -616,8 +627,8 @@ RSpec.describe Admin::SiteSettingsController do
                     update_existing_user: true,
                   }
             end
-          expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
-          expect(messages[0][:data][:status]).to eq("enqueued")
+          expect(messages[0].data[:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+          expect(messages[0].data[:status]).to eq("enqueued")
         end
       end
 
@@ -707,6 +718,35 @@ RSpec.describe Admin::SiteSettingsController do
             setting_names: "max_category_nesting",
           ),
         )
+      end
+
+      it "returns html_message: true with linkified errors when a validator message references settings" do
+        SiteSetting.allow_user_locale = false
+
+        put "/admin/site_settings/content_localization_language_switcher.json",
+            params: {
+              content_localization_language_switcher: "all",
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["html_message"]).to eq(true)
+        expect(response.parsed_body["errors"].first).to include(
+          'class="site-setting-link"',
+          ">All required settings</a>",
+        )
+        expect(response.parsed_body["errors"].first).not_to include("{{setting")
+      end
+
+      it "keeps the exception message plain text for non-admin-UI consumers" do
+        SiteSetting.allow_user_locale = false
+
+        expect { SiteSetting.set("content_localization_language_switcher", "all") }.to raise_error(
+          Discourse::InvalidHTMLParameters,
+        ) do |error|
+          expect(error.message).to include("'Allow user locale'")
+          expect(error.message).not_to include("<a", "{{setting")
+          expect(error.html_message).to include('class="site-setting-link"')
+        end
       end
 
       context "with an plugin" do

@@ -27,7 +27,6 @@ it:
     oauth2_json_email_verified_path: "Percorso nel JSON dell'utente OAuth2 per lo stato di verifica dell'email utente. Es.: user.email.verified. oauth2_email_verified deve essere disabilitato affinché questa impostazione abbia effetto."
     oauth2_json_avatar_path: "Percorso nel JSON dell'utente OAuth2 per l'avatar dell'utente. es.: user.avatar_url"
     oauth2_email_verified: "Abilita questa impostazione se il sito OAuth2 ha verificato \nl'email"
-    oauth2_overrides_email: "Sostituisci l'e-mail di Discourse con l'e-mail remota a ogni accesso. Funziona come l'impostazione `auth_overrides_email`, ma è specifica per gli accessi OAuth2."
     oauth2_send_auth_header: "Invia le credenziali del client in un'intestazione di autorizzazione HTTP"
     oauth2_send_auth_body: "Invia le credenziali del client nel corpo della richiesta"
     oauth2_debug_auth: "Includi informazioni di debugging complete nei tuoi log"

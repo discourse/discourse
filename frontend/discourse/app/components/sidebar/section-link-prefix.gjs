@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { isHex } from "discourse/components/sidebar/section-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class SidebarSectionLinkPrefix extends Component {
   get prefixValue() {
@@ -42,36 +42,36 @@ export default class SidebarSectionLinkPrefix extends Component {
   <template>
     {{#if @prefixType}}
       <span
-        style={{if @prefixColor (trustHTML (concat "color: " @prefixColor))}}
-        class={{concatClass
+        class={{dConcatClass
           "sidebar-section-link-prefix"
           @prefixType
           @prefixCSSClass
         }}
+        style={{if @prefixColor (trustHTML (concat "color: " @prefixColor))}}
       >
         {{#if (eq @prefixType "image")}}
-          <img src={{this.prefixValue}} class="prefix-image" alt="" />
+          <img alt="" class="prefix-image" src={{this.prefixValue}} />
         {{else if (eq @prefixType "text")}}
           <span class="prefix-text">
             {{this.prefixValue}}
           </span>
         {{else if (eq @prefixType "icon")}}
-          {{icon this.prefixValue class="prefix-icon"}}
+          {{dIcon this.prefixValue class="prefix-icon"}}
         {{else if (eq @prefixType "emoji")}}
-          {{replaceEmoji this.prefixValue class="prefix-emoji"}}
+          {{dReplaceEmoji this.prefixValue class="prefix-emoji"}}
         {{else if (eq @prefixType "square")}}
           <span
+            class="prefix-square"
             style={{trustHTML
               (concat
                 "background: linear-gradient(90deg, " this.prefixValue ")"
               )
             }}
-            class="prefix-square"
           ></span>
         {{/if}}
 
         {{#if @prefixBadge}}
-          {{icon @prefixBadge class="prefix-badge"}}
+          {{dIcon @prefixBadge class="prefix-badge"}}
         {{/if}}
       </span>
     {{/if}}

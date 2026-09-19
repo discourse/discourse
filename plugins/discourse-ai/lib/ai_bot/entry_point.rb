@@ -42,6 +42,29 @@ module DiscourseAi
         SQL
       end
 
+      def self.personal_message_bot_user_ids(user)
+        return [] if user.blank? || !SiteSetting.ai_bot_enabled
+
+        bot_user_ids = []
+
+        if user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          bot_user_ids.concat(
+            LlmModel
+              .where(id: LlmModel.enabled_chat_bot_ids)
+              .where.not(user_id: nil)
+              .pluck(:user_id),
+          )
+        end
+
+        bot_user_ids.concat(
+          AiAgent
+            .allowed_modalities(user: user, allow_personal_messages: true)
+            .map { |agent| agent[:user_id] },
+        )
+
+        bot_user_ids.compact
+      end
+
       # Most errors are simply "not_allowed"
       # we do not want to reveal information about this system
       # the 2 exceptions are "other_people_in_pm" and "other_content_in_pm"
@@ -70,6 +93,30 @@ module DiscourseAi
         TopicView.default_post_custom_fields << POST_AI_LLM_NAME_FIELD
 
         plugin.register_topic_custom_field_type(TOPIC_AI_BOT_PM_FIELD, :string)
+
+        # Hide bot PMs from the personal inbox queries (Latest, New, Unread)
+        # so human conversations are not buried under bot replies. Sent and
+        # Archive are intentionally untouched.
+        plugin.register_modifier(:private_messages_personal_inbox_query) do |list, _user|
+          next list unless SiteSetting.ai_bot_enabled
+
+          list.where(<<~SQL, field: TOPIC_AI_BOT_PM_FIELD)
+            NOT EXISTS (
+              SELECT 1 FROM topic_custom_fields tcf_pm_inbox
+              WHERE tcf_pm_inbox.topic_id = topics.id
+              AND tcf_pm_inbox.name = :field
+              AND tcf_pm_inbox.value = 't'
+            )
+          SQL
+        end
+
+        plugin.register_modifier(:guardian_can_send_private_message_to_target) do |allowed, params|
+          allowed ||
+            (
+              params[:private_message_context] == PERSONAL_MESSAGE_CONTEXT &&
+                params[:guardian].can_send_pm_to_ai_bot?(params[:target])
+            )
+        end
 
         plugin.on(:topic_created) do |topic|
           next if !topic.private_message?
@@ -123,7 +170,7 @@ module DiscourseAi
         ) do |url, route|
           if route[:action] == "show" && share_key = route[:share_key]
             if conversation = SharedAiConversation.find_by(share_key: share_key)
-              conversation.onebox
+              conversation.onebox if conversation.publicly_visible?
             end
           end
         end
@@ -132,9 +179,7 @@ module DiscourseAi
           doc.css("details").remove if options && options[:strip_details]
         end
 
-        plugin.register_seedfu_fixtures(
-          Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "ai_bot"),
-        )
+        plugin.register_seedfu_fixtures(Rails.root.join("plugins/discourse-ai/db/fixtures/ai_bot"))
 
         plugin.add_to_serializer(
           :topic_view,
@@ -201,7 +246,9 @@ module DiscourseAi
                 {
                   "id" => agent_user[:user_id],
                   "username" => agent_user[:username],
-                  "has_default_llm" => agent_user[:default_llm_id].present?,
+                  "has_default_llm" =>
+                    agent_user[:default_llm_id].present? ||
+                      SiteSetting.ai_default_llm_model.present?,
                   "force_default_llm" => agent_user[:force_default_llm],
                   "is_agent" => true,
                 }
@@ -233,7 +280,20 @@ module DiscourseAi
           DiscourseAi::AiBot::Playground.schedule_chat_reply(chat_message, channel, user, context)
         end
 
+        plugin.on(:chat_message_interaction) do |interaction|
+          DiscourseAi::AiBot::ChatToolApproval.handle_interaction(interaction)
+        end
+
         plugin.register_editable_topic_custom_field(:ai_agent_id)
+        plugin.register_topic_custom_field_type(
+          :ai_agent_id,
+          :string,
+          max_length: TOPIC_AI_AGENT_ID_MAX_LENGTH,
+        )
+
+        plugin.on(:after_validate_topic) do |topic, topic_creator|
+          DiscourseAi::AiBot::TopicAgentValidator.validate(topic, topic_creator)
+        end
 
         plugin.add_api_key_scope(
           :ai,

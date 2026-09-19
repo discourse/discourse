@@ -28,3 +28,16 @@ sr:
     edit_assignments_modal:
       topic: "Tema"
       post: "Post"
+    discourse_workflows:
+      assign_topic:
+        resources:
+          topic: "Tema"
+          post: "Post"
+        topic_id: "ID Teme"
+        post_id: "ID Poruke"
+      check_assignment:
+        target_types:
+          topic: "Tema"
+          post: "Post"
+        topic_id: "ID Teme"
+        post_id: "ID Poruke"

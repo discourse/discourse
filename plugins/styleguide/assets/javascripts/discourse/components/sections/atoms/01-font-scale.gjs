@@ -1,4 +1,4 @@
-import HighlightedCode from "discourse/components/highlighted-code";
+import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
@@ -20,7 +20,7 @@ const FontScale = <template>
       also provide different font sizes for the user text size settings defined
       above. The example below increases all text size options by 1px.
     </p>
-    <HighlightedCode
+    <DHighlightedCode
       @code="html {
   font-size: 16px; // default font-size
 
@@ -44,7 +44,7 @@ const FontScale = <template>
         Changing the font-size of a parent element will proportionately scale
         the font sizes of all its children.
       </p>
-      <HighlightedCode
+      <DHighlightedCode
         @code=".parent {
   font-size: var(--font-up-3);
   // Increases the relative font-size of this element and its children by 3 steps in the scale

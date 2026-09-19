@@ -27,7 +27,6 @@ hu:
     oauth2_json_email_verified_path: "Az OAuth2 felhasználói JSON-ban az e-mail ellenőrzési állapotához vezető útvonal (pl. user.email.verified). Az oauth2_email_verified beállítást ki kell kapcsolni ahhoz, hogy ez a mező érvénybe lépjen."
     oauth2_json_avatar_path: "Az OAuth2 User JSON fájlban található felhasználó profilképének elérési útja. Pl.: user.avatar_url"
     oauth2_email_verified: "Jelölje be ezt, ha az OAuth2-oldal már megerősítette az e-mail-címet."
-    oauth2_overrides_email: "A Discourse e-mail-cím felülírása a távoli e-mail-címmel minden bejelentkezéskor. Ugyanúgy működik, mint az auth_overrides_email beállítás, de kifejezetten az OAuth2-alapú bejelentkezésekre vonatkozik."
     oauth2_send_auth_header: "Ügyfél-hitelesítő adatok küldése a HTTP Authorization fejlécben."
     oauth2_send_auth_body: "Ügyfél hitelesítő adatainak küldése a kérés törzsében"
     oauth2_debug_auth: "Tartalmazzon gazdag hibakeresési információkat a naplókban"

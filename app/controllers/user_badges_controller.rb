@@ -23,8 +23,11 @@ class UserBadgesController < ApplicationController
     grant_count = nil
 
     if params[:username]
-      user_id = User.where(username_lower: params[:username].downcase).pick(:id)
-      user_badges = user_badges.where(user_id: user_id) if user_id
+      user = fetch_user_from_params(include_inactive: true)
+      raise Discourse::NotFound unless guardian.can_see_profile?(user)
+
+      user_id = user.id
+      user_badges = user_badges.where(user_id: user_id)
       grant_count = badge.user_badges.where(user_id: user_id).count
     end
 
@@ -96,7 +99,8 @@ class UserBadgesController < ApplicationController
       end
 
       if route = Discourse.route_for(params[:reason])
-        if route[:controller] == "topics" && route[:action] == "show"
+        if (route[:controller] == "topics" && route[:action] == "show") ||
+             route[:controller] == "nested_topics"
           topic_id = (route[:id] || route[:topic_id]).to_i
           post_number = route[:post_number] || 1
           post_id = Post.find_by(topic_id: topic_id, post_number: post_number)&.id if topic_id > 0
@@ -183,6 +187,10 @@ class UserBadgesController < ApplicationController
 
   def is_badge_reason_valid?(reason)
     route = Discourse.route_for(reason)
-    route && (route[:controller] == "posts" || route[:controller] == "topics")
+    route &&
+      (
+        route[:controller] == "posts" || route[:controller] == "topics" ||
+          route[:controller] == "nested_topics"
+      )
   end
 end

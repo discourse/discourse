@@ -23,6 +23,7 @@ class InviteRedeemer
               :ip_address,
               :session,
               :email_token,
+              :email_verified,
               :redeeming_user
 
   def initialize(
@@ -35,6 +36,7 @@ class InviteRedeemer
     ip_address: nil,
     session: nil,
     email_token: nil,
+    email_verified: false,
     redeeming_user: nil
   )
     @invite = invite
@@ -45,6 +47,7 @@ class InviteRedeemer
     @ip_address = ip_address
     @session = session
     @email_token = email_token
+    @email_verified = email_verified
     @redeeming_user = redeeming_user
 
     ensure_email_is_present!(email)
@@ -71,7 +74,7 @@ class InviteRedeemer
 
     if email.blank? && @invite.is_email_invite?
       @email = @invite.email
-    elsif @redeeming_user.present?
+    elsif @redeeming_user.present? && !email_verified
       @email = @redeeming_user.email
     else
       @email = email
@@ -91,11 +94,18 @@ class InviteRedeemer
     user_custom_fields: nil,
     ip_address: nil,
     session: nil,
-    email_token: nil
+    email_token: nil,
+    email_verified: false
   )
+    raise Discourse::SiteArchived if SiteSetting.site_archived
+
     if username && UsernameValidator.new(username).valid_format? &&
          User.username_available?(username, email)
       available_username = username
+    elsif email_verified
+      available_username =
+        UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
+          RandomUsernameGenerator.generate || UserNameSuggester.suggest(email)
     else
       available_username = UserNameSuggester.suggest(email)
     end
@@ -107,7 +117,7 @@ class InviteRedeemer
     user.attributes = {
       email: email,
       username: available_username,
-      name: name || available_username,
+      name: name.presence || (email_verified ? user.name : available_username),
       active: false,
       trust_level: SiteSetting.default_invitee_trust_level,
       ip_address: ip_address,
@@ -134,7 +144,10 @@ class InviteRedeemer
       user.custom_fields = fields
     end
 
-    user.moderator = true if invite.moderator? && invite.invited_by.staff?
+    if (invite.moderator? && invite.invited_by.staff?) ||
+         InviteRedeemer.admin_invite_grantable?(invite)
+      user.moderator = true
+    end
 
     if password
       user.password = password
@@ -156,12 +169,21 @@ class InviteRedeemer
     user.save!
     authenticator.finish
 
-    if invite.emailed_status != Invite.emailed_status_types[:not_required] &&
-         email == invite.email && invite.email_token.present? && email_token == invite.email_token
+    if email_verified ||
+         (
+           invite.emailed_status != Invite.emailed_status_types[:not_required] &&
+             email == invite.email && invite.email_token.present? &&
+             email_token == invite.email_token
+         )
       user.activate
     end
 
     User.find(user.id)
+  end
+
+  def self.admin_invite_grantable?(invite)
+    invite.admin? && invite.invited_by&.admin? &&
+      UpcomingChanges.enabled_for_user?(:enable_invite_modal_with_roles, invite.invited_by)
   end
 
   private
@@ -178,7 +200,7 @@ class InviteRedeemer
     # prefill the email and do not let the user modify it.
     #
     # Note that an invite link can also have a domain scope which must be checked.
-    email_to_check = redeeming_user&.email || email
+    email_to_check = email_verified ? email : (redeeming_user&.email || email)
 
     if invite.email.present? && !invite.email_matches?(email_to_check)
       raise ActiveRecord::RecordNotSaved.new(I18n.t("invite.not_matching_email"))
@@ -227,6 +249,7 @@ class InviteRedeemer
         ip_address: ip_address,
         session: session,
         email_token: email_token,
+        email_verified: email_verified,
       )
     invited_user.send_welcome_message = false
     @invited_user = invited_user
@@ -238,6 +261,31 @@ class InviteRedeemer
     add_user_to_groups
     send_welcome_message
     notify_invitee
+    grant_moderator_from_invite
+    create_admin_grant_confirmation
+  end
+
+  # Moderator invites grant moderator on redemption. Users created from the
+  # invite already have the flag set in create_user_from_invite; this covers
+  # existing users redeeming the invite.
+  def grant_moderator_from_invite
+    return if !invite.moderator? || !invite.invited_by&.staff?
+
+    invited_user.grant_moderation! if !invited_user.moderator?
+  end
+
+  # Admin invites grant moderator right away; full admin requires the inviter
+  # to confirm via the same email confirmation used when granting admin from
+  # the admin user page.
+  def create_admin_grant_confirmation
+    return if !InviteRedeemer.admin_invite_grantable?(invite)
+
+    invited_user.grant_moderation! if !invited_user.moderator?
+    StaffActionLogger.new(invite.invited_by).log_grant_moderation(invited_user)
+
+    if invite.invited_by.guardian.can_grant_admin?(invited_user)
+      AdminConfirmation.new(invited_user, invite.invited_by).create_confirmation
+    end
   end
 
   def mark_invite_redeemed
@@ -258,18 +306,21 @@ class InviteRedeemer
     # Should not happen because of ensure_email_is_present!, but better to cover bases.
     return if email.blank?
 
-    topic_ids =
-      TopicInvite
-        .joins(:invite)
-        .joins(:topic)
-        .where("topics.archetype = ?", Archetype.private_message)
-        .where("invites.email = ?", email)
-        .pluck(:topic_id)
-    topic_ids.each do |id|
-      if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
-        TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id)
+    TopicInvite
+      .includes(:topic, invite: :invited_by)
+      .joins(:invite)
+      .joins(:topic)
+      .where("topics.archetype = ?", Archetype.private_message)
+      .where("invites.email = ?", email)
+      .find_each do |topic_invite|
+        topic = topic_invite.topic
+        inviter = topic_invite.invite.invited_by
+        next if inviter.blank? || !inviter.guardian.can_invite_to?(topic)
+
+        if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: topic.id)
+          TopicAllowedUser.create!(user_id: invited_user.id, topic_id: topic.id)
+        end
       end
-    end
   end
 
   def add_user_to_groups
@@ -300,7 +351,7 @@ class InviteRedeemer
 
   def delete_duplicate_invites
     # Should not happen because of ensure_email_is_present!, but better to cover bases.
-    return if email.blank?
+    return if email.blank? || invite.is_invite_link?
 
     Invite
       .where("invites.max_redemptions_allowed = 1")

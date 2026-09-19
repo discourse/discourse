@@ -1,100 +1,22 @@
 .horizontal-overflow-nav {
-  position: relative;
   min-width: 0;
   width: 100%;
 
   .nav-pills {
-    overflow: auto;
-    min-width: 0;
+    @include horizontal-scroll-strip;
     margin: 0;
     height: 100%;
     position: relative;
-
-    // avoids auto-scroll on initial load if active nav item is overflowed
-    scroll-behavior: auto;
-
-    // hides scrollbars, but allows mouse scrolling
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      height: 0;
-    }
-  }
-
-  &.has-scroll {
-    .nav-pills {
-      scroll-behavior: smooth; // smooth scrolling on user interaction
-    }
   }
 }
 
-.horizontal-overflow-nav__scroll-right,
-.horizontal-overflow-nav__scroll-left {
+// Chained to outrank the primitive's own declaration on the same element.
+.d-overflow-controls.horizontal-overflow-nav__controls {
   --fade-width: 1.5em;
-  --fade-color: var(--secondary);
-  opacity: 1;
-  position: absolute;
-  z-index: 2;
-  background-color: var(--secondary);
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  transition: opacity 0.25s;
+  height: 100%;
 
-  .d-icon {
-    pointer-events: none;
-    margin-bottom: 0.2em;
+  .d-overflow-controls__btn .d-icon {
     color: var(--d-nav-color--active);
-  }
-
-  &.disabled {
-    // hiding with opacity so we can transition visibility
-    opacity: 0;
-    pointer-events: none;
-  }
-}
-
-.horizontal-overflow-nav__scroll-right {
-  /*! rtl:ignore */
-  right: 0;
-
-  &::before {
-    content: "";
-
-    /*! rtl:ignore */
-    margin-left: calc(var(--fade-width) * -1);
-    height: 100%;
-    width: var(--fade-width);
-
-    /*! rtl:ignore */
-    background: linear-gradient(to left, var(--fade-color), transparent);
-  }
-
-  // Undo automatic icon flip since button stays in physical position
-  .rtl & .d-icon {
-    transform: scaleX(1);
-  }
-}
-
-.horizontal-overflow-nav__scroll-left {
-  /*! rtl:ignore */
-  left: 0;
-
-  &::after {
-    content: "";
-
-    /*! rtl:ignore */
-    margin-right: calc(var(--fade-width) * -1);
-    height: 100%;
-    width: var(--fade-width);
-
-    /*! rtl:ignore */
-    background: linear-gradient(to right, var(--fade-color), transparent);
-  }
-
-  // Undo automatic icon flip since button stays in physical position
-  .rtl & .d-icon {
-    transform: scaleX(1);
+    margin-bottom: 0.2em;
   }
 }

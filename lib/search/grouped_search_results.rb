@@ -112,9 +112,9 @@ class Search
       if !@is_header_search && public_send(type).length == Search.per_filter
         @more_full_page_results = true
       elsif @is_header_search && public_send(type).length == Search.per_facet
-        instance_variable_set("@more_#{type}".to_sym, true)
+        instance_variable_set(:"@more_#{type}", true)
       else
-        (self.public_send(type)) << object
+        public_send(type) << object
       end
 
       if can_lazy_load_categories
@@ -142,15 +142,13 @@ class Search
         urls = Set.new
         cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
         urls.each do |url|
-          begin
-            case File.extname(URI(url).path || "")
-            when Oneboxer::VIDEO_REGEX
-              cooked.gsub!(url, I18n.t("search.video"))
-            when Oneboxer::AUDIO_REGEX
-              cooked.gsub!(url, I18n.t("search.audio"))
-            end
-          rescue URI::InvalidURIError
+          case File.extname(URI(url).path || "")
+          when Oneboxer::VIDEO_REGEX
+            cooked.gsub!(url, I18n.t("search.video"))
+          when Oneboxer::AUDIO_REGEX
+            cooked.gsub!(url, I18n.t("search.audio"))
           end
+        rescue URI::InvalidURIError
         end
       end
 

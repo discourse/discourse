@@ -37,6 +37,11 @@ html.composer-open:not(.has-full-page-chat) {
   }
 }
 
+.composer-toggles-menu-content,
+.composer-actions-dropdown {
+  z-index: z("mobile-composer");
+}
+
 #reply-control {
   position: fixed;
   display: flex;
@@ -195,83 +200,92 @@ html.composer-open:not(.has-full-page-chat) {
       justify-content: space-between;
     }
 
-    .reply-details {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      min-width: 0;
-      white-space: nowrap;
-      gap: var(--space-2);
+    .composer-actions-trigger {
+      border-color: var(--input-border-color);
+    }
 
-      .composer-actions {
-        .select-kit-header {
-          border-color: var(--primary-low-mid);
+    .composer-actions-trigger .d-button-label {
+      @include ellipsis;
+    }
+
+    .composer-whisper-indicator {
+      margin-left: auto;
+
+      @include viewport.until(sm) {
+        .d-button-label {
+          display: none;
         }
 
         .d-icon {
-          color: var(--primary-medium);
+          margin-right: 0;
         }
       }
+      font-size: var(--font-down-1);
+      border-radius: var(--d-border-radius);
 
-      @include viewport.until(sm) {
-        max-width: calc(100% - 75px);
+      &.--public {
+        --d-button-default-text-color: var(--primary-high);
+        --d-button-flat-icon-color: var(--primary-high);
+      }
+
+      &.--whispering {
+        --d-button-default-text-color: var(--tertiary);
+        --d-button-flat-icon-color: var(--tertiary);
+
+        &:hover {
+          background-color: var(--tertiary-200);
+        }
+      }
+    }
+
+    .composer-actions-reply-target-link {
+      --d-button-default-text-color: var(--primary-high);
+      --d-button-flat-icon-color: var(--primary-high);
+      overflow: hidden;
+
+      &__label {
+        @include ellipsis;
       }
     }
 
     .composer-action-title {
       display: flex;
+      gap: var(--space-1);
       align-items: center;
-      width: auto;
+      width: 100%;
       max-width: 100%;
       min-width: 0; // allows shrinking when needed
-
-      .action-title {
-        display: flex;
-        align-items: center;
-        line-height: normal;
-        min-width: 0;
-
-        .topic-link,
-        .user-link,
-        .post-link {
-          margin-right: 8px;
-
-          @include ellipsis;
-        }
-      }
-
-      .username {
-        margin-right: 5px;
-        max-width: 100px;
-
-        @include ellipsis;
-
-        @media screen and (width <= 500px) {
-          display: none;
-        }
-      }
 
       img.avatar {
         margin-right: 3px;
       }
     }
 
+    .action-title {
+      display: flex;
+      gap: var(--space-1);
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+
+      .topic-link {
+        @include ellipsis;
+      }
+    }
+
     .composer-controls {
       display: flex;
-      gap: 8px;
-      margin-left: 8px;
     }
 
     // Protection for languages with long strings on very small screens. This
     // has no effect on most users but we need it for some cases. If this is
     // not added, "add edit reason" will overlap with the composer controls
     @include viewport.until(sm) {
-      .reply-details {
-        flex-wrap: wrap;
-      }
-
-      .display-edit-reason.--active {
-        width: 100%;
+      .composer-actions-reply-target-link {
+        .d-icon {
+          margin-right: none;
+        }
       }
 
       #edit-reason {
@@ -279,32 +293,6 @@ html.composer-open:not(.has-full-page-chat) {
         margin-left: 0;
         margin-top: var(--space-2);
       }
-
-      .composer-controls {
-        align-self: flex-start;
-      }
-    }
-  }
-
-  .whisper,
-  .display-edit-reason {
-    font-style: italic;
-  }
-
-  .whisper {
-    margin: 0 0.25em;
-  }
-
-  .unlist {
-    margin-left: 0.25em;
-  }
-
-  .display-edit-reason {
-    display: inline-flex;
-    margin-left: auto;
-
-    a {
-      display: inline-flex;
     }
   }
 
@@ -377,7 +365,7 @@ html.composer-open:not(.has-full-page-chat) {
       width: auto;
 
       &.has-selection {
-        .name {
+        .selected-name .name {
           font-size: var(--font-up-1);
         }
       }
@@ -548,11 +536,11 @@ html.composer-open:not(.has-full-page-chat) {
       flex: 1 1 auto;
     }
 
-    .btn-primary {
-      flex: 0 0 auto;
+    .d-combo-button-button .d-icon {
+      margin-right: 0.45em;
     }
 
-    .cancel {
+    .d-c .cancel {
       align-items: center;
       display: flex;
       margin-left: 1em;
@@ -634,10 +622,6 @@ html.composer-open:not(.has-full-page-chat) {
       color: var(--danger);
       font-size: 20px;
       vertical-align: -5.5px;
-    }
-
-    + .btn-mini-toggle {
-      margin-left: 0;
     }
   }
 
@@ -781,8 +765,9 @@ html.composer-open:not(.has-full-page-chat) {
 
       .submit-panel,
       .composer-fields {
-        // this prevents touch events (i.e. accidental scrolls) from bubbling up
-        touch-action: none;
+        // prevents accidental scroll-panning from bubbling up while still
+        // allowing the browser's pinch-zoom gesture
+        touch-action: pinch-zoom;
       }
     }
 
@@ -1195,5 +1180,20 @@ body.has-sidebar-page {
       --layout-gap: 1em;
       margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
     }
+  }
+}
+
+.composer-toggle-item {
+  cursor: pointer;
+
+  @include menu-item;
+
+  &__icons .d-toggle-switch {
+    --toggle-switch-width: var(--d-sidebar-section-link-prefix-width);
+    --toggle-switch-height: 16px;
+  }
+
+  &__icons .d-toggle-switch__checkbox-slider .d-icon {
+    display: none;
   }
 }

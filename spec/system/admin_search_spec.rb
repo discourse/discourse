@@ -75,6 +75,7 @@ describe "Admin Search" do
 
   it "opens search modal with keyboard shortcut" do
     visit "/admin"
+    expect(page).to have_css("#site-logo")
 
     send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "/"])
     expect(search_modal).to be_open

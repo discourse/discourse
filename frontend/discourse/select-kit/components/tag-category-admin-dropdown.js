@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import renderTag from "discourse/lib/render-tag";
 import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 

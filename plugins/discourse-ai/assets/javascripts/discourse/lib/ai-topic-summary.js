@@ -53,19 +53,21 @@ export default class AiTopicSummary {
       return;
     }
 
-    let fetchURL = `/discourse-ai/summarization/t/${topicId}?`;
+    let fetchURL = `/discourse-ai/summarization/t/${topicId}`;
+    let ajaxOpts = {};
 
     if (currentUser) {
-      fetchURL += `stream=true`;
+      ajaxOpts.type = "POST";
+      ajaxOpts.data = { stream: true };
 
       if (this.canRegenerate) {
-        fetchURL += "&skip_age_check=true";
+        ajaxOpts.data.skip_age_check = true;
       }
     }
 
     this.loading = true;
 
-    return ajax(fetchURL)
+    return ajax(fetchURL, ajaxOpts)
       .then((data) => {
         if (!currentUser) {
           data.done = true;

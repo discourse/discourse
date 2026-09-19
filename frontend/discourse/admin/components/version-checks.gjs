@@ -1,8 +1,8 @@
-import CustomHtml from "discourse/components/custom-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import dashIfEmpty from "discourse/helpers/dash-if-empty";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DCustomHtml from "discourse/ui-kit/d-custom-html";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const VersionChecks = <template>
@@ -12,28 +12,38 @@ const VersionChecks = <template>
     </h2>
   </div>
 
-  <div
-    class="dashboard-stats version-check
-      {{if @versionCheck.critical_updates 'critical' 'normal'}}"
-  >
+  <div class="dashboard-stats version-check">
     <div class="version-number">
       <h4>
         {{i18n "admin.dashboard.installed_version"}}
       </h4>
       <h3>
         {{dashIfEmpty @versionCheck.installed_version}}
+        {{#if @versionCheck.installedCommitsAhead}}
+          <span
+            class="commits-ahead"
+            title={{i18n
+              "admin.dashboard.commits_ahead"
+              count=@versionCheck.installedCommitsAhead
+            }}
+          >+{{@versionCheck.installedCommitsAhead}}</span>
+        {{/if}}
       </h3>
       {{#if @versionCheck.gitLink}}
-        <div class="sha-link">
-          (
+        <div class="version-links">
           <a
+            class="github-link"
             href={{@versionCheck.gitLink}}
             rel="noopener noreferrer"
             target="_blank"
+            title={{i18n
+              "admin.dashboard.commit_on_github"
+              sha=@versionCheck.shortSha
+            }}
           >
-            {{@versionCheck.shortSha}}
+            {{i18n "admin.dashboard.github"}}
+            {{dIcon "up-right-from-square"}}
           </a>
-          )
         </div>
       {{/if}}
     </div>
@@ -49,7 +59,7 @@ const VersionChecks = <template>
       <div class="version-status">
         <div class="face">
           <span class="icon critical-updates-available">
-            {{icon "far-face-frown"}}
+            {{dIcon "far-face-frown"}}
           </span>
         </div>
         <div class="version-notes">
@@ -73,11 +83,11 @@ const VersionChecks = <template>
         <div class="face">
           {{#if @versionCheck.version_check_pending}}
             <span class="icon up-to-date">
-              {{icon "far-face-smile"}}
+              {{dIcon "far-face-smile"}}
             </span>
           {{else}}
             <span class="icon critical-updates-available">
-              {{icon "far-face-frown"}}
+              {{dIcon "far-face-frown"}}
             </span>
           {{/if}}
         </div>
@@ -98,48 +108,80 @@ const VersionChecks = <template>
         </h4>
         <h3>
           {{dashIfEmpty @versionCheck.latest_version}}
+          {{#if @versionCheck.latestCommitsAhead}}
+            <span
+              class="commits-ahead"
+              title={{i18n
+                "admin.dashboard.commits_ahead"
+                count=@versionCheck.latestCommitsAhead
+              }}
+            >+{{@versionCheck.latestCommitsAhead}}</span>
+          {{/if}}
         </h3>
+        {{#if @versionCheck.latestGitLink}}
+          <div class="version-links">
+            {{#if @versionCheck.changelogLink}}
+              <a
+                class="changelog-link"
+                href={{@versionCheck.changelogLink}}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {{i18n "admin.dashboard.changelog"}}
+                {{dIcon "up-right-from-square"}}
+              </a>
+            {{/if}}
+            <a
+              class="github-link"
+              href={{@versionCheck.latestGitLink}}
+              rel="noopener noreferrer"
+              target="_blank"
+              title={{i18n
+                "admin.dashboard.commit_on_github"
+                sha=@versionCheck.latestShortSha
+              }}
+            >
+              {{i18n "admin.dashboard.github"}}
+              {{dIcon "up-right-from-square"}}
+            </a>
+          </div>
+        {{/if}}
       </div>
       <div class="version-status">
         <div class="face">
           {{#if @versionCheck.upToDate}}
             <span class="icon up-to-date">
-              {{icon "far-face-smile"}}
+              {{dIcon "far-face-smile"}}
             </span>
           {{else}}
-            <span
-              class="icon
-                {{if
-                  @versionCheck.critical_updates
-                  'critical-updates-available'
-                  'updates-available'
-                }}"
-            >
+            <span class="icon updates-available">
               {{#if @versionCheck.behindByOneVersion}}
-                {{icon "far-face-meh"}}
+                {{dIcon "far-face-meh"}}
               {{else}}
-                {{icon "far-face-frown"}}
+                {{dIcon "far-face-frown"}}
               {{/if}}
             </span>
           {{/if}}
         </div>
         <div class="version-notes">
           {{#if @versionCheck.upToDate}}
-            {{i18n "admin.dashboard.up_to_date"}}
+            {{#if @versionCheck.newerCommitsAvailable}}
+              {{i18n
+                "admin.dashboard.up_to_date_newer_commits"
+                count=@versionCheck.newChangesCount
+              }}
+            {{else}}
+              {{i18n "admin.dashboard.up_to_date"}}
+            {{/if}}
           {{else}}
-            <span class="critical-note">
-              {{i18n "admin.dashboard.critical_available"}}
-            </span>
-            <span class="normal-note">
-              {{i18n "admin.dashboard.updates_available"}}
-            </span>
+            {{i18n "admin.dashboard.updates_available"}}
             {{i18n "admin.dashboard.please_update"}}
           {{/if}}
         </div>
       </div>
     {{/if}}
 
-    <CustomHtml @name="update-header" class="update-header" />
+    <DCustomHtml class="update-header" @name="update-header" />
 
     <PluginOutlet
       @name="admin-upgrade-header"

@@ -48,7 +48,5 @@ RSpec.describe Jobs::BulkUserTitleUpdate do
       described_class.new.execute(granted_badge_id: badge.id, action: described_class::RESET_ACTION)
       expect(user.reload.title).to eq("Protector of the Realm")
     end
-
-    after { TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name)) }
   end
 end

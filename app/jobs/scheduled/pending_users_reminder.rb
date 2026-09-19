@@ -7,6 +7,7 @@ module Jobs
     def execute(args)
       if SiteSetting.must_approve_users && SiteSetting.pending_users_reminder_delay_minutes >= 0
         query = AdminUserIndexQuery.new(query: "pending", stats: false).find_users_query # default order is: users.created_at DESC
+        query = query.where(id: ReviewableUser.pending.select(:target_id))
         if SiteSetting.pending_users_reminder_delay_minutes > 0
           query =
             query.where(

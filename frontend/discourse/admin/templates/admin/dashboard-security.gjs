@@ -4,24 +4,28 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 export default <template>
   <div class="sections">
     <PluginOutlet
-      @name="admin-dashboard-security-top"
       @connectorTagName="div"
+      @name="admin-dashboard-security-top"
     />
 
     <div class="main-section">
-      <AdminReport
-        @dataSourceName="suspicious_logins"
-        @filters={{@controller.lastWeekFilters}}
-      />
+      {{#if @controller.currentUser.can_see_ip}}
+        <AdminReport
+          @dataSourceName="suspicious_logins"
+          @filters={{@controller.lastWeekFilters}}
+        />
+      {{/if}}
 
-      <AdminReport
-        @dataSourceName="staff_logins"
-        @filters={{@controller.lastWeekFilters}}
-      />
+      {{#if @controller.currentUser.admin}}
+        <AdminReport
+          @dataSourceName="admin_logins"
+          @filters={{@controller.lastWeekFilters}}
+        />
+      {{/if}}
 
       <PluginOutlet
-        @name="admin-dashboard-security-bottom"
         @connectorTagName="div"
+        @name="admin-dashboard-security-bottom"
       />
     </div>
   </div>

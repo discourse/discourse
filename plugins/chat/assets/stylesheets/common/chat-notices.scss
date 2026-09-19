@@ -13,6 +13,11 @@
     top: 2rem;
   }
 
+  // float notices below the pinned bar only while it's actually visible
+  .chat-channel:has(.chat-pinned-bar:not(.--dismissed, .--loading)) & {
+    top: var(--chat-pinned-bar-height);
+  }
+
   &__notice,
   .chat-retention-reminder {
     display: flex;

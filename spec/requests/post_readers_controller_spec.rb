@@ -117,6 +117,30 @@ RSpec.describe PostReadersController do
       expect(reader_data["username_lower"]).to eq reader.username_lower
     end
 
+    it "returns forbidden if current_user cannot see members of the read state group" do
+      member = Fabricate(:user)
+      hidden_member = Fabricate(:user)
+
+      @group.update!(
+        visibility_level: Group.visibility_levels[:members],
+        members_visibility_level: Group.visibility_levels[:staff],
+        publish_read_state: true,
+      )
+      @group.add(member)
+      @group.add(hidden_member)
+      TopicUser.create!(
+        user: hidden_member,
+        topic: @group_message,
+        last_read_post_number: @post.post_number,
+      )
+
+      sign_in(member)
+      get "/post_readers.json", params: { id: @post.id }
+
+      expect(response).to be_forbidden
+      expect(response.parsed_body["error_type"]).to eq("invalid_access")
+    end
+
     it "returns forbidden if no group has publish_read_state enabled" do
       get "/post_readers.json", params: { id: @post.id }
 

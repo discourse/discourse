@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
-import icon from "discourse/helpers/d-icon";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -14,12 +14,12 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-watching"}}
+      <label>{{dIcon "d-watching"}}
         {{i18n "groups.notifications.watching.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.watchingCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.watchingCategories}}
         @onChange={{fn (mut @controller.model.watchingCategories)}}
       />
 
@@ -29,12 +29,12 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-tracking"}}
+      <label>{{dIcon "d-tracking"}}
         {{i18n "groups.notifications.tracking.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.trackingCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.trackingCategories}}
         @onChange={{fn (mut @controller.model.trackingCategories)}}
       />
 
@@ -44,12 +44,12 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-watching-first"}}
+      <label>{{dIcon "d-watching-first"}}
         {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.watchingFirstPostCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.watchingFirstPostCategories}}
         @onChange={{fn (mut @controller.model.watchingFirstPostCategories)}}
       />
 
@@ -61,12 +61,12 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-regular"}}
+      <label>{{dIcon "d-regular"}}
         {{i18n "groups.notifications.regular.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.regularCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.regularCategories}}
         @onChange={{fn (mut @controller.model.regularCategories)}}
       />
 
@@ -76,12 +76,12 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-muted"}}
+      <label>{{dIcon "d-muted"}}
         {{i18n "groups.notifications.muted.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.mutedCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.mutedCategories}}
         @onChange={{fn (mut @controller.model.mutedCategories)}}
       />
 

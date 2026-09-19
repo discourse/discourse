@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
-import concatClass from "discourse/helpers/concat-class";
 import { or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class ImageAltTextInput extends Component {
@@ -56,16 +56,16 @@ export default class ImageAltTextInput extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "image-alt-text-input"
         (if this.isExpanded "--expanded")
       }}
     >
       {{#if this.isExpanded}}
         <textarea
-          value={{this.transientAltText}}
-          placeholder={{i18n "composer.image_alt_text.title"}}
           class="image-alt-text-input__field"
+          placeholder={{i18n "composer.image_alt_text.title"}}
+          value={{this.transientAltText}}
           {{on "input" this.onInputChange}}
           {{on "blur" this.onBlur}}
           {{on "keydown" this.onKeyDown}}
@@ -73,8 +73,8 @@ export default class ImageAltTextInput extends Component {
         />
       {{else}}
         <div
-          tabindex="0"
           class="image-alt-text-input__display"
+          tabindex="0"
           {{on "focus" this.expandInput}}
           {{on "click" this.expandInput}}
         >

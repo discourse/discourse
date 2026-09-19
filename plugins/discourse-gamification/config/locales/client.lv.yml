@@ -37,3 +37,8 @@ lv:
       custom_range_from: "No"
       admin:
         name: "Vārds"
+    discourse_workflows:
+      gamification_score:
+        username: "Lietotājs"
+        date: "Datums"
+        description: "Apraksts"

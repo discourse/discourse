@@ -6,8 +6,7 @@ end
 
 class Plugin::Metadata
   # from config/official_plugins.json
-  OFFICIAL_PLUGINS =
-    Set.new(JSON.load_file(File.join(Rails.root, "config", "official_plugins.json")))
+  OFFICIAL_PLUGINS = Set.new(JSON.load_file(Rails.root.join("config/official_plugins.json").to_s))
 
   FIELDS = %i[name about version authors contact_emails url required_version meta_topic_id label]
   attr_accessor(*FIELDS)
@@ -31,7 +30,7 @@ class Plugin::Metadata
   end
 
   def self.parse(text)
-    metadata = self.new
+    metadata = new
     text.each_line { |line| break unless metadata.parse_line(line) }
     metadata
   end
@@ -51,10 +50,7 @@ class Plugin::Metadata
       attribute = attribute.strip.gsub(/ /, "_").to_sym
 
       if FIELDS.include?(attribute)
-        self.public_send(
-          "#{attribute}=",
-          value.strip.truncate(MAX_FIELD_LENGTHS[attribute] || 1000),
-        )
+        public_send("#{attribute}=", value.strip.truncate(MAX_FIELD_LENGTHS[attribute] || 1000))
       end
     end
 

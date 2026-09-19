@@ -39,6 +39,13 @@ vi:
     popup:
       chat_mention:
         direct: '%{username} nhắc đến bạn trong "%{channel}"'
+    actions:
+      chat_reply:
+        title: Trả lời
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Duyệt"
+      default_deny_label: "Từ chối"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

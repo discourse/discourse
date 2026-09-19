@@ -2,13 +2,12 @@
 
 describe "capabilities service" do
   describe "viewport helpers" do
-    it "works" do
+    it "updates viewport matches when the window is resized" do
       def matches(name)
         page.evaluate_script("Discourse.lookup('service:capabilities').viewport[#{name.to_json}]")
       end
 
       visit "/"
-      expect(page).to have_css("#site-logo")
 
       expect(matches("sm")).to eq(true)
       expect(matches("lg")).to eq(true)

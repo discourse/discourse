@@ -121,30 +121,43 @@ RSpec.describe Admin::ImpersonateController do
   describe "#destroy" do
     before { sign_in(admin) }
 
-    it "checks if experimental impersonation is allowed for the acting user" do
-      SiteSettingGroup.create!(name: "impersonate_without_logout", group_ids: "1|2")
-      SiteSetting.refresh!
-
+    it "succeeds and logs the impersonation" do
       post "/admin/impersonate.json", params: { username_or_email: user.username }
 
-      delete "/admin/impersonate.json"
+      delete "/admin/impersonate"
 
       expect(response.status).to eq(200)
       expect(session[:current_user_id]).to eq(admin.id)
     end
 
-    it "does not pass routing constraint when current user is not impersonating" do
-      delete "/admin/impersonate.json"
+    it "does nothing and returns success if not impersonating" do
+      delete "/admin/impersonate"
 
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(200)
     end
 
     it "stops impersonating" do
       post "/admin/impersonate.json", params: { username_or_email: user.username }
-      delete "/admin/impersonate.json"
+      delete "/admin/impersonate"
 
       expect(response.status).to eq(200)
       expect(session[:current_user_id]).to eq(admin.id)
+    end
+
+    context "when enforce_second_factor is enabled and impersonated user has no 2FA" do
+      before do
+        SiteSetting.enforce_second_factor = "all"
+        Fabricate(:user_second_factor_totp, user: admin)
+      end
+
+      it "stops impersonating despite 2FA enforcement on the impersonated user" do
+        post "/admin/impersonate.json", params: { username_or_email: user.username }
+
+        delete "/admin/impersonate"
+
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(admin.id)
+      end
     end
   end
 end

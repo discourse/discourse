@@ -56,7 +56,7 @@ describe DiscourseAutomation::AdminAutomationsController do
         let(:admin) { Fabricate(:admin) }
         let(:api_key) { Fabricate(:api_key, user: admin) }
 
-        it "works" do
+        it "enqueues the automation trigger with an admin API key" do
           post "/automations/#{automation.id}/trigger.json",
                params: {
                  context: {

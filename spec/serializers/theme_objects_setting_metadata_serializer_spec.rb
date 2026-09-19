@@ -4,7 +4,7 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
   fab!(:theme)
 
   let(:theme_setting) do
-    yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+    yaml = File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
     theme.settings
@@ -15,13 +15,14 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
       theme.set_field(
         target: :translations,
         name: "en",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        value:
+          File.read("#{Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")}"),
       )
 
       theme.save!
     end
 
-    it "should return a hash of the settings property descriptions with schema.properties segments stripped" do
+    it "returns property descriptions without schema.properties segments" do
       objects_setting_locale
 
       payload = described_class.new(theme_setting[:objects_setting], root: false).as_json
@@ -49,7 +50,7 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
     fab!(:category_3) { Fabricate(:private_category, group: Fabricate(:group)) }
     fab!(:admin)
 
-    it "should return a hash of serialized categories" do
+    it "returns serialized categories" do
       theme_setting[:objects_with_categories].value = [
         {
           "category_ids" => [category_1.id, category_2.id],

@@ -190,7 +190,7 @@ module BackupRestore
   end
 
   def self.spawn_process!(type, user_id, opts)
-    script = File.join(Rails.root, "script", "spawn_backup_restore.rb")
+    script = Rails.root.join("script/spawn_backup_restore.rb").to_s
     command = ["bundle", "exec", "ruby", script, type, user_id, opts.to_json].map(&:to_s)
 
     pid = spawn({ "RAILS_DB" => RailsMultisite::ConnectionManagement.current_db }, *command)

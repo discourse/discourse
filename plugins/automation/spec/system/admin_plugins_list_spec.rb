@@ -12,7 +12,7 @@ describe "Admin Plugins List" do
   end
 
   let(:automation_plugin) do
-    Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "automation", "plugin.rb"))
+    Plugin::Instance.parse_from_source(Rails.root.join("plugins/automation/plugin.rb").to_s)
   end
 
   it "shows the list of plugins" do
@@ -47,8 +47,10 @@ describe "Admin Plugins List" do
     expect(SiteSetting.discourse_automation_enabled).to eq(true)
   end
 
-  it "shows a navigation tab for each plugin that needs it" do
+  it "links a plugin with a config page to its config page" do
     admin_plugins_list_page.visit
-    expect(admin_plugins_list_page).to have_plugin_tab("automation")
+    admin_plugins_list_page.click_plugin_name("automation")
+
+    expect(page).to have_css(".admin-plugin-config-page .d-page-header__title", text: "Automation")
   end
 end

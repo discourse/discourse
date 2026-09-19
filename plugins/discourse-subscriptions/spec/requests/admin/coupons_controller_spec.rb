@@ -24,6 +24,17 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
     end
 
     describe "#index" do
+      before { SiteSetting.discourse_subscriptions_public_key = "public-key" }
+
+      it "returns nothing when Stripe is not configured" do
+        SiteSetting.discourse_subscriptions_public_key = ""
+
+        get "/s/admin/coupons.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to be_nil
+      end
+
       it "returns a list of promo codes" do
         ::Stripe::PromotionCode
           .expects(:list)

@@ -83,3 +83,8 @@ he:
         title: "משחוק"
         name: "שם"
         period: "פרק זמן"
+    discourse_workflows:
+      gamification_score:
+        username: "משתמש"
+        date: "תאריך"
+        description: "תיאור"

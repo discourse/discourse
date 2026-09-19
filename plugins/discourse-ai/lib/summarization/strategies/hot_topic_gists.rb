@@ -4,12 +4,23 @@ module DiscourseAi
   module Summarization
     module Strategies
       class HotTopicGists < Base
+        attr_reader :locale
+
+        def initialize(target, locale: nil)
+          @locale = LocaleNormalizer.normalize_to_i18n(locale)&.to_s
+          super(target)
+        end
+
         def type
           AiSummary.summary_types[:gist]
         end
 
         def feature
           "gists"
+        end
+
+        def output_tool
+          DiscourseAi::Agents::Tools::SetTopicSummary
         end
 
         def highest_target_number
@@ -86,8 +97,14 @@ module DiscourseAi
               Your task is to focus on these latest messages, capturing their meaning in the context of the initial statement.
             TEXT
           else
-            context << "Your task is to capture the meaning of the initial statement."
+            context << "Your task is to capture the meaning of the initial statement.\n"
           end
+
+          context << <<~TEXT
+
+            Write the summary in #{output_language}, regardless of the language used in the input.
+            Submit the final summary by calling set_topic_summary exactly once.
+          TEXT
 
           [{ type: :user, content: context }]
         end

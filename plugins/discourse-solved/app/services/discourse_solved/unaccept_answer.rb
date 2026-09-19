@@ -11,6 +11,7 @@ class DiscourseSolved::UnacceptAnswer
 
   model :post
   model :topic
+  model :topic_answer, optional: true
   policy :can_unaccept_answer
 
   only_if(:post_is_accepted_answer) do
@@ -39,12 +40,16 @@ class DiscourseSolved::UnacceptAnswer
     post.topic
   end
 
+  def fetch_topic_answer(topic:, post:)
+    topic.topic_answers.find_by(answer_post_id: post.id)
+  end
+
   def can_unaccept_answer(guardian:, topic:, post:)
     guardian.can_unaccept_answer?(topic, post)
   end
 
-  def post_is_accepted_answer(topic:, post:)
-    topic.solved&.answer_post == post
+  def post_is_accepted_answer(topic_answer:)
+    topic_answer.present?
   end
 
   def revoke_solved_credit(post:)
@@ -67,8 +72,10 @@ class DiscourseSolved::UnacceptAnswer
       .destroy_all
   end
 
-  def unmark_as_solved(topic:)
-    topic.solved.destroy!
+  def unmark_as_solved(topic:, topic_answer:)
+    topic_answer.destroy!
+    solved = topic.solved
+    solved.destroy! if solved && solved.topic_answers.none?
   end
 
   def unaccepted_solution_webhooks_active
@@ -79,11 +86,14 @@ class DiscourseSolved::UnacceptAnswer
     WebHook.enqueue_solved_hooks(:unaccepted_solution, post, WebHook.generate_payload(:post, post))
   end
 
-  def publish_unaccepted(post:, topic:)
+  def publish_unaccepted(post:, topic:, guardian:)
     DiscourseEvent.trigger(:unaccepted_solution, post)
     MessageBus.publish(
       "/topic/#{topic.id}",
-      { type: :unaccepted_solution },
+      {
+        type: :unaccepted_solution,
+        accepted_answers: DiscourseSolved::AcceptedAnswersHelper.serialize(topic.reload, guardian),
+      },
       topic.secure_audience_publish_messages,
     )
   end

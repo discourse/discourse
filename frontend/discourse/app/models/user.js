@@ -34,6 +34,10 @@ import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -54,6 +58,7 @@ export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
+  PASSKEY: 4,
 };
 
 export const MAX_SECOND_FACTOR_NAME_LENGTH = 300;
@@ -121,10 +126,10 @@ let userOptionFields = [
   "email_messages_level",
   "email_previous_replies",
   "enable_allowed_pm_users",
-  "enable_defer",
   "enable_markdown_monospace_font",
   "enable_quoting",
   "enable_smart_lists",
+  "enable_upcoming_change_available_notifications",
   "external_links_in_new_tab",
   "hide_presence",
   "hide_profile",
@@ -137,7 +142,10 @@ let userOptionFields = [
   "new_topic_duration_minutes",
   "notification_level_when_replying",
   "notify_on_linked_posts",
+  "push_notification_level",
   "seen_popups",
+  "send_shortcut",
+  "automatically_translate",
   "show_original_content",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
@@ -146,7 +154,7 @@ let userOptionFields = [
   "theme_ids",
   "timezone",
   "title_count_mode",
-  "topics_unread_when_closed",
+  "understood_languages",
   "watched_precedence_over_muted",
 ];
 
@@ -193,8 +201,18 @@ export default class User extends RestModel.extend(Evented) {
     if (userJson) {
       userJson.isCurrent = true;
 
+      // Calling user.groups is deprecated, see discourse.user.groups,
+      // it is replaced by visibleGroups
+      if (
+        !Object.hasOwn(userJson, "visibleGroups") &&
+        Object.hasOwn(userJson, "groups")
+      ) {
+        userJson.visibleGroups = userJson.groups;
+        delete userJson.groups;
+      }
+
       if (userJson.primary_group_id) {
-        const primaryGroup = userJson.groups.find(
+        const primaryGroup = userJson.visibleGroups.find(
           (group) => group.id === userJson.primary_group_id
         );
         if (primaryGroup) {
@@ -239,7 +257,6 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("hide_profile") hide_profile;
   @userOption("hide_presence") hide_presence;
   @userOption("title_count_mode") title_count_mode;
-  @userOption("enable_defer") enable_defer;
   @userOption("timezone") timezone;
   @userOption("skip_new_user_tips") skip_new_user_tips;
   @userOption("default_calendar") default_calendar;
@@ -254,6 +271,182 @@ export default class User extends RestModel.extend(Evented) {
   numGroupsToDisplay = 2;
 
   statusManager = new UserStatusManager(this);
+
+  @tracked _location;
+
+  @computed("sidebar_category_ids")
+  get sidebarCategoryIds() {
+    return this.sidebar_category_ids;
+  }
+
+  set sidebarCategoryIds(value) {
+    set(this, "sidebar_category_ids", value);
+  }
+
+  @dependentKeyCompat
+  get sidebarSections() {
+    return this.sidebar_sections;
+  }
+
+  set sidebarSections(value) {
+    this.sidebar_sections = value;
+  }
+
+  @dependentKeyCompat
+  get location() {
+    return applyValueTransformer("user-location", this._location, {
+      user: this,
+    });
+  }
+
+  set location(value) {
+    this._location = value;
+  }
+
+  @computed("can_pick_theme_with_custom_homepage")
+  get canPickThemeWithCustomHomepage() {
+    return this.can_pick_theme_with_custom_homepage;
+  }
+
+  set canPickThemeWithCustomHomepage(value) {
+    set(this, "can_pick_theme_with_custom_homepage", value);
+  }
+
+  @computed("can_edit_tags")
+  get canEditTags() {
+    return this.can_edit_tags;
+  }
+
+  set canEditTags(value) {
+    set(this, "can_edit_tags", value);
+  }
+
+  @computed("can_change_post_owner")
+  get canChangePostOwner() {
+    return this.can_change_post_owner;
+  }
+
+  set canChangePostOwner(value) {
+    set(this, "can_change_post_owner", value);
+  }
+
+  @computed("admin", "moderator")
+  get staff() {
+    return this.admin || this.moderator;
+  }
+
+  // prevents staff property to be overridden
+  set staff(value) {}
+
+  @dependentKeyCompat
+  get mutedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.muted_category_ids &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("muted_category_ids"));
+  }
+
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get regularCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.regular_category_ids &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("regular_category_ids"));
+  }
+
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get trackedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.tracked_category_ids &&
+      !Category.hasAsyncFoundAll(this.tracked_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracked_category_ids).then(() =>
+        this.notifyPropertyChange("tracked_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("tracked_category_ids"));
+  }
+
+  set trackedCategories(categories) {
+    this.set(
+      "tracked_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get watchedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watched_category_ids &&
+      !Category.hasAsyncFoundAll(this.watched_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watched_category_ids).then(() =>
+        this.notifyPropertyChange("watched_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watched_category_ids"));
+  }
+
+  set watchedCategories(categories) {
+    this.set(
+      "watched_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get watchedFirstPostCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watched_first_post_category_ids &&
+      !Category.hasAsyncFoundAll(this.watched_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watched_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watched_first_post_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watched_first_post_category_ids"));
+  }
+
+  set watchedFirstPostCategories(categories) {
+    this.set(
+      "watched_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
 
   @computed("private_messages_stats.all")
   get hasPMs() {
@@ -295,22 +488,9 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff || this.isLeader;
   }
 
-  @computed("sidebar_category_ids")
-  get sidebarCategoryIds() {
-    return this.sidebar_category_ids;
-  }
-
-  set sidebarCategoryIds(value) {
-    set(this, "sidebar_category_ids", value);
-  }
-
-  @dependentKeyCompat
-  get sidebarSections() {
-    return this.sidebar_sections;
-  }
-
-  set sidebarSections(value) {
-    this.sidebar_sections = value;
+  @computed("can_set_topic_timer", "canManageTopic")
+  get canSetTopicTimer() {
+    return this.can_set_topic_timer ?? this.canManageTopic;
   }
 
   @computed("sidebarTags.@each.name")
@@ -318,36 +498,11 @@ export default class User extends RestModel.extend(Evented) {
     return this.sidebarTags?.map?.((item) => item.name) ?? [];
   }
 
-  @computed("groups.@each.has_messages")
+  @computed("visibleGroups.@each.has_messages")
   get groupsWithMessages() {
-    return this.groups?.filter?.((item) => item.has_messages === true) ?? [];
-  }
-
-  @computed("can_pick_theme_with_custom_homepage")
-  get canPickThemeWithCustomHomepage() {
-    return this.can_pick_theme_with_custom_homepage;
-  }
-
-  set canPickThemeWithCustomHomepage(value) {
-    set(this, "can_pick_theme_with_custom_homepage", value);
-  }
-
-  @computed("can_edit_tags")
-  get canEditTags() {
-    return this.can_edit_tags;
-  }
-
-  set canEditTags(value) {
-    set(this, "can_edit_tags", value);
-  }
-
-  @computed("can_change_post_owner")
-  get canChangePostOwner() {
-    return this.can_change_post_owner;
-  }
-
-  set canChangePostOwner(value) {
-    set(this, "can_change_post_owner", value);
+    return (
+      this.visibleGroups?.filter?.((item) => item.has_messages === true) ?? []
+    );
   }
 
   @computed("user_option.composition_mode")
@@ -383,13 +538,17 @@ export default class User extends RestModel.extend(Evented) {
     return UserDraftsStream.create({ user: this });
   }
 
-  @computed("admin", "moderator")
-  get staff() {
-    return this.admin || this.moderator;
+  get groups() {
+    deprecated(
+      "Calling user.groups is deprecated, use user.visibleGroups instead, it more accurately reflects what this array of groups represents, not all of the user's group memberships may be serialized to the client. For permission checks, check the user's groups server-side and add an attribute to the User/CurrentUserSerializer, or use `resolve_group_memberships: true` for theme settings.",
+      {
+        id: "discourse.user.groups",
+        since: "2026.8.0-latest.1",
+        url: "https://meta.discourse.org/t/-/411124",
+      }
+    );
+    return this.visibleGroups;
   }
-
-  // prevents staff property to be overridden
-  set staff(value) {}
 
   @computed("has_unseen_features")
   get hasUnseenFeatures() {
@@ -399,14 +558,6 @@ export default class User extends RestModel.extend(Evented) {
   @computed("has_new_upcoming_changes")
   get hasNewUpcomingChanges() {
     return this.staff && this.get("has_new_upcoming_changes");
-  }
-
-  destroySession(pushSubscription) {
-    const data = {};
-    if (pushSubscription) {
-      data.push_subscription = pushSubscription;
-    }
-    return ajax(`/session/${this.username}`, { type: "DELETE", data });
   }
 
   @computed("username_lower")
@@ -445,7 +596,9 @@ export default class User extends RestModel.extend(Evented) {
   @computed()
   get path() {
     // no need to observe, requires a hard refresh to update
-    return userPath(this.username_lower);
+    return applyValueTransformer("user-path", userPath(this.username_lower), {
+      user: this,
+    });
   }
 
   @computed()
@@ -465,44 +618,6 @@ export default class User extends RestModel.extend(Evented) {
 
         return obj;
       });
-    }
-  }
-
-  revokeApiKey(key) {
-    return ajax("/user-api-key/revoke", {
-      type: "POST",
-      data: { id: key.get("id") },
-    }).then(() => {
-      key.set("revoked", true);
-    });
-  }
-
-  undoRevokeApiKey(key) {
-    return ajax("/user-api-key/undo-revoke", {
-      type: "POST",
-      data: { id: key.get("id") },
-    }).then(() => {
-      key.set("revoked", false);
-    });
-  }
-
-  pmPath(topic) {
-    const username = this.username_lower;
-    const details = topic.details;
-    const allowedUsers = details?.allowed_users;
-    const groups = details?.allowed_groups;
-
-    // directly targeted so go to inbox
-    if (!groups || allowedUsers?.find((user) => user.id === this.id)) {
-      return userPath(`${username}/messages`);
-    } else if (groups) {
-      const firstAllowedGroup = groups.find((allowedGroup) =>
-        this.groups.some((userGroup) => userGroup.id === allowedGroup.id)
-      );
-
-      if (firstAllowedGroup) {
-        return userPath(`${username}/messages/group/${firstAllowedGroup.name}`);
-      }
     }
   }
 
@@ -583,6 +698,202 @@ export default class User extends RestModel.extend(Evented) {
     return this.sidebar_tags?.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
+  }
+
+  @computed("visibleGroups.[]")
+  get filteredGroups() {
+    const groups = this.visibleGroups || [];
+
+    return groups.filter((group) => {
+      return !group.automatic || group.id === AUTO_GROUPS.moderators.id;
+    });
+  }
+
+  @computed("filteredGroups", "numGroupsToDisplay")
+  get displayGroups() {
+    const groups = this.filteredGroups.slice(0, this.numGroupsToDisplay);
+    return groups.length === 0 ? null : groups;
+  }
+
+  // The user's stat count, excluding PMs.
+  @computed("statsExcludingPms.@each.count")
+  get statsCountNonPM() {
+    if (isEmpty(this.statsExcludingPms)) {
+      return 0;
+    }
+    let count = 0;
+    this.statsExcludingPms.forEach((val) => {
+      if (this.inAllStream(val)) {
+        count += val.count;
+      }
+    });
+    return count;
+  }
+
+  // The user's stats, excluding PMs.
+  @computed("stats.@each.isPM")
+  get statsExcludingPms() {
+    if (isEmpty(this.stats)) {
+      return [];
+    }
+    return this.stats.filter((stat) => !stat.isPM);
+  }
+
+  @computed("can_delete_account")
+  get canDeleteAccount() {
+    return (
+      !this.siteSettings.enable_discourse_connect && this.can_delete_account
+    );
+  }
+
+  @dependentKeyCompat
+  get sidebarLinkToFilteredList() {
+    return this.get("user_option.sidebar_link_to_filtered_list");
+  }
+
+  @dependentKeyCompat
+  get sidebarShowCountOfNewItems() {
+    return this.get("user_option.sidebar_show_count_of_new_items");
+  }
+
+  @computed("visibleGroups.@each.title", "badges.[]")
+  get availableTitles() {
+    const titles = [];
+
+    (this.visibleGroups || []).forEach((group) => {
+      if (get(group, "title")) {
+        titles.push(get(group, "title"));
+      }
+    });
+
+    (this.badges || []).forEach((badge) => {
+      if (get(badge, "allow_title")) {
+        titles.push(get(badge, "name"));
+      }
+    });
+
+    return uniqueItemsFromArray(titles)
+      .sort()
+      .map((title) => {
+        return {
+          name: escapeExpression(title),
+          id: title,
+        };
+      });
+  }
+
+  @computed("visibleGroups.[]")
+  get availableFlairs() {
+    const flairs = [];
+
+    if (this.visibleGroups) {
+      this.visibleGroups.forEach((group) => {
+        if (group.flair_url) {
+          flairs.push({
+            id: group.id,
+            name: group.name,
+            url: group.flair_url,
+            bgColor: group.flair_bg_color,
+            color: group.flair_color,
+          });
+        }
+      });
+    }
+
+    return flairs;
+  }
+
+  @computed("user_option.text_size_seq", "user_option.text_size")
+  get currentTextSize() {
+    if (cookie(TEXT_SIZE_COOKIE_NAME)) {
+      const [cookieSize, cookieSeq] = cookie(TEXT_SIZE_COOKIE_NAME).split("|");
+      if (cookieSeq >= this.user_option?.text_size_seq) {
+        return cookieSize;
+      }
+    }
+    return this.user_option?.text_size;
+  }
+
+  @computed("second_factor_enabled", "staff")
+  get enforcedSecondFactor() {
+    const enforce = this.siteSettings.enforce_second_factor;
+    return (
+      !this.second_factor_enabled &&
+      (enforce === "all" || (enforce === "staff" && this.staff))
+    );
+  }
+
+  @computed("tracked_tags.[]", "watched_tags.[]", "watching_first_post_tags.[]")
+  get trackedTags() {
+    return [
+      ...(this.tracked_tags || []),
+      ...(this.watched_tags || []),
+      ...(this.watching_first_post_tags || []),
+    ];
+  }
+
+  get prefersLightColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.LIGHT
+    );
+  }
+
+  get prefersDarkColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.DARK
+    );
+  }
+
+  get prefersAutoColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.AUTODARK
+    );
+  }
+
+  destroySession(pushSubscription) {
+    const data = {};
+    if (pushSubscription) {
+      data.push_subscription = pushSubscription;
+    }
+    return ajax(`/session/${this.username}`, { type: "DELETE", data });
+  }
+
+  revokeApiKey(key) {
+    return ajax("/user-api-key/revoke", {
+      type: "POST",
+      data: { id: key.get("id") },
+    }).then(() => {
+      key.set("revoked", true);
+    });
+  }
+
+  undoRevokeApiKey(key) {
+    return ajax("/user-api-key/undo-revoke", {
+      type: "POST",
+      data: { id: key.get("id") },
+    }).then(() => {
+      key.set("revoked", false);
+    });
+  }
+
+  pmPath(topic) {
+    const username = this.username_lower;
+    const details = topic.details;
+    const allowedUsers = details?.allowed_users;
+    const groups = details?.allowed_groups;
+
+    // directly targeted so go to inbox
+    if (!groups || allowedUsers?.find((user) => user.id === this.id)) {
+      return userPath(`${username}/messages`);
+    } else if (groups) {
+      const firstAllowedGroup = groups.find((allowedGroup) =>
+        this.visibleGroups.some((userGroup) => userGroup.id === allowedGroup.id)
+      );
+
+      if (firstAllowedGroup) {
+        return userPath(`${username}/messages/group/${firstAllowedGroup.name}`);
+      }
+    }
   }
 
   changeUsername(new_username) {
@@ -876,45 +1187,6 @@ export default class User extends RestModel.extend(Evented) {
     );
   }
 
-  @computed("groups.[]")
-  get filteredGroups() {
-    const groups = this.groups || [];
-
-    return groups.filter((group) => {
-      return !group.automatic || group.id === AUTO_GROUPS.moderators.id;
-    });
-  }
-
-  @computed("filteredGroups", "numGroupsToDisplay")
-  get displayGroups() {
-    const groups = this.filteredGroups.slice(0, this.numGroupsToDisplay);
-    return groups.length === 0 ? null : groups;
-  }
-
-  // The user's stat count, excluding PMs.
-  @computed("statsExcludingPms.@each.count")
-  get statsCountNonPM() {
-    if (isEmpty(this.statsExcludingPms)) {
-      return 0;
-    }
-    let count = 0;
-    this.statsExcludingPms.forEach((val) => {
-      if (this.inAllStream(val)) {
-        count += val.count;
-      }
-    });
-    return count;
-  }
-
-  // The user's stats, excluding PMs.
-  @computed("stats.@each.isPM")
-  get statsExcludingPms() {
-    if (isEmpty(this.stats)) {
-      return [];
-    }
-    return this.stats.filter((stat) => !stat.isPM);
-  }
-
   findDetails(options) {
     const user = this;
 
@@ -946,16 +1218,13 @@ export default class User extends RestModel.extend(Evented) {
         );
       }
 
-      if (!isEmpty(json.user.groups) && !isEmpty(json.user.group_users)) {
-        const groups = [];
-
-        for (let i = 0; i < json.user.groups.length; i++) {
-          const group = Group.create(json.user.groups[i]);
-          group.group_user = json.user.group_users[i];
-          groups.push(group);
-        }
-
-        json.user.groups = groups;
+      if (Object.hasOwn(json.user, "groups")) {
+        json.user.visibleGroups = json.user.groups.map((groupJson, index) => {
+          const group = Group.create(groupJson);
+          group.group_user = json.user.group_users?.[index];
+          return group;
+        });
+        delete json.user.groups;
       }
 
       if (json.user.invited_by) {
@@ -1037,133 +1306,6 @@ export default class User extends RestModel.extend(Evented) {
       type: "POST",
       data: { email, skip_email: true, group_ids, topic_id },
     });
-  }
-
-  @dependentKeyCompat
-  get mutedCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.muted_category_ids &&
-      !Category.hasAsyncFoundAll(this.muted_category_ids)
-    ) {
-      Category.asyncFindByIds(this.muted_category_ids).then(() =>
-        this.notifyPropertyChange("muted_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("muted_category_ids"));
-  }
-
-  set mutedCategories(categories) {
-    this.set(
-      "muted_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get regularCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.regular_category_ids &&
-      !Category.hasAsyncFoundAll(this.regular_category_ids)
-    ) {
-      Category.asyncFindByIds(this.regular_category_ids).then(() =>
-        this.notifyPropertyChange("regular_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("regular_category_ids"));
-  }
-
-  set regularCategories(categories) {
-    this.set(
-      "regular_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get trackedCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.tracked_category_ids &&
-      !Category.hasAsyncFoundAll(this.tracked_category_ids)
-    ) {
-      Category.asyncFindByIds(this.tracked_category_ids).then(() =>
-        this.notifyPropertyChange("tracked_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("tracked_category_ids"));
-  }
-
-  set trackedCategories(categories) {
-    this.set(
-      "tracked_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get watchedCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.watched_category_ids &&
-      !Category.hasAsyncFoundAll(this.watched_category_ids)
-    ) {
-      Category.asyncFindByIds(this.watched_category_ids).then(() =>
-        this.notifyPropertyChange("watched_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("watched_category_ids"));
-  }
-
-  set watchedCategories(categories) {
-    this.set(
-      "watched_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @dependentKeyCompat
-  get watchedFirstPostCategories() {
-    if (
-      this.site.lazy_load_categories &&
-      this.watched_first_post_category_ids &&
-      !Category.hasAsyncFoundAll(this.watched_first_post_category_ids)
-    ) {
-      Category.asyncFindByIds(this.watched_first_post_category_ids).then(() =>
-        this.notifyPropertyChange("watched_first_post_category_ids")
-      );
-    }
-
-    return Category.findByIds(this.get("watched_first_post_category_ids"));
-  }
-
-  set watchedFirstPostCategories(categories) {
-    this.set(
-      "watched_first_post_category_ids",
-      categories.map((c) => c.id)
-    );
-  }
-
-  @computed("can_delete_account")
-  get canDeleteAccount() {
-    return (
-      !this.siteSettings.enable_discourse_connect && this.can_delete_account
-    );
-  }
-
-  @dependentKeyCompat
-  get sidebarLinkToFilteredList() {
-    return this.get("user_option.sidebar_link_to_filtered_list");
-  }
-
-  @dependentKeyCompat
-  get sidebarShowCountOfNewItems() {
-    return this.get("user_option.sidebar_show_count_of_new_items");
   }
 
   delete() {
@@ -1274,64 +1416,6 @@ export default class User extends RestModel.extend(Evented) {
     return group.get("can_admin_group") || group.get("is_group_owner");
   }
 
-  @computed("groups.@each.title", "badges.[]")
-  get availableTitles() {
-    const titles = [];
-
-    (this.groups || []).forEach((group) => {
-      if (get(group, "title")) {
-        titles.push(get(group, "title"));
-      }
-    });
-
-    (this.badges || []).forEach((badge) => {
-      if (get(badge, "allow_title")) {
-        titles.push(get(badge, "name"));
-      }
-    });
-
-    return uniqueItemsFromArray(titles)
-      .sort()
-      .map((title) => {
-        return {
-          name: escapeExpression(title),
-          id: title,
-        };
-      });
-  }
-
-  @computed("groups.[]")
-  get availableFlairs() {
-    const flairs = [];
-
-    if (this.groups) {
-      this.groups.forEach((group) => {
-        if (group.flair_url) {
-          flairs.push({
-            id: group.id,
-            name: group.name,
-            url: group.flair_url,
-            bgColor: group.flair_bg_color,
-            color: group.flair_color,
-          });
-        }
-      });
-    }
-
-    return flairs;
-  }
-
-  @computed("user_option.text_size_seq", "user_option.text_size")
-  get currentTextSize() {
-    if (cookie(TEXT_SIZE_COOKIE_NAME)) {
-      const [cookieSize, cookieSeq] = cookie(TEXT_SIZE_COOKIE_NAME).split("|");
-      if (cookieSeq >= this.user_option?.text_size_seq) {
-        return cookieSize;
-      }
-    }
-    return this.user_option?.text_size;
-  }
-
   updateTextSizeCookie(newSize) {
     if (newSize) {
       const seq = this.get("user_option.text_size_seq");
@@ -1342,15 +1426,6 @@ export default class User extends RestModel.extend(Evented) {
     } else {
       removeCookie(TEXT_SIZE_COOKIE_NAME, { path: "/" });
     }
-  }
-
-  @computed("second_factor_enabled", "staff")
-  get enforcedSecondFactor() {
-    const enforce = this.siteSettings.enforce_second_factor;
-    return (
-      !this.second_factor_enabled &&
-      (enforce === "all" || (enforce === "staff" && this.staff))
-    );
   }
 
   resolvedTimezone() {
@@ -1423,33 +1498,6 @@ export default class User extends RestModel.extend(Evented) {
 
     return getOwner(this).lookup("service:notifications").isInDoNotDisturb;
   }
-
-  @computed("tracked_tags.[]", "watched_tags.[]", "watching_first_post_tags.[]")
-  get trackedTags() {
-    return [
-      ...(this.tracked_tags || []),
-      ...(this.watched_tags || []),
-      ...(this.watching_first_post_tags || []),
-    ];
-  }
-
-  get prefersLightColor() {
-    return (
-      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.LIGHT
-    );
-  }
-
-  get prefersDarkColor() {
-    return (
-      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.DARK
-    );
-  }
-
-  get prefersAutoColor() {
-    return (
-      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.AUTODARK
-    );
-  }
 }
 
 User.reopenClass({
@@ -1507,7 +1555,7 @@ User.reopenClass({
     return result;
   },
 
-  createAccount(attrs) {
+  async createAccount(attrs) {
     let data = {
       name: attrs.accountName,
       email: attrs.accountEmail,
@@ -1523,10 +1571,15 @@ User.reopenClass({
       data.invite_code = attrs.inviteCode;
     }
 
-    return ajax(userPath(), {
-      data,
-      type: "POST",
-    });
+    return applyBehaviorTransformer(
+      "create-account",
+      () =>
+        ajax(userPath(), {
+          data,
+          type: "POST",
+        }),
+      { data }
+    );
   },
 
   _saveTimezone(user) {
@@ -1540,6 +1593,11 @@ User.reopenClass({
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);
+
+    if (Object.hasOwn(args, "groups")) {
+      args.visibleGroups = args.groups;
+      delete args.groups;
+    }
 
     return this._super(args);
   },

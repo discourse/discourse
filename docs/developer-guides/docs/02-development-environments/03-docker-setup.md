@@ -70,10 +70,10 @@ d/boot_dev --init
 d/rails s
 
 # And in a separate terminal
-d/ember-cli
+d/dev --only ember
 ```
 
-...then open a browser on http://localhost:4200 and _voila!_, you should see Discourse.
+...then open a browser on http://localhost:3000 and _voila!_, you should see Discourse.
 
 ## Plugin Symlinks
 

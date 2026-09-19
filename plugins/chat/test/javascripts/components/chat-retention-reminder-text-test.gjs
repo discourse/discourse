@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 import ChatRetentionReminderText from "discourse/plugins/chat/discourse/components/chat-retention-reminder-text";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Component | chat-retention-reminder-text", function (hooks) {
+module("Component | ChatRetentionReminderText", function (hooks) {
   setupRenderingTest(hooks);
 
   test("when setting is set on 0", async function (assert) {

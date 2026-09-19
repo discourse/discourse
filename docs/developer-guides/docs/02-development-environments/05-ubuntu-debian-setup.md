@@ -40,6 +40,7 @@ You will need the following packages on your system:
 - [Redis][redis_link]
 - [Node.js][node_link]
 - [pnpm][pnpm_link]
+- [libvips][libvips_link]
 - [MailHog][mh_link]\*\*
 - [ImageMagick][imagemagick_link]\*\*
 
@@ -96,20 +97,20 @@ bin/rails db:migrate
 RAILS_ENV=test bin/rails db:create db:migrate
 ```
 
-Start rails and ember server:
+Start rails and the frontend bundler:
 
 ```sh
-bin/ember-cli -u
+bin/dev
 ```
 
 If the images are not appearing, use this command instead:
 (_you can also specify an IP if you are working on a remote server_)
 
 ```sh
-DISCOURSE_HOSTNAME=localhost UNICORN_LISTENER=localhost:3000 bin/ember-cli -u
+DISCOURSE_HOSTNAME=localhost UNICORN_LISTENER=localhost:3000 bin/dev
 ```
 
-You should now be able to navigate to [http://localhost:4200](http://localhost:4200) to see your local Discourse installation.
+You should now be able to navigate to [http://localhost:3000](http://localhost:3000) to see your local Discourse installation.
 
 ## Create New Admin
 
@@ -145,6 +146,7 @@ Happy hacking! And to get started with that, see [Beginner’s Guide to Creating
 [pg_link]: http://www.postgresql.org/
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
+[libvips_link]: https://github.com/libvips/libvips/wiki#building-and-installing
 [imagemagick_link]: http://www.imagemagick.org/
 [pnpm_link]: https://pnpm.io/
 [mh_link]: https://github.com/mailhog/MailHog

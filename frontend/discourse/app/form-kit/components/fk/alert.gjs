@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FKAlert extends Component {
   get type() {
@@ -9,7 +9,7 @@ export default class FKAlert extends Component {
   <template>
     <div class="form-kit__alert alert alert-{{this.type}}" ...attributes>
       {{#if @icon}}
-        {{icon @icon}}
+        {{dIcon @icon}}
       {{/if}}
 
       <span class="form-kit__alert-message">{{yield}}</span>

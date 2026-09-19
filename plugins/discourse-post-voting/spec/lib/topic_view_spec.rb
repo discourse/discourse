@@ -43,7 +43,7 @@ describe TopicView do
     expect(topic_view.posts_user_voted).to eq(nil)
   end
 
-  it "should preload comments, comments count, user voted status for a given topic" do
+  it "preloads comments, comment count, and user vote status for a topic" do
     PostVoting::VoteManager.vote(comment, user)
     PostVoting::VoteManager.vote(comment_2, comment_3.user)
 
@@ -65,7 +65,7 @@ describe TopicView do
     expect(topic_view.comments_user_voted).to eq({ comment.id => true })
   end
 
-  it "should respect Topic::PRELOAD_COMMENTS_COUNT when loading initial comments" do
+  it "respects Topic::PRELOAD_COMMENTS_COUNT when loading initial comments" do
     stub_const(TopicView, "PRELOAD_COMMENTS_COUNT", 1) do
       topic_view = TopicView.new(topic, user)
 
@@ -74,7 +74,7 @@ describe TopicView do
     end
   end
 
-  it "should preload the right comments even if comments have been deleted" do
+  it "preloads the expected comments even when comments have been deleted" do
     comment_4 = Fabricate(:post_voting_comment, post: answer)
     comment.trash!
 
@@ -140,17 +140,13 @@ describe TopicView do
       end
     end
 
-    def topic_view_near(post)
-      TopicView.new(topic.id, user, post_number: post.post_number)
-    end
-
     before do
       Topic.reset_highest(topic.id)
       TopicView.stubs(:chunk_size).returns(3)
     end
 
     it "snaps to the lower boundary" do
-      near_view = topic_view_near(post)
+      near_view = TopicView.new(topic.id, user, post_number: post.post_number)
       expect(near_view.desired_post.id).to eq(post.id)
       expect(near_view.posts.map(&:id)).to eq(
         [post.id, answer_plus_2_votes.id, answer_plus_1_vote.id],
@@ -158,7 +154,7 @@ describe TopicView do
     end
 
     it "snaps to the upper boundary" do
-      near_view = topic_view_near(answer_minus_2_votes)
+      near_view = TopicView.new(topic.id, user, post_number: answer_minus_2_votes.post_number)
 
       expect(near_view.desired_post.id).to eq(answer_minus_2_votes.id)
       expect(near_view.posts.map(&:id)).to eq(
@@ -167,7 +163,7 @@ describe TopicView do
     end
 
     it "returns the posts in the middle" do
-      near_view = topic_view_near(answer_0_votes)
+      near_view = TopicView.new(topic.id, user, post_number: answer_0_votes.post_number)
       expect(near_view.desired_post.id).to eq(answer_0_votes.id)
       expect(near_view.posts.map(&:id)).to eq(
         [answer_plus_1_vote.id, answer_0_votes.id, answer_minus_1_vote.id],
@@ -211,6 +207,7 @@ describe TopicView do
         [answer_minus_2_votes.id, answer_minus_1_vote.id, answer_0_votes.id],
       )
     end
+
     describe "#next_page" do
       it "returns the next page properly when the highest id post is not the last" do
         expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(2)

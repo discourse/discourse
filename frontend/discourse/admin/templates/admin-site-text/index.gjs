@@ -1,30 +1,30 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import SiteTextSummary from "discourse/admin/components/site-text-summary";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="search-area">
-    <TextField
-      @value={{@controller.q}}
-      @placeholderKey="admin.site_text.search"
+    <DTextField
+      class="no-blur site-text-search"
       @autofocus="true"
       @key-up={{@controller.search}}
-      class="no-blur site-text-search"
+      @placeholderKey="admin.site_text.search"
+      @value={{@controller.q}}
     />
 
     <div class="reseed">
       <DButton
+        class="btn-default"
         @action={{@controller.showReseedModal}}
+        @icon="arrows-rotate"
         @label="admin.reseed.action.label"
         @title="admin.reseed.action.title"
-        @icon="arrows-rotate"
-        class="btn-default"
       />
     </div>
 
@@ -32,20 +32,20 @@ export default <template>
       <div class="locale">
         <label>{{i18n "admin.site_text.locale"}}</label>
         <ComboBox
-          @valueProperty="value"
+          class="locale-search"
           @content={{@controller.availableLocales}}
-          @value={{@controller.resolvedLocale}}
           @onChange={{@controller.updateLocale}}
           @options={{hash filterable=true}}
-          class="locale-search"
+          @value={{@controller.resolvedLocale}}
+          @valueProperty="value"
         />
       </div>
 
       <label class="checkbox-label">
         <input
+          checked={{@controller.resolvedOverridden}}
           id="toggle-overridden"
           type="checkbox"
-          checked={{@controller.resolvedOverridden}}
           {{on "click" @controller.toggleOverridden}}
         />
         {{i18n "admin.site_text.show_overriden"}}
@@ -53,9 +53,9 @@ export default <template>
 
       <label class="checkbox-label">
         <input
+          checked={{@controller.resolvedOutdated}}
           id="toggle-outdated"
           type="checkbox"
-          checked={{@controller.resolvedOutdated}}
           {{on "click" @controller.toggleOutdated}}
         />
         {{i18n "admin.site_text.show_outdated"}}
@@ -63,9 +63,9 @@ export default <template>
 
       <label class="checkbox-label">
         <input
+          checked={{@controller.resolvedOnlySelectedLocale}}
           id="toggle-only-locale"
           type="checkbox"
-          checked={{@controller.resolvedOnlySelectedLocale}}
           {{on "click" @controller.toggleOnlySelectedLocale}}
         />
         {{i18n "admin.site_text.only_show_selected_locale"}}
@@ -74,9 +74,9 @@ export default <template>
       {{#if @controller.showUntranslated}}
         <label class="checkbox-label">
           <input
+            checked={{@controller.resolvedUntranslated}}
             id="toggle-untranslated"
             type="checkbox"
-            checked={{@controller.resolvedUntranslated}}
             {{on "click" @controller.toggleUntranslated}}
           />
           {{i18n "admin.site_text.show_untranslated"}}
@@ -89,24 +89,24 @@ export default <template>
     <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
   {{/if}}
 
-  <LoadMore
+  <DLoadMore
+    class="site-text-list"
     @action={{@controller.loadMore}}
     @enabled={{@controller.canLoadMore}}
     @isLoading={{@controller.searching}}
-    class="site-text-list"
   >
     {{#each @controller.siteTexts as |siteText|}}
       <SiteTextSummary
-        @siteText={{siteText}}
         @editAction={{@controller.edit}}
-        @term={{@controller.q}}
         @searchRegex={{@controller.extras.regex}}
+        @siteText={{siteText}}
+        @term={{@controller.q}}
       />
     {{else}}
       {{#unless @controller.searching}}
         {{i18n "admin.site_text.no_results"}}
       {{/unless}}
     {{/each}}
-    <ConditionalLoadingSpinner @condition={{@controller.searching}} />
-  </LoadMore>
+    <DConditionalLoadingSpinner @condition={{@controller.searching}} />
+  </DLoadMore>
 </template>

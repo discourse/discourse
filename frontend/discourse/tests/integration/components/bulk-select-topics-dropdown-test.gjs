@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
+import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
@@ -47,6 +48,8 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
   test("actions all topics can perform", async function (assert) {
     this.currentUser.admin = true;
+    this.site.set("can_tag_topics", true);
+    this.currentUser.can_delete_all_posts_and_topics = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
     await render(
@@ -58,15 +61,14 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     await click(".bulk-select-topics-dropdown-trigger");
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item")
-      .exists({ count: 7 });
+      .exists({ count: 6 });
 
     [
       "update-notifications",
       "reset-bump-dates",
+      "defer",
       "close-topics",
-      "append-tags",
-      "replace-tags",
-      "remove-tags",
+      "manage-tags",
       "delete-topics",
     ].forEach((action) => {
       assert
@@ -111,23 +113,6 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .doesNotExist();
   });
 
-  test("allows deferring topics if the user has the preference enabled", async function (assert) {
-    this.currentUser.admin = true;
-    this.currentUser.user_option.enable_defer = true;
-    this.bulkSelectHelper = createBulkSelectHelper(this);
-
-    await render(
-      <template>
-        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
-      </template>
-    );
-
-    await click(".bulk-select-topics-dropdown-trigger");
-    assert
-      .dom(".fk-d-menu__inner-content .dropdown-menu__item .defer")
-      .exists();
-  });
-
   test("does not allow tagging actions if tagging_enabled is false", async function (assert) {
     this.currentUser.admin = true;
     this.siteSettings.tagging_enabled = false;
@@ -140,11 +125,26 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     );
 
     await click(".bulk-select-topics-dropdown-trigger");
-    ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
-      assert
-        .dom(`.fk-d-menu__inner-content .dropdown-menu__item .${action}`)
-        .doesNotExist();
-    });
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
+  });
+
+  test("does not allow tagging actions if the user cannot tag topics", async function (assert) {
+    this.currentUser.admin = true;
+    this.site.set("can_tag_topics", false);
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
   });
 
   test("does not allow tagging actions if user cannot manage topic", async function (assert) {
@@ -157,14 +157,12 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     );
 
     await click(".bulk-select-topics-dropdown-trigger");
-    ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
-      assert
-        .dom(`.fk-d-menu__inner-content .dropdown-menu__item .${action}`)
-        .doesNotExist();
-    });
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .manage-tags")
+      .doesNotExist();
   });
 
-  test("does not allow deleting topics if user is not staff", async function (assert) {
+  test("does not allow deleting topics if the user cannot delete all posts and topics", async function (assert) {
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
     await render(
@@ -177,6 +175,22 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
       .doesNotExist();
+  });
+
+  test("allows deleting topics for a non-staff user who can delete all posts and topics", async function (assert) {
+    this.currentUser.can_delete_all_posts_and_topics = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
+      .exists();
   });
 
   test("does not allow unlisting or relisting PM topics", async function (assert) {
@@ -262,8 +276,8 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       <template>
         <BulkSelectTopicsDropdown
           @bulkSelectHelper={{this.bulkSelectHelper}}
-          @extraButtons={{this.extraButtons}}
           @excludedButtonIds={{this.excludedButtonIds}}
+          @extraButtons={{this.extraButtons}}
           @onAction={{this.onAction}}
         />
       </template>
@@ -279,7 +293,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert.verifySteps(["custom-action"]);
   });
 
-  test("allows overriding built-in delete label with extra buttons", async function (assert) {
+  test("an extra button reusing a built-in id overrides the label, not the action", async function (assert) {
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
     this.extraButtons = [
@@ -296,8 +310,8 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       <template>
         <BulkSelectTopicsDropdown
           @bulkSelectHelper={{this.bulkSelectHelper}}
-          @extraButtons={{this.extraButtons}}
           @excludedButtonIds={{this.excludedButtonIds}}
+          @extraButtons={{this.extraButtons}}
         />
       </template>
     );
@@ -306,5 +320,40 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
       .hasTextContaining("Delete Topics (override)");
+
+    await click(
+      ".fk-d-menu__inner-content .dropdown-menu__item .delete-topics"
+    );
+    assert.strictEqual(
+      getOwner(this).lookup("service:modal").activeModal.component,
+      BulkTopicActions,
+      "the built-in delete action still runs"
+    );
+  });
+
+  test("the delete description does not claim the deletion is permanent", async function (assert) {
+    this.currentUser.admin = true;
+    this.currentUser.can_delete_all_posts_and_topics = true;
+    this.bulkSelectHelper = createBulkSelectHelper(this);
+
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
+      </template>
+    );
+
+    await click(".bulk-select-topics-dropdown-trigger");
+    await click(
+      ".fk-d-menu__inner-content .dropdown-menu__item .delete-topics"
+    );
+
+    const { description } =
+      getOwner(this).lookup("service:modal").activeModal.opts.model;
+
+    assert.strictEqual(typeof description, "string", "a description is shown");
+    assert.false(
+      /permanent|cannot be undone/i.test(description),
+      `bulk delete is recoverable, but the copy reads "${description}"`
+    );
   });
 });

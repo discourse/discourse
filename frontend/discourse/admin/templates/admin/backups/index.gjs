@@ -2,12 +2,12 @@ import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import UppyBackupUploader from "discourse/admin/components/uppy-backup-uploader";
 import humanSize from "discourse/admin/helpers/human-size";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -34,7 +34,7 @@ export default <template>
 
   {{#if @controller.status.restoreDisabled}}
     <div class="backup-message alert alert-info">
-      {{icon "circle-info"}}
+      {{dIcon "circle-info"}}
       {{trustHTML
         (i18n
           "admin.backups.operations.restore.is_disabled"
@@ -74,42 +74,42 @@ export default <template>
           <td class="d-table__cell --controls backup-controls">
             <div class="d-table__cell-actions">
               <DButton
-                @action={{fn @controller.download backup}}
-                @title="admin.backups.operations.download.title"
-                @label="admin.backups.operations.download.label"
                 class="btn-default btn-small backup-item-row__download"
+                @action={{fn @controller.download backup}}
+                @label="admin.backups.operations.download.label"
+                @title="admin.backups.operations.download.title"
               />
 
               {{#if @controller.siteSettings.enable_backups}}
                 <DMenu
+                  class="btn-default btn-small"
+                  @icon="ellipsis-vertical"
                   @identifier="backup-item-menu"
                   @title={{i18n "more_options"}}
-                  @icon="ellipsis-vertical"
-                  class="btn-default btn-small"
                 >
                   <:content>
-                    <DropdownMenu as |dropdown|>
+                    <DDropdownMenu as |dropdown|>
                       <dropdown.item>
                         <DButton
-                          @icon="play"
+                          class="btn-transparent backup-item-row__restore"
                           @action={{fn (routeAction "startRestore") backup}}
                           @disabled={{@controller.status.restoreDisabled}}
-                          @title={{@controller.restoreTitle}}
+                          @icon="play"
                           @label="admin.backups.operations.restore.label"
-                          class="btn-transparent backup-item-row__restore"
+                          @title={{@controller.restoreTitle}}
                         />
                       </dropdown.item>
                       <dropdown.item>
                         <DButton
-                          @icon="trash-can"
+                          class="btn-transparent --danger backup-item-row__delete"
                           @action={{fn (routeAction "destroyBackup") backup}}
                           @disabled={{@controller.status.isOperationRunning}}
-                          @title={{@controller.deleteTitle}}
+                          @icon="trash-can"
                           @label="admin.backups.operations.destroy.title"
-                          class="btn-transparent --danger backup-item-row__delete"
+                          @title={{@controller.deleteTitle}}
                         />
                       </dropdown.item>
-                    </DropdownMenu>
+                    </DDropdownMenu>
                   </:content>
                 </DMenu>
               {{/if}}

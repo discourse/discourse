@@ -13,6 +13,7 @@ en:
         title: Policy
         attach: Create Policy
         save: Save changes
+        edit: Edit policy settings
         insert: Insert
         errors:
           group: Group is required

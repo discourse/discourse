@@ -3,8 +3,8 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import SelectKitFilterComponent from "discourse/select-kit/components/select-kit/select-kit-filter";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("multi-select-filter")
 export default class MultiSelectFilter extends SelectKitFilterComponent {
@@ -40,19 +40,18 @@ export default class MultiSelectFilter extends SelectKitFilterComponent {
   <template>
     {{#unless this.isHidden}}
       {{! filter-input-search prevents 1password from attempting autocomplete }}
-      {{! template-lint-disable no-pointer-down-event-binding }}
 
       <Input
-        tabindex={{0}}
-        class="filter-input"
-        placeholder={{this.computedPlaceholder}}
+        autocapitalize="off"
         autocomplete="off"
         autocorrect="off"
-        autocapitalize="off"
+        class="filter-input"
         name="filter-input-search"
+        placeholder={{this.computedPlaceholder}}
         spellcheck={{false}}
-        @value={{readonly this.selectKit.filter}}
+        tabindex={{0}}
         @type="search"
+        @value={{readonly this.selectKit.filter}}
         {{on "paste" this.onPaste}}
         {{on "keydown" this.onKeydown}}
         {{on "keyup" this.onKeyup}}
@@ -60,7 +59,7 @@ export default class MultiSelectFilter extends SelectKitFilterComponent {
       />
 
       {{#if this.selectKit.options.filterIcon}}
-        {{icon this.selectKit.options.filterIcon class="filter-icon"}}
+        {{dIcon this.selectKit.options.filterIcon class="filter-icon"}}
       {{/if}}
     {{/unless}}
   </template>

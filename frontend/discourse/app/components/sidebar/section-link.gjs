@@ -8,11 +8,11 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { and, eq, not, or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SectionLinkPrefix from "./section-link-prefix";
 
 /**
@@ -40,7 +40,10 @@ export function isHex(input) {
  * @param {Object} @suffixArgs - Arguments to pass to the suffix component
  */
 export default class SectionLink extends Component {
+  @service capabilities;
   @service currentUser;
+  @service router;
+  @service sidebarState;
 
   @tracked hovering = false;
   @tracked hoverActionActive = false;
@@ -130,6 +133,23 @@ export default class SectionLink extends Component {
     return [];
   }
 
+  get resolvedCurrentWhen() {
+    if (this.args.exactUrlMatch) {
+      return false;
+    }
+
+    const currentWhen = this.args.currentWhen;
+
+    // Ember 7's <LinkTo> ignores @models for a string @current-when; resolve the route list against this link's models ourselves.
+    if (typeof currentWhen === "string") {
+      return currentWhen
+        .split(" ")
+        .some((route) => this.router.isActive(route, ...this.models));
+    }
+
+    return currentWhen;
+  }
+
   get prefixColor() {
     const hexCode = isHex(this.args.prefixColor);
 
@@ -140,9 +160,19 @@ export default class SectionLink extends Component {
     }
   }
 
+  get shouldRenderHoverAction() {
+    if (!this.args.hoverValue) {
+      return false;
+    }
+
+    // on narrow touch layouts the affordance exists elsewhere; rendering
+    // the button would only clutter the panel
+    return !this.capabilities.touch || this.capabilities.viewport.sm;
+  }
+
   @action
   hoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = true;
@@ -150,7 +180,7 @@ export default class SectionLink extends Component {
 
   @action
   stopHoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = false;
@@ -167,19 +197,50 @@ export default class SectionLink extends Component {
 
   @bind
   maybeScrollIntoView(element) {
+    this.#revealLink(element);
+  }
+
+  @bind
+  revealActiveLink(element) {
+    this.#revealLink(element, { force: true });
+  }
+
+  #revealLink(element, { force = false } = {}) {
     if (!this.args.scrollIntoView) {
       return;
     }
 
     schedule("afterRender", () => {
-      const rect = element.getBoundingClientRect();
-      const alreadyVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
-      if (alreadyVisible) {
+      if (
+        this.isDestroying ||
+        !element.isConnected ||
+        !this.args.scrollIntoView
+      ) {
+        return;
+      }
+
+      const container = element.closest(".sidebar-sections");
+      const destination = element.querySelector("a")?.href;
+
+      // Reinserting the same destination in another section is not navigation.
+      if (
+        container &&
+        destination &&
+        !this.sidebarState.shouldRevealLink(container, destination, {
+          force,
+          linkRoute: this.args.route,
+        })
+      ) {
+        return;
+      }
+
+      if (isFullyScrolledIntoView(element)) {
         return;
       }
 
       element.scrollIntoView({
-        block: "center",
+        block: "nearest",
+        inline: "nearest",
       });
     });
   }
@@ -187,33 +248,34 @@ export default class SectionLink extends Component {
   <template>
     {{#if this.shouldDisplay}}
       <li
+        class={{this.wrapperClass}}
+        data-list-item-name={{@linkName}}
+        ...attributes
         {{didInsert this.maybeScrollIntoView}}
-        {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
+        {{didUpdate this.revealActiveLink @scrollIntoView}}
         {{on "mouseenter" this.hoveringSectionLink}}
         {{on "mouseleave" this.stopHoveringSectionLink}}
-        data-list-item-name={{@linkName}}
-        class={{this.wrapperClass}}
-        ...attributes
       >
         {{#if @href}}
           <a
+            class={{this.linkClass}}
+            data-link-name={{@linkName}}
+            draggable={{if @suppressNativeDrag false}}
             href={{@href}}
             rel="noopener noreferrer"
             target={{this.target}}
             title={{@title}}
-            data-link-name={{@linkName}}
-            class={{this.linkClass}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "sidebar-section-link-content-text"
                 @contentCSSClass
               }}
@@ -234,29 +296,30 @@ export default class SectionLink extends Component {
 
             {{#if @suffixValue}}
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "sidebar-section-link-suffix"
                   @suffixType
                   @suffixCSSClass
                 }}
               >
                 {{#if (eq @suffixType "icon")}}
-                  {{icon @suffixValue}}
+                  {{dIcon @suffixValue}}
                 {{/if}}
               </span>
             {{/if}}
 
-            {{! template-lint-disable no-nested-interactive }}
-            {{#if @hoverValue}}
+            {{! eslint-disable ember/template-no-nested-interactive }}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
-                    {{icon @hoverValue class="hover-icon"}}
+                    {{dIcon @hoverValue class="hover-icon"}}
                   {{/if}}
                 </button>
               </span>
@@ -264,24 +327,25 @@ export default class SectionLink extends Component {
           </a>
         {{else}}
           <LinkTo
-            @route={{@route}}
-            @query={{or @query (hash)}}
-            @models={{this.models}}
-            @current-when={{and (not @exactUrlMatch) @currentWhen}}
-            title={{@title}}
-            data-link-name={{@linkName}}
             class={{this.linkClass}}
+            data-link-name={{@linkName}}
+            draggable={{if @suppressNativeDrag false}}
+            title={{@title}}
+            @current-when={{this.resolvedCurrentWhen}}
+            @models={{this.models}}
+            @query={{or @query (hash)}}
+            @route={{@route}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "sidebar-section-link-content-text"
                 @contentCSSClass
               }}
@@ -302,28 +366,29 @@ export default class SectionLink extends Component {
 
             {{#if @suffixValue}}
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "sidebar-section-link-suffix"
                   @suffixType
                   @suffixCSSClass
                 }}
               >
                 {{#if (eq @suffixType "icon")}}
-                  {{icon @suffixValue}}
+                  {{dIcon @suffixValue}}
                 {{/if}}
               </span>
             {{/if}}
 
-            {{#if @hoverValue}}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
-                    {{icon @hoverValue class="hover-icon"}}
+                    {{dIcon @hoverValue class="hover-icon"}}
                   {{/if}}
                 </button>
               </span>
@@ -333,4 +398,34 @@ export default class SectionLink extends Component {
       </li>
     {{/if}}
   </template>
+}
+
+function isFullyScrolledIntoView(element) {
+  const rect = element.getBoundingClientRect();
+  let node = element.parentElement;
+  let scrolled = false;
+
+  while (node && node !== document.body) {
+    const { overflowY } = getComputedStyle(node);
+
+    if (
+      (overflowY === "auto" || overflowY === "scroll") &&
+      node.scrollHeight > node.clientHeight
+    ) {
+      scrolled = true;
+      const bounds = node.getBoundingClientRect();
+
+      if (rect.top < bounds.top || rect.bottom > bounds.bottom) {
+        return false;
+      }
+    }
+
+    node = node.parentElement;
+  }
+
+  if (scrolled) {
+    return true;
+  }
+
+  return rect.top >= 0 && rect.bottom <= window.innerHeight;
 }

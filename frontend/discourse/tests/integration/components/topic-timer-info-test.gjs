@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | topic-timer-info", function (hooks) {
+module("Integration | Component | TopicTimerInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   test("does not crash when category does not exist in client cache", async function (assert) {
@@ -12,9 +12,9 @@ module("Integration | Component | topic-timer-info", function (hooks) {
     await render(
       <template>
         <TopicTimerInfo
-          @statusType="publish_to_category"
-          @executeAt={{executeAt}}
           @categoryId={{99999}}
+          @executeAt={{executeAt}}
+          @statusType="publish_to_category"
         />
       </template>
     );
@@ -28,10 +28,10 @@ module("Integration | Component | topic-timer-info", function (hooks) {
     await render(
       <template>
         <TopicTimerInfo
-          @statusType="delete"
           @basedOnLastPost={{true}}
-          @executeAt={{executeAt}}
           @durationMinutes={{2880}}
+          @executeAt={{executeAt}}
+          @statusType="delete"
         />
       </template>
     );

@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import {
@@ -12,6 +11,7 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { eq, or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import HeaderActivityCell from "./header/activity-cell";
 import HeaderBulkSelectCell from "./header/bulk-select-cell";
@@ -181,37 +181,37 @@ export default class TopicList extends Component {
   }
 
   <template>
-    {{! template-lint-disable table-groups }}
+    {{! eslint-disable ember/template-table-groups }}
     <table
-      class={{concatClass
+      aria-labelledby={{@ariaLabelledby}}
+      class={{dConcatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header bulk-select-enabled")
         this.additionalClasses
       }}
-      aria-labelledby={{@ariaLabelledby}}
       ...attributes
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
       <thead
-        class={{concatClass
+        class={{dConcatClass
           "topic-list-header"
           (if this.moreTopicsTabs.tabs.length "--has-tabs")
         }}
       >
         <Header
-          @columns={{this.columns}}
-          @canBulkSelect={{@canBulkSelect}}
-          @toggleInTitle={{this.toggleInTitle}}
-          @category={{@category}}
-          @hideCategory={{@hideCategory}}
-          @order={{@order}}
-          @changeSort={{@changeSort}}
           @ascending={{@ascending}}
-          @sortable={{@changeSort}}
-          @listTitle={{or @listTitle "topic.title"}}
-          @bulkSelectHelper={{@bulkSelectHelper}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
+          @bulkSelectHelper={{@bulkSelectHelper}}
+          @canBulkSelect={{@canBulkSelect}}
           @canDoBulkActions={{this.canDoBulkActions}}
+          @category={{@category}}
+          @changeSort={{@changeSort}}
+          @columns={{this.columns}}
+          @hideCategory={{@hideCategory}}
+          @listTitle={{or @listTitle "topic.title"}}
+          @order={{@order}}
+          @sortable={{@changeSort}}
+          @toggleInTitle={{this.toggleInTitle}}
         />
       </thead>
 
@@ -230,21 +230,21 @@ export default class TopicList extends Component {
       <tbody class="topic-list-body">
         {{#each @topics as |topic index|}}
           <Item
-            @columns={{this.columns}}
-            @topic={{topic}}
-            @bulkSelectHelper={{@bulkSelectHelper}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
-            @showTopicPostBadges={{this.showTopicPostBadges}}
-            @hideCategory={{@hideCategory}}
-            @expandGloballyPinned={{@expandGloballyPinned}}
-            @expandAllPinned={{@expandAllPinned}}
-            @lastVisitedTopic={{this.lastVisitedTopic}}
-            @selected={{this.selected}}
-            @tagsForUser={{@tagsForUser}}
-            @focusLastVisitedTopic={{@focusLastVisitedTopic}}
-            @index={{index}}
-            @listContext={{@listContext}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
             @category={{this.topicTrackingState.filterCategory}}
+            @columns={{this.columns}}
+            @expandAllPinned={{@expandAllPinned}}
+            @expandGloballyPinned={{@expandGloballyPinned}}
+            @focusLastVisitedTopic={{@focusLastVisitedTopic}}
+            @hideCategory={{@hideCategory}}
+            @index={{index}}
+            @lastVisitedTopic={{this.lastVisitedTopic}}
+            @listContext={{@listContext}}
+            @selected={{this.selected}}
+            @showTopicPostBadges={{this.showTopicPostBadges}}
+            @tagsForUser={{@tagsForUser}}
+            @topic={{topic}}
           />
 
           {{#if (eq topic this.lastVisitedTopic)}}
@@ -258,9 +258,9 @@ export default class TopicList extends Component {
           {{/if}}
 
           <PluginOutlet
+            @connectorTagName="tr"
             @name="after-topic-list-item"
             @outletArgs={{lazyHash topic=topic index=index}}
-            @connectorTagName="tr"
           />
         {{/each}}
       </tbody>

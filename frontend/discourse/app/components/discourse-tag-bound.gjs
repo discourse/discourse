@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class DiscourseTagBound extends Component {
@@ -24,8 +24,8 @@ export default class DiscourseTagBound extends Component {
 
   <template>
     <a
+      class={{dConcatClass "discourse-tag" this.style this.tagClass}}
       href={{this.href}}
-      class={{concatClass "discourse-tag" this.style this.tagClass}}
       ...attributes
     >{{this.tagRecord.name}}</a>
   </template>

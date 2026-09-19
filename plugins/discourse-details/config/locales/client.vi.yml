@@ -9,7 +9,7 @@ vi:
     admin:
       site_settings:
         categories:
-          discourse_details: "Chi tiết Discourse"
+          discourse_details: "Chi tiết Discourse(Discourse Details)"
   js:
     details:
       title: Ẩn chi tiết

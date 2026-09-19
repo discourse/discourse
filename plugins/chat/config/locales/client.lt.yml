@@ -65,6 +65,8 @@ lt:
       cancel: "Atšaukti"
       cancel_reply: "Atšaukti atsakymą"
       chat_channels: "Kanalai"
+      pinned_bar:
+        title: "Prisegta"
       pinned: "Prisegta"
       browse_all_channels: "Naršyti visus kanalus"
       see_in: "Žiūrėti"
@@ -158,6 +160,8 @@ lt:
         filter_all: Visos
         filter_open: Atidaryti
         filter_closed: Uždaryta
+        filter_joined_all: "Visi"
+        filter_joined_joined: "Prisijungė"
       chat_message_separator:
         today: Šiandien
         yesterday: Vakar
@@ -180,7 +184,11 @@ lt:
       direct_message_creator:
         title: Nauja žinutė
         prefix: "Kam:"
+      channel:
+        preview_card:
+          log_in: "Prisijungti"
       create_channel:
+        description: "Aprašymas"
         type: "Tipas"
         types:
           category: "Kategorija"
@@ -215,6 +223,14 @@ lt:
         sort:
           relevance: "Tinkamumas"
           latest: "Naujausia"
+      direct_messages:
+        leave: "Išeiti iš kanalo"
+        close: "Uždaryti kanalą"
+      channel_list:
+        options:
+          filter: "Filtruoti"
+        filter:
+          mentions: "Paminėjimai"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"
@@ -289,3 +305,14 @@ lt:
       panels:
         chat:
           label: "Pokalbis"
+    discourse_workflows:
+      send_chat_message:
+        message: "Žinutės"
+      chat_approval:
+        message: "Žinutės"
+        buttons: "Mygtukai"
+        value: "Reikšmė"
+        style_default: "Numatytasis"
+        style_primary: "Pagrindinė"
+        style_success: "Sėkmingai"
+        icon: "Ikona"

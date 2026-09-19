@@ -1,22 +1,22 @@
 import { trustHTML } from "@ember/template";
-import AvatarFlair from "discourse/components/avatar-flair";
-import DButton from "discourse/components/d-button";
 import GroupInfo from "discourse/components/group-info";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import GroupNavigation from "discourse/components/group-navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { and, or } from "discourse/truth-helpers";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <span>
     <PluginOutlet
-      @name="before-group-container"
       @connectorTagName="div"
+      @name="before-group-container"
       @outletArgs={{lazyHash group=@controller.model}}
     />
   </span>
@@ -38,14 +38,14 @@ export default <template>
           )
         }}
           <div class="group-avatar-flair">
-            <AvatarFlair
+            <DAvatarFlair
+              @flairBgColor={{@controller.model.flair_bg_color}}
+              @flairColor={{@controller.model.flair_color}}
               @flairName={{@controller.model.name}}
               @flairUrl={{or
                 @controller.model.flair_icon
                 @controller.model.flair_url
               }}
-              @flairBgColor={{@controller.model.flair_bg_color}}
-              @flairColor={{@controller.model.flair_color}}
             />
           </div>
         {{/if}}
@@ -56,7 +56,7 @@ export default <template>
           {{#if (and @controller.canManageGroup @controller.model.automatic)}}
             <DTooltip class="group-automatic-tooltip">
               <:trigger>
-                {{icon "gear"}}
+                {{dIcon "gear"}}
                 {{i18n "admin.groups.manage.membership.automatic"}}
               </:trigger>
               <:content>
@@ -75,36 +75,36 @@ export default <template>
           {{#if @controller.currentUser.admin}}
             {{#if @controller.model.automatic}}
               <DButton
+                class="btn-default"
                 @action={{@controller.toggleDeleteTooltip}}
                 @icon="circle-question"
                 @label="admin.groups.delete"
-                class="btn-default"
               />
             {{else}}
               <DButton
+                class="btn-danger"
+                data-test-selector="delete-group-button"
                 @action={{@controller.destroyGroup}}
                 @disabled={{@controller.destroying}}
                 @icon="trash-can"
                 @label="admin.groups.delete"
-                class="btn-danger"
-                data-test-selector="delete-group-button"
               />
             {{/if}}
           {{/if}}
 
           {{#if @controller.displayGroupMessageButton}}
             <DButton
+              class="btn-primary group-message-button"
               @action={{@controller.messageGroup}}
               @icon="envelope"
               @label="groups.message"
-              class="btn-primary group-message-button"
             />
           {{/if}}
         </div>
 
         <PluginOutlet
-          @name="group-details-after"
           @connectorTagName="div"
+          @name="group-details-after"
           @outletArgs={{lazyHash model=@controller.model}}
         />
       </div>
@@ -120,8 +120,8 @@ export default <template>
     <div class="user-content-wrapper">
       <section class="user-primary-navigation">
         <GroupNavigation
-          @group={{@controller.model}}
           @currentPath={{@controller.currentPath}}
+          @group={{@controller.model}}
           @tabs={{@controller.tabs}}
         />
       </section>

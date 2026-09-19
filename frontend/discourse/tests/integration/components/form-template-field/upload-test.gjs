@@ -5,7 +5,7 @@ import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
-  "Integration | Component | form-template-field | upload",
+  "Integration | Component | FormTemplateField | Upload",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -16,10 +16,10 @@ module(
       await render(
         <template>
           <FormUpload
-            @id="test-upload"
             @attributes={{attributes}}
-            @validations={{validations}}
+            @id="test-upload"
             @onChange={{noop}}
+            @validations={{validations}}
           />
         </template>
       );
@@ -34,10 +34,10 @@ module(
       await render(
         <template>
           <FormUpload
-            @id="test-upload"
             @attributes={{attributes}}
-            @validations={{validations}}
+            @id="test-upload"
             @onChange={{noop}}
+            @validations={{validations}}
           />
         </template>
       );

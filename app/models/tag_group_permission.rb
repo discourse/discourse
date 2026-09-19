@@ -15,11 +15,11 @@ end
 # Table name: tag_group_permissions
 #
 #  id              :bigint           not null, primary key
-#  tag_group_id    :bigint           not null
-#  group_id        :bigint           not null
 #  permission_type :integer          default(1), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  group_id        :bigint           not null
+#  tag_group_id    :bigint           not null
 #
 # Indexes
 #

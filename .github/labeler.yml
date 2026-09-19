@@ -1,3 +1,7 @@
+boards:
+  - changed-files:
+      - any-glob-to-any-file: plugins/boards/**/*
+
 chat:
   - changed-files:
       - any-glob-to-any-file: plugins/chat/**/*
@@ -98,17 +102,17 @@ discourse-subscriptions:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-subscriptions/**/*
 
-discourse-hcaptcha:
+discourse-captcha:
   - changed-files:
-      - any-glob-to-any-file: plugins/discourse-hcaptcha/**/*
+      - any-glob-to-any-file: plugins/discourse-captcha/**/*
 
 discourse-gamification:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-gamification/**/*
 
-discourse-calendar:
+discourse-events:
   - changed-files:
-      - any-glob-to-any-file: plugins/discourse-calendar/**/*
+      - any-glob-to-any-file: plugins/discourse-events/**/*
 
 discourse-policy:
   - changed-files:

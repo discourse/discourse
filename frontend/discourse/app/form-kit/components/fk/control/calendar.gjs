@@ -1,9 +1,9 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DatePicker from "discourse/components/date-picker";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import withEventValue from "discourse/helpers/with-event-value";
+import DDatePicker from "discourse/ui-kit/d-date-picker";
 
 export default class FKControlCalendar extends FKBaseControl {
   static controlType = "calendar";
@@ -22,6 +22,20 @@ export default class FKControlCalendar extends FKBaseControl {
 
   get includeTime() {
     return this.args.includeTime ?? true;
+  }
+
+  get minDate() {
+    return this.args.field.rules?.dateAfterOrEqual?.date;
+  }
+
+  get maxDate() {
+    return this.args.field.rules?.dateBeforeOrEqual?.date;
+  }
+
+  get expandedDatePicker() {
+    return (
+      (this.args.expandedDatePickerOnDesktop ?? true) && this.site.desktopView
+    );
   }
 
   @action
@@ -55,58 +69,44 @@ export default class FKControlCalendar extends FKBaseControl {
     return moment(date).format("YYYY-MM-DD");
   }
 
-  get minDate() {
-    return this.args.field.rules?.dateAfterOrEqual?.date;
-  }
-
-  get maxDate() {
-    return this.args.field.rules?.dateBeforeOrEqual?.date;
-  }
-
-  get expandedDatePicker() {
-    return (
-      (this.args.expandedDatePickerOnDesktop ?? true) && this.site.desktopView
-    );
-  }
-
   <template>
     {{#if this.expandedDatePicker}}
-      <DatePicker
-        @value={{readonly @field.value}}
-        @onSelect={{this.setDate}}
-        @containerId={{this.containerId}}
-        @minDate={{this.minDate}}
-        @maxDate={{this.maxDate}}
+      <DDatePicker
+        aria-describedby={{@field.describedBy}}
+        aria-invalid={{if @field.error "true"}}
+        class="form-kit__control-calendar"
         id={{@field.id}}
         name={{@field.name}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{if @field.error @field.errorId}}
-        class="form-kit__control-calendar"
+        @containerId={{this.containerId}}
+        @maxDate={{this.maxDate}}
+        @minDate={{this.minDate}}
+        @onSelect={{this.setDate}}
+        @value={{readonly @field.value}}
       />
-      <div id={{this.containerId}} class="date-picker-container"></div>
+      <div class="date-picker-container" id={{this.containerId}}></div>
     {{else}}
       <input
-        min={{this.formatForInput this.minDate}}
-        max={{this.formatForInput this.maxDate}}
-        disabled={{@field.disabled}}
+        aria-describedby={{@field.describedBy}}
         class="form-kit__control-input form-kit__control-date"
+        disabled={{@field.disabled}}
+        id={{@field.id}}
+        max={{this.formatForInput this.maxDate}}
+        min={{this.formatForInput this.minDate}}
+        name={{@field.name}}
         type="date"
         value={{this.date}}
-        id={{@field.id}}
-        name={{@field.name}}
-        aria-describedby={{if @field.error @field.errorId}}
         {{on "change" (withEventValue this.setDate)}}
       />
     {{/if}}
 
     {{#if this.includeTime}}
       <input
+        class="form-kit__control-input form-kit__control-time"
         disabled={{@field.disabled}}
+        step="900"
         type="time"
         value={{this.time}}
         {{on "input" (withEventValue this.setTime)}}
-        class="form-kit__control-input form-kit__control-time"
-        step="900"
       />
     {{/if}}
   </template>

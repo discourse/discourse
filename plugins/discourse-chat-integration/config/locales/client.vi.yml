@@ -55,6 +55,9 @@ vi:
           param:
             name:
               title: "Tên"
+          errors:
+            invalid_api_base_url: "Địa chỉ URL cơ sở cho Telegram API trong cài đặt hệ thống không phải là đường dẫn HTTPS hợp lệ."
+            api_base_url_blocked: "Các yêu cầu tới URL cơ sở Telegram API đã bị chặn. Các máy chủ thuộc mạng nội bộ phải được thêm vào danh sách máy chủ nội bộ cho phép trong cài đặt hệ thống."
         discord:
           title: "Discord"
           param:
@@ -100,3 +103,14 @@ vi:
               label: Tin nhắn
             url:
               label: URL
+    discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "Yêu cầu phải bật phần bổ trợ Tích hợp trò chuyện (Chat Integration)"
+      nodes:
+        "action:send_chat_integration_message": "Gửi tin nhắn qua tính năng Tích hợp trò chuyện"
+      node_descriptions:
+        "action:send_chat_integration_message": "Gửi thông báo đến kênh liên kết (Slack, Discord, Telegram, v.v.)"
+      send_chat_integration_message:
+        channel_id: "Kênh"
+        configure: "Cấu hình"
+        message: "Nội dung tin nhắn"

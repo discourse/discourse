@@ -4,6 +4,7 @@ import Wizard from "discourse/static/wizard/models/wizard";
 
 export default class WizardRoute extends Route {
   @service a11y;
+  @service keyboardShortcuts;
 
   model() {
     return Wizard.load();
@@ -20,6 +21,7 @@ export default class WizardRoute extends Route {
     });
 
     this.a11y.showSkipLinks = false;
+    this.keyboardShortcuts.pause();
   }
 
   deactivate() {
@@ -33,5 +35,6 @@ export default class WizardRoute extends Route {
     });
 
     this.a11y.showSkipLinks = true;
+    this.keyboardShortcuts.unpause();
   }
 }

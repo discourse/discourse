@@ -97,14 +97,12 @@ module ChatSDK
 
     def update(guardian:, **params)
       Chat::UpdateThread.call(guardian:, params:) do
-        on_model_not_found(:channel) do
-          raise "Couldn’t find channel with id: `#{params[:channel_id]}`"
-        end
         on_model_not_found(:thread) do
           raise "Couldn’t find thread with id: `#{params[:thread_id]}`"
         end
         on_failed_policy(:can_view_channel) { raise "Guardian can't view channel" }
         on_failed_policy(:can_edit_thread) { raise "Guardian can't edit thread" }
+        on_failed_policy(:no_silenced_user) { raise "Guardian is silenced" }
         on_failed_policy(:threading_enabled_for_channel) do
           raise "Threading is not enabled for this channel"
         end

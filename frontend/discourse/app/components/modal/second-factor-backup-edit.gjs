@@ -4,10 +4,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import BackupCodes from "discourse/components/backup-codes";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { debounce } from "discourse/lib/decorators";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorBackupEdit extends Component {
@@ -69,9 +69,9 @@ export default class SecondFactorBackupEdit extends Component {
 
   <template>
     <DModal
-      @title={{i18n "user.second_factor_backup.title"}}
-      @closeModal={{@closeModal}}
       class="second-factor-backup-edit-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "user.second_factor_backup.title"}}
     >
       <:body>
         {{#if this.successMessage}}
@@ -86,16 +86,16 @@ export default class SecondFactorBackupEdit extends Component {
           </div>
         {{/if}}
 
-        <ConditionalLoadingSection @isLoading={{this.loading}}>
+        <DConditionalLoadingSection @isLoading={{this.loading}}>
           {{#if this.backupCodes}}
             <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
             <p>{{i18n "user.second_factor_backup.codes.description"}}</p>
             <BackupCodes
-              @copyBackupCode={{this.copyBackupCode}}
               @backupCodes={{this.backupCodes}}
+              @copyBackupCode={{this.copyBackupCode}}
             />
           {{/if}}
-        </ConditionalLoadingSection>
+        </DConditionalLoadingSection>
 
         {{#if this.backupEnabled}}
           {{trustHTML
@@ -113,19 +113,19 @@ export default class SecondFactorBackupEdit extends Component {
           {{#if this.backupEnabled}}
             <DButton
               class="btn-primary"
-              @icon="arrow-rotate-right"
               @action={{this.generateSecondFactorCodes}}
-              @type="submit"
+              @icon="arrow-rotate-right"
               @isLoading={{this.loading}}
               @label="user.second_factor_backup.regenerate"
+              @type="submit"
             />
           {{else}}
             <DButton
               class="btn-primary"
               @action={{this.generateSecondFactorCodes}}
-              @type="submit"
               @disabled={{this.loading}}
               @label="user.second_factor_backup.enable"
+              @type="submit"
             />
           {{/if}}
         </div>

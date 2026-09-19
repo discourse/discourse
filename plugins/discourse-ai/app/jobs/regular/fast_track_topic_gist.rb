@@ -12,7 +12,9 @@ module Jobs
       topic = Topic.find_by(id: args[:topic_id])
       return if topic.blank?
 
-      summarizer = DiscourseAi::Summarization.topic_gist(topic)
+      summarizer = DiscourseAi::Summarization.topic_gist(topic, locale: args[:locale])
+      return if summarizer.blank?
+
       gist = summarizer.existing_summary
 
       unless args[:force_regenerate]

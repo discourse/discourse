@@ -70,6 +70,10 @@
     font-size: var(--font-up-4);
     margin-right: 0.5rem;
     text-align: center;
+
+    @include viewport.from(sm) {
+      width: 3rem;
+    }
   }
 
   .stream-topic-title {
@@ -196,6 +200,13 @@
       width: 20px;
       height: 20px;
       margin: 0;
+    }
+  }
+
+  @include viewport.from(sm) {
+    .user-stream-item .excerpt,
+    .user-stream-item-actions {
+      margin: 0.75em 0 0 3.5em;
     }
   }
 

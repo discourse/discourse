@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
-import Component, { Input } from "@ember/component";
+import Component from "@ember/component";
 import { array, concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
@@ -10,9 +10,12 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
-import icon from "discourse/helpers/d-icon";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { gt, lte } from "discourse/truth-helpers";
+import { gt } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";
@@ -40,6 +43,25 @@ export default class AdminThemeEditor extends Component {
 
   warning = null;
 
+  @computed("fieldName", "currentTargetName", "theme")
+  get activeSection() {
+    const themeValue = this.theme.getField(
+      this.currentTargetName,
+      this.fieldName
+    );
+    if (!themeValue && this.fieldName === "js") {
+      return JS_DEFAULT_VALUE;
+    }
+    return themeValue;
+  }
+
+  set activeSection(value) {
+    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
+      value = "";
+    }
+    this.theme.setField(this.currentTargetName, this.fieldName, value);
+  }
+
   @computed("fieldName", "currentTargetName")
   get editorId() {
     return `${this.fieldName}|${this.currentTargetName}`;
@@ -57,6 +79,7 @@ export default class AdminThemeEditor extends Component {
     });
   }
 
+  @computed("currentTargetName", "showAdvanced", "theme.fields")
   get visibleFields() {
     let fields = this.theme.fields[this.currentTargetName];
     if (!this.showAdvanced) {
@@ -67,6 +90,7 @@ export default class AdminThemeEditor extends Component {
     return fields;
   }
 
+  @computed("currentTargetName", "fieldName", "theme.fields")
   get currentField() {
     return this.theme.fields[this.currentTargetName].find(
       (field) => field.name === this.fieldName
@@ -99,28 +123,16 @@ export default class AdminThemeEditor extends Component {
     return "";
   }
 
-  @computed("fieldName", "currentTargetName", "theme")
-  get activeSection() {
-    const themeValue = this.theme.getField(
-      this.currentTargetName,
-      this.fieldName
-    );
-    if (!themeValue && this.fieldName === "js") {
-      return JS_DEFAULT_VALUE;
-    }
-    return themeValue;
-  }
-
-  set activeSection(value) {
-    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
-      value = "";
-    }
-    this.theme.setField(this.currentTargetName, this.fieldName, value);
-  }
-
   @computed("maximized")
   get maximizeIcon() {
     return this.maximized ? "discourse-compress" : "discourse-expand";
+  }
+
+  @computed("maximized")
+  get maximizeTitle() {
+    return this.maximized
+      ? "admin.customize.theme.minimize_editor"
+      : "admin.customize.theme.maximize_editor";
   }
 
   @computed("currentTargetName", "fieldName", "theme.theme_fields.@each.error")
@@ -129,8 +141,7 @@ export default class AdminThemeEditor extends Component {
   }
 
   @action
-  toggleMaximize(event) {
-    event?.preventDefault();
+  toggleMaximize() {
     this.toggleProperty("maximized");
     next(() => this.appEvents.trigger("ace:resize"));
   }
@@ -158,82 +169,88 @@ export default class AdminThemeEditor extends Component {
 
   <template>
     <div ...attributes>
+      <div class="editor-information">
+        <div class="editor-information__title">
+          <DButton
+            class="btn-default btn-small editor-back-button"
+            @action={{this.goBack}}
+            @icon="chevron-left"
+            @title="go_back"
+          />
+
+          <span class="editor-theme-name-wrapper">
+            {{i18n "admin.customize.theme.edit_css_html"}}
+            <LinkTo
+              class="editor-theme-name"
+              @model={{this.theme.id}}
+              @replace={{true}}
+              @route={{this.showRouteName}}
+            >
+              {{this.theme.name}}
+            </LinkTo>
+          </span>
+        </div>
+
+        <div class="editor-information__admin-actions">
+          <DToggleSwitch
+            @label="admin.customize.theme.show_advanced"
+            @state={{this.showAdvanced}}
+            {{on "click" this.toggleShowAdvanced}}
+          />
+
+          <DButton
+            class="btn-transparent theme-editor-maximize"
+            @action={{this.toggleMaximize}}
+            @icon={{this.maximizeIcon}}
+            @title={{this.maximizeTitle}}
+          />
+        </div>
+      </div>
+
       {{#if (gt this.visibleTargets.length 1)}}
         <div class="edit-main-nav admin-controls">
-          <nav>
-            <ul class="nav nav-pills target">
-              {{#each this.visibleTargets as |target|}}
-                <li>
-                  <LinkTo
-                    @route={{this.editRouteName}}
-                    @models={{array this.theme.id target.name this.fieldName}}
-                    @replace={{true}}
-                    title={{this.field.title}}
-                    class={{if target.edited "edited" "blank"}}
-                  >
-                    {{#if target.error}}{{icon "triangle-exclamation"}}{{/if}}
-                    {{#if target.icon}}{{icon target.icon}}{{/if}}
-                    {{i18n (concat "admin.customize.theme." target.name)}}
-                  </LinkTo>
-                </li>
-              {{/each}}
-              <li class="spacer"></li>
+          <DHorizontalOverflowNav @className="target">
+            {{#each this.visibleTargets as |target|}}
               <li>
-                <label>
-                  <Input
-                    @type="checkbox"
-                    @checked={{this.showAdvanced}}
-                    {{on "click" this.toggleShowAdvanced}}
-                  />
-                  {{i18n "admin.customize.theme.show_advanced"}}
-                </label>
+                <LinkTo
+                  class={{if target.edited "edited" "blank"}}
+                  title={{this.field.title}}
+                  @models={{array this.theme.id target.name this.fieldName}}
+                  @replace={{true}}
+                  @route={{this.editRouteName}}
+                >
+                  {{#if target.error}}{{dIcon "triangle-exclamation"}}{{/if}}
+                  {{#if target.icon}}{{dIcon target.icon}}{{/if}}
+                  {{i18n (concat "admin.customize.theme." target.name)}}
+                </LinkTo>
               </li>
-            </ul>
-          </nav>
+            {{/each}}
+          </DHorizontalOverflowNav>
         </div>
       {{/if}}
 
       <div class="admin-controls">
-        <nav>
-          <ul class="nav nav-pills fields">
-            {{#each this.visibleFields as |field|}}
-              <li>
-                <LinkTo
-                  @route={{this.editRouteName}}
-                  @models={{array
-                    this.theme.id
-                    this.currentTargetName
-                    field.name
-                  }}
-                  @replace={{true}}
-                  title={{field.title}}
-                  class={{if field.edited "edited" "blank"}}
-                >
-                  {{#if field.error}}{{icon "triangle-exclamation"}}{{/if}}
-                  {{#if field.icon}}{{icon field.icon}}{{/if}}
-                  {{field.translatedName}}
-                </LinkTo>
-              </li>
-            {{/each}}
-
-            <li class="spacer"></li>
+        <DHorizontalOverflowNav @className="fields">
+          {{#each this.visibleFields as |field|}}
             <li>
-              {{#if (lte this.visibleTargets.length 1)}}
-                <label>
-                  <Input
-                    @type="checkbox"
-                    @checked={{this.showAdvanced}}
-                    {{on "click" this.toggleShowAdvanced}}
-                  />
-                  {{i18n "admin.customize.theme.show_advanced"}}
-                </label>
-              {{/if}}
-              <a href {{on "click" this.toggleMaximize}} class="no-text">
-                {{icon this.maximizeIcon}}
-              </a>
+              <LinkTo
+                class={{if field.edited "edited" "blank"}}
+                title={{field.title}}
+                @models={{array
+                  this.theme.id
+                  this.currentTargetName
+                  field.name
+                }}
+                @replace={{true}}
+                @route={{this.editRouteName}}
+              >
+                {{#if field.error}}{{dIcon "triangle-exclamation"}}{{/if}}
+                {{#if field.icon}}{{dIcon field.icon}}{{/if}}
+                {{field.translatedName}}
+              </LinkTo>
             </li>
-          </ul>
-        </nav>
+          {{/each}}
+        </DHorizontalOverflowNav>
       </div>
 
       {{#if this.error}}
@@ -249,13 +266,13 @@ export default class AdminThemeEditor extends Component {
       </div>
 
       <AceEditor
-        @content={{this.activeSection}}
-        @onChange={{fn (mut this.activeSection)}}
-        @editorId={{this.editorId}}
-        @mode={{this.activeSectionMode}}
         @autofocus="true"
-        @placeholder={{this.placeholder}}
+        @content={{this.activeSection}}
+        @editorId={{this.editorId}}
         @htmlPlaceholder={{true}}
+        @mode={{this.activeSectionMode}}
+        @onChange={{fn (mut this.activeSection)}}
+        @placeholder={{this.placeholder}}
         @save={{this.save}}
         @setWarning={{this.setWarning}}
       />

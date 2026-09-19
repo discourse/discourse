@@ -13,21 +13,44 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
   @cached
   get data() {
     return {
-      companyName: this.args.yourOrganization.companyName.value,
-      governingLaw: this.args.yourOrganization.governingLaw.value,
-      cityForDisputes: this.args.yourOrganization.cityForDisputes.value,
+      companyName: this.#settingValue(
+        "company_name",
+        this.args.yourOrganization.companyName
+      ),
+      companyURL: this.#settingValue(
+        "company_url",
+        this.args.yourOrganization.companyURL
+      ),
+      governingLaw: this.#settingValue(
+        "governing_law",
+        this.args.yourOrganization.governingLaw
+      ),
+      cityForDisputes: this.#settingValue(
+        "city_for_disputes",
+        this.args.yourOrganization.cityForDisputes
+      ),
     };
+  }
+
+  get #savePath() {
+    if (this.args.isDefaultLocale) {
+      return "/admin/config/about.json";
+    }
+
+    return "/admin/config/about/localizations.json";
   }
 
   @action
   async save(data) {
     this.args.setGlobalSavingStatus(true);
     try {
-      await ajax("/admin/config/about.json", {
+      await ajax(this.#savePath, {
         type: "PUT",
         data: {
+          locale: this.args.locale,
           your_organization: {
             company_name: data.companyName,
+            company_url: data.companyURL,
             governing_law: data.governingLaw,
             city_for_disputes: data.cityForDisputes,
           },
@@ -48,12 +71,20 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
     }
   }
 
+  #settingValue(settingName, setting) {
+    if (this.args.isDefaultLocale) {
+      return setting.value;
+    }
+
+    return this.args.localizations?.[settingName]?.value ?? "";
+  }
+
   <template>
     <Form @data={{this.data}} @onSubmit={{this.save}} as |form|>
       <form.Field
+        @format="large"
         @name="companyName"
         @title={{i18n "admin.config_areas.about.company_name"}}
-        @format="large"
         @type="input"
         as |field|
       >
@@ -68,10 +99,24 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       </form.Alert>
 
       <form.Field
-        @name="governingLaw"
-        @title={{i18n "admin.config_areas.about.governing_law"}}
+        @format="large"
+        @name="companyURL"
+        @title={{i18n "admin.config_areas.about.company_url"}}
+        @type="input-url"
+        as |field|
+      >
+        <field.Control
+          placeholder={{i18n
+            "admin.config_areas.about.company_url_placeholder"
+          }}
+        />
+      </form.Field>
+
+      <form.Field
         @description={{i18n "admin.config_areas.about.governing_law_help"}}
         @format="large"
+        @name="governingLaw"
+        @title={{i18n "admin.config_areas.about.governing_law"}}
         @type="input"
         as |field|
       >
@@ -83,10 +128,10 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       </form.Field>
 
       <form.Field
-        @name="cityForDisputes"
-        @title={{i18n "admin.config_areas.about.city_for_disputes"}}
         @description={{i18n "admin.config_areas.about.city_for_disputes_help"}}
         @format="large"
+        @name="cityForDisputes"
+        @title={{i18n "admin.config_areas.about.city_for_disputes"}}
         @type="input"
         as |field|
       >
@@ -98,8 +143,8 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       </form.Field>
 
       <form.Submit
-        @label="admin.config_areas.about.update"
         @disabled={{@globalSavingStatus}}
+        @label="admin.config_areas.about.update"
       />
     </Form>
   </template>

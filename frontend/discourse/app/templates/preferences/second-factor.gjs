@@ -1,13 +1,13 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
 import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
 import bodyClass from "discourse/helpers/body-class";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -17,7 +17,7 @@ export default <template>
     <section
       class="user-content user-preferences solo-preference second-factor"
     >
-      <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+      <DConditionalLoadingSpinner @condition={{@controller.loading}}>
         <form class="form-vertical">
           {{#if @controller.showEnforcedNotice}}
             <div class="alert alert-error">
@@ -57,20 +57,20 @@ export default <template>
                     {{#if @controller.isCurrentUser}}
                       <div class="actions">
                         <TokenBasedAuthDropdown
-                          @totp={{totp}}
-                          @editSecondFactor={{@controller.editSecondFactor}}
                           @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
+                          @editSecondFactor={{@controller.editSecondFactor}}
+                          @totp={{totp}}
                         />
                       </div>
                     {{/if}}
                   </div>
                 {{/each}}
                 <DButton
-                  @action={{@controller.createTotp}}
-                  @icon="plus"
-                  @disabled={{@controller.loading}}
-                  @label="user.second_factor.totp.add"
                   class="btn-default new-totp"
+                  @action={{@controller.createTotp}}
+                  @disabled={{@controller.loading}}
+                  @icon="plus"
+                  @label="user.second_factor.totp.add"
                 />
               </div>
             </div>
@@ -93,20 +93,20 @@ export default <template>
                     {{#if @controller.isCurrentUser}}
                       <div class="actions">
                         <SecurityKeyDropdown
-                          @securityKey={{security_key}}
-                          @editSecurityKey={{@controller.editSecurityKey}}
                           @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
+                          @editSecurityKey={{@controller.editSecurityKey}}
+                          @securityKey={{security_key}}
                         />
                       </div>
                     {{/if}}
                   </div>
                 {{/each}}
                 <DButton
-                  @action={{@controller.createSecurityKey}}
-                  @icon="plus"
-                  @disabled={{@controller.loading}}
-                  @label="user.second_factor.security_key.add"
                   class="btn-default new-security-key"
+                  @action={{@controller.createSecurityKey}}
+                  @disabled={{@controller.loading}}
+                  @icon="plus"
+                  @label="user.second_factor.security_key.add"
                 />
               </div>
             </div>
@@ -127,11 +127,11 @@ export default <template>
                       }}
                     {{else}}
                       <DButton
-                        @action={{@controller.editSecondFactorBackup}}
-                        @icon="plus"
-                        @disabled={{@controller.loading}}
-                        @label="user.second_factor_backup.enable_long"
                         class="btn-default new-second-factor-backup"
+                        @action={{@controller.editSecondFactorBackup}}
+                        @disabled={{@controller.loading}}
+                        @icon="plus"
+                        @label="user.second_factor_backup.enable_long"
                       />
                     {{/if}}
                   </div>
@@ -144,9 +144,9 @@ export default <template>
                   }}
                     <div class="actions">
                       <TwoFactorBackupDropdown
-                        @secondFactorBackupEnabled={{@controller.model.second_factor_backup_enabled}}
-                        @editSecondFactorBackup={{@controller.editSecondFactorBackup}}
                         @disableSecondFactorBackup={{@controller.disableSecondFactorBackup}}
+                        @editSecondFactorBackup={{@controller.editSecondFactorBackup}}
+                        @secondFactorBackupEnabled={{@controller.model.second_factor_backup_enabled}}
                       />
                     </div>
                   {{/if}}
@@ -163,16 +163,16 @@ export default <template>
               <div class="control-group pref-second-factor-disable-all">
                 <div class="controls -actions">
                   <DButton
-                    @icon="ban"
+                    class="btn-danger"
                     @action={{@controller.disableAllSecondFactors}}
                     @disabled={{@controller.loading}}
+                    @icon="ban"
                     @label="user.second_factor.disable_all"
-                    class="btn-danger"
                   />
                   <LinkTo
-                    @route="preferences.security"
-                    @model={{@controller.model.username}}
                     class="cancel"
+                    @model={{@controller.model.username}}
+                    @route="preferences.security"
                   >
                     {{i18n "cancel"}}
                   </LinkTo>
@@ -181,7 +181,7 @@ export default <template>
             {{/unless}}
           {{/if}}
         </form>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </section>
   </PluginOutlet>
 </template>

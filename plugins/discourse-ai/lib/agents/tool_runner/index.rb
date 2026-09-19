@@ -13,7 +13,7 @@ module DiscourseAi
                 self.running_attached_function = true
                 options ||= {}
                 options = options.symbolize_keys
-                self.rag_search(query, **options)
+                rag_search(query, **options)
               end
             end,
           )

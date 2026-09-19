@@ -15,13 +15,18 @@ ja:
       title: RSS ポーリング
     admin:
       rss_polling:
-        feed: フィードの設定
-        discourse: Discourse の設定
         author: 作成者
         feed_url: URL
         discourse_category: カテゴリ
         discourse_tags: タグ
-        feed_category_filter: カテゴリフィルタ
-        documentation: RSS ポーリングの構成ドキュメント
-        destroy_feed:
-          confirm: "このフィードを削除してもよろしいですか？"
+        feeds:
+          edit: 編集
+          delete: 削除
+          save: 保存
+          confirm_delete: "このフィードを削除してもよろしいですか？"
+        test:
+          title: プレビュー
+          dismiss: 閉じる
+        status:
+          enabled: 有効
+          disabled: 無効

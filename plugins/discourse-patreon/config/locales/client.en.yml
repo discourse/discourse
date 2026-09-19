@@ -13,6 +13,8 @@ en:
       title: 'Patreon'
       header:
         rules: 'Filters'
+      unconfigured: "Patreon is not connected yet. Please see <a href='%{url}' target='_blank'>the documentation on Discourse Meta</a> for details."
+      configure_tokens: 'Go to settings'
       group: 'Group'
       rewards: 'Rewards'
       filter: 'Filter'

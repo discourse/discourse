@@ -2,27 +2,32 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import boundCategoryLink from "discourse/helpers/bound-category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 
 // Injections don't occur without a class
 @tagName("")
 export default class TopicCategory extends Component {
   <template>
     <div ...attributes>
-      {{#unless this.topic.isPrivateMessage}}
-        {{boundCategoryLink
-          this.topic.category
-          ancestors=this.topic.category.predecessors
-          hideParent=true
-        }}
-      {{/unless}}
+      <PluginOutlet
+        @name="topic-category-link-wrapper"
+        @outletArgs={{lazyHash category=this.topic.category topic=this.topic}}
+      >
+        {{#unless this.topic.isPrivateMessage}}
+          {{dBoundCategoryLink
+            this.topic.category
+            ancestors=this.topic.category.predecessors
+            hideParent=true
+          }}
+        {{/unless}}
+      </PluginOutlet>
       <div class="topic-header-extra">
         {{#if this.siteSettings.tagging_enabled}}
           <div class="list-tags">
-            {{discourseTags this.topic mode="list" tags=this.topic.tags}}
+            {{dDiscourseTags this.topic mode="list" tags=this.topic.tags}}
           </div>
         {{/if}}
         {{#if this.siteSettings.topic_featured_link_enabled}}
@@ -32,8 +37,8 @@ export default class TopicCategory extends Component {
 
       <span>
         <PluginOutlet
-          @name="topic-category"
           @connectorTagName="div"
+          @name="topic-category"
           @outletArgs={{lazyHash topic=this.topic category=this.topic.category}}
         />
       </span>

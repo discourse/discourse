@@ -1,0 +1,29 @@
+# frozen_string_literal: true
+
+module JsonApiKit
+  class Sideloads
+    def self.for(relationships, paths:, rows:, request:, schema:)
+      new(
+        relationships.map do |relationship|
+          Sideload.new(
+            relationship,
+            paths: paths.next_for(relationship.name),
+            rows:,
+            request:,
+            schema:,
+          )
+        end,
+      )
+    end
+
+    def initialize(sideloads)
+      @sideloads = sideloads
+    end
+
+    def linkage_for(row) = sideloads.to_h { [it.name, it.linkage_for(row)] }
+
+    private
+
+    attr_reader :sideloads
+  end
+end

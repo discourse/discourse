@@ -24,6 +24,7 @@ You will need the following packages on your system:
 - [Redis][redis_link]
 - [Node.js][node_link]
 - [pnpm][pnpm_link]
+- [libvips][libvips_link]
 - [MailHog][mh_link]\*\*
 - [ImageMagick][imagemagick_link]\*\*
 
@@ -77,7 +78,7 @@ RAILS_ENV=test bundle exec rake db:create db:migrate
 
 Start rails + Ember servers, you have two options here.
 
-**Option 1**: using two separate Terminal tabs/windows, run Rails and Ember CLI separately via
+**Option 1**: using two separate Terminal tabs/windows, run Rails and the frontend bundler separately via
 
 ```sh
 bundle exec rails server
@@ -86,16 +87,16 @@ bundle exec rails server
 and
 
 ```sh
-bin/ember-cli
+bin/dev --only ember
 ```
 
 **Option 2**: using only one Terminal tab/window:
 
 ```sh
-bin/ember-cli -u # will run the Pitchfork server in the background
+bin/dev # runs Pitchfork and the frontend bundler together
 ```
 
-:tada: You should now be able to navigate to [http://localhost:4200](http://localhost:4200) to see your local Discourse installation. (Note that the first load can take up to a minute as the server is warmed up.)
+:tada: You should now be able to navigate to [http://localhost:3000](http://localhost:3000) to see your local Discourse installation. (Note that the first load can take up to a minute as the server is warmed up.)
 
 You can also try running the specs:
 
@@ -139,6 +140,7 @@ Happy hacking! And to get started with that, see [Beginner’s Guide to Creating
 [pg_link]: http://www.postgresql.org/
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
+[libvips_link]: https://github.com/libvips/libvips/wiki#building-and-installing
 [imagemagick_link]: http://www.imagemagick.org/
 [pnpm_link]: https://pnpm.io/
 [mh_link]: https://github.com/mailhog/MailHog

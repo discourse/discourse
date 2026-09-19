@@ -2,6 +2,7 @@
 
 class EmbeddableHost < ActiveRecord::Base
   validate :host_must_be_valid
+  validate :allowed_paths_must_be_valid
   belongs_to :category
   belongs_to :user, optional: true
   has_many :embeddable_host_tags
@@ -9,8 +10,8 @@ class EmbeddableHost < ActiveRecord::Base
   after_destroy :reset_embedding_settings
 
   before_validation do
-    self.host.sub!(%r{\Ahttps?://}, "")
-    self.host.sub!(%r{/.*\z}, "")
+    host.sub!(%r{\Ahttps?://}, "")
+    host.sub!(%r{/.*\z}, "")
   end
 
   def self.record_for_url(uri)
@@ -35,8 +36,12 @@ class EmbeddableHost < ActiveRecord::Base
     where("lower(host) = ?", host).each do |eh|
       return eh if eh.allowed_paths.blank?
 
-      path_regexp = Regexp.new(eh.allowed_paths)
-      return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
+      begin
+        path_regexp = Regexp.new(eh.allowed_paths)
+        return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
+      rescue RegexpError
+        next
+      end
     end
 
     nil
@@ -62,6 +67,14 @@ class EmbeddableHost < ActiveRecord::Base
     end
   end
 
+  def allowed_paths_must_be_valid
+    return if allowed_paths.blank?
+
+    Regexp.new(allowed_paths)
+  rescue RegexpError
+    errors.add(:allowed_paths, I18n.t("errors.messages.invalid"))
+  end
+
   def host_must_be_valid
     if host !~ /\A[a-z0-9]+([\-\.]+{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i &&
          host !~ /\A(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(:[0-9]{1,5})?(\/.*)?\Z/ &&
@@ -76,11 +89,11 @@ end
 # Table name: embeddable_hosts
 #
 #  id            :integer          not null, primary key
+#  allowed_paths :string
+#  class_name    :string
 #  host          :string           not null
-#  category_id   :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  class_name    :string
-#  allowed_paths :string
+#  category_id   :integer          not null
 #  user_id       :integer
 #

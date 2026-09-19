@@ -8,7 +8,9 @@ gl:
   js:
     styleguide:
       title: "Guía de estilo"
-      welcome: "Para comezar, escolla unha sección do menú da esquerda."
+      example:
+        kind:
+          component: "Compoñente"
       categories:
         atoms: Átomos
         molecules: Moléculas
@@ -20,6 +22,9 @@ gl:
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, are in culpa qui officia deserunt mollit anim id is laborum."
         date_time_inputs:
           title: "Entradas de data/hora"
+        context_menu:
+          actions:
+            delete: "Eliminar"
         font_scale:
           title: "Sistema de tipos de letra"
         colors:
@@ -69,6 +74,21 @@ gl:
           title: "Máis temas"
         post_menu:
           title: "Menú de publicación"
+        roving_focus:
+          toolbar:
+            copy: "Copiar"
+          adjacent:
+            label: "Filtros"
+            field: "Buscar"
+            open: "Abrir"
+            recent: "Recentes"
+          combobox:
+            daily: "Diario"
+            weekly: "Semanal"
+            monthly: "Mensual"
+            never: "Nunca"
+          tree:
+            components: "Compoñentes"
         modal:
           title: "Modal"
           header: "Título da modal"

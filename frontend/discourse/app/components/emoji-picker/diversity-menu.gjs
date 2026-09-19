@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export const FITZPATRICK_MODIFIERS = [
   { scale: null, modifier: "" },
@@ -36,35 +36,35 @@ export default class EmojiPicker extends Component {
   <template>
     <DMenu
       @contentClass="emoji-picker__diversity-menu"
-      @triggerClass="emoji-picker__diversity-trigger btn-transparent"
       @onRegisterApi={{this.registerApi}}
+      @triggerClass="emoji-picker__diversity-trigger btn-transparent"
     >
       <:trigger>
         {{#if (eq this.emojiStore.diversity 1)}}
-          {{replaceEmoji ":clap:"}}
+          {{dReplaceEmoji ":clap:"}}
         {{else}}
-          {{replaceEmoji (concat ":clap:t" this.emojiStore.diversity ":")}}
+          {{dReplaceEmoji (concat ":clap:t" this.emojiStore.diversity ":")}}
         {{/if}}
       </:trigger>
 
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.fitzpatrickModifiers as |fitzpatrick|}}
             <dropdown.item>
               <DButton
                 class="btn-transparent emoji-picker__diversity-item"
-                @action={{fn this.didRequestFitzpatrickScale fitzpatrick.scale}}
                 data-level={{fitzpatrick.scale}}
+                @action={{fn this.didRequestFitzpatrickScale fitzpatrick.scale}}
               >
                 {{#if fitzpatrick.scale}}
-                  {{replaceEmoji (concat ":clap:t" fitzpatrick.scale ":")}}
+                  {{dReplaceEmoji (concat ":clap:t" fitzpatrick.scale ":")}}
                 {{else}}
-                  {{replaceEmoji ":clap:"}}
+                  {{dReplaceEmoji ":clap:"}}
                 {{/if}}
               </DButton>
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

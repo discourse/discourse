@@ -53,7 +53,7 @@ RSpec.describe DiscourseSolved::AnswerController do
 
         post "/solution/accept.json", params: { id: solution_post.id }
         expect(response.status).to eq(200)
-        post "/solution/accept.json", params: { id: solution_post.id }
+        post "/solution/unaccept.json", params: { id: solution_post.id }
         expect(response.status).to eq(200)
 
         # Unregister the modifier using DiscoursePluginRegistry
@@ -62,6 +62,45 @@ RSpec.describe DiscourseSolved::AnswerController do
           :solved_answers_controller_run_rate_limiter,
           &modifier_block
         )
+      end
+    end
+
+    it "returns single accepted answer in an array" do
+      sign_in(user)
+
+      post "/solution/accept.json", params: { id: solution_post.id }
+
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+      expect(result).to be_an(Array)
+      expect(result.length).to eq(1)
+      expect(result[0]["id"]).to eq(solution_post.id)
+    end
+
+    context "with multiple solutions enabled" do
+      fab!(:solution_post2) { Fabricate(:post, topic: topic) }
+
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      it "returns an array with multiple accepted answers" do
+        sign_in(user)
+
+        post "/solution/accept.json", params: { id: solution_post.id }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result).to be_an(Array)
+        expect(result.length).to eq(1)
+        expect(result[0]["id"]).to eq(solution_post.id)
+
+        post "/solution/accept.json", params: { id: solution_post2.id }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result).to be_an(Array)
+        expect(result.length).to eq(2)
+        expect(result[0]["id"]).to eq(solution_post.id)
+        expect(result[1]["id"]).to eq(solution_post2.id)
       end
     end
   end
@@ -82,6 +121,39 @@ RSpec.describe DiscourseSolved::AnswerController do
       RateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
       post "/solution/unaccept.json", params: { id: solution_post.id }
       expect(response.status).to eq(429)
+    end
+
+    it "returns an empty array of accepted answers after unaccepting" do
+      sign_in(user)
+
+      post "/solution/unaccept.json", params: { id: solution_post.id }
+
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+      expect(result).to be_nil
+    end
+
+    context "with multiple solutions enabled" do
+      fab!(:solution_post2) { Fabricate(:post, topic: topic) }
+
+      before do
+        SiteSetting.solved_allow_multiple_solutions = true
+        sign_in(user)
+        post "/solution/accept.json", params: { id: solution_post2.id }
+        sign_out
+      end
+
+      it "returns remaining accepted answers as an array" do
+        sign_in(user)
+
+        post "/solution/unaccept.json", params: { id: solution_post.id }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result).to be_an(Array)
+        expect(result.length).to eq(1)
+        expect(result[0]["id"]).to eq(solution_post2.id)
+      end
     end
   end
 end

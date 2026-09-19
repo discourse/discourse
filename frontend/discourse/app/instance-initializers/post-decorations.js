@@ -145,18 +145,18 @@ export default {
 
       function generateFullScreenTableModal(event) {
         const { postId } = this;
-
         const table = event.currentTarget.parentElement.nextElementSibling;
-        const tempTable = table.cloneNode(true);
-        const cookedWrapper = document.createElement("div");
-        cookedWrapper.classList.add("cooked");
-        if (siteSettings.display_footnotes_inline) {
-          cookedWrapper.classList.add("inline-footnotes");
+
+        if (!table) {
+          return;
         }
-        cookedWrapper.dataset.refPostId = postId;
-        cookedWrapper.appendChild(tempTable);
+
         modal.show(FullscreenTableModal, {
-          model: { tableHtml: cookedWrapper },
+          model: {
+            table,
+            postId,
+            displayFootnotesInline: siteSettings.display_footnotes_inline,
+          },
         });
       }
 

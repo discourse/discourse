@@ -12,3 +12,13 @@ sk:
         feed_url: URL
         discourse_category: Kategória
         discourse_tags: Značky
+        feeds:
+          edit: Upraviť
+          delete: Odstrániť
+          save: Uložiť
+        test:
+          title: Náhľad
+          dismiss: Zahodiť
+        status:
+          enabled: Povolené
+          disabled: Vypnuté

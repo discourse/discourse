@@ -4,7 +4,7 @@ import ValueList from "discourse/admin/components/value-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | value-list", function (hooks) {
+module("Integration | Component | ValueList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
@@ -67,7 +67,7 @@ module("Integration | Component | value-list", function (hooks) {
 
     await render(
       <template>
-        <ValueList @values={{this.values}} @choices={{this.choices}} />
+        <ValueList @choices={{this.choices}} @values={{this.values}} />
       </template>
     );
 
@@ -90,7 +90,7 @@ module("Integration | Component | value-list", function (hooks) {
 
     await render(
       <template>
-        <ValueList @values={{this.values}} @inputType="array" />
+        <ValueList @inputType="array" @values={{this.values}} />
       </template>
     );
 
@@ -116,7 +116,7 @@ module("Integration | Component | value-list", function (hooks) {
 
     await render(
       <template>
-        <ValueList @values={{this.values}} @inputDelimiter="|" />
+        <ValueList @inputDelimiter="|" @values={{this.values}} />
       </template>
     );
 

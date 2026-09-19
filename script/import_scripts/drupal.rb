@@ -245,7 +245,7 @@ class ImportScripts::Drupal < ImportScripts::Base
           }
           if row["pid"]
             parent = topic_lookup_from_imported_post_id("cid:#{row["pid"]}")
-            h[:reply_to_post_number] = parent[:post_number] if parent && parent[:post_number] > (1)
+            h[:reply_to_post_number] = parent[:post_number] if parent && parent[:post_number] > 1
           end
           h
         else
@@ -408,17 +408,15 @@ class ImportScripts::Drupal < ImportScripts::Base
     puts "", "creating permalinks..."
 
     Topic.listable_topics.find_each do |topic|
-      begin
-        tcf = topic.custom_fields
-        if tcf && tcf["import_id"]
-          node_id = tcf["import_id"][/nid:(\d+)/, 1]
-          slug = "/node/#{node_id}"
-          Permalink.create(url: slug, topic_id: topic.id)
-        end
-      rescue => e
-        puts e.message
-        puts "Permalink creation failed for id #{topic.id}"
+      tcf = topic.custom_fields
+      if tcf && tcf["import_id"]
+        node_id = tcf["import_id"][/nid:(\d+)/, 1]
+        slug = "/node/#{node_id}"
+        Permalink.create(url: slug, topic_id: topic.id)
       end
+    rescue => e
+      puts e.message
+      puts "Permalink creation failed for id #{topic.id}"
     end
   end
 
@@ -471,35 +469,33 @@ class ImportScripts::Drupal < ImportScripts::Base
     max = Post.count
 
     Post.find_each do |post|
-      begin
-        raw = post.raw
-        new_raw = raw.dup
+      raw = post.raw
+      new_raw = raw.dup
 
-        # replace old topic to new topic links
-        new_raw.gsub!(%r{https://site.com/forum/topic/(\d+)}im) do
-          post_id = post_id_from_imported_post_id("nid:#{$1}")
-          next unless post_id
-          topic = Post.find(post_id).topic
-          "https://community.site.com/t/-/#{topic.id}"
-        end
-
-        # replace old comment to reply links
-        new_raw.gsub!(%r{https://site.com/comment/(\d+)#comment-\d+}im) do
-          post_id = post_id_from_imported_post_id("cid:#{$1}")
-          next unless post_id
-          post_ref = Post.find(post_id)
-          "https://community.site.com/t/-/#{post_ref.topic_id}/#{post_ref.post_number}"
-        end
-
-        if raw != new_raw
-          post.raw = new_raw
-          post.save
-        end
-      rescue StandardError
-        puts "", "Failed rewrite on post: #{post.id}"
-      ensure
-        print_status(current += 1, max)
+      # replace old topic to new topic links
+      new_raw.gsub!(%r{https://site.com/forum/topic/(\d+)}im) do
+        post_id = post_id_from_imported_post_id("nid:#{$1}")
+        next unless post_id
+        topic = Post.find(post_id).topic
+        "https://community.site.com/t/-/#{topic.id}"
       end
+
+      # replace old comment to reply links
+      new_raw.gsub!(%r{https://site.com/comment/(\d+)#comment-\d+}im) do
+        post_id = post_id_from_imported_post_id("cid:#{$1}")
+        next unless post_id
+        post_ref = Post.find(post_id)
+        "https://community.site.com/t/-/#{post_ref.topic_id}/#{post_ref.post_number}"
+      end
+
+      if raw != new_raw
+        post.raw = new_raw
+        post.save
+      end
+    rescue StandardError
+      puts "", "Failed rewrite on post: #{post.id}"
+    ensure
+      print_status(current += 1, max)
     end
   end
 
@@ -508,14 +504,12 @@ class ImportScripts::Drupal < ImportScripts::Base
     current = 0
     max = User.count
     User.find_each do |user|
-      begin
-        user.create_user_avatar(user_id: user.id) unless user.user_avatar
-        user.user_avatar.update_gravatar!
-      rescue StandardError
-        puts "", 'Failed avatar update on user #{user.id}'
-      ensure
-        print_status(current += 1, max)
-      end
+      user.create_user_avatar(user_id: user.id) unless user.user_avatar
+      user.user_avatar.update_gravatar!
+    rescue StandardError
+      puts "", 'Failed avatar update on user #{user.id}'
+    ensure
+      print_status(current += 1, max)
     end
   end
 

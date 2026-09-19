@@ -57,6 +57,8 @@ sq:
       bot: "bot"
       create: "Krijo"
       cancel: "Anulo"
+      pinned_bar:
+        title: "E përzgjedhur"
       pinned: "E përzgjedhur"
       channel_settings:
         edit: "Redakto"
@@ -86,6 +88,8 @@ sq:
         back: "Kthehu mbrapa"
         filter_all: Të Gjithë
         filter_open: Fillo
+        filter_joined_all: "Të gjitha"
+        filter_joined_joined: "Anëtarësuar"
       chat_message_separator:
         today: Sot
         yesterday: Dje
@@ -107,7 +111,11 @@ sq:
       direct_message_creator:
         title: Mesazh i ri
         prefix: "Për:"
+      channel:
+        preview_card:
+          log_in: "Identifikohu"
       create_channel:
+        description: "Përshkrimi"
         type: "Lloji"
         types:
           category: "Kategori"
@@ -135,6 +143,11 @@ sq:
         sort:
           relevance: "Rëndësia"
           latest: "Më të fundit"
+      channel_list:
+        options:
+          filter: "Filtro"
+        filter:
+          mentions: "Përmendje"
       incoming_webhooks:
         back: "Kthehu mbrapa"
         description: "Përshkrimi"
@@ -182,3 +195,14 @@ sq:
           fields:
             message:
               label: Mesazh
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Dërgoi një kanal mesazhi."
+      send_chat_message:
+        message: "Mesazh"
+      chat_approval:
+        message: "Mesazh"
+        value: "Vlera"
+        style_default: "Paracaktuar"
+        style_primary: "Kryesor"
+        icon: "Ikonë"

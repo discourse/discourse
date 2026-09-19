@@ -1,9 +1,13 @@
+import { tracked } from "@glimmer/tracking";
+import Service from "@ember/service";
 import {
   click,
   fillIn,
+  find,
   render,
   settled,
   triggerKeyEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SearchMenu, {
@@ -17,7 +21,7 @@ import { i18n } from "discourse-i18n";
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/search-test.js. This is simply about the rendering of the
 // menu panel separate from the search input.
-module("Integration | Component | search-menu", function (hooks) {
+module("Integration | Component | SearchMenu", function (hooks) {
   setupRenderingTest(hooks);
 
   test("rendering standalone", async function (assert) {
@@ -67,10 +71,26 @@ module("Integration | Component | search-menu", function (hooks) {
     assert
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
+    assert
+      .dom("#icon-search-input")
+      .isFocused("search results keep input focus");
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
-    assert.dom(".menu-panel").doesNotExist("Menu panel is gone");
+    // Wait for the panel to actually be removed.
+    const menuClosed = await waitUntil(
+      () => !document.querySelector(".menu-panel")
+    ).catch(() => false);
+
+    // If it didn't close, print out focus state in the failure message.
+    let closeDebug = "";
+    if (!menuClosed) {
+      const panelCount = document.querySelectorAll(".menu-panel").length;
+      const { activeElement } = document;
+      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount})`;
+    }
+
+    assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
 
     await click("#icon-search-input");
     await click("#icon-search-input");
@@ -105,12 +125,80 @@ module("Integration | Component | search-menu", function (hooks) {
       .doesNotExist("Menu panel is hidden");
   });
 
+  test("@hideResults closes the menu and keeps it closed", async function (assert) {
+    const state = new (class {
+      @tracked hidden = false;
+    })();
+
+    await render(
+      <template>
+        <SearchMenu
+          @hideResults={{state.hidden}}
+          @location="test"
+          @searchInputId="icon-search-input"
+        />
+      </template>
+    );
+
+    await click("#icon-search-input");
+    assert.dom(".menu-panel").exists("menu opens from the input");
+
+    state.hidden = true;
+    await settled();
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu closes when results are hidden");
+
+    await click("#icon-search-input");
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu cannot open while results are hidden");
+
+    state.hidden = false;
+    await settled();
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu stays closed when results can show again");
+
+    find("#icon-search-input").blur();
+    await click("#icon-search-input");
+    assert.dom(".menu-panel").exists("menu can reopen from the input");
+  });
+
   test("rendering without a searchInputId provided", async function (assert) {
     await render(<template><SearchMenu @location="test" /></template>);
 
     assert
       .dom("#search-term.search-term__input")
       .exists("input defaults to id of search-term");
+  });
+
+  test("updates when the input placeholder changes", async function (assert) {
+    const state = new (class {
+      @tracked placeholder = "search.title";
+    })();
+
+    await render(
+      <template>
+        <SearchMenu
+          @location="test"
+          @searchInputPlaceholder={{state.placeholder}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#search-term")
+      .hasAttribute("placeholder", i18n("search.title"))
+      .hasAttribute("aria-label", i18n("search.title"));
+
+    state.placeholder = "welcome_banner.search_placeholder";
+    await settled();
+
+    assert
+      .dom("#search-term")
+      .hasAttribute("placeholder", i18n("welcome_banner.search_placeholder"))
+      .hasAttribute("aria-label", i18n("welcome_banner.search_placeholder"));
   });
 
   test("search-context state changes updates the UI", async function (assert) {
@@ -164,5 +252,72 @@ module("Integration | Component | search-menu", function (hooks) {
       .exists(
         "PM context button reappears after selecting 'in:messages' suggestion"
       );
+  });
+  test("announces the outcome of a submitted search, but not suggestions", async function (assert) {
+    const announcements = [];
+    this.owner.register(
+      "service:a11y",
+      class extends Service {
+        announce(message, priority) {
+          announcements.push({ message, priority });
+        }
+      }
+    );
+
+    pretender.get("/search/query", (request) => {
+      if (request.queryParams.term === "nothing") {
+        return response({ grouped_search_result: {} });
+      }
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        return response({
+          users: searchFixtures["search/query"]["users"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
+      }
+      return response(searchFixtures["search/query"]);
+    });
+
+    await render(
+      <template>
+        <SearchMenu @location="test" @searchInputId="icon-search-input" />
+      </template>
+    );
+
+    await click("#icon-search-input");
+    await fillIn("#icon-search-input", "test");
+
+    assert.deepEqual(announcements, [], "suggestions while typing are silent");
+
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.strictEqual(
+      announcements.length,
+      1,
+      "a submitted search is announced"
+    );
+    assert.strictEqual(announcements[0].priority, "polite");
+    assert.true(
+      /^\d+ results? found\.$/.test(announcements[0].message),
+      "with the number of results shown"
+    );
+
+    await fillIn("#icon-search-input", "nothing");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.deepEqual(
+      announcements.at(-1),
+      { message: i18n("search.no_results"), priority: "polite" },
+      "an empty search says so"
+    );
+
+    await fillIn("#icon-search-input", "a");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.deepEqual(
+      announcements.at(-1),
+      { message: i18n("search.too_short"), priority: "polite" },
+      "a term too short to search says why"
+    );
   });
 });

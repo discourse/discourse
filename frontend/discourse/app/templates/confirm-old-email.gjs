@@ -1,4 +1,4 @@
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -27,9 +27,9 @@ export default <template>
         }}
       </p>
       <DButton
-        @translatedLabel={{i18n "user.change_email.confirm"}}
         class="btn-primary"
         @action={{@controller.confirm}}
+        @translatedLabel={{i18n "user.change_email.confirm"}}
       />
     </div>
   </div>

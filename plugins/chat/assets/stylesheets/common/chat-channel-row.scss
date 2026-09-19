@@ -8,6 +8,10 @@
   color: var(--primary);
 
   @media (hover: none) {
+    // avoid the native long-press callout/selection on the row link
+    -webkit-touch-callout: none;
+    user-select: none;
+
     &:hover,
     &:focus {
       background: transparent;
@@ -16,6 +20,17 @@
     &:active {
       background: var(--primary-low);
     }
+
+    // no hover to reveal the button, so it stays visible
+    &.can-leave {
+      .toggle-channel-membership-button.-leave {
+        display: block;
+
+        > * {
+          pointer-events: auto;
+        }
+      }
+    }
   }
 
   @media (hover: hover) {
@@ -23,19 +38,19 @@
     &.active {
       background: var(--primary-very-low);
     }
-  }
 
-  &.can-leave:hover {
-    .toggle-channel-membership-button.-leave {
-      display: block;
+    &.can-leave:hover {
+      .toggle-channel-membership-button.-leave {
+        display: block;
 
-      > * {
-        pointer-events: auto;
+        > * {
+          pointer-events: auto;
+        }
       }
-    }
 
-    .chat-channel__metadata {
-      display: none;
+      .chat-channel__metadata {
+        display: none;
+      }
     }
   }
 
@@ -56,6 +71,12 @@
 
   &.muted {
     opacity: 0.65;
+  }
+
+  &.is-long-pressed {
+    .chat-channel-row__content {
+      background: var(--d-hover);
+    }
   }
 
   &__content {
@@ -135,5 +156,10 @@
   .toggle-channel-membership-button.-leave {
     display: none;
     margin-left: auto;
+  }
+
+  .desktop-view .full-page-chat & {
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--content-border-color);
   }
 }

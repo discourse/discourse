@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
 import { not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import DeleteMessagesConfirm from "discourse/plugins/chat/discourse/components/chat/modal/delete-messages-confirm";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
@@ -27,17 +27,30 @@ export default class ChatSelectionManager extends Component {
     return this.args.enableMove ?? false;
   }
 
+  get selectedMessageIds() {
+    return this.args.messagesManager.selectedMessages.map(
+      (message) => message.id
+    );
+  }
+
   get anyMessagesSelected() {
-    return this.args.pane.selectedMessageIds.length > 0;
+    return this.selectedMessageIds.length > 0;
   }
 
   get deleteCountLimitReached() {
-    return this.args.pane.selectedMessageIds.length > DELETE_COUNT_LIMIT;
+    return this.selectedMessageIds.length > DELETE_COUNT_LIMIT;
   }
 
   get canDeleteMessages() {
-    return this.args.pane.selectedMessageIds.every((id) => {
+    return this.selectedMessageIds.every((id) => {
       return this.canDeleteMessage(id);
+    });
+  }
+
+  get deleteButtonTitle() {
+    return i18n("chat.selection.delete", {
+      selectionCount: this.selectedMessageIds.length,
+      totalCount: DELETE_COUNT_LIMIT,
     });
   }
 
@@ -58,29 +71,28 @@ export default class ChatSelectionManager extends Component {
     }
   }
 
-  get deleteButtonTitle() {
-    return i18n("chat.selection.delete", {
-      selectionCount: this.args.pane.selectedMessageIds.length,
-      totalCount: DELETE_COUNT_LIMIT,
-    });
-  }
-
   @bind
   async generateQuote() {
     const { markdown } = await this.api.generateQuote(
-      this.args.pane.channel.id,
-      this.args.pane.selectedMessageIds
+      this.args.channel.id,
+      this.selectedMessageIds
     );
 
     return new Blob([markdown], { type: "text/plain" });
   }
 
   @action
+  cancelSelecting() {
+    this.args.messagesManager.clearSelectedMessages();
+    this.args.pane.cancelSelecting();
+  }
+
+  @action
   openMoveMessageModal() {
     this.modal.show(ChatModalMoveMessageToChannel, {
       model: {
-        sourceChannel: this.args.pane.channel,
-        selectedMessageIds: this.args.pane.selectedMessageIds,
+        sourceChannel: this.args.channel,
+        selectedMessageIds: this.selectedMessageIds,
       },
     });
   }
@@ -89,8 +101,8 @@ export default class ChatSelectionManager extends Component {
   openDeleteMessagesModal() {
     this.modal.show(DeleteMessagesConfirm, {
       model: {
-        sourceChannel: this.args.pane.channel,
-        selectedMessageIds: this.args.pane.selectedMessageIds,
+        sourceChannel: this.args.channel,
+        selectedMessageIds: this.selectedMessageIds,
       },
     });
   }
@@ -107,15 +119,15 @@ export default class ChatSelectionManager extends Component {
     }
 
     const openOpts = {};
-    if (this.args.pane.channel.isCategoryChannel) {
-      openOpts.categoryId = this.args.pane.channel.chatableId;
+    if (this.args.channel.isCategoryChannel) {
+      openOpts.categoryId = this.args.channel.chatableId;
     }
 
     if (this.site.mobileView) {
       // go to the relevant chatable (e.g. category) and open the
       // composer to insert text
-      if (this.args.pane.channel.chatableUrl) {
-        this.router.transitionTo(this.args.pane.channel.chatableUrl);
+      if (this.args.channel.chatableUrl) {
+        this.router.transitionTo(this.args.channel.chatableUrl);
       }
 
       await this.topicComposer.focusComposer({
@@ -163,49 +175,53 @@ export default class ChatSelectionManager extends Component {
     >
       <div class="chat-selection-management__buttons">
         <DButton
+          class="btn-default"
+          id="chat-quote-btn"
+          @action={{this.quoteMessages}}
+          @disabled={{not this.anyMessagesSelected}}
           @icon="quote-left"
           @label="chat.selection.quote_selection"
-          @disabled={{not this.anyMessagesSelected}}
-          @action={{this.quoteMessages}}
-          id="chat-quote-btn"
         />
 
         <DButton
+          class="btn-default"
+          id="chat-copy-btn"
+          @action={{this.copyMessages}}
+          @disabled={{not this.anyMessagesSelected}}
           @icon="copy"
           @label="chat.selection.copy"
-          @disabled={{not this.anyMessagesSelected}}
-          @action={{this.copyMessages}}
-          id="chat-copy-btn"
         />
 
         {{#if this.enableMove}}
           <DButton
+            class="btn-default"
+            id="chat-move-to-channel-btn"
+            @action={{this.openMoveMessageModal}}
+            @disabled={{not this.anyMessagesSelected}}
             @icon="right-from-bracket"
             @label="chat.selection.move_selection_to_channel"
-            @disabled={{not this.anyMessagesSelected}}
-            @action={{this.openMoveMessageModal}}
-            id="chat-move-to-channel-btn"
           />
         {{/if}}
 
         <DButton
-          @icon="trash-can"
-          @translatedLabel={{this.deleteButtonTitle}}
+          class="btn-default"
+          id="chat-delete-btn"
+          @action={{this.openDeleteMessagesModal}}
           @disabled={{or
             (not this.anyMessagesSelected)
             (not this.canDeleteMessages)
             this.deleteCountLimitReached
           }}
-          @action={{this.openDeleteMessagesModal}}
-          id="chat-delete-btn"
+          @icon="trash-can"
+          @translatedLabel={{this.deleteButtonTitle}}
         />
 
         <DButton
+          class="btn-default cancel-btn"
+          id="chat-cancel-selection-btn"
+          @action={{this.cancelSelecting}}
           @icon="xmark"
           @label="chat.selection.cancel"
-          @action={{@pane.cancelSelecting}}
-          id="chat-cancel-selection-btn"
-          class="btn-secondary cancel-btn"
         />
       </div>
     </div>

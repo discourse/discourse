@@ -1,6 +1,6 @@
 import { Textarea } from "@ember/component";
-import DButton from "discourse/components/d-button";
-import SaveControls from "discourse/components/save-controls";
+import DButton from "discourse/ui-kit/d-button";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -13,22 +13,22 @@ export default <template>
       </div>
     {{/if}}
     <Textarea
-      @value={{@controller.buffered.robots_txt}}
       class="robots-txt-input"
+      @value={{@controller.buffered.robots_txt}}
     />
-    <SaveControls
-      @model={{@controller}}
+    <DSaveControls
       @action={{@controller.save}}
+      @model={{@controller}}
       @saved={{@controller.saved}}
       @saveDisabled={{@controller.saveDisabled}}
     >
       <DButton
+        class="btn-default"
+        @action={{@controller.reset}}
         @disabled={{@controller.resetDisabled}}
         @icon="arrow-rotate-left"
-        @action={{@controller.reset}}
         @label="admin.settings.reset"
-        class="btn-default"
       />
-    </SaveControls>
+    </DSaveControls>
   </div>
 </template>

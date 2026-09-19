@@ -50,14 +50,14 @@ module DiscourseChatIntegration::Provider::TeamsProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "#{topic.category.parent_category.name}/#{topic.category.name}"
           else
             topic.category.name
           end
         )
     end
-    tags = topic.tags.map(&:name).join(", ") if topic.tags.present?
+    tags = DiscourseChatIntegration::Provider.display_tag_names(topic).presence
     category_and_tags_line = [category, tags].compact.join(" | ").presence
 
     body = [

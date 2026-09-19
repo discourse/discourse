@@ -221,16 +221,68 @@ RSpec.describe Admin::ReportsController do
                 topics: {
                   limit: 10,
                 },
+                admin_logins: {
+                  limit: 10,
+                },
                 top_uploads: {
+                  limit: 10,
+                },
+                topic_view_stats: {
                   limit: 10,
                 },
               },
             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["reports"].count).to eq(2)
+        expect(response.parsed_body["reports"].count).to eq(4)
         expect(response.parsed_body["reports"][0]["type"]).to eq("topics")
         expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][2]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][3]).to include("error" => "not_found", "data" => nil)
+      end
+
+      it "returns aggregates but not related items for identity-level reports" do
+        get "/admin/reports/bulk.json",
+            params: {
+              reports: {
+                signups: {
+                  include_related_items: false,
+                },
+                new_contributors: {
+                  include_related_items: true,
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"][0]["type"]).to eq("signups")
+        expect(response.parsed_body["reports"][1]["type"]).to eq("new_contributors")
+        expect(
+          response.parsed_body["reports"].filter_map { |report| report["related_items"] },
+        ).to be_empty
+      end
+
+      it "redacts suspicious login IP addresses when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+        DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+        user.user_auth_token_logs.create!(
+          action: "suspicious",
+          client_ip: "1.1.1.1",
+          user_agent: "Mozilla/5.0",
+          created_at: 1.hour.ago,
+        )
+
+        get "/admin/reports/bulk.json", params: { reports: { suspicious_logins: { limit: 10 } } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"].count).to eq(1)
+
+        report = response.parsed_body["reports"].first
+        row = report["data"].first
+        expect(report["type"]).to eq("suspicious_logins")
+        expect(row["username"]).to eq(user.username)
+        expect(row["client_ip"]).to be_nil
+        expect(row["location"]).to eq("Earth")
       end
     end
 
@@ -363,6 +415,19 @@ RSpec.describe Admin::ReportsController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["report"]["total"]).to eq(1)
           end
+
+          it "only includes related items when requested" do
+            Fabricate(:user, created_at: 1.hour.ago)
+
+            get "/admin/reports/signups.json", params: { cache: true }
+            expect(response.parsed_body["report"]).not_to have_key("related_items")
+
+            get "/admin/reports/signups.json", params: { cache: true, include_related_items: true }
+            expect(response.parsed_body["report"]["related_items"]["users"]).to be_present
+
+            get "/admin/reports/signups.json", params: { cache: true }
+            expect(response.parsed_body["report"]).not_to have_key("related_items")
+          end
         end
 
         context "when limit param is invalid" do
@@ -377,7 +442,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:topic) { Fabricate(:topic, category: category) }
         fab!(:other_topic, :topic)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           get "/admin/reports/topics.json", params: { category_id: category.id }
 
           expect(response.status).to eq(200)
@@ -394,7 +459,7 @@ RSpec.describe Admin::ReportsController do
         fab!(:other_user, :user)
         fab!(:group)
 
-        it "should render the report as JSON" do
+        it "renders the report as JSON" do
           group.add(user)
 
           get "/admin/reports/signups.json", params: { group_id: group.id }
@@ -405,6 +470,37 @@ RSpec.describe Admin::ReportsController do
 
           expect(report["type"]).to eq("signups")
           expect(report["data"].count).to eq(1)
+        end
+      end
+
+      describe "posters_by_member_type_members (internal drill-down report)" do
+        it "is excluded from the reports catalog but still fetchable directly" do
+          get "/admin/reports.json"
+          expect(response.parsed_body["reports"].map { |r| r["type"] }).not_to include(
+            "posters_by_member_type_members",
+          )
+
+          get "/admin/reports/posters_by_member_type_members.json",
+              params: {
+                filters: {
+                  group: "staff",
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["report"]["type"]).to eq("posters_by_member_type_members")
+        end
+
+        it "returns a not_found error for an unparseable group token" do
+          get "/admin/reports/posters_by_member_type_members.json",
+              params: {
+                filters: {
+                  group: "not-a-real-token",
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["report"]["error"]).to eq("not_found")
         end
       end
     end
@@ -421,11 +517,50 @@ RSpec.describe Admin::ReportsController do
         expect(response.parsed_body["report"]["total"]).to eq(1)
       end
 
-      it "does not allow accessing admin-only reports" do
-        get "/admin/reports/top_uploads.json"
+      it "returns report aggregates without identity-level data" do
+        get "/admin/reports/signups.json"
 
-        expect(response.status).to eq(404)
-        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["report"]["type"]).to eq("signups")
+
+        get "/admin/reports/signups.json", params: { include_related_items: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["report"]).not_to have_key("related_items")
+      end
+
+      context "when moderators cannot view IPs" do
+        before do
+          SiteSetting.moderators_view_ips = false
+          DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+
+          user.user_auth_token_logs.create!(
+            action: "suspicious",
+            client_ip: "1.1.1.1",
+            user_agent: "Mozilla/5.0",
+            created_at: 1.hour.ago,
+          )
+        end
+
+        it "redacts suspicious login IP address while retaining location" do
+          get "/admin/reports/suspicious_logins.json"
+
+          expect(response.status).to eq(200)
+
+          row = response.parsed_body.dig("report", "data", 0)
+          expect(row["username"]).to eq(user.username)
+          expect(row["client_ip"]).to be_nil
+          expect(row["location"]).to eq("Earth")
+        end
+      end
+
+      it "does not allow accessing admin-only reports" do
+        Report::ADMIN_ONLY_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        end
       end
     end
 
@@ -477,6 +612,31 @@ RSpec.describe Admin::ReportsController do
       it "does allow running the page_view_legacy_total_reqs report" do
         get "/admin/reports/page_view_legacy_total_reqs.json"
         expect(response.status).to eq(200)
+      end
+    end
+
+    context "with browser pageview reports" do
+      let(:browser_pageview_reports) do
+        %w[top_countries_by_browser_pageviews top_entry_urls top_referrers_by_browser_pageviews]
+      end
+
+      it "lets an admin run them" do
+        sign_in(admin)
+        SiteSetting.use_legacy_pageviews = false
+
+        browser_pageview_reports.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "denies a moderator" do
+        sign_in(moderator)
+
+        browser_pageview_reports.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(404)
+        end
       end
     end
   end

@@ -157,6 +157,54 @@ RSpec.describe "Drawer" do
     end
   end
 
+  context "when the drawer is collapsed" do
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:membership) do
+      Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+    end
+
+    before { SiteSetting.chat_search_enabled = true }
+
+    it "only keeps the navbar controls which are usable when collapsed" do
+      drawer_page.visit_channel(channel)
+
+      expect(page).to have_selector(".c-navbar__star-channel-button")
+      expect(page).to have_selector(".c-navbar__filter")
+      expect(page).to have_selector(".c-navbar__threads-list-button")
+
+      drawer_page.collapse
+
+      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+      expect(page).to have_no_selector(".c-navbar__star-channel-button")
+      expect(page).to have_no_selector(".c-navbar__filter")
+      expect(page).to have_no_selector(".c-navbar__threads-list-button")
+      expect(page).to have_selector(".c-navbar__close-drawer-button")
+
+      drawer_page.expand
+
+      expect(page).to have_selector(".chat-drawer.is-expanded")
+      expect(page).to have_selector(".c-navbar__star-channel-button")
+      expect(page).to have_selector(".c-navbar__filter")
+      expect(page).to have_selector(".c-navbar__threads-list-button")
+    end
+
+    it "can be expanded with the keyboard" do
+      drawer_page.visit_channel(channel)
+      drawer_page.collapse
+
+      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+      expect(drawer_page.toggle_button_width).to be <= 1 # not visible to pointer users
+
+      drawer_page.focus_toggle_button
+
+      expect(drawer_page.toggle_button_width).to be > 1
+
+      drawer_page.expand_with_keyboard
+
+      expect(page).to have_selector(".chat-drawer.is-expanded")
+    end
+  end
+
   context "when going from drawer to full page" do
     fab!(:channel_1, :chat_channel)
     fab!(:channel_2, :chat_channel)
@@ -177,6 +225,8 @@ RSpec.describe "Drawer" do
       drawer_page.maximize
       chat_page.minimize_full_page
       drawer_page.maximize
+
+      expect(page).to have_css(".chat-channel.--loaded[data-id='#{channel_1.id}']")
 
       Fabricate(
         :chat_message,
@@ -209,57 +259,77 @@ RSpec.describe "Drawer" do
 
       expect(drawer_page).to have_open_channel(channel)
     end
+
+    it "returns to the homepage when toggling chat icon after expanding drawer to full page" do
+      SiteSetting.chat_separate_sidebar_mode = "fullscreen"
+      SiteSetting.top_menu = "categories|latest|new"
+
+      visit("/discuss/")
+      chat_page.open_from_header
+      expect(page).to have_css("body.has-drawer-chat")
+
+      drawer_page.maximize
+      expect(page).to have_css("body.has-full-page-chat")
+
+      find(".chat-header-icon").click
+
+      expect(page).to have_current_path("/discuss/categories")
+      expect(page).to have_no_css("body.has-full-page-chat")
+    end
+
+    it "does not double the subfolder when returning to a chat channel via the header icon after a programmatic navigation" do
+      visit("/discuss/chat")
+      expect(page).to have_css("html.has-chat")
+
+      find(".title a").click
+      expect(page).to have_current_path("/discuss/")
+
+      find(".sidebar-section-link.channel-#{channel.id}").click
+      expect(page).to have_css("body.has-drawer-chat")
+
+      drawer_page.close
+
+      find(".chat-header-icon").click
+
+      expect(page).to have_current_path("/discuss/")
+      expect(page).to have_css("body.has-drawer-chat")
+      expect(page).to have_css(".chat-channel.--loaded[data-id='#{channel.id}']")
+    end
   end
 
-  context "when sending a message from topic" do
-    fab!(:topic)
-    fab!(:posts) { Fabricate.times(5, :post, topic: topic) }
-    fab!(:channel, :chat_channel)
+  context "when sending a message from a thread while viewing a topic" do
+    fab!(:post1, :post)
+    fab!(:post2) { Fabricate(:post, topic: post1.topic) }
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel, with_replies: 1, use_service: true) }
     fab!(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
     end
 
     let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
+    let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
-    context "when on a channel" do
-      xit "has context" do
-        ::Chat::CreateMessage
-          .expects(:call)
-          .with do |value|
-            value["topic_id"] === topic.id.to_s &&
-              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
-          end
+    before { Jobs.run_immediately! }
 
-        topic_page.visit_topic(topic, post_number: 3)
-        chat_page.open_from_header
-        drawer_page.open_channel(channel)
-        channel_page.send_message
+    it "has topic context" do
+      tested_context = {}
+      blk = ->(*, context) { tested_context = context }
+      DiscourseEvent.on(:chat_message_created, &blk)
+
+      topic_page.visit_topic(post1.topic)
+      chat_page.open_from_header
+      drawer_page.open_channel(channel)
+      drawer_page.open_thread_list
+      thread_list_page.open_thread(thread)
+      thread_page.send_message
+
+      try_until_success do
+        expect(tested_context.dig(:context, :post_ids)).to eq([post1.id, post2.id])
+        expect(tested_context.dig(:context, :topic_id)).to eq(post1.topic_id)
       end
-    end
-
-    context "when on a thread" do
-      before { channel.update!(threading_enabled: true) }
-
-      fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
-
-      let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
-      let(:thread_page) { PageObjects::Pages::ChatThread.new }
-
-      xit "has context" do
-        ::Chat::CreateMessage
-          .expects(:call)
-          .with do |value|
-            value["topic_id"] === topic.id.to_s &&
-              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
-          end
-
-        topic_page.visit_topic(topic, post_number: 3)
-        chat_page.open_from_header
-        drawer_page.open_channel(channel)
-        drawer_page.open_thread_list
-        thread_list_page.open_thread(thread_1)
-        thread_page.send_message
-      end
+    ensure
+      DiscourseEvent.off(:chat_message_created, &blk)
     end
   end
 

@@ -1,0 +1,85 @@
+import { computed } from "@ember/object";
+import { cancel, next } from "@ember/runloop";
+import { attributeBindings } from "@ember-decorators/component";
+import TextField from "discourse/components/ember-text-field";
+import discourseDebounce from "discourse/lib/debounce";
+import { siteDir } from "discourse/lib/text-direction";
+import { i18n } from "discourse-i18n";
+
+const DEBOUNCE_MS = 500;
+
+@attributeBindings(
+  "autocorrect",
+  "autocapitalize",
+  "autofocus",
+  "enterkeyhint",
+  "maxLength",
+  "dir",
+  "aria-label",
+  "aria-controls",
+  "resolvedPlaceholder:placeholder"
+)
+export default class DTextField extends TextField {
+  _prevValue = null;
+  _timer = null;
+
+  @computed("siteSettings.support_mixed_text_direction", "value")
+  get dir() {
+    if (this.siteSettings.support_mixed_text_direction) {
+      const value = this.value?.toString() || "";
+
+      if (value) {
+        return "auto";
+      }
+
+      return siteDir();
+    }
+  }
+
+  /**
+   * The bound `placeholder` attribute, derived from both arguments. This is
+   * a separate computed rather than a setter on `placeholder`: Ember caches
+   * what a computed setter returns at assignment time, so the result would
+   * depend on which argument the caller passes first.
+   */
+  @computed("placeholder", "placeholderKey")
+  get resolvedPlaceholder() {
+    if (this.placeholder) {
+      return this.placeholder;
+    }
+    return this.placeholderKey ? i18n(this.placeholderKey) : "";
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    this._prevValue = this.value;
+  }
+
+  didUpdateAttrs() {
+    super.didUpdateAttrs(...arguments);
+
+    if (this._prevValue !== this.value) {
+      if (this.onChangeImmediate) {
+        next(() => this.onChangeImmediate(this.value));
+      }
+      if (this.onChange) {
+        cancel(this._timer);
+        this._timer = discourseDebounce(
+          this,
+          this._debouncedChange,
+          DEBOUNCE_MS
+        );
+      }
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    cancel(this._timer);
+  }
+
+  _debouncedChange() {
+    next(() => this.onChange(this.value));
+  }
+}

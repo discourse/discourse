@@ -64,8 +64,6 @@ module(
     Object.entries(testCases).forEach(
       ([name, [markdown, expectedHtml, expectedMarkdown]]) => {
         test(name, async function (assert) {
-          this.siteSettings.rich_editor = true;
-
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
       }

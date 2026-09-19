@@ -2,6 +2,7 @@
 
 describe "Admin Site Setting Locales" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
   fab!(:admin)
 
   before do
@@ -15,13 +16,12 @@ describe "Admin Site Setting Locales" do
       settings_page.visit
 
       settings_page.type_in_search("default locale")
-      expect(settings_page.find_setting("default_locale")).to have_content("Español")
+      expect(settings_page).to have_enum_value("default_locale", "es")
 
       settings_page.select_enum_value("default_locale", "en")
       settings_page.save_setting("default_locale")
 
-      settings_page.type_in_search("default locale")
-      expect(settings_page.find_setting("default_locale")).to have_content("Inglés (English)")
+      expect(settings_page).to have_enum_value("default_locale", "en", text: "Inglés (English)")
     end
   end
 

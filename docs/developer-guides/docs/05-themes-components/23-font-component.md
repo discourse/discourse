@@ -81,7 +81,7 @@ Create an account on [GitHub.com](https://github.com) and then create a new repo
 
 ### (Optional) create a topic on Discourse as a home to discuss your colors
 
-Ideally you would create a topic in the #plugin:theme category with some screenshots of your color scheme. You will use this as your `about_url`
+Ideally you would create a topic in the #customization:theme category with some screenshots of your color scheme. You will use this as your `about_url`
 
 ### Fill in the missing information in your about.json file
 
@@ -113,13 +113,13 @@ git push
 
 - In the `admin/customize/theme` screen import your theme from GitHub
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/4/2/421dbfd15c3f35c0d5a97ad1b6dc78dd1c094385.png" width="690" height="278">
+![Importing a theme from GitHub in the admin customize screen|690x278](/assets/font-component-1.png)
 
 :confetti_ball:
 
 You can now easily share fonts!
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/7/3/73748bb31adedc3dad3bd65c02d0e1554dc31eb5.png" width="235" height="499">
+![Font selection dropdown showing the shared fonts|235x499](/assets/font-component-2.png)
 
 See also:
 

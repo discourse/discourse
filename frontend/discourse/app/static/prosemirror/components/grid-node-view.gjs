@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class GridNodeView extends Component {
@@ -55,48 +55,48 @@ export default class GridNodeView extends Component {
   <template>
     {{~! strip whitespace ~}}<div
       class="composer-image-gallery__mode-buttons"
-      role="group"
       contenteditable="false"
+      role="group"
     >
       <button
-        type="button"
-        class={{concatClass
+        aria-label={{i18n "composer.grid_mode_grid"}}
+        aria-pressed={{if (eq this.currentMode "grid") "true" "false"}}
+        class={{dConcatClass
           "composer-image-gallery__mode-btn"
           (if (eq this.currentMode "grid") "is-active")
         }}
         data-mode="grid"
-        aria-label={{i18n "composer.grid_mode_grid"}}
         title={{i18n
           "composer.grid_mode_title"
           mode=(i18n "composer.grid_mode_grid")
         }}
-        aria-pressed={{if (eq this.currentMode "grid") "true" "false"}}
+        type="button"
         {{on "click" (fn this.setMode "grid")}}
-      >{{icon "table-cells"}}<span>{{i18n
+      >{{dIcon "table-cells"}}<span>{{i18n
             "composer.grid_mode_grid"
           }}</span></button>
       <button
-        type="button"
-        class={{concatClass
+        aria-label={{i18n "composer.grid_mode_carousel"}}
+        aria-pressed={{if (eq this.currentMode "carousel") "true" "false"}}
+        class={{dConcatClass
           "composer-image-gallery__mode-btn"
           (if (eq this.currentMode "carousel") "is-active")
         }}
         data-mode="carousel"
-        aria-label={{i18n "composer.grid_mode_carousel"}}
         title={{i18n
           "composer.grid_mode_title"
           mode=(i18n "composer.grid_mode_carousel")
         }}
-        aria-pressed={{if (eq this.currentMode "carousel") "true" "false"}}
+        type="button"
         {{on "click" (fn this.setMode "carousel")}}
-      >{{icon "image"}}<span>{{i18n
+      >{{dIcon "image"}}<span>{{i18n
             "composer.grid_mode_carousel"
           }}</span></button>
     </div><button
-      type="button"
       class="composer-image-grid__remove-btn"
-      title={{i18n "composer.remove_grid"}}
       contenteditable="false"
+      title={{i18n "composer.remove_grid"}}
+      type="button"
       {{on "click" this.removeGrid}}
     ><span>{{i18n
           "composer.remove_grid"

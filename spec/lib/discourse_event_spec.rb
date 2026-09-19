@@ -3,13 +3,11 @@
 RSpec.describe DiscourseEvent do
   describe "#events" do
     it "defaults to {}" do
-      begin
-        original_events = DiscourseEvent.events
-        DiscourseEvent.instance_variable_set(:@events, nil)
-        expect(DiscourseEvent.events).to eq({})
-      ensure
-        DiscourseEvent.instance_variable_set(:@events, original_events)
-      end
+      original_events = DiscourseEvent.events
+      DiscourseEvent.instance_variable_set(:@events, nil)
+      expect(DiscourseEvent.events).to eq({})
+    ensure
+      DiscourseEvent.instance_variable_set(:@events, original_events)
     end
 
     describe "key value" do
@@ -99,17 +97,15 @@ RSpec.describe DiscourseEvent do
   end
 
   it "allows using kwargs" do
-    begin
-      handler =
-        Proc.new do |name:, message:|
-          expect(name).to eq("Supervillain")
-          expect(message).to eq("Two Face")
-        end
+    handler =
+      Proc.new do |name:, message:|
+        expect(name).to eq("Supervillain")
+        expect(message).to eq("Two Face")
+      end
 
-      DiscourseEvent.on(:acid_face, &handler)
-      DiscourseEvent.trigger(:acid_face, name: "Supervillain", message: "Two Face")
-    ensure
-      DiscourseEvent.off(:acid_face, &handler)
-    end
+    DiscourseEvent.on(:acid_face, &handler)
+    DiscourseEvent.trigger(:acid_face, name: "Supervillain", message: "Two Face")
+  ensure
+    DiscourseEvent.off(:acid_face, &handler)
   end
 end

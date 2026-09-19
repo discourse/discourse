@@ -18,14 +18,14 @@ function fabricatePolicy(options = {}) {
 }
 
 module(
-  "Discourse Policy | Integration | Component | post-policy",
+  "Discourse Policy | Integration | Component | PostPolicy",
   function (hooks) {
     setupRenderingTest(hooks);
 
     test("empty post", async function (assert) {
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -38,7 +38,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -52,7 +52,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -66,7 +66,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -79,7 +79,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -99,7 +99,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -120,7 +120,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -150,7 +150,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -189,7 +189,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -223,7 +223,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -261,7 +261,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 
@@ -302,7 +302,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
+          <PostPolicy @policy={{this.policy}} @post={{this.post}} />
         </template>
       );
 

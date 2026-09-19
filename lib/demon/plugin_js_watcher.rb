@@ -6,7 +6,7 @@ class Demon::PluginJsWatcher < ::Demon::Base
   end
 
   def after_fork
-    log("[PluginJsWatcher] Loading PluginJsWatcher in process id #{Process.pid}")
+    log("Loading PluginJsWatcher in process id #{Process.pid}")
 
     @queue = Queue.new
 

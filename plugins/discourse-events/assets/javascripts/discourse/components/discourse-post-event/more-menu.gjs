@@ -1,0 +1,408 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import EmberObject, { action } from "@ember/object";
+import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { exportEntity } from "discourse/lib/export-csv";
+import { cook } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
+import addEventToCalendar from "../../lib/add-event-to-calendar";
+import {
+  buildParams,
+  removeEvent,
+  replaceRaw,
+} from "../../lib/raw-event-helper";
+import PostEventBuilder from "../modal/post-event-builder";
+import PostEventBulkInvite from "../modal/post-event-bulk-invite";
+import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group";
+import PostEventInvitees from "../modal/post-event-invitees";
+
+export default class DiscoursePostEventMoreMenu extends Component {
+  @service currentUser;
+  @service dialog;
+  @service modal;
+  @service router;
+  @service siteSettings;
+  @service store;
+
+  @tracked isSavingEvent = false;
+
+  get expiredOrClosed() {
+    return this.args.event.isExpired || this.args.event.isClosed;
+  }
+
+  get canActOnEvent() {
+    return this.currentUser && this.args.event.canActOnDiscoursePostEvent;
+  }
+
+  get shouldShowParticipants() {
+    return applyValueTransformer(
+      "discourse-calendar-event-more-menu-should-show-participants",
+      this.canActOnEvent && !this.args.isStandaloneEvent,
+      {
+        event: this.args.event,
+      }
+    );
+  }
+
+  get canInvite() {
+    return (
+      !this.expiredOrClosed && this.canActOnEvent && this.args.event.isPublic
+    );
+  }
+
+  get canSeeUpcomingEvents() {
+    return !this.args.event.isClosed && this.args.event.recurrence;
+  }
+
+  get canBulkInvite() {
+    return !this.expiredOrClosed && !this.args.event.isStandalone;
+  }
+
+  get canSendPmToCreator() {
+    return (
+      this.currentUser &&
+      this.currentUser.username !== this.args.event.creator.username
+    );
+  }
+
+  @action
+  addToCalendar() {
+    this.menuApi.close();
+
+    addEventToCalendar(this.args.event);
+  }
+
+  @action
+  sendPMToCreator() {
+    this.menuApi.close();
+
+    this.args.composePrivateMessage(
+      EmberObject.create(this.args.event.creator),
+      EmberObject.create(this.args.event.post)
+    );
+  }
+
+  @action
+  upcomingEvents() {
+    this.router.transitionTo("discourse-post-event-upcoming-events");
+  }
+
+  @action
+  registerMenuApi(api) {
+    this.menuApi = api;
+  }
+
+  @action
+  async inviteUserOrGroup() {
+    this.menuApi.close();
+
+    try {
+      this.modal.show(PostEventInviteUserOrGroup, {
+        model: { event: this.args.event },
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  exportPostEvent() {
+    this.menuApi.close();
+
+    exportEntity("post_event", {
+      name: "post_event",
+      id: this.args.event.id,
+    });
+  }
+
+  @action
+  bulkInvite() {
+    this.menuApi.close();
+
+    this.modal.show(PostEventBulkInvite, {
+      model: { event: this.args.event },
+    });
+  }
+
+  @action
+  async openEvent() {
+    this.menuApi.close();
+
+    this.dialog.yesNoConfirm({
+      message: i18n("discourse_post_event.builder_modal.confirm_open"),
+      didConfirm: async () => {
+        this.isSavingEvent = true;
+
+        try {
+          const post = await this.store.find("post", this.args.event.id);
+          this.args.event.isClosed = false;
+
+          const eventParams = buildParams(
+            this.args.event.startsAt,
+            this.args.event.endsAt,
+            this.args.event,
+            this.siteSettings
+          );
+
+          const newRaw = replaceRaw(eventParams, post.raw);
+
+          if (newRaw) {
+            const props = {
+              raw: newRaw,
+              edit_reason: i18n("discourse_post_event.edit_reason_opened"),
+            };
+
+            const cooked = await cook(newRaw);
+            props.cooked = cooked.string;
+            await post.save(props);
+          }
+        } catch (e) {
+          popupAjaxError(e);
+        } finally {
+          this.isSavingEvent = false;
+        }
+      },
+    });
+  }
+
+  @action
+  async editPostEvent() {
+    this.menuApi.close();
+
+    this.modal.show(PostEventBuilder, {
+      model: {
+        event: this.args.event,
+        onDelete: async (event) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+          const newRaw = removeEvent(raw);
+
+          const props = {
+            raw: newRaw,
+            edit_reason: i18n("discourse_post_event.destroy_event"),
+          };
+
+          const cooked = await cook(newRaw);
+          props.cooked = cooked.string;
+
+          return await post.save(props);
+        },
+        onUpdate: async (startsAt, endsAt, event, siteSettings) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+          const eventParams = buildParams(
+            startsAt,
+            endsAt,
+            event,
+            siteSettings
+          );
+          const newRaw = replaceRaw(eventParams, raw);
+          if (newRaw) {
+            const props = {
+              raw: newRaw,
+              edit_reason: i18n("discourse_post_event.edit_reason"),
+            };
+
+            const cooked = await cook(newRaw);
+            props.cooked = cooked.string;
+
+            return await post.save(props);
+          }
+        },
+      },
+    });
+  }
+
+  @action
+  showParticipants() {
+    this.menuApi.close();
+
+    this.modal.show(PostEventInvitees, {
+      model: {
+        event: this.args.event,
+        title: this.args.event.title,
+        extraClass: this.args.event.extraClass,
+      },
+    });
+  }
+
+  @action
+  async closeEvent() {
+    this.menuApi.close();
+
+    this.dialog.yesNoConfirm({
+      message: i18n("discourse_post_event.builder_modal.confirm_close"),
+      didConfirm: () => {
+        this.isSavingEvent = true;
+        return this.store.find("post", this.args.event.id).then((post) => {
+          this.args.event.isClosed = true;
+
+          const eventParams = buildParams(
+            this.args.event.startsAt,
+            this.args.event.endsAt,
+            this.args.event,
+            this.siteSettings
+          );
+
+          const newRaw = replaceRaw(eventParams, post.raw);
+
+          if (newRaw) {
+            const props = {
+              raw: newRaw,
+              edit_reason: i18n("discourse_post_event.edit_reason_closed"),
+            };
+
+            return cook(newRaw)
+              .then((cooked) => {
+                props.cooked = cooked.string;
+                return post.save(props);
+              })
+              .finally(() => {
+                this.isSavingEvent = false;
+              });
+          }
+        });
+      },
+    });
+  }
+
+  <template>
+    <DMenu
+      @icon="ellipsis"
+      @identifier="discourse-post-event-more-menu"
+      @onRegisterApi={{this.registerMenuApi}}
+      @triggerClass={{dConcatClass
+        "more-dropdown"
+        "btn-small"
+        "btn-default"
+        (if this.isSavingEvent "--saving")
+      }}
+    >
+      <:content>
+        <DDropdownMenu as |dropdown|>
+          {{#unless this.expiredOrClosed}}
+            <dropdown.item class="add-to-calendar">
+              <DButton
+                @action={{this.addToCalendar}}
+                @icon="file"
+                @label="discourse_post_event.add_to_calendar"
+              />
+            </dropdown.item>
+          {{/unless}}
+
+          {{#if this.canSendPmToCreator}}
+            <dropdown.item class="send-pm-to-creator">
+              <DButton
+                class="btn-transparent"
+                @action={{this.sendPMToCreator}}
+                @icon="envelope"
+                @translatedLabel={{i18n
+                  "discourse_post_event.send_pm_to_creator"
+                  (hash username=@event.creator.username)
+                }}
+              />
+            </dropdown.item>
+          {{/if}}
+
+          {{#if this.canInvite}}
+            <dropdown.item class="invite-user-or-group">
+              <DButton
+                class="btn-transparent"
+                @action={{this.inviteUserOrGroup}}
+                @icon="user-plus"
+                @translatedLabel={{i18n "discourse_post_event.invite"}}
+              />
+            </dropdown.item>
+          {{/if}}
+
+          {{#if this.canSeeUpcomingEvents}}
+            <dropdown.item class="upcoming-events">
+              <DButton
+                class="btn-transparent"
+                @action={{this.upcomingEvents}}
+                @icon="far-calendar-plus"
+                @translatedLabel={{i18n
+                  "discourse_post_event.upcoming_events.title"
+                }}
+              />
+            </dropdown.item>
+          {{/if}}
+
+          {{#if this.shouldShowParticipants}}
+            <dropdown.item class="show-all-participants">
+              <DButton
+                class="btn-transparent"
+                @action={{this.showParticipants}}
+                @icon="user-group"
+                @label="discourse_post_event.show_participants"
+              />
+            </dropdown.item>
+
+            <dropdown.divider />
+          {{/if}}
+          {{#if this.canActOnEvent}}
+            <dropdown.item class="export-event">
+              <DButton
+                class="btn-transparent"
+                @action={{this.exportPostEvent}}
+                @icon="file-csv"
+                @label="discourse_post_event.export_event"
+              />
+            </dropdown.item>
+
+            {{#if this.canBulkInvite}}
+              <dropdown.item class="bulk-invite">
+                <DButton
+                  class="btn-transparent"
+                  @action={{this.bulkInvite}}
+                  @icon="file-arrow-up"
+                  @label="discourse_post_event.bulk_invite"
+                />
+              </dropdown.item>
+            {{/if}}
+
+            {{#if @event.isClosed}}
+              <dropdown.item class="open-event">
+                <DButton
+                  class="btn-transparent"
+                  @action={{this.openEvent}}
+                  @disabled={{this.isSavingEvent}}
+                  @icon="unlock"
+                  @label="discourse_post_event.open_event"
+                />
+              </dropdown.item>
+            {{else}}
+              <dropdown.item class="edit-event">
+                <DButton
+                  class="btn-transparent"
+                  @action={{this.editPostEvent}}
+                  @icon="pencil"
+                  @label="discourse_post_event.edit_event"
+                />
+              </dropdown.item>
+
+              {{#unless @event.isExpired}}
+                <dropdown.item class="close-event">
+                  <DButton
+                    class="btn-transparent --danger"
+                    @action={{this.closeEvent}}
+                    @disabled={{this.isSavingEvent}}
+                    @icon="xmark"
+                    @label="discourse_post_event.close_event"
+                  />
+                </dropdown.item>
+              {{/unless}}
+            {{/if}}
+          {{/if}}
+        </DDropdownMenu>
+      </:content>
+    </DMenu>
+  </template>
+}

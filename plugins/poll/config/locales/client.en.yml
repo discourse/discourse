@@ -4,9 +4,15 @@ en:
       site_settings:
         categories:
           poll: "Discourse Poll"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Poll closed"
+            poll_opened: "Poll opened"
   js:
     poll:
       title: "Poll"
+      closed_by: "Closed by %{username}"
       dynamic:
         enabled_hint: "Options can be added or removed."
       voters:
@@ -49,9 +55,24 @@ en:
             other: "Choose <strong>%{count} options</strong>."
           between_min_and_max_options: "Choose between <strong>%{min} and %{max} options</strong>."
 
+      vote_recorded: "Your vote has been recorded."
+
+      voted_choices:
+        title: "You voted for:"
+
       cast-votes:
         title: "Cast your votes"
         label: "Vote now!"
+        update_title: "Update your vote"
+        update_label: "Update vote"
+
+      amend-vote:
+        title: "Change your vote"
+        label: "Change vote"
+
+      keep-vote:
+        title: "Go back without changing your vote"
+        label: "Back"
 
       show-results:
         title: "Display the poll results"
@@ -131,6 +152,7 @@ en:
       error_while_exporting_results: "Sorry, there was an error exporting poll results."
 
       ui_builder:
+        edit: Edit poll
         title: Build poll
         insert: Insert Poll
         help:
@@ -168,10 +190,9 @@ en:
           label: Allow options to be added or removed after posting
         poll_title:
           label: Title (optional)
+          placeholder: Poll title
         poll_options:
           label: Options (one per line)
           add: Add option
         automatic_close:
           label: Automatically close poll
-        show_advanced: "Show Advanced Options"
-        hide_advanced: "Hide Advanced Options"

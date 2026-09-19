@@ -51,7 +51,10 @@ module PageObjects
       def click_dismiss_read_confirm
         find("#dismiss-read-confirm").click
       end
-      ### /TODO
+
+      def click_sort_by(order)
+        find("#{TOPIC_LIST_HEADER_SELECTOR} th[data-sort-order='#{order}']").click
+      end
 
       private
 

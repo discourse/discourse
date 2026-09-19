@@ -7,6 +7,7 @@
 fr:
   site_settings:
     sign_in_with_apple_enabled: 'Activer la connexion avec Apple ?'
+    apple_client_id: "(Connexion avec Apple) « Identifiant de service » Apple provenant de la console de développement. Il s'agit généralement d'une chaîne au format de nom de domaine inversé (par exemple, com.example.auth)."
     apple_team_id: '(Se connecter avec Apple) ID d''équipe Apple (10 caractères)'
     apple_key_id: '(Se connecter avec Apple) ID de clé Apple (10 caractères)'
     apple_pem: '(Se connecter avec Apple) Contenu du fichier Apple Pem. Incluez les lignes de début et de fin'

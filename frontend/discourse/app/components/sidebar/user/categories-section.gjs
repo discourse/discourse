@@ -2,8 +2,10 @@ import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
 import Category from "discourse/models/category";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllCategoriesSectionLink from "../common/all-categories-section-link";
 import CommonCategoriesSection from "../common/categories-section";
@@ -20,6 +22,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
   @service currentUser;
   @service modal;
   @service navigationMenu;
+  @service router;
   @service siteSettings;
 
   constructor() {
@@ -44,11 +47,9 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
     );
   }
 
-  // TopicTrackingState changes or plugins can trigger this function so we debounce to ensure we're not refreshing
-  // unnecessarily.
-  @debounce(300)
-  _refreshCounts() {
-    this.sectionLinks.forEach((sectionLink) => sectionLink.refreshCounts());
+  @cached
+  get activeLink() {
+    return findActiveLink(this.sectionLinks, this.router);
   }
 
   @cached
@@ -66,10 +67,6 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
 
   get hasDefaultSidebarCategories() {
     return hasDefaultSidebarCategories(this.siteSettings);
-  }
-
-  createCategory() {
-    this.categoryTypeChooser.createCategory();
   }
 
   @cached
@@ -99,47 +96,66 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
     return this.headerActions.length > 1 ? "ellipsis-vertical" : "pencil";
   }
 
+  createCategory() {
+    this.categoryTypeChooser.createCategory();
+  }
+
+  // TopicTrackingState changes or plugins can trigger this function so we debounce to ensure we're not refreshing
+  // unnecessarily.
+  @debounce(300)
+  _refreshCounts() {
+    this.sectionLinks.forEach((sectionLink) => sectionLink.refreshCounts());
+  }
+
   <template>
     <Section
-      @sectionName="categories"
-      @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
+      @activeLink={{this.activeLink}}
+      @collapsable={{@collapsable}}
+      @expandWhenActive={{@expandActiveSection}}
       @headerActions={{this.headerActions}}
       @headerActionsIcon={{this.headerActionsIcon}}
-      @collapsable={{@collapsable}}
+      @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
+      @sectionName="categories"
       @toggleNavigationMenu={{@toggleNavigationMenu}}
     >
 
       {{#each this.sectionLinks as |sectionLink|}}
         <SectionLink
-          @route={{sectionLink.route}}
-          @query={{sectionLink.query}}
-          @title={{sectionLink.title}}
+          data-category-id={{sectionLink.category.id}}
+          @badgeText={{sectionLink.badgeText}}
           @content={{sectionLink.text}}
           @currentWhen={{sectionLink.currentWhen}}
           @model={{sectionLink.model}}
-          @badgeText={{sectionLink.badgeText}}
           @prefixBadge={{sectionLink.prefixBadge}}
+          @prefixColor={{sectionLink.prefixColor}}
           @prefixType={{sectionLink.prefixType}}
           @prefixValue={{sectionLink.prefixValue}}
-          @prefixColor={{sectionLink.prefixColor}}
+          @query={{sectionLink.query}}
+          @route={{sectionLink.route}}
+          @scrollIntoView={{and
+            @scrollActiveLinkIntoView
+            (eq sectionLink.name this.activeLink.name)
+          }}
           @suffixCSSClass={{sectionLink.suffixCSSClass}}
-          @suffixValue={{sectionLink.suffixValue}}
           @suffixType={{sectionLink.suffixType}}
-          data-category-id={{sectionLink.category.id}}
+          @suffixValue={{sectionLink.suffixValue}}
+          @title={{sectionLink.title}}
         />
       {{/each}}
 
-      <AllCategoriesSectionLink />
+      <AllCategoriesSectionLink
+        @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+      />
 
       {{#if this.shouldDisplayDefaultConfig}}
         <SectionLink
-          @linkName="configure-default-navigation-menu-categories"
           @content={{i18n "sidebar.sections.categories.configure_defaults"}}
+          @linkName="configure-default-navigation-menu-categories"
+          @model="sidebar"
           @prefixType="icon"
           @prefixValue="wrench"
-          @route="adminSiteSettingsCategory"
-          @model="sidebar"
           @query={{hash filter="default_navigation_menu_categories"}}
+          @route="adminSiteSettingsCategory"
         />
       {{/if}}
     </Section>

@@ -46,6 +46,8 @@ class UserDestroyer
         delete_posts(user, category_topic_ids, opts)
       end
 
+      resolve_reviewables_targeting(user)
+
       user.post_actions.find_each { |post_action| post_action.remove_act!(Discourse.system_user) }
 
       # Add info about the user to staff action logs
@@ -110,7 +112,10 @@ class UserDestroyer
           else
             deleted_by = @actor
           end
-          StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
+          StaffActionLogger.new(deleted_by).log_user_deletion(
+            user,
+            opts.slice(:context, :reviewable_id),
+          )
           if opts.slice(:context).blank?
             Rails.logger.warn("User destroyed without context from: #{caller_locations(14, 1)[0]}")
           end
@@ -119,10 +124,9 @@ class UserDestroyer
       end
     end
 
-    # After the user is deleted, remove the reviewable unless request comes from reviewable
-    return result if opts[:from_reviewable]
+    # The account reviewable's own perform step handles the deletion it initiated.
     reviewable = ReviewableUser.pending.find_by(target: user)
-    reviewable.perform(@actor, :delete_user) if reviewable
+    reviewable.perform(@actor, :delete_user) if reviewable && reviewable.id != opts[:reviewable_id]
 
     result
   end
@@ -142,7 +146,9 @@ class UserDestroyer
     ReviewableFlaggedPost
       .where(target_created_by: user)
       .find_each do |reviewable|
-        if reviewable.actions_for(@guardian).has?(:agree_and_keep)
+        actions = reviewable.actions_for(@guardian)
+
+        if actions.has?(:agree_and_keep) || actions.has?(:agree_and_keep_hidden)
           reviewable.perform(@actor, :agree_and_keep)
         end
       end
@@ -153,6 +159,27 @@ class UserDestroyer
         if reviewable.actions_for(@guardian).has?(:reject_and_delete)
           reviewable.perform(@actor, :reject_and_delete)
         end
+      end
+
+    ReviewableQueuedPost
+      .where(target_created_by: user)
+      .find_each do |reviewable|
+        if reviewable.actions_for(@guardian).has?(:reject_post)
+          reviewable.perform(@actor, :reject_post)
+        end
+      end
+  end
+
+  def resolve_reviewables_targeting(user)
+    Reviewable
+      .pending
+      .where(target_created_by: user)
+      .find_each do |reviewable|
+        reviewable.reviewable_notes.create!(
+          user: Discourse.system_user,
+          content: I18n.t("reviewables.target_user_deleted"),
+        )
+        reviewable.transition_to(:ignored, Discourse.system_user)
       end
   end
 
@@ -165,6 +192,7 @@ class UserDestroyer
           @actor.staff? ? @actor : Discourse.system_user,
           post,
           context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
+          reviewable_id: opts[:reviewable_id],
         ).destroy
       end
 

@@ -133,7 +133,10 @@ RSpec.describe "AI Bot - Homepage" do
   end
 
   context "when `ai_bot_enable_dedicated_ux` is enabled" do
-    before { SiteSetting.ai_bot_add_to_header = true }
+    before do
+      SiteSetting.ai_bot_add_to_header = true
+      SiteSetting.ai_bot_enable_docked_composer = true
+    end
 
     it "allows uploading files to a new conversation" do
       ai_pm_homepage.visit
@@ -253,15 +256,33 @@ RSpec.describe "AI Bot - Homepage" do
       expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
     end
 
+    it "allows navigating to a specific LLM and agent with slugified names" do
+      visit "/discourse-ai/ai-bot/conversations?agent=test-agent&llm=duplicate"
+
+      expect(ai_pm_homepage.agent_selector).to have_selected_name(agent.name)
+      expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
+    end
+
+    it "keeps the URL in sync with the selected agent and LLM" do
+      ai_pm_homepage.visit
+
+      ai_pm_homepage.agent_selector.expand
+      ai_pm_homepage.agent_selector.select_row_by_name(agent.name)
+      expect(page).to have_current_path(/agent=test-agent/)
+
+      ai_pm_homepage.llm_selector.expand
+      ai_pm_homepage.llm_selector.select_row_by_name(claude_2_dup.display_name)
+      expect(page).to have_current_path(/agent=test-agent/)
+      expect(page).to have_current_path(/llm=duplicate/)
+    end
+
     it "removes agent from selector when allow_personal_messages is disabled" do
-      begin
-        agent.update!(allow_personal_messages: false)
-        ai_pm_homepage.visit
-        ai_pm_homepage.agent_selector.expand
-        expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
-      ensure
-        agent.update!(allow_personal_messages: true)
-      end
+      agent.update!(allow_personal_messages: false)
+      ai_pm_homepage.visit
+      ai_pm_homepage.agent_selector.expand
+      expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
+    ensure
+      agent.update!(allow_personal_messages: true)
     end
 
     it "includes agent in selector when allow_personal_messages is enabled" do
@@ -325,7 +346,7 @@ RSpec.describe "AI Bot - Homepage" do
 
     it "displays the shuffle icon when on homepage or bot PM" do
       visit "/"
-      expect(header).to have_icon_in_bot_button(icon: "robot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
       header.click_bot_button
 
       expect(header).to have_icon_in_bot_button(icon: "shuffle")
@@ -334,9 +355,9 @@ RSpec.describe "AI Bot - Homepage" do
       ai_pm_homepage.click_fist_sidebar_conversation
       expect(header).to have_icon_in_bot_button(icon: "shuffle")
 
-      # Go back home and assert that the icon is now robot again
+      # Go back home and assert that the icon is now discobot again
       header.click_bot_button
-      expect(header).to have_icon_in_bot_button(icon: "robot")
+      expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     end
 
     it "displays 'new question' button on homepage and topic page" do
@@ -354,14 +375,13 @@ RSpec.describe "AI Bot - Homepage" do
       expect(ai_pm_homepage).to have_homepage
     end
 
-    it "can send a new message to the bot" do
+    it "can send a new message to the bot via the docked composer" do
       topic_page.visit_topic(pm)
-      topic_page.click_reply_button
-      expect(composer).to be_opened
+      expect(page).to have_css(".ai-bot-docked-composer")
 
-      composer.fill_in(with: "Hello bot replying to you")
       DiscourseAi::Completions::Llm.with_prepared_responses(["hello user"]) do
-        composer.submit
+        find(".ai-bot-docked-composer .d-editor-input").fill_in(with: "Hello bot replying to you")
+        find(".ai-bot-docked-composer .d-editor-input").send_keys(:enter)
         expect(page).to have_content("Hello bot replying to you")
       end
     end
@@ -416,7 +436,7 @@ RSpec.describe "AI Bot - Homepage" do
 
       it "shows shuffle icon in the header and doesn't display sidebar back link" do
         visit "/"
-        expect(header).to have_icon_in_bot_button(icon: "robot")
+        expect(header).to have_icon_in_bot_button(icon: "far-discobot")
         header.click_bot_button
         expect(ai_pm_homepage).to have_homepage
         expect(header).to have_icon_in_bot_button(icon: "shuffle")

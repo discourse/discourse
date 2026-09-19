@@ -3,9 +3,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import { resettableTracked } from "discourse/lib/tracked-tools";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 // args: action, labelKey, checked, modelId
@@ -22,29 +22,29 @@ export default class InlineEditCheckbox extends Component {
   }
 
   <template>
-    <div {{didUpdate this.reset @modelId}} class="inline-edit">
+    <div class="inline-edit" {{didUpdate this.reset @modelId}}>
       <label class="checkbox-label">
         <input
+          checked={{this.value}}
+          type="checkbox"
           {{on
             "change"
             (withEventValue (fn (mut this.value)) "target.checked")
           }}
-          checked={{this.value}}
-          type="checkbox"
         />
         {{i18n @labelKey}}
       </label>
 
       {{#if this.changed}}
         <DButton
+          class="btn-success btn-small submit-edit"
           @action={{fn @action this.value}}
           @icon="check"
-          class="btn-success btn-small submit-edit"
         />
         <DButton
+          class="btn-danger btn-small cancel-edit"
           @action={{this.reset}}
           @icon="xmark"
-          class="btn-danger btn-small cancel-edit"
         />
       {{/if}}
     </div>

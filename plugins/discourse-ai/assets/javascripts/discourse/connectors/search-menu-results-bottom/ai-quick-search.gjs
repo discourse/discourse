@@ -156,43 +156,6 @@ export default class AiQuickSearch extends Component {
     }
   }
 
-  #removeExistingAiResults() {
-    if (!this.search.results) {
-      return;
-    }
-
-    if (this.search.results.posts) {
-      this.search.results.posts = this.search.results.posts.filter(
-        (post) => !post.aiGenerated
-      );
-    }
-
-    const resultTypes = this.search.results.resultTypes || [];
-    resultTypes.forEach((resultType) => {
-      if (resultType.results) {
-        resultType.results = resultType.results.filter(
-          (result) => !result.aiGenerated
-        );
-      }
-    });
-  }
-
-  #getExistingTopicIds() {
-    const existingTopicIds = new Set();
-    const resultTypes = this.search.results?.resultTypes || [];
-
-    resultTypes.forEach((resultType) => {
-      resultType.results?.forEach((result) => {
-        const topicId = result.topic?.id || result.topic_id;
-        if (topicId) {
-          existingTopicIds.add(topicId);
-        }
-      });
-    });
-
-    return existingTopicIds;
-  }
-
   appendResults(aiResults) {
     if (!this.search.results) {
       this.search.results = {};
@@ -232,6 +195,43 @@ export default class AiQuickSearch extends Component {
     this.search.results.resultTypes = resultTypes;
     this.search.results = { ...this.search.results };
     this.search.noResults = false;
+  }
+
+  #removeExistingAiResults() {
+    if (!this.search.results) {
+      return;
+    }
+
+    if (this.search.results.posts) {
+      this.search.results.posts = this.search.results.posts.filter(
+        (post) => !post.aiGenerated
+      );
+    }
+
+    const resultTypes = this.search.results.resultTypes || [];
+    resultTypes.forEach((resultType) => {
+      if (resultType.results) {
+        resultType.results = resultType.results.filter(
+          (result) => !result.aiGenerated
+        );
+      }
+    });
+  }
+
+  #getExistingTopicIds() {
+    const existingTopicIds = new Set();
+    const resultTypes = this.search.results?.resultTypes || [];
+
+    resultTypes.forEach((resultType) => {
+      resultType.results?.forEach((result) => {
+        const topicId = result.topic?.id || result.topic_id;
+        if (topicId) {
+          existingTopicIds.add(topicId);
+        }
+      });
+    });
+
+    return existingTopicIds;
   }
 
   <template>

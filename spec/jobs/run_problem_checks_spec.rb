@@ -43,6 +43,12 @@ RSpec.describe Jobs::RunProblemChecks do
     ProblemCheck.send(:remove_const, "MultiTargetCheck")
   end
 
+  it "runs the realtime checks in the background" do
+    expect { described_class.new.execute([]) }.to change {
+      ProblemCheckTracker.where(identifier: "non_scheduled_check").count
+    }.by(1)
+  end
+
   context "when a tracker hasn't been created yet" do
     it "still schedules checks" do
       expect_enqueued_with(

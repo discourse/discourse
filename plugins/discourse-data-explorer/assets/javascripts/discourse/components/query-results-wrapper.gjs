@@ -5,10 +5,14 @@ const QueryResultsWrapper = <template>
     <div class="query-results">
       {{#if @showResults}}
         <QueryResult
-          @query={{@query}}
-          @content={{@results}}
           @cachedAt={{@cachedAt}}
+          @content={{@results}}
+          @hideHeaderActions={{@hideHeaderActions}}
+          @includeQueryExport={{@includeQueryExport}}
+          @onSetView={{@onSetView}}
+          @query={{@query}}
           @showDownloads={{@showDownloads}}
+          @view={{@view}}
         />
       {{else}}
         {{#each @results.errors as |err|}}

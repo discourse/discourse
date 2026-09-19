@@ -9,20 +9,18 @@ RSpec.describe DiscourseSolved::SolvedTopic do
 
   describe "Associations" do
     it { is_expected.to belong_to(:topic) }
-    it { is_expected.to belong_to(:answer_post) }
-    it { is_expected.to belong_to(:accepter) }
+    it { is_expected.to have_many(:topic_answers) }
+    it { is_expected.to have_many(:answer_posts) }
     it { is_expected.to belong_to(:topic_timer).dependent(:destroy) }
   end
 
   describe "Validations" do
     it { is_expected.to validate_presence_of(:topic_id) }
-    it { is_expected.to validate_presence_of(:answer_post_id) }
-    it { is_expected.to validate_presence_of(:accepter_user_id) }
   end
 
   describe "Callbacks" do
     describe "#auto_close_topic_timer" do
-      subject(:solved) { described_class.create(topic:, answer_post: post, accepter: user) }
+      subject(:solved) { described_class.create(topic:) }
 
       context "when auto close hours is greater than zero" do
         before { SiteSetting.solved_topics_auto_close_hours = 2 }
@@ -65,6 +63,28 @@ RSpec.describe DiscourseSolved::SolvedTopic do
 
         it "uses the category value" do
           expect(solved.topic_timer).to have_attributes(duration_minutes: 300)
+        end
+      end
+
+      describe "with multiple solutions enabled" do
+        fab!(:post2) { Fabricate(:post, topic: topic) }
+        before do
+          SiteSetting.solved_allow_multiple_solutions = true
+          SiteSetting.solved_topics_auto_close_hours = 2
+        end
+
+        it "only creates one timer" do
+          expect(solved.topic_timer).to have_attributes(
+            topic:,
+            status_type: TopicTimer.types[:silent_close],
+            based_on_last_post: true,
+            duration_minutes: 120,
+          )
+
+          topic_timer_id = solved.topic_timer.id
+          Fabricate(:topic_answer, solved_topic: solved, post: post2)
+
+          expect(solved.reload.topic_timer.id).to eq(topic_timer_id)
         end
       end
     end

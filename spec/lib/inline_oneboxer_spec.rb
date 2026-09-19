@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe InlineOneboxer do
-  it "should return nothing with empty input" do
+  it "returns nothing for empty input" do
     expect(InlineOneboxer.new([]).process).to be_blank
   end
 
@@ -146,7 +146,7 @@ RSpec.describe InlineOneboxer do
       expect(InlineOneboxer.lookup("/test")).to be_nil
     end
 
-    it "will return the fancy title" do
+    it "returns the fancy title" do
       topic = Fabricate(:topic, title: "Hello :pizza: with an emoji")
       onebox = InlineOneboxer.lookup(topic.url, skip_cache: true)
       expect(onebox).to be_present
@@ -154,7 +154,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
-    it "will append the post number post author's username to the title" do
+    it "appends the post number and author's username to the title" do
       topic = Fabricate(:topic, title: "Inline oneboxer")
       Fabricate(:post, topic: topic) # OP
       Fabricate(:post, topic: topic)
@@ -182,13 +182,13 @@ RSpec.describe InlineOneboxer do
       expect(lookup.call(99)).to eq("Inline oneboxer - #4 by #{posts[3].user.username}")
     end
 
-    it "will not crawl domains that aren't allowlisted" do
+    it "does not crawl domains that are not allowlisted" do
       SiteSetting.enable_inline_onebox_on_all_domains = false
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end
 
-    it "will crawl anything if allowed to" do
+    it "crawls any domain when configured to do so" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
       stub_request(:get, "https://eviltrout.com/some-path").to_return(
@@ -203,7 +203,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq("a blog")
     end
 
-    it "will not return a onebox if it does not meet minimal length" do
+    it "does not return a onebox shorter than the minimum length" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
       stub_request(:get, "https://eviltrout.com/some-path").to_return(
@@ -218,7 +218,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq(nil)
     end
 
-    it "will lookup allowlisted domains" do
+    it "looks up allowlisted domains" do
       SiteSetting.allowed_inline_onebox_domains = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
 
@@ -432,6 +432,116 @@ RSpec.describe InlineOneboxer do
       expect(results).to be_present
       expect(results[0][:url]).to eq(url)
       expect(results[0][:title]).to eq("Custom Onebox for Wizard")
+    end
+  end
+
+  describe "engine-supplied inline data" do
+    let(:url) { "https://example.com/foo" }
+    let(:engine_data) { { title: "Engine title", css_class: "--engine-class" } }
+
+    it "returns engine-supplied title and css_class when domain is allowed" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(engine_data)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to eq(
+        url: url,
+        title: "Engine title",
+        css_class: "--engine-class",
+      )
+    end
+
+    it "returns engine-supplied data under enable_inline_onebox_on_all_domains" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(engine_data)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to eq(
+        url: url,
+        title: "Engine title",
+        css_class: "--engine-class",
+      )
+    end
+
+    it "does not call the engine when no inline-onebox policy permits the domain" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = ""
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when the domain is not in allowed_inline_onebox_domains" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = "other.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when the domain is in blocked_onebox_domains" do
+      SiteSetting.allowed_inline_onebox_domains = "example.com"
+      SiteSetting.blocked_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when blocked_onebox_domains matches under enable_inline_onebox_on_all_domains" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      SiteSetting.blocked_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      expect(InlineOneboxer.lookup(url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+
+    it "does not call the engine when blocked_onebox_domains matches a parent domain" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      SiteSetting.blocked_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for)
+
+      subdomain_url = "https://api.example.com/foo"
+      expect(InlineOneboxer.lookup(subdomain_url, skip_cache: true)).to be_nil
+      expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+  end
+
+  describe "private GitHub repo" do
+    let(:repo_url) { "https://github.com/discourse/discourse" }
+    let(:api_uri) { "https://api.github.com/repos/discourse/discourse" }
+
+    before do
+      stub_request(:get, api_uri).to_return(status: 200, body: onebox_response("githubrepo"))
+    end
+
+    it "resolves the title via the authenticated GitHub API when a token is configured" do
+      SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234"
+
+      expect(InlineOneboxer.lookup(repo_url, skip_cache: true)).to eq(
+        url: repo_url,
+        title: "GitHub - discourse/discourse - A platform for community discussion. Free, open,...",
+      )
+      expect(WebMock).to have_requested(:get, api_uri).with(
+        headers: {
+          "Authorization" => "Bearer github_pat_1234",
+        },
+      )
+    end
+
+    it "falls back to HTML title scraping and does not call the GitHub API when no token is configured" do
+      stub_request(:get, repo_url).to_return(
+        status: 200,
+        body: "<html><head><title>GitHub - discourse/discourse</title></head></html>",
+      )
+
+      expect(InlineOneboxer.lookup(repo_url, skip_cache: true)).to eq(
+        url: repo_url,
+        title: "GitHub - discourse/discourse",
+      )
+      expect(WebMock).not_to have_requested(:get, api_uri)
     end
   end
 end

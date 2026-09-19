@@ -8,9 +8,9 @@ import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class CategoriesBoxesWithTopics extends Component {
@@ -31,7 +31,7 @@ export default class CategoriesBoxesWithTopics extends Component {
 
   <template>
     <section
-      class={{concatClass
+      class={{dConcatClass
         "category-boxes-with-topics"
         (if this.anyLogos "with-logos" "no-logos")
       }}
@@ -39,10 +39,10 @@ export default class CategoriesBoxesWithTopics extends Component {
     >
       {{#each this.categories as |c|}}
         <div
-          data-notification-level={{c.notificationLevelString}}
-          style={{categoryColorVariable c.color}}
           class="category category-box category-box-{{c.slug}}
             {{if c.isMuted 'muted'}}"
+          data-notification-level={{c.notificationLevelString}}
+          style={{categoryColorVariable c.color}}
         >
           <div class="category-box-inner">
             <div class="category-box-heading">

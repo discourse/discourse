@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 
 /**
  * @component AiRetryStreamingButton
@@ -46,9 +46,9 @@ export default class AiRetryStreamingButton extends Component {
       class="post-action-menu__ai-retry-streaming ai-retry-streaming"
       ...attributes
       @action={{this.retry}}
+      @disabled={{this.retrying}}
       @icon={{if this.retrying "spinner" "arrow-rotate-right"}}
       @title="discourse_ai.ai_bot.try_again"
-      @disabled={{this.retrying}}
     />
   </template>
 }

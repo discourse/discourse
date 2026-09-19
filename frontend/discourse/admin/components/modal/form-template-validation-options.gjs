@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const TABLE_HEADER_KEYS = ["key", "type", "description"];
@@ -34,8 +34,8 @@ export default class FormTemplateValidationOptions extends Component {
   <template>
     <DModal
       class="form-templates__validation-options admin-form-template-validation-options-modal"
-      @title={{i18n "admin.form_templates.validations_modal.modal_title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.form_templates.validations_modal.modal_title"}}
     >
       <:body>
         <table>

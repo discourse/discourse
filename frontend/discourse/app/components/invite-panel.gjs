@@ -6,14 +6,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import GeneratedInviteLink from "discourse/components/generated-invite-link";
-import TextField from "discourse/components/text-field";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -43,6 +43,24 @@ export default class InvitePanel extends Component {
     this.setGroupOptions();
   }
 
+  @computed("inviteModel.id")
+  get topicId() {
+    return this.inviteModel?.id;
+  }
+
+  set topicId(value) {
+    set(this, "inviteModel.id", value);
+  }
+
+  @computed("invitingToTopic")
+  get allowExistingMembers() {
+    return this.invitingToTopic;
+  }
+
+  set allowExistingMembers(value) {
+    set(this, "invitingToTopic", value);
+  }
+
   @computed("currentUser.staff")
   get isStaff() {
     return this.currentUser?.staff;
@@ -51,15 +69,6 @@ export default class InvitePanel extends Component {
   @computed("currentUser.admin")
   get isAdmin() {
     return this.currentUser?.admin;
-  }
-
-  @computed("inviteModel.id")
-  get topicId() {
-    return this.inviteModel?.id;
-  }
-
-  set topicId(value) {
-    set(this, "inviteModel.id", value);
   }
 
   @computed("inviteModel.archetype")
@@ -77,23 +86,9 @@ export default class InvitePanel extends Component {
     return this.invitingToTopic && this.inviteModel?.category?.read_restricted;
   }
 
-  @computed("invitingToTopic")
-  get allowExistingMembers() {
-    return this.invitingToTopic;
-  }
-
-  set allowExistingMembers(value) {
-    set(this, "invitingToTopic", value);
-  }
-
   @computed()
   get customMessagePlaceholder() {
     return i18n(`invite.custom_message_placeholder`);
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.reset();
   }
 
   @computed(
@@ -282,22 +277,6 @@ export default class InvitePanel extends Component {
     return this.isPrivateTopic ? "required" : "optional";
   }
 
-  successMessage(invitee) {
-    if (this.isInviteeGroup) {
-      return i18n("topic.invite_private.success_group");
-    } else if (this.isPM) {
-      return i18n("topic.invite_private.success");
-    } else if (this.invitingExistingUserToTopic) {
-      return i18n("topic.invite_reply.success_existing_email", {
-        invitee,
-      });
-    } else if (emailValid(invitee)) {
-      return i18n("topic.invite_reply.success_email", { invitee });
-    } else {
-      return i18n("topic.invite_reply.success_username");
-    }
-  }
-
   @computed("isPM", "ajaxError")
   get errorMessage() {
     if (this.ajaxError) {
@@ -313,6 +292,27 @@ export default class InvitePanel extends Component {
     return this.canInviteViaEmail
       ? "topic.invite_private.email_or_username_placeholder"
       : "topic.invite_reply.username_placeholder";
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.reset();
+  }
+
+  successMessage(invitee) {
+    if (this.isInviteeGroup) {
+      return i18n("topic.invite_private.success_group");
+    } else if (this.isPM) {
+      return i18n("topic.invite_private.success");
+    } else if (this.invitingExistingUserToTopic) {
+      return i18n("topic.invite_reply.success_existing_email", {
+        invitee,
+      });
+    } else if (emailValid(invitee)) {
+      return i18n("topic.invite_reply.success_email", { invitee });
+    } else {
+      return i18n("topic.invite_reply.success_username");
+    }
   }
 
   // Reset the modal to allow a new user to be invited.
@@ -382,12 +382,14 @@ export default class InvitePanel extends Component {
         .createInvite(this.invitee.trim(), groupIds, this.customMessage)
         .then((result) => {
           model.setProperties({ saving: false, finished: true });
-          if (this.isPM && result && result.user) {
-            this.get("inviteModel.details.allowed_users").push(
-              EmberObject.create(result.user)
-            );
+          if (this.isPM) {
+            if (result && result.user) {
+              this.get("inviteModel.details.allowed_users").push(
+                EmberObject.create(result.user)
+              );
+            }
             this.toasts.success({
-              data: { message: this.successMessage(result) },
+              data: { message: this.successMessage(this.invitee) },
             });
             this.closeModal();
           } else if (
@@ -495,8 +497,8 @@ export default class InvitePanel extends Component {
         {{#if this.inviteModel.finished}}
           {{#if this.inviteModel.inviteLink}}
             <GeneratedInviteLink
-              @link={{this.inviteModel.inviteLink}}
               @email={{this.invitee}}
+              @link={{this.inviteModel.inviteLink}}
             />
           {{/if}}
         {{else}}
@@ -505,7 +507,7 @@ export default class InvitePanel extends Component {
             <div class="invite-user-input-wrapper">
               {{#if this.allowExistingMembers}}
                 <EmailGroupUserChooser
-                  @value={{this.invitee}}
+                  class="invite-user-input"
                   @onChange={{this.updateInvitee}}
                   @options={{hash
                     maximum=1
@@ -515,20 +517,20 @@ export default class InvitePanel extends Component {
                     filterPlaceholder=this.placeholderKey
                     fullWidthWrap=true
                   }}
-                  class="invite-user-input"
+                  @value={{this.invitee}}
                 />
               {{else}}
-                <TextField
-                  @value={{this.invitee}}
-                  @placeholderKey="topic.invite_reply.email_placeholder"
+                <DTextField
                   class="email-or-username-input"
+                  @placeholderKey="topic.invite_reply.email_placeholder"
+                  @value={{this.invitee}}
                 />
               {{/if}}
               {{#if this.capabilities.hasContactPicker}}
                 <DButton
-                  @icon="address-book"
-                  @action={{this.searchContact}}
                   class="btn-primary open-contact-picker"
+                  @action={{this.searchContact}}
+                  @icon="address-book"
                 />
               {{/if}}
             </div>
@@ -541,9 +543,9 @@ export default class InvitePanel extends Component {
               </label>
               <GroupChooser
                 @content={{this.allGroups}}
-                @value={{this.groupIds}}
                 @labelProperty="name"
                 @onChange={{fn (mut this.groupIds)}}
+                @value={{this.groupIds}}
               />
             </div>
           {{/if}}
@@ -552,15 +554,15 @@ export default class InvitePanel extends Component {
             <div class="show-custom-message-control">
               <label class="instructions">
                 <DiscourseLinkedText
+                  class="optional"
                   @action={{this.showCustomMessageBox}}
                   @text="invite.custom_message"
-                  class="optional"
                 />
               </label>
               {{#if this.hasCustomMessage}}
                 <Textarea
-                  @value={{this.customMessage}}
                   placeholder={{this.customMessagePlaceholder}}
+                  @value={{this.customMessage}}
                 />
               {{/if}}
             </div>
@@ -576,22 +578,22 @@ export default class InvitePanel extends Component {
 
       <div class="footer">
         {{#if this.inviteModel.finished}}
-          <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
+          <DButton class="btn-primary" @action={{@closeModal}} @label="close" />
         {{else}}
           <DButton
-            @icon={{this.inviteIcon}}
+            class="btn-primary send-invite"
             @action={{this.createInvite}}
             @disabled={{this.disabled}}
+            @icon={{this.inviteIcon}}
             @label={{this.buttonTitle}}
-            class="btn-primary send-invite"
           />
           {{#if this.showCopyInviteButton}}
             <DButton
-              @icon="link"
+              class="btn-primary generate-invite-link"
               @action={{this.generateInviteLink}}
               @disabled={{this.disabledCopyLink}}
+              @icon="link"
               @label="user.invited.generate_link"
-              class="btn-primary generate-invite-link"
             />
           {{/if}}
         {{/if}}

@@ -89,19 +89,6 @@ export default class PasswordResetController extends Controller {
     );
   }
 
-  initSelectedSecondFactorMethod() {
-    if (this.model.security_key_required) {
-      this.set(
-        "selectedSecondFactorMethod",
-        SECOND_FACTOR_METHODS.SECURITY_KEY
-      );
-    } else if (this.model.second_factor_required) {
-      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
-    } else if (this.model.backup_enabled) {
-      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
-    }
-  }
-
   get passwordValidation() {
     return this.passwordValidationHelper.passwordValidation;
   }
@@ -120,6 +107,19 @@ export default class PasswordResetController extends Controller {
 
   get showPasswordValidation() {
     return this.passwordValidation.ok || this.passwordValidation.reason;
+  }
+
+  initSelectedSecondFactorMethod() {
+    if (this.model.security_key_required) {
+      this.set(
+        "selectedSecondFactorMethod",
+        SECOND_FACTOR_METHODS.SECURITY_KEY
+      );
+    } else if (this.model.second_factor_required) {
+      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
+    } else if (this.model.backup_enabled) {
+      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
+    }
   }
 
   @action
@@ -197,7 +197,7 @@ export default class PasswordResetController extends Controller {
       if (e.jqXHR?.status === 429) {
         this.set("errorMessage", i18n("user.second_factor.rate_limit"));
       } else {
-        throw new Error(e);
+        throw new Error(e, { cause: e });
       }
     } finally {
       this.set("isLoading", false);

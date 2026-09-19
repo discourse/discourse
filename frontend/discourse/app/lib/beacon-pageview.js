@@ -1,3 +1,4 @@
+import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 
 let _pendingBeaconRequests = 0;
@@ -7,13 +8,21 @@ export function hasPendingBeaconRequests() {
 }
 
 export function sendBeaconPageview({ sessionId, url, referrer, topicId }) {
+  if (!sessionId) {
+    return;
+  }
+
   const body = {
     session_id: sessionId,
     url,
     referrer,
+    language: navigator.language,
   };
   if (topicId) {
     body.topic_id = topicId;
+  }
+  if (EmbedMode.enabled) {
+    body.embed = true;
   }
 
   _pendingBeaconRequests++;

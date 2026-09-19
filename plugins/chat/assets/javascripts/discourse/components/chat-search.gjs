@@ -7,20 +7,20 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import FilterInput from "discourse/components/filter-input";
-import LoadMore from "discourse/components/load-more";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
-import autoFocus from "discourse/modifiers/auto-focus";
-import tabToSibling from "discourse/modifiers/tab-to-sibling";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
+import dTabToSibling from "discourse/ui-kit/modifiers/d-tab-to-sibling";
 import { i18n } from "discourse-i18n";
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 import ChatMessageComponent from "discourse/plugins/chat/discourse/components/chat-message";
@@ -182,63 +182,63 @@ export default class ChatSearch extends Component {
       {{didUpdate this.checkQueryChange @query}}
     >
       <div class="chat-search__filters">
-        <FilterInput
-          {{autoFocus}}
-          @filterAction={{this.onFilterChange}}
-          @value={{@query}}
-          @icons={{hash left="magnifying-glass"}}
-          placeholder={{i18n "chat.search_view.filter_placeholder"}}
+        <DFilterInput
           class="no-blur"
+          placeholder={{i18n "chat.search_view.filter_placeholder"}}
+          @filterAction={{this.onFilterChange}}
+          @icons={{hash left="magnifying-glass"}}
           @onClearInput={{fn this.debounceFilterChange ""}}
+          @value={{@query}}
+          {{dAutoFocus}}
         />
 
         <DMenu
+          @icon="sort"
           @identifier="search-sort-options"
           @label={{this.sortLabel this.currentSort}}
-          @icon="sort"
         >
           <:content as |menu|>
-            <DropdownMenu as |dropdown|>
+            <DDropdownMenu as |dropdown|>
               <dropdown.item>
                 <DButton
-                  @translatedLabel={{this.sortLabel "relevance"}}
                   class="btn-transparent"
                   @action={{fn this.setCurrentSorting "relevance" menu.close}}
+                  @translatedLabel={{this.sortLabel "relevance"}}
                 />
               </dropdown.item>
               <dropdown.item>
                 <DButton
-                  @translatedLabel={{this.sortLabel "latest"}}
                   class="btn-transparent"
                   @action={{fn this.setCurrentSorting "latest" menu.close}}
+                  @translatedLabel={{this.sortLabel "latest"}}
                 />
               </dropdown.item>
-            </DropdownMenu>
+            </DDropdownMenu>
           </:content>
         </DMenu>
       </div>
 
       {{#if @query.length}}
         {{#if this.messages.length}}
-          <div id="chat-search-instructions" class="sr-only">
+          <div class="sr-only" id="chat-search-instructions">
             {{i18n "chat.search_view.sr_instructions"}}
           </div>
 
           <ul
+            aria-label={{i18n "chat.search_view.results_list_label"}}
             class="chat-message-search-entries"
             role="listbox"
-            aria-label={{i18n "chat.search_view.results_list_label"}}
           >
             {{#each this.messages key="id" as |message|}}
               <li
+                aria-describedby="chat-search-instructions"
+                aria-label={{this.accessibleMessageLabel message}}
                 class="chat-message-search-entry"
                 role="option"
+                tabindex="0"
                 {{on "click" (fn this.visitMessage message)}}
                 {{on "keydown" (fn this.handleKeypress message)}}
-                {{tabToSibling}}
-                tabindex="0"
-                aria-label={{this.accessibleMessageLabel message}}
-                aria-describedby="chat-search-instructions"
+                {{dTabToSibling}}
               >
                 <div class="chat-message-search-entry__info">
                   {{#unless @scopedChannelId}}
@@ -251,22 +251,22 @@ export default class ChatSearch extends Component {
                 </div>
 
                 <ChatMessageComponent
-                  @message={{message}}
+                  @dateMode="long"
                   @disableMouseEvents={{true}}
                   @includeSeparator={{false}}
                   @interactive={{false}}
-                  @dateMode="long"
+                  @message={{message}}
                 />
               </li>
             {{/each}}
           </ul>
 
           <div class="chat-search-loading">
-            <ConditionalLoadingSpinner @condition={{this.isLoading}} />
+            <DConditionalLoadingSpinner @condition={{this.isLoading}} />
           </div>
 
           {{#if this.hasMoreResults}}
-            <LoadMore @action={{this.loadMore}} />
+            <DLoadMore @action={{this.loadMore}} />
           {{/if}}
 
           <br />

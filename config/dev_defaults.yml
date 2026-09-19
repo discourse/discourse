@@ -37,6 +37,8 @@ user:
   count: 30
 email_logs:
   count: 2
+application_request:
+  logged_in_browser_pageviews_per_day: 9000
 
 new_user:
   username: new_user

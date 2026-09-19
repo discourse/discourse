@@ -34,8 +34,9 @@ module CookedProcessorMixin
           Oneboxer.onebox(
             url,
             invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
-            user_id: @model&.user_id,
+            user_id: @model&.last_editor_id,
             category_id: @category_id,
+            locale: @opts[:locale],
           )
 
         @has_oneboxes = true if onebox.present?
@@ -345,6 +346,9 @@ module CookedProcessorMixin
     if title = inline_onebox&.dig(:title)
       element.children = CGI.escapeHTML(title)
       element.add_class("inline-onebox")
+      if css_class = inline_onebox[:css_class]
+        element.add_class(css_class)
+      end
     end
 
     remove_inline_onebox_loading_class(element)
@@ -426,7 +430,7 @@ module CookedProcessorMixin
 
     original_width, original_height = nil
 
-    if (upload.present?)
+    if upload.present?
       original_width = upload.width || 0
       original_height = upload.height || 0
     else
@@ -485,10 +489,9 @@ module CookedProcessorMixin
   def process_hotlinked_image(img)
     onebox = img.ancestors(".onebox, .onebox-body").first
 
-    # Skip hotlinked media processing if @post is not available (e.g., for chat messages)
-    return true if @post.nil?
+    @hotlinked_map ||= hotlinked_media_map
+    return true if @hotlinked_map.nil?
 
-    @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).index_by(&:url)
     normalized_src =
       PostHotlinkedMedia.normalize_src(img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR])
     info = @hotlinked_map[normalized_src]
@@ -518,6 +521,13 @@ module CookedProcessorMixin
     end
 
     still_an_image
+  end
+
+  # Tracked hotlinked media for the target being processed, keyed by normalized
+  # url. Targets that don't track any (or aren't processing a post) return nil to
+  # skip localization entirely.
+  def hotlinked_media_map
+    @post&.post_hotlinked_media&.preload(:upload)&.index_by(&:url)
   end
 
   def optimize_image!(img, upload, cropped: false)

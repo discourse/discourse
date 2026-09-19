@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ko:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "토픽 소유자 및 스태프가 해결책으로 답글을 표시하도록 허용"
   site_settings:
     solved_enabled: "해결 된 플러그인 사용, 사용자가 주제에 대한 솔루션을 선택할 수 있도록 허용"
     accept_all_solutions_trust_level: "모든 주제에 대한 솔루션을 수락하는 데 필요한 최소 신뢰 수준 (OP가 아닌 경우에도)"

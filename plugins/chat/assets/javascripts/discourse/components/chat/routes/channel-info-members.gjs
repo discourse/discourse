@@ -6,15 +6,16 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import FilterInput from "discourse/components/filter-input";
-import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import autoFocus from "discourse/modifiers/auto-focus";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
@@ -85,9 +86,27 @@ export default class ChatRouteChannelInfoMembers extends Component {
     if (this.filter?.length) {
       params.username = this.filter;
     }
-    this.updatedAt;
+    manuallyTrack(this.updatedAt);
 
     return this.chatApi.listChannelMemberships(this.args.channel.id, params);
+  }
+
+  get addMembersMode() {
+    return MODES.add_members;
+  }
+
+  get canAddMembers() {
+    if (
+      !this.args.channel.isDirectMessageChannel ||
+      !this.chatGuardian.canUseGroupChat()
+    ) {
+      return false;
+    }
+
+    return (
+      this.args.channel.chatable.group ||
+      !this.args.channel.lastMessage?.message
+    );
   }
 
   @action
@@ -133,26 +152,8 @@ export default class ChatRouteChannelInfoMembers extends Component {
 
   async debouncedLoad() {
     this.loadingSlider.transitionStarted();
-    await this.members.load({ limit: 20 });
+    await this.members.load({ limit: 20 }).catch(() => {});
     this.loadingSlider.transitionEnded();
-  }
-
-  get addMembersMode() {
-    return MODES.add_members;
-  }
-
-  get canAddMembers() {
-    if (
-      !this.args.channel.isDirectMessageChannel ||
-      !this.chatGuardian.canUseGroupChat()
-    ) {
-      return false;
-    }
-
-    return (
-      this.args.channel.chatable.group ||
-      !this.args.channel.lastMessage?.message
-    );
   }
 
   <template>
@@ -160,28 +161,28 @@ export default class ChatRouteChannelInfoMembers extends Component {
       {{#if this.site.mobileView}}
         <LinkTo
           class="c-back-button"
-          @route="chat.channel.info.settings"
           @model={{@channel}}
+          @route="chat.channel.info.settings"
         >
-          {{icon "chevron-left"}}
+          {{dIcon "chevron-left"}}
           {{i18n "chat.members_view.back_to_settings"}}
         </LinkTo>
       {{/if}}
       {{#if this.showAddMembers}}
         <MessageCreator
-          @mode={{this.addMembersMode}}
           @channel={{@channel}}
-          @onClose={{this.hideAddMember}}
+          @mode={{this.addMembersMode}}
           @onCancel={{this.hideAddMember}}
+          @onClose={{this.hideAddMember}}
         />
       {{else}}
         <div class="c-channel-members">
-          <FilterInput
-            {{autoFocus}}
+          <DFilterInput
+            placeholder={{this.filterPlaceholder}}
+            @containerClass="c-channel-members__filter"
             @filterAction={{this.mutFilter}}
             @icons={{hash right="magnifying-glass"}}
-            @containerClass="c-channel-members__filter"
-            placeholder={{this.filterPlaceholder}}
+            {{dAutoFocus}}
           />
 
           <ul class="c-channel-members__list" {{this.fill}}>
@@ -189,11 +190,11 @@ export default class ChatRouteChannelInfoMembers extends Component {
               <li
                 class="c-channel-members__list-item -add-member"
                 role="button"
+                tabindex="0"
                 {{on "click" this.addMember}}
                 {{this.onEnter this.addMember}}
-                tabindex="0"
               >
-                {{icon "plus"}}
+                {{dIcon "plus"}}
                 <span>{{this.addMemberLabel}}</span>
               </li>
             {{/if}}
@@ -206,18 +207,18 @@ export default class ChatRouteChannelInfoMembers extends Component {
                   {{this.onEnter (fn this.openMemberCard membership.user)}}
                 >
                   <ChatUserInfo
-                    @user={{membership.user}}
                     @avatarSize="tiny"
                     @interactive={{false}}
                     @showStatus={{true}}
                     @showStatusDescription={{true}}
+                    @user={{membership.user}}
                   />
                 </div>
                 {{#if (this.canRemoveMember membership.user)}}
                   <DButton
+                    class="btn-flat -remove-member"
                     @action={{fn this.removeMember membership.user}}
                     @label="chat.channel_info.remove_member"
-                    class="btn-flat -remove-member"
                   />
                 {{/if}}
               </li>

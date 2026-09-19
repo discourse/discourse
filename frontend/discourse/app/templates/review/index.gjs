@@ -1,25 +1,25 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import NavItem from "discourse/components/nav-item";
 import ReviewIndex from "discourse/components/reviewable/index";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-<template>
-  <HorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
-    <NavItem @route="review.index" @label="review.view_all" />
-    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+export default <template>
+  <DHorizontalOverflowNav class="reviewable-title" @ariaLabel="Review">
+    <DNavItem @label="review.view_all" @route="review.index" />
+    <DNavItem @label="review.grouped_by_topic" @route="review.topics" />
     {{#if @controller.currentUser.admin}}
-      <NavItem
-        @route="review.settings"
-        @label="review.settings.title"
+      <DNavItem
         @icon="wrench"
+        @label="review.settings.title"
+        @route="review.settings"
       />
     {{/if}}
-  </HorizontalOverflowNav>
+  </DHorizontalOverflowNav>
   {{#if @controller.displayUnknownReviewableTypesWarning}}
     <div class="alert alert-info unknown-reviewables">
       <span class="text">{{i18n
@@ -50,15 +50,15 @@ import { i18n } from "discourse-i18n";
           )
         }}</span>
       <div class="unknown-reviewables__options">
-        <LinkTo @route="adminPlugins.index" class="btn">
-          {{icon "puzzle-piece"}}
+        <LinkTo class="btn" @route="adminPlugins.index">
+          {{dIcon "puzzle-piece"}}
           <span>{{i18n "review.unknown.enable_plugins"}}</span>
         </LinkTo>
         <DButton
-          @label="review.unknown.ignore_all"
-          @icon="trash-can"
-          @action={{@controller.ignoreAllUnknownTypes}}
           class="btn-default"
+          @action={{@controller.ignoreAllUnknownTypes}}
+          @icon="trash-can"
+          @label="review.unknown.ignore_all"
         />
       </div>
     </div>

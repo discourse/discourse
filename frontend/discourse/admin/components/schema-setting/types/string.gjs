@@ -4,8 +4,8 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
-import concatClass from "discourse/helpers/concat-class";
 import { and, not } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class SchemaSettingTypeString extends Component {
@@ -14,14 +14,6 @@ export default class SchemaSettingTypeString extends Component {
   minLength = this.args.spec.validations?.min_length;
   maxLength = this.args.spec.validations?.max_length;
   required = this.args.spec.required;
-
-  @action
-  onInput(event) {
-    this.touched = true;
-    const newValue = event.currentTarget.value;
-    this.args.onChange(newValue);
-    this.value = newValue;
-  }
 
   get validationErrorMessage() {
     if (!this.touched) {
@@ -45,14 +37,22 @@ export default class SchemaSettingTypeString extends Component {
     }
   }
 
+  @action
+  onInput(event) {
+    this.touched = true;
+    const newValue = event.currentTarget.value;
+    this.args.onChange(newValue);
+    this.value = newValue;
+  }
+
   <template>
     <Input
       class="--string"
+      maxLength={{this.maxLength}}
+      minLength={{this.minLength}}
+      required={{this.required}}
       @value={{this.value}}
       {{on "input" this.onInput}}
-      required={{this.required}}
-      minLength={{this.minLength}}
-      maxLength={{this.maxLength}}
     />
 
     <div class="schema-field__input-supporting-text">
@@ -68,7 +68,7 @@ export default class SchemaSettingTypeString extends Component {
 
       {{#if this.maxLength}}
         <div
-          class={{concatClass
+          class={{dConcatClass
             "schema-field__input-count"
             (if this.validationErrorMessage " --error")
           }}

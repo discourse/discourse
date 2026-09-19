@@ -5,9 +5,9 @@ import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -110,9 +110,9 @@ export default class FlagActionType extends Component {
           <label class="radio checkbox-label">
             <input
               id="radio_{{this.flag.name_key}}"
-              {{on "click" (fn this.changePostActionType this.flag)}}
-              type="radio"
               name="post_action_type_index"
+              type="radio"
+              {{on "click" (fn this.changePostActionType this.flag)}}
             />
 
             <div class="flag-action-type-details">
@@ -120,15 +120,16 @@ export default class FlagActionType extends Component {
                   this.flagDescription
                 }}</span>
               {{#if this.showMessageInput}}
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
-                  name="message"
-                  class="flag-message"
-                  placeholder={{this.customPlaceholder}}
                   aria-label={{i18n "flagging.notify_user_textarea_label"}}
+                  class="flag-message"
+                  name="message"
+                  placeholder={{this.customPlaceholder}}
                   @value={{this.message}}
                 />
                 <div
-                  class={{concatClass
+                  class={{dConcatClass
                     "custom-message-length"
                     this.customMessageLengthClasses
                   }}
@@ -147,27 +148,28 @@ export default class FlagActionType extends Component {
         <div class="controls {{this.flag.name_key}}">
           <label class="radio checkbox-label">
             <input
-              id="radio_{{this.flag.name_key}}"
-              {{on "click" (fn this.changePostActionType this.flag)}}
               checked={{this.selected}}
-              type="radio"
+              id="radio_{{this.flag.name_key}}"
               name="post_action_type_index"
+              type="radio"
+              {{on "click" (fn this.changePostActionType this.flag)}}
             />
             <div class="flag-action-type-details">
               <strong class="flag-name">{{this.formattedName}}</strong>
               <div class="description">{{trustHTML this.flagDescription}}</div>
               {{#if this.showMessageInput}}
+                {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                 <Textarea
-                  name="message"
-                  class="flag-message"
-                  placeholder={{this.customPlaceholder}}
                   aria-label={{i18n
                     "flagging.notify_moderators_textarea_label"
                   }}
+                  class="flag-message"
+                  name="message"
+                  placeholder={{this.customPlaceholder}}
                   @value={{this.message}}
                 />
                 <div
-                  class={{concatClass
+                  class={{dConcatClass
                     "custom-message-length"
                     this.customMessageLengthClasses
                   }}
@@ -181,8 +183,8 @@ export default class FlagActionType extends Component {
             <label class="checkbox-label flag-confirmation">
               <Input
                 name="confirmation"
-                @type="checkbox"
                 @checked={{this.isConfirmed}}
+                @type="checkbox"
               />
               <span>{{i18n "flagging.confirmation_illegal"}}</span>
             </label>

@@ -62,7 +62,7 @@ acceptance("post", function (needs) {
 
     assert.strictEqual(
       raw.trim(),
-      '[policy reminder="daily" version="1" groups="staff"]\nI accept this policy\n[/policy]'
+      '[policy groups="staff" version="1" reminder="daily"]\nI accept this policy\n[/policy]'
     );
   });
 

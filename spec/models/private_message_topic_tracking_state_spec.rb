@@ -105,7 +105,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_new" do
-    it "should publish the right message_bus message" do
+    it "publishes the expected MessageBus message" do
       messages = MessageBus.track_publish { described_class.publish_new(private_message) }
 
       expect(messages.map(&:channel)).to contain_exactly(described_class.user_channel(user_2.id))
@@ -120,7 +120,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
       expect(data["payload"]["created_by_user_id"]).to eq(private_message.user_id)
     end
 
-    it "should publish the right message_bus message for a group message" do
+    it "publishes the expected MessageBus message for a group message" do
       messages = MessageBus.track_publish { described_class.publish_new(group_message) }
 
       expect(messages.map(&:channel)).to contain_exactly(described_class.group_channel(group.id))
@@ -137,7 +137,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_unread" do
-    it "should publish the right message_bus message" do
+    it "publishes the expected MessageBus message" do
       messages =
         MessageBus.track_publish { described_class.publish_unread(private_message.first_post) }
 
@@ -164,18 +164,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
       expect(messages).to eq([])
     end
 
-    it "publishes small_action posts only to staff users" do
-      staff = Fabricate(:moderator, refresh_auto_groups: true)
-      private_message.topic_allowed_users.create!(user_id: staff.id)
-      TopicUser.change(
-        staff.id,
-        private_message.id,
-        notification_level: NotificationLevels.all[:watching],
-        last_read_post_number: 1,
-      )
-
-      TopicUser.find_by(user: user_2, topic: private_message).update!(last_read_post_number: 1)
-
+    it "does not publish small_action posts" do
       small_action =
         Fabricate(
           :post,
@@ -187,14 +176,12 @@ RSpec.describe PrivateMessageTopicTrackingState do
 
       messages = MessageBus.track_publish { described_class.publish_unread(small_action) }
 
-      published_user_ids = messages.flat_map(&:user_ids)
-      expect(published_user_ids).to include(staff.id)
-      expect(published_user_ids).not_to include(user_2.id)
+      expect(messages).to eq([])
     end
   end
 
   describe ".publish_group_archived" do
-    it "should publish the right message_bus message" do
+    it "publishes the expected MessageBus message" do
       user_3 = Fabricate(:user)
       group.add(user_3)
 
@@ -220,7 +207,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
   end
 
   describe ".publish_read" do
-    it "should publish the right message_bus message" do
+    it "publishes the expected MessageBus message" do
       message =
         MessageBus
           .track_publish(described_class.user_channel(user.id)) do

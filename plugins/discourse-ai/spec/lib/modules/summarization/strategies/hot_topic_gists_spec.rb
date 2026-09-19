@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Summarization::Strategies::HotTopicGists do
-  subject(:gist) { described_class.new(topic) }
+  subject(:gist) { described_class.new(topic, locale: "ja") }
 
   fab!(:topic) { Fabricate(:topic, highest_post_number: 25) }
   fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
   fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
 
   before { enable_current_plugin }
+
+  it "remains compatible with callers that omit a locale" do
+    expect(described_class.new(topic).locale).to be_nil
+  end
 
   describe "#targets_data" do
     it "respects the `hot_topics_recent_days` setting" do
@@ -57,6 +61,18 @@ RSpec.describe DiscourseAi::Summarization::Strategies::HotTopicGists do
 
         expect(op_content).to include(topic_embed.embed_content_cache)
       end
+    end
+  end
+
+  describe "#as_llm_messages" do
+    it "specifies the target language and summary tool" do
+      content = gist.as_llm_messages([{ id: 1, poster: "user1", text: "Hello" }]).first[:content]
+
+      expect(content).to include(
+        "Write the summary in Japanese (日本語), regardless of the language used in the input.",
+      )
+      expect(content).not_to include("required output locale")
+      expect(content).to include("calling set_topic_summary exactly once")
     end
   end
 end

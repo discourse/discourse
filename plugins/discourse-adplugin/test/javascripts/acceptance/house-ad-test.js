@@ -128,6 +128,81 @@ acceptance(`House Ads`, function (needs) {
   });
 });
 
+acceptance(`House Ads | Above site header`, function (needs) {
+  needs.user();
+  needs.settings({ no_ads_for_categories: "" });
+  needs.site({
+    house_creatives: {
+      settings: {
+        above_site_header: "Above Site Header",
+      },
+      creatives: {
+        "Above Site Header": {
+          html: "<div class='h-above-site-header'>ABOVE SITE HEADER</div>",
+          category_ids: [],
+        },
+      },
+    },
+  });
+
+  test("renders a house ad above the site header", async function (assert) {
+    updateCurrentUser({
+      staff: false,
+      trust_level: 1,
+      show_to_groups: true,
+    });
+    await visit("/latest");
+
+    assert
+      .dom(".above-site-header-outlet .h-above-site-header")
+      .exists({ count: 1 }, "renders an ad above the site header");
+  });
+});
+
+acceptance(
+  `House Ads | Above site header | no_ads_for_categories`,
+  function (needs) {
+    needs.user();
+    needs.settings({ no_ads_for_categories: "1" });
+    needs.site({
+      house_creatives: {
+        settings: {
+          above_site_header: "Above Site Header",
+        },
+        creatives: {
+          "Above Site Header": {
+            html: "<div class='h-above-site-header'>ABOVE SITE HEADER</div>",
+            category_ids: [],
+          },
+        },
+      },
+    });
+
+    test("hides the ad above the site header in no-ads categories", async function (assert) {
+      updateCurrentUser({
+        staff: false,
+        trust_level: 1,
+        show_to_groups: true,
+      });
+
+      await visit("/t/28830"); // topic in a no_ads_for_categories category
+      assert
+        .dom(".above-site-header-outlet .h-above-site-header")
+        .doesNotExist(
+          "ad is hidden because the topic category is in no_ads_for_categories"
+        );
+
+      await visit("/t/280"); // topic in a category not in no_ads_for_categories
+      assert
+        .dom(".above-site-header-outlet .h-above-site-header")
+        .exists(
+          { count: 1 },
+          "ad is shown on topics in categories not in no_ads_for_categories"
+        );
+    });
+  }
+);
+
 acceptance(`House Ads | Route Filtering | Display Ad`, function (needs) {
   needs.user();
   needs.settings({

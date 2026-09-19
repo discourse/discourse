@@ -15,7 +15,8 @@ class Admin::SiteTextsController < Admin::AdminController
       "user_notifications.confirm_old_email.text_body_template",
       "user_notifications.confirm_old_email_add.title",
       "user_notifications.confirm_old_email_add.subject_template",
-      "user_notifications.confirm_old_email_add.text_body_template"
+      "user_notifications.confirm_old_email_add.text_body_template",
+      "js.powered_by_discourse"
     ].freeze
 
   def self.restricted_key?(key)

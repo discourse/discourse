@@ -1,6 +1,10 @@
 import { cancel } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import {
+  isRateLimitError,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import { camelCaseToSnakeCase } from "discourse/lib/case-converter";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
@@ -8,14 +12,15 @@ import discourseLater from "discourse/lib/later";
 import { cloneJSON } from "discourse/lib/object";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 let cache = {},
   cacheKey,
   cacheTime,
   currentTerm,
-  oldSearch;
+  oldSearch,
+  rateLimitedUntil = 0;
 
 export function resetUserSearchCache() {
   cache = {};
@@ -23,6 +28,7 @@ export function resetUserSearchCache() {
   cacheTime = null;
   currentTerm = null;
   oldSearch = null;
+  rateLimitedUntil = 0;
 }
 
 function performSearch(
@@ -44,6 +50,11 @@ function performSearch(
   let cached = cache[term];
   if (cached) {
     resultsFn(cloneJSON(cached));
+    return;
+  }
+
+  if (rateLimitedUntil > Date.now()) {
+    resultsFn(CANCELLED_STATUS);
     return;
   }
 
@@ -103,6 +114,11 @@ function performSearch(
       // If there is a newer search term, return null
       if (term === currentTerm) {
         returnVal = r;
+      }
+    })
+    .catch(function (error) {
+      if (isRateLimitError(error)) {
+        rateLimitedUntil = Date.now() + rateLimitWaitSeconds(error) * 1000;
       }
     })
     .finally(function () {
@@ -172,6 +188,7 @@ function organizeResults(r, options) {
       if (!exclude.includes(user.username)) {
         user.isUser = true;
         user.isMetadataMatch =
+          term &&
           !lowerCaseIncludes(user.username, term) &&
           !lowerCaseIncludes(user.name, term);
         users.push(user);
@@ -193,85 +210,123 @@ function organizeResults(r, options) {
   }
 
   // Build prioritized list
-  const exactUsernameSet = new Set();
-  const partialUsernameSet = new Set();
-  const exactGroupSet = new Set();
-  const exactNameSet = new Set();
+  // These Sets are used to prevent duplicate entries in the autocomplete suggestions
+  const userUsernameSet = new Set();
+  const groupNameSet = new Set();
 
   // 1. Exact username matches
-  const exactUsernameMatches = users.filter((u) => {
+  const exactUserUsernameMatches = users.filter((u) => {
     if (u.username.toLowerCase() !== term?.toLowerCase()) {
       return false;
     }
-    exactUsernameSet.add(u.username);
+    userUsernameSet.add(u.username);
     return true;
   });
 
   // 2. Exact group name matches
-  const exactGroupMatches = groups.filter((g) => {
+  const exactGroupNameMatches = groups.filter((g) => {
     if (g.name.toLowerCase() !== term?.toLowerCase()) {
       return false;
     }
-    exactGroupSet.add(g.name);
+    groupNameSet.add(g.name);
     return true;
   });
 
   // 3. Partial username matches (not already in exact matches)
-  const partialUsernameMatches = users.filter((u) => {
+  const partialUserUsernameMatches = users.filter((u) => {
     if (
-      exactUsernameSet.has(u.username) ||
+      userUsernameSet.has(u.username) ||
       u.isMetadataMatch ||
-      !lowerCaseIncludes(u.username, term)
+      (term && !lowerCaseIncludes(u.username, term))
     ) {
       return false;
     }
-    partialUsernameSet.add(u.username);
+    userUsernameSet.add(u.username);
     return true;
   });
 
   // 4. Partial group name matches (not already in exact matches)
-  const partialGroupMatches = groups.filter(
-    (g) =>
-      !term || (!exactGroupSet.has(g.name) && lowerCaseIncludes(g.name, term))
-  );
+  const partialGroupNameMatches = groups.filter((g) => {
+    if (
+      groupNameSet.has(g.name) ||
+      (term && !lowerCaseIncludes(g.name, term))
+    ) {
+      return false;
+    }
+
+    groupNameSet.add(g.name);
+    return true;
+  });
 
   // 5. Exact name matches (not already included via username)
-  const exactNameMatches = users.filter((u) => {
+  const exactUserNameMatches = users.filter((u) => {
     if (
-      exactUsernameSet.has(u.username) ||
-      partialUsernameSet.has(u.username) ||
+      userUsernameSet.has(u.username) ||
       u.name?.toLowerCase() !== term?.toLowerCase() ||
       u.isMetadataMatch
     ) {
       return false;
     }
-    exactNameSet.add(u.username);
+    userUsernameSet.add(u.username);
     return true;
   });
 
   // 6. Partial name matches (not already included)
-  const partialNameMatches = users.filter(
-    (u) =>
-      !exactUsernameSet.has(u.username) &&
-      !partialUsernameSet.has(u.username) &&
-      !exactNameSet.has(u.username) &&
-      lowerCaseIncludes(u.name, term) &&
-      !u.isMetadataMatch
-  );
+  const partialUserNameMatches = users.filter((u) => {
+    if (
+      userUsernameSet.has(u.username) ||
+      !lowerCaseIncludes(u.name, term) ||
+      u.isMetadataMatch
+    ) {
+      return false;
+    }
 
-  // 7. Users with metadata match
-  const metadataMatchUsers = users.filter((u) => u.isMetadataMatch);
+    userUsernameSet.add(u.username);
+    return true;
+  });
+
+  // 7. Exact group full_name matches
+  const exactGroupFullNameMatches = groups.filter((g) => {
+    if (
+      groupNameSet.has(g.name) ||
+      !g.full_name ||
+      g.full_name?.toLowerCase() !== term?.toLowerCase()
+    ) {
+      return false;
+    }
+    groupNameSet.add(g.name);
+    return true;
+  });
+
+  // 8. Partial group full_name matches (not already in exact matches)
+  const partialGroupFullNameMatches = groups.filter((g) => {
+    if (
+      groupNameSet.has(g.name) ||
+      !g.full_name ||
+      !lowerCaseIncludes(g.full_name, term)
+    ) {
+      return false;
+    }
+
+    groupNameSet.add(g.name);
+    return true;
+  });
+
+  // 9. Users with metadata match
+  const metadataUserMatches = users.filter((u) => u.isMetadataMatch);
 
   // Build the prioritized results in the new order
   const prioritizedResults = [
-    ...exactUsernameMatches,
-    ...exactGroupMatches,
+    ...exactUserUsernameMatches,
+    ...exactGroupNameMatches,
     ...emails,
-    ...partialUsernameMatches,
-    ...partialGroupMatches,
-    ...exactNameMatches,
-    ...partialNameMatches,
-    ...metadataMatchUsers,
+    ...partialUserUsernameMatches,
+    ...partialGroupNameMatches,
+    ...exactUserNameMatches,
+    ...partialUserNameMatches,
+    ...exactGroupFullNameMatches,
+    ...partialGroupFullNameMatches,
+    ...metadataUserMatches,
   ];
 
   // Truncate to limit

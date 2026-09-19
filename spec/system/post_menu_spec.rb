@@ -149,6 +149,7 @@ describe "Post menu" do
         expect(topic_page).to have_post_action_button(post, :admin)
         expect(topic_page).to have_post_action_button(post2, :admin)
       end
+
       it "does not display the admin button when the group is not allowed" do
         SiteSetting.change_post_ownership_allowed_groups = ""
         sign_in(allowed_group_user)
@@ -513,7 +514,6 @@ describe "Post menu" do
     end
 
     it "shows the users who liked when clicking on the like count" do
-      SiteSetting.enable_new_post_reactions_menu = true
       PostActionCreator.like(user, post)
       PostActionCreator.like(admin, post)
 

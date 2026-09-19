@@ -4,12 +4,12 @@
 
 class SystemMessage
   def self.create(recipient, type, params = {})
-    self.new(recipient).create(type, params)
+    new(recipient).create(type, params)
   end
 
   def self.create_from_system_user(recipient, type, params = {})
     params = params.merge(from_system: true)
-    self.new(recipient).create(type, params)
+    new(recipient).create(type, params)
   end
 
   def initialize(recipient)
@@ -43,14 +43,7 @@ class SystemMessage
       user = Discourse.system_user
     else
       user = Discourse.site_contact_user
-      target_group_names =
-        (
-          if Group.exists?(name: SiteSetting.site_contact_group_name)
-            SiteSetting.site_contact_group_name
-          else
-            nil
-          end
-        )
+      target_group_names = Discourse.site_contact_group&.name
     end
 
     post_creator_args = [

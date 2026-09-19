@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import avatar from "discourse/helpers/avatar";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 const IpLookupAccountsTable = <template>
@@ -17,8 +17,8 @@ const IpLookupAccountsTable = <template>
       {{#each @accounts as |account|}}
         <tr>
           <td class="user">
-            <LinkTo @route="adminUser" @model={{account}}>
-              {{avatar account imageSize="tiny"}}
+            <LinkTo @model={{account}} @route="adminUser">
+              {{dAvatar account imageSize="tiny"}}
               <span>{{account.username}}</span>
             </LinkTo>
           </td>

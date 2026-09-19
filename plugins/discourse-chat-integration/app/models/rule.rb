@@ -97,7 +97,7 @@ class DiscourseChatIntegration::Rule < DiscourseChatIntegration::PluginModel
   private
 
   def channel_valid?
-    if !(DiscourseChatIntegration::Channel.where(id: channel_id).exists?)
+    if !DiscourseChatIntegration::Channel.where(id: channel_id).exists?
       errors.add(:channel_id, "#{channel_id} is not a valid channel id")
     end
   end

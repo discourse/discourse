@@ -44,7 +44,7 @@ export default class NoAnswer extends Component {
       // - topic is old
       // - topic has at least one reply from another user that can be accepted
       if (
-        !topic.accepted_answer &&
+        !topic.accepted_answers?.length &&
         currentUser &&
         topic.user_id === currentUser.id &&
         moment() - moment(topic.created_at) > MAX_DURATION_WITH_NO_ANSWER &&
@@ -69,6 +69,10 @@ export default class NoAnswer extends Component {
     );
   }
 
+  get confettiParticles() {
+    return Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => i);
+  }
+
   hidePopup() {
     if (!this.show) {
       return;
@@ -79,10 +83,6 @@ export default class NoAnswer extends Component {
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       this.showConfetti = true;
     }
-  }
-
-  get confettiParticles() {
-    return Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => i);
   }
 
   <template>
@@ -96,8 +96,8 @@ export default class NoAnswer extends Component {
       {{/if}}
       {{#if this.show}}
         <TopicNavigationPopup
-          @popupId="solved-notice"
           @dismissDuration={{this.oneWeek}}
+          @popupId="solved-notice"
         >
           <h2>{{i18n "solved.no_answer.title"}}</h2>
           <p>{{i18n "solved.no_answer.description"}}</p>

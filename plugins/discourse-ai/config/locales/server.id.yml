@@ -31,7 +31,6 @@ id:
     ai_sentiment_enabled: "Aktifkan modul sentiment."
     ai_sentiment_inference_service_api_endpoint: "URL tempat API berjalan untuk modul sentiment"
     ai_sentiment_inference_service_api_key: "Kunci API untuk API sentiment"
-    ai_sentiment_models: "Model yang digunakan untuk inferensi. Sentiment menglasifikasikan posting pada ruang positif/netral/negatif. Emosi dikelompokkan ke dalam ruang marah/jijik/takut/gembira/netral/sedih/kejutan."
     ai_nsfw_detection_enabled: "Aktifkan modul NSFW."
     ai_nsfw_inference_service_api_endpoint: "URL tempat API beroperasi untuk modul NSFW"
     ai_nsfw_inference_service_api_key: "Kunci API untuk API NSFW"
@@ -48,12 +47,19 @@ id:
     ai_helper:
       prompts:
         custom_prompt: "Perintah Khusus"
-      image_caption:
-        attribution: "Keterangan oleh AI"
     ai_bot:
+      navigation:
+        users:
+          title: "Pengguna"
+        groups:
+          title: "Grup"
+        categories:
+          title: "Kategori"
+        tags:
+          title: "Label"
       default_pm_prefix: "[PM bot AI tanpa judul]"
-      agents:
-        default_llm_required: "Model LLM default diperlukan sebelum mengaktifkan Obrolan"
+      read_post:
+        unknown_post: "post"
       tool_options:
         search:
           search_private:
@@ -61,6 +67,8 @@ id:
             description: "Sertakan semua topik yang dapat diakses pengguna dalam hasil pencarian (secara bawaan hanya topik publik yang disertakan)"
       tool_summary:
         github_search_files: "File pencarian GitHub"
+        suspend_user: "Tangguhkan pengguna"
+        silence_user: "Senyapkan pengguna"
         search: "Cari"
         time: "Waktu"
         summarize: "Meringkas"
@@ -79,10 +87,13 @@ id:
       delete_topic:
         errors:
           not_found: "Tidak ada topik."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tidak ada topik."
       edit_category:
+        errors:
+          not_found: "Kategori tidak ditemukan."
+      change_topic_category:
         errors:
           not_found: "Tidak ada topik."
           category_not_found: "Kategori tidak ditemukan."

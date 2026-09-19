@@ -1,76 +1,44 @@
-import Component from "@glimmer/component";
-import MobileNav from "discourse/components/mobile-nav";
-import NavigationBar from "discourse/components/navigation-bar";
-import GroupDropdown from "discourse/select-kit/components/group-dropdown";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import GroupNavPillsExample from "../../examples/molecules/group-nav-pills";
+import groupNavPillsSource from "../../examples/molecules/group-nav-pills?source=file";
+import NavigationBarExample from "../../examples/molecules/navigation-bar";
+import navigationBarSource from "../../examples/molecules/navigation-bar?source=file";
+import OverflowingNavExample from "../../examples/molecules/overflowing-nav";
+import overflowingNavSource from "../../examples/molecules/overflowing-nav?source=file";
+import UserNavPillsExample from "../../examples/molecules/user-nav-pills";
+import userNavPillsSource from "../../examples/molecules/user-nav-pills?source=file";
 
-export default class NavigationBarMolecule extends Component {
-  navigationBarCode = `<NavigationBar @navItems={{@dummy.navItems}} @filterMode="latest" />`;
+export default <template>
+  <StyleguideExample @code={{navigationBarSource}} @title="<NavigationBar>">
+    <NavigationBarExample @navItems={{@dummy.navItems}} />
+  </StyleguideExample>
 
-  userNavCode = `<MobileNav @desktopClass="nav nav-pills user-nav" class="main-nav">
-  {{#each @dummy.navItems as |ni|}}
-    <li>
-      <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
-        {{ni.displayName}}
-      </a>
-    </li>
-  {{/each}}
-</MobileNav>`;
+  <StyleguideExample
+    @code={{userNavPillsSource}}
+    @title=".user-main .nav-pills"
+  >
+    <UserNavPillsExample @navItems={{@dummy.navItems}} />
+  </StyleguideExample>
 
-  groupNavCode = `<MobileNav @desktopClass="nav nav-pills" class="group-nav">
-  <li class="group-dropdown">
-    <GroupDropdown @groups={{@dummy.groupNames}} @value="staff" />
-  </li>
+  <StyleguideExample
+    @code={{groupNavPillsSource}}
+    @title="group page <NavigationBar>"
+  >
+    <GroupNavPillsExample @navItems={{@dummy.navItems}} />
+  </StyleguideExample>
 
-  {{#each @dummy.navItems as |ni|}}
-    <li>
-      <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
-        {{ni.displayName}}
-      </a>
-    </li>
-  {{/each}}
-</MobileNav>`;
-
-  <template>
-    <StyleguideExample
-      @title="<NavigationBar>"
-      @code={{this.navigationBarCode}}
-    >
-      <NavigationBar @navItems={{@dummy.navItems}} @filterMode="latest" />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title=".user-main .nav-pills"
-      @code={{this.userNavCode}}
-    >
-      <MobileNav @desktopClass="nav nav-pills user-nav" class="main-nav">
-        {{#each @dummy.navItems as |ni|}}
-          <li>
-            <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
-              {{ni.displayName}}
-            </a>
-          </li>
-        {{/each}}
-      </MobileNav>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="group page <NavigationBar>"
-      @code={{this.groupNavCode}}
-    >
-      <MobileNav @desktopClass="nav nav-pills" class="group-nav">
-        <li class="group-dropdown">
-          <GroupDropdown @groups={{@dummy.groupNames}} @value="staff" />
-        </li>
-
-        {{#each @dummy.navItems as |ni|}}
-          <li>
-            <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
-              {{ni.displayName}}
-            </a>
-          </li>
-        {{/each}}
-      </MobileNav>
-    </StyleguideExample>
-  </template>
-}
+  <StyleguideExample
+    @code={{overflowingNavSource}}
+    @description="A navigation bar that outgrows its width scrolls sideways instead of wrapping. The edge with more items fades out under a chevron, a click scrolls one viewport, holding the chevron keeps scrolling, and the active item is brought into view when the bar mounts."
+    @title="<DHorizontalOverflowNav> — more items than fit"
+  >
+    <:tryThis>
+      The active item started off screen and was centered on mount. Click or
+      hold a chevron, or swipe the bar, and watch the chevrons swap sides at
+      each end.
+    </:tryThis>
+    <:default>
+      <OverflowingNavExample />
+    </:default>
+  </StyleguideExample>
+</template>

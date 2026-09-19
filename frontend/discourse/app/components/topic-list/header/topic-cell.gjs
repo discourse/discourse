@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import SortableColumn from "./sortable-column";
 
 export default class TopicCell extends Component {
@@ -13,17 +14,20 @@ export default class TopicCell extends Component {
 
   <template>
     {{#if this.showTabs}}
-      <th scope="col" class="topic-list-data default">
+      <th class="topic-list-data default" scope="col">
         <ul class="nav nav-pills">
           {{#each this.moreTopicsTabs.tabs as |tab|}}
             <li>
               <DButton
+                class={{dConcatClass
+                  "topic-list-header-tab"
+                  (if (this.moreTopicsTabs.isActiveTab tab) "active")
+                }}
+                tabindex={{if (this.moreTopicsTabs.isActiveTab tab) -1 0}}
                 @action={{fn this.moreTopicsTabs.selectTab tab}}
+                @icon={{tab.icon}}
                 @translatedLabel={{tab.name}}
                 @translatedTitle={{tab.name}}
-                @icon={{tab.icon}}
-                class={{if (this.moreTopicsTabs.isActiveTab tab) "active"}}
-                tabindex={{if (this.moreTopicsTabs.isActiveTab tab) -1 0}}
               />
             </li>
           {{/each}}
@@ -31,17 +35,17 @@ export default class TopicCell extends Component {
       </th>
     {{else}}
       <SortableColumn
-        @order="default"
-        @category={{@category}}
         @activeOrder={{@activeOrder}}
-        @changeSort={{@changeSort}}
         @ascending={{@ascending}}
-        @name={{@name}}
         @bulkSelectEnabled={{@bulkSelectEnabled}}
-        @showBulkToggle={{@showBulkToggle}}
+        @bulkSelectHelper={{@bulkSelectHelper}}
         @canBulkSelect={{@canBulkSelect}}
         @canDoBulkActions={{@canDoBulkActions}}
-        @bulkSelectHelper={{@bulkSelectHelper}}
+        @category={{@category}}
+        @changeSort={{@changeSort}}
+        @name={{@name}}
+        @order="default"
+        @showBulkToggle={{@showBulkToggle}}
       />
     {{/if}}
   </template>

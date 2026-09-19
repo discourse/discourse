@@ -21,8 +21,8 @@ module Onebox
 
       @md5 = Digest::MD5.new
       @view = View.new(name, @record)
-      @template_name = "_layout"
-      @template_path = load_paths.last
+      self.template_name = "_layout"
+      self.template_path = load_paths.last
     end
 
     def to_html

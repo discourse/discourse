@@ -26,7 +26,7 @@ function stubCategory(needs, customFields) {
 }
 
 acceptance("Categories for users that can assign", function (needs) {
-  needs.user({ can_assign: true });
+  needs.user({ can_assign: true, can_assign_globally: true });
   needs.settings({
     assign_enabled: true,
     assigns_user_url_path: "/",

@@ -12,6 +12,23 @@ describe "Composer - ProseMirror - Code formatting" do
     # 5. Full block selection: create code block with full content selected
     # 6. Partial text selection: toggle inline code marks
     context "when inside code block" do
+      it "lets the user indent and outdent selected code with Tab" do
+        code = "  first line\n second line\nthird line"
+        open_composer
+        composer.type_content("```#{code}")
+
+        composer.select_code_block
+        composer.send_keys(:tab)
+        composer.toggle_rich_editor
+        expect(composer).to have_value("```\n    first line\n   second line\n  third line\n```")
+
+        composer.toggle_rich_editor
+        composer.select_code_block
+        composer.send_keys(%i[shift tab])
+        composer.toggle_rich_editor
+        expect(composer).to have_value("```\n#{code}\n```")
+      end
+
       it "converts code block back to single paragraph" do
         open_composer
         composer.type_content("```\nSingle line of code\n```")
@@ -232,12 +249,13 @@ describe "Composer - ProseMirror - Code formatting" do
       expect(composer).to have_value("This is ~~SPARTA!~~ `code!`.")
     end
 
-    xit "allows typing before a code mark with/without the mark" do
+    it "allows typing before a code mark with/without the mark" do
       open_composer
       composer.type_content("`code mark`")
       expect(rich).to have_css("code", text: "code mark")
       # before the code mark
       composer.send_keys(SystemHelpers::LINE_START_KEY)
+      wait_for_timeout
       composer.send_keys(:left)
       composer.type_content("..")
       # within the code mark

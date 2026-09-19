@@ -107,6 +107,22 @@ describe "Automatic user removal from channels" do
     end
   end
 
+  context "when granular_anonymous_and_logged_in_groups_permissions is enabled" do
+    before do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+    end
+
+    it "does not remove any users on the next sweep" do
+      # Everyone (0) is mapped to the logged_in_users (5) pseudo-group.
+      expect(SiteSetting.chat_allowed_groups_map).to include(Group::AUTO_GROUPS[:logged_in_users])
+
+      expect { Chat::AutoLeaveChannels.call(params: { event: :hourly_job }) }.not_to change {
+        Chat::UserChatChannelMembership.count
+      }
+    end
+  end
+
   context "when a user is removed from a group" do
     context "when the user is no longer in any chat_allowed_groups" do
       fab!(:group)

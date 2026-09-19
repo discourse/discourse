@@ -17,6 +17,38 @@ export default class SiteSettingChangeTracker extends Service {
 
   @tracked dirtySiteSettings = trackedSet();
 
+  get count() {
+    return this.dirtySiteSettings.size;
+  }
+
+  get hasUnsavedChanges() {
+    return this.count > 0;
+  }
+
+  get saveLabel() {
+    const count = this.hasUnsavedChanges ? "other" : "one";
+
+    return `admin.site_settings.save.${count}`;
+  }
+
+  get discardLabel() {
+    const count = this.hasUnsavedChanges ? "other" : "one";
+
+    return `admin.site_settings.discard.${count}`;
+  }
+
+  get #requiresConfirmation() {
+    return [...this.dirtySiteSettings].filter(
+      (setting) => setting.requiresConfirmation
+    );
+  }
+
+  get #affectsExistingUsers() {
+    return [...this.dirtySiteSettings].filter(
+      (setting) => setting.affectsExistingUsers
+    );
+  }
+
   add(setting) {
     this.dirtySiteSettings.add(setting);
   }
@@ -31,7 +63,6 @@ export default class SiteSettingChangeTracker extends Service {
     this.#startSaving();
 
     try {
-      let reload = false;
       let confirm = true;
 
       // Settings with custom confirmation messages.
@@ -56,27 +87,29 @@ export default class SiteSettingChangeTracker extends Service {
       }
 
       this.dirtySiteSettings.forEach((setting) => {
-        params[setting.buffered.get("setting")] = {
-          value: setting.buffered.get("value"),
+        params[setting.setting] = {
+          value: setting.pendingValue,
           backfill: !!setting.updateExistingUsers,
         };
       });
 
       await SiteSetting.bulkUpdate(params);
 
+      const refreshParams = {};
+
       this.dirtySiteSettings.forEach((setting) => {
-        setting.validationMessage = null;
-        setting.buffered.applyChanges();
+        setting.commit();
+
         if (setting.requiresReload) {
-          reload = setting.afterSave;
+          refreshParams[setting.setting] = setting.value;
         }
       });
 
       this.#stopSaving();
       this.dirtySiteSettings.clear();
 
-      if (reload) {
-        reload();
+      if (Object.keys(refreshParams).length > 0) {
+        this.refreshPage(refreshParams);
       }
     } catch (error) {
       this.#stopSaving();
@@ -85,14 +118,12 @@ export default class SiteSettingChangeTracker extends Service {
   }
 
   discard() {
-    this.dirtySiteSettings.forEach((setting) =>
-      setting.buffered.discardChanges()
-    );
+    this.dirtySiteSettings.forEach((setting) => setting.rollback());
     this.dirtySiteSettings.clear();
   }
 
   async confirmChanges(setting) {
-    const settingKey = setting.buffered.get("setting");
+    const settingKey = setting.setting;
 
     return new Promise((resolve) => {
       // Fallback is needed in case the setting does not have a custom confirmation
@@ -150,10 +181,10 @@ export default class SiteSettingChangeTracker extends Service {
   }
 
   async configureBackfill(setting) {
-    const key = setting.buffered.get("setting");
+    const key = setting.setting;
 
     const data = {
-      [key]: setting.buffered.get("value"),
+      [key]: setting.pendingValue,
     };
 
     const result = await ajax(`/admin/site_settings/${key}/user_count.json`, {
@@ -171,18 +202,6 @@ export default class SiteSettingChangeTracker extends Service {
         },
       });
     }
-  }
-
-  #startSaving() {
-    this.dirtySiteSettings.forEach((setting) => {
-      setting.isSaving = true;
-    });
-  }
-
-  #stopSaving() {
-    this.dirtySiteSettings.forEach((setting) => {
-      setting.isSaving = false;
-    });
   }
 
   refreshPage(params) {
@@ -239,35 +258,15 @@ export default class SiteSettingChangeTracker extends Service {
     }
   }
 
-  get count() {
-    return this.dirtySiteSettings.size;
+  #startSaving() {
+    this.dirtySiteSettings.forEach((setting) => {
+      setting.isSaving = true;
+    });
   }
 
-  get hasUnsavedChanges() {
-    return this.count > 0;
-  }
-
-  get saveLabel() {
-    const count = this.hasUnsavedChanges ? "other" : "one";
-
-    return `admin.site_settings.save.${count}`;
-  }
-
-  get discardLabel() {
-    const count = this.hasUnsavedChanges ? "other" : "one";
-
-    return `admin.site_settings.discard.${count}`;
-  }
-
-  get #requiresConfirmation() {
-    return [...this.dirtySiteSettings].filter(
-      (setting) => setting.requiresConfirmation
-    );
-  }
-
-  get #affectsExistingUsers() {
-    return [...this.dirtySiteSettings].filter(
-      (setting) => setting.affectsExistingUsers
-    );
+  #stopSaving() {
+    this.dirtySiteSettings.forEach((setting) => {
+      setting.isSaving = false;
+    });
   }
 }

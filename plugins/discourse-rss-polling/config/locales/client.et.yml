@@ -12,3 +12,13 @@ et:
         feed_url: URL
         discourse_category: Kategooriad
         discourse_tags: Sildid
+        feeds:
+          edit: Muuda
+          delete: Kustuta
+          save: Salvesta
+        test:
+          title: Eelvaade
+          dismiss: Ignoreeri
+        status:
+          enabled: Sisse lülitatud
+          disabled: Välja lülitatud

@@ -8,16 +8,15 @@ module("Unit | Utility | render-tag", function (hooks) {
   test("defaultRenderTag", function (assert) {
     assert.strictEqual(
       renderTag("foo", { description: "foo description" }),
-      "<a href='/tag/foo'  data-tag-name=foo title=\"foo description\"  class='discourse-tag simple'>foo</a>",
-      "formats tag as link with plain description in hover"
+      "<a href='/tag/foo'  data-tag-name=foo class='discourse-tag simple'>foo</a>",
+      "does not expose the description as a tooltip"
     );
+  });
 
+  test("defaultRenderTag encodes legacy tag links with periods", function (assert) {
     assert.strictEqual(
-      renderTag("foo", {
-        description: 'foo description <a href="localhost">link</a>',
-      }),
-      "<a href='/tag/foo'  data-tag-name=foo title=\"foo description link\"  class='discourse-tag simple'>foo</a>",
-      "removes any html tags from description"
+      renderTag("node.js"),
+      "<a href='/tag/node%2Ejs'  data-tag-name=node.js class='discourse-tag simple'>node.js</a>"
     );
   });
 

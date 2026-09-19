@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import FilterableList from "../../components/d-templates/filterable-list";
 
 const SELECTOR_EDITOR_PREVIEW =
@@ -60,13 +60,13 @@ export default class DTemplatesEditorPreview extends Component {
       {{#if this.templatesVisible}}
         <div class="d-templates-container">
           <DButton
+            class="modal-close close btn-flat"
             @action={{this.hide}}
             @icon="xmark"
-            class="modal-close close btn-flat"
           />
           <FilterableList
-            @onInsertTemplate={{this.onInsertTemplate}}
             @onAfterInsertTemplate={{this.hide}}
+            @onInsertTemplate={{this.onInsertTemplate}}
           />
         </div>
       {{/if}}

@@ -143,3 +143,23 @@ sv:
     edit_assignments_modal:
       topic: "Ämne"
       post: "Inlägg"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Tilldelat"
+        "trigger:unassigned": "Otilldelat"
+      assign_topic:
+        resource: "Resurs"
+        resources:
+          topic: "Ämne"
+          post: "Inlägg"
+        operations:
+          assign: "Tilldela"
+          unassign: "Otilldela"
+        topic_id: "Ämnes-ID"
+        post_id: "Inläggs-ID"
+      check_assignment:
+        target_types:
+          topic: "Ämne"
+          post: "Inlägg"
+        topic_id: "Ämnes-ID"
+        post_id: "Inläggs-ID"

@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostListItemDetails extends Component {
@@ -65,17 +65,17 @@ export default class PostListItemDetails extends Component {
   <template>
     <div class="post-list-item__details">
       <div class="stream-topic-title">
-        <TopicStatus @topic={{@post}} @disableActions={{true}} />
+        <TopicStatus @disableActions={{true}} @topic={{@post}} />
         <span class="title">
           {{#if this.url}}
             <a
-              href={{getURL this.url}}
               aria-label={{this.titleAriaLabel}}
+              href={{getURL this.url}}
             >{{this.topicTitle}}</a>
           {{else if @isDraft}}
             <DButton
-              @action={{fn @resumeDraft @post}}
               class="btn-transparent draft-title"
+              @action={{fn @resumeDraft @post}}
             >
               {{or this.draftTitle (i18n "drafts.dropdown.untitled")}}
             </DButton>
@@ -88,24 +88,24 @@ export default class PostListItemDetails extends Component {
       <div class="post-list-item__metadata">
         {{#if @post.category}}
           <span class="category stream-post-category">
-            {{categoryLink @post.category}}
+            {{dCategoryLink @post.category}}
           </span>
         {{/if}}
 
         <span class="time">
-          {{formatDate @post.created_at leaveAgo="true"}}
+          {{dFormatDate @post.created_at leaveAgo="true"}}
         </span>
 
         {{#if @post.deleted_by}}
           <span class="delete-info">
-            {{icon "trash-can"}}
-            {{avatar
+            {{dIcon "trash-can"}}
+            {{dAvatar
               @post.deleted_by
               imageSize="tiny"
               extraClasses="actor"
               ignoreTitle="true"
             }}
-            {{formatDate @item.deleted_at leaveAgo="true"}}
+            {{dFormatDate @item.deleted_at leaveAgo="true"}}
           </span>
         {{/if}}
       </div>

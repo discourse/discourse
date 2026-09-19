@@ -76,6 +76,9 @@ module Email
     class EmailNotAllowed < ProcessingError
     end
 
+    class EmailAliasNotAllowed < ProcessingError
+    end
+
     class OldDestinationError < ProcessingError
     end
 
@@ -124,33 +127,40 @@ module Email
       id_hash = Digest::SHA1.hexdigest(@message_id)
 
       DistributedMutex.synchronize("process_email_#{id_hash}") do
-        begin
-          # If we find an existing incoming email record with the exact same `message_id`
-          # do not create a new `IncomingEmail` record to avoid double ups.
-          return if @incoming_email = IncomingEmail.find_by(message_id: @message_id)
+        # If we find an existing incoming email record with the exact same `message_id`
+        # do not create a new `IncomingEmail` record to avoid double ups.
+        return if @incoming_email = IncomingEmail.find_by(message_id: @message_id)
 
-          Email::Validator.ensure_valid!(@mail)
+        Email::Validator.ensure_valid!(@mail)
 
-          @from_email, @from_display_name = parse_from_field(@mail)
-          @from_user = User.find_by_email(@from_email)
-          @incoming_email = create_incoming_email
+        @from_email, @from_display_name = parse_from_field(@mail)
+        @from_user = User.find_by_email(@from_email)
+        @incoming_email = create_incoming_email
 
-          post = process_internal
+        post = process_internal
 
-          raise BouncedEmailError if is_bounce?
+        raise BouncedEmailError if is_bounce?
 
-          post
-        rescue Exception => e
-          @incoming_email.update_columns(error: e.class.name) if @incoming_email
-          delete_created_staged_users
-          raise
-        end
+        post
+      rescue Exception => e
+        @incoming_email.update_columns(error: e.class.name) if @incoming_email
+        delete_created_staged_users
+        raise
       end
     end
 
     def is_blocked?
-      return false if SiteSetting.ignore_by_title.blank?
-      Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
+      if SiteSetting.ignore_by_title.present?
+        escaped_regex =
+          SiteSetting.ignore_by_title.split("|").map { |s| Regexp.escape(s) }.join("|")
+        return true if Regexp.new(escaped_regex, Regexp::IGNORECASE) =~ @mail.subject
+      end
+      if SiteSetting.ignore_by_title_regex.present?
+        if Regexp.new(SiteSetting.ignore_by_title_regex, Regexp::IGNORECASE) =~ @mail.subject
+          return true
+        end
+      end
+      false
     end
 
     def create_incoming_email
@@ -214,7 +224,7 @@ module Email
         # the email is a reply to *something*
         if category = post.topic&.category
           # it's a topic in a category
-          if category.mailinglist_mirror?
+          if sent_to_mailinglist_mirror?(category)
             # replies to categories that are mailing mirrors should work,
             # even if reply_by_email is not otherwise enabled
           elsif !SiteSetting.reply_by_email_enabled
@@ -249,11 +259,9 @@ module Email
         first_exception = nil
 
         destinations.each do |destination|
-          begin
-            return process_destination(destination, user, body, elided)
-          rescue => e
-            first_exception ||= e
-          end
+          return process_destination(destination, user, body, elided)
+        rescue => e
+          first_exception ||= e
         end
 
         raise first_exception if first_exception
@@ -292,10 +300,8 @@ module Email
         next if mail[field].blank?
 
         mail[field].each do |address_field|
-          begin
-            address_field.decoded
-            recipients << address_field.address.downcase
-          end
+          address_field.decoded
+          recipients << address_field.address.downcase
         end
       end
 
@@ -461,7 +467,7 @@ module Email
           # use the first html extracter that matches
           if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
             doc = Nokogiri::HTML5.fragment(html)
-            self.public_send(:"extract_from_#{html_extracter[0]}", doc)
+            public_send(:"extract_from_#{html_extracter[0]}", doc)
           else
             markdown =
               HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
@@ -551,10 +557,8 @@ module Email
     def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
-      elided =
-        doc.css(
-          ".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *",
-        ).remove
+      signature_start = ".WordSection1 > :not(p):not(ul):not(ol):first-of-type"
+      elided = doc.css("#{signature_start}, #{signature_start} ~ *").remove
       to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
     end
 
@@ -763,28 +767,26 @@ module Email
     end
 
     def self.extract_email_address_and_name(value)
-      begin
-        # ensure the email header value is a string
-        value = value.to_s
-        # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
-        value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
-        # 'mailto:' suffix isn't supported by Mail::Address parsing
-        value = value.gsub("mailto:", "")
-        # parse the email header value
-        parsed = Mail::Address.new(value)
-        # extract the email address and name
-        mail = parsed.address.to_s.downcase.strip
-        name = parsed.name.to_s.strip
-        # ensure the email address is "valid"
-        if mail.include?("@")
-          # remove surrounding quotes from the name
-          name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
-          # return the email address and name
-          [mail, name]
-        end
-      rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
-        # something went wrong parsing the email header value, return nil
+      # ensure the email header value is a string
+      value = value.to_s
+      # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
+      value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
+      # 'mailto:' suffix isn't supported by Mail::Address parsing
+      value = value.gsub("mailto:", "")
+      # parse the email header value
+      parsed = Mail::Address.new(value)
+      # extract the email address and name
+      mail = parsed.address.to_s.downcase.strip
+      name = parsed.name.to_s.strip
+      # ensure the email address is "valid"
+      if mail.include?("@")
+        # remove surrounding quotes from the name
+        name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
+        # return the email address and name
+        [mail, name]
       end
+    rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
+      # something went wrong parsing the email header value, return nil
     end
 
     def subject
@@ -802,6 +804,10 @@ module Email
 
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
+          # Staging would be rejected by the normalized uniqueness rule, which is a
+          # deliberate block rather than an unexpected failure. Callers that tolerate
+          # a failed create keep getting nil, so only the sender aborts the email.
+          raise EmailAliasNotAllowed if raise_on_failed_create && normalized_email_taken?(email)
 
           username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
           begin
@@ -829,6 +835,10 @@ module Email
       find_or_create_user(email, display_name, raise_on_failed_create: true)
     end
 
+    def normalized_email_taken?(email)
+      SiteSetting.normalize_emails? && UserEmail.find_by_normalized(email).present?
+    end
+
     def all_destinations
       @all_destinations ||= [
         @mail.destinations,
@@ -842,15 +852,11 @@ module Email
         all_destinations.map { |d| Email::Receiver.check_address(d, is_bounce?) }.reject(&:blank?)
     end
 
-    def sent_to_mailinglist_mirror?
-      @sent_to_mailinglist_mirror ||=
-        begin
-          destinations.each do |destination|
-            return true if destination.is_a?(Category) && destination.mailinglist_mirror?
-          end
-
-          false
-        end
+    def sent_to_mailinglist_mirror?(category = nil)
+      destinations.any? do |destination|
+        destination.is_a?(Category) && destination.mailinglist_mirror? &&
+          (category.nil? || destination == category)
+      end
     end
 
     def self.check_address(address, include_verp = false)
@@ -963,7 +969,7 @@ module Email
       end
 
       target_post = post_ids.any? && Post.where(id: post_ids).order(:created_at).last
-      too_old_for_group_smtp = (destination_too_old?(target_post) && group.smtp_enabled)
+      too_old_for_group_smtp = destination_too_old?(target_post) && group.smtp_enabled
 
       if target_post.blank? || too_old_for_group_smtp
         create_topic(
@@ -1253,7 +1259,13 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      Email::MessageIdService.find_post_from_message_ids(message_ids)
+      post = Email::MessageIdService.find_post_from_message_ids(message_ids)
+      if !force && SiteSetting.find_related_post_with_key &&
+           !(post&.topic&.category && sent_to_mailinglist_mirror?(post.topic.category))
+        return
+      end
+
+      post
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)
@@ -1499,7 +1511,10 @@ module Email
 
       add_elided_to_raw!(options)
 
-      if sent_to_mailinglist_mirror?
+      topic_category = options[:topic]&.category
+      topic_category ||= Category.find_by(id: options[:category]) if options[:category]
+
+      if topic_category && sent_to_mailinglist_mirror?(topic_category)
         options[:skip_validations] = true
         options[:skip_guardian] = true
       else
@@ -1587,46 +1602,44 @@ module Email
         next if mail_object[d].blank?
 
         mail_object[d].each do |address_field|
-          begin
-            address_field.decoded
-            email = address_field.address.downcase
-            display_name = address_field.display_name.try(:to_s)
-            next if !email.include?("@")
+          address_field.decoded
+          email = address_field.address.downcase
+          display_name = address_field.display_name.try(:to_s)
+          next if !email.include?("@")
 
-            if should_invite?(email)
-              user = User.find_by_email(email)
+          if should_invite?(email)
+            user = User.find_by_email(email)
 
-              # cap number of staged users created per email
-              if (!user || user.staged) &&
-                   @staged_users.count >= SiteSetting.maximum_staged_users_per_email
-                max_staged_users_post ||=
-                  post.topic.add_moderator_post(
-                    sender,
-                    I18n.t("emails.incoming.maximum_staged_user_per_email_reached"),
-                    import_mode: @opts[:import_mode],
-                  )
-                next
-              end
-
-              user = find_or_create_user(email, display_name, user: user)
-              if user && can_invite?(post.topic, user)
-                post.topic.topic_allowed_users.create!(user_id: user.id)
-                TopicUser.auto_notification_for_staging(
-                  user.id,
-                  post.topic_id,
-                  TopicUser.notification_reasons[:auto_watch],
-                )
-                post.topic.add_small_action(
+            # cap number of staged users created per email
+            if (!user || user.staged) &&
+                 @staged_users.count >= SiteSetting.maximum_staged_users_per_email
+              max_staged_users_post ||=
+                post.topic.add_moderator_post(
                   sender,
-                  "invited_user",
-                  user.username,
+                  I18n.t("emails.incoming.maximum_staged_user_per_email_reached"),
                   import_mode: @opts[:import_mode],
                 )
-              end
+              next
             end
-          rescue ActiveRecord::RecordInvalid, EmailNotAllowed
-            # don't care if user already allowed or the user's email address is not allowed
+
+            user = find_or_create_user(email, display_name, user: user)
+            if user && can_invite?(post.topic, user)
+              post.topic.topic_allowed_users.create!(user_id: user.id)
+              TopicUser.auto_notification_for_staging(
+                user.id,
+                post.topic_id,
+                TopicUser.notification_reasons[:auto_watch],
+              )
+              post.topic.add_small_action(
+                sender,
+                "invited_user",
+                user.username,
+                import_mode: @opts[:import_mode],
+              )
+            end
           end
+        rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+          # don't care if user already allowed or the user's email address is not allowed
         end
       end
     end

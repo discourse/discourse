@@ -13,8 +13,6 @@ sk:
   js:
     discourse_reactions:
       reactions_title: "Reakcie"
-      state_panel:
-        more_users: "a %{count} ďalšie..."
       picker:
         react_with: "Reagujte na tento príspevok pomocou: %{reaction}"
         cant_remove_reaction: "Už nemôžete odstrániť svoju reakciu"

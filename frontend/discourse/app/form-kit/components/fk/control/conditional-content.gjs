@@ -12,6 +12,7 @@ const Conditions = <template>
         FKControlConditionalDisplayCondition
         activeName=@activeName
         setCondition=@setCondition
+        resyncToken=@resyncToken
       )
     }}
   </div>
@@ -25,6 +26,9 @@ const Contents = <template>
 
 export default class FKControlConditionalContent extends Component {
   @tracked manuallySetName = null;
+  // Bumped after `onChange` settles to re-sync the radios with `activeName`,
+  // so a rejected change doesn't leave the clicked radio selected.
+  @tracked resyncToken = 0;
 
   get activeName() {
     // If onChange is provided, parent controls state - always use @activeName
@@ -37,7 +41,12 @@ export default class FKControlConditionalContent extends Component {
   @action
   setCondition(name) {
     this.manuallySetName = name;
-    this.args.onChange?.(name);
+
+    if (this.args.onChange) {
+      Promise.resolve(this.args.onChange(name)).finally(() => {
+        this.resyncToken++;
+      });
+    }
   }
 
   <template>
@@ -45,7 +54,10 @@ export default class FKControlConditionalContent extends Component {
       {{yield
         (hash
           Conditions=(component
-            Conditions activeName=this.activeName setCondition=this.setCondition
+            Conditions
+            activeName=this.activeName
+            setCondition=this.setCondition
+            resyncToken=this.resyncToken
           )
           Contents=(component Contents activeName=this.activeName)
         )

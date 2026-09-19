@@ -1,126 +1,126 @@
-import DNavigationItem from "discourse/components/d-navigation-item";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{bodyClass "user-preferences-page"}}
 
   <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
+    <DHorizontalOverflowNav @ariaLabel="User secondary - preferences">
       <DNavigationItem
-        @route="preferences.account"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-account"
+        @ariaCurrentContext="subNav"
+        @route="preferences.account"
       >
-        {{icon "circle-user"}}
+        {{dIcon "circle-user"}}
         <span>{{i18n "user.preferences_nav.account"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="preferences.security"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-security"
+        @ariaCurrentContext="subNav"
+        @route="preferences.security"
       >
-        {{icon "lock"}}
+        {{dIcon "lock"}}
         <span>{{i18n "user.preferences_nav.security"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="preferences.profile"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-profile"
+        @ariaCurrentContext="subNav"
+        @route="preferences.profile"
       >
-        {{icon "address-card"}}
+        {{dIcon "address-card"}}
         <span>{{i18n "user.preferences_nav.profile"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="preferences.emails"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-emails"
+        @ariaCurrentContext="subNav"
+        @route="preferences.emails"
       >
-        {{icon "envelope"}}
+        {{dIcon "envelope"}}
         <span>{{i18n "user.preferences_nav.emails"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="preferences.notifications"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-notifications"
+        @ariaCurrentContext="subNav"
+        @route="preferences.notifications"
       >
-        {{icon "bell"}}
+        {{dIcon "bell"}}
         <span>{{i18n "user.preferences_nav.notifications"}}</span>
       </DNavigationItem>
 
       {{#if @controller.model.can_change_tracking_preferences}}
         <DNavigationItem
-          @route="preferences.tracking"
-          @ariaCurrentContext="subNav"
           class="user-nav__preferences-tracking"
+          @ariaCurrentContext="subNav"
+          @route="preferences.tracking"
         >
-          {{icon "plus"}}
+          {{dIcon "plus"}}
           <span>{{i18n "user.preferences_nav.tracking"}}</span>
         </DNavigationItem>
       {{/if}}
 
       <DNavigationItem
-        @route="preferences.users"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-users"
+        @ariaCurrentContext="subNav"
+        @route="preferences.users"
       >
-        {{icon "users"}}
+        {{dIcon "users"}}
         <span>{{i18n "user.preferences_nav.users"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="preferences.interface"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-interface"
+        @ariaCurrentContext="subNav"
+        @route="preferences.interface"
       >
-        {{icon "desktop"}}
+        {{dIcon "desktop"}}
         <span>{{i18n "user.preferences_nav.interface"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="preferences.navigation-menu"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-navigation-menu"
+        @ariaCurrentContext="subNav"
+        @route="preferences.navigation-menu"
       >
-        {{icon "bars"}}
+        {{dIcon "bars"}}
         <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="preferences.calendar-subscriptions"
-        @ariaCurrentContext="subNav"
         class="user-nav__preferences-calendar-subscriptions"
+        @ariaCurrentContext="subNav"
+        @route="preferences.calendar-subscriptions"
       >
-        {{icon "calendar-days"}}
+        {{dIcon "calendar-days"}}
         <span>{{i18n "user.preferences_nav.calendar_subscriptions"}}</span>
       </DNavigationItem>
 
       <PluginOutlet
-        @name="user-preferences-nav-under-interface"
         @connectorTagName="div"
+        @name="user-preferences-nav-under-interface"
         @outletArgs={{lazyHash model=@controller.model}}
       />
       <PluginOutlet
-        @name="user-preferences-nav"
         @connectorTagName="li"
+        @name="user-preferences-nav"
         @outletArgs={{lazyHash model=@controller.model}}
       />
-    </HorizontalOverflowNav>
+    </DHorizontalOverflowNav>
   </div>
 
   <section class="user-content user-preferences" id="user-content">
     <span>
       <PluginOutlet
-        @name="above-user-preferences"
         @connectorTagName="div"
+        @name="above-user-preferences"
         @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>

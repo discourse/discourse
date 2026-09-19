@@ -32,7 +32,7 @@ $sidebar-width: 17em;
 }
 
 .d-header #site-text-logo {
-  font-size: clamp(var(--font-0), 2.5vw, var(--font-up-2));
+  font-size: clamp(var(--font-0), 2.5vw, var(--font-up-1));
 
   .has-sidebar-page & {
     white-space: wrap;
@@ -99,15 +99,6 @@ $sidebar-width: 17em;
         auto
         minmax(auto, 1fr);
 
-      .d-header-mode {
-        grid-area: extra-info;
-        white-space: nowrap;
-
-        @include viewport.until(md) {
-          display: none;
-        }
-      }
-
       .d-header .title {
         min-width: auto;
       }
@@ -138,10 +129,6 @@ $sidebar-width: 17em;
 
         @media screen and (width <= 1000px) {
           gap: 0.5em;
-        }
-
-        .d-header-mode {
-          grid-area: extra-info;
         }
       }
     }
@@ -197,7 +184,6 @@ body.has-sidebar-page {
     max-width: unset; // undoing core default
   }
 
-  .d-header-mode,
   .extra-info-wrapper {
     padding: 0;
   }

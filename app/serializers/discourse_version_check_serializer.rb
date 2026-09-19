@@ -2,9 +2,11 @@
 
 class DiscourseVersionCheckSerializer < ApplicationSerializer
   attributes :latest_version,
-             :critical_updates,
+             :latest_pretty_version,
+             :latest_sha,
              :installed_version,
              :installed_sha,
+             :installed_describe,
              :missing_versions_count,
              :updated_at
 

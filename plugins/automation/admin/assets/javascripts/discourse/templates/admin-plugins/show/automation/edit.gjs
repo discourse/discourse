@@ -1,11 +1,11 @@
 import { fn, hash } from "@ember/helper";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 import AutomationEnabledToggle from "discourse/plugins/automation/admin/components/automation-enabled-toggle";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
@@ -14,9 +14,9 @@ import FormError from "discourse/plugins/automation/admin/components/form-error"
 export default <template>
   <div class="admin-detail discourse-automation-edit discourse-automation-form">
     <BackButton
+      class="discourse-automation-back"
       @label="discourse_automation.back"
       @route="adminPlugins.show.automation.index"
-      class="discourse-automation-back"
     />
 
     {{#if @controller.automationForm.trigger}}
@@ -51,15 +51,15 @@ export default <template>
               </label>
 
               <div class="controls">
-                <TextField
-                  @value={{@controller.automationForm.name}}
-                  @type="text"
-                  @autofocus={{true}}
-                  @name="automation-name"
+                <DTextField
                   class="input-large"
+                  @autofocus={{true}}
                   @input={{withEventValue
                     (fn (mut @controller.automationForm.name))
                   }}
+                  @name="automation-name"
+                  @type="text"
+                  @value={{@controller.automationForm.name}}
                 />
               </div>
             </div>
@@ -71,11 +71,11 @@ export default <template>
 
               <div class="controls">
                 <ComboBox
-                  @value={{@controller.automationForm.script}}
+                  class="scriptables"
                   @content={{@controller.model.scriptables}}
                   @onChange={{@controller.onChangeScript}}
                   @options={{hash filterable=true}}
-                  class="scriptables"
+                  @value={{@controller.automationForm.script}}
                 />
               </div>
             </div>
@@ -103,7 +103,7 @@ export default <template>
 
               <div class="controls">
                 <ComboBox
-                  @value={{@controller.automationForm.trigger}}
+                  class="triggerables"
                   @content={{@controller.model.triggerables}}
                   @onChange={{@controller.onChangeTrigger}}
                   @options={{hash
@@ -111,7 +111,7 @@ export default <template>
                     none="discourse_automation.select_trigger"
                     disabled=@controller.model.automation.script.forced_triggerable
                   }}
-                  class="triggerables"
+                  @value={{@controller.automationForm.trigger}}
                 />
               </div>
             </div>
@@ -141,13 +141,13 @@ export default <template>
                   {{/if}}
 
                   <DButton
-                    @label="discourse_automation.edit_automation.trigger_section.trigger_now"
-                    @isLoading={{@controller.isTriggeringAutomation}}
+                    class="btn-primary trigger-now-btn"
                     @action={{fn
                       @controller.onManualAutomationTrigger
                       @controller.model.automation.id
                     }}
-                    class="btn-primary trigger-now-btn"
+                    @isLoading={{@controller.isTriggeringAutomation}}
+                    @label="discourse_automation.edit_automation.trigger_section.trigger_now"
                   />
                 </div>
               {{/if}}
@@ -198,15 +198,15 @@ export default <template>
 
             <div class="control-group">
               <DButton
-                @isLoading={{@controller.isUpdatingAutomation}}
-                @label="discourse_automation.update"
-                @type="submit"
+                class="btn-primary update-automation"
                 @action={{fn
                   @controller.saveAutomation
                   @controller.automation
                   true
                 }}
-                class="btn-primary update-automation"
+                @isLoading={{@controller.isUpdatingAutomation}}
+                @label="discourse_automation.update"
+                @type="submit"
               />
             </div>
           {{/if}}

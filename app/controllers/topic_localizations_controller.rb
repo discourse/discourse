@@ -38,6 +38,15 @@ class TopicLocalizationsController < ApplicationController
     end
   end
 
+  def update_locale
+    topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless topic
+
+    updated_topic =
+      TopicLocaleUpdater.update(topic:, locale: params.fetch(:locale).presence, user: current_user)
+    render json: { locale: updated_topic.locale }, status: :ok
+  end
+
   def destroy
     topic_id, locale = params.require(%i[topic_id locale])
 

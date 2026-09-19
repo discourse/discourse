@@ -9,7 +9,7 @@ class PostOwnerChanger
     @skip_revision = params[:skip_revision] || false
 
     %i[post_ids topic new_owner acting_user].each do |arg|
-      raise ArgumentError.new(arg) if self.instance_variable_get("@#{arg}").blank?
+      raise ArgumentError.new(arg) if instance_variable_get("@#{arg}").blank?
     end
   end
 
@@ -23,7 +23,12 @@ class PostOwnerChanger
 
       if post.is_first_post?
         @topic.user = @new_owner
-        @topic.recover! if post.user.nil?
+        if post.user.nil?
+          topic_was_deleted = @topic.deleted_at.present?
+          @topic.recover!
+          # only resurrect an OP trashed alongside its topic, not one moderated individually
+          post.recover! if topic_was_deleted && post.deleted_at.present?
+        end
       end
 
       post.topic = @topic

@@ -89,7 +89,7 @@ be:
             level:
               label: ўзровень
           levels:
-            success: поспех
+            success: Поспех
             error: памылка
         user_group_membership_through_badge:
           fields:

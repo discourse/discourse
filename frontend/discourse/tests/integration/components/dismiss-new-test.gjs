@@ -4,7 +4,7 @@ import DismissNew from "discourse/components/modal/dismiss-new";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | modal/dismiss-new", function (hooks) {
+module("Integration | Component | Modal | DismissNew", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

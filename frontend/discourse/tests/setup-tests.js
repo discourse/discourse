@@ -1,5 +1,6 @@
 /* eslint-disable simple-import-sort/imports */
-import Application from "../app";
+import { noteKeyboardEvidence } from "discourse/services/capabilities";
+import Application from "discourse/app";
 import "./loader-shims";
 import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
@@ -9,22 +10,27 @@ import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
+  pauseTest,
   setApplication,
   setResolver,
 } from "@ember/test-helpers";
 import $ from "jquery";
-import MessageBus from "message-bus-client";
+import "message-bus-client";
+import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
+import { clearExtraAttributes } from "discourse/data/extra-attributes";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { setLoadedFaker } from "discourse/lib/load-faker";
 import PreloadStore from "discourse/lib/preload-store";
+import { loadSprites } from "discourse/lib/svg-sprite-loader";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
-import {
-  disableLoadMoreObserver,
-  enableLoadMoreObserver,
-} from "discourse/components/load-more";
+import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import { resetCategoryCache } from "discourse/models/category";
+import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
+import { buildResolver } from "discourse/resolver";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -43,13 +49,14 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setDefaultOwner } from "discourse/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse/lib/get-url";
-import { buildResolver } from "discourse/resolver";
-import { loadSprites } from "../lib/svg-sprite-loader";
-import * as FakerModule from "@faker-js/faker";
-import { setLoadedFaker } from "discourse/lib/load-faker";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
+import {
+  disableVirtualization,
+  enableVirtualization,
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 
 const REPORT_MEMORY = false;
 let cancelled = false;
@@ -58,7 +65,6 @@ let started = false;
 function createApplication(config, settings) {
   const app = Application.create(config);
 
-  app.injectTestHelpers();
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
@@ -127,7 +133,6 @@ function setupToolbar() {
     value: [
       "core",
       "plugins",
-      "all",
       "theme-qunit",
       "-----",
       ...(window._discourseQunitPluginNames || []),
@@ -154,8 +159,6 @@ function setupToolbar() {
     select.querySelector("option[value=-----]").disabled = true;
     select.querySelector("option[value=plugins]").innerText =
       "all plugins (not recommended)";
-    select.querySelector("option[value=all]").innerText =
-      "all (not recommended)";
   });
 
   // Abort tests when the qunit controls are clicked
@@ -206,7 +209,7 @@ function writeSummaryLine(message) {
   }
 }
 
-export default function setupTests(config) {
+export default async function setupTests(config) {
   const target = getUrlParameter("target") || "core";
 
   disableCloaking();
@@ -216,25 +219,11 @@ export default function setupTests(config) {
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
 
-  window.onunhandledrejection = (event) => {
-    // reports test boot failures to testem, so the browser doesn't hang forever
-    window.Testem?.emit(
-      "top-level-error",
-      String(event.reason),
-      window.location.href,
-      "0"
-    );
-  };
-
-  sinon.config = {
-    injectIntoThis: false,
-    injectInto: null,
-    properties: ["spy", "stub", "mock", "clock", "sandbox"],
-    useFakeTimers: true,
-  };
+  // Available in tests without an import
+  window.pauseTest = pauseTest;
 
   // Stop the message bus so we don't get ajax calls
-  MessageBus.stop();
+  window.MessageBus.stop();
 
   // disable logster error reporting
   if (window.Logster) {
@@ -250,8 +239,15 @@ export default function setupTests(config) {
     setupDataElement.remove();
   }
 
+  await loadSprites(setupData.svgSpritePath, "fontawesome");
+
+  // Shortcuts render only when a keyboard is likely; assume one before the
+  // first test, and after each test in testCleanup, so rendering does not
+  // depend on the test browser's pointer.
+  noteKeyboardEvidence();
+
   let app;
-  QUnit.testStart(function (ctx) {
+  QUnit.testStart(async function (ctx) {
     let settings = resetSettings();
 
     resetThemeSettings();
@@ -316,6 +312,15 @@ export default function setupTests(config) {
     sinon.stub(scrollManager, "unbindScrolling");
 
     disableLoadMoreObserver();
+
+    // Rendering tests mount in a zero-height container, so a virtualizer would compute an
+    // empty window and render nothing. Disable it globally (opt back in per-test with
+    // enableVirtualization) so tests mount every row; mirrors disableLoadMoreObserver.
+    //
+    // The fallback is a different code path, in which a row's index and its item can
+    // never disagree. A consumer whose behaviour depends on windowing therefore needs
+    // its own module that opts back in, or its suite says nothing about what ships.
+    disableVirtualization();
   });
 
   QUnit.testDone(function () {
@@ -329,6 +334,11 @@ export default function setupTests(config) {
     run(() => {
       app.destroy();
     });
+
+    // The inspector shim's global list would otherwise pin the destroyed app's registry.
+    globalThis.emberInspectorApps = globalThis.emberInspectorApps?.filter(
+      (entry) => entry.app !== app
+    );
 
     resetPretender();
     clearPresenceState();
@@ -346,10 +356,12 @@ export default function setupTests(config) {
     testContainer.scrollLeft = 0;
 
     flushMap();
+    clearExtraAttributes();
 
-    MessageBus.unsubscribe("*");
+    window.MessageBus.unsubscribe("*");
     localStorage.clear();
     enableLoadMoreObserver();
+    enableVirtualization();
 
     // Release the app reference so the destroyed app isn't retained
     // by this closure until the next test creates a new one.
@@ -383,14 +395,6 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
-  if (!window.Testem) {
-    // Running in a dev server - svg sprites are available
-    // Using a fake 40-char version hash will redirect to the current one
-    loadSprites(
-      "/svg-sprite/localhost/svg--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js",
-      "fontawesome"
-    );
-  }
 
   setLoadedFaker(FakerModule);
 
@@ -400,10 +404,7 @@ export default function setupTests(config) {
     `link[rel=modulepreload][data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
   );
 
-  if (
-    window.EmberENV.RAISE_ON_DEPRECATION ??
-    (isCoreTest || isPreinstalledPluginTest)
-  ) {
+  if (config.RAISE_ON_DEPRECATION ?? (isCoreTest || isPreinstalledPluginTest)) {
     configureRaiseOnDeprecation();
   }
 }

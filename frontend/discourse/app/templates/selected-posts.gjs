@@ -2,17 +2,17 @@ import SelectedPosts from "discourse/components/selected-posts";
 
 export default <template>
   <SelectedPosts
-    @selectedPostsCount={{@controller.selectedPostsCount}}
-    @canSelectAll={{@controller.canSelectAll}}
-    @canDeselectAll={{@controller.canDeselectAll}}
-    @canDeleteSelected={{@controller.canDeleteSelected}}
-    @canMergeTopic={{@controller.canMergeTopic}}
     @canChangeOwner={{@controller.canChangeOwner}}
+    @canDeleteSelected={{@controller.canDeleteSelected}}
+    @canDeselectAll={{@controller.canDeselectAll}}
     @canMergePosts={{@controller.canMergePosts}}
-    @toggleMultiSelect={{@controller.toggleMultiSelect}}
-    @mergePosts={{@controller.mergePosts}}
+    @canMergeTopic={{@controller.canMergeTopic}}
+    @canSelectAll={{@controller.canSelectAll}}
     @deleteSelected={{@controller.deleteSelected}}
     @deselectAll={{@controller.deselectAll}}
+    @mergePosts={{@controller.mergePosts}}
     @selectAll={{@controller.selectAll}}
+    @selectedPostsCount={{@controller.selectedPostsCount}}
+    @toggleMultiSelect={{@controller.toggleMultiSelect}}
   />
 </template>

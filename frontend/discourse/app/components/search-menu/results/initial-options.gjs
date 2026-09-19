@@ -6,6 +6,7 @@ import AssistantItem from "discourse/components/search-menu/results/assistant-it
 import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
 import RecentSearches from "discourse/components/search-menu/results/recent-searches";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import Assistant from "./assistant";
@@ -44,6 +45,14 @@ export default class InitialOptions extends Component {
         this.setAttributesForSearchContextType(this.search.searchContext.type);
       }
     }
+  }
+
+  // These shortcuts promise the term will be run against the index, scoped or
+  // not, so a consumer that offers those choices itself can drop them.
+  get showSearchShortcuts() {
+    return applyValueTransformer("search-menu-search-shortcuts-enabled", true, {
+      location: this.args.location,
+    });
   }
 
   get termMatchesContextTypeKeyword() {
@@ -165,38 +174,42 @@ export default class InitialOptions extends Component {
         }}
       >
         {{#if this.termMatchesContextTypeKeyword}}
-          <AssistantItem
-            @slug={{this.slug}}
-            @extraHint={{true}}
-            @closeSearchMenu={{@closeSearchMenu}}
-            @searchTermChanged={{@searchTermChanged}}
-            @suggestionKeyword={{this.contextTypeKeyword}}
-          />
+          {{#if this.showSearchShortcuts}}
+            <AssistantItem
+              @closeSearchMenu={{@closeSearchMenu}}
+              @extraHint={{true}}
+              @searchTermChanged={{@searchTermChanged}}
+              @slug={{this.slug}}
+              @suggestionKeyword={{this.contextTypeKeyword}}
+            />
+          {{/if}}
         {{else}}
           {{#if
             (or this.search.activeGlobalSearchTerm this.search.searchContext)
           }}
-            {{#if this.search.activeGlobalSearchTerm}}
+            {{#if
+              (and this.search.activeGlobalSearchTerm this.showSearchShortcuts)
+            }}
               <AssistantItem
-                @suffix={{i18n "search.in_topics_posts"}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchAllTopics={{true}}
                 @extraHint={{true}}
+                @searchAllTopics={{true}}
                 @searchTermChanged={{@searchTermChanged}}
+                @suffix={{i18n "search.in_topics_posts"}}
                 @suggestionKeyword={{this.contextTypeKeyword}}
               />
             {{/if}}
 
-            {{#if this.search.searchContext}}
+            {{#if (and this.search.searchContext this.showSearchShortcuts)}}
               <this.contextTypeComponent
-                @slug={{this.slug}}
-                @suggestionKeyword={{this.contextTypeKeyword}}
-                @results={{this.initialResults}}
-                @withInLabel={{this.withInLabel}}
-                @suffix={{this.suffix}}
-                @label={{this.label}}
                 @closeSearchMenu={{@closeSearchMenu}}
+                @label={{this.label}}
+                @results={{this.initialResults}}
                 @searchTermChanged={{@searchTermChanged}}
+                @slug={{this.slug}}
+                @suffix={{this.suffix}}
+                @suggestionKeyword={{this.contextTypeKeyword}}
+                @withInLabel={{this.withInLabel}}
               />
 
               {{#if
@@ -208,6 +221,7 @@ export default class InitialOptions extends Component {
               }}
                 <RecentSearches
                   @closeSearchMenu={{@closeSearchMenu}}
+                  @location={{@location}}
                   @searchTermChanged={{@searchTermChanged}}
                 />
               {{/if}}
@@ -220,12 +234,14 @@ export default class InitialOptions extends Component {
             {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
               <RecentSearches
                 @closeSearchMenu={{@closeSearchMenu}}
+                @location={{@location}}
                 @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
           {{/if}}
         {{/if}}
       </PluginOutlet>
+
     </ul>
   </template>
 }

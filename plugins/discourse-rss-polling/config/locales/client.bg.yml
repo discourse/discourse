@@ -11,3 +11,13 @@ bg:
         feed_url: URL
         discourse_category: Категория
         discourse_tags: Етикети
+        feeds:
+          edit: Редактирай
+          delete: Изтрий
+          save: Запази
+        test:
+          title: Преглед
+          dismiss: Отмени
+        status:
+          enabled: Да е включен
+          disabled: Деактивирани

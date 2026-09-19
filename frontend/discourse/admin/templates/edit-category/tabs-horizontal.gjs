@@ -4,20 +4,16 @@ import { on } from "@ember/modifier";
 import EditCategoryTab from "discourse/admin/components/edit-category-tab";
 import BackButton from "discourse/components/back-button";
 import BreadCrumbs from "discourse/components/bread-crumbs";
-import DPageHeader from "discourse/components/d-page-header";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { and } from "discourse/truth-helpers";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 
 export default class EditCategoryTabsHorizontalTemplate extends Component {
-  evaluateTabCondition(tab, controller) {
-    if (!tab.condition) {
-      return true;
-    }
-    return tab.condition({
-      category: controller.model,
-      siteSettings: controller.siteSettings,
-    });
+  get dynamicCategoryTypeTabs() {
+    return Object.values(this.args.controller.model.categoryTypes ?? {}).filter(
+      (type) => type.id !== "discussion" && type.visible
+    );
   }
 
   get visiblePrimaryTabs() {
@@ -28,22 +24,35 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
   }
 
   get hasPrimaryTabs() {
-    return this.visiblePrimaryTabs.length > 0;
+    return (
+      this.visiblePrimaryTabs.length > 0 ||
+      this.dynamicCategoryTypeTabs.length > 0
+    );
+  }
+
+  evaluateTabCondition(tab, controller) {
+    if (!tab.condition) {
+      return true;
+    }
+    return tab.condition({
+      category: controller.model,
+      siteSettings: controller.siteSettings,
+    });
   }
 
   <template>
     {{#if (and @controller.site.desktopView @controller.model.id)}}
       <BackButton
-        @route="discovery.category"
-        @model={{concat @controller.parentParams.slug "/" @controller.model.id}}
         @label="category.back"
+        @model={{concat @controller.parentParams.slug "/" @controller.model.id}}
+        @route="discovery.category"
       />
     {{/if}}
     <DPageHeader
-      @titleLabel={{@controller.baseTitle}}
-      @showDrawer={{true}}
-      @collapseActionsOnMobile={{false}}
       ...attributes
+      @collapseActionsOnMobile={{false}}
+      @showDrawer={{true}}
+      @titleLabel={{@controller.baseTitle}}
     >
 
       <:actions>
@@ -58,8 +67,8 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
         {{#if @controller.showAdvancedTabs}}
           <EditCategoryTab
             @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
+            @selectedTab={{@controller.selectedTab}}
             @tab="general"
           />
           {{#each registeredEditCategoryTabs as |pluginTab|}}
@@ -67,49 +76,58 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
               {{#if (this.evaluateTabCondition pluginTab @controller)}}
                 <EditCategoryTab
                   @panels={{@controller.panels}}
-                  @selectedTab={{@controller.selectedTab}}
                   @params={{@controller.parentParams}}
+                  @selectedTab={{@controller.selectedTab}}
                   @tab={{pluginTab.id}}
                   @tabTitle={{pluginTab.name}}
                 />
               {{/if}}
             {{/if}}
           {{/each}}
+          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @params={{@controller.parentParams}}
+              @selectedTab={{@controller.selectedTab}}
+              @tab={{dynamicTab.id}}
+              @tabTitle={{dynamicTab.name}}
+            />
+          {{/each}}
           <EditCategoryTab
             @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
+            @selectedTab={{@controller.selectedTab}}
             @tab="security"
           />
           <EditCategoryTab
             @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
+            @selectedTab={{@controller.selectedTab}}
             @tab="settings"
           />
           <EditCategoryTab
             @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
+            @selectedTab={{@controller.selectedTab}}
             @tab="moderation"
           />
           <EditCategoryTab
             @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
+            @selectedTab={{@controller.selectedTab}}
             @tab="images"
           />
           <EditCategoryTab
             @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
+            @selectedTab={{@controller.selectedTab}}
             @tab="topic-template"
           />
           {{#if @controller.siteSettings.tagging_enabled}}
             <EditCategoryTab
               @panels={{@controller.panels}}
-              @selectedTab={{@controller.selectedTab}}
               @params={{@controller.parentParams}}
+              @selectedTab={{@controller.selectedTab}}
               @tab="tags"
             />
           {{/if}}
@@ -117,8 +135,8 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
           {{#if @controller.siteSettings.content_localization_enabled}}
             <EditCategoryTab
               @panels={{@controller.panels}}
-              @selectedTab={{@controller.selectedTab}}
               @params={{@controller.parentParams}}
+              @selectedTab={{@controller.selectedTab}}
               @tab="localizations"
             />
           {{/if}}
@@ -128,8 +146,8 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
               {{#if (this.evaluateTabCondition pluginTab @controller)}}
                 <EditCategoryTab
                   @panels={{@controller.panels}}
-                  @selectedTab={{@controller.selectedTab}}
                   @params={{@controller.parentParams}}
+                  @selectedTab={{@controller.selectedTab}}
                   @tab={{pluginTab.id}}
                   @tabTitle={{pluginTab.name}}
                 />
@@ -139,17 +157,26 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
         {{else if this.hasPrimaryTabs}}
           <EditCategoryTab
             @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
+            @selectedTab={{@controller.selectedTab}}
             @tab="general"
           />
           {{#each this.visiblePrimaryTabs as |pluginTab|}}
             <EditCategoryTab
               @panels={{@controller.panels}}
-              @selectedTab={{@controller.selectedTab}}
               @params={{@controller.parentParams}}
+              @selectedTab={{@controller.selectedTab}}
               @tab={{pluginTab.id}}
               @tabTitle={{pluginTab.name}}
+            />
+          {{/each}}
+          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @params={{@controller.parentParams}}
+              @selectedTab={{@controller.selectedTab}}
+              @tab={{dynamicTab.id}}
+              @tabTitle={{dynamicTab.name}}
             />
           {{/each}}
         {{/if}}
@@ -159,9 +186,9 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
           <BreadCrumbs
             @categories={{@controller.breadcrumbCategories}}
             @category={{@controller.model}}
-            @noSubcategories={{@controller.model.noSubcategories}}
             @editingCategory={{true}}
             @editingCategoryTab={{@controller.selectedTab}}
+            @noSubcategories={{@controller.model.noSubcategories}}
           />
         {{/if}}
       </:drawer>

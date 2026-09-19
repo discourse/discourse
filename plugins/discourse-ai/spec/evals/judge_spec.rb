@@ -47,7 +47,6 @@ RSpec.describe DiscourseAi::Evals::Judge do
     expect(llm_proxy).to have_received(:generate).with(
       satisfy { |prompt| prompt.messages.any? { |msg| msg[:content].include?("hash-output") } },
       user: Discourse.system_user,
-      temperature: 0,
       response_format: DiscourseAi::Evals::Judge::RESPONSE_FORMAT,
       execution_context: nil,
     )
@@ -73,7 +72,6 @@ RSpec.describe DiscourseAi::Evals::Judge do
           prompt.messages.any? { |msg| msg[:content].include?("Candidate 2 (custom):") }
         end,
         user: Discourse.system_user,
-        temperature: 0,
         response_format: DiscourseAi::Evals::Judge::COMPARISON_RESPONSE_FORMAT,
         execution_context: nil,
       )

@@ -6,7 +6,7 @@ describe DiscourseTopicVoting::VotesController do
   let(:topic) { Fabricate(:topic, category_id: category.id) }
 
   before do
-    DiscourseTopicVoting::CategorySetting.create!(category: category)
+    DiscourseTopicVoting::CategorySetting.create!(category:)
     Category.reset_voting_cache
     SiteSetting.topic_voting_show_who_voted = true
     SiteSetting.topic_voting_enabled = true
@@ -52,7 +52,7 @@ describe DiscourseTopicVoting::VotesController do
   end
 
   it "returns 403 when the user already voted" do
-    DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+    DiscourseTopicVoting::Vote.create!(user:, topic:)
 
     post "/voting/vote.json", params: { topic_id: topic.id }
 
@@ -92,7 +92,7 @@ describe DiscourseTopicVoting::VotesController do
     end
 
     it "returns nil for limit fields on unvote" do
-      DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+      DiscourseTopicVoting::Vote.create!(user:, topic:)
 
       post "/voting/unvote.json", params: { topic_id: topic.id }
       expect(response.status).to eq(200)
@@ -118,7 +118,7 @@ describe DiscourseTopicVoting::VotesController do
   end
 
   it "triggers a topic_unvote webhook when unvoting" do
-    DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+    DiscourseTopicVoting::Vote.create!(user:, topic:)
     topic.update_vote_count
 
     Fabricate(:topic_voting_web_hook)
@@ -134,13 +134,13 @@ describe DiscourseTopicVoting::VotesController do
   end
 
   it "does not remove an archived vote when unvoting" do
-    DiscourseTopicVoting::Vote.create!(user: user, topic: topic, archive: true)
+    DiscourseTopicVoting::Vote.create!(user:, topic:, archive: true)
     topic.update_vote_count
 
     post "/voting/unvote.json", params: { topic_id: topic.id }
 
     expect(response.status).to eq(200)
-    expect(DiscourseTopicVoting::Vote.where(user: user, topic: topic, archive: true).count).to eq(1)
+    expect(DiscourseTopicVoting::Vote.where(user:, topic:, archive: true).count).to eq(1)
     expect(topic.reload.vote_count).to eq(1)
   end
 
@@ -155,7 +155,7 @@ describe DiscourseTopicVoting::VotesController do
     stub_const(DiscourseTopicVoting, "VOTER_PREVIEW_LIMIT", 10) do
       Fabricate
         .times(11, :user)
-        .each { |voter| DiscourseTopicVoting::Vote.create!(user: voter, topic: topic) }
+        .each { |voter| DiscourseTopicVoting::Vote.create!(user: voter, topic:) }
 
       get "/voting/who.json", params: { topic_id: topic.id }
 
@@ -164,16 +164,30 @@ describe DiscourseTopicVoting::VotesController do
     end
   end
 
-  it "excludes archived votes and honors a smaller who-voted limit" do
+  it "still returns voters after the topic has been closed" do
+    voter = Fabricate(:user)
+    DiscourseTopicVoting::Vote.create!(user: voter, topic:)
+    topic.update_vote_count
+
+    Jobs.run_immediately!
+    topic.update_status("closed", true, Discourse.system_user)
+
+    get "/voting/who.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.pluck("id")).to eq([voter.id])
+  end
+
+  it "includes archived votes and honors a smaller who-voted limit" do
     older_voter = Fabricate(:user)
     newer_voter = Fabricate(:user)
     archived_voter = Fabricate(:user)
 
-    DiscourseTopicVoting::Vote.create!(user: older_voter, topic: topic, created_at: 2.hours.ago)
-    DiscourseTopicVoting::Vote.create!(user: newer_voter, topic: topic, created_at: 1.hour.ago)
+    DiscourseTopicVoting::Vote.create!(user: older_voter, topic:, created_at: 2.hours.ago)
+    DiscourseTopicVoting::Vote.create!(user: newer_voter, topic:, created_at: 1.hour.ago)
     DiscourseTopicVoting::Vote.create!(
       user: archived_voter,
-      topic: topic,
+      topic:,
       archive: true,
       created_at: Time.zone.now,
     )
@@ -181,6 +195,6 @@ describe DiscourseTopicVoting::VotesController do
     get "/voting/who.json", params: { topic_id: topic.id, limit: 1 }
 
     expect(response.status).to eq(200)
-    expect(response.parsed_body.pluck("id")).to eq([newer_voter.id])
+    expect(response.parsed_body.pluck("id")).to eq([archived_voter.id])
   end
 end

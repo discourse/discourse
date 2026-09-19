@@ -1,18 +1,18 @@
-import DModal from "discourse/components/d-modal";
 import InvitePanel from "discourse/components/invite-panel";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const AddPmParticipants = <template>
   <DModal
-    @title={{i18n @model.title}}
-    @closeModal={{@closeModal}}
-    @bodyClass="invite modal-panel"
     class="add-pm-participants"
+    @bodyClass="invite modal-panel"
+    @closeModal={{@closeModal}}
+    @title={{i18n @model.title}}
   >
     <:body>
       <InvitePanel
-        @inviteModel={{@model.inviteModel}}
         @closeModal={{@closeModal}}
+        @inviteModel={{@model.inviteModel}}
       />
     </:body>
   </DModal>

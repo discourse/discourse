@@ -390,10 +390,10 @@ module DiscourseAi
                       "enabled",
                       "system_prompt",
                       "temperature",
+                      "thinking_effort",
                       "top_p",
                       "vision_enabled",
                       "tools",
-                      "max_context_posts",
                       "allow_chat_channel_mentions",
                       "allow_chat_direct_messages",
                       "allow_topic_mentions",
@@ -429,6 +429,11 @@ module DiscourseAi
                 end
 
                 allowed_updates[:top_p] = updates["top_p"] if updates["top_p"].is_a?(Numeric)
+                if DiscourseAi::Completions::ThinkingConfig.normalize_effort(
+                     updates["thinking_effort"],
+                   ) || updates["thinking_effort"] == "default"
+                  allowed_updates[:thinking_effort] = updates["thinking_effort"]
+                end
 
                 if updates["description"].present?
                   allowed_updates[:description] = updates["description"]
@@ -450,6 +455,7 @@ module DiscourseAi
                           "enabled",
                           "system_prompt",
                           "temperature",
+                          "thinking_effort",
                           "top_p",
                         ),
                     }

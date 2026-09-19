@@ -5,9 +5,24 @@
 # https://translate.discourse.org/
 
 nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_math: "Discourse-formulue"
   js:
     discourse_math:
+      edit_math: "Formule bewerken"
       edit_modal:
+        title: "Formule bewerken"
+        label: "Formule"
         apply: "Toepassen"
+      composer:
+        insert_math: "Formule invoegen"
       insert_modal:
+        title_inline: "Inline formule invoegen"
+        title_block: "Blokformule invoegen"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
         insert: "Invoegen"
+        block_mode: "Blokmodus (weergegeven vergelijking)"

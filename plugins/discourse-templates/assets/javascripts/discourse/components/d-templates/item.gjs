@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 import ItemContent from "./item-content";
 
 export default class DTemplatesItem extends Component {
@@ -23,9 +23,9 @@ export default class DTemplatesItem extends Component {
 
         <div class="actions">
           <DButton
+            class="templates-apply"
             @action={{this.apply}}
             @icon="far-clipboard"
-            class="templates-apply"
           />
         </div>
       </summary>

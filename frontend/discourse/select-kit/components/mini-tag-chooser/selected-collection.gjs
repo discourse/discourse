@@ -4,8 +4,8 @@ import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import discourseTag from "discourse/helpers/discourse-tag";
+import DButton from "discourse/ui-kit/d-button";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 
 @tagName("")
 export default class SelectedCollection extends Component {
@@ -49,13 +49,13 @@ export default class SelectedCollection extends Component {
       <div class="mini-tag-chooser-selected-collection selected-tags">
         {{#each this.tags as |tag|}}
           <DButton
-            @translatedTitle={{tag.value}}
-            @icon="xmark"
-            @action={{fn this.selectKit.deselect tag.value}}
-            tabindex="0"
             class={{tag.classNames}}
+            tabindex="0"
+            @action={{fn this.selectKit.deselect tag.value}}
+            @icon="xmark"
+            @translatedTitle={{tag.value}}
           >
-            {{discourseTag tag.value noHref=true}}
+            {{dDiscourseTag tag.value noHref=true}}
           </DButton>
         {{/each}}
       </div>

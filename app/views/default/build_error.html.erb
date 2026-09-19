@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Frontend build error</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #1e1e1e;
+        color: #f0f0f0;
+        margin: 0;
+        padding: 2rem;
+        line-height: 1.5;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #ff6b6b;
+        margin-top: 0;
+      }
+      pre {
+        background: #111;
+        color: #f0f0f0;
+        padding: 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Frontend build error</h1>
+
+      <% error = @build_error["error"] || {} %>
+      <% if error["messageHtml"] %>
+        <pre><%= error["messageHtml"].html_safe %></pre>
+      <% elsif error["message"] %>
+        <pre><%= error["message"] %></pre>
+      <% end %>
+
+      <script nonce="<%= csp_nonce_placeholder %>">
+        const clientId = crypto.randomUUID();
+        const SEP = "\r\n|\r\n";
+        let lastId = -1;
+
+        (async function poll() {
+          try {
+            const res = await fetch(`/message-bus/${clientId}/poll`, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({ "/file-change": String(lastId) }),
+            });
+            const decoder = new TextDecoder();
+            let buffer = "";
+            for await (const chunk of res.body) {
+              buffer += decoder.decode(chunk, { stream: true });
+              let sep;
+              while ((sep = buffer.indexOf(SEP)) !== -1) {
+                const batch = JSON.parse(buffer.slice(0, sep));
+                buffer = buffer.slice(sep + SEP.length);
+                for (const m of batch) {
+                  if (m.channel === "/file-change") {
+                    return window.location.reload();
+                  } else if (m.channel === "/__status") {
+                    lastId = m.data["/file-change"] ?? lastId;
+                  }
+                }
+              }
+            }
+          } catch {
+            await new Promise((r) => setTimeout(r, 1000));
+          }
+          poll();
+        })();
+      </script>
+    </main>
+  </body>
+</html>

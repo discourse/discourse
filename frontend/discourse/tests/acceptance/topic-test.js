@@ -571,6 +571,15 @@ acceptance(`Topic last visit line`, function (needs) {
       .dom(".topic-post-visited-line.post-10")
       .exists("shows the last visited line on the right post");
 
+    assert
+      .dom(".topic-post-visited-line.post-10 .topic-post-visited-message")
+      .hasAria("level", "2", "the marker is part of heading navigation")
+      .hasAttribute(
+        "role",
+        "heading",
+        "the marker is part of heading navigation"
+      );
+
     await visit("/t/-/9");
 
     assert
@@ -816,5 +825,16 @@ acceptance(`Topic stats update automatically`, function () {
       expectedLikesCount,
       "updates the likes count on the topic stats"
     );
+  });
+});
+
+acceptance(`Topic - Anonymous search disabled`, function (needs) {
+  needs.site({ can_search: false });
+
+  test("shows the likes count without opening search-backed details", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    assert.dom("#post_1 .topic-map .topic-map__likes").exists();
+    assert.dom("#post_1 .topic-map .topic-map__likes-trigger").doesNotExist();
   });
 });

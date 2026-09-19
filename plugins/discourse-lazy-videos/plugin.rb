@@ -4,7 +4,7 @@
 # about: Lazy loading for embedded videos
 # version: 0.1
 # authors: Jan Cernik
-# url: https://github.com/discourse/discourse-lazy-videos
+# url: https://github.com/discourse/discourse/blob/main/plugins/discourse-lazy-videos
 
 enabled_site_setting :lazy_videos_enabled
 
@@ -28,9 +28,13 @@ after_initialize do
     fragment
       .css(".lazy-video-container")
       .each do |video|
-        title = video["data-video-title"]
-        href = video.at_css("a")["href"]
-        video.replace("<p><a href=\"#{href}\">#{title}</a></p>")
+        link = fragment.document.create_element("a")
+        link["href"] = video.at_css("a")["href"].to_s
+        link.add_child(fragment.document.create_text_node(video["data-video-title"].to_s))
+
+        paragraph = fragment.document.create_element("p")
+        paragraph.add_child(link)
+        video.replace(paragraph)
       end
   end
 end

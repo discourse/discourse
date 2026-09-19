@@ -38,12 +38,14 @@ Here are just a few of the incredible communities using Discourse:
 
 To get your environment set up, follow one of the setup guides:
 
-- [Docker / Dev Container](https://meta.discourse.org/t/336366)
+- Docker
+    - [Dev Container in VS Code](https://meta.discourse.org/t/336366) (recommended)
+    - [CLI](https://meta.discourse.org/t/102009)
 - [macOS](https://meta.discourse.org/t/15772)
 - [Ubuntu/Debian](https://meta.discourse.org/t/14727)
 - [Windows](https://meta.discourse.org/t/75149)
 
-Before you get started, ensure you have the following minimum versions: [Ruby 3.4+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13](https://www.postgresql.org/download/), [Redis 7](https://redis.io/download).
+Before you get started, ensure you have the following minimum versions: [Ruby 3.4+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 15](https://www.postgresql.org/download/), [Redis 7](https://redis.io/download).
 
 For more information, check out [the Developer Documentation](https://meta.discourse.org/c/documentation/developer-guides/56).
 
@@ -106,7 +108,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2014 - 2025 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2026 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

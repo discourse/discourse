@@ -1,20 +1,45 @@
-.d-combo-button.--has-menu {
+@use "lib/viewport";
+
+.d-combo-button {
   display: inline-flex;
 
-  .d-combo-button-button {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right-color: transparent;
+  &.--has-menu {
+    .d-combo-button-button {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right-color: transparent;
+    }
+
+    .d-combo-button-menu {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left-color: transparent;
+      margin-left: 0.1em; // more flexible than border, and scales with UI zoom
+
+      &.fk-d-menu__trigger .d-icon {
+        font-size: var(--font-down-1);
+      }
+    }
+
+    // A filled variant reads the gutter above as a slot between two solid fills.
+    // A bordered one has no fill to separate, so the same gutter leaves the top
+    // and bottom border unpainted across it; those halves overlap onto one shared
+    // line instead. :where() adds no specificity, so theme overrides still win.
+    .d-combo-button-button:where(.btn-default) {
+      border-right: var(--d-button-default-border);
+    }
+
+    // Both facing edges stay painted and overlap exactly, so they coincide into a
+    // single 1px divider instead of stacking into a 2px double line.
+    .d-combo-button-menu:where(.btn-default) {
+      border-left: var(--d-button-default-border);
+      margin-left: -1px;
+    }
   }
 
-  .d-combo-button-menu {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left-color: transparent;
-    margin-left: 0.1em; // more flexible than border, and scales with UI zoom
-
-    &.fk-d-menu__trigger .d-icon {
-      font-size: var(--font-down-1);
+  @include viewport.until(sm) {
+    .d-icon {
+      margin-right: 0;
     }
   }
 }

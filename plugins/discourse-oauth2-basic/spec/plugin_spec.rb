@@ -62,6 +62,22 @@ describe OAuth2BasicAuthenticator do
       expect(result.email_valid).to eq(false)
     end
 
+    it "only accepts explicit verified email values" do
+      SiteSetting.oauth2_email_verified = false
+
+      [true, "true", "True", "TRUE"].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(true)
+      end
+
+      [false, nil, "false", "pending", 0, [], {}].each do |email_verified|
+        expect(
+          authenticator.primary_email_verified?(auth.deep_merge(info: { email_verified: })),
+        ).to eq(false)
+      end
+    end
+
     describe "fetch_user_details" do
       before(:each) do
         SiteSetting.oauth2_fetch_user_details = true
@@ -76,7 +92,7 @@ describe OAuth2BasicAuthenticator do
 
       let(:fail_response) { { status: 403 } }
 
-      it "works" do
+      it "supports GET and POST requests" do
         stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(success_response)
         result = authenticator.after_authenticate(auth)
         expect(result.email).to eq("newemail@example.com")
@@ -94,6 +110,12 @@ describe OAuth2BasicAuthenticator do
 
         SiteSetting.oauth2_user_json_url_method = "POST"
         stub_request(:post, SiteSetting.oauth2_user_json_url).to_return(fail_response)
+        result = authenticator.after_authenticate(auth)
+        expect(result.failed).to eq(true)
+      end
+
+      it "returns a standardised result if the request times out" do
+        stub_request(:get, SiteSetting.oauth2_user_json_url).to_timeout
         result = authenticator.after_authenticate(auth)
         expect(result.failed).to eq(true)
       end
@@ -120,6 +142,95 @@ describe OAuth2BasicAuthenticator do
           associated_account = UserAssociatedAccount.last
 
           expect(associated_account.extra[custom_path]).to eq("received")
+        end
+      end
+
+      describe "group syncing" do
+        before { SiteSetting.oauth2_json_groups_path = "account.groups" }
+
+        it "sets associated_groups from the configured path" do
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq(
+            [{ id: "admins", name: "admins" }, { id: "editors", name: "editors" }],
+          )
+        end
+
+        it "clears associated_groups when the path resolves to an empty array" do
+          body = { account: { email: "newemail@example.com", groups: [] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "clears associated_groups when the path doesn't resolve" do
+          body = { account: { email: "newemail@example.com" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "clears associated_groups and logs when the path resolves to a non-array" do
+          body = { account: { email: "newemail@example.com", groups: "admins" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "leaves associated_groups nil when no path is configured" do
+          SiteSetting.oauth2_json_groups_path = ""
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to be_nil
+        end
+      end
+
+      describe "user field mappings" do
+        fab!(:user_field)
+
+        before do
+          SiteSetting.oauth2_user_field_mappings = [
+            { "path" => "account.department", "user_field_id" => user_field.id },
+          ].to_json
+        end
+
+        it "populates user_field_values from the user JSON" do
+          body = { account: { email: "newemail@example.com", department: "Engineering" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+        end
+
+        it "clears the field when the path resolves to an empty string" do
+          body = { account: { email: "newemail@example.com", department: "" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "")
+        end
+
+        it "skips the mapping when the path doesn't resolve" do
+          body = { account: { email: "newemail@example.com" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq({})
+        end
+
+        it "joins array values with commas" do
+          body = { account: { email: "newemail@example.com", department: %w[Eng Ops] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "Eng,Ops")
         end
       end
 

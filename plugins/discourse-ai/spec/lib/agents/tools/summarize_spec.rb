@@ -32,6 +32,22 @@ RSpec.describe DiscourseAi::Agents::Tools::Summarize do
       end
     end
 
+    it "combines multiple LLM text blocks into the custom response" do
+      post = Fabricate(:post)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([["summary ", "stuff"]]) do
+        summarization =
+          described_class.new(
+            { topic_id: post.topic_id, guidance: "why did it happen?" },
+            bot_user: bot_user,
+            llm: llm,
+          )
+        summarization.invoke(&progress_blk)
+
+        expect(summarization.custom_raw).to eq("summary stuff")
+      end
+    end
+
     it "protects hidden data" do
       category = Fabricate(:category)
       category.set_permissions({})

@@ -201,6 +201,29 @@ RSpec.describe Admin::EmailController do
             }
         expect(response.status).to eq(200)
       end
+
+      it "does not turn a post attribute into executable HTML" do
+        attacker = Fabricate(:user, trust_level: TrustLevel[1])
+        payload =
+          '<a class="hashtag-cooked" data-slug="&lt;img src=x onerror=alert(1)&gt;">ignored</a>'
+
+        freeze_time 1.day.ago do
+          sign_in(attacker)
+          post "/posts.json", params: { title: "Attacker-created topic", raw: payload }
+          expect(response.status).to eq(200)
+        end
+
+        sign_in(admin)
+        get "/admin/email/preview-digest.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: admin.username,
+            }
+
+        expect(response.status).to eq(200)
+        preview = Nokogiri::HTML5.parse(response.parsed_body["html_content"])
+        expect(preview.at_css("img[onerror='alert(1)']")).to be_nil
+      end
     end
 
     shared_examples "preview digest inaccessible" do
@@ -279,7 +302,7 @@ RSpec.describe Admin::EmailController do
         expect(response.body).to include("param is missing")
       end
 
-      it "should enqueue the right job, and show a deprecation warning (email_encoded param should be used)" do
+      it "enqueues the email job and warns that email_encoded is preferred" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -294,7 +317,7 @@ RSpec.describe Admin::EmailController do
         )
       end
 
-      it "should enqueue the right job, decoding the raw email param" do
+      it "decodes the raw email and enqueues the email job" do
         expect_enqueued_with(
           job: :process_email,
           args: {
@@ -365,7 +388,7 @@ RSpec.describe Admin::EmailController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should ..." do
+      it "returns parsed email text and elided content" do
         post "/admin/email/advanced-test.json", params: { email: email }
 
         expect(response.status).to eq(200)

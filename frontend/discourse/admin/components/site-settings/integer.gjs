@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { preventDecimal } from "discourse/components/setting-field/integer";
 
 export default class SiteSettingsInteger extends Component {
   @action
@@ -17,24 +18,17 @@ export default class SiteSettingsInteger extends Component {
     this.args.changeValueCallback(num.toString());
   }
 
-  @action
-  preventDecimal(event) {
-    if (event.key === "." || event.key === ",") {
-      event.preventDefault();
-    }
-  }
-
   <template>
     <input
-      {{on "keydown" this.preventDecimal}}
-      {{on "input" this.updateValue}}
+      class="input-setting-integer"
+      disabled={{@disabled}}
+      max={{if @setting.max @setting.max null}}
+      min={{if @setting.min @setting.min null}}
+      step="1"
       type="number"
       value={{@value}}
-      min={{if @setting.min @setting.min null}}
-      max={{if @setting.max @setting.max null}}
-      class="input-setting-integer"
-      step="1"
-      disabled={{@disabled}}
+      {{on "keydown" preventDecimal}}
+      {{on "input" this.updateValue}}
     />
   </template>
 }

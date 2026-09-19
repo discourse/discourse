@@ -36,6 +36,24 @@ export default class AllowLister {
     this._cache = null;
   }
 
+  getAllowList() {
+    this._ensureCache();
+    return this._cache.allowList;
+  }
+
+  getCustom() {
+    this._ensureCache();
+    return this._cache.custom;
+  }
+
+  getAllowedHrefSchemes() {
+    return this._allowedHrefSchemes;
+  }
+
+  getAllowedIframes() {
+    return this._allowedIframes;
+  }
+
   _buildCache() {
     const tagList = {};
     const attrList = {};
@@ -90,24 +108,6 @@ export default class AllowLister {
       this._buildCache();
     }
   }
-
-  getAllowList() {
-    this._ensureCache();
-    return this._cache.allowList;
-  }
-
-  getCustom() {
-    this._ensureCache();
-    return this._cache.custom;
-  }
-
-  getAllowedHrefSchemes() {
-    return this._allowedHrefSchemes;
-  }
-
-  getAllowedIframes() {
-    return this._allowedIframes;
-  }
 }
 
 // Only add to `default` when you always want your allowlist to occur. In other words,
@@ -121,6 +121,12 @@ export const DEFAULT_LIST = [
   "a.onebox",
   `a.inline-onebox`,
   `a.inline-onebox-loading`,
+  "a[class=inline-onebox --gh-status-draft]",
+  "a[class=inline-onebox --gh-status-open]",
+  "a[class=inline-onebox --gh-status-approved]",
+  "a[class=inline-onebox --gh-status-changes_requested]",
+  "a[class=inline-onebox --gh-status-merged]",
+  "a[class=inline-onebox --gh-status-closed]",
   "a[data-bbcode]",
   "a[data-word]",
   "a[name]",

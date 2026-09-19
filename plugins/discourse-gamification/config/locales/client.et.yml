@@ -36,3 +36,8 @@ et:
       custom_range_from: "Kellelt"
       admin:
         name: "Nimi"
+    discourse_workflows:
+      gamification_score:
+        username: "Kasutaja"
+        date: "Kuupäev"
+        description: "Kirjeldus"

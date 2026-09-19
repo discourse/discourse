@@ -5,7 +5,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AiDefaultLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-default-llm-selector";
 
-module("Integration | Component | ai-default-llm-selector", function (hooks) {
+module("Integration | Component | AiDefaultLlmSelector", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -135,5 +135,52 @@ module("Integration | Component | ai-default-llm-selector", function (hooks) {
     await settled();
 
     assert.strictEqual(savedValue, "1", "saves model ID to backend");
+  });
+
+  test("invokes @onChange after a successful save", async function (assert) {
+    pretender.put("/admin/site_settings/ai_default_llm_model", () => {
+      return response({});
+    });
+
+    let onChangeCalls = 0;
+    const onChange = () => {
+      onChangeCalls += 1;
+    };
+
+    await render(
+      <template><AiDefaultLlmSelector @onChange={{onChange}} /></template>
+    );
+
+    const selector = selectKit(".ai-configure-default-llm__setting .combo-box");
+    await selector.expand();
+    await selector.selectRowByValue("1");
+    await settled();
+
+    assert.strictEqual(onChangeCalls, 1, "calls @onChange once after save");
+  });
+
+  test("does not roll back the selection when @onChange fails after save", async function (assert) {
+    pretender.put("/admin/site_settings/ai_default_llm_model", () => {
+      return response({});
+    });
+
+    const onChange = () => {
+      throw { responseJSON: { errors: ["Refresh failed"] } };
+    };
+
+    await render(
+      <template><AiDefaultLlmSelector @onChange={{onChange}} /></template>
+    );
+
+    const selector = selectKit(".ai-configure-default-llm__setting .combo-box");
+    await selector.expand();
+    await selector.selectRowByValue("1");
+    await settled();
+
+    assert.strictEqual(
+      selector.header().value(),
+      "1",
+      "keeps the saved selection even when the follow-up refresh fails"
+    );
   });
 });

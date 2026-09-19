@@ -14,6 +14,7 @@ RSpec.describe TopicEmbed do
     let(:contents) do
       "<p>hello world new post <a href='/hello'>hello</a> <img src='images/wat.jpg'></p>"
     end
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)
@@ -111,9 +112,9 @@ RSpec.describe TopicEmbed do
 
         # It caches the embed content
         expect(post.topic.topic_embed.embed_content_cache).to eq(contents)
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
 
         # It converts relative URLs to absolute when expanded
-        stub_request(:get, url).to_return(status: 200, body: contents)
         expect(TopicEmbed.expanded_for(post)).to have_tag(
           "img",
           with: {
@@ -153,13 +154,19 @@ RSpec.describe TopicEmbed do
         expect(topic_embed.embed_content_cache).to eq("new contents")
       end
 
-      it "Should leave uppercase Feed Entry URL untouched in content" do
+      it "updates an explicitly selected cook method on reimport" do
+        TopicEmbed.import(user, url, title, contents, cook_method: Post.cook_methods[:regular])
+
+        expect(post.reload.cook_method).to eq(Post.cook_methods[:regular])
+      end
+
+      it "leaves an uppercase feed entry URL untouched in content" do
         cased_url = "http://eviltrout.com/ABCD"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
-      it "Should leave lowercase Feed Entry URL untouched in content" do
+      it "leaves a lowercase feed entry URL untouched in content" do
         cased_url = "http://eviltrout.com/abcd"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
@@ -324,7 +331,7 @@ RSpec.describe TopicEmbed do
           expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
         end
 
-        it "will revert to defaults if the modifier returns nil" do
+        it "reverts to defaults when the modifier returns nil" do
           plugin = Plugin::Instance.new
           plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
 
@@ -387,6 +394,22 @@ RSpec.describe TopicEmbed do
       it "does update tags if tags are empty" do
         imported_page = TopicEmbed.import(user, url, title, contents, tags: [])
         expect(imported_page.topic.tags).to match_array([])
+      end
+
+      it "does not revise the post when the tags cannot all be saved" do
+        SiteSetting.max_tags_per_topic = 1
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+
+        Post.any_instance.expects(:revise).never
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+      end
+
+      it "does not revise the post when the existing tags match the incoming tags" do
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+        SiteSetting.max_tags_per_topic = 1
+
+        Post.any_instance.expects(:revise).never
+        TopicEmbed.import(user, url, title, contents, tags: tags)
       end
     end
 
@@ -477,6 +500,7 @@ RSpec.describe TopicEmbed do
         post = TopicEmbed.import(user, url, title, long_content)
 
         expect(post.raw).not_to include(long_content)
+        expect(post.topic.topic_embed.content_truncated).to eq(true)
       end
 
       it "keeps everything in the imported post when truncation is disabled" do
@@ -484,6 +508,7 @@ RSpec.describe TopicEmbed do
         post = TopicEmbed.import(user, url, title, long_content)
 
         expect(post.raw).to include(long_content)
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
       end
 
       it "looks at first div when there is no paragraph" do
@@ -493,6 +518,63 @@ RSpec.describe TopicEmbed do
         post = TopicEmbed.import(user, url, title, no_para)
 
         expect(post.raw).to include("testing it")
+      end
+
+      it "keeps the complete markup when truncation would only remove a wrapper" do
+        wrapped_content = "<div><p>#{"Complete paragraph. " * 30}</p></div>"
+        SiteSetting.embed_truncate = true
+
+        post = TopicEmbed.import(user, url, title, wrapped_content)
+
+        expect(post.raw).to include(wrapped_content)
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
+      end
+
+      it "keeps image-only content" do
+        SiteSetting.embed_truncate = true
+        post = TopicEmbed.import(user, url, title, "<img src='/comic.png' alt='comic'>")
+
+        expect(post.raw).to have_tag(
+          "img",
+          with: {
+            src: "http://eviltrout.com/comic.png",
+            alt: "comic",
+          },
+        )
+        expect(post.topic.topic_embed.content_truncated).to eq(false)
+      end
+
+      it "truncates independently of the cook method" do
+        SiteSetting.embed_truncate = true
+        post =
+          TopicEmbed.import(
+            user,
+            url,
+            title,
+            "**Meetup overview**\n\nTalk details",
+            cook_method: Post.cook_methods[:regular],
+            truncate: true,
+          )
+
+        expect(post.raw).not_to include("Talk details")
+        expect(post.cooked).to have_tag("strong", text: "Meetup overview")
+        expect(post.topic.topic_embed.content_truncated).to eq(true)
+      end
+
+      it "refreshes expanded content when the excerpt is unchanged" do
+        SiteSetting.embed_truncate = true
+        first_paragraph = "<p>#{"Same introduction. " * 10}</p>"
+        original_contents = "#{first_paragraph}<p>Original ending.</p>"
+        updated_contents = "#{first_paragraph}<p>Updated ending.</p>"
+
+        post = TopicEmbed.import(user, url, title, original_contents)
+        expect(TopicEmbed.expanded_for(post)).to include("Original ending.")
+
+        TopicEmbed.import(user, url, title, updated_contents)
+
+        expect(post.reload.raw).not_to include("Updated ending.")
+        expect(post.topic.topic_embed.reload.embed_content_cache).to eq(updated_contents)
+        expect(TopicEmbed.expanded_for(post)).to include("Updated ending.")
       end
     end
   end
@@ -512,6 +594,23 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.topic_id_for_embed("http://examples.com/post/248")).to eq(nil)
       expect(TopicEmbed.topic_id_for_embed("http://example.com/post/24")).to eq(nil)
       expect(TopicEmbed.topic_id_for_embed("http://example.com/post")).to eq(nil)
+    end
+
+    it "finds the topic id when the stored embed_url has mixed case" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "https://Example.com/Post/248")
+
+      expect(TopicEmbed.topic_id_for_embed("http://example.com/post/248")).to eq(
+        topic_embed.topic_id,
+      )
+    end
+
+    it "returns the oldest topic id when both http and https embeds exist" do
+      http_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248")
+      Fabricate(:topic_embed, embed_url: "https://example.com/post/248")
+
+      expect(TopicEmbed.topic_id_for_embed("https://example.com/post/248")).to eq(
+        http_embed.topic_id,
+      )
     end
 
     it "finds the topic id when the embed_url contains a query string" do
@@ -747,6 +846,36 @@ RSpec.describe TopicEmbed do
         }
       end
     end
+
+    context "when canonical URL points to a different domain" do
+      fab!(:user)
+      let(:title) { "Some article title" }
+      let(:original_url) { "http://staging.example.com/article/123" }
+      let(:canonical_url) { "http://production.example.com/article/123" }
+      let(:original_content) do
+        "<head><link rel=\"canonical\" href=\"#{canonical_url}\"></head><body>Article content</body>"
+      end
+      let(:canonical_content) do
+        "<title>#{title}</title><body>Article content from canonical</body>"
+      end
+
+      before do
+        stub_request(:get, original_url).to_return(status: 200, body: original_content)
+        stub_request(:head, canonical_url)
+        stub_request(:get, canonical_url).to_return(status: 200, body: canonical_content)
+      end
+
+      it "stores the original URL as embed_url so embeds can be found" do
+        Jobs.run_immediately!
+        post = TopicEmbed.import_remote(original_url, { title: title, user: user })
+
+        topic_embed = TopicEmbed.find_by(topic_id: post.topic_id)
+        expect(topic_embed.embed_url).to include("staging.example.com")
+
+        found_topic_id = TopicEmbed.topic_id_for_embed(original_url)
+        expect(found_topic_id).to eq(post.topic_id)
+      end
+    end
   end
 
   describe ".absolutize_urls" do
@@ -802,6 +931,15 @@ RSpec.describe TopicEmbed do
         "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
       expect(html).to eq(expected_html)
     end
+
+    it "escapes the URL in the raw HTML footer" do
+      url = "http://eviltrout.com/'onmouseover='window.topicEmbedXssExecuted=true"
+      link = Nokogiri::HTML5.fragment(TopicEmbed.imported_from_html(url)).at_css("a")
+
+      expect(link["href"]).to eq(url)
+      expect(link["onmouseover"]).to be_nil
+      expect(link.text).to eq(url)
+    end
   end
 
   describe ".expanded_for" do
@@ -809,24 +947,73 @@ RSpec.describe TopicEmbed do
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) { "<p>hello world new post :D</p>" }
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)
 
     it "returns embed content" do
-      stub_request(:get, url).to_return(status: 200, body: contents)
+      stub_request(:get, url).to_return(status: 200, body: "<p>remote content</p>")
       post = TopicEmbed.import(user, url, title, contents)
-      expect(TopicEmbed.expanded_for(post)).to include(contents)
+      expanded = TopicEmbed.expanded_for(post)
+
+      expect(expanded).to include(contents)
+      expect(expanded).not_to include("remote content")
+      expect(WebMock).not_to have_requested(:get, url)
     end
 
-    it "updates the embed content cache" do
-      stub_request(:get, url)
-        .to_return(status: 200, body: contents)
-        .then
-        .to_return(status: 200, body: "contents changed")
+    it "falls back to the remote page for a legacy embed without cached content" do
+      remote_contents =
+        "<html><body><article><p>Content from the remote page.</p></article></body></html>"
+      stub_request(:get, url).to_return(status: 200, body: remote_contents)
       post = TopicEmbed.import(user, url, title, contents)
-      TopicEmbed.expanded_for(post)
-      expect(post.topic.topic_embed.reload.embed_content_cache).to include("contents changed")
+      post.topic.topic_embed.update!(embed_content_cache: nil, content_truncated: nil)
+
+      expect(TopicEmbed.expanded_for(post)).to include("Content from the remote page.")
+      expect(post.topic.topic_embed.reload.embed_content_cache).to include(
+        "Content from the remote page.",
+      )
+    end
+
+    it "does not fetch the remote page for an imported item with missing cached content" do
+      stub_request(:get, url).to_return(status: 200, body: "<p>remote content</p>")
+      post = TopicEmbed.import(user, url, title, contents)
+      post.topic.topic_embed.update!(embed_content_cache: nil, content_truncated: true)
+
+      expect { TopicEmbed.expanded_for(post) }.to raise_error(Discourse::NotFound)
+      expect(WebMock).not_to have_requested(:get, url)
+    end
+
+    it "cooks cached Markdown using the post cook method" do
+      post =
+        TopicEmbed.import(
+          user,
+          url,
+          title,
+          "**Meetup overview**\n\nTalk details",
+          cook_method: Post.cook_methods[:regular],
+          truncate: true,
+        )
+
+      expanded = TopicEmbed.expanded_for(post)
+
+      expect(expanded).to have_tag("strong", text: "Meetup overview")
+      expect(expanded).to include("Talk details")
+    end
+
+    it "sanitizes cached raw HTML" do
+      post =
+        TopicEmbed.import(
+          user,
+          url,
+          title,
+          "<p>Safe content</p><script>window.evil = true</script>",
+        )
+
+      expanded = TopicEmbed.expanded_for(post)
+
+      expect(expanded).to include("Safe content")
+      expect(expanded).not_to have_tag("script")
     end
   end
 end

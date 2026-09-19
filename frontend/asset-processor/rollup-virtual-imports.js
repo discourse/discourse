@@ -1,112 +1,309 @@
-import { federatedExportNameFor } from "./federated-modules-helper";
-
-const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
+const SUPPORTED_FILE_EXTENSIONS = [
+  ".js",
+  ".js.es6",
+  ".hbs",
+  ".gjs",
+  ".ts",
+  ".gts",
+];
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
+// Scanned by name at runtime, at any depth, so these have to stay registered with `define()`.
+const EAGER_DIRECTORIES = [
+  "connectors",
+  "services",
+  "models",
+  "adapters",
+  "discourse-markdown",
+  "markdown-it",
+  "pre-initializers",
+  "initializers",
+  "api-initializers",
+  "instance-initializers",
+];
+
+const EAGER_DIRECTORY_REGEX = new RegExp(
+  `(^|/)(${EAGER_DIRECTORIES.join("|")})/`
+);
+
+function isEagerModule(compatModuleName) {
+  return (
+    EAGER_DIRECTORY_REGEX.test(compatModuleName) ||
+    // `mapRoutes` matches on the suffix alone.
+    /route-map$/.test(compatModuleName)
+  );
+}
+
+export function stripExtension(filename) {
+  return filename.replace(/\.[^\.]+(\.es6)?$/, "");
+}
+
+function normalizeModules(moduleFilenames, label) {
+  const records = [];
+  const warnings = [];
+  const seen = new Set();
+
+  for (const moduleFilename of moduleFilenames) {
+    if (moduleFilename.endsWith(".d.ts")) {
+      continue;
+    }
+
+    if (
+      !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
+    ) {
+      warnings.push(
+        `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
+      );
+      continue;
+    }
+
+    const filenameWithoutExtension = stripExtension(moduleFilename);
+
+    let compatModuleName = filenameWithoutExtension;
+
+    if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
+      const isTemplate = moduleFilename.endsWith(".hbs");
+      const isInTemplatesDirectory = moduleFilename.match(/(^|\/)templates\//);
+
+      if (isTemplate && !isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(
+          IS_CONNECTOR_REGEX,
+          "$1templates/connectors/"
+        );
+      } else if (!isTemplate && isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(/(^|\/)templates\//, "$1");
+      }
+    }
+
+    const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
+      ? moduleFilename
+      : filenameWithoutExtension;
+
+    if (seen.has(importPath)) {
+      continue;
+    }
+    seen.add(importPath);
+
+    records.push({ importPath, compatModuleName });
+  }
+
+  return { records, warnings };
+}
+
+// Anchored to the top-level segment: a component under `components/chat/routes/` is not a route.
+const ROUTE_FILE_REGEX = /^[^/]+\/(routes|controllers|templates)\/(.+)$/;
+
+function routeNameFor(compatModuleName) {
+  const match = compatModuleName.match(ROUTE_FILE_REGEX);
+
+  if (!match) {
+    return null;
+  }
+
+  const [, type, path] = match;
+
+  // Discourse nests connectors and classic component templates under `templates/` too.
+  if (
+    type === "templates" &&
+    (path.startsWith("connectors/") || path.startsWith("components/"))
+  ) {
+    return null;
+  }
+
+  return path.split("/").join(".");
+}
+
+// Ember creates these without a `this.route` call, so no route map names them.
+const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
+
+function bundleNameFor(routeName, bundleByRoute) {
+  let name = routeName;
+
+  while (name) {
+    if (bundleByRoute[name]) {
+      return bundleByRoute[name];
+    }
+
+    const dot = name.lastIndexOf(".");
+
+    if (!IMPLICIT_ROUTE_SUFFIXES.includes(name.slice(dot + 1))) {
+      return null;
+    }
+
+    name = dot === -1 ? "" : name.slice(0, dot);
+  }
+
+  return null;
+}
+
+export function routeBundlesFor(records, bundleByRoute) {
+  if (!bundleByRoute) {
+    return [];
+  }
+
+  const bundles = new Map();
+
+  for (const record of records) {
+    const routeName = routeNameFor(record.compatModuleName);
+    const bundleName = routeName && bundleNameFor(routeName, bundleByRoute);
+
+    if (!bundleName) {
+      continue;
+    }
+
+    let bundle = bundles.get(bundleName);
+
+    if (!bundle) {
+      bundle = { bundleName, names: new Set(), records: [] };
+      bundles.set(bundleName, bundle);
+    }
+
+    bundle.names.add(routeName);
+    bundle.records.push(record);
+  }
+
+  return [...bundles.values()].map((bundle) => ({
+    ...bundle,
+    names: [...bundle.names].sort(),
+  }));
+}
+
+export function routeNamesFor(moduleFilenames, bundleByRoute) {
+  const { records } = normalizeModules(moduleFilenames);
+
+  return new Set(
+    routeBundlesFor(records, bundleByRoute).flatMap((bundle) => bundle.names)
+  );
+}
+
+export function labelFor({ pluginName, themeId }) {
+  return pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
+}
+
+function renderImports(records) {
+  const identifiers = new Map(
+    records.map((record, i) => [record, `Mod${i + 1}`])
+  );
+
+  const lines = records.map(
+    (record) =>
+      `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+  );
+
+  return { lines, identifiers };
+}
+
+function renderMap(name, records, identifiers) {
+  return [
+    `const ${name} = {`,
+    ...records.map(
+      (record) => `  "${record.compatModuleName}": ${identifiers.get(record)},`
+    ),
+    "};",
+  ];
+}
+
 export default {
-  "virtual:entrypoint": async (
-    moduleFilenames,
-    { themeId },
-    { basePath, context }
-  ) => {
-    let output = `const compatModules = {};`;
+  "virtual:entrypoint": (moduleFilenames, opts, entrypointName) => {
+    const { frontendConfig } = opts;
 
-    if (themeId) {
-      output += cleanMultiline(`
-        import "virtual:init-settings";
-      `);
-    }
-
-    const moduleFilenamesSet = new Set(moduleFilenames);
-    const exportedModules = new Set();
-
-    let i = 1;
-    for (const moduleFilename of moduleFilenames) {
-      if (
-        !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
-      ) {
-        // Unsupported file type. Log a warning and skip
-        output += `console.warn("[THEME ${themeId}] Unsupported file type: ${moduleFilename}");\n`;
-        continue;
-      }
-
-      const filenameWithoutExtension = moduleFilename.replace(
-        /\.[^\.]+(\.es6)?$/,
-        ""
-      );
-
-      let compatModuleName = filenameWithoutExtension;
-
-      if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
-        const isTemplate = moduleFilename.endsWith(".hbs");
-        const isInTemplatesDirectory =
-          moduleFilename.match(/(^|\/)templates\//);
-
-        if (isTemplate && !isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            IS_CONNECTOR_REGEX,
-            "$1templates/connectors/"
-          );
-        } else if (!isTemplate && isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            /(^|\/)templates\//,
-            "$1"
-          );
-        }
-      }
-
-      const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
-        ? moduleFilename
-        : filenameWithoutExtension;
-
-      if (exportedModules.has(importPath)) {
-        continue;
-      }
-      exportedModules.add(importPath);
-
-      output += `import * as Mod${i} from "./${importPath}";\n`;
-      output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
-
-      const resolvedId = await context.resolve(
-        `./${importPath}`,
-        `${basePath}virtual:main`
-      );
-      const loadedModule = await context.load(resolvedId);
-
-      const reexportPairs = loadedModule.exports.map((exportedName) => {
-        return `${exportedName} as ${federatedExportNameFor(compatModuleName, exportedName)}`;
-      });
-
-      const isIndexModule =
-        compatModuleName.endsWith("/index") &&
-        !moduleFilenamesSet.has(moduleFilename.replace("/index", ""));
-
-      if (isIndexModule) {
-        loadedModule.exports.forEach((exportedName) => {
-          const federatedExportName = federatedExportNameFor(
-            compatModuleName.replace(/\/index$/, ""),
-            exportedName
-          );
-          reexportPairs.push(`${exportedName} as ${federatedExportName}`);
-        });
-      }
-
-      output += `export * as ${federatedExportNameFor(compatModuleName, "*")} from "./${importPath}";\n`;
-      output += `export {\n${reexportPairs.join(",\n")}\n} from "./${importPath}";\n`;
-
-      i += 1;
-    }
-
-    output += "export default compatModules;\n";
-
-    return output;
-  },
-  "virtual:init-settings": ({ themeId, settings }) => {
-    return (
-      `import { registerSettings } from "discourse/lib/theme-settings-store";\n\n` +
-      `registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});\n`
+    const { records, warnings } = normalizeModules(
+      moduleFilenames,
+      labelFor(opts)
     );
+
+    // QUnit only finds a test by running the module that registers it, so tests stay eager.
+    if (entrypointName === "test" || !frontendConfig?.staticModules) {
+      const { lines, identifiers } = renderImports(records);
+
+      return [
+        ...lines,
+        ...warnings,
+        ...renderMap("compatModules", records, identifiers),
+        "export { compatModules };",
+        "export default compatModules;",
+        "",
+      ].join("\n");
+    }
+
+    // `exports` maps the name other bundles import by to the module behind it. That module can be
+    // named with or without the `/index` a colocated component adds.
+    const publicNamesByPath = new Map();
+
+    for (const [publicName, internalName] of Object.entries(
+      frontendConfig.exports ?? {}
+    )) {
+      const path = stripExtension(internalName);
+
+      for (const candidate of [path, `${path}/index`]) {
+        if (!publicNamesByPath.has(candidate)) {
+          publicNamesByPath.set(candidate, []);
+        }
+        publicNamesByPath.get(candidate).push(publicName);
+      }
+    }
+
+    const bundles = routeBundlesFor(records, opts.routeTables?.bundleByRoute);
+
+    const eager = records.filter((record) =>
+      isEagerModule(record.compatModuleName)
+    );
+
+    // One module can be exported under several names.
+    const exported = records.flatMap((record) =>
+      (publicNamesByPath.get(stripExtension(record.importPath)) ?? []).map(
+        (publicName) => ({ publicName, record })
+      )
+    );
+
+    const imported = [
+      ...new Set([...eager, ...exported.map(({ record }) => record)]),
+    ];
+    const { lines, identifiers } = renderImports(imported);
+
+    return [
+      ...lines,
+      ...warnings,
+      ...renderMap("compatModules", eager, identifiers),
+      "const pluginExports = {",
+      ...exported.map(
+        ({ publicName, record }) =>
+          `  "${publicName}": ${identifiers.get(record)},`
+      ),
+      "};",
+      "export const routes = [",
+      ...bundles.map(
+        (bundle) =>
+          `  { names: ${JSON.stringify(bundle.names)},` +
+          ` load: () => import("virtual:route:${entrypointName}:${bundle.bundleName}") },`
+      ),
+      "];",
+      "export { compatModules };",
+      "export default pluginExports;",
+      "",
+    ].join("\n");
+  },
+  // The default export goes to `Resolver#addModules`, so it must be a plain module map.
+  "virtual:route": (moduleFilenames, opts, bundleName) => {
+    const { records } = normalizeModules(moduleFilenames, labelFor(opts));
+    const bundle = routeBundlesFor(
+      records,
+      opts.routeTables?.bundleByRoute
+    ).find((candidate) => candidate.bundleName === bundleName);
+
+    if (!bundle) {
+      return null;
+    }
+
+    const { lines, identifiers } = renderImports(bundle.records);
+
+    return [
+      ...lines,
+      ...renderMap("routeCompatModules", bundle.records, identifiers),
+      "export default routeCompatModules;",
+      "",
+    ].join("\n");
   },
   "virtual:theme": ({ themeId }) => {
     return cleanMultiline(`
@@ -120,6 +317,49 @@ export default {
     `);
   },
 };
+
+// Virtual modules the loader resolves only as a redirect target. They are kept
+// out of the default export, and given a null-byte id, so that plugin and theme
+// code cannot import them by name.
+export const privateVirtualImports = {
+  "virtual:attributed-plugin-api": (opts) =>
+    attributedEntryFunction({
+      module: "discourse/lib/plugin-api",
+      exportName: "withPluginApi",
+      opts,
+    }),
+  "virtual:attributed-api-initializer": (opts) =>
+    attributedEntryFunction({
+      module: "discourse/lib/api",
+      exportName: "apiInitializer",
+      opts,
+    }),
+};
+
+// Wraps a core API-entry function so calls from this plugin or theme carry its
+// source on `opts`. Plugin and theme imports of `module` resolve here, so the
+// wrapper must export everything they are allowed to import from it.
+function attributedEntryFunction({ module, exportName, opts }) {
+  return cleanMultiline(`
+    import { _INTERNAL_SOURCE_KEY } from "discourse/lib/api";
+    import { ${exportName} as _${exportName} } from "${module}";
+
+    const SOURCE = Object.freeze(${JSON.stringify(customizationSourceFor(opts))});
+
+    export function ${exportName}(...args) {
+      // A leading string is the legacy version argument, which shifts opts along.
+      const optsIndex = typeof args[0] === "string" ? 2 : 1;
+      args[optsIndex] = { ...args[optsIndex], [_INTERNAL_SOURCE_KEY]: SOURCE };
+      return _${exportName}(...args);
+    }
+  `);
+}
+
+function customizationSourceFor({ themeId, pluginName }) {
+  return pluginName
+    ? { type: "plugin", name: pluginName }
+    : { type: "theme", id: themeId };
+}
 
 function cleanMultiline(str) {
   const lines = str.split("\n");

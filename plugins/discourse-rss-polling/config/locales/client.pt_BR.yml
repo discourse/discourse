@@ -14,14 +14,44 @@ pt_BR:
     rss_polling:
       title: Sondagem de RSS
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: criar feed RSS
+            update_rss_polling_feed: atualizar feed RSS
+            destroy_rss_polling_feed: excluir feed RSS
+            enable_rss_polling_feed: ativar feed RSS
+            disable_rss_polling_feed: desativar feed RSS
       rss_polling:
-        feed: Configurações do feed
-        discourse: Configurações do Discourse
+        feed_settings: Configurações de feed
+        discourse_settings: Configurações do Discourse
         author: Autor(a)
         feed_url: URL
+        feed_url_must_be_http: Informe uma URL de feed válida começando com http:// ou https://.
         discourse_category: Categoria
         discourse_tags: Etiquetas
+        required_tags_hint: "Esta categoria requer uma destas tags - adicione uma ou tópicos importados serão rejeitados:"
+        required_tag_error: 'Adicione pelo menos %{count} tag(s) do grupo "%{tag_group}", caso contrário, tópicos importados serão rejeitados.'
         feed_category_filter: Filtro de categoria
-        documentation: Documentação da configuração da sondagem de RSS
-        destroy_feed:
-          confirm: "Você tem certeza de que quer excluir este feed?"
+        feeds:
+          add: Adicionar feed
+          add_header: Adicionar feed
+          edit_header: Editar feed
+          empty: Você ainda não configurou nenhum feed.
+          edit: Editar
+          delete: Excluir
+          enable: Ativar feed
+          disable: Desativar feed
+          back: Voltar aos feeds
+          save: Salvar
+          confirm_delete: "Você tem certeza de que quer excluir este feed?"
+          delete_success: Feed excluído
+          save_success: Feed salvo
+          enable_success: Feed ativado
+          disable_success: Feed desativado
+        test:
+          title: Pré-visualizar
+          dismiss: Descartar
+        status:
+          enabled: Ativados
+          disabled: Desativados

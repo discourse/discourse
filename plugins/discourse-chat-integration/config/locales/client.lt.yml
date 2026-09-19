@@ -92,3 +92,6 @@ lt:
               label: Žinutės
             url:
               label: Nuoroda
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "Žinutės"

@@ -1,50 +1,50 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="admin-embedding admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.embedding.title"}}
       @descriptionLabel={{i18n "admin.config.embedding.header_description"}}
       @learnMoreUrl="https://meta.discourse.org/t/embed-discourse-comments-on-another-website-via-javascript/31963"
+      @titleLabel={{i18n "admin.config.embedding.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/customize/embedding"
           @label={{i18n "admin.config.embedding.title"}}
+          @path="/admin/customize/embedding"
         />
       </:breadcrumbs>
       <:actions as |actions|>
         <actions.Primary
+          class="admin-embedding__header-add-host"
+          @label="admin.embedding.add_host"
           @route="adminEmbedding.new"
           @title="admin.embedding.add_host"
-          @label="admin.embedding.add_host"
-          class="admin-embedding__header-add-host"
         />
       </:actions>
       <:tabs>
-        <NavItem
-          @route="adminEmbedding.settings"
-          @label="admin.embedding.nav.settings"
+        <DNavItem
           class="admin-embedding-tabs__settings"
+          @label="admin.embedding.nav.settings"
+          @route="adminEmbedding.settings"
         />
-        <NavItem
-          @route="adminEmbedding.index"
-          @label="admin.embedding.nav.hosts"
+        <DNavItem
           class="admin-embedding-tabs__hosts"
+          @label="admin.embedding.nav.hosts"
+          @route="adminEmbedding.index"
         />
-        <NavItem
-          @route="adminEmbedding.postsAndTopics"
-          @label="admin.embedding.nav.posts_and_topics"
+        <DNavItem
           class="admin-embedding-tabs__posts-and-topics"
+          @label="admin.embedding.nav.posts_and_topics"
+          @route="adminEmbedding.postsAndTopics"
         />
-        <NavItem
-          @route="adminEmbedding.crawlers"
-          @label="admin.embedding.nav.crawlers"
+        <DNavItem
           class="admin-embedding-tabs__crawlers"
+          @label="admin.embedding.nav.crawlers"
+          @route="adminEmbedding.crawlers"
         />
       </:tabs>
     </DPageHeader>

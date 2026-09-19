@@ -5,12 +5,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty, isPresent } from "@ember/utils";
-import AsyncContent from "discourse/components/async-content";
 import TopicStatus from "discourse/components/topic-status";
-import boundCategoryLink from "discourse/helpers/bound-category-link";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { searchForTerm } from "discourse/lib/search";
 import { eq, or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 // args:
@@ -48,7 +48,7 @@ export default class ChooseTopic extends Component {
       }
     }
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -118,15 +118,15 @@ export default class ChooseTopic extends Component {
       </label>
 
       <input
+        id="choose-topic-title"
+        placeholder={{i18n "choose_topic.title.placeholder"}}
+        type="text"
         {{on "keydown" this.ignoreEnter}}
         {{on "input" this.onTopicTitleChange}}
-        type="text"
-        placeholder={{i18n "choose_topic.title.placeholder"}}
-        id="choose-topic-title"
       />
 
       <div class="choose-topic__search-results">
-        <AsyncContent
+        <DAsyncContent
           @asyncData={{this.loadTopics}}
           @context={{this.topicTitle}}
           @debounce={{true}}
@@ -148,20 +148,21 @@ export default class ChooseTopic extends Component {
             <div class="choose-topic-list" role="radiogroup">
               {{#each topics as |t|}}
                 <div class="controls existing-topic">
+                  {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label class="radio">
                     <input
-                      {{on "click" (fn this.chooseTopic t)}}
                       checked={{eq t.id @selectedTopicId}}
-                      type="radio"
-                      name="choose_topic_id"
                       id={{concat "choose-topic-" t.id}}
+                      name="choose_topic_id"
+                      type="radio"
+                      {{on "click" (fn this.chooseTopic t)}}
                     />
-                    <TopicStatus @topic={{t}} @disableActions={{true}} />
+                    <TopicStatus @disableActions={{true}} @topic={{t}} />
                     <span class="topic-title">
-                      {{replaceEmoji t.title}}
+                      {{dReplaceEmoji t.title}}
                     </span>
                     <span class="topic-categories">
-                      {{boundCategoryLink
+                      {{dBoundCategoryLink
                         t.category
                         ancestors=t.category.predecessors
                         hideParent=true
@@ -173,7 +174,7 @@ export default class ChooseTopic extends Component {
               {{/each}}
             </div>
           </:content>
-        </AsyncContent>
+        </DAsyncContent>
       </div>
     </div>
   </template>

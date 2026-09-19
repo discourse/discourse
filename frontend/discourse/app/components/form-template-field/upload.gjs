@@ -5,8 +5,6 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
-import PickFilesButton from "discourse/components/pick-files-button";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import {
   autoTrackedArray,
@@ -14,6 +12,8 @@ import {
 } from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FormTemplateFieldUpload extends Component {
   @service appEvents;
@@ -38,26 +38,6 @@ export default class FormTemplateFieldUpload extends Component {
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
   }
 
-  @action
-  handleReplaceText(oldVal, newVal) {
-    if (this.uploadValue?.includes(oldVal)) {
-      const escapedOldVal = oldVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const regex = new RegExp(escapedOldVal, "g");
-      this.uploadValue = this.uploadValue.replace(regex, newVal ?? "");
-
-      // If it was a deletion, try to find and remove the file from uploadedFiles list
-      if (!newVal) {
-        this.uploadedFiles = this.uploadedFiles.filter((file) => {
-          return !oldVal.includes(file.short_url);
-        });
-      }
-
-      schedule("afterRender", () => {
-        this.args.onChange?.();
-      });
-    }
-  }
-
   get uploadStatusLabel() {
     return this.uppyUpload.uploading || this.uppyUpload.processing
       ? "form_templates.upload_field.uploading"
@@ -66,6 +46,25 @@ export default class FormTemplateFieldUpload extends Component {
 
   get disabled() {
     return this.uppyUpload.uploading || this.uppyUpload.processing;
+  }
+
+  @action
+  handleReplaceText(oldVal, newVal) {
+    if (!this.uploadValue?.includes(oldVal)) {
+      return;
+    }
+
+    this.uploadValue = this.uploadValue.replace(oldVal, newVal ?? "");
+
+    if (!newVal) {
+      this.uploadedFiles = this.uploadedFiles.filter((file) => {
+        return !oldVal.includes(file.short_url);
+      });
+    }
+
+    schedule("afterRender", () => {
+      this.args.onChange?.();
+    });
   }
 
   /**
@@ -138,7 +137,7 @@ export default class FormTemplateFieldUpload extends Component {
         <label class="form-template-field__label">
           {{@attributes.label}}
           {{#if @validations.required}}
-            {{icon "asterisk" class="form-template-field__required-indicator"}}
+            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
           {{/if}}
         </label>
       {{/if}}
@@ -149,29 +148,29 @@ export default class FormTemplateFieldUpload extends Component {
         </span>
       {{/if}}
 
-      <PickFilesButton
-        @registerFileInput={{this.uppyUpload.setup}}
-        @fileInputClass="form-template-field__upload"
-        @fileInputId={{this.fileUploadElementId}}
+      <DPickFilesButton
+        @acceptedFileTypesString={{@attributes.file_types}}
+        @acceptedFormatsOverride={{@attributes.file_types}}
         @allowMultiple={{@attributes.allow_multiple}}
-        @showButton={{true}}
-        @onFilesPicked={{true}}
+        @fileInputClass="form-template-field__upload"
+        @fileInputDisabled={{this.disabled}}
+        @fileInputId={{this.fileUploadElementId}}
         @icon="upload"
         @label={{this.uploadStatusLabel}}
-        @fileInputDisabled={{this.disabled}}
-        @acceptedFormatsOverride={{@attributes.file_types}}
-        @acceptedFileTypesString={{@attributes.file_types}}
+        @onFilesPicked={{true}}
+        @registerFileInput={{this.uppyUpload.setup}}
+        @showButton={{true}}
       />
 
       {{#if this.uploadedFiles}}
         <ul class="form-template-field__uploaded-files">
           {{#each this.uploadedFiles as |file|}}
             <li>
-              {{icon "file"}}
+              {{dIcon "file"}}
               <a
                 href={{file.url}}
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >{{file.file_name}}</a>
               <span>{{file.human_filesize}}</span>
             </li>
@@ -180,13 +179,13 @@ export default class FormTemplateFieldUpload extends Component {
       {{/if}}
 
       <input
-        type="text"
-        name={{@id}}
-        value={{this.uploadValue}}
-        required={{if @validations.required "required" ""}}
-        class="form-template-field__upload-hidden-input"
-        tabindex="-1"
         aria-hidden="true"
+        class="form-template-field__upload-hidden-input"
+        name={{@id}}
+        required={{if @validations.required "required" ""}}
+        tabindex="-1"
+        type="text"
+        value={{this.uploadValue}}
       />
     </div>
   </template>

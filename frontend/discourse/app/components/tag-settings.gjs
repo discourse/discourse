@@ -4,17 +4,20 @@ import { array, concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
 import Form from "discourse/components/form";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synonyms-confirmation";
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
+import { slugify } from "discourse/lib/utilities";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import { eq } from "discourse/truth-helpers";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class TagSettings extends Component {
@@ -23,6 +26,7 @@ export default class TagSettings extends Component {
   @service toasts;
   @service siteSettings;
   @service store;
+  @service appEvents;
 
   @tracked form = null;
   @tracked tags = [];
@@ -32,16 +36,6 @@ export default class TagSettings extends Component {
     this.loadTags();
   }
 
-  async loadTags() {
-    try {
-      const tags = await this.store.findAll("tag");
-      this.tags = tags.content.map((tag) => ({
-        id: tag.id,
-        name: tag.name,
-      }));
-    } catch {}
-  }
-
   get tagNames() {
     return this.tags.map((t) => t.name);
   }
@@ -49,6 +43,7 @@ export default class TagSettings extends Component {
   get formData() {
     return {
       name: this.args.tag.name,
+      locale: this.args.tag.locale,
       slug: this.args.tag.slug,
       description: this.args.tag.description || "",
       synonyms: this.args.tag.synonyms || [],
@@ -97,24 +92,41 @@ export default class TagSettings extends Component {
           ? i18n("tagging.tag_groups_info_prefix.one")
           : i18n("tagging.tag_groups_info_prefix.other");
       const groups = (this.args.tag.tag_groups || [])
-        .map((tg) => `<a href="/tag_groups/${tg.id}">${tg.name}</a>`)
+        .map(
+          (tg) => `<a href="${getURL(`/tag_groups/${tg.id}`)}">${tg.name}</a>`
+        )
         .join(", ");
       parts.push(`${prefix}${groups}.`);
     }
 
     if (this.hasCategories) {
-      const categoriesHtml = this.args.tag.categories
-        .map(
-          (cat) =>
-            `<a href="/c/${cat.slug}/${cat.id}" class="badge-category">${cat.name}</a>`
-        )
-        .join(" ");
-      parts.push(`${i18n("tagging.restricted_to")} ${categoriesHtml}.`);
+      parts.push(
+        i18n("tagging.category_restrictions", {
+          count: this.args.tag.categories.length,
+          categories: this.args.tag.categories
+            .map((cat) => categoryBadgeHTML(cat))
+            .join(" "),
+        })
+      );
     } else if (this.isCategoryRestricted) {
       parts.push(i18n("tagging.category_restricted"));
     }
 
     return parts.join(" ");
+  }
+
+  get blockedTags() {
+    return [this.args.tag?.name].filter(Boolean);
+  }
+
+  async loadTags() {
+    try {
+      const tags = await this.store.findAll("tag");
+      this.tags = tags.content.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+      }));
+    } catch {}
   }
 
   @action
@@ -133,38 +145,6 @@ export default class TagSettings extends Component {
       });
     } else {
       await this.#performSave(data);
-    }
-  }
-
-  async #performSave(data) {
-    const tag = this.args.tag;
-
-    try {
-      const result = await ajax(`/tag/${tag.id}/settings.json`, {
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify({ tag_settings: data }),
-      });
-
-      if (result.tag_settings) {
-        this.args.tag.setProperties(result.tag_settings);
-
-        if (result.tag_settings.slug !== this.args.parentParams.tag_slug) {
-          this.router.replaceWith(
-            "tag.edit.tab",
-            result.tag_settings.slug,
-            result.tag_settings.id,
-            this.args.selectedTab
-          );
-        }
-      }
-
-      this.toasts.success({
-        duration: "short",
-        data: { message: i18n("tagging.settings.saved") },
-      });
-    } catch (error) {
-      popupAjaxError(error);
     }
   }
 
@@ -211,8 +191,48 @@ export default class TagSettings extends Component {
     this.form?.set("new_synonyms", newSynonyms);
   }
 
-  get blockedTags() {
-    return [this.args.tag?.name].filter(Boolean);
+  @action
+  validateSlug(name, slug, { addError }) {
+    if (slug?.trim() && slug !== slugify(slug)) {
+      addError(name, {
+        title: i18n("tagging.settings.slug"),
+        message: i18n("tagging.settings.invalid_slug"),
+      });
+    }
+  }
+
+  async #performSave(data) {
+    const tag = this.args.tag;
+
+    try {
+      const result = await ajax(`/tag/${tag.id}/settings.json`, {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({ tag_settings: data }),
+      });
+
+      if (result.tag_settings) {
+        this.args.tag.setProperties(result.tag_settings);
+
+        if (result.tag_settings.slug !== this.args.parentParams.tag_slug) {
+          this.router.replaceWith(
+            "tag.edit.tab",
+            result.tag_settings.slug,
+            result.tag_settings.id,
+            this.args.selectedTab
+          );
+        }
+
+        this.appEvents.trigger("tag-info:updated", result.tag_settings.id);
+      }
+
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("tagging.settings.saved") },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>
@@ -222,19 +242,19 @@ export default class TagSettings extends Component {
         @hideTabs={{true}}
       >
         <:breadcrumbs>
-          <DBreadcrumbsItem @path="/tags" @label={{i18n "tagging.tags"}} />
+          <DBreadcrumbsItem @label={{i18n "tagging.tags"}} @path="/tags" />
           <DBreadcrumbsItem
-            @path="/tag/{{@tag.slug}}/{{@tag.id}}"
             @label={{@tag.name}}
+            @path="/tag/{{@tag.slug}}/{{@tag.id}}"
           />
           <DBreadcrumbsItem
-            @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/general"
             @label={{i18n "edit"}}
+            @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/general"
           />
           {{#if this.showLocalizationsTab}}
             <DBreadcrumbsItem
-              @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/{{@selectedTab}}"
               @label={{i18n (concat "tagging.settings." @selectedTab)}}
+              @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/{{@selectedTab}}"
             />
           {{/if}}
         </:breadcrumbs>
@@ -244,9 +264,9 @@ export default class TagSettings extends Component {
             }}</span>
           <span class="tag-settings-title__dropdown">
             <TagDropdown
+              aria-label={{i18n "tagging.settings.select_tag"}}
               @tags={{this.tags}}
               @value={{@tag.name}}
-              aria-label={{i18n "tagging.settings.select_tag"}}
             />
           </span>
         </:title>
@@ -263,63 +283,64 @@ export default class TagSettings extends Component {
 
       {{#if this.showLocalizationsTab}}
         <div class="d-nav-submenu">
-          <HorizontalOverflowNav class="d-nav-submenu__tabs">
+          <DHorizontalOverflowNav class="d-nav-submenu__tabs">
             <li>
               <LinkTo
-                @route="tag.edit.tab"
                 @models={{array
                   @parentParams.tag_slug
                   @parentParams.tag_id
                   "general"
                 }}
+                @route="tag.edit.tab"
               >
                 {{i18n "tagging.settings.general"}}
               </LinkTo>
             </li>
             <li>
               <LinkTo
-                @route="tag.edit.tab"
                 @models={{array
                   @parentParams.tag_slug
                   @parentParams.tag_id
                   "localizations"
                 }}
+                @route="tag.edit.tab"
               >
                 {{i18n "tagging.settings.localizations"}}
               </LinkTo>
             </li>
-          </HorizontalOverflowNav>
+          </DHorizontalOverflowNav>
         </div>
       {{/if}}
 
       <Form
-        @data={{this.formData}}
-        @onSubmit={{this.save}}
-        @onRegisterApi={{this.registerForm}}
         class="tag-settings__form"
+        @data={{this.formData}}
+        @onRegisterApi={{this.registerForm}}
+        @onSubmit={{this.save}}
         as |form transientData|
       >
         {{#if (eq @selectedTab "general")}}
           <form.Field
-            @name="name"
-            @type="input"
-            @title={{i18n "tagging.settings.name"}}
             @format="large"
+            @name="name"
+            @title={{i18n "tagging.settings.name"}}
+            @type="input"
             @validation="required"
             as |field|
           >
             <field.Control
+              class="tag-name-input"
               placeholder={{i18n "tagging.settings.name_placeholder"}}
               @maxlength={{this.siteSettings.max_tag_length}}
-              class="tag-name-input"
             />
           </form.Field>
 
           <form.Field
-            @name="slug"
-            @type="input"
-            @title={{i18n "tagging.settings.slug"}}
             @format="large"
+            @name="slug"
+            @title={{i18n "tagging.settings.slug"}}
+            @type="input"
+            @validate={{this.validateSlug}}
             as |field|
           >
             <field.Control
@@ -328,30 +349,29 @@ export default class TagSettings extends Component {
           </form.Field>
 
           <form.Field
-            @name="description"
-            @type="textarea"
-            @title={{i18n "tagging.description"}}
             @format="large"
+            @name="description"
+            @title={{i18n "tagging.description"}}
+            @type="composer"
             @validation="length:0,1000"
             as |field|
           >
-            <field.Control @height={{80}} />
+            <field.Control @height={{200}} />
           </form.Field>
 
           <form.Field
-            @name="synonyms"
-            @type="custom"
-            @title={{i18n "tagging.synonyms"}}
             @description={{i18n
               "tagging.settings.synonyms_subtitle"
               name=@tag.name
             }}
             @format="large"
+            @name="synonyms"
+            @title={{i18n "tagging.synonyms"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
               <MiniTagChooser
-                @value={{transientData.synonyms}}
                 @onChange={{this.handleSynonymChange}}
                 @options={{hash
                   everyTag=true
@@ -360,19 +380,21 @@ export default class TagSettings extends Component {
                   filterPlaceholder="tagging.settings.add_synonym_placeholder"
                   maximum=200
                 }}
+                @value={{transientData.synonyms}}
               />
             </field.Control>
           </form.Field>
         {{else if (eq @selectedTab "localizations")}}
           <TagSettingsLocalizations
+            @form={{form}}
+            @locale={{transientData.locale}}
             @localizations={{transientData.localizations}}
             @tagId={{@tag.id}}
-            @form={{form}}
           />
         {{/if}}
 
         <form.Actions>
-          <form.Submit @label="tagging.settings.save" id="save-tag" />
+          <form.Submit id="save-tag" @label="tagging.settings.save" />
         </form.Actions>
       </Form>
     </div>

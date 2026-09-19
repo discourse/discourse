@@ -1,10 +1,38 @@
 # frozen_string_literal: true
 
+require "strscan"
+
 module DiscourseDataExplorer
   module DataExplorer
+    # the lookbehind skips `::type` casts
+    PARAM_REGEX = /(?<!:):([a-zA-Z_][a-zA-Z0-9_]*)/
+
     # Used for ftype calls, see https://www.rubydoc.info/gems/pg/0.17.1/PG%2FResult:ftype
     # and /usr/include/postgresql/server/catalog/pg_type_d.h
     PG_TYPE_OID_JSON = 114
+    PG_TYPE_OID_JSON_ARRAY = 199
+    PG_TYPE_OID_JSONB = 3802
+    PG_TYPE_OID_JSONB_ARRAY = 3807
+    PG_TYPE_OIDS_JSON = [
+      PG_TYPE_OID_JSON,
+      PG_TYPE_OID_JSON_ARRAY,
+      PG_TYPE_OID_JSONB,
+      PG_TYPE_OID_JSONB_ARRAY,
+    ]
+    PG_TYPE_OID_TEXT = 25
+    PG_TYPE_OID_DATE = 1082
+    PG_TYPE_OID_TIMESTAMP = 1114
+
+    JOIN_TABLE_ID_COLUMNS = %w[
+      user_badge_id
+      group_user_id
+      topic_user_id
+      category_user_id
+      topic_allowed_user_id
+      topic_allowed_group_id
+      associated_group_id
+      watched_word_group_id
+    ]
 
     # Run a data explorer query on the currently connected database.
     #
@@ -19,6 +47,15 @@ module DiscourseDataExplorer
     #   duration_nanos - the query duration, in nanoseconds
     #   explain - the query
     def self.run_query(query, req_params = {}, opts = {})
+      run_query_with_values(query, query.cast_params(req_params, opts), opts)
+    rescue ValidationError => e
+      { error: e, duration_nanos: 0 }
+    end
+
+    # Execute a query binding an already-resolved hash of parameter values,
+    # skipping the declared-parameter casting `run_query` does. Callers with
+    # undeclared parameters, such as a workflow's raw SQL node, use this directly.
+    def self.run_query_with_values(query, values = {}, opts = {})
       # Safety checks
       # see test 'doesn't allow you to modify the database #2'
       if query.sql =~ /;/
@@ -26,9 +63,11 @@ module DiscourseDataExplorer
         return { error: err, duration_nanos: 0 }
       end
 
-      query_args = {}
+      executable_sql = nil
+      binds = []
       begin
-        query_args = query.cast_params(req_params, opts)
+        executable_sql, binds =
+          rewrite_to_binds(strip_comments(query.sql), values, bind_oid_hints(query))
       rescue ValidationError => e
         return { error: e, duration_nanos: 0 }
       end
@@ -42,7 +81,7 @@ module DiscourseDataExplorer
           # Set a statement timeout so we can't tie up the server
           DB.exec "SET LOCAL statement_timeout = 10000"
 
-          # SQL comments are for the benefits of the slow queries log
+          # Add trusted instrumentation after removing comments from the stored query.
           started_by = opts[:current_user]&.username
           sql = <<~SQL
             /*
@@ -51,30 +90,25 @@ module DiscourseDataExplorer
             #{"* Started by: #{started_by}" if started_by}
             */
             WITH query AS (
-            #{query.sql}
+            #{executable_sql}
             ) SELECT * FROM query
             LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
           SQL
 
           time_start = Time.now
 
-          # Using MiniSql::InlineParamEncoder directly instead of DB.param_encoder because current implementation of
-          # DB.param_encoder is meant for SQL fragments and not an entire SQL string.
-          sql =
-            MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection).encode(
-              sql,
-              query_args,
-            )
-
-          result = ActiveRecord::Base.connection.raw_connection.async_exec(sql)
+          result = ActiveRecord::Base.connection.raw_connection.async_exec_params(sql, binds)
           result.check # make sure it's done
           time_end = Time.now
 
           if opts[:explain]
             explain =
-              DB
-                .query_hash("EXPLAIN #{query.sql}", query_args)
-                .map { |row| row["QUERY PLAN"] }.join "\n"
+              ActiveRecord::Base
+                .connection
+                .raw_connection
+                .async_exec_params("EXPLAIN #{executable_sql}", binds)
+                .map { |row| row["QUERY PLAN"] }
+                .join("\n")
           end
 
           # All done. Issue a rollback anyways, just in case
@@ -91,9 +125,167 @@ module DiscourseDataExplorer
         pg_result: result,
         duration_secs: time_end - time_start,
         explain: explain,
-        params_full: query_args,
+        params_full: values,
       }
     end
+
+    # Walk the SQL once with PostgreSQL's own lexical rules, yielding each span
+    # as [type, text] in order. `type` is one of :code, :string, :identifier,
+    # :dollar_quote, :line_comment, :block_comment. Only :code spans hold syntax
+    # a parameter marker can affect; every literal kind is reported so callers
+    # can leave it alone. Unterminated constructs are yielded whole so that
+    # PostgreSQL reports the syntax error.
+    def self.scan_sql_segments(sql)
+      scanner = StringScanner.new(sql)
+
+      until scanner.eos?
+        start = scanner.pos
+        if scanner.scan(/--[^\n]*/)
+          yield :line_comment, scanner.matched
+        elsif scanner.scan(%r{/\*})
+          depth = 1
+          while depth > 0 && scanner.skip_until(%r{\*/|/\*})
+            depth += scanner.matched == "/*" ? 1 : -1
+          end
+          scanner.terminate if depth > 0
+          yield :block_comment, sql[start...scanner.pos]
+        elsif scanner.match?(/'/)
+          # backslash escapes only apply to E'' strings
+          e_string = sql[0...scanner.pos].match?(/(?<![\w"])[eE]\z/)
+          pattern = e_string ? /'(?:''|[^'\\]|\\.)*'/m : /'(?:''|[^'])*'/
+          yield :string, scanner.scan(pattern) || scan_rest(scanner)
+        elsif scanner.match?(/"/)
+          yield :identifier, scanner.scan(/"(?:""|[^"])*"/) || scan_rest(scanner)
+        elsif scanner.match?(/\$\w*\$/)
+          yield :dollar_quote, scanner.scan(/\$(\w*)\$.*?\$\1\$/m) || scan_rest(scanner)
+        else
+          yield :code, scanner.scan(%r{[^-/'"$]+}) || scanner.getch
+        end
+      end
+    end
+    private_class_method :scan_sql_segments
+
+    # Rewrite each `:name` marker that sits in code position to a positional
+    # `$N` placeholder and collect its value, so PostgreSQL binds the values out
+    # of band instead of us splicing them into the SQL text. Markers inside any
+    # literal are left untouched. A list value expands to a comma-separated run
+    # of placeholders so `IN (:ids)` keeps working, and an empty list becomes
+    # `NULL`. A marker inside a dollar-quoted literal cannot be bound at all, so
+    # it is rejected rather than silently left as literal text.
+    def self.rewrite_to_binds(sql, params, bind_oid_hints = {})
+      return sql, [] if params.blank?
+
+      values = params.transform_keys(&:to_s)
+      binds = []
+      slots = {}
+      result = +""
+
+      scan_sql_segments(sql) do |type, text|
+        case type
+        when :code
+          result << text.gsub(PARAM_REGEX) do |matched|
+            name = $1
+            if values.key?(name)
+              slots[name] ||= placeholders_for(values[name], binds, bind_oid_hints[name])
+            else
+              matched
+            end
+          end
+        when :dollar_quote
+          if text.scan(PARAM_REGEX).any? { |match| values.key?(match.first) }
+            raise ValidationError.new("Parameters cannot be used inside dollar-quoted literals")
+          end
+          result << text
+        else
+          result << text
+        end
+      end
+
+      [result, binds]
+    end
+
+    # Postgres can't infer a type for a parameter used only somewhere like a
+    # bare `:param IS NULL`, so bind these declared types explicitly rather
+    # than leaving them unknown. `time` is left out: its value is formatted as
+    # a full timestamp string, which isn't valid input for a bare `time` column.
+    DECLARED_TYPE_OIDS = {
+      string: PG_TYPE_OID_TEXT,
+      string_list: PG_TYPE_OID_TEXT,
+      date: PG_TYPE_OID_DATE,
+      datetime: PG_TYPE_OID_TIMESTAMP,
+    }.freeze
+
+    def self.bind_oid_hints(query)
+      query
+        .params
+        .each_with_object({}) do |param, hints|
+          oid = DECLARED_TYPE_OIDS[param.type]
+          hints[param.identifier.to_s] = oid if oid
+        end
+    end
+    private_class_method :bind_oid_hints
+
+    def self.placeholders_for(value, binds, oid_hint)
+      # A fixed NULL token preserves the old literal's contextual type inference
+      # without interpolating any user-provided text into the SQL.
+      return "NULL" if value.nil?
+
+      if value.is_a?(Array)
+        return "NULL" if value.empty?
+        value
+          .map do |element|
+            next "NULL" if element.nil?
+
+            binds << bind_for(element, oid_hint)
+            "$#{binds.length}"
+          end
+          .join(", ")
+      else
+        binds << bind_for(value, oid_hint)
+        "$#{binds.length}"
+      end
+    end
+    private_class_method :placeholders_for
+
+    # Mirror how an inlined literal used to be typed: numbers and booleans carry
+    # their PostgreSQL type so results decode back to the same Ruby class, while
+    # everything else binds as an unknown-typed literal that the surrounding
+    # expression coerces and that reads back as text, unless `oid_hint` overrides it.
+    def self.bind_for(value, oid_hint = nil)
+      case value
+      when Integer
+        { value: value.to_s, type: 20 }
+      when Float
+        { value: value.to_s, type: 701 }
+      when true, false
+        { value: value.to_s, type: 16 }
+      when Time
+        { value: value.utc.iso8601, type: oid_hint || 0 }
+      else
+        { value: value.to_s, type: oid_hint || 0 }
+      end
+    end
+    private_class_method :bind_for
+
+    def self.strip_comments(sql)
+      result = +""
+      scan_sql_segments(sql) do |type, text|
+        case type
+        when :line_comment
+          # dropped; its trailing newline is a separate code span
+        when :block_comment
+          result << " "
+        else
+          result << text
+        end
+      end
+      result
+    end
+
+    def self.scan_rest(scanner)
+      scanner.rest.tap { scanner.terminate }
+    end
+    private_class_method :scan_rest
 
     def self.extra_data_pluck_fields
       @extra_data_pluck_fields ||= {
@@ -104,19 +296,29 @@ module DiscourseDataExplorer
         },
         badge: {
           class: Badge,
-          fields: %i[id name badge_type_id description icon],
-          include: [:badge_type],
+          fields: %i[id name badge_type_id description icon image_upload_id],
+          include: %i[badge_type image_upload],
           serializer: SmallBadgeSerializer,
         },
         post: {
           class: Post,
-          fields: %i[id topic_id post_number cooked user_id],
-          include: [:user],
+          fields: %i[
+            id
+            topic_id
+            post_number
+            cooked
+            user_id
+            post_type
+            deleted_at
+            deleted_by_id
+            hidden
+          ],
+          include: [:user, { topic: :category }],
           serializer: SmallPostWithExcerptSerializer,
         },
         topic: {
           class: Topic,
-          fields: %i[id title slug posts_count locale],
+          fields: %i[id title fancy_title slug posts_count locale],
           serializer: BasicTopicSerializer,
         },
         tag_group: {
@@ -146,48 +348,47 @@ module DiscourseDataExplorer
 
     def self.column_regexes
       @column_regexes ||=
-        extra_data_pluck_fields
-          .map { |key, val| /(#{val[:class].to_s.underscore})_id$/ if val[:class] }
-          .compact
+        extra_data_pluck_fields.filter_map do |key, val|
+          [/#{val[:class].to_s.underscore}_id$/, key] if val[:class]
+        end + [[/_(by|editor)_id$/, :user]]
     end
 
-    def self.add_extra_data(pg_result)
+    def self.relation_for(col)
+      prefix = col[/^(\w+)\$/, 1]&.to_sym
+      return prefix if extra_data_pluck_fields.key?(prefix)
+      return if JOIN_TABLE_ID_COLUMNS.include?(col)
+
+      column_regexes.find { |rgx, _| rgx.match?(col) }&.last
+    end
+
+    def self.add_extra_data(pg_result, guardian:)
       needed_classes = {}
       ret = {}
       col_map = {}
+      hidden = {}
       pg_result.fields.each_with_index do |col, idx|
-        rgx = column_regexes.find { |r| r.match col }
-        if rgx
-          cls = (rgx.match col)[1].to_sym
-          needed_classes[cls] ||= []
-          needed_classes[cls] << idx
-        elsif col =~ /^(\w+)\$/
-          cls = $1.to_sym
-          needed_classes[cls] ||= []
-          needed_classes[cls] << idx
+        if (cls = relation_for(col))
+          (needed_classes[cls] ||= []) << idx
         elsif col =~ /^\w+_url$/
           col_map[idx] = "url"
-        elsif col =~ /^\w+_payload$/ || col == "payload" || pg_result.ftype(idx) == PG_TYPE_OID_JSON
+        elsif col =~ /^\w+_payload$/ || col == "payload" ||
+              PG_TYPE_OIDS_JSON.include?(pg_result.ftype(idx))
           col_map[idx] = "json"
         end
       end
 
       needed_classes.each do |cls, column_nums|
-        next if column_nums.blank?
         support_info = extra_data_pluck_fields[cls]
         next unless support_info
 
         column_nums.each { |col_n| col_map[col_n] = cls }
-
-        if support_info[:ignore]
-          ret[cls] = []
-          next
-        end
+        next if support_info[:ignore]
 
         ids = Set.new
         column_nums.each { |col_n| ids.merge(pg_result.column_values(col_n)) }
         ids.delete nil
         ids.map! &:to_i
+        ids = ids.take(SiteSetting.data_explorer_query_result_limit)
 
         object_class = support_info[:class]
         all_objs = object_class
@@ -195,54 +396,83 @@ module DiscourseDataExplorer
         all_objs =
           all_objs
             .select(support_info[:fields])
-            .where(id: ids.to_a.sort)
+            .where(id: ids.sort)
             .includes(support_info[:include])
             .order(:id)
 
+        if guardian
+          case cls
+          when :post
+            allowed = guardian.can_see_topic_ids(topic_ids: all_objs.map(&:topic_id)).to_set
+            visible_post_types = Topic.visible_post_types(guardian.user)
+
+            all_objs, denied =
+              all_objs.partition do |post|
+                next true if guardian.is_admin?
+                next false if !allowed.include?(post.topic_id)
+                next false if visible_post_types.exclude?(post.post_type)
+                if guardian.is_moderator? ||
+                     guardian.is_category_group_moderator?(post.topic.category)
+                  next true
+                end
+
+                (!post.trashed? || guardian.can_see_deleted_post?(post)) &&
+                  (!post.hidden? || guardian.can_see_hidden_post?(post))
+              end
+          when :topic
+            allowed = guardian.can_see_topic_ids(topic_ids: ids).to_set
+            all_objs, denied = all_objs.partition { |topic| allowed.include?(topic.id) }
+          end
+
+          hidden[cls] = denied.map(&:id) if denied.present? && SiteSetting.detailed_404
+        end
+
         opts = { each_serializer: support_info[:serializer] }
         opts[:only] = support_info[:only] if support_info[:only]
+        opts[:scope] = guardian if guardian
         ret[cls] = ActiveModel::ArraySerializer.new(all_objs, **opts)
       end
-      [ret, col_map]
+      [ret, col_map, hidden]
     end
 
     def self.sensitive_column_names
       %w[
-        #_IP_Addresses
         topic_views.ip_address
         users.ip_address
         users.registration_ip_address
+        user_ip_address_histories.ip_address
+        user_auth_tokens.client_ip
+        user_auth_token_logs.client_ip
         incoming_links.ip_address
         topic_link_clicks.ip_address
         user_histories.ip_address
-        #_Emails
         email_tokens.email
-        users.email
+        user_emails.email
+        user_emails.normalized_email
         invites.email
         user_histories.email
         email_logs.to_address
         posts.raw_email
         badge_posts.raw_email
-        #_Secret_Tokens
-        email_tokens.token
-        email_logs.reply_key
-        api_keys.key
+        email_tokens.token_hash
+        post_reply_keys.reply_key
+        api_keys.key_hash
+        user_api_keys.key_hash
         site_settings.value
-        users.auth_token
-        users.password_hash
-        users.salt
-        #_Authentication_Info
+        user_auth_tokens.auth_token
+        user_auth_tokens.prev_auth_token
+        user_auth_token_logs.auth_token
+        user_passwords.password_hash
+        user_passwords.password_salt
         user_open_ids.email
         oauth2_user_infos.uid
         oauth2_user_infos.email
-        facebook_user_infos.facebook_user_id
-        facebook_user_infos.email
-        twitter_user_infos.twitter_user_id
-        github_user_infos.github_user_id
+        user_associated_accounts.provider_uid
+        user_associated_accounts.info
+        user_associated_accounts.credentials
+        user_associated_accounts.extra
         single_sign_on_records.external_email
         single_sign_on_records.external_id
-        google_user_infos.google_user_id
-        google_user_infos.email
       ]
     end
 
@@ -435,7 +665,6 @@ module DiscourseDataExplorer
         "topics.featured_user2_id": :users,
         "topics.featured_user3_id": :users,
         "topics.featured_user4_id": :users,
-        "topics.featured_user5_id": :users,
         "users.seen_notification_id": :notifications,
         "users.uploaded_avatar_id": :uploads,
         "users.primary_group_id": :groups,
@@ -445,20 +674,18 @@ module DiscourseDataExplorer
         "badges.badge_grouping_id": :badge_groupings,
         "post_actions.related_post_id": :posts,
         "color_scheme_colors.color_scheme_id": :color_schemes,
-        "color_schemes.versioned_id": :color_schemes,
         "incoming_links.incoming_referer_id": :incoming_referers,
         "incoming_referers.incoming_domain_id": :incoming_domains,
-        "post_replies.reply_id": :posts,
+        "post_replies.reply_post_id": :posts,
         "quoted_posts.quoted_post_id": :posts,
         "topic_link_clicks.topic_link_id": :topic_links,
-        "topic_link_clicks.link_topic_id": :topics,
-        "topic_link_clicks.link_post_id": :posts,
+        "topic_links.link_topic_id": :topics,
+        "topic_links.link_post_id": :posts,
         "user_actions.target_topic_id": :topics,
         "user_actions.target_post_id": :posts,
         "user_avatars.custom_upload_id": :uploads,
         "user_avatars.gravatar_upload_id": :uploads,
         "user_badges.notification_id": :notifications,
-        "user_profiles.card_image_badge_id": :badges,
       }.with_indifferent_access
     end
 

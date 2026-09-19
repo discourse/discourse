@@ -36,19 +36,37 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.imported_from_html(url)
-    url = UrlHelper.normalized_encode(url)
+    url = ERB::Util.html_escape(UrlHelper.normalized_encode(url))
     I18n.with_locale(SiteSetting.default_locale) do
       "\n<hr>\n<small>#{I18n.t("embed.imported_from", link: "<a href='#{url}'>#{url}</a>")}</small>\n"
     end
   end
 
   # Import an article from a source (RSS/Atom/Other)
-  def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
+  def self.import(
+    user,
+    url,
+    title,
+    contents,
+    category_id: nil,
+    cook_method: nil,
+    tags: nil,
+    truncate: cook_method.nil?
+  )
     return unless url =~ %r{\Ahttps?\://}
 
-    original_contents = contents.dup.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH)
-    contents = first_paragraph_from(contents) if SiteSetting.embed_truncate && cook_method.nil?
-    contents ||= ""
+    contents = contents.to_s
+    original_contents = contents.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH)
+    content_truncated = false
+
+    if SiteSetting.embed_truncate && truncate
+      excerpt = first_paragraph_from(contents)
+      if text_truncated?(contents, excerpt)
+        contents = excerpt
+        content_truncated = true
+      end
+    end
+
     contents = contents.dup << imported_from_html(url)
 
     url = normalize_url(url)
@@ -76,7 +94,7 @@ class TopicEmbed < ActiveRecord::Base
           title: title.presence || url,
           raw: absolutize_urls(url, contents),
           skip_validations: true,
-          cook_method: cook_method,
+          cook_method:,
           category: category_id || eh.try(:category_id),
           tags: SiteSetting.tagging_enabled ? tags : nil,
           embed_url: url,
@@ -84,22 +102,15 @@ class TopicEmbed < ActiveRecord::Base
         }
         create_args[:visible] = false if SiteSetting.import_embed_unlisted?
 
-        # always return `args` when using this modifier, e.g:
-        #
-        # plugin.register_modifier(:topic_embed_import_create_args) do |args|
-        #   args[:title] = "MODIFIED: #{args[:title]}"
-        #
-        #   args # returning args is important to prevent errors
-        # end
+        # Modifiers that return nil preserve the default arguments.
         create_args =
           DiscoursePluginRegistry.apply_modifier(:topic_embed_import_create_args, create_args) ||
             create_args
 
         post = PostCreator.create(user, create_args)
-        post.topic.topic_embed.update!(embed_content_cache: original_contents)
+        post.topic.topic_embed.update!(embed_content_cache: original_contents, content_truncated:)
       end
     else
-      absolutize_urls(url, contents)
       post = embed.post
 
       if eh = EmbeddableHost.record_for_url(url)
@@ -107,40 +118,69 @@ class TopicEmbed < ActiveRecord::Base
         user = eh.user.presence || user
       end
 
-      # Update the topic if it changed
-      if post&.topic
-        if post.user != user
-          PostOwnerChanger.new(
-            post_ids: [post.id],
-            topic_id: post.topic_id,
-            new_owner: user,
-            acting_user: Discourse.system_user,
-          ).change_owner!
+      return post unless post&.topic
 
-          # make sure the post returned has the right author
-          post.reload
-        end
+      if post.user_id != user.id
+        PostOwnerChanger.new(
+          post_ids: [post.id],
+          topic_id: post.topic_id,
+          new_owner: user,
+          acting_user: Discourse.system_user,
+        ).change_owner!
 
-        existing_tag_names = post.topic.tags.pluck(:name).sort
-        incoming_tag_names = Array(tags).map { |tag| tag.respond_to?(:name) ? tag.name : tag }.sort
+        post.reload
+      end
 
-        tags_changed = !tags.nil? && existing_tag_names != incoming_tag_names
+      incoming_tag_names = Array(tags).map { |tag| tag.respond_to?(:name) ? tag.name : tag }.sort
 
-        if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title) ||
-             tags_changed
-          changes = { raw: absolutize_urls(url, contents) }
+      tags_changed =
+        SiteSetting.tagging_enabled && !tags.nil? &&
+          tags_changed?(post.topic, user, incoming_tag_names)
+      content_changed = content_sha1 != embed.content_sha1
+      title_changed = title.present? && title != post.topic.title
+      cook_method_changed = !cook_method.nil? && cook_method != post.cook_method
 
-          changes[:tags] = incoming_tag_names if SiteSetting.tagging_enabled && tags_changed
-          changes[:title] = title if title.present?
+      post.cook_method = cook_method if cook_method_changed
 
-          post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
-          embed.update!(content_sha1: content_sha1, embed_content_cache: original_contents)
-        end
+      if content_changed || title_changed || tags_changed
+        changes = { raw: absolutize_urls(url, contents) }
+
+        changes[:tags] = incoming_tag_names if tags_changed
+        changes[:title] = title if title_changed
+
+        post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
+      end
+
+      post.save! if cook_method_changed && post.has_changes_to_save?
+      post.rebake! if cook_method_changed
+
+      embed.assign_attributes(
+        content_sha1:,
+        embed_content_cache: original_contents,
+        content_truncated:,
+      )
+      embed_changed = embed.changed?
+      embed.save! if embed_changed
+
+      if embed_changed || cook_method_changed
+        Discourse.cache.delete(expanded_cache_key(post.topic_id))
       end
     end
 
     post
   end
+
+  def self.tags_changed?(topic, user, incoming_tag_names)
+    existing_tag_names = topic.tags.pluck(:name)
+    return false if existing_tag_names.sort == incoming_tag_names
+
+    savable_tag_names =
+      Array(DiscourseTagging.tags_for_saving(incoming_tag_names, user.guardian, unlimited: true))
+    saved_count = [savable_tag_names.size, SiteSetting.max_tags_per_topic].min
+
+    existing_tag_names.size != saved_count || (existing_tag_names - savable_tag_names).present?
+  end
+  private_class_method :tags_changed?
 
   def self.find_remote(url)
     url = UrlHelper.normalized_encode(url)
@@ -229,7 +269,7 @@ class TopicEmbed < ActiveRecord::Base
       .each do |node|
         url_param = tags[node.name]
         src = node[url_param]
-        unless (src.nil? || src.empty?)
+        unless src.nil? || src.empty?
           begin
             # convert URL to absolute form
             node[url_param] = URI.join(url, UrlHelper.normalized_encode(src)).to_s
@@ -271,9 +311,16 @@ class TopicEmbed < ActiveRecord::Base
     response.title = opts[:title] if opts[:title].present?
     import_user = opts[:user] if opts[:user].present?
     import_user = response.author if response.author.present?
-    url = normalize_url(response.url) if response.url.present?
 
-    TopicEmbed.import(import_user, url, response.title, response.body)
+    embed_url = url
+
+    if response.url.present?
+      original_uri = URI.parse(UrlHelper.normalized_encode(url))
+      canonical_uri = URI.parse(UrlHelper.normalized_encode(response.url))
+      embed_url = response.url if original_uri.host == canonical_uri.host
+    end
+
+    TopicEmbed.import(import_user, embed_url, response.title, response.body)
   end
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
@@ -316,8 +363,21 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_embed_by_url(embed_url)
-    embed_url = normalize_url(embed_url).sub(%r{\Ahttps?\://}, "")
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").first
+    with_embed_urls([embed_url]).min_by(&:id)
+  end
+
+  def self.with_embed_urls(urls)
+    variants =
+      urls.flat_map do |url|
+        key = embed_url_key(url)
+        ["http://#{key}", "https://#{key}"]
+      end
+
+    where("lower(embed_url) IN (?)", variants)
+  end
+
+  def self.embed_url_key(url)
+    normalize_url(url).sub(%r{\Ahttps?\://}, "")
   end
 
   def self.topic_id_for_embed(embed_url)
@@ -326,10 +386,10 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.first_paragraph_from(html)
-    doc = Nokogiri.HTML5(html)
+    fragment = Nokogiri::HTML5.fragment(html)
 
     result = +""
-    doc
+    fragment
       .css("p")
       .each do |p|
         if p.text.present?
@@ -339,27 +399,54 @@ class TopicEmbed < ActiveRecord::Base
       end
     return result if result.present?
 
-    # If there is no first paragraph, return the first div (onebox)
-    doc.css("div").first.to_s
+    # Oneboxes may contain a div without any paragraphs.
+    first_div = fragment.at_css("div")
+    return first_div.to_s if first_div
+
+    return html.to_s.split(/\R[[:blank:]]*\R/, 2).first if fragment.element_children.empty?
+
+    fragment.to_html
   end
+
+  def self.text_truncated?(contents, excerpt)
+    return false if excerpt.blank?
+
+    Nokogiri::HTML5.fragment(contents).text.squish != Nokogiri::HTML5.fragment(excerpt).text.squish
+  end
+  private_class_method :text_truncated?
 
   def self.expanded_for(post)
     Discourse
       .cache
-      .fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
-        url = TopicEmbed.where(topic_id: post.topic_id).pick(:embed_url)
-        response = TopicEmbed.find_remote(url)
+      .fetch(expanded_cache_key(post.topic_id), expires_in: 10.minutes) do
+        embed = post.topic.topic_embed
+        raise Discourse::NotFound if embed.nil?
 
-        body = response.body
-        if post&.topic&.topic_embed && body.present?
-          post.topic.topic_embed.update!(
-            embed_content_cache: body.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH),
-          )
-        end
-        body << TopicEmbed.imported_from_html(url)
-        body
+        body = content_for_expansion(embed).dup << imported_from_html(embed.embed_url)
+        body = absolutize_urls(embed.embed_url, post.cook(body))
+
+        post.cook_method == Post.cook_methods[:raw_html] ? PrettyText.sanitize(body) : body
       end
   end
+
+  def self.content_for_expansion(embed)
+    return embed.embed_content_cache if embed.embed_content_cache.present?
+
+    raise Discourse::NotFound unless embed.content_truncated.nil?
+
+    body = find_remote(embed.embed_url)&.body
+    raise Discourse::NotFound if body.blank?
+
+    body = body.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH)
+    embed.update!(embed_content_cache: body)
+    body
+  end
+  private_class_method :content_for_expansion
+
+  def self.expanded_cache_key(topic_id)
+    "embed-topic:#{topic_id}"
+  end
+  private_class_method :expanded_cache_key
 end
 
 # == Schema Information
@@ -367,17 +454,19 @@ end
 # Table name: topic_embeds
 #
 #  id                  :integer          not null, primary key
-#  topic_id            :integer          not null
-#  post_id             :integer          not null
-#  embed_url           :string(1000)     not null
 #  content_sha1        :string(40)
+#  content_truncated   :boolean
+#  deleted_at          :datetime
+#  embed_content_cache :text
+#  embed_url           :string(1000)     not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  deleted_at          :datetime
 #  deleted_by_id       :integer
-#  embed_content_cache :text
+#  post_id             :integer          not null
+#  topic_id            :integer          not null
 #
 # Indexes
 #
-#  index_topic_embeds_on_embed_url  (embed_url) UNIQUE
+#  index_topic_embeds_on_embed_url        (embed_url) UNIQUE
+#  index_topic_embeds_on_lower_embed_url  (lower((embed_url)::text))
 #

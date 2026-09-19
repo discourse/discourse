@@ -46,6 +46,7 @@ RSpec.describe "Chat integration setup provider" do
 
   describe "adding more providers when at least one provider is enabled" do
     before { SiteSetting.chat_integration_teams_enabled = true }
+
     it "sets up Discord" do
       setup_provider_from_menu("discord")
 
@@ -147,6 +148,8 @@ RSpec.describe "Chat integration setup provider" do
             "Content-Type" => "application/json",
           },
         )
+        allow(Rails.logger).to receive(:error).and_call_original
+        allow(Rails.logger).to receive(:error).with(/\AFailed to setup telegram webhook\./)
 
         setup_provider_from_menu("telegram")
         expect(modal).to be_open

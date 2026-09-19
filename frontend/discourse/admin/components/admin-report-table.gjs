@@ -5,9 +5,9 @@ import { action, computed, set } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import AdminReportTableHeader from "discourse/admin/components/admin-report-table-header";
 import AdminReportTableRow from "discourse/admin/components/admin-report-table-row";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { makeArray } from "discourse/lib/helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const PAGES_LIMIT = 8;
@@ -198,7 +198,7 @@ export default class AdminReportTable extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "admin-report-table"
         (if this.sortable "sortable")
         (if this.twoColumns "two-columns")
@@ -210,10 +210,10 @@ export default class AdminReportTable extends Component {
           <tr>
             {{#each this.model.computedLabels as |label|}}
               <AdminReportTableHeader
-                @showSortingUI={{this.showSortingUI}}
                 @currentSortDirection={{this.sortDirection}}
                 @currentSortLabel={{this.sortLabel}}
                 @label={{label}}
+                @showSortingUI={{this.showSortingUI}}
                 @sortByLabel={{fn this.sortByLabel label}}
               />
             {{else}}
@@ -227,8 +227,11 @@ export default class AdminReportTable extends Component {
           {{#each this.paginatedData as |data|}}
             <AdminReportTableRow
               @data={{data}}
+              @hasRelatedItems={{@hasRelatedItems}}
               @labels={{this.model.computedLabels}}
               @options={{this.options}}
+              @reportFilters={{@reportFilters}}
+              @reportType={{@reportType}}
             />
           {{/each}}
 
@@ -284,9 +287,9 @@ export default class AdminReportTable extends Component {
       <div class="pagination">
         {{#each this.pages as |pageState|}}
           <DButton
-            @translatedLabel={{pageState.page}}
-            @action={{fn this.changePage pageState.index}}
             class={{pageState.class}}
+            @action={{fn this.changePage pageState.index}}
+            @translatedLabel={{pageState.page}}
           />
         {{/each}}
       </div>

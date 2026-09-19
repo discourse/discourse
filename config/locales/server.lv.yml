@@ -5,6 +5,23 @@
 # https://translate.discourse.org/
 
 lv:
+  mcp:
+    errors:
+      topic_not_found: "Tēma nav atrasta "
+    oauth:
+      deny: "Atteikt"
+  llms_txt:
+    sections:
+      optional: "Pēc izvēles"
+    links:
+      search:
+        label: "Meklēt"
+      categories:
+        label: "Sadaļas"
+      about:
+        label: "Par"
+      guidelines:
+        label: "Vadlīnijas"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -113,6 +130,11 @@ lv:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Ikviens"
+      admins: "Administratori"
+      moderators: "Moderātori"
+      staff: "Personāls"
   education:
     until_posts:
       zero: "%{count} raksti"
@@ -205,6 +227,10 @@ lv:
         other: "pirms %{count} dienām"
   password_reset:
     title: "Atjaunot paroli"
+  admin_site_traffic_explorer:
+    unknown: "Nezināms"
+    traffic_types:
+      anonymous: "Anonīmi"
   reviewable_score_types:
     needs_approval:
       title: "Nepieciešama apstiprināšana"
@@ -240,6 +266,9 @@ lv:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{username}
       confirm_button: Pabeigt pieteikšanos
+    device:
+      code: "Kods"
+      continue: "Turpināt"
   reports:
     default:
       labels:
@@ -268,6 +297,31 @@ lv:
       xaxis: "Diena"
     new_contributors:
       xaxis: "Diena"
+    activity_by_category:
+      labels:
+        category: "Sadaļa"
+        topics: "Tēmas"
+        posts: "Ieraksti"
+        share: "Dalīties"
+    posters_by_member_type:
+      labels:
+        count: "Ieraksti"
+        share: "Dalīties"
+      types:
+        staff: "Personāls"
+    posters_by_member_type_members:
+      labels:
+        user: "Lietotājs"
+        count: "Ieraksti"
+        share: "Dalīties"
+    trust_level_pipeline:
+      labels:
+        count: "Dalībnieki"
+        share: "Dalīties"
+      levels:
+        "0": "Jauns"
+        "2": "Biedrs"
+        "3": "Regulārs"
     trust_level_growth:
       yaxis: "Diena"
     consolidated_page_views:
@@ -283,6 +337,8 @@ lv:
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonīmi"
       yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
@@ -337,6 +393,15 @@ lv:
       labels:
         user: "Lietotājs"
         num_topics: "Tēmas"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
+    top_entry_urls:
+      labels:
+        count: "Apmeklējumi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
     top_traffic_sources:
       xaxis: "Domēns"
       num_topics: "Tēmas"
@@ -367,6 +432,8 @@ lv:
       xaxis: "Diena"
     page_view_logged_in_browser_reqs:
       xaxis: "Diena"
+    page_view_embed_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       xaxis: "Diena"
     http_2xx_reqs:
@@ -396,7 +463,7 @@ lv:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
-    staff_logins:
+    admin_logins:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
@@ -434,6 +501,9 @@ lv:
       category: "Sadaļas"
       user: "Lietotāji"
     results_page: "Meklēšanas rezultāti vaicājumam “%{term}”"
+  posts_filter:
+    description:
+      order_latest_topic: "Jaunākās tēmas"
   login:
     security_key_description: "Kad esat sagatavojis savu fiziskās drošības atslēgu, nospiediet tālāk esošo pogu Autentificēt ar drošības atslēgu."
     security_key_alternative: "Izmēģiniet citu veidu"
@@ -445,6 +515,7 @@ lv:
     admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
     not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
     omniauth_confirm_button: "Turpināt"
+    missing_username: "Lūdzu, ievadiet lietotājvārdu"
     second_factor_title: "Divu faktoru autentifikācija"
     second_factor_backup_description: "Lūdzu, ievadiet vienu no saviem rezerves kodiem:"
     second_factor_toggle:
@@ -466,8 +537,11 @@ lv:
       liked_received: "Saņemtās atzinības"
       new_users: "Jauni lietotāji"
       join_the_discussion: "Lasīt vairāk"
+      subject_template_improved: "Kopsavilkums"
     set_password:
       title: "Iestatīt paroli"
+    admin_login:
+      subject_template_improved: "Ielogoties"
   page_not_found:
     page_title: "Lapa nav atrasta"
     see_more: "Vairāk"
@@ -499,6 +573,9 @@ lv:
       button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
+  design_wizard:
+    palette_pairs:
+      default: "Noklusējums"
   wizard:
     step:
       setup:
@@ -510,6 +587,8 @@ lv:
               private:
                 label: "Privāts"
   onebox:
+    google_meet:
+      meeting_code: "Kods:"
     github:
       closed: "slēgts"
       status_date:
@@ -575,8 +654,6 @@ lv:
         title: "Jā"
       approve_and_unhide:
         title: "Jā"
-      delete_post:
-        complete: "Ieraksts dzēsts"
       delete_user:
         complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"

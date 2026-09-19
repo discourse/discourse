@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 // For use in plugins
 export default class TopicNavigationPopup extends Component {
@@ -47,7 +47,7 @@ export default class TopicNavigationPopup extends Component {
   <template>
     {{#unless this.hidden}}
       <div class="topic-navigation-popup">
-        <DButton @action={{this.close}} @icon="xmark" class="close btn-flat" />
+        <DButton class="close btn-flat" @action={{this.close}} @icon="xmark" />
         {{yield}}
       </div>
     {{/unless}}

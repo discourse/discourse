@@ -75,6 +75,8 @@ sk:
       removed: "Odstránené %{removed}"
     provider:
       slack:
+        errors:
+          action_prohibited: "Bot nemá povolenie na odosielanie príspevkov do tohto kanála"
         status:
           header: |
             *Pravidlá pre tento kanál*

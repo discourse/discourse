@@ -5,12 +5,12 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DTextarea from "discourse/components/d-textarea";
 import ReviewableQueuedPost from "discourse/components/reviewable/queued-post";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DTextarea from "discourse/ui-kit/d-textarea";
 import { i18n } from "discourse-i18n";
 
 const OTHER_REASON = "other_reason";
@@ -83,11 +83,11 @@ export default class ReviseAndRejectPostReviewable extends Component {
               "review.revise_and_reject_post.reason"
             }}</label>
           <ComboBox
-            @name="reason"
-            @content={{this.configuredReasons}}
-            @value={{this.reason}}
-            @onChange={{fn (mut this.reason)}}
             class="revise-and-reject-reviewable__reason"
+            @content={{this.configuredReasons}}
+            @name="reason"
+            @onChange={{fn (mut this.reason)}}
+            @value={{this.reason}}
           />
         </div>
 
@@ -97,8 +97,8 @@ export default class ReviseAndRejectPostReviewable extends Component {
                 "review.revise_and_reject_post.custom_reason"
               }}</label>
             <Input
-              name="custom_reason"
               class="revise-and-reject-reviewable__custom-reason"
+              name="custom_reason"
               @type="text"
               @value={{this.customReason}}
             />
@@ -114,10 +114,10 @@ export default class ReviseAndRejectPostReviewable extends Component {
               }})</span>
           </label>
           <DTextarea
-            @name="feedback"
-            @value={{this.feedback}}
-            @onChange={{fn (mut this.feedback)}}
             class="revise-and-reject-reviewable__feedback"
+            @name="feedback"
+            @onChange={{fn (mut this.feedback)}}
+            @value={{this.feedback}}
           />
         </div>
       </:body>

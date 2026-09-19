@@ -16,13 +16,22 @@ export default class ChatRoute extends DiscourseRoute {
   @service chatStateManager;
   @service chatDrawerRouter;
   @service currentUser;
+  @service siteSettings;
 
   titleToken() {
     return i18n("chat.title_capitalized");
   }
 
   beforeModel(transition) {
-    if (!this.chat.userCanChat) {
+    if (this.chat.chatDisabledInPreferences) {
+      if (transition.to.name === "chat.disabled") {
+        return;
+      }
+
+      return this.router.replaceWith("chat.disabled");
+    }
+
+    if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
       return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
 
@@ -77,11 +86,16 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   activate() {
+    if (this.chat.chatDisabledInPreferences) {
+      return;
+    }
+
     withPluginApi((api) => {
       api.setSidebarPanel(CHAT_PANEL);
 
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
+        this.currentUser,
+        this.siteSettings
       );
 
       if (chatSeparateSidebarMode.never) {

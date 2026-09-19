@@ -1,21 +1,21 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import formatUsername from "discourse/helpers/format-username";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const GroupAssignedFilter = <template>
   <li>
     {{#if @showAvatar}}
       <LinkTo
-        @route="group.assigned.show"
         @model={{@filter.username_lower}}
         @query={{hash order=@order ascending=@ascending search=@search}}
+        @route="group.assigned.show"
       >
         <div class="assign-image">
-          <a href={{@filter.userPath}} data-user-card={{@filter.username}}>
-            {{avatar @filter imageSize="small"}}
+          <a data-user-card={{@filter.username}} href={{@filter.userPath}}>
+            {{dAvatar @filter imageSize="small"}}
           </a>
         </div>
 
@@ -30,12 +30,12 @@ const GroupAssignedFilter = <template>
       </LinkTo>
     {{else if @groupName}}
       <LinkTo
-        @route="group.assigned.show"
         @model={{@filter}}
         @query={{hash order=@order ascending=@ascending search=@search}}
+        @route="group.assigned.show"
       >
         <div class="assign-image">
-          {{icon "group-plus"}}
+          {{dIcon "group-plus"}}
         </div>
         <div class="assign-names">
           <div class="assign-username">{{@groupName}}</div>
@@ -47,9 +47,9 @@ const GroupAssignedFilter = <template>
       </LinkTo>
     {{else}}
       <LinkTo
-        @route="group.assigned.show"
         @model={{@filter}}
         @query={{hash order=@order ascending=@ascending search=@search}}
+        @route="group.assigned.show"
       >
         <div class="assign-everyone">
           {{i18n "discourse_assign.group_everyone"}}

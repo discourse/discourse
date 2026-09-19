@@ -7,7 +7,7 @@ module DiscourseTopicVoting
     prepended { has_many :votes, class_name: "DiscourseTopicVoting::Vote", dependent: :destroy }
 
     def vote_count
-      topics_with_vote.length
+      topics_with_vote.count
     end
 
     def alert_low_votes?
@@ -16,11 +16,11 @@ module DiscourseTopicVoting
     end
 
     def topics_with_vote
-      self.votes.where(archive: false)
+      votes.where(archive: false)
     end
 
     def topics_with_archived_vote
-      self.votes.where(archive: true)
+      votes.where(archive: true)
     end
 
     def can_vote?
@@ -34,17 +34,12 @@ module DiscourseTopicVoting
 
     def vote_limit
       return nil unless SiteSetting.topic_voting_enable_vote_limits
-      SiteSetting.public_send("topic_voting_tl#{self.trust_level}_vote_limit")
+      SiteSetting.public_send("topic_voting_tl#{trust_level}_vote_limit")
     end
 
     def votes_left
       return nil unless SiteSetting.topic_voting_enable_vote_limits
       [vote_limit - vote_count, 0].max
-    end
-
-    def vote_limit_0?
-      return false unless SiteSetting.topic_voting_enable_vote_limits
-      vote_limit == 0
     end
   end
 end

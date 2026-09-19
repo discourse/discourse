@@ -9,7 +9,7 @@ class UserActionManager
     @disabled = false
   end
 
-  %i[notification post topic post_action].each { |type| self.class_eval(<<~RUBY) }
+  %i[notification post topic post_action].each { |type| class_eval(<<~RUBY) }
       def self.#{type}_created(*args)
         return if @disabled
         #{type}_rows(*args).each { |row| UserAction.log_action!(row) }

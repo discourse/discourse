@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class RagUploadProgress extends Component {
@@ -15,27 +15,6 @@ export default class RagUploadProgress extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe(`/discourse-ai/rag/${this.args.upload.id}`);
-  }
-
-  @action
-  trackProgress() {
-    this.messageBus.subscribe(
-      `/discourse-ai/rag/${this.args.upload.id}`,
-      this.onIndexingUpdate
-    );
-  }
-
-  @bind
-  onIndexingUpdate(data) {
-    // Order not guaranteed. Discard old updates.
-    if (
-      !this.updatedProgress ||
-      this.updatedProgress.left === 0 ||
-      this.updatedProgress.left > data.left ||
-      data.total === data.indexed
-    ) {
-      this.updatedProgress = data;
-    }
   }
 
   get calculateProgress() {
@@ -62,17 +41,38 @@ export default class RagUploadProgress extends Component {
     }
   }
 
+  @action
+  trackProgress() {
+    this.messageBus.subscribe(
+      `/discourse-ai/rag/${this.args.upload.id}`,
+      this.onIndexingUpdate
+    );
+  }
+
+  @bind
+  onIndexingUpdate(data) {
+    // Order not guaranteed. Discard old updates.
+    if (
+      !this.updatedProgress ||
+      this.updatedProgress.left === 0 ||
+      this.updatedProgress.left > data.left ||
+      data.total === data.indexed
+    ) {
+      this.updatedProgress = data;
+    }
+  }
+
   <template>
     <td class="rag-uploader__upload-status" {{didInsert this.trackProgress}}>
       {{#if this.progress}}
         {{#if this.fullyIndexed}}
           <span class="indexed">
-            {{icon "check"}}
+            {{dIcon "check"}}
             {{i18n "discourse_ai.rag.uploads.indexed"}}
           </span>
         {{else}}
           <span class="indexing">
-            {{icon "robot"}}
+            {{dIcon "robot"}}
             {{i18n "discourse_ai.rag.uploads.indexing"}}
             {{this.calculateProgress}}%
           </span>

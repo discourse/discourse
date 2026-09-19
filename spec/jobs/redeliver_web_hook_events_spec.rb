@@ -43,6 +43,21 @@ RSpec.describe Jobs::RedeliverWebHookEvents do
     expect(messages.first.data).to include(type: "redelivered")
   end
 
+  it "restricts the redelivery MessageBus publish to the admins group" do
+    stub_request(:post, web_hook.payload_url).to_return(status: 200, body: "", headers: {})
+
+    messages =
+      MessageBus.track_publish("/web_hook_events/#{web_hook.id}") do
+        job.execute(web_hook: web_hook, web_hook_event: web_hook_event1)
+      end
+
+    expect(RedeliveringWebhookEvent.count).to eq(0)
+    expect(messages.size).to eq(1)
+    expect(messages.first.data).to include(type: "redelivered")
+    expect(messages.first.data[:web_hook_event]).to include(payload: "abc")
+    expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+  end
+
   context "when there is a redelivering_webhook_event in process" do
     fab!(:redelivering_webhook_event_in_process) do
       Fabricate(

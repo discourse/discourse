@@ -154,7 +154,7 @@ RSpec.describe BadgeGranter do
       b.badge_id = Badge::FirstLike
     end
 
-    it "should grant missing badges" do
+    it "grants missing badges" do
       nice_topic = Badge.find(Badge::NiceTopic)
       good_topic = Badge.find(Badge::GoodTopic)
 
@@ -181,7 +181,7 @@ RSpec.describe BadgeGranter do
       expect(good_topic.grant_count).to eq(1)
     end
 
-    it "should grant badges in the user locale" do
+    it "grants badges in the user's locale" do
       SiteSetting.allow_user_locale = true
 
       nice_topic = Badge.find(Badge::NiceTopic)
@@ -527,8 +527,6 @@ RSpec.describe BadgeGranter do
         ).to be_empty
         expect(user.reload.title).to eq(nil)
       end
-
-      after { TranslationOverride.revert!(I18n.locale, Badge.i18n_key(badge.name)) }
     end
   end
 
@@ -872,6 +870,30 @@ RSpec.describe BadgeGranter do
           )
         end
       end
+    end
+  end
+
+  describe ".suppress_notification?" do
+    fab!(:silver_badge) { Fabricate(:badge, badge_type_id: BadgeType::Silver) }
+
+    it "does not suppress for a fresh silver badge by default" do
+      expect(BadgeGranter.suppress_notification?(silver_badge, 1.hour.ago, false)).to eq(false)
+    end
+
+    it "lets a plugin override via the :badge_granter_suppress_notification modifier" do
+      plugin_instance = Plugin::Instance.new
+      modifier_block =
+        Proc.new { |suppress, _badge, granted_at, _| suppress || granted_at < 1.day.ago }
+      plugin_instance.register_modifier(:badge_granter_suppress_notification, &modifier_block)
+
+      expect(BadgeGranter.suppress_notification?(silver_badge, 2.days.ago, false)).to eq(true)
+      expect(BadgeGranter.suppress_notification?(silver_badge, 1.hour.ago, false)).to eq(false)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :badge_granter_suppress_notification,
+        &modifier_block
+      )
     end
   end
 end

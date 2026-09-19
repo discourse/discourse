@@ -30,6 +30,8 @@ sr:
       cast-votes:
         title: "Daj svoj glas"
         label: "Glasaj sada!"
+      keep-vote:
+        label: "Nazad"
       show-results:
         title: "Prikaži rezultate ankete"
         label: "Rezultati"
@@ -105,5 +107,3 @@ sr:
           add: Додај опцију
         automatic_close:
           label: Automatski zatvorite anketu
-        show_advanced: "Прикажи напредне опције"
-        hide_advanced: "Сакриј напредне опције"

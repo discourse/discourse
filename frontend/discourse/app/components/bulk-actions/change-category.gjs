@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class ChangeCategory extends Component {
@@ -25,16 +25,16 @@ export default class ChangeCategory extends Component {
 
     <p>
       <CategoryChooser
-        @value={{this.categoryId}}
         @onChange={{fn (mut this.categoryId)}}
+        @value={{this.categoryId}}
       />
     </p>
 
-    <ConditionalLoadingSpinner @condition={{@loading}}>
+    <DConditionalLoadingSpinner @condition={{@loading}}>
       <DButton
         @action={{this.changeCategory}}
         @label="topics.bulk.change_category"
       />
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
   </template>
 }

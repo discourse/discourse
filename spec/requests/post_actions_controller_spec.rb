@@ -103,7 +103,7 @@ RSpec.describe PostActionsController do
       expect(response.status).to eq(403)
     end
 
-    it "fails when the user does not have permission to see the post" do
+    it "does not reveal private post existence" do
       sign_in(user)
       pm = Fabricate(:private_message_post, user: coding_horror)
 
@@ -113,7 +113,36 @@ RSpec.describe PostActionsController do
              post_action_type_id: PostActionType.types[:like],
            }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(pm.raw)
+
+      post "/post_actions.json",
+           params: {
+             id: Post.maximum(:id) + 1,
+             post_action_type_id: PostActionType.types[:like],
+           }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when flagging a hidden topic" do
+      sign_in(user)
+      SiteSetting.detailed_404 = false
+      pm = Fabricate(:private_message_post, user: coding_horror)
+
+      get "/t/#{pm.topic.id}.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"].first).to include(I18n.t("not_found"))
+
+      post "/post_actions.json",
+           params: {
+             id: pm.topic.id,
+             flag_topic: "true",
+             post_action_type_id: PostActionType.types[:inappropriate],
+           }
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"].first).to include(I18n.t("not_found"))
     end
 
     it "fails when the user tries to notify user that has disabled PM" do
@@ -214,7 +243,7 @@ RSpec.describe PostActionsController do
         expect(response.status).to eq(400)
       end
 
-      it "fails when the user doesn't have permission to see the post" do
+      it "does not reveal private post existence" do
         post_1 = Fabricate(:private_message_post, user: Fabricate(:user))
 
         post "/post_actions.json",
@@ -223,7 +252,7 @@ RSpec.describe PostActionsController do
                post_action_type_id: PostActionType.types[:like],
              }
 
-        expect(response).to be_forbidden
+        expect(response.status).to eq(404)
       end
 
       it "allows us to create an post action on a post" do

@@ -16,6 +16,7 @@ export default class ApplicationController extends Controller {
   @service router;
   @service scrollState;
   @service sidebarState;
+  @service site;
   @service siteSettings;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
@@ -25,26 +26,6 @@ export default class ApplicationController extends Controller {
   navigationMenuQueryParamOverride = null;
   _showSiteHeader = true;
   @tracked _showSidebar;
-
-  get isCurrentAdminRoute() {
-    return this.router.currentRouteName?.startsWith("admin");
-  }
-
-  get upcomingChangeBodyClasses() {
-    if (!this.siteSettings.currentUserUpcomingChanges) {
-      return "";
-    }
-
-    const classes = [];
-
-    Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
-      if (this.siteSettings[key]) {
-        classes.push(`uc-${dasherize(key)}`);
-      }
-    });
-
-    return classes.join(" ");
-  }
 
   get showSiteHeader() {
     if (EmbedMode.enabled) {
@@ -79,6 +60,29 @@ export default class ApplicationController extends Controller {
     this.footer.showFooter = value;
   }
 
+  get isCurrentAdminRoute() {
+    return this.router.currentRouteName?.startsWith("admin");
+  }
+
+  get upcomingChangeBodyClasses() {
+    if (!this.siteSettings.currentUserUpcomingChanges) {
+      return "";
+    }
+
+    const classes = [];
+
+    Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
+      if (
+        this.siteSettings[key] &&
+        this.site.upcoming_changes_with_css.includes(key)
+      ) {
+        classes.push(`uc-${dasherize(key)}`);
+      }
+    });
+
+    return classes.join(" ");
+  }
+
   get shouldHideScrollableContentAbove() {
     return this.scrollState.shouldHideContentAbove;
   }
@@ -91,9 +95,9 @@ export default class ApplicationController extends Controller {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   }
 
-  @computed
   get canSignUp() {
     return (
+      !this.site.isReadOnly &&
       !this.siteSettings.invite_only &&
       this.siteSettings.allow_new_registrations &&
       !this.siteSettings.enable_discourse_connect
@@ -113,10 +117,6 @@ export default class ApplicationController extends Controller {
   @computed
   get showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
-  }
-
-  _mainOutletAnimate() {
-    document.body.classList.remove("sidebar-animate");
   }
 
   get sidebarEnabled() {
@@ -201,5 +201,9 @@ export default class ApplicationController extends Controller {
         console.warn("Failed to measure init-to-paint", e);
       }
     });
+  }
+
+  _mainOutletAnimate() {
+    document.body.classList.remove("sidebar-animate");
   }
 }

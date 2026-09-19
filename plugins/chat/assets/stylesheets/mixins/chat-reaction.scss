@@ -18,19 +18,17 @@
     background: var(--tertiary-very-low);
     color: var(--tertiary-hover);
 
+    &:focus-visible,
     &:hover {
       background: var(--tertiary-low);
     }
   }
 
   &:not(.reacted) {
+    &:focus-visible,
     &:hover {
       background: var(--primary-low);
       border-color: var(--primary-low-mid);
-    }
-
-    &:focus {
-      background: none;
     }
   }
 

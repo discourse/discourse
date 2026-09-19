@@ -4,7 +4,7 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import LazyIframe from "./lazy-iframe";
 
@@ -36,44 +36,46 @@ export default class LazyVideo extends Component {
 
   <template>
     <div
-      data-video-id={{@videoAttributes.id}}
-      data-video-title={{@videoAttributes.title}}
-      data-video-start-time={{@videoAttributes.startTime}}
-      data-provider-name={{@videoAttributes.providerName}}
-      class={{concatClass
+      class={{dConcatClass
         "lazy-video-container"
         (concat @videoAttributes.providerName "-onebox")
         (if this.isLoaded "video-loaded")
       }}
+      data-provider-name={{@videoAttributes.providerName}}
+      data-video-id={{@videoAttributes.id}}
+      data-video-list-id={{@videoAttributes.listId}}
+      data-video-start-time={{@videoAttributes.startTime}}
+      data-video-title={{@videoAttributes.title}}
     >
       {{#if this.isLoaded}}
         <LazyIframe
+          @listId={{@videoAttributes.listId}}
           @providerName={{@videoAttributes.providerName}}
+          @startTime={{@videoAttributes.startTime}}
           @title={{@videoAttributes.title}}
           @videoId={{@videoAttributes.id}}
-          @startTime={{@videoAttributes.startTime}}
         />
       {{else}}
         <div
-          {{on "click" this.loadEmbed}}
-          {{on "keypress" this.onKeyPress}}
-          role="button"
-          tabindex="0"
           aria-label={{i18n
             "lazy_videos.play_video"
             title=@videoAttributes.title
           }}
+          class={{dConcatClass "video-thumbnail" @videoAttributes.providerName}}
+          role="button"
           style={{this.thumbnailStyle}}
-          class={{concatClass "video-thumbnail" @videoAttributes.providerName}}
+          tabindex="0"
+          {{on "click" this.loadEmbed}}
+          {{on "keypress" this.onKeyPress}}
         >
           <img
+            class={{concat @videoAttributes.providerName "-thumbnail"}}
+            loading="lazy"
             src={{@videoAttributes.thumbnail}}
             title={{@videoAttributes.title}}
-            loading="lazy"
-            class={{concat @videoAttributes.providerName "-thumbnail"}}
           />
           <div
-            class={{concatClass
+            class={{dConcatClass
               "icon"
               (concat @videoAttributes.providerName "-icon")
             }}
@@ -82,11 +84,11 @@ export default class LazyVideo extends Component {
         <div class="title-container">
           <div class="title-wrapper">
             <a
-              href={{@videoAttributes.url}}
-              title={{@videoAttributes.title}}
-              target="_blank"
-              rel="noopener noreferrer"
               class="title-link"
+              href={{@videoAttributes.url}}
+              rel="noopener noreferrer"
+              target="_blank"
+              title={{@videoAttributes.title}}
             >
               {{@videoAttributes.title}}
             </a>

@@ -1,4 +1,5 @@
 @use "lib/viewport";
+@use "lib/container";
 
 .chat-browse-view {
   position: relative;
@@ -26,37 +27,35 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
 
-    @include viewport.until(md) {
-      grid-template-columns: repeat(1, 1fr);
+    @include container.until(md) {
       gap: 1rem;
     }
   }
 
   &__actions {
     display: flex;
-    justify-content: space-between;
-    align-items: end;
+    align-items: center;
+    gap: 1rem;
+
+    .d-filter-controls {
+      margin-inline-start: auto;
+    }
 
     .c-drawer-routes.--browse & {
       flex-direction: column;
-      gap: 1rem;
-      align-items: flex-start;
+      align-items: stretch;
 
-      .filter-input {
-        width: 100%;
+      .d-filter-controls {
+        margin-inline-start: 0;
       }
     }
 
     @include viewport.until(md) {
       flex-direction: column;
+      align-items: stretch;
 
-      .filter-input-container {
-        margin-top: 1rem;
-      }
-
-      .filter-input-container,
-      nav {
-        width: 100%;
+      .d-filter-controls {
+        margin-inline-start: 0;
       }
     }
   }

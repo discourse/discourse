@@ -5,15 +5,15 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 import AutomationEnabledToggle from "discourse/plugins/automation/admin/components/automation-enabled-toggle";
 
@@ -22,6 +22,10 @@ const RUN_THRESHOLD = 10;
 
 export default class AutomationList extends Component {
   @service dialog;
+
+  get logsUrl() {
+    return getURL("/logs?search=discourse-automation");
+  }
 
   @action
   async destroyAutomation(automation) {
@@ -79,19 +83,15 @@ export default class AutomationList extends Component {
     });
   }
 
-  get logsUrl() {
-    return getURL("/logs?search=discourse-automation");
-  }
-
   <template>
     <section class="discourse-automations-table">
       <DPageSubheader @titleLabel={{i18n "discourse_automation.table_title"}}>
         <:actions as |actions|>
           <actions.Primary
+            class="discourse-automation__create-btn"
+            @icon="plus"
             @label="discourse_automation.create"
             @route="adminPlugins.show.automation.new"
-            @icon="plus"
-            class="discourse-automation__create-btn"
           />
         </:actions>
       </DPageSubheader>
@@ -123,8 +123,8 @@ export default class AutomationList extends Component {
               <tr class="d-table__row">
                 {{#if automation.script.not_found}}
                   <td
-                    colspan="5"
                     class="d-table__cell --detail alert alert-danger"
+                    colspan="5"
                   >
                     <div class="d-table__mobile-label">
                       {{i18n
@@ -139,8 +139,8 @@ export default class AutomationList extends Component {
                   </td>
                 {{else if automation.trigger.not_found}}
                   <td
-                    colspan="5"
                     class="d-table__cell --detail alert alert-danger"
+                    colspan="5"
                   >
                     <div class="d-table__mobile-label">
                       {{i18n
@@ -169,12 +169,12 @@ export default class AutomationList extends Component {
                     </div>
                     <div class="automations__user-timestamp">
                       <a
-                        href={{automation.last_updated_by.userPath}}
                         data-user-card={{automation.last_updated_by.username}}
+                        href={{automation.last_updated_by.userPath}}
                       >
-                        {{avatar automation.last_updated_by imageSize="small"}}
+                        {{dAvatar automation.last_updated_by imageSize="small"}}
                       </a>
-                      {{formatDate automation.updated_at leaveAgo="true"}}
+                      {{dFormatDate automation.updated_at leaveAgo="true"}}
                     </div>
                   </td>
                   <td class="d-table__cell --detail automations__runs">
@@ -188,9 +188,9 @@ export default class AutomationList extends Component {
                     </span>
                     {{#if automation.stats.last_day.total_errors}}
                       <a
-                        href={{this.logsUrl}}
                         class="automations__errors"
                         data-auto-route="true"
+                        href={{this.logsUrl}}
                       >
                         {{i18n
                           "discourse_automation.models.automation.recent_errors"
@@ -206,7 +206,7 @@ export default class AutomationList extends Component {
                       }}
                     </div>
                     {{#if automation.stats.last_run_at}}
-                      {{formatDate
+                      {{dFormatDate
                         automation.stats.last_run_at
                         leaveAgo="true"
                       }}
@@ -235,18 +235,18 @@ export default class AutomationList extends Component {
 
                 <td class="d-table__cell --controls automations__controls">
                   <LinkTo
-                    @route="adminPlugins.show.automation.edit"
-                    @model={{automation.id}}
                     class="btn btn-default btn-text btn-small"
+                    @model={{automation.id}}
+                    @route="adminPlugins.show.automation.edit"
                   >
                     {{i18n "discourse_automation.edit"}}
                   </LinkTo>
 
                   <DButton
-                    @icon="trash-can"
-                    @disabled={{automation.isDeleting}}
-                    {{on "click" (fn this.destroyAutomation automation)}}
                     class="btn-small btn-danger automations__delete"
+                    @disabled={{automation.isDeleting}}
+                    @icon="trash-can"
+                    {{on "click" (fn this.destroyAutomation automation)}}
                   />
                 </td>
               </tr>
@@ -255,9 +255,9 @@ export default class AutomationList extends Component {
         </table>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="discourse-automation__create-btn"
           @ctaLabel="discourse_automation.create"
           @ctaRoute="adminPlugins.show.automation.new"
-          @ctaClass="discourse-automation__create-btn"
           @emptyLabel="discourse_automation.no_automation_yet"
         />
       {{/if}}

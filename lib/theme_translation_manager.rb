@@ -9,14 +9,9 @@ class ThemeTranslationManager
       .map do |key, value|
         this_key_array = parent_keys + [key]
         if value.is_a?(Hash)
-          self.list_from_hash(
-            locale: locale,
-            hash: value,
-            theme: theme,
-            parent_keys: this_key_array,
-          )
+          list_from_hash(locale: locale, hash: value, theme: theme, parent_keys: this_key_array)
         else
-          self.new(locale: locale, theme: theme, key: this_key_array.join("."), default: value)
+          new(locale: locale, theme: theme, key: this_key_array.join("."), default: value)
         end
       end
       .flatten

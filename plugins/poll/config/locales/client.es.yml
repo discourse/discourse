@@ -54,6 +54,8 @@ es:
       cast-votes:
         title: "Emite tus votos"
         label: "Votar"
+      keep-vote:
+        label: "Atrás"
       show-results:
         title: "Mostrar los resultados de la encuesta"
         label: "Resultados"
@@ -160,5 +162,3 @@ es:
           add: Añadir opción
         automatic_close:
           label: Cerrar encuesta automáticamente
-        show_advanced: "Mostrar opciones avanzadas"
-        hide_advanced: "Ocultar opciones avanzadas"

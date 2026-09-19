@@ -23,10 +23,10 @@ export default class SolvedNotifications extends Component {
     <div class="control-group solved-notifications">
       <label class="control-label">{{i18n "solved.title"}}</label>
       <PreferenceCheckbox
-        @labelKey="solved.notify_on_solved"
-        @checked={{@outletArgs.model.user_option.notify_on_solved}}
-        data-setting-name="user-notify-on-solved"
         class="pref-notify-on-solved"
+        data-setting-name="user-notify-on-solved"
+        @checked={{@outletArgs.model.user_option.notify_on_solved}}
+        @labelKey="solved.notify_on_solved"
       />
     </div>
   </template>

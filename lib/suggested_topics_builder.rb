@@ -22,6 +22,7 @@ class SuggestedTopicsBuilder
       results = results.where(category_id: @category_id)
     end
 
+    results = results.includes(:nested_topic) if SiteSetting.nested_replies_enabled
     results = results.to_a
     results.reject! { |topic| @category_topic_ids.include?(topic.id) }
 

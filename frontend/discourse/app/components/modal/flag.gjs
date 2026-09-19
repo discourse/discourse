@@ -4,8 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import FlagActionType from "discourse/components/flag-action-type";
 import FlagSelection from "discourse/components/flag-selection";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -15,9 +13,9 @@ import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-
-const NOTIFY_MODERATORS_KEY = "notify_moderators";
 
 export default class Flag extends Component {
   @service adminTools;
@@ -50,20 +48,20 @@ export default class Flag extends Component {
       label: i18n("flagging.take_action"),
       actions: [
         {
-          id: "agree_and_hide",
+          action_name: "agree_and_hide",
           icon: "thumbs-up",
           label: i18n("flagging.take_action_options.default.title"),
           description: i18n("flagging.take_action_options.default.details"),
         },
         {
-          id: "agree_and_suspend",
+          action_name: "agree_and_suspend",
           icon: "ban",
           label: i18n("flagging.take_action_options.suspend.title"),
           description: i18n("flagging.take_action_options.suspend.details"),
           client_action: "suspend",
         },
         {
-          id: "agree_and_silence",
+          action_name: "agree_and_silence",
           icon: "microphone-slash",
           label: i18n("flagging.take_action_options.silence.title"),
           description: i18n("flagging.take_action_options.silence.details"),
@@ -127,10 +125,6 @@ export default class Flag extends Component {
     );
   }
 
-  get notifyModeratorsFlag() {
-    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_KEY);
-  }
-
   get canTakeAction() {
     return (
       !this.args.model.flagTarget.targetsTopic() &&
@@ -192,8 +186,7 @@ export default class Flag extends Component {
       // eslint-disable-next-line no-console
       console.error(`No handler for ${actionable.client_action} found`);
     } else {
-      this.args.model.setHidden();
-      this.createFlag({ takeAction: true });
+      await this.#createFlagAndHide({ takeAction: true });
     }
   }
 
@@ -202,24 +195,22 @@ export default class Flag extends Component {
     if (this.selected.require_message) {
       opts.message = this.message;
     }
-    this.args.model.flagTarget.create(this, opts);
+    const created = this.args.model.flagTarget.create(this, opts);
     this.appEvents.trigger("flag:created", {
       message: opts.message,
       postId: this.args.model.flagModel.id,
     });
+    return created;
   }
 
   @action
   createFlagAsWarning() {
-    this.createFlag({ isWarning: true });
-    this.args.model.setHidden();
+    return this.#createFlagAndHide({ isWarning: true });
   }
 
   @action
   flagForReview() {
-    this.selected ||= this.notifyModeratorsFlag;
-    this.createFlag({ queue_for_review: true });
-    this.args.model.setHidden();
+    return this.#createFlagAndHide({ queue_for_review: true });
   }
 
   @action
@@ -227,42 +218,49 @@ export default class Flag extends Component {
     this.selected = actionType;
   }
 
+  async #createFlagAndHide(opts) {
+    // Only an explicit `false` means the flag failed: custom flag targets may resolve nothing.
+    if ((await this.createFlag(opts)) !== false) {
+      this.args.model.setHidden();
+    }
+  }
+
   <template>
     <DModal
       class="flag-modal"
       @bodyClass="flag-modal-body"
-      @title={{i18n this.title}}
-      @submitOnEnter={{false}}
       @closeModal={{@closeModal}}
+      @submitOnEnter={{false}}
+      @title={{i18n this.title}}
       {{on "keydown" this.onKeydown}}
     >
       <:body>
         <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>
         <PluginOutlet
-          @name="after-flag-modal-review-process-description"
           @connectorTagName="div"
+          @name="after-flag-modal-review-process-description"
           @outletArgs={{lazyHash post=@model.flagModel}}
         />
         <form>
           <FlagSelection
-            @nameKey={{this.selected.name_key}}
             @flags={{this.flagsAvailable}}
+            @nameKey={{this.selected.name_key}}
             as |f|
           >
             <FlagActionType
-              @flag={{f}}
-              @message={{this.message}}
-              @isConfirmed={{this.isConfirmed}}
-              @selectedFlag={{this.selected}}
-              @username={{@model.flagModel.username}}
-              @staffFlagsAvailable={{this.staffFlagsAvailable}}
               @changePostActionType={{this.changePostActionType}}
+              @flag={{f}}
+              @isConfirmed={{this.isConfirmed}}
+              @message={{this.message}}
+              @selectedFlag={{this.selected}}
+              @staffFlagsAvailable={{this.staffFlagsAvailable}}
+              @username={{@model.flagModel.username}}
             />
           </FlagSelection>
         </form>
         <PluginOutlet
-          @name="flag-modal-bottom"
           @connectorTagName="div"
+          @name="flag-modal-bottom"
           @outletArgs={{lazyHash post=@model.flagModel}}
         />
       </:body>
@@ -271,9 +269,9 @@ export default class Flag extends Component {
           class="btn-primary flag-modal__create-flag"
           @action={{this.createFlag}}
           @disabled={{not this.submitEnabled}}
-          @title="flagging.submit_tooltip"
           @icon={{if this.selected.require_message "envelope" "flag"}}
           @label={{this.submitLabel}}
+          @title="flagging.submit_tooltip"
         />
 
         {{#if this.canSendWarning}}
@@ -297,7 +295,7 @@ export default class Flag extends Component {
           <DButton
             class="btn-danger flag-modal__flag-for-review"
             @action={{this.flagForReview}}
-            @disabled={{not this.submitEnabled this.notifyModeratorsFlag}}
+            @disabled={{not this.submitEnabled}}
             @icon="triangle-exclamation"
             @label="flagging.flag_for_review"
           />

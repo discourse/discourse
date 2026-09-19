@@ -15,10 +15,10 @@ end
 # Table name: do_not_disturb_timings
 #
 #  id        :bigint           not null, primary key
-#  user_id   :integer          not null
-#  starts_at :datetime         not null
 #  ends_at   :datetime         not null
 #  scheduled :boolean          default(FALSE)
+#  starts_at :datetime         not null
+#  user_id   :integer          not null
 #
 # Indexes
 #

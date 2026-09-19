@@ -13,7 +13,7 @@ module Chat
                :user
 
     def excerpt
-      object.excerpt || object.build_excerpt
+      object.excerpt_for_display
     end
 
     def mentioned_users

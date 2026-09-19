@@ -1,9 +1,12 @@
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
+  find,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
@@ -14,7 +17,7 @@ import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
+module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   setupRenderingTest(hooks);
 
   async function hover() {
@@ -39,7 +42,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
   test("@icon", async function (assert) {
     await render(
-      <template><DTooltip @inline={{true}} @icon="check" /></template>
+      <template><DTooltip @icon="check" @inline={{true}} /></template>
     );
 
     assert.dom(".fk-d-tooltip__icon .d-icon-check").exists();
@@ -48,7 +51,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   test("@content", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @content="content" />
+        <DTooltip @content="content" @inline={{true}} @label="label" />
       </template>
     );
     await hover();
@@ -128,7 +131,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   test("@identifier", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @identifier="tip" />
+        <DTooltip @identifier="tip" @inline={{true}} @label="label" />
       </template>
     );
 
@@ -161,6 +164,33 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     assert.dom(".fk-d-tooltip__trigger").hasText("label");
   });
 
+  test("trigger expanded argument reflects the open state", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}}>
+          <:trigger as |args|>
+            <span class="expanded-flag">{{if
+                args.expanded
+                "open"
+                "closed"
+              }}</span>
+          </:trigger>
+          <:content>content</:content>
+        </DTooltip>
+      </template>
+    );
+
+    assert
+      .dom(".expanded-flag")
+      .hasText("closed", "expanded is false when closed");
+
+    await hover();
+
+    assert
+      .dom(".expanded-flag")
+      .hasText("open", "expanded flips to true on open");
+  });
+
   test("<:content>", async function (assert) {
     await render(
       <template>
@@ -189,10 +219,10 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
-          @inline={{true}}
-          @label="test"
           @component={{this.component}}
           @data={{hash message="content"}}
+          @inline={{true}}
+          @label="test"
         />
       </template>
     );
@@ -224,7 +254,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   test("@closeOnEscape", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @closeOnEscape={{true}} />
+        <DTooltip @closeOnEscape={{true}} @inline={{true}} @label="label" />
       </template>
     );
     await hover();
@@ -234,7 +264,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @closeOnEscape={{false}} />
+        <DTooltip @closeOnEscape={{false}} @inline={{true}} @label="label" />
       </template>
     );
     await hover();
@@ -247,9 +277,9 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await render(
       <template>
         <span class="test">test</span><DTooltip
+          @closeOnClickOutside={{true}}
           @inline={{true}}
           @label="label"
-          @closeOnClickOutside={{true}}
         />
       </template>
     );
@@ -261,9 +291,9 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await render(
       <template>
         <span class="test">test</span><DTooltip
+          @closeOnClickOutside={{false}}
           @inline={{true}}
           @label="label"
-          @closeOnClickOutside={{false}}
         />
       </template>
     );
@@ -281,9 +311,78 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     );
     await hover();
 
+    assert.dom(".fk-d-tooltip__content").hasStyle({ maxWidth: "20px" });
+
+    await close();
+
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label" @maxWidth={{100000}} />
+      </template>
+    );
+    await hover();
+
+    // 20 is the default left + right `getPadding` inset the clamp reserves
     assert
       .dom(".fk-d-tooltip__content")
-      .hasAttribute("style", /max-width: 20px;/);
+      .hasStyle(
+        { maxWidth: `${window.innerWidth - 20}px` },
+        "a numeric cap is clamped to the width the viewport leaves"
+      );
+  });
+
+  test("a keyword @maxWidth is applied verbatim", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label" @maxWidth="unset" />
+      </template>
+    );
+    await hover();
+
+    // asserting the declaration rather than the computed value: wrapping a keyword in `min()`
+    // is invalid CSS, and the browser drops such a declaration to the same computed `none`
+    assert
+      .dom(".fk-d-tooltip__content")
+      .hasAttribute("style", /max-width: unset;/);
+  });
+
+  test("content taller than the cap scrolls inside the tooltip", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label">
+          <div>
+            <div class="first-line">first line</div>
+            <div style="height: 4000px"></div>
+            <div class="last-line">last line</div>
+          </div>
+        </DTooltip>
+      </template>
+    );
+    await hover();
+
+    const content = find(".fk-d-tooltip__inner-content");
+    const scrollport = content.getBoundingClientRect();
+
+    assert.true(
+      content.clientHeight <= Math.ceil(window.innerHeight * 0.6),
+      "the content is capped to a fraction of the viewport"
+    );
+    assert.true(
+      content.scrollHeight > content.clientHeight,
+      "the overflowing content is scrollable rather than clipped"
+    );
+    assert.true(
+      find(".first-line").getBoundingClientRect().top >= scrollport.top,
+      "the top of the content is reachable rather than centred out of view"
+    );
+
+    content.scrollTop = content.scrollHeight;
+
+    assert.true(
+      find(".last-line").getBoundingClientRect().bottom <=
+        scrollport.bottom + 1,
+      "the bottom of the content is reachable"
+    );
   });
 
   test("applies position", async function (assert) {
@@ -300,9 +399,9 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
+          @identifier="test"
           @inline={{true}}
           @label="label"
-          @identifier="test"
         >test</DTooltip>
       </template>
     );
@@ -355,6 +454,207 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     assert.dom(".fk-d-tooltip__content").doesNotExist();
   });
 
+  test("traps pointerdown, mousedown, and touchend inside the tooltip body", async function (assert) {
+    const received = { pointerdown: 0, mousedown: 0, touchend: 0 };
+    const listeners = {};
+    for (const name of Object.keys(received)) {
+      listeners[name] = () => received[name]++;
+      document.addEventListener(name, listeners[name]);
+    }
+
+    let innerClicked = false;
+    const handleInnerClick = () => (innerClicked = true);
+
+    try {
+      await render(
+        <template>
+          <DTooltip @inline={{true}} @label="trigger">
+            <:content>
+              <button
+                class="inner-link"
+                type="button"
+                {{on "click" handleInnerClick}}
+              >link</button>
+            </:content>
+          </DTooltip>
+        </template>
+      );
+
+      await hover();
+
+      await triggerEvent(".inner-link", "pointerdown");
+      await triggerEvent(".inner-link", "mousedown");
+      await triggerEvent(".inner-link", "touchend");
+
+      assert.strictEqual(
+        received.pointerdown,
+        0,
+        "pointerdown does not bubble out of the tooltip body"
+      );
+      assert.strictEqual(
+        received.mousedown,
+        0,
+        "mousedown does not bubble out of the tooltip body"
+      );
+      assert.strictEqual(
+        received.touchend,
+        0,
+        "touchend does not bubble out of the tooltip body"
+      );
+
+      await click(".inner-link");
+      assert.true(innerClicked, "the inner control still receives its click");
+    } finally {
+      for (const name of Object.keys(received)) {
+        document.removeEventListener(name, listeners[name]);
+      }
+    }
+  });
+
+  test("@hoverGracePeriod keeps the tooltip open while the pointer crosses to the content", async function (assert) {
+    await render(
+      <template>
+        <DTooltip
+          @hoverGracePeriod={{150}}
+          @inline={{true}}
+          @label="label"
+        ><:content>content</:content></DTooltip>
+      </template>
+    );
+
+    await hover();
+    assert.dom(".fk-d-tooltip__content").exists();
+
+    const trigger = document.querySelector(".fk-d-tooltip__trigger");
+    const content = document.querySelector(".fk-d-tooltip__content");
+    // The two events must dispatch synchronously so the close timer
+    // started by pointerleave can be cancelled by pointerenter on the
+    // content before settled() advances the runloop.
+    trigger.dispatchEvent(new PointerEvent("pointerleave"));
+    content.dispatchEvent(new PointerEvent("pointerenter"));
+    await settled();
+
+    assert.dom(".fk-d-tooltip__content").exists();
+  });
+
+  test("@hoverGracePeriod closes after the grace period when the pointer leaves entirely", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @hoverGracePeriod={{150}} @inline={{true}} @label="label" />
+      </template>
+    );
+
+    await hover();
+    await leave();
+
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("@hoverGracePeriod cancels the pending close when re-entering the trigger", async function (assert) {
+    await render(
+      <template>
+        <DTooltip
+          @hoverGracePeriod={{150}}
+          @inline={{true}}
+          @label="label"
+        ><:content>content</:content></DTooltip>
+      </template>
+    );
+
+    await hover();
+
+    const trigger = document.querySelector(".fk-d-tooltip__trigger");
+    trigger.dispatchEvent(new PointerEvent("pointerleave"));
+    trigger.dispatchEvent(new PointerEvent("pointerenter"));
+    await settled();
+
+    assert.dom(".fk-d-tooltip__content").exists();
+  });
+
+  test("@hoverGracePeriod closes after the grace period when the pointer leaves the content", async function (assert) {
+    await render(
+      <template>
+        <DTooltip
+          @hoverGracePeriod={{150}}
+          @inline={{true}}
+          @label="label"
+        ><:content>content</:content></DTooltip>
+      </template>
+    );
+
+    await hover();
+    await triggerEvent(".fk-d-tooltip__content", "pointerleave");
+
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("@hoverGracePeriod keeps the tooltip open while focus is inside the content", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @hoverGracePeriod={{150}} @inline={{true}} @label="label">
+          <:content>
+            <button class="focusable" type="button">click</button>
+          </:content>
+        </DTooltip>
+      </template>
+    );
+
+    await hover();
+    await triggerEvent(".focusable", "focusin");
+    await triggerEvent(".fk-d-tooltip__trigger", "pointerleave");
+
+    assert
+      .dom(".fk-d-tooltip__content")
+      .exists("stays open while focus is inside");
+
+    await triggerEvent(".focusable", "focusout");
+
+    assert
+      .dom(".fk-d-tooltip__content")
+      .doesNotExist("closes after focus leaves and grace elapses");
+  });
+
+  test("@hoverGracePeriod releases its focus lock when the tooltip closes", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      <template>
+        <DTooltip
+          @hoverGracePeriod={{10}}
+          @inline={{true}}
+          @label="label"
+          @onRegisterApi={{this.onRegisterApi}}
+        >
+          <:content>
+            <button class="focusable" type="button">click</button>
+          </:content>
+        </DTooltip>
+      </template>
+    );
+
+    await hover();
+    await triggerEvent(".focusable", "focusin");
+    await this.api.close();
+
+    await hover();
+    await leave();
+
+    assert
+      .dom(".fk-d-tooltip__content")
+      .doesNotExist("a reopened tooltip can close after its trigger is left");
+  });
+
+  test("default hoverGracePeriod (0) keeps immediate close behavior", async function (assert) {
+    await render(
+      <template><DTooltip @inline={{true}} @label="label" /></template>
+    );
+    await hover();
+    assert.dom(".fk-d-tooltip__content").exists();
+    await leave();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
   test("@portalOutletElement", async function (assert) {
     this.set("portalOutletElement", null);
     this.setPortalOutletElement = (element) => {
@@ -369,9 +669,9 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
         ></div>
         {{#if this.portalOutletElement}}
           <DTooltip
+            @content="content"
             @inline={{false}}
             @label="label"
-            @content="content"
             @portalOutletElement={{this.portalOutletElement}}
           />
         {{/if}}

@@ -1,21 +1,21 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { and } from "discourse/truth-helpers";
 import {
   DangerButton,
   DefaultButton,
   PrimaryButton,
-} from "discourse/components/d-page-action-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import element from "discourse/helpers/element";
-import { and } from "discourse/truth-helpers";
+} from "discourse/ui-kit/d-page-action-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSectionLandingItem extends Component {
   wrapperElement = (hasButtons) => {
     const makeClickable = this.args.titleRoute && !hasButtons;
-    return makeClickable ? LinkTo : element("div");
+    return makeClickable ? LinkTo : dElement("div");
   };
 
   get title() {
@@ -47,20 +47,20 @@ export default class AdminSectionLandingItem extends Component {
       {{! When there are no nested buttons, the entire component is a link }}
       {{#let (this.wrapperElement hasButtons) as |WrapperComponent|}}
         <WrapperComponent
-          @route={{@titleRoute}}
-          @model={{@titleRouteModel}}
-          class={{concatClass
+          class={{dConcatClass
             "admin-section-landing-item"
             (if @icon "--has-icon")
           }}
           ...attributes
+          @model={{@titleRouteModel}}
+          @route={{@titleRoute}}
         >
           {{#if @imageUrl}}
             <img class="admin-section-landing-item__image" src={{@imageUrl}} />
           {{/if}}
           {{#if @icon}}
             <div class="admin-section-landing-item__icon">
-              {{icon @icon}}
+              {{dIcon @icon}}
             </div>
           {{/if}}
           <div class="admin-section-landing-item__content">
@@ -72,7 +72,7 @@ export default class AdminSectionLandingItem extends Component {
 
             {{#if (and @titleRoute hasButtons)}}
               {{! Individual title is a link when buttons exist}}
-              <LinkTo @route={{@titleRoute}} @model={{@titleRouteModel}}>
+              <LinkTo @model={{@titleRouteModel}} @route={{@titleRoute}}>
                 <h3
                   class="admin-section-landing-item__title"
                 >{{this.title}}</h3>

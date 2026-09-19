@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { getURLWithCDN } from "discourse/lib/get-url";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import { eq } from "discourse/truth-helpers";
 
@@ -38,7 +39,9 @@ export default class ChatUpload extends Component {
     const width = this.args.upload.width;
     const height = this.args.upload.height;
 
+    // Shrink to fit, never blow up small images.
     const ratio = Math.min(
+      1,
       this.siteSettings.max_image_width / width,
       this.siteSettings.max_image_height / height
     );
@@ -52,7 +55,12 @@ export default class ChatUpload extends Component {
   }
 
   get imageUrl() {
-    return this.args.upload.thumbnail?.url ?? this.args.upload.url;
+    const rawUrl = this.args.upload.thumbnail?.url ?? this.args.upload.url;
+    return getURLWithCDN(rawUrl);
+  }
+
+  get largeImageUrl() {
+    return getURLWithCDN(this.args.upload.url);
   }
 
   get imageStyle() {
@@ -66,9 +74,19 @@ export default class ChatUpload extends Component {
   get videoSourceUrl() {
     const baseUrl =
       this.args.upload.optimized_video?.url ?? this.args.upload.url;
-    return this.capabilities.isIOS || this.capabilities.isSafari
-      ? `${baseUrl}#t=0.001`
-      : baseUrl;
+    const finalUrl =
+      this.capabilities.isIOS || this.capabilities.isSafari
+        ? `${baseUrl}#t=0.001`
+        : baseUrl;
+    return getURLWithCDN(finalUrl);
+  }
+
+  get audioSourceUrl() {
+    return getURLWithCDN(this.args.upload.url);
+  }
+
+  get attachmentUrl() {
+    return getURLWithCDN(this.args.upload.url);
   }
 
   @action
@@ -80,33 +98,33 @@ export default class ChatUpload extends Component {
     {{#if (eq this.type this.IMAGE_TYPE)}}
       <img
         class="chat-img-upload lightbox"
-        data-orig-src={{@upload.short_url}}
-        data-large-src={{@upload.url}}
+        data-dominant-color={{@upload.dominant_color}}
         data-download-href={{@upload.short_path}}
+        data-large-src={{this.largeImageUrl}}
+        data-orig-src={{@upload.short_url}}
+        data-target-height={{this.size.height}}
+        data-target-width={{this.size.width}}
         height={{this.size.thumb_height}}
-        width={{this.size.thumb_width}}
+        loading="lazy"
         src={{this.imageUrl}}
         style={{this.imageStyle}}
-        loading="lazy"
         tabindex="0"
-        data-target-width={{this.size.width}}
-        data-target-height={{this.size.height}}
-        data-dominant-color={{@upload.dominant_color}}
+        width={{this.size.thumb_width}}
         {{on "load" this.imageLoaded}}
       />
     {{else if (eq this.type this.VIDEO_TYPE)}}
-      <video class="chat-video-upload" preload="metadata" height="150" controls>
+      <video class="chat-video-upload" controls height="150" preload="metadata">
         <source src={{this.videoSourceUrl}} />
       </video>
     {{else if (eq this.type this.AUDIO_TYPE)}}
-      <audio class="chat-audio-upload" preload="metadata" controls>
-        <source src={{@upload.url}} />
+      <audio class="chat-audio-upload" controls preload="metadata">
+        <source src={{this.audioSourceUrl}} />
       </audio>
     {{else}}
       <a
         class="chat-other-upload"
         data-orig-href={{@upload.short_url}}
-        href={{@upload.url}}
+        href={{this.attachmentUrl}}
       >
         {{@upload.original_filename}}
       </a>

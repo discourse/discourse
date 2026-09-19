@@ -1,0 +1,55 @@
+.header-title {
+  @include ellipsis;
+
+  .topic-link {
+    display: inline;
+  }
+
+  .event-date {
+    font-size: var(--font-down-4);
+    color: var(--primary-medium);
+    font-weight: normal;
+    padding: 0.25em;
+  }
+}
+
+.main-link {
+  .event-date-container-wrapper {
+    // prevents new dot from breaking separately onto next line
+    white-space: nowrap;
+  }
+}
+
+.header-topic-title-suffix-outlet {
+  &.event-date-container {
+    vertical-align: text-bottom;
+  }
+
+  .event-date {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--font-down-2);
+    border: 1px solid var(--tertiary-very-low);
+    background: var(--tertiary-very-low);
+    color: var(--tertiary);
+    padding: 0 0.35em;
+    border-radius: 3px;
+    pointer-events: auto; // needed to show title attribute on hover
+    vertical-align: middle;
+
+    &.past {
+      border: 1px solid var(--primary-very-low);
+      background: var(--primary-very-low);
+      color: var(--primary-medium);
+    }
+
+    .indicator {
+      display: flex;
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--success);
+      margin-right: 0.25em;
+    }
+  }
+}

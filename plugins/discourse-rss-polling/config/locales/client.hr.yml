@@ -12,3 +12,13 @@ hr:
         feed_url: URL
         discourse_category: Kategorija
         discourse_tags: Oznake
+        feeds:
+          edit: Uredi
+          delete: Izbriši
+          save: Spremi
+        test:
+          title: Pregled
+          dismiss: Odbaciti
+        status:
+          enabled: Omogućeno
+          disabled: Onemogućeno

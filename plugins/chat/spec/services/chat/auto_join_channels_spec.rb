@@ -95,6 +95,15 @@ RSpec.describe Chat::AutoJoinChannels do
           expect { result }.to change { Chat::UserChatChannelMembership.count }.from(0).to(1)
         end
 
+        it "automatically joins users when everyone is mapped to logged_in_users" do
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+
+          Fabricate(:user, trust_level:, last_seen_at:)
+
+          expect { result }.to change { Chat::UserChatChannelMembership.count }.from(0).to(1)
+        end
+
         it "always automatically joins moderators" do
           SiteSetting.chat_allowed_groups = Fabricate(:group).id
 

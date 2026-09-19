@@ -20,7 +20,7 @@ module DiscourseAi
         end
 
         def default_options
-          { model: llm_model.name, temperature: 0.7 }
+          { model: llm_model.name }
         end
 
         def provider_id

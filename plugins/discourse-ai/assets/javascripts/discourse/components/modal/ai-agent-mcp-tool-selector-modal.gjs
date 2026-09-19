@@ -3,9 +3,9 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
 export default class AiAgentMcpToolSelectorModal extends Component {
@@ -121,13 +121,13 @@ export default class AiAgentMcpToolSelectorModal extends Component {
 
   <template>
     <DModal
+      class="ai-agent-mcp-tools-modal"
+      @bodyClass="ai-agent-mcp-tools-modal__body"
+      @closeModal={{@closeModal}}
       @title={{i18n
         "discourse_ai.ai_agent.mcp_tools_modal.title"
         name=@model.serverName
       }}
-      @closeModal={{@closeModal}}
-      @bodyClass="ai-agent-mcp-tools-modal__body"
-      class="ai-agent-mcp-tools-modal"
     >
       <:body>
         <p class="ai-agent-mcp-tools-modal__summary">
@@ -137,24 +137,24 @@ export default class AiAgentMcpToolSelectorModal extends Component {
         <div class="ai-agent-mcp-tools-modal__controls">
           <input
             class="ai-agent-mcp-tools-modal__filter"
-            type="search"
-            value={{this.filter}}
             placeholder={{i18n
               "discourse_ai.ai_agent.mcp_tools_modal.filter_placeholder"
             }}
+            type="search"
+            value={{this.filter}}
             {{on "input" this.updateFilter}}
           />
 
           <DButton
+            class="btn-default btn-small ai-agent-mcp-tools-modal__select-all"
             @action={{this.selectAllVisible}}
             @label="discourse_ai.ai_agent.mcp_tools_modal.select_all"
-            class="btn-default btn-small ai-agent-mcp-tools-modal__select-all"
           />
 
           <DButton
+            class="btn-default btn-small ai-agent-mcp-tools-modal__clear-all"
             @action={{this.clearAll}}
             @label="discourse_ai.ai_agent.mcp_tools_modal.clear_all"
-            class="btn-default btn-small ai-agent-mcp-tools-modal__clear-all"
           />
         </div>
 
@@ -175,8 +175,8 @@ export default class AiAgentMcpToolSelectorModal extends Component {
               <label class="ai-agent-mcp-tools-modal__tool-header">
                 <span class="ai-agent-mcp-tools-modal__tool-checkbox">
                   <input
-                    type="checkbox"
                     checked={{this.isSelected tool.name}}
+                    type="checkbox"
                     {{on "change" (fn this.toggleTool tool.name)}}
                   />
                 </span>
@@ -205,7 +205,7 @@ export default class AiAgentMcpToolSelectorModal extends Component {
       </:body>
 
       <:footer>
-        <DButton @action={{this.save}} @label="save" class="btn-primary" />
+        <DButton class="btn-primary" @action={{this.save}} @label="save" />
         <DModalCancel @close={{@closeModal}} />
       </:footer>
     </DModal>

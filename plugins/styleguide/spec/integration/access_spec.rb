@@ -24,6 +24,35 @@ RSpec.describe "SiteSetting.styleguide_allowed_groups" do
       end
     end
   end
+
+  context "when user is anonymous" do
+    context "when styleguide_allowed_groups is set to everyone" do
+      before { SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "does not show the styleguide" do
+        get "/styleguide"
+        expect(response.status).to eq(404)
+      end
+
+      context "when styleguide_allowed_groups includes anonymous_users" do
+        before { SiteSetting.styleguide_allowed_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}" }
+
+        it "shows the styleguide" do
+          get "/styleguide"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      context "when granular_anonymous_and_logged_in_groups_permissions is not enabled" do
+        before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false }
+
+        it "shows the styleguide" do
+          get "/styleguide"
+          expect(response.status).to eq(200)
+        end
+      end
+    end
+  end
 end
 
 RSpec.describe "SiteSetting.styleguide_enabled" do
@@ -45,5 +74,30 @@ RSpec.describe "SiteSetting.styleguide_enabled" do
       get "/styleguide"
       expect(response.status).to eq(404)
     end
+  end
+end
+
+RSpec.describe "Styleguide site capability" do
+  before do
+    SiteSetting.styleguide_enabled = true
+    SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:admins]
+  end
+
+  it "reflects whether the visitor can access the styleguide" do
+    sign_in(Fabricate(:admin))
+    get "/site.json"
+    expect(response.parsed_body["can_see_styleguide"]).to eq(true)
+
+    sign_in(Fabricate(:user))
+    get "/site.json"
+    expect(response.parsed_body["can_see_styleguide"]).to eq(false)
+  end
+
+  it "is omitted when the plugin is disabled" do
+    SiteSetting.styleguide_enabled = false
+
+    get "/site.json"
+
+    expect(response.parsed_body).not_to have_key("can_see_styleguide")
   end
 end

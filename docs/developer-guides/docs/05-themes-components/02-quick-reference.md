@@ -4,7 +4,7 @@ short_title: Quick reference
 id: quick-reference
 ---
 
-As themes grow more powerful, there's more to remember about how they work. We have loads of detailed documentation under [#howto / #themes](https://meta.discourse.org/tags/c/howto/themes), but if you just need something to jog your memory, this guide may help.
+As themes grow more powerful, there's more to remember about how they work. We have loads of detailed documentation under [#theme-guides](https://meta.discourse.org/tag/theme-guides), but if you just need something to jog your memory, this guide may help.
 
 ### General Resources
 
@@ -13,8 +13,8 @@ As themes grow more powerful, there's more to remember about how they work. We h
 [:scroll: Developer's guide](https://meta.discourse.org/t/developer-s-guide-to-discourse-themes/93648)
 [:paintbrush: Theme Creator](http://theme-creator.discourse.org)
 [:desktop_computer: Theme CLI](https://meta.discourse.org/t/discourse-theme-cli-console-app-to-help-you-build-themes/82950)
-[:notebook_with_decorative_cover: Theme Directory](/c/customization/theme/61/none)
-[:jigsaw: Component Directory](/c/customization/theme-component/120)
+[:notebook_with_decorative_cover: Theme Directory](https://meta.discourse.org/c/customization/theme/61/none)
+[:jigsaw: Component Directory](https://meta.discourse.org/c/customization/theme-component/120)
 [:wrench: Theme Modifiers](https://meta.discourse.org/t/theme-modifiers-a-brief-introduction/150605)
 [:wrench: Themeable site settings](https://meta.discourse.org/t/-/374376)
 
@@ -39,7 +39,7 @@ assets/
 stylesheets/
   (arbitrarily named files, can be imported from each other, and common/desktop/mobile.scss)
 javascripts/
-  (arbitrarily named files. Supports .js .hbs and .raw.hbs)
+  (arbitrarily named files. Supports .js, .gjs and .hbs)
 ```
 
 ### about.json <small>[structure info](https://meta.discourse.org/t/structure-of-themes-and-theme-components/60848), [available metadata](https://meta.discourse.org/t/adding-metadata-to-a-theme/119205)</small>

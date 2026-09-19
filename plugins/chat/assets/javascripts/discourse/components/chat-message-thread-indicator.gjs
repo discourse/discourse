@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import formatDate from "discourse/helpers/format-date";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ChatThreadParticipants from "./chat-thread-participants";
 import ChatUserAvatar from "./chat-user-avatar";
@@ -22,17 +22,17 @@ export default class ChatMessageThreadIndicator extends Component {
   <template>
     <LinkTo
       class="chat-message-thread-indicator"
-      @route="chat.channel.thread.near-message"
-      @models={{this.threadMessageRoute}}
-      title={{i18n "chat.threads.open"}}
       tabindex="0"
+      title={{i18n "chat.threads.open"}}
       ...attributes
+      @models={{this.threadMessageRoute}}
+      @route="chat.channel.thread.near-message"
     >
       <div class="chat-message-thread-indicator__last-reply-avatar">
         <ChatUserAvatar
-          @user={{@message.thread.preview.lastReplyUser}}
           @avatarSize="small"
           @interactive={{this.interactiveUser}}
+          @user={{@message.thread.preview.lastReplyUser}}
         />
       </div>
 
@@ -41,7 +41,7 @@ export default class ChatMessageThreadIndicator extends Component {
           {{@message.thread.preview.lastReplyUser.username}}
         </span>
         <span class="chat-message-thread-indicator__last-reply-timestamp">
-          {{formatDate
+          {{dFormatDate
             @message.thread.preview.lastReplyCreatedAt
             leaveAgo="true"
           }}
@@ -52,7 +52,7 @@ export default class ChatMessageThreadIndicator extends Component {
       </div>
       <ChatThreadParticipants @thread={{@message.thread}} />
       <div class="chat-message-thread-indicator__last-reply-excerpt">
-        {{replaceEmoji (trustHTML @message.thread.preview.lastReplyExcerpt)}}
+        {{dReplaceEmoji (trustHTML @message.thread.preview.lastReplyExcerpt)}}
       </div>
     </LinkTo>
   </template>

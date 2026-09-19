@@ -98,6 +98,101 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
         "true",
       )
     end
+
+    it "enables shared issues by default when the upcoming change is enabled" do
+      SiteSetting.enable_solved_shared_issues = true
+      described_class.configure_category(category, guardian: admin.guardian)
+
+      expect(category.custom_fields[DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD]).to eq(
+        "true",
+      )
+      expect(category.shared_issues_enabled?).to eq(true)
+    end
+
+    it "uses provided configuration_values for shared issues" do
+      SiteSetting.enable_solved_shared_issues = true
+      described_class.configure_category(
+        category,
+        guardian: admin.guardian,
+        configuration_values: {
+          DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => "false",
+        },
+      )
+
+      expect(category.shared_issues_enabled?).to eq(false)
+    end
+  end
+
+  describe "configuration_schema" do
+    it "passes schema validation" do
+      expect { described_class.validate_schema! }.not_to raise_error
+    end
+
+    context "when enable_solved_shared_issues is enabled" do
+      before { SiteSetting.enable_solved_shared_issues = true }
+
+      it "declares the shared issues toggle as a category custom field" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).to include(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+      end
+
+      it "declares the shared issue label as a dependent site text" do
+        label = described_class.configuration_schema[:site_texts]["js.solved.shared_issue.label"]
+        expect(label[:label]).to be_present
+        expect(label[:depends_on]).to eq(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+      end
+    end
+
+    context "when enable_solved_shared_issues is disabled" do
+      before { SiteSetting.enable_solved_shared_issues = false }
+
+      it "omits the shared issues toggle from the category custom fields" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).not_to include(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
+      end
+
+      it "omits the shared issue label site text" do
+        expect(described_class.configuration_schema[:site_texts]).not_to have_key(
+          "js.solved.shared_issue.label",
+        )
+      end
+    end
+
+    context "when the Horizon theme is the site's default theme" do
+      before { SiteSetting.default_theme_id = Theme.horizon_theme.id }
+
+      it "omits the empty box on unsolved toggle from the category custom fields" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).not_to include(DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD)
+      end
+
+      it "still passes schema validation" do
+        expect { described_class.validate_schema! }.not_to raise_error
+      end
+    end
+
+    context "when the Horizon theme is not the site's default theme" do
+      before { SiteSetting.default_theme_id = Theme.foundation_theme.id }
+
+      it "declares the empty box on unsolved toggle as a category custom field" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).to include(DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD)
+      end
+    end
+  end
+
+  describe ".unconfigure_category" do
+    before { described_class.configure_category(category, guardian: admin.guardian) }
+
+    it "removes the enable_accepted_answers custom field" do
+      expect(category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD]).to eq(
+        "true",
+      )
+      described_class.unconfigure_category(category, guardian: admin.guardian)
+      expect(
+        category.reload.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD],
+      ).to eq("false")
+    end
   end
 
   describe ".find_matches" do

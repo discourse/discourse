@@ -77,7 +77,7 @@ RSpec.describe "S3Helper" do
     end
   end
 
-  it "should prefix bucket folder path only if not exists" do
+  it "prefixes the bucket folder path only when it is missing" do
     s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 
     object1 = s3_helper.object("original/1X/def.xyz")
@@ -86,7 +86,7 @@ RSpec.describe "S3Helper" do
     expect(object1.key).to eq(object2.key)
   end
 
-  it "should not prefix the bucket folder path if the key begins with the temporary upload prefix" do
+  it "does not prefix keys that begin with the temporary upload prefix" do
     s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 
     object1 = s3_helper.object("original/1X/def.xyz")
@@ -137,10 +137,9 @@ RSpec.describe "S3Helper" do
       s3_helper.send(:s3_bucket).expects(:object).with(destination_key).returns(destination_stub)
 
       options = { multipart_copy: true, content_length: source_stub.size }
-      destination_stub
-        .expects(:copy_from)
-        .with(source_stub, options)
-        .returns(stub(data: stub(etag: '"etag"')))
+      destination_stub.expects(:copy_from).with(source_stub, options).returns(nil)
+      destination_stub.stubs(:reload).returns(destination_stub)
+      destination_stub.stubs(:etag).returns('"etag"')
 
       response = s3_helper.copy(source_key, destination_key)
       expect(response.first).to eq(destination_key)
@@ -161,7 +160,7 @@ RSpec.describe "S3Helper" do
       destination_stub
         .expects(:copy_from)
         .with(source_stub, options)
-        .returns(stub(data: stub(etag: '"etag"')))
+        .returns(stub(copy_object_result: stub(etag: '"etag"')))
 
       response =
         s3_helper.copy(
@@ -242,7 +241,7 @@ RSpec.describe "S3Helper" do
   describe "#delete_objects" do
     let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
 
-    it "works" do
+    it "deletes the object from S3" do
       # The S3::Client with `stub_responses: true` includes validation of requests.
       # If the request were invalid, this spec would raise an error
       s3_helper.delete_objects(%w[object/one.txt object/two.txt])

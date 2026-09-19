@@ -82,7 +82,7 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.invalidate(url)
       end
 
-      it "should respect SiteSetting.max_oneboxes_per_post" do
+      it "respects SiteSetting.max_oneboxes_per_post" do
         SiteSetting.max_oneboxes_per_post = 2
         SiteSetting.add_rel_nofollow_to_user_content = false
 
@@ -200,7 +200,7 @@ RSpec.describe CookedPostProcessor do
 
         after { urls.each { |url| InlineOneboxer.invalidate(url) } }
 
-        it "should convert the right links to inline oneboxes" do
+        it "converts eligible links to inline oneboxes" do
           cpp.post_process
           html = cpp.html
 
@@ -246,6 +246,45 @@ RSpec.describe CookedPostProcessor do
           cpp = CookedPostProcessor.new(staff_post, invalidate_oneboxes: true)
           cpp.post_process
           expect(cpp.html).to_not have_tag("a[rel='noopener nofollow ugc']")
+        end
+      end
+
+      describe "engine-supplied css_class" do
+        let(:url) { "https://example.com/foo" }
+        let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "Look at #{url} today") }
+        let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+        before do
+          allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
+            title: "engine title",
+            css_class: "--gh-status-merged",
+          )
+        end
+
+        after { InlineOneboxer.invalidate(url) }
+
+        it "adds the css_class alongside inline-onebox" do
+          cpp.post_process
+
+          link = Nokogiri::HTML5.fragment(cpp.html).at_css(%(a[href="#{url}"]))
+          expect(link["class"]).to eq("inline-onebox --gh-status-merged")
+          expect(link.text).to eq("engine title")
+        end
+
+        it "escapes HTML in engine-supplied title and css_class" do
+          allow(Oneboxer).to receive(:inline_data_for).with(url).and_return(
+            title: %(<script>alert("xss")</script>),
+            css_class: %(broken" onerror="alert(1)),
+          )
+
+          cpp.post_process
+
+          doc = Nokogiri::HTML5.fragment(cpp.html)
+          link = doc.at_css(%(a[href="#{url}"]))
+
+          expect(link.text).to eq(%(<script>alert("xss")</script>))
+          expect(link["onerror"]).to be_nil
+          expect(doc.css("script")).to be_empty
         end
       end
     end
@@ -371,16 +410,19 @@ RSpec.describe CookedPostProcessor do
 
         context "with invalid width" do
           let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 222 } } }
+
           include_examples "leave dimensions alone"
         end
 
         context "with invalid height" do
           let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 0 } } }
+
           include_examples "leave dimensions alone"
         end
 
         context "with invalid width & height" do
           let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 0, "height" => 0 } } }
+
           include_examples "leave dimensions alone"
         end
       end
@@ -472,7 +514,7 @@ RSpec.describe CookedPostProcessor do
               )
           end
 
-          it "should not add lightbox" do
+          it "does not add a lightbox" do
             FastImage.expects(:size).returns([1750, 2000])
 
             cpp.post_process
@@ -492,7 +534,7 @@ RSpec.describe CookedPostProcessor do
             )
           end
 
-          it "should not add lightbox" do
+          it "does not add a lightbox" do
             FastImage.expects(:size).returns([1750, 2000])
 
             cpp.post_process
@@ -512,7 +554,7 @@ RSpec.describe CookedPostProcessor do
               )
             end
 
-            it "should not add lightbox" do
+            it "does not add a lightbox" do
               FastImage.expects(:size).returns([1750, 2000])
 
               cpp.post_process
@@ -725,7 +767,7 @@ RSpec.describe CookedPostProcessor do
           expect(cpp).to be_dirty
         end
 
-        it "should escape the filename" do
+        it "escapes the filename" do
           upload.update!(original_filename: "><img src=x onerror=alert('haha')>.png")
           cpp.post_process
 
@@ -858,6 +900,74 @@ RSpec.describe CookedPostProcessor do
 
           expect(post.topic.image_upload_id).to be_present
           expect(post.image_upload_id).to be_blank
+        end
+      end
+
+      context "with topic og image generation" do
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "no image in this post") }
+
+        it "enqueues the generator job when the first post has no image and setting is on" do
+          SiteSetting.generate_topic_og_image = true
+          expect { CookedPostProcessor.new(post).post_process }.to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }.by(1)
+        end
+
+        it "does not enqueue when the setting is off" do
+          SiteSetting.generate_topic_og_image = false
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue when the topic already has a generated OG image" do
+          SiteSetting.generate_topic_og_image = true
+          post.topic.update_column(:og_image_upload_id, Fabricate(:upload).id)
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for non-first posts" do
+          SiteSetting.generate_topic_og_image = true
+          reply =
+            Fabricate(:post, user: user_with_auto_groups, topic: post.topic, raw: "no image reply")
+          expect { CookedPostProcessor.new(reply).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for personal messages" do
+          SiteSetting.generate_topic_og_image = true
+          pm_post = Fabricate(:private_message_post, user: user_with_auto_groups)
+          expect { CookedPostProcessor.new(pm_post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for topics in a read-restricted category" do
+          SiteSetting.generate_topic_og_image = true
+          private_category = Fabricate(:private_category, group: Fabricate(:group))
+          post.topic.update!(category: private_category)
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "clears the generated OG image when the first post has an image" do
+          SiteSetting.generate_topic_og_image = true
+          FastImage.stubs(:size)
+          old_upload = Fabricate(:upload)
+          image_post = Fabricate(:post_with_uploaded_image, user: user_with_auto_groups)
+          image_post.topic.update_column(:og_image_upload_id, old_upload.id)
+          UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: image_post.topic)
+
+          CookedPostProcessor.new(image_post).post_process
+
+          expect(image_post.topic.reload.og_image_upload_id).to be_nil
+          expect(UploadReference.exists?(upload_id: old_upload.id, target: image_post.topic)).to eq(
+            false,
+          )
         end
       end
 
@@ -1105,7 +1215,7 @@ RSpec.describe CookedPostProcessor do
         expect(doc.css("img.animated").size).to eq(1)
       end
 
-      it "marks giphy images as animated" do
+      it "marks Tenor images as animated" do
         post =
           Fabricate(
             :post,
@@ -1169,6 +1279,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns("<div>GANGNAM STYLE</div>")
 
@@ -1406,6 +1517,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>',
@@ -1437,6 +1549,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>',
@@ -1464,6 +1577,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           "<aside class='onebox'><div class='scale-images'><img src='/img.jpg' width='400' height='500'/></div></div>",
@@ -1484,6 +1598,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           "<aside class='onebox'><div class='scale-images'><a href='https://example.com'><img src='/img.jpg' width='400' height='500'/></a></div></div>",
@@ -1841,6 +1956,15 @@ RSpec.describe CookedPostProcessor do
       expect(cpp.html).to have_tag("a", with: { href: "https://google.com/?u=bar" })
       expect(cpp.html).to have_tag("a", with: { href: "https://www.example.com/#123#4" })
     end
+
+    it "preserves encoded characters in the remaining query params" do
+      post = Fabricate(:post, user: user_with_auto_groups, raw: "link: #{topic.url}?ref=a%26b&u=99")
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
+
+      cpp.remove_user_ids
+
+      expect(cpp.html).to have_tag("a", with: { href: "#{topic.url}?ref=a%26b" })
+    end
   end
 
   describe "#is_a_hyperlink?" do
@@ -1970,7 +2094,7 @@ RSpec.describe CookedPostProcessor do
         test
       MARKDOWN
 
-      it "should not be marked as modified" do
+      it "leaves the quote unmarked as modified" do
         cpp.post_process_quotes
         expect(cpp.doc.css("aside.quote.quote-modified")).to be_blank
       end
@@ -1984,7 +2108,7 @@ RSpec.describe CookedPostProcessor do
         test
       MARKDOWN
 
-      it "should be marked as modified" do
+      it "marks the quote as modified" do
         cpp.post_process_quotes
         expect(cpp.doc.css("aside.quote.quote-modified")).to be_present
       end
@@ -1998,7 +2122,7 @@ RSpec.describe CookedPostProcessor do
         and this is a reply
       MARKDOWN
 
-      it "it should be marked as missing" do
+      it "marks the quoted post as missing" do
         cpp.post_process_quotes
         expect(cpp.doc.css("aside.quote.quote-post-not-found")).to be_present
       end
@@ -2047,7 +2171,7 @@ RSpec.describe CookedPostProcessor do
 
     before { SiteSetting.remove_full_quote = true }
 
-    it "works" do
+    it "removes the full quote while preserving intervening hidden and action posts" do
       hidden =
         Fabricate(
           :post,

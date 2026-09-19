@@ -4,15 +4,15 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import User from "discourse/models/user";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class IgnoreDurationModal extends Component {
@@ -78,43 +78,43 @@ export default class IgnoreDurationModal extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "user.user_notifications.ignore_duration_title"}}
-      @flash={{this.flash}}
-      @autoFocus="false"
       class="ignore-duration-with-username-modal"
+      @autoFocus="false"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @title={{i18n "user.user_notifications.ignore_duration_title"}}
     >
       <:body>
         {{#if this.enableSelection}}
           <div class="controls tracking-controls">
-            <label>{{icon "far-eye-slash" class="icon"}}
+            <label>{{dIcon "far-eye-slash" class="icon"}}
               {{i18n
                 "user.user_notifications.ignore_duration_username"
               }}</label>
             <EmailGroupUserChooser
-              @value={{this.ignoredUsername}}
               @onChange={{this.updateIgnoredUsername}}
               @options={{hash excludeCurrentUser=true maximum=1}}
+              @value={{this.ignoredUsername}}
             />
           </div>
         {{/if}}
-        <FutureDateInput
-          @label="user.user_notifications.ignore_duration_when"
-          @input={{readonly this.ignoredUntil}}
+        <DFutureDateInput
           @customShortcuts={{this.timeShortcuts}}
           @includeDateTime={{false}}
+          @input={{readonly this.ignoredUntil}}
+          @label="user.user_notifications.ignore_duration_when"
           @onChangeInput={{fn (mut this.ignoredUntil)}}
         />
         <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
+          @action={{this.ignore}}
           @disabled={{this.saveDisabled}}
           @label="user.user_notifications.ignore_duration_save"
-          @action={{this.ignore}}
-          class="btn-primary"
         />
-        <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
       </:footer>
     </DModal>
   </template>

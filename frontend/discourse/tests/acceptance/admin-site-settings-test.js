@@ -9,6 +9,7 @@ import { test } from "qunit";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -68,13 +69,13 @@ acceptance("Admin - Site Settings", function (needs) {
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't overridden");
 
-    await fillIn(".input-setting-string", "Test");
+    await fillIn(".form-kit__control-input", "Test");
     await click("button.cancel");
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("canceling doesn't mark setting as overridden");
 
-    await fillIn(".input-setting-string", "Test");
+    await fillIn(".form-kit__control-input", "Test");
     await click("button.ok");
     assert
       .dom(".row.setting.overridden")
@@ -95,12 +96,6 @@ acceptance("Admin - Site Settings", function (needs) {
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't marked as overridden after undo");
-
-    await fillIn(".input-setting-string", "Test");
-    await triggerKeyEvent(".input-setting-string", "keydown", "Enter");
-    assert
-      .dom(".row.setting.overridden")
-      .exists("saving via Enter key marks setting as overridden");
   });
 
   test("always shows filtered site settings if a filter is set", async function (assert) {
@@ -137,12 +132,315 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.dom(".row.setting").exists({ count: 0 });
   });
 
+  test("renders inline dependent site settings under their parent setting", async function (assert) {
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "highlight_scope",
+              humanized_name: "Highlight scope",
+              description: "Choose a scope.",
+              default: "include",
+              value: "include",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+            {
+              setting: "highlight_categories",
+              humanized_name: "Highlight categories",
+              description: "Choose categories.",
+              default: "default",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+              depends_on: ["highlight_scope"],
+              depends_on_humanized_names: ["Highlight scope"],
+              depends_on_values: {
+                highlight_scope: ["include", "exclude"],
+              },
+              depends_behavior: "hidden",
+              dependent_setting_display: "inline",
+            },
+          ],
+        }),
+      ];
+    });
+
+    await visit("/admin/site_settings");
+
+    assert
+      .dom(
+        '[data-setting="highlight_scope"] [data-setting="highlight_categories"]'
+      )
+      .exists("dependent setting is rendered inside its parent setting");
+    assert
+      .dom('section.settings > [data-setting="highlight_categories"]')
+      .doesNotExist(
+        "dependent setting is not rendered as a separate top-level row"
+      );
+    assert
+      .dom(
+        '[data-setting="highlight_scope"] [data-setting="highlight_categories"] .setting-controls'
+      )
+      .doesNotExist("dependent setting does not render its own controls");
+    assert
+      .dom('[data-setting="highlight_scope"] > .setting-controls__undo')
+      .exists("parent setting renders controls for an overridden dependent");
+
+    await click('[data-setting="highlight_scope"] > .setting-controls__undo');
+
+    assert
+      .dom('[data-setting="highlight_categories"] .form-kit__control-input')
+      .hasValue("default", "parent controls reset the dependent setting");
+    assert
+      .dom(".setting-depends-on-notice")
+      .includesText(
+        "This setting only applies when Highlight scope is set to a compatible value.",
+        "value-based dependencies do not use enabled copy"
+      );
+  });
+
+  test("filtering by an inline dependent site setting shows its parent setting", async function (assert) {
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "highlight_scope",
+              humanized_name: "Highlight scope",
+              description: "Choose a scope.",
+              default: "include",
+              value: "include",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+            {
+              setting: "highlight_categories",
+              humanized_name: "Highlight categories",
+              description: "Choose categories.",
+              default: "",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+              depends_on: ["highlight_scope"],
+              depends_on_humanized_names: ["Highlight scope"],
+              depends_on_values: {
+                highlight_scope: ["include", "exclude"],
+              },
+              depends_behavior: "hidden",
+              dependent_setting_display: "inline",
+            },
+          ],
+        }),
+      ];
+    });
+
+    await visit("/admin/site_settings?filter=highlight_categories");
+
+    assert
+      .dom('section.settings > [data-setting="highlight_scope"]')
+      .exists("the parent setting is rendered as the top-level row");
+    assert
+      .dom(
+        '[data-setting="highlight_scope"] [data-setting="highlight_categories"]'
+      )
+      .exists("the matched dependent setting is rendered inline");
+    assert
+      .dom('section.settings > [data-setting="highlight_categories"]')
+      .doesNotExist("the dependent setting is not rendered as its own row");
+  });
+
+  test("inline dependent site settings use their parent setting controls", async function (assert) {
+    const updatedSettings = [];
+
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "highlight_scope",
+              humanized_name: "Highlight scope",
+              description: "Choose a scope.",
+              default: "public",
+              value: "public",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+            {
+              setting: "highlight_categories",
+              humanized_name: "Highlight categories",
+              description: "Choose categories.",
+              default: "",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+              depends_on: ["highlight_scope"],
+              depends_on_values: {
+                highlight_scope: ["include", "exclude"],
+              },
+              depends_behavior: "hidden",
+              dependent_setting_display: "inline",
+            },
+            {
+              setting: "unrelated_setting",
+              humanized_name: "Unrelated setting",
+              description: "Choose something else.",
+              default: "",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+          ],
+        }),
+      ];
+    });
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      updatedSettings.push("bulk_update");
+      const params = new URLSearchParams(request.requestBody);
+
+      assert.strictEqual(
+        params.get("settings[highlight_scope][value]"),
+        "include",
+        "saves the parent scope value"
+      );
+      assert.strictEqual(
+        params.get("settings[highlight_categories][value]"),
+        "selected categories",
+        "saves the inline dependent value"
+      );
+      assert.false(
+        params.has("settings[unrelated_setting][value]"),
+        "does not save unrelated dirty settings"
+      );
+
+      return [204, {}, ""];
+    });
+    pretender.put("/admin/site_settings/unrelated_setting", () => {
+      updatedSettings.push("unrelated_setting");
+      return [204, {}, ""];
+    });
+
+    await visit("/admin/site_settings");
+
+    await fillIn(
+      '[data-setting="highlight_scope"] .form-kit__control-input',
+      "include"
+    );
+    await fillIn(
+      '[data-setting="highlight_categories"] .form-kit__control-input',
+      "selected categories"
+    );
+    await fillIn(
+      '[data-setting="unrelated_setting"] .form-kit__control-input',
+      "do not save me"
+    );
+
+    await click('[data-setting="highlight_scope"] > .setting-controls .ok');
+
+    assert.deepEqual(
+      updatedSettings,
+      ["bulk_update"],
+      "only the inline group is saved"
+    );
+  });
+
   test("category name is preserved", async function (assert) {
     await visit("/admin/site_settings/category/basic?filter=menu");
     assert.strictEqual(
       currentURL(),
       "/admin/site_settings/category/basic?filter=menu"
     );
+  });
+
+  test("labels the MCP settings category and client policies", async function (assert) {
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "mcp_oauth_client_id_metadata_policy",
+              humanized_name: "MCP OAuth Client ID metadata policy",
+              description:
+                "Choose how OAuth clients can register with this site. Users must still approve the access requested by each client.",
+              default: "any_domain",
+              value: "any_domain",
+              category: "mcp",
+              preview: null,
+              secret: false,
+              type: "enum",
+              valid_values: [
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.disabled",
+                  value: "disabled",
+                },
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.approved_domains",
+                  value: "approved_domains",
+                },
+                {
+                  name: "mcp_oauth_client_id_metadata_policy.any_domain",
+                  value: "any_domain",
+                },
+              ],
+              translate_names: true,
+            },
+          ],
+        }),
+      ];
+    });
+
+    await visit("/admin/site_settings?filter=mcp%20client%20id%20metadata");
+
+    assert
+      .dom(".admin-site-settings-category-nav__item.mcp a")
+      .hasAttribute(
+        "title",
+        i18n("admin.site_settings.categories.mcp"),
+        "the MCP category has a translated label"
+      );
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] .form-kit__control-select'
+      )
+      .hasValue("any_domain", "CIMD from any domain is selected by default");
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="disabled"]'
+      )
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.disabled"));
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="approved_domains"]'
+      )
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.approved_domains"));
+    assert
+      .dom(
+        '[data-setting="mcp_oauth_client_id_metadata_policy"] option[value="any_domain"]'
+      )
+      .hasText(i18n("mcp_oauth_client_id_metadata_policy.any_domain"));
   });
 
   test("shows all_results if current category has none", async function (assert) {

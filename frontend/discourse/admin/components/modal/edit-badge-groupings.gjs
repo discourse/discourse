@@ -3,11 +3,11 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class EditBadgeGroupings extends Component {
@@ -78,9 +78,9 @@ export default class EditBadgeGroupings extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.badges.badge_groupings.modal_title"}}
       @bodyClass="badge-groupings-modal"
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.badges.badge_groupings.modal_title"}}
     >
       <:body>
         <div class="badge-groupings">
@@ -90,8 +90,8 @@ export default class EditBadgeGroupings extends Component {
                 <div class="badge-grouping">
                   {{#if wc.editing}}
                     <Input
-                      @value={{wc.name}}
                       class="badge-grouping-name-input"
+                      @value={{wc.name}}
                     />
                   {{else}}
                     <span>{{wc.displayName}}</span>
@@ -100,19 +100,30 @@ export default class EditBadgeGroupings extends Component {
                 <div class="actions">
                   {{#if wc.editing}}
                     <DButton
+                      class="btn-default"
                       @action={{fn (mut wc.editing) false}}
                       @icon="check"
                     />
                   {{else}}
                     <DButton
+                      class="btn-default"
                       @action={{fn (mut wc.editing) true}}
                       @disabled={{wc.system}}
                       @icon="pencil"
                     />
                   {{/if}}
-                  <DButton @action={{fn this.up wc}} @icon="chevron-up" />
-                  <DButton @action={{fn this.down wc}} @icon="chevron-down" />
                   <DButton
+                    class="btn-default"
+                    @action={{fn this.up wc}}
+                    @icon="chevron-up"
+                  />
+                  <DButton
+                    class="btn-default"
+                    @action={{fn this.down wc}}
+                    @icon="chevron-down"
+                  />
+                  <DButton
+                    class="btn-default"
                     @action={{fn this.delete wc}}
                     @disabled={{wc.system}}
                     @icon="xmark"
@@ -123,17 +134,17 @@ export default class EditBadgeGroupings extends Component {
           </ul>
         </div>
         <DButton
+          class="btn-default badge-groupings__add-grouping"
           @action={{this.add}}
-          class="badge-groupings__add-grouping"
           @label="admin.badges.new"
         />
       </:body>
       <:footer>
         <DButton
-          @action={{this.saveAll}}
-          @label="admin.badges.save"
           class="btn-primary badge-groupings__save"
+          @action={{this.saveAll}}
           @disabled={{this.submitDisabled}}
+          @label="admin.badges.save"
         />
         <DButton
           class="btn-flat d-modal-cancel"

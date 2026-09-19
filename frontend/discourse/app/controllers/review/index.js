@@ -109,17 +109,17 @@ export default class ReviewIndexController extends Controller {
     return this.filtersExpanded ? "chevron-up" : "chevron-down";
   }
 
+  @computed("unknownReviewableTypes")
+  get displayUnknownReviewableTypesWarning() {
+    return this.unknownReviewableTypes?.length > 0 && this.currentUser.admin;
+  }
+
   setRange(range) {
     this.setProperties(range);
   }
 
   refreshModel() {
     next(() => this.send("refreshRoute"));
-  }
-
-  @computed("unknownReviewableTypes")
-  get displayUnknownReviewableTypesWarning() {
-    return this.unknownReviewableTypes?.length > 0 && this.currentUser.admin;
   }
 
   @action
@@ -137,6 +137,17 @@ export default class ReviewIndexController extends Controller {
     } else {
       this.reviewables.content.splice(0, Infinity, ...newList);
     }
+  }
+
+  @action
+  updateStatuses(updates) {
+    this.reviewables.content.forEach((reviewable) => {
+      const update = updates[reviewable.id];
+
+      if (update) {
+        reviewable.setProperties(update);
+      }
+    });
   }
 
   @action

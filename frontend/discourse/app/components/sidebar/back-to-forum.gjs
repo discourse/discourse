@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BackToForum extends Component {
@@ -26,8 +26,8 @@ export default class BackToForum extends Component {
   }
 
   <template>
-    <a href={{this.href}} class="sidebar-sections__back-to-forum">
-      {{icon "arrow-left"}}
+    <a class="sidebar-sections__back-to-forum" href={{this.href}}>
+      {{dIcon "arrow-left"}}
 
       <span>{{i18n "sidebar.back_to_forum"}}</span>
     </a>

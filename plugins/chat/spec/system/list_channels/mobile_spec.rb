@@ -62,7 +62,7 @@ RSpec.describe "List channels | mobile", mobile: true do
         channel_4.add(current_user)
       end
 
-      it "sorts them by mentions, unread, then by slug" do
+      it "sorts channels alphabetically by default even with mentions and unreads" do
         Jobs.run_immediately!
 
         Fabricate(
@@ -88,16 +88,17 @@ RSpec.describe "List channels | mobile", mobile: true do
 
         visit("/chat/channels")
 
-        # channel with mentions should be first
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
-          channel_4.id.to_s,
-        )
-        # channels with unread messages are next
-        expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
           channel_1.id.to_s,
         )
-        expect(page.find("#public-channels a:nth-child(3)")["data-chat-channel-id"]).to eq(
+        expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
           channel_2.id.to_s,
+        )
+        expect(page.find("#public-channels a:nth-child(3)")["data-chat-channel-id"]).to eq(
+          channel_3.id.to_s,
+        )
+        expect(page.find("#public-channels a:nth-child(4)")["data-chat-channel-id"]).to eq(
+          channel_4.id.to_s,
         )
       end
 
@@ -149,6 +150,57 @@ RSpec.describe "List channels | mobile", mobile: true do
         it "doesn’t show the channel" do
           visit("/chat")
           expect(page).to have_no_content(inaccessible_dm_channel_1.title(current_user))
+        end
+      end
+    end
+
+    context "when long pressing a channel row" do
+      fab!(:category_channel_1, :category_channel)
+
+      let(:channel_row) { PageObjects::Components::Chat::ChannelRow.new(category_channel_1.id) }
+
+      before { category_channel_1.add(current_user) }
+
+      it "opens the channel menu" do
+        visit("/chat/channels")
+
+        channel_row.long_press
+
+        expect(page).to have_css(".fk-d-menu-modal .chat-channel-sidebar-link-menu")
+      end
+
+      it "leaves the channel using the menu" do
+        visit("/chat/channels")
+
+        channel_row.long_press
+        find(".chat-channel-sidebar-link-menu__leave-channel").click
+
+        expect(channel_row).to be_non_existent
+      end
+
+      it "changes the notification level from the menu submenu" do
+        visit("/chat/channels")
+
+        channel_row.long_press
+        find(".chat-channel-sidebar-link-menu__open-notification-settings").click
+        find(".chat-channel-sidebar-link-menu__notification-level-never").click
+
+        expect(category_channel_1.membership_for(current_user).reload.notification_level).to eq(
+          "never",
+        )
+      end
+
+      context "when direct message channel" do
+        fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
+
+        let(:dm_channel_row) { PageObjects::Components::Chat::ChannelRow.new(dm_channel_1.id) }
+
+        it "opens the channel menu" do
+          visit("/chat/direct-messages")
+
+          dm_channel_row.long_press
+
+          expect(page).to have_css(".fk-d-menu-modal .chat-channel-sidebar-link-menu")
         end
       end
     end
@@ -276,9 +328,10 @@ RSpec.describe "List channels | mobile", mobile: true do
     end
   end
 
-  it "has a new dm channel button" do
+  it "has a new dm channel option in the options menu" do
     visit("/chat/direct-messages")
-    find(".c-navbar__new-dm-button").click
+    find(".chat-channel-list-options-button").click
+    find('[data-menu-option-id="startDm"]').click
 
     expect(chat.message_creator).to be_opened
   end

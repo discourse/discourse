@@ -34,6 +34,7 @@ es:
         title: Programar una publicación en un tema con los resultados del Explorador de datos
         description: Obtener informes programados publicados en un tema específico
   data_explorer:
+    admin_dashboard_label: "Explorador de datos"
     report_generator:
       private_message:
         title: "Informe programado para %{query_name}"

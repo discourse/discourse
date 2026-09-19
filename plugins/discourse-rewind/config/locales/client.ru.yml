@@ -37,6 +37,7 @@ ru:
           title: Календарь активности
           cell_title:
             visited_no_posts: "Вы посетили и наблюдали за %{date}, но не оставили никаких сообщений."
+            visited_no_posts_others: "%{username} посетил и просматривал %{date}, но не оставил никаких сообщений."
             no_activity: "Вас не было рядом в %{date}."
             no_activity_others: "%{username} не было рядом в %{date}."
         top_words:

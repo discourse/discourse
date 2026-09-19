@@ -3,19 +3,21 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import UserLink from "discourse/components/user-link";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import {
   getPasskeyCredential,
   isWebauthnSupported,
 } from "discourse/lib/webauthn";
+import DButton from "discourse/ui-kit/d-button";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import { i18n } from "discourse-i18n";
 
 export default class ConfirmSession extends Component {
   @service dialog;
   @service currentUser;
+  @service modal;
   @service siteSettings;
 
   @tracked errorMessage;
@@ -95,6 +97,18 @@ export default class ConfirmSession extends Component {
     try {
       const result = await this.currentUser.changePassword();
 
+      if (result.email_code) {
+        this.dialog.cancel();
+        this.modal.show(ForgotPassword, {
+          model: {
+            codeSent: true,
+            emailOrUsername:
+              this.currentUser.email || this.currentUser.username,
+          },
+        });
+        return;
+      }
+
       if (result.success) {
         this.errorMessage = null;
         this.resetEmailSent = i18n(
@@ -127,9 +141,9 @@ export default class ConfirmSession extends Component {
 
       <div class="confirm-session__instructions">
         <span>{{this.loggedInAs}}</span>
-        <UserLink @user={{this.currentUser}}>
+        <DUserLink @user={{this.currentUser}}>
           {{this.currentUser.username}}
-        </UserLink>
+        </DUserLink>
       </div>
 
       <form>
@@ -137,25 +151,25 @@ export default class ConfirmSession extends Component {
         <div class="controls">
           <div class="inline-form">
             <Input
-              @value={{this.password}}
-              @type="password"
-              id="password"
-              class="input-large"
               autofocus="autofocus"
+              class="input-large"
+              id="password"
+              @type="password"
+              @value={{this.password}}
             />
             <DButton
-              @isLoading={{this.isLoading}}
               class="btn-primary"
-              @type="submit"
               @action={{this.submit}}
+              @isLoading={{this.isLoading}}
               @label="user.password.confirm"
+              @type="submit"
             />
           </div>
           <div class="confirm-session__reset">
             <DButton
-              @label="user.confirm_access.forgot_password"
-              @action={{this.sendPasswordResetEmail}}
               class="btn-link btn-flat confirm-session__reset-btn"
+              @action={{this.sendPasswordResetEmail}}
+              @label="user.confirm_access.forgot_password"
             />
             {{#if this.resetEmailSent}}
               <span class="confirm-session__reset-email-sent">
@@ -167,8 +181,8 @@ export default class ConfirmSession extends Component {
             <div class="confirm-session__passkey">
               <DButton
                 @action={{this.confirmWithPasskey}}
-                @label="user.passkeys.confirm_button"
                 @icon="user"
+                @label="user.passkeys.confirm_button"
               />
             </div>
           {{/if}}

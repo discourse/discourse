@@ -1,6 +1,7 @@
 discourse_openid_connect:
   openid_connect_enabled:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "oidc"
   openid_connect_discovery_document:
     default: ""
@@ -19,6 +20,9 @@ discourse_openid_connect:
     default: ""
     area: "oidc"
   openid_connect_rp_initiated_logout_include_client_id:
+    default: false
+    area: "oidc"
+  openid_connect_rp_initiated_logout_include_state:
     default: false
     area: "oidc"
   openid_connect_allow_association_change:
@@ -56,6 +60,32 @@ discourse_openid_connect:
   openid_connect_groups_claim:
     default: ""
     area: "oidc"
+  openid_connect_user_field_mappings:
+    type: objects
+    default: []
+    area: "oidc"
+    schema:
+      name: mapping
+      properties:
+        claim:
+          type: string
+          required: true
+        user_field_id:
+          type: integer
+          required: true
   openid_connect_use_pkce:
     default: false
+    area: "oidc"
+  openid_connect_mtls_client_cert:
+    default: ""
+    textarea: true
+    area: "oidc"
+  openid_connect_mtls_client_key:
+    default: ""
+    textarea: true
+    secret: true
+    area: "oidc"
+  openid_connect_mtls_client_key_passcode:
+    default: ""
+    secret: true
     area: "oidc"

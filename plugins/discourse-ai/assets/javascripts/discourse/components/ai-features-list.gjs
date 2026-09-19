@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { and, eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import AiFeatureCard from "./ai-feature-card";
 
@@ -65,8 +65,8 @@ export default class AiFeaturesList extends Component {
               {{else if (this.isAutomationModule module)}}
                 <DButton
                   class="btn-default edit"
-                  @label="discourse_ai.features.edit"
                   @action={{this.transitionToAutomations}}
+                  @label="discourse_ai.features.edit"
                 />
               {{else}}
                 <DButton
@@ -94,8 +94,8 @@ export default class AiFeaturesList extends Component {
             {{else}}
               {{#each module.features as |feature|}}
                 <AiFeatureCard
-                  @localizedFeatureName={{this.featureName feature module}}
                   @feature={{feature}}
+                  @localizedFeatureName={{this.featureName feature module}}
                   @showGroups={{not (this.isSpamModule module)}}
                 />
               {{/each}}

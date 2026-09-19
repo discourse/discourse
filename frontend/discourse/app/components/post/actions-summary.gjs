@@ -1,6 +1,6 @@
-import UserAvatar from "discourse/components/user-avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const PostActionsSummary = <template>
   {{#each @post.actionsSummary key="id" as |actionSummary|}}
@@ -9,9 +9,9 @@ const PostActionsSummary = <template>
   {{/each}}
   {{#if @post.deletedAt}}
     <div class="post-action deleted-post">
-      {{icon "trash-can"}}
-      <UserAvatar @size="tiny" @user={{@post.deletedBy}} />
-      {{formatDate @post.deletedAt format="tiny"}}
+      {{dIcon "trash-can"}}
+      <DUserAvatar @size="tiny" @user={{@post.deletedBy}} />
+      {{dFormatDate @post.deletedAt format="tiny"}}
     </div>
   {{/if}}
 </template>;

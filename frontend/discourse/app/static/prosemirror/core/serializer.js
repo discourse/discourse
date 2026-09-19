@@ -2,7 +2,7 @@ import {
   defaultMarkdownSerializer,
   MarkdownSerializerState,
 } from "prosemirror-markdown";
-import { buildTypographyReverseMap } from "discourse/static/prosemirror/extensions/typographer-replacements";
+import expelBoundaryPunctuation from "../lib/expel-boundary-punctuation";
 
 export default class Serializer {
   #afterSerializers;
@@ -12,13 +12,8 @@ export default class Serializer {
     this.nodes.hard_break = (state) =>
       state.write(state.inTable ? "<br>" : "\n");
 
-    const siteSettings = pluginParams.getContext?.().siteSettings;
-    const reverseTypography = buildReverseTypography(
-      buildTypographyReverseMap(siteSettings)
-    );
-
     this.nodes.text = (state, node) => {
-      state.text(reverseTypography(node.text), !state.inAutolink);
+      state.text(node.text, !state.inAutolink);
     };
 
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};
@@ -29,7 +24,7 @@ export default class Serializer {
 
   convert(doc) {
     const state = new MarkdownSerializerState(this.nodes, this.marks, {});
-    state.renderContent(doc.content);
+    state.renderContent(expelBoundaryPunctuation(doc).content);
 
     if (this.#afterSerializers) {
       for (const afterSerializer of this.#afterSerializers) {
@@ -70,19 +65,4 @@ export default class Serializer {
       Object.assign(this.marks, serializer);
     }
   }
-}
-
-function buildReverseTypography(map) {
-  if (!Object.keys(map).length) {
-    return (text) => text;
-  }
-
-  const re = new RegExp(
-    Object.keys(map)
-      .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-      .join("|"),
-    "g"
-  );
-
-  return (text) => text.replace(re, (char) => map[char]);
 }

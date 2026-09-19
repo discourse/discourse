@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import UserStatusMessage from "discourse/components/user-status-message";
-import concatClass from "discourse/helpers/concat-class";
 import userStatus from "discourse/helpers/user-status";
 import { not } from "discourse/truth-helpers";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
@@ -43,21 +43,21 @@ export default class ChatableUser extends Component {
       class="chat-message-creator__chatable -user"
       data-disabled={{not @item.enabled}}
     >
-      <ChatUserAvatar @user={{@item.model}} @interactive={{false}} />
+      <ChatUserAvatar @interactive={{false}} @user={{@item.model}} />
       <ChatUserDisplayName @user={{@item.model}} />
 
       {{#if this.showIndicator}}
         <div
-          class={{concatClass "unread-indicator" (if this.isUrgent "-urgent")}}
+          class={{dConcatClass "unread-indicator" (if this.isUrgent "-urgent")}}
         ></div>
       {{/if}}
 
       {{userStatus @item.model currentUser=this.currentUser}}
 
       <div class="user-status" {{this.trackUserStatus @item.model}}>
-        <UserStatusMessage
-          @status={{@item.model.status}}
+        <DUserStatusMessage
           @showDescription={{true}}
+          @status={{@item.model.status}}
         />
       </div>
 

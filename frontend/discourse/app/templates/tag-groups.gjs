@@ -1,12 +1,12 @@
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <a class="tag-groups--back" href={{getUrl "/tags"}}>
-    {{icon "chevron-left"}}
+    {{dIcon "chevron-left"}}
     <span>{{i18n "tagging.groups.back_btn"}}</span>
   </a>
 
@@ -19,7 +19,7 @@ export default <template>
           <ul>
             {{#each @controller.model.content as |tagGroup|}}
               <li>
-                <LinkTo @route="tagGroups.edit" @model={{tagGroup}}>
+                <LinkTo @model={{tagGroup}} @route="tagGroups.edit">
                   {{tagGroup.name}}
                 </LinkTo>
               </li>
@@ -27,10 +27,10 @@ export default <template>
           </ul>
 
           <DButton
+            class="btn-default"
             @action={{@controller.newTagGroup}}
             @icon="plus"
             @label="tagging.groups.new"
-            class="btn-default"
           />
         </div>
       {{/if}}

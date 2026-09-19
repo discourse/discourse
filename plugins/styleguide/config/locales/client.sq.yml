@@ -8,13 +8,15 @@ sq:
   js:
     styleguide:
       title: "Udhëzues stili"
-      welcome: "Për të filluar, zgjidhni një seksion nga menyja në të majtë."
       categories:
         syntax: Sintaksë
       sections:
         typography:
           example: "Mirë se vini në Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        context_menu:
+          actions:
+            delete: "Fshij"
         colors:
           title: "Ngjyrat"
         dropdowns:
@@ -41,6 +43,20 @@ sq:
           title: "Harta e temës"
         more_topics:
           title: "Më shumë tema"
+        roving_focus:
+          toolbar:
+            copy: "Kopjo"
+          adjacent:
+            field: "Kërko"
+            open: "Fillo"
+            recent: "Më të fundit"
+          combobox:
+            daily: "Ditore"
+            weekly: "Javore"
+            monthly: "Mujore"
+            never: "Asnjëherë"
+          tree:
+            select: "Zgjidhni"
         modal:
           title: "Modalitet"
         user_about:

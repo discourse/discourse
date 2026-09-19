@@ -24,7 +24,7 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
   private
 
   def init_data
-    self.data = {} if self.data.nil?
+    self.data = {} if data.nil?
   end
 
   def destroy_rules

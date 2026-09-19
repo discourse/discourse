@@ -4,8 +4,8 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import ChildTreeNode from "discourse/admin/components/schema-setting/editor/child-tree-node";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class SchemaSettingNewEditorChildTree extends Component {
   @tracked expanded = true;
@@ -32,29 +32,29 @@ export default class SchemaSettingNewEditorChildTree extends Component {
       {{on "click" this.toggleVisibility}}
     >
       {{@name}}
-      {{icon (if this.expanded "chevron-down" "chevron-right")}}
+      {{dIcon (if this.expanded "chevron-down" "chevron-right")}}
     </div>
 
     {{#if this.expanded}}
       <ul>
         {{#each @objects as |object index|}}
           <ChildTreeNode
+            data-test-parent-index={{@parentNodeIndex}}
+            @generateSchemaTitle={{@generateSchemaTitle}}
             @index={{index}}
             @object={{object}}
             @onChildClick={{fn this.onChildClick index}}
             @schema={{@schema}}
-            @generateSchemaTitle={{@generateSchemaTitle}}
-            data-test-parent-index={{@parentNodeIndex}}
           />
         {{/each}}
 
         <li class="schema-setting-editor__tree-node --child --add-button">
           <DButton
-            @action={{fn @addChildItem @name @parentNodeIndex}}
-            @translatedLabel={{@schema.name}}
-            @icon="plus"
             class="btn-transparent schema-setting-editor__tree-add-button --child"
             data-test-parent-index={{@parentNodeIndex}}
+            @action={{fn @addChildItem @name @parentNodeIndex}}
+            @icon="plus"
+            @translatedLabel={{@schema.name}}
           />
         </li>
       </ul>

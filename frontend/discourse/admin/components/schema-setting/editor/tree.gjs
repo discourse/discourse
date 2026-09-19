@@ -1,20 +1,20 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import TreeNode from "discourse/admin/components/schema-setting/editor/tree-node";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-<template>
+export default <template>
   <ul class="schema-setting-editor__tree">
     {{#if @backButtonText}}
       <li
-        role="link"
         class="schema-setting-editor__tree-node --back-btn"
+        role="link"
         {{on "click" @clickBack}}
       >
         <div class="schema-setting-editor__tree-node-text">
-          {{icon "arrow-left"}}
+          {{dIcon "arrow-left"}}
           {{@backButtonText}}
         </div>
       </li>
@@ -22,24 +22,23 @@ import { eq } from "discourse/truth-helpers";
 
     {{#each @data as |object index|}}
       <TreeNode
-        @index={{index}}
-        @object={{object}}
         @active={{eq @activeIndex index}}
-        @onClick={{fn @updateIndex index}}
-        @onChildClick={{@onChildClick}}
-        @schema={{@schema}}
         @addChildItem={{@addChildItem}}
         @generateSchemaTitle={{@generateSchemaTitle}}
-        @registerInputFieldObserver={{@registerInputFieldObserver}}
+        @index={{index}}
+        @object={{object}}
+        @onChildClick={{@onChildClick}}
+        @onClick={{fn @updateIndex index}}
+        @schema={{@schema}}
       />
     {{/each}}
 
     <li class="schema-setting-editor__tree-node --parent --add-button">
       <DButton
-        @action={{@addItem}}
-        @translatedLabel={{@schema.name}}
-        @icon="plus"
         class="btn-transparent schema-setting-editor__tree-add-button --root"
+        @action={{@addItem}}
+        @icon="plus"
+        @translatedLabel={{@schema.name}}
       />
     </li>
   </ul>

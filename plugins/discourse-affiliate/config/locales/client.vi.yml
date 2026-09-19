@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_affiliate: "Tích hợp liên kết tiếp thị Discourse (Discourse Affiliate)"

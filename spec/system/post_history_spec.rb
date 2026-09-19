@@ -64,3 +64,45 @@ describe "Post history with tag changes" do
     expect(post_history_modal.inserted_tags).to contain_exactly(tag2.name, tag3.name)
   end
 end
+
+describe "Post history with a hidden revision" do
+  include ThemeScreenshotMarker
+
+  fab!(:admin)
+  fab!(:post_owner, :user)
+  fab!(:topic) { Fabricate(:topic, user: post_owner) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: post_owner, raw: "Initial public version") }
+
+  let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
+
+  before do
+    SiteSetting.editing_grace_period = 0
+
+    post.revise(post_owner, raw: "Second public version")
+    post.revise(post_owner, raw: "Hidden secret version")
+    post.revise(post_owner, raw: "Latest public version")
+    post.revisions.find_by(number: 3).hide!
+  end
+
+  it "tells anonymous users why a diff can't be displayed instead of showing a blank space" do
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+
+    expect(post_history_modal).to have_hidden_diff_notice
+    screenshot_marker(label: "post-history-hidden-edit", only: :desktop)
+
+    post_history_modal.click_previous_revision
+
+    expect(post_history_modal).to have_hidden_diff_notice
+  end
+
+  it "still shows the diffs around the hidden revision to staff" do
+    sign_in(admin)
+    topic_page.visit_topic(topic)
+    find(".post-info.edits").click
+
+    expect(post_history_modal).to have_no_hidden_diff_notice
+    expect(post_history_modal).to have_body_diff("Latest public version")
+  end
+end

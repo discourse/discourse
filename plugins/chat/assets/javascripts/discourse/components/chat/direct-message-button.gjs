@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ChatDirectMessageButton extends Component {
   @service chat;
@@ -35,10 +35,10 @@ export default class ChatDirectMessageButton extends Component {
   <template>
     {{#if this.shouldRender}}
       <DButton
-        @action={{this.startChatting}}
-        @label="chat.title_capitalized"
-        @icon="d-chat"
         class="btn-primary chat-direct-message-btn"
+        @action={{this.startChatting}}
+        @icon="d-chat"
+        @label="chat.title_capitalized"
       />
     {{/if}}
   </template>

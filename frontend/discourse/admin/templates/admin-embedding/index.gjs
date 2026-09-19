@@ -3,18 +3,18 @@ import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import EmbeddableHost from "discourse/admin/components/embeddable-host";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import HighlightedCode from "discourse/components/highlighted-code";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{#if @controller.embedding.embeddable_hosts}}
     <div class="admin-embedding-index__full-app-toggle">
       <DToggleSwitch
-        @state={{@controller.fullAppMode}}
         aria-label={{i18n "admin.embedding.full_app_mode"}}
+        @state={{@controller.fullAppMode}}
         {{on "click" @controller.toggleFullAppMode}}
       />
       <div class="admin-embedding-index__full-app-toggle-text">
@@ -29,14 +29,14 @@ export default <template>
 
     {{#if @controller.showEmbeddingCode}}
       <AdminConfigAreaCard
-        @heading="admin.embedding.configuration_snippet"
+        class="admin-embedding-index__code"
         @collapsable={{true}}
         @collapsed={{true}}
-        class="admin-embedding-index__code"
+        @heading="admin.embedding.configuration_snippet"
       >
         <:content>
           {{trustHTML (i18n "admin.embedding.sample")}}
-          <HighlightedCode @code={{@controller.embeddingCode}} @lang="html" />
+          <DHighlightedCode @code={{@controller.embeddingCode}} @lang="html" />
         </:content>
       </AdminConfigAreaCard>
     {{/if}}
@@ -65,17 +65,17 @@ export default <template>
       <tbody class="d-table__body">
         {{#each @controller.embedding.embeddable_hosts as |host|}}
           <EmbeddableHost
-            @host={{host}}
             @deleteHost={{@controller.deleteHost}}
+            @host={{host}}
           />
         {{/each}}
       </tbody>
     </table>
   {{else}}
     <AdminConfigAreaEmptyList
+      @ctaClass="admin-embedding__add-host"
       @ctaLabel="admin.embedding.add_host"
       @ctaRoute="adminEmbedding.new"
-      @ctaClass="admin-embedding__add-host"
       @emptyLabel="admin.embedding.get_started"
     />
   {{/if}}

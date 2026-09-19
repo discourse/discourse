@@ -1,6 +1,6 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
@@ -43,7 +43,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
-    const sectionLinks = queryAll(
+    const sectionLinks = findAll(
       ".sidebar-more-section-content .sidebar-section-link"
     );
 

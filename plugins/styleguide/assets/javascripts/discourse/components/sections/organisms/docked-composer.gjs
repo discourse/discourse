@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DockedComposer from "discourse/components/docked-composer";
 import withEventValue from "discourse/helpers/with-event-value";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
@@ -16,7 +16,7 @@ export default class DockedComposerSection extends Component {
   @tracked resizable = true;
   @tracked disabled = false;
   @tracked placeholder = i18n("composer.reply_placeholder");
-  submitTitle = "composer.title";
+  submitTitle = "composer.reply";
 
   @action
   toggleResizable() {
@@ -37,19 +37,19 @@ export default class DockedComposerSection extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-potential-path-strings}}
+    {{! eslint-disable ember/template-no-potential-path-strings }}
     <StyleguideExample @title="<DockedComposer>">
       <StyleguideComponent>
         <div class="docked-composer-styleguide">
           <DockedComposer
-            @resizable={{this.resizable}}
             @disabled={{this.disabled}}
-            @placeholder={{this.placeholder}}
-            @submitTitle={{this.submitTitle}}
-            @uploadTitle="composer.upload_title"
             @draftKey="styleguide-docked-composer"
-            @uploaderId="styleguide-docked-composer-uploader"
             @onSubmit={{this.handleSubmit}}
+            @placeholder={{this.placeholder}}
+            @resizable={{this.resizable}}
+            @submitTitle={{this.submitTitle}}
+            @uploaderId="styleguide-docked-composer-uploader"
+            @uploadTitle="composer.upload_title"
           />
         </div>
       </StyleguideComponent>
@@ -69,9 +69,9 @@ export default class DockedComposerSection extends Component {
         </Row>
         <Row @name="@placeholder">
           <input
-            {{on "input" (withEventValue (fn (mut this.placeholder)))}}
             type="text"
             value={{this.placeholder}}
+            {{on "input" (withEventValue (fn (mut this.placeholder)))}}
           />
         </Row>
       </Controls>

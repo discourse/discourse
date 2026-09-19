@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe DiscourseAi::Agents::ToolRunner do
   fab!(:llm_model) { Fabricate(:llm_model, name: "claude-2") }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:bot_user) { Discourse.system_user }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:tool) do
@@ -60,7 +61,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
         @counter = 0
         stub_request(:post, cloudflare_embedding_def.url).to_return(
           status: 200,
-          body: lambda { |req| { result: { data: [([@counter += 2] * 1024)] } }.to_json },
+          body: lambda { |req| { result: { data: [[@counter += 2] * 1024] } }.to_json },
           headers: {
           },
         )

@@ -7,18 +7,19 @@ RSpec.describe SsoOverridesEmailValidator do
     describe "when 'email editable' is true" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.email_editable = true
       end
 
       describe "when val is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should not be valid" do
+        it "is invalid" do
           expect(validator.valid_value?("t")).to eq(false)
 
           expect(validator.error_message).to eq(
@@ -31,18 +32,19 @@ RSpec.describe SsoOverridesEmailValidator do
     describe "when 'email editable' is false" do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.email_editable = false
       end
 
       describe "when value is false" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
-        it "should be valid" do
+        it "is valid" do
           expect(validator.valid_value?("t")).to eq(true)
         end
       end

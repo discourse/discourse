@@ -23,14 +23,13 @@ module DiscourseAi
         conn = Faraday.new { |f| f.adapter FinalDestination::FaradayAdapter }
         response = conn.post(endpoint, payload.to_json, headers)
 
-        case response.status
-        when 200
+        if response.status == 200
           JSON.parse(response.body, symbolize_names: true).dig(:result, :data).first
         else
-          Rails.logger.warn(
-            "Cloudflare Workers AI Embeddings failed with status: #{response.status} body: #{response.body}",
-          )
-          raise Net::HTTPBadResponse.new(response.body.to_s)
+          raise EmbeddingInferenceError.from_response(
+                  provider: EmbeddingDefinition::CLOUDFLARE,
+                  response: response,
+                )
         end
       end
     end

@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import PinOptionSection, {
   MAX_GLOBALLY_PINNED_TOPICS,
 } from "discourse/components/modal/feature-topic/pin-option-section";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { ajax } from "discourse/lib/ajax";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class BulkPinOptions extends Component {
@@ -109,28 +109,28 @@ export default class BulkPinOptions extends Component {
 
   <template>
     <PinOptionSection
-      @statsMessage={{this.pinnedInCategoryStatsMessage}}
+      @buttonLabel="topic.bulk_feature_topic.pin_button"
+      @dateValue={{this.pinnedInCategoryUntil}}
       @loading={{this.loading}}
       @noteMessage={{i18n "topic.bulk_feature_topic.pin_note"}}
-      @pinMessage={{i18n "topic.bulk_feature_topic.pin"}}
-      @buttonLabel="topic.bulk_feature_topic.pin_button"
-      @onPin={{this.pinInCategory}}
-      @dateValue={{this.pinnedInCategoryUntil}}
       @onDateChange={{this.updatePinnedInCategoryUntil}}
+      @onPin={{this.pinInCategory}}
+      @pinMessage={{i18n "topic.bulk_feature_topic.pin"}}
+      @statsMessage={{this.pinnedInCategoryStatsMessage}}
     />
 
     {{#if this.currentUser.canManageTopic}}
       <hr />
       <PinOptionSection
-        @statsMessage={{this.pinnedGloballyStatsMessage}}
+        @buttonLabel="topic.bulk_feature_topic.pin_globally_button"
+        @confirmMessage={{this.pinGloballyConfirmMessage}}
+        @dateValue={{this.pinnedGloballyUntil}}
         @loading={{this.loading}}
         @noteMessage={{i18n "topic.bulk_feature_topic.pin_note"}}
-        @pinMessage={{i18n "topic.bulk_feature_topic.pin_globally"}}
-        @buttonLabel="topic.bulk_feature_topic.pin_globally_button"
-        @onPin={{this.pinGlobally}}
-        @dateValue={{this.pinnedGloballyUntil}}
         @onDateChange={{this.updatePinnedGloballyUntil}}
-        @confirmMessage={{this.pinGloballyConfirmMessage}}
+        @onPin={{this.pinGlobally}}
+        @pinMessage={{i18n "topic.bulk_feature_topic.pin_globally"}}
+        @statsMessage={{this.pinnedGloballyStatsMessage}}
       />
     {{/if}}
   </template>

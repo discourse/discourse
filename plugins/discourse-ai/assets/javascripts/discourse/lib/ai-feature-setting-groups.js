@@ -37,8 +37,21 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "ai_helper_translator_agent",
         "ai_helper_markdown_tables_agent",
         "ai_helper_custom_prompt_agent",
-        "ai_helper_image_caption_agent",
         "ai_helper_chat_thread_title_agent",
+      ],
+    },
+  ],
+
+  image_caption: [
+    {
+      key: "settings",
+      titleKey: "discourse_ai.features.image_caption.setting_groups.settings",
+      settings: [
+        "ai_post_image_captions_enabled",
+        "ai_image_caption_agent",
+        "ai_post_image_captions_per_post_limit",
+        "ai_post_image_captions_backfill_hourly_rate",
+        "ai_post_image_captions_backfill_max_age_days",
       ],
     },
   ],
@@ -75,6 +88,19 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "ai_embeddings_semantic_search_use_hyde",
         "ai_embeddings_semantic_quick_search_enabled",
         "ai_embeddings_semantic_search_hyde_agent",
+      ],
+    },
+  ],
+
+  admin_dashboard: [
+    {
+      key: "settings",
+      titleKey: "discourse_ai.features.admin_dashboard.setting_groups.settings",
+      settings: [
+        "ai_admin_dashboard_enabled",
+        "ai_admin_dashboard_highlights_agent",
+        "ai_admin_dashboard_highlights_category_scope",
+        "ai_admin_dashboard_highlights_categories",
       ],
     },
   ],
@@ -140,7 +166,38 @@ export const AI_FEATURE_SETTING_GROUPS = {
     {
       key: "settings",
       titleKey: "discourse_ai.features.search.setting_groups.settings",
-      settings: ["ai_discover_enabled", "ai_discover_agent"],
+      settings: [
+        "ai_discover_enabled",
+        "ai_ask_ai_enabled",
+        "ai_ask_ai_summary_detail",
+        "ai_ask_ai_related_count",
+      ],
+    },
+    {
+      key: "agents",
+      titleKey: "discourse_ai.features.search.setting_groups.agents",
+      settings: [
+        "ai_discover_agent",
+        "ai_ask_ai_agent",
+        "ai_ask_ai_query_rewriter_agent",
+        "ai_ask_ai_report_agent",
+        "ai_ask_ai_follow_up_agent",
+      ],
+    },
+    {
+      key: "access_control",
+      titleKey: "discourse_ai.features.search.setting_groups.access_control",
+      settings: ["ai_ask_ai_allowed_groups"],
+    },
+    {
+      key: "ask_ai_reports",
+      titleKey: "discourse_ai.features.search.setting_groups.ask_ai_reports",
+      settings: [
+        "ai_ask_ai_report_weekly_enabled",
+        "ai_ask_ai_report_exclude_groups",
+        "ai_ask_ai_report_max_asks",
+        "ai_ask_ai_report_recipient_groups",
+      ],
     },
   ],
 
@@ -166,11 +223,11 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "discourse_ai.features.translation.setting_groups.backfill_and_limits",
       settings: [
         "ai_translation_backfill_hourly_rate",
-        "ai_translation_target_categories",
+        "ai_translation_category_scope",
+        "ai_translation_categories",
         "ai_translation_personal_messages",
         "ai_translation_include_bot_content",
-        "ai_translation_max_post_length",
-        "ai_translation_backfill_max_age_days",
+        "ai_translation_backfill_start_date",
 
         "ai_translation_verbose_logs",
       ],

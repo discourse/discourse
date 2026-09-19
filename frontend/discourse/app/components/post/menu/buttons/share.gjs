@@ -1,14 +1,14 @@
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 const PostMenuShareButton = <template>
   <DButton
     class="post-action-menu__share share"
     ...attributes
     @action={{@buttonActions.share}}
+    @ariaLabel="post.controls.share"
     @icon="d-post-share"
     @label={{if @showLabel "post.controls.share_action"}}
     @title="post.controls.share"
-    @ariaLabel="post.controls.share"
   />
 </template>;
 

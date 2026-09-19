@@ -1,0 +1,29 @@
+@use "breakpoints";
+
+$breakpoints: breakpoints.$breakpoints;
+
+@function _container-name($name) {
+  @if $name {
+    @return "#{$name} ";
+  }
+
+  @return "";
+}
+
+@mixin from($bp, $name: null) {
+  @container #{_container-name($name)}(width >= #{breakpoints.get($bp)}) {
+    @content;
+  }
+}
+
+@mixin until($bp, $name: null) {
+  @container #{_container-name($name)}(width < #{breakpoints.get($bp)}) {
+    @content;
+  }
+}
+
+@mixin between($from, $until, $name: null) {
+  @container #{_container-name($name)}(#{breakpoints.get($from)} <= width < #{breakpoints.get($until)}) {
+    @content;
+  }
+}

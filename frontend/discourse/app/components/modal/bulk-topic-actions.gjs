@@ -6,19 +6,21 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { Promise } from "rsvp";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import ManageTagsForm from "discourse/components/modal/bulk-topic-actions/manage-tags-form";
 import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
-import RadioButton from "discourse/components/radio-button";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { extractError } from "discourse/lib/ajax-error";
 import { topicLevels } from "discourse/lib/notification-levels";
+import renderTag from "discourse/lib/render-tag";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
-import autoFocus from "discourse/modifiers/auto-focus";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
-import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DModal from "discourse/ui-kit/d-modal";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 const _customActions = {};
@@ -32,7 +34,6 @@ export default class BulkTopicActions extends Component {
 
   @tracked activeComponent = null;
   @tracked activeComponentProps = null;
-  @tracked tags = [];
   @tracked categoryId;
   @tracked loading;
   @tracked errors;
@@ -43,11 +44,17 @@ export default class BulkTopicActions extends Component {
   @tracked skippedTopicCount = 0;
 
   @tracked notificationLevelId = null;
+  @tracked customSubmitDisabled = false;
 
   constructor() {
     super(...arguments);
 
-    if (this.model.initialAction === "set-component") {
+    if (this.model.action === "manage-tags") {
+      this.setComponent(ManageTagsForm, {
+        categoryId: this.soleCategoryId,
+        onPerform: this.performAndRefresh,
+      });
+    } else if (this.model.initialAction === "set-component") {
       if (this.model.initialActionLabel in _customActions) {
         _customActions[this.model.initialActionLabel]({
           setComponent: this.setComponent.bind(this),
@@ -62,6 +69,78 @@ export default class BulkTopicActions extends Component {
         });
       }
     }
+  }
+
+  get failedTopicCount() {
+    return (this.failureMessages || []).reduce((sum, e) => sum + e.count, 0);
+  }
+
+  get hasFailures() {
+    return this.failedTopicCount > 0;
+  }
+
+  get isNotificationAction() {
+    return this.model.action === "update-notifications";
+  }
+
+  get isCategoryAction() {
+    return (
+      this.model.action === "update-category" ||
+      this.model.action === "convert-to-public-topic"
+    );
+  }
+
+  get isCloseAction() {
+    return this.model.action === "close";
+  }
+
+  get isPinAction() {
+    return this.model.action === "pin";
+  }
+
+  get model() {
+    return this.args.model;
+  }
+
+  get notificationLevels() {
+    return topicLevels.map((level) => ({
+      id: level.id.toString(),
+      name: i18n(`topic.notifications.${level.key}.title`),
+      description: i18n(`topic.notifications.${level.key}.description`),
+    }));
+  }
+
+  get soleCategoryId() {
+    if (this.model.bulkSelectHelper.selectedCategoryIds.length === 1) {
+      return this.model.bulkSelectHelper.selectedCategoryIds[0];
+    }
+
+    return null;
+  }
+
+  get soleCategory() {
+    if (!this.soleCategoryId) {
+      return null;
+    }
+
+    return Category.findById(this.soleCategoryId);
+  }
+
+  get confirmButtonLabel() {
+    if (this.model.confirmButtonTranslationKey) {
+      return i18n(this.model.confirmButtonTranslationKey, {
+        count: this.model.bulkSelectHelper.selected.length,
+      });
+    }
+    return i18n("topics.bulk.confirm");
+  }
+
+  get disabledSubmit() {
+    if (this.isNotificationAction) {
+      return !this.notificationLevelId || this.loading;
+    }
+
+    return this.customSubmitDisabled || this.loading;
   }
 
   async perform(operation) {
@@ -80,72 +159,6 @@ export default class BulkTopicActions extends Component {
     }
   }
 
-  _generateTopicChunks(allTopics) {
-    let startIndex = 0;
-    const chunkSize = 30;
-    const chunks = [];
-
-    while (startIndex < allTopics.length) {
-      chunks.push(allTopics.slice(startIndex, startIndex + chunkSize));
-      startIndex += chunkSize;
-    }
-
-    return chunks;
-  }
-
-  _processChunks(operation) {
-    const allTopics = this.model.bulkSelectHelper.selected;
-    const topicChunks = this._generateTopicChunks(allTopics);
-    const topicIds = [];
-    const mergedErrors = {};
-    const options = {};
-
-    if (this.model.allowSilent && !this.notifyUsers) {
-      operation.silent = true;
-    }
-
-    if (this.isCloseAction && this.closeNote) {
-      operation["message"] = this.closeNote;
-    }
-
-    const tasks = topicChunks.map((topics) => async () => {
-      const result = await Topic.bulkOperation(topics, operation, options);
-      this.processedTopicCount += topics.length;
-      return result;
-    });
-
-    return new Promise((resolve, reject) => {
-      const resolveNextTask = async () => {
-        if (tasks.length === 0) {
-          const topics = topicIds.map((id) =>
-            allTopics.find((value) => value.id === id)
-          );
-          const errors = Object.keys(mergedErrors).length ? mergedErrors : null;
-          return resolve({ topics, errors });
-        }
-
-        const task = tasks.shift();
-
-        try {
-          const result = await task();
-          if (result?.topic_ids) {
-            topicIds.push(...result.topic_ids);
-          }
-          if (result?.errors) {
-            for (const [msg, count] of Object.entries(result.errors)) {
-              mergedErrors[msg] = (mergedErrors[msg] || 0) + count;
-            }
-          }
-          resolveNextTask();
-        } catch {
-          reject();
-        }
-      };
-
-      resolveNextTask();
-    });
-  }
-
   @action
   setComponent(component, props = {}) {
     this.activeComponent = component;
@@ -159,7 +172,6 @@ export default class BulkTopicActions extends Component {
 
   @action
   performAction(opts = {}) {
-    this.loading = true;
     switch (this.model.action) {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
@@ -204,23 +216,18 @@ export default class BulkTopicActions extends Component {
       case "unpin":
         this.forEachPerformed({ type: "unpin" }, (t) => t.set("pinned", false));
         break;
+      case "enable-nested-replies":
+        this.forEachPerformed({ type: "enable_nested_view" }, (t) =>
+          t.set("is_nested_view", true)
+        );
+        break;
+      case "disable-nested-replies":
+        this.forEachPerformed({ type: "disable_nested_view" }, (t) =>
+          t.set("is_nested_view", false)
+        );
+        break;
       case "pin":
         this.performAndRefresh({ type: "pin", ...opts });
-        break;
-      case "append-tags":
-        this.performAndRefresh({
-          type: "append_tags",
-          tag_ids: this.tags?.map((t) => t.id),
-        });
-        break;
-      case "replace-tags":
-        this.performAndRefresh({
-          type: "change_tags",
-          tag_ids: this.tags?.map((t) => t.id),
-        });
-        break;
-      case "remove-tags":
-        this.performAndRefresh({ type: "remove_tags" });
         break;
       case "delete":
         this.performAndRefresh({ type: "delete" });
@@ -278,23 +285,6 @@ export default class BulkTopicActions extends Component {
     }
   }
 
-  get failedTopicCount() {
-    if (!this.failureMessages) {
-      return 0;
-    }
-    return this.failureMessages.reduce((sum, e) => sum + e.count, 0);
-  }
-
-  _showErrors(errors, successCount, totalCount) {
-    this.failureMessages = Object.entries(errors).map(([message, count]) => ({
-      message,
-      count,
-    }));
-    this.successTopicCount = successCount;
-    this.skippedTopicCount = totalCount - successCount - this.failedTopicCount;
-    this.loading = false;
-  }
-
   @action
   closeWithRefresh() {
     this.model.refreshClosure?.();
@@ -304,15 +294,16 @@ export default class BulkTopicActions extends Component {
 
   @action
   async forEachPerformed(operation, cb) {
+    this.loading = true;
     const totalCount = this.model.bulkSelectHelper.selected.length;
     const result = await this.perform(operation);
 
     if (result) {
-      const { topics, errors } = result;
+      const { topics, errors, tagCategoryErrors } = result;
       topics.forEach(cb);
 
-      if (errors) {
-        this._showErrors(errors, topics.length, totalCount);
+      if (errors || tagCategoryErrors) {
+        this._showErrors(errors, tagCategoryErrors, topics.length, totalCount);
       } else {
         this.model.refreshClosure?.();
         this.args.closeModal();
@@ -324,13 +315,14 @@ export default class BulkTopicActions extends Component {
 
   @action
   async performAndRefresh(operation) {
+    this.loading = true;
     const totalCount = this.model.bulkSelectHelper.selected.length;
     const result = await this.perform(operation);
 
     if (result) {
-      const { topics, errors } = result;
-      if (errors) {
-        this._showErrors(errors, topics.length, totalCount);
+      const { topics, errors, tagCategoryErrors } = result;
+      if (errors || tagCategoryErrors) {
+        this._showErrors(errors, tagCategoryErrors, topics.length, totalCount);
       } else {
         this.model.refreshClosure?.().then(() => {
           this.args.closeModal();
@@ -341,91 +333,15 @@ export default class BulkTopicActions extends Component {
     }
   }
 
-  get isTagAction() {
-    return (
-      this.model.action === "append-tags" ||
-      this.model.action === "replace-tags"
-    );
-  }
-
-  get isNotificationAction() {
-    return this.model.action === "update-notifications";
-  }
-
-  get isCategoryAction() {
-    return (
-      this.model.action === "update-category" ||
-      this.model.action === "convert-to-public-topic"
-    );
-  }
-
-  get isCloseAction() {
-    return this.model.action === "close";
-  }
-
-  get isPinAction() {
-    return this.model.action === "pin";
-  }
-
   @action
   updateCloseNote(event) {
     event.preventDefault();
     this.closeNote = event.target.value;
   }
 
-  get model() {
-    return this.args.model;
-  }
-
-  get notificationLevels() {
-    return topicLevels.map((level) => ({
-      id: level.id.toString(),
-      name: i18n(`topic.notifications.${level.key}.title`),
-      description: i18n(`topic.notifications.${level.key}.description`),
-    }));
-  }
-
-  get soleCategoryId() {
-    if (this.model.bulkSelectHelper.selectedCategoryIds.length === 1) {
-      return this.model.bulkSelectHelper.selectedCategoryIds[0];
-    }
-
-    return null;
-  }
-
-  get soleCategory() {
-    if (!this.soleCategoryId) {
-      return null;
-    }
-
-    return Category.findById(this.soleCategoryId);
-  }
-
-  get soleCategoryBadgeHTML() {
-    return categoryBadgeHTML(this.soleCategory, {
-      allowUncategorized: true,
-    });
-  }
-
-  get showSoleCategoryTip() {
-    return this.soleCategory && this.isTagAction;
-  }
-
-  get confirmButtonLabel() {
-    if (this.model.confirmButtonTranslationKey) {
-      return i18n(this.model.confirmButtonTranslationKey, {
-        count: this.model.bulkSelectHelper.selected.length,
-      });
-    }
-    return i18n("topics.bulk.confirm");
-  }
-
-  get disabledSubmit() {
-    if (this.isNotificationAction) {
-      return !this.notificationLevelId || this.loading;
-    }
-
-    return this.loading;
+  @action
+  setSubmitDisabled(value) {
+    this.customSubmitDisabled = value;
   }
 
   @action
@@ -433,18 +349,122 @@ export default class BulkTopicActions extends Component {
     this.categoryId = categoryId;
   }
 
+  _generateTopicChunks(allTopics) {
+    let startIndex = 0;
+    const chunkSize = 30;
+    const chunks = [];
+
+    while (startIndex < allTopics.length) {
+      chunks.push(allTopics.slice(startIndex, startIndex + chunkSize));
+      startIndex += chunkSize;
+    }
+
+    return chunks;
+  }
+
+  async _processChunks(operation) {
+    const allTopics = this.model.bulkSelectHelper.selected;
+    const topicChunks = this._generateTopicChunks(allTopics);
+    const topicIds = [];
+    const mergedErrors = {};
+    const mergedTagCategoryErrors = {};
+    const options = {};
+
+    if (this.model.allowSilent) {
+      operation.silent = !this.notifyUsers;
+    }
+
+    if (this.isCloseAction && this.closeNote) {
+      operation["message"] = this.closeNote;
+    }
+
+    if (operation.type === "manage_tags") {
+      options.asJSON = true;
+    }
+
+    for (const topics of topicChunks) {
+      try {
+        const result = await Topic.bulkOperation(topics, operation, options);
+        this.processedTopicCount += topics.length;
+
+        if (result?.topic_ids) {
+          topicIds.push(...result.topic_ids);
+        }
+        if (result?.errors) {
+          for (const [msg, count] of Object.entries(result.errors)) {
+            mergedErrors[msg] = (mergedErrors[msg] || 0) + count;
+          }
+        }
+        if (result?.tag_category_errors) {
+          for (const error of result.tag_category_errors) {
+            const key = `${error.category_id}:${error.tag_names.join(",")}`;
+            if (mergedTagCategoryErrors[key]) {
+              mergedTagCategoryErrors[key].count += error.count;
+            } else {
+              mergedTagCategoryErrors[key] = { ...error };
+            }
+          }
+        }
+      } catch (error) {
+        const message = extractError(error);
+        mergedErrors[message] = (mergedErrors[message] || 0) + topics.length;
+        break;
+      }
+    }
+
+    const topics = topicIds.map((id) =>
+      allTopics.find((value) => value.id === id)
+    );
+    const errors = Object.keys(mergedErrors).length ? mergedErrors : null;
+    const tagCategoryErrors = Object.values(mergedTagCategoryErrors);
+
+    return {
+      topics,
+      errors,
+      tagCategoryErrors: tagCategoryErrors.length ? tagCategoryErrors : null,
+    };
+  }
+
+  _buildTagCategoryError(error) {
+    const category = Category.findById(error.category_id);
+    return i18n("topics.bulk.tag_not_allowed_in_category", {
+      count: error.tag_names.length,
+      tags: error.tag_names.map((name) => renderTag(name)).join(" "),
+      category: category
+        ? categoryBadgeHTML(category)
+        : escapeExpression(error.category_name),
+    });
+  }
+
+  _showErrors(errors, tagCategoryErrors, successCount, totalCount) {
+    this.failureMessages = [
+      ...(tagCategoryErrors || []).map((error) => ({
+        message: this._buildTagCategoryError(error),
+        count: error.count,
+        trustHtml: true,
+      })),
+      ...Object.entries(errors || {}).map(([message, count]) => ({
+        message,
+        count,
+      })),
+    ];
+    this.successTopicCount = successCount;
+    this.skippedTopicCount = totalCount - successCount - this.failedTopicCount;
+    this.loading = false;
+  }
+
   <template>
     <DModal
-      @title={{@model.title}}
+      class="topic-bulk-actions-modal"
       @closeModal={{@closeModal}}
-      class="topic-bulk-actions-modal -large"
+      @title={{@model.title}}
     >
       <:body>
-        <ConditionalLoadingSection
+        <DConditionalLoadingSection
           @isLoading={{this.loading}}
           @title={{i18n "topics.bulk.performing"}}
         >
-          {{#if this.failureMessages}}
+          {{#if this.hasFailures}}
             <div class="topic-bulk-actions-modal__errors">
               {{#if this.successTopicCount}}
                 <p>{{trustHTML
@@ -465,7 +485,12 @@ export default class BulkTopicActions extends Component {
                 }}</p>
               <ul>
                 {{#each this.failureMessages as |error|}}
-                  <li>{{error.message}}
+                  <li>
+                    {{#if error.trustHtml}}
+                      {{trustHTML error.message}}
+                    {{else}}
+                      {{error.message}}
+                    {{/if}}
                     ({{i18n
                       "topics.bulk.error_topic_count"
                       count=error.count
@@ -480,23 +505,11 @@ export default class BulkTopicActions extends Component {
                 }}</p>
             {{/if}}
 
-            {{#if this.showSoleCategoryTip}}
-              <div class="topic-bulk-actions-modal__selection-info">
-                {{trustHTML
-                  (i18n
-                    "topics.bulk.selected_sole_category"
-                    count=@model.bulkSelectHelper.selected.length
-                  )
-                }}
-                {{trustHTML this.soleCategoryBadgeHTML}}
-              </div>
-            {{/if}}
-
             {{#if this.isCategoryAction}}
               <p>
                 <CategoryChooser
-                  @value={{this.categoryId}}
                   @onChange={{this.onCategoryChange}}
+                  @value={{this.categoryId}}
                 />
               </p>
             {{/if}}
@@ -508,10 +521,10 @@ export default class BulkTopicActions extends Component {
                     <label
                       class="radio notification-level-radio checkbox-label"
                     >
-                      <RadioButton
-                        @value={{level.id}}
+                      <DRadioButton
                         @name="notification_level"
                         @selection={{this.notificationLevelId}}
+                        @value={{level.id}}
                       />
                       <strong>{{level.name}}</strong>
                       <div class="description">{{trustHTML
@@ -523,26 +536,21 @@ export default class BulkTopicActions extends Component {
               </div>
             {{/if}}
 
-            {{#if this.isTagAction}}
-              <p><TagChooser
-                  @tags={{this.tags}}
-                  @categoryId={{this.soleCategoryId}}
-                /></p>
-            {{/if}}
-
             {{#if this.activeComponent}}
-              {{component
-                this.activeComponent
-                onRegisterAction=this.registerCustomAction
-                topics=this.activeComponentProps.topics
-                afterBulkAction=this.activeComponentProps.afterBulkAction
-              }}
+              <this.activeComponent
+                @afterBulkAction={{this.activeComponentProps.afterBulkAction}}
+                @categoryId={{this.activeComponentProps.categoryId}}
+                @onPerform={{this.activeComponentProps.onPerform}}
+                @onRegisterAction={{this.registerCustomAction}}
+                @setSubmitDisabled={{this.setSubmitDisabled}}
+                @topics={{this.activeComponentProps.topics}}
+              />
             {{/if}}
 
             {{#if this.isPinAction}}
               <BulkPinOptions
-                @onPin={{this.performAction}}
                 @category={{this.soleCategory}}
+                @onPin={{this.performAction}}
               />
             {{/if}}
 
@@ -557,49 +565,49 @@ export default class BulkTopicActions extends Component {
                 <textarea
                   id="bulk-close-note"
                   {{on "input" this.updateCloseNote}}
-                  {{autoFocus}}
+                  {{dAutoFocus}}
                 >{{this.closeNote}}</textarea>
               </div>
             {{/if}}
           {{/if}}
-        </ConditionalLoadingSection>
+        </DConditionalLoadingSection>
       </:body>
 
       <:footer>
-        {{#if this.failureMessages}}
+        {{#if this.hasFailures}}
           <DButton
-            @action={{this.closeWithRefresh}}
-            @label="close"
             class="btn-primary"
             id="bulk-topics-close"
+            @action={{this.closeWithRefresh}}
+            @label="close"
           />
         {{else if @model.showFooter}}
           {{#if @model.allowSilent}}
             <div class="topic-bulk-actions-options">
               <label
-                for="topic-bulk-action-options__notify"
                 class="checkbox-label"
+                for="topic-bulk-action-options__notify"
               >
                 <Input
                   id="topic-bulk-action-options__notify"
-                  @type="checkbox"
                   @checked={{this.notifyUsers}}
+                  @type="checkbox"
                 />{{i18n "topics.bulk.notify"}}</label>
             </div>
           {{/if}}
 
           <DButton
-            @action={{@closeModal}}
-            @label="cancel"
             class="btn-transparent d-modal-cancel"
             id="bulk-topics-cancel"
+            @action={{@closeModal}}
+            @label="cancel"
           />
           <DButton
+            class="btn-primary"
+            id="bulk-topics-confirm"
             @action={{this.performAction}}
             @disabled={{this.disabledSubmit}}
             @translatedLabel={{this.confirmButtonLabel}}
-            id="bulk-topics-confirm"
-            class="btn-primary"
           />
         {{/if}}
       </:footer>

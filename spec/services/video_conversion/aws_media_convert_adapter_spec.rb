@@ -106,9 +106,21 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(OptimizedVideo).to receive(:create_for)
   end
 
+  describe ".build_conversion_settings" do
+    it "honors rotation metadata from uploaded videos" do
+      settings =
+        described_class.build_conversion_settings(
+          "s3://#{s3_bucket}/uploads/default/original/test.mp4",
+          new_sha1,
+        )
+
+      expect(settings[:inputs].first[:video_selector]).to eq(rotate: "AUTO")
+    end
+  end
+
   describe "#convert" do
     let(:output_path) do
-      "/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{new_sha1}"
+      "/uploads/default/test_#{Discourse.test_env_number}/original/1X/#{new_sha1}"
     end
     let(:job_id) { "job-123" }
 

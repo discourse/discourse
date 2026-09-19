@@ -7,7 +7,7 @@ module Jobs
     cluster_concurrency 1
 
     def execute(args)
-      return if !DiscourseAi::Translation.backfill_enabled?
+      return if !DiscourseAi::Translation.backfill_enabled?(target: Tag)
 
       llm_model = find_llm_model
       return if llm_model.blank?
@@ -27,14 +27,12 @@ module Jobs
       return if tags.empty?
 
       tags.each do |tag|
-        begin
-          DiscourseAi::Translation::TagLocaleDetector.detect_locale(tag)
-        rescue FinalDestination::SSRFDetector::LookupFailedError
-        rescue => e
-          DiscourseAi::Translation::VerboseLogger.log(
-            "Failed to detect tag #{tag.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-          )
-        end
+        DiscourseAi::Translation::TagLocaleDetector.detect_locale(tag)
+      rescue FinalDestination::SSRFDetector::LookupFailedError
+      rescue => e
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Failed to detect tag #{tag.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+        )
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{tags.size} tag locales")

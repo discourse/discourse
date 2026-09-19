@@ -10,9 +10,9 @@ end
 # Table name: user_uploads
 #
 #  id         :bigint           not null, primary key
+#  created_at :datetime         not null
 #  upload_id  :integer          not null
 #  user_id    :integer          not null
-#  created_at :datetime         not null
 #
 # Indexes
 #

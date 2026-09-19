@@ -14,6 +14,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   # These are usually GET requests but some providers use POST requests
   allow_in_staff_writes_only_mode :complete
+  allow_when_archived :complete
 
   def confirm_request
     self.class.find_authenticator(params[:provider])
@@ -140,7 +141,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   protected
 
   def render_auth_result_failure
-    flash[:error] = @auth_result.failed_reason
+    flash[:error] = PrettyText.sanitize(@auth_result.failed_reason).html_safe
     render "failure"
   end
 
@@ -206,7 +207,7 @@ class Users::OmniauthCallbacksController < ApplicationController
         return
       end
 
-      log_on_user(user, { authenticated_with_oauth: true })
+      log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       server_session.delete(:authentication) # don't carry around old auth info
       @auth_result.authenticated = true

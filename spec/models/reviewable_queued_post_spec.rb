@@ -102,6 +102,15 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           result = reviewable.perform(moderator, :approve_post)
           expect(result.success?).to eq(true)
         end
+
+        it "logs a staff action linked to the reviewable" do
+          expect { reviewable.perform(moderator, :approve_post) }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:post_approved],
+              reviewable_id: reviewable.id,
+            ).count
+          }.by(1)
+        end
       end
 
       context "with reject_post" do
@@ -124,6 +133,15 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             Reviewable::InvalidAction,
           )
         end
+
+        it "logs a staff action linked to the reviewable" do
+          expect { reviewable.perform(moderator, :reject_post) }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:post_rejected],
+              reviewable_id: reviewable.id,
+            ).count
+          }.by(1)
+        end
       end
 
       context "with revise_and_reject_post" do
@@ -131,7 +149,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         fab!(:contact_user, :user)
 
         before do
-          SiteSetting.site_contact_group_name = contact_group.name
+          SiteSetting.site_contact_group_name = contact_group.id.to_s
           SiteSetting.site_contact_username = contact_user.username
         end
 
@@ -213,7 +231,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         context "when the topic is nil in the case of a new topic being created" do
           let(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
 
-          it "works" do
+          it "sends revision feedback for the rejected new topic" do
             args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
             expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
               Topic.where(archetype: Archetype.private_message).count
@@ -426,14 +444,99 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       it "includes actions" do
         actions = reviewable.actions_for(Guardian.new(admin))
-        action_ids = actions.to_a.map(&:id).map(&:to_s)
+        action_names = actions.to_a.map(&:action_name)
 
-        expect(action_ids).to include("approve_post")
-        expect(action_ids).to include("reject_post")
-        expect(action_ids).to include("revise_and_reject_post")
-        expect(action_ids).to include("delete_user")
-        expect(action_ids).to include("delete_user_block")
+        expect(action_names).to include("approve_post")
+        expect(action_names).to include("reject_post")
+        expect(action_names).to include("revise_and_reject_post")
+        expect(action_names).to include("delete_user")
+        expect(action_names).to include("delete_user_block")
       end
+    end
+  end
+
+  describe "actions when the author no longer exists" do
+    fab!(:reviewable, :reviewable_queued_post)
+
+    it "only offers rejecting the post" do
+      reviewable.update_column(:target_created_by_id, nil)
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      bundle = actions.bundles.find { |bundle| bundle.id == "#{reviewable.id}-reject-post" }
+
+      expect(actions.has?(:approve_post)).to eq(false)
+      expect(bundle.actions.map(&:server_action)).to eq(%w[reject_post])
+    end
+  end
+
+  describe "penalty actions" do
+    fab!(:reviewable, :reviewable_queued_post)
+
+    it "offers silence and suspend between the reject and delete actions" do
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      bundle = actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }
+
+      expect(bundle.actions.map(&:server_action)).to eq(
+        %w[
+          reject_post
+          revise_and_reject_post
+          reject_and_silence
+          reject_and_suspend
+          delete_user
+          delete_user_block
+        ],
+      )
+    end
+
+    it "doesn't offer the penalties when the author can't be suspended" do
+      reviewable.target_created_by.update!(moderator: true)
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      expect(actions.has?(:reject_and_silence)).to eq(false)
+      expect(actions.has?(:reject_and_suspend)).to eq(false)
+    end
+
+    it "doesn't offer the silence action when the author is already silenced" do
+      reviewable.target_created_by.update!(silenced_till: 1.year.from_now)
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      expect(actions.has?(:reject_and_silence)).to eq(false)
+      expect(actions.has?(:reject_and_suspend)).to eq(true)
+    end
+
+    it "doesn't offer the suspend action when the author is already suspended" do
+      reviewable.target_created_by.update!(
+        suspended_till: 1.year.from_now,
+        suspended_at: Time.zone.now,
+      )
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      expect(actions.has?(:reject_and_silence)).to eq(true)
+      expect(actions.has?(:reject_and_suspend)).to eq(false)
+    end
+
+    it "rejects the post and keeps the author, letting the client apply the suspension" do
+      result = nil
+      expect { result = reviewable.perform(moderator, :reject_and_suspend) }.not_to change(
+        Post,
+        :count,
+      )
+
+      expect(result.success?).to eq(true)
+      expect(reviewable.rejected?).to eq(true)
+      expect(reviewable.target_created_by.suspended?).to eq(false)
+    end
+
+    it "rejects the post and keeps the author, letting the client apply the silencing" do
+      result = nil
+      expect { result = reviewable.perform(moderator, :reject_and_silence) }.not_to change(
+        Post,
+        :count,
+      )
+
+      expect(result.success?).to eq(true)
+      expect(reviewable.rejected?).to eq(true)
+      expect(reviewable.target_created_by.silenced?).to eq(false)
     end
   end
 end

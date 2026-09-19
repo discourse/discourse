@@ -24,9 +24,9 @@ describe "GitHub Oauth2" do
   end
 
   before do
-    SiteSetting.enable_github_logins = true
     SiteSetting.github_client_id = client_id
     SiteSetting.github_client_secret = client_secret
+    SiteSetting.enable_github_logins = true
 
     stub_request(:post, "https://github.com/login/oauth/access_token").with(
       body:
@@ -186,6 +186,7 @@ describe "GitHub Oauth2" do
 
   it "doesn't log in the user if discourse connect is enabled" do
     SiteSetting.discourse_connect_url = "https://example.com/sso"
+    SiteSetting.discourse_connect_secret = "x" * 10
     SiteSetting.enable_discourse_connect = true
     post "/auth/github"
     expect(response.status).to eq(302)

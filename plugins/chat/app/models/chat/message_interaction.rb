@@ -14,11 +14,11 @@ end
 # Table name: chat_message_interactions
 #
 #  id              :bigint           not null, primary key
-#  user_id         :bigint           not null
-#  chat_message_id :bigint           not null
 #  action          :jsonb            not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  chat_message_id :bigint           not null
+#  user_id         :bigint           not null
 #
 # Indexes
 #

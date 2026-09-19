@@ -36,10 +36,6 @@ RSpec.describe Jobs::ExportUserArchive do
     [data_rows, csv_out]
   end
 
-  def make_component_json
-    JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
-  end
-
   describe "#execute" do
     before do
       _ = post
@@ -66,7 +62,7 @@ RSpec.describe Jobs::ExportUserArchive do
       )
     end
 
-    it "works" do
+    it "creates the archive and sends its download link" do
       expect do Jobs::ExportUserArchive.new.execute(user_id: user.id) end.to change {
         Upload.count
       }.by(1)
@@ -94,7 +90,12 @@ RSpec.describe Jobs::ExportUserArchive do
 
       files = []
       Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
-        zip_file.each { |entry| files << entry.name }
+        zip_file.each do |entry|
+          files << entry.name
+
+          bom = entry.name.end_with?(".csv") ? be_truthy : be_falsey
+          expect(zip_file.read(entry).start_with?(Encodings::BOM.b)).to bom
+        end
       end
 
       expect(files.size).to eq(Jobs::ExportUserArchive::COMPONENTS.length)
@@ -257,7 +258,7 @@ RSpec.describe Jobs::ExportUserArchive do
     it "properly includes the profile fields" do
       _serializer = job.preferences_export
       # puts MultiJson.dump(serializer, indent: 4)
-      output = make_component_json
+      output = JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
       payload = output["user"]
 
       expect(payload["website"]).to match("doe.example.com")
@@ -289,6 +290,7 @@ RSpec.describe Jobs::ExportUserArchive do
 
     context "with auth token logs" do
       let(:component) { "auth_token_logs" }
+
       it "includes details such as the path" do
         data, _csv_out = make_component_csv
         expect(data.length).to eq(1)

@@ -7,9 +7,9 @@ import { isEmpty } from "@ember/utils";
 import AdminSiteSettingsFilterControls from "discourse/admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "discourse/admin/components/site-setting";
 import SiteSettingFilter from "discourse/admin/lib/site-setting-filter";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseDebounce from "discourse/lib/debounce";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class AdminFilteredSiteSettings extends Component {
@@ -26,11 +26,6 @@ export default class AdminFilteredSiteSettings extends Component {
     this.filterChanged({ filter: "", onlyOverridden: false });
   }
 
-  @action
-  filterChanged(filterData) {
-    this._debouncedOnChangeFilter(filterData);
-  }
-
   get visibleSettings() {
     return this.matchedSettings?.filter((setting) =>
       this.adminSiteSettingStore.isVisible(setting, this.activeFilter)
@@ -41,14 +36,9 @@ export default class AdminFilteredSiteSettings extends Component {
     return isEmpty(this.visibleSettings) && !this.loading;
   }
 
-  _debouncedOnChangeFilter(filterData) {
-    cancel(this.onChangeFilterHandler);
-    this.onChangeFilterHandler = discourseDebounce(
-      this,
-      this.filterSettings,
-      filterData,
-      100
-    );
+  @action
+  filterChanged(filterData) {
+    this._debouncedOnChangeFilter(filterData);
   }
 
   filterSettings(filterData) {
@@ -65,14 +55,24 @@ export default class AdminFilteredSiteSettings extends Component {
     this.loading = false;
   }
 
+  _debouncedOnChangeFilter(filterData) {
+    cancel(this.onChangeFilterHandler);
+    this.onChangeFilterHandler = discourseDebounce(
+      this,
+      this.filterSettings,
+      filterData,
+      100
+    );
+  }
+
   <template>
     <PluginOutlet @name="admin-config-area-filtered-site-settings">
       <AdminSiteSettingsFilterControls
-        @onChangeFilter={{this.filterChanged}}
         @initialFilter={{@initialFilter}}
+        @onChangeFilter={{this.filterChanged}}
       />
 
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
         <section class="admin-filtered-site-settings form-horizontal settings">
           {{#each this.visibleSettings as |setting|}}
             <SiteSetting @setting={{setting}} />
@@ -82,7 +82,7 @@ export default class AdminFilteredSiteSettings extends Component {
             {{i18n "admin.site_settings.no_results"}}
           {{/if}}
         </section>
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </PluginOutlet>
   </template>
 }

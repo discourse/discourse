@@ -7,7 +7,7 @@ RSpec.describe TagGroupsController do
     fab!(:tag_group)
 
     describe "for a non staff user" do
-      it "should not be accessible" do
+      it "is not accessible" do
         get "/tag_groups.json"
 
         expect(response.status).to eq(404)
@@ -24,7 +24,7 @@ RSpec.describe TagGroupsController do
 
       before { sign_in(admin) }
 
-      it "should return the right response" do
+      it "returns the expected response" do
         tag_group
 
         get "/tag_groups.json"
@@ -90,6 +90,25 @@ RSpec.describe TagGroupsController do
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results).to be_empty
+      end
+
+      it "does not return the tags restricted to a category anons can't see" do
+        tag_group = tag_group_with_permission(everyone, readonly)
+        secret_tag = Fabricate(:tag)
+        tag_group.tags << secret_tag
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          tag: secret_tag,
+        )
+
+        get "/tag_groups/filter/search.json"
+        expect(response.status).to eq(200)
+
+        results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
+
+        expect(results).to contain_exactly(
+          { name: tag_group.name, tags: [{ id: tag.id, name: tag.name, slug: tag.slug }] },
+        )
       end
     end
 
@@ -167,7 +186,7 @@ RSpec.describe TagGroupsController do
 
     before { sign_in(admin) }
 
-    it "should create a tag group and log the creation" do
+    it "creates a tag group and logs the creation" do
       post "/tag_groups.json",
            params: {
              tag_group: {
@@ -191,7 +210,7 @@ RSpec.describe TagGroupsController do
       )
     end
 
-    it "should create a tag group with a parent tag" do
+    it "creates a tag group with a parent tag" do
       post "/tag_groups.json",
            params: {
              tag_group: {
@@ -255,7 +274,7 @@ RSpec.describe TagGroupsController do
 
     before { sign_in(admin) }
 
-    it "should delete the tag group and log the deletion" do
+    it "deletes the tag group and logs the deletion" do
       previous_value = TagGroupSerializer.new(tag_group).to_json(root: false)
 
       delete "/tag_groups/#{tag_group.id}.json"
@@ -284,7 +303,7 @@ RSpec.describe TagGroupsController do
 
     before { sign_in(admin) }
 
-    it "should update the tag group and log the modification" do
+    it "updates the tag group and logs the change" do
       previous_value = TagGroupSerializer.new(tag_group).to_json(root: false)
 
       put "/tag_groups/#{tag_group.id}.json",
@@ -310,7 +329,7 @@ RSpec.describe TagGroupsController do
       )
     end
 
-    it "should update the tag group's parent tag" do
+    it "updates the tag group's parent tag" do
       put "/tag_groups/#{tag_group.id}.json",
           params: {
             tag_group: {
@@ -365,6 +384,28 @@ RSpec.describe TagGroupsController do
 
       expect(response.status).to eq(422)
       expect(tag_group.reload.name).to eq(original_name)
+    end
+
+    it "rejects empty permissions on an existing tag group" do
+      group = Fabricate(:group)
+      tag_group.permissions = { group.id => TagGroupPermission.permission_types[:full] }
+      tag_group.save!
+
+      put "/tag_groups/#{tag_group.id}.json",
+          params: {
+            tag_group: {
+              tags: [{ id: tag1.id, name: tag1.name }],
+              permissions: {
+              },
+            },
+          },
+          as: :json
+
+      expect(response.status).to eq(422)
+
+      tag_group.reload
+      permissions = tag_group.tag_group_permissions.pluck(:group_id, :permission_type).to_h
+      expect(permissions).to eq(group.id => TagGroupPermission.permission_types[:full])
     end
 
     it "does not create a staff action log entry when update fails" do

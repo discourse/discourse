@@ -1,7 +1,9 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import concatClass from "discourse/helpers/concat-class";
+import { siteDir } from "discourse/lib/text-direction";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const SUPPORTED_TYPES = [
   "color",
@@ -23,6 +25,8 @@ const SUPPORTED_TYPES = [
 
 export default class FKControlInput extends FKBaseControl {
   static controlType = "input";
+
+  @service siteSettings;
 
   constructor(owner, args) {
     super(owner, args);
@@ -52,12 +56,26 @@ export default class FKControlInput extends FKBaseControl {
     return this.args.type ?? "text";
   }
 
+  get dir() {
+    if (!this.siteSettings.support_mixed_text_direction) {
+      return;
+    }
+
+    return this.args.field.value ? "auto" : siteDir();
+  }
+
   get displayValue() {
-    if (this.type === "number" && this.inputValue !== undefined) {
+    const fieldValue = this.args.field.value;
+
+    if (
+      this.type === "number" &&
+      this.inputValue !== undefined &&
+      Object.is(parseFloat(this.inputValue), parseFloat(fieldValue))
+    ) {
       return this.inputValue;
     }
 
-    return this.args.field.value ?? "";
+    return fieldValue ?? "";
   }
 
   @action
@@ -97,18 +115,20 @@ export default class FKControlInput extends FKBaseControl {
       {{/if}}
 
       <input
-        type={{this.type}}
-        value={{this.displayValue}}
-        class={{concatClass
+        aria-describedby={{@field.describedBy}}
+        aria-invalid={{if @field.error "true"}}
+        class={{dConcatClass
           "form-kit__control-input"
           (if @before "has-prefix")
           (if @after "has-suffix")
         }}
+        dir={{this.dir}}
         disabled={{@field.disabled}}
         id={{@field.id}}
         name={{@field.name}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{if @field.error @field.errorId}}
+        placeholder={{@field.placeholder}}
+        type={{this.type}}
+        value={{this.displayValue}}
         ...attributes
         {{on "focus" this.handleFocus}}
         {{on "blur" this.handleBlur}}

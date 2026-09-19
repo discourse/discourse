@@ -64,7 +64,7 @@ RSpec.describe UserNotifications do
 
     let(:email_html) { Email::Renderer.new(email).html }
 
-    it "works" do
+    it "addresses the signup email to the user with a subject and body" do
       expect(email.to).to eq([user.email])
       expect(email.subject).to be_present
       expect(email.from).to eq([SiteSetting.notification_email])
@@ -77,10 +77,54 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".signup_after_approval" do
+    before do
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.enable_local_logins = true
+      SiteSetting.enable_local_logins_via_email = true
+    end
+
+    it "links a passwordless user to code login when it is available" do
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("#{Discourse.base_url}/login?mode=code")
+      expect(body).not_to include("code=")
+      expect(body).to include("#{Discourse.base_url}/guidelines")
+    end
+
+    it "links a user with a password to the default destination" do
+      body = UserNotifications.signup_after_approval(user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+
+    it "uses the default destination when code login is unavailable" do
+      SiteSetting.enable_local_logins_via_code = false
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+
+    it "uses the default destination when external login is required" do
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "s" * 32
+      SiteSetting.enable_discourse_connect = true
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+  end
+
   describe ".forgot_password" do
     subject(:email) { UserNotifications.forgot_password(user) }
 
-    it "works" do
+    it "addresses the password reset email to the user with a subject and body" do
       expect(email.to).to eq([user.email])
       expect(email.subject).to be_present
       expect(email.from).to eq([SiteSetting.notification_email])
@@ -103,7 +147,7 @@ RSpec.describe UserNotifications do
   describe ".post_approved" do
     fab!(:post)
 
-    it "works" do
+    it "addresses the post approval email to the user with a subject and body" do
       subject =
         UserNotifications.post_approved(user, { notification_data_hash: { post_url: post.url } })
 
@@ -225,7 +269,7 @@ RSpec.describe UserNotifications do
 
       let!(:another_post) { Fabricate(:post, topic: another_popular_topic, post_number: 1) }
 
-      it "works" do
+      it "builds the digest with content, topic headers, and unsubscribe headers" do
         expect(email.to).to eq([user.email])
         expect(email.subject).to be_present
         expect(email.from).to eq([SiteSetting.notification_email])
@@ -541,6 +585,24 @@ RSpec.describe UserNotifications do
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:replied_notification, user: user, post: response) }
 
+    it "lets admins add the site name to the sender name via the email_from override" do
+      TranslationOverride.upsert!(
+        SiteSetting.default_locale,
+        "email_from",
+        "%{user_name} via %{site_name}",
+      )
+
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      expect(mail[:from].display_names).to eql(["John Doe via #{Email.site_title}"])
+    end
+
     it "generates a correct email" do
       SiteSetting.default_email_in_reply_to = true
 
@@ -642,7 +704,7 @@ RSpec.describe UserNotifications do
       describe "max_tags_per_email_subject siteSetting enabled" do
         before { SiteSetting.enable_max_tags_per_email_subject = true }
 
-        it "should match max_tags_per_email_subject" do
+        it "limits subject tags to max_tags_per_email_subject" do
           SiteSetting.email_subject =
             "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
           SiteSetting.max_tags_per_topic = 1
@@ -665,7 +727,7 @@ RSpec.describe UserNotifications do
       describe "max_tags_per_email_subject siteSetting disabled" do
         before { SiteSetting.enable_max_tags_per_email_subject = false }
 
-        it "should match max_tags_per_topic" do
+        it "limits subject tags to max_tags_per_topic" do
           SiteSetting.email_subject =
             "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
           SiteSetting.max_tags_per_topic = 2
@@ -687,7 +749,29 @@ RSpec.describe UserNotifications do
     end
 
     describe "optional placeholders in email body" do
-      it "should render optional_tags, optional_cat, optional_pm, and optional_re in body templates" do
+      it "renders no body hashtags when the email tag limit is zero" do
+        SiteSetting.enable_max_tags_per_email_subject = true
+        SiteSetting.max_tags_per_email_subject = 0
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.text_body_template",
+          "Tags: %{optional_tags}\n\n",
+        )
+
+        mail =
+          UserNotifications.user_replied(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        expect(Email::Renderer.new(mail).text.lines.first.strip).to eq("Tags:")
+      end
+
+      it "renders optional placeholders with tag links in the body and plain tags in the subject" do
+        Fabricate(:category, name: tag2.name, slug: tag2.name.downcase)
+        SiteSetting.email_subject = "%{optional_tags}%{topic_title}"
         custom_body = <<~BODY
           You got a reply!
 
@@ -713,22 +797,19 @@ RSpec.describe UserNotifications do
             notification_data_hash: notification.data_hash,
           )
 
-        body = mail.body.to_s
+        renderer = Email::Renderer.new(mail)
+        links = Nokogiri::HTML5.parse(renderer.html).css("a.hashtag-cooked")
 
-        expect(body).to include(tag2.name)
-        expect(body).to include(tag3.name)
-        expect(body).to include(category.name)
-
-        expect(body).not_to include("translation missing")
-        expect(body).not_to include("%{optional_tags}")
-        expect(body).not_to include("%{optional_cat}")
-        expect(body).not_to include("%{optional_pm}")
-        expect(body).not_to include("%{optional_re}")
-
-        TranslationOverride.revert!(
-          I18n.locale,
-          ["user_notifications.user_replied.text_body_template"],
+        expect(renderer.text).to include(
+          "Category: [#{category.name}]",
+          "Tags: ##{tag2.name}::tag ##{tag3.name} ##{tag1.name}",
+          "PM marker: \nRe marker: \n",
         )
+        expect(renderer.text).not_to include(hidden_tag.name)
+        expect(links.map(&:text)).to eq([tag2, tag3, tag1].map { |tag| "##{tag.name}" })
+        expect(links.map { |link| link["href"] }).to eq([tag2, tag3, tag1].map(&:full_url))
+        expect(mail.subject).to eq("#{tag2.name} #{tag3.name} #{tag1.name} #{topic.title}")
+        expect(mail["X-Discourse-Tags"].value).to eq("#{tag2.name} #{tag3.name} #{tag1.name}")
       end
     end
 
@@ -987,6 +1068,10 @@ RSpec.describe UserNotifications do
       before do
         SiteSetting.group_in_subject = true
         SiteSetting.simple_email_subject = true
+
+        # Enabling simple_email_subject rewrites email_subject to a template
+        # without %{optional_pm}, which is where the group name is rendered.
+        SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
       end
 
       let(:group) { Fabricate(:group, name: "my_group") }
@@ -1125,7 +1210,7 @@ RSpec.describe UserNotifications do
 
   shared_examples "supports reply by email" do
     context "with reply_by_email" do
-      it "should have allow_reply_by_email set when that feature is enabled" do
+      it "sets allow_reply_by_email when the feature is enabled" do
         expects_build_with(has_entry(:allow_reply_by_email, true))
       end
     end
@@ -1141,7 +1226,7 @@ RSpec.describe UserNotifications do
 
   shared_examples "respect for private_email" do
     context "with private_email" do
-      it "doesn't support reply by email" do
+      it "doesn't include topic title or slug for regular users" do
         SiteSetting.private_email = true
 
         mailer =
@@ -1159,6 +1244,35 @@ RSpec.describe UserNotifications do
         expect(message.html_part.body.to_s).not_to include(topic.slug)
         expect(message.text_part.body.to_s).not_to include(topic.title)
         expect(message.text_part.body.to_s).not_to include(topic.slug)
+      end
+
+      it "still links back to the topic for staged users" do
+        skip_types = %i[linked quoted mentioned group_mentioned]
+        if skip_types.include?(notification_type)
+          skip "Staged users don't receive #{notification_type} emails"
+        end
+
+        invite_types = %i[invited_to_private_message invited_to_topic watching_first_post]
+        if invite_types.include?(notification_type)
+          skip "Invite-type emails use a different template structure"
+        end
+
+        SiteSetting.private_email = true
+        user.update!(staged: true)
+
+        mailer =
+          UserNotifications.public_send(
+            mail_type,
+            user,
+            notification_type: Notification.types[notification.notification_type],
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+        message = mailer.message
+
+        slugless_path = notification.post.topic.slugless_url
+        expect(message.html_part.body.to_s).to include(slugless_path)
+        expect(message.text_part.body.to_s).to include(slugless_path)
       end
     end
   end
@@ -1225,23 +1339,23 @@ RSpec.describe UserNotifications do
         expects_build_with(has_key(:topic_id))
       end
 
-      it "should have user name as from_alias" do
+      it "uses the user's name as from_alias" do
         SiteSetting.enable_names = true
         SiteSetting.display_name_on_posts = true
         expects_build_with(has_entry(:from_alias, user.name))
       end
 
-      it "should not have user name as from_alias if display_name_on_posts is disabled" do
+      it "omits the user's name from from_alias when display_name_on_posts is disabled" do
         SiteSetting.enable_names = false
         SiteSetting.display_name_on_posts = false
         expects_build_with(has_entry(:from_alias, "walterwhite"))
       end
 
-      it "should explain how to respond" do
+      it "explains how to respond" do
         expects_build_with(Not(has_entry(:include_respond_instructions, false)))
       end
 
-      it "should not explain how to respond if the user is suspended" do
+      it "omits response instructions for suspended users" do
         User.any_instance.stubs(:suspended?).returns(true)
         expects_build_with(has_entry(:include_respond_instructions, false))
       end
@@ -1268,7 +1382,7 @@ RSpec.describe UserNotifications do
           )
         end
 
-        it "shouldn't use the default html_override" do
+        it "does not use the default html_override" do
           expects_build_with(Not(has_key(:html_override)))
         end
       end
@@ -1278,6 +1392,7 @@ RSpec.describe UserNotifications do
   describe "user mentioned email" do
     include_examples "notification email building" do
       let(:notification_type) { :mentioned }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1301,6 +1416,7 @@ RSpec.describe UserNotifications do
   describe "user replied" do
     include_examples "notification email building" do
       let(:notification_type) { :replied }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1310,6 +1426,7 @@ RSpec.describe UserNotifications do
   describe "user quoted" do
     include_examples "notification email building" do
       let(:notification_type) { :quoted }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1319,9 +1436,43 @@ RSpec.describe UserNotifications do
   describe "user posted" do
     include_examples "notification email building" do
       let(:notification_type) { :posted }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
+    end
+  end
+
+  describe "invitation email attribution" do
+    fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2], name: "Message Inviter") }
+    fab!(:invitee, :user)
+
+    %i[private_message topic].each do |destination|
+      it "identifies the inviter when another user started the #{destination}" do
+        SiteSetting.enable_names = true
+        SiteSetting.display_name_on_email_from = true
+        post =
+          if destination == :private_message
+            Fabricate(:private_message_post, recipient: inviter)
+          else
+            Fabricate(:post)
+          end
+
+        post.topic.invite(inviter, invitee.username)
+        notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+        notification_type = "invited_to_#{destination}"
+        mail =
+          UserNotifications.public_send(
+            "user_#{notification_type}",
+            invitee,
+            notification_type: notification_type,
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+
+        expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
+        expect(mail[:from].display_names).to eq([inviter.name])
+      end
     end
   end
 
@@ -1351,7 +1502,7 @@ RSpec.describe UserNotifications do
         notification.save!
       end
 
-      it "should include the group name" do
+      it "includes the group name" do
         expects_build_with(has_entry(:group_name, group.name))
       end
 
@@ -1400,7 +1551,7 @@ RSpec.describe UserNotifications do
         )
       end
 
-      it "sends the email as the inviter" do
+      it "uses the inviter's username when names are disabled" do
         SiteSetting.enable_names = false
 
         expect(mailer.message.to_s).to include(
@@ -1408,7 +1559,7 @@ RSpec.describe UserNotifications do
         )
       end
 
-      it "sends the email as the inviter" do
+      it "uses the inviter's name as the sender" do
         expect(mailer.message.to_s).to include(
           "From: #{inviter.name} <#{SiteSetting.notification_email}>",
         )
@@ -1419,6 +1570,7 @@ RSpec.describe UserNotifications do
   describe "watching first post" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
+
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
@@ -1524,6 +1676,7 @@ RSpec.describe UserNotifications do
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
+
           it "sets the locale" do
             expects_build_with(has_entry(:locale, "fr"))
           end
@@ -1547,6 +1700,7 @@ RSpec.describe UserNotifications do
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
+
           it "sets the locale" do
             expects_build_with(has_entry(:locale, "en"))
           end

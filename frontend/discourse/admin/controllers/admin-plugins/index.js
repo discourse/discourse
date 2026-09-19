@@ -2,13 +2,11 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
-import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class AdminPluginsIndexController extends Controller {
   @service session;
-  @service router;
 
   get searchableProps() {
     return ["nameTitleized", "author", "about"];
@@ -49,26 +47,5 @@ export default class AdminPluginsIndexController extends Controller {
       plugin.enabled = oldValue;
       popupAjaxError(e);
     }
-  }
-
-  // NOTE: See also AdminPluginsController, there is some duplication here
-  // while we convert plugins to use_new_show_route
-  get adminRoutes() {
-    return this.allAdminRoutes.filter((route) =>
-      adminRouteValid(this.router, route)
-    );
-  }
-
-  get allAdminRoutes() {
-    return this.model
-      .filter(
-        (plugin) =>
-          plugin?.enabled &&
-          plugin?.adminRoute &&
-          !plugin?.adminRoute?.auto_generated
-      )
-      .map((plugin) => {
-        return Object.assign(plugin.adminRoute, { plugin_id: plugin.id });
-      });
   }
 }

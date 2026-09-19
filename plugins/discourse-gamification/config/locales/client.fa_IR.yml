@@ -56,3 +56,8 @@ fa_IR:
         title: "بازی‌وارسازی"
         name: "نام"
         period: "دوره زمانی"
+    discourse_workflows:
+      gamification_score:
+        username: "کاربر"
+        date: "تاریخ"
+        description: "توضیح"

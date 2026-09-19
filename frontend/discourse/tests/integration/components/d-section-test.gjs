@@ -4,14 +4,14 @@ import DSection from "discourse/components/d-section";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | d-section", function (hooks) {
+module("Integration | Component | DSection", function (hooks) {
   setupRenderingTest(hooks);
 
   test("can set classes on the body element", async function (assert) {
     await withSilencedDeprecationsAsync("discourse.d-section", async () => {
       await render(
         <template>
-          <DSection @pageClass="test" @bodyClass="foo bar" class="special">
+          <DSection class="special" @bodyClass="foo bar" @pageClass="test">
             testing!
           </DSection>
         </template>

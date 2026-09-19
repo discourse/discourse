@@ -5,12 +5,12 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { bind } from "discourse/lib/decorators";
 import { isDevelopment } from "discourse/lib/environment";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const _pluginNotices = new DeferredTrackedSet();
@@ -68,16 +68,6 @@ export default class GlobalNotice extends Component {
     this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
-    this.logsNoticeService.removeObserver(
-      "hidden",
-      this._handleLogsNoticeUpdate
-    );
-  }
-
   get visible() {
     return !this.router.currentRouteName.startsWith("wizard.");
   }
@@ -122,15 +112,28 @@ export default class GlobalNotice extends Component {
     if (this.site.get("isStaffWritesOnly")) {
       notices.push(
         Notice.create({
-          text: i18n("staff_writes_only_mode.enabled"),
+          text: this.currentUser
+            ? i18n("staff_writes_only_mode.enabled")
+            : i18n("staff_writes_only_mode.enabled_anonymous"),
           id: "alert-staff-writes-only",
         })
       );
     } else if (this.site.get("isReadOnly")) {
       notices.push(
         Notice.create({
-          text: i18n("read_only_mode.enabled"),
+          text: this.currentUser
+            ? i18n("read_only_mode.enabled")
+            : i18n("read_only_mode.enabled_anonymous"),
           id: "alert-read-only",
+        })
+      );
+    } else if (this.siteSettings.site_archived) {
+      notices.push(
+        Notice.create({
+          text: this.currentUser
+            ? i18n("site_archived.enabled")
+            : i18n("site_archived.enabled_anonymous"),
+          id: "alert-site-archived",
         })
       );
     }
@@ -224,6 +227,16 @@ export default class GlobalNotice extends Component {
     });
   }
 
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
+    this.logsNoticeService.removeObserver(
+      "hidden",
+      this._handleLogsNoticeUpdate
+    );
+  }
+
   @action
   dismissNotice(notice) {
     notice.options.onDismiss?.(notice);
@@ -263,8 +276,8 @@ export default class GlobalNotice extends Component {
         {{#each this.notices as |notice|}}
           <div class="row">
             <div
-              id="global-notice-{{notice.id}}"
               class="alert alert-{{notice.options.level}} {{notice.id}}"
+              id="global-notice-{{notice.id}}"
             >
               {{#if notice.options.html}}
                 {{trustHTML notice.options.html}}
@@ -274,9 +287,9 @@ export default class GlobalNotice extends Component {
 
               {{#if notice.options.dismissable}}
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.dismissNotice notice}}
                   class="btn-transparent close"
+                  @action={{fn this.dismissNotice notice}}
+                  @icon="xmark"
                 />
               {{/if}}
             </div>

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../../support/sentiment_inference_stubs"
-
 RSpec.describe DiscourseAi::Sentiment::PostClassification do
   subject(:post_classification) { described_class.new }
 
@@ -12,14 +10,37 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       "[{\"model_name\":\"SamLowe/roberta-base-go_emotions\",\"endpoint\":\"http://samlowe-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"j-hartmann/emotion-english-distilroberta-base\",\"endpoint\":\"http://jhartmann-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"cardiffnlp/twitter-roberta-base-sentiment-latest\",\"endpoint\":\"http://cardiffnlp-sentiment.com\",\"api_key\":\"123\"}]"
   end
 
-  def check_classification_for(post)
-    result =
-      ClassificationResult.find_by(
-        model_used: "cardiffnlp/twitter-roberta-base-sentiment-latest",
-        target: post,
-      )
+  describe ".active_model_name_for" do
+    it "uses an explicitly typed custom sentiment classifier for read paths" do
+      SiteSetting.ai_sentiment_model_configs = [
+        {
+          classification_type: "sentiment",
+          model_name: "custom/sentiment-model",
+          endpoint: "https://sentiment.example.com",
+          api_key: "123",
+        },
+      ].to_json
 
-    expect(result.classification.keys).to contain_exactly("negative", "neutral", "positive")
+      expect(described_class.active_model_name_for(:sentiment)).to eq("custom/sentiment-model")
+    end
+
+    it "uses a single legacy untyped custom classifier for sentiment read paths" do
+      SiteSetting.ai_sentiment_model_configs = [
+        {
+          model_name: "custom/classifier",
+          endpoint: "https://sentiment.example.com",
+          api_key: "123",
+        },
+      ].to_json
+
+      expect(described_class.active_model_name_for(:sentiment)).to eq("custom/classifier")
+    end
+
+    it "prefers the default emotion classifier when multiple legacy emotion classifiers are configured" do
+      expect(described_class.active_model_name_for(:emotion)).to eq(
+        DiscourseAi::Sentiment::Constants::EMOTION_MODEL,
+      )
+    end
   end
 
   describe "#classify!" do
@@ -46,7 +67,13 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       SentimentInferenceStubs.stub_classification(post_1)
 
       post_classification.classify!(post_1)
-      check_classification_for(post_1)
+
+      result =
+        ClassificationResult.find_by(
+          model_used: "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          target: post_1,
+        )
+      expect(result.classification.keys).to contain_exactly("negative", "neutral", "positive")
     end
 
     it "does nothing if there are no classification model" do
@@ -74,6 +101,128 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       new_classifications = ClassificationResult.where("created_at > ?", first_classified_at).count
       expect(new_classifications).to eq(1)
     end
+
+    context "with an agent" do
+      fab!(:llm_model, :fake_model)
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          default_llm: llm_model,
+          response_format:
+            %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          system_prompt: "Classify this post",
+        )
+      end
+
+      it "classifies sentiment through a configured agent" do
+        SiteSetting.ai_sentiment_model_configs = ""
+        SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+        SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ negative: 0.1, neutral: 0.2, positive: 0.7 }],
+        ) { post_classification.classify!(post_1) }
+
+        result =
+          ClassificationResult.find_by!(
+            model_used: DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL,
+            target: post_1,
+          )
+
+        expect(result.classification).to eq("negative" => 0.1, "neutral" => 0.2, "positive" => 0.7)
+      end
+
+      it "classifies emotion through a configured agent" do
+        ai_agent.update!(
+          response_format:
+            DiscourseAi::Sentiment::Emotions::LIST.map do |label|
+              { "key" => label, "type" => "number" }
+            end,
+        )
+        SiteSetting.ai_sentiment_model_configs = ""
+        SiteSetting.ai_sentiment_emotion_classification_strategy = "agent"
+        SiteSetting.ai_sentiment_emotion_agent = ai_agent.id
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ anger: 0.7, joy: 0.2, neutral: 0.1 }],
+        ) { post_classification.classify!(post_1) }
+
+        result =
+          ClassificationResult.find_by!(
+            model_used: DiscourseAi::Sentiment::Constants::EMOTION_AGENT_MODEL,
+            target: post_1,
+          )
+
+        expect(result.classification.keys).to contain_exactly(
+          *DiscourseAi::Sentiment::Emotions::LIST,
+        )
+        expect(result.classification.slice("anger", "joy", "neutral")).to eq(
+          "anger" => 0.7,
+          "joy" => 0.2,
+          "neutral" => 0.1,
+        )
+      end
+
+      it "skips a lone legacy untyped sentiment config when sentiment strategy is agent" do
+        SiteSetting.ai_sentiment_model_configs = [
+          { model_name: "custom/legacy", endpoint: "https://legacy.example.com", api_key: "123" },
+        ].to_json
+        SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+        SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+
+        model_names = post_classification.classifiers.map { |c| c[:model_name] }
+        expect(model_names).to include(DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL)
+        expect(model_names).not_to include("custom/legacy")
+      end
+
+      it "skips storing when the agent returns no usable classification" do
+        SiteSetting.ai_sentiment_model_configs = ""
+        SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+        SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["not json"]) do
+          post_classification.classify!(post_1)
+        end
+
+        expect(
+          ClassificationResult.where(
+            model_used: DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL,
+            target: post_1,
+          ),
+        ).to be_empty
+      end
+    end
+
+    context "when the configured agent does not set a default LLM" do
+      fab!(:older_llm_model) { Fabricate(:fake_model, name: "older-model", created_at: 1.day.ago) }
+      fab!(:newest_llm_model) { Fabricate(:fake_model, name: "newer-model") }
+      fab!(:agent_without_default_llm) do
+        Fabricate(
+          :ai_agent,
+          default_llm: nil,
+          response_format:
+            %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          system_prompt: "Classify this post",
+        )
+      end
+
+      it "falls back to the newest LLM model" do
+        SiteSetting.ai_default_llm_model = ""
+        SiteSetting.ai_sentiment_model_configs = ""
+        SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+        SiteSetting.ai_sentiment_sentiment_agent = agent_without_default_llm.id
+
+        classifier =
+          post_classification.send(
+            :agent_classifier,
+            :sentiment,
+            agent_without_default_llm.id,
+            DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL,
+          )
+
+        expect(classifier[:model]).to eq(newest_llm_model)
+      end
+    end
   end
 
   describe "#classify_bulk!" do
@@ -97,8 +246,15 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
 
       post_classification.bulk_classify!(Post.where(id: [post_1.id, post_2.id]))
 
-      check_classification_for(post_1)
-      check_classification_for(post_2)
+      results =
+        ClassificationResult.where(
+          model_used: "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          target: [post_1, post_2],
+        ).to_a
+      expect(results.map(&:target_id)).to contain_exactly(post_1.id, post_2.id)
+      expect(results.map { |result| result.classification.keys }).to all(
+        contain_exactly("negative", "neutral", "positive"),
+      )
     end
 
     it "does nothing if there are no classification model" do
@@ -170,6 +326,39 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
 
       posts = described_class.backfill_query
       expect(posts).to contain_exactly(classified_post)
+    end
+
+    context "with an agent classification" do
+      fab!(:llm_model, :fake_model)
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          default_llm: llm_model,
+          response_format:
+            %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          system_prompt: "Classify this post",
+        )
+      end
+
+      it "does not reclassify agent results when the agent LLM changes" do
+        SiteSetting.ai_sentiment_model_configs = ""
+        SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
+        SiteSetting.ai_sentiment_emotion_classification_strategy = "agent"
+        SiteSetting.ai_sentiment_sentiment_agent = ai_agent.id
+        SiteSetting.ai_sentiment_emotion_agent = "0"
+
+        classified_post = Fabricate(:post)
+        Fabricate(
+          :classification_result,
+          target: classified_post,
+          model_used: DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL,
+        )
+
+        ai_agent.update!(default_llm: Fabricate(:fake_model, name: "new-model"))
+
+        posts = described_class.backfill_query
+        expect(posts).to be_empty
+      end
     end
 
     it "excludes deleted posts" do

@@ -10,18 +10,12 @@ fi:
       sort_options:
         votes: "Äänet"
     topic_voting:
-      reached_limit: "Sinulla ei ole enempää ääniä, poista antamasi ääni!"
-      list_votes: "Kaikki antamasi äänet"
       voted: "Äänestit tässä ketjussa"
-      allow_topic_voting: "Salli käyttäjien antaa ääniä ketjuissa tällä alueella"
       vote_title: "Äänestä"
       vote_title_plural: "Äänet"
       votes:
         one: "%{count} ääni"
         other: "%{count} ääntä"
-      anonymous_button:
-        one: "Ääni"
-        other: "Äänet"
       remove_vote: "Poista ääni"
       and_more_voters: "ja %{count} muuta..."
       show_voters: "Näytä äänestäneet"
@@ -36,13 +30,12 @@ fi:
         help: "ketjut, joissa olet äänestänyt"
     search:
       most_votes: "Eniten ääniä"
-      advanced:
-        vote:
-          count:
-            label: "Vähimmäisäänimäärä"
     admin:
       web_hooks:
         voting_event:
           group_name: "Ketjunäänestystapahtuma"
           topic_upvote: "Kun käyttäjä äänestää ketjua"
           topic_unvote: "Kun käyttäjä poistaa äänen ketjulta"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Tunnisteet"

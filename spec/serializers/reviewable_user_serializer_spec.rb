@@ -11,6 +11,16 @@ RSpec.describe ReviewableUserSerializer do
     Jobs::CreateUserReviewable.new.execute(user_id: user.id)
   end
 
+  it "includes the avatar the user was flagged for" do
+    upload = Fabricate(:image_upload, user: user)
+    user.update!(uploaded_avatar_id: upload.id)
+    reviewable.update!(payload: ReviewableUser.payload_for(user.reload))
+
+    json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+
+    expect(json[:payload]["avatar_url"]).to eq(Discourse.store.cdn_url(upload.reload.url))
+  end
+
   it "includes the user fields for review" do
     json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
     expect(json[:user_id]).to eq(reviewable.target_id)
@@ -68,6 +78,30 @@ RSpec.describe ReviewableUserSerializer do
       expect(json[:target_user]).to be_present
       expect(json[:target_user][:id]).to eq(user.id)
       expect(json[:target_user][:username]).to eq(user.username)
+    end
+
+    it "exposes an active penalty with its reason" do
+      user.update!(silenced_till: 1.month.from_now)
+      UserHistory.create!(
+        action: UserHistory.actions[:silence_user],
+        acting_user_id: admin.id,
+        target_user_id: user.id,
+        details: "Promotional links in bio",
+      )
+
+      json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_user][:silenced_till]).to be_present
+      expect(json[:target_user][:silence_reason]).to eq("Promotional links in bio")
+      expect(json[:target_user]).not_to have_key(:suspended_till)
+      expect(json[:target_user]).not_to have_key(:suspend_reason)
+    end
+
+    it "doesn't expose expired penalties" do
+      user.update!(suspended_till: 1.day.ago, suspended_at: 1.month.ago)
+
+      json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_user]).not_to have_key(:suspended_till)
+      expect(json[:target_user]).not_to have_key(:suspend_reason)
     end
   end
 end

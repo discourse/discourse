@@ -6,11 +6,7 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import DateInput from "discourse/components/date-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -20,6 +16,10 @@ import MultiSelect from "discourse/select-kit/components/multi-select";
 import SearchAdvancedCategoryChooser from "discourse/select-kit/components/search-advanced-category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DDateInput from "discourse/ui-kit/d-date-input";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -174,9 +174,37 @@ export default class SearchAdvancedOptions extends Component {
     );
   }
 
-  @action
-  _collapseFilters() {
-    this.isExpanded = false;
+  @computed(
+    "searchedTerms.username",
+    "searchedTerms.category.id",
+    "searchedTerms.tags.[]",
+    "searchedTerms.in.[]",
+    "searchedTerms.special.all_tags",
+    "searchedTerms.status",
+    "searchedTerms.min_posts",
+    "searchedTerms.max_posts",
+    "searchedTerms.min_views",
+    "searchedTerms.max_views",
+    "searchedTerms.time.days"
+  )
+  get activeFilterCount() {
+    const t = this.searchedTerms;
+    if (!t) {
+      return 0;
+    }
+    return [
+      t.username,
+      t.category?.id,
+      t.tags?.length,
+      t.in?.length,
+      t.special?.all_tags,
+      t.status,
+      t.min_posts,
+      t.max_posts,
+      t.min_views,
+      t.max_views,
+      t.time?.days,
+    ].filter(Boolean).length;
   }
 
   didReceiveAttrs() {
@@ -499,6 +527,16 @@ export default class SearchAdvancedOptions extends Component {
     this[updateFnName]();
   }
 
+  @action
+  toggleFilters() {
+    this.isExpanded = !this.isExpanded;
+  }
+
+  @action
+  _collapseFilters() {
+    this.isExpanded = false;
+  }
+
   _updateSearchTermForTags() {
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get("searchedTerms.tags");
@@ -769,47 +807,9 @@ export default class SearchAdvancedOptions extends Component {
     this.onChangeSearchTerm(searchTerm.trim());
   }
 
-  @computed(
-    "searchedTerms.username",
-    "searchedTerms.category.id",
-    "searchedTerms.tags.[]",
-    "searchedTerms.in.[]",
-    "searchedTerms.special.all_tags",
-    "searchedTerms.status",
-    "searchedTerms.min_posts",
-    "searchedTerms.max_posts",
-    "searchedTerms.min_views",
-    "searchedTerms.max_views",
-    "searchedTerms.time.days"
-  )
-  get activeFilterCount() {
-    const t = this.searchedTerms;
-    if (!t) {
-      return 0;
-    }
-    return [
-      t.username,
-      t.category?.id,
-      t.tags?.length,
-      t.in?.length,
-      t.special?.all_tags,
-      t.status,
-      t.min_posts,
-      t.max_posts,
-      t.min_views,
-      t.max_views,
-      t.time?.days,
-    ].filter(Boolean).length;
-  }
-
-  @action
-  toggleFilters() {
-    this.isExpanded = !this.isExpanded;
-  }
-
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "advanced-filters"
         (if this.isExpanded "--is-expanded")
       }}
@@ -817,15 +817,15 @@ export default class SearchAdvancedOptions extends Component {
     >
       <DButton
         class="advanced-filters__toggle btn-default"
-        @ariaLabel={{i18n "search.advanced.title"}}
-        @ariaExpanded={{this.isExpanded}}
         @action={{this.toggleFilters}}
+        @ariaExpanded={{this.isExpanded}}
+        @ariaLabel={{i18n "search.advanced.title"}}
       >
         {{#if this.submittedFilterCount}}
           <span class="badge-notification">{{this.submittedFilterCount}}</span>
         {{/if}}
         {{i18n "search.advanced.title"}}
-        {{icon (if this.isExpanded "chevron-up" "chevron-down")}}
+        {{dIcon (if this.isExpanded "chevron-up" "chevron-down")}}
       </DButton>
       <PluginOutlet
         @name="full-page-search-advanced-header"
@@ -841,8 +841,8 @@ export default class SearchAdvancedOptions extends Component {
         <div class="search-advanced-filters">
           <div class="search-advanced-options">
             <PluginOutlet
-              @name="advanced-search-options-above"
               @connectorTagName="div"
+              @name="advanced-search-options-above"
               @outletArgs={{lazyHash
                 searchedTerms=this.searchedTerms
                 onChangeSearchedTermField=this.onChangeSearchedTermField
@@ -856,8 +856,8 @@ export default class SearchAdvancedOptions extends Component {
               <div class="controls">
                 <SearchAdvancedCategoryChooser
                   @id="search-in-category"
-                  @value={{this.searchedTerms.category.id}}
                   @onChange={{this.onChangeSearchTermForCategory}}
+                  @value={{this.searchedTerms.category.id}}
                 />
               </div>
             </div>
@@ -869,10 +869,8 @@ export default class SearchAdvancedOptions extends Component {
                 </label>
                 <div class="controls">
                   <TagChooser
-                    @id="search-with-tags"
-                    @tags={{this.searchedTerms.tags}}
                     @everyTag={{true}}
-                    @unlimitedTagCount={{true}}
+                    @id="search-with-tags"
                     @onChange={{this.onChangeSearchTermForTags}}
                     @options={{hash
                       allowAny=false
@@ -880,14 +878,16 @@ export default class SearchAdvancedOptions extends Component {
                         "search.advanced.with_tags.aria_label"
                       )
                     }}
+                    @tags={{this.searchedTerms.tags}}
+                    @unlimitedTagCount={{true}}
                   />
                   {{#if this.showAllTagsCheckbox}}
                     <section class="field">
                       <label>
                         <Input
-                          @type="checkbox"
                           class="all-tags"
                           @checked={{this.searchedTerms.special.all_tags}}
+                          @type="checkbox"
                           {{on "click" this.onChangeSearchTermForAllTags}}
                         />
                         {{i18n "search.advanced.filters.all_tags"}}
@@ -904,14 +904,14 @@ export default class SearchAdvancedOptions extends Component {
               </label>
               <div class="controls">
                 <MultiSelect
-                  @id="search-in-options"
-                  @valueProperty="value"
                   @content={{this.inOptions}}
-                  @value={{this.searchedTerms.in}}
+                  @id="search-in-options"
                   @onChange={{this.onChangeSearchTermForIn}}
                   @options={{hash
                     headerAriaLabel=(i18n "search.advanced.filters.label")
                   }}
+                  @value={{this.searchedTerms.in}}
+                  @valueProperty="value"
                 />
               </div>
             </div>
@@ -922,16 +922,16 @@ export default class SearchAdvancedOptions extends Component {
               </label>
               <div class="controls">
                 <ComboBox
-                  @id="search-status-options"
-                  @valueProperty="value"
                   @content={{this.statusOptions}}
-                  @value={{this.searchedTerms.status}}
+                  @id="search-status-options"
                   @onChange={{this.onChangeSearchTermForStatus}}
                   @options={{hash
                     none="user.locale.any"
                     headerAriaLabel=(i18n "search.advanced.statuses.label")
                     clearable=true
                   }}
+                  @value={{this.searchedTerms.status}}
+                  @valueProperty="value"
                 />
               </div>
             </div>
@@ -943,7 +943,6 @@ export default class SearchAdvancedOptions extends Component {
               <div class="controls">
                 <UserChooser
                   @id="search-posted-by"
-                  @value={{this.searchedTerms.username}}
                   @onChange={{this.onChangeSearchTermForUsername}}
                   @options={{hash
                     headerAriaLabel=(i18n
@@ -952,6 +951,7 @@ export default class SearchAdvancedOptions extends Component {
                     maximum=1
                     excludeCurrentUser=false
                   }}
+                  @value={{this.searchedTerms.username}}
                 />
               </div>
             </div>
@@ -962,17 +962,17 @@ export default class SearchAdvancedOptions extends Component {
                 }}</label>
               <div class="controls inline-form">
                 <ComboBox
-                  @id="postTime"
-                  @valueProperty="value"
                   @content={{this.postTimeOptions}}
-                  @value={{this.searchedTerms.time.when}}
+                  @id="postTime"
                   @onChange={{this.onChangeWhenTime}}
+                  @value={{this.searchedTerms.time.when}}
+                  @valueProperty="value"
                 />
-                <DateInput
-                  @date={{this.searchedTerms.time.days}}
-                  @onChange={{this.onChangeWhenDate}}
-                  @inputId="search-post-date"
+                <DDateInput
                   aria-label={{i18n "search.advanced.post.time.aria_label"}}
+                  @date={{this.searchedTerms.time.days}}
+                  @inputId="search-post-date"
+                  @onChange={{this.onChangeWhenDate}}
                 />
               </div>
             </div>
@@ -983,25 +983,25 @@ export default class SearchAdvancedOptions extends Component {
               </label>
               <div class="controls">
                 <Input
-                  @type="number"
-                  @value={{readonly this.searchedTerms.min_posts}}
+                  aria-label={{i18n "search.advanced.post.min.aria_label"}}
                   class="input-small"
                   id="search-min-post-count"
                   placeholder={{i18n "search.advanced.post.min.placeholder"}}
-                  aria-label={{i18n "search.advanced.post.min.aria_label"}}
+                  @type="number"
+                  @value={{readonly this.searchedTerms.min_posts}}
                   {{on
                     "input"
                     (withEventValue this.onChangeSearchTermMinPostCount)
                   }}
                 />
-                {{icon "left-right"}}
+                {{dIcon "left-right"}}
                 <Input
-                  @type="number"
-                  @value={{readonly this.searchedTerms.max_posts}}
+                  aria-label={{i18n "search.advanced.post.max.aria_label"}}
                   class="input-small"
                   id="search-max-post-count"
                   placeholder={{i18n "search.advanced.post.max.placeholder"}}
-                  aria-label={{i18n "search.advanced.post.max.aria_label"}}
+                  @type="number"
+                  @value={{readonly this.searchedTerms.max_posts}}
                   {{on
                     "input"
                     (withEventValue this.onChangeSearchTermMaxPostCount)
@@ -1016,25 +1016,25 @@ export default class SearchAdvancedOptions extends Component {
               </label>
               <div class="controls">
                 <Input
-                  @type="number"
-                  @value={{readonly this.searchedTerms.min_views}}
+                  aria-label={{i18n "search.advanced.min_views.aria_label"}}
                   class="input-small"
                   id="search-min-views"
                   placeholder={{i18n "search.advanced.min_views.placeholder"}}
-                  aria-label={{i18n "search.advanced.min_views.aria_label"}}
+                  @type="number"
+                  @value={{readonly this.searchedTerms.min_views}}
                   {{on
                     "input"
                     (withEventValue this.onChangeSearchTermMinViews)
                   }}
                 />
-                {{icon "left-right"}}
+                {{dIcon "left-right"}}
                 <Input
-                  @type="number"
-                  @value={{readonly this.searchedTerms.max_views}}
+                  aria-label={{i18n "search.advanced.max_views.aria_label"}}
                   class="input-small"
                   id="search-max-views"
                   placeholder={{i18n "search.advanced.max_views.placeholder"}}
-                  aria-label={{i18n "search.advanced.max_views.aria_label"}}
+                  @type="number"
+                  @value={{readonly this.searchedTerms.max_views}}
                   {{on
                     "input"
                     (withEventValue this.onChangeSearchTermMaxViews)
@@ -1044,8 +1044,8 @@ export default class SearchAdvancedOptions extends Component {
             </div>
 
             <PluginOutlet
-              @name="advanced-search-options-below"
               @connectorTagName="div"
+              @name="advanced-search-options-below"
               @outletArgs={{lazyHash
                 searchedTerms=this.searchedTerms
                 onChangeSearchedTermField=this.onChangeSearchedTermField
@@ -1056,12 +1056,12 @@ export default class SearchAdvancedOptions extends Component {
           {{#if this.site.mobileView}}
             <div class="second-search-button">
               <DButton
+                class="btn-primary search-cta"
                 @action={{this.search}}
-                @icon="magnifying-glass"
-                @label="search.search_button"
                 @ariaLabel="search.search_button"
                 @disabled={{this.searchButtonDisabled}}
-                class="btn-primary search-cta"
+                @icon="magnifying-glass"
+                @label="search.search_button"
               />
             </div>
           {{/if}}

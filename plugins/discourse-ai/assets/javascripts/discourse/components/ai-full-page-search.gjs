@@ -5,14 +5,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidSearchTerm, translateResults } from "discourse/lib/search";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const AI_RESULTS_TOGGLED = "full-page-search:ai-results-toggled";
@@ -48,48 +48,6 @@ export default class AiFullPageSearch extends Component {
       this,
       this.onSearchResultsLoaded
     );
-  }
-
-  @action
-  onSearch() {
-    if (!this.searchEnabled) {
-      return;
-    }
-
-    this.searching = true;
-    this.hasCompletedSearch = false;
-    this.autoEnabledForZeroResults = false;
-    this.shouldAutoEnableWhenAiReady = false;
-    this.resetAiResults();
-    return this.performHyDESearch();
-  }
-
-  @action
-  onSearchResultsLoaded() {
-    // enable AI results if we have zero regular results and AI results are ready
-    if (
-      this.hasZeroRegularResults &&
-      !this.showingAiResults &&
-      !this.autoEnabledForZeroResults &&
-      this.AiResults.length > 0
-    ) {
-      this.autoEnabledForZeroResults = true;
-      this.showingAiResults = true;
-      this.args.addSearchResults(this.AiResults, "topic_id");
-      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
-        enabled: true,
-        autoEnabled: true,
-      });
-    }
-    // AI results not ready yet, auto-enable when ready
-    else if (
-      this.hasZeroRegularResults &&
-      !this.showingAiResults &&
-      !this.autoEnabledForZeroResults &&
-      this.AiResults.length === 0
-    ) {
-      this.shouldAutoEnableWhenAiReady = true;
-    }
   }
 
   get disableToggleSwitch() {
@@ -200,6 +158,48 @@ export default class AiFullPageSearch extends Component {
   }
 
   @action
+  onSearch() {
+    if (!this.searchEnabled) {
+      return;
+    }
+
+    this.searching = true;
+    this.hasCompletedSearch = false;
+    this.autoEnabledForZeroResults = false;
+    this.shouldAutoEnableWhenAiReady = false;
+    this.resetAiResults();
+    return this.performHyDESearch();
+  }
+
+  @action
+  onSearchResultsLoaded() {
+    // enable AI results if we have zero regular results and AI results are ready
+    if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length > 0
+    ) {
+      this.autoEnabledForZeroResults = true;
+      this.showingAiResults = true;
+      this.args.addSearchResults(this.AiResults, "topic_id");
+      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
+        enabled: true,
+        autoEnabled: true,
+      });
+    }
+    // AI results not ready yet, auto-enable when ready
+    else if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length === 0
+    ) {
+      this.shouldAutoEnableWhenAiReady = true;
+    }
+  }
+
+  @action
   toggleAiResults() {
     this.appEvents.trigger(AI_RESULTS_TOGGLED, {
       enabled: !this.showingAiResults,
@@ -282,24 +282,24 @@ export default class AiFullPageSearch extends Component {
   <template>
     {{bodyClass (if this.searching "ai-semantic-search-loading")}}
     <div
-      {{didUpdate this.sortChanged @sortOrder}}
       class="semantic-search__container search-results"
       role="region"
+      {{didUpdate this.sortChanged @sortOrder}}
     >
       <div class="semantic-search__results">
         {{#if this.tooltipIdentifier}}
           <DTooltip @identifier={{this.tooltipIdentifier}}>
             <:trigger>
               <div
-                class={{concatClass
+                class={{dConcatClass
                   "semantic-search__searching"
                   this.searchClass
                 }}
               >
                 <DToggleSwitch
+                  class="semantic-search__results-toggle"
                   disabled={{this.disableToggleSwitch}}
                   @state={{this.showingAiResults}}
-                  class="semantic-search__results-toggle"
                   {{on "click" this.toggleAiResults}}
                 />
                 <div class="semantic-search__searching-text">
@@ -308,7 +308,7 @@ export default class AiFullPageSearch extends Component {
                     <div class="spinner small"></div>
                   {{else if this.hasCompletedSearch}}
                     <span
-                      class={{concatClass
+                      class={{dConcatClass
                         "badge-notification"
                         (if this.AiResults.length "--has-results")
                       }}
@@ -321,12 +321,12 @@ export default class AiFullPageSearch extends Component {
           </DTooltip>
         {{else}}
           <div
-            class={{concatClass "semantic-search__searching" this.searchClass}}
+            class={{dConcatClass "semantic-search__searching" this.searchClass}}
           >
             <DToggleSwitch
+              class="semantic-search__results-toggle"
               disabled={{this.disableToggleSwitch}}
               @state={{this.showingAiResults}}
-              class="semantic-search__results-toggle"
               {{on "click" this.toggleAiResults}}
             />
             <div class="semantic-search__searching-text">
@@ -335,7 +335,7 @@ export default class AiFullPageSearch extends Component {
                 <div class="spinner small"></div>
               {{else if this.hasCompletedSearch}}
                 <span
-                  class={{concatClass
+                  class={{dConcatClass
                     "badge-notification"
                     (if this.AiResults.length "--has-results")
                   }}

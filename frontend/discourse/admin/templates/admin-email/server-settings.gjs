@@ -1,5 +1,5 @@
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -26,16 +26,16 @@ export default <template>
           {{#if @controller.sendingEmail}}
             {{i18n "admin.email.sending_test"}}
           {{else}}
-            <TextField
-              @value={{@controller.testEmailAddress}}
+            <DTextField
               @placeholderKey="admin.email.test_email_address"
+              @value={{@controller.testEmailAddress}}
             />
             <DButton
+              class="btn-primary"
+              type="submit"
               @action={{@controller.sendTestEmail}}
               @disabled={{@controller.sendTestEmailDisabled}}
               @label="admin.email.send_test"
-              type="submit"
-              class="btn-primary"
             />
             {{#if @controller.sentTestEmailMessage}}
               <span

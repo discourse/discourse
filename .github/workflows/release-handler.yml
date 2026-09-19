@@ -16,7 +16,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  actions: write
 
 jobs:
   build:
@@ -27,23 +26,17 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           filter: tree:0
           fetch-depth: 0
-          
+          token: ${{ secrets.GH_PUSH_TOKEN }}
+
       - uses: ./.github/actions/setup-release-environment
 
       - name: Maybe cut branch
-        id: maybe-cut-branch
         if: github.ref == 'refs/heads/main'
         run: bin/rake release:maybe_cut_branch[${{ inputs.sha || github.sha }}]
-
-      - name: Maybe trigger prepare next version
-        if: steps.maybe-cut-branch.outputs.new_branch_name
-        run: gh workflow run release-branch-handler.yml -f branch="${{ steps.maybe-cut-branch.outputs.new_branch_name }}"
-        env:
-          GH_TOKEN: ${{ github.token }}
 
       - name: Maybe tag release
         run: bin/rake release:maybe_tag_release[${{ inputs.sha || github.sha }}]

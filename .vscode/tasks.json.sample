@@ -34,6 +34,17 @@
       "problemMatcher": []
     },
     {
+      "label": "deps/playwright",
+      "type": "shell",
+      "command": "pnpm playwright-install && sudo pnpm exec playwright install-deps chromium",
+      "presentation": {
+        "reveal": "always",
+        "group": "deps",
+        "close": true
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "dev/migrate",
       "type": "shell",
       "command": "bin/rake db:create db:migrate",
@@ -48,7 +59,7 @@
     {
       "label": "dev/server",
       "type": "shell",
-      "command": "bin/ember-cli -u",
+      "command": "bin/dev",
       "options": {
         "env":{
           "DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE": "1"
@@ -56,6 +67,17 @@
       },
       "problemMatcher": [],
       "isBackground": true
+    },
+    {
+      "label": "dev/admin/create",
+      "type": "shell",
+      "command": "bin/rake admin:create",
+      "presentation": {
+        "reveal": "always",
+        "group": "dev",
+        "close": true
+      },
+      "problemMatcher": []
     },
     {
       "label": "shortcuts/boot-dev",
@@ -76,6 +98,20 @@
       "type": "shell",
       "command": "RAILS_ENV=test bin/rake db:create db:migrate parallel:create parallel:migrate",
       "problemMatcher": [],
+    },
+    {
+      "label": "deps/testing",
+      "dependsOn": [
+        "deps/playwright",
+        "spec/migrate"
+      ],
+      "dependsOrder": "sequence",
+      "presentation": {
+        "reveal": "always",
+        "group": "deps",
+        "close": true
+      },
+      "problemMatcher": []
     },
     {
       "label": "spec/run-all",

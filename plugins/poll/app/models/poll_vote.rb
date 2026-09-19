@@ -10,12 +10,12 @@ end
 #
 # Table name: poll_votes
 #
+#  rank           :integer          default(0), not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  poll_id        :bigint
 #  poll_option_id :bigint
 #  user_id        :bigint
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  rank           :integer          default(0), not null
 #
 # Indexes
 #

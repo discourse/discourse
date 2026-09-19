@@ -1,9 +1,9 @@
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const ActivationResent = <template>
-  <DModal @title={{i18n "log_in"}} @closeModal={{@closeModal}}>
+  <DModal @closeModal={{@closeModal}} @title={{i18n "log_in"}}>
     <:body>
       {{trustHTML
         (i18n

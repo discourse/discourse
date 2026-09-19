@@ -86,17 +86,6 @@ export default class AdminWatchedWordsController extends Controller {
     this.filteredWatchedWords = filteredWatchedWords;
   }
 
-  @bind
-  async _onUploadMessage(message) {
-    if (message.words_updated > 0) {
-      await this.updateAllWords();
-    }
-
-    if (message.errors?.length) {
-      popupAjaxError(message.errors[0]);
-    }
-  }
-
   @action
   clearFilter() {
     this.filter = "";
@@ -117,5 +106,16 @@ export default class AdminWatchedWordsController extends Controller {
         items: this.filteredWatchedWords,
       },
     });
+  }
+
+  @bind
+  async _onUploadMessage(message) {
+    if (message.words_updated > 0) {
+      await this.updateAllWords();
+    }
+
+    if (message.errors?.length) {
+      popupAjaxError(message.errors[0]);
+    }
   }
 }

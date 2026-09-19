@@ -46,6 +46,7 @@ export default (type) => {
         type: "private_messages",
         id: this.currentUser.get("username_lower"),
         user: this.currentUser,
+        group: this.modelFor("group"),
       };
     }
 
@@ -56,12 +57,12 @@ export default (type) => {
       };
     }
 
-    _isArchive() {
-      return type === "archive";
-    }
-
     deactivate() {
       this.searchService.searchContext = null;
+    }
+
+    _isArchive() {
+      return type === "archive";
     }
   };
 };

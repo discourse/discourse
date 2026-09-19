@@ -62,7 +62,9 @@ export default function (topic, params) {
   if (callbacks && topic) {
     callbacks.forEach((c) => {
       const html = c(topic, params);
-      if (html) {
+      if (Array.isArray(html)) {
+        callbackResults.push(...html.filter(Boolean));
+      } else if (html) {
         callbackResults.push(html);
       }
     });

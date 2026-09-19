@@ -31,7 +31,7 @@ class DistributedMutex
   LUA
 
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
-    self.new(key, redis: redis, validity: validity).synchronize(&blk)
+    new(key, redis: redis, validity: validity).synchronize(&blk)
   end
 
   def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)

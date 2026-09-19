@@ -9,17 +9,18 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import InstallThemeItem from "discourse/admin/components/install-theme-item";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import CopyButton from "discourse/components/copy-button";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
 import { POPULAR_THEMES } from "discourse/lib/popular-themes";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const MIN_NAME_LENGTH = 4;
@@ -57,12 +58,20 @@ export default class InstallThemeModal extends Component {
     return this.uploadUrl?.match?.(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
   }
 
+  get showGithubDeployKeyHelp() {
+    return /^(?:ssh:\/\/)?git@github\.com[:/]/.test(this.uploadUrl?.trim());
+  }
+
   get submitLabel() {
     if (this.themeCannotBeInstalled) {
       return "admin.customize.theme.create_placeholder";
     }
 
     return `admin.customize.theme.${this.create ? "create" : "install"}`;
+  }
+
+  get showStageButton() {
+    return this.remote && this.showPublicKey && !this.themeCannotBeInstalled;
   }
 
   get component() {
@@ -97,6 +106,7 @@ export default class InstallThemeModal extends Component {
     return (
       this.loading ||
       (this.remote && !this.uploadUrl) ||
+      (this.remote && this.showPublicKey && !this.publicKey) ||
       (this.local && !this.localFile) ||
       (this.create && this.nameTooShort)
     );
@@ -189,6 +199,15 @@ export default class InstallThemeModal extends Component {
 
   @action
   async installTheme() {
+    return this.#installTheme();
+  }
+
+  @action
+  async stageTheme() {
+    return this.#installTheme({ placeholder: true });
+  }
+
+  async #installTheme({ placeholder = false } = {}) {
     if (this.create) {
       return this.#createTheme();
     }
@@ -222,6 +241,10 @@ export default class InstallThemeModal extends Component {
         branch: this.branch,
         public_key: this.publicKey,
       };
+
+      if (placeholder) {
+        options.data.placeholder = true;
+      }
     }
 
     // User knows that theme cannot be installed, but they want to continue
@@ -244,7 +267,7 @@ export default class InstallThemeModal extends Component {
       this.args.model.addTheme(theme);
       this.args.closeModal();
     } catch (err) {
-      if (!this.publicKey || this.themeCannotBeInstalled) {
+      if (placeholder || !this.publicKey || this.themeCannotBeInstalled) {
         return popupAjaxError(err);
       }
       this.themeCannotBeInstalled = i18n("admin.customize.theme.force_install");
@@ -257,7 +280,7 @@ export default class InstallThemeModal extends Component {
   #backgroundLoading() {
     if (this.loading) {
       discourseLater(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -283,39 +306,39 @@ export default class InstallThemeModal extends Component {
 
   <template>
     <DModal
+      class="admin-install-theme-modal --large"
       @bodyClass="install-theme"
-      class="admin-install-theme-modal"
-      @title={{i18n "admin.customize.theme.install"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.customize.theme.install"}}
     >
       <:body>
         {{#unless this.directRepoInstall}}
           <div class="install-theme-items">
             <InstallThemeItem
-              @value="popular"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_popular"
+              @selection={{this.selection}}
+              @value="popular"
             />
             <InstallThemeItem
-              @value="local"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_upload"
+              @selection={{this.selection}}
+              @value="local"
             />
             <InstallThemeItem
-              @value="remote"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_git_repo"
+              @selection={{this.selection}}
+              @value="remote"
             />
             <InstallThemeItem
-              @value="create"
-              @selection={{this.selection}}
               @label="admin.customize.theme.install_create"
+              @selection={{this.selection}}
               @showIcon={{true}}
+              @value="create"
             />
           </div>
         {{/unless}}
         <div class="install-theme-content">
-          <ConditionalLoadingSection
+          <DConditionalLoadingSection
             @isLoading={{this.loading}}
             @title={{this.installingMessage}}
           >
@@ -323,6 +346,19 @@ export default class InstallThemeModal extends Component {
               <div class="popular-theme-items">
                 {{#each this.themes as |theme|}}
                   <div class="popular-theme-item" data-name={{theme.name}}>
+                    {{#if theme.screenshot_url}}
+                      <div class="popular-theme-screenshot">
+                        <img
+                          alt={{i18n
+                            "admin.customize.theme.screenshot"
+                            name=theme.name
+                          }}
+                          loading="lazy"
+                          src={{theme.screenshot_url}}
+                        />
+                      </div>
+                    {{/if}}
+
                     <div class="popular-theme-name">
                       <a
                         href={{theme.meta_url}}
@@ -330,7 +366,7 @@ export default class InstallThemeModal extends Component {
                         target="_blank"
                       >
                         {{#if theme.component}}
-                          {{icon
+                          {{dIcon
                             "puzzle-piece"
                             title="admin.customize.theme.component"
                           }}
@@ -347,11 +383,11 @@ export default class InstallThemeModal extends Component {
                         <span>{{i18n "admin.customize.theme.installed"}}</span>
                       {{else}}
                         <DButton
-                          class="btn-default btn-small"
-                          @label="admin.customize.theme.install"
+                          class="btn-primary"
+                          @action={{fn this.installThemeFromList theme.value}}
                           @disabled={{this.installDisabled}}
                           @icon="upload"
-                          @action={{fn this.installThemeFromList theme.value}}
+                          @label="admin.customize.theme.install"
                         />
 
                         {{#if theme.preview}}
@@ -360,7 +396,7 @@ export default class InstallThemeModal extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                           >
-                            {{icon "desktop"}}
+                            {{dIcon "desktop"}}
                             {{i18n "admin.customize.theme.preview"}}
                           </a>
                         {{/if}}
@@ -373,10 +409,10 @@ export default class InstallThemeModal extends Component {
             {{#if this.local}}
               <div class="inputs">
                 <input
-                  {{on "change" this.uploadLocaleFile}}
-                  type="file"
-                  id="file-input"
                   accept=".tar.gz,application/x-gzip,.zip,application/zip"
+                  id="file-input"
+                  type="file"
+                  {{on "change" this.uploadLocaleFile}}
                 />
                 <br />
                 <span class="description">
@@ -392,13 +428,12 @@ export default class InstallThemeModal extends Component {
                   </div>
                   <input
                     type="text"
-                    {{on "input" (withEventValue (fn (mut this.uploadUrl)))}}
                     value={{this.uploadUrl}}
-                    placeholder={{this.urlPlaceholder}}
+                    {{on "input" (withEventValue (fn (mut this.uploadUrl)))}}
                   />
                 </div>
                 <DButton
-                  class="btn-small advanced-repo"
+                  class="btn-default btn-small advanced-repo"
                   @action={{this.toggleAdvanced}}
                   @label="admin.customize.theme.import_web_advanced"
                 />
@@ -408,30 +443,49 @@ export default class InstallThemeModal extends Component {
                       {{i18n "admin.customize.theme.remote_branch"}}
                     </div>
                     <input
+                      placeholder={{i18n
+                        "admin.customize.theme.remote_branch_placeholder"
+                      }}
                       type="text"
-                      {{on "input" (withEventValue (fn (mut this.branch)))}}
                       value={{this.branch}}
-                      placeholder="main"
+                      {{on "input" (withEventValue (fn (mut this.branch)))}}
                     />
                   </div>
                 {{/if}}
                 {{#if this.showPublicKey}}
                   <div class="public-key">
                     <div class="label">
-                      {{i18n "admin.customize.theme.public_key"}}
+                      {{#if this.showGithubDeployKeyHelp}}
+                        <DInterpolatedTranslation
+                          @key="admin.customize.theme.public_key_github"
+                          as |Placeholder|
+                        >
+                          <Placeholder @name="link">
+                            <a
+                              href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >{{i18n
+                                "admin.customize.theme.deploy_key_instructions"
+                              }}</a>
+                          </Placeholder>
+                        </DInterpolatedTranslation>
+                      {{else}}
+                        {{i18n "admin.customize.theme.public_key"}}
+                      {{/if}}
                     </div>
                     <div class="public-key-text-wrapper">
                       <textarea
                         class="public-key-value"
                         readonly="true"
+                        value={{this.publicKey}}
                         {{on
                           "input"
                           (withEventValue (fn (mut this.publicKey)))
                         }}
-                        value={{this.publicKey}}
                         {{didInsert this.generatePublicKey}}
                       />
-                      <CopyButton @selector="textarea.public-key-value" />
+                      <DCopyButton @selector="textarea.public-key-value" />
                     </div>
                   </div>
                 {{/if}}
@@ -444,19 +498,19 @@ export default class InstallThemeModal extends Component {
                   }}</div>
                 <input
                   class="install-theme-content__theme-name"
-                  type="text"
-                  {{on "input" (withEventValue (fn (mut this.name)))}}
-                  value={{this.name}}
                   placeholder={{this.placeholder}}
+                  type="text"
+                  value={{this.name}}
+                  {{on "input" (withEventValue (fn (mut this.name)))}}
                 />
                 <div class="label">{{i18n
                     "admin.customize.theme.create_type"
                   }}</div>
                 <ComboBox
-                  @valueProperty="value"
                   @content={{CREATE_TYPES}}
-                  @value={{this.selectedType}}
                   @onChange={{this.updateSelectedType}}
+                  @value={{this.selectedType}}
+                  @valueProperty="value"
                 />
               </div>
             {{/if}}
@@ -473,7 +527,7 @@ export default class InstallThemeModal extends Component {
                 <pre><code>{{this.uploadUrl}}</code></pre>
               </div>
             {{/if}}
-          </ConditionalLoadingSection>
+          </DConditionalLoadingSection>
         </div>
       </:body>
       <:footer>
@@ -491,11 +545,19 @@ export default class InstallThemeModal extends Component {
             </div>
           {{/if}}
           <DButton
+            class={{if this.themeCannotBeInstalled "btn-default" "btn-primary"}}
             @action={{this.installTheme}}
             @disabled={{this.installDisabled}}
-            class={{if this.themeCannotBeInstalled "btn-danger" "btn-primary"}}
             @label={{this.submitLabel}}
           />
+          {{#if this.showStageButton}}
+            <DButton
+              class="btn-default create-placeholder"
+              @action={{this.stageTheme}}
+              @disabled={{this.installDisabled}}
+              @label="admin.customize.theme.create_placeholder"
+            />
+          {{/if}}
           <DButton
             class="btn-flat d-modal-cancel"
             @action={{@closeModal}}

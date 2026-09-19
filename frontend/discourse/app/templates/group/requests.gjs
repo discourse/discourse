@@ -1,14 +1,14 @@
 import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import ResponsiveTable from "discourse/components/responsive-table";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
-import TextField from "discourse/components/text-field";
-import UserInfo from "discourse/components/user-info";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DResponsiveTable from "discourse/ui-kit/d-responsive-table";
+import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DUserInfo from "discourse/ui-kit/d-user-info";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,33 +18,33 @@ export default <template>
 
   <section class="user-content">
     <div class="group-members-actions">
-      <TextField
-        @value={{@controller.filterInput}}
-        @placeholderKey={{@controller.filterPlaceholder}}
+      <DTextField
         class="group-username-filter no-blur"
+        @placeholderKey={{@controller.filterPlaceholder}}
+        @value={{@controller.filterInput}}
       />
     </div>
 
     {{#if @controller.hasRequesters}}
-      <LoadMore @action={{@controller.loadMore}}>
-        <ResponsiveTable @className="group-members group-members__requests">
+      <DLoadMore @action={{@controller.loadMore}}>
+        <DResponsiveTable @className="group-members group-members__requests">
           <:header>
-            <TableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @order={{@controller.order}}
+            <DTableHeaderToggle
+              class="username"
               @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="username_lower"
               @labelKey="username"
-              @automatic={{true}}
-              class="username"
-            />
-            <TableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
+            />
+            <DTableHeaderToggle
               @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="requested_at"
               @labelKey="groups.member_requested"
-              @automatic={{true}}
+              @onToggle={{@controller.updateOrder}}
+              @order={{@controller.order}}
             />
             <div
               class="directory-table__column-header group-request-reason__column-header"
@@ -55,14 +55,14 @@ export default <template>
             {{#each @controller.model.requesters as |m|}}
               <div class="directory-table__row">
                 <div class="directory-table__cell group-member">
-                  <UserInfo @user={{m}} @skipName={{@controller.skipName}} />
+                  <DUserInfo @skipName={{@controller.skipName}} @user={{m}} />
                 </div>
                 <div class="directory-table__cell">
                   <span class="directory-table__label">
                     <span>{{i18n "groups.member_requested"}}</span>
                   </span>
                   <span class="directory-table__value">
-                    {{ageWithTooltip m.requested_at format="medium"}}
+                    {{dAgeWithTooltip m.requested_at format="medium"}}
                   </span>
                 </div>
                 <div
@@ -88,23 +88,23 @@ export default <template>
                     {{i18n "groups.requests.denied"}}
                   {{else}}
                     <DButton
+                      class="btn-primary"
                       @action={{fn @controller.acceptRequest m}}
                       @label="groups.requests.accept"
-                      class="btn-primary"
                     />
                     <DButton
+                      class="btn-danger"
                       @action={{fn @controller.denyRequest m}}
                       @label="groups.requests.deny"
-                      class="btn-danger"
                     />
                   {{/if}}
                 </div>
               </div>
             {{/each}}
           </:body>
-        </ResponsiveTable>
-      </LoadMore>
-      <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+        </DResponsiveTable>
+      </DLoadMore>
+      <DConditionalLoadingSpinner @condition={{@controller.loading}} />
     {{else}}
       <div>{{i18n "groups.empty.requests"}}</div>
     {{/if}}

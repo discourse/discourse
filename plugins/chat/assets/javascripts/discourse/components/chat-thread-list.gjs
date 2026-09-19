@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { bind } from "discourse/lib/decorators";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { eq } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
@@ -60,11 +60,6 @@ export default class ChatThreadList extends Component {
   @cached
   get threadsCollection() {
     return this.chatApi.threads(this.args.channel.id, this.handleLoadedThreads);
-  }
-
-  @bind
-  loadThreads() {
-    this.threadsCollection.load({ limit: 10 });
   }
 
   get threadsManager() {
@@ -149,6 +144,11 @@ export default class ChatThreadList extends Component {
   }
 
   @bind
+  loadThreads() {
+    this.threadsCollection.load({ limit: 10 }).catch(() => {});
+  }
+
+  @bind
   onMessageBus(busData) {
     switch (busData.type) {
       case "delete":
@@ -221,7 +221,7 @@ export default class ChatThreadList extends Component {
             {{/if}}
           {{/each}}
 
-          <ConditionalLoadingSpinner
+          <DConditionalLoadingSpinner
             @condition={{this.threadsCollection.loading}}
           />
 

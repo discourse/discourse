@@ -1,6 +1,6 @@
 discourse_reactions:
   discourse_reactions_enabled:
-    default: false
+    default: true
     client: true
   discourse_reactions_like_icon:
     client: true
@@ -31,3 +31,22 @@ discourse_reactions:
     default: false
     client: true
     area: "emojis"
+  enable_discourse_reactions_by_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "permanent"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403795"
+      permanent_warning: false
+      requires_plugin_enabled: false
+  enable_new_post_reply_count_position:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "permanent"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403390"

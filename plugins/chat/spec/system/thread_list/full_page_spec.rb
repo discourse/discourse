@@ -31,7 +31,7 @@ describe "Thread list in side panel | full page" do
 
     before { chat_system_user_bootstrap(user: other_user, channel: channel) }
 
-    it "it shows threads in the channel even if the user is not tracking them" do
+    it "shows threads in the channel even if the user is not tracking them" do
       thread_1 =
         Fabricate(
           :chat_thread,
@@ -188,6 +188,7 @@ describe "Thread list in side panel | full page" do
         trash_message!(thread_1.original_message, user: other_user)
         chat_page.visit_threads_list(channel)
 
+        expect(thread_list_page).to have_loaded
         expect(thread_list_page).to have_no_thread(thread_1)
 
         restore_message!(thread_1.original_message, user: other_user)

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
-import onResize from "discourse/modifiers/on-resize";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 
 export default class HorizontalScrollSyncWrapper extends Component {
   scrollableElement;
@@ -118,17 +118,17 @@ export default class HorizontalScrollSyncWrapper extends Component {
   }
 
   <template>
-    <div {{this.setup}} class="horizontal-scroll-sync__container" ...attributes>
+    <div class="horizontal-scroll-sync__container" ...attributes {{this.setup}}>
       <div
-        {{on "scroll" this.handleTopScrollBarScroll passive=true}}
         class="horizontal-scroll-sync__top-scroll"
+        {{on "scroll" this.handleTopScrollBarScroll passive=true}}
       >
         <div class="horizontal-scroll-sync__fake-content"></div>
       </div>
 
       <div
-        {{onResize this.syncScrollWidth}}
         class="horizontal-scroll-sync__content"
+        {{dOnResize this.syncScrollWidth}}
       >
         {{yield}}
       </div>

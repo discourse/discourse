@@ -182,8 +182,7 @@ class DiscourseCLI < Thor
       store.upload_file(filename, tmpfile.path, content_type)
     else
       puts "Saving backup file to local store..."
-      Discourse::Utils.execute_command(
-        "mv",
+      FileUtils.mv(
         tmpfile.path,
         File.join(BackupRestore::LocalBackupStore.base_directory, filename),
       )
@@ -366,7 +365,7 @@ class DiscourseCLI < Thor
   end
 
   def do_remap(from, to)
-    begin
+    
       remap_options = {
         verbose: true,
         skip_max_length_violations: options[:skip_max_length_violations],
@@ -390,7 +389,7 @@ class DiscourseCLI < Thor
       puts "Error: #{ex}"
       puts "The remap has only been partially applied due to the error above. Please re-run the script again."
       exit(1)
-    end
+    
   end
 end
 

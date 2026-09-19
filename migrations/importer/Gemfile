@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "migrations-core", path: "../core"
+
+gemspec
+
+group :test do
+  # Exercise the resolver against rows produced by the real extractor.
+  gem "migrations-converters", path: "../converters"
+
+  gem "rspec"
+  gem "rspec-multi-mock"
+  gem "mocha"
+end

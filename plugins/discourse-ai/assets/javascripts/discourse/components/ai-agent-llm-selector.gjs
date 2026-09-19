@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { slugify } from "discourse/lib/utilities";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
 
@@ -25,8 +26,39 @@ export default class AiAgentLlmSelector extends Component {
 
       next(() => {
         this.resetTargetRecipients();
+        this.notifySelectionChanged();
       });
     }
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  set value(newValue) {
+    this._value = newValue;
+    this.keyValueStore.setItem(AGENT_SELECTOR_KEY, newValue);
+    this.args.setAgentId(newValue);
+    this.setAllowLLMSelector();
+    this.resetTargetRecipients();
+    this.notifySelectionChanged();
+  }
+
+  get currentLlm() {
+    return this.llm;
+  }
+
+  set currentLlm(newValue) {
+    this.llm = newValue;
+    this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
+
+    // Pass the LLM model ID (not user ID) for credit checking
+    const bot = this.currentUser.ai_enabled_chat_bots.find(
+      (b) => b.id === newValue
+    );
+    this.args.setLlmId?.(bot?.llm_model_id);
+    this.resetTargetRecipients();
+    this.notifySelectionChanged();
   }
 
   get composer() {
@@ -71,61 +103,6 @@ export default class AiAgentLlmSelector extends Component {
     return this.botOptions.length > 8;
   }
 
-  get value() {
-    return this._value;
-  }
-
-  set value(newValue) {
-    this._value = newValue;
-    this.keyValueStore.setItem(AGENT_SELECTOR_KEY, newValue);
-    this.args.setAgentId(newValue);
-    this.setAllowLLMSelector();
-    this.resetTargetRecipients();
-  }
-
-  setAllowLLMSelector() {
-    if (!this.hasLlmSelector) {
-      this.allowLLMSelector = false;
-      return;
-    }
-
-    const agent = this.enabledAgents.find(
-      (innerAgent) => innerAgent.id === this._value
-    );
-
-    this.allowLLMSelector = !agent?.force_default_llm;
-  }
-
-  get currentLlm() {
-    return this.llm;
-  }
-
-  set currentLlm(newValue) {
-    this.llm = newValue;
-    this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
-
-    // Pass the LLM model ID (not user ID) for credit checking
-    const bot = this.currentUser.ai_enabled_chat_bots.find(
-      (b) => b.id === newValue
-    );
-    this.args.setLlmId?.(bot?.llm_model_id);
-    this.resetTargetRecipients();
-  }
-
-  resetTargetRecipients() {
-    if (this.allowLLMSelector) {
-      const botUsername = this.currentUser.ai_enabled_chat_bots.find(
-        (bot) => bot.id === this.llm
-      ).username;
-      this.args.setTargetRecipient(botUsername);
-    } else {
-      const agent = this.enabledAgents.find(
-        (innerAgent) => innerAgent.id === this._value
-      );
-      this.args.setTargetRecipient(agent.username || "");
-    }
-  }
-
   get llmOptions() {
     const availableBots = this.currentUser.ai_enabled_chat_bots
       .filter((bot) => !bot.is_agent)
@@ -149,10 +126,62 @@ export default class AiAgentLlmSelector extends Component {
     return this.allowLLMSelector && this.llmOptions.length > 1;
   }
 
+  setAllowLLMSelector() {
+    if (!this.hasLlmSelector) {
+      this.allowLLMSelector = false;
+      return;
+    }
+
+    const agent = this.enabledAgents.find(
+      (innerAgent) => innerAgent.id === this._value
+    );
+
+    this.allowLLMSelector = !agent?.force_default_llm;
+  }
+
+  notifySelectionChanged() {
+    if (!this.args.onSelectionChanged) {
+      return;
+    }
+
+    let agentName = null;
+    if (this.showAgentSelector) {
+      agentName = this.enabledAgents.find(
+        (agent) => agent.id === this._value
+      )?.name;
+    }
+
+    let llmName = null;
+    if (this.showLLMSelector) {
+      llmName = this.currentUser.ai_enabled_chat_bots.find(
+        (bot) => bot.id === this.llm
+      )?.display_name;
+    }
+
+    this.args.onSelectionChanged({ agentName, llmName });
+  }
+
+  resetTargetRecipients() {
+    if (this.allowLLMSelector) {
+      const botUsername = this.currentUser.ai_enabled_chat_bots.find(
+        (bot) => bot.id === this.llm
+      ).username;
+      this.args.setTargetRecipient(botUsername);
+    } else {
+      const agent = this.enabledAgents.find(
+        (innerAgent) => innerAgent.id === this._value
+      );
+      this.args.setTargetRecipient(agent.username || "");
+    }
+  }
+
   #getAgentIdFromAttrs() {
     const agentName = this.args?.agentName;
     if (agentName) {
-      const agent = this.botOptions.find((p) => p.name === agentName);
+      const slug = slugify(agentName);
+      const agent = this.botOptions.find(
+        (p) => p.name === agentName || (slug && slugify(p.name) === slug)
+      );
       if (agent) {
         return agent.id;
       }
@@ -162,7 +191,10 @@ export default class AiAgentLlmSelector extends Component {
   #getLlmIdFromAttrs() {
     const llmName = this.args?.llmName;
     if (llmName) {
-      const llm = this.llmOptions.find((l) => l.name === llmName);
+      const slug = slugify(llmName);
+      const llm = this.llmOptions.find(
+        (l) => l.name === llmName || (slug && slugify(l.name) === slug)
+      );
       if (llm) {
         return llm.id;
       }
@@ -182,7 +214,9 @@ export default class AiAgentLlmSelector extends Component {
       }
     }
 
-    this.args.setAgentId(this._value);
+    // deferred: the parent tracks state already consumed by templates
+    // rendered before this component
+    next(() => this.args.setAgentId(this._value));
   }
 
   #loadStoredLlm() {
@@ -223,12 +257,13 @@ export default class AiAgentLlmSelector extends Component {
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__agent-dropdown"
-            @value={{this.value}}
             @content={{this.botOptions}}
             @options={{hash
               icon=(if @showLabels "angle-down" "robot")
               filterable=this.filterable
+              customStyle=true
             }}
+            @value={{this.value}}
           />
         </div>
       {{/if}}
@@ -239,9 +274,12 @@ export default class AiAgentLlmSelector extends Component {
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__llm-dropdown"
-            @value={{this.currentLlm}}
             @content={{this.llmOptions}}
-            @options={{hash icon=(if @showLabels "angle-down" "globe")}}
+            @options={{hash
+              icon=(if @showLabels "angle-down" "globe")
+              customStyle=true
+            }}
+            @value={{this.currentLlm}}
           />
         </div>
       {{/if}}

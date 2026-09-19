@@ -3,18 +3,18 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DModal from "discourse/components/d-modal";
-import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import dasherize from "discourse/helpers/dasherize";
+import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import { i18n } from "discourse-i18n";
 
 function customTagArray(val) {
@@ -29,6 +29,7 @@ function customTagArray(val) {
 
 export default class History extends Component {
   @service dialog;
+  @service modal;
   @service site;
   @service currentUser;
   @service siteSettings;
@@ -116,20 +117,12 @@ export default class History extends Component {
     return this.postRevision?.body_changes?.[this.viewMode];
   }
 
-  @action
-  async calculateBodyDiff(_, [bodyDiff]) {
-    let html = bodyDiff;
-    if (this.viewMode !== "side_by_side_markdown") {
-      const opts = {
-        features: { editHistory: true, historyOneboxes: true },
-        allowListed: {
-          editHistory: { custom: (tag, attr) => attr === "class" },
-          historyOneboxes: ["header", "article", "div[style]"],
-        },
-      };
-      html = await sanitizeAsync(html, opts);
-    }
-    this.bodyDiff = html;
+  get diffHidden() {
+    return (
+      !this.postRevision?.body_changes &&
+      !this.postRevision?.diff_error &&
+      (this.postRevision?.previous_hidden || this.postRevision?.current_hidden)
+    );
   }
 
   get previousTagChanges() {
@@ -180,64 +173,6 @@ export default class History extends Component {
     }
   }
 
-  async refresh(postId, postVersion) {
-    this.loading = true;
-    this.error = null;
-    try {
-      const result = await Post.loadRevision(postId, postVersion);
-      this.postRevision = result;
-      if (result.diff_error) {
-        this.error = i18n("post.revisions.diff_too_complex");
-      }
-    } catch (error) {
-      this.error =
-        error.jqXHR?.responseJSON?.errors?.[0] || i18n("generic_error");
-
-      const postStream = this.args.model.post?.topic?.postStream;
-      if (postStream) {
-        postStream.triggerChangedPost(postId, this.args.model);
-      }
-    } finally {
-      this.loading = false;
-      this.initialLoad = false;
-    }
-  }
-
-  hide(postId, postVersion) {
-    Post.hideRevision(postId, postVersion).then(() =>
-      this.refresh(postId, postVersion)
-    );
-  }
-
-  show(postId, postVersion) {
-    Post.showRevision(postId, postVersion).then(() =>
-      this.refresh(postId, postVersion)
-    );
-  }
-
-  async revert(post, postVersion) {
-    try {
-      const result = await post.revertToRevision(postVersion);
-      this.refresh(post.id, postVersion);
-      if (result.topic) {
-        post.set("topic.slug", result.topic.slug);
-        post.set("topic.title", result.topic.title);
-        post.set("topic.fancy_title", result.topic.fancy_title);
-      }
-      if (result.category_id) {
-        post.set(
-          "topic.category",
-          await Category.asyncFindById(result.category_id)
-        );
-      }
-      this.args.closeModal();
-    } catch (e) {
-      if (e.jqXHR.responseJSON?.errors?.[0]) {
-        this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
-      }
-    }
-  }
-
   get editButtonLabel() {
     return `post.revisions.controls.${
       this.postRevision?.wiki ? "edit_wiki" : "edit_post"
@@ -245,6 +180,10 @@ export default class History extends Component {
   }
 
   get hiddenClasses() {
+    if (this.diffHidden) {
+      return null;
+    }
+
     if (this.viewMode === "inline") {
       return this.postRevision?.previous_hidden ||
         this.postRevision?.current_hidden
@@ -283,6 +222,95 @@ export default class History extends Component {
         allowUncategorized: true,
         extraClasses: "diff-ins",
       });
+    }
+  }
+
+  @action
+  async calculateBodyDiff(_, [bodyDiff]) {
+    let html = bodyDiff;
+    if (this.viewMode !== "side_by_side_markdown") {
+      const opts = {
+        features: { editHistory: true, historyOneboxes: true },
+        allowListed: {
+          editHistory: { custom: (tag, attr) => attr === "class" },
+          historyOneboxes: ["header", "article", "div[style]"],
+        },
+      };
+      html = await sanitizeAsync(html, opts);
+    }
+    this.bodyDiff = html;
+  }
+
+  async refresh(postId, postVersion) {
+    this.loading = true;
+    this.error = null;
+    try {
+      const result = await Post.loadRevision(postId, postVersion);
+      this.postRevision = result;
+      if (result.diff_error) {
+        this.error = i18n("post.revisions.diff_too_complex");
+      }
+    } catch (error) {
+      this.error =
+        error.jqXHR?.responseJSON?.errors?.[0] || i18n("generic_error");
+
+      const postStream = this.args.model.post?.topic?.postStream;
+      if (postStream) {
+        void postStream.refreshPost(postId).catch(() => {});
+      }
+    } finally {
+      this.loading = false;
+      this.initialLoad = false;
+    }
+  }
+
+  hide(postId, postVersion) {
+    Post.hideRevision(postId, postVersion).then(() =>
+      this.refresh(postId, postVersion)
+    );
+  }
+
+  show(postId, postVersion) {
+    Post.showRevision(postId, postVersion).then(() =>
+      this.refresh(postId, postVersion)
+    );
+  }
+
+  async revert(post, postVersion) {
+    try {
+      const result = await post.revertToRevision(postVersion);
+      this.refresh(post.id, postVersion);
+      if (result.topic) {
+        post.set("topic.slug", result.topic.slug);
+        post.set("topic.title", result.topic.title);
+        post.set("topic.fancy_title", result.topic.fancy_title);
+      }
+      if (result.category_id) {
+        post.set(
+          "topic.category",
+          await Category.asyncFindById(result.category_id)
+        );
+      }
+      if (result.post) {
+        // `PostSerializer` omits `reply_to_user` when the user is nil OR
+        // when `suppress_reply_when_quoting` is on and the post quotes its
+        // target. Treat a missing key as "leave alone" — only clear it
+        // when the post number is also cleared.
+        const props = {
+          reply_to_post_number: result.post.reply_to_post_number ?? null,
+        };
+        if ("reply_to_user" in result.post) {
+          props.reply_to_user = result.post.reply_to_user;
+        } else if (result.post.reply_to_post_number == null) {
+          props.reply_to_user = null;
+        }
+        post.setProperties(props);
+      }
+      this.args.closeModal();
+    } catch (e) {
+      if (e.jqXHR.responseJSON?.errors?.[0]) {
+        this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
+      }
     }
   }
 
@@ -340,15 +368,15 @@ export default class History extends Component {
     const postId = this.postRevision?.post_id;
     this.args.closeModal();
 
-    this.dialog.confirm(
-      buildPermanentlyDeleteConfirmDialogArgs(
-        i18n("post.revisions.controls.destroy_confirm"),
-        i18n("post.controls.permanently_delete_confirm_phrase"),
-        () => {
+    this.modal.show(PermanentlyDeleteConfirmModal, {
+      model: {
+        message: i18n("post.revisions.controls.destroy_confirm"),
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+        didConfirm: () => {
           Post.permanentlyDeleteRevisions(postId);
-        }
-      )
-    );
+        },
+      },
+    });
   }
 
   @action
@@ -369,69 +397,71 @@ export default class History extends Component {
 
   <template>
     <DModal
-      @title={{i18n this.modalTitleKey}}
+      class="history-modal --max
+        {{concat '--mode-' (dDasherize this.viewMode)}}"
       @closeModal={{@closeModal}}
-      class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
+      @title={{i18n this.modalTitleKey}}
     >
       <:body>
         {{#if this.error}}
           <div class="alert alert-error">{{this.error}}</div>
         {{/if}}
-        <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+        <DConditionalLoadingSpinner @condition={{this.initialLoad}}>
           {{#if this.postRevision}}
             <Revision
-              @model={{this.postRevision}}
-              @previousCategory={{this.previousCategory}}
               @currentCategory={{this.currentCategory}}
               @displayInline={{this.displayInline}}
               @displaySideBySide={{this.displaySideBySide}}
               @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
+              @model={{this.postRevision}}
+              @previousCategory={{this.previousCategory}}
               @viewMode={{this.viewMode}}
             />
             <Revisions
-              @model={{this.postRevision}}
+              @bodyDiff={{this.bodyDiff}}
+              @bodyDiffHTML={{this.bodyDiffHTML}}
+              @calculateBodyDiff={{this.calculateBodyDiff}}
+              @currentCategory={{this.currentCategory}}
+              @currentTagChanges={{this.currentTagChanges}}
+              @diffHidden={{this.diffHidden}}
               @hiddenClasses={{this.hiddenClasses}}
               @mobileView={{this.site.mobileView}}
-              @userChanges={{this.user_changes}}
+              @model={{this.postRevision}}
               @previousCategory={{this.previousCategory}}
-              @currentCategory={{this.currentCategory}}
               @previousTagChanges={{this.previousTagChanges}}
-              @currentTagChanges={{this.currentTagChanges}}
-              @bodyDiffHTML={{this.bodyDiffHTML}}
-              @bodyDiff={{this.bodyDiff}}
-              @calculateBodyDiff={{this.calculateBodyDiff}}
               @titleDiff={{this.titleDiff}}
+              @userChanges={{this.user_changes}}
               @viewMode={{this.viewMode}}
             />
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:body>
       <:footer>
         {{#if @model.editPost}}
           {{#if this.postRevision}}
             <TopicFooter
-              @model={{this.postRevision}}
-              @loadFirstVersion={{this.loadFirstVersion}}
-              @loadPreviousVersion={{this.loadPreviousVersion}}
-              @loadNextVersion={{this.loadNextVersion}}
-              @loadLastVersion={{this.loadLastVersion}}
-              @displayEdit={{this.displayEdit}}
-              @editPost={{this.editPost}}
-              @editButtonLabel={{this.editButtonLabel}}
-              @revertToVersion={{this.revertToVersion}}
-              @hideVersion={{this.hideVersion}}
-              @showVersion={{this.showVersion}}
-              @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
-              @loading={{this.loading}}
               @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
-              @loadFirstDisabled={{this.loadFirstDisabled}}
-              @loadPreviousDisabled={{this.loadPreviousDisabled}}
+              @displayEdit={{this.displayEdit}}
               @displayRevisions={{this.displayRevisions}}
-              @revisionsText={{this.revisionsText}}
-              @loadNextDisabled={{this.loadNextDisabled}}
-              @loadLastDisabled={{this.loadLastDisabled}}
-              @revertToRevisionText={{this.revertToRevisionText}}
+              @editButtonLabel={{this.editButtonLabel}}
+              @editPost={{this.editPost}}
+              @hideVersion={{this.hideVersion}}
               @isStaff={{this.currentUser.staff}}
+              @loadFirstDisabled={{this.loadFirstDisabled}}
+              @loadFirstVersion={{this.loadFirstVersion}}
+              @loading={{this.loading}}
+              @loadLastDisabled={{this.loadLastDisabled}}
+              @loadLastVersion={{this.loadLastVersion}}
+              @loadNextDisabled={{this.loadNextDisabled}}
+              @loadNextVersion={{this.loadNextVersion}}
+              @loadPreviousDisabled={{this.loadPreviousDisabled}}
+              @loadPreviousVersion={{this.loadPreviousVersion}}
+              @model={{this.postRevision}}
+              @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
+              @revertToRevisionText={{this.revertToRevisionText}}
+              @revertToVersion={{this.revertToVersion}}
+              @revisionsText={{this.revisionsText}}
+              @showVersion={{this.showVersion}}
             />
           {{/if}}
         {{/if}}

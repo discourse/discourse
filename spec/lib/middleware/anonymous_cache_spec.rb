@@ -69,6 +69,27 @@ RSpec.describe Middleware::AnonymousCache do
       end
     end
 
+    describe "per color scheme cache" do
+      it "handles valid color scheme keys only", :aggregate_failures do
+        color_scheme = Fabricate(:color_scheme)
+
+        with_no_scheme_key = new_helper.cache_key
+        with_bad_scheme_key =
+          new_helper(
+            "HTTP_COOKIE" => %(color_scheme_id=#{color_scheme.id}"><link rel="modulepreload">),
+          ).cache_key
+        with_color_scheme_key =
+          new_helper("HTTP_COOKIE" => "color_scheme_id=#{color_scheme.id}").cache_key
+        with_dark_scheme_key =
+          new_helper("HTTP_COOKIE" => "dark_scheme_id=#{color_scheme.id}").cache_key
+
+        expect(with_bad_scheme_key).to eq(with_no_scheme_key)
+        expect(with_color_scheme_key).not_to eq(with_no_scheme_key)
+        expect(with_dark_scheme_key).not_to eq(with_no_scheme_key)
+        expect(with_color_scheme_key).not_to eq(with_dark_scheme_key)
+      end
+    end
+
     context "with header or cookie based custom locale" do
       it "handles different languages" do
         # Normally does not check the language header
@@ -95,6 +116,33 @@ RSpec.describe Middleware::AnonymousCache do
 
         SiteSetting.set_locale_from_cookie = true
         expect(new_helper("HTTP_COOKIE" => "locale=es;").cache_key).to include("l=es")
+      end
+
+      it "keys on the locale cookie when the language switcher is enabled" do
+        SiteSetting.default_locale = "en"
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_cookie = false
+        SiteSetting.content_localization_supported_locales = "es|fr"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+
+        expect(new_helper("HTTP_COOKIE" => "locale=es;").cache_key).to include("l=es")
+
+        # An unsupported locale is not honoured, so it must not fan the cache out either.
+        expect(new_helper("HTTP_COOKIE" => "locale=ja;").cache_key).to eq(new_helper.cache_key)
+      end
+
+      it "keys on the same locale the request renders in" do
+        SiteSetting.default_locale = "en"
+        SiteSetting.allow_user_locale = true
+        SiteSetting.content_localization_supported_locales = "es"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+
+        env = { "HTTP_COOKIE" => "locale=es;" }
+        request = ActionDispatch::Request.new(Rack::MockRequest.env_for("/", env))
+
+        expect(new_helper(env).cache_key).to include("l=#{Discourse.anonymous_locale(request)}")
       end
     end
 
@@ -124,12 +172,19 @@ RSpec.describe Middleware::AnonymousCache do
       }.not_to raise_error
     end
 
-    it "handles showing original content" do
-      show_orig_key =
-        new_helper("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE).cache_key
+    it "keys only on the resolved automatic translation preference" do
       regular_key = new_helper.cache_key
+      enabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=true",
+        ).cache_key
+      disabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false",
+        ).cache_key
 
-      expect(show_orig_key).not_to eq(regular_key)
+      expect(enabled_key).to eq(regular_key)
+      expect(disabled_key).not_to eq(regular_key)
     end
 
     context "when cached" do
@@ -237,7 +292,7 @@ RSpec.describe Middleware::AnonymousCache do
   end
 
   describe "background request rate limit" do
-    it "will rate limit background requests" do
+    it "rate limits background requests" do
       app = Middleware::AnonymousCache.new(lambda { |env| [200, {}, ["ok"]] })
 
       global_setting :background_requests_max_queue_length, "0.5"
@@ -277,7 +332,7 @@ RSpec.describe Middleware::AnonymousCache do
   describe "#force_anonymous!" do
     before { RateLimiter.enable }
 
-    it "will revert to anonymous once we reach the limit" do
+    it "reverts to anonymous when the limit is reached" do
       is_anon = false
 
       app =
@@ -430,7 +485,7 @@ RSpec.describe Middleware::AnonymousCache do
       expect(@status).to eq(200)
     end
 
-    it "should never block robots.txt" do
+    it "allows robots.txt requests" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/robots.txt",
@@ -441,7 +496,7 @@ RSpec.describe Middleware::AnonymousCache do
       expect(@status).to eq(200)
     end
 
-    it "should never block srv/status" do
+    it "allows srv/status requests" do
       SiteSetting.blocked_crawler_user_agents = "Googlebot"
 
       get "/srv/status",

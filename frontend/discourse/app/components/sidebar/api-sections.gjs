@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import ApiSection from "./api-section";
 import PanelHeader from "./panel-header";
 
@@ -45,10 +46,10 @@ export default class SidebarApiSections extends Component {
 
     {{#each this.filteredSections key="name" as |section|}}
       <ApiSection
-        @section={{section}}
         @collapsable={{@collapsable}}
         @expandWhenActive={{@expandActiveSection}}
         @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+        @section={{section}}
       />
     {{/each}}
   </template>
@@ -67,15 +68,44 @@ function prepareSidebarSectionClass(Section, routerService) {
 
     @cached
     get filteredLinks() {
+      return this.#applyFilter(this.links);
+    }
+
+    @cached
+    get filteredMoreLinks() {
+      return this.#applyFilter(this.moreLinks);
+    }
+
+    @cached
+    get activeLink() {
+      return findActiveLink(
+        [...this.filteredLinks, ...(this.filteredMoreLinks || [])],
+        routerService
+      );
+    }
+
+    get filtered() {
+      return (
+        !this.filterable ||
+        this.filteredLinks?.length > 0 ||
+        this.filteredMoreLinks?.length > 0
+      );
+    }
+
+    #applyFilter(links) {
+      if (!links?.length) {
+        return links;
+      }
+
       if (!this.filterable || !this.sidebarState.filter) {
-        return this.links;
+        return links;
       }
 
       if (this.text?.toLowerCase()?.match(this.sidebarState.sanitizedFilter)) {
-        return this.links;
+        return links;
       }
 
-      return this.links.filter((link) => {
+      return links.filter((link) => {
         return (
           link.text
             .toString()
@@ -86,50 +116,6 @@ function prepareSidebarSectionClass(Section, routerService) {
           )
         );
       });
-    }
-
-    get activeLink() {
-      return this.filteredLinks.find((link) => {
-        try {
-          const currentWhen = link.currentWhen;
-
-          if (typeof currentWhen === "boolean") {
-            return currentWhen;
-          }
-
-          // TODO detect active links using the href field
-
-          const queryParams = link.query || {};
-          let models;
-
-          if (link.model) {
-            models = [link.model];
-          } else if (link.models) {
-            models = link.models;
-          } else {
-            models = [];
-          }
-
-          if (typeof currentWhen === "string") {
-            return currentWhen.split(" ").some((route) =>
-              routerService.isActive(route, ...models, {
-                queryParams,
-              })
-            );
-          }
-
-          return routerService.isActive(link.route, ...models, {
-            queryParams,
-          });
-        } catch {
-          // false if ember throws an exception while checking the routes
-          return false;
-        }
-      });
-    }
-
-    get filtered() {
-      return !this.filterable || this.filteredLinks?.length > 0;
     }
   };
 }

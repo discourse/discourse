@@ -77,6 +77,9 @@ hu:
       removed: "Eltávolítva %{removed}"
     provider:
       slack:
+        errors:
+          action_prohibited: "A botnak nincs engedélye posztolni ezen a csatornán."
+          channel_not_found: "A megadott csatorna nem létezik a Slacken."
         status:
           header: |
             *Szabályok ehhez a csatornához*

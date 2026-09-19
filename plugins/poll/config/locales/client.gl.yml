@@ -28,6 +28,8 @@ gl:
       cast-votes:
         title: "Vote"
         label: "Vote agora!"
+      keep-vote:
+        label: "Volver"
       show-results:
         title: "Amosar os resultados da enquisa"
         label: "Resultados"
@@ -89,5 +91,3 @@ gl:
           label: Título (opcional)
         automatic_close:
           label: Pechar automaticamente a enquisa
-        show_advanced: "Amosar opcións avanzadas"
-        hide_advanced: "Agochar opcións avanzadas"

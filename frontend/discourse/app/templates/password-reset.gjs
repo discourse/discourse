@@ -1,16 +1,16 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
-import InputTip from "discourse/components/input-tip";
-import PasswordField from "discourse/components/password-field";
 import SecondFactorForm from "discourse/components/second-factor-form";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import DButton from "discourse/ui-kit/d-button";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DPasswordField from "discourse/ui-kit/d-password-field";
+import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
+import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -46,38 +46,38 @@ export default <template>
 
           {{#if @controller.displaySecurityKeyForm}}
             <SecurityKeyForm
+              @action={{@controller.authenticateSecurityKey}}
+              @backupEnabled={{@controller.backupEnabled}}
+              @otherMethodAllowed={{@controller.otherMethodAllowed}}
               @setSecondFactorMethod={{fn
                 (mut @controller.selectedSecondFactorMethod)
               }}
-              @backupEnabled={{@controller.backupEnabled}}
               @totpEnabled={{@controller.secondFactorRequired}}
-              @otherMethodAllowed={{@controller.otherMethodAllowed}}
-              @action={{@controller.authenticateSecurityKey}}
             />
           {{else}}
             <SecondFactorForm
+              @backupEnabled={{@controller.backupEnabled}}
+              @isLogin={{false}}
               @secondFactorMethod={{@controller.selectedSecondFactorMethod}}
               @secondFactorToken={{@controller.secondFactorToken}}
-              @backupEnabled={{@controller.backupEnabled}}
               @totpEnabled={{@controller.secondFactorRequired}}
-              @isLogin={{false}}
             >
-              <SecondFactorInput
+              <DSecondFactorInput
+                id="second-factor"
+                value={{@controller.secondFactorToken}}
                 @onChange={{fn (mut @controller.secondFactorToken)}}
                 @secondFactorMethod={{@controller.selectedSecondFactorMethod}}
-                value={{@controller.secondFactorToken}}
-                id="second-factor"
               />
             </SecondFactorForm>
           {{/if}}
 
           {{#unless @controller.displaySecurityKeyForm}}
             <DButton
-              @isLoading={{@controller.isLoading}}
-              @action={{@controller.submit}}
-              @label="submit"
-              type="submit"
               class="btn-primary"
+              type="submit"
+              @action={{@controller.submit}}
+              @isLoading={{@controller.isLoading}}
+              @label="submit"
             />
           {{/unless}}
         {{else}}
@@ -88,28 +88,29 @@ export default <template>
           {{/if}}
 
           <div class="input">
-            <PasswordField
-              @value={{@controller.accountPassword}}
-              @capsLockOn={{@controller.capsLockOn}}
-              type={{if @controller.maskPassword "password" "text"}}
-              autofocus="autofocus"
+            <DPasswordField
               autocomplete="new-password"
+              autofocus="autofocus"
+              class="change-password-form__password"
               id="new-account-password"
+              type={{if @controller.maskPassword "password" "text"}}
+              @capsLockOn={{@controller.capsLockOn}}
+              @value={{@controller.accountPassword}}
             />
             <div class="change-password__password-info">
               <div class="change-password_tip-validation">
                 {{#if @controller.showPasswordValidation}}
-                  <InputTip @validation={{@controller.passwordValidation}} />
+                  <DInputTip @validation={{@controller.passwordValidation}} />
                 {{/if}}
                 <div
                   class="caps-lock-warning
                     {{unless @controller.capsLockOn 'hidden'}}"
                 >
-                  {{icon "triangle-exclamation"}}
+                  {{dIcon "triangle-exclamation"}}
                   {{i18n "login.caps_lock_warning"}}
                 </div>
               </div>
-              <TogglePasswordMask
+              <DTogglePasswordMask
                 @maskPassword={{@controller.maskPassword}}
                 @togglePasswordMask={{@controller.togglePasswordMask}}
               />
@@ -117,11 +118,11 @@ export default <template>
           </div>
 
           <DButton
-            @isLoading={{@controller.isLoading}}
-            @action={{@controller.submit}}
-            @label="user.change_password.set_password"
-            type="submit"
             class="btn-primary"
+            type="submit"
+            @action={{@controller.submit}}
+            @isLoading={{@controller.isLoading}}
+            @label="user.change_password.set_password"
           />
         {{/if}}
       {{/if}}

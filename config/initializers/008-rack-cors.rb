@@ -17,7 +17,7 @@ class Discourse::Cors
     cors_origins += SiteSetting.cors_origins.split("|") if SiteSetting.cors_origins.present?
     cors_origins = cors_origins.presence
 
-    if env["REQUEST_METHOD"] == ("OPTIONS") && env["HTTP_ACCESS_CONTROL_REQUEST_METHOD"]
+    if env["REQUEST_METHOD"] == "OPTIONS" && env["HTTP_ACCESS_CONTROL_REQUEST_METHOD"]
       return 200, Discourse::Cors.apply_headers(cors_origins, env, {}), []
     end
 

@@ -73,6 +73,52 @@ acceptance(
   }
 );
 
+acceptance(
+  "Create Account - external auth with full name required but not from provider",
+  function (needs) {
+    needs.hooks.beforeEach(function () {
+      setupAuthData({ name: "Testuser", name_from_provider: false });
+    });
+    needs.hooks.afterEach(function () {
+      document.getElementById("data-authentication").remove();
+    });
+
+    needs.site({ full_name_required_for_signup: true });
+
+    test("when skip is enabled but name is required and not from provider, shows form", async function (assert) {
+      this.siteSettings.auth_skip_create_confirm = true;
+      await visit("/");
+
+      assert.dom(".signup-fullpage").exists("it shows the signup page");
+      assert.dom("#new-account-name").exists("it shows the name field");
+    });
+  }
+);
+
+acceptance(
+  "Create Account - external auth with full name required and from provider",
+  function (needs) {
+    needs.hooks.beforeEach(function () {
+      setupAuthData({ name: "John Doe", name_from_provider: true });
+    });
+    needs.hooks.afterEach(function () {
+      document.getElementById("data-authentication").remove();
+    });
+
+    needs.site({ full_name_required_for_signup: true });
+
+    test("when skip is enabled and name is from provider, skips form", async function (assert) {
+      this.siteSettings.auth_skip_create_confirm = true;
+      await visit("/");
+
+      assert.dom(".signup-fullpage").exists("it shows the signup page");
+      assert
+        .dom("#new-account-username")
+        .doesNotExist("it does not show the fields");
+    });
+  }
+);
+
 acceptance("Create account - with associate link", function (needs) {
   needs.hooks.beforeEach(function () {
     setupAuthData({ associate_url: "/associate/abcde" });

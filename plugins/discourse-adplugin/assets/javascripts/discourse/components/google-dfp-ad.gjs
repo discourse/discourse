@@ -3,9 +3,9 @@ import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
-import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component";
 
@@ -45,16 +45,24 @@ function keyParse(word) {
   return key;
 }
 
-// This should call adslot.setTargeting(key for that location, value for that location)
-function custom_targeting(key_array, value_array, adSlot) {
+// This builds the targeting map for that location, for slot.setConfig({ targeting })
+function custom_targeting(key_array, value_array) {
+  const targeting = {};
   for (let i = 0; i < key_array.length; i++) {
     if (key_array[i]) {
-      adSlot.setTargeting(key_array[i], valueParse(value_array[i]));
+      targeting[key_array[i]] = valueParse(value_array[i]);
     }
   }
+  return targeting;
 }
 
 const DESKTOP_SETTINGS = {
+  "above-site-header": {
+    code: "dfp_above_site_header_code",
+    sizes: "dfp_above_site_header_ad_sizes",
+    targeting_keys: "dfp_target_above_site_header_key_code",
+    targeting_values: "dfp_target_above_site_header_value_code",
+  },
   "topic-list-top": {
     code: "dfp_topic_list_top_code",
     sizes: "dfp_topic_list_top_ad_sizes",
@@ -82,6 +90,12 @@ const DESKTOP_SETTINGS = {
 };
 
 const MOBILE_SETTINGS = {
+  "above-site-header": {
+    code: "dfp_mobile_above_site_header_code",
+    sizes: "dfp_mobile_above_site_header_ad_sizes",
+    targeting_keys: "dfp_target_above_site_header_key_code",
+    targeting_values: "dfp_target_above_site_header_value_code",
+  },
   "topic-list-top": {
     code: "dfp_mobile_topic_list_top_code",
     sizes: "dfp_mobile_topic_list_top_ad_sizes",
@@ -177,15 +191,16 @@ function defineSlot(
     divId
   );
 
-  custom_targeting(
+  const targeting = custom_targeting(
     keyParse(settings[config.targeting_keys]),
-    keyParse(settings[config.targeting_values]),
-    ad
+    keyParse(settings[config.targeting_values])
   );
 
   if (categoryTarget) {
-    ad.setTargeting("discourse-category", categoryTarget);
+    targeting["discourse-category"] = categoryTarget;
   }
+
+  ad.setConfig({ targeting });
 
   ad.addService(window.googletag.pubads());
 
@@ -226,14 +241,16 @@ function loadGoogle() {
     }
 
     window.googletag.cmd.push(function () {
-      // Infinite scroll requires SRA:
-      window.googletag.pubads().enableSingleRequest();
+      window.googletag.setConfig({
+        // Infinite scroll requires SRA:
+        singleRequest: true,
 
-      // we always use refresh() to fetch the ads:
-      window.googletag.pubads().disableInitialLoad();
+        // we always use refresh() to fetch the ads:
+        disableInitialLoad: true,
 
-      // Improve CSP compatibility (https://developers.google.com/publisher-tag/guides/content-security-policy)
-      window.googletag.pubads().setForceSafeFrame(true);
+        // Improve CSP compatibility (https://developers.google.com/publisher-tag/guides/content-security-policy)
+        safeFrame: { forceSafeFrame: true },
+      });
 
       window.googletag.enableServices();
     });
@@ -386,10 +403,35 @@ export default class GoogleDfpAd extends AdComponent {
     if (this.get("loadedGoogletag")) {
       this.set("lastAdRefresh", new Date());
       window.googletag.cmd.push(() => {
-        ad.setTargeting("discourse-category", categorySlug || "0");
+        ad.setConfig({
+          targeting: { "discourse-category": categorySlug || "0" },
+        });
         window.googletag.pubads().refresh([ad]);
       });
     }
+  }
+
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: this.site.ad_types.dfp,
+        ad_plugin_house_ad_id: null,
+        placement: this.placement,
+      },
+    };
+  }
+
+  willRender() {
+    super.willRender(...arguments);
+
+    if (!this.get("showAd")) {
+      return;
+    }
+  }
+
+  @on("willDestroyElement")
+  cleanup() {
+    destroySlot(this.get("divId"));
   }
 
   @on("didInsertElement")
@@ -426,50 +468,27 @@ export default class GoogleDfpAd extends AdComponent {
     });
   }
 
-  buildImpressionPayload() {
-    return {
-      ad_plugin_impression: {
-        ad_type: this.site.ad_types.dfp,
-        ad_plugin_house_ad_id: null,
-        placement: this.placement,
-      },
-    };
-  }
-
-  willRender() {
-    super.willRender(...arguments);
-
-    if (!this.get("showAd")) {
-      return;
-    }
-  }
-
-  @on("willDestroyElement")
-  cleanup() {
-    destroySlot(this.get("divId"));
-  }
-
   <template>
-    <div class={{concatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
+    <div class={{dConcatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
       {{#if this.showAd}}
         {{#if this.site.mobileView}}
           <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2
             >{{i18n "adplugin.advertisement_label"}}</h2></div>
           <div
+            align="center"
+            class="dfp-ad-unit"
             id={{this.divId}}
             style={{this.adWrapperStyle}}
-            class="dfp-ad-unit"
-            align="center"
           ></div>
         {{else}}
           <div class="google-dfp-ad-label"><h2>{{i18n
                 "adplugin.advertisement_label"
               }}</h2></div>
           <div
+            align="center"
+            class="dfp-ad-unit"
             id={{this.divId}}
             style={{this.adWrapperStyle}}
-            class="dfp-ad-unit"
-            align="center"
           ></div>
         {{/if}}
       {{/if}}

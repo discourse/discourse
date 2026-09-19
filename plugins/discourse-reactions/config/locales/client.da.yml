@@ -13,8 +13,6 @@ da:
   js:
     discourse_reactions:
       reactions_title: "Reaktioner"
-      state_panel:
-        more_users: "og %{count} mere..."
       picker:
         react_with: "Reager på dette indlæg med: %{reaction}"
         cant_remove_reaction: "Du kan ikke længere fjerne din reaktion"

@@ -50,6 +50,36 @@ RSpec.describe DraftsController do
       expect(response.parsed_body["drafts"].first["title"]).to eq(nil)
     end
 
+    it "returns the translated topic title" do
+      viewer = Fabricate(:user, locale: "ja")
+      SiteSetting.content_localization_enabled = true
+      topic = Fabricate(:topic, locale: "en")
+      Fabricate(:topic_localization, topic: topic, locale: "ja", title: "翻訳された題名")
+      Draft.set(viewer, "topic_#{topic.id}", 0, "{}")
+
+      sign_in(viewer)
+      get "/drafts.json"
+
+      expect(response.parsed_body["drafts"].first["title"]).to eq("翻訳された題名")
+    end
+
+    it "omits display user names when names are disabled" do
+      SiteSetting.enable_names = false
+      topic_author = Fabricate(:user, name: "Hidden Full Name")
+      topic = Fabricate(:topic, user: topic_author)
+      Draft.set(user, "topic_#{topic.id}", 0, { reply: "draft reply" }.to_json)
+
+      sign_in(user)
+      get "/drafts.json"
+
+      draft = response.parsed_body["drafts"].first
+
+      expect(response.status).to eq(200)
+      expect(draft).to include("username" => topic_author.username)
+      expect(draft).not_to have_key("name")
+      expect(response.body).not_to include(topic_author.name)
+    end
+
     it "returns categories when lazy load categories is enabled" do
       SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
       category = Fabricate(:category)
@@ -440,64 +470,96 @@ RSpec.describe DraftsController do
       expect(Draft.get(user, "xxx", 0)).to be_present
     end
 
-    shared_examples "for a passed user" do
-      it "deletes draft" do
-        api_key = Fabricate(:api_key).key
-        Draft.set(recipient, "xxx", 0, "hi")
+    describe "via API" do
+      fab!(:admin)
+      fab!(:other_user, :user)
+
+      it "admin can target another user with `username` param" do
+        api_key = Fabricate(:api_key, user: admin).key
+        Draft.set(other_user, "xxx", 0, "hi")
 
         delete "/drafts/xxx.json",
                params: {
                  sequence: 0,
-                 username: recipient.username,
+                 username: other_user.username,
                },
                headers: {
-                 HTTP_API_USERNAME: caller.username,
+                 HTTP_API_USERNAME: admin.username,
                  HTTP_API_KEY: api_key,
                }
 
-        expect(response.status).to eq(response_code)
-
-        if draft_deleted
-          expect(Draft.get(recipient, "xxx", 0)).to eq(nil)
-        else
-          expect(Draft.get(recipient, "xxx", 0)).to be_present
-        end
+        expect(response.status).to eq(200)
+        expect(Draft.get(other_user, "xxx", 0)).to eq(nil)
       end
-    end
 
-    describe "api called by admin" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:admin) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 200 }
-        let(:draft_deleted) { true }
+      it "admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: admin).key
+        Draft.set(admin, "xxx", 0, "hi")
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+               },
+               headers: {
+                 HTTP_API_USERNAME: admin.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(admin, "xxx", 0)).to eq(nil)
       end
-    end
 
-    describe "api called by tl4 user" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:trust_level_4) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 403 }
-        let(:draft_deleted) { false }
+      it "non-admin gets 403 when passing `username` to target another user" do
+        api_key = Fabricate(:api_key, user: user).key
+        Draft.set(user, "xxx", 0, "hi")
+        Draft.set(other_user, "xxx", 0, "hi")
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+                 username: other_user.username,
+               },
+               headers: {
+                 HTTP_API_USERNAME: user.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(403)
+        expect(Draft.get(user, "xxx", 0)).to be_present
+        expect(Draft.get(other_user, "xxx", 0)).to be_present
       end
-    end
 
-    describe "api called by regular user" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:user) }
-        let(:recipient) { Fabricate(:user) }
-        let(:response_code) { 403 }
-        let(:draft_deleted) { false }
+      it "non-admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: user).key
+        Draft.set(user, "xxx", 0, "hi")
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+               },
+               headers: {
+                 HTTP_API_USERNAME: user.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(user, "xxx", 0)).to eq(nil)
       end
-    end
 
-    describe "api called by admin for another admin" do
-      include_examples "for a passed user" do
-        let(:caller) { Fabricate(:admin) }
-        let(:recipient) { Fabricate(:admin) }
-        let(:response_code) { 200 }
-        let(:draft_deleted) { true }
+      it "returns 404 when admin targets a nonexistent `username`" do
+        api_key = Fabricate(:api_key, user: admin).key
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+                 username: "does_not_exist",
+               },
+               headers: {
+                 HTTP_API_USERNAME: admin.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(404)
       end
     end
   end
@@ -629,11 +691,11 @@ RSpec.describe DraftsController do
       expect(user.user_stat.draft_count).to eq(initial_draft_count - 3)
     end
 
-    context "when using API access" do
-      it "allows admin to delete other user's drafts via API" do
-        admin = Fabricate(:admin)
-        api_key = Fabricate(:api_key, user: admin)
+    describe "via API" do
+      fab!(:admin)
 
+      it "admin can target another user with `username` param" do
+        api_key = Fabricate(:api_key, user: admin).key
         Draft.set(user, "draft1", 0, '{"reply": "draft content"}')
 
         delete "/drafts/bulk_destroy.json",
@@ -645,7 +707,7 @@ RSpec.describe DraftsController do
                  username: user.username,
                },
                headers: {
-                 "Api-Key" => api_key.key,
+                 "Api-Key" => api_key,
                  "Api-Username" => admin.username,
                }
 
@@ -653,10 +715,29 @@ RSpec.describe DraftsController do
         expect(Draft.get(user, "draft1", 0)).to eq(nil)
       end
 
-      it "denies non-admin API access to other user's drafts" do
-        non_admin = Fabricate(:user)
-        api_key = Fabricate(:api_key, user: non_admin)
+      it "admin acts on self when `username` param is absent" do
+        api_key = Fabricate(:api_key, user: admin).key
+        Draft.set(admin, "draft1", 0, '{"reply": "draft content"}')
 
+        delete "/drafts/bulk_destroy.json",
+               params: {
+                 draft_keys: ["draft1"],
+                 sequences: {
+                   "draft1" => 0,
+                 },
+               },
+               headers: {
+                 "Api-Key" => api_key,
+                 "Api-Username" => admin.username,
+               }
+
+        expect(response.status).to eq(200)
+        expect(Draft.get(admin, "draft1", 0)).to eq(nil)
+      end
+
+      it "non-admin gets 403 when passing `username` to target another user" do
+        non_admin = Fabricate(:user)
+        api_key = Fabricate(:api_key, user: non_admin).key
         Draft.set(user, "draft1", 0, '{"reply": "draft content"}')
 
         delete "/drafts/bulk_destroy.json",
@@ -668,7 +749,7 @@ RSpec.describe DraftsController do
                  username: user.username,
                },
                headers: {
-                 "Api-Key" => api_key.key,
+                 "Api-Key" => api_key,
                  "Api-Username" => non_admin.username,
                }
 

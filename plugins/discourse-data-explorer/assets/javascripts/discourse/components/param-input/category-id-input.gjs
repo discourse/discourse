@@ -14,14 +14,14 @@ export default class CategoryIdInput extends Component {
   <template>
     <@Control id={{@field.id}}>
       <CategoryChooser
-        @value={{this.data.value}}
+        name={{@info.identifier}}
         @onChange={{@field.set}}
         @options={{hash
           allowUncategorized=null
           autoInsertNoneItem=true
           none=true
         }}
-        name={{@info.identifier}}
+        @value={{this.data.value}}
       />
     </@Control>
   </template>

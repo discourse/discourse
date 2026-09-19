@@ -29,14 +29,14 @@ end
 # Table name: incoming_chat_webhooks
 #
 #  id              :bigint           not null, primary key
-#  name            :string           not null
-#  key             :string           not null
-#  chat_channel_id :bigint           not null
-#  username        :string
 #  description     :string
 #  emoji           :string
+#  key             :string           not null
+#  name            :string           not null
+#  username        :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  chat_channel_id :bigint           not null
 #
 # Indexes
 #

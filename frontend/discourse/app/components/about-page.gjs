@@ -6,10 +6,10 @@ import { isBlank } from "@ember/utils";
 import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const pluginActivitiesFuncs = [];
@@ -205,6 +205,10 @@ export default class AboutPage extends Component {
     });
   }
 
+  get showExtraGroups() {
+    return !isBlank(this.siteSettings.about_page_extra_groups);
+  }
+
   siteActivitiesFromPlugins() {
     const stats = this.args.model.stats;
     const statKeys = Object.keys(stats);
@@ -232,15 +236,11 @@ export default class AboutPage extends Component {
     return configs;
   }
 
-  get showExtraGroups() {
-    return !isBlank(this.siteSettings.about_page_extra_groups);
-  }
-
   <template>
     {{#if this.currentUser.admin}}
       <p>
         <LinkTo class="edit-about-page" @route="adminConfig.about">
-          {{icon "pencil"}}
+          {{dIcon "pencil"}}
           <span>{{i18n "about.edit"}}</span>
         </LinkTo>
       </p>
@@ -254,8 +254,8 @@ export default class AboutPage extends Component {
       <h1>{{@model.title}}</h1>
       <p class="short-description">{{@model.description}}</p>
       <PluginOutlet
-        @name="about-after-description"
         @connectorTagName="section"
+        @name="about-after-description"
         @outletArgs={{lazyHash model=@model}}
       />
     </section>
@@ -265,7 +265,7 @@ export default class AboutPage extends Component {
           {{#each this.stats as |stat|}}
             {{#if stat.display}}
               <span class="about__stats-item {{stat.class}}">
-                {{icon stat.icon}}
+                {{dIcon stat.icon}}
                 <span>{{stat.text}}</span>
               </span>
             {{/if}}
@@ -280,24 +280,24 @@ export default class AboutPage extends Component {
         {{#if @model.admins.length}}
           <section class="about__admins">
             <h2>{{i18n "about.our_admins"}}</h2>
-            <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
+            <AboutPageUsers @truncateAt={{6}} @users={{@model.admins}} />
           </section>
         {{/if}}
         <PluginOutlet
-          @name="about-after-admins"
           @connectorTagName="section"
+          @name="about-after-admins"
           @outletArgs={{lazyHash model=@model}}
         />
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
             <h2>{{i18n "about.our_moderators"}}</h2>
-            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
+            <AboutPageUsers @truncateAt={{6}} @users={{@model.moderators}} />
           </section>
         {{/if}}
         <PluginOutlet
-          @name="about-after-moderators"
           @connectorTagName="section"
+          @name="about-after-moderators"
           @outletArgs={{lazyHash model=@model}}
         />
         {{#if this.showExtraGroups}}
@@ -315,7 +315,7 @@ export default class AboutPage extends Component {
         <div class="about__activities">
           {{#each this.siteActivities as |activity|}}
             <div class="about__activities-item {{activity.class}}">
-              <span class="about__activities-item-icon">{{icon
+              <span class="about__activities-item-icon">{{dIcon
                   activity.icon
                 }}</span>
               <span class="about__activities-item-type">

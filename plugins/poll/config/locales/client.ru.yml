@@ -66,6 +66,8 @@ ru:
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"
+      keep-vote:
+        label: "Назад"
       show-results:
         title: "Показать результаты опроса"
         label: "Результаты"
@@ -176,5 +178,3 @@ ru:
           add: Добавить вариант
         automatic_close:
           label: Автоматически закрыть опрос
-        show_advanced: "Показать дополнительные параметры"
-        hide_advanced: "Скрыть дополнительные параметры"

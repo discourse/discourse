@@ -30,7 +30,7 @@ RSpec.describe ScoreCalculator do
   end
 
   describe "summary" do
-    it "won't update the site settings when the site settings don't match" do
+    it "leaves the summary flag unset when the topic does not qualify" do
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
       expect(topic.has_summary).to eq(false)
@@ -56,7 +56,7 @@ RSpec.describe ScoreCalculator do
       expect(topic.has_summary).to eq(true)
     end
 
-    it "won't update the site settings when the site settings don't match" do
+    it "sets the summary flag when the topic meets the configured thresholds" do
       SiteSetting.expects(:summary_likes_required).returns(0)
       SiteSetting.expects(:summary_posts_required).returns(1)
       SiteSetting.expects(:summary_score_threshold).returns(100)

@@ -9,7 +9,7 @@ class ToastsStub extends Service {
   success() {}
 }
 
-module("Integration | Component | ai-mcp-server-editor-form", function (hooks) {
+module("Integration | Component | AiMcpServerEditorForm", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });
 
   hooks.beforeEach(function () {
@@ -52,8 +52,8 @@ module("Integration | Component | ai-mcp-server-editor-form", function (hooks) {
     await render(
       <template>
         <AiMcpServerEditorForm
-          @model={{this.model}}
           @mcpServers={{this.mcpServers}}
+          @model={{this.model}}
           @secrets={{this.secrets}}
         />
       </template>
@@ -75,8 +75,8 @@ module("Integration | Component | ai-mcp-server-editor-form", function (hooks) {
     await render(
       <template>
         <AiMcpServerEditorForm
-          @model={{this.model}}
           @mcpServers={{this.mcpServers}}
+          @model={{this.model}}
           @secrets={{this.secrets}}
         />
       </template>

@@ -15,6 +15,7 @@ sk:
         title: Naplánovať príspevok v téme s výsledkami Data Explorer
         description: Získanie naplánovaných správ odoslaných do konkrétnej témy
   data_explorer:
+    admin_dashboard_label: "Prieskumník údajov"
     report_generator:
       private_message:
         title: "Naplánovaná správa pre %{query_name}"

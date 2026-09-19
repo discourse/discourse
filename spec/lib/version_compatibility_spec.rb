@@ -41,6 +41,28 @@ RSpec.describe Discourse do
       expect(Discourse.has_needed_version?("1.3.0.beta4", "1.3.0.beta3")).to eq(true)
       expect(Discourse.has_needed_version?("1.3.0", "1.3.0.beta3")).to eq(true)
     end
+
+    it "treats -latest builds as pre-releases of the same version" do
+      expect(Discourse.has_needed_version?("2026.8.0-latest", "2026.7.2")).to eq(true)
+      expect(Discourse.has_needed_version?("2026.8.0-latest.1", "2026.8.0-latest")).to eq(true)
+      expect(Discourse.has_needed_version?("2026.8.0", "2026.8.0-latest.1")).to eq(true)
+      expect(Discourse.has_needed_version?("2026.8.0-latest", "2026.8.0-latest.1")).to eq(false)
+      expect(Discourse.has_needed_version?("2026.8.0-latest.1", "2026.8.0")).to eq(false)
+    end
+  end
+
+  describe "VERSION_REGEXP" do
+    it "matches release, beta and -latest versions" do
+      %w[2026.8.0 1.3.0.beta3 2026.8.0-latest 2026.8.0-latest.1].each do |v|
+        expect(v).to match(Discourse::VERSION_REGEXP)
+      end
+    end
+
+    it "rejects other suffixes" do
+      %w[2026.8 2026.8.0-beta 2026.8.0-latest. 2026.8.0-latest.1.2 2026.8.0latest].each do |v|
+        expect(v).not_to match(Discourse::VERSION_REGEXP)
+      end
+    end
   end
 
   describe ".find_compatible_resource" do
@@ -76,6 +98,14 @@ RSpec.describe Discourse do
       expect(Discourse.find_compatible_resource("")).to be_nil
     end
 
+    it "returns nil when blank" do
+      expect(Discourse.find_compatible_resource("   \n  \n")).to be_nil
+    end
+
+    it "returns nil when the file contains only comments" do
+      expect(Discourse.find_compatible_resource("# just a comment\n# another line\n")).to be_nil
+    end
+
     it "raises an error on invalid input" do
       expect { Discourse.find_compatible_resource("1.0.0.beta1 12f82d5") }.to raise_error(
         Discourse::InvalidVersionListError,
@@ -90,6 +120,7 @@ RSpec.describe Discourse do
         2.4.4.beta6: twofourfourbetasix
         2.4.2.beta1: twofourtwobetaone
         YML
+
       include_examples "test compatible resource"
     end
 
@@ -101,6 +132,7 @@ RSpec.describe Discourse do
         2.5.0.beta2: twofivebetatwo
         2.4.4.beta6: twofourfourbetasix
         YML
+
       include_examples "test compatible resource"
     end
 
@@ -172,10 +204,13 @@ RSpec.describe Discourse do
 
       after { FileUtils.remove_entry(git_directory) }
 
-      it "returns the branch commit and ignores .discourse-compatibility" do
-        compat_branch_sha = `cd #{git_directory} && git rev-parse #{compat_branch_name}`.strip
+      it "returns the d-compat branch ref and ignores .discourse-compatibility" do
+        resource = Discourse.find_compatible_git_resource(git_directory)
 
-        expect(Discourse.find_compatible_git_resource(git_directory)).to eq(compat_branch_sha)
+        expect(resource).to eq("origin/#{compat_branch_name}")
+        expect(`cd #{git_directory} && git rev-parse #{resource}`.strip).to eq(
+          `cd #{git_directory} && git rev-parse #{compat_branch_name}`.strip,
+        )
       end
     end
 
@@ -207,6 +242,23 @@ RSpec.describe Discourse do
           capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
 
         expect(output).to include("Invalid version list")
+      end
+    end
+
+    context "with an empty .discourse-compatibility file" do
+      let!(:git_directory) do
+        path = setup_git_repo(".discourse-compatibility" => "# only a comment\n")
+        setup_remote_upstream(path)
+        path
+      end
+
+      after { FileUtils.remove_entry(git_directory) }
+
+      it "returns nil without logging an error" do
+        output =
+          capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
+
+        expect(output).to be_blank
       end
     end
 

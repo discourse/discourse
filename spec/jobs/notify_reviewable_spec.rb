@@ -8,7 +8,28 @@ RSpec.describe Jobs::NotifyReviewable do
     fab!(:group) { group_user.group }
     fab!(:user) { group_user.user }
 
-    it "will notify users of new reviewable content for the user menu" do
+    it "publishes status updates for handled reviewables as integers" do
+      reviewable = Fabricate(:reviewable, reviewable_by_moderator: false)
+      reviewable.update!(status: Reviewable.statuses[:approved])
+
+      messages =
+        MessageBus.track_publish("/reviewable_counts/#{admin.id}") do
+          described_class.new.execute(
+            reviewable_id: reviewable.id,
+            performing_username: admin.username,
+            updated_reviewable_ids: [reviewable.id],
+          )
+        end
+
+      expect(messages.first.data[:updates]).to eq(
+        reviewable.id => {
+          last_performing_username: admin.username,
+          status: Reviewable.statuses[:approved],
+        },
+      )
+    end
+
+    it "notifies users of new reviewable content for the user menu" do
       SiteSetting.navigation_menu = "sidebar"
       SiteSetting.enable_category_group_moderation = true
 
@@ -82,7 +103,7 @@ RSpec.describe Jobs::NotifyReviewable do
       expect(group_user_message.data[:unseen_reviewable_count]).to eq(1)
     end
 
-    it "won't notify a group when disabled" do
+    it "does not notify a group when disabled" do
       SiteSetting.enable_category_group_moderation = false
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)

@@ -34,6 +34,7 @@ You will need the following packages on your system:
 - [Redis][redis_link]
 - [Node.js][node_link]
 - [pnpm][pnpm_link]
+- [libvips][libvips_link]
 - [MailHog][mh_link]\*\*
 - [ImageMagick][imagemagick_link]\*\*
 
@@ -110,15 +111,13 @@ bundle exec rails server
 
 You should now be able to connect with your Discourse app on [http://localhost:3000](http://localhost:3000) - try it out!
 
-**Starting with Discourse 2.5+ EmberCLI is required in development and these additional steps will be required:**
-
 In a separate terminal instance, navigate to your discourse folder (`cd ~/discourse`) and run:
 
 ```sh
-bin/ember-cli
+bin/dev --only ember
 ```
 
-You should now be able to navigate to [http://localhost:4200](http://localhost:4200) to see your local Discourse installation.
+This starts the frontend bundler; the app remains served from [http://localhost:3000](http://localhost:3000).
 [/quote]
 
 ## Creating a Command to Start Discourse
@@ -513,6 +512,7 @@ _Last Reviewed by @SaraDev on [date=2022-06-15 time=19:00:00 timezone="America/L
 [pg_link]: http://www.postgresql.org/
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
+[libvips_link]: https://github.com/libvips/libvips/wiki#building-and-installing
 [imagemagick_link]: http://www.imagemagick.org/
 [pnpm_link]: https://pnpm.io/
 [mh_link]: https://github.com/mailhog/MailHog

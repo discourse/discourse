@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import DatePicker from "discourse/components/date-picker";
+import DButton from "discourse/ui-kit/d-button";
+import DDatePicker from "discourse/ui-kit/d-date-picker";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
 export default class JumpToPost extends Component {
@@ -14,6 +14,15 @@ export default class JumpToPost extends Component {
 
   get filteredPostsCount() {
     return this.args.model.topic.postStream.filteredPostsCount;
+  }
+
+  @action
+  jump() {
+    if (this.postNumber) {
+      this._jumpToIndex(this.filteredPostsCount, this.postNumber);
+    } else if (this.postDate) {
+      this._jumpToDate(this.postDate);
+    }
   }
 
   _jumpToIndex(postsCounts, postNumber) {
@@ -27,30 +36,21 @@ export default class JumpToPost extends Component {
     this.args.closeModal();
   }
 
-  @action
-  jump() {
-    if (this.postNumber) {
-      this._jumpToIndex(this.filteredPostsCount, this.postNumber);
-    } else if (this.postDate) {
-      this._jumpToDate(this.postDate);
-    }
-  }
-
   <template>
     <DModal
+      class="jump-to-post-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "topic.progress.jump_prompt_long"}}
-      class="jump-to-post-modal"
     >
       <:body>
         <div class="jump-to-post-form">
           <div class="jump-to-post-control">
             <span class="index">#</span>
             <Input
-              @value={{this.postNumber}}
-              @type="number"
               autofocus="true"
               id="post-jump"
+              @type="number"
+              @value={{this.postNumber}}
             />
             <span class="input-hint-text post-number">
               {{i18n
@@ -71,11 +71,11 @@ export default class JumpToPost extends Component {
             <span class="input-hint-text post-date">
               {{i18n "topic.progress.jump_prompt_to_date"}}
             </span>
-            <DatePicker
-              @value={{this.postDate}}
-              @defaultDate="YYYY-MM-DD"
-              id="post-date"
+            <DDatePicker
               class="date-input"
+              id="post-date"
+              @defaultDate="YYYY-MM-DD"
+              @value={{this.postDate}}
             />
           </div>
         </div>
@@ -83,10 +83,10 @@ export default class JumpToPost extends Component {
 
       <:footer>
         <DButton
+          class="btn-primary"
+          type="submit"
           @action={{this.jump}}
           @label="composer.modal_ok"
-          type="submit"
-          class="btn-primary"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

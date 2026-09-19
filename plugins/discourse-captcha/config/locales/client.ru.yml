@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    discourse_captcha:
+      missing_token: "Пожалуйста, пройдите проверку капчи."
+      verification_failed: "Проверка капчи не удалась. Пожалуйста, попробуйте еще раз."
+      placeholder: заполнитель
+      contact_system_administrator: "Возникла проблема с вашим поставщиком капчи. Если проблема сохраняется, пожалуйста, свяжитесь с системным администратором."

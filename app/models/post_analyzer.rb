@@ -104,14 +104,12 @@ class PostAnalyzer
     @linked_hosts = {}
 
     all_links.each do |u|
-      begin
-        uri = self.class.parse_uri_rfc2396(u)
-        host = uri.host
-        @linked_hosts[host] ||= 1 unless host.nil?
-      rescue URI::Error
-        # An invalid URI does not count as a host
-        next
-      end
+      uri = self.class.parse_uri_rfc2396(u)
+      host = uri.host
+      @linked_hosts[host] ||= 1 unless host.nil?
+    rescue URI::Error
+      # An invalid URI does not count as a host
+      next
     end
 
     @linked_hosts

@@ -51,6 +51,19 @@ module PageObjects
         self
       end
 
+      def remove_localization
+        find(".form-kit__collection .btn-danger").click
+        self
+      end
+
+      def has_localizations?
+        has_css?(".form-kit__collection")
+      end
+
+      def has_no_localizations?
+        has_no_css?(".form-kit__collection")
+      end
+
       def name_input
         find("input[name='name']")
       end
@@ -60,7 +73,7 @@ module PageObjects
       end
 
       def description_textarea
-        find("textarea[name='description']")
+        find(".form-kit__field[data-name='description'] textarea.d-editor-input")
       end
 
       def fill_name(value)

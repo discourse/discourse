@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 @tagName("")
 export default class AssignedAdvancedSearch extends Component {
   static shouldRender(args, { currentUser }) {
-    return currentUser?.can_assign;
+    return currentUser?.can_assign_globally;
   }
 
   @action
@@ -30,7 +30,6 @@ export default class AssignedAdvancedSearch extends Component {
 
         <div class="controls">
           <EmailGroupUserChooser
-            @value={{this.outletArgs.searchedTerms.assigned}}
             @onChange={{this.onChangeAssigned}}
             @options={{hash
               maximum=1
@@ -38,6 +37,7 @@ export default class AssignedAdvancedSearch extends Component {
               includeGroups=true
               customSearchOptions=(hash assignableGroups=true)
             }}
+            @value={{this.outletArgs.searchedTerms.assigned}}
           />
         </div>
       </div>

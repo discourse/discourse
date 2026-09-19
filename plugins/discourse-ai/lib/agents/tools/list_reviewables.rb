@@ -37,6 +37,12 @@ module DiscourseAi
                   "Filter by status: pending (default), approved, rejected, ignored, deleted",
                 type: "string",
               },
+              {
+                name: "has_notes",
+                description:
+                  "Filter by whether the item already has notes. Set to false to only return items that have no notes yet, true to only return items that already have notes.",
+                type: "boolean",
+              },
             ],
           }
         end
@@ -85,9 +91,31 @@ module DiscourseAi
             filters[:from_date] = parameters[:max_hours_old].to_i.hours.ago
           end
 
-          reviewables = Reviewable.list_for(guardian.user, **filters).to_a
+          relation = Reviewable.list_for(guardian.user, **filters)
 
-          if reviewables.empty?
+          if parameters.key?(:has_notes) && !parameters[:has_notes].nil?
+            notes_exists = <<~SQL
+              EXISTS(
+                SELECT 1 FROM reviewable_notes
+                WHERE reviewable_notes.reviewable_id = reviewables.id
+              )
+            SQL
+            relation =
+              (
+                if ActiveModel::Type::Boolean.new.cast(parameters[:has_notes])
+                  relation.where(notes_exists)
+                else
+                  relation.where("NOT #{notes_exists}")
+                end
+              )
+          end
+
+          rows =
+            Reviewable.with_deleted_content do
+              relation.map { |reviewable| serialize_reviewable(reviewable) }
+            end
+
+          if rows.empty?
             return(
               {
                 status: "success",
@@ -96,8 +124,6 @@ module DiscourseAi
               }
             )
           end
-
-          rows = reviewables.map { |r| serialize_reviewable(r) }
 
           {
             status: "success",
@@ -133,13 +159,11 @@ module DiscourseAi
           result[:available_actions] = available_action_ids(reviewable)
 
           case reviewable
-          when ReviewableFlaggedPost
-            serialize_flagged_post(result, reviewable)
           when ReviewableQueuedPost
             serialize_queued_post(result, reviewable)
           when ReviewableUser
             serialize_user(result, reviewable)
-          when ReviewablePost
+          when ReviewableFlaggedPost, ReviewablePost
             serialize_post(result, reviewable)
           end
 
@@ -152,22 +176,21 @@ module DiscourseAi
             }
           end
 
+          result[:notes] = reviewable.reviewable_notes.map do |note|
+            {
+              id: note.id,
+              content: note.content,
+              user: note.user&.username,
+              created_at: note.created_at.iso8601,
+            }
+          end
+
           result
         end
 
         def available_action_ids(reviewable)
           actions = reviewable.actions_for(guardian)
           actions.bundles.flat_map { |bundle| bundle.actions.map { |a| a.server_action } }
-        end
-
-        def serialize_flagged_post(result, reviewable)
-          post = reviewable.post
-          return unless post
-
-          result[:post_id] = post.id
-          result[:post_number] = post.post_number
-          result[:post_excerpt] = post.excerpt(300, strip_links: true, text_entities: true)
-          result[:topic_title] = post.topic&.title
         end
 
         def serialize_queued_post(result, reviewable)

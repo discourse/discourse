@@ -1,7 +1,6 @@
 import EmberObject, { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
-import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
 import { durationTiny, number } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
@@ -13,11 +12,12 @@ import {
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
+import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import I18n, { i18n } from "discourse-i18n";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 export default class Report extends EmberObject {
   static groupingForDatapoints(count) {
@@ -63,31 +63,31 @@ export default class Report extends EmberObject {
     } else if (grouping === "weekly" || grouping === "monthly") {
       const isoKind = grouping === "weekly" ? "isoWeek" : "month";
       const kind = grouping === "weekly" ? "week" : "month";
-      const startMoment = moment(model.start_date, "YYYY-MM-DD");
+      const selectedStart = Report.#dateMoment(model.start_date);
+      const selectedEnd = Report.#dateMoment(model.end_date);
 
       let currentIndex = 0;
-      let currentStart = startMoment.clone().startOf(isoKind);
-      let currentEnd = startMoment.clone().endOf(isoKind);
-      const transformedData = [
-        {
-          x: currentStart.format("YYYY-MM-DD"),
-          y: 0,
-        },
-      ];
+      let currentStart = selectedStart.clone().startOf(isoKind);
+      let currentEnd = selectedStart.clone().endOf(isoKind);
+      const bucketStart = () => moment.max(currentStart, selectedStart);
+      const bucketEnd = () => moment.min(currentEnd, selectedEnd);
+      const bucket = () => ({
+        x: bucketStart().format("YYYY-MM-DD"),
+        y: 0,
+        end_date: bucketEnd().format("YYYY-MM-DD"),
+      });
+      const transformedData = [bucket()];
 
       let appliedAverage = false;
       data.forEach((d) => {
-        const date = moment(d.x, "YYYY-MM-DD");
+        const date = Report.#dateMoment(d.x);
 
-        if (
-          !date.isSame(currentStart) &&
-          !date.isBetween(currentStart, currentEnd)
-        ) {
+        while (date.isAfter(currentEnd)) {
           if (model.average) {
             transformedData[currentIndex].y = applyAverage(
               transformedData[currentIndex].y,
-              currentStart,
-              currentEnd
+              bucketStart(),
+              bucketEnd()
             );
 
             appliedAverage = true;
@@ -96,25 +96,18 @@ export default class Report extends EmberObject {
           currentIndex += 1;
           currentStart = currentStart.add(1, kind).startOf(isoKind);
           currentEnd = currentEnd.add(1, kind).endOf(isoKind);
-        } else {
-          appliedAverage = false;
+          transformedData[currentIndex] = bucket();
         }
 
-        if (transformedData[currentIndex]) {
-          transformedData[currentIndex].y += d.y;
-        } else {
-          transformedData[currentIndex] = {
-            x: d.x,
-            y: d.y,
-          };
-        }
+        transformedData[currentIndex].y += d.y;
+        appliedAverage = false;
       });
 
       if (model.average && !appliedAverage) {
         transformedData[currentIndex].y = applyAverage(
           transformedData[currentIndex].y,
-          currentStart,
-          moment(model.end_date).subtract(1, "day") // remove 1 day as model end date is at 00:00 of next day
+          bucketStart(),
+          bucketEnd()
         );
       }
 
@@ -199,6 +192,18 @@ export default class Report extends EmberObject {
     });
   }
 
+  static #dateMoment(value) {
+    if (moment.isMoment(value)) {
+      return value.clone().startOf("day");
+    }
+
+    if (value instanceof Date) {
+      return moment(value).startOf("day");
+    }
+
+    return moment.utc(value).startOf("day");
+  }
+
   average = false;
   percent = false;
   higher_is_better = true;
@@ -237,41 +242,6 @@ export default class Report extends EmberObject {
     return this.data;
   }
 
-  valueAt(numDaysAgo) {
-    if (this.combinedData) {
-      const wantedDate = moment()
-        .subtract(numDaysAgo, "days")
-        .locale("en")
-        .format("YYYY-MM-DD");
-      const item = this.combinedData.find((d) => d.x === wantedDate);
-      if (item) {
-        return item.y;
-      }
-    }
-    return 0;
-  }
-
-  valueFor(startDaysAgo, endDaysAgo) {
-    if (this.combinedData) {
-      const earliestDate = moment().subtract(endDaysAgo, "days").startOf("day");
-      const latestDate = moment().subtract(startDaysAgo, "days").startOf("day");
-      let d,
-        sum = 0,
-        count = 0;
-      this.combinedData.forEach((datum) => {
-        d = moment(datum.x);
-        if (d >= earliestDate && d <= latestDate) {
-          sum += datum.y;
-          count++;
-        }
-      });
-      if (this.method === "average" && count > 0) {
-        sum /= count;
-      }
-      return round(sum, -2);
-    }
-  }
-
   @computed("data", "average")
   get todayCount() {
     return this.valueAt(0);
@@ -300,10 +270,6 @@ export default class Report extends EmberObject {
   @computed("data", "average")
   get lastThirtyDaysCount() {
     return this.averageCount(30, this.valueFor(1, 30));
-  }
-
-  averageCount(count, value) {
-    return this.average ? value / count : value;
   }
 
   @computed("yesterdayCount", "higher_is_better")
@@ -387,18 +353,6 @@ export default class Report extends EmberObject {
     }
   }
 
-  percentChangeString(val1, val2) {
-    const change = this._computeChange(val1, val2);
-
-    if (isNaN(change) || !isFinite(change)) {
-      return null;
-    } else if (change > 0) {
-      return `+${i18n("js.number.percent", { count: change.toFixed(0) })}`;
-    } else {
-      return `${i18n("js.number.percent", { count: change.toFixed(0) })}`;
-    }
-  }
-
   @computed("prev_period", "currentTotal", "currentAverage")
   get trendTitle() {
     let prev = this.prev_period;
@@ -421,28 +375,6 @@ export default class Report extends EmberObject {
       prev,
       current,
     });
-  }
-
-  changeTitle(valAtT1, valAtT2, prevPeriodString) {
-    const change = this.percentChangeString(valAtT1, valAtT2);
-    const title = [];
-    if (change) {
-      title.push(
-        i18n("admin.dashboard.reports.percent_change_tooltip", {
-          percent: change,
-        })
-      );
-    }
-    title.push(
-      i18n(
-        `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
-        {
-          count: valAtT1,
-          previousValue: number(valAtT1),
-        }
-      )
-    );
-    return title.join(" ");
   }
 
   @computed("yesterdayCount")
@@ -511,7 +443,7 @@ export default class Report extends EmberObject {
         mainProperty,
         type,
         compute: (row, opts = {}) => {
-          let value = null;
+          let value;
 
           if (opts.useSortProperty) {
             value = row[label.sort_property || mainProperty];
@@ -568,6 +500,79 @@ export default class Report extends EmberObject {
         },
       };
     });
+  }
+
+  valueAt(numDaysAgo) {
+    if (this.combinedData) {
+      const wantedDate = moment()
+        .subtract(numDaysAgo, "days")
+        .locale("en")
+        .format("YYYY-MM-DD");
+      const item = this.combinedData.find((d) => d.x === wantedDate);
+      if (item) {
+        return item.y;
+      }
+    }
+    return 0;
+  }
+
+  valueFor(startDaysAgo, endDaysAgo) {
+    if (this.combinedData) {
+      const earliestDate = moment().subtract(endDaysAgo, "days").startOf("day");
+      const latestDate = moment().subtract(startDaysAgo, "days").startOf("day");
+      let d,
+        sum = 0,
+        count = 0;
+      this.combinedData.forEach((datum) => {
+        d = moment(datum.x);
+        if (d >= earliestDate && d <= latestDate) {
+          sum += datum.y;
+          count++;
+        }
+      });
+      if (this.method === "average" && count > 0) {
+        sum /= count;
+      }
+      return round(sum, -2);
+    }
+  }
+
+  averageCount(count, value) {
+    return this.average ? value / count : value;
+  }
+
+  percentChangeString(val1, val2) {
+    const change = this._computeChange(val1, val2);
+
+    if (isNaN(change) || !isFinite(change)) {
+      return null;
+    } else if (change > 0) {
+      return `+${i18n("js.number.percent", { count: change.toFixed(0) })}`;
+    } else {
+      return `${i18n("js.number.percent", { count: change.toFixed(0) })}`;
+    }
+  }
+
+  changeTitle(valAtT1, valAtT2, prevPeriodString) {
+    const change = this.percentChangeString(valAtT1, valAtT2);
+    const title = [];
+    if (change) {
+      title.push(
+        i18n("admin.dashboard.reports.percent_change_tooltip", {
+          percent: change,
+        })
+      );
+    }
+    title.push(
+      i18n(
+        `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
+        {
+          count: valAtT1,
+          previousValue: number(valAtT1),
+        }
+      )
+    );
+    return title.join(" ");
   }
 
   _userLabel(properties, row) {

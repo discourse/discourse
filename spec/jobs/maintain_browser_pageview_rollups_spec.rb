@@ -1,0 +1,647 @@
+# frozen_string_literal: true
+
+RSpec.describe Jobs::MaintainBrowserPageviewRollups do
+  subject(:job) { described_class.new }
+
+  describe "#execute" do
+    context "when aggregating rollups" do
+      it "aggregates both country and referrer rollups from recent pageview events" do
+        Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
+
+        job.execute({})
+
+        expect(BrowserPageviewCountryDailyRollup.where(country_code: "US").sum(:count)).to eq(1)
+        expect(
+          BrowserPageviewReferrerDailyRollup.where(normalized_referrer: "google.com").sum(:count),
+        ).to eq(1)
+      end
+
+      it "backfills from the earliest event date on the first run when rollups are empty" do
+        Fabricate(:browser_pageview_event, country_code: "US", created_at: 60.days.ago)
+        Fabricate(:browser_pageview_event, country_code: "GB", created_at: 5.days.ago)
+
+        job.execute({})
+
+        expect(BrowserPageviewCountryDailyRollup.pluck(:country_code)).to contain_exactly(
+          "US",
+          "GB",
+        )
+      end
+
+      it "only aggregates yesterday and today once historical rollups are populated" do
+        Fabricate(:browser_pageview_event, country_code: "US", created_at: 60.days.ago)
+        job.execute({}) # first run backfills everything
+
+        Fabricate(:browser_pageview_event, country_code: "GB", created_at: 60.days.ago) # late old event
+        Fabricate(:browser_pageview_event, country_code: "FR") # today
+        job.execute({}) # second run only does yesterday + today
+
+        expect(BrowserPageviewCountryDailyRollup.pluck(:country_code)).to contain_exactly(
+          "US",
+          "FR",
+        )
+      end
+    end
+
+    context "when aggregating crawler rollups" do
+      let(:above_threshold) { CrawlerScorer::BOT_SCORE_THRESHOLD + 1 }
+
+      before { freeze_time(Time.utc(2026, 6, 20, 12, 0, 0)) }
+
+      it "does nothing when improved_crawler_detection is disabled" do
+        Fabricate(
+          :browser_pageview_event,
+          score: above_threshold,
+          created_at: Time.utc(2026, 6, 20, 9),
+        )
+
+        job.execute({})
+
+        expect(BrowserPageviewCrawlerDailyRollup.count).to eq(0)
+      end
+
+      context "when improved_crawler_detection is enabled" do
+        before { SiteSetting.improved_crawler_detection = true }
+
+        it "backfills the full event history on the first run" do
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 5, 1, 9),
+          )
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 6, 20, 9),
+          )
+
+          job.execute({})
+
+          expect(BrowserPageviewCrawlerDailyRollup.sum(:count)).to eq(2)
+        end
+
+        it "only refreshes yesterday and today once history has been rolled up" do
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 6, 20, 9),
+          )
+          job.execute({})
+
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 5, 1, 9),
+          )
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 6, 19, 9),
+          )
+          job.execute({})
+
+          expect(
+            BrowserPageviewCrawlerDailyRollup.order(:date).pluck(:date, :count),
+          ).to contain_exactly([Date.new(2026, 6, 19), 1], [Date.new(2026, 6, 20), 1])
+        end
+      end
+    end
+
+    context "when aggregating engagement rollups" do
+      before { freeze_time(Time.utc(2026, 6, 20, 12, 0, 0)) }
+
+      it "aggregates nothing until the first engagement row exists" do
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 10, 9))
+
+        job.execute({})
+
+        expect(BrowserPageviewSessionEngagementDailyRollup.count).to eq(0)
+      end
+
+      it "floors aggregation at the earliest engagement row's date" do
+        Fabricate(:browser_pageview_session_engagement, created_at: Time.utc(2026, 6, 10, 8))
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 9, 9))
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 10, 9))
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 11, 9))
+
+        job.execute({})
+
+        expect(BrowserPageviewSessionEngagementDailyRollup.order(:date).pluck(:date)).to eq(
+          [Date.new(2026, 6, 10), Date.new(2026, 6, 11)],
+        )
+      end
+
+      it "backfills from the floor forward on the first run" do
+        Fabricate(:browser_pageview_session_engagement, created_at: Time.utc(2026, 6, 12, 8))
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 12, 9))
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 18, 9))
+
+        job.execute({})
+
+        expect(BrowserPageviewSessionEngagementDailyRollup.pluck(:date)).to contain_exactly(
+          Date.new(2026, 6, 12),
+          Date.new(2026, 6, 18),
+        )
+      end
+
+      it "re-aggregates days a multi-day failure skipped, not only the previous day" do
+        Fabricate(:browser_pageview_session_engagement, created_at: Time.utc(2026, 6, 10, 8))
+        Fabricate(:browser_pageview_session_engagement_daily_rollup, date: Date.new(2026, 6, 10))
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 15, 9))
+
+        job.execute({})
+
+        expect(
+          BrowserPageviewSessionEngagementDailyRollup.where(date: Date.new(2026, 6, 15)).sum(
+            :sessions,
+          ),
+        ).to eq(1)
+      end
+
+      it "does not reach back for a late event on a day behind the last rolled-up day" do
+        Fabricate(:browser_pageview_session_engagement, created_at: Time.utc(2026, 6, 18, 8))
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 19, 9))
+        job.execute({})
+
+        Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 18, 9))
+        job.execute({})
+
+        expect(BrowserPageviewSessionEngagementDailyRollup.pluck(:date)).to eq(
+          [Date.new(2026, 6, 19)],
+        )
+      end
+    end
+
+    context "when backfilling referrers" do
+      it "normalizes historical rows using the inspector and stamps the current version" do
+        raw = "https://www.reddit.com/r/discourse/"
+        event = Fabricate(:browser_pageview_event_with_unnormalized_referrer, referrer: raw)
+
+        job.execute({})
+
+        expect(event.reload.normalized_referrer).to eq(
+          BrowserPageviewEventUrlNormalizer.normalize_referrer(raw),
+        )
+        expect(event.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
+      end
+
+      it "leaves rows without a referrer untouched and does not let them block completion" do
+        direct_visit = Fabricate(:browser_pageview_event_with_unnormalized_referrer, referrer: nil)
+        referred =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://reddit.com/",
+          )
+
+        job.execute({})
+
+        expect(direct_visit.reload.normalized_referrer_version).to be_nil
+        expect(referred.reload.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
+        expect { job.execute({}) }.not_to change { referred.reload.normalized_referrer_version }
+      end
+
+      it "processes an empty-string referrer once, normalizing it to NULL and stamping it" do
+        event = Fabricate(:browser_pageview_event_with_unnormalized_referrer, referrer: "")
+
+        job.execute({})
+
+        event.reload
+        expect(event.normalized_referrer).to be_nil
+        expect(event.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
+      end
+
+      it "is a no-op once every referrer row is current" do
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://reddit.com/",
+        )
+        job.execute({})
+
+        expect { job.execute({}) }.not_to change {
+          BrowserPageviewReferrerDailyRollup.pluck(:id, :count)
+        }
+      end
+
+      it "only processes up to the configured batch size per run" do
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://reddit.com/",
+        )
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://news.ycombinator.com/",
+        )
+
+        job.execute({})
+
+        expect(BrowserPageviewEvent.where(normalized_referrer_version: nil).count).to eq(1)
+      end
+
+      it "waits to repair a date until every stale referrer row for that date is processed" do
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        date = 3.days.ago.to_date
+        2.times do
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.google.com/",
+            created_at: date,
+          )
+        end
+
+        job.execute({})
+
+        rollups =
+          BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count)
+        expect(rollups).to eq([[nil, 2]])
+
+        job.execute({})
+
+        rollups =
+          BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count)
+        expect(rollups).to eq([["google.com", 2]])
+      end
+
+      it "skips rows within a day of the retention cutoff when cleanup is enabled" do
+        SiteSetting.clean_up_browser_pageview_events = true
+        prunable =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.reddit.com/",
+            created_at: (BrowserPageviewEvent::RETENTION_PERIOD + 1.day).ago,
+          )
+        near_cutoff =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.reddit.com/",
+            created_at: BrowserPageviewEvent::RETENTION_PERIOD.ago,
+          )
+        recent =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.reddit.com/",
+          )
+
+        job.execute({})
+
+        prunable.reload
+        expect(prunable.normalized_referrer).to be_nil
+        expect(prunable.normalized_referrer_version).to be_nil
+        expect(near_cutoff.reload.normalized_referrer_version).to be_nil
+        expect(recent.reload.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
+      end
+
+      it "backfills rows older than the retention period when cleanup is disabled" do
+        SiteSetting.clean_up_browser_pageview_events = false
+        event =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.reddit.com/",
+            created_at: (BrowserPageviewEvent::RETENTION_PERIOD + 1.day).ago,
+          )
+
+        job.execute({})
+
+        expect(event.reload.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
+      end
+
+      it "repairs the affected rollups to match a fresh aggregation, including the NULL bucket" do
+        date = 3.days.ago.to_date
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://www.google.com/",
+          created_at: date,
+        )
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: "https://www.google.com/",
+          created_at: date,
+        )
+        Fabricate(
+          :browser_pageview_event_with_unnormalized_referrer,
+          referrer: nil,
+          created_at: date,
+        )
+
+        job.execute({})
+
+        rollups =
+          BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count)
+        expect(rollups).to contain_exactly(["google.com", 2], [nil, 1])
+      end
+
+      it "re-selects the row and repairs the rollup when a crash happens before the version is stamped" do
+        date = 3.days.ago.to_date
+        event =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.google.com/",
+            created_at: date,
+          )
+
+        BrowserPageviewReferrerDailyRollup.stubs(:recompute).raises("rollup boom")
+        expect { job.execute({}) }.to raise_error("rollup boom")
+
+        expect(event.reload.normalized_referrer).to eq("google.com")
+        expect(event.normalized_referrer_version).to be_nil
+        expect(
+          BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count),
+        ).to eq([[nil, 1]])
+
+        BrowserPageviewReferrerDailyRollup.unstub(:recompute)
+        job.execute({})
+
+        expect(event.reload.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
+        expect(
+          BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count),
+        ).to eq([["google.com", 1]])
+      end
+
+      it "re-normalizes rows stamped with an older version and repairs their rollups" do
+        date = 3.days.ago.to_date
+        raw = "https://google.com/?utm_source=newsletter"
+        event =
+          Fabricate(
+            :browser_pageview_event,
+            referrer: raw,
+            normalized_referrer: "google.com/?utm_source=newsletter",
+            normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+            created_at: date,
+          )
+
+        stub_const(
+          BrowserPageviewEventUrlNormalizer,
+          "REFERRER_VERSION",
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION + 1,
+        ) do
+          job.execute({})
+
+          event.reload
+          expect(event.normalized_referrer).to eq(
+            BrowserPageviewEventUrlNormalizer.normalize_referrer(raw),
+          )
+          expect(event.normalized_referrer_version).to eq(
+            BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          )
+        end
+
+        expect(BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer)).to eq(
+          ["google.com"],
+        )
+      end
+    end
+
+    context "when aggregating entry URLs" do
+      it "keeps entry URL counts stable across repeated runs" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        Fabricate(:browser_pageview_event, url: "/search?q=private", created_at: "2026-05-12")
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/search", 1]])
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/search", 1]])
+      end
+
+      it "does not publish partial counts while retained URLs are being normalized" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        2.times do |index|
+          event =
+            Fabricate(
+              :browser_pageview_event,
+              session_id: "stale-url-session-#{index}",
+              url: "/latest",
+              created_at: "2026-05-12",
+            )
+          event.update_columns(normalized_url: nil, normalized_url_version: nil)
+        end
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollup.all).to be_empty
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollup.sum(:count)).to eq(2)
+      end
+
+      it "includes every retained date in the first report" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-10")
+        stale = Fabricate(:browser_pageview_event, url: "/top", created_at: "2026-05-12")
+        stale.update_columns(normalized_url: nil, normalized_url_version: nil)
+
+        job.execute({})
+
+        expect(
+          BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
+        ).to contain_exactly(
+          [Date.new(2026, 5, 10), "/latest", 1],
+          [Date.new(2026, 5, 12), "/top", 1],
+        )
+      end
+
+      it "updates recent counts without changing older counts" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-10")
+        job.execute({})
+
+        Fabricate(:browser_pageview_event, url: "/top", created_at: "2026-05-10")
+        Fabricate(:browser_pageview_event, url: "/faq", created_at: "2026-05-14")
+
+        freeze_time(Time.zone.local(2026, 5, 15, 0, 10, 0))
+        job.execute({})
+
+        expect(
+          BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
+        ).to contain_exactly(
+          [Date.new(2026, 5, 10), "/latest", 1],
+          [Date.new(2026, 5, 14), "/faq", 1],
+        )
+      end
+
+      it "does not publish partial counts while retained referrers are being normalized" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        2.times do
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            url: "/latest",
+            referrer: "https://google.com/search",
+            created_at: "2026-05-12",
+          )
+        end
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollup.all).to be_empty
+
+        job.execute({})
+
+        expect(BrowserPageviewEntryUrlDailyRollup.sum(:count)).to eq(2)
+      end
+
+      it "normalizes retained URLs before reporting them" do
+        event =
+          Fabricate(
+            :browser_pageview_event,
+            url: "https://forum.example/latest/?sort=recent#section",
+          )
+        event.update_columns(normalized_url: nil, normalized_url_version: nil)
+
+        job.execute({})
+
+        event.reload
+        expect(event.normalized_url).to eq("/latest")
+        expect(event.normalized_url_version).to eq(
+          BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+        )
+      end
+
+      it "finishes URL normalization across bounded maintenance runs" do
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        first = Fabricate(:browser_pageview_event, url: "/first")
+        second = Fabricate(:browser_pageview_event, url: "/second")
+        [first, second].each do |event|
+          event.update_columns(normalized_url: nil, normalized_url_version: nil)
+        end
+
+        job.execute({})
+
+        expect(
+          BrowserPageviewEvent.where(normalized_url_version: nil).pluck(:id),
+        ).to contain_exactly(first.id)
+
+        job.execute({})
+
+        expect(BrowserPageviewEvent.where(normalized_url_version: nil)).to be_empty
+      end
+
+      it "updates historical counts when URL normalization changes" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        raw = "https://forum.example/latest/?sort=recent#section"
+        changed_raw = "https://forum.example/top/"
+        event = Fabricate(:browser_pageview_event, url: raw, created_at: "2026-05-10")
+        job.execute({})
+        event.update_column(:url, changed_raw)
+
+        stub_const(
+          BrowserPageviewEventUrlNormalizer,
+          "SITE_PATH_VERSION",
+          BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION + 1,
+        ) do
+          job.execute({})
+
+          event.reload
+          expect(event.normalized_url).to eq(
+            BrowserPageviewEventUrlNormalizer.normalize_site_path(changed_raw),
+          )
+          expect(event.normalized_url_version).to eq(
+            BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+          )
+          expect(
+            BrowserPageviewEntryUrlDailyRollup.pluck(:date, :entry_url, :count),
+          ).to contain_exactly([Date.new(2026, 5, 10), "/top", 1])
+        end
+      end
+
+      it "removes a historical entry after interrupted referrer normalization resumes" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        event =
+          Fabricate(
+            :browser_pageview_event,
+            url: "/latest",
+            referrer: nil,
+            created_at: "2026-05-10",
+          )
+        job.execute({})
+        event.update_columns(
+          referrer: "https://test.localhost/top",
+          normalized_referrer: nil,
+          normalized_referrer_version: nil,
+        )
+
+        BrowserPageviewEntryUrlDailyRollup.stubs(:recompute).raises("entry rollup boom")
+        expect { job.execute({}) }.to raise_error("entry rollup boom")
+        expect(event.reload.normalized_referrer_version).to be_nil
+
+        BrowserPageviewEntryUrlDailyRollup.unstub(:recompute)
+        job.execute({})
+
+        expect(event.reload.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
+        expect(BrowserPageviewEntryUrlDailyRollup.where(date: "2026-05-10")).to be_empty
+      end
+
+      it "replaces a historical entry after interrupted URL normalization resumes" do
+        freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
+        event = Fabricate(:browser_pageview_event, url: "/latest", created_at: "2026-05-10")
+        job.execute({})
+        event.update_columns(url: "/top", normalized_url: nil, normalized_url_version: nil)
+
+        BrowserPageviewEntryUrlDailyRollup.stubs(:recompute).raises("entry rollup boom")
+        expect { job.execute({}) }.to raise_error("entry rollup boom")
+        expect(event.reload.normalized_url_version).to be_nil
+
+        BrowserPageviewEntryUrlDailyRollup.unstub(:recompute)
+        job.execute({})
+
+        expect(event.reload.normalized_url_version).to eq(
+          BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
+        )
+        expect(BrowserPageviewEntryUrlDailyRollup.pluck(:entry_url, :count)).to eq([["/top", 1]])
+      end
+
+      it "leaves expired URLs unchanged" do
+        event = Fabricate(:browser_pageview_event, url: "/expired", created_at: 4.months.ago)
+        event.update_columns(normalized_url: nil, normalized_url_version: nil)
+
+        job.execute({})
+
+        expect(event.reload.normalized_url_version).to be_nil
+      end
+    end
+
+    context "when backfilling browsers" do
+      it "resumes bounded batches and classifies unknown user agents" do
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        edge =
+          Fabricate(
+            :browser_pageview_event,
+            user_agent: "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0",
+            browser: nil,
+          )
+        unknown =
+          Fabricate(
+            :browser_pageview_event,
+            user_agent: "Discourse/163 CFNetwork/978.0.7 Darwin/18.6.0",
+            browser: nil,
+          )
+
+        job.execute({})
+
+        expect([edge.reload.browser, unknown.reload.browser]).to eq([nil, "unknown"])
+
+        job.execute({})
+
+        expect(edge.reload.browser).to eq("edge")
+      end
+    end
+  end
+end

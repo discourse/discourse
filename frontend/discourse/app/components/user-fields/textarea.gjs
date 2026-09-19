@@ -1,7 +1,7 @@
 import { Textarea } from "@ember/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import InputTip from "discourse/components/input-tip";
+import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 import UserFieldBase from "./base";
 
@@ -9,10 +9,10 @@ export default class UserFieldTextArea extends UserFieldBase {
   <template>
     <div class="controls">
       <Textarea
-        id={{concat "user-" this.elementId}}
-        @value={{this.value}}
         class="form-template-field__textarea"
+        id={{concat "user-" this.elementId}}
         maxlength={{this.site.user_field_max_length}}
+        @value={{this.value}}
       />
       <label
         class="control-label alt-placeholder"
@@ -23,7 +23,7 @@ export default class UserFieldTextArea extends UserFieldBase {
           {{i18n "user_fields.optional"}}{{/unless~}}
       </label>
       {{#if this.validation.failed}}
-        <InputTip @validation={{this.validation}} />
+        <DInputTip @validation={{this.validation}} />
       {{else}}
         <div class="instructions">{{trustHTML this.field.description}}</div>
       {{/if}}

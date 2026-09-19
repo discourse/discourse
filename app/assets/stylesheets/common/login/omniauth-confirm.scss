@@ -168,7 +168,7 @@ body.no-ember:has(.omniauth-confirm) {
     &.btn-primary {
       background: var(--omniauth-primary);
       color: #fff;
-      border: none;
+      border: var(--d-button-primary-border);
 
       &:hover,
       &:focus {

@@ -36,7 +36,12 @@ export default class CardContentsBase extends Component {
   @service site;
   @service siteSettings;
 
+  canShowWhenUserProfilesHidden = false;
   elementId = null; //click detection added for data-{elementId}
+  eventPrefix = "user-card";
+  menuIdentifier = "usercard";
+  showCardBeforeLoad = true;
+  triggeringLinkSelector = null;
 
   visible = false;
   username = null;
@@ -59,63 +64,6 @@ export default class CardContentsBase extends Component {
   @computed("router.currentRouteName")
   get viewingTopic() {
     return /^topic\./.test(this.router?.currentRouteName);
-  }
-
-  _show(username, target, event) {
-    // No user card for anon
-    if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      return true;
-    }
-
-    username = escapeExpression(username.toString());
-
-    // Don't show if nested
-    if (target.closest(".card-content")) {
-      this._close();
-      DiscourseURL.routeTo(target.href);
-      return false;
-    }
-
-    this.appEvents.trigger("card:show", username, target, event);
-
-    const postId = target.closest("article")?.dataset?.postId || null;
-
-    if (this.visible) {
-      this._close();
-      if (target === this.cardTarget) {
-        return;
-      }
-    }
-
-    const post =
-      this.viewingTopic && postId
-        ? this.postStream.findLoadedPost(postId)
-        : null;
-
-    this.setProperties({
-      username,
-      loading: username,
-      cardTarget: target,
-      post,
-    });
-
-    document.querySelector(".card-cloak")?.classList.add("--visible");
-
-    this.appEvents.trigger("user-card:show", { username });
-    // Using `next()` to optimise INP
-    next(() => {
-      this._positionCard(target, event);
-      this._showCallback(username).then((user) => {
-        this.appEvents.trigger("user-card:after-show", { user });
-      });
-    });
-
-    // We bind scrolling on mobile after cards are shown to hide them if user scrolls
-    if (this.site.mobileView) {
-      this._bindMobileScroll();
-    }
-
-    return false;
   }
 
   didInsertElement() {
@@ -143,6 +91,112 @@ export default class CardContentsBase extends Component {
     );
 
     this.appEvents.on("card:close", this, "_close");
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    document.removeEventListener("pointerdown", this._clickOutsideHandler);
+    document.removeEventListener("keyup", this._escListener);
+
+    _cardClickListenerSelectors.forEach((selector) => {
+      document
+        .querySelector(selector)
+        ?.removeEventListener("click", this._cardClickHandler);
+    });
+
+    this.appEvents.off(
+      `d-editor:preview-click-${this.elementId}`,
+      this,
+      "_previewClick"
+    );
+
+    this.appEvents.off(
+      `topic-header:trigger-${this.elementId}`,
+      this,
+      "_topicHeaderTrigger"
+    );
+
+    this.appEvents.off("card:close", this, "_close");
+    this._hide();
+  }
+
+  _show(username, target, event) {
+    if (
+      this.siteSettings.hide_user_profiles_from_public &&
+      !this.currentUser &&
+      !this.canShowWhenUserProfilesHidden
+    ) {
+      return true;
+    }
+
+    username = escapeExpression(username.toString());
+
+    // Don't show if nested
+    if (target.closest(".card-content")) {
+      this._close();
+      DiscourseURL.routeTo(target.href);
+      return false;
+    }
+
+    this.appEvents.trigger("card:show", username, target, event);
+
+    const postId = target.closest("article")?.dataset?.postId || null;
+
+    if (this.visible) {
+      this._close();
+      if (target === this.cardTarget) {
+        return;
+      }
+    }
+
+    const post =
+      this.viewingTopic && postId
+        ? this.postStream?.findLoadedPost(postId)
+        : null;
+
+    this.setProperties({
+      username,
+      loading: username,
+      cardTarget: target,
+      post,
+    });
+
+    if (this.eventPrefix) {
+      this.appEvents.trigger(`${this.eventPrefix}:show`, { username });
+    }
+    // Using `next()` to optimise INP
+    next(async () => {
+      if (this.isDestroying || this.cardTarget !== target) {
+        return;
+      }
+
+      if (this.showCardBeforeLoad) {
+        this._positionCard(target, event);
+      }
+
+      const user = await this._showCallback(username);
+
+      if (
+        !this.showCardBeforeLoad &&
+        this.visible &&
+        this.cardTarget === target &&
+        !this.isDestroying
+      ) {
+        this._positionCard(target, event);
+      }
+
+      if (this.eventPrefix) {
+        this.appEvents.trigger(`${this.eventPrefix}:after-show`, { user });
+      }
+    });
+
+    // We bind scrolling on mobile after cards are shown to hide them if user scrolls
+    if (this.site.mobileView) {
+      this._bindMobileScroll();
+    }
+
+    return false;
   }
 
   @bind
@@ -182,6 +236,8 @@ export default class CardContentsBase extends Component {
         event.preventDefault();
         event.stopPropagation();
       }
+
+      return true;
     }
 
     return false;
@@ -210,11 +266,13 @@ export default class CardContentsBase extends Component {
   }
 
   async _positionCard(target) {
+    document.querySelector(".card-cloak")?.classList.add("--visible");
+
     if (this.site.desktopView) {
       this._menuInstance = await this.menu.show(target, {
         content: this.element,
         autoUpdate: { ancestorScroll: false, layoutShift: false },
-        identifier: "usercard",
+        identifier: this.menuIdentifier,
         padding: {
           top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),
           right: 10,
@@ -235,7 +293,7 @@ export default class CardContentsBase extends Component {
       this._menuInstance = await this.menu.show(target, {
         content: this.element,
         strategy: "fixed",
-        identifier: "usercard",
+        identifier: this.menuIdentifier,
         computePosition: (content) => {
           content.style.left = "10px";
           content.style.right = "10px";
@@ -286,41 +344,15 @@ export default class CardContentsBase extends Component {
     this.appEvents.trigger("card:hide");
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    document.removeEventListener("pointerdown", this._clickOutsideHandler);
-    document.removeEventListener("keyup", this._escListener);
-
-    _cardClickListenerSelectors.forEach((selector) => {
-      document
-        .querySelector(selector)
-        ?.removeEventListener("click", this._cardClickHandler);
-    });
-
-    this.appEvents.off(
-      `d-editor:preview-click-${this.elementId}`,
-      this,
-      "_previewClick"
-    );
-
-    this.appEvents.off(
-      `topic-header:trigger-${this.elementId}`,
-      this,
-      "_topicHeaderTrigger"
-    );
-
-    this.appEvents.off("card:close", this, "_close");
-    this._hide();
-  }
-
   @bind
   _clickOutsideHandler(event) {
     if (
-      !this.visible ||
+      (!this.visible && !this.loading) ||
       event.target
         .closest(`[data-${this.elementId}]`)
         ?.getAttribute(`data-${this.elementId}`) ||
+      (this.triggeringLinkSelector &&
+        event.target.closest(this.triggeringLinkSelector)) ||
       event.target.closest(`a.${this.triggeringLinkClass}`) ||
       event.target.closest(`#${this.elementId}`)
     ) {
@@ -332,7 +364,7 @@ export default class CardContentsBase extends Component {
 
   @bind
   _escListener(event) {
-    if (this.visible && event.key === "Escape") {
+    if ((this.visible || this.loading) && event.key === "Escape") {
       this.cardTarget?.focus();
       this._close();
     }

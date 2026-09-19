@@ -1,0 +1,296 @@
+plugins:
+  automation:
+    tables:
+      - discourse_automation_automations
+      - discourse_automation_fields
+      - discourse_automation_pending_automations
+      - discourse_automation_pending_pms
+      - discourse_automation_stats
+      - discourse_automation_user_global_notices
+    columns: {}
+  boards:
+    tables:
+      - discourse_kanban_board_histories
+      - discourse_kanban_boards
+      - discourse_kanban_card_histories
+      - discourse_kanban_cards
+      - discourse_kanban_columns
+    columns: {}
+  chat:
+    tables:
+      - chat_channel_archives
+      - chat_channel_custom_fields
+      - chat_channels
+      - chat_drafts
+      - chat_mention_notifications
+      - chat_mentions
+      - chat_message_custom_fields
+      - chat_message_hotlinked_media
+      - chat_message_interactions
+      - chat_message_links
+      - chat_message_reactions
+      - chat_message_revisions
+      - chat_message_search_data
+      - chat_messages
+      - chat_pinned_messages
+      - chat_thread_custom_fields
+      - chat_threads
+      - chat_webhook_events
+      - direct_message_channels
+      - direct_message_users
+      - incoming_chat_webhooks
+      - user_chat_channel_memberships
+      - user_chat_thread_memberships
+    columns:
+      user_options:
+        - chat_announce_new_messages
+        - chat_channel_list_filter
+        - chat_channel_list_filter_dms
+        - chat_channel_list_filter_starred
+        - chat_channel_list_sort
+        - chat_channel_list_sort_dms
+        - chat_channel_list_sort_starred
+        - chat_email_frequency
+        - chat_enabled
+        - chat_header_indicator_preference
+        - chat_new_message_sound
+        - chat_quick_reaction_type
+        - chat_quick_reactions_custom
+        - chat_send_shortcut
+        - chat_separate_sidebar_mode
+        - chat_sound
+        - dismissed_channel_retention_reminder
+        - dismissed_dm_retention_reminder
+        - ignore_channel_wide_mention
+        - only_chat_push_notifications
+        - show_thread_title_prompts
+  discourse-adplugin:
+    tables:
+      - ad_plugin_house_ads
+      - ad_plugin_house_ads_categories
+      - ad_plugin_house_ads_groups
+      - ad_plugin_house_ads_routes
+      - ad_plugin_impressions
+    columns: {}
+  discourse-ai:
+    tables:
+      - ai_agent_mcp_servers
+      - ai_agents
+      - ai_api_audit_logs
+      - ai_api_request_stats
+      - ai_artifact_key_values
+      - ai_artifact_versions
+      - ai_artifacts
+      - ai_document_fragments_embeddings
+      - ai_mcp_oauth_tokens
+      - ai_mcp_servers
+      - ai_moderation_settings
+      - ai_post_image_captions
+      - ai_posts_embeddings
+      - ai_secrets
+      - ai_spam_logs
+      - ai_summaries
+      - ai_tool_actions
+      - ai_tool_secret_bindings
+      - ai_tools
+      - ai_topics_embeddings
+      - ask_ai_logs
+      - ask_ai_report_subject_asks
+      - ask_ai_report_subjects
+      - ask_ai_reports
+      - chat_message_custom_prompts
+      - classification_results
+      - completion_prompts
+      - discourse_ai_ai_bot_conversation_stars
+      - embedding_definitions
+      - inferred_concept_posts
+      - inferred_concept_topics
+      - inferred_concepts
+      - llm_credit_allocations
+      - llm_credit_daily_usages
+      - llm_feature_credit_costs
+      - llm_models
+      - llm_quota_usages
+      - llm_quotas
+      - model_accuracies
+      - post_custom_prompts
+      - rag_document_fragments
+      - rag_document_sources
+      - shared_ai_conversations
+    columns:
+      user_options:
+        - ai_ask_ai_default
+        - ai_search_discoveries
+        - auto_image_caption
+  discourse-assign:
+    tables:
+      - assignments
+      - silenced_assignments
+    columns:
+      groups:
+        - assignable_level
+      user_options:
+        - notification_level_when_assigned
+  discourse-data-explorer:
+    tables:
+      - data_explorer_queries
+      - data_explorer_query_groups
+      - data_explorer_query_stats
+    columns: {}
+  discourse-events:
+    tables:
+      - calendar_events
+      - discourse_calendar_disabled_holidays
+      - discourse_calendar_post_event_dates
+      - discourse_post_event_events
+      - discourse_post_event_hosts
+      - discourse_post_event_invitees
+      - livestream_topic_chat_channels
+    columns:
+      user_options:
+        - event_reminder_preference
+  discourse-gamification:
+    tables:
+      - gamification_leaderboard_scores
+      - gamification_leaderboards
+      - gamification_score_events
+      - gamification_scores
+    columns:
+      directory_items:
+        - gamification_score
+  discourse-github:
+    tables:
+      - github_commits
+      - github_repos
+    columns: {}
+  discourse-policy:
+    tables:
+      - policy_users
+      - post_policies
+      - post_policy_groups
+    columns:
+      user_options:
+        - policy_email_frequency
+  discourse-post-voting:
+    tables:
+      - post_voting_comment_custom_fields
+      - post_voting_comments
+      - post_voting_votes
+    columns:
+      posts:
+        - qa_vote_count
+  discourse-reactions:
+    tables:
+      - discourse_reactions_reaction_users
+      - discourse_reactions_reactions
+    columns: {}
+  discourse-rewind:
+    tables: []
+    columns:
+      user_options:
+        - discourse_rewind_dismissed_at
+        - discourse_rewind_enabled
+        - discourse_rewind_share_publicly
+  discourse-rss-polling:
+    tables:
+      - discourse_rss_polling_poll_attempts
+      - discourse_rss_polling_rss_feeds
+    columns: {}
+  discourse-solved:
+    tables:
+      - discourse_solved_shared_issues
+      - discourse_solved_solved_topics
+      - discourse_solved_topic_answers
+    columns:
+      directory_items:
+        - solutions
+      user_options:
+        - notify_on_solved
+  discourse-subscriptions:
+    tables:
+      - discourse_subscriptions_customers
+      - discourse_subscriptions_products
+      - discourse_subscriptions_subscriptions
+    columns: {}
+  discourse-templates:
+    tables:
+      - discourse_templates_usage_count
+    columns: {}
+  discourse-topic-voting:
+    tables:
+      - topic_voting_category_settings
+      - topic_voting_topic_vote_count
+      - topic_voting_votes
+    columns: {}
+  discourse-workflows:
+    tables:
+      - discourse_workflows_ai_authoring_sessions
+      - discourse_workflows_credentials
+      - discourse_workflows_data_tables
+      - discourse_workflows_execution_data
+      - discourse_workflows_execution_stats
+      - discourse_workflows_executions
+      - discourse_workflows_tags
+      - discourse_workflows_variables
+      - discourse_workflows_webhooks
+      - discourse_workflows_workflow_call_runs
+      - discourse_workflows_workflow_dependencies
+      - discourse_workflows_workflow_publish_history
+      - discourse_workflows_workflow_tags
+      - discourse_workflows_workflow_versions
+      - discourse_workflows_workflows
+    columns: {}
+  poll:
+    tables:
+      - poll_options
+      - poll_votes
+      - polls
+    columns: {}
+  voice:
+    tables:
+      - voice_co_presences
+      - voice_invites
+      - voice_recordings
+      - voice_room_memberships
+      - voice_rooms
+      - voice_sessions
+    columns: {}
+plugin_checksums:
+  automation: d168107063ed75d7e568f1c1250866f8
+  boards: 7196f10413674b3c08480ff2aa42b2e8
+  chat: 9c46fca8e1650c913c2b249268020d77
+  discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
+  discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
+  discourse-ai: e99c584c9a721aa1e4caa3ad781f1d17
+  discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
+  discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
+  discourse-captcha: fd538c1338062354276ccfda4cbafd55
+  discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
+  discourse-data-explorer: fb71ab79dbe07af481ba147ea526406f
+  discourse-events: 4bd525eef635a0ca1e118ca237cfcef7
+  discourse-gamification: 633256e241b030fddcc059076f7474f8
+  discourse-github: 3bd17b2c09828e232e7565edbf2c746f
+  discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20
+  discourse-lazy-videos: a916a4f265d1cc6f99a3e53f5bcd1e9e
+  discourse-local-dates: 18d3ec627bf8546fe13bae24c6a5bb6c
+  discourse-microsoft-auth: 3a95a5b50edc156ad06f40aadda7d6bc
+  discourse-narrative-bot: '086bde6a2d7bdddf802800977eb727ac'
+  discourse-oauth2-basic: a9151339b643380530db0eb6548bac36
+  discourse-patreon: f0113218c1d5b0d127a6021c5a49d2af
+  discourse-policy: 41786c59418426f1933f8b95f6c00e18
+  discourse-post-voting: ece13b87f2fbac3e64f8aa3abe07fe3d
+  discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
+  discourse-rewind: 1e0f2acf6e8409f2d2f011e14405fa06
+  discourse-rss-polling: 526db84c3d2ade0fa03497031fea2333
+  discourse-solved: 3ebebf25c6eebc06b980f3bb02b4fa89
+  discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
+  discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
+  discourse-topic-voting: 9d0535677407702fa312965e20ac8fcb
+  discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
+  discourse-workflows: 61c0d4b94a17ad401490893981b23dd4
+  discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
+  poll: e481f2cfa0e7c22778dee12a1e9c33c6
+  styleguide: 0fd92e5ef0c99ee047f206961a587544
+  voice: cf9c46b63d1ee4c208e822201838cd52
+failed_plugins: []
+incomplete: false

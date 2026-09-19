@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import number from "discourse/helpers/number";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class WritingAnalysis extends Component {
@@ -17,32 +17,6 @@ export default class WritingAnalysis extends Component {
   constructor() {
     super(...arguments);
     this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-
-  @action
-  setupKeyListener(element) {
-    document.addEventListener("keydown", this.handleKeyDown);
-    this.element = element;
-  }
-
-  @action
-  teardownKeyListener() {
-    document.removeEventListener("keydown", this.handleKeyDown);
-  }
-
-  handleKeyDown(event) {
-    if (event.key === "F1") {
-      event.preventDefault();
-      this.cycleColor();
-    }
-  }
-
-  @action
-  cycleColor() {
-    this.currentColorIndex =
-      (this.currentColorIndex + 1) % this.terminalColors.length;
-    const newColor = this.terminalColors[this.currentColorIndex];
-    document.documentElement.style.setProperty("--rewind-green", newColor);
   }
 
   get scoreLabel() {
@@ -78,6 +52,32 @@ export default class WritingAnalysis extends Component {
       this.args.report.data.total_words >= 100 &&
       this.args.report.data.total_posts >= 5
     );
+  }
+
+  @action
+  setupKeyListener(element) {
+    document.addEventListener("keydown", this.handleKeyDown);
+    this.element = element;
+  }
+
+  @action
+  teardownKeyListener() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+
+  handleKeyDown(event) {
+    if (event.key === "F1") {
+      event.preventDefault();
+      this.cycleColor();
+    }
+  }
+
+  @action
+  cycleColor() {
+    this.currentColorIndex =
+      (this.currentColorIndex + 1) % this.terminalColors.length;
+    const newColor = this.terminalColors[this.currentColorIndex];
+    document.documentElement.style.setProperty("--rewind-green", newColor);
   }
 
   <template>
@@ -155,14 +155,14 @@ export default class WritingAnalysis extends Component {
                 <div class="writing-analysis__stats-label">{{i18n
                     "discourse_rewind.reports.writing_analysis.avg_post_length"
                   }}</div>
-                <div class="writing-analysis__stats-value">{{number
+                <div class="writing-analysis__stats-value">{{dNumber
                     @report.data.average_post_length
                   }}</div>
 
                 <div class="writing-analysis__stats-label">{{i18n
                     "discourse_rewind.reports.writing_analysis.readability_score_label"
                   }}</div>
-                <div class="writing-analysis__stats-value">{{number
+                <div class="writing-analysis__stats-value">{{dNumber
                     @report.data.readability_score
                   }}/100</div>
               </div>

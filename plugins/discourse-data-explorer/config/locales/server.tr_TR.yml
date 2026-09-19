@@ -34,6 +34,7 @@ tr_TR:
         title: Veri Gezgini sonuçlarını içeren bir konuda gönderi planlayın
         description: Belirli bir konuya gönderilen planlanmış raporları alın
   data_explorer:
+    admin_dashboard_label: "Veri Gezgini"
     report_generator:
       private_message:
         title: "%{query_name} için planlanmış rapor"

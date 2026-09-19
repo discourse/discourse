@@ -1,0 +1,13 @@
+en:
+  importer:
+    default_step_title: "Importing %{type}"
+    done: "Done. Total runtime: %{runtime}"
+    site_setting_log_message: "Updated by import script"
+    site_settings:
+      id_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original %{type_name} ID '%{original_id}' to Discourse ID"
+      username_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original username '%{original_username}' to Discourse username"
+    fallback_names:
+      user: "user"
+      group: "group"
+      category: "Category"
+      badge: "Badge"

@@ -61,6 +61,14 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
       expect(completion_queue.pop).to eq("second")
     end
 
+    it "maintains the posting thread's locale" do
+      completion_queue = Queue.new
+
+      I18n.with_locale(:fr) { pool.post { completion_queue << I18n.locale } }
+
+      expect(completion_queue.pop).to eq(:fr)
+    end
+
     it "scales up threads when work increases" do
       completion_queue = Queue.new
       blocker_queue = Queue.new

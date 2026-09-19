@@ -1,22 +1,22 @@
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
 import EmailDropdown from "discourse/components/email-dropdown";
 import GoogleIcon from "discourse/components/google-icon";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SaveControls from "discourse/components/save-controls";
-import TextField from "discourse/components/text-field";
-import UserStatusMessage from "discourse/components/user-status-message";
 import UsernamePreference from "discourse/components/username-preference";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import icon from "discourse/helpers/d-icon";
-import dasherize from "discourse/helpers/dasherize";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FlairChooser from "discourse/select-kit/components/flair-chooser";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -36,19 +36,19 @@ export default <template>
           "user.avatar.title"
         }}</label>
       <input
-        type="hidden"
-        id="user-avatar-uploads"
         data-custom-avatar-upload-id={{@controller.model.custom_avatar_upload_id}}
         data-system-avatar-upload-id={{@controller.model.system_avatar_upload_id}}
+        id="user-avatar-uploads"
+        type="hidden"
       />
       <div class="controls">
         {{! we want the "huge" version even though we're downsizing it in CSS }}
-        {{boundAvatar @controller.model "huge"}}
+        {{dBoundAvatar @controller.model "huge"}}
         <DButton
+          class="btn-default pad-left"
+          id="edit-avatar"
           @action={{fn (routeAction "showAvatarSelector") @controller.model}}
           @icon="pencil"
-          id="edit-avatar"
-          class="btn-default pad-left"
         />
       </div>
     </div>
@@ -80,8 +80,8 @@ export default <template>
                       <span>{{i18n "user.email.resent_label"}}</span>
                     {{else}}
                       <button
-                        type="button"
                         class="resend-email-confirmation"
+                        type="button"
                         {{on
                           "click"
                           (fn @controller.resendConfirmationEmail email)
@@ -94,9 +94,9 @@ export default <template>
                 </div>
                 {{#if @controller.model.can_edit_email}}
                   <EmailDropdown
+                    @destroyEmail={{@controller.destroyEmail}}
                     @email={{email}}
                     @setPrimaryEmail={{@controller.setPrimaryEmail}}
-                    @destroyEmail={{@controller.destroyEmail}}
                   />
                 {{/if}}
               </div>
@@ -105,8 +105,8 @@ export default <template>
 
           {{#if @controller.canAddEmail}}
             <div class="controls">
-              <LinkTo @route="preferences.email" @query={{hash new=1}}>
-                {{icon "plus"}}
+              <LinkTo @query={{hash new=1}} @route="preferences.email">
+                {{dIcon "plus"}}
                 {{i18n "user.email.add_email"}}
               </LinkTo>
             </div>
@@ -116,10 +116,10 @@ export default <template>
             <span class="static">{{@controller.model.email}}</span>
             {{#if @controller.model.can_edit_email}}
               <LinkTo
-                @route="preferences.email"
                 class="btn btn-default btn-small btn-icon pad-left no-text"
+                @route="preferences.email"
               >
-                {{icon "pencil"}}
+                {{dIcon "pencil"}}
               </LinkTo>
             {{/if}}
           </div>
@@ -134,11 +134,11 @@ export default <template>
       {{else}}
         <div class="controls">
           <DButton
+            class="btn-default"
             @action={{fn (routeAction "checkEmail") @controller.model}}
-            @title="admin.users.check_email.title"
             @icon="envelope"
             @label="admin.users.check_email.text"
-            class="btn-default"
+            @title="admin.users.check_email.title"
           />
         </div>
       {{/if}}
@@ -166,14 +166,14 @@ export default <template>
             {{#each @controller.authProviders as |authProvider|}}
               {{#if authProvider.account}}
                 <tr
-                  class="{{dasherize authProvider.method.name}}
+                  class="{{dDasherize authProvider.method.name}}
                     account-connected"
                 >
                   <td class="associated-account__icon">
                     {{#if authProvider.method.isGoogle}}
                       <GoogleIcon />
                     {{else}}
-                      {{icon (or authProvider.method.icon "user")}}
+                      {{dIcon (or authProvider.method.icon "user")}}
                     {{/if}}
                   </td>
                   <td>
@@ -197,31 +197,31 @@ export default <template>
                   <td class="associated-account__actions">
                     {{#if authProvider.method.can_revoke}}
                       <DButton
+                        class="btn-danger no-text"
                         @action={{fn
                           @controller.revokeAccount
                           authProvider.account
                         }}
-                        @title="user.associated_accounts.revoke"
-                        @icon="trash-can"
                         @disabled={{get
                           @controller.revoking
                           authProvider.method.name
                         }}
-                        class="btn-danger no-text"
+                        @icon="trash-can"
+                        @title="user.associated_accounts.revoke"
                       />
                     {{/if}}
                   </td>
                 </tr>
               {{else}}
-                <tr class={{dasherize authProvider.method.name}}>
+                <tr class={{dDasherize authProvider.method.name}}>
                   <td
                     class="associated-account__icon
-                      {{dasherize authProvider.method.name}}"
+                      {{dDasherize authProvider.method.name}}"
                   >
                     {{#if authProvider.method.isGoogle}}
                       <GoogleIcon />
                     {{else}}
-                      {{icon (or authProvider.method.icon "user")}}
+                      {{dIcon (or authProvider.method.icon "user")}}
                     {{/if}}
                   </td>
                   <td>
@@ -245,14 +245,14 @@ export default <template>
                   <td class="associated-account__actions">
                     {{#if authProvider.method.can_connect}}
                       <DButton
+                        class="btn-primary"
                         @action={{fn
                           @controller.connectAccount
                           authProvider.method
                         }}
-                        @label="user.associated_accounts.connect"
-                        @icon="plug"
                         @disabled={{@controller.disableConnectButtons}}
-                        class="btn-primary"
+                        @icon="plug"
+                        @label="user.associated_accounts.connect"
                       />
                     {{else}}
                       {{i18n "user.associated_accounts.not_connected"}}
@@ -267,9 +267,9 @@ export default <template>
         <div class="controls">
           <DButton
             @action={{fn (routeAction "checkEmail") @controller.model}}
-            @title="admin.users.check_email.title"
             @icon="envelope"
             @label="admin.users.check_email.text"
+            @title="admin.users.check_email.title"
           />
         </div>
       {{/if}}
@@ -281,10 +281,10 @@ export default <template>
       <label class="control-label">{{i18n "user.name.title"}}</label>
       <div class="controls">
         {{#if @controller.model.can_edit_name}}
-          <TextField
-            @value={{@controller.newNameInput}}
+          <DTextField
             @classNames="input-xxlarge"
             @maxlength="255"
+            @value={{@controller.newNameInput}}
           />
         {{else}}
           <span class="static">{{@controller.model.name}}</span>
@@ -306,10 +306,10 @@ export default <template>
       <label class="control-label">{{i18n "user.title.title"}}</label>
       <div class="controls">
         <ComboBox
-          @value={{@controller.newTitleInput}}
           @content={{@controller.model.availableTitles}}
           @onChange={{fn (mut @controller.newTitleInput)}}
           @options={{hash none="user.title.none"}}
+          @value={{@controller.newTitleInput}}
         />
       </div>
       <div class="instructions">
@@ -323,10 +323,10 @@ export default <template>
       <label class="control-label">{{i18n "user.flair.title"}}</label>
       <div class="controls">
         <FlairChooser
-          @value={{@controller.newFlairGroupId}}
           @content={{@controller.model.availableFlairs}}
           @onChange={{fn (mut @controller.newFlairGroupId)}}
           @options={{hash none="user.flair.none"}}
+          @value={{@controller.newFlairGroupId}}
         />
       </div>
       <div class="instructions">
@@ -340,17 +340,17 @@ export default <template>
       <label class="control-label">{{i18n "user.status.title"}}</label>
       <div class="controls">
         {{#if @controller.newStatus}}
-          <UserStatusMessage
-            @status={{@controller.newStatus}}
+          <DUserStatusMessage
             @showDescription={{true}}
+            @status={{@controller.newStatus}}
           />
         {{else}}
           <span class="static">{{i18n "user.status.not_set"}}</span>
         {{/if}}
         <DButton
+          class="btn-default btn-small pad-left"
           @action={{fn @controller.showUserStatusModal @controller.newStatus}}
           @icon="pencil"
-          class="btn-default btn-small pad-left"
         />
       </div>
     </div>
@@ -364,9 +364,9 @@ export default <template>
       <label class="control-label">{{i18n "user.primary_group.title"}}</label>
       <div class="controls">
         <ComboBox
-          @value={{@controller.newPrimaryGroupInput}}
           @content={{@controller.model.filteredGroups}}
           @options={{hash none="user.primary_group.none"}}
+          @value={{@controller.newPrimaryGroupInput}}
         />
       </div>
     </div>
@@ -382,10 +382,10 @@ export default <template>
         }}</label>
       <div class="controls">
         <DButton
-          @action={{@controller.exportUserArchive}}
-          @label="user.download_archive.button_text"
-          @icon="download"
           class="btn-default btn-request-archive"
+          @action={{@controller.exportUserArchive}}
+          @icon="download"
+          @label="user.download_archive.button_text"
         />
       </div>
       <div class="instructions">
@@ -396,8 +396,8 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-preferences-account"
       @connectorTagName="div"
+      @name="user-preferences-account"
       @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
     />
   </span>
@@ -406,16 +406,16 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   </span>
 
   {{#if @controller.canSaveUser}}
-    <SaveControls
-      @model={{@controller.model}}
+    <DSaveControls
       @action={{@controller.save}}
+      @model={{@controller.model}}
       @saved={{@controller.saved}}
     />
   {{/if}}
@@ -425,11 +425,11 @@ export default <template>
       <br />
       <div class="controls">
         <DButton
+          class="btn-danger"
           @action={{@controller.delete}}
           @disabled={{@controller.deleteDisabled}}
           @icon="trash-can"
           @label="user.delete_account"
-          class="btn-danger"
         />
       </div>
     </div>

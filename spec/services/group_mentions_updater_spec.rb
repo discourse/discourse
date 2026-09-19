@@ -6,7 +6,7 @@ RSpec.describe GroupMentionsUpdater do
   before { Jobs.run_immediately! }
 
   describe ".update" do
-    it "should update valid group mentions" do
+    it "updates valid group mentions" do
       new_group_name = "awesome_team"
       old_group_name = "team"
 
@@ -29,7 +29,7 @@ RSpec.describe GroupMentionsUpdater do
       end
     end
 
-    it "should not update invalid group mentions" do
+    it "does not update invalid group mentions" do
       group = Fabricate(:group, name: "team", mentionable_level: Group::ALIAS_LEVELS[:everyone])
 
       post.update!(raw: "This is not valid@team.com")
@@ -41,7 +41,24 @@ RSpec.describe GroupMentionsUpdater do
       expect(post.reload.raw_mentions).to eq([])
     end
 
-    it "should ignore validations" do
+    it "updates a category description that mentions the group" do
+      group = Fabricate(:group, name: "old_team", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+
+      category = Fabricate(:category_with_definition)
+      first_post = category.topic.first_post
+      first_post.revise(first_post.user, { raw: "This category is managed by @old_team" })
+      category.reload
+
+      expect(category.description).to include("old_team")
+
+      GroupMentionsUpdater.update("new_team", "old_team")
+      category.reload
+
+      expect(category.description).to include("new_team")
+      expect(category.description).not_to include("old_team")
+    end
+
+    it "ignores validations" do
       everyone_mention_level = Group::ALIAS_LEVELS[:everyone]
 
       %w[awesome_team pro_team].each do |name|

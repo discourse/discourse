@@ -29,8 +29,8 @@ export default class AddUserNotesButton extends Component {
 
   <template>
     <ShowUserNotes
-      @show={{this.showUserNotes}}
       @count={{this.userNotesCount}}
+      @show={{this.showUserNotes}}
     />
   </template>
 }

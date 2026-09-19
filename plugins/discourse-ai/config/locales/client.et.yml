@@ -8,6 +8,10 @@ et:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Kuupäev"
+          outcomes:
+            failed: "Ebaõnnestunud"
         reports:
           filters:
             sort_by:
@@ -34,6 +38,19 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      copied: "Kopeeritud"
+      ai_decoded_transcript:
+        type: "Tüüp"
+        error: "Viga"
+        response: "Vastus"
+      ai_tool_approval:
+        loading: "Laadimine..."
+        tool: "Tegevus"
+        user: "Kasutaja"
+        approve: "Kinnita"
+        reject: "Lükka tagasi"
+        approved: "Heakskiidetud"
+        rejected: "Tagasi lükatud"
       llm_selector:
         none: "Pole"
       features:
@@ -44,16 +61,36 @@ et:
         expand_list:
           one: "(veel %{count})"
           other: "(veel %{count})"
+        nav:
+          enabled: "Sisse lülitatud"
         filters:
           all: "Kõik"
           reset: "Nulli"
         search:
           name: "Otsi"
+        image_caption:
+          setting_groups:
+            settings: "Seaded"
         spam:
           name: "Spämm"
       modals:
         select_option: "Vali võimalus..."
       translations:
+        category_scope: "Liigid"
+        model_progress:
+          detail:
+            columns:
+              pending: "Ootel"
+              total: "Kokku"
+          targets:
+            post:
+              title: "Postitust"
+            topic:
+              title: "Teemasid"
+            category:
+              title: "Kategooriad"
+            tag:
+              title: "Sildid"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -78,6 +115,32 @@ et:
         username: "Kasutajanimi"
         total_requests: "Kokku päringuid"
         total: "Kokku"
+      logs:
+        short_title: "Logid"
+        apply: "Rakenda"
+        successful: "Edukas"
+        failed: "Ebaõnnestunud"
+        unknown: "Teadmata"
+        time: "Aeg"
+        when: "Millal"
+        request: "Taotle"
+        provider: "Teenusepakkuja"
+        user: "Kasutaja"
+        context: "Kontekst"
+        topic: "Teema"
+        post: "Postitus"
+        post_short: "Postitus %{id}"
+        actions: "Tegevused"
+        view_details: "Üksikasjad"
+        periods:
+          custom: "Individuaalne"
+        detail:
+          request: "Taotle"
+          response: "Vastus"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Kokkuvõte"
+          save: "Salvesta"
       ai_agent:
         name: "Nimi"
         edit: "Muuda"
@@ -88,6 +151,11 @@ et:
         save: "Salvesta"
         enabled: "Sisse lülitatud?"
         delete: "Kustuta"
+        thinking_effort_options:
+          none: "Pole"
+          medium: "Keskmine"
+          high: "Kõrge"
+          max: "Maksimum"
         response_format:
           open_modal: "Muuda"
         filters:
@@ -129,6 +197,9 @@ et:
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"
+        vision_modes:
+          disabled:
+            title: "Välja lülitatud"
         save: "Salvesta"
         edit: "Muuda"
         delete: Kustuta
@@ -147,7 +218,6 @@ et:
         tests:
           success: "Korras!"
         providers:
-          google: "Google"
           fake: "Individuaalne"
       ai_helper:
         context_menu:
@@ -159,8 +229,6 @@ et:
           cancel: "Loobu"
         thumbnail_suggestions:
           try_again: "Proovi uuesti"
-        image_caption:
-          save_caption: "Salvesta"
       embeddings:
         save: "Salvesta"
         delete: "Kustuta"
@@ -194,8 +262,10 @@ et:
           table:
             total_count: "Kokku"
       discobot_discoveries:
-        regular_results: "Teemasid"
-        collapse: "Ahenda"
-        tooltip:
-          actions:
-            disable: "Keela"
+        legacy:
+          regular_results: "Teemasid"
+          collapse: "Ahenda"
+          tooltip:
+            actions:
+              disable: "Lülita välja"
+        search_messages: "Sõnumid"

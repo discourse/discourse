@@ -45,4 +45,24 @@ RSpec.describe "Last visit" do
 
     expect(channel_page).to have_last_visit_line_at_id(message_4.id)
   end
+
+  it "keeps the last visit line when loading more messages" do
+    past_limit = Chat::MessagesQuery::PAST_MESSAGE_LIMIT
+
+    # more than a page of older messages, then the last read, then a couple
+    # of unread messages for the last visit line
+    messages = Fabricate.times(past_limit + 4, :chat_message, chat_channel: channel_1, user: user_1)
+    channel_1.membership_for(current_user).update!(last_read_message_id: messages[-3].id)
+    first_unread = messages[-2]
+
+    chat_page.visit_channel(channel_1)
+    expect(channel_page).to have_last_visit_line_at_id(first_unread.id)
+    expect(channel_page.messages).to have_no_message(id: messages.first.id)
+
+    # the older page loads in on scroll, and must not wipe the line
+    channel_page.scroll_to_top
+
+    expect(channel_page.messages).to have_message(id: messages.first.id)
+    expect(channel_page).to have_last_visit_line_at_id(first_unread.id)
+  end
 end

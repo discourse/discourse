@@ -56,7 +56,7 @@ describe "Thread indicator for chat messages" do
       )
     end
 
-    it "it shows the reply count but no participant avatars when there is only one participant" do
+    it "shows the reply count but no participant avatars when there is only one participant" do
       single_user_thread =
         chat_thread_chain_bootstrap(channel: channel, users: [current_user], messages_count: 3)
 
@@ -89,7 +89,7 @@ describe "Thread indicator for chat messages" do
       expect(page).not_to have_css(channel_page.message_by_id_selector(new_thread.replies.first))
     end
 
-    xit "increments the indicator when a new reply is sent in the thread" do
+    it "increments the indicator when a new reply is sent in the thread" do
       chat_page.visit_channel(channel)
 
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(

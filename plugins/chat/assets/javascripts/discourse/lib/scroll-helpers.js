@@ -82,24 +82,21 @@ export function scrollListToMessage(
     message.expanded = true;
   }
 
-  next(() => {
-    schedule("afterRender", () => {
-      const messageEl = list.querySelector(
-        `.chat-message-container[data-id='${message.id}']`
-      );
+  if (opts.highlight) {
+    message.highlight();
+  }
 
-      if (!messageEl) {
-        return;
-      }
-
-      if (opts.highlight) {
-        message.highlight();
-      }
-
-      messageEl.scrollIntoView({
-        behavior: "auto",
-        block: opts.position || "center",
-      });
+  const scroll = () => {
+    const element = list.querySelector(
+      `.chat-message-container[data-id='${message.id}']`
+    );
+    element?.scrollIntoView({
+      behavior: "auto",
+      block: opts.position || "center",
     });
-  });
+    return !!element;
+  };
+
+  // The message element may not be present yet - retry once.
+  next(() => scroll() || next(scroll));
 }

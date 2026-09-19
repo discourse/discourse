@@ -1,31 +1,31 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.groups.title"}}
     @descriptionLabel={{i18n "admin.config.groups.header_description"}}
     @hideTabs={{@controller.hideTabs}}
+    @titleLabel={{i18n "admin.config.groups.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/groups"
         @label={{i18n "admin.config.groups.title"}}
+        @path="/admin/groups"
       />
     </:breadcrumbs>
     <:tabs>
-      <NavItem
-        @route="adminGroups.settings"
-        @label="settings"
+      <DNavItem
         class="admin-groups-tabs__settings"
+        @label="settings"
+        @route="adminGroups.settings"
       />
-      <NavItem
-        @route="adminGroups.index"
-        @label="admin.config.groups.title"
+      <DNavItem
         class="admin-groups-tabs__index"
+        @label="admin.config.groups.title"
+        @route="adminGroups.index"
       />
     </:tabs>
   </DPageHeader>

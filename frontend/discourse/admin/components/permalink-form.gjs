@@ -6,10 +6,10 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import Permalink from "discourse/admin/models/permalink";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import { bind } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -103,37 +103,37 @@ export default class PermalinkForm extends Component {
       <div class="inline-form">
         <label>{{i18n "admin.permalink.form.label"}}</label>
 
-        <TextField
-          @value={{this.url}}
+        <DTextField
+          class="permalink-url"
+          @autocapitalize="off"
+          @autocorrect="off"
           @disabled={{this.formSubmitted}}
           @placeholderKey="admin.permalink.url"
-          @autocorrect="off"
-          @autocapitalize="off"
-          class="permalink-url"
+          @value={{this.url}}
         />
 
         <ComboBox
-          @content={{this.permalinkTypes}}
-          @value={{this.permalinkType}}
-          @onChange={{fn (mut this.permalinkType)}}
           class="permalink-type"
+          @content={{this.permalinkTypes}}
+          @onChange={{fn (mut this.permalinkType)}}
+          @value={{this.permalinkType}}
         />
 
-        <TextField
-          @value={{this.permalinkTypeValue}}
-          @disabled={{this.formSubmitted}}
-          @placeholderKey={{this.permalinkTypePlaceholder}}
-          @autocorrect="off"
-          @autocapitalize="off"
-          @keyDown={{this.submitFormOnEnter}}
+        <DTextField
           class="permalink-destination"
+          @autocapitalize="off"
+          @autocorrect="off"
+          @disabled={{this.formSubmitted}}
+          @keyDown={{this.submitFormOnEnter}}
+          @placeholderKey={{this.permalinkTypePlaceholder}}
+          @value={{this.permalinkTypeValue}}
         />
 
         <DButton
+          class="permalink-add"
           @action={{this.onSubmit}}
           @disabled={{this.formSubmitted}}
           @label="admin.permalink.form.add"
-          class="permalink-add"
         />
       </div>
     </div>

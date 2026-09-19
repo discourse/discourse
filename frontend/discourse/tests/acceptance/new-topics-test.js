@@ -5,7 +5,7 @@ import { i18n } from "discourse-i18n";
 
 acceptance("New Topics - New new view enabled", function (needs) {
   needs.user({
-    new_new_view_enabled: true,
+    unified_new_enabled: true,
   });
 
   needs.pretender((server, helper) => {
@@ -20,6 +20,6 @@ acceptance("New Topics - New new view enabled", function (needs) {
     await visit("/new");
     assert
       .dom(".topic-list-bottom .empty-state__title")
-      .hasText(i18n("topics.none.education.new_new"));
+      .hasText(i18n("topics.none.education.unified_new"));
   });
 });

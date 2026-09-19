@@ -9,11 +9,11 @@ end
 # Table name: linked_topics
 #
 #  id                :bigint           not null, primary key
-#  topic_id          :bigint           not null
-#  original_topic_id :bigint           not null
 #  sequence          :integer          not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  original_topic_id :bigint           not null
+#  topic_id          :bigint           not null
 #
 # Indexes
 #

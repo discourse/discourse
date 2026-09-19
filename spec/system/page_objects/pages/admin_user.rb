@@ -52,6 +52,14 @@ module PageObjects
         find(".btn-danger.unsilence-user").click
       end
 
+      def click_approve_button
+        find(".display-row .controls .btn", text: I18n.t("admin_js.admin.user.approve")).click
+      end
+
+      def has_approve_success?
+        has_css?(".display-row .controls", text: I18n.t("admin_js.admin.user.approve_success"))
+      end
+
       def custom_groups_chooser
         PageObjects::Components::SelectKit.new(".admin-user__custom-groups .group-chooser")
       end
@@ -80,6 +88,10 @@ module PageObjects
         find(".penalty-similar-users .alert-warning")["innerHTML"]
       end
 
+      def open_upcoming_changes_modal
+        find(".upcoming-changes-info .btn-default").click
+      end
+
       class UpcomingChangeRow < PageObjects::Components::Base
         attr_reader :element
 
@@ -88,14 +100,14 @@ module PageObjects
         end
 
         def enabled?
-          expect(element.find(".upcoming-change-enabled-status")).to have_content(
-            I18n.t("js.yes_value"),
+          expect(element.find(".upcoming-change-enabled-status")).to have_css(
+            ".emoji[alt='white_check_mark']",
           )
         end
 
         def disabled?
-          expect(element.find(".upcoming-change-enabled-status")).to have_content(
-            I18n.t("js.no_value"),
+          expect(element.find(".upcoming-change-enabled-status")).to have_css(
+            ".emoji[alt='cross_mark']",
           )
         end
 
@@ -121,20 +133,20 @@ module PageObjects
 
       def has_upcoming_change?(change_name)
         has_css?(
-          ".user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
+          ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
         )
       end
 
       def has_no_upcoming_change?(change_name)
         has_no_css?(
-          ".user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
+          ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
         )
       end
 
       def upcoming_change(change_name)
         row =
           find(
-            ".user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
+            ".admin-user-upcoming-changes-modal .user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
           )
         UpcomingChangeRow.new(row)
       end

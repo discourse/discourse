@@ -5,10 +5,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import { PROVIDER_LEARN_MORE_URLS } from "../../lib/utilities";
 import SlackProviderSetupForm from "../provider-setup-form/slack";
@@ -153,15 +153,15 @@ export default class SetupProvider extends Component {
 
   <template>
     <DModal
+      class="chat-integration-setup-provider-modal"
+      id="chat-integration-setup-provider-modal"
+      @closeModal={{@closeModal}}
       @title={{i18n
         "chat_integration.setup_provider_modal.title"
         provider=(i18n
           (concat "chat_integration.provider." @model.provider.name ".title")
         )
       }}
-      @closeModal={{@closeModal}}
-      id="chat-integration-setup-provider-modal"
-      class="chat-integration-setup-provider-modal"
     >
       <:body>
         <p class="chat-integration-setup-provider-modal__instructions">
@@ -173,23 +173,23 @@ export default class SetupProvider extends Component {
           {{trustHTML (i18n "learn_more_with_link" url=this.learnMoreUrl)}}
         </p>
         <Form
+          @onRegisterApi={{this.registerFormApi}}
           @onSubmit={{this.save}}
           @validate={{this.validateForm}}
-          @onRegisterApi={{this.registerFormApi}}
           as |form|
         >
           <this.formComponent @form={{form}} />
 
           <form.Actions>
             <form.Submit
-              @label="chat_integration.setup_provider_modal.confirm_setup"
               class="btn-primary"
               id="save-provider"
+              @label="chat_integration.setup_provider_modal.confirm_setup"
             />
             <form.Button
-              @label="cancel"
-              @action={{@closeModal}}
               class="btn-default"
+              @action={{@closeModal}}
+              @label="cancel"
             />
           </form.Actions>
         </Form>

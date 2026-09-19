@@ -3,7 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
+import GroupLink from "discourse/components/group-link";
+import { groupPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 class ExpandableList extends Component {
@@ -58,8 +60,8 @@ class ExpandableList extends Component {
     {{#if this.hasMore}}
       <DButton
         class="btn-flat ai-expanded-list__toggle-button"
-        @translatedLabel={{this.expandToggleLabel}}
         @action={{this.toggleExpanded}}
+        @translatedLabel={{this.expandToggleLabel}}
       />
     {{/if}}
   </template>
@@ -113,9 +115,9 @@ export default class AiFeatureCard extends Component {
               as |agent index isLastItem|
             >
               <LinkTo
-                @route="adminPlugins.show.discourse-ai-agents.edit"
-                @model={{agent.id}}
                 class="ai-feature-card__agent-link"
+                @model={{agent.id}}
+                @route="adminPlugins.show.discourse-ai-agents.edit"
               >
                 {{concat agent.name (unless (isLastItem index) ", ")}}
               </LinkTo>
@@ -140,9 +142,9 @@ export default class AiFeatureCard extends Component {
               as |llm index isLastItem|
             >
               <LinkTo
-                @route="adminPlugins.show.discourse-ai-llms.edit"
-                @model={{llm.id}}
                 class="ai-feature-card__llm-link"
+                @model={{llm.id}}
+                @route="adminPlugins.show.discourse-ai-llms.edit"
               >
                 {{concat llm.name (unless (isLastItem index) ", ")}}
               </LinkTo>
@@ -162,7 +164,15 @@ export default class AiFeatureCard extends Component {
               {{#if (this.hasGroups @feature)}}
                 <ul class="ai-feature-card__item-groups">
                   {{#each (this.groupList @feature) as |group|}}
-                    <li>{{group.name}}</li>
+                    <li>
+                      <GroupLink
+                        class="mention-group"
+                        @href={{groupPath group.name}}
+                        @name={{group.name}}
+                      >
+                        {{group.name}}
+                      </GroupLink>
+                    </li>
                   {{/each}}
                 </ul>
               {{else}}

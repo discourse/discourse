@@ -16,11 +16,11 @@ end
 # Table name: chat_message_reactions
 #
 #  id              :bigint           not null, primary key
-#  chat_message_id :bigint
-#  user_id         :integer
 #  emoji           :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  chat_message_id :bigint
+#  user_id         :integer
 #
 # Indexes
 #

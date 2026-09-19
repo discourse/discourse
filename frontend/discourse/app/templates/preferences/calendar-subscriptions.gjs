@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import CalendarSubscriptionUrl from "discourse/components/calendar-subscription-url";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CalendarSubscriptions extends Component {
@@ -76,6 +76,10 @@ export default class CalendarSubscriptions extends Component {
   }
 
   <template>
+    <PluginOutlet
+      @name="calendar-preferences"
+      @outletArgs={{lazyHash model=@controller.model}}
+    />
     <div class="calendar-subscriptions">
       <p class="calendar-subscriptions__description">
         {{i18n "user.calendar_subscriptions.description"}}
@@ -84,15 +88,15 @@ export default class CalendarSubscriptions extends Component {
       {{#if this.urls}}
         <div class="calendar-subscriptions__urls">
           <div class="alert alert-info calendar-subscriptions__warning">
-            {{icon "triangle-exclamation"}}
+            {{dIcon "triangle-exclamation"}}
             {{i18n "user.calendar_subscriptions.urls_warning"}}
           </div>
 
           <CalendarSubscriptionUrl
-            @label={{i18n "user.calendar_subscriptions.bookmarks"}}
             @description={{i18n
               "user.calendar_subscriptions.bookmarks_description"
             }}
+            @label={{i18n "user.calendar_subscriptions.bookmarks"}}
             @url={{this.urls.bookmarks}}
           />
 
@@ -103,40 +107,40 @@ export default class CalendarSubscriptions extends Component {
 
           <div class="calendar-subscriptions__actions">
             <DButton
+              class="btn-danger"
               @action={{this.revokeSubscription}}
               @label="user.calendar_subscriptions.revoke"
-              class="btn-danger"
             />
           </div>
         </div>
       {{else if this.hasSubscription}}
         <div class="calendar-subscriptions__active">
           <p class="calendar-subscriptions__active-status">
-            {{icon "check"}}
+            {{dIcon "check"}}
             {{i18n "user.calendar_subscriptions.active_subscription"}}
           </p>
           <div class="calendar-subscriptions__actions">
             <DButton
+              class="btn-primary"
               @action={{this.regenerateUrls}}
               @icon="arrows-rotate"
-              @label="user.calendar_subscriptions.regenerate"
               @isLoading={{this.loading}}
-              class="btn-primary"
+              @label="user.calendar_subscriptions.regenerate"
             />
             <DButton
+              class="btn-danger"
               @action={{this.revokeSubscription}}
               @label="user.calendar_subscriptions.revoke"
-              class="btn-danger"
             />
           </div>
         </div>
       {{else if (eq this.hasSubscription false)}}
         <DButton
+          class="btn-primary"
           @action={{this.generateUrls}}
           @icon="calendar-days"
-          @label="user.calendar_subscriptions.generate"
           @isLoading={{this.loading}}
-          class="btn-primary"
+          @label="user.calendar_subscriptions.generate"
         />
       {{/if}}
     </div>

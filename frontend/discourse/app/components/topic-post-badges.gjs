@@ -19,18 +19,24 @@ export default class TopicPostBadges extends Component {
     {{~! no whitespace ~}}
     <span class="topic-post-badges">
       {{~#if this.displayUnreadPosts~}}
+        {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
         &nbsp;<a
+          aria-description={{i18n
+            "topic.unread_posts"
+            count=this.displayUnreadPosts
+          }}
+          class="badge badge-notification unread-posts"
           href={{@url}}
           title={{i18n "topic.unread_posts" count=this.displayUnreadPosts}}
-          class="badge badge-notification unread-posts"
         >{{this.displayUnreadPosts}}</a>
       {{~/if~}}
 
       {{~#if @unseen~}}
         &nbsp;<a
+          aria-label={{i18n "topic.new"}}
+          class="badge badge-notification new-topic"
           href={{@url}}
           title={{i18n "topic.new"}}
-          class="badge badge-notification new-topic"
         >{{this.newDotText}}</a>
       {{~/if~}}
     </span>

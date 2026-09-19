@@ -12,27 +12,21 @@ ru:
     topic_voting:
       notification_label:
         vote_released: "Голосование вернулось"
-      title: "Голосование по теме"
-      reached_limit: "У вас закончились голоса. Удалите часть голосов."
-      list_votes: "Показать ваши голоса"
+      hot_nav_help: "Главные темы последних событий, включая те, по которым недавно проводилось голосование."
       voted: "Вы голосовали по этой теме"
-      allow_topic_voting: "Разрешить пользователям голосовать по темам в этой категории"
       vote_title: "Проголосовать"
       vote_title_plural: "Голоса"
+      voting_closed_description: "Голосование по этой теме завершено."
       see_votes: "У вас осталось %{count}/%{max} голосов"
-      locked: "Заблокировано"
       locked_description: "Повысьте уровень доверия, чтобы проголосовать"
       votes:
         one: "%{count} голос"
         few: "%{count} голоса"
         many: "%{count} голосов"
         other: "%{count} голоса"
-      anonymous_button:
-        one: "Голос"
-        few: "Голоса"
-        many: "Голоса"
-        other: "Голоса"
       remove_vote: "Удалить голос"
+      watch_topic: "Уведомлять меня о новых публикациях"
+      no_votes_yet: "За это ещё никто не проголосовал."
       and_more_voters: "и еще %{count}..."
       show_voters: "Показывать проголосовавших (не отмечайте, если голосование анонимное)"
       vote_count_thousands: "%{count} тыс."
@@ -41,18 +35,18 @@ ru:
     filters:
       votes:
         title: "Голоса"
+        help: "темы, набравшие наибольшее количество голосов за все время"
       my_votes:
         title: "Мои голоса"
         help: "Темы, в которых вы проголосовали"
     search:
       most_votes: "Большинство голосов"
-      advanced:
-        vote:
-          count:
-            label: "Минимальное количество голосов"
     admin:
       web_hooks:
         voting_event:
           group_name: "Событие голосования по теме"
           topic_upvote: "Когда пользователь голосует за тему"
           topic_unvote: "Когда пользователь отменяет голосование по теме"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Теги"

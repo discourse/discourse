@@ -59,7 +59,9 @@ def assets
   results = Set.new
 
   load_path.assets.each do |asset|
-    fullpath = "#{Rails.root}/public/assets/#{asset.digested_path}"
+    fullpath = "#{Rails.root.join("public/assets/#{asset.digested_path}")}"
+
+    next if fullpath.end_with?(".gz", ".br")
 
     content_type = MiniMime.lookup_by_filename(fullpath)&.content_type
     content_type ||= "application/json" if fullpath.end_with?(".map")
@@ -110,7 +112,26 @@ end
 
 task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
   logger = Logger.new(STDOUT)
-  assets.each { |asset| upload(*asset, logger:) }
+
+  # Initialize S3 client state before spawning threads
+  existing_assets
+
+  pool = Concurrent::FixedThreadPool.new(8)
+
+  # Use promises so we can detect failures
+  promises =
+    assets.map { |asset| Concurrent::Promise.execute(executor: pool) { upload(*asset, logger:) } }
+
+  pool.shutdown
+  pool.wait_for_termination
+
+  # Check for failures
+  failed = promises.select(&:rejected?)
+  if failed.any?
+    logger.error "\n#{failed.size} asset upload(s) failed:"
+    failed.each { |promise| logger.error "  #{promise.reason}" }
+    raise "Asset upload failed. See errors above."
+  end
 end
 
 task "s3:expire_missing_assets" => :environment do

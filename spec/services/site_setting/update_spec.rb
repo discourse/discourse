@@ -97,6 +97,26 @@ RSpec.describe SiteSetting::Update do
           expect { result }.to change { SiteSetting.max_category_nesting }.to(3)
         end
       end
+
+      context "when the hidden setting is an upcoming change" do
+        let(:setting_name) { :enable_upload_debug_mode }
+        let(:new_value) { true }
+
+        before do
+          mock_upcoming_change_metadata(
+            {
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :stable,
+                impact_type: "other",
+                impact_role: "developers",
+              },
+            },
+          )
+        end
+
+        it { is_expected.to run_successfully }
+      end
     end
 
     context "when a user changes a setting shadowed by a global variable" do
@@ -133,6 +153,17 @@ RSpec.describe SiteSetting::Update do
         it "cleans up the new setting value before using it" do
           expect { result }.to change { SiteSetting.max_image_size_kb }.to(8843)
         end
+      end
+    end
+
+    context "when the expected value is stale" do
+      let(:options) do
+        { allow_changing_hidden:, expected_values: { setting_name => "a stale value" } }
+      end
+
+      it "does not update the setting" do
+        expect { result }.to not_change { SiteSetting.title }
+        expect(result["result.try.default"].exception).to be_a(SiteSetting::Update::Conflict)
       end
     end
 

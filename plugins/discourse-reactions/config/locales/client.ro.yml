@@ -13,8 +13,6 @@ ro:
   js:
     discourse_reactions:
       reactions_title: "Reacții"
-      state_panel:
-        more_users: "și încă %{count}..."
       picker:
         react_with: "Reacționează la această postare cu: %{reaction}"
         cant_remove_reaction: "Nu-ți mai poți elimina reacția."

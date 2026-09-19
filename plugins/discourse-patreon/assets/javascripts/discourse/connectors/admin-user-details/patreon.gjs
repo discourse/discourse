@@ -3,10 +3,10 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -60,11 +60,11 @@ export default class Patreon extends Component {
                 {{this.patreon_email}}
               {{else}}
                 <DButton
+                  class="btn-default"
                   @action={{this.checkPatreonEmail}}
                   @icon="far-envelope"
                   @label="admin.users.check_email.text"
                   @title="admin.users.check_email.title"
-                  class="btn-default"
                 />
               {{/if}}
             </div>
@@ -95,11 +95,11 @@ export default class Patreon extends Component {
           <div class="field">{{i18n "patreon.field.more_details.label"}}</div>
           <div class="value">
             <a
+              href={{this.patron_url}}
               rel="noopener noreferrer"
               target="_blank"
-              href={{this.patron_url}}
             >
-              {{icon "up-right-from-square"}}
+              {{dIcon "up-right-from-square"}}
             </a>
           </div>
           <div class="controls">

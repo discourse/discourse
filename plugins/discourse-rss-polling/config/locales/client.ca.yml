@@ -12,3 +12,13 @@ ca:
         feed_url: URL
         discourse_category: Categoria
         discourse_tags: Etiquetes
+        feeds:
+          edit: Edita
+          delete: Suprimeix
+          save: Desa
+        test:
+          title: Previsualitza
+          dismiss: Descarta-ho
+        status:
+          enabled: Activat
+          disabled: Desactivat

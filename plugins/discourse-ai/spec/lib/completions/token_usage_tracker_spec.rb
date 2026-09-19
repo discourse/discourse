@@ -18,6 +18,44 @@ RSpec.describe DiscourseAi::Completions::TokenUsageTracker do
     expect(tracker.total).to eq(1130)
   end
 
+  it "estimates usage from payloads when audit logs do not report tokens" do
+    tracker = described_class.new
+    log =
+      Struct.new(
+        :request_tokens,
+        :cache_write_tokens,
+        :cache_read_tokens,
+        :response_tokens,
+        :raw_request_payload,
+        :raw_response_payload,
+      ).new(0, 0, 0, 0, "a" * 10, "b" * 7)
+
+    tracker.add_from_audit_log(log)
+
+    expect(tracker.request).to eq(4)
+    expect(tracker.response).to eq(3)
+    expect(tracker.total).to eq(7)
+  end
+
+  it "uses reported usage before payload estimates" do
+    tracker = described_class.new
+    log =
+      Struct.new(
+        :request_tokens,
+        :cache_write_tokens,
+        :cache_read_tokens,
+        :response_tokens,
+        :raw_request_payload,
+        :raw_response_payload,
+      ).new(10, 0, 0, 2, "a" * 300, "b" * 300)
+
+    tracker.add_from_audit_log(log)
+
+    expect(tracker.request).to eq(10)
+    expect(tracker.response).to eq(2)
+    expect(tracker.total).to eq(12)
+  end
+
   it "supports starting from a previous total budget" do
     tracker = described_class.new(base_total: 101)
 

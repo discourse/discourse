@@ -47,6 +47,42 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenRouter do
     expect(parsed_body).to eq(expected)
   end
 
+  it "sends thinking effort using OpenRouter reasoning parameter" do
+    parsed_body = nil
+    stub_request(:post, open_router_model.url).with(
+      body: proc { |body| parsed_body = JSON.parse(body, symbolize_names: true) },
+    ).to_return(
+      status: 200,
+      body: { "choices" => [message: { role: "assistant", content: "reasoned" }] }.to_json,
+    )
+
+    proxy = DiscourseAi::Completions::Llm.proxy(open_router_model)
+    result = proxy.generate("hello", user: user, thinking_effort: "max")
+
+    expect(result).to eq("reasoned")
+    expect(parsed_body[:reasoning]).to eq(effort: "max")
+    expect(parsed_body).not_to have_key(:reasoning_effort)
+  end
+
+  it "preserves legacy reasoning_effort custom parameter using OpenRouter reasoning parameter" do
+    open_router_model.update!(provider_params: { reasoning_effort: "high" })
+
+    parsed_body = nil
+    stub_request(:post, open_router_model.url).with(
+      body: proc { |body| parsed_body = JSON.parse(body, symbolize_names: true) },
+    ).to_return(
+      status: 200,
+      body: { "choices" => [message: { role: "assistant", content: "legacy" }] }.to_json,
+    )
+
+    proxy = DiscourseAi::Completions::Llm.proxy(open_router_model)
+    result = proxy.generate("hello", user: user)
+
+    expect(result).to eq("legacy")
+    expect(parsed_body[:reasoning]).to eq(effort: "high")
+    expect(parsed_body).not_to have_key(:reasoning_effort)
+  end
+
   it "excludes disabled parameters from the request" do
     open_router_model.update!(provider_params: { disable_top_p: true, disable_temperature: true })
 

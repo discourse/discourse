@@ -1,16 +1,27 @@
 strictPeerDependencies: true
+strictDepBuilds: true
+onlyBuiltDependencies:
+- lefthook
+ignoredBuiltDependencies:
+- "@zoom/meetingsdk"
+- core-js
+- rete
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+- "@discourse/*"
+- discourse
 packages:
 - "docs/developer-guides"
-- "frontend/custom-proxy"
 - "frontend/deprecation-silencer"
 - "frontend/discourse"
 - "frontend/discourse-i18n"
 - "frontend/discourse-markdown-it"
-- "frontend/ember-cli-progress-ci"
 - "frontend/pretty-text"
+- "frontend/pretty-text-processor"
 - "frontend/asset-processor"
 - "frontend/discourse-types"
 - "plugins/automation"
+- "plugins/boards"
 - "plugins/chat"
 - "plugins/checklist"
 - "plugins/discourse-adplugin"
@@ -19,14 +30,14 @@ packages:
 - "plugins/discourse-apple-auth"
 - "plugins/discourse-assign"
 - "plugins/discourse-cakeday"
-- "plugins/discourse-calendar"
+- "plugins/discourse-events"
 - "plugins/discourse-chat-integration"
 - "plugins/discourse-data-explorer"
 - "plugins/discourse-details"
 - "plugins/discourse-gamification"
 - "plugins/discourse-github"
 - "plugins/discourse-graphviz"
-- "plugins/discourse-hcaptcha"
+- "plugins/discourse-captcha"
 - "plugins/discourse-lazy-videos"
 - "plugins/discourse-local-dates"
 - "plugins/discourse-login-with-amazon"
@@ -52,7 +63,28 @@ packages:
 - "plugins/poll"
 - "plugins/spoiler-alert"
 - "plugins/styleguide"
+- "plugins/voice"
 - "themes/horizon"
+patchedDependencies:
+  "babel-plugin-debug-macros@0.3.4": "patches/babel-plugin-debug-macros@0.3.4.patch"
+  "licensee": "patches/licensee.patch"
+  # https://github.com/warp-drive-data/warp-drive/pull/11037
+  "@warp-drive/legacy@5.9.0-alpha.15": "patches/@warp-drive__legacy@5.9.0-alpha.15.patch"
+  "ember-source@7.2.0": "patches/ember-source@7.2.0.patch"
+  "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
+  "pikaday": "patches/pikaday.patch"
+peerDependencyRules:
+  allowedVersions:
+    "@mixer/parallel-prettier>prettier": "*"
+    "@fullcalendar/moment-timezone>moment-timezone": "*"
+  ignoreMissing:
+    - "webpack"
+    - "@types/react"
+overrides:
+  "tmp": "^0.2.7"
+  typescript: "^6.0.3"
+  "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
+  "broccoli-babel-transpiler@8.0.0": "^8.0.2"
 allowedDeprecatedVersions:
   "@babel/plugin-proposal-class-properties": "*"
   "@babel/plugin-proposal-private-methods": "*"

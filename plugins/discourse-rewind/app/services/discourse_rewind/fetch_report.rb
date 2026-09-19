@@ -39,10 +39,10 @@ module DiscourseRewind
     private
 
     def fetch_date(params:, year:)
-      Date.new(year).all_year
+      Time.zone.local(year).all_year
     end
 
-    def fetch_report(params:, for_user:, year:, date:)
+    def fetch_report(params:, for_user:, year:, date:, guardian:)
       report_class = FetchReports::REPORTS[params.index]
       return if !report_class
 
@@ -52,7 +52,60 @@ module DiscourseRewind
         report = report_class.call(date:, user: for_user)
         cache_single_report(for_user.id, year, report_name, report.as_json)
       end
+
+      report = filter_report_for_viewer(report, guardian, report_class) if report_class.in?(
+        FetchReports::VISIBILITY_FILTERED_REPORTS,
+      )
       report
+    end
+
+    def filter_report_for_viewer(report, guardian, report_class)
+      case report_class.name
+      when Action::BestTopics.name
+        filter_best_topics_for_viewer(report, guardian)
+      when Action::BestPosts.name
+        filter_best_posts_for_viewer(report, guardian)
+      end
+    end
+
+    def filter_best_topics_for_viewer(report, guardian)
+      topic_ids = report[:data].pluck(:topic_id)
+      visible_topic_ids = guardian.can_see_topic_ids(topic_ids:)
+      eligible_topic_ids =
+        Topic
+          .visible
+          .where(id: visible_topic_ids, deleted_at: nil)
+          .where.not(archetype: Archetype.private_message)
+          .joins(:category)
+          .where("NOT categories.read_restricted")
+          .pluck(:id)
+
+      report.merge(data: report[:data].select { |topic| topic[:topic_id].in?(eligible_topic_ids) })
+    end
+
+    def filter_best_posts_for_viewer(report, guardian)
+      topic_ids = report[:data].pluck(:topic_id)
+      visible_topic_ids = guardian.can_see_topic_ids(topic_ids:)
+      eligible_post_keys =
+        Post
+          .public_posts
+          .visible
+          .joins(topic: :category)
+          .where(
+            topic_id: visible_topic_ids,
+            post_number: report[:data].pluck(:post_number),
+            deleted_at: nil,
+          )
+          .where("NOT categories.read_restricted")
+          .where.not(post_type: Post.types[:whisper])
+          .pluck(:topic_id, :post_number)
+
+      report.merge(
+        data:
+          report[:data].select do |post|
+            [post[:topic_id], post[:post_number]].in?(eligible_post_keys)
+          end,
+      )
     end
   end
 end

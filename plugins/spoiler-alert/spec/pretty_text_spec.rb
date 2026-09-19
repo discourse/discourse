@@ -3,10 +3,6 @@
 describe PrettyText do
   let(:post) { Fabricate(:post) }
 
-  def n(html)
-    html.strip
-  end
-
   it "can spoil blocks" do
     md = PrettyText.cook("[spoiler]\nmy tests fail\n[/spoiler]")
     html = "<div class=\"spoiler\">\n<p>my tests fail</p>\n</div>"

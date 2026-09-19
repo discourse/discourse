@@ -13,6 +13,16 @@ RSpec.describe Notifications::ConsolidateNotifications do
         threshold: 1,
       ).set_mutations(set_data_blk: Proc.new { |n| n.data_hash.merge(consolidated: true) })
     end
+    let(:like_notifications) do
+      Array.new(3) do
+        Fabricate.build(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:liked],
+          data: {}.to_json,
+        )
+      end
+    end
 
     it "applies a callback when consolidating a notification" do
       rule.before_consolidation_callbacks(
@@ -20,8 +30,8 @@ RSpec.describe Notifications::ConsolidateNotifications do
           Proc.new { |_, data| data[:consolidation_callback_called] = true },
       )
 
-      rule.consolidate_or_save!(build_like_notification)
-      rule.consolidate_or_save!(build_like_notification)
+      rule.consolidate_or_save!(like_notifications[0])
+      rule.consolidate_or_save!(like_notifications[1])
 
       consolidated_notification = Notification.where(user: user).last
 
@@ -33,27 +43,18 @@ RSpec.describe Notifications::ConsolidateNotifications do
         before_update_blk: Proc.new { |_, data| data[:update_callback_called] = true },
       )
 
-      rule.consolidate_or_save!(build_like_notification)
-      rule.consolidate_or_save!(build_like_notification)
+      rule.consolidate_or_save!(like_notifications[0])
+      rule.consolidate_or_save!(like_notifications[1])
 
       consolidated_notification = Notification.where(user: user).last
 
       expect(consolidated_notification.data_hash[:update_callback_called]).to be_nil
 
-      rule.consolidate_or_save!(build_like_notification)
+      rule.consolidate_or_save!(like_notifications[2])
 
       consolidated_notification = Notification.where(user: user).last
 
       expect(consolidated_notification.data_hash[:update_callback_called]).to eq(true)
-    end
-
-    def build_like_notification
-      Fabricate.build(
-        :notification,
-        user: user,
-        notification_type: Notification.types[:liked],
-        data: {}.to_json,
-      )
     end
   end
 end

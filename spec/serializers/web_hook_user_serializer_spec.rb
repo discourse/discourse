@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe WebHookUserSerializer do
+  fab!(:featured_topic, :topic)
   let(:user) do
-    user = Fabricate(:user)
+    user = Fabricate(:user).tap { |u| u.user_profile.update!(featured_topic:) }
     SingleSignOnRecord.create!(user_id: user.id, external_id: "12345", last_payload: "")
     user
   end
@@ -13,13 +14,13 @@ RSpec.describe WebHookUserSerializer do
     WebHookUserSerializer.new(user, scope: Guardian.new(admin), root: false)
   end
 
-  it "should include relevant user info" do
+  it "includes relevant user information" do
     payload = serializer.as_json
     expect(payload[:email]).to eq(user.email)
     expect(payload[:external_id]).to eq("12345")
   end
 
-  it "should only include the required keys" do
+  it "includes only the required keys" do
     expect(serializer.as_json.keys).to contain_exactly(
       :admin,
       :allowed_pm_usernames,

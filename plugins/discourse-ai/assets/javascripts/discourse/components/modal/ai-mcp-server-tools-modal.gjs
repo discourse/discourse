@@ -1,15 +1,15 @@
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   <DModal
+    class="ai-mcp-server-tools-modal"
+    @bodyClass="ai-mcp-server-tools-modal__body"
+    @closeModal={{@closeModal}}
     @title={{i18n
       "discourse_ai.mcp_servers.tools_modal.title"
       name=@model.serverName
     }}
-    @closeModal={{@closeModal}}
-    @bodyClass="ai-mcp-server-tools-modal__body"
-    class="ai-mcp-server-tools-modal"
   >
     <:body>
       <p class="ai-mcp-server-tools-modal__summary">

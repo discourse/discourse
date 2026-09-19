@@ -52,6 +52,12 @@ class Service::ContractBase
     [super, nested_attributes_valid?].all?
   end
 
+  protected
+
+  def options=(options)
+    @__options__ = options
+  end
+
   private
 
   def nested_attributes_valid?
@@ -67,6 +73,7 @@ class Service::ContractBase
       .wrap(attribute.value)
       .map
       .with_index do |contract, index|
+        contract.options = options
         next true if contract.valid?
         import_nested_errors(contract, attribute, index)
         false

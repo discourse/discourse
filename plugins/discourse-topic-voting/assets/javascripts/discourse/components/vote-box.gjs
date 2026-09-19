@@ -11,28 +11,18 @@ export default class VoteBox extends Component {
 
   @action
   addVote() {
-    let topic = this.args.topic;
-    return ajax("/voting/vote", {
-      type: "POST",
-      data: {
-        topic_id: topic.id,
-      },
-    })
-      .then((result) => {
-        topic.vote_count = result.vote_count;
-        topic.user_voted = true;
-        this.currentUser.votes_exceeded = !result.can_vote;
-        this.currentUser.vote_limit = result.vote_limit;
-        this.currentUser.votes_left = result.votes_left;
-      })
-      .catch(popupAjaxError);
+    return this.#sendVote("/voting/vote", true);
   }
 
   @action
   removeVote() {
+    return this.#sendVote("/voting/unvote", false);
+  }
+
+  #sendVote(url, userVoted) {
     const topic = this.args.topic;
 
-    return ajax("/voting/unvote", {
+    return ajax(url, {
       type: "POST",
       data: {
         topic_id: topic.id,
@@ -40,7 +30,7 @@ export default class VoteBox extends Component {
     })
       .then((result) => {
         topic.vote_count = result.vote_count;
-        topic.user_voted = false;
+        topic.user_voted = userVoted;
         this.currentUser.votes_exceeded = !result.can_vote;
         this.currentUser.vote_limit = result.vote_limit;
         this.currentUser.votes_left = result.votes_left;
@@ -51,9 +41,9 @@ export default class VoteBox extends Component {
   <template>
     <div class="voting-wrapper">
       <VoteButton
-        @topic={{@topic}}
         @addVote={{this.addVote}}
         @removeVote={{this.removeVote}}
+        @topic={{@topic}}
       />
       <VoteCount @topic={{@topic}} />
     </div>

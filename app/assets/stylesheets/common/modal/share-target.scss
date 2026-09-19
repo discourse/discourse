@@ -1,0 +1,42 @@
+.share-target-modal {
+  &__intro {
+    margin-top: 0;
+  }
+
+  &__preview-text {
+    padding: 0.5em 0.75em;
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 8em;
+    overflow-y: auto;
+  }
+
+  &__files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-top: 0.75em;
+  }
+
+  &__thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-low);
+  }
+
+  &__file-name {
+    padding: 0.25em 0.5em;
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1);
+    word-break: break-all;
+  }
+
+  .d-modal__footer {
+    flex-wrap: wrap;
+  }
+}

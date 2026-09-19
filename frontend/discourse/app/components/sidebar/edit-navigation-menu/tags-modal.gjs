@@ -6,12 +6,12 @@ import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { gt, has, or } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import EditNavigationMenuModal from "./modal";
 
@@ -32,39 +32,6 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   constructor() {
     super(...arguments);
     this.#loadTags();
-  }
-
-  async #loadTags() {
-    try {
-      this.tagsLoading = true;
-
-      const findArgs = {};
-
-      if (this.filter) {
-        findArgs.filter = this.filter;
-      }
-
-      if (this.onlySelected) {
-        if (this.selectedTags.size === 0) {
-          this.tags = [];
-          return;
-        }
-
-        findArgs.only_tags = [...this.selectedTags].join(",");
-      } else if (this.onlyUnselected) {
-        findArgs.exclude_tags = [...this.selectedTags].join(",");
-      }
-
-      try {
-        const tags = await this.store.findAll("listTag", findArgs);
-        this.tags = tags;
-      } catch (error) {
-        popupAjaxError(error);
-      }
-    } finally {
-      this.tagsLoading = false;
-      this.disableFiltering = false;
-    }
   }
 
   @action
@@ -128,11 +95,6 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
     discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
   }
 
-  #performFiltering(filter) {
-    this.filter = filter.toLowerCase();
-    this.#loadTags();
-  }
-
   @action
   deselectAll() {
     this.selectedTags.clear();
@@ -172,50 +134,88 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
     }
   }
 
+  async #loadTags() {
+    try {
+      this.tagsLoading = true;
+
+      const findArgs = {};
+
+      if (this.filter) {
+        findArgs.filter = this.filter;
+      }
+
+      if (this.onlySelected) {
+        if (this.selectedTags.size === 0) {
+          this.tags = [];
+          return;
+        }
+
+        findArgs.only_tags = [...this.selectedTags].join(",");
+      } else if (this.onlyUnselected) {
+        findArgs.exclude_tags = [...this.selectedTags].join(",");
+      }
+
+      try {
+        const tags = await this.store.findAll("listTag", findArgs);
+        this.tags = tags;
+      } catch (error) {
+        popupAjaxError(error);
+      }
+    } finally {
+      this.tagsLoading = false;
+      this.disableFiltering = false;
+    }
+  }
+
+  #performFiltering(filter) {
+    this.filter = filter.toLowerCase();
+    this.#loadTags();
+  }
+
   <template>
     <EditNavigationMenuModal
-      @title="sidebar.tags_form_modal.title"
-      @saving={{this.saving}}
+      class="sidebar__edit-navigation-menu__tags-modal"
+      @closeModal={{@closeModal}}
+      @deselectAll={{this.deselectAll}}
+      @deselectAllText={{i18n "sidebar.tags_form_modal.subtitle.text"}}
+      @filterSelected={{this.filterSelected}}
+      @filterUnselected={{this.filterUnselected}}
+      @inputFilterPlaceholder={{i18n
+        "sidebar.tags_form_modal.filter_placeholder"
+      }}
+      @loading={{or this.tagsLoading this.disableFiltering}}
+      @onFilterInput={{this.onFilterInput}}
+      @resetFilter={{this.resetFilter}}
+      @resetToDefaults={{this.resetToDefaults}}
       @save={{this.save}}
+      @saving={{this.saving}}
       @showResetDefaultsButton={{gt
         this.siteSettings.default_navigation_menu_tags.length
         0
       }}
-      @resetToDefaults={{this.resetToDefaults}}
-      @deselectAll={{this.deselectAll}}
-      @deselectAllText={{i18n "sidebar.tags_form_modal.subtitle.text"}}
-      @inputFilterPlaceholder={{i18n
-        "sidebar.tags_form_modal.filter_placeholder"
-      }}
-      @onFilterInput={{this.onFilterInput}}
-      @resetFilter={{this.resetFilter}}
-      @filterSelected={{this.filterSelected}}
-      @filterUnselected={{this.filterUnselected}}
-      @closeModal={{@closeModal}}
-      @loading={{or this.tagsLoading this.disableFiltering}}
-      class="sidebar__edit-navigation-menu__tags-modal"
+      @title="sidebar.tags_form_modal.title"
     >
       {{#if this.tagsLoading}}
-        {{loadingSpinner size="large"}}
+        {{dLoadingSpinner size="large"}}
       {{else}}
         <form class="sidebar-tags-form">
           {{#each this.tags.content as |tag|}}
             <div
-              {{didInsert this.didInsertTag}}
-              data-tag-name={{tag.name}}
               class="sidebar-tags-form__tag"
+              data-tag-name={{tag.name}}
+              {{didInsert this.didInsertTag}}
             >
               <input
-                {{on "click" (fn this.toggleTag tag.name)}}
-                type="checkbox"
                 checked={{has this.selectedTags tag.name}}
-                id={{concat "sidebar-tags-form__input--" tag.name}}
                 class="sidebar-tags-form__input"
+                id={{concat "sidebar-tags-form__input--" tag.name}}
+                type="checkbox"
+                {{on "click" (fn this.toggleTag tag.name)}}
               />
 
               <label
-                for={{concat "sidebar-tags-form__input--" tag.name}}
                 class="sidebar-tags-form__tag-label"
+                for={{concat "sidebar-tags-form__input--" tag.name}}
               >
                 <p>
                   <span class="sidebar-tags-form__tag-label-name">
@@ -236,7 +236,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
         </form>
       {{/if}}
 
-      <ConditionalLoadingSpinner @condition={{this.tags.loadingMore}} />
+      <DConditionalLoadingSpinner @condition={{this.tags.loadingMore}} />
     </EditNavigationMenuModal>
   </template>
 }

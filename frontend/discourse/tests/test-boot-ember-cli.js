@@ -1,20 +1,40 @@
-import loadEmberExam from "ember-exam/test-support/load";
-import { setupEmberOnerrorValidation, start } from "ember-qunit";
+import { start as startEmberExam } from "ember-exam/addon-test-support";
+import { setupEmberOnerrorValidation } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import { loadAdmin, loadThemesAndPlugins } from "discourse/app";
+import config from "discourse/config/environment";
 import setupTests from "discourse/tests/setup-tests";
-import config from "../config/environment";
 
-document.addEventListener("discourse-init", async () => {
+/**
+ * Resolves once the styles that computed-geometry assertions depend on are in
+ * place. `fonts.ready` only covers faces that were already requested, so the
+ * element's computed font is requested explicitly first; a face that fails to
+ * load must not block the run.
+ *
+ * @param {object} [options]
+ * @param {FontFaceSet} [options.fonts] The font set to wait on.
+ * @param {Element} [options.element] The element whose computed font is requested.
+ * @returns {Promise<void>}
+ */
+export async function awaitVisualReadiness({
+  fonts = document.fonts,
+  element = document.body,
+} = {}) {
+  const { fontWeight, fontSize, fontFamily } = getComputedStyle(element);
+
+  try {
+    await fonts.load(`${fontWeight} ${fontSize} ${fontFamily}`);
+  } catch {
+    // A missing face degrades rendering; it must not abort the test run.
+  }
+
+  await fonts.ready;
+}
+
+export async function startTests() {
   await loadAdmin();
   await loadThemesAndPlugins();
-
-  if (!window.EmberENV.TESTS_FILE_LOADED) {
-    throw new Error(
-      'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
-    );
-  }
 
   const script = document.getElementById("plugin-test-script");
   if (script && !requirejs.entries["discourse/tests/plugin-tests"]) {
@@ -25,7 +45,6 @@ document.addEventListener("discourse-init", async () => {
 
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target") || "core";
-  const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
   const themeName = document.querySelector(
     "link[rel=modulepreload][data-theme-name]"
   )?.dataset.themeName;
@@ -48,8 +67,7 @@ document.addEventListener("discourse-init", async () => {
   }
 
   setup(QUnit.assert);
-  setupTests(config.APP);
-  let loader = loadEmberExam();
+  await setupTests(config.APP);
 
   if (window.Testem && (hasThemeJs || target !== "core")) {
     window.Testem.on("test-result", (t) => {
@@ -66,37 +84,23 @@ document.addEventListener("discourse-init", async () => {
     QUnit.config.reorder = false;
   }
 
-  loader.shouldLoadModule = function (name) {
-    if (!/[-_]test$/.test(name)) {
-      return false;
+  let availableModules;
+  if (testingCore) {
+    const rawModules = import.meta.glob("./**/*-test.{gjs,js,ts,gts}", {
+      eager: true,
+    });
+    availableModules = {};
+    for (const [key, value] of Object.entries(rawModules)) {
+      availableModules[key] = value.default;
     }
+  }
 
-    const isPlugin = name.match(/\/plugins\//);
-    const isTheme = name.match(/\/theme--?\d+\//);
-    const isCore = !isPlugin && !isTheme;
-    const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
+  await awaitVisualReadiness();
 
-    const loadCore = target === "core" || target === "all";
-    const loadAllPlugins = target === "plugins" || target === "all";
-
-    if (hasThemeJs) {
-      return isTheme;
-    } else if (isCore && !loadCore) {
-      return false;
-    } else if (isPlugin && !(loadAllPlugins || pluginName === target)) {
-      return false;
-    }
-
-    return true;
-  };
-  loader.loadModules();
-
-  start({
+  startEmberExam({
     setupTestContainer: false,
-    startTests: !disableAutoStart,
     setupEmberOnerrorValidation: testingCore,
     setupTestIsolationValidation: true,
+    availableModules,
   });
-});
-
-window.EmberENV.TESTS_FILE_LOADED = true;
+}

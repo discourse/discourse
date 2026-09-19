@@ -7,16 +7,18 @@ module DiscourseTopicVoting
         type_id :ideas
 
         class << self
-          def visible?
-            SiteSetting.enable_ideas_category_type_setup
-          end
-
           def enable_plugin
             SiteSetting.topic_voting_enabled = true
           end
 
+          def plugin_enabled?
+            SiteSetting.topic_voting_enabled
+          end
+
           def category_matches?(category)
-            Category.can_vote?(category.id)
+            return false if !SiteSetting.topic_voting_enabled
+
+            DiscourseTopicVoting::CategorySetting.exists?(category_id: category.id)
           end
 
           def find_matches
@@ -27,6 +29,12 @@ module DiscourseTopicVoting
             category.discourse_topic_voting_category_setting ||=
               DiscourseTopicVoting::CategorySetting.new(category: category)
             category.discourse_topic_voting_category_setting.save!
+            Category.reset_voting_cache
+          end
+
+          def unconfigure_category(category, guardian:)
+            category.discourse_topic_voting_category_setting.destroy!
+            Category.reset_voting_cache
           end
 
           def configuration_schema

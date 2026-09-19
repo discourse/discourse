@@ -4,16 +4,16 @@ import { concat } from "@ember/helper";
 import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
-import UserAvatar from "discourse/components/user-avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { autoUpdatingRelativeAge, relativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { userPath } from "discourse/lib/url";
+import { groupPath, userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostA11yHeading from "./a11y-heading";
 
@@ -112,9 +112,9 @@ export default class PostSmallAction extends Component {
     if (this.who) {
       const escapedWho = escapeExpression(this.who);
       if (this.isGroupAction) {
-        who = `<a class="mention-group" href="/g/${encodeURIComponent(this.who)}">@${escapedWho}</a>`;
+        who = `<a class="mention-group" href="${groupPath(encodeURIComponent(this.who))}">@${escapedWho}</a>`;
       } else {
-        who = `<a class="mention" href="${userPath(this.who)}">@${escapedWho}</a>`;
+        who = `<a class="mention" href="${userPath(encodeURIComponent(this.who))}">@${escapedWho}</a>`;
       }
     }
 
@@ -162,27 +162,27 @@ export default class PostSmallAction extends Component {
       <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
       {{#unless @cloaked}}
         <article
-          id={{@elementId}}
+          aria-labelledby={{concat "post-heading-" @post.post_number}}
           class={{unless
             @cloaked
-            (concatClass
+            (dConcatClass
               "small-action"
               "onscreen-post"
               (if @post.deleted "deleted")
               this.additionalClasses
             )
           }}
-          aria-labelledby={{concat "post-heading-" @post.post_number}}
           data-post-id={{@post.id}}
           data-topic-id={{@post.topicId}}
           data-user-id={{@post.user_id}}
+          id={{@elementId}}
         >
           <div class="topic-avatar">
-            {{icon this.icon}}
+            {{dIcon this.icon}}
           </div>
           <div class="small-action-desc">
             <div class="small-action-contents">
-              <UserAvatar
+              <DUserAvatar
                 @ariaHidden={{false}}
                 @size="small"
                 @user={{@post.user}}
@@ -190,9 +190,9 @@ export default class PostSmallAction extends Component {
               {{#if this.CustomComponent}}
                 <this.CustomComponent
                   @code={{this.code}}
-                  @post={{@post}}
                   @createdAt={{this.createdAt}}
                   @path={{this.path}}
+                  @post={{@post}}
                   @who={{this.who}}
                 />
               {{else}}
@@ -204,24 +204,24 @@ export default class PostSmallAction extends Component {
             <div class="small-action-buttons">
               {{#if @post.canRecover}}
                 <DButton
-                  class="btn-flat small-action-recover"
-                  @icon="arrow-rotate-left"
+                  class="btn-flat btn-small small-action-recover"
                   @action={{@recoverPost}}
+                  @icon="arrow-rotate-left"
                   @title="post.controls.undelete"
                 />
               {{else if @post.can_edit}}
                 <DButton
-                  class="btn-flat small-action-edit"
-                  @icon="pencil"
+                  class="btn-flat btn-small small-action-edit"
                   @action={{@editPost}}
+                  @icon="pencil"
                   @title="post.controls.edit"
                 />
               {{/if}}
               {{#if @post.canDelete}}
                 <DButton
-                  class="btn-flat btn-danger small-action-delete"
-                  @icon="trash-can"
+                  class="btn-flat btn-small btn-danger small-action-delete"
                   @action={{@deletePost}}
+                  @icon="trash-can"
                   @title="post.controls.delete"
                 />
               {{/if}}
@@ -230,9 +230,9 @@ export default class PostSmallAction extends Component {
               {{#if @post.cooked}}
                 <div class="small-action-custom-message">
                   <PostCookedHtml
-                    @post={{@post}}
                     @decoratorState={{this.decoratorState}}
                     @highlightTerm={{@highlightTerm}}
+                    @post={{@post}}
                     @streamElement={{@streamElement}}
                   />
                 </div>

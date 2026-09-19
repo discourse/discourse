@@ -8,7 +8,7 @@ RSpec.describe GroupShowSerializer do
     fab!(:user, :admin)
     fab!(:group) { Fabricate(:group, users: [user]) }
 
-    it "should return the right attributes" do
+    it "returns the public group attributes" do
       json = GroupShowSerializer.new(group, scope: Guardian.new(user)).as_json
 
       expect(json[:group_show][:is_group_owner]).to eq(nil)
@@ -19,7 +19,7 @@ RSpec.describe GroupShowSerializer do
   context "with a group owner" do
     before { group.add_owner(user) }
 
-    it "should return the right attributes" do
+    it "returns the private group attributes" do
       json = GroupShowSerializer.new(group, scope: Guardian.new(user)).as_json
 
       expect(json[:group_show][:is_group_owner]).to eq(true)
@@ -30,7 +30,7 @@ RSpec.describe GroupShowSerializer do
   describe "#mentionable" do
     fab!(:group) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
 
-    it "should return the right value" do
+    it "returns the group flair URL" do
       json = GroupShowSerializer.new(group, scope: Guardian.new).as_json
 
       expect(json[:group_show][:mentionable]).to eq(nil)
@@ -45,16 +45,29 @@ RSpec.describe GroupShowSerializer do
     fab!(:group) { Fabricate(:group, automatic_membership_email_domains: "ilovediscourse.com") }
     let(:admin_guardian) { Guardian.new(Fabricate(:admin)) }
 
-    it "should include email domains for admin" do
+    it "includes email domains for an administrator" do
       subject =
         described_class.new(group, scope: admin_guardian, root: false, owner_group_ids: [group.id])
       expect(subject.as_json[:automatic_membership_email_domains]).to eq("ilovediscourse.com")
     end
 
-    it "should not include email domains for other users" do
+    it "omits email domains for other users" do
       subject =
         described_class.new(group, scope: Guardian.new, root: false, owner_group_ids: [group.id])
       expect(subject.as_json[:automatic_membership_email_domains]).to eq(nil)
+    end
+
+    it "includes email domains for a moderator who can manage groups" do
+      SiteSetting.moderators_manage_groups = true
+      moderator_guardian = Fabricate(:moderator).guardian
+      subject =
+        described_class.new(
+          group,
+          scope: moderator_guardian,
+          root: false,
+          owner_group_ids: [group.id],
+        )
+      expect(subject.as_json[:automatic_membership_email_domains]).to eq("ilovediscourse.com")
     end
   end
 
@@ -137,8 +150,12 @@ RSpec.describe GroupShowSerializer do
         expect(serializer.as_json[:regular_category_ids]).to eq([])
         expect(serializer.as_json[:muted_category_ids]).to eq([])
 
-        expect(serializer.as_json[:watching_tags]).to eq([tag1.name])
-        expect(serializer.as_json[:tracking_tags]).to eq([tag2.name])
+        expect(serializer.as_json[:watching_tags]).to eq(
+          [{ id: tag1.id, name: tag1.name, slug: tag1.slug }],
+        )
+        expect(serializer.as_json[:tracking_tags]).to eq(
+          [{ id: tag2.id, name: tag2.name, slug: tag2.slug }],
+        )
         expect(serializer.as_json[:watching_first_post_tags]).to eq([])
         expect(serializer.as_json[:regular_tags]).to eq([])
         expect(serializer.as_json[:muted_tags]).to eq([])

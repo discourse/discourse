@@ -48,7 +48,7 @@ class Mapping
   attr_accessor :pss
 
   def initialize(lines)
-    FIELDS.each { |field| self.public_send("#{field}=", 0) }
+    FIELDS.each { |field| public_send("#{field}=", 0) }
 
     parse_first_line(lines.shift)
     lines.each { |l| parse_field_line(l) }
@@ -69,7 +69,7 @@ class Mapping
     field = parts[0].downcase.sub(":", "")
     if respond_to? "#{field}="
       value = Float(parts[1]).to_i
-      self.public_send("#{field}=", value)
+      public_send("#{field}=", value)
     end
   end
 end

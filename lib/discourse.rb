@@ -86,8 +86,8 @@ module Discourse
       rescue Errno::ENOENT
       end
 
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+      temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
 
       File.open(temp_destination, "w") do |fd|
         fd.write(contents)
@@ -100,20 +100,33 @@ module Discourse
     end
 
     def self.atomic_ln_s(source, destination)
-      begin
-        return if File.readlink(destination) == source
-      rescue Errno::ENOENT, Errno::EINVAL
+      return if File.symlink?(destination) && File.readlink(destination) == source
+
+      FileUtils.mkdir_p(Rails.root.join("tmp").to_s)
+
+      File.open(
+        Rails.root.join("tmp/atomic_ln_s.lock").to_s,
+        File::CREAT | File::WRONLY,
+        0o644,
+      ) do |lock|
+        lock.flock(File::LOCK_EX)
+
+        next if File.symlink?(destination) && File.readlink(destination) == source
+
+        temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
+        File.symlink(source, temp_destination)
+
+        begin
+          File.rename(temp_destination, destination)
+        rescue Errno::EXDEV
+          # Rails.root/tmp and the destination can live on different filesystems
+          # (e.g. containerized setups where tmp is a separate mount). rename(2)
+          # cannot cross filesystem boundaries, so fall back to a non-atomic
+          # replace. The flock above already serializes writers.
+          File.delete(destination) if File.symlink?(destination)
+          FileUtils.mv(temp_destination, destination)
+        end
       end
-
-      FileUtils.mkdir_p(File.join(Rails.root, "tmp"))
-      temp_destination = File.join(Rails.root, "tmp", SecureRandom.hex)
-      execute_command("ln", "-s", source, temp_destination)
-
-      # Remove existing symlink first to prevent FileUtils.mv from moving
-      # the temp file inside the symlinked directory instead of replacing it
-      File.delete(destination) if File.symlink?(destination)
-
-      FileUtils.mv(temp_destination, destination)
 
       nil
     end
@@ -151,6 +164,7 @@ module Discourse
         failure_message: "",
         success_status_codes: [0],
         chdir: ".",
+        unsetenv_others: false,
         unsafe_shell: false
       )
         env = nil
@@ -170,7 +184,10 @@ module Discourse
 
         args = command
         args = [env] + command if env
-        stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
+
+        spawn_options = { chdir: chdir }
+        spawn_options[:unsetenv_others] = true if unsetenv_others
+        stdout, stderr, status = Open3.capture3(*args, **spawn_options)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           message = [command.join(" "), failure_message, stderr].filter(&:present?).join("\n")
@@ -248,6 +265,18 @@ module Discourse
   class InvalidParameters < StandardError
   end
 
+  # Same as InvalidParameters, but carries an HTML-rendered variant of the
+  # message for surfaces that can render it (e.g. the admin settings UI).
+  # The plain #message stays free of markup so generic rescuers can display it.
+  class InvalidHTMLParameters < InvalidParameters
+    attr_reader :html_message
+
+    def initialize(message = nil, html_message: nil)
+      super(message)
+      @html_message = html_message || message
+    end
+  end
+
   # When they don't have permission to do something
   class InvalidAccess < StandardError
     attr_reader :obj
@@ -302,6 +331,11 @@ module Discourse
   class ReadOnly < StandardError
   end
 
+  # Raised when the site is archived (site_archived setting) and a write is
+  # attempted from an action not declared with `allow_when_archived`.
+  class SiteArchived < StandardError
+  end
+
   # Cross site request forgery
   class CSRF < StandardError
   end
@@ -321,6 +355,12 @@ module Discourse
 
   def self.anonymous_filters
     @anonymous_filters ||= %i[latest top categories hot]
+  end
+
+  # `anonymous_filters` also holds menu items such as `categories`, which have no
+  # `/l/<filter>` route. Not memoized: plugins push onto both lists at load time.
+  def self.anonymous_list_filters
+    Discourse.filters & Discourse.anonymous_filters
   end
 
   def self.top_menu_items
@@ -343,7 +383,7 @@ module Discourse
     @plugins = []
     @plugins_by_name = {}
     Plugin::Instance
-      .find_all("#{Rails.root}/plugins")
+      .find_all("#{Rails.root.join("plugins")}")
       .each do |p|
         v = p.metadata.required_version || Discourse::VERSION::STRING
         if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
@@ -430,13 +470,14 @@ module Discourse
   end
 
   def self.find_plugin_css_assets(args)
-    plugins = apply_asset_filters(self.find_plugins(args), :css, args[:request])
+    plugins = apply_asset_filters(find_plugins(args), :css, args[:request])
 
     assets = []
 
     targets = [nil]
     targets << :mobile if args[:mobile_view]
     targets << :desktop if args[:desktop_view]
+    targets << :admin if args[:include_admin]
 
     targets.each do |target|
       assets +=
@@ -453,13 +494,13 @@ module Discourse
 
   def self.find_plugin_js_assets(args)
     plugins =
-      self
-        .find_plugins(args)
-        .select do |plugin|
-          plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
-        end
+      find_plugins(args).select do |plugin|
+        plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
+      end
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
+
+    request_path = args[:request]&.path&.delete_prefix(Discourse.base_path)&.delete_prefix("/")
 
     assets = []
 
@@ -472,6 +513,10 @@ module Discourse
             plugin: plugin,
             type_module: true,
             importmap_name: "discourse/plugins/#{plugin.name}",
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "main", request_path),
           }
         end
       end
@@ -492,6 +537,10 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "admin", request_path),
           }
         end
       end
@@ -504,6 +553,8 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "test"),
           }
         end
       end
@@ -589,12 +640,10 @@ module Discourse
 
   def self.cache
     @cache ||=
-      begin
-        if GlobalSetting.skip_redis?
-          ActiveSupport::Cache::MemoryStore.new
-        else
-          Cache.new
-        end
+      if GlobalSetting.skip_redis?
+        ActiveSupport::Cache::MemoryStore.new
+      else
+        Cache.new
       end
   end
 
@@ -679,6 +728,10 @@ module Discourse
 
   def self.beacon_pv_tracking_path
     "#{Discourse.base_path}/srv/pv"
+  end
+
+  def self.engagement_tracking_path
+    "#{Discourse.base_path}/srv/se"
   end
 
   class << self
@@ -798,6 +851,11 @@ module Discourse
 
             @mutex.synchronize do
               @dbs.each do |db|
+                if !RailsMultisite::ConnectionManagement.has_db?(db)
+                  @dbs.delete(db)
+                  next
+                end
+
                 RailsMultisite::ConnectionManagement.with_connection(db) do
                   @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
                 end
@@ -944,7 +1002,12 @@ module Discourse
       User.find_by(
         username_lower: SiteSetting.site_contact_username.downcase,
       ) if SiteSetting.site_contact_username.present?
-    user ||= (system_user || User.admins.real.order(:id).first)
+    user ||= system_user || User.admins.real.order(:id).first
+  end
+
+  # A global override bypasses the write-time name-to-id conversion.
+  def self.site_contact_group
+    Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
   end
 
   SYSTEM_USER_ID = -1
@@ -989,6 +1052,8 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
+    DiscourseVips.before_fork
+
     if GlobalSetting.mini_racer_single_threaded
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
     else
@@ -1028,6 +1093,8 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
+
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
@@ -1193,11 +1260,9 @@ module Discourse
   def self.reset_active_record_cache
     ActiveRecord::Base.connection.query_cache.clear
     (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      begin
-        table.classify.constantize.reset_column_information
-      rescue StandardError
-        nil
-      end
+      table.classify.constantize.reset_column_information
+    rescue StandardError
+      nil
     end
     nil
   end
@@ -1221,11 +1286,9 @@ module Discourse
 
       # load up all models and schema
       (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-        begin
-          table.classify.constantize.first
-        rescue StandardError
-          nil
-        end
+        table.classify.constantize.first
+      rescue StandardError
+        nil
       end
 
       # ensure we have a full schema cache in case we missed something above
@@ -1257,11 +1320,10 @@ module Discourse
     [
       Thread.new do
         # router warm up
-        begin
-          Rails.application.routes.recognize_path("abc")
-        rescue StandardError
-          nil
-        end
+
+        Rails.application.routes.recognize_path("abc")
+      rescue StandardError
+        nil
       end,
       Thread.new do
         # preload discourse version
@@ -1274,9 +1336,12 @@ module Discourse
         require "actionview_precompiler"
         ActionviewPrecompiler.precompile
       end,
-      Thread.new { LetterAvatar.image_magick_version },
+      Thread.new do
+        LetterAvatar.version
+        LetterAvatar.cleanup_old
+      end,
       Thread.new { SvgSprite.core_svgs },
-      Thread.new { EmberCli.script_chunks },
+      Thread.new { EmberAssets.script_chunks(exception: false) },
       Thread.new do
         if GlobalSetting.mini_racer_single_threaded
           PrettyText.cook("warm up **pretty text**")
@@ -1292,6 +1357,11 @@ module Discourse
 
   def self.is_parallel_test?
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
+  end
+
+  def self.test_env_number
+    return "0" if ENV["TEST_ENV_NUMBER"].nil?
+    ENV["TEST_ENV_NUMBER"].presence || "1"
   end
 
   def self.apply_cdn_headers(headers)
@@ -1314,10 +1384,24 @@ module Discourse
 
   def self.anonymous_locale(request)
     locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
-    locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
+    locale ||= locale_from_cookie(request)
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
     HttpLanguageParser.parse(locale)
+  end
+
+  def self.locale_from_cookie(request)
+    cookie = request.cookies["locale"]
+    return if cookie.blank?
+    return cookie if SiteSetting.set_locale_from_cookie
+
+    # The language switcher writes this cookie, so reading it back needs no separate opt-in.
+    # Restricted to the configured locales so anonymous cache variance stays bounded by the
+    # site's own locale list rather than every available locale.
+    if ContentLocalization.language_switcher_enabled? &&
+         SiteSetting.content_localization_locales.include?(cookie)
+      cookie
+    end
   end
 
   # For test environment only

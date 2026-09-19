@@ -3,7 +3,9 @@ import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import AdminReportTableSummary from "discourse/admin/components/admin-report-table-summary";
+import { adminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class AdminReportTableCell extends Component {
@@ -50,13 +52,59 @@ export default class AdminReportTableCell extends Component {
     return this.label.compute(this.data, this.options || {});
   }
 
+  @computed("hasRelatedItems", "type", "property", "value")
+  get hasRelatedItemsSummary() {
+    return (
+      this.hasRelatedItems &&
+      this.type === "number" &&
+      this.property === "y" &&
+      this.value > 0
+    );
+  }
+
+  @computed("reportType")
+  get relatedItemsRenderer() {
+    return adminReportRelatedItemsRenderer(this.reportType);
+  }
+
+  @computed("reportType")
+  get relatedItemsSummary() {
+    return this.relatedItemsRenderer?.tableSummary;
+  }
+
   <template>
     <td
-      title={{this.value}}
-      class={{concatClass "admin-report-table-cell" this.type this.property}}
+      class={{dConcatClass "admin-report-table-cell" this.type this.property}}
+      title={{if this.hasRelatedItemsSummary null this.value}}
       ...attributes
     >
-      {{trustHTML this.formattedValue}}
+      {{#if this.hasRelatedItemsSummary}}
+        {{#if this.relatedItemsRenderer}}
+          {{#if this.relatedItemsSummary}}
+            <AdminReportTableSummary
+              @date={{this.data.x}}
+              @formattedValue={{this.formattedValue}}
+              @itemComponent={{this.relatedItemsSummary.itemComponent}}
+              @itemsKey={{this.relatedItemsSummary.itemsKey}}
+              @listClass={{this.relatedItemsSummary.listClass}}
+              @reportFilters={{this.reportFilters}}
+              @reportType={{this.reportType}}
+              @titleKey={{this.relatedItemsSummary.titleKey}}
+            />
+          {{else}}
+            {{trustHTML this.formattedValue}}
+          {{/if}}
+        {{else}}
+          <AdminReportTableSummary
+            @date={{this.data.x}}
+            @formattedValue={{this.formattedValue}}
+            @reportFilters={{this.reportFilters}}
+            @reportType={{this.reportType}}
+          />
+        {{/if}}
+      {{else}}
+        {{trustHTML this.formattedValue}}
+      {{/if}}
     </td>
   </template>
 }

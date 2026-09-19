@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import ScoreValue from "discourse/components/score-value";
 import float from "discourse/helpers/float";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ExplainReviewable extends Component {
@@ -40,7 +40,7 @@ export default class ExplainReviewable extends Component {
       @title={{i18n "review.explain.title"}}
     >
       <:body>
-        <ConditionalLoadingSpinner @condition={{this.loading}}>
+        <DConditionalLoadingSpinner @condition={{this.loading}}>
           <table>
             <tbody>
               <tr>
@@ -51,18 +51,18 @@ export default class ExplainReviewable extends Component {
                 <tr>
                   <td>
                     <ScoreValue @value="1.0" />
-                    <ScoreValue @value={{s.type_bonus}} @label="type_bonus" />
+                    <ScoreValue @label="type_bonus" @value={{s.type_bonus}} />
                     <ScoreValue
-                      @value={{s.take_action_bonus}}
                       @label="take_action_bonus"
+                      @value={{s.take_action_bonus}}
                     />
                     <ScoreValue
-                      @value={{s.trust_level_bonus}}
                       @label="trust_level_bonus"
+                      @value={{s.trust_level_bonus}}
                     />
                     <ScoreValue
-                      @value={{s.user_accuracy_bonus}}
                       @label="user_accuracy_bonus"
+                      @value={{s.user_accuracy_bonus}}
                     />
                   </td>
                   <td class="sum">{{float s.score}}</td>
@@ -93,7 +93,7 @@ export default class ExplainReviewable extends Component {
               </tr>
             </tbody>
           </table>
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:body>
       <:footer>
         <DButton @action={{@closeModal}} @label="close" />

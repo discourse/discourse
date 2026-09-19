@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse 劇透警示"
   js:
+    spoiler:
+      title: 模糊化劇透內容
+      label:
+        show: "顯示隱藏內容"
     composer:
       spoiler_text: "這段文字會被模糊化"

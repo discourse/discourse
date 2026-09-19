@@ -2,41 +2,23 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
-import cookie, { removeCookie } from "discourse/lib/cookie";
+import {
+  LOCALE_COOKIE,
+  LOCALE_COOKIE_EXPIRY,
+} from "discourse/lib/content-localization";
+import cookie from "discourse/lib/cookie";
+import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-
-const SHOW_ORIGINAL_COOKIE = "content-localization-show-original";
 
 export default class LanguageSwitcher extends Component {
   @service siteSettings;
   @service languageNameLookup;
   @service currentUser;
-
-  @action
-  async changeLocale(locale) {
-    if (this.currentUser) {
-      this.currentUser.set("locale", locale);
-      this.currentUser.set("user_option.show_original_content", false);
-      await ajax(`/u/${this.currentUser.username}.json`, {
-        type: "PUT",
-        data: { locale, show_original_content: false },
-      });
-    } else {
-      cookie("locale", locale, { path: "/" });
-    }
-
-    removeCookie(SHOW_ORIGINAL_COOKIE, { path: "/" });
-
-    this.dMenu.close();
-    // content should switch immediately,
-    // but we need a hard refresh here for controls to switch to the new locale
-    window.location.reload();
-  }
 
   get currentLocale() {
     return I18n.locale;
@@ -72,6 +54,27 @@ export default class LanguageSwitcher extends Component {
     }
 
     return langs;
+  }
+
+  @action
+  async changeLocale(locale) {
+    if (this.currentUser) {
+      this.currentUser.set("locale", locale);
+      await ajax(`/u/${this.currentUser.username}.json`, {
+        type: "PUT",
+        data: { locale },
+      });
+    } else {
+      cookie(LOCALE_COOKIE, locale, {
+        path: getURL("/"),
+        expires: LOCALE_COOKIE_EXPIRY,
+      });
+    }
+
+    this.dMenu.close();
+    // content should switch immediately,
+    // but we need a hard refresh here for controls to switch to the new locale
+    window.location.reload();
   }
 
   normalizeUKEnglish(text) {
@@ -112,31 +115,31 @@ export default class LanguageSwitcher extends Component {
 
   <template>
     <DMenu
-      @identifier="language-switcher"
-      @title={{i18n "language_switcher.title"}}
       class="btn-flat"
+      @identifier="language-switcher"
       @onRegisterApi={{this.onRegisterApi}}
+      @title={{i18n "language_switcher.title"}}
     >
       <:trigger>
         <span class="language-switcher__locale">
           {{this.currentLanguageCode}}
         </span>
-        {{icon "angle-down"}}
+        {{dIcon "angle-down"}}
       </:trigger>
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.content as |option|}}
             <dropdown.item
               class="locale-options {{if option.isActive '--selected'}}"
               data-menu-option-id={{option.value}}
             >
               <DButton
-                @translatedLabel={{option.name}}
                 @action={{fn this.changeLocale option.value}}
+                @translatedLabel={{option.name}}
               />
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

@@ -1,3 +1,5 @@
+const TOO_MANY_REQUESTS = 429;
+
 const _cache = {};
 
 export async function applyInlineOneboxes(inline, ajax, opts) {
@@ -34,11 +36,21 @@ export async function applyInlineOneboxes(inline, ajax, opts) {
           links.forEach((link) => {
             link.innerText = onebox.title;
             link.classList.add("inline-onebox");
+            if (onebox.css_class) {
+              link.classList.add(onebox.css_class);
+            }
             link.classList.remove("inline-onebox-loading");
           });
         }
       });
     } catch (err) {
+      const rateLimited = (err.jqXHR ?? err).status === TOO_MANY_REQUESTS;
+
+      if (rateLimited) {
+        urls.slice(i).forEach((url) => delete _cache[url]);
+        return;
+      }
+
       // eslint-disable-next-line no-console
       console.error("Inline onebox request failed", err, batch);
     }

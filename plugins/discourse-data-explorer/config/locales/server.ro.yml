@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ro:
+  data_explorer:
+    admin_dashboard_label: "Explorator de date"

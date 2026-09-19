@@ -3,6 +3,58 @@
 RSpec.describe ApplicationController do
   fab!(:user)
 
+  describe "handling PostgreSQL read-only errors" do
+    after { Discourse.clear_postgres_readonly! }
+
+    it "returns a read-only response" do
+      get "/test_postgres_readonly.json"
+
+      expect(response.status).to eq(503)
+      expect(response.parsed_body).to eq(
+        "errors" => [I18n.t("read_only_mode_enabled")],
+        "error_type" => "read_only",
+      )
+    end
+  end
+
+  describe "shared session key" do
+    before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
+
+    it "renders the meta tag for a logged-in user" do
+      sign_in(user)
+
+      get "/latest"
+
+      expect(response.body).to match(/<meta name="shared_session_key" content="[^"]+">/)
+    end
+
+    it "authenticates a login-required route via the header" do
+      SiteSetting.login_required = true
+      token = UserAuthToken.generate!(user_id: user.id)
+      key = SecureRandom.hex
+      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
+
+      get "/latest.json"
+      expect(response.status).to eq(403)
+
+      get "/latest.json", headers: { "HTTP_X_SHARED_SESSION_KEY" => key }
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe "search metadata" do
+    it "only advertises OpenSearch to users who can search" do
+      SiteSetting.allow_anonymous_search = false
+
+      get "/latest"
+      expect(response.body).not_to have_tag("link[rel='search']")
+
+      sign_in(user)
+      get "/latest"
+      expect(response.body).to have_tag("link[rel='search']")
+    end
+  end
+
   context "for cache control headers" do
     it "sets the `no-cache, no-store` cache control response header when no error is raised" do
       get "/latest"
@@ -28,26 +80,33 @@ RSpec.describe ApplicationController do
     context "when cache_control_bfcache_compatibility is enabled" do
       before { SiteSetting.cache_control_bfcache_compatibility = true }
 
-      it "sets bfcache-compatible cache control headers" do
+      it "sets bfcache-compatible cache control headers and includes the stale document reload script" do
         get "/latest"
 
         expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
+        expect(response.body).to include("bfcache-stale-document-check")
       end
 
       it "sets bfcache-compatible cache control headers on 404" do
         get "/invalid-urlllllllllll"
 
         expect(response.status).to eq(404)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
       end
 
       it "sets bfcache-compatible cache control headers on 403" do
         get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
 
         expect(response.status).to eq(403)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
       end
+    end
+
+    it "does not include the stale document reload script in the HTML document by default" do
+      get "/latest"
+
+      expect(response.body).not_to include("bfcache-stale-document-check")
     end
   end
 
@@ -75,27 +134,28 @@ RSpec.describe ApplicationController do
       SiteSetting.login_required = true
     end
 
-    it "should never cache a login redirect" do
+    it "does not cache login redirects" do
       get "/"
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
 
-    it "should not redirect to login" do
+    it "does not redirect to login" do
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
     end
 
-    it "should redirect to SSO if enabled" do
+    it "redirects to SSO when enabled" do
       SiteSetting.discourse_connect_url = "http://someurl.com"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
       get "/"
       expect(response).to redirect_to("/session/sso")
     end
 
-    it "should redirect to authenticator if only one, and local logins disabled" do
+    it "redirects to the sole authenticator when local logins are disabled" do
       # Local logins and google enabled, show login UI
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
@@ -106,15 +166,16 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/auth/google_oauth2")
 
       # Google and GitHub enabled, direct to login UI
-      SiteSetting.enable_github_logins = true
+      enable_auth_provider(:github)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect to SSO when auth_immediately is disabled" do
+    it "does not redirect to SSO when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
       SiteSetting.discourse_connect_url = "http://someurl.com"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
 
       get "/"
@@ -122,9 +183,9 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect to authenticator when auth_immediately is disabled" do
+    it "does not redirect to the authenticator when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       SiteSetting.enable_local_logins = false
 
       get "/"
@@ -152,9 +213,9 @@ RSpec.describe ApplicationController do
         OmniAuth.config.test_mode = false
       end
 
-      it "should not redirect to authenticator if registration in progress" do
+      it "does not redirect to the authenticator during registration" do
         SiteSetting.enable_local_logins = false
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
 
         get "/"
         expect(response).to redirect_to("/auth/google_oauth2")
@@ -199,13 +260,14 @@ RSpec.describe ApplicationController do
 
   describe "#redirect_to_second_factor_if_required" do
     let(:admin) { Fabricate(:admin) }
+
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     before do
       admin # to skip welcome wizard at home page `/`
     end
 
-    it "should redirect admins when enforce_second_factor is 'all'" do
+    it "redirects admins when second factor is enforced for everyone" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(admin)
 
@@ -213,7 +275,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
     end
 
-    it "should properly redirect admins when enforce_second_factor is 'all' in subfolder" do
+    it "includes the subfolder when redirecting admins for enforced second factor" do
       set_subfolder "/forum"
       SiteSetting.enforce_second_factor = "all"
       sign_in(admin)
@@ -222,7 +284,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/forum/u/#{admin.username}/preferences/second-factor")
     end
 
-    it "should redirect users when enforce_second_factor is 'all'" do
+    it "redirects users when second factor is enforced for everyone" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
 
@@ -230,7 +292,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
-    it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
+    it "redirects OAuth users when second factor is enforced for everyone" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
       user.user_auth_tokens.last.update(authenticated_with_oauth: true)
@@ -239,7 +301,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
-    it "should not redirect users when enforce_second_factor is 'all', authenticated via oauth but enforce_second_factor_on_external_auth is false" do
+    it "exempts OAuth users when second factor enforcement excludes external authentication" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.enforce_second_factor_on_external_auth = false
       sign_in(user)
@@ -249,7 +311,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect anonymous users when enforce_second_factor is 'all'" do
+    it "does not redirect anonymous users for enforced second factor" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_mode = true
 
@@ -262,7 +324,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should redirect admins when enforce_second_factor is 'staff'" do
+    it "redirects admins when second factor is enforced for staff" do
       SiteSetting.enforce_second_factor = "staff"
       sign_in(admin)
 
@@ -270,7 +332,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
     end
 
-    it "should not redirect users when enforce_second_factor is 'staff'" do
+    it "does not redirect regular users when second factor is enforced for staff" do
       SiteSetting.enforce_second_factor = "staff"
       sign_in(user)
 
@@ -278,7 +340,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect admins when turned off" do
+    it "does not redirect admins when enforcement is disabled" do
       SiteSetting.enforce_second_factor = "no"
       sign_in(admin)
 
@@ -286,7 +348,7 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect users when turned off" do
+    it "does not redirect users when enforcement is disabled" do
       SiteSetting.enforce_second_factor = "no"
       sign_in(user)
 
@@ -382,7 +444,7 @@ RSpec.describe ApplicationController do
 
     after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-    it "should not raise a 500 (nor should it log a warning) for bad params" do
+    it "handles invalid parameters without a 500 response or warning" do
       bad_str = (+"d\xDE").force_encoding("utf-8")
       expect(bad_str.valid_encoding?).to eq(false)
 
@@ -396,7 +458,7 @@ RSpec.describe ApplicationController do
   end
 
   describe "missing required param" do
-    it "should return a 400" do
+    it "returns 400" do
       get "/search/query.json", params: { trem: "misspelled term" }
 
       expect(response.status).to eq(400)
@@ -408,7 +470,7 @@ RSpec.describe ApplicationController do
 
   describe "build_not_found_page" do
     describe "topic not found" do
-      it "should not redirect to permalink if topic/category does not exist" do
+      it "does not redirect to a permalink for a missing topic or category" do
         topic = create_post.topic
         Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
         topic.trash!
@@ -422,7 +484,7 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(410)
       end
 
-      it "should return permalink for deleted topics" do
+      it "returns the permalink for deleted topics" do
         topic = create_post.topic
         external_url = "https://somewhere.over.rainbow"
         Permalink.create!(url: topic.relative_url, external_url: external_url)
@@ -471,7 +533,7 @@ RSpec.describe ApplicationController do
         )
       end
 
-      it "should return 404 and show Google search for an invalid topic route" do
+      it "returns 404 with Google search for an invalid topic route" do
         get "/t/nope-nope/99999999"
 
         expect(response.status).to eq(404)
@@ -482,7 +544,7 @@ RSpec.describe ApplicationController do
         expect(response_body).to have_tag("input", with: { value: "nope nope" })
       end
 
-      it "should not include Google search if login_required is enabled" do
+      it "omits Google search when login is required" do
         SiteSetting.login_required = true
         sign_in(Fabricate(:user))
         get "/t/nope-nope/99999999"
@@ -490,7 +552,16 @@ RSpec.describe ApplicationController do
         expect(response.body).to_not include("google.com/search")
       end
 
-      it "should allow anchor tags in title" do
+      it "does not include search when anonymous search is disabled" do
+        SiteSetting.allow_anonymous_search = false
+
+        get "/t/nope-nope/99999999"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(I18n.t("page_not_found.search_title"))
+      end
+
+      it "allows anchor tags in the title" do
         TranslationOverride.upsert!(
           I18n.locale,
           "page_not_found.title",
@@ -502,7 +573,7 @@ RSpec.describe ApplicationController do
         expect(response.body).to include('<a href="/search">search</a>')
       end
 
-      it "should sanitize unsafe HTML in title" do
+      it "sanitizes unsafe HTML in the title" do
         TranslationOverride.upsert!(
           I18n.locale,
           "page_not_found.title",
@@ -522,7 +593,7 @@ RSpec.describe ApplicationController do
 
         after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-        it "should handle 404 to a css file" do
+        it "handles a missing CSS file" do
           Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
 
           topic1 = Fabricate(:topic)
@@ -547,7 +618,7 @@ RSpec.describe ApplicationController do
           expect(fake_logger.warnings.length).to eq(0)
         end
 
-        it "should render category badges with correct style classes on 404 page" do
+        it "renders category badge style classes on the 404 page" do
           Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
 
           square_cat = Fabricate(:category, style_type: :square)
@@ -570,7 +641,60 @@ RSpec.describe ApplicationController do
         end
       end
 
-      it "should cache results" do
+      it "does not retain topics moved to a restricted category" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op, title: "restricted 404 cache topic")
+        private_category = Fabricate(:private_category, group: Group[:staff])
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}.json", params: { category_id: private_category.id }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
+        end
+      end
+
+      it "does not retain topics after a category becomes restricted" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        category = Fabricate(:category)
+        topic = Fabricate(:topic_with_op, title: "restricted category 404 cache topic", category:)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/categories/#{category.id}.json",
+            params: {
+              permissions: {
+                Group[:staff].name => CategoryGroup.permission_types[:full],
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
+        end
+      end
+
+      it "caches results" do
         Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
         Discourse.cache.delete("page_not_found_topics:fr")
 
@@ -599,6 +723,7 @@ RSpec.describe ApplicationController do
     let!(:theme) { Fabricate(:theme, user_selectable: true) }
     let!(:theme2) { Fabricate(:theme, user_selectable: true) }
     let!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
+
     fab!(:user)
     fab!(:admin)
 
@@ -675,12 +800,12 @@ RSpec.describe ApplicationController do
   end
 
   describe "allow_embedding_site_in_an_iframe" do
-    it "should have the 'X-Frame-Options' header with value 'sameorigin'" do
+    it "sets X-Frame-Options to sameorigin" do
       get("/latest")
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
     end
 
-    it "should not include the 'X-Frame-Options' header" do
+    it "omits the X-Frame-Options header" do
       SiteSetting.allow_embedding_site_in_an_iframe = true
       get("/latest")
       expect(response.headers).not_to include("X-Frame-Options")
@@ -760,20 +885,18 @@ RSpec.describe ApplicationController do
   describe "splash_screen" do
     let(:admin) { Fabricate(:admin) }
 
-    before { admin }
+    before do
+      admin
+      allow_any_instance_of(ApplicationController).to receive(:include_splash_screen?).and_return(
+        true,
+      )
+    end
 
-    it "adds a preloader splash screen when enabled" do
+    it "adds a preloader splash screen" do
       get "/"
 
       expect(response.status).to eq(200)
       expect(response.body).to include("d-splash")
-
-      SiteSetting.splash_screen = false
-
-      get "/"
-
-      expect(response.status).to eq(200)
-      expect(response.body).not_to include("d-splash")
     end
 
     context "with color schemes" do
@@ -1111,6 +1234,45 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "browser pageview tracking session id" do
+    it "doesn't reuse session ids between requests served from the anon cache" do
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      Middleware::AnonymousCache.clear_all_cache!
+
+      get "/latest"
+
+      expect(response.headers["X-Discourse-Cached"]).to eq("store")
+      expect(response.headers).not_to include(
+        Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER,
+      )
+
+      session_id_format = /\A[A-Za-z0-9]{#{Middleware::RequestTracker::MAX_SESSION_ID_LENGTH}}\z/
+
+      first_session_id = extract_session_id_from_body(response.body)
+      expect(first_session_id).to match(session_id_format)
+
+      get "/latest"
+
+      expect(response.headers["X-Discourse-Cached"]).to eq("true")
+      expect(response.headers).not_to include(
+        Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER,
+      )
+
+      second_session_id = extract_session_id_from_body(response.body)
+      expect(second_session_id).to match(session_id_format)
+
+      expect(first_session_id).not_to eq(second_session_id)
+    end
+
+    def extract_session_id_from_body(body)
+      meta_tag =
+        Nokogiri::HTML5.fragment(body).css("meta[name='discourse-track-view-session-id']").first
+      expect(meta_tag).to be_present
+      meta_tag["content"]
+    end
+  end
+
   it "can respond to a request with */* accept header" do
     get "/", headers: { HTTP_ACCEPT: "*/*" }
     expect(response.status).to eq(200)
@@ -1272,7 +1434,7 @@ RSpec.describe ApplicationController do
         end
 
         context "with a logged in user" do
-          it "it uses the default locale" do
+          it "uses the default locale" do
             user = Fabricate(:user, locale: :fr)
             sign_in(user)
 
@@ -1363,6 +1525,55 @@ RSpec.describe ApplicationController do
       end
     end
 
+    context "with a logged in user whose interface language differs from the default locale" do
+      let(:user) { Fabricate(:user, locale: :ja) }
+
+      before do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.default_locale = "en"
+        sign_in(user)
+      end
+
+      it "serves the whole not-found page, including the title, in the user's locale" do
+        get "/missingroute"
+        expect(response.status).to eq(404)
+
+        # the body is rendered in the user's interface language...
+        expect(response.body).to include(I18n.t("page_not_found.home", locale: :ja))
+        expect(response.body).to include(I18n.t("page_not_found.search_title", locale: :ja))
+
+        # ...and so is the <h1> title
+        expect(response.body).to include(
+          ActionController::Base.helpers.sanitize(
+            I18n.t("page_not_found.title", locale: :ja),
+            tags: %w[a],
+            attributes: %w[href class target rel],
+          ),
+        )
+      end
+
+      it "serves the forbidden page title in the user's locale" do
+        SiteSetting.detailed_404 = true
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        get "/c/#{private_category.slug}/l/latest"
+        expect(response.status).to eq(403)
+        expect(response.body).to include(I18n.t("page_forbidden.title", locale: :ja))
+      end
+
+      it "serves the SPA-injected error panel (JSON extras) in the user's locale" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+
+        get "/t/#{private_topic.slug}/#{private_topic.id}.json"
+        expect(response.status).to eq(404)
+
+        extras = response.parsed_body["extras"]
+        expect(extras["title"]).to eq(I18n.t("page_not_found.page_title", locale: :ja))
+        expect(extras["html"]).to include(I18n.t("page_not_found.title", locale: :ja))
+      end
+    end
+
     context "with set_locale_from_cookie enabled" do
       context "when cookie locale differs from default locale" do
         before do
@@ -1397,6 +1608,53 @@ RSpec.describe ApplicationController do
           get "/latest", headers: { Cookie: "" }
           expect(response.status).to eq(200)
           expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+      end
+    end
+
+    context "with the language switcher enabled and set_locale_from_cookie disabled" do
+      before do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.default_locale = "en"
+        SiteSetting.set_locale_from_cookie = false
+        SiteSetting.content_localization_supported_locales = "es|fr"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      context "with an anonymous user" do
+        it "uses the locale from the cookie" do
+          get "/latest", headers: { Cookie: "locale=es" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("es")
+        end
+
+        it "ignores a locale the site has not configured" do
+          get "/latest", headers: { Cookie: "locale=ja" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+
+        it "ignores the cookie once the switcher is turned off" do
+          SiteSetting.content_localization_language_switcher = "none"
+
+          get "/latest", headers: { Cookie: "locale=es" }
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
+        end
+      end
+
+      context "with a logged-in user" do
+        fab!(:user) { Fabricate(:user, locale: "fr") }
+
+        it "ignores the cookie and uses the user's preference" do
+          sign_in(user)
+          # Set through the jar rather than a Cookie header, which would drop the auth cookie.
+          cookies[:locale] = "es"
+
+          get "/latest"
+          expect(response.status).to eq(200)
+          expect(main_locale_scripts(response.body)).to contain_exactly("fr")
         end
       end
     end
@@ -1625,6 +1883,7 @@ RSpec.describe ApplicationController do
   describe "#banner_json" do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
+
     fab!(:banner_topic)
     fab!(:p1) { Fabricate(:post, topic: banner_topic, raw: "A banner topic") }
 
@@ -1634,11 +1893,12 @@ RSpec.describe ApplicationController do
 
     context "with login_required" do
       before { SiteSetting.login_required = true }
+
       it "does not include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["banner"]).to eq("{}")
         end
       end
@@ -1647,8 +1907,8 @@ RSpec.describe ApplicationController do
         sign_in(user)
         get "/"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1656,11 +1916,12 @@ RSpec.describe ApplicationController do
 
     context "with login not required" do
       before { SiteSetting.login_required = false }
+
       it "does include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1669,7 +1930,7 @@ RSpec.describe ApplicationController do
     context "with content localization enabled" do
       def banner_html
         preloaded = Nokogiri::HTML5.fragment(response.body).css("#data-preloaded").first
-        JSON.parse(JSON.parse(preloaded["data-preloaded"])["banner"])["html"]
+        JSON.parse(JSON.parse(preloaded.text)["banner"])["html"]
       end
 
       before do
@@ -1747,9 +2008,7 @@ RSpec.describe ApplicationController do
 
   describe "preloading data" do
     def preloaded_json
-      JSON.parse(
-        Nokogiri::HTML5.fragment(response.body).css("div#data-preloaded").first["data-preloaded"],
-      )
+      JSON.parse(Nokogiri::HTML5.fragment(response.body).css("script#data-preloaded").first.text)
     end
 
     context "when user is anon" do
@@ -1874,6 +2133,39 @@ RSpec.describe ApplicationController do
   describe "#set_current_user_for_logs" do
     fab!(:admin)
 
+    it "sets the X-Discourse-Username header for responses that cannot be stored" do
+      sign_in(admin)
+
+      get "/u/#{admin.username}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to include("no-store")
+      expect(response.headers["X-Discourse-Username"]).to eq(admin.username)
+    end
+
+    it "sets the X-Discourse-Username header in bfcache compatibility mode" do
+      # bfcache mode swaps `no-store` for `private`, which still keeps the
+      # response out of any shared cache, so attribution is safe to keep.
+      SiteSetting.cache_control_bfcache_compatibility = true
+      sign_in(admin)
+
+      get "/u/#{admin.username}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, private")
+      expect(response.headers["X-Discourse-Username"]).to eq(admin.username)
+    end
+
+    it "sets the X-Discourse-Username header for private cached responses" do
+      sign_in(admin)
+
+      get "/manifest.webmanifest"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("max-age=60, private")
+      expect(response.headers["X-Discourse-Username"]).to eq(admin.username)
+    end
+
     it "sets the X-Discourse-Route header to the controller name and action including namespace" do
       sign_in(admin)
 
@@ -1889,10 +2181,27 @@ RSpec.describe ApplicationController do
 
   describe "color definition stylesheets" do
     let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
+    let!(:light_scheme) do
+      ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+    end
 
     before do
       Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
+    end
+
+    context "when scheme cookies contain HTML" do
+      it "does not add injected links to the page" do
+        injected_link =
+          '<link rel="modulepreload" data-plugin-name="poc" href="https://example.com/xss.js">'
+        cookies[:color_scheme_id] = %(#{light_scheme.id}">#{injected_link})
+        cookies[:dark_scheme_id] = %(#{dark_scheme.id}">#{injected_link})
+
+        get "/"
+
+        injected_links = css_select('link[rel="modulepreload"][data-plugin-name="poc"]')
+        expect(injected_links).to be_empty
+      end
     end
 
     context "with early hints" do

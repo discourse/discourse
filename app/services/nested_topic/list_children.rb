@@ -70,7 +70,7 @@ class NestedTopic::ListChildren
             .where(reply_to_post_number: params.parent_post_number)
             .where(post_number: 2..)
         scope = loader.apply_visibility(scope)
-        scope = NestedReplies::Sort.apply(scope, params.sort)
+        scope = loader.apply_sort(scope, params.sort)
         scope.offset(params.page * per_page).limit(per_page)
       end
 
@@ -86,15 +86,22 @@ class NestedTopic::ListChildren
       else
         0
       end
-    tree_data = loader.batch_preload_tree(children_posts, params.sort, max_depth: remaining_depth)
+    tree_data =
+      loader.batch_preload_tree(
+        children_posts,
+        params.sort,
+        max_depth: remaining_depth,
+        starting_depth: params.depth,
+      )
     context[:children_map] = tree_data[:children_map]
     context[:all_posts] = tree_data[:all_posts]
   end
 
   def prepare_posts(loader:, preloader:, all_posts:)
     preloader.prepare(all_posts)
-    context[:reply_counts] = loader.direct_reply_counts(all_posts.map(&:post_number))
-    context[:descendant_counts] = loader.total_descendant_counts(all_posts.map(&:id))
+    counts = loader.tree_counts(all_posts)
+    context[:reply_counts] = counts[:reply_counts]
+    context[:descendant_counts] = counts[:descendant_counts]
   end
 
   def serialize_children(

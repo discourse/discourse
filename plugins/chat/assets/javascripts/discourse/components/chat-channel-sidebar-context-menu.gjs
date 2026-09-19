@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
 
 export default class ChatChannelSidebarContextMenu extends Component {
@@ -15,14 +14,16 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @service chatChannelsManager;
   @service currentUser;
 
-  @tracked isTogglingStarred;
-
   get channel() {
     return this.args.data.channel;
   }
 
   get currentUserMembership() {
     return this.channel?.currentUserMembership;
+  }
+
+  get isTogglingStarred() {
+    return this.chatChannelsManager.isUpdatingStarred(this.channel);
   }
 
   get starIcon() {
@@ -43,27 +44,15 @@ export default class ChatChannelSidebarContextMenu extends Component {
 
   @action
   async toggleStarred() {
-    if (!this.currentUserMembership || this.isTogglingStarred) {
-      return;
-    }
+    const channel = this.channel;
+    const menuIdentifier = channel.isDirectMessageChannel
+      ? "chat-direct-message-channel-menu"
+      : "chat-channel-menu";
+    const menu = this.menu;
 
-    this.isTogglingStarred = true;
-    const previousValue = this.currentUserMembership.starred;
-    const newValue = !previousValue;
-
-    this.currentUserMembership.starred = newValue;
-
-    try {
-      await this.chatApi.updateCurrentUserChannelMembership(this.channel.id, {
-        starred: newValue,
-      });
-      this.args.close();
-    } catch (err) {
-      this.currentUserMembership.starred = previousValue;
-      popupAjaxError(err);
-    } finally {
-      this.isTogglingStarred = false;
-    }
+    await this.chatChannelsManager.toggleStarred(channel, {
+      beforeUpdate: () => menu.close(menuIdentifier),
+    });
   }
 
   @action
@@ -123,46 +112,46 @@ export default class ChatChannelSidebarContextMenu extends Component {
   }
 
   <template>
-    <DropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
+    <DDropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__open-notification-settings"
           @action={{this.openNotificationSettings}}
           @forwardEvent={{true}}
           @icon="bell"
-          @suffixIcon="angle-right"
           @label="chat.channel_settings.notification_settings_context"
+          @suffixIcon="angle-right"
           @title="chat.channel_settings.notification_settings_context"
-          class="chat-channel-sidebar-link-menu__open-notification-settings"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__channel-settings"
           @action={{this.navigateToSettings}}
           @icon="gear"
           @label="chat.channel_settings.title"
           @title="chat.channel_settings.title"
-          class="chat-channel-sidebar-link-menu__channel-settings"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__star-channel"
           @action={{this.toggleStarred}}
           @disabled={{this.isTogglingStarred}}
           @icon={{this.starIcon}}
           @label={{this.starLabel}}
           @title={{this.starLabel}}
-          class="chat-channel-sidebar-link-menu__star-channel"
         />
       </dropdown.item>
       <dropdown.item>
         <DButton
+          class="chat-channel-sidebar-link-menu__leave-channel --danger"
           @action={{this.leaveChannel}}
           @icon="xmark"
           @label={{this.leaveLabel}}
           @title={{this.leaveLabel}}
-          class="chat-channel-sidebar-link-menu__leave-channel --danger"
         />
       </dropdown.item>
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }

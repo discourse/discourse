@@ -16,6 +16,13 @@ th:
     popup:
       chat_mention:
         direct: '%{username} พูดถึงคุณใน "%{channel}"'
+    actions:
+      chat_reply:
+        title: ตอบ
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "อนุมัติ"
+      default_deny_label: "ปฏิเสธ"
   unsubscribe:
     chat_summary:
       never: ไม่เคย

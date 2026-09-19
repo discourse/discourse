@@ -17,7 +17,7 @@ module SecureUploadEndpointHelpers
   def check_secure_upload_permission(upload)
     if upload.access_control_post_id.present?
       raise Discourse::InvalidAccess if current_user.nil? && SiteSetting.login_required
-      raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
+      raise Discourse::InvalidAccess if !guardian.can_see_upload?(upload)
     else
       raise Discourse::NotFound if current_user.nil?
     end

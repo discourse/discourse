@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import ChatablesLoader from "./lib/chatables-loader";
 import List from "./list";
@@ -23,12 +23,12 @@ export default class MembersSelector extends Component {
 
   get items() {
     return this.chatables.filter(
-      (c) => !this.highlightedMemberIds.includes(c.model.id)
+      (c) => !this.selectedIdentifiers.includes(c.identifier)
     );
   }
 
-  get highlightedMemberIds() {
-    return this.args.members.map((u) => u.model.id);
+  get selectedIdentifiers() {
+    return this.args.members.map((member) => member.identifier);
   }
 
   @action
@@ -57,7 +57,7 @@ export default class MembersSelector extends Component {
       return;
     }
 
-    if (this.highlightedMemberIds.includes(chatable.model.id)) {
+    if (this.selectedIdentifiers.includes(chatable.identifier)) {
       this.unselectMember(chatable);
     } else {
       this.args.onChange?.([...this.args.members, chatable]);
@@ -110,8 +110,8 @@ export default class MembersSelector extends Component {
 
   <template>
     <ListHandler
-      @items={{this.items}}
       @highlightedItem={{this.highlightedChatable}}
+      @items={{this.items}}
       @onHighlight={{this.highlightChatable}}
       @onSelect={{this.selectChatable}}
     >
@@ -119,12 +119,12 @@ export default class MembersSelector extends Component {
         <div class="chat-message-creator__add-members-header">
           <Members
             @filter={{this.filter}}
-            @members={{@members}}
             @highlightedMember={{this.highlightedMember}}
+            @members={{@members}}
             @onFilter={{this.onFilter}}
-            @registerFocusFilterAction={{this.registerFocusFilterAction}}
             @onHighlightMember={{this.highlightMember}}
             @onSelectMember={{this.unselectMember}}
+            @registerFocusFilterAction={{this.registerFocusFilterAction}}
           />
 
           <DButton
@@ -136,12 +136,12 @@ export default class MembersSelector extends Component {
       </div>
 
       <List
-        @items={{this.items}}
         @highlightedItem={{this.highlightedChatable}}
-        @onSelect={{this.selectChatable}}
-        @onHighlight={{this.highlightChatable}}
+        @items={{this.items}}
         @maxReached={{@maxReached}}
         @membersCount={{@membersCount}}
+        @onHighlight={{this.highlightChatable}}
+        @onSelect={{this.selectChatable}}
       />
 
     </ListHandler>

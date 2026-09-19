@@ -6,8 +6,8 @@ RSpec.describe DiscourseConnect do
 
   before do
     SiteSetting.discourse_connect_url = discourse_connect_url
-    SiteSetting.enable_discourse_connect = true
     SiteSetting.discourse_connect_secret = discourse_connect_secret
+    SiteSetting.enable_discourse_connect = true
     SiteSetting.reserved_usernames = ""
     Jobs.run_immediately!
   end
@@ -497,7 +497,7 @@ RSpec.describe DiscourseConnect do
     expect(user.username).to eq "testuser"
   end
 
-  it "should preserve username when several users login with the same username" do
+  it "preserves usernames when several users log in with the same username" do
     SiteSetting.auth_overrides_username = true
 
     # if several users have username "bill" on the external site,

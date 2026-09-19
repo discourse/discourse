@@ -4,14 +4,14 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import PinOptionSection, {
   MAX_GLOBALLY_PINNED_TOPICS,
 } from "discourse/components/modal/feature-topic/pin-option-section";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { ajax } from "discourse/lib/ajax";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class FeatureTopic extends Component {
@@ -137,18 +137,18 @@ export default class FeatureTopic extends Component {
   <template>
     <DModal
       class="feature-topic"
-      @title={{i18n "topic.feature_topic.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "topic.feature_topic.title"}}
     >
       <:body>
         {{#if @model.topic.pinned_at}}
           <div class="feature-section">
-            <div class="desc">
+            <div class="feature-section__description">
               {{#if @model.topic.pinned_globally}}
                 <p>
-                  <ConditionalLoadingSpinner
-                    @size="small"
+                  <DConditionalLoadingSpinner
                     @condition={{this.loading}}
+                    @size="small"
                   >
                     {{#if this.pinnedGloballyCount}}
                       {{trustHTML
@@ -162,70 +162,70 @@ export default class FeatureTopic extends Component {
                         (i18n "topic.feature_topic.not_pinned_globally")
                       }}
                     {{/if}}
-                  </ConditionalLoadingSpinner>
+                  </DConditionalLoadingSpinner>
                 </p>
                 <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
               {{else}}
                 <p>
-                  <ConditionalLoadingSpinner
-                    @size="small"
+                  <DConditionalLoadingSpinner
                     @condition={{this.loading}}
+                    @size="small"
                   >
                     {{trustHTML this.alreadyPinnedMessage}}
-                  </ConditionalLoadingSpinner>
+                  </DConditionalLoadingSpinner>
                 </p>
                 <p>{{i18n "topic.feature_topic.pin_note"}}</p>
               {{/if}}
               <p>{{trustHTML this.unPinMessage}}</p>
               <p><DButton
+                  class="btn-primary"
                   @action={{this.unpin}}
                   @icon="thumbtack"
                   @label="topic.feature.unpin"
-                  class="btn-primary"
                 /></p>
             </div>
           </div>
         {{else}}
           <PinOptionSection
-            @statsMessage={{this.alreadyPinnedMessage}}
+            @buttonLabel="topic.feature.pin"
+            @dateValue={{@model.topic.pinnedInCategoryUntil}}
             @loading={{this.loading}}
             @noteMessage={{i18n "topic.feature_topic.pin_note"}}
-            @pinMessage={{this.pinMessage}}
-            @buttonLabel="topic.feature.pin"
-            @onPin={{this.pin}}
-            @dateValue={{@model.topic.pinnedInCategoryUntil}}
             @onDateChange={{fn (mut @model.topic.pinnedInCategoryUntil)}}
+            @onPin={{this.pin}}
+            @pinMessage={{this.pinMessage}}
+            @statsMessage={{this.alreadyPinnedMessage}}
           />
           {{#if this.canPinGlobally}}
             <hr />
             <PinOptionSection
-              @statsMessage={{this.pinGloballyStatsMessage}}
+              @buttonLabel="topic.feature.pin_globally"
+              @confirmMessage={{this.pinGloballyConfirmMessage}}
+              @dateValue={{@model.topic.pinnedGloballyUntil}}
               @loading={{this.loading}}
               @noteMessage={{i18n "topic.feature_topic.global_pin_note"}}
-              @pinMessage={{i18n "topic.feature_topic.pin_globally"}}
-              @buttonLabel="topic.feature.pin_globally"
-              @onPin={{this.pinGlobally}}
-              @dateValue={{@model.topic.pinnedGloballyUntil}}
               @onDateChange={{fn (mut @model.topic.pinnedGloballyUntil)}}
-              @confirmMessage={{this.pinGloballyConfirmMessage}}
+              @onPin={{this.pinGlobally}}
+              @pinMessage={{i18n "topic.feature_topic.pin_globally"}}
+              @statsMessage={{this.pinGloballyStatsMessage}}
             />
           {{/if}}
         {{/if}}
-        <hr />
         {{#if @model.topic.details.can_banner_topic}}
+          <hr />
           <div class="feature-section">
-            <div class="desc">
+            <div class="feature-section__description">
               <p>
-                <ConditionalLoadingSpinner
-                  @size="small"
+                <DConditionalLoadingSpinner
                   @condition={{this.loading}}
+                  @size="small"
                 >
                   {{#if this.bannerCount}}
                     {{trustHTML (i18n "topic.feature_topic.banner_exists")}}
                   {{else}}
                     {{trustHTML (i18n "topic.feature_topic.no_banner_exists")}}
                   {{/if}}
-                </ConditionalLoadingSpinner>
+                </DConditionalLoadingSpinner>
               </p>
               <p>
                 {{i18n "topic.feature_topic.banner_note"}}
@@ -240,17 +240,17 @@ export default class FeatureTopic extends Component {
               <p>
                 {{#if @model.topic.isBanner}}
                   <DButton
+                    class="btn-primary"
                     @action={{this.removeBanner}}
                     @icon="thumbtack"
                     @label="topic.feature.remove_banner"
-                    class="btn-primary"
                   />
                 {{else}}
                   <DButton
+                    class="btn-primary make-banner"
                     @action={{this.makeBanner}}
                     @icon="thumbtack"
                     @label="topic.feature.make_banner"
-                    class="btn-primary make-banner"
                   />
                 {{/if}}
               </p>

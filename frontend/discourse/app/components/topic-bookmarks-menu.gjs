@@ -3,12 +3,9 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import BookmarkMenu from "discourse/components/bookmark-menu";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import TopicBookmarkPostSubmenu from "discourse/components/topic-bookmark-post-submenu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import TopicBookmarkManager from "discourse/lib/topic-bookmark-manager";
@@ -18,6 +15,9 @@ import {
   NOT_BOOKMARKED,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class TopicBookmarksMenu extends Component {
@@ -133,6 +133,10 @@ export default class TopicBookmarksMenu extends Component {
     }
 
     return classes.join(" ");
+  }
+
+  get #timezone() {
+    return this.currentUser?.user_option?.timezone || moment.tz.guess();
   }
 
   @action
@@ -324,45 +328,41 @@ export default class TopicBookmarksMenu extends Component {
     this.topic.removeBookmark(bookmarkId);
   }
 
-  get #timezone() {
-    return this.currentUser?.user_option?.timezone || moment.tz.guess();
-  }
-
   <template>
     {{#if this.useGroupedDropdown}}
       <DMenu
         ...attributes
-        @identifier="topic-bookmarks-menu"
         class={{this.buttonClasses}}
-        @title={{this.buttonTitle}}
-        @label={{this.buttonLabel}}
-        @icon={{this.buttonIcon}}
-        @onRegisterApi={{this.onRegisterApi}}
-        @modalForMobile={{true}}
         @arrow={{false}}
+        @icon={{this.buttonIcon}}
+        @identifier="topic-bookmarks-menu"
+        @label={{this.buttonLabel}}
+        @modalForMobile={{true}}
+        @onRegisterApi={{this.onRegisterApi}}
+        @title={{this.buttonTitle}}
       >
         <:content>
-          <DropdownMenu as |dropdown|>
+          <DDropdownMenu as |dropdown|>
             {{! Post bookmark submenu triggers }}
             {{#each this.postBookmarks as |bookmark|}}
               <dropdown.item
-                class={{concatClass
+                class={{dConcatClass
                   "bookmark-menu__row --post-bookmark"
                   (if bookmark.name "--has-name")
                 }}
                 data-menu-option-id="post-{{bookmark.post_number}}"
               >
                 <DButton
+                  class="bookmark-menu__row-btn"
+                  @action={{this.openPostBookmarkSubmenu}}
+                  @actionParam={{bookmark}}
+                  @forwardEvent={{true}}
                   @icon="bookmark"
                   @suffixIcon="angle-right"
                   @translatedAriaLabel={{i18n
                     "bookmarks.post_bookmark"
                     post_number=bookmark.post_number
                   }}
-                  @actionParam={{bookmark}}
-                  @action={{this.openPostBookmarkSubmenu}}
-                  @forwardEvent={{true}}
-                  class="bookmark-menu__row-btn"
                 >
                   <span class="bookmark-menu__row-texts">
                     <span class="bookmark-menu__row-label">
@@ -385,16 +385,16 @@ export default class TopicBookmarksMenu extends Component {
             {{#if this.topicBookmark}}
               <dropdown.divider />
               <dropdown.item
-                class={{concatClass
+                class={{dConcatClass
                   "bookmark-menu__row --edit"
                   (if this.topicBookmark.name "--has-name")
                 }}
                 data-menu-option-id="edit-topic-bookmark"
               >
                 <DButton
-                  @icon="pencil"
-                  @action={{this.onEditTopicBookmark}}
                   class="bookmark-menu__row-btn"
+                  @action={{this.onEditTopicBookmark}}
+                  @icon="pencil"
                 >
                   <span class="bookmark-menu__row-texts">
                     <span class="bookmark-menu__row-label">
@@ -413,10 +413,10 @@ export default class TopicBookmarksMenu extends Component {
                 data-menu-option-id="delete-topic-bookmark"
               >
                 <DButton
-                  @icon="trash-can"
-                  @action={{this.onRemoveTopicBookmark}}
-                  @label="bookmarks.delete_topic_bookmark"
                   class="bookmark-menu__row-btn --danger"
+                  @action={{this.onRemoveTopicBookmark}}
+                  @icon="trash-can"
+                  @label="bookmarks.delete_topic_bookmark"
                 />
               </dropdown.item>
             {{else}}
@@ -426,10 +426,10 @@ export default class TopicBookmarksMenu extends Component {
                 data-menu-option-id="bookmark-topic"
               >
                 <DButton
+                  class="bookmark-menu__row-btn"
+                  @action={{this.onBookmarkTopic}}
                   @icon="bookmark"
                   @label="bookmarks.bookmark_topic"
-                  @action={{this.onBookmarkTopic}}
-                  class="bookmark-menu__row-btn"
                 />
               </dropdown.item>
             {{/if}}
@@ -442,22 +442,22 @@ export default class TopicBookmarksMenu extends Component {
                 data-menu-option-id="clear-all"
               >
                 <DButton
+                  class="bookmark-menu__row-btn --danger"
+                  @action={{this.onClearAllBookmarks}}
                   @icon="trash-can"
                   @label="bookmarked.delete_bookmarks"
-                  @action={{this.onClearAllBookmarks}}
-                  class="bookmark-menu__row-btn --danger"
                 />
               </dropdown.item>
             {{/if}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     {{else}}
       <BookmarkMenu
-        @showLabel={{@showLabel}}
+        ...attributes
         @bookmarkManager={{this.topicBookmarkManager}}
         @buttonClasses={{@buttonClasses}}
-        ...attributes
+        @showLabel={{@showLabel}}
       />
     {{/if}}
   </template>

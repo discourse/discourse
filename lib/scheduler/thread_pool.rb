@@ -48,7 +48,8 @@ module Scheduler
       raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if shutdown?
 
       db = RailsMultisite::ConnectionManagement.current_db
-      wrapped_block = wrap_block(block, db)
+      locale = I18n.locale
+      wrapped_block = wrap_block(block, db, locale)
 
       @mutex.synchronize do
         @queue << wrapped_block
@@ -112,16 +113,13 @@ module Scheduler
 
     private
 
-    def wrap_block(block, db)
+    def wrap_block(block, db, locale)
       proc do
-        begin
-          RailsMultisite::ConnectionManagement.with_connection(db) { block.call }
-        rescue StandardError => e
-          Discourse.warn_exception(
-            e,
-            message: "Discourse Scheduler ThreadPool: Unhandled exception",
-          )
+        RailsMultisite::ConnectionManagement.with_connection(db) do
+          I18n.with_locale(locale) { block.call }
         end
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "Discourse Scheduler ThreadPool: Unhandled exception")
       end
     end
 

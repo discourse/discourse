@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
-import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
+import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 
 export default class FKControlIcon extends FKBaseControl {
   static controlType = "icon";
@@ -12,12 +12,14 @@ export default class FKControlIcon extends FKBaseControl {
 
   <template>
     <DIconGridPicker
-      @value={{@field.value}}
-      @onChange={{this.handleInput}}
+      class="form-kit__control-icon"
+      @allowClear={{@allowClear}}
       @disabled={{@field.disabled}}
+      @onChange={{this.handleInput}}
+      @onlyAvailable={{@onlyAvailable}}
       @showCaret={{true}}
       @showSelectedName={{true}}
-      class="form-kit__control-icon"
+      @value={{@field.value}}
     />
   </template>
 }

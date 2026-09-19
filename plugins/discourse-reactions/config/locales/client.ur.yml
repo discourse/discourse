@@ -9,12 +9,10 @@ ur:
     admin:
       site_settings:
         categories:
-          discourse_reactions: "ڈسکورس ری ایکشنز"
+          discourse_reactions: "Discourse ری ایکشنز"
   js:
     discourse_reactions:
       reactions_title: "ری ایکشنز"
-      state_panel:
-        more_users: "اور %{count} مزید۔۔۔"
       picker:
         react_with: "اس پوسٹ پر اس کے ساتھ ردعمل دیں: %{reaction}"
         cant_remove_reaction: "آپ اپنے ردعمل کو مزید نہیں ہٹا سکتے"

@@ -4,19 +4,22 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import DockedComposer from "discourse/components/docked-composer";
-import avatar from "discourse/helpers/avatar";
+import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
+import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class EmbedModeComposer extends Component {
   @service appEvents;
   @service currentUser;
+  @service embedAuthFlow;
   @service site;
   @service store;
 
   @tracked replyingToPost = null;
+  @tracked editingPost = null;
   @tracked isSubmitting = false;
   @tracked footerVisible = true;
 
@@ -27,6 +30,7 @@ export default class EmbedModeComposer extends Component {
       this,
       this.handleReplyToPost
     );
+    this.appEvents.on("embed-composer:edit-post", this, this.handleEditPost);
     this.appEvents.on("embed-composer:focus", this, this.handleFocus);
 
     const footerButtons = document.querySelector("#topic-footer-buttons");
@@ -58,9 +62,12 @@ export default class EmbedModeComposer extends Component {
         this,
         this.handleReplyToPost
       );
+      this.appEvents.off("embed-composer:edit-post", this, this.handleEditPost);
       this.appEvents.off("embed-composer:focus", this, this.handleFocus);
     };
   });
+
+  #composerApi = null;
   #footerObserver = null;
   #rootElement = null;
 
@@ -69,6 +76,17 @@ export default class EmbedModeComposer extends Component {
       return false;
     }
     return this.currentUser && this.args.topic?.details?.can_create_post;
+  }
+
+  get showSigninCta() {
+    if (!EmbedMode.enabled || this.currentUser) {
+      return false;
+    }
+    // The empty-state footer already renders its own login CTA
+    if (!this.args.topic?.replyCount) {
+      return false;
+    }
+    return this.embedAuthFlow.isActive;
   }
 
   get showFloatingTimelineButton() {
@@ -85,6 +103,10 @@ export default class EmbedModeComposer extends Component {
 
   @action
   handleReplyToPost(post) {
+    if (this.editingPost) {
+      this.editingPost = null;
+      this.#composerApi?.setReply("");
+    }
     if (post && post.post_number !== 1) {
       this.replyingToPost = post;
     } else {
@@ -111,7 +133,71 @@ export default class EmbedModeComposer extends Component {
   }
 
   @action
+  registerComposerApi(api) {
+    this.#composerApi = api;
+  }
+
+  @action
+  async handleEditPost(post) {
+    this.replyingToPost = null;
+    const fullPost = await this.store.find("post", post.id);
+    this.editingPost = fullPost;
+    this.#composerApi?.setReply(fullPost.raw);
+    schedule("afterRender", () => {
+      this.#rootElement?.querySelector(".d-editor-input")?.focus();
+    });
+  }
+
+  @action
+  cancelEditing() {
+    this.editingPost = null;
+    this.#composerApi?.setReply("");
+  }
+
+  @action
+  handleSigninCtaClick() {
+    this.embedAuthFlow.requestAccess({ intent: "login" });
+  }
+
+  @action
   async handleSubmit({ raw }) {
+    if (this.editingPost) {
+      return this.#submitEdit(raw);
+    }
+    return this.#submitReply(raw);
+  }
+
+  async #submitEdit(raw) {
+    const post = this.editingPost;
+    this.isSubmitting = true;
+
+    try {
+      const result = await ajax(`/posts/${post.id}.json`, {
+        type: "PUT",
+        data: { post: { raw } },
+      });
+
+      const postStream = this.args.topic.postStream;
+      const loadedPost = postStream.findLoadedPost(post.id);
+      if (loadedPost) {
+        loadedPost.setProperties({
+          raw: result.post.raw,
+          cooked: result.post.cooked,
+          version: result.post.version,
+          updated_at: result.post.updated_at,
+        });
+      }
+
+      this.editingPost = null;
+      this.isSubmitting = false;
+      return { ok: true };
+    } catch (error) {
+      this.isSubmitting = false;
+      throw error;
+    }
+  }
+
+  async #submitReply(raw) {
     const topic = this.args.topic;
     const postStream = topic.postStream;
     const user = this.currentUser;
@@ -180,45 +266,66 @@ export default class EmbedModeComposer extends Component {
   }
 
   <template>
-    {{#if this.show}}
+    {{#if this.showSigninCta}}
+      <div class="embed-mode-composer embed-mode-composer--signin-cta">
+        <DButton
+          class="btn-primary embed-mode-composer__signin-cta"
+          @action={{this.handleSigninCtaClick}}
+          @label="embed_mode.signin_flow.sign_in_to_reply"
+        />
+      </div>
+    {{else if this.show}}
       <div class="embed-mode-composer" {{this.setupEvents}}>
         {{#if this.showFloatingTimelineButton}}
           <div class="embed-floating-buttons">
             <DButton
+              class="btn-default embed-floating-timeline-button"
               @action={{this.handleTimelineToggle}}
               @icon="bars-staggered"
               @title="topic.progress.title"
-              class="btn-default embed-floating-timeline-button"
             />
           </div>
         {{/if}}
-        {{#if this.replyingToPost}}
+        {{#if this.editingPost}}
+          <div class="embed-mode-composer__editing">
+            <span class="embed-mode-composer__editing-text">
+              {{dAvatar this.editingPost imageSize="tiny"}}
+              {{i18n "embed_mode.editing_post"}}
+            </span>
+            <DButton
+              class="btn-transparent embed-mode-composer__editing-dismiss"
+              @action={{this.cancelEditing}}
+              @icon="xmark"
+            />
+          </div>
+        {{else if this.replyingToPost}}
           <div class="embed-mode-composer__replying-to">
             <span class="embed-mode-composer__replying-to-text">
-              {{avatar this.replyingToPost imageSize="tiny"}}
+              {{dAvatar this.replyingToPost imageSize="tiny"}}
               {{i18n
                 "embed_mode.replying_to"
                 username=this.replyingToPost.username
               }}
             </span>
             <DButton
-              @icon="xmark"
-              @action={{this.clearReplyingTo}}
               class="btn-transparent embed-mode-composer__replying-to-dismiss"
+              @action={{this.clearReplyingTo}}
+              @icon="xmark"
             />
           </div>
         {{/if}}
         <DockedComposer
-          @topicId={{@topic.id}}
-          @categoryId={{@topic.category.id}}
-          @onSubmit={{this.handleSubmit}}
-          @isSubmitting={{this.isSubmitting}}
-          @resizable={{true}}
-          @placeholder={{this.placeholder}}
-          @draftKey={{this.draftKey}}
-          @submitOnEnter={{false}}
           @bodyClassName="embed-docked-composer-open"
+          @categoryId={{@topic.category.id}}
           @class="embed-mode-composer__composer"
+          @draftKey={{this.draftKey}}
+          @isSubmitting={{this.isSubmitting}}
+          @onRegisterApi={{this.registerComposerApi}}
+          @onSubmit={{this.handleSubmit}}
+          @placeholder={{this.placeholder}}
+          @resizable={{true}}
+          @submitOnEnter={{false}}
+          @topicId={{@topic.id}}
         />
       </div>
     {{/if}}

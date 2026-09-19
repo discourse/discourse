@@ -6,7 +6,7 @@ require "net/pop"
 class EmailSettingsValidator
   def self.validate_as_user(user, protocol, **kwargs)
     DistributedMutex.synchronize("validate_#{protocol}_#{user.id}", validity: 10) do
-      self.public_send("validate_#{protocol}", **kwargs)
+      public_send("validate_#{protocol}", **kwargs)
     end
   end
 
@@ -25,25 +25,23 @@ class EmailSettingsValidator
     openssl_verify: SiteSetting.pop3_polling_openssl_verify,
     debug: Rails.env.development?
   )
-    begin
-      pop3 = Net::POP3.new(host, port)
+    pop3 = Net::POP3.new(host, port)
 
-      # Note that we do not allow which verification mode to be specified
-      # like we do for SMTP, we just pick TLS1_2 if the SSL and openSSL verify
-      # options have been enabled.
-      if ssl
-        if openssl_verify
-          pop3.enable_ssl(max_version: OpenSSL::SSL::TLS1_2_VERSION)
-        else
-          pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
-        end
+    # Note that we do not allow which verification mode to be specified
+    # like we do for SMTP, we just pick TLS1_2 if the SSL and openSSL verify
+    # options have been enabled.
+    if ssl
+      if openssl_verify
+        pop3.enable_ssl(max_version: OpenSSL::SSL::TLS1_2_VERSION)
+      else
+        pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
       end
-
-      # This disconnects itself, unlike SMTP.
-      pop3.auth_only(username, password)
-    rescue => err
-      log_and_raise(err, debug)
     end
+
+    # This disconnects itself, unlike SMTP.
+    pop3.auth_only(username, password)
+  rescue => err
+    log_and_raise(err, debug)
   end
 
   ##
@@ -67,63 +65,61 @@ class EmailSettingsValidator
     openssl_verify_mode: GlobalSetting.smtp_openssl_verify_mode,
     debug: Rails.env.development?
   )
-    begin
-      if username || password
-        authentication = SmtpProviderOverrides.authentication_override(host) if authentication.nil?
-        authentication = authentication.to_sym
-        if !%i[plain login cram_md5].include?(authentication)
-          raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
-        end
-      else
-        authentication = nil
+    if username || password
+      authentication = SmtpProviderOverrides.authentication_override(host) if authentication.nil?
+      authentication = authentication.to_sym
+      if !%i[plain login cram_md5].include?(authentication)
+        raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
       end
-
-      if domain.blank?
-        if Rails.env.development?
-          domain = "localhost"
-        else
-          # Because we are using the SMTP settings here to send emails,
-          # the domain should just be the TLD of the host.
-          domain = MiniSuffix.domain(host)
-        end
-      end
-
-      smtp = Net::SMTP.new(host, port)
-
-      # These SSL options are cribbed from the Mail gem, which is used internally
-      # by ActionMailer. Unfortunately the mail gem hides this setup in private
-      # methods, e.g. https://github.com/mikel/mail/blob/master/lib/mail/network/delivery_methods/smtp.rb#L112-L147
-      #
-      # Relying on the GlobalSetting options is a good idea here.
-      #
-      # For specific use cases, options should be passed in from higher up. For example
-      # Gmail needs either port 465 and tls enabled, or port 587 and starttls_auto.
-      if openssl_verify_mode.kind_of?(String)
-        openssl_verify_mode = OpenSSL::SSL.const_get("VERIFY_#{openssl_verify_mode.upcase}")
-      end
-      ssl_context = Net::SMTP.default_ssl_context
-      ssl_context.verify_mode = openssl_verify_mode if openssl_verify_mode
-
-      if enable_starttls_auto
-        # starttls is automatic, but we might need to change the context
-        smtp.enable_starttls_auto(ssl_context)
-      else
-        smtp.disable_starttls
-      end
-      smtp.enable_tls(ssl_context) if enable_tls
-
-      smtp.open_timeout = 5
-
-      # Some SMTP servers have a higher delay to respond with errors
-      # as a tarpit measure that slows down clients who are sending "bad" commands.
-      # 10s is the minimum, we might need to increase this in the future.
-      smtp.read_timeout = 10
-
-      smtp.start(domain, username, password, authentication)
-      smtp.finish
-    rescue => err
-      log_and_raise(err, debug)
+    else
+      authentication = nil
     end
+
+    if domain.blank?
+      if Rails.env.development?
+        domain = "localhost"
+      else
+        # Because we are using the SMTP settings here to send emails,
+        # the domain should just be the TLD of the host.
+        domain = MiniSuffix.domain(host)
+      end
+    end
+
+    smtp = Net::SMTP.new(host, port)
+
+    # These SSL options are cribbed from the Mail gem, which is used internally
+    # by ActionMailer. Unfortunately the mail gem hides this setup in private
+    # methods, e.g. https://github.com/mikel/mail/blob/master/lib/mail/network/delivery_methods/smtp.rb#L112-L147
+    #
+    # Relying on the GlobalSetting options is a good idea here.
+    #
+    # For specific use cases, options should be passed in from higher up. For example
+    # Gmail needs either port 465 and tls enabled, or port 587 and starttls_auto.
+    if openssl_verify_mode.kind_of?(String)
+      openssl_verify_mode = OpenSSL::SSL.const_get("VERIFY_#{openssl_verify_mode.upcase}")
+    end
+    ssl_context = Net::SMTP.default_ssl_context
+    ssl_context.verify_mode = openssl_verify_mode if openssl_verify_mode
+
+    if enable_starttls_auto
+      # starttls is automatic, but we might need to change the context
+      smtp.enable_starttls_auto(ssl_context)
+    else
+      smtp.disable_starttls
+    end
+    smtp.enable_tls(ssl_context) if enable_tls
+
+    smtp.open_timeout = 5
+
+    # Some SMTP servers have a higher delay to respond with errors
+    # as a tarpit measure that slows down clients who are sending "bad" commands.
+    # 10s is the minimum, we might need to increase this in the future.
+    smtp.read_timeout = 10
+
+    smtp.start(domain, username, password, authentication)
+    smtp.finish
+  rescue => err
+    log_and_raise(err, debug)
   end
 
   def self.log_and_raise(err, debug)

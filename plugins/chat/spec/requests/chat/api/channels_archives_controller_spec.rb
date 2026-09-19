@@ -3,6 +3,7 @@
 RSpec.describe Chat::Api::ChannelsArchivesController do
   fab!(:user)
   fab!(:admin)
+  fab!(:moderator)
   fab!(:category)
   fab!(:channel) { Fabricate(:category_channel, chatable: category) }
 
@@ -21,6 +22,7 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
 
   before do
     SiteSetting.chat_enabled = true
+    SiteSetting.chat_allow_archiving_channels = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
   end
 
@@ -54,6 +56,45 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
       sign_in(admin)
       post "/chat/api/channels/#{channel.id}/archives", params: new_topic_params
       expect(response.status).to eq(403)
+    end
+
+    it "rejects an archive request for a staff-only channel when archiving is disabled" do
+      SiteSetting.chat_allow_archiving_channels = false
+      staff_channel = Fabricate(:private_category_channel)
+      secret_message =
+        Fabricate(
+          :chat_message,
+          chat_channel: staff_channel,
+          user: admin,
+          message: "Staff-only archive secret",
+        )
+      public_topic = Fabricate(:post).topic
+
+      sign_in(moderator)
+      post "/chat/api/channels/#{staff_channel.id}/archives",
+           params: {
+             archive: {
+               type: "existing_topic",
+               topic_id: public_topic.id,
+             },
+           }
+      archive_response_status = response.status
+      archive_response_body = response.body
+      archive = Chat::ChannelArchive.find_by(chat_channel: staff_channel)
+
+      Jobs::Chat::ChannelArchive.new.execute(chat_channel_archive_id: archive.id) if archive
+
+      sign_out
+      get "/t/#{public_topic.slug}/#{public_topic.id}.rss"
+
+      aggregate_failures do
+        expect(archive_response_status).to eq(403)
+        expect(archive_response_body).to include(I18n.t("invalid_access"))
+        expect(archive).to be_nil
+        expect(secret_message.reload.deleted_at).to be_nil
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(secret_message.message)
+      end
     end
 
     it "starts the archive process using a new topic" do

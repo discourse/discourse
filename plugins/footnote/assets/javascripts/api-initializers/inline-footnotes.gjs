@@ -13,19 +13,19 @@ class InlineFootnote extends Component {
 
   <template>
     <DTooltip
+      @closeOnClickOutside={{true}}
+      @closeOnScroll={{false}}
       @identifier="inline-footnote"
       @interactive={{true}}
-      @closeOnScroll={{false}}
-      @closeOnClickOutside={{true}}
     >
       <:trigger>
-        {{! template-lint-disable no-invalid-link-text }}
+        {{! eslint-disable ember/template-no-invalid-link-text }}
         <a
           class="expand-footnote"
+          data-footnote-content={{@data.footnoteContent}}
+          data-footnote-id={{@data.footnoteId}}
           href
           role="button"
-          data-footnote-id={{@data.footnoteId}}
-          data-footnote-content={{@data.footnoteContent}}
           {{on "click" this.preventDefault}}
         ></a>
       </:trigger>
@@ -53,7 +53,13 @@ export default apiInitializer((api) => {
       }
 
       const footnoteId = refLink.getAttribute("href");
-      const footnoteContent = elem.querySelector(footnoteId)?.innerHTML;
+      const footnoteElement = elem.querySelector(footnoteId)?.cloneNode(true);
+
+      footnoteElement
+        ?.querySelectorAll("sup.footnote-ref, .footnote-backref")
+        .forEach((element) => element.remove());
+
+      const footnoteContent = footnoteElement?.innerHTML;
 
       const expandableFootnote = document.createElement("span");
       expandableFootnote.className = "inline-footnote";

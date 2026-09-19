@@ -23,18 +23,18 @@ export default class AssignedTopicListColumn extends Component {
   <template>
     {{#if @topic.assigned_to_user}}
       <AssignActionsDropdown
-        @topic={{@topic}}
         @assignee={{@topic.assigned_to_user.username}}
-        @unassign={{this.unassign}}
         @reassign={{this.reassign}}
+        @topic={{@topic}}
+        @unassign={{this.unassign}}
       />
     {{else if @topic.assigned_to_group}}
       <AssignActionsDropdown
-        @topic={{@topic}}
         @assignee={{@topic.assigned_to_group.name}}
         @group={{true}}
-        @unassign={{this.unassign}}
         @reassign={{this.reassign}}
+        @topic={{@topic}}
+        @unassign={{this.unassign}}
       />
     {{else}}
       <AssignActionsDropdown @topic={{@topic}} @unassign={{this.unassign}} />

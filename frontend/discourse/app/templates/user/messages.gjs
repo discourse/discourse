@@ -1,12 +1,12 @@
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
-import DButton from "discourse/components/d-button";
 import GroupNotificationsTracking from "discourse/components/group-notifications-tracking";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MessagesDropdown from "discourse/components/user-nav/messages-dropdown";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 export default <template>
   {{bodyClass "user-messages-page"}}
@@ -21,16 +21,16 @@ export default <template>
       <li>
         <MessagesDropdown
           @content={{@controller.messagesDropdownContent}}
-          @value={{@controller.messagesDropdownValue}}
           @onChange={{@controller.onMessagesDropdownChange}}
+          @value={{@controller.messagesDropdownValue}}
         />
       </li>
     </ol>
 
-    <HorizontalOverflowNav
-      @ariaLabel="User secondary - messages"
-      id="user-navigation-secondary__horizontal-nav"
+    <DHorizontalOverflowNav
       class="messages-nav"
+      id="user-navigation-secondary__horizontal-nav"
+      @ariaLabel="User secondary - messages"
     />
 
     <div class="navigation-controls">
@@ -51,11 +51,11 @@ export default <template>
 
       {{#if @controller.showNewPM}}
         <DButton
+          class="btn-primary new-private-message"
+          id="new-private-message-btn"
           @action={{routeAction "composePrivateMessage"}}
           @icon="envelope"
           @label="user.new_private_message"
-          id="new-private-message-btn"
-          class="btn-primary new-private-message"
         />
       {{/if}}
       <PluginOutlet

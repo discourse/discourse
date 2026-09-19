@@ -64,3 +64,13 @@ desc "Creates sample email logs"
 task "email_logs:populate" => ["db:load_config"] do |_, args|
   DiscourseDev::EmailLog.populate!
 end
+
+desc "Populates sample data for the admin dashboard"
+task "admin_dashboard:populate" => ["db:load_config"] do |_, args|
+  DiscourseDev::ApplicationRequest.populate!
+end
+
+desc "Seeds browser pageview events and matching application requests"
+task "browser_pageview_events:populate", [:count] => ["db:load_config"] do |_, args|
+  DiscourseDev::BrowserPageviewEvent.populate!(count: args[:count]&.to_i)
+end

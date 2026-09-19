@@ -1,0 +1,233 @@
+tr_TR:
+  site_settings:
+    voice_enabled: "Voice sesli odalar eklentisini etkinleştir."
+    voice_allowed_groups: "Sesli odalara erişebilen gruplar."
+    voice_create_room_allowed_groups: "Yeni sesli oda oluşturabilen gruplar."
+    voice_direct_calls_allowed_groups: "Kullanıcı kartından veya profilinden başka bir kullanıcıyı doğrudan arayabilen gruplar. Boş bırakılırsa doğrudan aramalar kapatılır. Arayanların ayrıca {{setting:voice_allowed_groups}} içinde olması gerekir; sesli oda erişimi olan herkes arama alabilir."
+    voice_max_rooms_per_user: "Bir kullanıcının sahip olabileceği en fazla sesli oda sayısı. Diğer özellikler tarafından otomatik oluşturulan geçici odalar bu sınıra dahil değildir."
+    voice_max_invites_per_day: "Bir kullanıcının günde gönderebileceği en fazla sesli oda daveti bildirimi. Aynı odada aynı kişiye yinelenen davetler, bir gün geçene kadar yeniden bildirim göndermez ve sınıra dahil edilmez."
+    voice_ephemeral_room_ttl_minutes: "Başka bir özellik (örneğin doğrudan arama) tarafından otomatik oluşturulan geçici bir odanın silinmeden önce boş kalabileceği dakika sayısı. İçinde kişi bulunan odalar silinmez."
+    voice_participant_ttl_seconds: "Etkin konuşmacı durumunun otomatik temizlenmeden önce Redis'te tutulacağı saniye sayısı. İstemci yaşam sinyali her 10 saniyede yenilenir."
+    voice_auto_status_enabled: "Kullanıcı sesli odaya katıldığında durumunu otomatik ayarla (ör. '🎙️ Sohbet Odasında'). 'Kullanıcı durumunu etkinleştir' site ayarının açık olması gerekir."
+    voice_mesh_privacy_warning_enabled: "Kullanıcıları eşler arası sesli odaya katılmadan önce diğer katılımcıların IP adreslerini görebileceği konusunda uyar ve bu aygıtta uyarıyı bir daha göstermeme seçeneği sun. LiveKit sunucusunda barındırılan görüşmelerde uyarı gösterilmez."
+    voice_badges_enabled: "Sesli sohbet rozetlerini etkinleştir. Sesli odalarda geçirilen süre, ziyaret edilen odalar ve kurulan bağlantılar gibi dönüm noktaları için rozet verir."
+    voice_idle_threshold_minutes: "Sesli oda katılımcısının boşta olarak işaretlenmesi için geçmesi gereken etkinlik dışı dakika sayısı. Kapatmak için 0 yapın."
+    voice_afk_auto_mute_threshold_minutes: "Sesli oda katılımcısının mikrofonunun otomatik kapatılması için geçmesi gereken etkinlik dışı dakika sayısı. Kapatmak için 0 yapın."
+    voice_afk_disconnect_threshold_minutes: "Sesli oda katılımcısının bağlantısının otomatik kesilmesi için geçmesi gereken etkinlik dışı dakika sayısı. Kapatmak için 0 yapın."
+    voice_video_enabled: "Sesli odalarda kamera videosunu ve ekran paylaşımını etkinleştir. Her oda kendi ayarlarından bunları kapatabilir."
+    voice_video_max_publishers: "Bir odada aynı anda video veya ekran paylaşabilen en fazla katılımcı sayısı. Eşler arası odalarda yüksek değerler tüm izleyicilerin işlemci ve bant genişliği yükünü artırır; LiveKit medya sunucusu kullanan odalarda ise ağırlıklı olarak sunucu yükünü artırır."
+    voice_video_background_blur_enabled: "Katılımcıların kamera arka planını bulanıklaştırmasına izin ver. Bölümleme, yayıncının aygıtında MediaPipe ile çalışır ve kamera açıkken işlemci/GPU yükünü artırır."
+    voice_subtitles_enabled: "Katılımcıların diğer kişilerin konuşmaları için canlı altyazıları açmasına izin ver. Yazıya aktarma tamamen izleyicinin aygıtında NVIDIA Parakeet konuşmadan metne modeliyle çalışır (yaklaşık 2,5 GB, ilk kullanımda indirilir, WebGPU gerekir); ses tarayıcıdan dışarı çıkmaz."
+    voice_stt_model_base_url: "Altyazı modelinin kendi sunucunuzda barındırılan yansısı için isteğe bağlı temel URL. Boşken model dosyaları ilk kullanımda Discourse'un HuggingFace deposundan (Discourse/parakeet-tdt-0.6b-v3-onnx) indirilir. Yansı, özgün adlarıyla aynı dört dosyayı tarayıcıların CORS izniyle erişebileceği şekilde sunmalıdır; eklentideki docs/subtitles-model-mirror.md belgesine bakın."
+    voice_max_voice_quality: "Katılımcıların ses ayarlarında seçebileceği en yüksek mikrofon ses kalitesi. Standart, tarayıcının konuşma varsayılanıdır (yaklaşık 32 kbps); yüksek (yaklaşık 64 kbps) ve en yüksek (yaklaşık 128 kbps), bant genişliği karşılığında iyi mikrofonların ses kalitesini artırır."
+    voice_max_camera_quality: "Katılımcıların video ayarlarında seçebileceği en yüksek kamera kalitesi. Standart 720p, yüksek 1080p görüntü yakalar; en yüksek ise eşler arası odalarda izleyici sayısı arttıkça otomatik kalite düşürmeyi de durdurur ve göndericinin yükleme bant genişliği ile işlemci kullanımını katlar."
+    voice_max_screen_share_quality: "Katılımcıların video ayarlarında seçebileceği en yüksek ekran paylaşımı kalitesi. Standart makul bit hızında 15 fps, yüksek daha yüksek bit hızında 30 fps, en yüksek ise çok yüksek bit hızı sınırıyla 60 fps hedefler ve hızlı bağlantıların yüksek çözünürlüklü ekranları tam kalitede paylaşmasını sağlar."
+    voice_chat_enabled: "Sesli odaların bir sohbet kanalına bağlanmasına izin ver. Her sohbet oturumu o kanalda bir konu açar; iletiler gerçek sohbet iletileridir ve katılımcılar sohbet arayüzünden de takip edebilir."
+    voice_stun_servers: "Eşler arası sesli odalarda NAT geçişi için kullanılan ve | ile ayrılan STUN sunucusu URI'leri (stun:ana_makine:port). {{setting:voice_turn_secret_servers}} yapılandırıldığında boş bırakılabilir; istemciler genel adreslerini TURN sunucusunun kendisi üzerinden bulur."
+    voice_turn_servers: "Doğrudan bağlantı kurulamadığında ses trafiğini aktarmak için kullanılan ve | ile ayrılan TURN sunucusu URI'leri (turn:ana_makine:port veya turns:ana_makine:port). {{setting:voice_turn_username}} ve {{setting:voice_turn_credential}} ile kimlik doğrulanır; kısa ömürlü kimlik bilgilerini destekleyen sunucular için bunun yerine {{setting:voice_turn_secret_servers}} kullanın."
+    voice_turn_username: "{{setting:voice_turn_servers}} içindeki TURN sunucuları için sabit kullanıcı adı."
+    voice_turn_credential: "{{setting:voice_turn_servers}} içindeki TURN sunucuları için sabit parola."
+    voice_turn_secret: "{{setting:voice_turn_secret_servers}} içindeki sunucular için kısa ömürlü TURN kimlik bilgileri üretmekte kullanılan ortak gizli anahtar (TURN REST API, coturn use-auth-secret modu). Bu TURN sunucularında yapılandırılan gizli anahtarla aynı olmalıdır."
+    voice_turn_secret_servers: "Sabit kullanıcı adı ve parola yerine {{setting:voice_turn_secret}} üzerinden türetilen, kullanıcıya özel kısa ömürlü kimlik bilgileriyle doğrulama yapan ve | ile ayrılan TURN sunucusu URI'leri (turn:ana_makine:port veya turns:ana_makine:port). Böylece kimlik bilgileri üçüncü kişilerce yeniden kullanılamaz."
+    voice_livekit_url: "Kendi sunucunuzda barındırılan LiveKit sunucusunun WebSocket URL'si (ws:// veya wss://). API anahtarı ve gizli anahtarla birlikte sesli odaların eşler arası ağ yerine bu sunucuyu medya sunucusu (SFU) olarak kullanmasını sağlar."
+    voice_livekit_api_key: "LiveKit sunucusunun API anahtarı."
+    voice_livekit_api_secret: "Kısa ömürlü oda erişim belirteçlerini imzalamak için kullanılan LiveKit sunucusu API gizli anahtarı."
+    voice_livekit_room_policy: "Eşler arası ağ yerine LiveKit medya sunucusunu kullanacak odalar. Değişiklikler devam eden görüşmeleri etkilemez; her oda bir sonraki görüşme başladığında geçiş yapar."
+    voice_livekit_room_prefix: "LiveKit sunucusundaki oda adları için ad alanı ön eki. Sitenin veritabanı adını kullanmak için boş bırakın."
+    voice_livekit_mesh_fallback: "LiveKit erişim belirteci üretilemediğinde ve oda boşken katılımı başarısız kılmak yerine görüşmeyi eşler arası ağda başlat. Sessiz kalite düşüşü LiveKit kesintisini gizleyebileceği için varsayılan olarak kapalıdır."
+    voice_livekit_recording_enabled: "Oda moderatörlerinin LiveKit medya sunucusunda çalışan görüşmeleri kaydetmesine izin ver. Kayıtlar LiveKit Egress hizmeti tarafından oluşturulur ve kurulumun yazmak üzere yapılandırıldığı yerde (S3, GCS veya yerel disk) saklanır; bu siteye yüklenmez."
+    voice_livekit_recording_filepath: "Kayıtlar için LiveKit Egress'e gönderilen dosya yolu. {room_name}, {room_id}, {time} ve {utc} gibi LiveKit şablon değişkenlerini destekler; dosya uzantısı otomatik eklenir."
+    errors:
+      voice_turn_secret_servers_requires_secret: "Kısa ömürlü kimlik bilgileri kullanan TURN sunucularını eklemeden önce voice_turn_secret ayarını yapın."
+      voice_livekit_policy_requires_url: "Bir LiveKit oda ilkesini etkinleştirmeden önce voice_livekit_url ayarını ws:// veya wss:// URL'si olarak girin."
+      voice_livekit_policy_requires_api_key: "Bir LiveKit oda ilkesini etkinleştirmeden önce voice_livekit_api_key ayarını yapın."
+      voice_livekit_policy_requires_api_secret: "Bir LiveKit oda ilkesini etkinleştirmeden önce voice_livekit_api_secret ayarını yapın."
+  voice:
+    defaults:
+      watercooler_description: "Diğer topluluk üyeleriyle rahat ve anlık sesli sohbetler için katılın."
+    chat:
+      default_thread_title: "{room} odasında sesli sohbet"
+    user_status:
+      in_room: "%{room_name} odasında"
+      in_private_room: "Bir sesli odada"
+      afk_in_room: "%{room_name} odasında AFK"
+      afk_in_private_room: "Bir sesli odada AFK"
+    errors:
+      not_enabled: "Voice sesli odaları devre dışı."
+      not_authorized: "Bu oda için bu işlemi yapma izniniz yok."
+      room_limit: "Oluşturabileceğiniz en fazla oda sayısına ulaştınız."
+      missing_payload: "Sinyal verisi gereklidir."
+      cannot_call_user: "Üzgünüz, bu kullanıcıyı arayamazsınız."
+      cannot_kick_self: "Kendinizi odadan çıkaramazsınız."
+      cannot_kick_creator: "Odayı oluşturan kişiyi odadan çıkaramazsınız."
+      listeners_cannot_unmute: "Dinleyiciler Sahne odasında mikrofonlarını açamaz."
+      video_not_allowed: "Bu odada video etkin değil."
+      video_publisher_limit: "Bu odada aynı anda yayınlanabilecek en yüksek video akışı sayısına ulaşıldı."
+      chat_unavailable: "Bu oda için sohbet kullanılamıyor."
+      chat_requires_presence: "Sohbeti kullanmak için sesli odaya katılın."
+      flag_target_never_joined: "Bu kullanıcı odaya katılmadı."
+      flag_already_handled: "Teşekkürler, bu kullanıcı hakkında daha önce bilgilendirildik ve durumu inceliyoruz."
+      chat_threading_disabled: "Bağlı sohbet kanalında konu özelliği artık etkin değil, bu nedenle sohbet oturumu başlatılamıyor."
+      livekit_unavailable: "Ses sunucusu kullanılamıyor. Site yöneticinizle iletişime geçin."
+      livekit_room_instance_ended: "Bu görüşme sona erdi. Yeni bir görüşme başlatmak için odaya yeniden katılın."
+      livekit_no_signaling: "Bu odadaki görüşme bir medya sunucusu kullanıyor; eşler arası sinyalleşme devre dışı."
+      recording_unavailable: "Bu görüşmede kayıt kullanılamıyor."
+      recording_already_active: "Bu görüşme zaten kaydediliyor."
+      recording_not_active: "Bu görüşme kaydedilmiyor."
+      recording_failed: "Kayıt başlatılamadı. Site yöneticinizle iletişime geçin."
+      recording_stop_failed: "Kayıt durdurulamadı. Lütfen yeniden deneyin."
+    reviewable_score_types:
+      notify_moderators:
+        pm_title: "Bir sesli oda katılımcısı yetkililerin ilgisini gerektiriyor"
+        pm_body: "[%{room_name}](%{link}) sesli odasındaki @%{username} adlı kullanıcı yetkililerin ilgisini gerektiriyor:\n\n%{message}"
+    reviewables:
+      actions:
+        agree_and_keep:
+          title: "Kabul et"
+          description: "Bildirimi kabul et."
+        agree_and_suspend:
+          title: "Kullanıcıyı askıya al"
+          description: "Bildirimi kabul et ve kullanıcıyı askıya al."
+        agree_and_silence:
+          title: "Kullanıcıyı sustur"
+          description: "Bildirimi kabul et ve kullanıcıyı sustur."
+        disagree:
+          title: "Reddet"
+          description: "Bildirimi reddet."
+        ignore:
+          title: "Bildirimi yok say"
+          description: "İşlem yapmadan bildirimi kuyruktan kaldır."
+    invite_notification:
+      title: "%{username} sizi %{room_name} odasına davet etti"
+      excerpt: "%{room_name} sesli odasına katıl"
+    call_notification:
+      title: "%{username} sizi arıyor"
+      excerpt: "Yanıtlamak için %{room_name} odasına katıl"
+    call:
+      room_name: "📞 %{caller} + %{callee}"
+    recording_ready_pm:
+      title: "%{room_name} odasının kaydı hazır"
+      body_with_link: |
+        **%{room_name}** sesli odasının kaydı (%{duration}) hazır:
+
+        [Kaydı indir](%{link})
+
+        Bu bağlantıya sahip olan herkes kayda erişebilir; dikkatli paylaşın.
+      body_with_path: |
+        **%{room_name}** sesli odasının kaydı (%{duration}) tamamlandı.
+
+        Kayıt sunucusunda şu konumda saklanıyor:
+
+        `%{filepath}`
+
+        Erişim için site yöneticinize başvurun.
+      unknown_duration: "bilinmeyen süre"
+  badges:
+    mic_check:
+      name: "Mikrofon Kontrolü"
+      description: "İlk sesli sohbet oturumunu tamamladı."
+      long_description: "Başka bir kişiyle sesli odada en az 30 saniye geçirince verilir."
+    rookie:
+      name: "Çaylak"
+      description: "Sesli sohbette 1 saat geçirdi."
+      long_description: "Toplam 1 saat sesli sohbette geçirince verilir."
+    chatterbox:
+      name: "Geveze"
+      description: "Sesli sohbette 10 saat geçirdi."
+      long_description: "Toplam 10 saat sesli sohbette geçirince verilir."
+    silver_tongue:
+      name: "Gümüş Dil"
+      description: "Sesli sohbette 100 saat geçirdi."
+      long_description: "Toplam 100 saat sesli sohbette geçirince verilir."
+    icebreaker:
+      name: "Buzkıran"
+      description: "Yabancılarla dolu bir odaya katıldı."
+      long_description: "Daha önce birlikte bulunma geçmişi olmayan kişilerle dolu bir sesli odaya katılınca verilir."
+    social_butterfly:
+      name: "Sosyal Kelebek"
+      description: "10 farklı kişiyle sohbet etti."
+      long_description: "10 veya daha fazla farklı kullanıcıyla aynı anda sesli odada bulununca verilir."
+    life_of_the_party:
+      name: "Partinin Neşesi"
+      description: "50 farklı kişiyle sohbet etti."
+      long_description: "50 veya daha fazla farklı kullanıcıyla aynı anda sesli odada bulununca verilir."
+    familiar_face:
+      name: "Tanıdık Yüz"
+      description: "Aynı kişiyle 2 saat sohbet etti."
+      long_description: "Belirli bir kullanıcıyla toplam 2 saat veya daha uzun süre aynı anda sesli odada bulununca verilir."
+    inner_circle:
+      name: "Yakın Çevre"
+      description: "Aynı kişiyle 10 saat sohbet etti."
+      long_description: "Belirli bir kullanıcıyla toplam 10 saat veya daha uzun süre aynı anda sesli odada bulununca verilir."
+    partners_in_crime:
+      name: "Suç Ortakları"
+      description: "Aynı kişiyle 50 saat sohbet etti."
+      long_description: "Belirli bir kullanıcıyla toplam 50 saat veya daha uzun süre aynı anda sesli odada bulununca verilir."
+    explorer:
+      name: "Kâşif"
+      description: "5 farklı sesli odaya katıldı."
+      long_description: "5 farklı sesli odaya katılınca verilir."
+    nomad:
+      name: "Göçebe"
+      description: "20 farklı sesli odaya katıldı."
+      long_description: "20 farklı sesli odaya katılınca verilir."
+    omnipresent:
+      name: "Her Yerde"
+      description: "50 farklı sesli odaya katıldı."
+      long_description: "50 farklı sesli odaya katılınca verilir."
+    patron:
+      name: "Müdavim"
+      description: "Aynı odayı 10 farklı günde ziyaret etti."
+      long_description: "Aynı sesli odaya 10 farklı günde katılınca verilir."
+    barfly:
+      name: "Gedikli"
+      description: "Aynı odayı 30 farklı günde ziyaret etti."
+      long_description: "Aynı sesli odaya 30 farklı günde katılınca verilir."
+    the_mayor:
+      name: "Belediye Başkanı"
+      description: "Aynı odayı 100 farklı günde ziyaret etti."
+      long_description: "Aynı sesli odaya 100 farklı günde katılınca verilir."
+    host:
+      name: "Ev Sahibi"
+      description: "İlk sesli odasını oluşturdu."
+      long_description: "İlk sesli odayı oluşturunca verilir."
+    crowd_puller:
+      name: "Kalabalık Toplayan"
+      description: "Oluşturduğu bir oda toplam 50 katılıma ulaştı."
+      long_description: "Oluşturduğunuz bir sesli oda toplam 50 veya daha fazla katılıma ulaşınca verilir."
+    master_of_ceremonies:
+      name: "Tören Ustası"
+      description: "Oluşturduğu bir oda toplam 500 katılıma ulaştı."
+      long_description: "Oluşturduğunuz bir sesli oda toplam 500 veya daha fazla katılıma ulaşınca verilir."
+    plus_one:
+      name: "Artı Bir"
+      description: "Bir kişi davetiyle sesli odaya katıldı."
+      long_description: "Davet ettiğiniz bir kişi ilk kez davetiniz üzerinden sesli odaya katılınca verilir."
+    connector:
+      name: "Bağ Kurucu"
+      description: "10 kişi davetleriyle sesli odalara katıldı."
+      long_description: "10 farklı kişi davetleriniz üzerinden sesli odalara katılınca verilir."
+    people_magnet:
+      name: "İnsan Mıknatısı"
+      description: "50 kişi davetleriyle sesli odalara katıldı."
+      long_description: "50 farklı kişi davetleriniz üzerinden sesli odalara katılınca verilir."
+    night_owl:
+      name: "Gece Kuşu"
+      description: "Gece yarısı ile 05.00 arasında sohbet etti."
+      long_description: "Yerel saat diliminizde gece yarısı ile 05.00 arasında bir sesli oturuma katılınca verilir."
+    early_bird:
+      name: "Erkenci Kuş"
+      description: "05.00 ile 09.00 arasında sohbet etti."
+      long_description: "Yerel saat diliminizde 05.00 ile 09.00 arasında bir sesli oturuma katılınca verilir."
+    packed_house:
+      name: "Tıklım Tıklım"
+      description: "Bir oda tam kapasiteye ulaştığında oradaydı."
+      long_description: "Bir sesli odanın en yüksek kapasiteye ulaştığı anda odada bulununca verilir."
+    weekend_warrior:
+      name: "Hafta Sonu Savaşçısı"
+      description: "Hafta sonları 5 saat sohbet etti."
+      long_description: "Hafta sonlarında toplam 5 saat veya daha uzun süre sesli sohbette geçirince verilir."
+    marathoner:
+      name: "Maratoncu"
+      description: "Tek bir sesli oturumda 4 saat kaldı."
+      long_description: "Kesintisiz tek bir sesli oturumda 4 saat veya daha uzun süre kalınca verilir."

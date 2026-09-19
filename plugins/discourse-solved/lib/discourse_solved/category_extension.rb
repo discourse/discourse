@@ -38,6 +38,14 @@ module DiscourseSolved::CategoryExtension
     custom_fields[DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD] = coerce_boolean_value(value)
   end
 
+  def shared_issues_enabled?
+    custom_fields[DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD] != "false"
+  end
+
+  def shared_issues_enabled=(value)
+    custom_fields[DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD] = coerce_boolean_value(value)
+  end
+
   private
 
   def coerce_boolean_value(value)

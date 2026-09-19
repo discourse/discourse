@@ -11,6 +11,7 @@ RSpec.describe TopicBookmarkable do
   let!(:topic1) { Fabricate(:topic) }
   let!(:topic2) { Fabricate(:topic) }
   let!(:post) { Fabricate(:post, topic: topic1) }
+  let!(:post2) { Fabricate(:post, topic: topic2) }
   let!(:bookmark1) do
     Fabricate(:bookmark, user: user, bookmarkable: topic1, name: "something i gotta do")
   end
@@ -93,6 +94,12 @@ RSpec.describe TopicBookmarkable do
       expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
       bookmark1.bookmarkable.trash!
       bookmark1.reload
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
+    end
+
+    it "cannot send a reminder if the first post is hidden" do
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
+      bookmark1.bookmarkable.first_post.update!(hidden: true)
       expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
     end
 

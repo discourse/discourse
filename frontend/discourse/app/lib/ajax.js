@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import $ from "jquery";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -123,6 +124,10 @@ export function ajax() {
       _trackView = false;
       args.headers["Discourse-Track-View"] = "true";
 
+      if (EmbedMode.enabled) {
+        args.headers["Discourse-Track-View-Embed"] = "true";
+      }
+
       if (_trackingSessionId) {
         args.headers["Discourse-Track-View-Session-Id"] = _trackingSessionId;
         _trackingSessionId = null;
@@ -239,9 +244,7 @@ export function ajax() {
     !Session.currentProp("csrfToken")
   ) {
     promise = new Promise((resolve, reject) => {
-      ajaxObj = updateCsrfToken().then(() => {
-        performAjax(resolve, reject);
-      });
+      updateCsrfToken().then(() => performAjax(resolve, reject), reject);
     });
   } else {
     promise = new Promise(performAjax);

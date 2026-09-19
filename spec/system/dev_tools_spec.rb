@@ -8,7 +8,6 @@ describe "Discourse dev tools" do
   describe "toolbar" do
     it "can be enabled and disabled" do
       visit("/latest")
-      expect(page).to have_css("#site-logo")
       expect(toolbar).to have_no_toolbar
 
       toolbar.enable
@@ -16,7 +15,6 @@ describe "Discourse dev tools" do
 
       toolbar.disable
       expect(toolbar).to have_no_toolbar
-      expect(page).to have_css("#site-logo")
     end
   end
 
@@ -90,7 +88,7 @@ describe "Discourse dev tools" do
 
     context "with test theme blocks" do
       fab!(:theme) do
-        theme_dir = "#{Rails.root}/spec/fixtures/themes/dev-tools-test-theme"
+        theme_dir = "#{Rails.root.join("spec/fixtures/themes/dev-tools-test-theme")}"
         theme = RemoteTheme.import_theme_from_directory(theme_dir)
         Theme.find(SiteSetting.default_theme_id).child_themes << theme
         theme

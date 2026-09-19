@@ -1,8 +1,17 @@
 # frozen_string_literal: true
 
 class Admin::SiteSettingsController < Admin::AdminController
+  # On an archived site the only site setting an admin may change is
+  # `site_archived` itself (to toggle archive back off). The guard inside
+  # #update blocks every other setting.
+  allow_when_archived :update
+
   rescue_from Discourse::InvalidParameters do |e|
     render_json_error e.message, status: 422
+  end
+
+  rescue_from Discourse::InvalidHTMLParameters do |e|
+    render_json_error e.html_message, html_message: true, status: 422
   end
 
   def index
@@ -32,6 +41,10 @@ class Admin::SiteSettingsController < Admin::AdminController
       settings = [{ setting_name: id, value: params[id], backfill: }]
     end
 
+    if SiteSetting.site_archived && settings.any? { |s| s[:setting_name].to_s != "site_archived" }
+      raise Discourse::SiteArchived
+    end
+
     SiteSetting::Update.call(
       guardian:,
       params: {
@@ -43,7 +56,10 @@ class Admin::SiteSettingsController < Admin::AdminController
       },
     ) do
       on_success { head :no_content }
-      on_exceptions { |e| raise Discourse::InvalidParameters, e }
+      on_exceptions do |e|
+        raise e if e.is_a?(Discourse::InvalidParameters)
+        raise Discourse::InvalidParameters, e.message
+      end
       on_failed_policy(:settings_are_not_deprecated) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end

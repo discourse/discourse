@@ -10,9 +10,26 @@ lv:
       yaxis: "Datums"
   discourse_ai:
     ai_bot:
+      navigation:
+        users:
+          title: "Lietotāji"
+        groups:
+          title: "Grupas"
+        categories:
+          title: "Sadaļas"
+        tags:
+          title: "Birkas"
+        themes:
+          title: "Dizaini"
+        backups:
+          title: "Dublējums (Backups)"
+      read_post:
+        unknown_post: "ieraksts"
       tool_summary:
         search: "Meklēt"
         time: "Laiks"
+      tool_help:
+        create_category: "Izveidot jaunu sadaļu"
     reviewables:
       ai_tool_action:
         approve:

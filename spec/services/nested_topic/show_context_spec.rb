@@ -45,6 +45,18 @@ RSpec.describe NestedTopic::ShowContext do
       it { is_expected.to fail_to_find_a_model(:target_post) }
     end
 
+    context "when target post is soft-deleted" do
+      before { PostDestroyer.new(Discourse.system_user, target, context: "spec").destroy }
+
+      it { is_expected.to run_successfully }
+
+      it "resolves the deleted post and serializes it via the placeholder path" do
+        response = result[:response]
+        expect(response[:target_post][:id]).to eq(target.id)
+        expect(response[:target_post][:deleted_post_placeholder]).to eq(true)
+      end
+    end
+
     context "when target is a root post" do
       it { is_expected.to run_successfully }
 
@@ -57,6 +69,19 @@ RSpec.describe NestedTopic::ShowContext do
         expect(response[:siblings]).to be_a(Hash)
         expect(response[:target_post][:id]).to eq(target.id)
         expect(response[:message_bus_last_id]).to be_an(Integer)
+      end
+    end
+
+    context "with suggested/related payload" do
+      # The context view has no pagination, so the suggested/related keys
+      # must always ride along with the response — mirrors the final-page
+      # behavior in NestedTopic::ListRoots.
+      fab!(:other_topic) { Fabricate(:post).topic }
+
+      it "attaches suggested/related keys to the response" do
+        response = result[:response]
+        expect(response).to include(:suggested_topics)
+        expect(response[:suggested_topics].map(&:id)).to include(other_topic.id)
       end
     end
 
@@ -88,6 +113,112 @@ RSpec.describe NestedTopic::ShowContext do
       it "populates siblings for ancestors" do
         response = result[:response]
         expect(response[:siblings]).to be_a(Hash)
+      end
+    end
+
+    context "when context reaches the capped display boundary" do
+      before do
+        SiteSetting.nested_replies_cap_nesting_depth = true
+        SiteSetting.nested_replies_max_depth = 3
+      end
+
+      it "returns all deeper branches as sorted children of the target" do
+        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        second_level =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        boundary_target =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: second_level.post_number)
+        low_direct =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: boundary_target.post_number,
+            like_count: 1,
+          )
+        high_direct =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: boundary_target.post_number,
+            like_count: 8,
+          )
+        highest_deep =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: low_direct.post_number,
+            like_count: 12,
+          )
+        middle_deep =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: high_direct.post_number,
+            like_count: 5,
+          )
+
+        response =
+          stub_const(NestedReplies::TreeLoader, :PRELOAD_CHILDREN_PER_PARENT, 10) do
+            described_class.call(
+              params: {
+                target_post_number: boundary_target.post_number,
+                sort: "top",
+              },
+              **dependencies,
+            )[
+              :response
+            ]
+          end
+
+        expected_posts = [highest_deep, high_direct, middle_deep, low_direct]
+        expect(response[:target_post][:children].map { |post_json| post_json[:id] }).to eq(
+          expected_posts.map(&:id),
+        )
+        expect(
+          response[:target_post][:children].map { |post_json| post_json[:children] }.uniq,
+        ).to eq([[]])
+      end
+
+      it "leaves descendants for boundary pagination when the target is already at max depth" do
+        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        second_level =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        boundary_parent =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: second_level.post_number)
+        max_depth_target =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: boundary_parent.post_number,
+          )
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          reply_to_post_number: max_depth_target.post_number,
+        )
+
+        response =
+          described_class.call(
+            params: {
+              target_post_number: max_depth_target.post_number,
+              sort: "old",
+            },
+            **dependencies,
+          )[
+            :response
+          ]
+
+        expect(response[:target_post][:children]).to eq([])
+        expect(response[:ancestor_chain].last).to include(
+          id: boundary_parent.id,
+          total_descendant_count: 2,
+        )
       end
     end
   end

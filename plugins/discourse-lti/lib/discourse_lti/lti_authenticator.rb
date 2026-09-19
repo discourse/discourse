@@ -15,8 +15,12 @@ class DiscourseLti::LtiAuthenticator < Auth::ManagedAuthenticator
     true
   end
 
-  def enabled?
-    SiteSetting.lti_enabled
+  def enable_setting
+    :lti_enabled
+  end
+
+  def required_settings
+    %i[lti_client_ids lti_authorization_endpoint lti_platform_issuer_id lti_platform_public_key]
   end
 
   def primary_email_verified?(auth)

@@ -2,6 +2,8 @@
 
 module Middleware
   class CrawlerHooks
+    NON_LOCALIZABLE_PATH_PREFIXES = %w[/uploads/ /secure-uploads/ /secure-media-uploads/].freeze
+
     def initialize(app)
       @app = app
     end
@@ -11,8 +13,9 @@ module Middleware
       status, headers, response = @app.call(env)
 
       if status == 200 && headers["X-Discourse-Crawler-View"] &&
-           SiteSetting.content_localization_enabled &&
-           SiteSetting.content_localization_crawler_param
+           headers["Content-Type"]&.include?("text/html") &&
+           !non_localizable_path?(request_path_without_base_path(request)) &&
+           ContentLocalization.crawler_locale_param_enabled?
         response = transform_response(request:, response:)
       end
 
@@ -24,14 +27,14 @@ module Middleware
     def transform_response(request:, response:)
       locale = request.params[Discourse::LOCALE_PARAM]
 
-      if SiteSetting.content_localization_enabled &&
-           SiteSetting.content_localization_crawler_param && locale.present?
+      if ContentLocalization.crawler_locale_param_enabled? && locale.present?
         html_fragment = Nokogiri::HTML5.parse(response.body)
 
         html_fragment
           .css("a[href^='/'], a[href^='#{Discourse.base_url}']")
           .each do |link|
             uri = Addressable::URI.parse(link["href"])
+            next if non_localizable_path?(uri.path)
             uri.query_values = (uri.query_values || {}).merge(Discourse::LOCALE_PARAM => locale)
             link["href"] = uri.to_s
           end
@@ -41,6 +44,22 @@ module Middleware
       end
 
       response
+    end
+
+    def non_localizable_path?(path)
+      return false if path.blank?
+      NON_LOCALIZABLE_PATH_PREFIXES.any? { |prefix| path.start_with?(prefix) }
+    end
+
+    def request_path_without_base_path(request)
+      path = request.path
+      base_path = Discourse.base_path
+
+      if base_path.present? && path.start_with?(base_path)
+        path.delete_prefix(base_path)
+      else
+        path
+      end
     end
   end
 end

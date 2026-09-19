@@ -9,13 +9,9 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import DButton from "discourse/components/d-button";
-import FilterInput from "discourse/components/filter-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import noop from "discourse/helpers/noop";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -27,13 +23,17 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
-import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { eq, gt, includes, notEq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 
-const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
 const DEFAULT_LAST_SECTION = "favorites";
 
 const tonableEmojiTitle = (emoji, diversity) => {
@@ -56,12 +56,13 @@ export default class EmojiPicker extends Component {
   @service emojiStore;
   @service capabilities;
   @service site;
+  @service siteSettings;
 
   @tracked isFiltering = false;
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";
-  @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
+  @tracked visibleSections = this.initialVisibleSections;
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked term = this.args.term;
 
@@ -99,10 +100,12 @@ export default class EmojiPicker extends Component {
     };
   });
 
-  addVisibleSections(sections) {
-    this.visibleSections = uniqueItemsFromArray(
-      makeArray(this.visibleSections).concat(makeArray(sections))
-    );
+  get initialVisibleSections() {
+    const pinned =
+      this.siteSettings.emoji_picker_pinned_groups
+        ?.split("|")
+        .filter(Boolean) ?? [];
+    return ["favorites", ...[...pinned, "smileys_&_emotion"].slice(0, 3)];
   }
 
   get sections() {
@@ -129,6 +132,12 @@ export default class EmojiPicker extends Component {
       ...favorites,
       ...this.emojiStore.list,
     };
+  }
+
+  addVisibleSections(sections) {
+    this.visibleSections = uniqueItemsFromArray(
+      makeArray(this.visibleSections).concat(makeArray(sections))
+    );
   }
 
   @action
@@ -162,7 +171,7 @@ export default class EmojiPicker extends Component {
 
     if (!value?.length) {
       cancel(this.debouncedFilterHandler);
-      this.visibleSections = DEFAULT_VISIBLE_SECTIONS;
+      this.visibleSections = this.initialVisibleSections;
       this.filteredEmojis = null;
       this.isFiltering = false;
       return;
@@ -339,21 +348,7 @@ export default class EmojiPicker extends Component {
     this.lastVisibleSection = section;
 
     next(() => {
-      schedule("afterRender", () => {
-        const targetSection = document.querySelector(
-          `.emoji-picker__section[data-section="${section}"]`
-        );
-
-        if (targetSection && this.scrollableNode) {
-          const titleContainer = targetSection.querySelector(
-            ".emoji-picker__section-title-container"
-          );
-          const titleHeight = titleContainer?.offsetHeight ?? 0;
-          this.scrollableNode.scrollTop = targetSection.offsetTop - titleHeight;
-        }
-
-        this.scrollObserverEnabled = true;
-      });
+      schedule("afterRender", () => this._scrollToSection(section));
     });
   }
 
@@ -376,6 +371,41 @@ export default class EmojiPicker extends Component {
     } finally {
       this.loading = false;
     }
+  }
+
+  // re-enables the scroll observer only once the final scroll has happened, so
+  // the expand-and-retry path below doesn't let it re-detect a section mid-jump
+  _scrollToSection(section) {
+    const targetSection = document.querySelector(
+      `.emoji-picker__section[data-section="${section}"]`
+    );
+
+    if (!targetSection || !this.scrollableNode) {
+      this.scrollObserverEnabled = true;
+      return;
+    }
+
+    const node = this.scrollableNode;
+    const titleHeight =
+      targetSection.querySelector(".emoji-picker__section-title-container")
+        ?.offsetHeight ?? 0;
+    const desiredScrollTop = targetSection.offsetTop - titleHeight;
+    const maxScrollTop = node.scrollHeight - node.clientHeight;
+
+    // when the sections below the target don't fill the panel, the target can't
+    // reach the top and the jump lands in empty space; expand the remaining
+    // sections so real content fills it, then scroll once they've rendered
+    if (
+      desiredScrollTop > maxScrollTop &&
+      this.visibleSections.length < Object.keys(this.groups).length
+    ) {
+      this.addVisibleSections(Object.keys(this.groups));
+      schedule("afterRender", () => this._scrollToSection(section));
+      return;
+    }
+
+    node.scrollTop = Math.min(desiredScrollTop, maxScrollTop);
+    this.scrollObserverEnabled = true;
   }
 
   @bind
@@ -404,12 +434,18 @@ export default class EmojiPicker extends Component {
       this.lastVisibleSection = sectionElement.dataset.section;
       this.addVisibleSections(visibleSections.map((s) => s.dataset.section));
 
-      document
-        .querySelector(".emoji-picker__section-btn.active")
-        ?.scrollIntoView({
-          block: "nearest",
-          inline: "start",
-        });
+      // target the button by section rather than `.active`, which only updates
+      // on the next render and would leave us scrolling the previous one
+      const navButton = document.querySelector(
+        `.emoji-picker__section-btn[data-section="${this.lastVisibleSection}"]`
+      );
+
+      if (navButton) {
+        navButton.scrollIntoView({ block: "nearest", inline: "start" });
+        // scrollIntoView doesn't emit a scroll event, so nudge the surrounding
+        // scroll container to refresh its scroll indicators
+        navButton.parentElement?.dispatchEvent(new Event("scroll"));
+      }
     }
   }
 
@@ -437,9 +473,8 @@ export default class EmojiPicker extends Component {
     for (const sectionNode of document.querySelectorAll(
       ".emoji-picker__section"
     )) {
-      const sectionName = sectionNode.dataset.section;
       sections.push(sectionNode.dataset.section);
-      if (sectionName === section) {
+      if (sectionNode.dataset.section === section) {
         break;
       }
     }
@@ -447,15 +482,15 @@ export default class EmojiPicker extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    {{! template-lint-disable no-nested-interactive }}
-    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-nested-interactive }}
+
     <div
-      class={{concatClass "emoji-picker"}}
+      class={{dConcatClass "emoji-picker"}}
+      ...attributes
       {{didInsert this.loadEmojis}}
       {{didInsert (if @didInsert @didInsert (noop))}}
       {{on "keydown" this.trapKeyDownEvents}}
-      ...attributes
     >
       <div class="emoji-picker__filter-container">
         <PluginOutlet
@@ -469,86 +504,90 @@ export default class EmojiPicker extends Component {
             close=@close
           }}
         >
-          <FilterInput
-            {{preventScrollOnFocus}}
-            {{autoFocus}}
-            {{didInsert this.registerFilterInput}}
-            @value={{this.term}}
+          <DFilterInput
+            placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
+            @containerClass="emoji-picker__filter"
             @filterAction={{withEventValue this.didInputFilter}}
             @icons={{hash left="magnifying-glass"}}
-            @containerClass="emoji-picker__filter"
-            placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
+            @value={{this.term}}
+            {{preventScrollOnFocus}}
+            {{dAutoFocus}}
+            {{didInsert this.registerFilterInput}}
           />
 
           <DiversityMenu />
 
           {{#if this.site.mobileView}}
             <DButton
-              @icon="xmark"
-              @action={{@close}}
               class="btn-transparent emoji-picker__close-btn"
+              @action={{@close}}
+              @icon="xmark"
             />
           {{/if}}
         </PluginOutlet>
       </div>
 
       <div class="emoji-picker__content">
-        <div class="emoji-picker__sections-nav" {{this.setupSectionsNavScroll}}>
+        <DOverflowControls
+          @class="emoji-picker__sections-nav"
+          @wrapperClass="emoji-picker__sections-nav-wrap"
+          {{this.setupSectionsNavScroll}}
+        >
           {{#each-in this.groups as |section emojis|}}
             {{#if emojis.length}}
               <DButton
-                class={{concatClass
+                class={{dConcatClass
                   "btn-flat"
                   "emoji-picker__section-btn"
                   (if (eq this.lastVisibleSection section) "active")
                 }}
+                data-section={{section}}
                 tabindex="-1"
                 @action={{fn this.didRequestSection section}}
-                data-section={{section}}
               >
                 {{#if (eq section "favorites")}}
-                  {{replaceEmoji ":star:"}}
+                  {{dReplaceEmoji ":star:"}}
                 {{else}}
                   <img
-                    width="18"
-                    height="18"
                     class="emoji"
+                    height="18"
                     src={{tonableEmojiUrl
                       (get emojis "0")
                       this.emojiStore.diversity
                     }}
+                    width="18"
                   />
                 {{/if}}
               </DButton>
             {{/if}}
           {{/each-in}}
-        </div>
+        </DOverflowControls>
 
         {{#if this.emojiStore.list}}
           <div class="emoji-picker__scrollable-content" {{this.scrollListener}}>
             <div
               class="emoji-picker__sections"
+              role="button"
               {{on "click" this.didSelectEmoji}}
               {{on "keydown" this.onSectionsKeyDown}}
-              role="button"
             >
               {{#if this.term.length}}
                 <div class="emoji-picker__section filtered">
                   {{#each this.filteredEmojis as |emoji|}}
                     <img
-                      width="32"
-                      height="32"
+                      alt={{emoji.name}}
                       class="emoji"
-                      src={{tonableEmojiUrl emoji this.emojiStore.diversity}}
-                      tabindex="0"
                       data-emoji={{emoji.name}}
                       data-tonable={{if emoji.tonable "true"}}
-                      alt={{emoji.name}}
+                      height="32"
+                      loading="lazy"
+                      src={{tonableEmojiUrl emoji this.emojiStore.diversity}}
+                      tabindex="0"
                       title={{tonableEmojiTitle
                         emoji
                         this.emojiStore.diversity
                       }}
-                      loading="lazy"
+                      width="32"
                     />
                   {{else}}
                     {{#if this.isFiltering}}
@@ -558,7 +597,7 @@ export default class EmojiPicker extends Component {
                     {{else}}
                       <p class="emoji-picker__no-results">
                         {{i18n "chat.emoji_picker.no_results"}}
-                        {{replaceEmoji ":crying_cat_face:"}}
+                        {{dReplaceEmoji ":crying_cat_face:"}}
                       </p>
                     {{/if}}
                   {{/each}}
@@ -567,18 +606,19 @@ export default class EmojiPicker extends Component {
                 {{#each-in this.groups as |section emojis|}}
                   {{#if emojis}}
                     <div
-                      class={{concatClass
+                      aria-label={{i18n
+                        (concat "chat.emoji_picker." section)
+                        translatedFallback=section
+                      }}
+                      class={{dConcatClass
                         "emoji-picker__section"
                         (if (notEq this.filteredEmojis null) "hidden")
                       }}
                       data-section={{section}}
                       role="region"
-                      aria-label={{i18n
-                        (concat "chat.emoji_picker." section)
-                        translatedFallback=section
-                      }}
                     >
                       <div class="emoji-picker__section-title-container">
+                        {{! eslint-disable-next-line ember/template-no-heading-inside-button }}
                         <h2 class="emoji-picker__section-title">
                           {{i18n
                             (concat "chat.emoji_picker." section)
@@ -587,9 +627,9 @@ export default class EmojiPicker extends Component {
                         </h2>
                         {{#if (eq section "favorites")}}
                           <DButton
-                            @icon="trash-can"
                             class="btn-transparent"
                             @action={{this.clearFavorites}}
+                            @icon="trash-can"
                           />
                         {{/if}}
                       </div>
@@ -597,22 +637,22 @@ export default class EmojiPicker extends Component {
                         {{! we always want the first emoji for tabbing}}
                         {{#let (get emojis "0") as |emoji|}}
                           <img
-                            width="32"
-                            height="32"
+                            alt={{emoji.name}}
                             class="emoji"
+                            data-emoji={{emoji.name}}
+                            data-tonable={{if emoji.tonable "true"}}
+                            height="32"
+                            loading="lazy"
                             src={{tonableEmojiUrl
                               emoji
                               this.emojiStore.diversity
                             }}
                             tabindex="0"
-                            data-emoji={{emoji.name}}
-                            data-tonable={{if emoji.tonable "true"}}
-                            alt={{emoji.name}}
                             title={{tonableEmojiTitle
                               emoji
                               this.emojiStore.diversity
                             }}
-                            loading="lazy"
+                            width="32"
                           />
                         {{/let}}
 
@@ -621,22 +661,22 @@ export default class EmojiPicker extends Component {
                             {{! first emoji has already been rendered, we don't want to re render or would lose focus}}
                             {{#if (gt index 0)}}
                               <img
-                                width="32"
-                                height="32"
+                                alt={{emoji.name}}
                                 class="emoji"
+                                data-emoji={{emoji.name}}
+                                data-tonable={{if emoji.tonable "true"}}
+                                height="32"
+                                loading="lazy"
                                 src={{tonableEmojiUrl
                                   emoji
                                   this.emojiStore.diversity
                                 }}
                                 tabindex="-1"
-                                data-emoji={{emoji.name}}
-                                data-tonable={{if emoji.tonable "true"}}
-                                alt={{emoji.name}}
                                 title={{tonableEmojiTitle
                                   emoji
                                   this.emojiStore.diversity
                                 }}
-                                loading="lazy"
+                                width="32"
                               />
                             {{/if}}
                           {{/each}}

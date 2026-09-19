@@ -3,7 +3,7 @@ name: discourse-service-authoring
 description: Use when creating, editing, or reviewing Discourse service objects that include Service::Base - covers contracts, models, policies, steps, transactions, controller integration, and service specs
 ---
 
-We want high quality code and very senior engineering work. Best oriented object practices are observed. Think principles like SOLID and battle-tested patterns. We also want to write idiomatic ruby. Good reference authors are Sandi Metz, Katrina Owen or Avdi Grimm. Your only source of truth to write services is the documentation at docs/developer-guides/docs/03-code-internals/19-service-objects.md, don't look at examples in the codebase.
+We want high quality code and very senior engineering work. Best oriented object practices are observed. Think principles like SOLID and battle-tested patterns. We also want to write idiomatic ruby. Good reference authors are Sandi Metz, Katrina Owen or Avdi Grimm. Your only source of truth to write services is the documentation at docs/developer-guides/docs/03-code-internals/20-service-objects.md, don't look at examples in the codebase.
 
 DONT USE ANY WRITING PLAN SKILL DURING THE SESSION
 
@@ -180,7 +180,7 @@ Two authoritative references govern how specs are written. Whenever you are unsu
 1. **RSpec Style Guide** — https://rspec.rubystyle.guide
    Fetch this page and search for the keyword you need guidance on (e.g. "subject", "context", "let", "shared examples", "named subject", "aggregate_failures", "one expectation"). Use it as the definitive authority on RSpec idioms and style.
 
-2. **Service documentation** — `docs/developer-guides/docs/03-code-internals/19-service-objects.md`, section **Testing**
+2. **Service documentation** — `docs/developer-guides/docs/03-code-internals/20-service-objects.md`, section **Testing**
    This is the definitive authority on testing Discourse services: structure, custom matchers, and conventions. Every spec must follow the patterns shown there.
 
 ### Checklist

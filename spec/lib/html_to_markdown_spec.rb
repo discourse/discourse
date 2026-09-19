@@ -399,6 +399,35 @@ RSpec.describe HtmlToMarkdown do
     )
   end
 
+  it "nests lists that are siblings of the <li> they belong to" do
+    expect(html_to_markdown(<<-HTML)).to eq(
+      <ul>
+        <li>Fruits</li>
+        <ul>
+            <li>🍏</li>
+            <li>🍐</li>
+            <li>🍌</li>
+        </ul>
+        <li>Vegetables</li>
+        <ul>
+            <li>🍆</li>
+            <li>🍅</li>
+            <li>🍄</li>
+        </ul>
+      </ul>
+    HTML
+      "- Fruits\n  - 🍏\n  - 🍐\n  - 🍌\n- Vegetables\n  - 🍆\n  - 🍅\n  - 🍄",
+    )
+
+    expect(html_to_markdown("<ol><li>🍆</li><ol><li>🍅</li></ol><li>🍄</li></ol>")).to eq(
+      "1. 🍆\n   1. 🍅\n1. 🍄",
+    )
+  end
+
+  it "separates a nested list from the <li> that follows it" do
+    expect(html_to_markdown("<ul><ol><li>🍏</li></ol><li>🍐</li></ul>")).to eq("1. 🍏\n- 🍐")
+  end
+
   it "supports bare <li>" do
     expect(html_to_markdown("<li>I'm alone</li>")).to eq("- I'm alone")
   end
@@ -436,7 +465,7 @@ RSpec.describe HtmlToMarkdown do
     ).to eq("> ```\n> var foo = 'bar';\n> ```")
   end
 
-  it "works" do
+  it "converts a blockquote nested in a list item" do
     expect(
       html_to_markdown(
         "<ul><li><p>A list item with a blockquote:</p><blockquote><p>This is a <strong>blockquote</strong><br>inside a list item.</p></blockquote></li></ul>",
@@ -521,7 +550,7 @@ RSpec.describe HtmlToMarkdown do
       )
     end
 
-    it "works" do
+    it "converts nested bold and italic text with line breaks" do
       expect(html_to_markdown("<div>A <b> B <i> C <br> D </i> E <br> F </b> G</div>")).to eq(
         "A __B *C*__\n__*D* E__\n**F** G",
       )

@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   simulateKeys,
@@ -89,6 +89,37 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
         '.hashtag-autocomplete__option .hashtag-autocomplete__text img.emoji[title="bug"]'
       )
       .exists();
+  });
+
+  test("autocomplete supports periods in the middle of tag names", async function (assert) {
+    const terms = [];
+
+    pretender.get("/hashtags/search.json", (request) => {
+      terms.push(request.queryParams.term);
+
+      return response({
+        results: [
+          {
+            id: 301,
+            text: "sam.i.am x 1",
+            slug: "sam.i.am",
+            icon: "tag",
+            relative_url: "/tag/sam-i-am/301",
+            ref: "sam.i.am",
+            type: "tag",
+            style_type: "icon",
+          },
+        ],
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await simulateKeys(".d-editor-input", "abc #sam.i");
+
+    assert.true(terms.includes("sam.i"));
+    assert.dom(".hashtag-autocomplete__option").exists({ count: 1 });
+    assert.dom(".hashtag-autocomplete__option").hasText("sam.i.am x 1");
   });
 
   test("iconHTML is correctly generated for various hashtag types and style_type configs", async function (assert) {

@@ -48,6 +48,8 @@ ro:
       cast-votes:
         title: "Exprimă-ți votul"
         label: "Votează acum!"
+      keep-vote:
+        label: "Înapoi"
       show-results:
         title: "Afişează rezultatele sondajului"
         label: "Rezultate"
@@ -117,5 +119,3 @@ ro:
           add: Adaugă opțiune
         automatic_close:
           label: Închide sondaj automat
-        show_advanced: "Afișați opțiunile avansate"
-        hide_advanced: "Ascundeți opțiunile avansate"

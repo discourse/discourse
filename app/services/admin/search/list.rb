@@ -46,7 +46,7 @@ module Admin
       end
 
       def fetch_reports(guardian:)
-        Reports::ListQuery.call(admin: true)
+        Reports::ListQuery.call(guardian: guardian)
       end
 
       def fetch_upcoming_changes(guardian:)

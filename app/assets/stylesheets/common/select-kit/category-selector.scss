@@ -1,6 +1,7 @@
 .select-kit,
 .select-kit-box {
-  &.category-selector {
+  &.category-selector,
+  &.multiple-categories-selector {
     .category-row {
       max-width: 100%;
 
@@ -23,10 +24,14 @@
         margin: 0;
       }
 
+      .badge-category__wrapper + .badge-category__wrapper {
+        margin-inline-start: var(--space-1);
+      }
+
       &:hover,
       &:focus {
         .badge-category {
-          color: var(--secondary);
+          color: var(--d-button-default-text-color--hover);
         }
       }
     }

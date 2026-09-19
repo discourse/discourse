@@ -12,7 +12,6 @@ RSpec.describe "Discourse Math - composer" do
 
   before do
     SiteSetting.discourse_math_enabled = true
-    SiteSetting.rich_editor = true
     sign_in(current_user)
   end
 

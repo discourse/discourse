@@ -119,6 +119,23 @@ describe "Viewing reviewable item" do
       expect(page).to have_text("This is a review note.")
     end
 
+    it "only shows a note on the reviewable it was added to" do
+      other_reviewable = Fabricate(:reviewable_flagged_post)
+
+      review_page.visit_reviewable(reviewable_flagged_post)
+      review_note_form.add_note("This is a review note.")
+
+      expect(page).to have_text("This is a review note.")
+
+      review_page.visit_reviewable_from_user_menu(other_reviewable)
+
+      expect(page).to have_no_text("This is a review note.")
+
+      review_page.visit_reviewable_from_user_menu(reviewable_flagged_post)
+
+      expect(page).to have_text("This is a review note.")
+    end
+
     it "shows confirmation dialog when navigating away with unsaved note, but not after clearing the note" do
       dialog = PageObjects::Components::Dialog.new
 
@@ -208,7 +225,7 @@ describe "Viewing reviewable item" do
       before do
         reviewable_flagged_post.target_created_by.update!(ip_address: "81.2.69.142")
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS
           .any_instance
           .stubs(:getname)
@@ -270,7 +287,7 @@ describe "Viewing reviewable item" do
 
         expect(review_page).to have_ip_hostname("ip-81-2-69-142.example.com")
 
-        review_page.visit_reviewable(other_reviewable)
+        review_page.visit_reviewable_from_user_menu(other_reviewable)
         review_page.click_insights_tab
 
         expect(review_page).to have_ip_hostname("ip-2-125-160-216.example.com")
@@ -319,8 +336,11 @@ describe "Viewing reviewable item" do
     end
 
     it "shows context question for rejected queued post" do
+      reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
+
       review_page.visit_reviewable(reviewable_queued_post)
 
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable_queued_post)
       expect(review_page).to have_context_question(
         reviewable_queued_post,
         I18n.t("js.review.context_question.approve_post"),
@@ -356,7 +376,14 @@ describe "Viewing reviewable item" do
 
       expect(page).to have_text(user.name)
 
+      expect(review_page).to have_no_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.approve_user"),
+      )
+
       review_page.click_scrub_user_button
+
+      expect(scrub_user_modal.scrub_button).to be_disabled
 
       scrubbing_reason = "a spammer who knows how to make GDPR requests"
       scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)

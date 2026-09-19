@@ -4,6 +4,121 @@ RSpec.describe PostMover do
   fab!(:admin)
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
+  describe "#to_topic" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+    fab!(:destination_topic, :topic)
+    fab!(:user)
+
+    it "rejects the move when the user cannot move posts from the source topic" do
+      mover = described_class.new(topic, user, [reply.id])
+
+      expect do
+        expect { mover.to_topic(destination_topic.id) }.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "rejects the move when the destination category is read-only for the user" do
+      mover_user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :readonly)
+      category.save!
+      destination_topic.update!(category: category)
+      mover = described_class.new(topic, mover_user, [reply.id])
+
+      expect do
+        expect { mover.to_topic(destination_topic.id) }.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "does not emit topic_created when moving to an existing topic" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      events = DiscourseEvent.track_events(:topic_created) { mover.to_topic(destination_topic.id) }
+
+      expect(events).to be_empty
+      expect(reply.reload.topic_id).to eq(destination_topic.id)
+    end
+
+    it "rejects the move when no destination is given" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      expect { mover.to_topic(nil) }.to raise_error(Discourse::InvalidAccess)
+      expect(reply.reload.topic_id).to eq(topic.id)
+    end
+  end
+
+  describe "#to_new_topic" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "emits topic_created once for the completed split" do
+      mover = described_class.new(topic, admin, [reply.id])
+      destination = nil
+
+      events =
+        DiscourseEvent.track_events(:topic_created) do
+          destination = mover.to_new_topic("A separate discussion")
+        end
+
+      expect(events.size).to eq(1)
+      expect(events.first[:params]).to eq([destination, {}, admin, { continue_on_error: true }])
+      expect(destination.first_post).to eq(reply.reload)
+      expect(destination.excerpt).to be_present
+    end
+
+    it "does not emit topic_created when creating the destination fails" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      events =
+        DiscourseEvent.track_events(:topic_created) do
+          expect { mover.to_new_topic("") }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+      expect(events).to be_empty
+      expect(reply.reload.topic_id).to eq(topic.id)
+    end
+
+    it "does not create a topic when the user cannot move posts from the source topic" do
+      mover = described_class.new(topic, Fabricate(:user), [reply.id])
+
+      expect do
+        expect { mover.to_new_topic("A separate discussion") }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
+    end
+
+    it "does not create a topic when the user can only reply in the destination category" do
+      user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+      mover = described_class.new(topic, user, [reply.id])
+
+      expect do
+        expect { mover.to_new_topic("A separate discussion", category.id) }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
+    end
+
+    it "allows an admin to split posts on behalf of a user with reply-only access" do
+      user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+      mover = described_class.new(topic, user, [reply.id], guardian: admin.guardian)
+
+      destination = mover.to_new_topic("A separate discussion", category.id)
+
+      expect(destination.category_id).to eq(category.id)
+      expect(reply.reload.topic_id).to eq(destination.id)
+    end
+  end
+
   describe "#move_types" do
     context "when verifying enum sequence" do
       it "'new_topic' should be at 1st position" do
@@ -138,6 +253,15 @@ RSpec.describe PostMover do
       end
 
       context "with errors" do
+        it "raises when the mover can see a duplicate title the first post's author cannot" do
+          SiteSetting.duplicate_topic_titles = "disallowed"
+          secure_topic =
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+          expect { topic.move_posts(user, [p2.id], title: secure_topic.title) }.to raise_error(
+            ActiveRecord::RecordInvalid,
+          )
+        end
+
         it "raises an error when one of the posts doesn't exist" do
           non_existent_post_id = Post.maximum(:id)&.next || 1
           expect {
@@ -164,7 +288,7 @@ RSpec.describe PostMover do
 
         context "with post replies" do
           describe "when a post with replies is moved" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               topic.move_posts(
                 user,
                 [p2.id],
@@ -189,7 +313,7 @@ RSpec.describe PostMover do
           end
 
           describe "when replies of a post have been moved" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               p5 =
                 Fabricate(
                   :post,
@@ -212,7 +336,7 @@ RSpec.describe PostMover do
           end
 
           context "when only one reply is left behind" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               p5 =
                 Fabricate(
                   :post,
@@ -252,7 +376,13 @@ RSpec.describe PostMover do
             ).to eq(p3.post_number)
 
             expect(new_topic).to be_present
-            expect(new_topic.featured_user1_id).to eq(p4.user_id)
+            expect(
+              [
+                new_topic.user_id,
+                new_topic.last_post_user_id,
+                *new_topic.featured_user_ids,
+              ].uniq.size,
+            ).to eq([new_topic.posts.distinct.pluck(:user_id).size, 5].min)
             expect(new_topic.like_count).to eq(1)
 
             expect(new_topic.category).to eq(category)
@@ -779,6 +909,75 @@ RSpec.describe PostMover do
 
             topic.reload
             expect(topic).to_not be_closed
+          end
+
+          context "with an action whisper that has no content" do
+            fab!(:action_whisper) do
+              Fabricate(
+                :post,
+                topic:,
+                user:,
+                post_type: Post.types[:whisper],
+                action_code: "some_action",
+              ).tap { |post| post.update_columns(raw: "", cooked: "") }
+            end
+
+            it "closes the topic when all other posts were moved" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to be_closed
+            end
+
+            it "closes the topic when the whisper id is included in the move" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id, action_whisper.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to be_closed
+              expect(action_whisper.reload.topic_id).to eq(topic.id)
+            end
+          end
+
+          context "with a whisper that has content" do
+            fab!(:content_whisper) do
+              Fabricate(:post, topic:, user:, post_type: Post.types[:whisper])
+            end
+
+            it "closes the topic when the whisper is moved along with all posts" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id, content_whisper.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to be_closed
+              expect(content_whisper.reload.topic_id).to eq(destination_topic.id)
+            end
+
+            it "doesn't close the topic when the whisper is left behind" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to_not be_closed
+            end
+          end
+
+          it "closes the topic when moving all posts and a whisper from an earlier move to a message" do
+            split_topic_whisper =
+              Fabricate(
+                :post,
+                topic:,
+                user:,
+                post_type: Post.types[:whisper],
+                action_code: "split_topic",
+              )
+
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id, split_topic_whisper.id]
+            topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+            topic.reload
+            expect(topic).to be_closed
           end
 
           it "schedules topic deleting when all posts were moved" do
@@ -1319,7 +1518,13 @@ RSpec.describe PostMover do
             ).to eq(p3.post_number)
 
             expect(new_topic).to be_present
-            expect(new_topic.featured_user1_id).to eq(p4.user_id)
+            expect(
+              [
+                new_topic.user_id,
+                new_topic.last_post_user_id,
+                *new_topic.featured_user_ids,
+              ].uniq.size,
+            ).to eq([new_topic.posts.distinct.pluck(:user_id).size, 5].min)
             expect(new_topic.like_count).to eq(1)
 
             expect(new_topic.archetype).to eq(Archetype.private_message)
@@ -1771,7 +1976,9 @@ RSpec.describe PostMover do
             # Check out the original topic
             topic.reload
             expect(topic.posts_count).to eq(2)
-            expect(topic.featured_user1_id).to eq(p2.user_id)
+            expect(
+              [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids].uniq.size,
+            ).to eq([topic.posts.distinct.pluck(:user_id).size, 5].min)
             expect(topic.like_count).to eq(0)
             expect(topic.posts.by_post_number).to match_array([p1, p2])
             expect(topic.highest_post_number).to eq(p2.post_number)
@@ -1826,7 +2033,7 @@ RSpec.describe PostMover do
             # Check out the original topic
             topic.reload
             expect(topic.posts_count).to eq(4)
-            expect(topic.featured_user1_id).to eq(p2.user_id)
+            expect(topic.featured_user_ids).to include(p2.user_id)
             expect(topic.like_count).to eq(1)
             expect(topic.posts.by_post_number).to match_array([p1, p2, p3, p4])
             expect(topic.highest_post_number).to eq(p4.post_number)
@@ -2903,9 +3110,10 @@ RSpec.describe PostMover do
       fab!(:topic_1, :topic)
       fab!(:topic_2, :topic)
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
-      fab!(:user)
+      fab!(:user, :trust_level_4)
 
       before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
+
       let(:modifier_block) do
         Proc.new do |is_currently_allowed_to_delete, topic, who_is_merging|
           expect(is_currently_allowed_to_delete).to eq(false)
@@ -2913,6 +3121,7 @@ RSpec.describe PostMover do
           user.id == who_is_merging.id
         end
       end
+
       it "lets user merge topics immediately" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:is_allowed_to_delete_after_merge, &modifier_block)
@@ -2929,7 +3138,7 @@ RSpec.describe PostMover do
       end
 
       it "allows specific user to merge topics" do
-        special_user = Fabricate(:user)
+        special_user = Fabricate(:trust_level_4)
         plugin_instance = Plugin::Instance.new
 
         plugin_instance.register_modifier(:is_allowed_to_delete_after_merge, &modifier_block)
@@ -3116,6 +3325,7 @@ RSpec.describe PostMover do
         fab!(:user)
 
         before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
+
         let(:modifier_block) { Proc.new { |continue, _| false } }
 
         it "does not create small action post when modifier returns false" do
@@ -3354,65 +3564,57 @@ RSpec.describe PostMover do
         end
 
         it "does not rate limit when moving to a new topic" do
-          begin
-            PostMover.new(
-              original_topic,
-              Discourse.system_user,
-              original_topic.posts.map(&:id),
-              options: {
-                freeze_original: true,
-              },
-            ).to_new_topic("Hi I'm a new topic, with a copy of the old posts")
-          rescue RateLimiter::LimitExceeded
-            fail "Rate limit exceeded"
-          end
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            original_topic.posts.map(&:id),
+            options: {
+              freeze_original: true,
+            },
+          ).to_new_topic("Hi I'm a new topic, with a copy of the old posts")
+        rescue RateLimiter::LimitExceeded
+          fail "Rate limit exceeded"
         end
 
         it "does not rate limit when moving to an existing topic" do
-          begin
-            PostMover.new(
-              original_topic,
-              Discourse.system_user,
-              original_topic.posts.map(&:id),
-              options: {
-                freeze_original: true,
-              },
-            ).to_topic(destination_topic.id)
-          rescue RateLimiter::LimitExceeded
-            fail "Rate limit exceeded"
-          end
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            original_topic.posts.map(&:id),
+            options: {
+              freeze_original: true,
+            },
+          ).to_topic(destination_topic.id)
+        rescue RateLimiter::LimitExceeded
+          fail "Rate limit exceeded"
         end
 
         it "does not rate limit when moving to a new PM" do
-          begin
-            PostMover.new(
-              original_topic,
-              Discourse.system_user,
-              original_topic.posts.map(&:id),
-              move_to_pm: true,
-              options: {
-                freeze_original: true,
-              },
-            ).to_new_topic("Hi I'm a new PM, with a copy of the old posts")
-          rescue RateLimiter::LimitExceeded
-            fail "Rate limit exceeded"
-          end
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            original_topic.posts.map(&:id),
+            move_to_pm: true,
+            options: {
+              freeze_original: true,
+            },
+          ).to_new_topic("Hi I'm a new PM, with a copy of the old posts")
+        rescue RateLimiter::LimitExceeded
+          fail "Rate limit exceeded"
         end
 
         it "does not rate limit when moving to an existing PM" do
-          begin
-            PostMover.new(
-              original_topic,
-              Discourse.system_user,
-              original_topic.posts.map(&:id),
-              move_to_pm: true,
-              options: {
-                freeze_original: true,
-              },
-            ).to_topic(destination_topic.id)
-          rescue RateLimiter::LimitExceeded
-            fail "Rate limit exceeded"
-          end
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            original_topic.posts.map(&:id),
+            move_to_pm: true,
+            options: {
+              freeze_original: true,
+            },
+          ).to_topic(destination_topic.id)
+        rescue RateLimiter::LimitExceeded
+          fail "Rate limit exceeded"
         end
       end
     end
@@ -3453,6 +3655,60 @@ RSpec.describe PostMover do
             &modifier_block
           )
         end
+      end
+    end
+
+    context "with reviewables" do
+      fab!(:original_category, :category)
+      fab!(:original_topic) { Fabricate(:topic, category: original_category) }
+      fab!(:target_post) { Fabricate(:post, topic: original_topic) }
+
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+      fab!(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          target: target_post,
+          target_created_by: target_post.user,
+          topic: original_topic,
+          category: original_category,
+        )
+      end
+
+      it "updates reviewable category_id and topic_id when moving posts to another topic" do
+        expect(reviewable.category_id).to eq(original_category.id)
+        expect(reviewable.topic_id).to eq(original_topic.id)
+
+        PostMover.new(original_topic, admin, [target_post.id]).to_topic(private_topic.id)
+
+        reviewable.reload
+        expect(reviewable.category_id).to eq(private_category.id)
+        expect(reviewable.topic_id).to eq(private_topic.id)
+      end
+
+      it "updates multiple reviewables when moving multiple flagged posts" do
+        target_post_2 = Fabricate(:post, topic: original_topic)
+        reviewable_2 =
+          Fabricate(
+            :reviewable_flagged_post,
+            target: target_post_2,
+            target_created_by: target_post_2.user,
+            topic: original_topic,
+            category: original_category,
+          )
+
+        PostMover.new(original_topic, admin, [target_post.id, target_post_2.id]).to_topic(
+          private_topic.id,
+        )
+
+        reviewable.reload
+        reviewable_2.reload
+
+        expect(reviewable.category_id).to eq(private_category.id)
+        expect(reviewable.topic_id).to eq(private_topic.id)
+        expect(reviewable_2.category_id).to eq(private_category.id)
+        expect(reviewable_2.topic_id).to eq(private_topic.id)
       end
     end
 

@@ -1,11 +1,7 @@
 import SiteSettingComponent from "./site-setting";
 
 export default class ThemeSettingRelativesSelectorComponent extends SiteSettingComponent {
-  _save() {
-    return this.args.model.save({
-      [this.args.setting.setting]: this.convertNamesToIds(),
-    });
-  }
+  trackChanges = false;
 
   convertNamesToIds() {
     return this.buffered
@@ -20,5 +16,11 @@ export default class ThemeSettingRelativesSelectorComponent extends SiteSettingC
         }
         return themeName;
       });
+  }
+
+  _save() {
+    return this.args.model.save({
+      [this.args.setting.setting]: this.convertNamesToIds(),
+    });
   }
 }

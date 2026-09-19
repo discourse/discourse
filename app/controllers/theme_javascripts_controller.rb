@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ThemeJavascriptsController < ApplicationController
-  DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache"
-  TESTS_DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache/tests"
+  DISK_CACHE_PATH = "#{Rails.root.join("tmp/javascript-cache")}"
+  TESTS_DISK_CACHE_PATH = "#{Rails.root.join("tmp/javascript-cache/tests")}"
 
   skip_before_action(
     :check_xhr,
@@ -72,12 +72,10 @@ class ThemeJavascriptsController < ApplicationController
 
   def last_modified
     @last_modified ||=
-      begin
-        if params[:action].to_s == "show_tests"
-          File.exist?(@cache_file) ? File.ctime(@cache_file) : nil
-        else
-          query.pick(:updated_at)
-        end
+      if params[:action].to_s == "show_tests"
+        File.exist?(@cache_file) ? File.ctime(@cache_file) : nil
+      else
+        query.pick(:updated_at)
       end
   end
 

@@ -18,12 +18,12 @@ end
 # Table name: poll_options
 #
 #  id              :bigint           not null, primary key
-#  poll_id         :bigint
+#  anonymous_votes :integer
 #  digest          :string           not null
 #  html            :text             not null
-#  anonymous_votes :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  poll_id         :bigint
 #
 # Indexes
 #

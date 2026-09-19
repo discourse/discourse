@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -6,7 +5,7 @@ import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isHTMLSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { observes, on } from "@ember-decorators/object";
+import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
@@ -14,7 +13,10 @@ import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
@@ -108,6 +110,8 @@ const CLOSED = "closed",
     original_title: "originalTitle",
     original_tags: "originalTags",
     locale: "locale",
+    reply_to_post_number: "reply_to_post_number",
+    reply_to_user: "reply_to_user",
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -126,7 +130,7 @@ export const SAVE_ICONS = {
   [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
-  [CREATE_TOPIC]: "plus",
+  [CREATE_TOPIC]: "far-pen-to-square",
   [PRIVATE_MESSAGE]: "envelope",
   [CREATE_SHARED_DRAFT]: "far-clipboard",
 };
@@ -202,6 +206,10 @@ export default class Composer extends RestModel {
     return Object.keys(_draft_serializer);
   }
 
+  static isEditDraft(draft) {
+    return isEdit(draft?.action) && !!draft.postId;
+  }
+
   @service dialog;
   @service siteSettings;
   @service currentUser;
@@ -210,12 +218,14 @@ export default class Composer extends RestModel {
   @tracked post;
   @tracked reply;
   @tracked whisper;
+  @tracked reply_to_post_number = null;
+  @tracked reply_to_user = null;
   @tracked
   locale = this.siteSettings.content_localization_enabled
     ? this.post?.locale
     : null;
 
-  unlistTopic = false;
+  @tracked unlistTopic = false;
   noBump = false;
   draftSaving = false;
   draftForceSave = false;
@@ -224,6 +234,49 @@ export default class Composer extends RestModel {
   @tracked _categoryId = null;
 
   @tracked _archetypesOverride;
+
+  @tracked _user;
+
+  @tracked _composeState;
+
+  @tracked _archetypeId;
+
+  @dependentKeyCompat
+  get composeState() {
+    return this._composeState;
+  }
+
+  set composeState(value) {
+    if (value === this._composeState) {
+      return;
+    }
+    this._composeState = value;
+    this.composeStateChanged();
+  }
+
+  @dependentKeyCompat
+  get archetypeId() {
+    return this._archetypeId;
+  }
+
+  set archetypeId(value) {
+    if (value === this._archetypeId) {
+      return;
+    }
+    this._archetypeId = value;
+    this.set("metaData", EmberObject.create());
+  }
+
+  @dependentKeyCompat
+  get user() {
+    return applyValueTransformer("composer-user", this._user, {
+      composer: this,
+    });
+  }
+
+  set user(value) {
+    this._user = value;
+  }
 
   @computed("site.archetypes")
   get archetypes() {
@@ -235,6 +288,45 @@ export default class Composer extends RestModel {
 
   set archetypes(value) {
     this._archetypesOverride = value;
+  }
+
+  @dependentKeyCompat
+  get categoryId() {
+    return this._categoryId;
+  }
+
+  // We wrap categoryId this way so we can fire `applyTopicTemplate` with
+  // the previous value as well as the new value
+  set categoryId(categoryId) {
+    const oldCategoryId = this._categoryId;
+
+    if (this.privateMessage) {
+      categoryId = null;
+    } else if (isEmpty(categoryId)) {
+      // Check if there is a default composer category to set
+      const defaultComposerCategoryId = parseInt(
+        this.siteSettings.default_composer_category,
+        10
+      );
+      categoryId =
+        defaultComposerCategoryId && defaultComposerCategoryId > 0
+          ? defaultComposerCategoryId
+          : null;
+    }
+    this._categoryId = categoryId;
+
+    if (oldCategoryId !== categoryId) {
+      const applyTemplate = () => {
+        this.applyTopicTemplate(oldCategoryId, categoryId);
+        this.appEvents?.trigger("composer:category-changed", this);
+      };
+
+      if (this.site.lazy_load_categories) {
+        Category.asyncFindById(categoryId).then(applyTemplate);
+      } else {
+        applyTemplate();
+      }
+    }
   }
 
   @computed("action")
@@ -340,42 +432,6 @@ export default class Composer extends RestModel {
     );
   }
 
-  @dependentKeyCompat
-  get categoryId() {
-    return this._categoryId;
-  }
-
-  // We wrap categoryId this way so we can fire `applyTopicTemplate` with
-  // the previous value as well as the new value
-  set categoryId(categoryId) {
-    const oldCategoryId = this._categoryId;
-
-    if (this.privateMessage) {
-      categoryId = null;
-    } else if (isEmpty(categoryId)) {
-      // Check if there is a default composer category to set
-      const defaultComposerCategoryId = parseInt(
-        this.siteSettings.default_composer_category,
-        10
-      );
-      categoryId =
-        defaultComposerCategoryId && defaultComposerCategoryId > 0
-          ? defaultComposerCategoryId
-          : null;
-    }
-    this._categoryId = categoryId;
-
-    if (oldCategoryId !== categoryId) {
-      if (this.site.lazy_load_categories) {
-        Category.asyncFindById(categoryId).then(() => {
-          this.applyTopicTemplate(oldCategoryId, categoryId);
-        });
-      } else {
-        this.applyTopicTemplate(oldCategoryId, categoryId);
-      }
-    }
-  }
-
   @computed("categoryId")
   get category() {
     return this.categoryId ? Category.findById(this.categoryId) : null;
@@ -388,7 +444,9 @@ export default class Composer extends RestModel {
 
   @dependentKeyCompat
   get editingPost() {
-    return isEdit(this.get("action"));
+    return applyValueTransformer("composer-editing-post", isEdit(this.action), {
+      composer: this,
+    });
   }
 
   @computed("category.minimumRequiredTags")
@@ -418,30 +476,6 @@ export default class Composer extends RestModel {
     );
   }
 
-  @observes("composeState")
-  composeStateChanged() {
-    const oldOpen = this.composerOpened;
-    const elem = document.documentElement;
-
-    if (this.composeState === FULLSCREEN) {
-      elem.classList.add("fullscreen-composer");
-    } else {
-      elem.classList.remove("fullscreen-composer");
-    }
-
-    if (this.composeState === OPEN) {
-      this.set("composerOpened", oldOpen || new Date());
-      elem.classList.add("composer-open");
-    } else {
-      if (oldOpen) {
-        const oldTotal = this.composerTotalOpened || 0;
-        this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
-      }
-      this.set("composerOpened", null);
-      elem.classList.remove("composer-open");
-    }
-  }
-
   get composerTime() {
     let total = this.composerTotalOpened || 0;
     const oldOpen = this.composerOpened;
@@ -454,7 +488,7 @@ export default class Composer extends RestModel {
   }
 
   get composerVersion() {
-    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+    if (this.currentUser.useRichEditor) {
       return 2;
     }
 
@@ -465,24 +499,6 @@ export default class Composer extends RestModel {
   get archetype() {
     return this.archetypes.find(
       (archetype) => archetype.id === this.archetypeId
-    );
-  }
-
-  @observes("archetype")
-  archetypeChanged() {
-    return this.set("metaData", EmberObject.create());
-  }
-
-  // called whenever the user types to update the typing time
-  typing() {
-    throttle(
-      this,
-      function () {
-        const typingTime = this.typingTime || 0;
-        this.set("typingTime", typingTime + 100);
-      },
-      100,
-      false
     );
   }
 
@@ -521,10 +537,19 @@ export default class Composer extends RestModel {
     );
   }
 
-  @computed("canEditTopicFeaturedLink")
+  @computed("canEditTopicFeaturedLink", "category")
   get titlePlaceholder() {
-    return this.canEditTopicFeaturedLink
-      ? "composer.title_or_link_placeholder"
+    const custom = this.customizationFor("titlePlaceholder");
+    if (custom) {
+      return custom;
+    }
+
+    if (this.canEditTopicFeaturedLink) {
+      return "composer.title_or_link_placeholder";
+    }
+
+    return this.siteSettings.enable_composer_redesign
+      ? "composer.title_placeholder_redesign"
       : "composer.title_placeholder";
   }
 
@@ -533,7 +558,7 @@ export default class Composer extends RestModel {
     return this.category?.topic_title_placeholder || null;
   }
 
-  @computed("action", "post", "topic", "topic.title")
+  @computed("action", "post", "topic", "topic.title", "reply_to_user")
   get replyOptions() {
     const options = {
       userLink: null,
@@ -560,10 +585,8 @@ export default class Composer extends RestModel {
       options.userAvatar = tinyAvatar(avatarTemplate);
 
       if (this.site.desktopView) {
-        const originalUserName = this.post.get("reply_to_user.username");
-        const originalUserAvatar = this.post.get(
-          "reply_to_user.avatar_template"
-        );
+        const originalUserName = this.reply_to_user?.username;
+        const originalUserAvatar = this.reply_to_user?.avatar_template;
         if (originalUserName && originalUserAvatar && isEdit(this.action)) {
           options.originalUser = {
             username: originalUserName,
@@ -735,16 +758,22 @@ export default class Composer extends RestModel {
 
   @computed("privateMessage", "topicFirstPost", "topic.pm_with_non_human_user")
   get minimumPostLength() {
+    let length;
+
     if (this.topic?.pm_with_non_human_user) {
-      return 1;
+      length = 1;
     } else if (this.privateMessage) {
-      return this.siteSettings.min_personal_message_post_length;
+      length = this.siteSettings.min_personal_message_post_length;
     } else if (this.topicFirstPost) {
       // first post (topic body)
-      return this.siteSettings.min_first_post_length;
+      length = this.siteSettings.min_first_post_length;
     } else {
-      return this.siteSettings.min_post_length;
+      length = this.siteSettings.min_post_length;
     }
+
+    return applyValueTransformer("composer-minimum-post-length", length, {
+      composer: this,
+    });
   }
 
   @computed("title")
@@ -823,9 +852,77 @@ export default class Composer extends RestModel {
     return len;
   }
 
-  @on("init")
-  _setupComposer() {
-    this.set("archetypeId", this.site.default_archetype);
+  @computed(
+    "draftSaving",
+    "disableDrafts",
+    "canEditTitle",
+    "title",
+    "reply",
+    "titleLengthValid",
+    "replyLength",
+    "minimumPostLength"
+  )
+  get canSaveDraft() {
+    if (this.action === Composer.ADD_TRANSLATION) {
+      return false;
+    }
+
+    if (this.draftSaving) {
+      return false;
+    }
+
+    if (this.disableDrafts) {
+      return false;
+    }
+
+    // Title is only edited when editing topic OP or making a new topic.
+    if (this.canEditTitle) {
+      if (isEmpty(this.title) && isEmpty(this.reply)) {
+        return false;
+      }
+    } else {
+      if (isEmpty(this.reply)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  composeStateChanged() {
+    const oldOpen = this.composerOpened;
+    const elem = document.documentElement;
+
+    if (this.composeState === FULLSCREEN) {
+      elem.classList.add("fullscreen-composer");
+    } else {
+      elem.classList.remove("fullscreen-composer");
+    }
+
+    if (this.composeState === OPEN) {
+      this.set("composerOpened", oldOpen || new Date());
+      elem.classList.add("composer-open");
+    } else {
+      if (oldOpen) {
+        const oldTotal = this.composerTotalOpened || 0;
+        this.set("composerTotalOpened", oldTotal + (new Date() - oldOpen));
+      }
+      this.set("composerOpened", null);
+      elem.classList.remove("composer-open");
+    }
+  }
+
+  // called whenever the user types to update the typing time
+  typing() {
+    throttle(
+      this,
+      function () {
+        const typingTime = this.typingTime || 0;
+        this.set("typingTime", typingTime + 100);
+      },
+      100,
+      false
+    );
   }
 
   appendText(text, position, opts) {
@@ -889,29 +986,35 @@ export default class Composer extends RestModel {
   }
 
   applyTopicTemplate(oldCategoryId, categoryId) {
-    if (this.action !== CREATE_TOPIC) {
-      return;
-    }
+    applyBehaviorTransformer(
+      "composer-apply-topic-template",
+      () => {
+        if (this.action !== CREATE_TOPIC) {
+          return;
+        }
 
-    let reply = this.reply;
+        let reply = this.reply;
 
-    // If the user didn't change the template, clear it
-    if (oldCategoryId) {
-      const oldCat = Category.findById(oldCategoryId);
-      if (oldCat && oldCat.topic_template === reply) {
-        reply = "";
-      }
-    }
+        // If the user didn't change the template, clear it
+        if (oldCategoryId) {
+          const oldCat = Category.findById(oldCategoryId);
+          if (oldCat && oldCat.topic_template === reply) {
+            reply = "";
+          }
+        }
 
-    if (!isEmpty(reply)) {
-      return;
-    }
+        if (!isEmpty(reply)) {
+          return;
+        }
 
-    const category = Category.findById(categoryId);
-    if (category) {
-      this.set("reply", category.topic_template || "");
-      this.set("originalText", category.topic_template || "");
-    }
+        const category = Category.findById(categoryId);
+        if (category) {
+          this.set("reply", category.topic_template || "");
+          this.set("originalText", category.topic_template || "");
+        }
+      },
+      { composer: this, oldCategoryId, categoryId }
+    );
   }
 
   /**
@@ -939,173 +1042,13 @@ export default class Composer extends RestModel {
    @param {String} [opts.title]
    **/
   open(opts) {
-    let promise = Promise.resolve();
-
     if (!opts) {
       opts = {};
     }
 
-    this.set("loading", true);
-
-    if (
-      !isEmpty(this.reply) &&
-      (opts.reply || isEdit(opts.action)) &&
-      this.replyDirty
-    ) {
-      return promise;
-    }
-
-    if (opts.action === REPLY && isEdit(this.action)) {
-      this.set("reply", "");
-    }
-
-    if (!opts.draftKey) {
-      throw new Error("draft key is required");
-    }
-
-    if (opts.draftSequence === null) {
-      throw new Error("draft sequence is required");
-    }
-
-    if (opts.usernames) {
-      deprecated("`usernames` is deprecated, use `recipients` instead.", {
-        id: "discourse.composer.usernames",
-      });
-    }
-
-    this.setProperties({
-      draftKey: opts.draftKey,
-      draftSequence: opts.draftSequence,
-      composeState: opts.composerState || OPEN,
-      action: opts.action,
-      topic: opts.topic,
-      targetRecipients: opts.usernames || opts.recipients,
-      composerTotalOpened: opts.composerTime,
-      typingTime: opts.typingTime,
-      whisper: opts.whisper,
-      tags: opts.tags || [],
-      noBump: opts.noBump,
-      originalText: opts.originalText,
-      originalTitle: opts.originalTitle,
-      originalTags: opts.originalTags,
-    });
-
-    if (opts.post) {
-      this.setProperties({
-        post: opts.post,
-        whisper:
-          opts.whisper ?? opts.post.post_type === this.site.post_types.whisper,
-      });
-
-      if (!this.topic) {
-        if (opts.post.topic) {
-          this.set("topic", opts.post.topic);
-        } else {
-          // handles the edge cases where the topic model is not loaded in the post model and the store does not have a
-          // topic for the post, e.g., make a post then edit right away, edit a post outside the post stream, etc.
-          promise = promise.then(async () => {
-            const data = await Topic.find(opts.post.topic_id, {});
-            const topic = this.store.createRecord("topic", data);
-            this.post.set("topic", topic);
-            this.set("topic", topic);
-          });
-        }
-      }
-    } else if (opts.postId) {
-      promise = promise.then(() =>
-        this.store.find("post", opts.postId).then((post) => {
-          this.set("post", post);
-          if (post) {
-            this.set("topic", post.topic);
-          }
-        })
-      );
-    } else {
-      this.set("post", null);
-    }
-
-    this.setProperties({
-      archetypeId: opts.archetypeId || this.site.default_archetype,
-      metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
-      reply: opts.reply || this.reply || "",
-    });
-
-    // We set the category id separately for topic templates on opening of composer
-    if (!opts.readOnlyCategoryId) {
-      this.set(
-        "categoryId",
-        opts.topicCategoryId || opts.categoryId || this.get("topic.category.id")
-      );
-    }
-
-    if (!this.categoryId && this.creatingTopic) {
-      const categories = this.site.categories;
-      if (categories.length === 1) {
-        this.set("categoryId", categories[0].id);
-      }
-    }
-
-    this._hasTopicTemplates = this.site.categories.some(
-      (c) => c.topic_template
-    );
-
-    // If we are editing a post, load it.
-    if (isEdit(opts.action) && this.post) {
-      const topicProps = this.serialize(_edit_topic_serializer);
-      topicProps.loading = true;
-      topicProps.tags = this.topic.tags;
-
-      // When editing a shared draft, use its category
-      if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {
-        topicProps.categoryId = opts.destinationCategoryId;
-      }
-      this.setProperties(topicProps);
-
-      promise = promise.then(async () => {
-        const post = await this.store.find("post", opts.post.id);
-        this.setProperties({
-          post,
-          reply: post.raw,
-          originalText: post.raw,
-          originalTitle: this.topic.title,
-        });
-
-        if (post.post_number === 1 && this.canEditTitle) {
-          this.setProperties({
-            originalTags: this.topic.tags,
-          });
-        }
-
-        this.appEvents.trigger("composer:reply-reloaded", this);
-      });
-    } else if (opts.action === REPLY && opts.quote) {
-      this.set("reply", opts.quote);
-      this.set("originalText", opts.quote);
-    }
-
-    if (opts.title) {
-      this.set("title", opts.title);
-    }
-
-    if (this.canEditTitle) {
-      if (isEmpty(this.title) && this.title !== "") {
-        this.set("title", "");
-      }
-    }
-
-    if (!isEdit(opts.action) || !opts.post) {
-      promise = promise.then(() =>
-        this.appEvents.trigger("composer:reply-reloaded", this)
-      );
-    }
-
-    // Ensure additional draft fields are set
-    Object.keys(_add_draft_fields).forEach((f) => {
-      this.set(_add_draft_fields[f], opts[f]);
-    });
-
-    return promise.finally(() => {
-      this.set("loading", false);
+    return applyBehaviorTransformer("composer-open", () => this._open(opts), {
+      composer: this,
+      opts,
     });
   }
 
@@ -1143,6 +1086,15 @@ export default class Composer extends RestModel {
       featuredLink: null,
       noBump: false,
       editConflict: false,
+      reply_to_post_number: null,
+      reply_to_user: null,
+    });
+  }
+
+  setReplyTo(postNumber, user) {
+    this.setProperties({
+      reply_to_post_number: postNumber ?? null,
+      reply_to_user: postNumber ? (user ?? null) : null,
     });
   }
 
@@ -1161,11 +1113,17 @@ export default class Composer extends RestModel {
         const topicProps = this.getProperties(
           Object.keys(_edit_topic_serializer)
         );
-        // frontend should have featuredLink but backend needs featured_link
-        if (topicProps.featuredLink) {
-          topicProps.featured_link = topicProps.featuredLink;
-          delete topicProps.featuredLink;
+        // user clicked "overwrite edits" button
+        if (!this.editConflict) {
+          topicProps.original_title = this.originalTitle;
+          topicProps.original_tags = this.originalTags;
         }
+
+        // frontend should have featuredLink but backend needs featured_link
+        if (topicProps.featuredLink !== topic.featured_link) {
+          topicProps.featured_link = topicProps.featuredLink ?? null;
+        }
+        delete topicProps.featuredLink;
 
         // If we're editing a shared draft, keep the original category
         if (this.action === EDIT_SHARED_DRAFT) {
@@ -1188,6 +1146,12 @@ export default class Composer extends RestModel {
 
     this.serialize(_update_serializer, props);
 
+    // Only send when changed; otherwise a stale composer value could
+    // clobber a concurrent reply-target change by another editor.
+    if (this.reply_to_post_number !== (post?.reply_to_post_number ?? null)) {
+      props.reply_to_post_number = this.reply_to_post_number;
+    }
+
     // user clicked "overwrite edits" button
     if (this.editConflict) {
       delete props.original_text;
@@ -1209,6 +1173,14 @@ export default class Composer extends RestModel {
     return promise
       .then(() => {
         return post.save(props).then((result) => {
+          // The server omits `reply_to_user` from the response when it's
+          // nil, so the post's in-memory value isn't overwritten when the
+          // target is cleared. Mirror the composer's final state onto the
+          // post so reply indicators update without a refresh.
+          post.setProperties({
+            reply_to_post_number: this.reply_to_post_number,
+            reply_to_user: this.reply_to_user,
+          });
           this.clearState();
           return result;
         });
@@ -1385,43 +1357,6 @@ export default class Composer extends RestModel {
     return "";
   }
 
-  @computed(
-    "draftSaving",
-    "disableDrafts",
-    "canEditTitle",
-    "title",
-    "reply",
-    "titleLengthValid",
-    "replyLength",
-    "minimumPostLength"
-  )
-  get canSaveDraft() {
-    if (this.action === Composer.ADD_TRANSLATION) {
-      return false;
-    }
-
-    if (this.draftSaving) {
-      return false;
-    }
-
-    if (this.disableDrafts) {
-      return false;
-    }
-
-    // Title is only edited when editing topic OP or making a new topic.
-    if (this.canEditTitle) {
-      if (isEmpty(this.title) && isEmpty(this.reply)) {
-        return false;
-      }
-    } else {
-      if (isEmpty(this.reply)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   serializeDraftData() {
     return this.serialize(_draft_serializer);
   }
@@ -1514,5 +1449,205 @@ export default class Composer extends RestModel {
         }
       }
     }
+  }
+
+  @on("init")
+  _setupComposer() {
+    this.set("archetypeId", this.site.default_archetype);
+  }
+
+  _open(opts) {
+    let promise = Promise.resolve();
+
+    this.set("loading", true);
+
+    if (
+      !isEmpty(this.reply) &&
+      (opts.reply || isEdit(opts.action)) &&
+      this.replyDirty
+    ) {
+      return promise;
+    }
+
+    if (opts.action === REPLY && isEdit(this.action)) {
+      this.set("reply", "");
+    }
+
+    if (!opts.draftKey) {
+      throw new Error("draft key is required");
+    }
+
+    if (opts.draftSequence === null) {
+      throw new Error("draft sequence is required");
+    }
+
+    if (opts.usernames) {
+      deprecated("`usernames` is deprecated, use `recipients` instead.", {
+        id: "discourse.composer.usernames",
+      });
+    }
+
+    this.setProperties({
+      draftKey: opts.draftKey,
+      draftSequence: opts.draftSequence,
+      composeState: opts.composerState || OPEN,
+      action: opts.action,
+      topic: opts.topic,
+      targetRecipients: opts.usernames || opts.recipients,
+      composerTotalOpened: opts.composerTime,
+      typingTime: opts.typingTime,
+      whisper: opts.whisper,
+      tags: opts.tags || [],
+      noBump: opts.noBump,
+      originalText: opts.originalText,
+      originalTitle: opts.originalTitle,
+      originalTags: opts.originalTags,
+    });
+
+    if (opts.post) {
+      this.setProperties({
+        post: opts.post,
+        whisper:
+          opts.whisper ?? opts.post.post_type === this.site.post_types.whisper,
+      });
+
+      if (!this.topic) {
+        if (opts.post.topic) {
+          this.set("topic", opts.post.topic);
+        } else {
+          // handles the edge cases where the topic model is not loaded in the post model and the store does not have a
+          // topic for the post, e.g., make a post then edit right away, edit a post outside the post stream, etc.
+          promise = promise.then(async () => {
+            const data = await Topic.find(opts.post.topic_id, {});
+            const topic = this.store.createRecord("topic", data);
+            this.post.set("topic", topic);
+            this.set("topic", topic);
+          });
+        }
+      }
+    } else if (opts.postId) {
+      promise = promise.then(() =>
+        this.store.find("post", opts.postId).then((post) => {
+          this.set("post", post);
+          if (post) {
+            this.set("topic", post.topic);
+          }
+        })
+      );
+    } else {
+      this.set("post", null);
+    }
+
+    this.setProperties({
+      archetypeId: opts.archetypeId || this.site.default_archetype,
+      metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
+      reply: opts.reply || this.reply || "",
+    });
+
+    // We set the category id separately for topic templates on opening of composer
+    if (!opts.readOnlyCategoryId) {
+      this.set(
+        "categoryId",
+        opts.topicCategoryId || opts.categoryId || this.get("topic.category.id")
+      );
+    }
+
+    if (!this.categoryId && this.creatingTopic) {
+      const categories = this.site.categories;
+      if (categories.length === 1) {
+        this.set("categoryId", categories[0].id);
+      }
+    }
+
+    this._hasTopicTemplates = this.site.categories.some(
+      (c) => c.topic_template
+    );
+
+    // If we are editing a post, load it.
+    if (isEdit(opts.action) && this.post) {
+      const topicProps = this.serialize(_edit_topic_serializer);
+      topicProps.loading = true;
+      topicProps.tags = this.topic.tags;
+
+      // When editing a shared draft, use its category
+      if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {
+        topicProps.categoryId = opts.destinationCategoryId;
+      }
+      this.setProperties(topicProps);
+
+      promise = promise.then(async () => {
+        const post = await this.store.find("post", opts.post.id);
+        // When a draft is being restored, `opts` already carries the
+        // composer's saved `reply_to_*` state (see `_draft_serializer`).
+        // Prefer those values so pending reply-target changes survive a
+        // reload or navigation; fall back to the post's stored state
+        // otherwise. `undefined` means the key wasn't in the draft at all.
+        //
+        // `post.reply_to_user` is a rich `User` model instance with
+        // circular back-refs (via `statusManager`), so we extract a plain
+        // snapshot — otherwise `JSON.stringify` during periodic draft saves
+        // throws "Converting circular structure to JSON".
+        const replyToPostNumber =
+          opts.reply_to_post_number !== undefined
+            ? opts.reply_to_post_number
+            : (post.reply_to_post_number ?? null);
+        const postReplyToUser = post.reply_to_user;
+        const replyToUser =
+          opts.reply_to_user !== undefined
+            ? opts.reply_to_user
+            : postReplyToUser
+              ? {
+                  id: postReplyToUser.id,
+                  username: postReplyToUser.username,
+                  name: postReplyToUser.name,
+                  avatar_template: postReplyToUser.avatar_template,
+                }
+              : null;
+        this.setProperties({
+          post,
+          reply: post.raw,
+          originalText: post.raw,
+          originalTitle: this.topic.title,
+          reply_to_post_number: replyToPostNumber,
+          reply_to_user: replyToUser,
+        });
+
+        if (post.post_number === 1 && this.canEditTitle) {
+          this.setProperties({
+            originalTags: this.topic.tags,
+          });
+        }
+
+        this.appEvents.trigger("composer:reply-reloaded", this);
+      });
+    } else if (opts.action === REPLY && opts.quote) {
+      this.set("reply", opts.quote);
+      this.set("originalText", opts.quote);
+    }
+
+    if (opts.title) {
+      this.set("title", opts.title);
+    }
+
+    if (this.canEditTitle) {
+      if (isEmpty(this.title) && this.title !== "") {
+        this.set("title", "");
+      }
+    }
+
+    if (!isEdit(opts.action) || !opts.post) {
+      promise = promise.then(() =>
+        this.appEvents.trigger("composer:reply-reloaded", this)
+      );
+    }
+
+    // Ensure additional draft fields are set
+    Object.keys(_add_draft_fields).forEach((f) => {
+      this.set(_add_draft_fields[f], opts[f]);
+    });
+
+    return promise.finally(() => {
+      this.set("loading", false);
+    });
   }
 }

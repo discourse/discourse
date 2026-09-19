@@ -404,8 +404,6 @@ ru:
         confirm_payment: Подтвердить оплату
         success: Назад
       admin:
-        unconfigured: 'Сервис Stripe настроен неправильно. За дополнительной информацией обратитесь к описанию плагина: meta.discourse.org/t/discourse-subscriptions'
-        on_meta: Подписки на Discourse на Meta
         dashboard:
           title: Панель управления
           table:

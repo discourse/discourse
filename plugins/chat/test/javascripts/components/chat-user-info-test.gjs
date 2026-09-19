@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 
-module("Component | chat-user-info", function (hooks) {
+module("Component | ChatUserInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   test("avatar and name", async function (assert) {
@@ -27,9 +27,9 @@ module("Component | chat-user-info", function (hooks) {
     await render(
       <template>
         <ChatUserInfo
-          @user={{this.user}}
           @showStatus={{true}}
           @showStatusDescription={{true}}
+          @user={{this.user}}
         />
       </template>
     );

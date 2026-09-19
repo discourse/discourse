@@ -14,6 +14,8 @@ module Jobs
           ::DiscourseTopicVoting::Vote.where(topic_id: topic.id).update_all(archive: false)
           topic.update_vote_count
         end
+
+        Jobs.enqueue(Jobs::DiscourseTopicVoting::BackfillBadges, topic_id: topic.id)
       end
     end
   end

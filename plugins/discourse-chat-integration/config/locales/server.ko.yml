@@ -52,6 +52,8 @@ ko:
     group_message_template: "메시지 : @ %{name}"
     provider:
       slack:
+        errors:
+          action_prohibited: "봇은 해당 채널에 게시 할 권한이 없습니다"
         status:
           no_rules: "이 채널에 설정된 규칙이 없습니다. 지침을 보려면`/ discourse help`를 실행하십시오."
           rule_string: "* %{index}) * * %{filter} * * %{category}의 게시물 *"

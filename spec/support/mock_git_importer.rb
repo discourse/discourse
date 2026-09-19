@@ -52,5 +52,6 @@ class MockGitImporter < ThemeStore::GitImporter
     end
 
     Discourse::Utils.execute_command("git", "clone", path, @temp_folder)
+    checkout_compatible_version!
   end
 end

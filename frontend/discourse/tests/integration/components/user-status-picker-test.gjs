@@ -5,7 +5,7 @@ import UserStatusPicker from "discourse/components/user-status-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
-module("Integration | Component | user-status-picker", function (hooks) {
+module("Integration | Component | UserStatusPicker", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

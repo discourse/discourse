@@ -1,0 +1,56 @@
+# frozen_string_literal: true
+
+Fabricator(:event, from: "DiscourseEvents::Events::Event") do
+  transient :user
+
+  post do |attrs|
+    if attrs[:post]
+      attrs[:post]
+    else
+      user = attrs[:user] || Fabricate(:user, admin: true, refresh_auto_groups: true)
+      topic = attrs[:topic] || Fabricate(:topic, user:, category: Fabricate(:category))
+      Fabricate(:post, user:, topic:)
+    end
+  end
+
+  id { |attrs| attrs[:post].id }
+
+  status do |attrs|
+    if attrs[:status]
+      DiscourseEvents::Events::Event.statuses[attrs[:status]]
+    else
+      DiscourseEvents::Events::Event.statuses[:public]
+    end
+  end
+  original_starts_at { |attrs| attrs[:original_starts_at] || 1.day.from_now.iso8601 }
+  original_ends_at { |attrs| attrs[:original_ends_at] }
+end
+
+Fabricator(:private_event, from: :event) do
+  transient :group
+
+  post do |attrs|
+    group = attrs[:group] || Fabricate(:group)
+    category = Fabricate(:private_category, group:)
+    user = attrs[:user] || Fabricate(:user, admin: true, refresh_auto_groups: true)
+    topic = Fabricate(:topic, user:, category:)
+    Fabricate(:post, user:, topic:)
+  end
+end
+
+Fabricator(:event_date, from: "DiscourseEvents::Events::EventDate") do
+  event
+
+  starts_at { |attrs| attrs[:starts_at] || 1.day.from_now.iso8601 }
+  ends_at { |attrs| attrs[:ends_at] }
+end
+
+def create_post_with_event(user, extra_raw = "", start = nil)
+  start = start ? start.utc.iso8601(3) : (Time.now - 10.seconds).utc.iso8601(3)
+
+  PostCreator.create!(
+    user,
+    title: "Sell a boat party ##{SecureRandom.alphanumeric}",
+    raw: "[event start=\"#{start}\" #{extra_raw}]\n[/event]",
+  ).reload
+end

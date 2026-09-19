@@ -35,10 +35,25 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         )
       end
 
-      it "works" do
+      it "returns the requested thread" do
         get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
         expect(response.status).to eq(200)
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
+      end
+
+      context "as anonymous user" do
+        before do
+          sign_out
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns a public category channel thread" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
+        end
       end
 
       context "with user status enabled" do
@@ -123,6 +138,37 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         end
       end
 
+      context "when user can only see a readonly category channel" do
+        fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+        fab!(:readonly_channel) do
+          category =
+            Fabricate(
+              :private_category,
+              group: readonly_group,
+              permission_type: CategoryGroup.permission_types[:readonly],
+            )
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+        fab!(:restricted_message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: readonly_channel,
+            message: "Confidential restricted thread lookup",
+          )
+        end
+        fab!(:thread) do
+          Fabricate(:chat_thread, channel: readonly_channel, original_message: restricted_message)
+        end
+
+        it "does not expose the thread" do
+          get "/chat/api/channels/#{readonly_channel.id}/threads/#{thread.id}"
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["error_type"]).to eq("invalid_access")
+          expect(response.body).not_to include(restricted_message.message)
+        end
+      end
+
       context "when user cannot chat" do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
@@ -166,8 +212,10 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     it "returns the threads of the channel" do
       get "/chat/api/channels/#{public_channel.id}/threads"
       expect(response.status).to eq(200)
+      # thread_1 and thread_3 have memberships with last_read IS NULL → unread (sort first)
+      # thread_2 has no membership → sorts by date after unread threads
       expect(response.parsed_body["threads"].map { |thread| thread["id"] }).to eq(
-        [thread_3.id, thread_2.id, thread_1.id],
+        [thread_3.id, thread_1.id, thread_2.id],
       )
     end
 
@@ -213,6 +261,43 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       end
     end
 
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+      fab!(:readonly_channel) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        Fabricate(:category_channel, chatable: category, threading_enabled: true)
+      end
+      fab!(:restricted_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: readonly_channel,
+          message: "Confidential restricted thread list",
+        )
+      end
+
+      before do
+        Fabricate(
+          :chat_thread,
+          channel: readonly_channel,
+          original_message: restricted_message,
+          with_replies: 1,
+        )
+      end
+
+      it "does not expose thread list messages" do
+        get "/chat/api/channels/#{readonly_channel.id}/threads"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(restricted_message.message)
+      end
+    end
+
     context "when channel does not have threading enabled" do
       before { public_channel.update!(threading_enabled: false) }
 
@@ -233,6 +318,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   describe "update" do
     let(:title) { "New title" }
     let(:params) { { title: title } }
+
     fab!(:thread) do
       Fabricate(:chat_thread, channel: public_channel, original_message_user: current_user)
     end
@@ -328,6 +414,27 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         end
       end
 
+      context "when user can only see a readonly category channel" do
+        fab!(:group) { Fabricate(:group, users: [current_user]) }
+        fab!(:category) do
+          Fabricate(
+            :private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+        fab!(:channel_1) do
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+        it "returns 403" do
+          post "/chat/api/channels/#{channel_id}/threads", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
       context "when the title is too long" do
         let(:title) { "x" * Chat::Thread::MAX_TITLE_LENGTH + "x" }
 
@@ -342,12 +449,118 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       end
     end
 
+    context "when a direct-message recipient excludes the current user from their PM allowlist" do
+      fab!(:recipient, :user)
+      fab!(:allowed_user, :user)
+      fab!(:channel_1) do
+        Fabricate(
+          :direct_message_channel,
+          users: [current_user, recipient],
+          threading_enabled: true,
+        )
+      end
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+      before do
+        recipient.user_option.update!(enable_allowed_pm_users: true)
+        AllowedPmUser.create!(user: recipient, allowed_pm_user: allowed_user)
+      end
+
+      it "does not create a thread" do
+        expect { post "/chat/api/channels/#{channel_id}/threads", params: params }.not_to change {
+          Chat::Thread.count
+        }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      end
+    end
+
     context "when channel does not have threading enabled" do
       fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: false) }
 
       it "returns 404" do
         post "/chat/api/channels/#{channel_id}/threads", params: params
         expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "silenced users" do
+    fab!(:direct_message_recipient, :user)
+    fab!(:direct_message_channel) do
+      Fabricate(
+        :direct_message_channel,
+        users: [current_user, direct_message_recipient],
+        threading_enabled: true,
+      )
+    end
+    fab!(:category_creation_message) do
+      Fabricate(:chat_message, chat_channel: public_channel, user: current_user)
+    end
+    fab!(:direct_message_creation_message) do
+      Fabricate(:chat_message, chat_channel: direct_message_channel, user: current_user)
+    end
+    fab!(:category_thread) do
+      Fabricate(
+        :chat_thread,
+        channel: public_channel,
+        original_message_user: current_user,
+        title: "Category thread",
+      )
+    end
+    fab!(:direct_message_thread) do
+      Fabricate(
+        :chat_thread,
+        channel: direct_message_channel,
+        original_message_user: current_user,
+        title: "Direct-message thread",
+      )
+    end
+
+    it "cannot create or rename category or direct-message threads" do
+      UserSilencer.new(current_user).silence
+      responses = []
+
+      events =
+        DiscourseEvent.track_events(:chat_thread_created) do
+          post "/chat/api/channels/#{public_channel.id}/threads",
+               params: {
+                 original_message_id: category_creation_message.id,
+                 title: "New category thread",
+               }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+
+          post "/chat/api/channels/#{direct_message_channel.id}/threads",
+               params: {
+                 original_message_id: direct_message_creation_message.id,
+                 title: "New direct-message thread",
+               }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+
+          put "/chat/api/channels/#{public_channel.id}/threads/#{category_thread.id}",
+              params: {
+                title: "Renamed category thread",
+              }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+
+          put "/chat/api/channels/#{direct_message_channel.id}/threads/#{direct_message_thread.id}",
+              params: {
+                title: "Renamed direct-message thread",
+              }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+        end
+
+      aggregate_failures do
+        expect(responses.map { |response| response[:status] }).to all(eq(403))
+        expect(responses.map { |response| response[:errors] }).to all(
+          include(I18n.t("invalid_access")),
+        )
+        expect(events).to be_empty
+        expect(category_creation_message.reload.thread).to be_nil
+        expect(direct_message_creation_message.reload.thread).to be_nil
+        expect(category_thread.reload.title).to eq("Category thread")
+        expect(direct_message_thread.reload.title).to eq("Direct-message thread")
       end
     end
   end

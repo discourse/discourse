@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 class DiscourseIdAdmin extends Component {
@@ -98,8 +98,8 @@ class DiscourseIdAdmin extends Component {
             {{i18n "admin.config.discourse_id.description"}}
             <a
               href="https://id.discourse.com"
-              target="_blank"
               rel="noopener noreferrer"
+              target="_blank"
             >{{i18n "admin.config.discourse_id.learn_more"}}</a>
           </p>
 
@@ -133,11 +133,11 @@ class DiscourseIdAdmin extends Component {
 
             <div class="discourse-id-footer">
               <DButton
+                class="btn-default btn-small"
                 @action={{this.regenerateCredentials}}
-                @label="admin.config.discourse_id.regenerate_credentials"
                 @disabled={{this.regenerateDisabled}}
                 @isLoading={{this.isRegenerating}}
-                class="btn-default btn-small"
+                @label="admin.config.discourse_id.regenerate_credentials"
               />
             </div>
           </div>

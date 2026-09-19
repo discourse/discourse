@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class UserColorPaletteMenuItem extends Component {
   get siteStyle() {
@@ -26,14 +26,14 @@ export default class UserColorPaletteMenuItem extends Component {
       data-color-palette={{@colorPalette.name}}
     >
       <DButton
-        class={{concatClass
+        class={{dConcatClass
           "btn-flat user-color-palette-menu__item-choice"
           this.activeClass
         }}
         style={{trustHTML this.siteStyle}}
+        @action={{this.paletteSelected}}
         @icon="circle"
         @translatedLabel={{@colorPalette.name}}
-        @action={{this.paletteSelected}}
       />
     </div>
   </template>

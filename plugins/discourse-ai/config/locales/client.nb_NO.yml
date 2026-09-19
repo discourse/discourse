@@ -8,6 +8,10 @@ nb_NO:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Dato"
+          outcomes:
+            failed: "Feilet"
         reports:
           filters:
             sort_by:
@@ -34,6 +38,19 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      copied: "Kopiert"
+      ai_decoded_transcript:
+        type: "Type"
+        error: "Feil"
+        response: "Svar"
+      ai_tool_approval:
+        loading: "Laster…"
+        tool: "Handling"
+        user: "Bruker"
+        approve: "Godkjenn"
+        reject: "Avvis"
+        approved: "Godkjent"
+        rejected: "Avvist"
       llm_selector:
         none: "Ingen"
       features:
@@ -46,17 +63,37 @@ nb_NO:
           one: "(%{count} mer)"
           other: "(%{count} mer)"
         collapse_list: "(vis mindre)"
+        nav:
+          enabled: "Aktivert"
         filters:
           all: "Alle"
           reset: "Tilbakestill"
         search:
           name: "Søk"
+        image_caption:
+          setting_groups:
+            settings: "Innstillinger"
         spam:
           name: "Spam"
       modals:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
+        category_scope: "Kategorier"
+        model_progress:
+          detail:
+            columns:
+              pending: "Venter"
+              total: "Totalt"
+          targets:
+            post:
+              title: "Innlegg"
+            topic:
+              title: "Emner"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Stikkord"
         stats:
           eta_minutes:
             one: "%{count} minutt"
@@ -84,6 +121,36 @@ nb_NO:
         total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
+      logs:
+        short_title: "Logger"
+        apply: "Bruk"
+        successful: "Vellykket"
+        failed: "Feilet"
+        unknown: "Ukjent"
+        time: "Tid"
+        when: "Når"
+        request: "Forespørsel"
+        provider: "Tilbyder"
+        user: "Bruker"
+        context: "Kontekst"
+        topic: "Emne"
+        post: "Innlegg"
+        post_short: "Innlegg %{id}"
+        duration: "Varighet"
+        actions: "Handlinger"
+        view_details: "Detaljer"
+        periods:
+          day: "Siste 24 timer"
+          week: "Siste 7 dager"
+          custom: "Egendefinert"
+        detail:
+          request: "Forespørsel"
+          response: "Svar"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Sammendrag"
+          deleted_stage: "Slettet"
+          save: "Lagre"
       ai_agent:
         name: "Navn"
         edit: "Rediger"
@@ -94,6 +161,12 @@ nb_NO:
         save: "Lagre"
         enabled: "Aktivert?"
         delete: "Slett"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Lav"
+          medium: "Middels"
+          high: "Høy"
+          max: "Maksimum"
         response_format:
           open_modal: "Rediger"
         filters:
@@ -137,6 +210,9 @@ nb_NO:
       llms:
         display_name: "Navn"
         provider: "Tilbyder"
+        vision_modes:
+          disabled:
+            title: "Deaktivert"
         save: "Lagre"
         edit: "Rediger"
         delete: Slett
@@ -158,7 +234,6 @@ nb_NO:
         tests:
           success: "Suksess!"
         providers:
-          google: "Google"
           fake: "Egendefinert"
       ai_helper:
         context_menu:
@@ -173,8 +248,6 @@ nb_NO:
         thumbnail_suggestions:
           select: "Velg"
           try_again: "Prøv igjen"
-        image_caption:
-          save_caption: "Lagre"
       embeddings:
         save: "Lagre"
         delete: "Slett"
@@ -188,6 +261,7 @@ nb_NO:
           fake: "Egendefinert"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Varighet:"
           request: "Forespørsel"
           response: "Svar"
           next_log: "Neste"
@@ -212,8 +286,10 @@ nb_NO:
         chat:
           summarize: "Oppsummer"
       discobot_discoveries:
-        regular_results: "Emner"
-        collapse: "Fold sammen"
-        tooltip:
-          actions:
-            disable: "Deaktiver"
+        legacy:
+          regular_results: "Emner"
+          collapse: "Fold sammen"
+          tooltip:
+            actions:
+              disable: "Deaktiver"
+        search_messages: "Meldinger"

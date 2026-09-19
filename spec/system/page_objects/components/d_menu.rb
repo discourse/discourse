@@ -37,8 +37,12 @@ module PageObjects
         if @identifier.nil?
           "#d-menu-portals"
         else
-          "#d-menu-portals [data-identifier=\"#{@identifier}\"]"
+          "[data-content][data-identifier=\"#{@identifier}\"]"
         end
+      end
+
+      def remove_selected_option(title)
+        find(".d-multi-select-trigger__selected-item", text: title).click
       end
 
       def option(selector, match = nil)

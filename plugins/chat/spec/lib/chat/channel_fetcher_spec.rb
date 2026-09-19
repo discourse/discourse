@@ -12,13 +12,8 @@ describe Chat::ChannelFetcher do
   fab!(:user1) { Fabricate(:user, group_ids: [chatters.id]) }
   fab!(:user2, :user)
 
-  def guardian
-    Guardian.new(user1)
-  end
-
-  def memberships
-    Chat::UserChatChannelMembership.where(user: user1)
-  end
+  let(:guardian) { user1.guardian }
+  let(:memberships) { Chat::UserChatChannelMembership.where(user: user1) }
 
   before { SiteSetting.chat_allowed_groups = chatters }
 
@@ -46,17 +41,53 @@ describe Chat::ChannelFetcher do
 
       expect(channels).to contain_exactly(category_channel)
     end
+
+    it "returns starred public channels beyond the public channel limit" do
+      first_channel = Fabricate(:category_channel, name: "aardvark")
+      first_channel.user_chat_channel_memberships.create!(user: user1, following: true)
+
+      starred_channel = Fabricate(:category_channel, name: "zebra")
+      starred_channel.user_chat_channel_memberships.create!(
+        user: user1,
+        following: true,
+        starred: true,
+      )
+
+      stub_const(Chat::ChannelFetcher, "MAX_PUBLIC_CHANNEL_RESULTS", 1) do
+        expect(described_class.structured(guardian)[:public_channels]).to contain_exactly(
+          first_channel,
+          starred_channel,
+        )
+      end
+    end
+
+    it "returns starred direct message channels beyond the direct message limit" do
+      recent_channel = Fabricate(:direct_message_channel, users: [user1, user2])
+      recent_channel.update!(last_message: Fabricate(:chat_message, chat_channel: recent_channel))
+
+      starred_channel = Fabricate(:direct_message_channel, users: [user1, user2])
+      starred_channel.membership_for(user1).update!(starred: true)
+
+      stub_const(Chat::ChannelFetcher, "MAX_DM_CHANNEL_RESULTS", 1) do
+        expect(described_class.structured(guardian)[:direct_message_channels]).to contain_exactly(
+          recent_channel,
+          starred_channel,
+        )
+      end
+    end
   end
 
   describe ".tracking_state" do
     context "when user is member of the channel" do
-      before do
+      fab!(:category_channel_membership) do
         Fabricate(:user_chat_channel_membership, chat_channel: category_channel, user: user1)
       end
 
       context "with unread messages" do
-        before do
+        fab!(:first_unread_message) do
           Fabricate(:chat_message, chat_channel: category_channel, message: "hi", user: user2)
+        end
+        fab!(:second_unread_message) do
           Fabricate(:chat_message, chat_channel: category_channel, message: "bonjour", user: user2)
         end
 
@@ -92,7 +123,7 @@ describe Chat::ChannelFetcher do
 
     context "when user is not member of the channel" do
       context "when the channel has new messages" do
-        before do
+        fab!(:new_channel_message) do
           Fabricate(:chat_message, chat_channel: category_channel, message: "hi", user: user2)
         end
 
@@ -203,6 +234,20 @@ describe Chat::ChannelFetcher do
       ).to match_array([category_channel.id])
     end
 
+    it "preloads last-message uploads" do
+      another_channel = Fabricate(:category_channel)
+      first_message = Fabricate(:chat_message, chat_channel: category_channel, user: user2)
+      second_message = Fabricate(:chat_message, chat_channel: another_channel, user: user2)
+      category_channel.update!(last_message: first_message)
+      another_channel.update!(last_message: second_message)
+
+      channels = described_class.secured_public_channels(guardian, following: following)
+
+      expect(channels.map { |channel| channel.last_message.association(:uploads).loaded? }).to all(
+        eq(true),
+      )
+    end
+
     it "returns an empty array when public channels are disabled" do
       SiteSetting.enable_public_channels = false
 
@@ -227,6 +272,16 @@ describe Chat::ChannelFetcher do
           filter: "cool stuff",
         ).map(&:id),
       ).to match_array([category_channel.id])
+    end
+
+    it "orders channels by lower-cased name by default" do
+      category_channel.update!(name: "Support")
+      Fabricate(:category_channel, name: "banana")
+      Fabricate(:category_channel, name: "Apple")
+
+      channels = described_class.secured_public_channels(guardian, following: following)
+
+      expect(channels.map(&:name)).to eq(%w[Apple banana Support])
     end
 
     context "with match_quality when filtering" do

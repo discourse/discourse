@@ -2,8 +2,8 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
 import IncomingEmail from "discourse/admin/models/incoming-email";
-import formatDate from "discourse/helpers/format-date";
 import routeAction from "discourse/helpers/route-action";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 
 const REJECTED_HEADERS = [
   { key: "admin.email.incoming_emails.from_address" },
@@ -37,18 +37,18 @@ const REJECTED_FILTERS = [
 
 export default <template>
   <EmailLogsList
-    @status="rejected"
-    @logType="rejected"
-    @sourceModel={{IncomingEmail}}
-    @headers={{REJECTED_HEADERS}}
     @filters={{REJECTED_FILTERS}}
+    @headers={{REJECTED_HEADERS}}
+    @logType="rejected"
     @onShowEmail={{routeAction "showIncomingEmail"}}
+    @sourceModel={{IncomingEmail}}
+    @status="rejected"
   >
     <:default
       as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
     >
       <tr data-test-email-log-row-id={{emailLog.id}}>
-        <td>{{formatDate emailLog.created_at}}</td>
+        <td>{{dFormatDate emailLog.created_at}}</td>
         <td>{{emailLog.from_address}}</td>
         <td>{{emailLog.to_addresses}}</td>
         <td>
@@ -56,9 +56,9 @@ export default <template>
         </td>
         <td>
           <a
+            class="incoming-email-link"
             href
             {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
-            class="incoming-email-link"
           >
             {{emailLog.error}}
           </a>

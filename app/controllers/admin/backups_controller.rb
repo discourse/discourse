@@ -7,6 +7,7 @@ class Admin::BackupsController < Admin::AdminController
   include ExternalUploadHelpers
 
   before_action :ensure_backups_enabled
+  before_action :ensure_valid_backup_id, only: %i[show email destroy restore]
   skip_before_action :check_xhr, only: %i[index show logs check_backup_chunk upload_backup_chunk]
   skip_before_action :ensure_backups_enabled, only: %i[show status index email]
 
@@ -22,6 +23,21 @@ class Admin::BackupsController < Admin::AdminController
                          :complete_multipart,
                          :abort_multipart,
                          :batch_presign_multipart_parts
+
+  # Backups are ops, not content — an archived site should still be
+  # backup-able, restorable, and downloadable.
+  allow_when_archived :create,
+                      :cancel,
+                      :email,
+                      :destroy,
+                      :restore,
+                      :rollback,
+                      :readonly,
+                      :upload_backup_chunk,
+                      :create_multipart,
+                      :complete_multipart,
+                      :abort_multipart,
+                      :batch_presign_multipart_parts
 
   def index
     respond_to do |format|
@@ -177,6 +193,7 @@ class Admin::BackupsController < Admin::AdminController
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
     raise Discourse::InvalidParameters.new(:resumableIdentifier) unless valid_filename?(identifier)
+    raise Discourse::InvalidParameters.new(:resumableFilename) unless valid_filename?(filename)
 
     # path to chunk file
     chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
@@ -256,7 +273,7 @@ class Admin::BackupsController < Admin::AdminController
   private
 
   def has_enough_space_on_disk?(size)
-    DiskSpace.free("#{Rails.root}/public/backups") > size
+    DiskSpace.free("#{Rails.public_path.join("backups")}") > size
   end
 
   def ensure_backups_enabled
@@ -269,6 +286,11 @@ class Admin::BackupsController < Admin::AdminController
 
   def valid_filename?(filename)
     !!(/\A[a-zA-Z0-9\._\-]+\z/ =~ filename)
+  end
+
+  def ensure_valid_backup_id
+    backup_id = params.fetch(:id)
+    raise Discourse::NotFound unless valid_filename?(backup_id) && valid_extension?(backup_id)
   end
 
   def render_error(message_key)
@@ -293,17 +315,15 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def create_direct_multipart_upload
-    begin
-      yield
-    rescue BackupRestore::BackupStore::StorageError => err
-      message =
-        debug_upload_error(
-          err,
-          I18n.t("upload.create_multipart_failure", additional_detail: err.message),
-        )
-      raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
-    rescue BackupRestore::BackupStore::BackupFileExists
-      raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
-    end
+    yield
+  rescue BackupRestore::BackupStore::StorageError => err
+    message =
+      debug_upload_error(
+        err,
+        I18n.t("upload.create_multipart_failure", additional_detail: err.message),
+      )
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+  rescue BackupRestore::BackupStore::BackupFileExists
+    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))
   end
 end

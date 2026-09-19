@@ -14,7 +14,7 @@ module("payment-plan", function (hooks) {
       recurring: { interval: "year" },
       amountDollars: "44.99",
     };
-    let selectedPlan;
+    let selectedPlan = null;
 
     await render(
       <template>

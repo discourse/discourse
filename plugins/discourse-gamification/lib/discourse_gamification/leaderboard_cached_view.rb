@@ -68,19 +68,19 @@ module DiscourseGamification
     end
 
     def self.create_all
-      GamificationLeaderboard.find_each { |leaderboard| self.new(leaderboard).create }
+      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).create }
     end
 
     def self.refresh_all
-      GamificationLeaderboard.find_each { |leaderboard| self.new(leaderboard).refresh }
+      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).refresh }
     end
 
     def self.delete_all
-      GamificationLeaderboard.find_each { |leaderboard| self.new(leaderboard).delete }
+      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).delete }
     end
 
     def self.purge_all_stale
-      GamificationLeaderboard.find_each { |leaderboard| self.new(leaderboard).purge_stale }
+      GamificationLeaderboard.find_each { |leaderboard| new(leaderboard).purge_stale }
     end
 
     def self.update_all

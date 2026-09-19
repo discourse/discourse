@@ -25,7 +25,7 @@ module Chat
     end
 
     def chat_message
-      @chat_message ||= (target || Chat::Message.with_deleted.find_by(id: target_id))
+      @chat_message ||= target || Chat::Message.with_deleted.find_by(id: target_id)
     end
 
     def chat_message_creator
@@ -34,6 +34,12 @@ module Chat
 
     def flagged_by_user_ids
       @flagged_by_user_ids ||= reviewable_scores.map(&:user_id)
+    end
+
+    def silenced_for_this_message?
+      return false if !chat_message_creator&.silenced?
+
+      chat_message_creator.silenced_record&.reviewable_id == id
     end
 
     def post
@@ -95,6 +101,31 @@ module Chat
       unless chat_message.deleted_at?
         build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
       end
+
+      build_unsilence_action(actions, guardian)
+    end
+
+    def build_unsilence_action(actions, guardian)
+      return if !chat_message_creator&.silenced?
+      return if !guardian.can_unsilence_user?(chat_message_creator)
+
+      build_action(actions, :unsilence_user, icon: "microphone-slash", secondary: true)
+    end
+
+    def penalty_effect_for(action_id)
+      return if author_penalties.empty?
+
+      lifts_silence =
+        case action_id
+        when :disagree, :disagree_and_restore
+          silenced_for_this_message?
+        when :unsilence_user
+          true
+        else
+          false
+        end
+
+      lifts_silence ? :lifts_penalty : :retains_penalty
     end
 
     def perform_agree_and_keep_message(performed_by, args)
@@ -110,15 +141,21 @@ module Chat
     end
 
     def perform_disagree_and_restore(performed_by, args)
-      disagree { chat_message.recover! }
+      disagree(performed_by) { chat_message.recover! }
     end
 
     def perform_disagree(performed_by, args)
-      disagree
+      disagree(performed_by)
     end
 
     def perform_ignore(performed_by, args)
       ignore
+    end
+
+    def perform_unsilence_user(performed_by, _args)
+      UserSilencer.unsilence(chat_message_creator, performed_by, reviewable_id: id)
+
+      create_result(:success)
     end
 
     def perform_delete_and_ignore(performed_by, args)
@@ -139,10 +176,12 @@ module Chat
       end
     end
 
-    def disagree
+    def disagree(performed_by)
       yield if block_given?
 
-      UserSilencer.unsilence(chat_message_creator)
+      if silenced_for_this_message?
+        UserSilencer.unsilence(chat_message_creator, performed_by, reviewable_id: id)
+      end
 
       create_result(:success, :rejected) do |result|
         result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }
@@ -164,26 +203,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
-#  type                    :string           not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
-#  version                 :integer          default(0), not null
+#  force_review            :boolean          default(FALSE), not null
 #  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
+#  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
+#  version                 :integer          default(0), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
-#  type_source             :string           default("unknown"), not null
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #
@@ -192,6 +231,7 @@ end
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

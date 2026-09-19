@@ -8,16 +8,16 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import WebhookEvent from "discourse/admin/components/webhook-event";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CountI18n from "discourse/components/count-i18n";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCountI18n from "discourse/ui-kit/d-count-i18n";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class WebhookEvents extends Component {
@@ -45,23 +45,6 @@ export default class WebhookEvents extends Component {
     return this.incomingCount > 0;
   }
 
-  async loadEvents() {
-    this.loading = true;
-
-    try {
-      this.events = await this.store.findAll("web-hook-event", {
-        webhookId: this.args.webhookId,
-        status: this.args.status,
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
-
-    this.redeliverEnabled = this.failedEventIds.length;
-  }
-
   get failedEventIds() {
     return this.events.content
       .filter(
@@ -84,6 +67,23 @@ export default class WebhookEvents extends Component {
     ];
   }
 
+  async loadEvents() {
+    this.loading = true;
+
+    try {
+      this.events = await this.store.findAll("web-hook-event", {
+        webhookId: this.args.webhookId,
+        status: this.args.status,
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
+
+    this.redeliverEnabled = this.failedEventIds.length;
+  }
+
   @bind
   reloadEvents() {
     if (this.loading) {
@@ -102,39 +102,6 @@ export default class WebhookEvents extends Component {
   @bind
   unsubscribe() {
     this.messageBus.unsubscribe("/web_hook_events/*", this._addIncoming);
-  }
-
-  @bind
-  _addIncoming(data) {
-    if (data.event_type === "ping") {
-      this.pingEnabled = true;
-    }
-
-    if (data.type === "redelivered") {
-      const event = this.events.content.find(
-        (e) => e.id === data.web_hook_event.id
-      );
-
-      event.setProperties({
-        response_body: data.web_hook_event.response_body,
-        response_headers: data.web_hook_event.response_headers,
-        status: data.web_hook_event.status,
-        redelivering: false,
-      });
-      return;
-    }
-
-    if (data.type === "redelivery_failed") {
-      const event = this.events.content.find(
-        (e) => e.id === data.web_hook_event_id
-      );
-      event.set("redelivering", false);
-      return;
-    }
-
-    if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
-      this.incomingEventIds.push(data.web_hook_event_id);
-    }
   }
 
   @action
@@ -209,6 +176,39 @@ export default class WebhookEvents extends Component {
     });
   }
 
+  @bind
+  _addIncoming(data) {
+    if (data.event_type === "ping") {
+      this.pingEnabled = true;
+    }
+
+    if (data.type === "redelivered") {
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event.id
+      );
+
+      event.setProperties({
+        response_body: data.web_hook_event.response_body,
+        response_headers: data.web_hook_event.response_headers,
+        status: data.web_hook_event.status,
+        redelivering: false,
+      });
+      return;
+    }
+
+    if (data.type === "redelivery_failed") {
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event_id
+      );
+      event.set("redelivering", false);
+      return;
+    }
+
+    if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
+      this.incomingEventIds.push(data.web_hook_event_id);
+    }
+  }
+
   <template>
     <div
       class="web-hook-events-listing"
@@ -218,31 +218,32 @@ export default class WebhookEvents extends Component {
     >
       <div class="web-hook-events-actions">
         <ComboBox
-          @value={{@status}}
+          class="delivery-status-filters"
           @content={{this.statuses}}
           @onChange={{fn (mut @status)}}
           @options={{hash none="admin.web_hooks.events.filter_status.all"}}
-          class="delivery-status-filters"
+          @value={{@status}}
         />
 
         <DButton
-          @icon="arrows-rotate"
-          @label="admin.web_hooks.events.redeliver_failed"
+          class="btn-default"
           @action={{this.redeliverFailed}}
           @disabled={{not this.redeliverEnabled}}
+          @icon="arrows-rotate"
+          @label="admin.web_hooks.events.redeliver_failed"
         />
 
         <DButton
-          @icon="paper-plane"
-          @label="admin.web_hooks.events.ping"
+          class="btn-default webhook-events__ping-button"
           @action={{this.ping}}
           @disabled={{not this.pingEnabled}}
-          class="webhook-events__ping-button"
+          @icon="paper-plane"
+          @label="admin.web_hooks.events.ping"
         />
       </div>
 
       {{#if this.events.content}}
-        <LoadMore @action={{this.loadMore}}>
+        <DLoadMore @action={{this.loadMore}}>
           <div class="web-hook-events content-list">
             <div class="heading-container">
               <div class="col heading first status">
@@ -264,14 +265,14 @@ export default class WebhookEvents extends Component {
 
             {{#if this.hasIncoming}}
               <a
+                class="alert alert-info clickable"
                 href
                 tabindex="0"
                 {{on "click" this.showInserted}}
-                class="alert alert-info clickable"
               >
-                <CountI18n
-                  @key="admin.web_hooks.events.incoming"
+                <DCountI18n
                   @count={{this.incomingCount}}
+                  @key="admin.web_hooks.events.incoming"
                 />
               </a>
             {{/if}}
@@ -283,8 +284,8 @@ export default class WebhookEvents extends Component {
             </ul>
           </div>
 
-          <ConditionalLoadingSpinner @condition={{this.events.loadingMore}} />
-        </LoadMore>
+          <DConditionalLoadingSpinner @condition={{this.events.loadingMore}} />
+        </DLoadMore>
       {{else}}
         <p>{{i18n "admin.web_hooks.events.none"}}</p>
       {{/if}}

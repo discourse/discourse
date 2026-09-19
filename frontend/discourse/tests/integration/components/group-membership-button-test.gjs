@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | group-membership-button", function (hooks) {
+module("Integration | Component | GroupMembershipButton", function (hooks) {
   setupRenderingTest(hooks);
 
   test("canJoinGroup", async function (assert) {

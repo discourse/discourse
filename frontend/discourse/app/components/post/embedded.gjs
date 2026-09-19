@@ -1,4 +1,4 @@
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostAvatar from "./avatar";
 import PostCookedHtml from "./cooked-html";
@@ -13,26 +13,26 @@ const PostEmbedded = <template>
           <PostMetaDataPosterName @post={{@post}} />
           <div class="post-link-arrow">
             <a
-              class="post-info arrow"
               aria-label={{i18n
                 "topic.jump_reply_aria"
                 username=@post.username
               }}
+              class="post-info arrow"
               href={{@post.shareUrl}}
               title={{i18n "topic.jump_reply"}}
             >
               {{#if @above}}
-                {{icon "arrow-up"}}
+                {{dIcon "arrow-up"}}
               {{else}}
-                {{icon "arrow-down"}}
+                {{dIcon "arrow-down"}}
               {{/if}}
               {{i18n "topic.jump_reply_button"}}
             </a>
           </div>
         </div>
         <PostCookedHtml
-          @post={{@post}}
           @highlightTerm={{@highlightTerm}}
+          @post={{@post}}
           @streamElement={{@streamElement}}
         />
       </div>

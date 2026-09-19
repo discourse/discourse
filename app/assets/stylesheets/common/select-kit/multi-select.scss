@@ -52,7 +52,7 @@
 
     .multi-select-header {
       background: var(--secondary);
-      border-color: var(--primary-400);
+      border-color: var(--input-border-color);
 
       .formatted-selection {
         margin: 0;
@@ -66,13 +66,15 @@
         display: flex;
         flex-wrap: wrap;
         margin: -0.35em;
-        margin-left: -0.25em;
         position: relative;
+        align-items: center;
+        gap: var(--space-1);
 
         .selected-choice {
-          margin: 0.125em 0.25em 0.125em 0;
-          padding: 0.2em 0.3em;
+          height: min-content;
+          padding: var(--space-1);
           font-size: var(--font-down-1);
+          border-radius: var(--d-border-radius);
 
           &.selected-choice-color {
             border-bottom: 2px solid transparent;

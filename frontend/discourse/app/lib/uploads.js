@@ -1,9 +1,15 @@
+import {
+  isRateLimitError,
+  MAX_RATE_LIMIT_RETRY_SECONDS,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { escapeMarkdownCharacters } from "discourse/lib/markdown-image-builder";
 import { humanizeList } from "discourse/lib/text";
 import { capabilities } from "discourse/services/capabilities";
 import I18n, { i18n } from "discourse-i18n";
+
+const RATE_LIMIT_RETRIES = 1;
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -202,7 +208,7 @@ export function authorizedExtensions(staff, siteSettings) {
 
 function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
-    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif"
+    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif, jxl"
     : imagesExtensions(staff, siteSettings).join(", ");
 }
 
@@ -236,7 +242,7 @@ export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
 }
 
 export function isImage(path) {
-  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif|avif)$/i.test(path);
+  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif|avif|jxl)$/i.test(path);
 }
 
 export function isVideo(path) {
@@ -285,7 +291,7 @@ function markdownNameFromFileName(fileName) {
     name = i18n("upload_selector.default_image_alt_text");
   }
 
-  return escapeMarkdownCharacters(name);
+  return name.replace(/\[|\]|\|/g, "");
 }
 
 function imageMarkdown(upload) {
@@ -301,7 +307,7 @@ function playableMediaMarkdown(upload, type) {
 }
 
 function attachmentMarkdown(upload) {
-  return `[${escapeMarkdownCharacters(upload.original_filename)}|attachment](${
+  return `[${upload.original_filename.replace(/\[|\]|\|/g, "")}|attachment](${
     upload.short_url
   }) (${I18n.toHumanSize(upload.filesize)})`;
 }
@@ -318,7 +324,26 @@ export function getUploadMarkdown(upload) {
   }
 }
 
+export function displayUploadErrors(errors, siteSettings) {
+  if (errors.length === 0) {
+    return;
+  }
+
+  if (errors.length === 1) {
+    displayErrorForUpload(errors[0].data, siteSettings, errors[0].fileName);
+    return;
+  }
+
+  displayErrorForBulkUpload(errors);
+}
+
 export function displayErrorForBulkUpload(errors) {
+  const rateLimited = errors.find(({ data }) => isRateLimitError(data));
+  if (rateLimited) {
+    displayRateLimitError(rateLimited.data);
+    return;
+  }
+
   const fileNames = humanizeList(errors.map((item) => item.fileName));
 
   dialog.alert(i18n("post.errors.upload", { file_name: fileNames }));
@@ -331,6 +356,11 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
       { id: "discourse.uploads.display-error-for-upload" }
     );
     fileName = data.files[0].name;
+  }
+
+  if (isRateLimitError(data)) {
+    displayRateLimitError(data);
+    return;
   }
 
   if (data.jqXHR) {
@@ -403,6 +433,52 @@ function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
   }
 
   return;
+}
+
+function displayRateLimitError(error) {
+  dialog.alert(
+    i18n("too_many_requests", { count: rateLimitWaitSeconds(error) })
+  );
+}
+
+function isRetryableRateLimit(error) {
+  return (
+    isRateLimitError(error) &&
+    rateLimitWaitSeconds(error) <= MAX_RATE_LIMIT_RETRY_SECONDS
+  );
+}
+
+function waitOutRateLimit(error) {
+  return new Promise((resolve) =>
+    setTimeout(resolve, rateLimitWaitSeconds(error) * 1000)
+  );
+}
+
+export const rateLimitRetryOptions = {
+  retries: RATE_LIMIT_RETRIES,
+
+  shouldRetry: isRetryableRateLimit,
+
+  async onAfterResponse(xhr, retryCount) {
+    if (retryCount >= RATE_LIMIT_RETRIES || !isRetryableRateLimit(xhr)) {
+      return;
+    }
+
+    await waitOutRateLimit(xhr);
+  },
+};
+
+export async function withRateLimitRetry(request) {
+  try {
+    return await request();
+  } catch (error) {
+    if (!isRetryableRateLimit(error)) {
+      throw error;
+    }
+
+    await waitOutRateLimit(error);
+    return request();
+  }
 }
 
 export function bindFileInputChangeListener(element, fileCallbackFn) {

@@ -1,0 +1,110 @@
+.ai-decoded-transcript {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  &__thinking,
+  &__section {
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+  }
+
+  &__summary,
+  &__heading {
+    font-size: var(--font-up-1);
+    font-weight: 600;
+  }
+
+  &__summary {
+    padding: var(--space-3);
+    cursor: pointer;
+  }
+
+  &__heading {
+    margin: 0;
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  &__text {
+    padding: 0 var(--space-3) var(--space-3);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  &__section > &__text {
+    padding-top: var(--space-3);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: 0;
+    padding: var(--space-3);
+    list-style: none;
+  }
+
+  &__item {
+    padding: var(--space-3);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+
+    &.--error {
+      border-color: var(--danger);
+    }
+  }
+
+  &__item-heading,
+  &__label {
+    font-size: var(--font-0);
+  }
+
+  &__item-heading {
+    margin: 0 0 var(--space-2);
+  }
+
+  &__label {
+    margin: var(--space-3) 0 var(--space-2);
+  }
+
+  &__metadata {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--space-1) var(--space-2);
+    margin: var(--space-1) 0;
+
+    dt {
+      color: var(--primary-high);
+      font-weight: 600;
+    }
+
+    dd {
+      min-width: 0;
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__code {
+    margin: 0;
+    padding: var(--space-3);
+    overflow: visible;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    color: var(--primary);
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-medium);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  &__error {
+    color: var(--danger);
+    font-size: var(--font-down-1);
+  }
+}

@@ -10,10 +10,10 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import { isValidInput } from "discourse/select-kit/lib/input-utils";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @classNames("select-kit-row")
@@ -42,7 +42,6 @@ import { i18n } from "discourse-i18n";
 export default class SelectKitRow extends Component {
   tabIndex = 0;
   index = 0;
-  role = "menuitemradio";
 
   @tracked _langOverride;
 
@@ -58,22 +57,13 @@ export default class SelectKitRow extends Component {
     this._langOverride = value;
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    if (this.site.desktopView) {
-      this.element.addEventListener("mouseenter", this.handleMouseEnter);
-      this.element.addEventListener("focus", this.handleMouseEnter);
-    }
+  get isActionRow() {
+    return typeof this.item?.onSelect === "function";
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    if (this.site.desktopView) {
-      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
-      this.element.removeEventListener("focus", this.handleMouseEnter);
-    }
+  @computed("item.onSelect")
+  get role() {
+    return this.isActionRow ? "menuitem" : "menuitemradio";
   }
 
   @computed("rowValue")
@@ -86,8 +76,11 @@ export default class SelectKitRow extends Component {
     return guidFor(this.item);
   }
 
-  @computed("isSelected")
+  @computed("isSelected", "item.onSelect")
   get ariaChecked() {
+    if (this.isActionRow) {
+      return undefined;
+    }
     return this.isSelected ? "true" : "false";
   }
 
@@ -121,19 +114,6 @@ export default class SelectKitRow extends Component {
     return label;
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    this.setProperties({
-      rowName: this.getName(this.item),
-      rowValue: this.getValue(this.item),
-      rowLabel: this.getProperty(this.item, "labelProperty"),
-      rowTitle: this.getProperty(this.item, "titleProperty"),
-      rowLang: this.getProperty(this.item, "langProperty"),
-      rowDisabled: this.getProperty(this.item, "disabled"),
-    });
-  }
-
   @computed("item.{icon,icons}")
   get icons() {
     const _icon = makeArray(this.getProperty(this.item, "icon"));
@@ -156,9 +136,40 @@ export default class SelectKitRow extends Component {
     return this.rowValue === this.value;
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    if (this.site.desktopView) {
+      this.element.addEventListener("mouseenter", this.handleMouseEnter);
+      this.element.addEventListener("focus", this.handleMouseEnter);
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    if (this.site.desktopView) {
+      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
+      this.element.removeEventListener("focus", this.handleMouseEnter);
+    }
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    this.setProperties({
+      rowName: this.getName(this.item),
+      rowValue: this.getValue(this.item),
+      rowLabel: this.getProperty(this.item, "labelProperty"),
+      rowTitle: this.getProperty(this.item, "titleProperty"),
+      rowLang: this.getProperty(this.item, "langProperty"),
+      rowDisabled: this.getProperty(this.item, "disabled"),
+    });
+  }
+
   @action
   handleMouseEnter() {
-    if (!this.isDestroying || !this.isDestroyed) {
+    if (!this.isDestroying) {
       this.selectKit.onHover(this.rowValue, this.item);
     }
     return false;
@@ -229,7 +240,11 @@ export default class SelectKitRow extends Component {
 
   <template>
     {{#each this.icons as |i|}}
-      {{icon i translatedTitle=this.dasherizedTitle}}
+      {{dIcon
+        i
+        translatedTitle=this.dasherizedTitle
+        ignoreMissing=this.selectKit.options.ignoreMissingIcons
+      }}
     {{/each}}
 
     <span class="name">

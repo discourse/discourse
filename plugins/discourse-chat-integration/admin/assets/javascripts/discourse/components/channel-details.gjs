@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 import ChannelData from "./channel-data";
 import InlineChannelForm from "./inline-channel-form";
@@ -53,59 +53,59 @@ export default class ChannelDetails extends Component {
         <div class="admin-config-area-card__title channel-title">
           {{#if @channel.error_key}}
             <DButton
-              @icon="triangle-exclamation"
-              @action={{fn @showError @channel}}
               class="btn-danger btn-small channel-error-btn"
+              @action={{fn @showError @channel}}
+              @icon="triangle-exclamation"
             />
           {{/if}}
           {{#if this.isEditing}}
             <InlineChannelForm
               @channel={{@channel}}
-              @provider={{@provider}}
-              @onSave={{this.onChannelSaved}}
               @onCancel={{this.cancelEditing}}
+              @onSave={{this.onChannelSaved}}
+              @provider={{@provider}}
             />
           {{else}}
-            <ChannelData @provider={{@provider}} @channel={{@channel}} />
+            <ChannelData @channel={{@channel}} @provider={{@provider}} />
           {{/if}}
         </div>
 
         {{#unless this.isEditing}}
           <div class="admin-config-area-card__header-actions">
             <DMenu
-              @identifier="channel-actions-{{@channel.id}}"
-              @icon="ellipsis-vertical"
-              @title={{i18n "chat_integration.channel_actions"}}
               class="btn-default btn-small"
+              @icon="ellipsis-vertical"
+              @identifier="channel-actions-{{@channel.id}}"
+              @title={{i18n "chat_integration.channel_actions"}}
             >
               <:content>
-                <DropdownMenu as |dropdown|>
+                <DDropdownMenu as |dropdown|>
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent edit-channel"
+                      @action={{this.startEditing}}
                       @icon="pencil"
                       @label="chat_integration.edit_channel"
-                      @action={{this.startEditing}}
-                      class="btn-transparent edit-channel"
                     />
                   </dropdown.item>
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent test-channel"
+                      @action={{fn @test @channel}}
                       @icon="rocket"
                       @label="chat_integration.test_channel"
-                      @action={{fn @test @channel}}
-                      class="btn-transparent test-channel"
                     />
                   </dropdown.item>
                   <dropdown.divider />
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent btn-danger delete-channel"
+                      @action={{fn this.deleteChannel @channel}}
                       @icon="trash-can"
                       @label="chat_integration.delete_channel"
-                      @action={{fn this.deleteChannel @channel}}
-                      class="btn-transparent btn-danger delete-channel"
                     />
                   </dropdown.item>
-                </DropdownMenu>
+                </DDropdownMenu>
               </:content>
             </DMenu>
           </div>
@@ -127,9 +127,9 @@ export default class ChannelDetails extends Component {
           <tbody>
             {{#each @channel.rules as |rule|}}
               <RuleRow
-                @rule={{rule}}
                 @edit={{fn @editRuleWithChannel rule @channel}}
                 @refresh={{@refresh}}
+                @rule={{rule}}
               />
             {{/each}}
           </tbody>
@@ -138,10 +138,10 @@ export default class ChannelDetails extends Component {
 
       <div class="admin-config-area-card__footer channel-footer">
         <DButton
+          class="btn-default btn-small"
+          @action={{fn @createRule @channel}}
           @icon="plus"
           @label="chat_integration.create_rule"
-          @action={{fn @createRule @channel}}
-          class="btn-default btn-small"
         />
       </div>
     </div>

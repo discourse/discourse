@@ -6,8 +6,10 @@
 
 nl:
   solved: "Opgelost"
+  unsolved: "Onopgelost"
   posted: "geplaatst"
   by_username: "van @%{username}"
+  replied: "beantwoord"
   vote_count:
     one: "%{count} stem"
     other: "%{count} stemmen"

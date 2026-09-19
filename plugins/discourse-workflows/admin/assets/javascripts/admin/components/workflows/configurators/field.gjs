@@ -1,0 +1,277 @@
+import Component from "@glimmer/component";
+import { trustHTML } from "@ember/template";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
+import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
+import {
+  fieldControl,
+  fieldFormat,
+  fieldInputType,
+  fieldShowDescription,
+  fieldShowLabel,
+  fieldSupportsExpression,
+  fieldType,
+  findNodeType,
+  isExpression,
+  propertyDescription,
+  propertyDynamicValueHint,
+  propertyLabel,
+  propertyPlaceholder,
+  propertyTooltip,
+} from "../../../lib/workflows/property-engine";
+
+const CRON_FIELD_PATTERN =
+  /^(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+)(,(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+))*$/;
+
+function isValidCron(value) {
+  if (!value || typeof value !== "string") {
+    return false;
+  }
+  const fields = value.trim().split(/\s+/);
+  return fields.length === 5 && fields.every((f) => CRON_FIELD_PATTERN.test(f));
+}
+
+const FIELD_VALIDATORS = {
+  cron: (name, value, { addError }) => {
+    if (value && !isExpression(value) && !isValidCron(value)) {
+      addError(name, {
+        title: i18n("discourse_workflows.schedule.cron"),
+        message: i18n("discourse_workflows.schedule.cron_invalid"),
+      });
+    }
+  },
+};
+
+export default class Field extends Component {
+  get control() {
+    return fieldControl(this.args.schema);
+  }
+
+  get entry() {
+    const entry =
+      FIELD_CONTROL_REGISTRY[this.control] || FIELD_CONTROL_REGISTRY.default;
+
+    return applyValueTransformer("workflow-field-control", entry, {
+      control: this.control,
+      fieldName: this.args.fieldName,
+      node: this.args.node,
+      nodeParameters: this.args.nodeParameters,
+      schema: this.args.schema,
+    });
+  }
+
+  get renderer() {
+    return this.entry.renderer;
+  }
+
+  get resolvedFieldType() {
+    const { type } = this.entry;
+    if (typeof type === "function") {
+      return type({ inputType: this.inputType });
+    }
+    return type;
+  }
+
+  get isCustomType() {
+    return this.resolvedFieldType === "custom";
+  }
+
+  get inputType() {
+    return fieldInputType(this.args.schema);
+  }
+
+  get label() {
+    return (
+      this.args.label || propertyLabel(this.nodeDefinition, this.args.fieldName)
+    );
+  }
+
+  get metadata() {
+    return this.args.metadata || this.nodeDefinition?.metadata || {};
+  }
+
+  get nodeDefinition() {
+    return (
+      this.args.nodeDefinition ||
+      findNodeType(this.args.nodeTypes, this.nodeType)
+    );
+  }
+
+  get nodeType() {
+    return this.args.nodeType || this.args.node?.type;
+  }
+
+  get placeholder() {
+    return propertyPlaceholder(this.nodeDefinition, this.args.fieldName);
+  }
+
+  get showLabel() {
+    return fieldShowLabel(this.args.schema);
+  }
+
+  get showOptional() {
+    return this.args.showOptional ?? true;
+  }
+
+  get format() {
+    return fieldFormat(this.args.schema);
+  }
+
+  get supportsExpression() {
+    return fieldSupportsExpression(this.args.schema);
+  }
+
+  get validation() {
+    const schema = this.args.schema ?? {};
+    const rules = [];
+    if (schema.required) {
+      rules.push("required");
+    }
+    if (fieldType(schema) === "integer" && !this.supportsExpression) {
+      rules.push("integer");
+    }
+    if (schema.min != null || schema.max != null) {
+      const min = schema.min ?? Number.MIN_SAFE_INTEGER;
+      const max = schema.max ?? Number.MAX_SAFE_INTEGER;
+      rules.push(`between:${min},${max}`);
+    }
+    return rules.length > 0 ? rules.join("|") : undefined;
+  }
+
+  get customValidation() {
+    return FIELD_VALIDATORS[this.args.schema?.validate];
+  }
+
+  get fieldDescription() {
+    if (!fieldShowDescription(this.args.schema)) {
+      return undefined;
+    }
+
+    const description = propertyDescription(
+      this.nodeDefinition,
+      this.args.fieldName
+    );
+    return description ? trustHTML(description) : undefined;
+  }
+
+  get fieldTooltip() {
+    if (!this.showLabel) {
+      return undefined;
+    }
+
+    return propertyTooltip(this.nodeDefinition, this.args.fieldName);
+  }
+
+  get dynamicValueHint() {
+    if (!this.supportsExpression) {
+      return null;
+    }
+
+    return propertyDynamicValueHint(
+      this.nodeDefinition,
+      this.args.fieldName,
+      this.args.schema
+    );
+  }
+
+  get fieldTitle() {
+    return this.label || this.args.fieldName || "-";
+  }
+
+  <template>
+    {{#if (eq this.entry.kind "standalone")}}
+      <this.renderer
+        @configuration={{@configuration}}
+        @connections={{@connections}}
+        @credentials={{@credentials}}
+        @dynamicValueHint={{this.dynamicValueHint}}
+        @fieldName={{@fieldName}}
+        @form={{@form}}
+        @formApi={{@formApi}}
+        @label={{this.fieldTitle}}
+        @metadata={{this.metadata}}
+        @node={{@node}}
+        @nodeDefinition={{this.nodeDefinition}}
+        @nodeParameters={{@nodeParameters}}
+        @nodes={{@nodes}}
+        @nodeTypes={{@nodeTypes}}
+        @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+        @onSet={{@onSet}}
+        @schema={{@schema}}
+        @session={{@session}}
+        @showOptional={{this.showOptional}}
+      />
+    {{else}}
+      <@form.Field
+        @description={{this.fieldDescription}}
+        @format={{this.format}}
+        @name={{@fieldName}}
+        @onSet={{@onSet}}
+        @showOptional={{this.showOptional}}
+        @showTitle={{this.showLabel}}
+        @title={{this.fieldTitle}}
+        @tooltip={{this.fieldTooltip}}
+        @type={{this.resolvedFieldType}}
+        @validate={{this.customValidation}}
+        @validation={{this.validation}}
+        as |field|
+      >
+        {{#if this.isCustomType}}
+          <field.Control>
+            <this.renderer
+              @configuration={{@configuration}}
+              @connections={{@connections}}
+              @credentials={{@credentials}}
+              @dynamicValueHint={{this.dynamicValueHint}}
+              @field={{field}}
+              @fieldName={{@fieldName}}
+              @formApi={{@formApi}}
+              @metadata={{this.metadata}}
+              @node={{@node}}
+              @nodeDefinition={{this.nodeDefinition}}
+              @nodeParameters={{@nodeParameters}}
+              @nodes={{@nodes}}
+              @nodeTypes={{@nodeTypes}}
+              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @placeholder={{this.placeholder}}
+              @schema={{@schema}}
+              @session={{@session}}
+              @supportsExpression={{this.supportsExpression}}
+            />
+          </field.Control>
+        {{else}}
+          <this.renderer
+            @configuration={{@configuration}}
+            @connections={{@connections}}
+            @credentials={{@credentials}}
+            @dynamicValueHint={{this.dynamicValueHint}}
+            @field={{field}}
+            @fieldName={{@fieldName}}
+            @formApi={{@formApi}}
+            @metadata={{this.metadata}}
+            @node={{@node}}
+            @nodeDefinition={{this.nodeDefinition}}
+            @nodeParameters={{@nodeParameters}}
+            @nodes={{@nodes}}
+            @nodeTypes={{@nodeTypes}}
+            @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+            @placeholder={{this.placeholder}}
+            @schema={{@schema}}
+            @session={{@session}}
+            @supportsExpression={{this.supportsExpression}}
+          />
+        {{/if}}
+        {{#each this.entry.addons as |Addon|}}
+          <Addon
+            @field={{field}}
+            @fieldName={{@fieldName}}
+            @node={{@node}}
+            @nodeParameters={{@nodeParameters}}
+            @schema={{@schema}}
+          />
+        {{/each}}
+      </@form.Field>
+    {{/if}}
+  </template>
+}

@@ -5,12 +5,12 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
-import UserStatusMessage from "discourse/components/user-status-message";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { and, eq, not } from "discourse/truth-helpers";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import formatChatDate from "../../../helpers/format-chat-date";
@@ -18,16 +18,6 @@ import formatChatDate from "../../../helpers/format-chat-date";
 export default class ChatMessageInfo extends Component {
   @service site;
   @service siteSettings;
-
-  @bind
-  trackStatus() {
-    this.#user?.statusManager.trackStatus();
-  }
-
-  @bind
-  stopTrackingStatus() {
-    this.#user?.statusManager.stopTrackingStatus();
-  }
 
   get usernameClasses() {
     const user = this.#user;
@@ -77,6 +67,10 @@ export default class ChatMessageInfo extends Component {
     return !!this.#user?.get("status");
   }
 
+  get interactive() {
+    return this.args.interactive !== false;
+  }
+
   get #user() {
     return this.args.message?.user;
   }
@@ -101,6 +95,16 @@ export default class ChatMessageInfo extends Component {
     }
   }
 
+  @bind
+  trackStatus() {
+    this.#user?.statusManager.trackStatus();
+  }
+
+  @bind
+  stopTrackingStatus() {
+    this.#user?.statusManager.stopTrackingStatus();
+  }
+
   <template>
     {{#if @show}}
       <div
@@ -111,7 +115,7 @@ export default class ChatMessageInfo extends Component {
         {{#if @message.chatWebhookEvent}}
           {{#if @message.chatWebhookEvent.username}}
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "chat-message-info__username"
                 this.usernameClasses
               }}
@@ -124,19 +128,29 @@ export default class ChatMessageInfo extends Component {
             {{i18n "chat.bot"}}
           </span>
         {{else}}
+          {{! The name carries the click target rather than the wrapper: a status message
+          brings its own tooltip trigger, which cannot sit inside a button. }}
           <span
-            role="button"
-            class={{concatClass
+            class={{dConcatClass
               "chat-message-info__username"
               this.usernameClasses
-              "clickable"
+              (if this.interactive "clickable")
             }}
-            data-user-card={{@message.user.username}}
           >
-            <span class="chat-message-info__username__name">{{this.name}}</span>
+            {{#if this.interactive}}
+              <button
+                class="chat-message-info__username__name"
+                data-user-card={{@message.user.username}}
+                type="button"
+              >{{this.name}}</button>
+            {{else}}
+              <span
+                class="chat-message-info__username__name"
+              >{{this.name}}</span>
+            {{/if}}
             {{#if this.showStatus}}
               <span class="chat-message-info__status">
-                <UserStatusMessage @status={{@message.user.status}} />
+                <DUserStatusMessage @status={{@message.user.status}} />
               </span>
             {{/if}}
           </span>
@@ -161,7 +175,7 @@ export default class ChatMessageInfo extends Component {
               class="chat-message-info__pinned"
               title={{i18n "chat.pinned"}}
             >
-              {{icon "thumbtack"}}
+              {{dIcon "thumbtack"}}
             </span>
           {{/if}}
         {{/if}}
@@ -169,20 +183,20 @@ export default class ChatMessageInfo extends Component {
         {{#if this.isFlagged}}
           <span class="chat-message-info__flag">
             {{#if @message.reviewableId}}
-              <LinkTo @route="review.show" @model={{@message.reviewableId}}>
-                {{icon "flag" title="chat.flagged"}}
+              <LinkTo @model={{@message.reviewableId}} @route="review.show">
+                {{dIcon "flag" title="chat.flagged"}}
               </LinkTo>
             {{else}}
-              {{icon "flag" title="chat.you_flagged"}}
+              {{dIcon "flag" title="chat.you_flagged"}}
             {{/if}}
           </span>
         {{/if}}
 
         {{#if (and @threadContext @message.isOriginalThreadMessage)}}
           <LinkTo
-            @route={{this.route}}
-            @models={{this.routeModels}}
             class="chat-message-info__original-message"
+            @models={{this.routeModels}}
+            @route={{this.route}}
           >
             <span class="chat-message-info__original-message__text">
               {{i18n "chat.see_in"}}
@@ -190,6 +204,20 @@ export default class ChatMessageInfo extends Component {
             <ChannelTitle @channel={{@message.channel}} />
           </LinkTo>
         {{/if}}
+      </div>
+    {{else if
+      (and this.interactive @message.user.username (not @message.isAction))
+    }}
+      {{! A message chained to the one above shows no author, but it still has one. Keeping
+      the name rendered keeps the transcript attributable when it is being read rather than
+      seen, and gives the message a control the keyboard can reach. An action message is
+      excluded: it names its author in its own text. }}
+      <div class="chat-message-info -author-only sr-only">
+        <button
+          class="chat-message-info__username__name"
+          data-user-card={{@message.user.username}}
+          type="button"
+        >{{this.name}}</button>
       </div>
     {{/if}}
   </template>

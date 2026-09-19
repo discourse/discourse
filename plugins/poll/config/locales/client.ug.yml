@@ -51,6 +51,8 @@ ug:
       cast-votes:
         title: "بېلەت تاشلاڭ"
         label: "ھازىر بېلەت تاشلاڭ!"
+      keep-vote:
+        label: "كەينى"
       show-results:
         title: "راي سىناش نەتىجىسىنى كۆرسىتىدۇ"
         label: "نەتىجە"
@@ -154,5 +156,3 @@ ug:
           add: تاللانما قوش
         automatic_close:
           label: راي سىناشنى ئاپتوماتىك تاقاش
-        show_advanced: "ئالىي تاللانمىلارنى كۆرسەت"
-        hide_advanced: "ئالىي تاللانمىلارنى كۆرسەت"

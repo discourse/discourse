@@ -7,7 +7,10 @@
 fr:
   site_settings:
     discourse_automation_enabled: "Activer l'extension discourse-automation"
+    discourse_automation_max_recursion_depth: "Profondeur maximale de récursion des automatisations"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(vide)"
     models:
       automations:
         validations:
@@ -20,6 +23,9 @@ fr:
         invalid_field: Le composant du champ « %{component} » n'est pas utilisable sur « %{target}:%{target_name} ».
         invalid_metadata: Les données pour « %{field} » ne sont pas valides ou le composant « %{component} » est inconnu.
     triggerables:
+      post_flag_created:
+        title: Signalement de publication créé
+        description: Déclenche une automatisation lorsqu'une publication est signalée.
       errors:
         custom_fields_or_user_profile_required: "Au moins l'un des champs « custom_fields » ou « user_profile » doit être fourni."
       user_badge_granted:
@@ -40,6 +46,7 @@ fr:
         description: Lorsqu'une catégorie est créée ou modifiée, l'automatisation sera déclenchée
       recurring:
         title: Récurrent
+        invalid_interval: L'intervalle doit être un nombre positif.
       point_in_time:
         title: Point dans le temps
         description: Lorsque la date est atteinte, l'automatisation est déclenchée.
@@ -67,6 +74,10 @@ fr:
         description: Lorsque les balises d'un sujet sont modifiées, l'automatisation est déclenchée
       topic:
         title: Sujet
+        description: Le script associé sera utilisé uniquement pour le sujet indiqué. Cela est notamment utile pour les scripts de validation.
+      topic_closed:
+        title: Sujet fermé
+        description: Déclenche un script lorsqu'un sujet est fermé.
       after_post_cook:
         title: Après la préparation de la publication
         description: Lorsqu'un contenu de publication est préparé, l'automatisation est déclenchée
@@ -74,6 +85,25 @@ fr:
         title: Après la mise à jour de l'utilisateur
         description: Lorsqu'un utilisateur met à jour des informations, l'automatisation est déclenchée
     scriptables:
+      email_on_flagged_post:
+        title: E-mail lors du signalement d'une publication
+        description: Envoyer un e-mail personnalisé chaque fois qu'un signalement est créé pour une publication
+        subject: "Publication signalée : %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Une publication a été signalée.
+
+          Sujet : {{topic_title}} ({{topic_url}})
+          Publication : {{post_url}} (#{{post_number}})
+          Type de signalement : {{flag_type}}
+          Utilisateur signalé : {{flagged_username}}
+          Signalement effectué par : {{flagger_username}}
+          Catégorie : {{category}}
+          Étiquettes : {{tags}}
+
+          -------
+
+          Extrait de la publication :
+          {{post_excerpt}}
       post:
         title: Créer une publication
         description: Créer une publication sur un sujet spécifique
@@ -104,6 +134,10 @@ fr:
         title: Échange de cadeaux
         description: Permet d'associer anonymement les utilisateurs d'un groupe pour qu'ils s'envoient des cadeaux.
         doc: L'échange de cadeaux nécessite un groupe existant avec au moins 3 utilisateurs. À la date choisie, chaque utilisateur du groupe sera jumelé avec un donateur et un bénéficiaire.
+      remove_upload_markup_from_deleted_posts:
+        title: Supprimer le marquage des fichiers téléversés dans les publications supprimées
+        description: Agit en tant qu'utilisateur système et ajoute une révision aux publications supprimées dans laquelle le balisage des fichiers téléversés est supprimé. Associée à la tâche « nettoyer les fichiers téléversés », cette opération entraîne la suppression définitive des fichiers concernés. À utiliser avec prudence !
+        edit_reason: L'automatisation a supprimé le marquage des fichiers téléversés de la publication supprimée
       send_pms:
         title: Envoyer des MP
         description: Permet d'envoyer des MP (éventuellement retardés).
@@ -159,3 +193,4 @@ fr:
         description: "Attribuez aléatoirement des sujets à un groupe"
       set_topic_timer:
         title: "Planifier une action"
+        description: "Programmer une action sur un sujet"

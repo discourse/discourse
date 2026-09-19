@@ -13,7 +13,7 @@ class ::TopicAssigner
 
   def self.auto_assign(post, force: false)
     deprecation_note
-    Assigner.auto_assign(post, force)
+    Assigner.auto_assign(post, force: force)
   end
 
   def self.is_last_staff_post?(post)

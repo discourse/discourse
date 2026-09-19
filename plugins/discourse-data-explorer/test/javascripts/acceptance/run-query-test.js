@@ -1,8 +1,36 @@
-import { click, visit } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
+
+function stubPluginDetails(server, helper) {
+  server.get("/admin/plugins/discourse-data-explorer.json", () =>
+    helper.response({
+      id: "discourse-data-explorer",
+      name: "discourse-data-explorer",
+      enabled: true,
+      has_settings: true,
+      humanized_name: "Data Explorer",
+      is_discourse_owned: true,
+      admin_route: {
+        label: "explorer.title",
+        location: "discourse-data-explorer",
+        use_new_show_route: true,
+      },
+    })
+  );
+}
 
 acceptance("Run Query", function (needs) {
   needs.user();
@@ -17,21 +45,7 @@ acceptance("Run Query", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/discourse-data-explorer.json", () => {
-      return helper.response({
-        id: "discourse-data-explorer",
-        name: "discourse-data-explorer",
-        enabled: true,
-        has_settings: true,
-        humanized_name: "Data Explorer",
-        is_discourse_owned: true,
-        admin_route: {
-          label: "explorer.title",
-          location: "discourse-data-explorer",
-          use_new_show_route: true,
-        },
-      });
-    });
+    stubPluginDetails(server, helper);
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([
@@ -296,16 +310,19 @@ acceptance("Run Query", function (needs) {
     assert.dom("div.query-edit").exists("the query code was rendered");
 
     assert
-      .dom("form.query-run button span")
+      .dom(".query-run-split__primary span")
       .hasText(i18n("explorer.run"), "the run button was rendered");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
+
+    assert.dom("canvas").exists("the chart was rendered by default");
+
+    await click(".query-results-modes input[value='table']");
 
     assert
       .dom("div.query-results table tbody tr")
       .exists({ count: 2 }, "the table with query results was rendered");
 
-    assert.dom("canvas").exists("the chart was rendered");
     assert
       .dom(".query-results-modes")
       .exists("the chart/table toggle buttons were rendered");
@@ -314,7 +331,7 @@ acceptance("Run Query", function (needs) {
   test("runs query and is able to download the results", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/-6");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
 
     const createElement = document.createElement.bind(document);
     const appendChild = document.body.appendChild.bind(document.body);
@@ -357,9 +374,8 @@ acceptance("Run Query", function (needs) {
         }
       });
 
-    await click(
-      ".query-run-actions__right .query-result-download-buttons button:nth-child(1)"
-    );
+    await click(".query-action-bar__right .query-result-download-buttons");
+    await click(".query-result-export__results-json");
 
     await finishedForm;
 
@@ -392,10 +408,15 @@ acceptance("Run Query", function (needs) {
       .hasText("What about 0?", "the query name was rendered");
 
     assert
-      .dom("form.query-run button span")
+      .dom(".query-run-split__primary span")
       .hasText(i18n("explorer.run"), "the run button was rendered");
 
-    await click("form.query-run button");
+    await click(".query-run-split__primary");
+
+    // Default view is chart for chartable data; switch to table to inspect cells.
+    if (document.querySelector(".query-results-modes input[value='table']")) {
+      await click(".query-results-modes input[value='table']");
+    }
 
     assert
       .dom("div.query-results tbody td:nth-child(1)")
@@ -413,14 +434,178 @@ acceptance("Run Query", function (needs) {
   test("automatically runs query when run query parameter is present", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/2?run");
 
-    assert
-      .dom("div.query-results table tbody tr")
-      .exists({ count: 1 }, "query results should be displayed");
+    assert.dom("div.query-results").exists("query results should be displayed");
   });
 
   test("automatically runs query when run query parameter is present on group report route", async function (assert) {
     await visit("/g/testgroup/reports/2?run=1");
 
     assert.dom("div.query-results").exists("query results should be displayed");
+  });
+
+  test("dragging the grippie resizes the editor panes", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+    const startingHeight = panes.clientHeight;
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    // No sideways movement: a vertical resize must not need any.
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 240 });
+    await settleGestureFrame();
+
+    assert.strictEqual(
+      panes.style.height,
+      `${startingHeight + 40}px`,
+      "the panes grow by the pointer's vertical travel"
+    );
+    // Asserted mid-gesture as well as after: absence on release alone would
+    // pass against a resize that never held the cursor at all.
+    assert
+      .dom(document.body)
+      .hasClass("d-resizing-ns", "the cursor is held while the drag runs");
+
+    await triggerEvent(grippie, "pointerup", { pointerId: 1, clientY: 240 });
+    assert
+      .dom(document.body)
+      .doesNotHaveClass(
+        "d-resizing-ns",
+        "the held cursor is given back on release"
+      );
+  });
+
+  test("the grippie is an operable separator", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+
+    assert
+      .dom(grippie)
+      .hasAttribute("role", "separator")
+      .hasAttribute("aria-orientation", "horizontal")
+      .hasAttribute("tabindex", "0")
+      .hasAttribute("data-resize-axis", "vertical");
+    assert
+      .dom(grippie)
+      .hasAttribute(
+        "aria-label",
+        i18n("explorer.resize_editor"),
+        "the separator says what it resizes rather than announcing a bare splitter"
+      );
+
+    const panes = find(".query-editor .panels-flex");
+    const startingHeight = panes.clientHeight;
+    await triggerKeyEvent(grippie, "keydown", "ArrowDown");
+
+    assert.true(
+      parseInt(panes.style.height, 10) > startingHeight,
+      "arrow keys resize it without a pointer"
+    );
+  });
+
+  test("the separator announces a size inside the bounds it announces", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const read = (name) => parseFloat(grippie.getAttribute(name));
+
+    // Asserted against each other, not against pixels. The numbers depend on the
+    // stylesheet and the window; a size outside its own range is wrong regardless.
+    assert.true(
+      Number.isFinite(read("aria-valuenow")),
+      "a size is announced once the panes are measured"
+    );
+    assert.true(
+      read("aria-valuemin") <= read("aria-valuenow"),
+      "the announced size is not below the announced minimum"
+    );
+    assert.true(
+      read("aria-valuenow") <= read("aria-valuemax"),
+      "the announced size is not above the announced maximum"
+    );
+  });
+
+  test("dragging far past the maximum stops at it", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+    const ceiling = parseFloat(grippie.getAttribute("aria-valuemax"));
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    await triggerEvent(grippie, "pointermove", {
+      pointerId: 1,
+      clientY: 200 + ceiling * 3,
+    });
+    await settleGestureFrame();
+    await triggerEvent(grippie, "pointerup", {
+      pointerId: 1,
+      clientY: 200 + ceiling * 3,
+    });
+
+    assert.true(
+      parseFloat(panes.style.height) <= ceiling,
+      "the panes stop at the maximum rather than following the pointer"
+    );
+  });
+
+  test("a separator torn down mid-gesture writes nothing afterwards", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 260 });
+    await settleGestureFrame();
+    const heightWhenTornDown = panes.style.height;
+
+    // Leaving the route with the gesture still held: the separator goes, and the
+    // controller is a singleton that outlives it.
+    await visit("/admin/plugins/discourse-data-explorer");
+    await triggerEvent(document, "pointerup", { pointerId: 1, clientY: 900 });
+
+    assert.strictEqual(
+      panes.style.height,
+      heightWhenTornDown,
+      "the detached panes keep the size they had when the separator went"
+    );
+  });
+});
+
+acceptance("Run Query | non-admin", function (needs) {
+  needs.user({ admin: false });
+  needs.settings({ data_explorer_enabled: true });
+
+  needs.pretender((server, helper) => {
+    stubPluginDetails(server, helper);
+  });
+
+  test("shows the admins only error page", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/62");
+
+    assert.dom(".error-page .desc").hasText(i18n("explorer.admins_only"));
+  });
+
+  test("shows the admins only error page for a new query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert.dom(".error-page .desc").hasText(i18n("explorer.admins_only"));
   });
 });

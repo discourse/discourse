@@ -42,13 +42,6 @@ describe DiscourseAi::Translation::PostLocalizer do
       expect(described_class.localize(post, "ja")).to eq(nil)
     end
 
-    it "returns nil if post raw is too long" do
-      SiteSetting.ai_translation_max_post_length = 10
-      post.raw = "This is a very long post that exceeds the limit."
-
-      expect(described_class.localize(post, "ja")).to eq(nil)
-    end
-
     it "translates with post and locale" do
       post_raw_translator_stub({ text: post.raw, target_locale: "ja", translated: translated_raw })
 

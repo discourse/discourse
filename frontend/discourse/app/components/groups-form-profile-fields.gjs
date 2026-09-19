@@ -4,15 +4,15 @@ import EmberObject, { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import DEditor from "discourse/components/d-editor";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
-import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import Group from "discourse/models/group";
+import DEditor from "discourse/ui-kit/d-editor";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -23,6 +23,13 @@ export default class GroupsFormProfileFields extends Component {
   @computed("model.automatic")
   get canEdit() {
     return !this.model?.automatic;
+  }
+
+  @computed("basicNameValidation", "uniqueNameValidation")
+  get nameValidation() {
+    return this.uniqueNameValidation
+      ? this.uniqueNameValidation
+      : this.basicNameValidation;
   }
 
   didInsertElement() {
@@ -36,11 +43,8 @@ export default class GroupsFormProfileFields extends Component {
     }
   }
 
-  @computed("basicNameValidation", "uniqueNameValidation")
-  get nameValidation() {
-    return this.uniqueNameValidation
-      ? this.uniqueNameValidation
-      : this.basicNameValidation;
+  checkGroupNameDebounced() {
+    discourseDebounce(this, this._checkGroupName, 500);
   }
 
   @observes("nameInput")
@@ -73,10 +77,6 @@ export default class GroupsFormProfileFields extends Component {
     this.checkGroupNameDebounced();
 
     return this._failedInputValidation(i18n("admin.groups.new.name.checking"));
-  }
-
-  checkGroupNameDebounced() {
-    discourseDebounce(this, this._checkGroupName, 500);
   }
 
   _checkGroupName() {
@@ -133,14 +133,14 @@ export default class GroupsFormProfileFields extends Component {
                 "groups.name"
               }}</label>
 
-            <TextField
-              @name="name"
-              @value={{this.nameInput}}
-              @placeholderKey="admin.groups.name_placeholder"
+            <DTextField
               class="input-xxlarge group-form-name"
+              @name="name"
+              @placeholderKey="admin.groups.name_placeholder"
+              @value={{this.nameInput}}
             />
 
-            <InputTip @validation={{this.nameValidation}} />
+            <DInputTip @validation={{this.nameValidation}} />
           </div>
         {{/if}}
 
@@ -149,10 +149,10 @@ export default class GroupsFormProfileFields extends Component {
               "groups.manage.full_name"
             }}</label>
 
-          <TextField
+          <DTextField
+            class="input-xxlarge group-form-full-name"
             @name="full_name"
             @value={{this.model.full_name}}
-            class="input-xxlarge group-form-full-name"
           />
         </div>
       {{/if}}
@@ -160,8 +160,8 @@ export default class GroupsFormProfileFields extends Component {
       <div class="control-group">
         <label class="control-label" for="bio">{{i18n "groups.bio"}}</label>
         <DEditor
-          @value={{this.model.bio_raw}}
           class="group-form-bio input-xxlarge"
+          @value={{this.model.bio_raw}}
         />
       </div>
 
@@ -176,8 +176,8 @@ export default class GroupsFormProfileFields extends Component {
 
         <span>
           <PluginOutlet
-            @name="group-edit"
             @connectorTagName="div"
+            @name="group-edit"
             @outletArgs={{lazyHash group=this.model}}
           />
         </span>

@@ -60,6 +60,8 @@ sv:
       cancel: "Avbryt"
       cancel_reply: "Avbryt svar"
       chat_channels: "Kanaler"
+      pinned_bar:
+        title: "Fäst"
       pinned: "Fäst"
       browse_all_channels: "Bläddra bland alla kanaler"
       see_in: "Se i"
@@ -106,7 +108,7 @@ sv:
         process_started: "Processen för att radera kanalen har påbörjats. Denna modal kommer att stängas inom kort och du kommer inte längre att se den raderade kanalen någonstans."
       channels_list_popup:
         browse: "Bläddra bland kanaler"
-        create: "Ny kanal"
+        create: "Ny kanal..."
       close: "Stäng"
       remove: "Ta bort"
       collapse: "Komprimera chattruta"
@@ -121,8 +123,6 @@ sv:
       muted: "tystat"
       joined: "gick med"
       empty_state:
-        direct_message_cta: "Starta en personlig chatt"
-        direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
         title: "Inga kanaler hittades"
         my_threads: "Du har inga trådar än. Trådar du deltar i kommer att visas här."
       email_frequency:
@@ -227,8 +227,6 @@ sv:
         channels_list: "Lista över chattkanaler"
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       chat_notifications_title: "Chattaviseringar"
-      only_chat_push_notifications:
-        title: "Skicka bara push-meddelanden för chatt"
       ignore_channel_wide_mention:
         title: "Ignorera omnämnanden i hela kanalen"
       open: "Öppna chatt"
@@ -272,8 +270,6 @@ sv:
         title: "Meddelandeljud för chatt via dator"
       sounds:
         none: "Ingen"
-        bell: "Bell"
-        ding: "Ding"
       title: "chatt"
       title_capitalized: "Chatt"
       upload: "Bifoga en fil"
@@ -303,6 +299,8 @@ sv:
         filter_closed: Stängd
         filter_archived: Arkiverad
         filter_input_placeholder: Sök kanal efter namn
+        filter_joined_all: "Alla"
+        filter_joined_joined: "Gick med"
       chat_message_separator:
         today: Idag
         yesterday: Igår
@@ -349,7 +347,6 @@ sv:
         input_placeholder: Lägg till ett namn
         slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
         name: Kanalnamn
-        slug: Dynamiskt kanalfält (valfritt)
       channel_edit_description_modal:
         title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning
@@ -370,6 +367,8 @@ sv:
         memberships_count:
           one: "%{count} medlem"
           other: "%{count} medlemmar"
+        preview_card:
+          log_in: "Logga in"
       create_channel:
         threading:
           label: "Aktivera trådning"
@@ -406,9 +405,8 @@ sv:
             one: 'Användare i %{group} och ytterligare %{count} grupp kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
             other: 'Användare i %{group} och ytterligare %{count} grupper kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
         create: "Skapa kanal"
-        description: "Beskrivning (valfritt)"
+        description: "Beskrivning"
         name: "Kanalnamn"
-        slug: "Dynamiskt kanalfält (valfritt)"
         title: "Ny kanal"
         type: "Typ"
         types:
@@ -489,14 +487,16 @@ sv:
       direct_messages:
         title: "DM"
         aria_label: "Byt till direktmeddelanden"
-        new: "Skapa en personlig chatt"
+        new_group: "Ny gruppchatt"
         create: "Kör"
-        leave: "Lämna den här personliga chatten"
-        close: "Stäng den här personliga chatten"
         cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."
       channel_list:
         title: "Kanaler"
         aria_label: "Växla till kanallistan"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Omnämnanden"
       incoming_webhooks:
         back: "Tillbaka"
         channel_placeholder: "Välj en kanal"
@@ -619,11 +619,6 @@ sv:
           direct_html: '<span>%{username}</span> <span>nämnde dig i "%{channel}"</span>'
           other_plain: 'nämnde %{identifier} i "%{channel}"'
           other_html: '<span>%{username}</span> <span>nämnde %{identifier} i "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "nämnde dig i personlig chatt"
-          direct_html: "<span>%{username}</span> <span>nämnde dig i en personlig chatt</span>"
-          other_plain: "nämnde %{identifier} i personlig chatt"
-          other_html: "<span>%{username}</span> <span>nämnde %{identifier} i personlig chatt</span>"
         chat_message: "Nytt chattmeddelande"
         chat_quoted: "%{username} citerade ditt chattmeddelande"
     action_codes:
@@ -685,8 +680,21 @@ sv:
         chat:
           title: Chatt
     sidebar:
-      start_new_dm:
-        title: Skapa en personlig chatt
       panels:
         chat:
           label: "Chatt"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Meddelande"
+      chat_approval:
+        message: "Meddelande"
+        buttons: "Knappar"
+        value: "Värde"
+        style_default: "Standard"
+        style_primary: "Primär"
+        style_success: "Lyckades"
+        icon: "Ikon"
+        channel_id: "Kanal"

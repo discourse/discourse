@@ -1,7 +1,7 @@
 import { on } from "@ember-decorators/object";
-import TextField from "discourse/components/text-field";
+import DTextField from "discourse/ui-kit/d-text-field";
 
-export default class HoneypotInput extends TextField {
+export default class HoneypotInput extends DTextField {
   @on("init")
   _init() {
     // Chrome autocomplete is buggy per:

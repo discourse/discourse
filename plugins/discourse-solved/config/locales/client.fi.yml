@@ -10,6 +10,22 @@ fi:
       site_settings:
         categories:
           discourse_solved: "Discoursen ratkaistu"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Hyväksytyt ratkaisut"
+        sections:
+          support:
+            title: "Tuki"
+            answerers:
+              staff: "Henkilökunta"
+              member: "Jäsenet"
+              basic: "Haastaja"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tunti"
+                gt_24h: "> 24 tuntia"
   js:
     notifications:
       alt:
@@ -42,6 +58,8 @@ fi:
       move_post_cancel: "Peruuta"
       confirm_solved_removal_confirm: "Vahvista"
       confirm_solved_removal_cancel: "Peruuta"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Onko kysymykseesi vastattu?
         description: "Korosta vastaus ja auta muita käyttämällä oikean vastauksen alla olevaa ratkaisupainiketta."
@@ -59,6 +77,11 @@ fi:
           solved: "ovat ratkaistu"
           unsolved: "ovat ratkaisemattomia"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Ketju"
+            category: "Luokka"
       web_hooks:
         solved_event:
           group_name: "Ratkaistu-tapahtuma"

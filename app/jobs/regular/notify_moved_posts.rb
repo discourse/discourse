@@ -20,6 +20,7 @@ module Jobs
       users_notified = Set.new
       posts.each do |p|
         next if users_notified.include?(p.user_id)
+        next if !p.user.guardian.can_see?(p.topic)
 
         p.user.notifications.create(
           notification_type: Notification.types[:moved_post],

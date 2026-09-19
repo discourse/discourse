@@ -25,6 +25,7 @@ class Tags::Search
     attribute :filterForInput, :boolean
     attribute :excludeSynonyms, :boolean
     attribute :excludeHasSynonyms, :boolean
+    attribute :prioritizeRecentTags, :boolean
 
     validate :limit_is_valid
 
@@ -88,8 +89,9 @@ class Tags::Search
 
   private
 
-  def fetch_category(params:)
-    Category.find_by(id: params.categoryId) if params.categoryId.present?
+  def fetch_category(params:, guardian:)
+    return if params.categoryId.blank?
+    Category.where(id: params.categoryId).where(id: guardian.allowed_category_ids).first
   end
 
   def has_term_for_input(params:)
@@ -100,8 +102,20 @@ class Tags::Search
     params.term.present?
   end
 
+  def visible_tags(guardian)
+    DiscourseTagging.visible_tags(guardian)
+  end
+
+  def tag_visible?(tag_id, guardian)
+    DiscourseTagging.visible_tags(guardian).exists?(id: tag_id)
+  end
+
   def search_tags(params:, category:, guardian:)
     filter_options = params.filter_options.merge(category: category)
+
+    if (recent_tag_ids = recent_priority_tag_ids(params:, guardian:))
+      filter_options[:order_recent_tag_ids] = recent_tag_ids
+    end
 
     tags_with_counts, filter_result_context =
       DiscourseTagging.filter_allowed_tags(guardian, **filter_options, with_context: true)
@@ -114,16 +128,21 @@ class Tags::Search
     context[:forbidden_message] = nil
   end
 
+  def recent_priority_tag_ids(params:, guardian:)
+    return unless params.prioritizeRecentTags && params.term.blank?
+    return if guardian.anonymous?
+    return unless UpcomingChanges.enabled_for_user?(:prioritize_recently_used_tags, guardian.user)
+
+    Tag.recently_used_by(guardian.user).presence
+  end
+
   def append_disabled_tags(params:, category:, tags:, guardian:)
     selected_ids = params.resolved_selected_tag_ids
     skip_ids = tags.map { |t| t[:id] } | selected_ids
 
     candidate_tags =
-      DiscourseTagging
-        .filter_visible(
-          Tag.where("position(LOWER(?) IN LOWER(tags.name)) <> 0", params.term),
-          guardian,
-        )
+      visible_tags(guardian)
+        .where("tags.name ~* ?", "\\m#{Regexp.escape(params.term)}")
         .where.not(id: skip_ids)
         .limit(SiteSetting.max_tag_search_results)
         .to_a
@@ -144,8 +163,8 @@ class Tags::Search
   def detect_forbidden_tag(params:, category:, tags:, guardian:)
     return if tags.any? { |h| h[:name].downcase == params.term.downcase }
 
-    tag = Tag.where_name(params.term).first
-    return unless tag && guardian.can_see_tag?(tag)
+    tag = visible_tags(guardian).where_name(params.term).first
+    return unless tag
     return if reject_allowed_tags([tag], params:, category:, tags:, guardian:).empty?
 
     context[:forbidden] = params.q
@@ -175,7 +194,7 @@ class Tags::Search
   end
 
   def explain_exclusion(tag, params, selected_ids, guardian)
-    if params.excludeSynonyms && tag.synonym?
+    if params.excludeSynonyms && tag.synonym? && tag_visible?(tag.target_tag_id, guardian)
       return I18n.t("tags.forbidden.synonym", tag_name: tag.target_tag.name)
     end
 
@@ -190,7 +209,28 @@ class Tags::Search
           .where(one_per_topic: true, tag_group_memberships: { tag_id: tag.id })
           .where(id: TagGroupMembership.where(tag_id: selected_ids).select(:tag_group_id))
           .first
-      return I18n.t("tags.forbidden.one_tag_per_topic_group", tag_group_name: group.name) if group
+
+      if group
+        conflicting_tag_names =
+          visible_tags(guardian)
+            .where(id: selected_ids)
+            .joins(:tag_group_memberships)
+            .where(tag_group_memberships: { tag_group_id: group.id })
+            .order(:name)
+            .pluck(:name)
+
+        if conflicting_tag_names.present?
+          return(
+            I18n.t(
+              "tags.forbidden.one_tag_per_topic_group",
+              tag_group_name: group.name,
+              tag_names: conflicting_tag_names.join(", "),
+            )
+          )
+        end
+
+        return I18n.t("tags.forbidden.one_tag_per_topic_group_without_names")
+      end
     end
 
     if params.filterForInput
@@ -201,7 +241,8 @@ class Tags::Search
           .where.not(parent_tag_id: [nil, *selected_ids])
           .includes(:parent_tag)
           .first
-      if group&.parent_tag && guardian.can_see_tag?(group.parent_tag)
+
+      if group&.parent_tag && tag_visible?(group.parent_tag_id, guardian)
         return(
           I18n.t(
             "tags.forbidden.missing_parent_tag",
@@ -238,8 +279,10 @@ class Tags::Search
           category_names: category_names.join(", "),
         )
       end
-    else
+    elsif params.categoryId.present?
       I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
+    else
+      I18n.t("tags.forbidden.not_allowed", tag_name: tag.name)
     end
   end
 end

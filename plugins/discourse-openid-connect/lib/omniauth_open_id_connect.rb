@@ -12,6 +12,7 @@ module OmniAuth
     class OpenIDConnect < OmniAuth::Strategies::OAuth2
       class NonceVerifyError < StandardError
       end
+
       class SubVerifyError < StandardError
       end
 
@@ -133,6 +134,7 @@ module OmniAuth
           discover! if options[:discovery]
 
           oauth2_callback_phase = super
+          raise env["omniauth.error"] if env["omniauth.error"].is_a?(Faraday::Error)
           return oauth2_callback_phase if env["omniauth.error"]
 
           oauth2_callback_phase
@@ -144,6 +146,15 @@ module OmniAuth
           fail!(:jwt_nonce_verify_failed, e)
         rescue SubVerifyError => e
           fail!(:openid_connect_sub_mismatch, e)
+        rescue Faraday::Error => e
+          detail =
+            if e.is_a?(Faraday::TimeoutError)
+              "timed out after #{GlobalSetting.openid_connect_request_timeout_seconds}s"
+            else
+              "failed"
+            end
+          Rails.logger.error("OIDC Log: request #{detail}: #{e.class} #{e.message}")
+          fail!(:openid_connect_request_failed, e)
         end
       end
 
@@ -210,6 +221,7 @@ module OmniAuth
         hash = {}
         hash[:raw_info] = options.use_userinfo ? userinfo_response : id_token_info
         hash[:id_token] = access_token["id_token"]
+        hash[:id_token_info] = id_token_info
         prune! hash
       end
 
@@ -242,7 +254,8 @@ module OmniAuth
         return super if options.use_userinfo
         response =
           client.request(:post, options[:client_options][:token_url], body: get_token_options)
-        ::OAuth2::AccessToken.from_hash(client, response.parsed)
+        parsed = response.parsed
+        ::OAuth2::AccessToken.new(client, parsed["id_token"].to_s, parsed)
       end
     end
   end

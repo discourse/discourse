@@ -17,7 +17,8 @@
 }
 
 .d-otp-slot {
-  padding: 0.5em 0.65em;
+  padding: var(--d-otp-slot-padding, 0.5em 0.65em);
+  font-size: var(--d-otp-slot-font-size, inherit);
   line-height: normal;
   display: flex;
   align-items: center;
@@ -50,6 +51,16 @@
   &.--placeholder {
     font-size: var(--font-up-0);
   }
+
+  .form-kit__field.has-error & {
+    border-color: var(--danger);
+  }
+}
+
+.d-otp-separator {
+  color: var(--primary-medium);
+  font-size: var(--font-up-1);
+  font-weight: 700;
 }
 
 .d-otp-input-wrapper {

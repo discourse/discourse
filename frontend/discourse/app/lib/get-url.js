@@ -38,8 +38,14 @@ export function getURLWithCDN(url) {
   // only relative urls
   if (cdn && /^\/[^\/]/.test(url)) {
     url = cdn + url;
-  } else if (S3CDN && url.startsWith(S3BaseUrl)) {
-    url = url.replace(S3BaseUrl, S3CDN);
+  } else if (S3CDN && S3BaseUrl) {
+    // Strip http: and https: to ensure robust domain comparison
+    const normalizedUrl = url.replace(/^https?:/i, "");
+    const normalizedBase = S3BaseUrl.replace(/^https?:/i, "");
+
+    if (normalizedUrl.startsWith(normalizedBase)) {
+      url = S3CDN + normalizedUrl.substring(normalizedBase.length);
+    }
   }
   return url;
 }

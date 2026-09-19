@@ -8,3 +8,9 @@ nl:
   site_settings:
     discourse_math_enabled: "Discourse Math-plug-in inschakelen (voegt speciale verwerking toe aan $- en $$-blokken)"
     discourse_math_provider: "Standaard provider voor wiskundige weergave"
+    discourse_math_enable_latex_delimiters: "Schakel LaTeX-achtige scheidingstekens in: \\(...\\) voor inline formule en \\[...\\] voor blokformule."
+    discourse_math_mathjax_output: "MathJax-uitvoerindeling (alleen voor MathJax)"
+    discourse_math_enable_menu: "Contextmenu inschakelen (alleen MathJax)"
+    discourse_math_enable_accessibility: "Toegankelijkheidsfuncties inschakelen (alleen MathJax met menu)"
+    discourse_math_zoom_on_click: "Zoom 175% bij alt-klik (alleen MathJax met menu)"
+    discourse_math_enable_asciimath: "Asciimath inschakelen (voegt speciale verwerking toe aan invoer gescheiden door %, alleen ondersteund met MathJax)"

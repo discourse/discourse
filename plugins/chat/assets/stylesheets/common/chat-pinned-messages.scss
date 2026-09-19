@@ -3,6 +3,12 @@
   transform: rotate(45deg);
 }
 
+.c-navbar__pinned-messages-btn {
+  .d-icon {
+    transform: rotate(45deg);
+  }
+}
+
 .chat-pinned-messages-list {
   display: flex;
   flex-direction: column;
@@ -26,17 +32,61 @@
   color: var(--primary-medium);
 }
 
+.chat-pinned-messages-list__footer {
+  position: sticky;
+  inset-block-end: 0;
+  margin-block-start: auto;
+  padding: var(--space-2);
+  background: var(--secondary);
+  border-top: 1px solid var(--content-border-color);
+}
+
+.chat-pinned-messages-list__dismiss,
+.chat-pinned-messages-list__show {
+  width: 100%;
+  color: var(--primary-medium);
+}
+
 .chat-pinned-message {
-  display: block;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
   margin-inline: 1rem 0.75rem;
   border-bottom: 1px solid var(--content-border-color);
 
-  &,
-  &:hover,
-  &:visited,
-  &:active {
-    color: var(--primary);
-    text-decoration: none;
+  &__link {
+    flex: 1;
+    min-width: 0;
+
+    &,
+    &:hover,
+    &:visited,
+    &:active {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    // stretch the click target across the whole row, under the unpin button
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &__unpin {
+    position: relative;
+    z-index: 1;
+    margin-block-start: 0.25em;
+
+    .discourse-no-touch & {
+      opacity: 0;
+    }
+
+    .discourse-no-touch .chat-pinned-message:hover &,
+    &:focus-visible {
+      opacity: 1;
+    }
   }
 
   .chat-message-container {
@@ -80,24 +130,5 @@
   .d-icon {
     font-size: var(--font-down-2);
     transform: rotate(45deg);
-  }
-}
-
-.c-navbar__pinned-messages-btn {
-  position: relative;
-
-  .d-icon {
-    transform: rotate(45deg);
-  }
-
-  &__unread-indicator {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 8px;
-    height: 8px;
-    background: var(--tertiary);
-    border-radius: 50%;
-    border: 2px solid var(--secondary);
   }
 }

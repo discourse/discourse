@@ -1,0 +1,583 @@
+.workflows-variable-input {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--primary-low-mid);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  box-sizing: border-box;
+
+  // Editor and scroller fill the wrapper, so a taller field has no dead strip
+  // below the text where clicks and drops don't register.
+  .cm-editor {
+    flex: 1 1 auto;
+
+    // Text cursor over the whole field, so the empty area reads as editable.
+    .cm-scroller {
+      flex: 1 1 auto;
+      cursor: text;
+    }
+  }
+
+  .cm-editor .cm-content {
+    min-height: 60px;
+    padding: 0.5em;
+    font-size: var(--font-0);
+    font-family: inherit;
+  }
+
+  .cm-editor .cm-lineWrapping {
+    word-break: break-all;
+  }
+
+  &:focus-within {
+    outline: none;
+    border-color: var(--tertiary);
+    box-shadow: 0 0 0 1px var(--tertiary);
+  }
+
+  .is-drag-over & {
+    border-color: var(--tertiary);
+    background: var(--tertiary-50);
+  }
+
+  .cm-editor {
+    background: transparent;
+    color: var(--primary);
+
+    &.cm-focused {
+      outline: none;
+    }
+
+    .cm-cursor {
+      border-left-color: var(--primary);
+    }
+
+    .cm-selectionBackground {
+      background: var(--tertiary-low) !important;
+    }
+
+    .cm-content {
+      caret-color: var(--primary);
+    }
+
+    .cm-activeLine {
+      background: transparent;
+    }
+
+    // Base override for all CM tooltips — CM injects a light baseTheme
+    // dynamically, so we must override it for dark mode support.
+    .cm-tooltip {
+      z-index: z("modal", "tooltip") !important;
+      background: var(--secondary);
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary);
+      font-size: var(--font-down-2);
+      box-shadow: var(--shadow-dropdown);
+    }
+
+    .cm-tooltip-autocomplete {
+      > ul {
+        font-family: inherit;
+
+        > li {
+          padding: 1px 0.4em;
+        }
+      }
+
+      li[aria-selected] {
+        background: var(--tertiary-low);
+        color: var(--primary);
+      }
+    }
+
+    // Section headers in the autocomplete dropdown
+    .cm-expr-section-header {
+      padding: 0.1em 0.4em;
+      font-size: var(--font-down-3);
+      font-weight: 700;
+      color: var(--primary-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    // Info tooltip panel next to autocomplete — inherits font-size
+    // from .cm-tooltip (--font-down-2) for consistency with the list.
+    .cm-completionInfo {
+      padding: 0.3em 0.5em;
+      max-width: 200px;
+      width: 200px;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+    }
+
+    .cm-expr-completion-info {
+      &__signature {
+        font-family: var(--d-font-family--monospace);
+        font-weight: 600;
+        margin-bottom: 0.15em;
+        color: var(--primary-medium);
+        word-break: break-all;
+      }
+
+      &__description {
+        color: var(--primary-high);
+        margin-bottom: 0.15em;
+        line-height: 1.3;
+      }
+
+      &__example code {
+        background: var(--primary-very-low);
+        padding: 0.1em 0.2em;
+        border-radius: 2px;
+        font-family: var(--d-font-family--monospace);
+        font-size: 0.9em;
+        word-break: break-all;
+      }
+    }
+
+    // Syntax highlighting — theme-aware via Discourse CSS vars
+    .cm-wf-text {
+      color: var(--primary);
+    }
+
+    .cm-wf-brace {
+      color: var(--tertiary);
+      opacity: 0.7;
+      font-weight: 700;
+    }
+
+    .cm-wf-keyword {
+      color: var(--tertiary);
+    }
+
+    .cm-wf-string {
+      color: var(--success);
+    }
+
+    .cm-wf-number {
+      color: var(--success);
+    }
+
+    .cm-wf-bool,
+    .cm-wf-null {
+      color: var(--tertiary);
+    }
+
+    .cm-wf-variable {
+      color: var(--primary-high);
+    }
+
+    .cm-wf-property {
+      color: var(--primary-high);
+    }
+
+    .cm-wf-function {
+      color: var(--tertiary-hover);
+    }
+
+    .cm-wf-operator,
+    .cm-wf-punctuation {
+      color: var(--primary);
+    }
+
+    .cm-wf-comment {
+      color: var(--primary-medium);
+      font-style: italic;
+    }
+
+    // Validation underlines
+    .cm-wf-error {
+      text-decoration: wavy underline var(--danger);
+      text-decoration-skip-ink: none;
+      text-underline-offset: 3px;
+    }
+
+    // Expression state colors — applied by backend evaluation results
+    .cm-wf-valid-expression {
+      background: color-mix(in srgb, var(--success) 12%, transparent);
+      border-radius: 2px;
+    }
+
+    .cm-wf-invalid-expression {
+      background: color-mix(in srgb, var(--danger) 20%, transparent);
+      border-radius: 2px;
+      outline: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+    }
+
+    .cm-wf-empty-expression {
+      background: color-mix(in srgb, var(--primary-low-mid) 20%, transparent);
+      border-radius: 2px;
+      outline: 1px dashed
+        color-mix(in srgb, var(--primary-medium) 40%, transparent);
+    }
+
+    .cm-wf-warning-expression {
+      background: color-mix(in srgb, var(--highlight-medium) 40%, transparent);
+      border-radius: 2px;
+    }
+
+    .cm-wf-pending-expression {
+      background: color-mix(in srgb, var(--primary-low-mid) 30%, transparent);
+      border-radius: 2px;
+    }
+
+    .cm-wf-reference-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      max-width: 100%;
+      padding: 1px 0.5em;
+
+      // Inset shadow, not a border: a border would add to the pill's height.
+      box-shadow: inset 0 0 0 1px var(--tertiary-low-mid, var(--tertiary-low));
+      border-radius: 1em;
+      background: var(--tertiary-low);
+      color: var(--tertiary-hover);
+      font-size: var(--font-down-1);
+      line-height: 1.15;
+      white-space: nowrap;
+
+      // Middle, not baseline, so pills with/without a path line up.
+      vertical-align: middle;
+      margin-block: 1px;
+      cursor: grab;
+
+      &:hover {
+        background: color-mix(in srgb, var(--tertiary) 22%, transparent);
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &.--selected {
+        background: color-mix(in srgb, var(--tertiary) 30%, transparent);
+        box-shadow: inset 0 0 0 1px var(--tertiary);
+      }
+
+      &.--incomplete {
+        outline: 1px dashed color-mix(in srgb, var(--tertiary) 55%, transparent);
+        outline-offset: -1px;
+      }
+
+      &.--invalid {
+        background: color-mix(in srgb, var(--danger) 12%, transparent);
+        box-shadow: inset 0 0 0 1px var(--danger);
+        color: var(--danger);
+
+        .cm-wf-reference-pill__icon,
+        .cm-wf-reference-pill__drill {
+          color: var(--danger);
+        }
+      }
+
+      &__icon {
+        display: inline-flex;
+        color: var(--tertiary);
+
+        .d-icon {
+          width: 0.85em;
+          height: 0.85em;
+        }
+      }
+
+      &__badge {
+        flex-shrink: 0;
+        max-width: 16ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 600;
+      }
+
+      // Not monospace: the browser's monospace-size quirk made these pills
+      // taller than badge-only ones.
+      &__path {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &::before {
+          content: "›";
+          margin-inline-end: 0.3em;
+          opacity: 0.6;
+        }
+      }
+
+      &__drill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+        margin-inline-start: 0.1em;
+        border: none;
+        background: none;
+        color: var(--tertiary);
+        cursor: pointer;
+
+        .d-icon {
+          width: 0.7em;
+          height: 0.7em;
+        }
+
+        &:hover {
+          color: var(--tertiary-hover);
+        }
+      }
+    }
+
+    // Drop cursor during variable drag
+    .cm-dropCursor {
+      position: absolute;
+      width: 2px;
+      background: var(--tertiary);
+      pointer-events: none;
+      z-index: 10;
+    }
+  }
+
+  .cm-tooltip-hover {
+    background: var(--secondary) !important;
+    border: 1px solid var(--primary-low-mid) !important;
+    border-radius: var(--d-border-radius);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .cm-wf-hover-tooltip {
+    padding: 0.4em 0.6em;
+    max-width: 260px;
+    font-size: var(--font-down-2);
+
+    &__name {
+      color: var(--tertiary);
+      margin-bottom: 0.15em;
+    }
+
+    &__description {
+      color: var(--primary-high);
+      line-height: 1.3;
+    }
+  }
+
+  .workflows-property-engine__collection-fields & {
+    min-height: 100px;
+
+    &:focus-within {
+      box-shadow: none;
+    }
+  }
+}
+
+.fk-d-tooltip__content[data-identifier="expression-preview"] {
+  // Above normal content, below modal tooltips/popovers where CM autocomplete lives
+  z-index: z("tooltip") !important;
+  box-sizing: border-box;
+  pointer-events: auto;
+  user-select: text;
+
+  .fk-d-tooltip__inner-content {
+    display: block;
+    width: 100%;
+    pointer-events: auto;
+    user-select: text;
+  }
+}
+
+.expression-preview {
+  padding: 0.3em 0.5em;
+  font-size: var(--font-down-2);
+  font-family: var(--d-font-family--monospace);
+  max-height: 80px;
+  overflow-y: auto;
+
+  &__result {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__label {
+    float: right;
+    font-weight: 700;
+    font-size: var(--font-down-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary-low-mid);
+    margin-left: 0.5em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  &__error-text {
+    color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
+    border-radius: 2px;
+    padding: 0.1em 0.2em;
+  }
+
+  &__resolved {
+    &.--valid {
+      color: var(--tertiary);
+    }
+
+    &.--invalid,
+    &.--undefined {
+      color: var(--danger);
+      background: color-mix(in srgb, var(--danger) 10%, transparent);
+      border-radius: 2px;
+      padding: 0.1em 0.2em;
+    }
+
+    &.--warning {
+      color: var(--warning, light-dark(#b5651d, #e6a33e));
+      background: color-mix(in srgb, var(--warning, #e6a33e) 10%, transparent);
+      border-radius: 2px;
+      padding: 0.1em 0.2em;
+      font-style: italic;
+    }
+
+    &.--pending {
+      color: var(--primary-medium);
+    }
+
+    &.--label {
+      background: color-mix(in srgb, var(--primary-low-mid) 40%, transparent);
+      border-radius: 2px;
+      padding: 0.1em 0.4em;
+      font-size: var(--font-down-1);
+    }
+  }
+
+  &__plaintext {
+    color: var(--primary);
+  }
+}
+
+// The picker opens over the node configurator modal, so it must sit above it.
+.fk-d-menu[data-identifier="workflows-reference-picker"] {
+  z-index: z("modal", "tooltip") !important;
+}
+
+.workflows-reference-picker {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+  max-width: 340px;
+  font-size: var(--font-down-1);
+
+  &__header {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  // Scoped under __header (two classes) to out-specify the global
+  // `input[type=text]` border/outline without !important.
+  &__header &__filter {
+    flex: 1 1 auto;
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.5em 0.75em;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: var(--font-down-1);
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--tertiary);
+      outline-offset: -1px;
+    }
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0.25em 0;
+    max-height: 280px;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  &__option {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    width: 100%;
+    padding: 0.3em 0.75em;
+    border: none;
+    background: none;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &.--active {
+      background: var(--tertiary-low);
+    }
+
+    &.--current .workflows-reference-picker__name {
+      font-weight: 700;
+      color: var(--tertiary);
+    }
+  }
+
+  &__name {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--d-font-family--monospace), monospace;
+  }
+
+  &__type {
+    flex: 0 0 auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__empty {
+    padding: 0.5em 0.75em;
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  &__unavailable {
+    flex: 1 1 auto;
+    padding: 0.5em 0.75em;
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  &__edit {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0 0.75em;
+    border: 0;
+    border-inline-start: 1px solid var(--primary-low);
+    background: none;
+    color: var(--primary-high);
+    white-space: nowrap;
+    cursor: pointer;
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+    }
+
+    &:hover,
+    &:focus {
+      background: var(--tertiary-low);
+      color: var(--tertiary-hover);
+
+      .d-icon {
+        color: var(--tertiary-hover);
+      }
+    }
+  }
+}

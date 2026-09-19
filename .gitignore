@@ -36,6 +36,7 @@
 !/plugins/discourse-lazy-videos
 !/plugins/automation
 /plugins/automation/gems
+!/plugins/boards
 !/plugins/chat
 !/plugins/poll
 !/plugins/styleguide
@@ -62,9 +63,9 @@
 !/plugins/discourse-user-notes
 !/plugins/discourse-assign
 !/plugins/discourse-subscriptions
-!/plugins/discourse-hcaptcha
+!/plugins/discourse-captcha
 !/plugins/discourse-gamification
-!/plugins/discourse-calendar
+!/plugins/discourse-events
 !/plugins/discourse-policy
 !/plugins/discourse-github
 !/plugins/discourse-adplugin
@@ -75,6 +76,10 @@
 !/plugins/discourse-ai
 !/plugins/discourse-cakeday
 !/plugins/discourse-rewind
+!/plugins/discourse-workflows
+!/plugins/voice
+/plugins/voice/gems
+/plugins/voice/public/javascripts
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -99,6 +104,7 @@
 
 # Front-end
 dist
+frontend/discourse/tmp/compat-prebuild
 node_modules
 yarn-error.log
 .pnpm-store
@@ -122,6 +128,7 @@ openapi/*
 
 # direnv.net
 .direnv
+/app/assets/javascripts/discourse/tmp
 
 # Types
 frontend/discourse-types/declarations
@@ -137,6 +144,7 @@ frontend/discourse-i18n/src/index.d.ts.map
 /plugins/discourse-ai/config/eval-llms.local.yml
 
 # AI customization
+/AGENTS.override.md
 /.claude
 /.cursor
 .playwright-mcp

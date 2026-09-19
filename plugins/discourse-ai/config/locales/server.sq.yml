@@ -11,10 +11,27 @@ sq:
         image_generation_custom:
           name: "Grupet e krijuara"
     ai_bot:
+      navigation:
+        users:
+          title: "Users"
+        groups:
+          title: "Grupet"
+        review:
+          title: "Radha e rishikimit"
+        categories:
+          title: "Categories"
+        tags:
+          title: "Etiketat"
+        backups:
+          title: "Rezervat"
+      read_post:
+        unknown_post: "postim"
       tool_summary:
         search: "Kërko"
         time: "Koha"
         summarize: "Përmblidhni"
+      tool_help:
+        create_category: "Krijo një kategori të re"
       close_topic:
         errors:
           not_found: "Tema nuk u gjet."
@@ -24,10 +41,10 @@ sq:
       delete_topic:
         errors:
           not_found: "Tema nuk u gjet."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tema nuk u gjet."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Tema nuk u gjet."
       set_topic_timer:

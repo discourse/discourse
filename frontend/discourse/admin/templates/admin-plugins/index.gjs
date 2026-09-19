@@ -1,19 +1,17 @@
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AdminPluginsList from "discourse/admin/components/admin-plugins-list";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="admin-plugins-list-container">
 
     <DPageHeader
-      @titleLabel={{i18n "admin.config.plugins.title"}}
       @descriptionLabel={{trustHTML
         (concat
           (i18n "admin.config.plugins.header_description")
@@ -22,57 +20,44 @@ export default <template>
           "</a>"
         )
       }}
+      @hideTabs={{true}}
+      @titleLabel={{i18n "admin.config.plugins.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/plugins"
           @label={{i18n "admin.plugins.title"}}
+          @path="/admin/plugins"
         />
       </:breadcrumbs>
-      <:tabs>
-        <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
-        {{#each @controller.adminRoutes as |route|}}
-          {{#if route.use_new_show_route}}
-            <NavItem
-              @route={{route.full_location}}
-              @label={{route.label}}
-              @routeParam={{route.location}}
-              @class="admin-plugin-tab-nav-item"
-              data-plugin-nav-tab-id={{route.plugin_id}}
-            />
-          {{else}}
-            <NavItem
-              @route={{route.full_location}}
-              @label={{route.label}}
-              @class="admin-plugin-tab-nav-item"
-              data-plugin-nav-tab-id={{route.plugin_id}}
-            />
-          {{/if}}
-        {{/each}}
-      </:tabs>
     </DPageHeader>
 
+    <PluginOutlet
+      @connectorTagName="div"
+      @name="admin-above-plugins-index"
+      @outletArgs={{lazyHash model=@controller.model}}
+    />
+
     {{#if @controller.model.length}}
-      <AdminFilterControls
+      <DFilterControls
         @array={{@controller.model}}
-        @searchableProps={{@controller.searchableProps}}
         @dropdownOptions={{@controller.dropdownOptions}}
         @inputPlaceholder={{i18n "admin.plugins.filters.search_placeholder"}}
         @noResultsMessage={{i18n "admin.plugins.filters.no_results"}}
+        @searchableProps={{@controller.searchableProps}}
       >
         <:content as |filteredPlugins|>
           <AdminPluginsList @plugins={{filteredPlugins}} />
         </:content>
-      </AdminFilterControls>
+      </DFilterControls>
     {{else}}
       <p>{{i18n "admin.plugins.none_installed"}}</p>
     {{/if}}
 
     <span>
       <PluginOutlet
-        @name="admin-below-plugins-index"
         @connectorTagName="div"
+        @name="admin-below-plugins-index"
         @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>

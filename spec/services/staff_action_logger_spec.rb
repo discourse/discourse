@@ -79,6 +79,30 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "#log_post_recover" do
+    fab!(:topic)
+    fab!(:reply, :post)
+
+    it "raises an error when post is nil" do
+      expect { logger.log_post_recover(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error when post is not a Post" do
+      expect { logger.log_post_recover(topic) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_post_recover(reply) }.to change { UserHistory.count }.by(1)
+    end
+
+    it "truncates overly long values" do
+      long_reply = Fabricate(:post, topic: topic, skip_validation: true, raw: long_string)
+      expect { logger.log_post_recover(long_reply) }.to change { UserHistory.count }.by(1)
+      log = UserHistory.last
+      expect(log.details.size).to be_between(50_000, 110_000)
+    end
+  end
+
   describe "log_topic_delete_recover" do
     fab!(:topic)
 
@@ -237,6 +261,32 @@ RSpec.describe StaffActionLogger do
 
       result = logger.log_upcoming_change_toggle("allow_user_locale", false, true, { details: })
       expect(result.details).to eq(details)
+    end
+  end
+
+  describe "log_update_site_setting_localizations" do
+    it "raises an error when params are invalid" do
+      expect {
+        logger.log_update_site_setting_localizations(locale: nil, setting_names: ["title"])
+      }.to raise_error(Discourse::InvalidParameters)
+      expect {
+        logger.log_update_site_setting_localizations(locale: "ja", setting_names: [])
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a custom staff UserHistory record" do
+      log_record =
+        logger.log_update_site_setting_localizations(
+          locale: "ja",
+          setting_names: %w[title site_description title],
+        )
+
+      aggregate_failures do
+        expect(log_record.action).to eq(UserHistory.actions[:custom_staff])
+        expect(log_record.custom_type).to eq("update_site_setting_localizations")
+        expect(log_record.details).to include("locale: ja")
+        expect(log_record.details).to include("setting_names: site_description|title")
+      end
     end
   end
 

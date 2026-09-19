@@ -52,6 +52,7 @@ RSpec.describe UserPasswordValidator do
       end
     end
   end
+
   context "when password is commonly used" do
     before do
       SiteSetting.min_password_length = 8

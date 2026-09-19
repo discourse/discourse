@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-GIT_INITIAL_BRANCH_SUPPORTED =
-  Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
-
 module Helpers
   extend ActiveSupport::Concern
 
   class NotAThemeError < StandardError
   end
+
   class NotAComponentThemeError < StandardError
   end
 
@@ -180,7 +178,7 @@ module Helpers
   def setup_git_repo(files)
     repo_dir = Dir.mktmpdir
     system(
-      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}",
+      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if git_initial_branch_supported?}",
       exception: true,
     )
     system("git -C #{repo_dir} config user.email 'someone@cool.com'", exception: true)
@@ -198,6 +196,11 @@ module Helpers
       exception: false,
     )
     repo_dir
+  end
+
+  def git_initial_branch_supported?
+    @git_initial_branch_supported ||=
+      Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
   end
 
   def setup_remote_upstream(path)
@@ -220,13 +223,14 @@ module Helpers
   end
 
   def stub_const(target, const, value)
-    old = target.const_get(const)
-    target.send(:remove_const, const)
+    previously_defined = target.const_defined?(const, false)
+    old = target.const_get(const, false) if previously_defined
+    target.send(:remove_const, const) if previously_defined
     target.const_set(const, value)
     yield
   ensure
     target.send(:remove_const, const)
-    target.const_set(const, old)
+    target.const_set(const, old) if previously_defined
   end
 
   def track_sql_queries
@@ -332,18 +336,22 @@ module Helpers
   def enable_current_plugin
     plugin = Discourse.plugins_by_name[directory_from_caller.split("/").last]
     return if plugin.enabled?
+    return if enable_auth_provider(plugin.enabled_site_setting)
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
   end
 
-  def try_until_success(timeout: 3, frequency: 0.01)
-    start ||= Time.zone.now
-    backoff ||= frequency
-    yield
-  rescue RSpec::Expectations::ExpectationNotMetError
-    raise if Time.zone.now >= start + timeout.seconds
-    sleep backoff
-    backoff += frequency
-    retry
+  # Only blank settings are filled, so a spec can set anything it reads first.
+  # Ten digits is the one placeholder every credential `regex:` accepts.
+  def enable_auth_provider(name)
+    authenticator =
+      Discourse.authenticators.find { it.enable_setting == name.to_sym || it.name == name.to_s }
+    return false if authenticator.nil?
+
+    authenticator.required_settings.each do |setting|
+      SiteSetting.set(setting, "1234567890") if SiteSetting.get(setting).blank?
+    end
+    SiteSetting.set(authenticator.enable_setting, true)
+    true
   end
 
   def mock_upcoming_change_metadata(metadata)
@@ -391,6 +399,14 @@ module Helpers
       :@upcoming_change_default_overrides,
       @original_upcoming_change_default_overrides,
     )
+  end
+
+  def has_trigger?(trigger_name)
+    DB.exec(<<~SQL) != 0
+      SELECT 1
+      FROM INFORMATION_SCHEMA.TRIGGERS
+      WHERE trigger_name = '#{trigger_name}'
+    SQL
   end
 
   private

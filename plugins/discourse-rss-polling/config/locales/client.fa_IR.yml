@@ -12,3 +12,13 @@ fa_IR:
         feed_url: نشانی اینترنتی
         discourse_category: دسته‌بندی
         discourse_tags: برچسب‌ها
+        feeds:
+          edit: ویرایش
+          delete: حذف
+          save: ذخیره
+        test:
+          title: پیش‌نمایش
+          dismiss: رد کردن
+        status:
+          enabled: فعال شده
+          disabled: غیرفعال

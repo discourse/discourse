@@ -8,7 +8,7 @@ class Admin::EmbeddingController < Admin::AdminController
   end
 
   def update
-    raise InvalidAccess if !(%w[posts_and_topics crawlers].include?(params[:embedding][:type]))
+    raise InvalidAccess if !%w[posts_and_topics crawlers].include?(params[:embedding][:type])
 
     Embedding
       .send("#{params[:embedding][:type]}_settings")

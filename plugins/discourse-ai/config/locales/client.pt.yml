@@ -16,6 +16,12 @@ pt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Tentar novamente"
+          date: "Data"
+          outcomes:
+            failed: "Falhado"
         emotion:
           title: "Emoção"
         reports:
@@ -67,6 +73,22 @@ pt:
               label: "Responder"
     discourse_ai:
       title: "IA"
+      copied: "Copiado"
+      ai_decoded_transcript:
+        type: "Tipo"
+        error: "Erro"
+        response: "Resposta"
+      discourse_workflows:
+        ai_agent:
+          mode: "Modo"
+      ai_tool_approval:
+        loading: "A carregar..."
+        tool: "Ação"
+        user: "Utilizador"
+        approve: "Aprovar"
+        reject: "Rejeitar"
+        approved: "Aprovado"
+        rejected: "Rejeitado"
       default_llm:
         title: "Modelo de LLM Predefinido"
       llm_selector:
@@ -91,8 +113,7 @@ pt:
           name: "Robô"
           description: "Um robô de conversação pode responder a perguntas e assistir os utilizadores nas mensagens pessoais, fórum e na conversação"
         nav:
-          configured: "Configurada"
-          unconfigured: "Não configurada"
+          enabled: "Ativado"
         filters:
           all: "Todos"
           reset: "Repor"
@@ -101,7 +122,6 @@ pt:
           topic_summaries: "Resumos de tópico"
         search:
           name: "Pesquisar"
-          discoveries: "Descobertas"
         embeddings:
           hyde: "HyDE"
         discord:
@@ -118,8 +138,10 @@ pt:
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Marcação"
           custom_prompt: "Janela personalizada"
-          image_caption: "Imagens de legenda"
           translator: "Tradutor"
+        image_caption:
+          setting_groups:
+            settings: "Configurações"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas suportados"
@@ -133,6 +155,23 @@ pt:
         select_option: "Selecione uma opção..."
       translations:
         title: "Traduções"
+        category_scope: "Categorias"
+        model_progress:
+          detail:
+            retry: "Tentar novamente"
+            columns:
+              locale: "Idioma"
+              pending: "Pendente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicações"
+            topic:
+              title: "Tópicos"
+            category:
+              title: "Categorias"
+            tag:
+              title: "Etiquetas"
         stats:
           title: "Estatísticas da tradução"
           eta_minutes:
@@ -170,6 +209,40 @@ pt:
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."
+      logs:
+        short_title: "Logs"
+        apply: "Aplicar"
+        all_features: "Todas as funcionalidades"
+        successful: "Sucesso"
+        failed: "Falhado"
+        unknown: "Desconhecido"
+        time: "Hora"
+        when: "Quando"
+        feature: "Funcionalidade"
+        model: "Modelo"
+        request: "Pedido"
+        provider: "Provedor"
+        user: "Utilizador"
+        context: "Contexto"
+        topic: "Tópico"
+        post: "Publicação"
+        post_short: "Publicação %{id}"
+        duration: "Duração"
+        actions: "Ações"
+        view_details: "Detalhes"
+        periods:
+          day: "Últimas 24 horas"
+          week: "Últimos 7 Dias"
+          custom: "Personalizar"
+        detail:
+          request: "Pedido"
+          response: "Resposta"
+          context: "Contexto"
+          network_error: "Erro de rede"
+        retention:
+          summary_stage: "Resumo"
+          deleted_stage: "Eliminado"
+          save: "Guardar"
       ai_agent:
         name: "Nome"
         edit: "Editar"
@@ -184,6 +257,12 @@ pt:
           clear_all: "Limpar tudo"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
+        thinking_effort_options:
+          none: "Nenhuma"
+          low: "Baixa"
+          medium: "Médio"
+          high: "Elevado"
+          max: "Máximo"
         response_format:
           open_modal: "Editar"
           modal:
@@ -234,6 +313,9 @@ pt:
       llms:
         display_name: "Nome"
         provider: "Provedor"
+        vision_modes:
+          disabled:
+            title: "Desativado"
         save: "Guardar"
         edit: "Editar"
         delete: Eliminar
@@ -251,14 +333,11 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
           invalid_config: "Corrija primeiro os seguintes erros na sua configuração:"
         providers:
-          google: "Google"
           fake: "Personalizar"
       ai_helper:
         context_menu:
@@ -273,8 +352,6 @@ pt:
         thumbnail_suggestions:
           select: "Selecionar"
           try_again: "Tentar Novamente"
-        image_caption:
-          save_caption: "Guardar"
       embeddings:
         save: "Guardar"
         delete: "Eliminar"
@@ -285,7 +362,9 @@ pt:
           google: "Google"
           fake: "Personalizar"
       ai_bot:
+        llm: "Modelo:"
         debug_ai_modal:
+          duration_label: "Duração:"
           request: "Pedido"
           response: "Resposta"
           next_log: "Próximo"
@@ -298,6 +377,7 @@ pt:
           today: "Hoje"
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"
+          scroll_to_bottom: "Rolar até o final"
       sentiments:
         sentiment_analysis:
           filter_types:
@@ -312,8 +392,12 @@ pt:
         topic:
           regenerate_summaries_option: "Resumos de tópico"
       discobot_discoveries:
-        regular_results: "Tópicos"
-        collapse: "Colapsar"
-        tooltip:
-          actions:
-            disable: "Desativar"
+        legacy:
+          regular_results: "Tópicos"
+          collapse: "Colapsar"
+          tooltip:
+            actions:
+              disable: "Desativar"
+        search_type: "IA"
+        search_messages: "Mensagens"
+        ask_ai: "IA"

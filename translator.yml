@@ -24,6 +24,13 @@ files:
     destination_path: error_pages/503.html
     label: core
 
+  - source_path: plugins/boards/config/locales/client.en.yml
+    destination_path: plugins/boards/client.yml
+    label: boards
+  - source_path: plugins/boards/config/locales/server.en.yml
+    destination_path: plugins/boards/server.yml
+    label: boards
+
   - source_path: plugins/chat/config/locales/client.en.yml
     destination_path: plugins/chat/client.yml
     label: chat
@@ -229,12 +236,12 @@ files:
     destination_path: plugins/subscriptions/server.yml
     label: subscriptions
 
-  - source_path: plugins/discourse-hcaptcha/config/locales/client.en.yml
-    destination_path: plugins/hcaptcha/client.yml
-    label: hcaptcha
-  - source_path: plugins/discourse-hcaptcha/config/locales/server.en.yml
-    destination_path: plugins/hcaptcha/server.yml
-    label: hcaptcha
+  - source_path: plugins/discourse-captcha/config/locales/client.en.yml
+    destination_path: plugins/captcha/client.yml
+    label: captcha
+  - source_path: plugins/discourse-captcha/config/locales/server.en.yml
+    destination_path: plugins/captcha/server.yml
+    label: captcha
 
   - source_path: plugins/discourse-gamification/config/locales/client.en.yml
     destination_path: plugins/gamification/client.yml
@@ -243,10 +250,10 @@ files:
     destination_path: plugins/gamification/server.yml
     label: gamification
 
-  - source_path: plugins/discourse-calendar/config/locales/client.en.yml
+  - source_path: plugins/discourse-events/config/locales/client.en.yml
     destination_path: plugins/calendar/client.yml
     label: calendar
-  - source_path: plugins/discourse-calendar/config/locales/server.en.yml
+  - source_path: plugins/discourse-events/config/locales/server.en.yml
     destination_path: plugins/calendar/server.yml
     label: calendar
 

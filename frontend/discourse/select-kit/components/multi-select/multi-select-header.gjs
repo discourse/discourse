@@ -6,11 +6,11 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import FormatSelectedContent from "discourse/select-kit/components/multi-select/format-selected-content";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
-import { or } from "discourse/truth-helpers";
+import { and, or } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("summary")
 @classNames("multi-select-header")
@@ -64,8 +64,19 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
   <template>
     <div class="select-kit-header-wrapper">
       {{#each this.icons as |iconName|}}
-        {{icon iconName}}
+        {{dIcon iconName}}
       {{/each}}
+
+      {{#if
+        (and
+          this.selectKit.options.useHeaderSelectedCount
+          this.selectedContent.length
+        )
+      }}
+        <span
+          class="multi-select-header__selected-count"
+        >{{this.selectedContent.length}}</span>
+      {{/if}}
 
       {{#if this.selectKit.options.useHeaderFilter}}
         <div class="select-kit-header--filter">
@@ -78,8 +89,8 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             }}
               {{#each this.selectedContent as |item|}}
                 <SelectedChoiceComponent
-                  @selectKit={{this.selectKit}}
                   @item={{item}}
+                  @selectKit={{this.selectKit}}
                 />
               {{/each}}
             {{/let}}
@@ -90,9 +101,9 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             as |FilterComponent|
           }}
             <FilterComponent
-              @selectKit={{this.selectKit}}
-              @id={{concat this.selectKit.uniqueID "-filter"}}
               @hidePlaceholderWithSelection={{true}}
+              @id={{concat this.selectKit.uniqueID "-filter"}}
+              @selectKit={{this.selectKit}}
             />
           {{/let}}
         </div>
@@ -102,7 +113,7 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
           @selectKit={{this.selectKit}}
         />
         {{#if this.caretIcon}}
-          {{icon this.caretIcon class="angle-icon"}}
+          {{dIcon this.caretIcon class="angle-icon"}}
         {{/if}}
       {{/if}}
     </div>

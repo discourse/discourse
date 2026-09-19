@@ -3,20 +3,23 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseLater from "discourse/lib/later";
-import { clipboardCopy, escapeExpression } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { jsonToHtml } from "../../lib/utilities";
+import AiDecodedTranscript from "discourse/plugins/discourse-ai/discourse/components/ai-decoded-transcript";
+import AiPayloadViewer from "discourse/plugins/discourse-ai/discourse/components/ai-payload-viewer";
+import {
+  decodedResponseText,
+  isDecodedResponse,
+} from "discourse/plugins/discourse-ai/discourse/lib/decoded-response";
 
 export default class DebugAiModal extends Component {
   @tracked info = null;
-  @tracked justCopiedText = "";
   @tracked activeTab = "request";
+  @tracked showRawResponse = false;
 
   constructor() {
     super(...arguments);
@@ -25,83 +28,50 @@ export default class DebugAiModal extends Component {
     });
   }
 
-  get htmlContext() {
+  get activePayload() {
     if (!this.info) {
-      return "";
+      return null;
     }
 
-    let parsed;
+    return this.activeTab === "request"
+      ? this.info.raw_request_payload
+      : this.info.raw_response_payload;
+  }
 
-    try {
-      if (this.activeTab === "request") {
-        parsed = JSON.parse(this.info.raw_request_payload);
-      } else {
-        return this.formattedResponse(this.info.raw_response_payload);
-      }
-    } catch {
-      return this.info.raw_request_payload;
+  get hasDecodedResponse() {
+    return isDecodedResponse(this.info?.decoded_response);
+  }
+
+  get showDecodedResponse() {
+    return (
+      this.activeTab === "response" &&
+      !this.showRawResponse &&
+      this.hasDecodedResponse
+    );
+  }
+
+  get showResponseToggle() {
+    return this.activeTab === "response" && this.hasDecodedResponse;
+  }
+
+  get copyValue() {
+    return this.showDecodedResponse
+      ? decodedResponseText(this.info.decoded_response)
+      : this.activePayload;
+  }
+
+  get activeCopyLabel() {
+    if (this.activeTab === "request") {
+      return i18n("discourse_ai.ai_bot.debug_ai_modal.copy_request");
     }
 
-    return jsonToHtml(parsed);
+    return i18n("discourse_ai.ai_bot.debug_ai_modal.copy_response");
   }
 
-  formattedResponse(response) {
-    // we need to replace the new lines with <br> to make it look good
-    const split = response.split("\n");
-    const safe = split.map((line) => escapeExpression(line)).join("<br>");
-
-    return trustHTML(safe);
-  }
-
-  @action
-  copyRequest() {
-    this.copy(this.info.raw_request_payload);
-  }
-
-  @action
-  copyResponse() {
-    this.copy(this.info.raw_response_payload);
-  }
-
-  async loadLog(logId) {
-    try {
-      await ajax(`/discourse-ai/ai-bot/show-debug-info/${logId}.json`).then(
-        (result) => {
-          this.info = result;
-        }
-      );
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  prevLog() {
-    this.loadLog(this.info.prev_log_id);
-  }
-
-  @action
-  nextLog() {
-    this.loadLog(this.info.next_log_id);
-  }
-
-  copy(text) {
-    clipboardCopy(text);
-    this.justCopiedText = i18n("discourse_ai.ai_bot.conversation_shared");
-
-    discourseLater(() => {
-      this.justCopiedText = "";
-    }, 2000);
-  }
-
-  loadApiRequestInfo() {
-    ajax(`/discourse-ai/ai-bot/post/${this.args.model.id}/show-debug-info.json`)
-      .then((result) => {
-        this.info = result;
-      })
-      .catch((e) => {
-        popupAjaxError(e);
-      });
+  get responseToggleLabel() {
+    return i18n(
+      `discourse_ai.${this.showRawResponse ? "view_decoded" : "view_raw"}`
+    );
   }
 
   get requestActive() {
@@ -112,16 +82,27 @@ export default class DebugAiModal extends Component {
     return this.activeTab === "response" ? "active" : "";
   }
 
-  @action
-  requestClicked(e) {
-    this.activeTab = "request";
-    e.preventDefault();
-  }
+  get formattedDurationSummary() {
+    const durationSeconds = this.seconds(this.info?.duration_msecs);
+    const firstTokenSeconds = this.seconds(
+      this.info?.time_to_first_token_msecs
+    );
 
-  @action
-  responseClicked(e) {
-    this.activeTab = "response";
-    e.preventDefault();
+    if (durationSeconds == null) {
+      return i18n("discourse_ai.ai_bot.debug_ai_modal.duration_unavailable");
+    }
+
+    if (firstTokenSeconds == null) {
+      return i18n(
+        "discourse_ai.ai_bot.debug_ai_modal.duration_without_first_token",
+        { duration_seconds: durationSeconds }
+      );
+    }
+
+    return i18n("discourse_ai.ai_bot.debug_ai_modal.duration", {
+      duration_seconds: durationSeconds,
+      first_token_seconds: firstTokenSeconds,
+    });
   }
 
   get formattedSpending() {
@@ -160,6 +141,64 @@ export default class DebugAiModal extends Component {
     );
   }
 
+  async loadLog(logId) {
+    this.showRawResponse = false;
+
+    try {
+      await ajax(`/discourse-ai/ai-bot/show-debug-info/${logId}.json`).then(
+        (result) => {
+          this.info = result;
+        }
+      );
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  prevLog() {
+    this.loadLog(this.info.prev_log_id);
+  }
+
+  @action
+  nextLog() {
+    this.loadLog(this.info.next_log_id);
+  }
+
+  loadApiRequestInfo() {
+    this.showRawResponse = false;
+    ajax(`/discourse-ai/ai-bot/post/${this.args.model.id}/show-debug-info.json`)
+      .then((result) => {
+        this.info = result;
+      })
+      .catch((e) => {
+        popupAjaxError(e);
+      });
+  }
+
+  @action
+  requestClicked(e) {
+    this.activeTab = "request";
+    this.showRawResponse = false;
+    e.preventDefault();
+  }
+
+  @action
+  responseClicked(e) {
+    this.activeTab = "response";
+    this.showRawResponse = false;
+    e.preventDefault();
+  }
+
+  @action
+  toggleResponseView() {
+    this.showRawResponse = !this.showRawResponse;
+  }
+
+  seconds(milliseconds) {
+    return milliseconds == null ? null : (milliseconds / 1000).toFixed(1);
+  }
+
   cacheLabel(read, write) {
     const hasRead = read && read > 0;
     const hasWrite = write && write > 0;
@@ -194,99 +233,132 @@ export default class DebugAiModal extends Component {
   <template>
     <DModal
       class="ai-debug-modal"
-      @title={{i18n "discourse_ai.ai_bot.debug_ai_modal.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.ai_bot.debug_ai_modal.title"}}
     >
       <:body>
         <ul class="nav nav-pills ai-debug-modal__nav">
           <li><a
-              href=""
               class={{this.requestActive}}
+              href=""
               {{on "click" this.requestClicked}}
             >{{i18n "discourse_ai.ai_bot.debug_ai_modal.request"}}</a></li>
           <li><a
-              href=""
               class={{this.responseActive}}
+              href=""
               {{on "click" this.responseClicked}}
             >{{i18n "discourse_ai.ai_bot.debug_ai_modal.response"}}</a></li>
         </ul>
-        <div class="ai-debug-modal__stats">
-          <p class="ai-debug-modal__stats-line">
-            <strong class="ai-debug-modal__stats-line__label">
-              {{i18n "discourse_ai.ai_bot.debug_ai_modal.this_turn"}}
-            </strong>
-            {{i18n
-              "discourse_ai.ai_bot.debug_ai_modal.tokens_summary"
-              request_tokens=this.info.request_tokens
-              response_tokens=this.info.response_tokens
-            }}
-            {{#if this.turnCacheLabel}}
-              <span
-                class="ai-debug-modal__stats-line__cache"
-              >{{this.turnCacheLabel}}</span>
-            {{/if}}
-            {{#if this.formattedSpending}}
-              <span class="ai-debug-modal__stats-line__cost">:
-                {{this.formattedSpending}}</span>
-            {{/if}}
-          </p>
-          {{#if this.showConversationLine}}
+        {{#if this.info}}
+          <div class="ai-debug-modal__stats">
             <p class="ai-debug-modal__stats-line">
               <strong class="ai-debug-modal__stats-line__label">
-                {{i18n "discourse_ai.ai_bot.debug_ai_modal.whole_conversation"}}
+                {{i18n "discourse_ai.ai_bot.debug_ai_modal.this_turn"}}
               </strong>
               {{i18n
                 "discourse_ai.ai_bot.debug_ai_modal.tokens_summary"
-                request_tokens=this.info.conversation_request_tokens
-                response_tokens=this.info.conversation_response_tokens
+                request_tokens=this.info.request_tokens
+                response_tokens=this.info.response_tokens
               }}
-              {{#if this.conversationCacheLabel}}
+              {{#if this.turnCacheLabel}}
                 <span
                   class="ai-debug-modal__stats-line__cache"
-                >{{this.conversationCacheLabel}}</span>
+                >{{this.turnCacheLabel}}</span>
               {{/if}}
-              {{#if this.formattedConversationSpending}}
+              {{#if this.formattedSpending}}
                 <span class="ai-debug-modal__stats-line__cost">:
-                  {{this.formattedConversationSpending}}</span>
+                  {{this.formattedSpending}}</span>
               {{/if}}
             </p>
+            <p class="ai-debug-modal__stats-line ai-debug-modal__duration">
+              <strong class="ai-debug-modal__stats-line__label">
+                {{i18n "discourse_ai.ai_bot.debug_ai_modal.duration_label"}}
+              </strong>
+              {{this.formattedDurationSummary}}
+            </p>
+            {{#if this.showConversationLine}}
+              <p class="ai-debug-modal__stats-line">
+                <strong class="ai-debug-modal__stats-line__label">
+                  {{i18n
+                    "discourse_ai.ai_bot.debug_ai_modal.whole_conversation"
+                  }}
+                </strong>
+                {{i18n
+                  "discourse_ai.ai_bot.debug_ai_modal.tokens_summary"
+                  request_tokens=this.info.conversation_request_tokens
+                  response_tokens=this.info.conversation_response_tokens
+                }}
+                {{#if this.conversationCacheLabel}}
+                  <span
+                    class="ai-debug-modal__stats-line__cache"
+                  >{{this.conversationCacheLabel}}</span>
+                {{/if}}
+                {{#if this.formattedConversationSpending}}
+                  <span class="ai-debug-modal__stats-line__cost">:
+                    {{this.formattedConversationSpending}}</span>
+                {{/if}}
+              </p>
+            {{/if}}
+          </div>
+          {{#if this.showDecodedResponse}}
+            <AiDecodedTranscript
+              class="ai-debug-modal__preview"
+              @response={{this.info.decoded_response}}
+            />
+          {{else}}
+            <AiPayloadViewer
+              class="ai-debug-modal__preview"
+              @emptyMessage={{i18n
+                "discourse_ai.ai_bot.debug_ai_modal.payload_unavailable"
+              }}
+              @payload={{this.activePayload}}
+              @unbounded={{true}}
+            />
           {{/if}}
-        </div>
-        <div class="ai-debug-modal__preview">
-          {{this.htmlContext}}
-        </div>
+        {{/if}}
       </:body>
 
       <:footer>
-        <DButton
-          class="btn confirm"
-          @icon="copy"
-          @action={{this.copyRequest}}
-          @label="discourse_ai.ai_bot.debug_ai_modal.copy_request"
-        />
-        <DButton
-          class="btn confirm"
-          @icon="copy"
-          @action={{this.copyResponse}}
-          @label="discourse_ai.ai_bot.debug_ai_modal.copy_response"
-        />
         {{#if this.info.prev_log_id}}
           <DButton
-            class="btn"
-            @icon="angles-left"
+            class="btn ai-debug-modal__previous"
             @action={{this.prevLog}}
+            @icon="angles-left"
             @label="discourse_ai.ai_bot.debug_ai_modal.previous_log"
           />
         {{/if}}
         {{#if this.info.next_log_id}}
           <DButton
-            class="btn"
-            @icon="angles-right"
+            class="btn ai-debug-modal__next"
             @action={{this.nextLog}}
+            @icon="angles-right"
             @label="discourse_ai.ai_bot.debug_ai_modal.next_log"
           />
         {{/if}}
-        <span class="ai-debug-modal__just-copied">{{this.justCopiedText}}</span>
+        <div class="ai-debug-modal__copy-actions">
+          {{#if this.showResponseToggle}}
+            <DButton
+              class="btn-default ai-debug-modal__response-toggle"
+              @action={{this.toggleResponseView}}
+              @translatedLabel={{this.responseToggleLabel}}
+            />
+          {{/if}}
+          {{#if this.copyValue}}
+            <DCopyButton
+              @copyClass="btn-default ai-debug-modal__copy"
+              @translatedLabel={{this.activeCopyLabel}}
+              @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
+              @value={{this.copyValue}}
+            />
+          {{else}}
+            <DButton
+              class="btn-default ai-debug-modal__copy"
+              @disabled={{true}}
+              @icon="copy"
+              @translatedLabel={{this.activeCopyLabel}}
+            />
+          {{/if}}
+        </div>
       </:footer>
     </DModal>
   </template>

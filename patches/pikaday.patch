@@ -1,0 +1,14 @@
+diff --git a/pikaday.js b/pikaday.js
+index 61642454d18999d9f9ea53702b0e98cbb93a6b53..1980bc5f09004a8c5c529dcf37890f1bbebcb76b 100755
+--- a/pikaday.js
++++ b/pikaday.js
+@@ -12,8 +12,7 @@
+     if (typeof exports === 'object') {
+         // CommonJS module
+         // Load moment.js as an optional dependency
+-        try { moment = require('moment'); } catch (e) {}
+-        module.exports = factory(moment);
++        module.exports = factory(window.moment);
+     } else if (typeof define === 'function' && define.amd) {
+         // AMD. Register as an anonymous module.
+         define(function (req)

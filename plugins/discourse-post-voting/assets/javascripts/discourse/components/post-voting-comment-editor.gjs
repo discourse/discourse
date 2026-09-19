@@ -3,9 +3,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 import PostVotingCommentComposer from "./post-voting-comment-composer";
 
 export default class PostVotingCommentEditor extends Component {
@@ -55,23 +55,23 @@ export default class PostVotingCommentEditor extends Component {
     >
       <PostVotingCommentComposer
         @onInput={{this.updateValue}}
-        @raw={{@raw}}
         @onKeyDown={{this.onKeyDown}}
+        @raw={{@raw}}
       />
 
       <DButton
+        class="btn-primary post-voting-comments__comment-editor-submit"
         @action={{this.saveComment}}
         @disabled={{this.submitDisabled}}
-        @label="post_voting.post.post_voting_comment.edit"
         @icon="pencil"
-        class="btn-primary post-voting-comments__comment-editor-submit"
+        @label="post_voting.post.post_voting_comment.edit"
       />
 
       <DButton
-        @display="link"
-        @action={{@onCancel}}
-        @label="post_voting.post.post_voting_comment.cancel"
         class="post-voting-comments__comment-editor-cancel"
+        @action={{@onCancel}}
+        @display="link"
+        @label="post_voting.post.post_voting_comment.cancel"
       />
     </div>
   </template>

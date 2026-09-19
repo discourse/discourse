@@ -216,7 +216,7 @@ class Typepad < Thor
             comment[:author].each_char do |c|
               is_upper = /[[:upper:]]/.match(c)
 
-              if (current.size > 1 && is_upper != last_upper)
+              if current.size > 1 && is_upper != last_upper
                 segments << current
                 current = ""
               end

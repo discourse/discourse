@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::SearchController < Admin::AdminController
-  RESULT_TYPES = %w[page setting theme component report].freeze
+  RESULT_TYPES = %w[page setting theme component report upcomingChange].freeze
 
   def index
     respond_to do |format|

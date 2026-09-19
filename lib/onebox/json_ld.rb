@@ -35,12 +35,10 @@ module Onebox
     end
 
     def parse_json(json)
-      begin
-        JSON[json]
-      rescue JSON::ParserError => e
-        Discourse.warn_exception(e, message: "Error parsing JSON-LD: #{json}")
-        {}
-      end
+      JSON[json]
+    rescue JSON::ParserError => e
+      Discourse.warn_exception(e, message: "Error parsing JSON-LD: #{json}")
+      {}
     end
   end
 end

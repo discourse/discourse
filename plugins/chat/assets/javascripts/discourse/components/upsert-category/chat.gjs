@@ -6,16 +6,16 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import EmptyState from "discourse/components/empty-state";
-import categoryBadge from "discourse/helpers/category-badge";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { or } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 function channelColorStyle(channel) {
@@ -23,7 +23,7 @@ function channelColorStyle(channel) {
 }
 
 function channelIcon(channel) {
-  return channel.emoji ? replaceEmoji(`:${channel.emoji}:`) : icon("d-chat");
+  return channel.emoji ? dReplaceEmoji(`:${channel.emoji}:`) : dIcon("d-chat");
 }
 
 function isSubcategoryChannel(channel, categoryId) {
@@ -83,7 +83,7 @@ export default class EditCategoryChat extends Component {
 
   <template>
     <section class="edit-category-chat" {{didInsert this.loadChannels}}>
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.displayedChannels.length}}
           {{#if this.hasSubcategoryChannels}}
             <div class="edit-category-chat__subcategory-toggle">
@@ -119,7 +119,7 @@ export default class EditCategoryChat extends Component {
                     <span>{{channel.title}}</span>
                     {{#if (isSubcategoryChannel channel @category.id)}}
                       <div>
-                        {{categoryBadge channel.chatable link=true}}
+                        {{dCategoryBadge channel.chatable link=true}}
                       </div>
                     {{/if}}
                   </td>
@@ -132,9 +132,9 @@ export default class EditCategoryChat extends Component {
                     class="d-table__cell edit-category-chat__channel-actions d-table__cell-actions"
                   >
                     <LinkTo
-                      @route="chat.channel.info.settings"
-                      @models={{array (or channel.slug "-") channel.id}}
                       class="btn btn-default btn-small"
+                      @models={{array (or channel.slug "-") channel.id}}
+                      @route="chat.channel.info.settings"
                     >
                       {{i18n "chat.edit_category.settings"}}
                     </LinkTo>
@@ -144,17 +144,17 @@ export default class EditCategoryChat extends Component {
             </tbody>
           </table>
         {{else}}
-          <EmptyState
-            @title={{i18n "chat.edit_category.no_channels"}}
+          <DEmptyState
             @body={{trustHTML
               (i18n
                 "chat.edit_category.no_channels_body"
                 chatBrowseUrl=(getURL "/chat/browse/open")
               )
             }}
+            @title={{i18n "chat.edit_category.no_channels"}}
           />
         {{/if}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </section>
   </template>
 }

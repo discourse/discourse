@@ -7,7 +7,7 @@ import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import Category from "discourse/models/category";
-import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 let cache = {};
 let cacheTime;

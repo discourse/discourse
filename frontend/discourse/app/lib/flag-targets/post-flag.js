@@ -45,8 +45,8 @@ export default class PostFlag extends Flag {
   }
 
   postActionFor(flagModal) {
-    return flagModal.args.model.flagModel.actions_summary.find(
-      (item) => item.id === flagModal.selected.id
-    );
+    return flagModal.args.model.flagModel.actionByName?.[
+      flagModal.selected.name_key
+    ];
   }
 }

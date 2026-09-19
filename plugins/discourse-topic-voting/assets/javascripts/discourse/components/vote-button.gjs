@@ -2,19 +2,20 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
+import getURL from "discourse/lib/get-url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
-import { and, eq, not } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class VoteBox extends Component {
+export default class VoteButton extends Component {
   @service currentUser;
-  @service router;
 
   @tracked hasVoted = false;
   @tracked hasSeenSuccessMenu = false;
@@ -39,6 +40,10 @@ export default class VoteBox extends Component {
 
   get showVotedMenu() {
     return this.hasVoted && !this.hasSeenSuccessMenu;
+  }
+
+  get showVotedActions() {
+    return this.showVotedMenu || this.topic.user_voted;
   }
 
   get buttonClasses() {
@@ -70,26 +75,17 @@ export default class VoteBox extends Component {
       this.hasSeenSuccessMenu = false;
     }
 
-    applyBehaviorTransformer("topic-vote-button-click", () => {
+    applyBehaviorTransformer("topic-vote-button-click", async () => {
       if (!this.currentUser) {
-        return this.router.transitionTo("login");
+        if (this.topic.archived || this.topic.closed) {
+          return;
+        }
+        return deferAnonymousAction(this, "vote_topic", {
+          topic_id: this.topic.id,
+        });
       }
 
       if (this.currentUser.vote_limit === 0) {
-        return;
-      }
-
-      // When limits are disabled and user has voted, toggle off
-      if (!this.limitsEnabled && this.topic.user_voted) {
-        this.args.removeVote();
-        this.hasVoted = false;
-        this.hasSeenSuccessMenu = false;
-        return;
-      }
-
-      // If user has already voted and seen the success menu, don't do anything
-      // The menu will show with the "remove vote" option
-      if (this.topic.user_voted && this.hasSeenSuccessMenu) {
         return;
       }
 
@@ -99,22 +95,9 @@ export default class VoteBox extends Component {
         !this.currentUser.votes_exceeded
       ) {
         this.args.addVote();
-
-        // When limits are disabled, no menu needed
-        if (!this.limitsEnabled) {
-          return;
-        }
-
         this.hasVoted = true;
-        // Don't set hasSeenSuccessMenu yet - it will be set when menu closes
       }
     });
-  }
-
-  @action
-  addVote() {
-    this.args.addVote();
-    this.hasVoted = true;
   }
 
   @action
@@ -150,119 +133,79 @@ export default class VoteBox extends Component {
       <DTooltip @identifier="vote-closed-tooltip" @placement="right">
         <:trigger>
           <DButton
-            @icon={{this.buttonIcon}}
-            @disabled={{true}}
-            @ariaLabel={{this.ariaLabel}}
             class={{this.buttonClasses}}
+            @disabled={{true}}
+            @icon={{this.buttonIcon}}
+            @translatedAriaLabel={{this.ariaLabel}}
           />
         </:trigger>
         <:content>
           {{i18n "topic_voting.voting_closed_description"}}
         </:content>
       </DTooltip>
-    {{else if this.limitsEnabled}}
+    {{else if this.currentUser}}
       <DMenu
-        @identifier="topic-voting-menu"
-        @icon={{this.buttonIcon}}
-        @onShow={{this.onShowMenu}}
-        @onClose={{this.onCloseMenu}}
-        @ariaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
+        @ariaLabel={{this.ariaLabel}}
+        @icon={{this.buttonIcon}}
+        @identifier="topic-voting-menu"
+        @onClose={{this.onCloseMenu}}
         @onRegisterApi={{this.onRegisterApi}}
+        @onShow={{this.onShowMenu}}
         @placement="right"
+        @title={{this.ariaLabel}}
       >
         <:content>
-          <DropdownMenu as |dropdown|>
-            {{#if this.showVotedMenu}}
-              <dropdown.item class="topic-voting-menu__votes-left">
-                <DButton
-                  @translatedLabel={{i18n
-                    "topic_voting.see_votes"
-                    count=this.currentUser.votes_left
-                    max=this.currentUser.vote_limit
-                  }}
-                  @href="/my/activity/votes"
-                  @icon="check-to-slot"
-                  class="btn-transparent see-votes topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-              <dropdown.item class="topic-voting-menu__row">
-                <DButton
-                  @translatedLabel={{i18n "topic_voting.remove_vote"}}
-                  @action={{this.removeVote}}
-                  @icon="arrow-rotate-left"
-                  class="btn-transparent remove-vote topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-              <dropdown.item class="topic-voting-menu__watch-toggle">
-                <DButton
-                  @translatedLabel={{i18n "topic_voting.watch_topic"}}
-                  @action={{this.toggleWatching}}
-                  @icon={{if this.isWatching "toggle-on" "toggle-off"}}
-                  class="btn-transparent topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-            {{else if (eq this.currentUser.vote_limit 0)}}
+          <DDropdownMenu as |dropdown|>
+            {{#if (eq this.currentUser.vote_limit 0)}}
               <dropdown.item class="topic-voting-menu__title --locked">
-                {{icon "lock"}}
+                {{dIcon "lock"}}
                 <span>{{i18n "topic_voting.locked_description"}}</span>
               </dropdown.item>
-            {{else if
-              (and this.currentUser.votes_exceeded (not this.topic.user_voted))
-            }}
-              <dropdown.item class="topic-voting-menu__row">
-                <DButton
-                  @translatedLabel={{i18n
-                    "topic_voting.see_votes"
-                    count=this.currentUser.votes_left
-                    max=this.currentUser.vote_limit
-                  }}
-                  @href="/my/activity/votes"
-                  @icon="check-to-slot"
-                  class="btn-transparent see-votes topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
             {{else}}
-              <dropdown.item class="topic-voting-menu__row">
-                <DButton
-                  @translatedLabel={{i18n
-                    "topic_voting.see_votes"
-                    count=this.currentUser.votes_left
-                    max=this.currentUser.vote_limit
-                  }}
-                  @href="/my/activity/votes"
-                  @icon="check-to-slot"
-                  class="btn-transparent see-votes topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-              {{#if this.topic.user_voted}}
+              {{#if this.limitsEnabled}}
+                <dropdown.item class="topic-voting-menu__votes-left">
+                  <DButton
+                    class="btn-transparent see-votes topic-voting-menu__row-btn"
+                    @href={{getURL "/my/activity/votes"}}
+                    @icon="check-to-slot"
+                    @translatedLabel={{i18n
+                      "topic_voting.see_votes"
+                      count=this.currentUser.votes_left
+                      max=this.currentUser.vote_limit
+                    }}
+                  />
+                </dropdown.item>
+              {{/if}}
+              {{#if this.showVotedActions}}
                 <dropdown.item class="topic-voting-menu__row">
                   <DButton
-                    @translatedLabel={{i18n "topic_voting.remove_vote"}}
+                    class="btn-transparent remove-vote topic-voting-menu__row-btn"
                     @action={{this.removeVote}}
                     @icon="arrow-rotate-left"
-                    class="btn-transparent remove-vote topic-voting-menu__row-btn"
+                    @translatedLabel={{i18n "topic_voting.remove_vote"}}
                   />
                 </dropdown.item>
                 <dropdown.item class="topic-voting-menu__watch-toggle">
                   <DButton
-                    @translatedLabel={{i18n "topic_voting.watch_topic"}}
+                    class="btn-transparent topic-voting-menu__row-btn"
                     @action={{this.toggleWatching}}
                     @icon={{if this.isWatching "toggle-on" "toggle-off"}}
-                    class="btn-transparent topic-voting-menu__row-btn"
+                    @translatedLabel={{i18n "topic_voting.watch_topic"}}
                   />
                 </dropdown.item>
               {{/if}}
             {{/if}}
-          </DropdownMenu>
+          </DDropdownMenu>
         </:content>
       </DMenu>
     {{else}}
       <DButton
-        @icon={{this.buttonIcon}}
-        @action={{this.onShowMenu}}
-        @ariaLabel={{this.ariaLabel}}
         class={{this.buttonClasses}}
+        @action={{this.onShowMenu}}
+        @icon={{this.buttonIcon}}
+        @translatedAriaLabel={{this.ariaLabel}}
+        @translatedTitle={{this.ariaLabel}}
       />
     {{/if}}
   </template>

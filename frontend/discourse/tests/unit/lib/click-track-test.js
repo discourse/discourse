@@ -1,3 +1,4 @@
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -12,7 +13,7 @@ const track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
   const event = new MouseEvent("click");
-  sinon.stub(event, "currentTarget").get(() => fixture(selector));
+  sinon.stub(event, "target").get(() => fixture(selector));
   return event;
 }
 
@@ -62,6 +63,7 @@ module("Unit | Utility | click-track", function (hooks) {
           <a class="mention" href="/u/joe">@joe</a>
           <a class="hashtag-cooked" href="/c/staff/42" data-type="category" data-slug="staff"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>staff</span></a>
           <a class="mention-group" href="/g/support">@support</a>
+          <a class="hashtag-cooked category-card-hashtag" href="/c/staff/42" data-type="category" data-id="42">staff</a>
           <a class="mailto" href="mailto:foo@bar.com">email-me</a>
           <a class="a-without-href">no href</a>
           <aside class="quote">
@@ -97,6 +99,26 @@ module("Unit | Utility | click-track", function (hooks) {
 
   test("does not track elements with no href", async function (assert) {
     assert.true(track(generateClickEventOn(".a-without-href")));
+  });
+
+  test("resolves the link when the click lands on a nested element", async function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "http://discuss.domain.com");
+
+    const done = assert.async();
+    pretender.post("/clicks/track", (request) => {
+      assert.strictEqual(
+        request.requestBody,
+        "url=http%3A%2F%2Fwww.google.de&post_id=42&topic_id=1337"
+      );
+      done();
+      return [200, {}, ""];
+    });
+
+    // Target the badge <span> inside the "#with-badge" anchor: trackClick must
+    // still walk up to the enclosing <a> via closest().
+    const event = new MouseEvent("click");
+    sinon.stub(event, "target").get(() => fixture("#with-badge span.badge"));
+    assert.false(track(event));
   });
 
   test("does not track attachments", async function (assert) {
@@ -220,6 +242,40 @@ module("Unit | Utility | click-track", function (hooks) {
   test("returns true for tracking mentions and group mentions so the card can appear", async function (assert) {
     assert.true(track(generateClickEventOn(".mention")));
     assert.true(track(generateClickEventOn(".mention-group")));
+  });
+
+  test("leaves category card hashtags to the card listener", async function (assert) {
+    this.owner.lookup("service:site-settings").enable_category_hashtag_cards =
+      true;
+
+    assert.true(
+      track(generateClickEventOn(".category-card-hashtag"), this.owner),
+      "the event reaches the card listener"
+    );
+
+    await settled();
+
+    assert.false(
+      DiscourseURL.routeTo.called,
+      "the link tracker does not navigate away from the card"
+    );
+  });
+
+  test("navigates category hashtags when category cards are disabled", async function (assert) {
+    this.owner.lookup("service:site-settings").enable_category_hashtag_cards =
+      false;
+
+    assert.false(
+      track(generateClickEventOn(".category-card-hashtag"), this.owner),
+      "the link tracker handles navigation"
+    );
+
+    await settled();
+
+    assert.true(
+      DiscourseURL.routeTo.calledWith("/c/staff/42"),
+      "the category opens normally"
+    );
   });
 
   test("does not track clicks on mailto", async function (assert) {

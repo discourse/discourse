@@ -3,15 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
 import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
 import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const UP = "up";
@@ -114,21 +114,21 @@ export default class EditUserDirectoryColumns extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "directory.edit_columns.title"}}
       class="edit-user-directory-columns-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "directory.edit_columns.title"}}
     >
       <:body>
         {{#if this.loading}}
-          {{loadingSpinner size="large"}}
+          {{dLoadingSpinner size="large"}}
         {{else}}
           <div class="edit-directory-columns-container">
             {{#each this.columns as |column|}}
               <div class="edit-directory-column">
                 <div class="left-content">
                   <label class="column-name">
-                    <Input @type="checkbox" @checked={{column.enabled}} />
+                    <Input @checked={{column.enabled}} @type="checkbox" />
                     {{#if (directoryColumnIsAutomatic column=column)}}
                       {{directoryTableHeaderTitle
                         field=column.name
@@ -149,14 +149,14 @@ export default class EditUserDirectoryColumns extends Component {
                 </div>
                 <div class="right-content">
                   <DButton
-                    @icon="arrow-up"
+                    class="btn-default button-secondary move-column-up"
                     @action={{fn this.moveUp column}}
-                    class="button-secondary move-column-up"
+                    @icon="arrow-up"
                   />
                   <DButton
-                    @icon="arrow-down"
+                    class="btn-default button-secondary move-column-down"
                     @action={{fn this.moveDown column}}
-                    class="button-secondary"
+                    @icon="arrow-down"
                   />
                 </div>
               </div>
@@ -166,14 +166,14 @@ export default class EditUserDirectoryColumns extends Component {
       </:body>
       <:footer>
         <DButton
-          @label="directory.edit_columns.save"
-          @action={{this.save}}
           class="btn-primary"
+          @action={{this.save}}
+          @label="directory.edit_columns.save"
         />
         <DButton
-          @label="directory.edit_columns.reset_to_default"
+          class="btn-default reset-to-default"
           @action={{this.resetToDefault}}
-          class="btn-secondary reset-to-default"
+          @label="directory.edit_columns.reset_to_default"
         />
       </:footer>
     </DModal>

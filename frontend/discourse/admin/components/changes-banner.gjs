@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import bodyClass from "discourse/helpers/body-class";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ChangesBanner extends Component {
   @tracked isSaving = false;
@@ -45,7 +45,7 @@ export default class ChangesBanner extends Component {
         }}</span>
       <div class="controls">
         <DButton
-          class="btn-default btn-secondary btn-small"
+          class="btn-default btn-small"
           @action={{@discard}}
           @disabled={{this.isSaving}}
           @translatedLabel={{@discardLabel}}
@@ -53,6 +53,7 @@ export default class ChangesBanner extends Component {
         <DButton
           class="btn-primary btn-small"
           @action={{this.save}}
+          @id={{@saveButtonId}}
           @isLoading={{this.isSaving}}
           @translatedLabel={{@saveLabel}}
         />

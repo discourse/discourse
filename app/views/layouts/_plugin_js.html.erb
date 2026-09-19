@@ -18,10 +18,10 @@
     <% end %>
   <%- end %>
 
-  <%- plugin_assets.flat_map { it[:imports] }.compact.uniq.each do |import| %>
+  <%- plugin_assets.flat_map { [*it[:imports], it[:route_bundle]] }.compact.uniq.each do |preload| %>
     <link
       rel="modulepreload"
-      href="<%= script_asset_path(import) %>"
+      href="<%= script_asset_path(preload) %>"
       nonce="<%= csp_nonce_placeholder %>"
     >
   <%- end %>

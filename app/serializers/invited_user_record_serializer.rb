@@ -50,7 +50,15 @@ class InvitedUserRecordSerializer < BasicUserSerializer
     can_see_invite_details?
   end
 
+  def include_last_seen_at?
+    can_see_profile?
+  end
+
   private
+
+  def can_see_profile?
+    (scope || Guardian.new).can_see_profile?(object)
+  end
 
   def can_see_invite_details?
     @can_see_invite_details ||= scope.can_see_invite_details?(invited_by)

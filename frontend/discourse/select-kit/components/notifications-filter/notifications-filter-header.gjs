@@ -1,7 +1,7 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import DropdownSelectBoxHeaderComponent from "discourse/select-kit/components/dropdown-select-box/dropdown-select-box-header";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @classNames("notifications-filter-header", "btn-flat")
@@ -24,7 +24,7 @@ export default class NotificationsFilterHeader extends DropdownSelectBoxHeaderCo
       <span class="header-text">
         {{i18n this.label}}
       </span>
-      {{icon this.caretIcon class="angle-icon"}}
+      {{dIcon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

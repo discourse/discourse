@@ -147,6 +147,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
 
         expect(log).to include("CREATE TABLE public.foo")
         expect(log).not_to be_blank
+        expect(log).not_to include("SET transaction_timeout")
         expect(log).not_to include("CREATE EXTENSION")
         expect(log).not_to include("COMMENT ON EXTENSION")
         expect(log).not_to include(
@@ -159,7 +160,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
     end
 
     describe "database connection" do
-      it "it is not erroring for non-multisite" do
+      it "does not raise an error outside multisite mode" do
         expect { execute_stubbed_restore }.not_to raise_error
       end
     end

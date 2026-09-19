@@ -1,10 +1,10 @@
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -23,14 +23,14 @@ export default <template>
             <div class="url">
               {{i18n "errors.prev_page"}}
               <a
-                href={{@controller.requestUrl}}
                 data-auto-route="true"
+                href={{@controller.requestUrl}}
               >{{@controller.requestUrl}}</a>
             </div>
           {{/if}}
           <div class="desc">
             {{#if @controller.networkFixed}}
-              {{icon "circle-check"}}
+              {{dIcon "circle-check"}}
             {{/if}}
 
             {{@controller.desc}}
@@ -38,13 +38,13 @@ export default <template>
           <div class="buttons">
             {{#each @controller.enabledButtons as |buttonData|}}
               <DButton
-                @icon={{buttonData.icon}}
-                @action={{buttonData.action}}
-                @label={{buttonData.key}}
                 class={{buttonData.classes}}
+                @action={{buttonData.action}}
+                @icon={{buttonData.icon}}
+                @label={{buttonData.key}}
               />
             {{/each}}
-            <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+            <DConditionalLoadingSpinner @condition={{@controller.loading}} />
           </div>
         </div>
       {{/if}}

@@ -5,6 +5,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -26,6 +27,7 @@ export default class Chat extends Service {
   @service chatStateManager;
   @service presence;
   @service router;
+  @service siteSettings;
   @service chatChannelsManager;
   @service chatTrackingStateManager;
   @service chatPanePendingManager;
@@ -54,17 +56,13 @@ export default class Chat extends Service {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    if (this.userCanChat && !EmbedMode.enabled) {
+    if (this.canSubscribeToChat && !EmbedMode.enabled) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
+    }
+
+    if (this.userCanChat && !EmbedMode.enabled) {
       removeOnPresenceChange(this.onPresenceChangeCallback);
     }
-  }
-
-  @computed("currentUser.has_chat_enabled", "siteSettings.chat_enabled")
-  get userCanChat() {
-    return (
-      this.currentUser?.has_chat_enabled && this.siteSettings?.chat_enabled
-    );
   }
 
   get activeChannel() {
@@ -83,7 +81,47 @@ export default class Chat extends Service {
     this._activeChannel = channel;
   }
 
-  @computed("currentUser.staff", "currentUser.groups.[]")
+  get activeMessage() {
+    return this._activeMessage;
+  }
+
+  set activeMessage(hash) {
+    if (hash) {
+      this._activeMessage = hash;
+    } else {
+      this._activeMessage = null;
+    }
+  }
+
+  @computed("currentUser.has_chat_enabled", "siteSettings.chat_enabled")
+  get userCanChat() {
+    return (
+      this.currentUser?.has_chat_enabled && this.siteSettings?.chat_enabled
+    );
+  }
+
+  @computed("currentUser.can_chat", "currentUser.has_chat_enabled")
+  get chatDisabledInPreferences() {
+    return this.currentUser?.can_chat && !this.currentUser?.has_chat_enabled;
+  }
+
+  get anonymousUserCanViewPublicChat() {
+    return (
+      !this.currentUser &&
+      this.siteSettings.enable_public_channels &&
+      (this.siteSettings.chat_allowed_groups || "")
+        .toString()
+        .split("|")
+        .map((groupId) => parseInt(groupId, 10))
+        .includes(AUTO_GROUPS.anonymous_users.id)
+    );
+  }
+
+  get canSubscribeToChat() {
+    return this.userCanChat || this.anonymousUserCanViewPublicChat;
+  }
+
+  @computed("currentUser.staff")
   get userCanDirectMessage() {
     if (!this.currentUser) {
       return false;
@@ -104,18 +142,6 @@ export default class Chat extends Service {
   @computed("activeChannel.userSilenced")
   get userCanInteractWithChat() {
     return !this.activeChannel?.userSilenced;
-  }
-
-  get activeMessage() {
-    return this._activeMessage;
-  }
-
-  set activeMessage(hash) {
-    if (hash) {
-      this._activeMessage = hash;
-    } else {
-      this._activeMessage = null;
-    }
   }
 
   @bind
@@ -170,7 +196,7 @@ export default class Chat extends Service {
     }
   }
 
-  async loadChannels() {
+  async loadChannels({ subscribe = Boolean(this.currentUser) } = {}) {
     // We want to be able to call this method multiple times, but only
     // actually load the channels once. This is because we might call
     // this method before the chat is fully initialized, and we don't
@@ -183,7 +209,7 @@ export default class Chat extends Service {
       if (!this.loadingChannels) {
         this.loadingChannels = new Promise((resolve) => {
           this.chatApi.listCurrentUserChannels().then((result) => {
-            this.setupWithPreloadedChannels(result);
+            this.setupWithPreloadedChannels(result, { subscribe });
             this.chatStateManager.hasPreloadedChannels = true;
             resolve();
           });
@@ -196,11 +222,21 @@ export default class Chat extends Service {
     }
   }
 
-  setupWithPreloadedChannels(channelsView) {
-    this.chatSubscriptionsManager.startChannelsSubscriptions(
-      channelsView.meta.message_bus_last_ids
-    );
-    this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
+  setupWithPreloadedChannels(
+    channelsView,
+    { subscribe = Boolean(this.currentUser) } = {}
+  ) {
+    if (subscribe && this.canSubscribeToChat) {
+      this.chatSubscriptionsManager.startChannelsSubscriptions(
+        channelsView.meta.message_bus_last_ids
+      );
+    }
+
+    if (this.currentUser) {
+      this.presenceChannel?.subscribe(
+        channelsView.global_presence_channel_state
+      );
+    }
 
     this.chatChannelsManager.userHasThreads = channelsView.has_threads ?? false;
 
@@ -215,21 +251,31 @@ export default class Chat extends Service {
           channelsView.unread_thread_overview[storedChannel.id];
       }
 
-      return this.chatChannelsManager.follow(storedChannel);
+      if (this.currentUser) {
+        return this.chatChannelsManager.follow(storedChannel);
+      }
+
+      if (subscribe && storedChannel.isCategoryChannel) {
+        this.chatSubscriptionsManager.startChannelSubscription(storedChannel, {
+          readOnly: true,
+        });
+      }
     });
 
-    this.chatTrackingStateManager.setupWithPreloadedState(
-      channelsView.tracking
-    );
+    if (channelsView.tracking) {
+      this.chatTrackingStateManager.setupWithPreloadedState(
+        channelsView.tracking
+      );
+    }
   }
 
   updatePresence() {
     next(() => {
-      if (this.isDestroyed || this.isDestroying) {
+      if (this.isDestroying) {
         return;
       }
 
-      if (this.currentUser.user_option?.hide_presence) {
+      if (!this.currentUser || this.currentUser.user_option?.hide_presence) {
         return;
       }
 
@@ -290,89 +336,6 @@ export default class Chat extends Service {
         ...nextChannel.routeModels
       );
     }
-  }
-
-  /**
-   * Returns channels in sidebar display order: starred, public, DMs.
-   *
-   * @returns {Array} Ordered array of chat channels matching sidebar order
-   */
-  #getOrderedChannels() {
-    const manager = this.chatChannelsManager;
-
-    return [
-      ...manager.starredChannels,
-      ...manager.unstarredPublicMessageChannels,
-      ...manager.truncatedUnstarredDirectMessageChannels,
-    ];
-  }
-
-  /**
-   * Returns channels with unread activity in sidebar display order.
-   * If the active channel has no unreads, inserts it at its proper position
-   * relative to other channels with activity.
-   *
-   * @param {ChatChannel} activeChannel - The currently active channel
-   * @returns {Array} Ordered array of channels with activity
-   */
-  #getOrderedChannelsWithActivity(activeChannel) {
-    const manager = this.chatChannelsManager;
-
-    // Filter each section for channels with activity
-    const starredWithActivity = manager.starredChannels.filter(
-      (c) => c.hasUnread
-    );
-    const publicWithActivity = manager.unstarredPublicMessageChannels.filter(
-      (c) => c.hasUnread
-    );
-    const dmsWithActivity =
-      manager.truncatedUnstarredDirectMessageChannels.filter(
-        (c) => c.hasUnread
-      );
-
-    const allChannels = [
-      ...starredWithActivity,
-      ...publicWithActivity,
-      ...dmsWithActivity,
-    ];
-
-    // If the active channel has no unread messages, insert it at its proper position
-    if (!activeChannel.hasUnread) {
-      const orderedChannels = this.#getOrderedChannels();
-      const activeIndexInOrdered = orderedChannels.findIndex(
-        (c) => c.id === activeChannel.id
-      );
-
-      if (activeIndexInOrdered !== -1) {
-        // Find the last unread channel before the active channel's position
-        let insertAfterIndex = -1;
-        for (let i = activeIndexInOrdered - 1; i >= 0; i--) {
-          const channelAtPos = orderedChannels[i];
-          const indexInActivity = allChannels.findIndex(
-            (c) => c.id === channelAtPos.id
-          );
-          if (indexInActivity !== -1) {
-            insertAfterIndex = indexInActivity;
-            break;
-          }
-        }
-
-        // Insert the active channel after the found unread channel (or at start)
-        allChannels.splice(insertAfterIndex + 1, 0, activeChannel);
-      }
-    }
-
-    return allChannels;
-  }
-
-  _fireOpenFloatAppEvent(channel, messageId = null) {
-    messageId
-      ? this.router.transitionTo(
-          "chat.channel.near-message",
-          ...channel.routeModels,
-          messageId
-        )
-      : this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
 
   async followChannel(channel) {
@@ -453,5 +416,87 @@ export default class Chat extends Service {
       "chat:toggle-expand",
       this.chatStateManager.isDrawerExpanded
     );
+  }
+
+  /**
+   * Returns channels in sidebar display order: starred, public, DMs.
+   *
+   * @returns {Array} Ordered array of chat channels matching sidebar order
+   */
+  #getOrderedChannels() {
+    const manager = this.chatChannelsManager;
+
+    return [
+      ...manager.starredChannelsByPreference,
+      ...manager.sidebarPublicMessageChannels,
+      ...manager.sidebarDirectMessageChannels,
+    ];
+  }
+
+  /**
+   * Returns channels with unread activity in sidebar display order.
+   * If the active channel has no unreads, inserts it at its proper position
+   * relative to other channels with activity.
+   *
+   * @param {ChatChannel} activeChannel - The currently active channel
+   * @returns {Array} Ordered array of channels with activity
+   */
+  #getOrderedChannelsWithActivity(activeChannel) {
+    const manager = this.chatChannelsManager;
+
+    // Filter each section for channels with activity
+    const starredWithActivity = manager.starredChannelsByPreference.filter(
+      (c) => c.hasUnread
+    );
+    const publicWithActivity = manager.sidebarPublicMessageChannels.filter(
+      (c) => c.hasUnread
+    );
+    const dmsWithActivity = manager.sidebarDirectMessageChannels.filter(
+      (c) => c.hasUnread
+    );
+
+    const allChannels = [
+      ...starredWithActivity,
+      ...publicWithActivity,
+      ...dmsWithActivity,
+    ];
+
+    // If the active channel has no unread messages, insert it at its proper position
+    if (!activeChannel.hasUnread) {
+      const orderedChannels = this.#getOrderedChannels();
+      const activeIndexInOrdered = orderedChannels.findIndex(
+        (c) => c.id === activeChannel.id
+      );
+
+      if (activeIndexInOrdered !== -1) {
+        // Find the last unread channel before the active channel's position
+        let insertAfterIndex = -1;
+        for (let i = activeIndexInOrdered - 1; i >= 0; i--) {
+          const channelAtPos = orderedChannels[i];
+          const indexInActivity = allChannels.findIndex(
+            (c) => c.id === channelAtPos.id
+          );
+          if (indexInActivity !== -1) {
+            insertAfterIndex = indexInActivity;
+            break;
+          }
+        }
+
+        // Insert the active channel after the found unread channel (or at start)
+        allChannels.splice(insertAfterIndex + 1, 0, activeChannel);
+      }
+    }
+
+    return allChannels;
+  }
+
+  _fireOpenFloatAppEvent(channel, messageId = null) {
+    messageId
+      ? this.router.transitionTo(
+          "chat.channel.near-message",
+          ...channel.routeModels,
+          messageId
+        )
+      : this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
 }

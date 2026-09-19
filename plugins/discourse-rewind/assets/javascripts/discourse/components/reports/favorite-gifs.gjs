@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -30,23 +30,23 @@ export default class FavoriteGifs extends Component {
             <div class="rewind-card scale">
               <div class="favorite-gifs__gif">
                 <img
-                  src={{gif.url}}
                   alt="GIF #{{idx}}"
                   class="favorite-gifs__image"
                   loading="lazy"
+                  src={{gif.url}}
                 />
                 <div class="favorite-gifs__stats">
                   <span class="favorite-gifs__stat">
-                    {{icon "repeat"}}
-                    {{number gif.usage_count}}
+                    {{dIcon "repeat"}}
+                    {{dNumber gif.usage_count}}
                   </span>
                   <span class="favorite-gifs__stat">
-                    {{icon "heart"}}
-                    {{number gif.likes}}
+                    {{dIcon "heart"}}
+                    {{dNumber gif.likes}}
                   </span>
                   <span class="favorite-gifs__stat">
-                    {{icon "smile"}}
-                    {{number gif.reactions}}
+                    {{dIcon "smile"}}
+                    {{dNumber gif.reactions}}
                   </span>
                 </div>
               </div>

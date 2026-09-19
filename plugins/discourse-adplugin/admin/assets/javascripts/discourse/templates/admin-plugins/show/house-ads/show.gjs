@@ -6,8 +6,8 @@ export default <template>
 
   <div class="house-ad-form-container admin-detail">
     <HouseAdForm
-      @model={{@controller.model}}
       @houseAds={{@controller.houseAds}}
+      @model={{@controller.model}}
     />
   </div>
 </template>

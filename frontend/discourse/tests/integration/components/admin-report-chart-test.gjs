@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { hasIncompleteData } from "discourse/admin/components/admin-report-chart";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | admin-report-chart", function (hooks) {
+module("Integration | Component | AdminReportChart", function (hooks) {
   setupRenderingTest(hooks);
 
   module("hasIncompleteData", function () {

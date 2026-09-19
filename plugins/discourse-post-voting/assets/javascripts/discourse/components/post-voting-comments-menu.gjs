@@ -4,10 +4,10 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import PostVotingCommentsMenuComposer from "./post-voting-comments-menu-composer";
 
@@ -74,29 +74,29 @@ export default class PostVotingCommentsMenu extends Component {
       {{#if this.expanded}}
         <PostVotingCommentsMenuComposer
           @id={{@id}}
-          @onSave={{this.handleSave}}
           @onCancel={{this.closeComposer}}
+          @onSave={{this.handleSave}}
         />
       {{else}}
         <div class="post-voting-comments__actions">
           <DButton
+            class="btn-transparent --primary btn-small post-voting-comments__actions-add"
             @action={{if
               this.currentUser
               this.expandComposer
               (routeAction "showLogin")
             }}
             @label="post_voting.post.post_voting_comment.add"
-            class="btn-transparent --primary btn-small post-voting-comments__actions-add"
           />
 
           {{#if this.hasMoreComments}}
             <DButton
+              class="btn-transparent --primary btn-small post-voting-comments__actions-show-more"
               @action={{this.fetchComments}}
               @translatedLabel={{i18n
                 "post_voting.post.post_voting_comment.show"
                 count=@moreCommentCount
               }}
-              class="btn-transparent --primary btn-small post-voting-comments__actions-show-more"
             />
 
           {{/if}}

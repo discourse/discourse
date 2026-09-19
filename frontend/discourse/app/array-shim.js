@@ -88,7 +88,10 @@ function wrapSquareBracketDescriptor() {
   // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, propertyName, {
     get() {
-      warn(propertyName, "getter");
+      // Reading `[]` on `Array.prototype` itself isn't an issue.
+      if (this !== Array.prototype) {
+        warn(propertyName, "getter");
+      }
 
       return withSilencedDeprecations(SILENCED_ARRAY_DEPRECATIONS, () =>
         squareBracketDescriptor.get.bind(this)()

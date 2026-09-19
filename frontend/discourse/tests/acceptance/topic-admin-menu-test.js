@@ -32,6 +32,25 @@ acceptance("Topic - Admin Menu", function (needs) {
     assert.dom(".topic-admin-delete").exists("the delete item is rendered");
   });
 
+  test("Enter as a user with topic timer permissions", async function (assert) {
+    updateCurrentUser({
+      admin: false,
+      moderator: false,
+      trust_level: 1,
+      can_set_topic_timer: true,
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".toggle-admin-menu");
+
+    assert
+      .dom(".admin-topic-timer-update")
+      .exists("the topic timer item is rendered");
+    assert
+      .dom(".topic-admin-slow-mode")
+      .doesNotExist("topic management items are not rendered");
+  });
+
   test("Enter as a user with moderator and admin permissions", async function (assert) {
     updateCurrentUser({ moderator: true, admin: true, trust_level: 4 });
 
@@ -70,5 +89,27 @@ acceptance("Topic - Admin Menu", function (needs) {
       .hasText(i18n("yes_value"), "The label was rendered");
     await click(".extra-button");
     assert.true(this.actionCalled, "The action was called");
+  });
+
+  test("Buttons with a section are rendered under a subheader", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    withPluginApi((api) => {
+      api.addTopicAdminMenuButton(() => ({
+        className: "section-button",
+        icon: "heart",
+        translatedLabel: "Section button",
+        action: () => {},
+        section: { id: "test-section", translatedLabel: "Test section" },
+      }));
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".toggle-admin-menu");
+
+    assert
+      .dom(".dropdown-menu__subheader")
+      .hasText("Test section", "The section subheader is rendered");
+    assert.dom(".section-button").exists("The section button is rendered");
   });
 });

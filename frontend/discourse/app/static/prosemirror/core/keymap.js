@@ -23,10 +23,13 @@ export function buildKeymap(
   params,
   includeDefault = true
 ) {
-  const keys = {
-    ...initialKeymap,
-    ...extractKeymap(extensions, params),
-  };
+  const keys = { ...initialKeymap };
+
+  for (const [key, command] of Object.entries(
+    extractKeymap(extensions, params)
+  )) {
+    keys[key] = keys[key] ? chainCommands(command, keys[key]) : command;
+  }
 
   function chainWithExisting(key, ...commands) {
     if (keys[key]) {

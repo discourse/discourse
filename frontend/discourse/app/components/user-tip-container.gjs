@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class UserTipContainer extends Component {
   @service userTips;
@@ -41,7 +41,7 @@ export default class UserTipContainer extends Component {
   <template>
     <div class="user-tip__container">
       <div class="user-tip__title">{{@data.titleText}}</div>
-      {{! template-lint-disable no-invalid-interactive }}
+      {{! eslint-disable ember/template-no-invalid-interactive }}
       <div class="user-tip__content" {{on "click" this.onClick}}>
         {{#if @data.contentHtml}}
           {{this.safeHtmlContent}}
@@ -52,17 +52,17 @@ export default class UserTipContainer extends Component {
       <div class="user-tip__buttons">
         <DButton
           class="btn-primary"
-          @translatedLabel={{@data.buttonText}}
           @action={{this.handleDismiss}}
           @forwardEvent={{true}}
+          @translatedLabel={{@data.buttonText}}
         />
 
         {{#if this.showSkipButton}}
           <DButton
             class="btn-flat btn-text"
-            @translatedLabel={{@data.buttonSkipText}}
             @action={{this.handleSkip}}
             @forwardEvent={{true}}
+            @translatedLabel={{@data.buttonSkipText}}
           />
         {{/if}}
       </div>

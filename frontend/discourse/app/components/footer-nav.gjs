@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class FooterNav extends Component {
   @service capabilities;
@@ -24,18 +24,25 @@ export default class FooterNav extends Component {
     "signup",
   ];
 
-  _modalOn() {
-    postRNWebviewMessage("headerBg", "rgb(0, 0, 0)");
+  get isVisible() {
+    const { currentRouteName } = this.router;
+
+    return (
+      [UNSCROLLED, SCROLLED_UP].includes(
+        this.scrollDirection.lastScrollDirection
+      ) &&
+      !this.composer.isOpen &&
+      (this.capabilities.isAppWebview || this.canGoBack || this.canGoForward) &&
+      !this.EXCLUDE_IN_ROUTES.includes(currentRouteName)
+    );
   }
 
-  _modalOff() {
-    const header = document.querySelector(".d-header-wrap .d-header");
-    if (header) {
-      postRNWebviewMessage(
-        "headerBg",
-        window.getComputedStyle(header).backgroundColor
-      );
-    }
+  get canGoBack() {
+    return this.historyStore.hasPastEntries || !!document.referrer;
+  }
+
+  get canGoForward() {
+    return this.historyStore.hasFutureEntries;
   }
 
   @action
@@ -73,25 +80,18 @@ export default class FooterNav extends Component {
     event.preventDefault();
   }
 
-  get isVisible() {
-    const { currentRouteName } = this.router;
-
-    return (
-      [UNSCROLLED, SCROLLED_UP].includes(
-        this.scrollDirection.lastScrollDirection
-      ) &&
-      !this.composer.isOpen &&
-      (this.capabilities.isAppWebview || this.canGoBack || this.canGoForward) &&
-      !this.EXCLUDE_IN_ROUTES.includes(currentRouteName)
-    );
+  _modalOn() {
+    postRNWebviewMessage("headerBg", "rgb(0, 0, 0)");
   }
 
-  get canGoBack() {
-    return this.historyStore.hasPastEntries || !!document.referrer;
-  }
-
-  get canGoForward() {
-    return this.historyStore.hasFutureEntries;
+  _modalOff() {
+    const header = document.querySelector(".d-header-wrap .d-header");
+    if (header) {
+      postRNWebviewMessage(
+        "headerBg",
+        window.getComputedStyle(header).backgroundColor
+      );
+    }
   }
 
   <template>
@@ -103,38 +103,38 @@ export default class FooterNav extends Component {
       {{htmlClass "footer-nav-visible"}}
     {{/if}}
 
-    <div class={{concatClass "footer-nav" (if this.isVisible "visible")}}>
+    <div class={{dConcatClass "footer-nav" (if this.isVisible "visible")}}>
       <div class="footer-nav-widget">
         <DButton
-          @action={{this.goBack}}
-          @icon="chevron-left"
           class="btn-flat btn-large"
+          @action={{this.goBack}}
           @disabled={{not this.canGoBack}}
-          @title="footer_nav.back"
           @forwardEvent={{true}}
+          @icon="chevron-left"
+          @title="footer_nav.back"
         />
 
         <DButton
-          @action={{this.goForward}}
-          @icon="chevron-right"
           class="btn-flat btn-large"
+          @action={{this.goForward}}
           @disabled={{not this.canGoForward}}
-          @title="footer_nav.forward"
           @forwardEvent={{true}}
+          @icon="chevron-right"
+          @title="footer_nav.forward"
         />
 
         {{#if this.capabilities.isAppWebview}}
           <DButton
+            class="btn-flat btn-large"
             @action={{this.share}}
             @icon="link"
-            class="btn-flat btn-large"
             @title="footer_nav.share"
           />
 
           <DButton
+            class="btn-flat btn-large"
             @action={{this.dismiss}}
             @icon="chevron-down"
-            class="btn-flat btn-large"
             @title="footer_nav.dismiss"
           />
         {{/if}}

@@ -37,6 +37,8 @@ describe "JS Deprecation Handling" do
 
     visit("/latest")
 
+    expect(page).to have_css("#site-logo")
+
     page.execute_script <<~JS
       const deprecated = require("discourse/lib/deprecated").default;
       deprecated("Fake deprecation message", { id: "fake.deprecation1" })
@@ -52,6 +54,29 @@ describe "JS Deprecation Handling" do
     expect(message).to have_text("One of your themes or plugins contains code which needs updating")
     expect(message).to have_text("fake.deprecation2")
     expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
+  end
+
+  it "emits ember-this-fallback deprecation for theme .hbs connectors using property fallback",
+     expected_js_deprecations: %w[ember-this-fallback.this-property-fallback] do
+    t = Fabricate(:theme, name: "Theme With Hbs Connector")
+    t.set_field(
+      target: :extra_js,
+      name: "discourse/connectors/below-footer/my-connector.hbs",
+      value: "{{someProperty}}",
+    )
+    t.save!
+    SiteSetting.default_theme_id = t.id
+
+    visit "/latest"
+    expect(find("#main-outlet-wrapper")).to be_visible
+
+    try_until_success do
+      expect(
+        $playwright_logger.logs.any? do |log|
+          log[:message].include?("ember-this-fallback.this-property-fallback")
+        end,
+      ).to eq(true)
+    end
   end
 
   it "can show warnings triggered during initial render" do
@@ -78,5 +103,41 @@ describe "JS Deprecation Handling" do
     visit "/latest"
 
     expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation")
+  end
+
+  it "shows warnings for Discourse and Ember deprecations triggered before the handler is set up" do
+    sign_in Fabricate(:admin)
+
+    SiteSetting.warn_critical_js_deprecations = true
+
+    t = Fabricate(:theme, name: "Theme With Early Deprecations")
+    t.set_field(
+      target: :extra_js,
+      type: :js,
+      name: "discourse/api-initializers/trigger-early-deprecations.js",
+      value: <<~JS,
+        import { deprecate } from "@ember/debug";
+        import { apiInitializer } from "discourse/lib/api";
+        import deprecated from "discourse/lib/deprecated";
+
+        // Both fire during boot, before the admin-banner handler exists.
+        deprecated("Fake deprecation message", { id: "fake.deprecation1" });
+        deprecate("Fake ember deprecation message", false, {
+          id: "fake.deprecation2",
+          for: "discourse",
+          since: "3.4.0",
+          until: "3.5.0",
+        });
+
+        export default apiInitializer(() => {});
+      JS
+    )
+    t.save!
+    SiteSetting.default_theme_id = t.id
+
+    visit "/latest"
+
+    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation1")
+    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation2")
   end
 end

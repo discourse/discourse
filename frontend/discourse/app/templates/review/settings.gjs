@@ -1,22 +1,22 @@
 import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import NavItem from "discourse/components/nav-item";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import DNavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <HorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
-    <NavItem @route="review.index" @label="review.view_all" />
-    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+  <DHorizontalOverflowNav class="reviewable-title" @ariaLabel="Review">
+    <DNavItem @label="review.view_all" @route="review.index" />
+    <DNavItem @label="review.grouped_by_topic" @route="review.topics" />
     {{#if @controller.currentUser.admin}}
-      <NavItem
-        @route="review.settings"
-        @label="review.settings.title"
+      <DNavItem
         @icon="wrench"
+        @label="review.settings.title"
+        @route="review.settings"
       />
     {{/if}}
-  </HorizontalOverflowNav>
+  </DHorizontalOverflowNav>
 
   <div class="reviewable-settings">
     <h4>{{i18n "review.settings.priorities.title"}}</h4>
@@ -26,9 +26,9 @@ export default <template>
         <div class="title">{{rst.title}}</div>
         <div class="field">
           <ComboBox
-            @value={{rst.reviewable_priority}}
             @content={{@controller.settings.reviewable_priorities}}
             @onChange={{fn (mut rst.reviewable_priority)}}
+            @value={{rst.reviewable_priority}}
           />
         </div>
       </div>
@@ -38,11 +38,11 @@ export default <template>
       <div class="title"></div>
       <div class="field">
         <DButton
-          @icon="check"
-          @label="review.settings.save_changes"
+          class="btn-primary save-settings"
           @action={{@controller.save}}
           @disabled={{@controller.saving}}
-          class="btn-primary save-settings"
+          @icon="check"
+          @label="review.settings.save_changes"
         />
 
         {{#if @controller.saved}}

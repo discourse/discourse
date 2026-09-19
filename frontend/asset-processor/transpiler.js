@@ -1,6 +1,6 @@
 import "./shims";
 import "./postcss";
-import "./theme-rollup";
+import "./asset-processor-rollup";
 import { transform as babelTransform } from "@babel/standalone";
 import DecoratorTransforms from "decorator-transforms";
 import EMBER_PACKAGE from "ember-source/package.json";
@@ -17,14 +17,13 @@ globalThis.transpile = function (source, options = {}) {
 
   const plugins = [];
   if (moduleId && !skipModule) {
-    plugins.push(["transform-modules-amd", { noInterop: true }]);
+    plugins.push(["transform-modules-amd", { noInterop: true, moduleId }]);
   }
   plugins.push([DecoratorTransforms, { runEarly: true }]);
   plugins.push(babelTransformModuleRenames);
 
   try {
     const result = babelTransform(source, {
-      moduleId,
       filename,
       ast: false,
       plugins,
@@ -56,28 +55,4 @@ globalThis.transpile = function (source, options = {}) {
   }
 };
 
-// mini_racer doesn't have native support for getting the result of an async operation.
-// To work around that, we provide a getMinifyResult which can be used to fetch the result
-// in a followup method call.
-let lastMinifyError, lastMinifyResult;
-
-globalThis.minify = async function (sources, options) {
-  lastMinifyError = lastMinifyResult = null;
-  try {
-    lastMinifyResult = await terserMinify(sources, options);
-  } catch (e) {
-    lastMinifyError = e;
-  }
-};
-
-globalThis.getMinifyResult = function () {
-  const error = lastMinifyError;
-  const result = lastMinifyResult;
-
-  lastMinifyError = lastMinifyResult = null;
-
-  if (error) {
-    throw error.toString();
-  }
-  return result;
-};
+globalThis.minify = terserMinify;

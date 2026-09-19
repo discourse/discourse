@@ -3,31 +3,21 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import GroupCard from "discourse/components/group-card";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default class GroupList extends Component {
   @service currentUser;
   @service router;
-
-  @action
-  new() {
-    this.router.transitionTo("groups.new");
-  }
-
-  @action
-  loadMore() {
-    this.args.groups?.loadMore();
-  }
 
   get types() {
     const types = [];
@@ -42,6 +32,16 @@ export default class GroupList extends Component {
     return types;
   }
 
+  @action
+  new() {
+    this.router.transitionTo("groups.new");
+  }
+
+  @action
+  loadMore() {
+    this.args.groups?.loadMore();
+  }
+
   <template>
     {{#if (or @groups.loadingMore @groups.canLoadMore)}}
       {{hideApplicationFooter}}
@@ -50,56 +50,56 @@ export default class GroupList extends Component {
     {{bodyClass "groups-page"}}
 
     <PluginOutlet
-      @name="before-groups-index-container"
       @connectorTagName="div"
+      @name="before-groups-index-container"
     />
 
     <section class="container groups-index">
       <div class="groups-header">
         {{#if this.currentUser.can_create_group}}
           <DButton
+            class="btn-default groups-header-new pull-right"
             @action={{this.new}}
             @icon="plus"
             @label="admin.groups.new.title"
-            class="btn-default groups-header-new pull-right"
           />
         {{/if}}
 
         <div class="groups-header-filters">
           <input
-            value={{@filter}}
-            placeholder={{i18n "groups.index.all"}}
-            class="groups-header-filters-name no-blur"
-            {{on "input" (withEventValue @onFilterChanged)}}
-            type="search"
             aria-label={{i18n "groups.index.search_results"}}
+            class="groups-header-filters-name no-blur"
+            placeholder={{i18n "groups.index.all"}}
+            type="search"
+            value={{@filter}}
+            {{on "input" (withEventValue @onFilterChanged)}}
           />
 
           <ComboBox
-            @value={{@type}}
+            class="groups-header-filters-type"
             @content={{this.types}}
             @onChange={{@onTypeChanged}}
             @options={{hash clearable=true none="groups.index.filter"}}
-            class="groups-header-filters-type"
+            @value={{@type}}
           />
         </div>
       </div>
 
       {{#if @groups.content}}
-        <LoadMore @action={{this.loadMore}}>
+        <DLoadMore @action={{this.loadMore}}>
           <div class="container">
             <div class="groups-boxes">
               {{#each @groups.content as |group|}}
                 <GroupCard @group={{group}} />
               {{/each}}
               <PluginOutlet
-                @name="groups-boxes-additional-cards"
                 @connectorTagName="div"
+                @name="groups-boxes-additional-cards"
               />
             </div>
           </div>
-        </LoadMore>
-        <ConditionalLoadingSpinner @condition={{@groups.loadingMore}} />
+        </DLoadMore>
+        <DConditionalLoadingSpinner @condition={{@groups.loadingMore}} />
       {{else}}
         <p role="status">{{i18n "groups.index.empty"}}</p>
       {{/if}}

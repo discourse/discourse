@@ -36,7 +36,7 @@ class ExternalUploadStub < ActiveRecord::Base
 
   before_create do
     self.unique_identifier = SecureRandom.uuid
-    self.status = ExternalUploadStub.statuses[:created] if self.status.blank?
+    self.status = ExternalUploadStub.statuses[:created] if status.blank?
   end
 
   def self.statuses
@@ -54,17 +54,17 @@ end
 # Table name: external_upload_stubs
 #
 #  id                         :bigint           not null, primary key
+#  external_upload_identifier :string
+#  filesize                   :bigint           not null
 #  key                        :string           not null
+#  multipart                  :boolean          default(FALSE), not null
 #  original_filename          :string           not null
 #  status                     :integer          default(1), not null
 #  unique_identifier          :uuid             not null
-#  created_by_id              :integer          not null
 #  upload_type                :string           not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  multipart                  :boolean          default(FALSE), not null
-#  external_upload_identifier :string
-#  filesize                   :bigint           not null
+#  created_by_id              :integer          not null
 #
 # Indexes
 #

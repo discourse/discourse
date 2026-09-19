@@ -107,6 +107,8 @@ export default class CodeblockButtons {
   }
 
   _createButtons(codeBlocks) {
+    const pendingOffsets = [];
+
     codeBlocks.forEach((codeBlock) => {
       const wrapperEl = document.createElement("div");
       wrapperEl.classList.add("codeblock-button-wrapper");
@@ -120,9 +122,7 @@ export default class CodeblockButtons {
         copyButton.ariaLabel = i18n("copy_codeblock.copy");
         copyButton.innerHTML = iconHTML("copy");
         wrapperEl.appendChild(copyButton);
-        wrapperEl.style.right = `${
-          codeBlock.offsetWidth - codeBlock.clientWidth
-        }px`;
+        pendingOffsets.push([wrapperEl, codeBlock]);
       }
 
       if (this.#site?.desktopView && this.showFullscreen) {
@@ -137,6 +137,16 @@ export default class CodeblockButtons {
         fullscreenButton.innerHTML = iconHTML("discourse-expand");
         wrapperEl.appendChild(fullscreenButton);
       }
+    });
+
+    // read every scrollbar gutter before writing any of them back; interleaving
+    // the two forces a synchronous layout per code block
+    const gutters = pendingOffsets.map(
+      ([, codeBlock]) => codeBlock.offsetWidth - codeBlock.clientWidth
+    );
+
+    pendingOffsets.forEach(([wrapperEl], index) => {
+      wrapperEl.style.right = `${gutters[index]}px`;
     });
   }
 

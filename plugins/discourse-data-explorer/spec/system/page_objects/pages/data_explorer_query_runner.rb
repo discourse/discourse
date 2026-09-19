@@ -21,7 +21,7 @@ module PageObjects
       end
 
       def run_query
-        page.find(".query-run .query-run__submit").click
+        page.find(".query-run-split__primary").click
         self
       end
 
@@ -36,8 +36,10 @@ module PageObjects
       end
 
       def click_save_and_run
-        page.find(".query-run .query-run__save-and-run").click
-        self
+        # Run auto-saves when dirty. Wait for the label to morph to "Save
+        # changes and run" so we know the debounced dirty flag has fired.
+        page.find(".query-run-split__primary", text: /Save changes and run/i)
+        run_query
       end
 
       def has_query_name?(text)
@@ -52,7 +54,22 @@ module PageObjects
         page.has_css?(".query-results .result-header")
       end
 
+      def show_table
+        # Chart is the default view when chartable; some assertions need rows.
+        # The input is a hidden radio inside a label, so click the label.
+        page.execute_script(<<~JS)
+          const input = document.querySelector(
+            ".query-results-modes input[value='table']"
+          );
+          if (input && !input.checked) {
+            input.closest("label").click();
+          }
+        JS
+        self
+      end
+
       def has_result_row_count?(count)
+        show_table
         page.has_css?(".query-results .query-result-row", count: count)
       end
 
@@ -82,6 +99,27 @@ module PageObjects
         self
       end
 
+      def fill_new_query_sql(text)
+        page.execute_script(
+          "document.querySelector('.query-new .editor-panel .ace_editor').env.editor.setValue(arguments[0], 1);",
+          text,
+        )
+        self
+      end
+
+      def select_new_query_groups(*group_names)
+        select_kit = PageObjects::Components::SelectKit.new(".query-new .query-group-select")
+        select_kit.expand
+        group_names.each { |name| select_kit.select_row_by_name(name) }
+        self
+      end
+
+      def has_query_groups?(*group_names)
+        PageObjects::Components::SelectKit.new(
+          ".query-edit .groups .select-kit",
+        ).has_selected_names?(*group_names)
+      end
+
       def submit_new_query
         page.find(".query-new .btn-primary").click
         self
@@ -105,6 +143,40 @@ module PageObjects
 
       def has_chart?
         page.has_css?(".query-results .chart-canvas-container")
+      end
+
+      def collapse_schema
+        page.find(".schema__toggle.--collapse").click
+        self
+      end
+
+      # Clicked through the DOM. Stacked, this affordance sits past the left edge
+      # of the viewport, where a real click cannot land on it.
+      def expand_schema
+        page.execute_script("document.querySelector('.schema__toggle.--expand').click()")
+        self
+      end
+
+      # Drags the editor separator, negative to shrink.
+      def resize_panes_by(y)
+        drag_with_pointer(from: ".query-editor .grippie", by: { y: y })
+        self
+      end
+
+      # The floor the separator announces for the layout as it stands.
+      def pane_floor
+        page.find(".query-editor .grippie")["aria-valuemin"].to_f
+      end
+
+      # How much taller the panes' content is than the box clipping it. One pixel
+      # is not overflow; the two readings round independently.
+      def pane_overflow
+        page.evaluate_script(<<~JS)
+          (() => {
+            const panes = document.querySelector(".query-editor .panels-flex");
+            return Math.max(0, panes.scrollHeight - panes.clientHeight - 1);
+          })()
+        JS
       end
     end
   end

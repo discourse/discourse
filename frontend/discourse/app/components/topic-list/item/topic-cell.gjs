@@ -3,17 +3,18 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
+import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import ParticipantGroups from "discourse/components/topic-list/participant-groups";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import categoryLink from "discourse/helpers/category-link";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 
 export default class TopicCell extends Component {
   get participantGroups() {
@@ -44,7 +45,7 @@ export default class TopicCell extends Component {
         @outletArgs={{lazyHash topic=@topic}}
       />
 
-      <span class="link-top-line" role="heading" aria-level="2">
+      <span aria-level="2" class="link-top-line" role="heading">
         {{~! no whitespace ~}}
         <PluginOutlet
           @name="topic-list-before-status"
@@ -56,13 +57,13 @@ export default class TopicCell extends Component {
           @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
         >
           {{~! no whitespace ~}}
-          <TopicStatus @topic={{@topic}} @context="topic-list" />
+          <TopicStatus @context="topic-list" @topic={{@topic}} />
           {{~! no whitespace ~}}
           <TopicLink
+            class="raw-link raw-topic-link"
+            @topic={{@topic}}
             {{on "focus" this.onTitleFocus}}
             {{on "blur" this.onTitleBlur}}
-            @topic={{@topic}}
-            class="raw-link raw-topic-link"
           />
           {{~#if @topic.featured_link~}}
             &nbsp;
@@ -74,7 +75,11 @@ export default class TopicCell extends Component {
           />
           {{~! no whitespace ~}}
           <UnreadIndicator @topic={{@topic}} />
-          {{~#if @showTopicPostBadges~}}
+          {{~#if @topic.is_nested_view~}}
+            {{~#if @topic.has_new_replies~}}
+              <NewRepliesDot @topic={{@topic}} />
+            {{~/if~}}
+          {{~else if @showTopicPostBadges~}}
             <TopicPostBadges
               @unreadPosts={{@topic.unread_posts}}
               @unseen={{@topic.unseen}}
@@ -99,7 +104,7 @@ export default class TopicCell extends Component {
           />
           {{#unless @hideCategory}}
             {{#unless @topic.isPinnedUncategorized}}
-              {{categoryLink @topic.category}}
+              {{dCategoryLink @topic.category}}
             {{/unless}}
           {{/unless}}
           <PluginOutlet
@@ -107,17 +112,17 @@ export default class TopicCell extends Component {
             @outletArgs={{lazyHash topic=@topic}}
           />
 
-          {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          {{dDiscourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
           {{#if this.participantGroups}}
             <ParticipantGroups @groups={{this.participantGroups}} />
           {{/if}}
 
           <ActionList
-            @topic={{@topic}}
-            @postNumbers={{@topic.liked_post_numbers}}
-            @icon="heart"
             class="likes"
+            @icon="heart"
+            @postNumbers={{@topic.liked_post_numbers}}
+            @topic={{@topic}}
           />
         </PluginOutlet>
       </div>

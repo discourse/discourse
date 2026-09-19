@@ -39,7 +39,7 @@ module Onebox
             key = $1.tr("-:", "_").to_sym
             data[key] ||= value
             if key.in?(COLLECTIONS)
-              collection_name = "#{key}s".to_sym
+              collection_name = :"#{key}s"
               data[collection_name] ||= []
               data[collection_name] << value
             end

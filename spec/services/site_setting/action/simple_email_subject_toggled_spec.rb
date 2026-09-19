@@ -2,15 +2,13 @@
 
 RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(enabled:) }
 
     let(:default_email_subject) { SiteSetting.defaults.get(:email_subject) }
     let(:simple_email_subject) { described_class::SIMPLE_EMAIL_SUBJECT }
 
     context "when enabling" do
-      let(:params) { { setting_enabled: true } }
-
-      it { is_expected.to run_successfully }
+      let(:enabled) { true }
 
       it "updates email_subject to the simple format" do
         result
@@ -112,11 +110,9 @@ RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
     end
 
     context "when disabling" do
-      let(:params) { { setting_enabled: false } }
+      let(:enabled) { false }
 
       before { SiteSetting.email_subject = simple_email_subject }
-
-      it { is_expected.to run_successfully }
 
       it "resets email_subject to the default" do
         result

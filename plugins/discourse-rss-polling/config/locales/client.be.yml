@@ -12,3 +12,12 @@ be:
         feed_url: URL спасылка
         discourse_category: Катэгорыя
         discourse_tags: Цэтлікі
+        feeds:
+          edit: Рэдагаваць
+          delete: Выдаліць
+          save: Захаваць
+        test:
+          title: Перадпрагляд
+          dismiss: Адхіліць
+        status:
+          disabled: Адключаныя

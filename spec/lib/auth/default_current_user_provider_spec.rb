@@ -184,7 +184,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update ApiKey#last_used_at" do
+      it "does not update ApiKey#last_used_at" do
         api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
         params = { "HTTP_API_KEY" => api_key.key }
 
@@ -251,7 +251,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
     after { user.clear_last_seen_cache!(@orig) }
 
-    it "should not update last seen for suspended users" do
+    it "does not update last seen for suspended users" do
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       u = provider2.current_user
       u.reload
@@ -277,7 +277,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update User#last_seen_at" do
+      it "does not update User#last_seen_at" do
         provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
         u = provider2.current_user
         u.reload
@@ -286,7 +286,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
 
     describe "when impersonating another user" do
-      it "should not update User#last_seen_at" do
+      it "does not update User#last_seen_at" do
         old_timestamp = 1.week.ago
         user.update!(last_seen_at: old_timestamp)
         User.any_instance.stubs(:is_impersonating).returns(true)
@@ -298,7 +298,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    it "should not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
+    it "does not cache an invalid user before Rails sets the request's path_parameters" do
       SiteSetting.login_required = true
       user = Fabricate(:user)
       api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
@@ -317,14 +317,89 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_blank
       expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to eq(u)
     end
+
+    context "with the shared session key header" do
+      def authenticate_via_shared_key(stored_value)
+        key = SecureRandom.hex
+        Auth::DefaultCurrentUserProvider.store_shared_session_key(key, stored_value)
+        provider("/", "HTTP_X_SHARED_SESSION_KEY" => key).current_user
+      end
+
+      def expired_token(user)
+        UserAuthToken
+          .generate!(user_id: user.id)
+          .tap do |token|
+            token.update!(rotated_at: (SiteSetting.maximum_session_age.hours + 1.hour).ago)
+          end
+      end
+
+      it "authenticates the user of the bound auth token" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(user)
+      end
+
+      it "returns nil once the bound user is suspended" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "returns nil once the bound user is deactivated" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        user.update!(active: false)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "returns nil after the bound auth token is destroyed" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        stored_value = token.id.to_s
+        token.destroy!
+        expect(authenticate_via_shared_key(stored_value)).to eq(nil)
+      end
+
+      it "does not authenticate an expired token" do
+        token = expired_token(user)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "authenticates the impersonated user while the bound token is impersonating" do
+        admin = Fabricate(:admin)
+        token = UserAuthToken.generate!(user_id: admin.id)
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.from_now)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(user)
+      end
+
+      it "authenticates the acting user once impersonation has expired" do
+        admin = Fabricate(:admin)
+        token = UserAuthToken.generate!(user_id: admin.id)
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.ago)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(admin)
+      end
+
+      it "returns nil when the bound token's user no longer exists" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        user.delete
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "returns nil when the stored value is not a token id" do
+        expect(authenticate_via_shared_key("not-a-token-id")).to eq(nil)
+      end
+
+      it "returns nil for a value stored under the legacy namespace" do
+        key = SecureRandom.hex
+        Discourse.redis.setex("shared_session_key_#{key}", 7.days, user.id.to_s)
+        expect(provider("/", "HTTP_X_SHARED_SESSION_KEY" => key).current_user).to eq(nil)
+      end
+    end
   end
 
-  it "should update last seen for non ajax" do
+  it "updates last seen for non-AJAX requests" do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
 
-  it "should update ajax reqs with discourse visible" do
+  it "updates last seen for AJAX requests with Discourse visible" do
     expect(
       provider(
         "/topic/anything/goes",
@@ -335,7 +410,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     ).to eq(true)
   end
 
-  it "should not update last seen for ajax calls without Discourse-Present header" do
+  it "does not update last seen for AJAX requests without the Discourse-Present header" do
     expect(
       provider(
         "/topic/anything/goes",
@@ -345,7 +420,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     ).to eq(false)
   end
 
-  it "should update last seen for API calls with Discourse-Present header" do
+  it "updates last seen for API calls with the Discourse-Present header" do
     api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
     params = {
       :method => "POST",
@@ -655,12 +730,26 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect { provider("/", params).current_user }.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "allows unexpired user API keys" do
+      api_key.update!(expires_at: 1.minute.from_now)
+      params = { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
+
+      expect(provider("/", params).current_user.id).to eq(user.id)
+    end
+
+    it "does not allow expired user API keys" do
+      api_key.update!(expires_at: 1.minute.ago)
+      params = { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
+
+      expect { provider("/", params).current_user }.to raise_error(Discourse::InvalidAccess)
+    end
+
     describe "when readonly mode is enabled due to postgres" do
       before { Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update ApiKey#last_used_at" do
+      it "does not update ApiKey#last_used_at" do
         params = { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
 
         good_provider = provider("/", params)
@@ -744,7 +833,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
     end
 
-    it "should work when the current user was cached by a different provider instance" do
+    it "logs off a user cached by another provider instance" do
       user_provider = TestProvider.new(env)
       expect(user_provider.current_user).to eq(user)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_present
@@ -754,7 +843,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
     end
 
-    it "should trigger user_logged_out event" do
+    it "triggers the user_logged_out event" do
       event_triggered_user = nil
       event_handler = Proc.new { |user| event_triggered_user = user.id }
       DiscourseEvent.on(:user_logged_out, &event_handler)
@@ -831,6 +920,57 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       user.reload
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:staff]])).to eq(true)
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+  end
+
+  describe "bootstrap first admin" do
+    let(:admin) { Fabricate(:admin, last_seen_at: nil) }
+
+    it "grants moderation and logs the staff action on the singular admin's first login" do
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(true)
+      log = UserHistory.where(action: UserHistory.actions[:grant_moderation]).last
+      expect(log.target_user_id).to eq(admin.id)
+      expect(log.acting_user_id).to eq(Discourse.system_user.id)
+    end
+
+    it "is idempotent: a second login does not re-log grant_moderation" do
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+      admin.update!(last_seen_at: nil)
+
+      expect {
+        @provider = provider("/")
+        @provider.log_on_user(admin.reload, {}, @provider.cookie_jar)
+      }.to_not change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }
+    end
+
+    it "does not grant moderation when another admin already exists" do
+      Fabricate(:admin)
+
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(false)
+      expect(UserHistory.where(action: UserHistory.actions[:grant_moderation]).count).to eq(0)
+    end
+
+    it "does not grant moderation when the admin has logged in before" do
+      admin.update!(last_seen_at: 1.day.ago)
+
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(false)
+    end
+
+    it "does not grant moderation to non-admin users" do
+      @provider = provider("/")
+      @provider.log_on_user(user, {}, @provider.cookie_jar)
+
+      expect(user.reload.moderator).to eq(false)
     end
   end
 end

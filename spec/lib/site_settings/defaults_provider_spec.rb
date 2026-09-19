@@ -58,6 +58,35 @@ RSpec.describe SiteSettings::DefaultsProvider do
       it "returns the correct locale_default for boolean site settings" do
         expect(settings.defaults.get(:test_boolean_override, :zh_CN)).to eq false
       end
+
+      it "does not merge with locale default if locale matches default locale" do
+        Hash.any_instance.expects(:merge).never
+        expect(settings.defaults.get(:test_default, :en)).to eq "test"
+      end
+    end
+
+    describe ".all_clean" do
+      it "returns all values according to locale" do
+        expect(settings.defaults.all_clean).to eq(
+          test_override: "default",
+          test_default: "test",
+          test_boolean_override: true,
+        )
+        expect(settings.defaults.all_clean("zh_CN")).to eq(
+          test_override: "cn",
+          test_default: "test",
+          test_boolean_override: false,
+        )
+      end
+
+      it "does not merge with DEFAULT_LOCALE if locale matches default locale" do
+        Hash.any_instance.expects(:merge).never
+        expect(settings.defaults.all_clean("en")).to eq(
+          test_override: "default",
+          test_default: "test",
+          test_boolean_override: true,
+        )
+      end
     end
 
     describe ".set_regardless_of_locale" do
@@ -198,6 +227,32 @@ RSpec.describe SiteSettings::DefaultsProvider do
 
         it "does not use upcoming change default overrides" do
           expect(settings.defaults.all[:suggested_topics_max_days_old]).to eq(365)
+        end
+      end
+    end
+
+    describe ".get" do
+      context "when the upcoming change override is active" do
+        before do
+          settings.defaults.activate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
+        end
+
+        it "returns the upcoming change default override" do
+          expect(settings.defaults.get(:suggested_topics_max_days_old)).to eq(1000)
+        end
+      end
+
+      context "when the upcoming change override is not active" do
+        before do
+          settings.defaults.deactivate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
+        end
+
+        it "returns the original default" do
+          expect(settings.defaults.get(:suggested_topics_max_days_old)).to eq(365)
         end
       end
     end

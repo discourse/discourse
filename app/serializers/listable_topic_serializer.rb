@@ -113,7 +113,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   def excerpt
     e = object.excerpt
 
-    if (ContentLocalization.show_translated_topic?(object, scope))
+    if ContentLocalization.show_translated_topic?(object, scope)
       object.get_localization&.excerpt.presence || e
     else
       e

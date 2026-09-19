@@ -5,14 +5,13 @@ module Jobs
     def execute(args)
       post = Post.find_by(id: args[:post_id])
       return if !post&.topic
+      return if post.small_action?
 
       topic = post.topic
 
       if topic.private_message?
         PrivateMessageTopicTrackingState.publish_unread(post) if post.post_number > 1
-        if post.post_type != Post.types[:small_action]
-          TopicGroup.new_message_update(topic.last_poster, topic.id, post.post_number)
-        end
+        TopicGroup.new_message_update(topic.last_poster, topic.id, post.post_number)
       else
         TopicTrackingState.publish_unmuted(post.topic)
         if post.post_number > 1

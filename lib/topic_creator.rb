@@ -6,7 +6,7 @@ class TopicCreator
   include HasErrors
 
   def self.create(user, guardian, opts)
-    self.new(user, guardian, opts).create
+    new(user, guardian, opts).create
   end
 
   def initialize(user, guardian, opts)
@@ -69,7 +69,8 @@ class TopicCreator
     process_private_message(topic)
     save_topic(topic)
     create_warning(topic)
-    watch_topic(topic)
+    set_author_notification_level(topic)
+    apply_pm_recipient_notification_levels(topic)
     create_shared_draft(topic)
     UserActionManager.topic_created(topic)
 
@@ -111,15 +112,25 @@ class TopicCreator
     UserWarning.create(topic: topic, user: @added_users.first, created_by: @user)
   end
 
-  def watch_topic(topic)
-    topic.notifier.watch_topic!(topic.user_id) unless @opts[:auto_track] == false
+  def set_author_notification_level(topic)
+    return if @opts[:auto_track] == false
+
+    if topic.nested_view?
+      topic.notifier.track_topic!(topic.user_id)
+    else
+      topic.notifier.watch_topic!(topic.user_id)
+    end
+  end
+
+  def apply_pm_recipient_notification_levels(topic)
+    return unless topic.private_message?
 
     topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id == -1 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)
     end
 
-    topic.reload.topic_allowed_groups.each do |topic_allowed_group|
+    topic.topic_allowed_groups.each do |topic_allowed_group|
       group = topic_allowed_group.group
 
       begin
@@ -145,7 +156,7 @@ class TopicCreator
       visible: @opts[:visible],
     }
 
-    %i[subtype archetype import_mode advance_draft locale].each do |key|
+    %i[subtype import_mode advance_draft locale].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
@@ -161,7 +172,7 @@ class TopicCreator
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
     category = find_category
-    unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
+    unless @opts[:skip_validations] || @opts[:archetype] == Archetype.private_message
       @guardian.ensure_can_create!(Topic, category)
     end
 
@@ -173,6 +184,15 @@ class TopicCreator
     topic_params[:pinned_globally] = @opts[:pinned_globally] if @opts[:pinned_globally].present?
     topic_params[:external_id] = @opts[:external_id] if @opts[:external_id].present?
     topic_params[:featured_link] = @opts[:featured_link]
+
+    if @opts[:archetype].present?
+      topic = Topic.new(topic_params)
+
+      if @opts[:archetype] == Archetype.private_message ||
+           @guardian.can_change_archetype?(topic, @opts[:archetype])
+        topic_params[:archetype] = @opts[:archetype]
+      end
+    end
 
     topic_params
   end
@@ -266,7 +286,7 @@ class TopicCreator
   end
 
   def save_topic(topic)
-    topic.disable_rate_limits! if @opts[:skip_validations]
+    topic.disable_rate_limits! if @opts[:skip_validations] || @opts[:skip_rate_limits]
 
     rollback_from_errors!(topic) unless topic.save(validate: !@opts[:skip_validations])
   end
@@ -311,6 +331,8 @@ class TopicCreator
         display_name = email.split("@").first
 
         if user = find_or_create_user(email, display_name)
+          check_can_send_permission!(topic, user)
+
           if !@added_users.include?(user)
             @added_users << user
             topic.topic_allowed_users.build(user_id: user.id)
@@ -319,7 +341,7 @@ class TopicCreator
         end
       end
     ensure
-      rollback_with!(topic, :target_user_not_found) unless len == emails.length
+      rollback_with!(topic, :target_user_not_found) if topic.errors.blank? && len != emails.length
     end
   end
 
@@ -345,6 +367,7 @@ class TopicCreator
              @guardian.can_send_private_message?(
                obj,
                notify_moderators: topic&.subtype == TopicSubtype.notify_moderators,
+               private_message_context: @opts[:private_message_context],
              )
       rollback_with!(topic, :cant_send_pm)
     end

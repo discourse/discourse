@@ -1,17 +1,17 @@
 import { hash } from "@ember/helper";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <form class="groups-form form-vertical groups-notifications-form">
 
     <PluginOutlet
-      @name="before-manage-group-tags"
       @connectorTagName="div"
+      @name="before-manage-group-tags"
       @outletArgs={{lazyHash model=@controller.model}}
     />
 
@@ -23,15 +23,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-watching"}}
+      <label>{{dIcon "d-watching"}}
         {{i18n "groups.notifications.watching.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.watching_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.watching_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -40,15 +40,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-tracking"}}
+      <label>{{dIcon "d-tracking"}}
         {{i18n "groups.notifications.tracking.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.tracking_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.tracking_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -57,15 +57,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-watching-first"}}
+      <label>{{dIcon "d-watching-first"}}
         {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.watching_first_post_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.watching_first_post_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -74,15 +74,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-regular"}}
+      <label>{{dIcon "d-regular"}}
         {{i18n "groups.notifications.regular.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.regular_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.regular_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">
@@ -91,15 +91,15 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-muted"}}
+      <label>{{dIcon "d-muted"}}
         {{i18n "groups.notifications.muted.title"}}</label>
 
       <TagChooser
-        @tags={{@controller.model.muted_tags}}
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
         @options={{hash allowAny=false}}
+        @tags={{@controller.model.muted_tags}}
+        @unlimitedTagCount={{true}}
       />
 
       <div class="control-instructions">

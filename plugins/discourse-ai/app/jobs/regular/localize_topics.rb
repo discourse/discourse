@@ -9,7 +9,7 @@ module Jobs
       pairs = args[:pairs]
       raise Discourse::InvalidParameters.new(:pairs) if pairs.blank?
 
-      return if !DiscourseAi::Translation.backfill_enabled?
+      return if !DiscourseAi::Translation.backfill_enabled?(target: Topic)
 
       unless DiscourseAi::Translation.credits_available_for_topic_localization?
         Rails.logger.info(

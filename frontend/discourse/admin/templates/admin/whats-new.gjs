@@ -1,26 +1,26 @@
 import DashboardNewFeatures from "discourse/admin/components/dashboard-new-features";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.whats_new.title"}}
     @descriptionLabel={{i18n "admin.config.whats_new.header_description"}}
-    @learnMoreUrl="https://releases.discourse.org/"
     @hideTabs={{true}}
+    @learnMoreUrl="https://releases.discourse.org/"
+    @titleLabel={{i18n "admin.config.whats_new.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/whats-new"
         @label={{i18n "admin.config.whats_new.title"}}
+        @path="/admin/whats-new"
       />
     </:breadcrumbs>
     <:actions as |actions|>
       <actions.Primary
-        @label="admin.new_features.check_for_updates"
         @action={{@controller.checkForUpdates}}
+        @label="admin.new_features.check_for_updates"
       />
     </:actions>
   </DPageHeader>
@@ -29,6 +29,7 @@ export default <template>
     <div class="admin-config-area">
       <DashboardNewFeatures
         @onCheckForFeatures={{@controller.bindCheckFeatures}}
+        @scrollTo={{@controller.scrollTo}}
       />
     </div>
   </div>

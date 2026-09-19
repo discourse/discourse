@@ -1,11 +1,11 @@
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const avatarPx = translateSize("medium");
 
 const IconAvatar = <template>
-  <div class={{concatClass "icon-avatar" @data.classNames}}>
+  <div class={{dConcatClass "icon-avatar" @data.classNames}}>
     {{!--
         avoiding {{avatar}} helper because its html would be fully
         re-rendered whenever arguments change, even if the argument values
@@ -13,14 +13,14 @@ const IconAvatar = <template>
         causes a visible flicker.
       --}}
     <img
+      class="avatar"
+      height={{avatarPx}}
       lazy="lazy"
       src={{avatarUrl @data.avatarTemplate "medium"}}
       width={{avatarPx}}
-      height={{avatarPx}}
-      class="avatar"
     />
     <div class="icon-avatar__icon-wrapper">
-      {{icon @data.icon}}
+      {{dIcon @data.icon}}
     </div>
   </div>
 </template>;

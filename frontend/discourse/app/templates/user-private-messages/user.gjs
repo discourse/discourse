@@ -1,7 +1,9 @@
 import { trustHTML } from "@ember/template";
-import DNavigationItem from "discourse/components/d-navigation-item";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
-import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -13,52 +15,59 @@ export default <template>
 
   <MessagesSecondaryNav>
     <DNavigationItem
-      @route="userPrivateMessages.user.index"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-latest"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.user.index"
     >
-      {{icon "envelope"}}
+      {{dIcon "envelope"}}
       <span>{{i18n "categories.latest"}}</span>
     </DNavigationItem>
 
     <DNavigationItem
-      @route="userPrivateMessages.user.sent"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-sent"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.user.sent"
     >
-      {{icon "reply"}}
+      {{dIcon "reply"}}
       <span>{{i18n "user.messages.sent"}}</span>
     </DNavigationItem>
 
     {{#if @controller.viewingSelf}}
       <DNavigationItem
-        @route="userPrivateMessages.user.new"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-new"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.user.new"
       >
-        {{icon "circle-exclamation"}}
+        {{dIcon "circle-exclamation"}}
         <span>{{@controller.newLinkText}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userPrivateMessages.user.unread"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-unread"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.user.unread"
       >
-        {{icon "circle-plus"}}
+        {{dIcon "circle-plus"}}
         <span>{{@controller.unreadLinkText}}</span>
       </DNavigationItem>
     {{/if}}
 
     <DNavigationItem
-      @route="userPrivateMessages.user.archive"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-archive"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.user.archive"
     >
-      {{icon "box-archive"}}
+      {{dIcon "box-archive"}}
       <span>{{i18n "user.messages.archive"}}</span>
     </DNavigationItem>
 
+    <PluginOutlet
+      @name="user-messages-nav-bottom"
+      @outletArgs={{lazyHash
+        viewingSelf=@controller.viewingSelf
+        model=@controller.model
+      }}
+    />
   </MessagesSecondaryNav>
 
   {{outlet}}

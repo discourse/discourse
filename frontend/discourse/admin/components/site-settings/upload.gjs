@@ -6,25 +6,25 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import PickFilesButton from "discourse/components/pick-files-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions, isImage } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DButton from "discourse/ui-kit/d-button";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BACKGROUND_SIZE_COVER_SETTINGS = ["welcome_banner_image"];
 
 const ImagePreview = <template>
   <a
-    {{@applyLightbox}}
-    href={{@cdnUrl}}
-    title={{@fileName}}
-    rel="nofollow ugc noopener"
     class="lightbox"
+    href={{@cdnUrl}}
+    rel="nofollow ugc noopener"
+    title={{@fileName}}
+    {{@applyLightbox}}
   >
     <div class="meta">
       <span class="informations">
@@ -38,10 +38,10 @@ const ImagePreview = <template>
 
   <div class="expand-overlay">
     <DButton
+      class="btn-default btn-small file-uploader-lightbox-btn"
       @action={{@onToggleLightbox}}
       @icon="discourse-expand"
       @title="expand"
-      class="btn-default btn-small file-uploader-lightbox-btn"
     />
   </div>
 </template>;
@@ -49,7 +49,7 @@ const ImagePreview = <template>
 const FilePreview = <template>
   <div class="file-info">
     <div class="file-icon">
-      {{icon "file"}}
+      {{dIcon "file"}}
     </div>
     <div class="file-details">
       <span class="file-name">{{@fileName}}</span>
@@ -58,14 +58,14 @@ const FilePreview = <template>
       {{/if}}
     </div>
     <a
-      href={{@cdnUrl}}
-      download={{@fileName}}
-      target="_blank"
-      rel="nofollow ugc noopener noreferrer"
       class="btn btn-default btn-small no-text download-btn"
+      download={{@fileName}}
+      href={{@cdnUrl}}
+      rel="nofollow ugc noopener noreferrer"
+      target="_blank"
       title={{i18n "admin.site_settings.download_file"}}
     >
-      {{icon "download"}}
+      {{dIcon "download"}}
     </a>
   </div>
 </template>;
@@ -116,13 +116,6 @@ export default class SiteSettingUpload extends Component {
     return this.args.setting.authorized_extensions
       ? { skipValidation: true }
       : { imagesOnly: true };
-  }
-
-  formatExtensions(separator = ", ") {
-    return this.args.setting.authorized_extensions
-      .split("|")
-      .map((ext) => `.${ext}`)
-      .join(separator);
   }
 
   get acceptedFormats() {
@@ -240,6 +233,13 @@ export default class SiteSettingUpload extends Component {
     return parts.length > 0 ? parts.join(" · ") : null;
   }
 
+  formatExtensions(separator = ", ") {
+    return this.args.setting.authorized_extensions
+      .split("|")
+      .map((ext) => `.${ext}`)
+      .join(separator);
+  }
+
   @action
   async toggleLightbox() {
     const link = document.querySelector(`#${this.settingId} a.lightbox`);
@@ -267,15 +267,15 @@ export default class SiteSettingUpload extends Component {
 
   <template>
     <div
-      id={{this.settingId}}
-      class={{concatClass
+      class={{dConcatClass
         "file-uploader"
         (if @value "has-file" "no-file")
         (if this.isImageFile "has-image")
       }}
+      id={{this.settingId}}
     >
       <div
-        class={{concatClass
+        class={{dConcatClass
           "file-uploader__preview input-xxlarge"
           this.previewSizeClass
         }}
@@ -288,9 +288,9 @@ export default class SiteSettingUpload extends Component {
               @cdnUrl={{this.fileCdnUrl}}
               @fileName={{this.fileName}}
               @filesize={{this.filesize}}
-              @width={{this.imageWidth}}
               @height={{this.imageHeight}}
               @onToggleLightbox={{this.toggleLightbox}}
+              @width={{this.imageWidth}}
             />
           {{else}}
             <FilePreview
@@ -305,17 +305,17 @@ export default class SiteSettingUpload extends Component {
               class="btn btn-transparent
                 {{if this.disabled 'disabled'}}
                 {{if this.isUploading 'hidden'}}"
-              title={{this.disabledReason}}
               for={{this.inputId}}
               tabindex="0"
+              title={{this.disabledReason}}
               {{on "keydown" this.onKeydown}}
             >
-              {{icon "upload"}}
-              <PickFilesButton
-                @registerFileInput={{this.uppyUpload.setup}}
-                @fileInputDisabled={{this.disabled}}
+              {{dIcon "upload"}}
+              <DPickFilesButton
                 @acceptedFormatsOverride={{this.acceptedFormats}}
+                @fileInputDisabled={{this.disabled}}
                 @fileInputId={{this.inputId}}
+                @registerFileInput={{this.uppyUpload.setup}}
               />
               {{i18n "upload_selector.select_file"}}
             </label>
@@ -326,8 +326,8 @@ export default class SiteSettingUpload extends Component {
             >
               <div
                 aria-label={{this.uploadStatusLabel}}
-                role="progressbar"
                 class="progress-bar-container"
+                role="progressbar"
               >
                 <div class="progress-bar" style={{this.progressBarStyle}}></div>
               </div>
@@ -348,26 +348,26 @@ export default class SiteSettingUpload extends Component {
         <div class="file-uploader__controls">
           <label
             class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
-            title={{this.disabledReason}}
             for={{this.inputId}}
             tabindex="0"
+            title={{this.disabledReason}}
             {{on "keydown" this.onKeydown}}
           >
-            {{icon "upload"}}
-            <PickFilesButton
-              @registerFileInput={{this.uppyUpload.setup}}
-              @fileInputDisabled={{this.disabled}}
+            {{dIcon "upload"}}
+            <DPickFilesButton
               @acceptedFormatsOverride={{this.acceptedFormats}}
+              @fileInputDisabled={{this.disabled}}
               @fileInputId={{this.inputId}}
+              @registerFileInput={{this.uppyUpload.setup}}
             />
             {{i18n "upload_selector.change"}}
           </label>
           <DButton
-            @action={{this.deleteUpload}}
-            @icon="trash-can"
-            @disabled={{this.disabled}}
-            @label="upload_selector.delete"
             class="btn-danger btn-small"
+            @action={{this.deleteUpload}}
+            @disabled={{this.disabled}}
+            @icon="trash-can"
+            @label="upload_selector.delete"
           />
         </div>
       {{/if}}

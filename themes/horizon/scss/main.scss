@@ -95,7 +95,11 @@ body:not(.has-full-page-chat, .wizard) {
       }
 
       @include viewport.from(sm) {
-        > *:not(.experimental-screen, .activate-account, .kanban-board-viewer) {
+        > *:not(
+            .experimental-screen,
+            .activate-account,
+            .discourse-boards-board-viewer
+          ) {
           box-sizing: border-box;
           max-width: 1000px;
           margin-inline: auto;
@@ -124,12 +128,6 @@ body.has-admin-changes-banner #main-outlet-wrapper #main-outlet {
 }
 
 aside.onebox {
-  background-color: var(--d-content-background);
-}
-
-.d-editor-preview-wrapper {
-  border-radius: var(--d-border-radius);
-  padding: 1em;
   background-color: var(--d-content-background);
 }
 

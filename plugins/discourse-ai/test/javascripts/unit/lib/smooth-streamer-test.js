@@ -76,6 +76,35 @@ module("Unit | Lib | smooth-streamer", function (hooks) {
     );
   });
 
+  test("it can finish a stream without jumping to the final text", async function (assert) {
+    let mockText = "";
+    const getRealtimeText = () => mockText;
+    const setRealtimeText = (val) => (mockText = val);
+    const streamer = new SmoothStreamer(getRealtimeText, setRealtimeText, 1, {
+      smoothCompletion: true,
+    });
+    const finalText =
+      "A complete answer that arrived before the animation caught up.";
+
+    await streamer.updateResult({ text: "A comp", done: false }, "text");
+    await streamer.updateResult({ text: finalText, done: true }, "text");
+
+    assert.true(
+      streamer.isStreaming,
+      "the final update keeps animating briefly"
+    );
+    assert.notStrictEqual(
+      streamer.renderedText,
+      finalText,
+      "the remaining answer is not revealed in one jump"
+    );
+
+    await settled();
+
+    assert.false(streamer.isStreaming, "animation ends after catching up");
+    assert.strictEqual(streamer.renderedText, finalText);
+  });
+
   test("resetStreaming clears all progress", function (assert) {
     let mockText = "Some text";
     const getRealtimeText = () => mockText;

@@ -34,6 +34,10 @@ export function isProviderParamHidden(paramMeta, providerParamsData) {
   return false;
 }
 
+export function providerParamLabel(field, paramMeta) {
+  return paramMeta.label || `discourse_ai.llms.provider_fields.${field}`;
+}
+
 // Normalizes raw provider_params metadata (from the server) into a
 // consistent shape for the editor form.
 export function normalizeProviderParams(rawParams) {
@@ -44,10 +48,17 @@ export function normalizeProviderParams(rawParams) {
   return Object.entries(rawParams).reduce((acc, [field, value]) => {
     if (typeof value === "string") {
       acc[field] = { type: value };
-    } else if (typeof value === "object") {
+    } else if (typeof value === "object" && value !== null) {
       if (value.values) {
         value = { ...value };
-        value.values = value.values.map((v) => ({ id: v, name: v }));
+        value.values = value.values.map((option) => {
+          if (typeof option === "object" && option !== null) {
+            const id = option.id ?? option.value;
+            return { id, name: option.name ?? option.label ?? id };
+          }
+
+          return { id: option, name: option };
+        });
       }
 
       acc[field] = {
@@ -56,6 +67,9 @@ export function normalizeProviderParams(rawParams) {
         default: value.default ?? undefined,
         hidden_if: value.hidden_if ?? undefined,
         depends_on: value.depends_on ?? undefined,
+        label: value.label ?? undefined,
+        tooltip: value.tooltip ?? undefined,
+        helpText: value.helpText ?? value.help_text ?? undefined,
       };
     } else {
       acc[field] = { type: "text" };

@@ -10,7 +10,21 @@ class GroupUserWithCustomFieldsSerializer < UserWithCustomFieldsSerializer
     options[:include_status] = true
   end
 
+  def include_last_posted_at?
+    can_see_profile?
+  end
+
+  def include_last_seen_at?
+    can_see_profile?
+  end
+
   def include_added_at?
     object.respond_to? :added_at
+  end
+
+  private
+
+  def can_see_profile?
+    (scope || Guardian.new).can_see_profile?(object)
   end
 end

@@ -9,6 +9,10 @@ class StaticController < ApplicationController
 
   before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]
 
+  # `enter` is the post-login redirect helper; it performs no writes and must
+  # work on archived sites so login can complete.
+  allow_when_archived :enter
+
   PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup]
   MODAL_PAGES = %w[password_reset signup]
   DEFAULT_PAGES = {
@@ -109,7 +113,13 @@ class StaticController < ApplicationController
           @topic.title
         end
       @title = "#{title_prefix} - #{SiteSetting.title}"
-      @body = @topic.posts.first.cooked
+      post = @topic.posts.first
+      @body =
+        if ContentLocalization.show_translated_post?(post, guardian)
+          post.get_localization&.cooked || post.cooked
+        else
+          post.cooked
+        end
       @faq_overridden = SiteSetting.faq_url.present?
       @rename_faq_to_guidelines = rename_faq
 
@@ -228,14 +238,21 @@ class StaticController < ApplicationController
         response.headers["Expires"] = 1.year.from_now.httpdate
         response.headers["Content-Length"] = data.bytesize.to_s
         response.headers["Last-Modified"] = Time.new(2000, 01, 01).httpdate
-        render body: data, content_type: "image/png"
+        content_type =
+          MiniMime.lookup_by_filename(SiteIconManager.favicon_url)&.content_type || "image/png"
+        render body: data, content_type: content_type
       end
     end
   end
 
   def llms_txt
     upload = SiteSetting.llms_txt
-    return head(:not_found) if upload.blank?
+
+    if upload.blank?
+      return head(:not_found) if !UpcomingChanges.enabled?(:enable_generated_llms_txt)
+
+      return render plain: LlmsTxt.generate, content_type: "text/plain; charset=utf-8"
+    end
 
     if Discourse.store.external?
       content =

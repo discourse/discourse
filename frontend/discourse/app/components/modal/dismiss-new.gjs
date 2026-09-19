@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class DismissNew extends Component {
@@ -91,41 +91,41 @@ export default class DismissNew extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      @title={{this.modalTitle}}
       @inline={{@inline}}
+      @title={{this.modalTitle}}
     >
       <:body>
         <p>
           {{#if this.showDismissNewTopics}}
             <PreferenceCheckbox
-              @labelKey={{this.dismissNewTopicsLabel}}
-              @labelCount={{this.countNewTopics}}
-              @checked={{this.dismissTopics}}
               class="dismiss-topics"
+              @checked={{this.dismissTopics}}
+              @labelCount={{this.countNewTopics}}
+              @labelKey={{this.dismissNewTopicsLabel}}
             />
           {{/if}}
           {{#if this.showDismissNewReplies}}
             <PreferenceCheckbox
-              @labelKey={{this.dismissNewRepliesLabel}}
-              @labelCount={{this.countNewReplies}}
-              @checked={{this.dismissPosts}}
               class="dismiss-posts"
+              @checked={{this.dismissPosts}}
+              @labelCount={{this.countNewReplies}}
+              @labelKey={{this.dismissNewRepliesLabel}}
             />
           {{/if}}
           <PreferenceCheckbox
-            @labelKey="topics.bulk.dismiss_new_modal.untrack"
-            @checked={{this.untrack}}
             class="untrack"
+            @checked={{this.untrack}}
+            @labelKey="topics.bulk.dismiss_new_modal.untrack"
           />
         </p>
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
+          id="dismiss-read-confirm"
           @action={{this.dismissed}}
           @icon="check"
           @label="topics.bulk.dismiss"
-          id="dismiss-read-confirm"
-          class="btn-primary"
         />
       </:footer>
     </DModal>

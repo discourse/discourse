@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -11,13 +11,9 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
-import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
-import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
-import { applyHtmlDecorators } from "discourse/components/decorated-html";
 import Wrapper from "discourse/components/form-template-field/wrapper";
-import PickFilesButton from "discourse/components/pick-files-button";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -47,6 +43,9 @@ import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import { gt } from "discourse/truth-helpers";
+import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
+import DEditor from "discourse/ui-kit/d-editor";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
@@ -109,8 +108,6 @@ export default class ComposerEditor extends Component {
   @tracked preview;
 
   composerEventPrefix = "composer";
-  shouldBuildScrollMap = true;
-  scrollMap = null;
 
   fileUploadElementId = "file-uploader";
 
@@ -127,6 +124,25 @@ export default class ComposerEditor extends Component {
       uploadHandlers,
       fileUploadElementId: this.fileUploadElementId,
     });
+  }
+
+  @computed("composer.formTemplateIds")
+  get selectedFormTemplateId() {
+    if (this._selectedFormTemplateId) {
+      return this._selectedFormTemplateId;
+    }
+
+    return (
+      this.composer.model.formTemplateId || this.composer.formTemplateIds?.[0]
+    );
+  }
+
+  set selectedFormTemplateId(value) {
+    this._selectedFormTemplateId = value;
+  }
+
+  get composerRedesign() {
+    return this.siteSettings.enable_composer_redesign;
   }
 
   get topic() {
@@ -147,7 +163,7 @@ export default class ComposerEditor extends Component {
       );
 
       let key;
-      if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+      if (this.currentUser.useRichEditor) {
         key = allowImages
           ? "reply_placeholder_rte"
           : "reply_placeholder_rte_no_images";
@@ -170,13 +186,6 @@ export default class ComposerEditor extends Component {
     return this.currentUser && this.currentUser.link_posting_access !== "none";
   }
 
-  @observes("composer.focusTarget")
-  setFocus() {
-    if (this.composer.focusTarget === "editor") {
-      this.textManipulation.putCursorAtEnd();
-    }
-  }
-
   @computed
   get markdownOptions() {
     return {
@@ -185,24 +194,15 @@ export default class ComposerEditor extends Component {
       formatUsername,
 
       lookupAvatarByPostNumber: (postNumber, topicId) => {
-        const topic = this.topic;
-        if (!topic) {
-          return;
-        }
+        const avatarTemplate = this.lookupAvatarTemplateByPostNumber(
+          postNumber,
+          topicId
+        );
 
-        const posts = topic.get("postStream.posts");
-        if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.find((p) => p.post_number === postNumber);
-          if (quotedPost) {
-            const avatarTemplate = applyValueTransformer(
-              "composer-editor-quoted-post-avatar-template",
-              quotedPost.get("avatar_template"),
-              { post: quotedPost }
-            );
-            return tinyAvatar(avatarTemplate);
-          }
-        }
+        return avatarTemplate ? tinyAvatar(avatarTemplate) : undefined;
       },
+
+      lookupAvatarTemplateByPostNumber: this.lookupAvatarTemplateByPostNumber,
 
       lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
         const topic = this.topic;
@@ -223,6 +223,297 @@ export default class ComposerEditor extends Component {
         this.site.hashtag_configurations["topic-composer"],
       hashtagIcons: this.site.hashtag_icons,
     };
+  }
+
+  @computed(
+    "composer.model.reply",
+    "composer.model.replyLength",
+    "composer.model.missingReplyCharacters",
+    "composer.model.minimumPostLength",
+    "composer.lastValidatedAt"
+  )
+  get validation() {
+    const postType = this.get("composer.post.post_type");
+    if (postType === this.site.get("post_types.small_action")) {
+      return;
+    }
+
+    let reason;
+    if (this.composer?.model?.missingReplyCharacters > 0) {
+      if (this.composer?.model?.replyLength < 1) {
+        reason = i18n("composer.error.post_missing");
+      } else {
+        reason = i18n("composer.error.post_length", {
+          count: this.composer?.model?.minimumPostLength,
+        });
+        const tl = this.get("currentUser.trust_level");
+        if ((tl === 0 || tl === 1) && !this._isNewTopic) {
+          reason +=
+            "<br/>" +
+            i18n("composer.error.try_like", {
+              heart: iconHTML("heart", {
+                label: i18n("likes_lowercase", { count: 1 }),
+              }),
+            });
+        }
+      }
+    }
+
+    if (reason) {
+      return EmberObject.create({
+        failed: true,
+        reason,
+        lastShownAt: this.composer?.lastValidatedAt,
+      });
+    }
+  }
+
+  @computed("composer.{creatingTopic,editingFirstPost,creatingSharedDraft}")
+  get _isNewTopic() {
+    return (
+      this.composer.model.creatingTopic ||
+      this.composer.model.editingFirstPost ||
+      this.composer.model.creatingSharedDraft
+    );
+  }
+
+  get showTranslationEditor() {
+    const post = this.get("composer.model.post");
+    if (!post?.can_localize_post) {
+      return false;
+    }
+
+    if (this.composer.model?.action === Composer.ADD_TRANSLATION) {
+      return true;
+    }
+
+    return false;
+  }
+
+  @computed(
+    "composer.formTemplateIds",
+    "composer.model.replyingToTopic",
+    "composer.model.editingPost"
+  )
+  get showFormTemplateForm() {
+    return (
+      this.composer?.formTemplateIds?.length > 0 &&
+      !this.composer?.model?.replyingToTopic &&
+      !this.composer?.model?.editingPost
+    );
+  }
+
+  @computed("composer.model")
+  get forceEditorMode() {
+    return applyValueTransformer("composer-force-editor-mode", null, {
+      model: this.composer.model,
+    });
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.uppyComposerUpload.teardown();
+  }
+
+  @observes("composer.focusTarget")
+  setFocus() {
+    if (this.composer.focusTarget === "editor") {
+      this.textManipulation.putCursorAtEnd();
+    }
+  }
+
+  @bind
+  lookupAvatarTemplateByPostNumber(postNumber, topicId) {
+    const topic = this.topic;
+    if (!topic || topicId !== topic.get("id")) {
+      return;
+    }
+
+    const quotedPost = topic
+      .get("postStream.posts")
+      ?.find((p) => p.post_number === postNumber);
+
+    if (!quotedPost) {
+      return;
+    }
+
+    return applyValueTransformer(
+      "composer-editor-quoted-post-avatar-template",
+      quotedPost.get("avatar_template"),
+      { post: quotedPost }
+    );
+  }
+
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
+  @bind
+  setupEditor(textManipulation) {
+    this.textManipulation = textManipulation;
+    this.uppyComposerUpload.textManipulation = textManipulation;
+
+    const input = this.element.querySelector(".d-editor-input");
+
+    input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
+
+    this.composer.set("allowPreview", this.textManipulation.allowPreview);
+
+    if (
+      // Focus on the editor unless we have a title
+      !this.get("composer.model.canEditTitle") ||
+      // Or focus is in the body (e.g. when the editor is destroyed)
+      document.activeElement.tagName === "BODY"
+    ) {
+      this.textManipulation.putCursorAtEnd();
+    }
+
+    const destroyComposerPosition = setupComposerPosition(input, {
+      swipeToCollapse: this.siteSettings.enable_composer_redesign,
+    });
+
+    return () => {
+      destroyComposerPosition();
+
+      input.removeEventListener(
+        "scroll",
+        this._throttledSyncEditorAndPreviewScroll
+      );
+    };
+  }
+
+  resetImageControls(buttonWrapper) {
+    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
+
+    const readonlyContainer = buttonWrapper.querySelector(
+      ".alt-text-readonly-container"
+    );
+    const editContainer = buttonWrapper.querySelector(
+      ".alt-text-edit-container"
+    );
+
+    imageResize.removeAttribute("hidden");
+    imageDelete.removeAttribute("hidden");
+
+    readonlyContainer.removeAttribute("hidden");
+    buttonWrapper.removeAttribute("editing");
+    editContainer.setAttribute("hidden", "true");
+  }
+
+  commitAltText(buttonWrapper) {
+    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
+    const matchingPlaceholder = this.get("composer.model.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
+    const match = matchingPlaceholder[index];
+    const input = buttonWrapper.querySelector("input.alt-text-input");
+    const replacement = match.replace(
+      IMAGE_MARKDOWN_REGEX,
+      `![${input.value}|$2$3$4]($5)`
+    );
+
+    this.appEvents.trigger(
+      `${this.composerEventPrefix}:replace-text`,
+      match,
+      replacement
+    );
+
+    this.resetImageControls(buttonWrapper);
+  }
+
+  @action
+  onExpandPopupMenuOptions(toolbarEvent) {
+    const selected = toolbarEvent.selected;
+    toolbarEvent.selectText(selected.start, selected.end - selected.start);
+    this.composer.storeToolbarState(toolbarEvent);
+
+    window.getSelection().removeAllRanges();
+  }
+
+  showPreview() {
+    this.composer.togglePreview();
+  }
+
+  @action
+  extraButtons(toolbar) {
+    const composerRedesign = this.siteSettings.enable_composer_redesign;
+
+    if (
+      this.composer.allowUpload &&
+      this.composer.uploadIcon &&
+      (composerRedesign || this.site.desktopView)
+    ) {
+      toolbar.addButton({
+        id: "upload",
+        group: "insertions",
+        icon: this.composer.uploadIcon,
+        title: "upload",
+        sendAction: this.showUploadModal,
+      });
+    }
+
+    toolbar.addButton({
+      id: "options",
+      group: "extras",
+      icon: composerRedesign ? "discourse-circle-plus" : "circle-plus",
+      title: "composer.options",
+      sendAction: this.onExpandPopupMenuOptions.bind(this),
+      popupMenu: {
+        options: () => this.composer.popupMenuOptions,
+        action: this.composer.onPopupMenuAction,
+      },
+    });
+  }
+
+  @action
+  replyChanged() {
+    this.appEvents.trigger("composer:reply-changed", this.composer.model);
+  }
+
+  @action
+  previewUpdated(preview, helper) {
+    this._renderMentions(preview);
+    this._renderHashtags(preview);
+    this._refreshOneboxes(preview);
+    this._expandShortUrls(preview);
+
+    this._decorateCookedElement(preview, helper);
+
+    this.composer.afterRefresh(preview);
+  }
+
+  @action
+  async updateFormPreview() {
+    const formTemplateData = prepareFormTemplateData(
+      document.querySelector("#form-template-form"),
+      this.composer.selectedFormTemplate,
+      false
+    );
+
+    this.composer.model.set("reply", formTemplateData);
+
+    this.preview = await this.cachedCookAsync(
+      formTemplateData,
+      this.markdownOptions
+    );
+  }
+
+  async cachedCookAsync(text, options) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
+  }
+
+  @action
+  updateSelectedFormTemplateId(formTemplateId) {
+    this.selectedFormTemplateId = formTemplateId;
+  }
+
+  @action
+  showUploadModal() {
+    document.getElementById(this.fileUploadElementId).click();
   }
 
   @on("didInsertElement")
@@ -288,260 +579,40 @@ export default class ComposerEditor extends Component {
     }
   }
 
-  /**
-   * Sets up the editor with the given text manipulation instance
-   *
-   * @param {TextManipulation} textManipulation The text manipulation instance
-   * @returns {(() => void)} destructor function
-   */
-  @bind
-  setupEditor(textManipulation) {
-    this.textManipulation = textManipulation;
-    this.uppyComposerUpload.textManipulation = textManipulation;
-
-    const input = this.element.querySelector(".d-editor-input");
-
-    input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
-
-    this.composer.set("allowPreview", this.textManipulation.allowPreview);
-
-    if (
-      // Focus on the editor unless we have a title
-      !this.get("composer.model.canEditTitle") ||
-      // Or focus is in the body (e.g. when the editor is destroyed)
-      document.activeElement.tagName === "BODY"
-    ) {
-      this.textManipulation.putCursorAtEnd();
+  @action
+  _composerEditorInitFormTemplate(formEl) {
+    if (this.composer.allowUpload) {
+      this.uppyComposerUpload.setup(formEl);
     }
-
-    const destroyComposerPosition = setupComposerPosition(input);
-
-    return () => {
-      destroyComposerPosition();
-
-      input.removeEventListener(
-        "scroll",
-        this._throttledSyncEditorAndPreviewScroll
-      );
-    };
-  }
-
-  @computed(
-    "composer.model.reply",
-    "composer.model.replyLength",
-    "composer.model.missingReplyCharacters",
-    "composer.model.minimumPostLength",
-    "composer.lastValidatedAt"
-  )
-  get validation() {
-    const postType = this.get("composer.post.post_type");
-    if (postType === this.site.get("post_types.small_action")) {
-      return;
-    }
-
-    let reason;
-    if (this.composer?.model?.replyLength < 1) {
-      reason = i18n("composer.error.post_missing");
-    } else if (this.composer?.model?.missingReplyCharacters > 0) {
-      reason = i18n("composer.error.post_length", {
-        count: this.composer?.model?.minimumPostLength,
-      });
-      const tl = this.get("currentUser.trust_level");
-      if ((tl === 0 || tl === 1) && !this._isNewTopic) {
-        reason +=
-          "<br/>" +
-          i18n("composer.error.try_like", {
-            heart: iconHTML("heart", {
-              label: i18n("likes_lowercase", { count: 1 }),
-            }),
-          });
-      }
-    }
-
-    if (reason) {
-      return EmberObject.create({
-        failed: true,
-        reason,
-        lastShownAt: this.composer?.lastValidatedAt,
-      });
-    }
-  }
-
-  @computed("composer.{creatingTopic,editingFirstPost,creatingSharedDraft}")
-  get _isNewTopic() {
-    return (
-      this.composer.model.creatingTopic ||
-      this.composer.model.editingFirstPost ||
-      this.composer.model.creatingSharedDraft
-    );
-  }
-
-  _resetShouldBuildScrollMap() {
-    this.set("shouldBuildScrollMap", true);
-  }
-
-  @bind
-  _handleInputInteraction(event) {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (!$(preview).is(":visible")) {
-      return;
-    }
-
-    preview.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-    event.target.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  }
-
-  @bind
-  _handleInputOrPreviewScroll(event) {
-    this._syncScroll(
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $(this.element.querySelector(".d-editor-preview-wrapper"))
-    );
-  }
-
-  @bind
-  _handlePreviewInteraction(event) {
-    this.element
-      .querySelector(".d-editor-input")
-      ?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-
-    event.target?.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  }
-
-  _syncScroll($callback, $input, $preview) {
-    if (!this.scrollMap || this.shouldBuildScrollMap) {
-      this.set("scrollMap", this._buildScrollMap($input, $preview));
-      this.set("shouldBuildScrollMap", false);
-    }
-
-    throttle(this, $callback, $input, $preview, this.scrollMap, 20);
-  }
-
-  // Adapted from https://github.com/markdown-it/markdown-it.github.io
-  _buildScrollMap($input, $preview) {
-    let sourceLikeDiv = $("<div />")
-      .css({
-        position: "absolute",
-        height: "auto",
-        visibility: "hidden",
-        width: $input[0].clientWidth,
-        "font-size": $input.css("font-size"),
-        "font-family": $input.css("font-family"),
-        "line-height": $input.css("line-height"),
-        "white-space": $input.css("white-space"),
-      })
-      .appendTo("body");
-
-    const linesMap = [];
-    let numberOfLines = 0;
-
-    $input
-      .val()
-      .split("\n")
-      .forEach((text) => {
-        linesMap.push(numberOfLines);
-
-        if (text.length === 0) {
-          numberOfLines++;
-        } else {
-          sourceLikeDiv.text(text);
-
-          let height;
-          let lineHeight;
-          height = parseFloat(sourceLikeDiv.css("height"));
-          lineHeight = parseFloat(sourceLikeDiv.css("line-height"));
-          numberOfLines += Math.round(height / lineHeight);
-        }
-      });
-
-    linesMap.push(numberOfLines);
-    sourceLikeDiv.remove();
-
-    const previewOffsetTop = $preview.offset().top;
-    const offset =
-      $preview.scrollTop() -
-      previewOffsetTop -
-      ($input.offset().top - previewOffsetTop);
-    const nonEmptyList = [];
-    const scrollMap = [];
-    for (let i = 0; i < numberOfLines; i++) {
-      scrollMap.push(-1);
-    }
-
-    nonEmptyList.push(0);
-    scrollMap[0] = 0;
-
-    $preview.find(".preview-sync-line").each((_, element) => {
-      let $element = $(element);
-      let lineNumber = $element.data("line-number");
-      let linesToTop = linesMap[lineNumber];
-      if (linesToTop !== 0) {
-        nonEmptyList.push(linesToTop);
-      }
-      scrollMap[linesToTop] = Math.round($element.offset().top + offset);
-    });
-
-    nonEmptyList.push(numberOfLines);
-    scrollMap[numberOfLines] = $preview[0].scrollHeight;
-
-    let position = 0;
-
-    for (let i = 1; i < numberOfLines; i++) {
-      if (scrollMap[i] !== -1) {
-        position++;
-        continue;
-      }
-
-      let top = nonEmptyList[position];
-      let bottom = nonEmptyList[position + 1];
-
-      scrollMap[i] = (
-        (scrollMap[bottom] * (i - top) + scrollMap[top] * (bottom - i)) /
-        (bottom - top)
-      ).toFixed(2);
-    }
-
-    return scrollMap;
   }
 
   @bind
   _throttledSyncEditorAndPreviewScroll(event) {
-    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
-
-    throttle(
-      this,
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $preview,
-      20
-    );
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+    throttle(this, this._syncEditorAndPreviewScroll, event.target, preview, 20);
   }
 
-  _syncEditorAndPreviewScroll($input, $preview) {
-    if (!$input) {
+  _syncEditorAndPreviewScroll(input, preview) {
+    if (!input || !preview) {
       return;
     }
 
-    if ($input.scrollTop() === 0) {
-      $preview.scrollTop(0);
+    if (input.scrollTop === 0) {
+      preview.scrollTop = 0;
       return;
     }
 
-    const inputHeight = $input[0].scrollHeight;
-    const previewHeight = $preview[0].scrollHeight;
+    const inputHeight = input.scrollHeight;
+    const previewHeight = preview.scrollHeight;
 
-    if ($input.height() + $input.scrollTop() + 100 > inputHeight) {
+    if (input.clientHeight + input.scrollTop + 100 > inputHeight) {
       // cheat, special case for bottom
-      $preview.scrollTop(previewHeight);
+      preview.scrollTop = previewHeight;
       return;
     }
 
-    const scrollPosition = $input.scrollTop();
     const factor = previewHeight / inputHeight;
-    const desired = scrollPosition * factor;
-    $preview.scrollTop(desired + 50);
+    preview.scrollTop = input.scrollTop * factor + 50;
   }
 
   _renderMentions(preview) {
@@ -720,46 +791,6 @@ export default class ComposerEditor extends Component {
     return;
   }
 
-  resetImageControls(buttonWrapper) {
-    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
-    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
-
-    const readonlyContainer = buttonWrapper.querySelector(
-      ".alt-text-readonly-container"
-    );
-    const editContainer = buttonWrapper.querySelector(
-      ".alt-text-edit-container"
-    );
-
-    imageResize.removeAttribute("hidden");
-    imageDelete.removeAttribute("hidden");
-
-    readonlyContainer.removeAttribute("hidden");
-    buttonWrapper.removeAttribute("editing");
-    editContainer.setAttribute("hidden", "true");
-  }
-
-  commitAltText(buttonWrapper) {
-    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
-    const matchingPlaceholder = this.get("composer.model.reply").match(
-      IMAGE_MARKDOWN_REGEX
-    );
-    const match = matchingPlaceholder[index];
-    const input = buttonWrapper.querySelector("input.alt-text-input");
-    const replacement = match.replace(
-      IMAGE_MARKDOWN_REGEX,
-      `![${input.value}|$2$3$4]($5)`
-    );
-
-    this.appEvents.trigger(
-      `${this.composerEventPrefix}:replace-text`,
-      match,
-      replacement
-    );
-
-    this.resetImageControls(buttonWrapper);
-  }
-
   @bind
   _handleAltTextInputKeypress(event) {
     if (!event.target.classList.contains("alt-text-input")) {
@@ -893,19 +924,6 @@ export default class ComposerEditor extends Component {
     );
   }
 
-  @action
-  onExpandPopupMenuOptions(toolbarEvent) {
-    const selected = toolbarEvent.selected;
-    toolbarEvent.selectText(selected.start, selected.end - selected.start);
-    this.composer.storeToolbarState(toolbarEvent);
-
-    window.getSelection().removeAllRanges();
-  }
-
-  showPreview() {
-    this.composer.togglePreview();
-  }
-
   _isInQuote(element) {
     let parent = element.parentElement;
     while (parent && !this._isPreviewRoot(parent)) {
@@ -930,170 +948,6 @@ export default class ComposerEditor extends Component {
     return element.tagName === "ASIDE" && element.classList.contains("quote");
   }
 
-  @action
-  extraButtons(toolbar) {
-    if (
-      this.composer.allowUpload &&
-      this.composer.uploadIcon &&
-      this.site.desktopView
-    ) {
-      toolbar.addButton({
-        id: "upload",
-        group: "insertions",
-        icon: this.composer.uploadIcon,
-        title: "upload",
-        sendAction: this.showUploadModal,
-      });
-    }
-
-    toolbar.addButton({
-      id: "options",
-      group: "extras",
-      icon: "circle-plus",
-      title: "composer.options",
-      sendAction: this.onExpandPopupMenuOptions.bind(this),
-      popupMenu: {
-        options: () => this.composer.popupMenuOptions,
-        action: this.composer.onPopupMenuAction,
-      },
-    });
-  }
-
-  @action
-  previewUpdated(preview, helper) {
-    this._renderMentions(preview);
-    this._renderHashtags(preview);
-    this._refreshOneboxes(preview);
-    this._expandShortUrls(preview);
-
-    // Only apply image size adjustments for form template previews
-    // Regular composer handles this through ProseMirror
-    if (this.composer.formTemplateIds?.length > 0) {
-      this._applyImageSizes(preview);
-    }
-
-    this._decorateCookedElement(preview, helper);
-
-    this.composer.afterRefresh(preview);
-  }
-
-  _applyImageSizes(preview) {
-    // Apply sizing to images to match regular composer behavior
-    // where percentage scales are relative to the max_image_width site setting
-    // not the original image dimensions
-    const maxImageWidth = this.siteSettings.max_image_width;
-
-    const images = preview.querySelectorAll("img.resizable[width][height]");
-
-    images.forEach((img) => {
-      const processImage = () => {
-        const width = parseInt(img.getAttribute("width"), 10);
-        const height = parseInt(img.getAttribute("height"), 10);
-        const naturalWidth = img.naturalWidth;
-
-        if (!naturalWidth || naturalWidth === 0) {
-          return;
-        }
-
-        if (width && height) {
-          const percentage = width / naturalWidth;
-
-          const constrainedBase = Math.min(naturalWidth, maxImageWidth);
-          const displayWidth = Math.round(constrainedBase * percentage);
-          const displayHeight = Math.round(height * (displayWidth / width));
-
-          img.setAttribute("width", displayWidth);
-          img.setAttribute("height", displayHeight);
-        }
-      };
-
-      if (img.complete && img.naturalWidth > 0) {
-        processImage();
-      } else {
-        img.addEventListener("load", processImage, { once: true });
-      }
-    });
-  }
-
-  @computed("composer.formTemplateIds")
-  get selectedFormTemplateId() {
-    if (this._selectedFormTemplateId) {
-      return this._selectedFormTemplateId;
-    }
-
-    return (
-      this.composer.model.formTemplateId || this.composer.formTemplateIds?.[0]
-    );
-  }
-
-  set selectedFormTemplateId(value) {
-    this._selectedFormTemplateId = value;
-  }
-
-  get showTranslationEditor() {
-    const post = this.get("composer.model.post");
-    if (!post?.can_localize_post) {
-      return false;
-    }
-
-    if (this.composer.model?.action === Composer.ADD_TRANSLATION) {
-      return true;
-    }
-
-    return false;
-  }
-
-  @action
-  async updateFormPreview() {
-    const formTemplateData = prepareFormTemplateData(
-      document.querySelector("#form-template-form"),
-      this.composer.selectedFormTemplate,
-      false
-    );
-
-    this.composer.model.set("reply", formTemplateData);
-
-    this.preview = await this.cachedCookAsync(
-      formTemplateData,
-      this.markdownOptions
-    );
-  }
-
-  async cachedCookAsync(text, options) {
-    this._cachedCookFunction ||= await generateCookFunction(options || {});
-    return await this._cachedCookFunction(text);
-  }
-
-  @action
-  updateSelectedFormTemplateId(formTemplateId) {
-    this.selectedFormTemplateId = formTemplateId;
-  }
-
-  @computed(
-    "composer.formTemplateIds",
-    "composer.model.replyingToTopic",
-    "composer.model.editingPost"
-  )
-  get showFormTemplateForm() {
-    return (
-      this.composer?.formTemplateIds?.length > 0 &&
-      !this.composer?.model?.replyingToTopic &&
-      !this.composer?.model?.editingPost
-    );
-  }
-
-  @computed("composer.model")
-  get forceEditorMode() {
-    return applyValueTransformer("composer-force-editor-mode", null, {
-      model: this.composer.model,
-    });
-  }
-
-  @action
-  showUploadModal() {
-    document.getElementById(this.fileUploadElementId).click();
-  }
-
   <template>
     {{#if this.showFormTemplateForm}}
       <div class="d-editor">
@@ -1102,28 +956,32 @@ export default class ComposerEditor extends Component {
 
           {{#if (gt this.composer.formTemplateIds.length 1)}}
             <FormTemplateChooser
+              class="composer-select-form-template"
               @filteredIds={{this.composer.formTemplateIds}}
-              @value={{this.selectedFormTemplateId}}
               @onChange={{this.updateSelectedFormTemplateId}}
               @options={{hash maximum=1}}
-              class="composer-select-form-template"
+              @value={{this.selectedFormTemplateId}}
             />
           {{/if}}
-          <form id="form-template-form">
+          <form
+            id="form-template-form"
+            {{didInsert this._composerEditorInitFormTemplate}}
+          >
             <Wrapper
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}
-              @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
               @onChange={{this.updateFormPreview}}
+              @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
+              @uppyComposerUpload={{this.uppyComposerUpload}}
             />
           </form>
         </div>
         {{#if this.siteSettings.show_preview_for_form_templates}}
           <DEditorPreview
-            @preview={{this.preview}}
             @forcePreview={{this.forcePreview}}
             @onPreviewUpdated={{this.previewUpdated}}
             @outletArgs={{this.outletArgs}}
+            @preview={{this.preview}}
             {{didInsert this._composerEditorInitPreview}}
             {{willDestroy this._composerEditorDestroyPreview}}
           />
@@ -1131,8 +989,8 @@ export default class ComposerEditor extends Component {
       </div>
     {{else if this.showTranslationEditor}}
       <PostTranslationEditor
-        @setupEditor={{this.setupEditor}}
         @extraButtons={{this.extraButtons}}
+        @setupEditor={{this.setupEditor}}
         @showLink={{this.showLink}}
         @uppyComposerUpload={{this.uppyComposerUpload}}
         {{didInsert this._composerEditorInitPreview}}
@@ -1140,30 +998,33 @@ export default class ComposerEditor extends Component {
       />
     {{else}}
       <DEditor
-        @value={{this.composer.model.reply}}
-        @placeholder={{this.replyPlaceholder}}
-        @previewUpdated={{this.previewUpdated}}
-        @markdownOptions={{this.markdownOptions}}
-        @extraButtons={{this.extraButtons}}
-        @processPreview={{this.composer.isPreviewVisible}}
-        @validation={{this.validation}}
-        @loading={{this.composer.loading}}
-        @forcePreview={{this.forcePreview}}
-        @forceEditorMode={{this.forceEditorMode}}
-        @showLink={{this.showLink}}
+        @categoryId={{this.composer.model.category.id}}
+        @change={{this.replyChanged}}
         @composerEvents={{true}}
-        @onPopupMenuAction={{this.composer.onPopupMenuAction}}
-        @popupMenuOptions={{this.composer.popupMenuOptions}}
         @disabled={{this.composer.disableTextarea}}
+        @disableSubmit={{this.composer.disableSubmit}}
+        @extraButtons={{this.extraButtons}}
+        @forceEditorMode={{this.forceEditorMode}}
+        @forcePreview={{this.forcePreview}}
+        @loading={{this.composer.loading}}
+        @markdownOptions={{this.markdownOptions}}
+        @onPopupMenuAction={{this.composer.onPopupMenuAction}}
+        @onSetup={{this.setupEditor}}
         @outletArgs={{lazyHash
           composer=this.composer.model
           editorType="composer"
         }}
-        @topicId={{this.composer.model.topic.id}}
-        @categoryId={{this.composer.model.category.id}}
+        @placeholder={{this.replyPlaceholder}}
+        @popupMenuOptions={{this.composer.popupMenuOptions}}
+        @previewUpdated={{this.previewUpdated}}
+        @processPreview={{this.composer.isPreviewVisible}}
+        @renderYieldAboveContainer={{this.composerRedesign}}
         @replyingToUserId={{this.composer.replyingToUserId}}
-        @onSetup={{this.setupEditor}}
-        @disableSubmit={{this.composer.disableSubmit}}
+        @showLink={{this.showLink}}
+        @toolbarPortalTarget={{this.toolbarPortalTarget}}
+        @topicId={{this.composer.model.topic.id}}
+        @validation={{this.validation}}
+        @value={{this.composer.model.reply}}
         {{didInsert this._composerEditorInitEditor}}
         {{willDestroy this._composerEditorDestroyEditor}}
         {{didInsert this._composerEditorInitPreview}}
@@ -1174,10 +1035,10 @@ export default class ComposerEditor extends Component {
     {{/if}}
 
     {{#if this.composer.allowUpload}}
-      <PickFilesButton
-        @fileInputId={{this.fileUploadElementId}}
-        @allowMultiple={{true}}
+      <DPickFilesButton
         name="file-uploader"
+        @allowMultiple={{true}}
+        @fileInputId={{this.fileUploadElementId}}
       />
     {{/if}}
   </template>

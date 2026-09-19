@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import formatDate from "discourse/helpers/format-date";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class ThreadPreview extends Component {
   get lastReplyDate() {
-    return formatDate(this.args.preview.lastReplyCreatedAt, { leaveAgo: true });
+    return dFormatDate(this.args.preview.lastReplyCreatedAt, {
+      leaveAgo: true,
+    });
   }
 
   <template>
@@ -18,7 +20,7 @@ export default class ThreadPreview extends Component {
       </span>
       <span>:</span>
       <span class="c-user-thread__excerpt-text">
-        {{replaceEmoji (trustHTML @preview.lastReplyExcerpt)}}
+        {{dReplaceEmoji (trustHTML @preview.lastReplyExcerpt)}}
       </span>
     </span>
   </template>

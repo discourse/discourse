@@ -45,6 +45,23 @@ RSpec.describe InviteGuardian do
 
   ###### INVITING ######
 
+  describe "#can_create_admin_invite?" do
+    it "is true only for admins when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+
+      expect(Guardian.new(admin).can_create_admin_invite?).to eq(true)
+      expect(Guardian.new(moderator).can_create_admin_invite?).to eq(false)
+      expect(Guardian.new(user).can_create_admin_invite?).to eq(false)
+      expect(Guardian.new(nil).can_create_admin_invite?).to eq(false)
+    end
+
+    it "is false for admins when enable_invite_modal_with_roles is disabled" do
+      SiteSetting.enable_invite_modal_with_roles = false
+
+      expect(Guardian.new(admin).can_create_admin_invite?).to eq(false)
+    end
+  end
+
   describe "#can_invite_to_forum?" do
     it "returns true if user has sufficient trust level" do
       SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
@@ -103,6 +120,7 @@ RSpec.describe InviteGuardian do
         SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         user.update!(trust_level: 2)
       end
+
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:topic)
       fab!(:private_topic) { Fabricate(:topic, category: category) }
@@ -153,16 +171,16 @@ RSpec.describe InviteGuardian do
 
         let(:topic) { Fabricate(:topic, category: category) }
 
-        it "should return true for an admin user" do
+        it "returns true for an admin" do
           expect(Guardian.new(admin).can_invite_to?(topic)).to eq(true)
         end
 
-        it "should return true for a group owner" do
+        it "returns true for a group owner" do
           group_owner.update!(trust_level: 2)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
         end
 
-        it "should return false for a normal user" do
+        it "returns false for a regular user" do
           expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
         end
       end
@@ -175,7 +193,7 @@ RSpec.describe InviteGuardian do
         let(:group_owner) { Fabricate(:user).tap { |user| automatic_group.add_owner(user) } }
         let(:topic) { Fabricate(:topic, category: category) }
 
-        it "should return false for all type of users" do
+        it "returns false for every user type" do
           expect(Guardian.new(admin).can_invite_to?(topic)).to eq(false)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(false)
           expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
@@ -233,6 +251,7 @@ RSpec.describe InviteGuardian do
 
     it "returns true for all users when sso is enabled" do
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
 
       expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_truthy

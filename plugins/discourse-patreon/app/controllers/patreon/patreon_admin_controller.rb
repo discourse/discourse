@@ -4,13 +4,15 @@ class Patreon::PatreonAdminController < Admin::AdminController
   requires_plugin Patreon::PLUGIN_NAME
 
   before_action :patreon_enabled?
-  before_action :patreon_tokens_present?
+  before_action :patreon_tokens_present?, except: %i[list]
 
   def patreon_enabled?
     raise Discourse::NotFound unless SiteSetting.patreon_enabled
   end
 
   def list
+    return render json: { unconfigured: true } if !patreon_tokens?
+
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
     rewards = Patreon::Reward.all
     last_sync = Patreon.get("last_sync") || {}
@@ -29,11 +31,9 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def is_number?(string)
-    begin
-      true if Float(string)
-    rescue StandardError
-      false
-    end
+    true if Float(string)
+  rescue StandardError
+    false
   end
 
   def edit
@@ -65,12 +65,10 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def sync_groups
-    begin
-      Patreon::Patron.sync_groups
-      render json: success_json
-    rescue => e
-      render json: { message: e.message }, status: :internal_server_error
-    end
+    Patreon::Patron.sync_groups
+    render json: success_json
+  rescue => e
+    render json: { message: e.message }, status: :internal_server_error
   end
 
   def update_data
@@ -87,6 +85,11 @@ class Patreon::PatreonAdminController < Admin::AdminController
     end
 
     render json: { email: Patreon::Patron.attr("email", user) }
+  end
+
+  def patreon_tokens?
+    SiteSetting.patreon_creator_access_token.present? &&
+      SiteSetting.patreon_creator_refresh_token.present?
   end
 
   def patreon_tokens_present?

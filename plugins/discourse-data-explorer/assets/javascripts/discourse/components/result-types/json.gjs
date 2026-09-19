@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class Json extends Component {
   @service modal;

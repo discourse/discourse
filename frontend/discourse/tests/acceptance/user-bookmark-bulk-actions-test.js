@@ -1,6 +1,6 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, find, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -13,8 +13,8 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
 
     await click("button.bulk-select");
 
-    await click(queryAll("input.bulk-select")[0]);
-    await click(queryAll("input.bulk-select")[1]);
+    await click(find("input.bulk-select"));
+    await click(findAll("input.bulk-select")[1]);
 
     const dropdown = selectKit(".select-kit.bulk-select-bookmarks-dropdown");
     await dropdown.expand();

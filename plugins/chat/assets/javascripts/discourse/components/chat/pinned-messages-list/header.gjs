@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 
@@ -11,10 +11,10 @@ export default class ChatPinnedMessagesListHeader extends Component {
   pinnedMessagesTitle = i18n("chat.pinned_messages.title");
 
   get title() {
-    let title = replaceEmoji(this.pinnedMessagesTitle);
+    let title = dReplaceEmoji(this.pinnedMessagesTitle);
 
     if (this.site.mobileView) {
-      title += " - " + replaceEmoji(this.args.channel.escapedTitle);
+      title += " - " + dReplaceEmoji(this.args.channel.escapedTitle);
     }
 
     return trustHTML(title);
@@ -30,7 +30,7 @@ export default class ChatPinnedMessagesListHeader extends Component {
         />
       {{/if}}
 
-      <navbar.Title @title={{this.title}} @icon="thumbtack" />
+      <navbar.Title @icon="thumbtack" @title={{this.title}} />
 
       <navbar.Actions as |action|>
         <action.ClosePinsButton @channel={{@channel}} />

@@ -5,8 +5,6 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -14,6 +12,8 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import cookie from "discourse/lib/cookie";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import UserColorPaletteMenuItem from "./user-color-palette-menu-item";
 
 const HORIZON_PALETTES = [
@@ -180,27 +180,27 @@ export default class UserColorPaletteSelector extends Component {
   <template>
     {{#unless (isEmpty this.userColorPalettes)}}
       <DMenu
-        @identifier="user-color-palette-selector"
-        @placementStrategy="fixed"
-        @onRegisterApi={{this.onRegisterMenu}}
-        class={{concatClass
+        class={{dConcatClass
           "btn-flat user-color-palette-selector sidebar-footer-actions-button"
           (if this.cssLoaded "user-color-palette-css-loaded")
         }}
         data-selected-color-palette-id={{this.selectedColorPaletteId}}
+        @identifier="user-color-palette-selector"
         @inline={{true}}
+        @onRegisterApi={{this.onRegisterMenu}}
+        @placementStrategy="fixed"
       >
         <:trigger>
-          {{icon "paintbrush"}}
+          {{dIcon "paintbrush"}}
         </:trigger>
         <:content>
           <div class="user-color-palette-menu">
             <div class="user-color-palette-menu__content">
               {{#each this.userColorPalettes as |colorPalette|}}
                 <UserColorPaletteMenuItem
-                  @selectedColorPaletteId={{this.selectedColorPaletteId}}
                   @colorPalette={{colorPalette}}
                   @paletteSelected={{this.paletteSelected}}
+                  @selectedColorPaletteId={{this.selectedColorPaletteId}}
                 />
               {{/each}}
             </div>

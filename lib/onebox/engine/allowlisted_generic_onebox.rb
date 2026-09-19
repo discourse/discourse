@@ -18,7 +18,7 @@ module Onebox
       # include the entire page HTML. However for some providers like Flickr it allows us
       # to return gifv and galleries.
       def self.default_html_providers
-        %w[Flickr Meetup]
+        { "Flickr" => ["flickr.com"], "Meetup" => ["meetup.com"] }
       end
 
       def self.html_providers
@@ -73,9 +73,9 @@ module Onebox
       end
 
       def placeholder_html
-        return article_html if (is_article? || force_article_html?)
+        return article_html if is_article? || force_article_html?
         return image_html if is_image?
-        return Onebox::Helpers.video_placeholder_html if (is_video? || is_card?)
+        return Onebox::Helpers.video_placeholder_html if is_video? || is_card?
         return Onebox::Helpers.generic_placeholder_html if is_embedded?
         to_html
       end
@@ -184,13 +184,13 @@ module Onebox
       end
 
       def generic_html
-        return article_html if (is_article? || force_article_html?)
+        return article_html if is_article? || force_article_html?
         return video_html if is_video?
         return image_html if is_image?
         return embedded_html if is_embedded?
         return card_html if is_card?
 
-        article_html if (has_text? || is_image_article?)
+        article_html if has_text? || is_image_article?
       end
 
       def is_card?
@@ -229,7 +229,8 @@ module Onebox
 
       def is_embedded?
         return false if data[:html].blank?
-        return true if AllowlistedGenericOnebox.html_providers.include?(data[:provider_name])
+        provider_hosts = AllowlistedGenericOnebox.html_providers[data[:provider_name]]
+        return true if provider_hosts && AllowlistedGenericOnebox.host_matches(uri, provider_hosts)
         return false unless data[:html]["iframe"]
 
         fragment = Nokogiri::HTML5.fragment(data[:html])

@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import categoryBadge from "discourse/helpers/category-badge";
 import Category from "discourse/models/category";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
 
 export default class EmbeddableHost extends Component {
@@ -56,7 +56,7 @@ export default class EmbeddableHost extends Component {
         <div class="d-table__mobile-label">
           {{i18n "admin.embedding.category"}}
         </div>
-        {{categoryBadge this.category allowUncategorized=true}}
+        {{dCategoryBadge this.category allowUncategorized=true}}
       </td>
       <td class="d-table__cell --detail">
         <div class="d-table__mobile-label">
@@ -82,27 +82,27 @@ export default class EmbeddableHost extends Component {
         <div class="d-table__cell-actions">
           <DButton
             class="btn-default btn-small admin-embeddable-host-item__edit"
+            @label="admin.embedding.edit"
             @route="adminEmbedding.edit"
             @routeModels={{this.host}}
-            @label="admin.embedding.edit"
           />
           <DMenu
-            @identifier="embedding-host-menu"
-            @title={{i18n "admin.embedding.more_options.title"}}
             @icon="ellipsis-vertical"
+            @identifier="embedding-host-menu"
             @onRegisterApi={{this.onRegisterApi}}
+            @title={{i18n "admin.embedding.more_options.title"}}
           >
             <:content>
-              <DropdownMenu as |dropdown|>
+              <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
-                    @action={{this.delete}}
-                    @label="admin.embedding.delete"
-                    @icon="trash-can"
                     class="btn-transparent --danger admin-embeddable-host-item__delete"
+                    @action={{this.delete}}
+                    @icon="trash-can"
+                    @label="admin.embedding.delete"
                   />
                 </dropdown.item>
-              </DropdownMenu>
+              </DDropdownMenu>
             </:content>
           </DMenu>
         </div>

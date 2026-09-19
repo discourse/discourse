@@ -67,7 +67,7 @@ module PageObjects
       end
 
       def back_to_category
-        find(".edit-category .back-button").click
+        find(".edit-category-page .back-button").click
         self
       end
 
@@ -151,11 +151,6 @@ module PageObjects
         page.find(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).click
       end
 
-      def click_setting_tab(name)
-        find(".edit-category-nav .edit-category-#{name}").click
-        self
-      end
-
       def click_edit_category
         find(".navigation-controls .edit-category").click
         self
@@ -187,6 +182,21 @@ module PageObjects
       def has_no_setting_tab?(tab_name)
         tab_css = ".edit-category-#{tab_name}"
         page.has_no_css?(tab_css)
+      end
+
+      def has_changes_banner?
+        page.has_css?(".admin-changes-banner")
+      end
+
+      def has_powered_by_discourse?
+        page.has_css?(".powered-by-discourse")
+      end
+
+      def changes_banner_is_clear_of_powered_by_discourse?
+        page.evaluate_script(<<~JS)
+          document.querySelector(".admin-changes-banner").getBoundingClientRect().bottom <=
+            document.querySelector(".powered-by-discourse").getBoundingClientRect().top
+        JS
       end
 
       def has_category_title?(title)

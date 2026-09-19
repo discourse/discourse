@@ -34,7 +34,7 @@ RSpec.describe DiscoursePoll::PollsController do
   before { Group.refresh_automatic_groups! }
 
   describe "#vote" do
-    it "works" do
+    it "publishes the updated poll vote" do
       channel = "/polls/#{poll.topic_id}"
 
       message =
@@ -133,6 +133,36 @@ RSpec.describe DiscoursePoll::PollsController do
       expect(message.channel).to eq(channel)
       expect(message.user_ids).to eq(nil)
       expect(message.group_ids).to contain_exactly(group.id)
+    end
+
+    it "blocks topic participants from voting on a staff whisper" do
+      visible_post = Fabricate(:post, topic: topic)
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: Fabricate(:admin),
+          post_type: Post.types[:whisper],
+          raw: "[poll]\n- Staff-only option\n- Another staff-only option\n[/poll]",
+        )
+      secret_option = whisper.polls.first.poll_options.first
+
+      expect(user.guardian.can_see?(visible_post)).to eq(true)
+      expect(user.guardian.can_see?(whisper)).to eq(false)
+
+      put :vote,
+          params: {
+            post_id: whisper.id,
+            poll_name: "poll",
+            options: [secret_option.digest],
+          },
+          format: :json
+
+      aggregate_failures do
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).not_to include(secret_option.html)
+        expect(PollVote.exists?(poll_option: secret_option, user: user)).to eq(false)
+      end
     end
 
     it "requires at least 1 valid option" do

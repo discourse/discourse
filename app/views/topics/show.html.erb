@@ -66,7 +66,7 @@
             <link itemprop='url' rel='nofollow' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
           </span>
         <% end %>
-        <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
+        <meta itemprop='text' content='<%= @topic_view.topic.plain_text_excerpt %>'>
       <% end %>
 
       <% @topic_view.crawler_posts.each do |post| %>
@@ -80,7 +80,7 @@
                 <% if emit_md %>
                   <meta itemprop='url' content='<%= Discourse.base_url %>/u/<%= u.username %>'>
                 <% end %>
-                <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+                <%= "(#{u.name})" if SiteSetting.display_name_on_posts && SiteSetting.enable_names? && u.name.present? %>
                 <%
                   post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
                   who_username = post_custom_fields["action_code_who"] || ""
@@ -197,7 +197,7 @@
 
   <% if @topic_view.print %>
     <% content_for :after_body do %>
-        <%= preload_script('print-page') %>
+        <%= preload_script('js/print-page') %>
     <% end %>
   <% end %>
 <% end %>

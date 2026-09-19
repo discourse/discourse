@@ -10,19 +10,22 @@ import AccessibleDiscoveryHeading from "discourse/components/discovery/accessibl
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
+import categoryColorVariable from "discourse/helpers/category-color-variable";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DiscoveryNavigation extends Component {
   @service categoryTypeChooser;
   @service currentUser;
   @service modal;
   @service router;
+  @service siteSettings;
 
   get filterMode() {
     return calculateFilterMode({
@@ -37,7 +40,21 @@ export default class DiscoveryNavigation extends Component {
   }
 
   get canCreateTopic() {
-    return this.currentUser?.can_create_topic;
+    let value = this.currentUser?.can_create_topic ?? false;
+
+    if (
+      value &&
+      this.siteSettings.hide_disabled_create_topic_button &&
+      this.args.createTopicDisabled
+    ) {
+      value = false;
+    }
+
+    return applyValueTransformer("can-create-topic-button", value, {
+      category: this.args.category,
+      tag: this.args.tag,
+      createTopicDisabled: this.args.createTopicDisabled,
+    });
   }
 
   get bodyClass() {
@@ -57,6 +74,15 @@ export default class DiscoveryNavigation extends Component {
     }
   }
 
+  get headingClasses() {
+    return dConcatClass(
+      "category-heading",
+      this.args.category?.uploaded_logo?.url
+        ? "--has-logo discovery-heading"
+        : null
+    );
+  }
+
   @action
   editCategory() {
     DiscourseURL.routeTo(`/c/${Category.slugFor(this.args.category)}/edit`);
@@ -72,13 +98,6 @@ export default class DiscoveryNavigation extends Component {
     this.modal.show(ReorderCategories);
   }
 
-  get headingClasses() {
-    return concatClass(
-      "category-heading",
-      this.args.category?.uploaded_logo?.url ? "--has-logo" : null
-    );
-  }
-
   <template>
     <AddCategoryTagClasses
       @category={{@category}}
@@ -86,10 +105,10 @@ export default class DiscoveryNavigation extends Component {
     />
 
     <AccessibleDiscoveryHeading
-      @category={{@category}}
-      @tag={{@tag}}
       @additionalTags={{@additionalTags}}
+      @category={{@category}}
       @filter={{this.filterMode}}
+      @tag={{@tag}}
     />
 
     {{#if @category}}
@@ -98,15 +117,18 @@ export default class DiscoveryNavigation extends Component {
         @outletArgs={{lazyHash category=@category tag=@tag}}
       />
 
-      <section class={{this.headingClasses}}>
+      <section
+        class={{this.headingClasses}}
+        style={{categoryColorVariable @category.color}}
+      >
         {{#if @category.uploaded_logo.url}}
           <CategoryLogo
-            @category={{@category}}
             class="category-heading__logo"
+            @category={{@category}}
           />
           {{#if @category.description}}
             <div class="category-heading__content">
-              {{categoryBadge @category class="category-heading__badge"}}
+              {{dCategoryBadge @category class="category-heading__badge"}}
               <p class="category-heading__description">
                 {{trustHTML @category.description}}
               </p>
@@ -115,8 +137,8 @@ export default class DiscoveryNavigation extends Component {
         {{/if}}
 
         <PluginOutlet
-          @name="category-heading"
           @connectorTagName="div"
+          @name="category-heading"
           @outletArgs={{lazyHash category=@category tag=@tag}}
         />
 
@@ -126,49 +148,52 @@ export default class DiscoveryNavigation extends Component {
     {{bodyClass this.bodyClass}}
 
     <section
-      class={{concatClass
+      class={{dConcatClass
         "navigation-container"
         (if @category "category-navigation")
       }}
     >
       <DNavigation
-        @category={{@category}}
-        @tag={{@tag}}
         @additionalTags={{@additionalTags}}
-        @filterMode={{this.filterMode}}
-        @noSubcategories={{@noSubcategories}}
+        @bulkSelectHelper={{@bulkSelectHelper}}
+        @canBulkSelect={{@canBulkSelect}}
         @canCreateTopic={{this.canCreateTopic}}
         @canCreateTopicOnTag={{@canCreateTopicOnTag}}
+        @category={{@category}}
+        @createCategory={{this.createCategory}}
         @createTopic={{@createTopic}}
         @createTopicDisabled={{@createTopicDisabled}}
+        @dismissRead={{@dismissRead}}
         @draftCount={{this.currentUser.draft_count}}
         @editCategory={{this.editCategory}}
-        @showCategoryAdmin={{@showCategoryAdmin}}
-        @createCategory={{this.createCategory}}
-        @reorderCategories={{this.reorderCategories}}
-        @canBulkSelect={{@canBulkSelect}}
-        @bulkSelectHelper={{@bulkSelectHelper}}
-        @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
-        @tagNotification={{@tagNotification}}
+        @filterMode={{this.filterMode}}
+        @loadingTagInfo={{@loadingTagInfo}}
         @model={{@model}}
+        @noSubcategories={{@noSubcategories}}
+        @reorderCategories={{this.reorderCategories}}
+        @resetNew={{@resetNew}}
+        @showCategoryAdmin={{@showCategoryAdmin}}
         @showDismissRead={{@showDismissRead}}
         @showResetNew={{@showResetNew}}
-        @dismissRead={{@dismissRead}}
-        @resetNew={{@resetNew}}
+        @showTagInfo={{@showTagInfo}}
+        @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
+        @tag={{@tag}}
+        @tagNotification={{@tagNotification}}
+        @toggleTagInfo={{@toggleTagInfo}}
       />
 
       {{#if @category}}
         <PluginOutlet
-          @name="category-navigation"
           @connectorTagName="div"
+          @name="category-navigation"
           @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       {{/if}}
 
       {{#if @tag}}
         <PluginOutlet
-          @name="tag-navigation"
           @connectorTagName="div"
+          @name="tag-navigation"
           @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       {{/if}}

@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 
 const SKIPPED_HEADERS = [
   { key: "admin.email.user" },
@@ -30,19 +30,19 @@ const SKIPPED_FILTERS = [
 
 export default <template>
   <EmailLogsList
-    @status="skipped"
-    @logType="skipped"
-    @headers={{SKIPPED_HEADERS}}
     @filters={{SKIPPED_FILTERS}}
+    @headers={{SKIPPED_HEADERS}}
+    @logType="skipped"
+    @status="skipped"
   >
     <:default as |emailLog|>
       <tr data-test-email-log-row-id={{emailLog.id}}>
-        <td>{{formatDate emailLog.created_at}}</td>
+        <td>{{dFormatDate emailLog.created_at}}</td>
         <td>
           {{#if emailLog.user}}
             <span class="email-logs-user">
-              <LinkTo @route="adminUser" @model={{emailLog.user}}>
-                {{avatar emailLog.user imageSize="tiny"}}
+              <LinkTo @model={{emailLog.user}} @route="adminUser">
+                {{dAvatar emailLog.user imageSize="tiny"}}
                 {{emailLog.user.username}}
               </LinkTo>
             </span>
@@ -54,7 +54,11 @@ export default <template>
           <a href="mailto:{{emailLog.to_address}}">{{emailLog.to_address}}</a>
         </td>
         <td>{{emailLog.email_type}}</td>
-        <td>{{emailLog.skipped_reason}}</td>
+        <td>
+          <div class="overflow-ellipsis" title={{emailLog.skipped_reason}}>
+            {{emailLog.skipped_reason}}
+          </div>
+        </td>
       </tr>
     </:default>
   </EmailLogsList>

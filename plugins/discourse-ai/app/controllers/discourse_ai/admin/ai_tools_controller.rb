@@ -115,11 +115,13 @@ module DiscourseAi
         # we need an llm so we have a tokenizer
         # but will do without if none is available
         llm = LlmModel.first&.to_llm
+        context = DiscourseAi::Agents::BotContext.new(guardian: guardian)
         runner =
           @ai_tool.runner(
             parameters,
             llm: llm,
             bot_user: current_user,
+            context: context,
             secret_bindings: test_bindings,
           )
         result = runner.invoke

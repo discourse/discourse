@@ -6,14 +6,14 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import AiUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/ai-usage";
@@ -294,15 +294,15 @@ export default class Rewind extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "rewind-container"
         (if this.fullScreen "--fullscreen")
       }}
+      tabindex="0"
       {{didInsert this.loadRewind}}
       {{on "keydown" this.handleEscape}}
       {{on "click" this.handleBackdropClick}}
       {{didInsert this.registerRewindContainer}}
-      tabindex="0"
     >
       <div class="rewind">
         <RewindHeader />
@@ -320,8 +320,8 @@ export default class Rewind extends Component {
                 {{i18n "discourse_rewind.share.toggle_label.private"}}
 
                 <DToggleSwitch
-                  @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
                   class="rewind__share-toggle"
+                  @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
                   {{on "click" this.toggleShareRewind}}
                 />
                 {{i18n "discourse_rewind.share.toggle_label.public"}}
@@ -332,20 +332,20 @@ export default class Rewind extends Component {
               }}
                 <DButton
                   class="btn-default rewind__copy-link-btn --special-kbd"
-                  @title="composer.link_toolbar.copy"
-                  @icon="link"
                   @action={{this.copyRewindLink}}
+                  @icon="link"
+                  @title="composer.link_toolbar.copy"
                 />
               {{/if}}
             {{/if}}
             <DButton
               class="btn-default rewind__exit-fullscreen-btn --special-kbd"
+              @action={{this.toggleFullScreen}}
               @icon={{if
                 this.fullScreen
                 "discourse-compress"
                 "discourse-expand"
               }}
-              @action={{this.toggleFullScreen}}
             />
 
           </div>
@@ -390,11 +390,11 @@ export default class Rewind extends Component {
                 as |ReportComponent|
               }}
                 {{#if ReportComponent}}
-                  <div class={{concatClass "rewind-report" report.identifier}}>
+                  <div class={{dConcatClass "rewind-report" report.identifier}}>
                     <ReportComponent
+                      @isOwnRewind={{this.isOwnRewind}}
                       @report={{report}}
                       @user={{@user}}
-                      @isOwnRewind={{this.isOwnRewind}}
                     />
                   </div>
                 {{/if}}
@@ -411,16 +411,16 @@ export default class Rewind extends Component {
           {{#if this.showPrev}}
             <DButton
               class="rewind__prev-btn"
-              @icon="chevron-left"
               @action={{this.prev}}
+              @icon="chevron-left"
             />
           {{/if}}
 
           {{#if this.showNext}}
             <DButton
               class="rewind__next-btn"
-              @icon="chevron-right"
               @action={{this.next}}
+              @icon="chevron-right"
             />
           {{/if}}
         {{/if}}

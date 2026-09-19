@@ -26,7 +26,7 @@ acceptance("Category Edit - Settings", function (needs) {
   });
 
   test("values updating while switching the category", async function (assert) {
-    await visit("/c/uncategorized/edit/settings");
+    await visit("/c/uncategorized/edit/moderation");
 
     assert
       .dom("input#category-default-slow-mode")

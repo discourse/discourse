@@ -1,45 +1,45 @@
-import DNavigationItem from "discourse/components/d-navigation-item";
 import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
-import icon from "discourse/helpers/d-icon";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <MessagesSecondaryNav>
 
     <DNavigationItem
-      @route="userPrivateMessages.group.index"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-group-latest"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.group.index"
     >
-      {{icon "envelope"}}
+      {{dIcon "envelope"}}
       <span>{{i18n "categories.latest"}}</span>
     </DNavigationItem>
 
     {{#if @controller.viewingSelf}}
       <DNavigationItem
-        @route="userPrivateMessages.group.new"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-group-new"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.group.new"
       >
-        {{icon "circle-exclamation"}}
+        {{dIcon "circle-exclamation"}}
         <span>{{@controller.newLinkText}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userPrivateMessages.group.unread"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-group-unread"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.group.unread"
       >
-        {{icon "circle-plus"}}
+        {{dIcon "circle-plus"}}
         <span>{{@controller.unreadLinkText}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userPrivateMessages.group.archive"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-group-archive"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.group.archive"
       >
-        {{icon "box-archive"}}
+        {{dIcon "box-archive"}}
         <span>{{i18n "user.messages.archive"}}</span>
       </DNavigationItem>
     {{/if}}

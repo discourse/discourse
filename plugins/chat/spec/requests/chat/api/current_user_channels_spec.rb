@@ -14,6 +14,50 @@ describe Chat::Api::CurrentUserChannelsController do
         get "/chat/api/me/channels"
         expect(response.status).to eq(403)
       end
+
+      context "when anonymous users can view public chat channels" do
+        before do
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns public category channels without direct message channels" do
+          public_channel = Fabricate(:category_channel)
+          Fabricate(:chat_message, chat_channel: public_channel)
+          Fabricate(:private_category_channel)
+          Fabricate(:direct_message_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(200)
+          public_channels = response.parsed_body["public_channels"]
+
+          expect(public_channels.map { |channel| channel["id"] }).to eq([public_channel.id])
+          expect(public_channels.first["meta"]["can_join_chat_channel"]).to eq(true)
+          expect(public_channels.first["meta"]["message_bus_last_ids"].keys).to eq(
+            %w[channel_message_bus_last_id],
+          )
+          expect(response.parsed_body["direct_message_channels"]).to be_blank
+        end
+
+        it "omits global presence channel state" do
+          Fabricate(:category_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to have_key("global_presence_channel_state")
+        end
+
+        it "returns an error when public channels are disabled" do
+          SiteSetting.enable_public_channels = false
+          Fabricate(:category_channel)
+
+          get "/chat/api/me/channels"
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "as disallowed user" do
@@ -40,6 +84,27 @@ describe Chat::Api::CurrentUserChannelsController do
         get "/chat/api/me/channels"
 
         expect(response.parsed_body["public_channels"][0]["id"]).to eq(channel.id)
+      end
+
+      it "escapes legacy upload filenames in last-message excerpts" do
+        channel = Fabricate(:category_channel)
+        channel.add(current_user)
+        upload =
+          Fabricate(
+            :upload,
+            original_filename: "<svg data-chat-channel-list-filename-xss='true'></svg>.png",
+          )
+        message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+        message.update!(excerpt: upload.original_filename)
+        channel.update!(last_message: message)
+
+        get "/chat/api/me/channels"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["public_channels"][0].dig("last_message", "excerpt")).to eq(
+          "&lt;svg data-chat-channel-list-filename-xss=&#39;true&#39;&gt;&lt;/svg&gt;.png",
+        )
+        expect(response.body).not_to include(upload.original_filename)
       end
 
       context "with multiple direct messages" do

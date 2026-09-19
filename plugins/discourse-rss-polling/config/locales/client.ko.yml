@@ -12,3 +12,13 @@ ko:
         feed_url: URL
         discourse_category: 카테고리
         discourse_tags: 태그
+        feeds:
+          edit: 편집
+          delete: 삭제
+          save: 저장
+        test:
+          title: 미리 보기
+          dismiss: 읽음으로 표시
+        status:
+          enabled: 활성화
+          disabled: 비활성

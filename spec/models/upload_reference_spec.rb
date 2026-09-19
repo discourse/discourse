@@ -94,6 +94,7 @@ RSpec.describe UploadReference do
 
   describe "site setting uploads" do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
+
     fab!(:upload)
     fab!(:upload2, :upload)
 

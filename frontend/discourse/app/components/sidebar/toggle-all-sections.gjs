@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class ToggleAllSections extends Component {
   @service sidebarState;
@@ -46,10 +46,10 @@ export default class ToggleAllSections extends Component {
 
   <template>
     <DButton
+      class="btn-transparent sidebar-toggle-all-sections"
       @action={{this.toggleAllSections}}
       @icon={{this.icon}}
       @title={{this.title}}
-      class="btn-transparent sidebar-toggle-all-sections"
     />
   </template>
 }
