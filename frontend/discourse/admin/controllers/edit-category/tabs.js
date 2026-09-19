@@ -8,9 +8,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
-import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -410,7 +410,7 @@ export default class EditCategoryTabsController extends Controller {
       updatedModel.setupGroupsAndPermissions();
 
       if (lostAccess) {
-        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        this.router.transitionTo(homepageNavigationDestination());
         return;
       }
 
