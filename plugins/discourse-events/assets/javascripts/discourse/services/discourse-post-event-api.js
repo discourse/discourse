@@ -13,42 +13,13 @@ import DiscoursePostEventInvitees from "discourse/plugins/discourse-events/disco
 export default class DiscoursePostEventApi extends Service {
   eventsPromise = null;
 
-  #eventsByTopicId = new Map();
-
   get #basePath() {
     return "/discourse-post-event";
-  }
-
-  // cached per topic id so the live composer preview (which re-cooks on every
-  // keystroke) only hits the endpoint once per linked topic; failed requests
-  // are evicted so a transient error doesn't hide the card until a full reload
-  cachedEventByTopicId(topicId) {
-    if (!this.#eventsByTopicId.has(topicId)) {
-      this.#eventsByTopicId.set(
-        topicId,
-        this.eventByTopicId(topicId).catch(() => {
-          this.#eventsByTopicId.delete(topicId);
-          return null;
-        })
-      );
-    }
-    return this.#eventsByTopicId.get(topicId);
   }
 
   async event(id, data = {}) {
     const result = await this.#getRequest(`/events/${id}`, data);
     return DiscoursePostEventEvent.create(result.event);
-  }
-
-  async eventByTopicId(topicId) {
-    const result = await this.#getRequest("/events", {
-      topic_id: topicId,
-      include_details: true,
-      include_closed: true,
-      limit: 1,
-    });
-    const eventData = (result.events || [])[0];
-    return eventData ? DiscoursePostEventEvent.create(eventData) : null;
   }
 
   async events(data = {}) {
