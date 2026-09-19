@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  MAX_HIDDEN_COMPOSER_TOOLBAR_BUTTONS = 50
+  MAX_HIDDEN_COMPOSER_TOOLBAR_BUTTON_LENGTH = 100
+
   AUTO_MODE = 1
   LIGHT_MODE = 2
   DARK_MODE = 3
@@ -87,6 +90,8 @@ class UserOption < ActiveRecord::Base
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
   validates :timezone, timezone: true
   validate :understood_languages_are_supported, if: :will_save_change_to_understood_languages?
+  validate :hidden_composer_toolbar_buttons_are_bounded,
+           if: :will_save_change_to_hidden_composer_toolbar_buttons?
 
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -259,6 +264,15 @@ class UserOption < ActiveRecord::Base
 
   private
 
+  def hidden_composer_toolbar_buttons_are_bounded
+    values = hidden_composer_toolbar_buttons
+
+    if values.size > MAX_HIDDEN_COMPOSER_TOOLBAR_BUTTONS ||
+         values.any? { |id| id.to_s.size > MAX_HIDDEN_COMPOSER_TOOLBAR_BUTTON_LENGTH }
+      errors.add(:hidden_composer_toolbar_buttons, :invalid)
+    end
+  end
+
   def understood_languages_are_supported
     if understood_languages.all? { |locale| LocaleSiteSetting.supported_locales.include?(locale) }
       return
@@ -330,6 +344,7 @@ end
 #  enable_upcoming_change_available_notifications :boolean          default(TRUE), not null
 #  event_reminder_preference                      :integer          default("personal_message"), not null
 #  external_links_in_new_tab                      :boolean          default(FALSE), not null
+#  hidden_composer_toolbar_buttons                :string           default([]), not null, is an Array
 #  hide_presence                                  :boolean          default(FALSE), not null
 #  hide_profile                                   :boolean          default(FALSE), not null
 #  hide_profile_and_presence                      :boolean          default(FALSE), not null

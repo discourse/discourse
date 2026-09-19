@@ -131,6 +131,7 @@ let userOptionFields = [
   "enable_smart_lists",
   "enable_upcoming_change_available_notifications",
   "external_links_in_new_tab",
+  "hidden_composer_toolbar_buttons",
   "hide_presence",
   "hide_profile",
   "homepage_id",
