@@ -7,7 +7,8 @@ class ReviewableHistory < ActiveRecord::Base
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
   alias_attribute :type, :reviewable_history_type
-  enum :type, { created: 0, transitioned: 1, edited: 2, claimed: 3, unclaimed: 4 }
+  enum :type,
+       { created: 0, transitioned: 1, edited: 2, claimed: 3, unclaimed: 4, dsa_classified: 5 }
 end
 
 # == Schema Information

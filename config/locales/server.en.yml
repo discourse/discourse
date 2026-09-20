@@ -2658,6 +2658,7 @@ en:
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
     allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
+    enable_dsa_reporting: "Let moderators classify handled review queue items using the EU Digital Services Act (DSA) categories, for statements of reasons and transparency reports. Classification is always optional."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after {{setting:editing_grace_period}}?"
 
@@ -6332,6 +6333,8 @@ en:
     post_deleted_by_author_after_penalty: >-
       Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
     target_user_deleted: "Automatically ignored because the user account was deleted."
+    dsa_classification_not_required: "Only items where the report was upheld need a DSA classification."
+    dsa_category_mismatch: "That category doesn't match whether this item was handled as illegal content or a terms of service violation."
     priorities:
       low: "Low"
       medium: "Medium"

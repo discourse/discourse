@@ -37,6 +37,9 @@ class Reviewable < ActiveRecord::Base
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
+  AWAITING_DSA_CLASSIFICATION_SQL =
+    "reviewables.legal_basis IS NOT NULL AND reviewables.dsa_category IS NULL"
+
   attribute :sensitivity, :integer
   enum :sensitivity, { disabled: 0, low: 9, medium: 6, high: 3 }, scopes: false, suffix: true
 
@@ -353,6 +356,21 @@ class Reviewable < ActiveRecord::Base
     @author_penalties ||= AuthorPenalty.all_for(target_created_by, target_post:, reviewable_id: id)
   end
 
+  # Whether the outcome upheld the report, restricting the content or user. Only those
+  # outcomes need a DSA statement of reasons.
+  def restrictive_outcome?
+    approved?
+  end
+
+  def awaiting_dsa_classification?
+    SiteSetting.enable_dsa_reporting && legal_basis.present? && dsa_category.blank?
+  end
+
+  def can_review_target?(guardian)
+    post = target_post
+    !post || guardian.can_review_post?(post)
+  end
+
   def actions_for(guardian, args = nil)
     args ||= {}
     built_actions = Actions.new(self, guardian)
@@ -425,7 +443,10 @@ class Reviewable < ActiveRecord::Base
 
       raise ActiveRecord::Rollback unless result.success?
 
-      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+      if result.transition_to
+        update_count = transition_to(result.transition_to, performed_by)
+        assign_dsa_legal_basis(performed_by)
+      end
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
     end
@@ -437,7 +458,7 @@ class Reviewable < ActiveRecord::Base
     end
 
     # An action that leaves the reviewable pending didn't resolve it, so it stays in the queue.
-    result.remove_reviewable_ids -= [id] if pending?
+    result.remove_reviewable_ids -= [id] if pending? || awaiting_dsa_classification?
 
     if update_count || result.remove_reviewable_ids.present?
       Jobs.enqueue(
@@ -468,6 +489,8 @@ class Reviewable < ActiveRecord::Base
 
     self.status = status_symbol
     save!
+
+    clear_dsa_classification if pending? && SiteSetting.enable_dsa_reporting
 
     log_history(:transitioned, performed_by)
     DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
@@ -584,11 +607,14 @@ class Reviewable < ActiveRecord::Base
     unseen_list_for(user).count
   end
 
+  UNCLASSIFIED_DSA_CATEGORY = "unclassified"
+
   def self.list_for(
     user,
     ids: nil,
     status: :pending,
     category_id: nil,
+    dsa_category: nil,
     topic_id: nil,
     type: nil,
     limit: nil,
@@ -626,6 +652,12 @@ class Reviewable < ActiveRecord::Base
 
     result = viewable_by(user, order: order, preload: preload)
     result = by_status(result, status)
+
+    if dsa_category == UNCLASSIFIED_DSA_CATEGORY
+      result = result.where(AWAITING_DSA_CLASSIFICATION_SQL)
+    elsif dsa_category.present?
+      result = result.where(dsa_category: dsa_category)
+    end
     result = result.where(id: ids) if ids
     if type
       custom_type = custom_filter_type_options.find { |option| option[:id].to_s == type.to_s }
@@ -965,8 +997,16 @@ class Reviewable < ActiveRecord::Base
   def self.by_status(partial_result, status)
     return partial_result if status == :all
 
-    if status == :reviewed
+    if status == :dsa_classification
+      partial_result.where.not(legal_basis: nil)
+    elsif status == :reviewed
       partial_result.where(status: statuses.except(:pending).values)
+    elsif status == :pending && SiteSetting.enable_dsa_reporting
+      # Handled items stay in the queue until they're classified for DSA reporting.
+      partial_result.where(
+        "reviewables.status = :pending OR (#{AWAITING_DSA_CLASSIFICATION_SQL})",
+        pending: statuses[:pending],
+      )
     else
       partial_result.where(status: statuses[status])
     end
@@ -997,9 +1037,34 @@ class Reviewable < ActiveRecord::Base
 
   private
 
-  def can_review_target?(guardian)
-    post = target_post
-    !post || guardian.can_review_post?(post)
+  # Illegal content waits in the queue for a moderator to pick a category. Content
+  # incompatible with the terms of service only has one category, so it's classified straight
+  # away. An outcome that no longer restricts anything drops the classification it had.
+  def assign_dsa_legal_basis(performed_by)
+    return if !SiteSetting.enable_dsa_reporting
+
+    return clear_dsa_classification if !restrictive_outcome?
+    return if legal_basis.present?
+
+    if potentially_illegal
+      update!(legal_basis: Reviewable::DsaTaxonomy::ILLEGAL_CONTENT)
+    else
+      update!(
+        legal_basis: Reviewable::DsaTaxonomy::INCOMPATIBLE_CONTENT,
+        dsa_category: Reviewable::DsaTaxonomy.incompatible_content_category,
+      )
+      log_history(
+        :dsa_classified,
+        performed_by,
+        edited: slice(:legal_basis, :dsa_category, :dsa_subcategory, :dsa_subcategory_other),
+      )
+    end
+  end
+
+  def clear_dsa_classification
+    return if legal_basis.blank?
+
+    update!(legal_basis: nil, dsa_category: nil, dsa_subcategory: nil, dsa_subcategory_other: nil)
   end
 
   def target_post
@@ -1072,12 +1137,18 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  dsa_category            :string
+#  dsa_subcategory         :string
+#  dsa_subcategory_other   :string(500)
 #  force_review            :boolean          default(FALSE), not null
 #  latest_score            :datetime
+#  legal_basis             :string
+#  outcome_source          :string
 #  payload                 :json
 #  potential_spam          :boolean          default(FALSE), not null
 #  potentially_illegal     :boolean          default(FALSE)
 #  reject_reason           :text
+#  restriction_type        :string
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  score                   :float            default(0.0), not null
 #  status                  :integer          default("pending"), not null
@@ -1096,6 +1167,7 @@ end
 # Indexes
 #
 #  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  index_reviewables_awaiting_dsa_classification               (status) WHERE ((legal_basis IS NOT NULL) AND (dsa_category IS NULL))
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
