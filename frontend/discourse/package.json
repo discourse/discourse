@@ -135,7 +135,7 @@
     "@glimmer/env": "^0.1.7",
     "@rolldown/pluginutils": "1.0.1",
     "@rollup/plugin-babel": "^7.1.0",
-    "@tanstack/virtual-core": "3.17.8",
+    "@tanstack/virtual-core": "3.17.10",
     "@types/jquery": "^4.0.1",
     "@types/picomatch": "^4.0.3",
     "@types/qunit": "^2.19.14",
