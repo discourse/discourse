@@ -47,27 +47,8 @@ module Migrations
 
         rows_query <<~SQL, MappingType::USERS, MappingType::UPLOADS, Discourse::SYSTEM_USER_ID
           SELECT ur.id                          AS original_id,
-                 u.id                           AS files_db_upload_id,
-                 COALESCE(mu.discourse_id, ?3)  AS user_id,
-                 u.original_filename,
-                 u.filesize,
-                 u.width,
-                 u.height,
-                 u.url,
-                 u.created_at,
-                 u.sha1,
-                 u.origin,
-                 u.extension,
-                 u.thumbnail_width,
-                 u.thumbnail_height,
-                 u.etag,
-                 u.secure,
-                 u.original_sha1,
-                 u.animated,
-                 u.verification_status,
-                 u.security_last_changed_at,
-                 u.security_last_changed_reason,
-                 u.dominant_color
+                 u.*,
+                 COALESCE(mu.discourse_id, ?3)  AS user_id
           FROM files.upload_results ur
                JOIN files.uploads u ON u.id = ur.upload_id
                JOIN upload_sources us ON us.id = ur.id
@@ -96,7 +77,7 @@ module Migrations
         end
 
         def transform_row(row)
-          files_db_upload_id = row.delete(:files_db_upload_id)
+          files_db_upload_id = row.delete(:id)
           sha1 = row[:sha1]
 
           # An earlier source file already used this FilesDB upload. Map this
