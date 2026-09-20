@@ -98,6 +98,24 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
     expect(composer).to have_value("This is [spoiler]secret[/spoiler] text here")
   end
 
+  it "inserts a selected placeholder in an inline spoiler when nothing is selected via applySurround" do
+    open_composer
+
+    composer.type_content("This is a test ")
+
+    page.execute_script(<<~JS)
+      const appEvents = Discourse.__container__.lookup("service:app-events");
+      appEvents.trigger("composer:apply-surround", "[spoiler]", "[/spoiler]", "spoiler_text", { multiline: false });
+    JS
+
+    expect(rich).to have_css("span.spoiled", text: I18n.t("js.composer.spoiler_text"))
+
+    composer.type_content("spoiler")
+
+    expect(rich).to have_css("span.spoiled", text: "spoiler")
+    expect(rich).to have_no_content(I18n.t("js.composer.spoiler_text"))
+  end
+
   it "preserves paragraphs when applying a block spoiler through the plugin API" do
     open_composer
     composer.type_content("First paragraph")

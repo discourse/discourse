@@ -6,7 +6,6 @@ import { isEmpty } from "@ember/utils";
 import { lookupCachedUploadUrl } from "pretty-text/upload-short-url";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import {
-  type Attrs,
   type Fragment,
   type Mark,
   type Node,
@@ -18,12 +17,14 @@ import {
   liftListItem,
   sinkListItem,
   wrapInList,
+  wrapRangeInList,
 } from "prosemirror-schema-list";
 import {
   type EditorState,
   NodeSelection,
   Selection,
   TextSelection,
+  type Transaction,
 } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
 import type {
@@ -53,6 +54,7 @@ interface ProsemirrorTextManipulationOptions {
   schema: Schema;
   view: EditorView;
   convertFromMarkdown: (markdown: string) => Node;
+  tryConvertFromMarkdown: (markdown: string) => Node | null;
   convertToMarkdown: (doc: Node | Fragment | Slice) => string;
   splitNonEmptyLines: (text: string) => string[];
   buildListNode: (
@@ -63,15 +65,6 @@ interface ProsemirrorTextManipulationOptions {
   commands: EditorCommands;
   customState: CustomState;
 }
-
-type MarkupProbe =
-  | { kind: "mark"; mark: Mark }
-  | {
-      kind: "node";
-      nodeType: NodeType;
-      attrs: Attrs;
-      inlineVariant: { nodeType: NodeType; attrs: Attrs } | null;
-    };
 
 interface HandlerOptions {
   schema: Schema;
@@ -113,6 +106,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   autocompleteHandler: AutocompleteHandler;
   state = trackedObject<ToolbarState & Record<string, unknown>>({});
   convertFromMarkdown: (markdown: string) => Node;
+  tryConvertFromMarkdown: (markdown: string) => Node | null;
   convertToMarkdown: (doc: Node | Fragment | Slice) => string;
   splitNonEmptyLines: (text: string) => string[];
   buildListNode: (
@@ -129,6 +123,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       schema,
       view,
       convertFromMarkdown,
+      tryConvertFromMarkdown,
       convertToMarkdown,
       splitNonEmptyLines,
       buildListNode,
@@ -140,6 +135,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
+    this.tryConvertFromMarkdown = tryConvertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
     this.splitNonEmptyLines = splitNonEmptyLines;
     this.buildListNode = buildListNode;
@@ -229,66 +225,15 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     exampleKey: string,
     opts?: SurroundOptions
   ): void {
-    head = typeof head === "function" ? head() : head;
+    const hval = typeof head === "function" ? head() : head;
+    const mark = this.#probeMark(hval, tail);
 
-    // Stored marks alone would not insert the placeholder.
-    if (this.view.state.selection.empty) {
-      this.#applySurroundFallback(head, tail, exampleKey, opts);
-      this.focus();
-      return;
+    if (mark) {
+      toggleMark(mark.type, mark.attrs)(this.view.state, this.view.dispatch);
+    } else {
+      this.#applySurroundFallback(hval, tail, exampleKey, opts);
     }
 
-    const probe = this.#probeMarkup(head, tail);
-
-    if (probe?.kind === "mark") {
-      toggleMark(probe.mark.type, probe.mark.attrs)(
-        this.view.state,
-        this.view.dispatch
-      );
-      this.focus();
-      return;
-    }
-
-    if (probe?.kind === "node") {
-      const activeNode = [probe, probe.inlineVariant].find(
-        (variant) =>
-          variant && inNode(this.view.state, variant.nodeType, variant.attrs)
-      );
-
-      if (activeNode) {
-        this.#unwrapNode(activeNode.nodeType, activeNode.attrs);
-        this.focus();
-        return;
-      }
-
-      const { $from, $to } = this.view.state.selection;
-      const isInline = $from.sameParent($to) && $from.parent.isTextblock;
-      const inlineVariant = probe.nodeType.isInline
-        ? probe
-        : probe.inlineVariant;
-
-      if (isInline && inlineVariant) {
-        if (
-          !this.#wrapInlineNode(inlineVariant.nodeType, inlineVariant.attrs)
-        ) {
-          this.#applySurroundFallback(head, tail, exampleKey, opts);
-        }
-      } else if (
-        !probe.nodeType.isBlock ||
-        probe.nodeType.isTextblock ||
-        !wrapIn(probe.nodeType, probe.attrs)(
-          this.view.state,
-          this.view.dispatch
-        )
-      ) {
-        this.#applySurroundFallback(head, tail, exampleKey, opts);
-      }
-
-      this.focus();
-      return;
-    }
-
-    this.#applySurroundFallback(head, tail, exampleKey, opts);
     this.focus();
   }
 
@@ -341,13 +286,13 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     opts?: SurroundOptions
   ): void {
     const hval = typeof head === "function" ? head() : head;
+    const doc = hval == null ? null : this.tryConvertFromMarkdown(hval + "x");
 
-    if (hval == null) {
+    if (!doc) {
       this.#applyListFallback(head, exampleKey, opts);
       return;
     }
 
-    const doc = this.convertFromMarkdown(hval + "x");
     const probe = doc.firstChild;
     const isList =
       probe?.type === this.schema.nodes.bullet_list ||
@@ -660,18 +605,39 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     });
   }
 
+  #probeMark(head: string, tail: string): Mark | null {
+    const doc = this.tryConvertFromMarkdown(head + "x" + tail);
+    const paragraph = doc?.childCount === 1 ? doc.firstChild : null;
+    const text =
+      paragraph?.type === this.schema.nodes.paragraph &&
+      paragraph.childCount === 1
+        ? paragraph.firstChild
+        : null;
+
+    return text?.isText && text.text === "x" && text.marks.length === 1
+      ? text.marks[0]!
+      : null;
+  }
+
   #applySurroundFallback(
     head: string,
     tail: string,
     exampleKey: string,
     opts?: SurroundOptions
   ): void {
-    const { from, to } = this.view.state.selection;
+    const { state } = this.view;
+    const { from, to, empty, $from, $to } = state.selection;
     const text = this.#selectedMarkdownOr(exampleKey);
+
+    const withinTextblock = $from.sameParent($to) && $from.parent.isTextblock;
+
+    // A wrapper around several blocks only cooks as a block on its own lines.
+    const useBlockMode =
+      opts?.useBlockMode || (tail.length > 0 && !withinTextblock);
 
     let effectiveHead = head;
     let effectiveTail = tail;
-    if (opts?.useBlockMode && text.includes("\n")) {
+    if (useBlockMode && text.includes("\n")) {
       if (!effectiveHead.endsWith("\n")) {
         effectiveHead += "\n";
       }
@@ -680,29 +646,117 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       }
     }
 
-    const doc = this.convertFromMarkdown(effectiveHead + text + effectiveTail);
+    const markdown = effectiveHead + text + effectiveTail;
 
-    const result =
-      doc.content.childCount === 1 &&
-      doc.content.firstChild?.type.name === "paragraph"
-        ? doc.content.firstChild.content
-        : doc.content;
+    // Markup that does not both start and end its line cooks as inline content.
+    const partialTextblock =
+      withinTextblock &&
+      ($from.parentOffset > 0 || $to.parentOffset < $from.parent.content.size);
+    const inlineContent = partialTextblock
+      ? this.#convertInlineMarkdown(markdown)
+      : null;
 
-    this.view.dispatch(this.view.state.tr.replaceWith(from, to, result));
+    const tr = inlineContent
+      ? state.tr.replaceWith(from, to, inlineContent)
+      : this.#replaceWithParsed(
+          state.tr,
+          from,
+          to,
+          this.convertFromMarkdown(markdown)
+        );
+
+    if (empty) {
+      this.#selectInserted(tr, from, to, text);
+    }
+
+    this.view.dispatch(tr);
+  }
+
+  // Leading text keeps block rules from claiming the markup, like mid-line
+  // markdown when cooked.
+  #convertInlineMarkdown(markdown: string): Fragment | null {
+    const doc = this.tryConvertFromMarkdown("x " + markdown);
+    const paragraph = doc?.childCount === 1 ? doc.firstChild : null;
+    const first =
+      paragraph?.type === this.schema.nodes.paragraph
+        ? paragraph.firstChild
+        : null;
+
+    return first?.isText && first.text!.startsWith("x ")
+      ? paragraph!.content.cut(2)
+      : null;
+  }
+
+  // Block results go through replaceRange so a fully covered textblock is
+  // replaced instead of being left behind empty.
+  #replaceWithParsed(
+    tr: Transaction,
+    from: number,
+    to: number,
+    doc: Node
+  ): Transaction {
+    const paragraph =
+      doc.childCount === 1 &&
+      doc.firstChild?.type === this.schema.nodes.paragraph
+        ? doc.firstChild
+        : null;
+
+    if (paragraph) {
+      return tr.replaceWith(from, to, paragraph.content);
+    }
+
+    // replaceRange would also swallow covered non-defining ancestors such as
+    // a blockquote, so a fully covered textblock is replaced explicitly.
+    const $from = tr.doc.resolve(from);
+    const $to = tr.doc.resolve(to);
+    const wholeTextblock =
+      $from.sameParent($to) &&
+      $from.parent.isTextblock &&
+      $from.parentOffset === 0 &&
+      $to.parentOffset === $to.parent.content.size;
+
+    return wholeTextblock
+      ? tr.replaceWith($from.before(), $to.after(), doc.content)
+      : tr.replaceRange(from, to, new Slice(doc.content, 0, 0));
+  }
+
+  #selectInserted(
+    tr: Transaction,
+    from: number,
+    to: number,
+    text: string
+  ): void {
+    const start = tr.mapping.map(from, -1);
+    // Everything after the selection is untouched, so the inserted range ends
+    // the same distance from the end of the document as `to` did.
+    const end = tr.doc.content.size - (this.view.state.doc.content.size - to);
+    let found = null as number | null;
+
+    tr.doc.nodesBetween(start, end, (node, pos) => {
+      if (found === null && node.isText) {
+        const index = node.text!.indexOf(text, Math.max(0, start - pos));
+        if (index >= 0) {
+          found = pos + index;
+        }
+      }
+      return found === null;
+    });
+
+    if (found !== null) {
+      tr.setSelection(TextSelection.create(tr.doc, found, found + text.length));
+    }
   }
 
   #toggleListType(targetType: NodeType): void {
     const { state } = this.view;
     const { $from } = state.selection;
+    const { bullet_list, ordered_list, list_item } = this.schema.nodes;
 
     let currentListType: NodeType | null = null;
     for (let depth = $from.depth; depth > 0; depth--) {
-      const node = $from.node(depth);
-      if (
-        node.type === this.schema.nodes.bullet_list ||
-        node.type === this.schema.nodes.ordered_list
-      ) {
-        currentListType = node.type;
+      const { type } = $from.node(depth);
+      if (type === bullet_list || type === ordered_list) {
+        currentListType = type;
         break;
       }
     }
@@ -729,31 +783,17 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     }
 
     if (currentListType === targetType) {
-      liftListItem(this.schema.nodes.list_item)(state, this.view.dispatch);
+      liftListItem(list_item)(state, this.view.dispatch);
       return;
     }
 
-    // Compose lift + wrap into a single transaction for one undo step
-    const tr = state.tr;
-
-    const lifted = liftListItem(this.schema.nodes.list_item)(
-      state,
-      (liftTr) => {
-        liftTr.steps.forEach((step) => tr.step(step));
+    // Lifting and re-wrapping in one transaction keeps the switch a single undo step.
+    liftListItem(list_item)(state, (tr) => {
+      const range = tr.selection.$from.blockRange(tr.selection.$to);
+      if (range && wrapRangeInList(tr, range, targetType)) {
+        this.view.dispatch(tr);
       }
-    );
-    if (!lifted) {
-      return;
-    }
-
-    const liftedState = state.apply(tr);
-    wrapInList(targetType)(liftedState, (wrapTr) => {
-      wrapTr.steps.forEach((step) => tr.step(step));
     });
-
-    if (tr.steps.length) {
-      this.view.dispatch(tr);
-    }
   }
 
   #applyListFallback(
@@ -761,25 +801,35 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     exampleKey: string,
     opts?: SurroundOptions
   ): void {
-    const { from, to } = this.view.state.selection;
+    const { state } = this.view;
+    const { from, to, empty } = state.selection;
     const text = this.#selectedMarkdownOr(exampleKey);
 
+    let previous: string | undefined;
     const result = text
       .split("\n")
-      .map((line, i) => {
+      .map((line) => {
         if (!opts?.applyEmptyLines && !line.length) {
           return line;
         }
-        const lineHead =
-          typeof head === "function"
-            ? head(i === 0 ? undefined : String(i))
-            : head;
+        const lineHead = typeof head === "function" ? head(previous) : head;
+        previous = lineHead;
         return lineHead + line;
       })
       .join("\n");
 
-    const doc = this.convertFromMarkdown(result);
-    this.view.dispatch(this.view.state.tr.replaceWith(from, to, doc.content));
+    const tr = this.#replaceWithParsed(
+      state.tr,
+      from,
+      to,
+      this.convertFromMarkdown(result)
+    );
+
+    if (empty) {
+      this.#selectInserted(tr, from, to, text);
+    }
+
+    this.view.dispatch(tr);
     this.focus();
   }
 
@@ -788,124 +838,6 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     return empty
       ? i18n(`composer.${exampleKey}`)
       : this.convertToMarkdown(this.view.state.doc.slice(from, to));
-  }
-
-  #probeMarkup(head: string, tail: string): MarkupProbe | null {
-    const doc = this.convertFromMarkdown(head + "x" + tail);
-
-    if (doc.content.childCount !== 1 || !doc.firstChild) {
-      return null;
-    }
-
-    const outer = doc.firstChild;
-
-    // Standalone parsing can prefer a block variant of inline markup.
-    if (outer.type.name !== "paragraph") {
-      const plainParagraph = this.schema.nodes.paragraph.create(
-        null,
-        this.schema.text("x")
-      );
-      // Native wrapping preserves only the outer node, not its parsed contents.
-      if (outer.childCount !== 1 || !outer.firstChild?.eq(plainParagraph)) {
-        return null;
-      }
-
-      const inlineVariant = this.#probeInlineVariant(head, tail);
-      return {
-        kind: "node",
-        nodeType: outer.type,
-        attrs: outer.attrs,
-        inlineVariant,
-      };
-    }
-
-    if (outer.content.childCount !== 1 || !outer.firstChild) {
-      return null;
-    }
-
-    const child = outer.firstChild;
-
-    if (child.isText && child.text === "x" && child.marks.length === 1) {
-      return { kind: "mark", mark: child.marks[0]! };
-    }
-
-    if (!child.isText && child.type.isInline && child.textContent === "x") {
-      return {
-        kind: "node",
-        nodeType: child.type,
-        attrs: child.attrs,
-        inlineVariant: null,
-      };
-    }
-
-    return null;
-  }
-
-  #probeInlineVariant(
-    head: string,
-    tail: string
-  ): { nodeType: NodeType; attrs: Attrs } | null {
-    const doc = this.convertFromMarkdown("text " + head + "x" + tail + " text");
-    if (doc.content.childCount !== 1 || !doc.firstChild) {
-      return null;
-    }
-
-    const para = doc.content.firstChild;
-    if (para?.type.name !== "paragraph") {
-      return null;
-    }
-
-    let found: { nodeType: NodeType; attrs: Attrs } | null = null;
-    para.content.forEach((child) => {
-      if (!child.isText && child.type.isInline && child.textContent === "x") {
-        found = { nodeType: child.type, attrs: child.attrs };
-      }
-    });
-    return found;
-  }
-
-  #unwrapNode(nodeType: NodeType, attrs: Attrs = {}): void {
-    const { state } = this.view;
-    const { $from } = state.selection;
-
-    for (let depth = $from.depth; depth > 0; depth--) {
-      const node = $from.node(depth);
-      if (
-        node.type === nodeType &&
-        Object.keys(attrs).every((key) => node.attrs[key] === attrs[key])
-      ) {
-        const pos = $from.before(depth);
-
-        const tr = state.tr.replaceWith(pos, pos + node.nodeSize, node.content);
-
-        const resolvedPos = tr.doc.resolve(pos);
-        tr.setSelection(Selection.near(resolvedPos));
-
-        this.view.dispatch(tr);
-        return;
-      }
-    }
-  }
-
-  #wrapInlineNode(nodeType: NodeType, attrs: Attrs = {}): boolean {
-    const { state } = this.view;
-    const { from, to } = state.selection;
-    const content = state.doc.slice(from, to).content;
-
-    const wrappedNode = nodeType.createAndFill(attrs, content);
-    if (wrappedNode) {
-      const tr = state.tr.replaceWith(from, to, wrappedNode);
-      tr.setSelection(
-        TextSelection.create(
-          tr.doc,
-          from + 1,
-          from + 1 + wrappedNode.content.size
-        )
-      );
-      this.view.dispatch(tr);
-      return true;
-    }
-    return false;
   }
 }
 
