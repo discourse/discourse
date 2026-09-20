@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseEvents::Events::Onebox do
+describe DiscourseEvents::Events::TopicOnebox do
   fab!(:event) do
     Fabricate(
       :event,
@@ -112,11 +112,73 @@ describe DiscourseEvents::Events::Onebox do
   end
 
   it "preserves calendar dates for all-day events" do
+    event.update!(all_day: true, original_starts_at: Time.utc(2026, 9, 21), original_ends_at: nil)
+
+    text = preview.at_css(".discourse-event-onebox").text
+
+    expect(text).to include("September 21, 2026")
+    expect(text).not_to include(event.timezone, "PM")
+  end
+
+  it "shows the next occurrence of a recurring event" do
+    event.update!(recurrence: "every_week", original_starts_at: 8.days.ago, original_ends_at: nil)
+    next_starts_at = event.reload.starts_at.in_time_zone(event.timezone)
+
+    text = preview.at_css(".discourse-event-onebox").text
+
+    expect(next_starts_at).to be > Time.now
+    expect(text).to include(I18n.l(next_starts_at, format: "%B %-d, %Y %-I:%M %p"))
+  end
+
+  it "renders emoji shortcodes in the name and location" do
+    event.update!(name: "Party :tada:", location: "Room :tada:")
+
+    expect(preview.css(".discourse-event-onebox img.emoji").size).to eq(2)
+  end
+
+  it "falls back to the current locale for one it cannot switch to" do
+    html = preview(locale: "xx-YY")
+
+    expect(html.at_css(".discourse-event-onebox").text).to include(event.name, "September 20, 2026")
+  end
+
+  it "omits the name when it matches the topic title" do
+    event.post.topic.update!(title: event.name)
+
+    html = preview
+
+    expect(html.css(".discourse-event-onebox strong")).to be_empty
+    expect(html.at_css(".discourse-event-onebox").text).to include("September 20, 2026")
+  end
+
+  it "falls back to UTC for a timezone Rails no longer knows" do
+    event.update_columns(timezone: "Mars/Olympus")
+
+    html = preview
+
+    expect(html.at_css("aside.quote")).to be_present
+    expect(html.at_css(".discourse-event-onebox").text).to include(
+      "September 20, 2026 9:00 PM",
+      "(UTC)",
+    )
+  end
+
+  it "does not repeat the date of a single-day all-day event" do
     event.update!(all_day: true)
 
     text = preview.at_css(".discourse-event-onebox").text
 
-    expect(text).to include("September 20, 2026")
-    expect(text).not_to include(event.timezone, "PM")
+    expect(text.scan("September 20, 2026").size).to eq(1)
+    expect(text).not_to include("→")
+  end
+
+  it "prefixes the dates with the translatable summary string" do
+    TranslationOverride.upsert!(
+      "en",
+      "discourse_post_event.event_excerpt.summary",
+      "When: %{summary}",
+    )
+
+    expect(preview.at_css(".discourse-event-onebox").text).to include("When: September 20, 2026")
   end
 end

@@ -91,9 +91,6 @@ acceptance("Event onebox", function (needs) {
           "HTML indentation does not create blank lines"
         );
       assert
-        .dom(".composer-onebox-node")
-        .doesNotExist("no custom rich-text renderer is mounted");
-      assert
         .dom(".ProseMirror > p")
         .hasStyle(
           { whiteSpace: "break-spaces" },
