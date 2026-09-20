@@ -31,7 +31,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
     allow(Migrations::Database::FilesDB::Download).to receive(:create)
   end
 
-  describe "#write (dedup by staging id)" do
+  describe "#write (dedup by FilesDB upload ID)" do
     def result_for(source_id, upload_id)
       {
         id: source_id,
@@ -50,7 +50,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
       }
     end
 
-    it "inserts the uploads row once per staging id but records every result" do
+    it "inserts the uploads row once per FilesDB upload ID but records every result" do
       seen = []
       allow(Migrations::Database::FilesDB::Upload).to receive(:create) { |**kwargs|
         seen << kwargs[:id]

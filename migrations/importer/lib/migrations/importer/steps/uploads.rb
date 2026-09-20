@@ -47,7 +47,7 @@ module Migrations
 
         rows_query <<~SQL, MappingType::USERS, MappingType::UPLOADS, Discourse::SYSTEM_USER_ID
           SELECT ur.id                          AS original_id,
-                 u.id                           AS staging_id,
+                 u.id                           AS files_db_upload_id,
                  COALESCE(mu.discourse_id, ?3)  AS user_id,
                  u.original_filename,
                  u.filesize,
@@ -89,21 +89,21 @@ module Migrations
         private
 
         def setup
-          # staging upload id (files.uploads.id) => the Discourse upload id it
-          # ended up as. Files are deduplicated by sha1 when they are uploaded,
-          # so several source ids can point at the same staging upload.
-          @staging_upload_ids = {}
+          # files.uploads.id => the Discourse upload id it ended up as. Files are
+          # deduplicated by sha1 when they are uploaded, so several source ids can
+          # point at the same FilesDB upload.
+          @files_db_upload_ids = {}
         end
 
         def transform_row(row)
-          staging_id = row.delete(:staging_id)
+          files_db_upload_id = row.delete(:files_db_upload_id)
           sha1 = row[:sha1]
 
-          # An earlier source file already used this staging upload. Map this
+          # An earlier source file already used this FilesDB upload. Map this
           # source id to the Discourse upload we created for it and skip the
           # copy. Without this the mapping was lost and later references to the
           # deduplicated source ids resolved to NULL.
-          if (discourse_id = @staging_upload_ids[staging_id])
+          if (discourse_id = @files_db_upload_ids[files_db_upload_id])
             row[:id] = discourse_id
             return nil
           end
@@ -111,14 +111,14 @@ module Migrations
           # The same file already exists on the target site. Reuse it. We only
           # match on a real sha1 because it is nullable and NULLs are not equal.
           if sha1 && (discourse_id = @existing_sha1s[sha1])
-            @staging_upload_ids[staging_id] = discourse_id
+            @files_db_upload_ids[files_db_upload_id] = discourse_id
             row[:id] = discourse_id
             return nil
           end
 
           transformed = super
           discourse_id = transformed[:id]
-          @staging_upload_ids[staging_id] = discourse_id
+          @files_db_upload_ids[files_db_upload_id] = discourse_id
           @existing_sha1s[sha1] = discourse_id if sha1
           transformed
         end
