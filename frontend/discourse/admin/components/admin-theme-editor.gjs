@@ -5,11 +5,10 @@ import { array, concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -34,14 +33,15 @@ const ADVANCED_FIELDS = [
   "body_tag",
 ];
 
+const COLOR_VARS_REGEX =
+  /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
+
 @tagName("")
 export default class AdminThemeEditor extends Component {
   @service router;
 
   @tracked showAdvanced;
   currentTargetName;
-
-  warning = null;
 
   @computed("fieldName", "currentTargetName", "theme")
   get activeSection() {
@@ -62,9 +62,36 @@ export default class AdminThemeEditor extends Component {
     this.theme.setField(this.currentTargetName, this.fieldName, value);
   }
 
-  @computed("fieldName", "currentTargetName")
-  get editorId() {
-    return `${this.fieldName}|${this.currentTargetName}`;
+  /**
+   * Lines using a theme colour variable directly, which the colour scheme
+   * cannot override. `color_definitions` is where they are meant to be
+   * declared, so it is exempt.
+   */
+  get colorVariableWarnings() {
+    if (
+      this.activeSectionMode !== "scss" ||
+      this.fieldName?.startsWith("color_definitions")
+    ) {
+      return [];
+    }
+
+    return (this.activeSection || "")
+      .split("\n")
+      .map((line, index) =>
+        line.match(COLOR_VARS_REGEX)
+          ? {
+              line: index + 1,
+              message: i18n("admin.customize.theme.scss_warning_inline"),
+            }
+          : null
+      )
+      .filter(Boolean);
+  }
+
+  get warning() {
+    return this.colorVariableWarnings.length
+      ? i18n("admin.customize.theme.scss_color_variables_warning")
+      : null;
   }
 
   get visibleTargets() {
@@ -143,12 +170,6 @@ export default class AdminThemeEditor extends Component {
   @action
   toggleMaximize() {
     this.toggleProperty("maximized");
-    next(() => this.appEvents.trigger("ace:resize"));
-  }
-
-  @action
-  setWarning(message) {
-    this.set("warning", message);
   }
 
   @action
@@ -265,16 +286,14 @@ export default class AdminThemeEditor extends Component {
         {{this.currentField.title}}
       </div>
 
-      <AceEditor
-        @autofocus="true"
-        @content={{this.activeSection}}
-        @editorId={{this.editorId}}
+      <CodeEditor
         @htmlPlaceholder={{true}}
-        @mode={{this.activeSectionMode}}
+        @language={{this.activeSectionMode}}
+        @lineWarnings={{this.colorVariableWarnings}}
         @onChange={{fn (mut this.activeSection)}}
         @placeholder={{this.placeholder}}
         @save={{this.save}}
-        @setWarning={{this.setWarning}}
+        @value={{this.activeSection}}
       />
     </div>
   </template>

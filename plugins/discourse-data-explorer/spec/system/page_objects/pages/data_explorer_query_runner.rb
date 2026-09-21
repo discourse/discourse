@@ -100,8 +100,7 @@ module PageObjects
       end
 
       def fill_new_query_sql(text)
-        page.execute_script(
-          "document.querySelector('.query-new .editor-panel .ace_editor').env.editor.setValue(arguments[0], 1);",
+        PageObjects::Components::CodeEditor.new(".query-new .editor-panel .code-editor").set_input(
           text,
         )
         self
