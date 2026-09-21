@@ -325,6 +325,11 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height, opts = {})
+    if opts[:quality].nil? &&
+         image_extension(path: to, ext_path: to, opts: opts).match?(/\Ajpe?g\z/i)
+      opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
+    end
+
     if GlobalSetting.enable_vips_image_processing
       ensure_safe_paths!(from, to)
       resize_with_vips(from: from, to: to, width: width, height: height, opts: opts)
