@@ -85,6 +85,20 @@ RSpec.describe DiscourseRewind::Action::TopWords do
       end
     end
 
+    it "only counts words from the user's publicly visible posts" do
+      raw = "confidential " * 10
+      restricted_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      [
+        Fabricate(:private_message_post, user:, raw:, created_at: random_datetime),
+        Fabricate(:post, user:, raw:, topic: restricted_topic, created_at: random_datetime),
+        Fabricate(:post, user:, raw:, post_type: Post.types[:whisper], created_at: random_datetime),
+        Fabricate(:post, user:, raw:, hidden: true, created_at: random_datetime),
+      ].each { |post| SearchIndexer.index(post, force: true) }
+
+      expect(call_report[:data].map { |word| word[:word] }).not_to include("confidential")
+    end
+
     context "with a large number of posts and words" do
       before do
         # Create posts with different frequencies of non-stop words
