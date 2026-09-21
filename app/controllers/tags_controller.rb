@@ -448,7 +448,19 @@ class TagsController < ::ApplicationController
 
   def create_synonyms
     guardian.ensure_can_edit_tag!(@tag)
-    value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
+
+    synonym_names =
+      DiscourseTagging.tags_for_saving(params[:synonyms], Guardian.new(Discourse.system_user)) || []
+    existing = Tag.where_name(synonym_names)
+    editable_synonym_ids = DiscourseTagging.editable_synonym_ids(existing, guardian)
+    existing_synonym_names = existing.where(id: editable_synonym_ids).pluck(:name)
+    new_synonym_names = synonym_names - existing.map(&:name)
+
+    value =
+      DiscourseTagging.add_or_create_synonyms_by_name(
+        @tag,
+        existing_synonym_names + new_synonym_names,
+      )
     if value.is_a?(Array)
       render json:
                failed_json.merge(
