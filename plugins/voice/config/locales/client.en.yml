@@ -300,6 +300,7 @@ en:
         type_name: "Type a name instead"
         pick_name: "Choose from the list instead"
         refresh: "Refresh the agent list"
+        deploy_hint: "Ensure your agent is deployed before adding it to this call."
         invited: "Agent invited. It will appear when LiveKit connects it. This can take about a minute."
       admin:
         title: "Voice"
