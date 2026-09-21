@@ -34,7 +34,11 @@ module Migrations
             handle_surplus_uploads if surplus_upload_ids.any?
 
             @seen_upload_ids = load_existing_ids(files_db, "SELECT id FROM uploads")
-            @downloader = Downloader.new(cache_path: settings[:download_cache_path], downloads:)
+            @downloader =
+              Downloader.new(
+                cache_path: settings[:download_cache_path],
+                downloads: reusable_downloads,
+              )
 
             @max_count = (@source_existing_ids - @output_existing_ids).size
             @source_existing_ids = nil
@@ -375,11 +379,14 @@ module Migrations
             classes
           end
 
-          def downloads
+          def reusable_downloads
             hash = {}
-            files_db.query("SELECT id, original_filename FROM downloads") do |row|
-              hash[row[:id]] = row[:original_filename]
-            end
+            files_db.query(<<~SQL) { |row| hash[row[:id]] = row[:original_filename] }
+              SELECT downloads.id, downloads.original_filename
+              FROM downloads
+              LEFT JOIN upload_results ON upload_results.id = downloads.id
+              WHERE upload_results.id IS NULL
+            SQL
             hash
           end
 

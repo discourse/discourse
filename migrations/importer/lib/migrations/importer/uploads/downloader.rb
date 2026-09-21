@@ -4,8 +4,8 @@ module Migrations
   module Importer
     module Uploads
       # Downloads remote upload sources and reuses files recorded in the download
-      # cache. Workers share an immutable snapshot of the filename map; source IDs
-      # are unique and processed once, so new entries are only needed by the next run.
+      # cache. Workers share an immutable snapshot of filenames for downloads that
+      # have no result yet; completed source IDs will not be processed again.
       class Downloader
         class DownloadFailedError < StandardError
         end
