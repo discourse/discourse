@@ -106,9 +106,13 @@ export function decorateHashtags(element, site) {
     if (iconPlaceholderEl && hashtagTypeClass) {
       let opts = {
         icon: site.hashtag_icons[hashtagType],
-        id: hashtagEl.dataset.id,
+        id: parseInt(hashtagEl.dataset.id, 10),
         slug: hashtagEl.dataset.slug,
-        style_type: hashtagEl.dataset?.styleType || "square",
+        style_type: ["square", "icon", "emoji"].includes(
+          hashtagEl.dataset.styleType
+        )
+          ? hashtagEl.dataset.styleType
+          : "square",
       };
 
       if (opts.style_type === "icon") {
