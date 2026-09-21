@@ -85,6 +85,31 @@ RSpec.describe UploadsController do
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
       end
 
+      it "logs unexpected upload errors and returns a generic message" do
+        error =
+          Discourse::Utils::CommandError.new(
+            "magick /private/tmp/upload.png /private/tmp/image.jpg\nImage conversion failed",
+          )
+        FileStore::LocalStore.any_instance.stubs(:store_upload).raises(error)
+
+        logger =
+          track_log_messages do
+            post "/uploads.json", params: { file: logo, upload_type: "composer" }
+          end
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body).to eq(
+          "failed" => "FAILED",
+          "message" => I18n.t("upload.failed"),
+        )
+        expect(logger.errors.join("\n")).to include(
+          "Failed to create upload",
+          error.class.name,
+          error.message,
+          error.backtrace.first,
+        )
+      end
+
       it 'returns "raw" url for site settings' do
         set_cdn_url "https://awesome.com"
 
