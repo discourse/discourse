@@ -909,6 +909,67 @@ RSpec.describe ReviewablesController do
           expect(json["errors"]).to be_present
         end
       end
+
+      describe "ReviewableFlaggedPost with deleted post" do
+        fab!(:admin)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:post)
+
+        before do
+          sign_in(admin)
+          SiteSetting.reviewable_claiming = "optional"
+        end
+
+        it "allows performing actions on reviewable when post is deleted" do
+          result = PostActionCreator.spam(user, post)
+          reviewable = result.reviewable
+
+          expect(reviewable.pending?).to eq(true)
+          expect(reviewable.target_id).to eq(post.id)
+
+          # Delete the post but keep reviewable pending
+          PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
+          reviewable.reload
+          post.reload
+
+          expect(post.deleted_at).not_to be_nil
+          expect(reviewable.pending?).to eq(true),
+          "Reviewable should still be pending after post deletion"
+
+          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
+
+          expect(response.status).to eq(200),
+          "Expected 200 but got #{response.status}. " \
+            "This means target association is not loading as expected. " \
+            "Body: #{response.parsed_body}"
+
+          json = response.parsed_body
+          expect(json.dig("reviewable_perform_result", "success")).to eq(true)
+
+          reviewable.reload
+          expect(reviewable.approved?).to eq(true)
+        end
+
+        it "does not return 403 when reviewable has deleted post" do
+          result = PostActionCreator.spam(user, post)
+          reviewable = result.reviewable
+
+          # Delete the post but keep reviewable pending
+          PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
+          reviewable.reload
+
+          expect(reviewable.pending?).to eq(true), "Reviewable should still be pending"
+
+          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
+
+          expect(response.status).not_to eq(403),
+          "Got 403 InvalidAction. " \
+            "This means actions_for returned empty due to post.blank? being true. " \
+            "The preload: false fix should prevent this."
+
+          expect(response.status).to eq(200)
+        end
+      end
     end
 
     describe "with reviewable params added via plugin API" do
