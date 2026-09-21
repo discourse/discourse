@@ -35,7 +35,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
-        is_image: true,
+        file_type: Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
         upload: {
           id: upload_id,
           sha1: "abc",
@@ -72,7 +72,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
-        is_image: true,
+        file_type: Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
         upload: {
           id: 7,
           sha1: "abc",
@@ -94,7 +94,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
-        is_image: true,
+        file_type: Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
         upload_id: 7,
       )
     end
@@ -106,7 +106,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: skip_reason::DOWNLOAD_ERROR,
         skip_details: "boom",
         markdown: nil,
-        is_image: nil,
+        file_type: nil,
         upload: nil,
         download: nil,
       }
@@ -127,7 +127,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: skip_reason::FILE_NOT_FOUND,
         skip_details: nil,
         markdown: nil,
-        is_image: nil,
+        file_type: nil,
         upload: nil,
         download: {
           id: "hash-dl",
@@ -145,7 +145,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
   end
 
   describe "upload classification" do
-    it "records whether the created upload is an image" do
+    it "records the created upload's file type" do
       metadata = described_class::UploadMetadata.new(description: nil)
       upload_markdown_class =
         Class.new do
@@ -161,16 +161,31 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
           def self.is_supported_image?(filename)
             filename.end_with?(".png")
           end
+
+          def self.is_supported_audio?(filename)
+            filename.end_with?(".mp3")
+          end
+
+          def self.is_supported_video?(filename)
+            filename.end_with?(".mp4")
+          end
         end
       stub_const("UploadMarkdown", upload_markdown_class)
       stub_const("FileHelper", file_helper)
 
-      %w[image.png audio.mp3].each do |filename|
+      expected_types = {
+        "image.png" => Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
+        "audio.mp3" => Migrations::Database::FilesDB::Enums::UploadFileType::AUDIO,
+        "video.mp4" => Migrations::Database::FilesDB::Enums::UploadFileType::VIDEO,
+        "document.pdf" => Migrations::Database::FilesDB::Enums::UploadFileType::ATTACHMENT,
+      }
+
+      expected_types.each do |filename, file_type|
         upload = Data.define(:original_filename, :attributes).new(filename, {})
 
         result = uploader.__send__(:success_result, { id: filename }, upload, metadata, nil)
 
-        expect(result[:is_image]).to eq(filename == "image.png")
+        expect(result[:file_type]).to eq(file_type)
       end
     end
   end

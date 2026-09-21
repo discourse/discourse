@@ -14,6 +14,7 @@ module Migrations
 
           Status = Database::FilesDB::Enums::UploadResultStatus
           SkipReason = Database::FilesDB::Enums::UploadSkipReason
+          UploadFileType = Database::FilesDB::Enums::UploadFileType
 
           UPLOAD_COLUMNS =
             Database::FilesDB::Upload.method(:create).parameters.map { |_type, name| name }.freeze
@@ -122,7 +123,7 @@ module Migrations
               skip_reason: result[:skip_reason],
               skip_details: result[:skip_details],
               markdown: result[:markdown],
-              is_image: result[:is_image],
+              file_type: result[:file_type],
               upload_id:,
             )
 
@@ -302,7 +303,7 @@ module Migrations
               skip_reason: nil,
               skip_details: nil,
               markdown: UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
-              is_image: FileHelper.is_supported_image?(upload.original_filename),
+              file_type: upload_file_type(upload.original_filename),
               upload: upload_attributes(upload),
               download: download_record,
             }
@@ -315,7 +316,7 @@ module Migrations
               skip_reason: SkipReason::FILE_NOT_FOUND,
               skip_details: nil,
               markdown: nil,
-              is_image: nil,
+              file_type: nil,
               upload: nil,
               download: nil,
             }
@@ -328,7 +329,7 @@ module Migrations
               skip_reason:,
               skip_details:,
               markdown: nil,
-              is_image: nil,
+              file_type: nil,
               upload: nil,
               download:,
             }
@@ -336,6 +337,18 @@ module Migrations
 
           def upload_attributes(upload)
             upload.attributes.symbolize_keys.slice(*UPLOAD_COLUMNS)
+          end
+
+          def upload_file_type(filename)
+            if FileHelper.is_supported_image?(filename)
+              UploadFileType::IMAGE
+            elsif FileHelper.is_supported_audio?(filename)
+              UploadFileType::AUDIO
+            elsif FileHelper.is_supported_video?(filename)
+              UploadFileType::VIDEO
+            else
+              UploadFileType::ATTACHMENT
+            end
           end
 
           def outcome_for(status)

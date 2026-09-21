@@ -28,12 +28,12 @@ CREATE INDEX idx_optimized_images_upload_id ON optimized_images (upload_id);
 
 CREATE TABLE upload_results
 (
-    id           TEXT      NOT NULL PRIMARY KEY,
-    is_image     BOOLEAN,
+    id           TEXT         NOT NULL PRIMARY KEY,
+    file_type    ENUM_INTEGER,
     markdown     TEXT,
     skip_details TEXT,
     skip_reason  ENUM_TEXT,
-    status       ENUM_TEXT NOT NULL,
+    status       ENUM_TEXT    NOT NULL,
     upload_id    INTEGER
 );
 

@@ -10,6 +10,7 @@ module Migrations
         class Optimizer < Base
           OPTIMIZED_IMAGE_COLUMNS =
             Database::FilesDB::OptimizedImage.method(:create).parameters.map(&:last).freeze
+          UploadFileType = Database::FilesDB::Enums::UploadFileType
 
           def title
             "Creating optimized images"
@@ -41,7 +42,7 @@ module Migrations
                      u.sha1 AS upload_sha1,
                      r.id AS source_id,
                      r.markdown,
-                     r.is_image
+                     r.file_type
                 FROM upload_results r
                      JOIN uploads u ON u.id = r.upload_id
                ORDER BY u.id
@@ -50,7 +51,8 @@ module Migrations
             files_db.query(sql) do |row|
               upload_id = row[:upload_id]
 
-              if @optimized_upload_ids.include?(upload_id) || !row[:is_image]
+              if @optimized_upload_ids.include?(upload_id) ||
+                   row[:file_type] != UploadFileType::IMAGE
                 emit_result.call(skipped_status(upload_id))
               elsif @post_upload_ids.include?(row[:source_id])
                 row[:type] = "post"

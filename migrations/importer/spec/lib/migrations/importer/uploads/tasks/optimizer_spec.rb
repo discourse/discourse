@@ -43,7 +43,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
         source_id: "s-attachment",
         upload_id: 5,
         markdown: "![audio|audio](upload://e)",
-        is_image: false,
+        file_type: Migrations::Database::FilesDB::Enums::UploadFileType::AUDIO,
       )
       insert_optimized_image(upload_id: 4)
 
@@ -116,11 +116,11 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
       source_id:,
       upload_id:,
       markdown: "![image](upload://#{source_id})",
-      is_image: true,
+      file_type: Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
     )
   end
 
-  def insert_result(source_id:, upload_id:, markdown:, is_image:)
+  def insert_result(source_id:, upload_id:, markdown:, file_type:)
     files_db.execute(
       "INSERT INTO uploads (id, sha1, url, filesize, original_filename) VALUES (?, ?, ?, ?, ?)",
       upload_id,
@@ -130,11 +130,11 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
       "#{upload_id}.png",
     )
     files_db.execute(
-      "INSERT INTO upload_results (id, status, markdown, is_image, upload_id) " \
+      "INSERT INTO upload_results (id, status, markdown, file_type, upload_id) " \
         "VALUES (?, 'ok', ?, ?, ?)",
       source_id,
       markdown,
-      is_image,
+      file_type,
       upload_id,
     )
   end

@@ -11,7 +11,7 @@ module Migrations
         SQL = <<~SQL
           INSERT INTO upload_results (
             id,
-            is_image,
+            file_type,
             markdown,
             skip_details,
             skip_reason,
@@ -27,7 +27,8 @@ module Migrations
         # Creates a new `upload_results` record in the FilesDB.
         #
         # @param id             [String]
-        # @param is_image       [Boolean, nil]
+        # @param file_type      [Integer, nil]
+        #   Any constant from UploadFileType (e.g. UploadFileType::IMAGE)
         # @param markdown       [String, nil]
         # @param skip_details   [String, nil]
         # @param skip_reason    [String, nil]
@@ -38,11 +39,12 @@ module Migrations
         #
         # @return [void]
         #
+        # @see Migrations::Database::FilesDB::Enums::UploadFileType
         # @see Migrations::Database::FilesDB::Enums::UploadSkipReason
         # @see Migrations::Database::FilesDB::Enums::UploadResultStatus
         def self.create(
           id:,
-          is_image: nil,
+          file_type: nil,
           markdown: nil,
           skip_details: nil,
           skip_reason: nil,
@@ -52,7 +54,7 @@ module Migrations
           Migrations::Database::FilesDB.insert(
             SQL,
             id,
-            Migrations::Database.format_boolean(is_image),
+            file_type,
             markdown,
             skip_details,
             skip_reason,
