@@ -27,9 +27,11 @@ module DiscourseRewind
       WORD_PATTERN = "^[^[:digit:][:punct:][:space:]]{2,}$"
       WORD_COUNT = 5
       CANDIDATE_COUNT = 100
+      QUOTES_REGEX = "\\[quote[^\\]]*\\](?:[^\\[]|\\[(?!/quote\\]))*\\[/quote\\]"
+      CODE_REGEX = "```(?:[^`]|`(?!``))*```|`[^`]*`"
       LINKS_REGEX = "https?://[^\\s]+"
-      RAW_TSVECTOR_SQL =
-        "to_tsvector('#{SIMPLE_TS_CONFIG}', regexp_replace(raw, '#{LINKS_REGEX}', ' ', 'g'))"
+      STRIPPED_RAW_TSVECTOR_SQL =
+        "to_tsvector('#{SIMPLE_TS_CONFIG}', regexp_replace(raw, '#{QUOTES_REGEX}|#{CODE_REGEX}|#{LINKS_REGEX}', ' ', 'g'))"
 
       FakeData = {
         data: [
@@ -52,6 +54,15 @@ module DiscourseRewind
 
       private
 
+      def own_search_data_sql
+        <<~SQL.squish
+          ts_filter(
+            post_search_data.search_data,
+            CASE WHEN topics.user_id = #{user.id} AND posts.post_number = 1 THEN '{a,d}' ELSE '{d}' END::"char"[]
+          )
+        SQL
+      end
+
       def word_query
         posts = self.class.publicly_visible_posts.where(user_id: user.id, created_at: date)
         stem = "strip(to_tsvector('#{Search.ts_config}', #{Search.wrap_unaccent("word")}))"
@@ -62,7 +73,7 @@ module DiscourseRewind
               word, ndoc, nentry
             FROM
               ts_stat($INNERSQL$
-                #{posts.joins(:post_search_data).select(:search_data).to_sql}
+                #{posts.joins(:post_search_data).select(own_search_data_sql).to_sql}
               $INNERSQL$)
             WHERE
               word ~ '#{WORD_PATTERN}'
@@ -79,7 +90,7 @@ module DiscourseRewind
               word AS original_word
             FROM
               ts_stat($INNERSQL$
-                #{posts.select(RAW_TSVECTOR_SQL).to_sql}
+                #{posts.select(STRIPPED_RAW_TSVECTOR_SQL).to_sql}
               $INNERSQL$)
             WHERE
               word ~ '#{WORD_PATTERN}'

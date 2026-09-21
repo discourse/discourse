@@ -42,6 +42,47 @@ RSpec.describe DiscourseRewind::Action::TopWords do
       expect(call_report[:data].map { |word| word[:word] }).to include("releases")
     end
 
+    it "counts the title of the user's own topics, but not of other people's" do
+      own_topic = Fabricate(:topic, user:, title: "Everything about kiwi fruit")
+      other_topic = Fabricate(:topic, title: "Everything about melon fruit")
+      [own_topic, other_topic].each do |topic|
+        post = Fabricate(:post, user:, topic:, raw: "kiwi melon " * 5, created_at: random_datetime)
+        index(post)
+      end
+      reply = Fabricate(:post, user:, topic: own_topic, raw: "grape", created_at: random_datetime)
+      index(reply)
+
+      expect(call_report[:data].first(2)).to eq(
+        [{ word: "kiwi", score: 13 }, { word: "melon", score: 12 }],
+      )
+    end
+
+    it "ignores words that are only quoted or in code blocks" do
+      raw = <<~RAW
+        [quote="someone, post:1, topic:2"]
+        quoted quoted quoted quoted
+        [/quote]
+        mine mine mine mine
+        [quote="someone, post:1, topic:2"]
+        quoted
+        [/quote]
+        ```
+        codeword codeword codeword codeword
+        ```
+        lemon lemon lemon lemon
+        ```
+        codeword
+        ```
+      RAW
+      post = Fabricate(:post, user:, raw:, created_at: random_datetime)
+      index(post)
+
+      words = call_report[:data].map { |word| word[:word] }
+
+      expect(words).to include("mine", "lemon")
+      expect(words).not_to include("quoted", "codeword")
+    end
+
     it "ignores link and domain words" do
       post = Fabricate(:post, user:, raw: "github github github", created_at: random_datetime)
       index(post)
