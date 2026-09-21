@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "username": {
+      "type": "string",
+      "description": "The username of the user to grant the badge to."
+    },
+    "badge_id": {
+      "type": "integer",
+      "description": "The ID of the badge to grant. Either badge_id or badge_name is required."
+    },
+    "badge_name": {
+      "type": "string",
+      "description": "The name of the badge to grant. Either badge_id or badge_name is required."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Optional URL of a post or topic associated with the grant."
+    },
+    "suppress_notification": {
+      "type": "boolean",
+      "default": false,
+      "description": "Suppress the notification for this grant only. Omit or set to false to preserve normal notification behavior, including existing suppression rules. The badge is still granted and grant events still occur."
+    }
+  },
+  "required": [
+    "username"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "badge_id"
+      ]
+    },
+    {
+      "required": [
+        "badge_name"
+      ]
+    }
+  ]
+}

@@ -111,7 +111,11 @@ class UserBadgesController < ApplicationController
     grant_opts_from_params =
       DiscoursePluginRegistry.apply_modifier(
         :user_badges_badge_grant_opts,
-        { granted_by: current_user, post_id: post_id },
+        {
+          granted_by: current_user,
+          post_id: post_id,
+          suppress_notification: params[:suppress_notification].to_s == "true",
+        },
         { param: params },
       )
 

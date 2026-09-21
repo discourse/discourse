@@ -243,7 +243,12 @@ RSpec.describe UserBadgesController do
     it "does not allow regular users to grant badges" do
       sign_in(Fabricate(:user))
 
-      post "/user_badges.json", params: { badge_id: badge.id, username: user.username }
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             suppress_notification: true,
+           }
 
       expect(response.status).to eq(403)
     end
@@ -268,6 +273,82 @@ RSpec.describe UserBadgesController do
       expect(user_badge.granted_by).to eq(admin)
       expect(user_badge.post_id).to eq(post_1.id)
       expect(UserHistory.where(acting_user: admin, target_user: user).count).to eq(1)
+    end
+
+    it "silently grants a multiple-grant badge once for a distinct post reason" do
+      badge.update!(multiple_grant: true)
+      first_post = Fabricate(:post, user: user)
+      second_post = Fabricate(:post, user: user)
+      api_key = Fabricate(:api_key)
+      headers = { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system" }
+      granted_badge_notifications =
+        user.notifications.where(notification_type: Notification.types[:granted_badge])
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             reason: Discourse.base_url + first_post.url,
+           },
+           headers: headers
+      expect(response.status).to eq(200)
+      expect(granted_badge_notifications.count).to eq(1)
+
+      %w[true false].each do |suppress_notification|
+        post "/user_badges.json",
+             params: {
+               badge_id: badge.id,
+               username: user.username,
+               reason: Discourse.base_url + second_post.url,
+               suppress_notification: suppress_notification,
+             },
+             headers: headers
+        expect(response.status).to eq(200)
+      end
+
+      expect(UserBadge.where(user:, badge:).pluck(:post_id)).to contain_exactly(
+        first_post.id,
+        second_post.id,
+      )
+      expect(granted_badge_notifications.count).to eq(1)
+      expect(
+        UserBadge.find_by!(user:, badge:, post_id: first_post.id).notification_id,
+      ).to be_present
+      expect(UserBadge.find_by!(user:, badge:, post_id: second_post.id).notification_id).to be_nil
+    end
+
+    it "does not suppress notifications for the string false" do
+      sign_in(admin)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             suppress_notification: "false",
+           }
+
+      expect(response.status).to eq(200)
+      expect(
+        user.notifications.where(notification_type: Notification.types[:granted_badge]).count,
+      ).to eq(1)
+    end
+
+    it "suppresses notifications for JSON true" do
+      sign_in(admin)
+
+      post "/user_badges.json",
+           params: {
+             badge_name: badge.name,
+             username: user.username,
+             suppress_notification: true,
+           },
+           as: :json
+
+      expect(response.status).to eq(200)
+      expect(UserBadge.exists?(user:, badge:)).to eq(true)
+      expect(
+        user.notifications.where(notification_type: Notification.types[:granted_badge]),
+      ).to be_empty
     end
 
     it "does not grant badges from regular api calls" do
