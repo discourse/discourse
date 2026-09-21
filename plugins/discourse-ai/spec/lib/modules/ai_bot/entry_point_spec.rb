@@ -32,6 +32,15 @@ describe DiscourseAi::AiBot::EntryPoint do
 
       it "falls back to the top menu homepage for anonymous visitors" do
         expect(HomepageHelper.resolve).to eq("latest")
+        expect(Site.json_for(Guardian.new)).not_to include("ai_bot_anonymous_preview")
+      end
+
+      it "offers anonymous visitors a preview when they're in the allowed groups" do
+        SiteSetting.ai_bot_allowed_groups =
+          "#{bot_allowed_group.id}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+
+        expect(HomepageHelper.resolve).to eq("ai-conversations")
+        expect(JSON.parse(Site.json_for(Guardian.new))["ai_bot_anonymous_preview"]).to eq(true)
       end
     end
 
