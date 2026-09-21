@@ -68,6 +68,11 @@ export default class FullPageSearch extends DiscourseRoute {
     });
   }
 
+  setupController(controller, model) {
+    controller.setSearchTerm(controller.q);
+    super.setupController(controller, model);
+  }
+
   @action
   didTransition() {
     this.controllerFor("full-page-search")._afterTransition();
