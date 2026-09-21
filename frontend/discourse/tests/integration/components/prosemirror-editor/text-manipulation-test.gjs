@@ -287,6 +287,28 @@ module(
         .hasText("hello world", "the paragraph is kept");
     });
 
+    test("selects the placeholder of a block inserted before a paragraph", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      const { view } = state.textManipulation;
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 1))
+      );
+
+      state.textManipulation.applySurroundSelection(
+        "\n[wrap=note]\n",
+        "\n[/wrap]\n",
+        "wrap_text"
+      );
+
+      const { from, to } = view.state.selection;
+      assert.strictEqual(view.state.doc.textBetween(from, to), "Wrap content");
+      assert.strictEqual(countNodes(state, "wrap_block"), 1);
+      assert
+        .dom(".ProseMirror > p")
+        .hasText("hello world", "the paragraph is kept");
+    });
+
     test("removes mark when already applied", async function (assert) {
       const state = await setupEditor();
       setContent(state, "**hello world**");

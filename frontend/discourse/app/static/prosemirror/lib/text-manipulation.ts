@@ -687,8 +687,6 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       : null;
   }
 
-  // Block results go through replaceRange so a fully covered textblock is
-  // replaced instead of being left behind empty.
   #replaceWithParsed(
     tr: Transaction,
     from: number,
@@ -726,10 +724,14 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     to: number,
     text: string
   ): void {
-    const start = tr.mapping.map(from, -1);
-    // Everything after the selection is untouched, so the inserted range ends
-    // the same distance from the end of the document as `to` did.
-    const end = tr.doc.content.size - (this.view.state.doc.content.size - to);
+    // The replace step knows where the content landed, even when it was
+    // placed before the selection's textblock.
+    let start = from;
+    let end = to;
+    tr.mapping.maps.at(-1)?.forEach((_, __, newStart, newEnd) => {
+      start = newStart;
+      end = newEnd;
+    });
     let found = null as number | null;
 
     tr.doc.nodesBetween(start, end, (node, pos) => {
