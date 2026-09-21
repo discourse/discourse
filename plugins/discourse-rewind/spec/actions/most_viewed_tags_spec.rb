@@ -28,6 +28,17 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
   end
 
   describe ".call" do
+    it "ignores personal messages and read-restricted categories" do
+      restricted_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      [Fabricate(:private_message_topic), restricted_topic].each do |topic|
+        topic.tags = [tag_5]
+        TopicViewItem.add(topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
+      end
+
+      expect(call_report[:data]).to be_empty
+    end
+
     it "returns top 4 most viewed tags ordered by view count" do
       # Tag 1 (ruby): 2 views (2 different topics)
       TopicViewItem.add(topic_1.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
