@@ -6,10 +6,6 @@ module DiscourseRewind
       option :user
       option :date
 
-      def call
-        raise NotImplementedError
-      end
-
       def self.publicly_visible_topics
         Topic.listable_topics.visible.secured
       end
