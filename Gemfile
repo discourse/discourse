@@ -236,6 +236,7 @@ gem "sshkey", require: false
 gem "lz4-ruby", require: false, platform: :ruby
 
 gem "sanitize"
+gem "reverse_markdown", "3.0.2", require: false
 
 if ENV["IMPORT"] == "1"
   gem "mysql2"
@@ -244,7 +245,6 @@ if ENV["IMPORT"] == "1"
   # NOTE: in import mode the version of sqlite can matter a lot, so we stick it to a specific one
   gem "sqlite3", "~> 1.3", ">= 1.3.13"
   gem "ruby-bbcode-to-md", git: "https://github.com/nlalonde/ruby-bbcode-to-md"
-  gem "reverse_markdown"
   gem "tiny_tds"
   gem "csv"
 end

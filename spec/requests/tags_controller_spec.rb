@@ -592,6 +592,19 @@ RSpec.describe TagsController do
       expect(response.redirect_url).to match(%r{/tag/test/#{tag.id}/l/top\.json\?period=daily})
     end
 
+    it "preserves raw query strings in HTML and JSON redirects" do
+      synonym = Fabricate(:tag, target_tag: tag)
+      query = "encoded=first%20value&duplicate=one&duplicate=two&path=%2Ffoo%2fbar"
+
+      get "/tag/#{tag.name}?#{query}"
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to end_with("/tag/test/#{tag.id}?#{query}")
+
+      get "/tag/#{synonym.name}/l/top.json?#{query}"
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to end_with("/tag/test/#{tag.id}/l/top.json?#{query}")
+    end
+
     it "is not creating infinite redirect loop when tag is a synonym of itself" do
       tag.update!(target_tag_id: tag.id)
 
