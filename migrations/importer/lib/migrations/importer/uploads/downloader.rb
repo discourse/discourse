@@ -59,7 +59,7 @@ module Migrations
                 end
               end
 
-            return nil, nil, nil if file.nil?
+            return nil if file.nil?
 
             [path, filename, { id:, original_filename: filename }]
           rescue UploadSizeExceededError
