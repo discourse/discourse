@@ -53,19 +53,28 @@ module DiscourseRewind
         cache_single_report(for_user.id, year, report_name, report.as_json)
       end
 
-      report = filter_report_for_viewer(report, guardian, report_class) if report_class.in?(
-        FetchReports::VISIBILITY_FILTERED_REPORTS,
-      )
-      report
+      return report if !report || !report_class.in?(FetchReports::VISIBILITY_FILTERED_REPORTS)
+
+      filter_report_for_viewer(report, guardian, for_user, report_class)
     end
 
-    def filter_report_for_viewer(report, guardian, report_class)
+    def filter_report_for_viewer(report, guardian, for_user, report_class)
       case report_class.name
       when Action::BestTopics.name
         filter_best_topics_for_viewer(report, guardian)
       when Action::BestPosts.name
         filter_best_posts_for_viewer(report, guardian)
+      when Action::AiUsage.name
+        filter_ai_usage_for_viewer(report, guardian, for_user)
+      when Action::Invites.name
+        report if guardian.can_see_invite_details?(for_user)
       end
+    end
+
+    def filter_ai_usage_for_viewer(report, guardian, for_user)
+      return report if guardian.is_me?(for_user) || guardian.is_admin?
+
+      report.merge(data: report[:data].except(:model_usage))
     end
 
     def filter_best_topics_for_viewer(report, guardian)
