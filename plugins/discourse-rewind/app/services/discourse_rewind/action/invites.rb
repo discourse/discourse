@@ -96,6 +96,10 @@ module DiscourseRewind
           identifier: "invites",
         }
       end
+
+      def self.filter_for_viewer(report, guardian:, for_user:)
+        report if guardian.can_see_invite_details?(for_user)
+      end
     end
   end
 end

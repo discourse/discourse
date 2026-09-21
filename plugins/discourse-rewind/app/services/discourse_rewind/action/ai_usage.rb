@@ -92,6 +92,12 @@ module DiscourseRewind
       def enabled?
         Discourse.plugins_by_name["discourse-ai"]&.enabled?
       end
+
+      def self.filter_for_viewer(report, guardian:, for_user:)
+        return report if guardian.is_me?(for_user) || guardian.is_admin?
+
+        report.merge(data: report[:data].except(:model_usage))
+      end
     end
   end
 end
