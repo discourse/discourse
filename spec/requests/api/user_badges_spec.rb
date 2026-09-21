@@ -5,6 +5,7 @@ RSpec.describe "user_badges" do
   let(:admin) { Fabricate(:admin) }
   let(:badge) { Fabricate(:badge) }
   let(:user) { Fabricate(:user) }
+  let(:associated_post) { Fabricate(:post) }
 
   before do
     Jobs.run_immediately!
@@ -22,7 +23,9 @@ RSpec.describe "user_badges" do
       produces "application/json"
       response "200", "badge granted" do
         expected_response_schema = nil
-        let(:params) { { "username" => user.username, "badge_id" => badge.id } }
+        let(:params) do
+          { "username" => user.username, "badge_id" => badge.id, "post_id" => associated_post.id }
+        end
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

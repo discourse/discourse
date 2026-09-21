@@ -15,7 +15,12 @@
     },
     "reason": {
       "type": "string",
-      "description": "Optional URL of a post or topic associated with the grant."
+      "description": "Optional URL of a post or topic associated with the grant. Cannot be used together with post_id."
+    },
+    "post_id": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Optional ID of a visible, non-deleted post associated with the grant. Cannot be used together with reason."
     },
     "suppress_notification": {
       "type": "boolean",

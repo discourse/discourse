@@ -90,7 +90,18 @@ class UserBadgesController < ApplicationController
     badge = fetch_badge_from_params
     post_id = nil
 
-    if params[:reason].present?
+    if params.key?(:post_id)
+      raise Discourse::InvalidParameters.new(:post_id) if params[:reason].present?
+
+      post_id = Integer(params[:post_id].to_s, 10, exception: false)
+      raise Discourse::InvalidParameters.new(:post_id) if post_id.nil? || post_id < 1
+
+      post = Post.find_by(id: post_id)
+      raise Discourse::NotFound if post.blank?
+
+      guardian.ensure_can_see!(post)
+      post_id = post.id
+    elsif params[:reason].present?
       unless is_badge_reason_valid? params[:reason]
         return(
           render json: failed_json.merge(message: I18n.t("invalid_grant_badge_reason_link")),

@@ -275,7 +275,26 @@ RSpec.describe UserBadgesController do
       expect(UserHistory.where(acting_user: admin, target_user: user).count).to eq(1)
     end
 
-    it "silently grants a multiple-grant badge once for a distinct post reason" do
+    it "grants a badge associated with a direct post ID from an authenticated API request" do
+      associated_post = Fabricate(:post, user: Fabricate(:user))
+      api_key = Fabricate(:api_key)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             post_id: associated_post.id,
+           },
+           headers: {
+             HTTP_API_KEY: api_key.key,
+             HTTP_API_USERNAME: "system",
+           }
+
+      expect(response).to have_http_status(:ok)
+      expect(UserBadge.find_by!(user:, badge:).post_id).to eq(associated_post.id)
+    end
+
+    it "silently grants a multiple-grant badge once for a distinct direct post ID" do
       badge.update!(multiple_grant: true)
       first_post = Fabricate(:post, user: user)
       second_post = Fabricate(:post, user: user)
@@ -288,7 +307,7 @@ RSpec.describe UserBadgesController do
            params: {
              badge_id: badge.id,
              username: user.username,
-             reason: Discourse.base_url + first_post.url,
+             post_id: first_post.id,
            },
            headers: headers
       expect(response.status).to eq(200)
@@ -299,7 +318,7 @@ RSpec.describe UserBadgesController do
              params: {
                badge_id: badge.id,
                username: user.username,
-               reason: Discourse.base_url + second_post.url,
+               post_id: second_post.id,
                suppress_notification: suppress_notification,
              },
              headers: headers
@@ -315,6 +334,118 @@ RSpec.describe UserBadgesController do
         UserBadge.find_by!(user:, badge:, post_id: first_post.id).notification_id,
       ).to be_present
       expect(UserBadge.find_by!(user:, badge:, post_id: second_post.id).notification_id).to be_nil
+    end
+
+    it "rejects malformed, missing, and deleted direct post IDs without granting a badge" do
+      existing_post = Fabricate(:post)
+      deleted_post = Fabricate(:post)
+      deleted_post.trash!(admin)
+      sign_in(admin)
+
+      [
+        nil,
+        [],
+        [existing_post.id],
+        {},
+        { id: existing_post.id },
+        0,
+        -1,
+        "1.5",
+        existing_post.id + 0.5,
+      ].each do |post_id|
+        post "/user_badges.json",
+             params: {
+               badge_id: badge.id,
+               username: user.username,
+               post_id: post_id,
+             },
+             as: :json
+
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      [Post.maximum(:id) + 1, deleted_post.id].each do |post_id|
+        post "/user_badges.json",
+             params: {
+               badge_id: badge.id,
+               username: user.username,
+               post_id: post_id,
+             }
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      expect(UserBadge.exists?(user:, badge:)).to eq(false)
+    end
+
+    it "silently grants a multiple-grant badge associated through a reason URL" do
+      badge.update!(multiple_grant: true)
+      associated_post = Fabricate(:post, user: user)
+      sign_in(admin)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             reason: Discourse.base_url + associated_post.url,
+             suppress_notification: true,
+           }
+
+      expect(response).to have_http_status(:ok)
+      user_badge = UserBadge.find_by!(user:, badge:)
+      expect(user_badge.post_id).to eq(associated_post.id)
+      expect(user_badge.notification_id).to be_nil
+      expect(
+        user.notifications.where(notification_type: Notification.types[:granted_badge]),
+      ).to be_empty
+    end
+
+    it "rejects a direct post ID together with a nonblank reason" do
+      associated_post = Fabricate(:post)
+      sign_in(admin)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             post_id: associated_post.id,
+             reason: Discourse.base_url + associated_post.url,
+           }
+
+      expect(response).to have_http_status(:bad_request)
+      expect(UserBadge.exists?(user:, badge:)).to eq(false)
+    end
+
+    it "only allows a moderator to associate posts they can see" do
+      moderator = Fabricate(:moderator)
+      private_message_post = Fabricate(:private_message_post)
+      group = Fabricate(:group)
+      restricted_category = Fabricate(:private_category, group: group)
+      restricted_post = Fabricate(:post, topic: Fabricate(:topic, category: restricted_category))
+      accessible_post = Fabricate(:post)
+      sign_in(moderator)
+
+      [private_message_post, restricted_post].each do |inaccessible_post|
+        post "/user_badges.json",
+             params: {
+               badge_id: badge.id,
+               username: user.username,
+               post_id: inaccessible_post.id,
+             }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+      expect(UserBadge.exists?(user:, badge:)).to eq(false)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             post_id: accessible_post.id,
+           }
+
+      expect(response).to have_http_status(:ok)
+      expect(UserBadge.find_by!(user:, badge:).post_id).to eq(accessible_post.id)
     end
 
     it "does not suppress notifications for the string false" do
