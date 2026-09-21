@@ -18,7 +18,6 @@ module DiscourseRewind
 
       def call
         return FakeData if should_use_fake_data?
-        return if !enabled?
 
         # Assignments made to the user
         assignments_scope =
@@ -63,8 +62,8 @@ module DiscourseRewind
         }
       end
 
-      def enabled?
-        Discourse.plugins_by_name["discourse-assign"]&.enabled?
+      def self.enabled?
+        plugin_enabled?("discourse-assign")
       end
     end
   end
