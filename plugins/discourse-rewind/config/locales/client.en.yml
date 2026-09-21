@@ -141,16 +141,6 @@ en:
           message_4: "Your average message length was <strong>%{length}</strong> characters"
           message_5: "Your favorite channels:"
           dancing_baby_alt: "Dancing baby"
-        favorite_gifs:
-          title:
-            one: Your favorite GIF
-            other: Your %{count} favorite GIFs
-          title_others:
-            one: "%{username}'s favorite GIF"
-            other: "%{username}'s %{count} favorite GIFs"
-          total_usage:
-            one: Used %{count} time
-            other: Used %{count} times total
         invites:
           title: Invites
           total_invites: Total Invites Sent
