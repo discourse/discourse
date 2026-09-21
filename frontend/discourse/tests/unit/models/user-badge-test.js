@@ -97,6 +97,11 @@ module("Unit | Model | user-badge", function (hooks) {
     assert.true(Array.isArray(badges), "returns an array");
   });
 
+  test("findByBadgeIds", async function (assert) {
+    const badges = await UserBadge.findByBadgeIds([880, 50]);
+    assert.true(Array.isArray(badges), "returns an array");
+  });
+
   test("grant", async function (assert) {
     const userBadge = await UserBadge.grant(1, "username");
     assert.false(Array.isArray(userBadge), "does not return an array");

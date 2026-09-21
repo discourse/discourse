@@ -2,23 +2,24 @@
 
 class UserBadgesController < ApplicationController
   MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
+  MAX_INDEX_LIMIT = 50
 
   before_action :ensure_badges_enabled
   before_action :ensure_logged_in, only: %i[create destroy toggle_favorite]
 
   def index
-    params.permit %i[granted_before offset username]
+    params.permit %i[
+                    granted_before
+                    offset
+                    username
+                    badge_id
+                    badge_name
+                    badge_ids
+                    badge_type_id
+                    limit
+                  ]
 
-    badge = fetch_badge_from_params
-    user_badges = badge.user_badges.order("granted_at DESC, id DESC").limit(MAX_BADGES)
-    user_badges =
-      user_badges.includes(
-        :user,
-        :granted_by,
-        badge: :badge_type,
-        post: :topic,
-        user: %i[primary_group flair_group],
-      )
+    user_badges = scoped_user_badges
 
     grant_count = nil
 
@@ -26,10 +27,21 @@ class UserBadgesController < ApplicationController
       user = fetch_user_from_params(include_inactive: true)
       raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
-      user_id = user.id
-      user_badges = user_badges.where(user_id: user_id)
-      grant_count = badge.user_badges.where(user_id: user_id).count
+      user_badges = user_badges.where(user_id: user.id)
+      grant_count = user_badges.count
     end
+
+    user_badges =
+      user_badges
+        .order("granted_at DESC, id DESC")
+        .limit(index_limit)
+        .includes(
+          :user,
+          :granted_by,
+          badge: :badge_type,
+          post: :topic,
+          user: %i[primary_group flair_group],
+        )
 
     offset = fetch_int_from_params(:offset, default: 0)
     user_badges = user_badges.offset(offset) if offset > 0
@@ -155,6 +167,60 @@ class UserBadgesController < ApplicationController
   end
 
   private
+
+  def scoped_user_badges
+    ids = selected_badge_ids
+
+    scope =
+      if ids
+        UserBadge.where(badge: Badge.enabled).where(badge_id: ids)
+      else
+        UserBadge.where(badge: Badge.enabled.where(listable: true))
+      end
+
+    if params[:badge_type_id].present?
+      type_id = fetch_int_from_params(:badge_type_id, default: nil, min: 1)
+      scope = scope.joins(:badge).where(badges: { badge_type_id: type_id })
+    end
+
+    scope
+  end
+
+  def selected_badge_ids
+    return parse_badge_ids(params[:badge_ids]) if params.key?(:badge_ids)
+
+    if params[:badge_name].present?
+      badge = Badge.find_by(name: params[:badge_name], enabled: true)
+      raise Discourse::NotFound if badge.blank?
+
+      return [badge.id]
+    end
+
+    if params[:badge_id].present?
+      badge = Badge.find_by(id: params[:badge_id], enabled: true)
+      raise Discourse::NotFound if badge.blank?
+
+      return [badge.id]
+    end
+
+    nil
+  end
+
+  def parse_badge_ids(raw)
+    return nil if raw.blank?
+
+    tokens = raw.is_a?(Array) ? raw.flatten : raw.to_s.split(/[,|\s+]/)
+    tokens
+      .flat_map { |token| token.to_s.split(/[,|\s+]/) }
+      .filter_map { |token| Integer(token, exception: false) }
+      .select(&:positive?)
+      .uniq
+  end
+
+  def index_limit
+    limit = fetch_int_from_params(:limit, min: 1, default: MAX_BADGES)
+    [limit, MAX_INDEX_LIMIT].min
+  end
 
   # Get the badge from either the badge name or id specified in the params.
   def fetch_badge_from_params
