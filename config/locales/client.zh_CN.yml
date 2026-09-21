@@ -4961,6 +4961,7 @@ zh_CN:
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
       latest_topics: "最新话题"
+      view_all_topics: "查看所有话题 (%{number})"
       description_updated: "描述已更新"
       description_expand: "展开"
       description_collapse: "收起"
