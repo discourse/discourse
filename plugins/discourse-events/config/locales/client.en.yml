@@ -412,11 +412,13 @@ en:
       open_event: "Open event"
       destroy_event: "Destroy event"
       invitees_modal:
-        title_invited: "Event Participation"
+        title_invited: "Event participation"
         title_participated: "List of users who participated"
         filter_placeholder: "Filter users"
         remove_invitee: "Remove invitee from list"
         add_invitee: "Add invitee to list"
+        this_event: "This event"
+        first_event_only: "First event only"
       bulk_invite_modal:
         confirm: "confirm"
         text: "Upload CSV file"
@@ -432,6 +434,7 @@ en:
         group_selector_placeholder: "Choose a group..."
         user_selector_placeholder: "Choose user..."
         attendance_label: "Attendance"
+        recurring: "Apply attendance to this event and all following events"
         inline_title: "Inline bulk invite"
         csv_title: "CSV bulk invite"
       upcoming_events:

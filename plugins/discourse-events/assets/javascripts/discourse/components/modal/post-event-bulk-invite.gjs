@@ -24,7 +24,10 @@ export default class PostEventBulkInvite extends Component {
 
   formApi;
 
-  data = { invitees: [{ identifier: null, attendance: DEFAULT_ATTENDANCE }] };
+  data = {
+    invitees: [{ identifier: null, attendance: DEFAULT_ATTENDANCE }],
+    recurring: false,
+  };
 
   get bulkInviteStatuses() {
     return [
@@ -51,6 +54,11 @@ export default class PostEventBulkInvite extends Component {
   @action
   registerApi(api) {
     this.formApi = api;
+  }
+
+  @action
+  csvAdditionalParams() {
+    return { recurring: this.formApi?.get("recurring") ?? false };
   }
 
   @action
@@ -92,7 +100,10 @@ export default class PostEventBulkInvite extends Component {
           type: "POST",
           dataType: "json",
           contentType: "application/json",
-          data: JSON.stringify({ invitees: data.invitees }),
+          data: JSON.stringify({
+            invitees: data.invitees,
+            recurring: data.recurring,
+          }),
         }
       );
 
@@ -121,7 +132,13 @@ export default class PostEventBulkInvite extends Component {
       @title={{i18n "discourse_post_event.bulk_invite_modal.title"}}
     >
       <:body>
-        <div class="bulk-invites">
+        <Form
+          class="bulk-invites-form"
+          @data={{this.data}}
+          @onRegisterApi={{this.registerApi}}
+          @onSubmit={{this.sendBulkInvites}}
+          as |form|
+        >
           <p class="bulk-event-help">
             {{i18n
               (concat
@@ -130,17 +147,12 @@ export default class PostEventBulkInvite extends Component {
               )
             }}
           </p>
-          <h3>{{i18n
-              "discourse_post_event.bulk_invite_modal.inline_title"
-            }}</h3>
 
-          <Form
-            class="bulk-invites-form"
-            @data={{this.data}}
-            @onRegisterApi={{this.registerApi}}
-            @onSubmit={{this.sendBulkInvites}}
-            as |form|
-          >
+          <div class="bulk-invites">
+            <h3>{{i18n
+                "discourse_post_event.bulk_invite_modal.inline_title"
+              }}</h3>
+
             <form.Collection @name="invitees" as |collection index|>
               <div class="bulk-invite-row">
                 <collection.Field
@@ -224,31 +236,46 @@ export default class PostEventBulkInvite extends Component {
                 @icon="plus"
                 @label="discourse_post_event.bulk_invite_modal.add_attendee"
               />
+              {{#if @model.isRecurring}}
+                <form.Field
+                  class="bulk-invite-recurrence"
+                  @format="full"
+                  @name="recurring"
+                  @title={{i18n
+                    "discourse_post_event.bulk_invite_modal.recurring"
+                  }}
+                  @type="checkbox"
+                  as |field|
+                >
+                  <field.Control />
+                </form.Field>
+              {{/if}}
               <form.Submit
                 class="send-bulk-invites"
                 @label="discourse_post_event.bulk_invite_modal.send_bulk_invites"
               />
             </form.Actions>
-          </Form>
-        </div>
-
-        <div class="csv-bulk-invites">
-          <h3>{{i18n "discourse_post_event.bulk_invite_modal.csv_title"}}</h3>
-
-          <div class="bulk-invite-actions">
-            <BulkInviteSampleCsvFile />
-
-            <CsvUploader
-              @i18nPrefix="discourse_post_event.bulk_invite_modal"
-              @uploadDone={{this.uploadDone}}
-              @uploadUrl={{concat
-                "/discourse-post-event/events/"
-                @model.event.id
-                "/csv-bulk-invite"
-              }}
-            />
           </div>
-        </div>
+
+          <div class="csv-bulk-invites">
+            <h3>{{i18n "discourse_post_event.bulk_invite_modal.csv_title"}}</h3>
+
+            <div class="bulk-invite-actions">
+              <BulkInviteSampleCsvFile />
+
+              <CsvUploader
+                @additionalParams={{this.csvAdditionalParams}}
+                @i18nPrefix="discourse_post_event.bulk_invite_modal"
+                @uploadDone={{this.uploadDone}}
+                @uploadUrl={{concat
+                  "/discourse-post-event/events/"
+                  @model.event.id
+                  "/csv-bulk-invite"
+                }}
+              />
+            </div>
+          </div>
+        </Form>
       </:body>
     </DModal>
   </template>

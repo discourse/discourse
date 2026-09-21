@@ -127,7 +127,10 @@ export default class DiscoursePostEventMoreMenu extends Component {
     this.menuApi.close();
 
     this.modal.show(PostEventBulkInvite, {
-      model: { event: this.args.event },
+      model: {
+        event: this.args.event,
+        isRecurring: Boolean(this.args.event.recurrence),
+      },
     });
   }
 
@@ -227,6 +230,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
     this.modal.show(PostEventInvitees, {
       model: {
         event: this.args.event,
+        isRecurring: Boolean(this.args.event.recurrence),
         title: this.args.event.title,
         extraClass: this.args.event.extraClass,
       },

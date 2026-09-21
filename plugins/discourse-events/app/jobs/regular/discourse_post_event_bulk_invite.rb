@@ -22,6 +22,8 @@ module Jobs
       @event = DiscourseEvents::Events::Event.find_by(id: args[:event_id])
       raise Discourse::InvalidParameters.new(:event_id) unless @event
 
+      @recurring = ActiveModel::Type::Boolean.new.cast(args[:recurring]) || false
+
       @guardian = Guardian.new(@current_user)
       @guardian.ensure_can_edit!(@event.post)
 
@@ -71,11 +73,11 @@ module Jobs
         return
       end
 
-      attendance = invitee["attendance"] || "going"
-      status = DiscourseEvents::Events::Invitee.statuses[attendance.to_sym]
+      attendance_status_name = invitee["attendance"] || "going"
+      status = DiscourseEvents::Events::Invitee.statuses[attendance_status_name.to_sym]
 
       if status.nil?
-        save_log "Skipping '#{invitee["identifier"]}' due to unknown attendance: '#{attendance}'"
+        save_log "Skipping '#{invitee["identifier"]}' due to unknown attendance: '#{attendance_status_name}'"
         @failed += 1
         return
       end
@@ -83,14 +85,16 @@ module Jobs
       post_id = @event.post.id
 
       users.each do |user_id|
-        # Respect capacity: skip creating new going when full
-        if attendance == "going" && @event.at_capacity?
+        event_invitee =
+          DiscourseEvents::Events::Invitee.find_or_initialize_by(user_id: user_id, post_id: post_id)
+
+        if attendance_status_name == "going" && @event.at_capacity? && !event_invitee.going?
           save_log "Skipping '#{invitee["identifier"]}' due to max attendees reached"
           @failed += 1
           next
         end
 
-        create_attendance(user_id, post_id, status)
+        create_attendance(event_invitee, status)
       end
 
       @processed += 1
@@ -99,11 +103,10 @@ module Jobs
       @failed += 1
     end
 
-    def create_attendance(user_id, post_id, status)
-      invitee =
-        DiscourseEvents::Events::Invitee.find_or_initialize_by(user_id: user_id, post_id: post_id)
+    def create_attendance(invitee, status)
       invitee.notified = false
       invitee.status = status
+      invitee.recurring = @recurring && invitee.going?
       invitee.save!
     end
 

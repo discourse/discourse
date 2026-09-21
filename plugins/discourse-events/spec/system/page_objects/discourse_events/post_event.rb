@@ -82,6 +82,11 @@ module PageObjects
           has_css?(".event-invitees-icon .going", text: count.to_s)
         end
 
+        def open_invitees_modal
+          find(".event-invitees-icon").click
+          self
+        end
+
         def has_invitee_avatar?(username)
           has_css?(".event-invitees-avatars [data-user-card='#{username}']")
         end
