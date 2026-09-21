@@ -328,22 +328,24 @@ class TopicOgImageGenerator
 
       File.write(svg_path, svg)
 
-      ImageMagick.magick(
-        "-background",
-        "none",
-        "-size",
-        "#{OG_WIDTH}x#{OG_HEIGHT}",
-        svg_path,
-        "-depth",
-        "8",
-        "-define",
-        "png:compression-level=9",
-        png_path,
-        read: [svg_path],
-        write: [dir],
-        nice: 10,
-        timeout: 20,
-      )
+      ImageProcessing::OutputFile.write(png_path) do |temporary_path|
+        ImageMagick.magick(
+          "-background",
+          "none",
+          "-size",
+          "#{OG_WIDTH}x#{OG_HEIGHT}",
+          svg_path,
+          "-depth",
+          "8",
+          "-define",
+          "png:compression-level=9",
+          temporary_path,
+          read: [svg_path],
+          write: [temporary_path],
+          nice: 10,
+          timeout: 20,
+        )
+      end
 
       return nil unless File.exist?(png_path)
       FileHelper.optimize_image!(png_path)

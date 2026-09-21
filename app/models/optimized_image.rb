@@ -327,22 +327,18 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     method_name = "#{operation}_instructions"
+    instructions = nil
 
-    instructions = public_send(method_name.to_sym, from, to, dimensions, opts)
-    convert_with(instructions, from, to, opts)
-  end
-
-  MAX_PNGQUANT_SIZE = 500_000
-  MAX_CONVERT_SECONDS = 20
-
-  def self.convert_with(instructions, from, to, opts = {})
-    ImageMagick.magick(
-      *instructions,
-      read: [from],
-      write: [File.dirname(to)],
-      nice: 10,
-      timeout: MAX_CONVERT_SECONDS,
-    )
+    ImageProcessing::OutputFile.write(to) do |temporary_path|
+      instructions = public_send(method_name.to_sym, from, temporary_path, dimensions, opts)
+      ImageMagick.magick(
+        *instructions,
+        read: [from],
+        write: [temporary_path],
+        nice: 10,
+        timeout: MAX_CONVERT_SECONDS,
+      )
+    end
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
@@ -369,6 +365,9 @@ class OptimizedImage < ActiveRecord::Base
       false
     end
   end
+
+  MAX_PNGQUANT_SIZE = 500_000
+  MAX_CONVERT_SECONDS = 20
 end
 
 # == Schema Information

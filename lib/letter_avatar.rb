@@ -76,27 +76,29 @@ class LetterAvatar
       # and adjust vertical offset accordingly
       vertical_offset = font == "Helvetica" ? 26 : 34
 
-      instructions = %W[
-        -size
-        #{FULLSIZE}x#{FULLSIZE}
-        xc:#{to_rgb(color)}
-        -pointsize
-        #{POINTSIZE}
-        -fill
-        #FFFFFFCC
-        -font
-        #{font}
-        -gravity
-        Center
-        -annotate
-        -0+#{vertical_offset}
-        #{letter}
-        -depth
-        8
-        #{filename}
-      ]
+      ImageProcessing::OutputFile.write(filename) do |temporary_path|
+        instructions = %W[
+          -size
+          #{FULLSIZE}x#{FULLSIZE}
+          xc:#{to_rgb(color)}
+          -pointsize
+          #{POINTSIZE}
+          -fill
+          #FFFFFFCC
+          -font
+          #{font}
+          -gravity
+          Center
+          -annotate
+          -0+#{vertical_offset}
+          #{letter}
+          -depth
+          8
+          #{temporary_path}
+        ]
 
-      ImageMagick.magick(*instructions, write: [File.dirname(filename)])
+        ImageMagick.magick(*instructions, write: [temporary_path])
+      end
 
       ## do not optimize image, it will end up larger than original
       filename
