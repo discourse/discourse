@@ -4,7 +4,7 @@ module MarkdownEndpoint
   class CookedProcessor
     BLOCK_TAG = "discourse-markdown-block"
     INLINE_TAG = "discourse-markdown-inline"
-    VERSION = 2
+    VERSION = 4
 
     class PreservedBlockConverter < ReverseMarkdown::Converters::Base
       def convert(node, _state = {})
@@ -21,12 +21,13 @@ module MarkdownEndpoint
     ReverseMarkdown::Converters.register(BLOCK_TAG.to_sym, PreservedBlockConverter.new)
     ReverseMarkdown::Converters.register(INLINE_TAG.to_sym, PreservedInlineConverter.new)
 
-    def self.to_markdown(cooked_html)
-      new(cooked_html).to_markdown
+    def self.to_markdown(cooked_html, post_url: nil)
+      new(cooked_html, post_url:).to_markdown
     end
 
-    def initialize(cooked_html)
+    def initialize(cooked_html, post_url: nil)
       @fragment = Nokogiri::HTML5.fragment(cooked_html.to_s)
+      @post_url = post_url
     end
 
     def to_markdown
@@ -36,6 +37,7 @@ module MarkdownEndpoint
       replace_hashtags
       replace_lightboxes
       replace_code_blocks
+      replace_footnotes
       replace_quotes
       replace_oneboxes
       replace_details
@@ -54,7 +56,10 @@ module MarkdownEndpoint
     def replace_emojis
       @fragment
         .css("img.emoji")
-        .each { |image| image.replace(preserved_inline(image["title"] || image["alt"] || "")) }
+        .each do |image|
+          shortcode = image["title"] || image["alt"] || ""
+          image.replace(preserved_inline(EmojiConverter.convert(shortcode)))
+        end
     end
 
     def replace_mentions
@@ -106,6 +111,13 @@ module MarkdownEndpoint
           opening = language.present? ? "#{fence}#{language}" : fence
           code.parent.replace(preserved_block("#{opening}\n#{content}\n#{fence}"))
         end
+    end
+
+    def replace_footnotes
+      @fragment.css("a.footnote-backref").each(&:remove)
+      @fragment
+        .css("sup.footnote-ref a")
+        .each { |anchor| anchor.replace(preserved_inline(escape_text(anchor.text))) }
     end
 
     def replace_quotes
@@ -172,8 +184,10 @@ module MarkdownEndpoint
         .each do |poll|
           title =
             poll["data-poll-title"].presence ||
-              poll.at_css("[data-poll-title]")&.[]("data-poll-title").presence || "Poll"
-          poll.replace(preserved_block("_Poll: #{escape_text(title)} (view on site)_"))
+              poll.at_css("[data-poll-title]")&.[]("data-poll-title").presence
+          label = title.present? ? "Poll: #{escape_text(title)}" : "Poll"
+          label += " ([view on site](#{absolute_url(@post_url)}))" if @post_url.present?
+          poll.replace(preserved_block("_#{label}_"))
         end
     end
 
@@ -196,7 +210,7 @@ module MarkdownEndpoint
     end
 
     def convert_html(html)
-      fragment = self.class.new(html)
+      fragment = self.class.new(html, post_url: @post_url)
       fragment.to_markdown
     end
 

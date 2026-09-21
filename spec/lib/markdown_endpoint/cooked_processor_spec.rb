@@ -18,9 +18,64 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
 
       markdown = described_class.to_markdown(html)
 
-      expect(markdown).to include("## Heading", "**world**", "@sam", "#ruby", ":wave:")
+      expect(markdown).to include("## Heading", "**world**", "@sam", "#ruby", "👋")
       expect(markdown).to include("| Name | Value |", 'puts "ok"')
-      expect(markdown).to include("> **More**", "_Poll: Choose one (view on site)_")
+      expect(markdown).to include("> **More**", "_Poll: Choose one_")
+    end
+
+    it "converts standard emoji, aliases, and skin tones to Unicode" do
+      html = PrettyText.cook(":smile: :+1: :wave:t4: :thumbsup:t6:")
+
+      expect(described_class.to_markdown(html)).to eq("😄 👍 👋🏽 👍🏿")
+    end
+
+    it "preserves custom and unknown emoji shortcodes" do
+      html = <<~HTML
+        <p><img class="emoji emoji-custom" title=":custom_emoji:" src="/custom.png">
+        <img class="emoji" alt=":unknown_emoji:" src="/emoji.png"></p>
+      HTML
+
+      expect(described_class.to_markdown(html)).to eq(":custom_emoji::unknown_emoji:")
+    end
+
+    it "preserves literal shortcodes in code and URLs" do
+      html = <<~HTML
+        <p><code>:smile:</code> <a href="https://example.com/:wave:">Example</a></p>
+        <pre><code>:wave:t4:</code></pre>
+      HTML
+
+      expect(described_class.to_markdown(html)).to eq(
+        "`:smile:` [Example](https://example.com/:wave:)\n\n```\n:wave:t4:\n```",
+      )
+    end
+
+    it "keeps footnote markers and formatted definitions without dead fragment links" do
+      html = <<~HTML
+        <p>Some text<sup class="footnote-ref"><a href="#footnote-123-1" id="footnote-ref-123-1">[1]</a></sup>.</p>
+        <p>Repeated<sup class="footnote-ref"><a href="#footnote-123-1" id="footnote-ref-123-1:1">[1:1]</a></sup>.</p>
+        <section class="footnotes"><ol class="footnotes-list">
+          <li id="footnote-123-1" class="footnote-item"><p>A <strong>formatted</strong> note with a <a href="https://example.com">source</a> <a href="#footnote-ref-123-1" class="footnote-backref">↩︎</a> <a href="#footnote-ref-123-1:1" class="footnote-backref">↩︎</a></p></li>
+        </ol></section>
+      HTML
+
+      markdown = described_class.to_markdown(html)
+
+      expect(markdown).to include("Some text\\[1\\].", "Repeated\\[1:1\\].")
+      expect(markdown).to include("1. A **formatted** note with a [source](https://example.com)")
+      expect(markdown).not_to match(/\]\(#footnote|↩︎/)
+    end
+
+    it "links named and unnamed polls, including nested polls, to their post" do
+      html = <<~HTML
+        <div class="poll" data-poll-title="Choose [one]"></div>
+        <details><summary>More</summary><div class="poll"></div></details>
+      HTML
+      post_url = "#{Discourse.base_url}/t/topic/123/2"
+
+      markdown = described_class.to_markdown(html, post_url:)
+
+      expect(markdown).to include("_Poll: Choose \\[one\\] ([view on site](#{post_url}))_")
+      expect(markdown).to include("> _Poll ([view on site](#{post_url}))_")
     end
 
     it "preserves quotes, oneboxes, lightboxes, and nested formatting" do
