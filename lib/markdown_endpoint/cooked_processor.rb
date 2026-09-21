@@ -4,7 +4,7 @@ module MarkdownEndpoint
   class CookedProcessor
     BLOCK_TAG = "discourse-markdown-block"
     INLINE_TAG = "discourse-markdown-inline"
-    VERSION = 2
+    VERSION = 3
 
     class PreservedBlockConverter < ReverseMarkdown::Converters::Base
       def convert(node, _state = {})
@@ -54,7 +54,12 @@ module MarkdownEndpoint
     def replace_emojis
       @fragment
         .css("img.emoji")
-        .each { |image| image.replace(preserved_inline(image["title"] || image["alt"] || "")) }
+        .each do |image|
+          shortcode = image["title"] || image["alt"] || ""
+          name, tone = shortcode.delete_prefix(":").delete_suffix(":").split(":", 2)
+          unicode = Emoji.lookup_unicode([Emoji.resolve_alias(name), tone].compact.join(":"))
+          image.replace(preserved_inline(unicode || shortcode))
+        end
     end
 
     def replace_mentions

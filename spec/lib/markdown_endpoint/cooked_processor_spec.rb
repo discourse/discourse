@@ -18,9 +18,35 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
 
       markdown = described_class.to_markdown(html)
 
-      expect(markdown).to include("## Heading", "**world**", "@sam", "#ruby", ":wave:")
+      expect(markdown).to include("## Heading", "**world**", "@sam", "#ruby", "👋")
       expect(markdown).to include("| Name | Value |", 'puts "ok"')
       expect(markdown).to include("> **More**", "_Poll: Choose one (view on site)_")
+    end
+
+    it "converts standard emoji, aliases, and skin tones to Unicode" do
+      html = PrettyText.cook(":smile: :+1: :wave:t4: :thumbsup:t6:")
+
+      expect(described_class.to_markdown(html)).to eq("😄 👍 👋🏽 👍🏿")
+    end
+
+    it "preserves custom and unknown emoji shortcodes" do
+      html = <<~HTML
+        <p><img class="emoji emoji-custom" title=":custom_emoji:" src="/custom.png">
+        <img class="emoji" alt=":unknown_emoji:" src="/emoji.png"></p>
+      HTML
+
+      expect(described_class.to_markdown(html)).to eq(":custom_emoji::unknown_emoji:")
+    end
+
+    it "preserves literal shortcodes in code and URLs" do
+      html = <<~HTML
+        <p><code>:smile:</code> <a href="https://example.com/:wave:">Example</a></p>
+        <pre><code>:wave:t4:</code></pre>
+      HTML
+
+      expect(described_class.to_markdown(html)).to eq(
+        "`:smile:` [Example](https://example.com/:wave:)\n\n```\n:wave:t4:\n```",
+      )
     end
 
     it "preserves quotes, oneboxes, lightboxes, and nested formatting" do
