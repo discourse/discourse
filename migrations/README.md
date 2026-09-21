@@ -93,6 +93,14 @@ Two things to get right:
   but do it in the source query (`DISTINCT ON`, a window function, a view) and
   partition on the dedup key, rather than keeping state in `process`.
 
+## Uploads
+
+`disco upload` turns the IntermediateDB's `upload_sources` into uploads on the site's
+store and records the results in `files.db`; `disco import` then copies those into the
+target site, or creates them inline when there is no `files.db`. See
+[docs/testing-uploads-locally.md](docs/testing-uploads-locally.md) for how to exercise
+both paths against a local store or an S3 one (MinIO) without a real migration.
+
 ## Schema DSL
 
 The schema DSL lives in `migrations/tooling/lib/migrations/tooling/schema/dsl/`. Config sources
