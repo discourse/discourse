@@ -19,11 +19,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       expect(result).to have_attributes(
         year: 2021,
         for_user: current_user,
-        reports: [
-          nil,
-          include(identifier: "reading-time"),
-          include(identifier: "writing-analysis"),
-        ],
+        reports: [nil, include(identifier: "reading-time"), nil],
         total_available: described_class.enabled_reports.size,
       )
     end
@@ -62,12 +58,12 @@ RSpec.describe(DiscourseRewind::FetchReports) do
             .call(guardian:, params:)
             .reports
             .map { |report| report&.dig(:identifier) },
-        ).to eq([nil, nil, "writing-analysis"])
+        ).to eq([nil, nil, nil])
 
         DiscourseRewind::Action::ReadingTime.unstub(:call)
 
         expect(result.reports.map { |report| report&.dig(:identifier) }).to eq(
-          [nil, "reading-time", "writing-analysis"],
+          [nil, "reading-time", nil],
         )
       end
     end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseRewind::Action::ChatUsage do
-  fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
   fab!(:public_category, :category)
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
@@ -13,37 +12,60 @@ RSpec.describe DiscourseRewind::Action::ChatUsage do
   describe ".call" do
     context "with messages in public and private channels" do
       before do
-        5.times do
+        2.times do
           Fabricate(
             :chat_message,
             chat_channel: public_channel,
-            user: user,
+            user:,
+            message: "hi",
             created_at: random_datetime,
           )
         end
-
-        3.times do
+        Fabricate(
+          :chat_message,
+          chat_channel: private_channel,
+          user:,
+          message: "hello",
+          created_at: random_datetime,
+        )
+        direct_message =
           Fabricate(
             :chat_message,
-            chat_channel: private_channel,
-            user: user,
+            chat_channel: Fabricate(:direct_message_channel, users: [user, Fabricate(:user)]),
+            user:,
+            message: "hey you",
             created_at: random_datetime,
           )
+        Fabricate(:chat_message_reaction, chat_message: direct_message)
+      end
+
+      it "returns nothing when there is too little chat activity to show" do
+        expect(call_report).to be_nil
+      end
+
+      context "when above the minimum activity" do
+        around do |example|
+          stub_const(described_class, "MINIMUM_MESSAGES", 1) do
+            stub_const(described_class, "MINIMUM_DM_CHANNELS", 0) { example.run }
+          end
         end
-      end
 
-      it "only includes public channels in favorite_channels" do
-        result = call_report
-
-        expect(result[:data][:favorite_channels].length).to eq(1)
-        expect(result[:data][:favorite_channels].first[:channel_id]).to eq(public_channel.id)
-        expect(result[:data][:favorite_channels].first[:message_count]).to eq(5)
-      end
-
-      it "includes all messages in total_messages count" do
-        result = call_report
-
-        expect(result[:data][:total_messages]).to eq(8)
+        it "returns the chat statistics, with only public channels as favorites" do
+          expect(call_report[:data]).to eq(
+            total_messages: 4,
+            favorite_channels: [
+              {
+                channel_id: public_channel.id,
+                channel_slug: public_channel.slug,
+                message_count: 2,
+              },
+            ],
+            dm_message_count: 1,
+            unique_dm_channels: 1,
+            total_reactions_received: 1,
+            avg_message_length: 4.0,
+          )
+        end
       end
     end
   end
