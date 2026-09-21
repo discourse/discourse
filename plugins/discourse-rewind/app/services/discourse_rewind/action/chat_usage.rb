@@ -38,11 +38,7 @@ module DiscourseRewind
         channel_usage =
           messages
             .joins(:chat_channel)
-            .joins(
-              "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-            )
-            .where(chat_channels: { type: "CategoryChannel" })
-            .where(categories: { read_restricted: false })
+            .merge(self.class.public_category_channels)
             .group("chat_channels.id", "chat_channels.slug")
             .order("COUNT(*) DESC", "chat_channels.id")
             .limit(5)
@@ -96,6 +92,23 @@ module DiscourseRewind
           },
           identifier: "chat-usage",
         }
+      end
+
+      def self.public_category_channels
+        Chat::Channel.public_channels.where(categories: { read_restricted: false })
+      end
+
+      def self.filter_for_viewer(report, **)
+        favorite_channels = report[:data][:favorite_channels]
+        public_channel_ids =
+          public_category_channels.where(id: favorite_channels.pluck(:channel_id)).pluck(:id)
+
+        report.deep_merge(
+          data: {
+            favorite_channels:
+              favorite_channels.select { |channel| channel[:channel_id].in?(public_channel_ids) },
+          },
+        )
       end
 
       def enabled?
