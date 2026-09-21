@@ -7,7 +7,10 @@ module MarkdownEndpoint
         .to_s
         .gsub(Emoji::EMOJI_CODE_REGEXP) do |shortcode|
           name, tone = Regexp.last_match(1).split(":", 2)
-          Emoji.lookup_unicode([Emoji.resolve_alias(name), tone].compact.join(":")) || shortcode
+          next shortcode if Emoji.custom?(name)
+
+          unicode = Emoji.lookup_unicode([Emoji.resolve_alias(name), tone].compact.join(":"))
+          unicode.presence || shortcode
         end
     end
   end
