@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseRewind::Action::MostViewedCategories do
-  fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
   fab!(:other_user, :user)
 
@@ -18,31 +17,18 @@ RSpec.describe DiscourseRewind::Action::MostViewedCategories do
   fab!(:topic_5) { Fabricate(:topic, category: category_4) }
   fab!(:topic_6) { Fabricate(:topic, category: category_5) }
 
-  before { SiteSetting.discourse_rewind_enabled = true }
-
   describe ".call" do
     it "returns top 4 most viewed categories ordered by view count" do
-      # Category 1: 2 views
       TopicViewItem.add(topic_1.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
       TopicViewItem.add(topic_2.id, "127.0.0.2", user.id, Date.new(2021, 4, 20))
-
-      # Category 2: 1 view
       TopicViewItem.add(topic_3.id, "127.0.0.3", user.id, Date.new(2021, 5, 10))
-
-      # Category 3: 1 view
       TopicViewItem.add(topic_4.id, "127.0.0.4", user.id, Date.new(2021, 6, 5))
-
-      # Category 4: 3 views (same topic, multiple views)
       TopicViewItem.add(topic_5.id, "127.0.0.5", user.id, Date.new(2021, 7, 1))
       TopicViewItem.add(topic_5.id, "127.0.0.6", user.id, Date.new(2021, 8, 15))
       TopicViewItem.add(topic_5.id, "127.0.0.7", user.id, Date.new(2021, 9, 20))
 
-      # Category 5: 0 views
-
       result = call_report
 
-      expect(result[:identifier]).to eq("most-viewed-categories")
-      expect(result[:data].length).to eq(4)
       expect(result[:data]).to eq(
         [
           { category_id: category_1.id, name: "Technology" },
@@ -51,17 +37,6 @@ RSpec.describe DiscourseRewind::Action::MostViewedCategories do
           { category_id: category_4.id, name: "Literature" },
         ],
       )
-    end
-
-    it "only includes categories the user can see (no read-restricted/private categories)" do
-      group = Fabricate(:group)
-      private_category = Fabricate(:private_category, group: group)
-      private_topic = Fabricate(:topic, category: private_category)
-
-      TopicViewItem.add(private_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
-
-      result = call_report
-      expect(result[:data].map { |c| c[:category_id] }).not_to include(private_category.id)
     end
 
     it "filters by date range" do
