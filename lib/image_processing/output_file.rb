@@ -9,9 +9,7 @@ module ImageProcessing
         result = yield output.path
         output.rewind
 
-        File.open(path, "wb") do |destination|
-          IO.copy_stream(output, destination)
-        end
+        File.open(path, "wb") { |destination| IO.copy_stream(output, destination) }
 
         result
       end
