@@ -31,7 +31,6 @@ module DiscourseRewind
 
       def call
         return FakeData if should_use_fake_data?
-        return if !enabled?
 
         base_query = AiApiRequestStat.where(user_id: user.id).where(bucket_date: date)
 
@@ -89,8 +88,8 @@ module DiscourseRewind
         }
       end
 
-      def enabled?
-        Discourse.plugins_by_name["discourse-ai"]&.enabled?
+      def self.enabled?
+        plugin_enabled?("discourse-ai")
       end
 
       def self.filter_for_viewer(report, guardian:, for_user:)

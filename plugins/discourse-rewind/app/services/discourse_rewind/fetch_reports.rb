@@ -48,6 +48,10 @@ module DiscourseRewind
       Action::Invites,
     ]
 
+    def self.enabled_reports
+      REPORTS.select(&:enabled?)
+    end
+
     params do
       attribute :for_user_username, :string
       attribute :offset, :integer, default: 0
@@ -55,7 +59,7 @@ module DiscourseRewind
       validates :offset,
                 numericality: {
                   greater_than_or_equal_to: 0,
-                  less_than: ->(_) { REPORTS.size },
+                  less_than: ->(_) { FetchReports.enabled_reports.size },
                 }
     end
 
@@ -82,13 +86,13 @@ module DiscourseRewind
     end
 
     def fetch_reports(params:, for_user:, year:, guardian:)
-      REPORTS[params.offset, PAGE_SIZE].map do |report_class|
+      self.class.enabled_reports[params.offset, PAGE_SIZE].map do |report_class|
         fetch_report(report_class, for_user:, year:, guardian:)
       end
     end
 
     def fetch_total_available
-      REPORTS.size
+      self.class.enabled_reports.size
     end
 
     def fetch_report(report_class, for_user:, year:, guardian:)

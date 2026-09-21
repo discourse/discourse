@@ -24,7 +24,6 @@ module DiscourseRewind
 
       def call
         return FakeData if should_use_fake_data?
-        return if !self.class.enabled?
 
         used = count_by_emoji(DiscourseReactions::Reaction.by_user(user))
         received =

@@ -24,7 +24,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
           include(identifier: "reading-time"),
           include(identifier: "writing-analysis"),
         ],
-        total_available: described_class::REPORTS.size,
+        total_available: described_class.enabled_reports.size,
       )
     end
 
@@ -87,11 +87,12 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       end
     end
 
-    context "with every report returning data" do
+    context "with every report enabled" do
       let(:params) { { offset: 3 } }
 
       before do
         described_class::REPORTS.each do |report_class|
+          report_class.stubs(:enabled?).returns(true)
           report = { data: [1], identifier: report_class.name.demodulize }
           report_class.stubs(:call).returns(report)
           report_class.stubs(:filter_for_viewer).returns(report)
@@ -119,6 +120,15 @@ RSpec.describe(DiscourseRewind::FetchReports) do
           [*reports_named("Reactions"), nil, *reports_named("MostViewedTags")],
         )
       end
+
+      it "skips the reports of disabled plugins" do
+        DiscourseRewind::Action::Reactions.stubs(:enabled?).returns(false)
+
+        expect(result).to have_attributes(
+          reports: reports_named("Fbff", "MostViewedTags", "MostViewedCategories"),
+          total_available: described_class::REPORTS.size - 1,
+        )
+      end
     end
 
     context "when the offset is negative" do
@@ -128,7 +138,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
     end
 
     context "when the offset is past the last report" do
-      let(:params) { { offset: described_class::REPORTS.size } }
+      let(:params) { { offset: described_class.enabled_reports.size } }
 
       it { is_expected.to fail_a_contract }
     end
@@ -138,7 +148,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       fab!(:shared_draft_topic) { Fabricate(:shared_draft).topic }
 
       let(:params) do
-        { offset: described_class::REPORTS.index(DiscourseRewind::Action::BestTopics) }
+        { offset: described_class.enabled_reports.index(DiscourseRewind::Action::BestTopics) }
       end
 
       it "filters the report for the viewer" do

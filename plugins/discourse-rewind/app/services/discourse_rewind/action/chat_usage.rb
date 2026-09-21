@@ -26,7 +26,6 @@ module DiscourseRewind
 
       def call
         return FakeData if should_use_fake_data?
-        return if !enabled?
 
         messages =
           Chat::Message.where(user_id: user.id).where(created_at: date).where(deleted_at: nil)
@@ -111,8 +110,8 @@ module DiscourseRewind
         )
       end
 
-      def enabled?
-        Discourse.plugins_by_name["chat"]&.enabled?
+      def self.enabled?
+        plugin_enabled?("chat")
       end
     end
   end
