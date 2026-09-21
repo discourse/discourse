@@ -667,6 +667,8 @@ class BulkImport::Base
     external_card_background_url
   ]
 
+  USER_ASSOCIATED_GROUP_COLUMNS = %i[user_id associated_group_id created_at updated_at]
+
   USER_ASSOCIATED_ACCOUNT_COLUMNS = %i[
     provider_name
     provider_uid
@@ -1137,6 +1139,10 @@ class BulkImport::Base
     create_records(rows, "user_associated_account", USER_ASSOCIATED_ACCOUNT_COLUMNS, &block)
   end
 
+  def create_user_associated_groups(rows, &block)
+    create_records(rows, "user_associated_group", USER_ASSOCIATED_GROUP_COLUMNS, &block)
+  end
+
   def create_user_custom_fields(rows, &block)
     create_records(rows, "user_custom_field", USER_CUSTOM_FIELD_COLUMNS, &block)
   end
@@ -1602,6 +1608,12 @@ class BulkImport::Base
     account[:created_at] = NOW
     account[:updated_at] = NOW
     account
+  end
+
+  def process_user_associated_group(user_associated_group)
+    user_associated_group[:created_at] = NOW
+    user_associated_group[:updated_at] = NOW
+    user_associated_group
   end
 
   def process_group_user(group_user)
