@@ -15,6 +15,7 @@ import {
   findNodeType,
   isExpression,
   propertyDescription,
+  propertyDescriptionIsLiteral,
   propertyDynamicValueHint,
   propertyLabel,
   propertyPlaceholder,
@@ -83,7 +84,8 @@ export default class Field extends Component {
 
   get label() {
     return (
-      this.args.label || propertyLabel(this.nodeDefinition, this.args.fieldName)
+      this.args.label ||
+      propertyLabel(this.nodeDefinition, this.args.fieldName, this.args.schema)
     );
   }
 
@@ -103,7 +105,11 @@ export default class Field extends Component {
   }
 
   get placeholder() {
-    return propertyPlaceholder(this.nodeDefinition, this.args.fieldName);
+    return propertyPlaceholder(
+      this.nodeDefinition,
+      this.args.fieldName,
+      this.args.schema
+    );
   }
 
   get showLabel() {
@@ -150,9 +156,20 @@ export default class Field extends Component {
 
     const description = propertyDescription(
       this.nodeDefinition,
-      this.args.fieldName
+      this.args.fieldName,
+      this.args.schema
     );
-    return description ? trustHTML(description) : undefined;
+    if (!description) {
+      return undefined;
+    }
+
+    return propertyDescriptionIsLiteral(
+      this.nodeDefinition,
+      this.args.fieldName,
+      this.args.schema
+    )
+      ? description
+      : trustHTML(description);
   }
 
   get fieldTooltip() {

@@ -196,6 +196,34 @@ module("Unit | Component | workflows editor", function () {
     );
   });
 
+  test("node panel search matches pack subtitles and names", function (assert) {
+    const editor = buildEditor({ id: 12 });
+    editor.nodePanelNodeTypes = [
+      {
+        identifier: "action:example_pack.choice",
+        ui: {
+          label: "Choose an option",
+          subtitle: "One label from a list",
+          pack: { name: "Example pack" },
+        },
+      },
+      { identifier: "action:topic" },
+    ];
+    editor.nodePanelContext = { canvasX: 10, canvasY: 20 };
+
+    editor.nodePanelSearchTerm = "label from";
+    assert.deepEqual(
+      editor.filteredNodePanelTypes.map((nodeType) => nodeType.identifier),
+      ["action:example_pack.choice"]
+    );
+
+    editor.nodePanelSearchTerm = "example pack";
+    assert.deepEqual(
+      editor.filteredNodePanelTypes.map((nodeType) => nodeType.identifier),
+      ["action:example_pack.choice"]
+    );
+  });
+
   test("buildPastedGraph duplicates nodes with unique names and remaps internal connections", function (assert) {
     const existingNodes = [
       {

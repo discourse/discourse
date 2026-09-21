@@ -47,7 +47,7 @@ module DiscourseWorkflows
           webhooks: webhooks,
         )
 
-      {
+      serialized = {
         displayName: description[:displayName],
         name: @identifier,
         version: version,
@@ -72,6 +72,9 @@ module DiscourseWorkflows
         unavailable_reason_key: (klass.unavailable_reason_key unless klass.available?),
         metadata: metadata.presence,
       }.compact
+      serialized[:examples] = klass.examples if klass.respond_to?(:examples) &&
+        klass.examples.present?
+      serialized
     end
 
     def serializable_webhooks(klass)

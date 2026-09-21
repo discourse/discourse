@@ -280,6 +280,71 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
       end
     end
 
+    context "when imported node definitions are retained" do
+      it "accepts an exact retired typeVersion while rejecting a missing version" do
+        admin = Fabricate(:admin)
+        raw_manifest =
+          File.read(
+            Rails.root.join("plugins/discourse-workflows/docs/examples/node-packs/jev.json"),
+          )
+        pack =
+          DiscourseWorkflows::NodePack::Install.call(
+            params: {
+              manifest: raw_manifest,
+              approved_destinations: ["https://api.typesafe.ai"],
+            },
+            guardian: admin.guardian,
+          )[
+            :node_pack
+          ]
+        updated_manifest = JSON.parse(raw_manifest)
+        updated_manifest["version"] = "1.1.0"
+        updated_manifest["nodes"].reject! { |node| node["key"] == "choice" }
+        DiscourseWorkflows::NodePack::Install.call(
+          params: {
+            manifest: updated_manifest,
+            approved_destinations: ["https://api.typesafe.ai"],
+          },
+          guardian: admin.guardian,
+        )
+        expect(
+          pack.definitions.find_by!(identifier: "action:jev.choice").reload.retired_at,
+        ).to be_present
+
+        exact =
+          described_class.call(
+            workflow: workflow,
+            nodes_data: [
+              {
+                id: "choice-1",
+                type: "action:jev.choice",
+                typeVersion: "1.0",
+                name: "Retired choice",
+              },
+            ],
+            connections_data: {
+            },
+          )
+        missing =
+          described_class.call(
+            workflow: workflow,
+            nodes_data: [
+              {
+                id: "choice-1",
+                type: "action:jev.choice",
+                typeVersion: "9.0",
+                name: "Missing choice",
+              },
+            ],
+            connections_data: {
+            },
+          )
+
+        expect(exact).to eq(true)
+        expect(missing).to eq(false)
+      end
+    end
+
     context "when a node type has multiple versions" do
       it "uses the latest version for new nodes without a submitted typeVersion" do
         v1 =

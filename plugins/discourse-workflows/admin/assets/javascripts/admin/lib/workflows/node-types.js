@@ -131,7 +131,10 @@ export function nodeTypeLabelKey(nodeTypeOrIdentifier, typeVersion = null) {
 }
 
 export function nodeTypeLabel(nodeTypeOrIdentifier, typeVersion = null) {
-  return i18n(nodeTypeLabelKey(nodeTypeOrIdentifier, typeVersion));
+  return (
+    nodeTypeUi(nodeTypeOrIdentifier, typeVersion).label ||
+    i18n(nodeTypeLabelKey(nodeTypeOrIdentifier, typeVersion))
+  );
 }
 
 export function nodeTypeDescriptionKey(
@@ -145,9 +148,34 @@ export function nodeTypeDescriptionKey(
 }
 
 export function nodeTypeDescription(nodeTypeOrIdentifier, typeVersion = null) {
-  return translatedOrNull(
-    nodeTypeDescriptionKey(nodeTypeOrIdentifier, typeVersion)
+  return (
+    nodeTypeUi(nodeTypeOrIdentifier, typeVersion).description ||
+    translatedOrNull(nodeTypeDescriptionKey(nodeTypeOrIdentifier, typeVersion))
   );
+}
+
+export function nodeTypeSubtitle(nodeTypeOrIdentifier, typeVersion = null) {
+  return nodeTypeUi(nodeTypeOrIdentifier, typeVersion).subtitle || null;
+}
+
+export function safeHttpsUrl(value) {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  try {
+    return new URL(value).protocol === "https:" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+export function nodeTypeDocsUrl(nodeTypeOrIdentifier, typeVersion = null) {
+  return safeHttpsUrl(nodeTypeUi(nodeTypeOrIdentifier, typeVersion).docs_url);
+}
+
+export function nodeTypePack(nodeTypeOrIdentifier, typeVersion = null) {
+  return nodeTypeUi(nodeTypeOrIdentifier, typeVersion).pack || null;
 }
 
 export function nodeTypeCapabilities(nodeTypeOrIdentifier, typeVersion = null) {
@@ -398,6 +426,9 @@ export function nodeTypePresenter(nodeTypeOrIdentifier) {
     style: nodeTypeStyle(nodeTypeOrIdentifier),
     label: nodeTypeLabel(nodeTypeOrIdentifier),
     description: nodeTypeDescription(nodeTypeOrIdentifier),
+    subtitle: nodeTypeSubtitle(nodeTypeOrIdentifier),
+    docsUrl: nodeTypeDocsUrl(nodeTypeOrIdentifier),
+    pack: nodeTypePack(nodeTypeOrIdentifier),
     paletteGroup: nodeTypePaletteGroup(nodeTypeOrIdentifier),
     hasOperations: operations.length > 0,
     operations,

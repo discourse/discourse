@@ -18,6 +18,13 @@ export default {
     this.route("discourse-workflows-templates", { path: "templates" });
     this.route("discourse-workflows-variables", { path: "variables" });
     this.route("discourse-workflows-credentials", { path: "credentials" });
+    this.route(
+      "discourse-workflows-node-packs",
+      { path: "node-packs" },
+      function () {
+        this.route("show", { path: "/:id" });
+      }
+    );
     this.route("discourse-workflows-executions", { path: "executions" });
     this.route(
       "discourse-workflows-data-tables",

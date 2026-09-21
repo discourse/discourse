@@ -5331,6 +5331,84 @@ ALTER SEQUENCE public.discourse_workflows_executions_id_seq OWNED BY public.disc
 
 
 --
+-- Name: discourse_workflows_node_pack_definitions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_node_pack_definitions (
+    id bigint NOT NULL,
+    node_pack_id bigint NOT NULL,
+    identifier character varying(100) NOT NULL,
+    version character varying(16) NOT NULL,
+    definition jsonb NOT NULL,
+    definition_sha256 character varying(64) NOT NULL,
+    introduced_in character varying(32) NOT NULL,
+    retired_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_node_pack_definitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_node_pack_definitions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_node_pack_definitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_node_pack_definitions_id_seq OWNED BY public.discourse_workflows_node_pack_definitions.id;
+
+
+--
+-- Name: discourse_workflows_node_packs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_node_packs (
+    id bigint NOT NULL,
+    key character varying(32) NOT NULL,
+    name character varying(60) NOT NULL,
+    version character varying(32) NOT NULL,
+    manifest jsonb NOT NULL,
+    manifest_sha256 character varying(64) NOT NULL,
+    approved_destinations jsonb DEFAULT '[]'::jsonb NOT NULL,
+    enabled boolean DEFAULT true NOT NULL,
+    palette_visible boolean DEFAULT true NOT NULL,
+    installed_by_id integer NOT NULL,
+    updated_by_id integer,
+    removed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_node_packs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_node_packs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_node_packs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_node_packs_id_seq OWNED BY public.discourse_workflows_node_packs.id;
+
+
+--
 -- Name: discourse_workflows_tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14589,6 +14667,20 @@ ALTER TABLE ONLY public.discourse_workflows_executions ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: discourse_workflows_node_pack_definitions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_node_pack_definitions ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_node_pack_definitions_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_node_packs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_node_packs ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_node_packs_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17206,6 +17298,22 @@ ALTER TABLE ONLY public.discourse_workflows_execution_stats
 
 ALTER TABLE ONLY public.discourse_workflows_executions
     ADD CONSTRAINT discourse_workflows_executions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_node_pack_definitions discourse_workflows_node_pack_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_node_pack_definitions
+    ADD CONSTRAINT discourse_workflows_node_pack_definitions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_node_packs discourse_workflows_node_packs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_node_packs
+    ADD CONSTRAINT discourse_workflows_node_packs_pkey PRIMARY KEY (id);
 
 
 --
@@ -19837,6 +19945,13 @@ CREATE INDEX idx_on_mcp_oauth_authorization_id_d749d8a9de ON public.mcp_oauth_au
 
 
 --
+-- Name: idx_on_node_pack_id_2efbcacff5; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_node_pack_id_2efbcacff5 ON public.discourse_workflows_node_pack_definitions USING btree (node_pack_id);
+
+
+--
 -- Name: idx_on_sidebar_section_id_locale_271bd8ee1c; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20156,6 +20271,13 @@ CREATE INDEX idx_voice_sessions_orphaned ON public.voice_sessions USING btree (l
 --
 
 CREATE UNIQUE INDEX idx_web_hook_event_types_hooks_on_ids ON public.web_hook_event_types_hooks USING btree (web_hook_event_type_id, web_hook_id);
+
+
+--
+-- Name: idx_workflow_node_pack_definitions_identity; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_workflow_node_pack_definitions_identity ON public.discourse_workflows_node_pack_definitions USING btree (identifier, version);
 
 
 --
@@ -21514,6 +21636,13 @@ CREATE INDEX index_discourse_subscriptions_subscriptions_on_external_id ON publi
 --
 
 CREATE UNIQUE INDEX index_discourse_templates_usage_count_on_topic_id ON public.discourse_templates_usage_count USING btree (topic_id);
+
+
+--
+-- Name: index_discourse_workflows_node_packs_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_workflows_node_packs_on_key ON public.discourse_workflows_node_packs USING btree (key);
 
 
 --
@@ -25383,6 +25512,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260921033355'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),

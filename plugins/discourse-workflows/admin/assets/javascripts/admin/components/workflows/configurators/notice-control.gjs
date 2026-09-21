@@ -3,6 +3,7 @@ import { trustHTML } from "@ember/template";
 import {
   fieldShowDescription,
   propertyDescription,
+  propertyDescriptionIsLiteral,
 } from "../../../lib/workflows/property-engine";
 
 export default class NoticeControl extends Component {
@@ -10,11 +11,22 @@ export default class NoticeControl extends Component {
     if (!fieldShowDescription(this.args.schema)) {
       return undefined;
     }
-    const desc = propertyDescription(
+    const description = propertyDescription(
       this.args.nodeDefinition,
-      this.args.fieldName
+      this.args.fieldName,
+      this.args.schema
     );
-    return desc ? trustHTML(desc) : undefined;
+    if (!description) {
+      return undefined;
+    }
+
+    return propertyDescriptionIsLiteral(
+      this.args.nodeDefinition,
+      this.args.fieldName,
+      this.args.schema
+    )
+      ? description
+      : trustHTML(description);
   }
 
   <template>

@@ -36,7 +36,13 @@ module DiscourseWorkflows
           @workflow_snapshot.to_h["nodes"],
           workflow_name: @workflow_snapshot.workflow_name,
         )
-        @execution = create_execution!
+        @execution =
+          NodePacks::LifecycleLock.with_node_locks(@workflow_snapshot.to_h["nodes"]) do
+            create_execution!.tap do |execution|
+              execution_data = execution.execution_data || execution.build_execution_data
+              execution_data.update!(workflow_data: @workflow_snapshot.to_h)
+            end
+          end
         reset_collaborators!
         restore_seeded_run_data!
         @execution

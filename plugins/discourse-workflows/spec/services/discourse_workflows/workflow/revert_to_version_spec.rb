@@ -67,6 +67,38 @@ RSpec.describe DiscourseWorkflows::Workflow::RevertToVersion do
       it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
+    context "when the selected version references a removed node pack" do
+      it "returns a service failure and leaves the draft unchanged" do
+        pack = install_node_pack(user)
+        pack_graph = build_workflow_graph { |builder| builder.node "choice-1", "action:jev.choice" }
+        pack_workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **pack_graph)
+        pack_version =
+          pack_workflow.workflow_versions.find_by!(version_id: pack_workflow.version_id)
+        replacement_graph =
+          build_workflow_graph { |builder| builder.node "manual-1", "trigger:manual" }
+        pack_workflow.update!(**replacement_graph)
+        pack_workflow.snapshot!(user: user)
+        DiscourseWorkflows::NodePack::Remove.call(
+          params: {
+            node_pack_id: pack.id,
+          },
+          guardian: user.guardian,
+        )
+
+        failed =
+          described_class.call(
+            params: {
+              workflow_id: pack_workflow.id,
+              version_id: pack_version.version_id,
+            },
+            guardian: user.guardian,
+          )
+
+        expect(failed).to fail_a_step(:restore_version)
+        expect(pack_workflow.reload.nodes).to eq(replacement_graph[:nodes])
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
@@ -88,5 +120,19 @@ RSpec.describe DiscourseWorkflows::Workflow::RevertToVersion do
 
       it_behaves_like "expires workflow caches"
     end
+  end
+
+  def install_node_pack(user)
+    manifest =
+      File.read(Rails.root.join("plugins/discourse-workflows/docs/examples/node-packs/jev.json"))
+    DiscourseWorkflows::NodePack::Install.call(
+      params: {
+        manifest:,
+        approved_destinations: ["https://api.typesafe.ai"],
+      },
+      guardian: user.guardian,
+    )[
+      :node_pack
+    ]
   end
 end

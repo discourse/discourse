@@ -31,6 +31,8 @@ module DiscourseWorkflows
 
     def restore_version(workflow:, version:, guardian:)
       workflow.restore_from_version!(version, user: guardian.user)
+    rescue NodePacks::LifecycleLock::MissingReferencesError => error
+      fail!(NodePacks::LifecycleLock.missing_reference_messages(error.references))
     end
 
     def expire_workflow_caches

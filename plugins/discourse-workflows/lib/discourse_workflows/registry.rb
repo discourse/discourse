@@ -14,7 +14,8 @@ module DiscourseWorkflows
           else
             DiscoursePluginRegistry.discourse_workflows_nodes
           end
-        references.map { |reference| resolve_class(reference) }.uniq
+        ruby_nodes = references.map { |reference| resolve_class(reference) }.uniq
+        ruby_nodes + NodePacks::Runtime.node_classes
       end
 
       def triggers
@@ -58,6 +59,7 @@ module DiscourseWorkflows
 
       def reset_indexes!
         @credential_type_index = nil
+        NodePacks::Runtime.clear! if defined?(NodePacks::Runtime)
       end
 
       private

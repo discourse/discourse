@@ -232,6 +232,48 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::ApplyPatch do
     )
   end
 
+  it "rejects a persisted patch that references a removed node pack" do
+    manifest =
+      File.read(Rails.root.join("plugins/discourse-workflows/docs/examples/node-packs/jev.json"))
+    pack =
+      DiscourseWorkflows::NodePack::Install.call(
+        params: {
+          manifest:,
+          approved_destinations: ["https://api.typesafe.ai"],
+        },
+        guardian: admin.guardian,
+      )[
+        :node_pack
+      ]
+    DiscourseWorkflows::NodePack::Remove.call(
+      params: {
+        node_pack_id: pack.id,
+      },
+      guardian: admin.guardian,
+    )
+
+    result =
+      described_class.call(
+        workflow:,
+        operations: [
+          {
+            op: "add_node",
+            node: {
+              type: "action:jev.choice",
+              typeVersion: "1.0",
+              name: "Removed choice",
+            },
+          },
+        ],
+        persist: true,
+        user: admin,
+      )
+
+    expect(result[:valid]).to eq(false)
+    expect(result[:errors].join).to include("Unsupported version 1.0")
+    expect(workflow.reload.nodes).to be_empty
+  end
+
   it "rejects unknown AI agent references" do
     result =
       described_class.call(

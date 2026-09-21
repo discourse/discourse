@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import {
@@ -43,8 +44,67 @@ export default class CredentialModal extends Component {
     return !!this.args.model.credential;
   }
 
+  get credentialSlot() {
+    return this.args.model.credentialSlot;
+  }
+
+  get availableCredentialTypes() {
+    if (this.isEditing || !this.credentialSlot) {
+      return this.credentialTypes || [];
+    }
+
+    const allowedTypes = [
+      this.credentialSlot.credential_types ||
+        this.credentialSlot.credential_type,
+    ]
+      .flat()
+      .filter(Boolean);
+
+    return (this.credentialTypes || []).filter((credentialType) =>
+      allowedTypes.includes(credentialType.identifier)
+    );
+  }
+
+  get automaticCredentialType() {
+    return this.credentialSlot && this.availableCredentialTypes.length === 1
+      ? this.availableCredentialTypes[0].identifier
+      : null;
+  }
+
+  get isLoading() {
+    return this.credentialTypes === null;
+  }
+
+  get modalTitle() {
+    if (this.isEditing) {
+      return i18n("discourse_workflows.credentials.edit");
+    }
+
+    const slot = this.credentialSlot?.label || this.credentialSlot?.name;
+    if (slot) {
+      return i18n("discourse_workflows.credentials.add_for_slot", { slot });
+    }
+
+    return i18n("discourse_workflows.credentials.add");
+  }
+
+  get showTypePicker() {
+    return (
+      !this.isEditing &&
+      (!this.credentialSlot || this.availableCredentialTypes.length > 1)
+    );
+  }
+
+  get typeContextUnavailable() {
+    return (
+      !this.isEditing &&
+      !!this.credentialSlot &&
+      this.availableCredentialTypes.length === 0
+    );
+  }
+
   get typeOptions() {
-    return (this.credentialTypes || []).map((ct) => ({
+    return this.availableCredentialTypes.map((ct) => ({
       value: ct.identifier,
       label: ct.display_name,
     }));
@@ -53,7 +113,10 @@ export default class CredentialModal extends Component {
   get formData() {
     const credential = this.args.model.credential;
     if (!credential) {
-      return { name: "", credential_type: "" };
+      return {
+        name: "",
+        credential_type: this.automaticCredentialType || "",
+      };
     }
 
     return {
@@ -99,101 +162,109 @@ export default class CredentialModal extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      @title={{if
-        this.isEditing
-        (i18n "discourse_workflows.credentials.edit")
-        (i18n "discourse_workflows.credentials.add")
-      }}
+      @inline={{@model.inline}}
+      @title={{this.modalTitle}}
     >
       <:body>
-        <Form
-          class="workflows-configurator-form"
-          @data={{this.formData}}
-          @onSubmit={{fn this.handleSubmit this.credentialTypes}}
-          as |form transientData|
-        >
-          <form.Field
-            @format="full"
-            @name="name"
-            @title={{i18n "discourse_workflows.credentials.name"}}
-            @type="input"
-            @validation="required"
-            as |field|
+        <DConditionalLoadingSpinner @condition={{this.isLoading}}>
+          <Form
+            class="workflows-configurator-form"
+            @data={{this.formData}}
+            @onSubmit={{fn this.handleSubmit this.availableCredentialTypes}}
+            as |form transientData|
           >
-            <field.Control
-              placeholder={{i18n
-                "discourse_workflows.credentials.name_placeholder"
-              }}
-            />
-          </form.Field>
-
-          {{#if this.isEditing}}
             <form.Field
-              @disabled={{true}}
               @format="full"
-              @name="credential_type"
-              @title={{i18n "discourse_workflows.credentials.type"}}
+              @name="name"
+              @title={{i18n "discourse_workflows.credentials.name"}}
               @type="input"
-              as |field|
-            >
-              <field.Control @disabled={{true}} />
-            </form.Field>
-          {{else}}
-            <form.Field
-              @format="full"
-              @name="credential_type"
-              @title={{i18n "discourse_workflows.credentials.type"}}
-              @type="select"
               @validation="required"
               as |field|
             >
               <field.Control
-                @includeNone={{i18n
-                  "discourse_workflows.credentials.select_type"
+                placeholder={{i18n
+                  "discourse_workflows.credentials.name_placeholder"
                 }}
-                as |c|
-              >
-                {{#each this.typeOptions as |option|}}
-                  <c.Option @value={{option.value}}>{{option.label}}</c.Option>
-                {{/each}}
-              </field.Control>
-            </form.Field>
-          {{/if}}
-
-          {{#each
-            (credentialTypeSchema
-              this.credentialTypes transientData.credential_type
-            )
-            key="name"
-            as |fieldSchema|
-          }}
-            {{#if (fieldVisible fieldSchema transientData)}}
-              <Field
-                @configuration={{transientData}}
-                @fieldName={{if
-                  (eq fieldSchema.name "name")
-                  "credential_data_name"
-                  fieldSchema.name
-                }}
-                @form={{form}}
-                @formApi={{form.api}}
-                @label={{propertyLabel
-                  (credentialTypeDefinition
-                    this.credentialTypes transientData.credential_type
-                  )
-                  fieldSchema.name
-                }}
-                @nodeDefinition={{credentialTypeDefinition
-                  this.credentialTypes
-                  transientData.credential_type
-                }}
-                @schema={{fieldSchema}}
               />
-            {{/if}}
-          {{/each}}
+            </form.Field>
 
-          <form.Submit />
-        </Form>
+            {{#if this.isEditing}}
+              <form.Field
+                @disabled={{true}}
+                @format="full"
+                @name="credential_type"
+                @title={{i18n "discourse_workflows.credentials.type"}}
+                @type="input"
+                as |field|
+              >
+                <field.Control @disabled={{true}} />
+              </form.Field>
+            {{else if this.showTypePicker}}
+              <form.Field
+                @format="full"
+                @name="credential_type"
+                @title={{i18n "discourse_workflows.credentials.type"}}
+                @type="select"
+                @validation="required"
+                as |field|
+              >
+                <field.Control
+                  @includeNone={{i18n
+                    "discourse_workflows.credentials.select_type"
+                  }}
+                  as |c|
+                >
+                  {{#each this.typeOptions as |option|}}
+                    <c.Option
+                      @value={{option.value}}
+                    >{{option.label}}</c.Option>
+                  {{/each}}
+                </field.Control>
+              </form.Field>
+            {{/if}}
+
+            {{#if this.typeContextUnavailable}}
+              <div class="alert alert-error" role="alert">
+                {{i18n "discourse_workflows.credentials.no_supported_types"}}
+              </div>
+            {{/if}}
+
+            {{#each
+              (credentialTypeSchema
+                this.availableCredentialTypes transientData.credential_type
+              )
+              key="name"
+              as |fieldSchema|
+            }}
+              {{#if (fieldVisible fieldSchema transientData)}}
+                <Field
+                  @configuration={{transientData}}
+                  @fieldName={{if
+                    (eq fieldSchema.name "name")
+                    "credential_data_name"
+                    fieldSchema.name
+                  }}
+                  @form={{form}}
+                  @formApi={{form.api}}
+                  @label={{propertyLabel
+                    (credentialTypeDefinition
+                      this.availableCredentialTypes
+                      transientData.credential_type
+                    )
+                    fieldSchema.name
+                  }}
+                  @nodeDefinition={{credentialTypeDefinition
+                    this.availableCredentialTypes
+                    transientData.credential_type
+                  }}
+                  @schema={{fieldSchema}}
+                />
+              {{/if}}
+            {{/each}}
+
+            <form.Submit @disabled={{this.typeContextUnavailable}} />
+          </Form>
+        </DConditionalLoadingSpinner>
       </:body>
     </DModal>
   </template>

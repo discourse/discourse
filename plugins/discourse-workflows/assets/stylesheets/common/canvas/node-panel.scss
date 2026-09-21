@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 320px;
+  width: min(320px, 100vw);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -177,5 +177,25 @@
     .d-icon {
       color: var(--primary-medium);
     }
+  }
+
+  &__imported-badge {
+    flex-shrink: 0;
+    padding: var(--space-1) var(--space-2);
+    color: var(--tertiary);
+    background: var(--tertiary-very-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-2);
+    white-space: nowrap;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--primary-low-mid);
+    font-size: var(--font-down-1);
   }
 }

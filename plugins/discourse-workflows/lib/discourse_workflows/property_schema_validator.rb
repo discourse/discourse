@@ -37,6 +37,9 @@ module DiscourseWorkflows
       type_options
       ui
       control_options
+      label
+      description
+      placeholder
     ].freeze
 
     TYPE_SPECIFIC_KEYS = { credential: %i[credential_type] }.freeze

@@ -14,6 +14,7 @@ export default class PaginatedListManager extends Component {
   @service modal;
 
   @tracked items = null;
+  @tracked loadError = null;
   @tracked loadMoreUrl = null;
   @tracked totalRows = 0;
   @tracked loadingMore = false;
@@ -36,12 +37,15 @@ export default class PaginatedListManager extends Component {
   }
 
   async loadItems() {
+    this.loadError = null;
     try {
       const result = await ajax(this.apiUrl);
       this.items = result[this.collectionKey];
       this.loadMoreUrl = result.meta?.load_more_url;
       this.totalRows = result.meta?.total_rows ?? this.items.length;
     } catch (e) {
+      this.loadError = e;
+      this.items = [];
       popupAjaxError(e);
     }
   }

@@ -74,6 +74,26 @@
     color: var(--node-icon-color, var(--primary-medium));
   }
 
+  &__pack-name {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__pack-badge {
+    padding: var(--space-1) var(--space-2);
+    color: var(--tertiary);
+    background: var(--tertiary-very-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-2);
+    white-space: nowrap;
+  }
+
+  &__docs-link {
+    margin-inline-start: var(--space-2);
+    font-size: var(--font-down-1);
+    white-space: nowrap;
+  }
+
   &__name-input {
     flex: 0 1 auto;
     width: calc(var(--node-name-length) * 1ch) !important;

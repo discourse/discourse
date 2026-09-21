@@ -318,6 +318,9 @@ module DiscourseWorkflows
       return handle_unknown_node(node, input_items) unless node_type_class
 
       unless node_type_class.available?
+        if node_type_class.respond_to?(:imported_node_pack?) && node_type_class.imported_node_pack?
+          return handle_unavailable_pack_node(node, node_type_class, input_items)
+        end
         return handle_unavailable_node(node, node_type_class, input_items)
       end
 
@@ -463,11 +466,34 @@ module DiscourseWorkflows
     end
 
     def handle_unknown_node(node, input_items)
+      if NodePacks::LifecycleLock.pack_references([node]).any?
+        reason = I18n.t("discourse_workflows.node_packs.pack_missing")
+        Rails.logger.warn(
+          "discourse-workflows: imported node type '#{node.type}' (version: #{node.type_version}) " \
+            "is missing in workflow #{@context.workflow.id}, stopping at node '#{node.name}'",
+        )
+        step = record_step(node, input_items, status: Step::ERROR, error: reason)
+        @store.publish_progress(step: step)
+        raise DiscourseWorkflows::NodeError, reason
+      end
+
       Rails.logger.warn(
         "discourse-workflows: unknown node type '#{node.type}' (version: #{node.type_version}) " \
           "in workflow #{@context.workflow.id}, skipping node '#{node.name}'",
       )
       record_step(node, input_items, status: Step::ERROR, error: "Unknown node type '#{node.type}'")
+    end
+
+    def handle_unavailable_pack_node(node, node_type_class, input_items)
+      reason =
+        node_type_class.unavailable_reason_key || "discourse_workflows.node_packs.pack_disabled"
+      Rails.logger.warn(
+        "discourse-workflows: imported node type '#{node.type}' is unavailable " \
+          "in workflow #{@context.workflow.id}, stopping at node '#{node.name}'",
+      )
+      step = record_step(node, input_items, status: Step::ERROR, error: I18n.t(reason))
+      @store.publish_progress(step: step)
+      raise DiscourseWorkflows::NodeError, I18n.t(reason)
     end
 
     def handle_unavailable_node(node, node_type_class, input_items)

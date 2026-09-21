@@ -1,0 +1,232 @@
+.workflows-node-packs {
+  &__pack-link,
+  &__detail-meta,
+  &__section-header,
+  &__actions {
+    flex-wrap: wrap;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+  }
+
+  &__pack-link {
+    gap: var(--space-2);
+  }
+
+  &__pack-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 2em;
+    min-height: 2em;
+    color: var(--tertiary);
+    background: var(--tertiary-very-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__secondary,
+  &__request-url,
+  &__docs-link {
+    display: block;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    overflow-wrap: anywhere;
+  }
+
+  &__badge {
+    display: inline-block;
+    margin-top: var(--space-1);
+  }
+
+  &__detail-header {
+    margin-block: var(--space-3) var(--space-4);
+  }
+
+  &__detail-meta {
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  &__description {
+    max-width: 70ch;
+    margin-block: var(--space-2);
+    white-space: pre-wrap;
+  }
+
+  &__cards {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  &__table-wrap {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+  }
+
+  &__destinations,
+  &__credential-list {
+    margin-bottom: 0;
+  }
+
+  &__credential-list > div {
+    display: grid;
+    grid-template-columns: minmax(10em, 1fr) 2fr;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__credential-list dt {
+    font-weight: 700;
+  }
+
+  &__credential-list dd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__empty-section,
+  &__workflow-link {
+    color: var(--primary-medium);
+  }
+
+  &__load-error {
+    margin-block: var(--space-3);
+  }
+}
+
+.workflows-node-pack-import {
+  .d-modal__container {
+    width: min(52em, 95vw);
+  }
+
+  &__pack-header,
+  &__node,
+  &__section-header,
+  &__file-row,
+  &__actions {
+    display: flex;
+    align-items: center;
+  }
+
+  &__pack-header {
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  &__pack-header h3,
+  &__node span,
+  &__capabilities p {
+    margin: 0;
+  }
+
+  &__pack-icon,
+  &__node-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: var(--tertiary);
+    background: var(--tertiary-very-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__pack-icon {
+    width: 3em;
+    height: 3em;
+  }
+
+  &__node-icon {
+    width: 2.25em;
+    height: 2.25em;
+  }
+
+  &__nodes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17em, 1fr));
+    gap: var(--space-2);
+    margin-block: var(--space-3);
+  }
+
+  &__node {
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__node > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__node > div span,
+  &__hint {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__capabilities {
+    margin-block: var(--space-3);
+  }
+
+  &__section-header {
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__section-header h3 {
+    margin: 0;
+  }
+
+  &__credentials ul {
+    padding-inline-start: var(--space-4);
+  }
+
+  &__credentials li {
+    margin-block: var(--space-2);
+  }
+
+  &__credentials li span {
+    display: block;
+    color: var(--primary-medium);
+  }
+
+  &__add-credential {
+    margin-top: var(--space-1);
+  }
+
+  &__file-row {
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  &__separator {
+    margin-block: var(--space-3);
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  &__choose-form textarea {
+    min-height: 15em;
+    font-family: monospace;
+  }
+
+  &__actions {
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+}
