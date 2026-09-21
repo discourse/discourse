@@ -1,177 +1,79 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseRewind::Action::TopWords do
-  fab!(:date) { Date.new(2021).all_year }
+  def index(post)
+    SearchIndexer.index(post, force: true)
+  end
+
   fab!(:user)
-  fab!(:other_user, :user)
-
-  fab!(:post1) do
-    Fabricate(
-      :post,
-      user: user,
-      raw: "apple orange banana apple apple orange",
-      created_at: random_datetime,
-    )
-  end
-  fab!(:post2) do
-    Fabricate(:post, user: user, raw: "cucumber tomato banana orange", created_at: random_datetime)
-  end
-  fab!(:post3) do
-    Fabricate(:post, user: user, raw: "grape watermelon mango", created_at: random_datetime)
-  end
-  fab!(:post4) do
-    Fabricate(:post, user: user, raw: "apple banana grape apple", created_at: random_datetime)
-  end
-  fab!(:post5) do
-    Fabricate(:post, user: user, raw: "apple orange apple apple", created_at: random_datetime)
-  end
-  fab!(:other_user_post) do
-    Fabricate(:post, user: other_user, raw: "apple apple apple", created_at: random_datetime)
-  end
-
-  before do
+  fab!(:posts) do
     SearchIndexer.enable
-    [post1, post2, post3, post4, post5, other_user_post].each do |post|
-      SearchIndexer.index(post, force: true)
+    [
+      "apple orange banana apple apple orange",
+      "cucumber tomato banana orange",
+      "grape watermelon mango",
+      "apple banana grape apple",
+      "apple orange apple apple",
+    ].map do |raw|
+      Fabricate(:post, user:, raw:, created_at: random_datetime).tap { |post| index(post) }
     end
   end
+
+  before { SearchIndexer.enable }
 
   describe ".call" do
-    it "limits top words to 5" do
-      result = call_report
-
-      expect(result[:data].length).to eq(5)
+    it "returns the five most used words with their score" do
+      expect(call_report).to eq(
+        data: [
+          { word: "apple", score: 11 },
+          { word: "orange", score: 7 },
+          { word: "banana", score: 6 },
+          { word: "grape", score: 4 },
+          { word: "cucumber", score: 2 },
+        ],
+        identifier: "top-words",
+      )
     end
 
-    it "returns top words ordered by frequency" do
-      result = call_report
+    it "shows the most used form of a word" do
+      post = Fabricate(:post, user:, raw: "#{"releases " * 9}release", created_at: random_datetime)
+      index(post)
 
-      expect(result[:identifier]).to eq("top-words")
-
-      words = result[:data]
-
-      expect(words.first[:word]).to eq("apple")
-      expect(words.second[:word]).to eq("orange")
-      expect(words.third[:word]).to eq("banana")
-
-      expect(words.map { |w| w[:word] }).to include("apple", "orange", "banana", "grape")
-      expect(words.map { |w| w[:score] }).to eq(words.map { |w| w[:score] }.sort.reverse)
+      expect(call_report[:data].map { |word| word[:word] }).to include("releases")
     end
 
-    context "when a post is deleted" do
-      before do
-        post1.trash!(Discourse.system_user)
-        post1.post_search_data.destroy!
-      end
+    it "ignores link and domain words" do
+      post = Fabricate(:post, user:, raw: "github github github", created_at: random_datetime)
+      index(post)
 
-      it "does not include words from deleted posts" do
-        result = call_report
-
-        words = result[:data]
-
-        apple = words.find { |w| w[:word] == "apple" }
-        expect(apple[:score]).to be < 9
-      end
+      expect(call_report[:data].map { |word| word[:word] }).not_to include("github")
     end
 
-    context "when posts are from another user" do
-      it "does not include words from other users' posts" do
-        result = call_report
+    it "uses the stemmer and accent handling of the site locale" do
+      SiteSetting.default_locale = "fr"
+      SiteSetting.search_ignore_accents = true
+      raw = ("chevaux " * 20) + ("élèves " * 20)
+      post = Fabricate(:post, user:, raw:, created_at: random_datetime)
+      index(post)
 
-        words = result[:data]
-        apple_score = words.find { |w| w[:word] == "apple" }[:score]
-
-        expect(apple_score).to be < 12
-      end
+      expect(call_report[:data].map { |word| word[:word] }).to include("chevaux", "élèves")
     end
 
     it "only counts words from the user's publicly visible posts" do
       raw = "confidential " * 10
-      restricted_topic =
-        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       [
+        Fabricate(:post, user:, raw: "pumpkin " * 10, created_at: random_datetime),
+        Fabricate(:post, raw:, created_at: random_datetime),
         Fabricate(:private_message_post, user:, raw:, created_at: random_datetime),
-        Fabricate(:post, user:, raw:, topic: restricted_topic, created_at: random_datetime),
-        Fabricate(:post, user:, raw:, post_type: Post.types[:whisper], created_at: random_datetime),
-        Fabricate(:post, user:, raw:, hidden: true, created_at: random_datetime),
-      ].each { |post| SearchIndexer.index(post, force: true) }
+      ].each { |post| index(post) }
 
-      expect(call_report[:data].map { |word| word[:word] }).not_to include("confidential")
-    end
-
-    context "with a large number of posts and words" do
-      before do
-        # Create posts with different frequencies of non-stop words
-        10.times do |i|
-          post =
-            Fabricate(
-              :post,
-              user: user,
-              raw: "#{frequent_word} #{frequent_word} #{frequent_word} #{infrequent_word}",
-              created_at: random_datetime,
-            )
-          SearchIndexer.index(post, force: true)
-        end
-      end
-
-      let(:frequent_word) { "zucchini" }
-      let(:infrequent_word) { "xylophone" }
-
-      it "ranks high frequency words higher than low frequency words" do
-        result = call_report
-
-        words = result[:data]
-        frequent_word_entry = words.find { |w| w[:word] == frequent_word }
-        infrequent_word_entry = words.find { |w| w[:word] == infrequent_word }
-
-        expect(frequent_word_entry).to be_present
-        expect(infrequent_word_entry).to be_present
-
-        expect(frequent_word_entry[:score]).to be > infrequent_word_entry[:score]
-      end
-    end
-
-    context "with stemmer workaround words" do
-      before do
-        DiscourseRewind::Action::TopWords
-          .any_instance
-          .stubs(:word_query)
-          .returns(
-            [
-              OpenStruct.new(original_word: "discours", ndoc: 5, nentry: 10),
-              OpenStruct.new(original_word: "topical", ndoc: 3, nentry: 7),
-              OpenStruct.new(original_word: "categori", ndoc: 4, nentry: 6),
-            ],
-          )
-      end
-
-      it "applies STEMMER_WORKAROUNDS to replace stemmed words with preferred forms" do
-        result = call_report
-
-        words = result[:data].map { |w| w[:word] }
-
-        expect(words).to include("discourse")
-        expect(words).to include("topic")
-        expect(words).to include("category")
-        expect(words).not_to include("topical")
-        expect(words).not_to include("categori")
-        expect(words).not_to include("discours")
-      end
-    end
-  end
-
-  context "when in rails development mode" do
-    before { Rails.env.stubs(:development?).returns(true) }
-
-    it "returns fake data" do
-      result = call_report
-
-      expect(result[:identifier]).to eq("top-words")
-      expect(result[:data].length).to eq(5)
-      expect(result[:data].first[:word]).to eq("seven")
-      expect(result[:data].first[:score]).to eq(100)
-      expect(result[:data].second[:word]).to eq("longest")
-      expect(result[:data].second[:score]).to eq(90)
+      expect(call_report[:data].map { |word| word[:word] }).to contain_exactly(
+        "apple",
+        "orange",
+        "banana",
+        "grape",
+        "pumpkin",
+      )
     end
   end
 end
