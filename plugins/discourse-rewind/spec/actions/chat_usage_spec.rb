@@ -47,4 +47,19 @@ RSpec.describe DiscourseRewind::Action::ChatUsage do
       end
     end
   end
+
+  describe ".filter_for_viewer" do
+    it "drops favorite channels that are no longer public, even for the owner" do
+      report = {
+        data: {
+          favorite_channels:
+            [public_channel, private_channel].map { |channel| { channel_id: channel.id } },
+        },
+      }
+
+      filtered = described_class.filter_for_viewer(report, guardian: user.guardian, for_user: user)
+
+      expect(filtered[:data][:favorite_channels]).to eq([{ channel_id: public_channel.id }])
+    end
+  end
 end

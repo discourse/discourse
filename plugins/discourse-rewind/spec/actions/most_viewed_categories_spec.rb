@@ -109,4 +109,15 @@ RSpec.describe DiscourseRewind::Action::MostViewedCategories do
       end
     end
   end
+
+  describe ".filter_for_viewer" do
+    it "drops categories that are no longer public, even for the owner" do
+      report = { data: [category_1, category_2].map { |category| { category_id: category.id } } }
+      category_2.update!(read_restricted: true)
+
+      filtered = described_class.filter_for_viewer(report, guardian: user.guardian, for_user: user)
+
+      expect(filtered[:data]).to eq([{ category_id: category_1.id }])
+    end
+  end
 end

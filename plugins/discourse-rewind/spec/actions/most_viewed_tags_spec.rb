@@ -184,4 +184,19 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
       end
     end
   end
+
+  describe ".filter_for_viewer" do
+    it "drops tags that are no longer visible to everyone, even for the owner" do
+      report = { data: [tag_1, tag_2].map { |tag| { tag_id: tag.id } } }
+      group = Fabricate(:group)
+      group.add(user)
+      tag_group = Fabricate(:tag_group, tags: [tag_2])
+      tag_group.permissions = [[group, TagGroupPermission.permission_types[:full]]]
+      tag_group.save!
+
+      filtered = described_class.filter_for_viewer(report, guardian: user.guardian, for_user: user)
+
+      expect(filtered[:data]).to eq([{ tag_id: tag_1.id }])
+    end
+  end
 end
