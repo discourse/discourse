@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
@@ -23,9 +24,9 @@ const NodeTypeItem = <template>
       <span class="workflows-node-panel__item-name">
         {{@presenter.label}}
       </span>
-      {{#if @presenter.description}}
+      {{#if (or @presenter.subtitle @presenter.description)}}
         <span class="workflows-node-panel__item-description">
-          {{@presenter.description}}
+          {{or @presenter.subtitle @presenter.description}}
         </span>
       {{/if}}
     </span>
@@ -107,7 +108,10 @@ export default class NodePanel extends Component {
 
       groups.set(presenter.paletteGroup.id, {
         ...presenter.paletteGroup,
-        label: i18n(presenter.paletteGroup.label_key),
+        label:
+          presenter.paletteGroup.label ||
+          i18n(presenter.paletteGroup.label_key),
+        pack: presenter.pack,
       });
     }
 
@@ -238,6 +242,14 @@ export default class NodePanel extends Component {
           <span class="workflows-node-panel__title">
             {{this.selectedCategory.label}}
           </span>
+          {{#if this.selectedCategory.pack}}
+            <span class="workflows-node-panel__imported-badge">
+              {{i18n
+                "discourse_workflows.node_packs.imported_badge"
+                version=this.selectedCategory.pack.version
+              }}
+            </span>
+          {{/if}}
         {{else}}
           <span class="workflows-node-panel__title">
             {{i18n "discourse_workflows.add_node.title"}}
@@ -277,6 +289,14 @@ export default class NodePanel extends Component {
               <span class="workflows-node-panel__category-name">
                 {{category.label}}
               </span>
+              {{#if category.pack}}
+                <span class="workflows-node-panel__imported-badge">
+                  {{i18n
+                    "discourse_workflows.node_packs.imported_badge"
+                    version=category.pack.version
+                  }}
+                </span>
+              {{/if}}
               <span class="workflows-node-panel__category-arrow">
                 {{dIcon "chevron-right"}}
               </span>
@@ -310,6 +330,15 @@ export default class NodePanel extends Component {
           {{/each}}
         {{/if}}
       </div>
+      <footer class="workflows-node-panel__footer">
+        <LinkTo
+          @route="adminPlugins.show.discourse-workflows-node-packs.index"
+        >{{i18n "discourse_workflows.node_packs.manage_packs"}}</LinkTo>
+        <LinkTo
+          @query={{hash import="1"}}
+          @route="adminPlugins.show.discourse-workflows-node-packs.index"
+        >{{i18n "discourse_workflows.node_packs.import_another"}}</LinkTo>
+      </footer>
     </div>
   </template>
 }

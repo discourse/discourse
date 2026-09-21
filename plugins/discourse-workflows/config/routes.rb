@@ -12,6 +12,8 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/data-tables" => "admin#index"
       get "/data-tables/:id" => "admin#index", :constraints => { id: /\d+/ }
       get "/credentials" => "admin#index"
+      get "/node-packs" => "admin#index"
+      get "/node-packs/:id" => "admin#index", :constraints => { id: /\d+/ }
       get "/workflows/new" => "admin#index"
       get "/workflows/:id" => "admin#index", :constraints => { id: /\d+/ }
       get "/workflows/:id/nodes/:node_id" => "admin#index",
@@ -73,6 +75,13 @@ DiscourseWorkflows::Engine.routes.draw do
       post "/credentials" => "credentials#create"
       put "/credentials/:id" => "credentials#update"
       delete "/credentials/:id" => "credentials#destroy"
+      get "/node-packs" => "node_packs#index"
+      post "/node-packs/preview" => "node_packs#preview"
+      post "/node-packs" => "node_packs#create"
+      get "/node-packs/:id/export" => "node_packs#export", :constraints => { id: /\d+/ }
+      get "/node-packs/:id" => "node_packs#show", :constraints => { id: /\d+/ }
+      put "/node-packs/:id" => "node_packs#update", :constraints => { id: /\d+/ }
+      delete "/node-packs/:id" => "node_packs#destroy", :constraints => { id: /\d+/ }
       get "/data-tables" => "data_tables#index"
       post "/data-tables" => "data_tables#create"
       get "/data-tables/:id" => "data_tables#show", :constraints => { id: /\d+/ }

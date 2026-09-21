@@ -124,6 +124,7 @@ export default class PropertyEngineConfigurator extends Component {
         {{#each (this.slotsForField field.name) as |slot|}}
           {{#if (credentialSlotVisible slot @configuration)}}
             <CredentialControl
+              @credentialName={{slot.name}}
               @credentialTypes={{credentialTypesForSlot slot}}
               @label={{credentialSlotLabel slot}}
               @onChange={{fn @onCredentialSet slot.name}}

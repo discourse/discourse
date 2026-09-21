@@ -202,14 +202,16 @@ module DiscourseWorkflows
     end
 
     def restore_from_version!(version, user:)
-      update!(
-        name: version.name,
-        nodes: version.nodes || [],
-        connections: version.connections || {},
-        settings: version.settings || {},
-        version_id: version.version_id,
-        updated_by: user,
-      )
+      NodePacks::LifecycleLock.with_graph_write(version.nodes || []) do
+        update!(
+          name: version.name,
+          nodes: version.nodes || [],
+          connections: version.connections || {},
+          settings: version.settings || {},
+          version_id: version.version_id,
+          updated_by: user,
+        )
+      end
     end
 
     def published?

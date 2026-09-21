@@ -15,6 +15,7 @@ import {
   localeKeyPart,
   normalizeOptions,
   propertyDescription,
+  propertyDescriptionIsLiteral,
   propertyDynamicValueHint,
   propertyLabel,
   propertyOptionLabel,
@@ -65,6 +66,36 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertyPlaceholder("trigger:webhook", "path"),
       "my-webhook"
+    );
+  });
+
+  test("falls back to literal property metadata", function (assert) {
+    const nodeType = { identifier: "action:example_pack.choice" };
+    const schema = {
+      label: "State to inspect",
+      description: "Literal <img src=x onerror=alert(1)>",
+      placeholder: "{{ $json.post.raw }}",
+    };
+
+    assert.strictEqual(
+      propertyLabel(nodeType, "pack_payload", schema),
+      "State to inspect"
+    );
+    assert.strictEqual(
+      propertyDescription(nodeType, "pack_payload", schema),
+      "Literal <img src=x onerror=alert(1)>"
+    );
+    assert.true(propertyDescriptionIsLiteral(nodeType, "pack_payload", schema));
+    assert.strictEqual(
+      propertyPlaceholder(nodeType, "pack_payload", schema),
+      "{{ $json.post.raw }}"
+    );
+    assert.strictEqual(
+      propertyOptionLabel(nodeType, "model", {
+        value: "stable",
+        label: "Stable model",
+      }),
+      "Stable model"
     );
   });
 

@@ -73,6 +73,11 @@ export default class Credential extends Component {
     this.modal.show(CredentialModal, {
       model: {
         credential: null,
+        credentialSlot: {
+          name: this.args.credentialName,
+          label: this.args.label,
+          credential_types: this.credentialTypes,
+        },
         onSave: async (data) => {
           const result = await ajax(
             "/admin/plugins/discourse-workflows/credentials.json",

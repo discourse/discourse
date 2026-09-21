@@ -12,6 +12,7 @@ module DiscourseWorkflows
       DEFAULT_MAX_RETRIES = 0
       DEFAULT_RETRY_STATUSES = Set[429, 500, 502, 503, 504].freeze
       ERROR_BODY_MAX_BYTES = 10.kilobytes
+      PACK_FORBIDDEN_HEADERS = /\A(?:cookie|host|content-length|proxy-)/i
 
       def initialize(exec_ctx, item_index = 0)
         @exec_ctx = exec_ctx
@@ -27,12 +28,15 @@ module DiscourseWorkflows
             @item_index,
           ).build
         never_error = config.fetch("never_error", false)
+        ensure_approved_origin!(uri, config)
+        ensure_pack_headers_safe!(request_headers, config)
         response = run_with_retries(request_method, uri, request_headers, request_body, config)
+        ensure_approved_origin!(response.env.url, config)
         if !never_error && !(200..299).cover?(response.status)
           filtered_url = filtered_url_for_logging(config["url"], config["query_params"])
           raise_node_error!(
             "HTTP #{config["method"]} #{filtered_url} failed with status #{response.status}",
-            description: error_body_description(response),
+            description: (error_body_description(response) unless config["redact_error_body"]),
           )
         end
 
@@ -51,6 +55,33 @@ module DiscourseWorkflows
       end
 
       private
+
+      def ensure_approved_origin!(url, config)
+        allowed = config["allowed_origins"]
+        return if allowed.nil?
+
+        uri = URI.parse(url.to_s)
+        unless allowed.is_a?(Array) && allowed.any? && uri.is_a?(URI::HTTPS) && uri.host.present? &&
+                 uri.userinfo.nil?
+          raise_node_error!(
+            I18n.t("discourse_workflows.node_packs.errors.destination_not_approved"),
+          )
+        end
+        port = uri.port == uri.default_port ? nil : uri.port
+        origin = "#{uri.scheme.downcase}://#{uri.host.downcase}#{":#{port}" if port}"
+        return if allowed.include?(origin)
+
+        raise_node_error!(I18n.t("discourse_workflows.node_packs.errors.destination_not_approved"))
+      rescue URI::InvalidURIError
+        raise_node_error!(I18n.t("discourse_workflows.node_packs.errors.destination_not_approved"))
+      end
+
+      def ensure_pack_headers_safe!(headers, config)
+        return if config["allowed_origins"].nil?
+        return unless headers.keys.any? { |name| name.to_s.match?(PACK_FORBIDDEN_HEADERS) }
+
+        raise_node_error!(I18n.t("discourse_workflows.node_packs.errors.header_forbidden"))
+      end
 
       def error_body_description(response)
         body = response.body.to_s.scrub("").strip

@@ -2,25 +2,115 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import ComboBoxField from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/combo-box";
+import {
+  nodePackDisableConfirmation,
+  nodePackLifecycleUpdate,
+  nodePackRemovalMessages,
+} from "discourse/plugins/discourse-workflows/admin/components/workflows/node-pack/lifecycle";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 import {
+  nodeTypeDescription,
+  nodeTypeDocsUrl,
   nodeTypeHasConfigurationFields,
   nodeTypeI18nPrefix,
   nodeTypeI18nScope,
   nodeTypeInputLabel,
   nodeTypeInputs,
   nodeTypeInputUsesConnectionIndexes,
+  nodeTypeLabel,
   nodeTypeOperationLabel,
   nodeTypeOutputKeys,
+  nodeTypePack,
   nodeTypePaletteGroup,
   nodeTypePortLabel,
   nodeTypePrimaryOutputKey,
   nodeTypeRunScopeLabelKey,
+  nodeTypeSubtitle,
   nodeTypeVersion,
   resolveNodeTypeVersion,
+  safeHttpsUrl,
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/node-types";
 
 module("Unit | Utility | workflows node types", function () {
+  test("node pack lifecycle copy and updates fail closed", function (assert) {
+    const message = nodePackDisableConfirmation();
+
+    assert.true(message.includes("stop with an error"));
+    assert.false(message.includes("skip"));
+    assert.deepEqual(nodePackLifecycleUpdate({ enabled: true }, "enabled"), {
+      enabled: false,
+    });
+    assert.true(nodePackRemovalMessages(2)[0].includes("2 active executions"));
+    assert.true(
+      nodePackRemovalMessages(2)[1].includes("never deletes site credentials")
+    );
+  });
+
+  test("uses literal node pack metadata before translation keys", function (assert) {
+    const nodeType = {
+      identifier: "action:example_pack.choice",
+      ui: {
+        label: "Choose <an option>",
+        description: "Literal <strong>description</strong>",
+        subtitle: "Choice · One label from a list",
+        docs_url: "https://example.com/docs/choice",
+        pack: { id: 7, key: "example_pack", name: "Example pack" },
+      },
+    };
+
+    assert.strictEqual(nodeTypeLabel(nodeType), "Choose <an option>");
+    assert.strictEqual(
+      nodeTypeDescription(nodeType),
+      "Literal <strong>description</strong>"
+    );
+    assert.strictEqual(
+      nodeTypeSubtitle(nodeType),
+      "Choice · One label from a list"
+    );
+    assert.strictEqual(
+      nodeTypeDocsUrl(nodeType),
+      "https://example.com/docs/choice"
+    );
+    assert.strictEqual(
+      nodeTypeDocsUrl({ ui: { docs_url: "http://example.com/unsafe" } }),
+      null,
+      "unsafe documentation links are discarded"
+    );
+    assert.deepEqual(nodeTypePack(nodeType), {
+      id: 7,
+      key: "example_pack",
+      name: "Example pack",
+    });
+    assert.strictEqual(
+      nodeTypeLabel({ identifier: "action:user" }),
+      "User",
+      "Ruby nodes continue to use translations"
+    );
+  });
+
+  test("allows only absolute HTTPS metadata links", function (assert) {
+    assert.strictEqual(
+      safeHttpsUrl("https://example.com/docs"),
+      "https://example.com/docs",
+      "HTTPS URLs are preserved"
+    );
+    assert.strictEqual(
+      safeHttpsUrl(["javascript", "alert(1)"].join(":")),
+      null,
+      "script URLs are discarded"
+    );
+    assert.strictEqual(
+      safeHttpsUrl("http://example.com/docs"),
+      null,
+      "non-HTTPS URLs are discarded"
+    );
+    assert.strictEqual(
+      safeHttpsUrl("//example.com/docs"),
+      null,
+      "protocol-relative URLs are discarded"
+    );
+  });
+
   test("reads i18n metadata from the descriptor ui", function (assert) {
     const nodeType = {
       identifier: "action:ai_agent",
@@ -261,6 +351,26 @@ module("Unit | Utility | workflows node types", function () {
 
 module("Unit | Service | workflows-node-types", function (hooks) {
   setupTest(hooks);
+
+  test("clear invalidates node pack definitions and lookup caches", function (assert) {
+    const service = this.owner.lookup("service:workflows-node-types");
+    service.nodeTypes = [{ identifier: "action:example_pack.choice" }];
+    service.credentialTypes = [{ identifier: "bearer_token" }];
+    service.nodeTypeMap = new Map([
+      ["action:example_pack.choice", service.nodeTypes[0]],
+    ]);
+    service._nodeParameterOptionsCache.set("pack", [{ value: "cached" }]);
+
+    service.clear();
+
+    assert.strictEqual(service.nodeTypes, null);
+    assert.strictEqual(service.credentialTypes, null);
+    assert.strictEqual(
+      service.findNodeType("action:example_pack.choice"),
+      null
+    );
+    assert.strictEqual(service._nodeParameterOptionsCache.size, 0);
+  });
 
   test("buildNodeParameterOptionsPayload includes current node, parameters, credentials, and execution context", function (assert) {
     const service = this.owner.lookup("service:workflows-node-types");

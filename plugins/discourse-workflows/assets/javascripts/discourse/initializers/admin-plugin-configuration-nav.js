@@ -28,6 +28,12 @@ export default {
           route: "adminPlugins.show.discourse-workflows-credentials",
         },
         {
+          label: "discourse_workflows.node_packs.title",
+          route: "adminPlugins.show.discourse-workflows-node-packs.index",
+          currentWhen:
+            "adminPlugins.show.discourse-workflows-node-packs.index adminPlugins.show.discourse-workflows-node-packs.show",
+        },
+        {
           label: "discourse_workflows.data_tables.title",
           route: "adminPlugins.show.discourse-workflows-data-tables",
         },

@@ -96,7 +96,7 @@ function i18nBase(nodeDefinitionOrType) {
 
 const SHARED_FIELDS_BASE = "discourse_workflows.property_engine.fields";
 
-export function propertyLabel(nodeDefinitionOrType, fieldName) {
+export function propertyLabel(nodeDefinitionOrType, fieldName, schema = {}) {
   const base = i18nBase(nodeDefinitionOrType);
   const labelKey = localeKeyPart(fieldName);
 
@@ -104,17 +104,41 @@ export function propertyLabel(nodeDefinitionOrType, fieldName) {
     translatedOrNull(`${base}.${labelKey}`) ||
     translatedOrNull(`${base}.${labelKey}.title`) ||
     translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}`) ||
+    schema.label ||
     humanize(fieldName)
   );
 }
 
-export function propertyDescription(nodeDefinitionOrType, fieldName) {
+function translatedPropertyDescription(nodeDefinitionOrType, fieldName) {
   const labelKey = localeKeyPart(fieldName);
 
   return (
     translatedOrNull(
       `${i18nBase(nodeDefinitionOrType)}.${labelKey}_description`
     ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
+  );
+}
+
+export function propertyDescription(
+  nodeDefinitionOrType,
+  fieldName,
+  schema = {}
+) {
+  return (
+    translatedPropertyDescription(nodeDefinitionOrType, fieldName) ||
+    schema.description ||
+    null
+  );
+}
+
+export function propertyDescriptionIsLiteral(
+  nodeDefinitionOrType,
+  fieldName,
+  schema = {}
+) {
+  return (
+    Boolean(schema.description) &&
+    !translatedPropertyDescription(nodeDefinitionOrType, fieldName)
   );
 }
 
@@ -127,13 +151,20 @@ export function propertyTooltip(nodeDefinitionOrType, fieldName) {
   );
 }
 
-export function propertyPlaceholder(nodeDefinitionOrType, fieldName) {
+export function propertyPlaceholder(
+  nodeDefinitionOrType,
+  fieldName,
+  schema = {}
+) {
   const labelKey = localeKeyPart(fieldName);
 
   return (
     translatedOrNull(
       `${i18nBase(nodeDefinitionOrType)}.${labelKey}_placeholder`
-    ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_placeholder`)
+    ) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_placeholder`) ||
+    schema.placeholder ||
+    null
   );
 }
 

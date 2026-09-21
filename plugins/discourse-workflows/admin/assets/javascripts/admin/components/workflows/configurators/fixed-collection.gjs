@@ -80,7 +80,11 @@ export default class FixedCollection extends Component {
   }
 
   get description() {
-    return propertyDescription(this.nodeDefinition, this.args.fieldName);
+    return propertyDescription(
+      this.nodeDefinition,
+      this.args.fieldName,
+      this.args.schema
+    );
   }
 
   get label() {
@@ -89,7 +93,8 @@ export default class FixedCollection extends Component {
     }
 
     return (
-      this.args.label || propertyLabel(this.nodeDefinition, this.args.fieldName)
+      this.args.label ||
+      propertyLabel(this.nodeDefinition, this.args.fieldName, this.args.schema)
     );
   }
 

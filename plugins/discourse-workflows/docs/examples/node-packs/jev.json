@@ -1,0 +1,665 @@
+{
+  "format": "discourse-workflows/node-pack",
+  "format_version": 1,
+  "key": "jev",
+  "version": "1.0.0",
+  "name": "Jev",
+  "description": "Typed judgments from the TypeSafe System One API. Sends only the state you map and returns structured answers.",
+  "homepage": "https://docs.typesafe.ai",
+  "icon": "wand-magic-sparkles",
+  "color": "violet",
+  "destinations": [
+    {
+      "origin": "https://api.typesafe.ai"
+    }
+  ],
+  "credentials": [
+    {
+      "key": "api",
+      "label": "TypeSafe API key",
+      "credential_types": [
+        "bearer_token"
+      ],
+      "required": true
+    }
+  ],
+  "nodes": [
+    {
+      "key": "choice",
+      "version": "1.0",
+      "label": "Choose an option",
+      "subtitle": "Choice · One label from a list",
+      "description": "Picks one option from the list you define and returns the chosen option, per-option probabilities and a confidence.",
+      "docs_url": "https://docs.typesafe.ai/primitives/choice",
+      "icon": "list-check",
+      "credential": "api",
+      "properties": {
+        "model": {
+          "type": "options",
+          "required": true,
+          "default": "jev-latest",
+          "options": [
+            "jev-latest",
+            "jev-1.13.0"
+          ],
+          "label": "Model"
+        },
+        "state": {
+          "type": "string",
+          "required": true,
+          "ui": {
+            "control": "textarea"
+          },
+          "label": "State",
+          "description": "The content to evaluate. Map a field from the input, e.g. the post body.",
+          "placeholder": "{{ $json.post.raw }}"
+        },
+        "question": {
+          "type": "string",
+          "required": true,
+          "label": "Question",
+          "placeholder": "Which team should handle this support request?"
+        },
+        "options": {
+          "type": "fixed_collection",
+          "required": true,
+          "label": "Options",
+          "type_options": {
+            "multiple_values": true,
+            "min_required_fields": 2,
+            "max_allowed_fields": 255
+          },
+          "options": [
+            {
+              "name": "values",
+              "values": {
+                "key": {
+                  "type": "string",
+                  "required": true,
+                  "label": "Key",
+                  "placeholder": "billing"
+                },
+                "description": {
+                  "type": "string",
+                  "required": false,
+                  "label": "Description",
+                  "placeholder": "Payments, invoices, refunds"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "POST",
+        "url": "https://api.typesafe.ai/v1/systemone",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "content_type": "json",
+        "body": {
+          "state": {
+            "$param": "state"
+          },
+          "model": {
+            "$param": "model"
+          },
+          "questions": {
+            "answer": {
+              "type": "choice",
+              "instructions": {
+                "$param": "question"
+              },
+              "criteria": {
+                "$rows": "options.values",
+                "key": "key",
+                "value": {
+                  "$row": "description",
+                  "omit_if_blank": true
+                }
+              }
+            }
+          }
+        },
+        "max_request_kb": 256,
+        "max_response_kb": 256,
+        "retry": {
+          "max": 2,
+          "statuses": [
+            429,
+            529
+          ]
+        }
+      },
+      "response": {
+        "output": {
+          "choice": {
+            "$response": "answers.answer.choice"
+          },
+          "probabilities": {
+            "$response": "answers.answer.probabilities"
+          },
+          "confidence": {
+            "$response": "answers.answer.confidence"
+          },
+          "model": {
+            "$response": "model"
+          },
+          "usage": {
+            "$response": "usage"
+          }
+        },
+        "output_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "choice": {
+              "type": "string",
+              "description": "Highest-probability option key"
+            },
+            "probabilities": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "model": {
+              "type": "string"
+            },
+            "usage": {
+              "type": "object",
+              "properties": {
+                "input_tokens": {
+                  "type": "integer"
+                },
+                "output_tokens": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples": [
+        {
+          "name": "Route a support post to a team",
+          "parameters": {
+            "model": "jev-latest",
+            "state": "={{ $json.post.raw }}",
+            "question": "Which team should handle this request?",
+            "options": {
+              "values": [
+                {
+                  "key": "billing",
+                  "description": "Payments, invoices, refunds"
+                },
+                {
+                  "key": "technical",
+                  "description": "Bugs, errors, integrations"
+                },
+                {
+                  "key": "other",
+                  "description": "None of these"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "key": "score",
+      "version": "1.0",
+      "label": "Score against a rubric",
+      "subtitle": "Score · A value across defined levels",
+      "description": "Rates the state along ordered levels you define (2–10). Returns a fractional score, the legend, per-level probabilities and a confidence.",
+      "docs_url": "https://docs.typesafe.ai/primitives/score",
+      "icon": "gauge",
+      "credential": "api",
+      "properties": {
+        "model": {
+          "type": "options",
+          "required": true,
+          "default": "jev-latest",
+          "options": [
+            "jev-latest",
+            "jev-1.13.0"
+          ],
+          "label": "Model"
+        },
+        "state": {
+          "type": "string",
+          "required": true,
+          "ui": {
+            "control": "textarea"
+          },
+          "label": "State",
+          "placeholder": "{{ $json.post.raw }}"
+        },
+        "question": {
+          "type": "string",
+          "required": true,
+          "label": "What to rate",
+          "placeholder": "How urgent is this request?"
+        },
+        "levels": {
+          "type": "fixed_collection",
+          "required": true,
+          "label": "Levels (lowest first)",
+          "type_options": {
+            "multiple_values": true,
+            "sortable": true,
+            "min_required_fields": 2,
+            "max_allowed_fields": 10
+          },
+          "options": [
+            {
+              "name": "values",
+              "values": {
+                "description": {
+                  "type": "string",
+                  "required": true,
+                  "label": "Level description"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "POST",
+        "url": "https://api.typesafe.ai/v1/systemone",
+        "content_type": "json",
+        "body": {
+          "state": {
+            "$param": "state"
+          },
+          "model": {
+            "$param": "model"
+          },
+          "questions": {
+            "answer": {
+              "type": "score",
+              "instructions": {
+                "$param": "question"
+              },
+              "criteria": {
+                "$rows": "levels.values",
+                "value": {
+                  "$row": "description"
+                }
+              }
+            }
+          }
+        },
+        "retry": {
+          "max": 2,
+          "statuses": [
+            429,
+            529
+          ]
+        }
+      },
+      "response": {
+        "output": {
+          "score": {
+            "$response": "answers.answer.score"
+          },
+          "legend": {
+            "$response": "answers.answer.legend"
+          },
+          "probabilities": {
+            "$response": "answers.answer.probabilities"
+          },
+          "confidence": {
+            "$response": "answers.answer.confidence"
+          },
+          "model": {
+            "$response": "model"
+          },
+          "usage": {
+            "$response": "usage"
+          }
+        },
+        "output_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "number"
+            },
+            "legend": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "probabilities": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            },
+            "confidence": {
+              "type": "number"
+            },
+            "model": {
+              "type": "string"
+            },
+            "usage": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "noul",
+      "version": "1.0",
+      "label": "Check a statement",
+      "subtitle": "Noul · Probability a statement is true",
+      "description": "Returns the probability (0–1) that a yes/no statement is true. There is no separate confidence; set your own threshold in the next node.",
+      "docs_url": "https://docs.typesafe.ai/primitives/noul",
+      "icon": "circle-question",
+      "credential": "api",
+      "properties": {
+        "model": {
+          "type": "options",
+          "required": true,
+          "default": "jev-latest",
+          "options": [
+            "jev-latest",
+            "jev-1.13.0"
+          ],
+          "label": "Model"
+        },
+        "state": {
+          "type": "string",
+          "required": true,
+          "ui": {
+            "control": "textarea"
+          },
+          "label": "State",
+          "placeholder": "{{ $json.post.raw }}"
+        },
+        "statement": {
+          "type": "string",
+          "required": true,
+          "label": "Statement to check",
+          "placeholder": "The author is asking for a refund."
+        },
+        "true_means": {
+          "type": "string",
+          "required": false,
+          "label": "What yes means",
+          "placeholder": "Explicitly asks for money to be returned."
+        },
+        "false_means": {
+          "type": "string",
+          "required": false,
+          "label": "What no means",
+          "placeholder": "Mentions billing without requesting money back."
+        }
+      },
+      "request": {
+        "method": "POST",
+        "url": "https://api.typesafe.ai/v1/systemone",
+        "content_type": "json",
+        "body": {
+          "state": {
+            "$param": "state"
+          },
+          "model": {
+            "$param": "model"
+          },
+          "questions": {
+            "answer": {
+              "type": "noul",
+              "instructions": {
+                "$param": "statement"
+              },
+              "criteria": {
+                "$omit_if_empty": true,
+                "true": {
+                  "$param": "true_means",
+                  "omit_if_blank": true
+                },
+                "false": {
+                  "$param": "false_means",
+                  "omit_if_blank": true
+                }
+              }
+            }
+          }
+        },
+        "retry": {
+          "max": 2,
+          "statuses": [
+            429,
+            529
+          ]
+        }
+      },
+      "response": {
+        "output": {
+          "noul": {
+            "$response": "answers.answer.noul"
+          },
+          "model": {
+            "$response": "model"
+          },
+          "usage": {
+            "$response": "usage"
+          }
+        },
+        "output_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "noul": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Probability the statement is true"
+            },
+            "model": {
+              "type": "string"
+            },
+            "usage": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "batch",
+      "version": "1.0",
+      "label": "Evaluate questions",
+      "subtitle": "Batch · Several judgments, one request",
+      "description": "Asks several independent choice, score or noul questions about the same state in one request. Answers come back under the question ids you choose.",
+      "docs_url": "https://docs.typesafe.ai/api",
+      "icon": "table-cells",
+      "credential": "api",
+      "properties": {
+        "model": {
+          "type": "options",
+          "required": true,
+          "default": "jev-latest",
+          "options": [
+            "jev-latest",
+            "jev-1.13.0"
+          ],
+          "label": "Model"
+        },
+        "state": {
+          "type": "string",
+          "required": true,
+          "ui": {
+            "control": "textarea"
+          },
+          "label": "State",
+          "placeholder": "{{ $json.post.raw }}"
+        },
+        "questions": {
+          "type": "fixed_collection",
+          "required": true,
+          "label": "Questions",
+          "description": "Each question is evaluated independently against the same state.",
+          "type_options": {
+            "multiple_values": true,
+            "min_required_fields": 1,
+            "max_allowed_fields": 50
+          },
+          "options": [
+            {
+              "name": "values",
+              "values": {
+                "id": {
+                  "type": "string",
+                  "required": true,
+                  "label": "Answer id",
+                  "placeholder": "department"
+                },
+                "type": {
+                  "type": "options",
+                  "required": true,
+                  "default": "noul",
+                  "options": [
+                    {
+                      "value": "choice",
+                      "label": "Choice"
+                    },
+                    {
+                      "value": "score",
+                      "label": "Score"
+                    },
+                    {
+                      "value": "noul",
+                      "label": "Noul"
+                    }
+                  ],
+                  "label": "Type"
+                },
+                "instructions": {
+                  "type": "string",
+                  "required": true,
+                  "ui": {
+                    "control": "textarea"
+                  },
+                  "label": "Question"
+                },
+                "criteria": {
+                  "type": "string",
+                  "required": false,
+                  "ui": {
+                    "control": "textarea",
+                    "format": "json"
+                  },
+                  "label": "Criteria (JSON)",
+                  "description": "Choice: {\"key\": \"description\"}. Score: [\"level 0\", \"level 1\"]. Noul: {\"true\": \"…\", \"false\": \"…\"} or empty."
+                }
+              }
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "POST",
+        "url": "https://api.typesafe.ai/v1/systemone",
+        "content_type": "json",
+        "body": {
+          "state": {
+            "$param": "state"
+          },
+          "model": {
+            "$param": "model"
+          },
+          "questions": {
+            "$rows": "questions.values",
+            "key": "id",
+            "value": {
+              "type": {
+                "$row": "type"
+              },
+              "instructions": {
+                "$row": "instructions"
+              },
+              "criteria": {
+                "$row": "criteria",
+                "omit_if_blank": true
+              }
+            }
+          }
+        },
+        "retry": {
+          "max": 2,
+          "statuses": [
+            429,
+            529
+          ]
+        }
+      },
+      "response": {
+        "output": {
+          "answers": {
+            "$response": "answers"
+          },
+          "model": {
+            "$response": "model"
+          },
+          "usage": {
+            "$response": "usage"
+          }
+        },
+        "output_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answers": {
+              "type": "object",
+              "description": "One answer per question id",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "choice": {
+                    "type": "string"
+                  },
+                  "score": {
+                    "type": "number"
+                  },
+                  "noul": {
+                    "type": "number"
+                  },
+                  "probabilities": {
+                    "type": "object"
+                  },
+                  "legend": {
+                    "type": "object"
+                  },
+                  "confidence": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "model": {
+              "type": "string"
+            },
+            "usage": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

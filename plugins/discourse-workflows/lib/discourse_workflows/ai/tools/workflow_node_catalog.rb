@@ -335,9 +335,13 @@ module DiscourseWorkflows
           properties = json_safe(node_class.properties || {})
           group = description[:group].to_s.presence
 
+          ui = node_class.ui_metadata
           haystack = [
             identifier,
             group,
+            ui[:label],
+            ui[:subtitle],
+            ui.dig(:pack, :name),
             properties.keys.join(" "),
             SEARCH_ALIASES[identifier],
           ].compact.join(" ").downcase
@@ -355,8 +359,14 @@ module DiscourseWorkflows
             credentials: json_safe(node_class.credentials),
             capabilities: json_safe(description[:capabilities] || {}),
             output_contracts: serialized_output_contracts(node_class),
-          }
-          payload[:examples] = EXAMPLES[identifier] if include_examples && EXAMPLES.key?(identifier)
+            label: ui[:label],
+            description: ui[:description],
+            subtitle: ui[:subtitle],
+            pack: ui[:pack],
+          }.compact
+          examples =
+            EXAMPLES[identifier] || (node_class.examples if node_class.respond_to?(:examples))
+          payload[:examples] = examples if include_examples && examples.present?
           payload
         end
 

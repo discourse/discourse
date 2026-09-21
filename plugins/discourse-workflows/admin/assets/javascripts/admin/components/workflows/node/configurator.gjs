@@ -18,8 +18,10 @@ import { i18n } from "discourse-i18n";
 import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape";
 import {
   nodeTypeDescription,
+  nodeTypeDocsUrl,
   nodeTypeIcon,
   nodeTypeLabel,
+  nodeTypePack,
   nodeTypeProducesData,
   nodeTypeRunScopeLabelKey,
   nodeTypeStyle,
@@ -44,7 +46,9 @@ import { takenNodeNames } from "../editor/node-factory";
 import LivePreview from "./live-preview";
 
 function credentialSlotLabel(slot) {
-  return i18n(slot.label_key || "discourse_workflows.credentials.type");
+  return (
+    slot.label || i18n(slot.label_key || "discourse_workflows.credentials.type")
+  );
 }
 
 function normalizeCredentials(credentials = {}) {
@@ -143,6 +147,14 @@ export default class NodeConfigurator extends Component {
 
   get nodeDescription() {
     return nodeTypeDescription(this.resolvedNodeType);
+  }
+
+  get nodeDocsUrl() {
+    return nodeTypeDocsUrl(this.resolvedNodeType);
+  }
+
+  get nodePack() {
+    return nodeTypePack(this.resolvedNodeType);
   }
 
   get propertySchema() {
@@ -499,6 +511,7 @@ export default class NodeConfigurator extends Component {
       class="workflows-configurator-modal"
       @closeModal={{this.handleClose}}
       @hideHeader={{true}}
+      @inline={{@model.inline}}
       @submitOnEnter={{false}}
     >
       <:body>
@@ -553,6 +566,31 @@ export default class NodeConfigurator extends Component {
               @icon="pencil"
               @title="discourse_workflows.edit"
             />
+          {{/if}}
+          {{#if this.nodePack}}
+            <span class="workflows-configurator-modal__pack-name">
+              {{this.nodePack.name}}
+              /
+              {{this.nodeTypeDefaultName}}
+            </span>
+            <span class="workflows-configurator-modal__pack-badge">
+              {{i18n
+                "discourse_workflows.node_packs.imported_badge"
+                version=this.nodePack.definition_version
+              }}
+              {{#if this.nodePack.retired}}
+                ·
+                {{i18n "discourse_workflows.node_packs.retired"}}
+              {{/if}}
+            </span>
+            {{#if this.nodeDocsUrl}}
+              <a
+                class="workflows-configurator-modal__docs-link"
+                href={{this.nodeDocsUrl}}
+                rel="noopener noreferrer"
+                target="_blank"
+              >{{i18n "discourse_workflows.node_packs.documentation"}} ↗</a>
+            {{/if}}
           {{/if}}
           {{#if this.showSaveStatus}}
             <span
@@ -680,6 +718,7 @@ export default class NodeConfigurator extends Component {
                   {{#each this.unanchoredCredentialSlots as |slot|}}
                     {{#if (credentialSlotVisible slot transientData)}}
                       <CredentialControl
+                        @credentialName={{slot.name}}
                         @credentialTypes={{credentialTypesForSlot slot}}
                         @label={{credentialSlotLabel slot}}
                         @onChange={{fn this.handleCredentialSet slot.name}}

@@ -39,7 +39,7 @@ export function createNode(
   identifier,
   existingNodes,
   position = null,
-  { typeVersion = null, configOverrides = null } = {}
+  { typeVersion = null, configOverrides = null, defaultName = null } = {}
 ) {
   const allDefaults = applyValueTransformer(
     "workflow-node-defaults",
@@ -51,7 +51,7 @@ export function createNode(
     type: identifier,
     typeVersion: typeVersion || "1.0",
     name: uniqueNodeName(
-      defaultNodeName(identifier),
+      defaultName || defaultNodeName(identifier),
       takenNodeNames(existingNodes)
     ),
     configuration: {

@@ -21,7 +21,7 @@ module DiscourseWorkflows
 
       workflow_version = nil
       created_ai_agents_by_client_id = {}
-      workflow.transaction do
+      NodePacks::LifecycleLock.with_graph_write(result[:nodes]) do
         created_ai_agents_by_client_id = create_ai_agents!(result[:ai_agent_definitions])
         rewrite_ai_agent_references!(result[:nodes], created_ai_agents_by_client_id)
         workflow.update!(nodes: result[:nodes], connections: result[:connections], updated_by: user)
@@ -32,6 +32,8 @@ module DiscourseWorkflows
       Workflow::Action::ExpireCaches.call
       result[:created_resources] = created_ai_agent_resources(created_ai_agents_by_client_id)
       result
+    rescue NodePacks::LifecycleLock::MissingReferencesError => error
+      invalid_result(NodePacks::LifecycleLock.missing_reference_messages(error.references))
     end
 
     private

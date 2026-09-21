@@ -2844,4 +2844,54 @@ module("Integration | Component | workflows property engine", function (hooks) {
       .doesNotExist("does not offer a toggle that would overwrite it");
     assert.dom(".workflows-variable-input").includesText("enabled");
   });
+
+  test("renders literal pack descriptions as escaped text", async function (assert) {
+    const description = '<img src=x onerror=alert("unsafe")>';
+    this.setProperties({
+      configuration: { pack_payload: "" },
+      nodeType: "action:example_pack.choice",
+      nodeTypes: [
+        {
+          identifier: "action:example_pack.choice",
+          ui: { label: "Choose <an option>" },
+        },
+      ],
+      schema: {
+        pack_payload: {
+          type: "string",
+          label: "Payload <label>",
+          description,
+        },
+        pack_notice: {
+          type: "notice",
+          description,
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @configuration={{transientData}}
+            @form={{form}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__container-title").includesText("Payload <label>");
+    assert.dom(".form-kit__container-description").hasText(description);
+    assert
+      .dom(".form-kit__container-description img")
+      .doesNotExist("field markup is not inserted into the DOM");
+    assert.dom(".form-kit__alert").hasText(description);
+    assert
+      .dom(".form-kit__alert img")
+      .doesNotExist("notice markup is not inserted into the DOM");
+  });
 });

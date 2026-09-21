@@ -56,6 +56,15 @@ register_svg_icon "layer-group"
 register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"
+register_svg_icon "list-check"
+register_svg_icon "gauge"
+register_svg_icon "circle-question"
+register_svg_icon "wand-magic-sparkles"
+register_svg_icon "cloud"
+register_svg_icon "robot"
+register_svg_icon "scale-balanced"
+register_svg_icon "tags"
+register_svg_icon "cubes"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 

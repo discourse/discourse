@@ -18,7 +18,9 @@ import {
   nodeTypeInputUsesConnectionIndexes,
   nodeTypeLabel,
   nodeTypeOutputKeys,
+  nodeTypePack,
   nodeTypePrimaryOutputKey,
+  nodeTypeSubtitle,
   nodeTypeVersion,
   resolveNodeTypeVersion,
   typeVersionForNode,
@@ -215,9 +217,16 @@ export default class WorkflowsEditor extends Component {
     if (!term) {
       return nodeTypes;
     }
-    return nodeTypes.filter((nt) => {
-      const label = nodeTypeLabel(nt)?.toLowerCase() || "";
-      return label.includes(term);
+    return nodeTypes.filter((nodeType) => {
+      const haystack = [
+        nodeTypeLabel(nodeType),
+        nodeTypeSubtitle(nodeType),
+        nodeTypePack(nodeType)?.name,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(term);
     });
   }
 
@@ -681,6 +690,7 @@ export default class WorkflowsEditor extends Component {
       {
         typeVersion: nodeTypeVersion(nodeType),
         configOverrides,
+        defaultName: nodeTypeLabel(nodeType),
       }
     );
     const newNodeOutput = nodeTypePrimaryOutputKey(nodeType);
@@ -790,6 +800,7 @@ export default class WorkflowsEditor extends Component {
       null,
       {
         typeVersion: nodeTypeVersion(nodeType),
+        defaultName: nodeTypeLabel(nodeType),
       }
     );
 
@@ -1373,6 +1384,7 @@ export default class WorkflowsEditor extends Component {
       {
         typeVersion: nodeTypeVersion(nodeType),
         configOverrides,
+        defaultName: nodeTypeLabel(nodeType),
       }
     );
 
