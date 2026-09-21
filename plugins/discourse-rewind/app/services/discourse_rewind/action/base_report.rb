@@ -18,6 +18,10 @@ module DiscourseRewind
         Post.visible.merge(publicly_visible_topics).where.not(post_type: Post.types[:whisper])
       end
 
+      def self.filter_for_viewer(report, **)
+        report
+      end
+
       def self.enabled?
         true
       end

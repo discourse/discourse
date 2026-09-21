@@ -28,6 +28,10 @@ module ::DiscourseRewind
     date ||= Time.zone.now
     date.month == 1 ? date.year - 1 : date.year
   end
+
+  def self.rewind_period?
+    Rails.env.development? || Time.zone.now.month.in?([1, 12])
+  end
 end
 
 require_relative "lib/discourse_rewind/engine"
@@ -58,9 +62,7 @@ after_initialize do
   end
 
   add_to_serializer(:current_user, :is_rewind_active) do
-    is_rewind_period = Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
-    user_old_enough = scope.user.created_at <= 1.month.ago
-    is_rewind_period && user_old_enough
+    DiscourseRewind.rewind_period? && scope.user.created_at <= 1.month.ago
   end
 
   Discourse::Application.routes.append do
