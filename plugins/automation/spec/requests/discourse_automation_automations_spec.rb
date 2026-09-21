@@ -55,6 +55,18 @@ describe DiscourseAutomation::AdminAutomationsController do
 
         let(:admin) { Fabricate(:admin) }
         let(:api_key) { Fabricate(:api_key, user: admin) }
+        let(:restricted_api_key) do
+          Fabricate(:api_key, user: admin).tap do |key|
+            ApiKeyScope.create!(
+              api_key_id: key.id,
+              resource: "automation",
+              action: "trigger_automation",
+              allowed_parameters: {
+                "id" => [automation.id.to_s],
+              },
+            )
+          end
+        end
 
         it "works" do
           post "/automations/#{automation.id}/trigger.json",
@@ -69,6 +81,33 @@ describe DiscourseAutomation::AdminAutomationsController do
 
           expect(response.status).to eq(200)
           expect(Jobs::DiscourseAutomation::Trigger.jobs.size).to eq(1)
+        end
+
+        it "enforces the automation ID from the path" do
+          other_automation = Fabricate(:automation)
+
+          post "/automations/#{automation.id}/trigger.json",
+               params: {
+                 context: {
+                   foo: :bar,
+                 },
+               },
+               headers: {
+                 HTTP_API_KEY: restricted_api_key.key,
+               }
+          expect(response.status).to eq(200)
+
+          post "/automations/#{other_automation.id}/trigger.json",
+               params: {
+                 id: automation.id,
+                 context: {
+                   foo: :bar,
+                 },
+               },
+               headers: {
+                 HTTP_API_KEY: restricted_api_key.key,
+               }
+          expect(response.status).to eq(404)
         end
       end
     end
