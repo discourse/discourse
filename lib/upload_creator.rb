@@ -353,7 +353,6 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(from, to)
 
     read = [@file.path]
-    write = [jpeg_tempfile.path]
 
     if GlobalSetting.enable_vips_image_processing
       DiscourseVips.heif_to_jpeg(
@@ -361,15 +360,16 @@ class UploadCreator
         output_path: to,
         quality: SiteSetting.image_quality,
         timeout: MAX_CONVERT_FORMAT_SECONDS,
-        read:,
-        write:,
       )
     else
-      begin
-        execute_convert(from, to, {}, read:, write:)
-      rescue StandardError
-        # retry with debugging enabled
-        execute_convert(from, to, { debug: true }, read:, write:)
+      ImageProcessing::OutputFile.write(to) do |temporary_path|
+        write = [temporary_path]
+        begin
+          execute_convert(from, temporary_path, {}, read:, write:)
+        rescue StandardError
+          # retry with debugging enabled
+          execute_convert(from, temporary_path, { debug: true }, read:, write:)
+        end
       end
     end
 
@@ -497,19 +497,19 @@ class UploadCreator
         output_path: @file.path,
         quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
         timeout: MAX_FIX_ORIENTATION_TIME,
-        read: [@file.path],
-        write: [@file.path],
       )
     else
-      ImageMagick.magick(
-        path,
-        "-auto-orient",
-        path,
-        operation: :upload_auto_orient,
-        read: [@file.path],
-        write: [@file.path, File.dirname(@file.path)],
-        timeout: MAX_FIX_ORIENTATION_TIME,
-      )
+      ImageProcessing::OutputFile.write(@file.path) do |temporary_path|
+        ImageMagick.magick(
+          path,
+          "-auto-orient",
+          "jpeg:#{temporary_path}",
+          operation: :upload_auto_orient,
+          read: [@file.path],
+          write: [temporary_path],
+          timeout: MAX_FIX_ORIENTATION_TIME,
+        )
+      end
     end
 
     extract_image_info!
@@ -678,21 +678,21 @@ class UploadCreator
         output_path: to,
         quality:,
         timeout: MAX_CONVERT_FORMAT_SECONDS,
-        read: [from],
-        write: [jpeg_tempfile.path],
       )
     else
       from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-      to = OptimizedImage.prepend_decoder!(to)
       opts = { quality: }
       read = [@file.path]
-      write = [jpeg_tempfile.path]
 
-      begin
-        execute_convert(from, to, opts, read:, write:)
-      rescue StandardError
-        # retry with debugging enabled
-        execute_convert(from, to, opts.merge(debug: true), read:, write:)
+      ImageProcessing::OutputFile.write(to) do |temporary_path|
+        converted_path = OptimizedImage.prepend_decoder!(temporary_path)
+        write = [temporary_path]
+        begin
+          execute_convert(from, converted_path, opts, read:, write:)
+        rescue StandardError
+          # retry with debugging enabled
+          execute_convert(from, converted_path, opts.merge(debug: true), read:, write:)
+        end
       end
     end
 

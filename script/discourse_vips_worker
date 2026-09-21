@@ -1,11 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "fileutils"
 require "landlock"
 require "msgpack"
 require "socket"
-require "tempfile"
 require "tmpdir"
 require "vips"
 
@@ -231,10 +229,7 @@ class DiscourseVipsWorker
         block_loaders(allowed: %w[VipsForeignLoadJpeg])
         begin
           image = Vips::Image.jpegload(input_path, access: :random)
-          Tempfile.create(%w[reencoded .jpg]) do |reencoded_file|
-            save_jpeg(image, input_path:, output_path: reencoded_file.path, quality:)
-            FileUtils.copy_file(reencoded_file.path, output_path)
-          end
+          save_jpeg(image, input_path:, output_path:, quality:)
           nil
         rescue Vips::Error => error
           raise InvalidImage, error.message

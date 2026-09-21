@@ -95,27 +95,29 @@ class LetterAvatar
         font = macos? ? "Helvetica" : "NimbusSans-Regular"
         vertical_offset = font == "Helvetica" ? 26 : 34
 
-        ImageMagick.magick(
-          "-size",
-          "#{FULLSIZE}x#{FULLSIZE}",
-          "xc:#{to_rgb(color)}",
-          "-pointsize",
-          POINTSIZE.to_s,
-          "-fill",
-          "#FFFFFFCC",
-          "-font",
-          font,
-          "-gravity",
-          "Center",
-          "-annotate",
-          "-0+#{vertical_offset}",
-          letter,
-          "-depth",
-          "8",
-          filename,
-          operation: :letter_avatar_render,
-          write: [File.dirname(filename)],
-        )
+        ImageProcessing::OutputFile.write(filename) do |temporary_path|
+          ImageMagick.magick(
+            "-size",
+            "#{FULLSIZE}x#{FULLSIZE}",
+            "xc:#{to_rgb(color)}",
+            "-pointsize",
+            POINTSIZE.to_s,
+            "-fill",
+            "#FFFFFFCC",
+            "-font",
+            font,
+            "-gravity",
+            "Center",
+            "-annotate",
+            "-0+#{vertical_offset}",
+            letter,
+            "-depth",
+            "8",
+            temporary_path,
+            operation: :letter_avatar_render,
+            write: [temporary_path],
+          )
+        end
       end
 
       filename
