@@ -21,6 +21,47 @@ acceptance("User Preferences - Interface", function (needs) {
     });
   });
 
+  test("bulk permanent topic deletion preference is hidden without capability", async function (assert) {
+    await visit("/u/eviltrout/preferences/interface");
+
+    assert
+      .dom(".pref-bulk-permanent-topic-deletion")
+      .doesNotExist(
+        "does not show the preference without the server capability"
+      );
+  });
+
+  test("bulk permanent topic deletion preference is shown and saved with capability", async function (assert) {
+    const currentUser = getOwner(this).lookup("service:current-user");
+    currentUser.set("can_enable_bulk_permanent_topic_deletion", true);
+
+    await visit("/u/eviltrout/preferences/interface");
+
+    assert
+      .dom(".pref-bulk-permanent-topic-deletion")
+      .exists("shows the preference when the server capability is present");
+
+    await click(".pref-bulk-permanent-topic-deletion input[type=checkbox]");
+    await click(".save-changes");
+
+    assert.strictEqual(
+      lastUserData.bulk_permanent_topic_deletion,
+      "true",
+      "includes the preference in the save request"
+    );
+  });
+
+  test("bulk permanent topic deletion preference is hidden on another user's profile", async function (assert) {
+    const currentUser = getOwner(this).lookup("service:current-user");
+    currentUser.set("can_enable_bulk_permanent_topic_deletion", true);
+
+    await visit("/u/charlie/preferences/interface");
+
+    assert
+      .dom(".pref-bulk-permanent-topic-deletion")
+      .doesNotExist("does not show the preference on another user's profile");
+  });
+
   test("font size change", async function (assert) {
     removeCookie("text_size");
 

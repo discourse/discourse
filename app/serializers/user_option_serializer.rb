@@ -51,7 +51,8 @@ class UserOptionSerializer < ApplicationSerializer
              :show_original_content,
              :send_shortcut,
              :automatically_translate,
-             :understood_languages
+             :understood_languages,
+             :bulk_permanent_topic_deletion
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
