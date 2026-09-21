@@ -91,7 +91,10 @@ class LetterAvatar
         #{filename}
       ]
 
-      ImageMagick.magick(*instructions, write: [File.dirname(filename)])
+      ImageProcessing::OutputFile.write(filename) do |temporary_path|
+        instructions[-1] = temporary_path
+        ImageMagick.magick(*instructions, write: [temporary_path])
+      end
 
       ## do not optimize image, it will end up larger than original
       filename
