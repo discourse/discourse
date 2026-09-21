@@ -75,12 +75,9 @@ module Migrations
         def check_response!(response, uri)
           return if uri.present?
 
-          if response.code.to_i >= 400
-            # `value` raises the matching Net::HTTP exception for error responses.
-            response.value
-          else
-            throw :done
-          end
+          throw :done if response.code.to_i < 400
+
+          response.error!
         end
 
         def extract_filename(response, uri)

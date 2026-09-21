@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "net/http"
+
 RSpec.describe Migrations::Importer::Uploads::Downloader do
   subject(:downloader) { described_class.new(cache_path:, downloads:) }
 
@@ -38,6 +40,20 @@ RSpec.describe Migrations::Importer::Uploads::Downloader do
 
       expect(filename).to eq("image.png")
       expect(download_record[:original_filename]).to eq("image.png")
+    end
+
+    it "reports HTTP error responses as download failures" do
+      url = "https://example.com/missing.png"
+      response = Net::HTTPNotFound.new("1.1", "404", "Not Found")
+      destination = Object.new
+      destination.define_singleton_method(:get) { |&block| block.call(response, nil, nil) }
+      stub_const("FinalDestination", Class.new)
+      FinalDestination.stubs(:new).with(url).returns(destination)
+
+      expect { downloader.download(url:, id: "1") }.to raise_error(
+        described_class::DownloadFailedError,
+        /404.*Not Found/,
+      )
     end
   end
 end
