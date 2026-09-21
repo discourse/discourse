@@ -85,23 +85,24 @@ module MarkdownEndpoint
       end
       lines << "#### #{I18n.t("markdown_endpoints.post_date", timestamp: @timestamp.render(post.created_at, url: post.full_url))}"
       lines.concat(["", "</div>", ""])
-      lines << cached_body(cooked)
+      lines << cached_body(cooked, post_url: post.full_url)
       lines.join("\n")
     end
 
-    def cached_body(cooked)
+    def cached_body(cooked, post_url:)
       context = [
         CookedProcessor::VERSION,
         Discourse.base_url,
         Discourse.asset_host,
         I18n.locale,
+        post_url,
         cooked,
       ].join("\0")
       digest = Digest::SHA256.hexdigest(context)
       Discourse
         .cache
         .fetch("markdown-endpoint:cooked:#{digest}", expires_in: 1.week) do
-          CookedProcessor.to_markdown(cooked)
+          CookedProcessor.to_markdown(cooked, post_url:)
         end
     end
 
