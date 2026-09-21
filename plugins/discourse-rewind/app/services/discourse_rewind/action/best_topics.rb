@@ -38,7 +38,7 @@ module DiscourseRewind
             .where(topic: { deleted_at: nil, created_at: date, user_id: user.id, visible: true })
             .where.not(topic: { archetype: Archetype.private_message })
             .where("NOT categories.read_restricted")
-            .order("yearly_score DESC NULLS LAST")
+            .order("yearly_score DESC NULLS LAST, top_topics.topic_id")
             .limit(3)
             .pluck(:topic_id, :title, :excerpt, :yearly_score)
             .map do |topic_id, title, excerpt, yearly_score|

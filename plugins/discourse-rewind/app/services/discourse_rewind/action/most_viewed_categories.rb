@@ -29,7 +29,7 @@ module DiscourseRewind
               },
             )
             .group("categories.id, categories.name")
-            .order("COUNT(*) DESC")
+            .order("COUNT(*) DESC, categories.id")
             .limit(4)
             .pluck("categories.id, categories.name")
             .map { |category_id, name| { category_id: category_id, name: name } }

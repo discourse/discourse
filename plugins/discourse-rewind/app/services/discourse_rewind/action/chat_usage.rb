@@ -44,9 +44,9 @@ module DiscourseRewind
             .where(chat_channels: { type: "CategoryChannel" })
             .where(categories: { read_restricted: false })
             .group("chat_channels.id", "chat_channels.slug")
+            .order("COUNT(*) DESC", "chat_channels.id")
+            .limit(5)
             .count
-            .sort_by { |_, count| -count }
-            .first(5)
             .map do |(id, slug), count|
               { channel_id: id, channel_slug: slug, message_count: count }
             end
