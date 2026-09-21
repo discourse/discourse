@@ -248,6 +248,34 @@ RSpec.describe "Markdown endpoints" do
     expect(response.body).not_to include(post.raw, "[Next page]", "[Previous page]")
   end
 
+  it "links topic and post authors to subfolder-safe user profiles" do
+    set_subfolder "/forum"
+    author = Fabricate(:user, username: "reply_author")
+    reply = Fabricate(:post, topic: topic, user: author)
+
+    get "/latest.md"
+    expect(response.body).to include(
+      "**Author:** [@#{user.username}](#{Discourse.base_url}/u/#{user.encoded_username})",
+    )
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response.body).to include(
+      "## Post 1 by [@#{user.username}](#{Discourse.base_url}/u/#{user.encoded_username})",
+      "## Post #{reply.post_number} by [@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
+    )
+
+    get "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md"
+    expect(response.body).to include(
+      "by [@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
+    )
+
+    reply.update_columns(user_id: nil)
+    get "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("## Post #{reply.post_number} - ")
+    expect(response.body).not_to include("by [@")
+  end
+
   it "preserves topic author filters through discovery and pagination" do
     excluded = Fabricate(:post, topic: topic, raw: "Another author's reply")
     2.times { Fabricate(:post, topic: topic, user: user) }

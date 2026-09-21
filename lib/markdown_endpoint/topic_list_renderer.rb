@@ -53,7 +53,9 @@ module MarkdownEndpoint
     def render_topic(topic)
       lines = ["## [#{escape_text(topic.title)}](#{topic.url})"]
       lines << ""
-      lines << "**Author:** @#{escape_text(topic.user.username)}" if topic.user
+      if topic.user
+        lines << "**Author:** [@#{escape_text(topic.user.username)}](#{topic.user.full_url})"
+      end
       lines << "**Last posted:** #{topic.last_posted_at.iso8601}" if topic.last_posted_at
       excerpt = Nokogiri::HTML5.fragment(topic.excerpt.to_s).text.squish
       lines.concat(["", escape_text(excerpt)]) if excerpt.present?

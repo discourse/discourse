@@ -73,8 +73,8 @@ module MarkdownEndpoint
       serializer = BasicPostSerializer.new(post, scope: @guardian, root: false)
       serializer.topic_view = @topic_view
       cooked = serializer.cooked.to_s
-      heading =
-        "## Post #{post.post_number} by @#{escape_text(post.user&.username)} - #{post.created_at.iso8601}"
+      author = " by [@#{escape_text(post.user.username)}](#{post.user.full_url})" if post.user
+      heading = "## Post #{post.post_number}#{author} - #{post.created_at.iso8601}"
       "#{heading}\n\n#{cached_body(cooked)}"
     end
 
