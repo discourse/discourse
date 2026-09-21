@@ -1,6 +1,7 @@
 import { setBlockType, toggleMark } from "prosemirror-commands";
 import { highlightPlugin } from "prosemirror-highlightjs";
 import { schema as markdownSchema } from "prosemirror-markdown";
+import { Fragment } from "prosemirror-model";
 import { TextSelection } from "prosemirror-state";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 
@@ -195,6 +196,79 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
+function codeBlockContent(dom, schema) {
+  let text = "";
+  let pendingBreak = false;
+
+  function appendText(value) {
+    if (!value) {
+      return;
+    }
+
+    if (
+      pendingBreak &&
+      text &&
+      !text.endsWith("\n") &&
+      !value.startsWith("\n")
+    ) {
+      text += "\n";
+    }
+    text += value;
+    pendingBreak = false;
+  }
+
+  function visit(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      appendText(node.nodeValue.replace(/\r\n?/g, "\n"));
+      return;
+    }
+
+    if (
+      node.nodeType !== Node.ELEMENT_NODE ||
+      node.matches("head, noscript, object, script, style, title")
+    ) {
+      return;
+    }
+
+    if (node.tagName === "BR") {
+      if (pendingBreak && text && !text.endsWith("\n")) {
+        text += "\n";
+      }
+      appendText("\n");
+      return;
+    }
+
+    const isBlock = node.matches(
+      "address, article, aside, blockquote, dd, div, dl, dt, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, li, main, nav, ol, p, pre, section, table, tr, ul"
+    );
+    if (isBlock) {
+      if (text && !text.endsWith("\n")) {
+        text += "\n";
+      }
+      pendingBreak = false;
+    }
+
+    const start = text.length;
+    for (const child of node.childNodes) {
+      visit(child);
+    }
+
+    if (isBlock) {
+      if (text.length === start) {
+        text += "\n";
+      }
+      pendingBreak = true;
+    }
+  }
+
+  // Only text belongs inside code blocks; parsing nested elements can close them.
+  for (const child of dom.childNodes) {
+    visit(child);
+  }
+
+  return text ? Fragment.from(schema.text(text)) : Fragment.empty;
+}
+
 function convertSelectionToCodeBlock(schema) {
   return (editorState, dispatch) => {
     const { from, to } = editorState.selection;
@@ -227,6 +301,10 @@ const extension = {
     code_block: {
       createGapCursor: true,
       ...markdownSchema.nodes.code_block.spec,
+      parseDOM: markdownSchema.nodes.code_block.spec.parseDOM.map((rule) => ({
+        ...rule,
+        getContent: codeBlockContent,
+      })),
     },
   },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
