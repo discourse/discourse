@@ -39,7 +39,12 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
       insert_uploaded_image(source_id: "s-avatar", upload_id: 2)
       insert_uploaded_image(source_id: "s-unreferenced", upload_id: 3)
       insert_uploaded_image(source_id: "s-optimized", upload_id: 4)
-      insert_result(source_id: "s-attachment", upload_id: 5, markdown: "[file](upload://e)")
+      insert_result(
+        source_id: "s-attachment",
+        upload_id: 5,
+        markdown: "![audio|audio](upload://e)",
+        is_image: false,
+      )
       insert_optimized_image(upload_id: 4)
 
       insert_embed_upload(placeholder: "a", post_id: 1, upload_id: "s-post")
@@ -107,10 +112,15 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
   end
 
   def insert_uploaded_image(source_id:, upload_id:)
-    insert_result(source_id:, upload_id:, markdown: "![image](upload://#{source_id})")
+    insert_result(
+      source_id:,
+      upload_id:,
+      markdown: "![image](upload://#{source_id})",
+      is_image: true,
+    )
   end
 
-  def insert_result(source_id:, upload_id:, markdown:)
+  def insert_result(source_id:, upload_id:, markdown:, is_image:)
     files_db.execute(
       "INSERT INTO uploads (id, sha1, url, filesize, original_filename) VALUES (?, ?, ?, ?, ?)",
       upload_id,
@@ -120,9 +130,11 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
       "#{upload_id}.png",
     )
     files_db.execute(
-      "INSERT INTO upload_results (id, status, markdown, upload_id) VALUES (?, 'ok', ?, ?)",
+      "INSERT INTO upload_results (id, status, markdown, is_image, upload_id) " \
+        "VALUES (?, 'ok', ?, ?, ?)",
       source_id,
       markdown,
+      is_image,
       upload_id,
     )
   end

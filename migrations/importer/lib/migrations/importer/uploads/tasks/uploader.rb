@@ -122,6 +122,7 @@ module Migrations
               skip_reason: result[:skip_reason],
               skip_details: result[:skip_details],
               markdown: result[:markdown],
+              is_image: result[:is_image],
               upload_id:,
             )
 
@@ -301,6 +302,7 @@ module Migrations
               skip_reason: nil,
               skip_details: nil,
               markdown: UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
+              is_image: FileHelper.is_supported_image?(upload.original_filename),
               upload: upload_attributes(upload),
               download: download_record,
             }
@@ -313,6 +315,7 @@ module Migrations
               skip_reason: SkipReason::FILE_NOT_FOUND,
               skip_details: nil,
               markdown: nil,
+              is_image: nil,
               upload: nil,
               download: nil,
             }
@@ -325,6 +328,7 @@ module Migrations
               skip_reason:,
               skip_details:,
               markdown: nil,
+              is_image: nil,
               upload: nil,
               download:,
             }

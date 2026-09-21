@@ -18,10 +18,6 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
 
   let(:reporter) { instance_double(Migrations::Reporting::Reporter::StepHandle, notice: nil) }
 
-  # Stands in for an ActiveRecord `Upload` without booting Rails; only `attributes`
-  # is read off it.
-  let(:fake_upload_class) { Data.define(:attributes) }
-
   let(:status) { described_class::Status }
   let(:skip_reason) { described_class::SkipReason }
 
@@ -39,6 +35,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
+        is_image: true,
         upload: {
           id: upload_id,
           sha1: "abc",
@@ -75,6 +72,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
+        is_image: true,
         upload: {
           id: 7,
           sha1: "abc",
@@ -96,6 +94,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
+        is_image: true,
         upload_id: 7,
       )
     end
@@ -107,6 +106,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: skip_reason::DOWNLOAD_ERROR,
         skip_details: "boom",
         markdown: nil,
+        is_image: nil,
         upload: nil,
         download: nil,
       }
@@ -127,6 +127,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         skip_reason: skip_reason::FILE_NOT_FOUND,
         skip_details: nil,
         markdown: nil,
+        is_image: nil,
         upload: nil,
         download: {
           id: "hash-dl",
@@ -140,6 +141,37 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
         id: "hash-dl",
         original_filename: "x.png",
       )
+    end
+  end
+
+  describe "upload classification" do
+    it "records whether the created upload is an image" do
+      metadata = described_class::UploadMetadata.new(description: nil)
+      upload_markdown_class =
+        Class.new do
+          def initialize(*)
+          end
+
+          def to_markdown(display_name: nil)
+            "markdown"
+          end
+        end
+      file_helper =
+        Module.new do
+          def self.is_supported_image?(filename)
+            filename.end_with?(".png")
+          end
+        end
+      stub_const("UploadMarkdown", upload_markdown_class)
+      stub_const("FileHelper", file_helper)
+
+      %w[image.png audio.mp3].each do |filename|
+        upload = Data.define(:original_filename, :attributes).new(filename, {})
+
+        result = uploader.__send__(:success_result, { id: filename }, upload, metadata, nil)
+
+        expect(result[:is_image]).to eq(filename == "image.png")
+      end
     end
   end
 end

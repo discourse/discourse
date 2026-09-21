@@ -37,7 +37,11 @@ module Migrations
             # is the original id from `upload_results`, which is what the
             # post/avatar sets below are keyed on.
             sql = <<~SQL
-              SELECT u.id AS upload_id, u.sha1 AS upload_sha1, r.id AS source_id, r.markdown
+              SELECT u.id AS upload_id,
+                     u.sha1 AS upload_sha1,
+                     r.id AS source_id,
+                     r.markdown,
+                     r.is_image
                 FROM upload_results r
                      JOIN uploads u ON u.id = r.upload_id
                ORDER BY u.id
@@ -46,7 +50,7 @@ module Migrations
             files_db.query(sql) do |row|
               upload_id = row[:upload_id]
 
-              if @optimized_upload_ids.include?(upload_id) || !row[:markdown].start_with?("![")
+              if @optimized_upload_ids.include?(upload_id) || !row[:is_image]
                 emit_result.call(skipped_status(upload_id))
               elsif @post_upload_ids.include?(row[:source_id])
                 row[:type] = "post"

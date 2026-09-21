@@ -29,6 +29,7 @@ CREATE INDEX idx_optimized_images_upload_id ON optimized_images (upload_id);
 CREATE TABLE upload_results
 (
     id           TEXT      NOT NULL PRIMARY KEY,
+    is_image     BOOLEAN,
     markdown     TEXT,
     skip_details TEXT,
     skip_reason  ENUM_TEXT,
