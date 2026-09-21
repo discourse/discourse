@@ -63,9 +63,15 @@ module DiscourseRewind
         SQL
       end
 
+      def segmented_search_data?
+        Search.ts_config == SIMPLE_TS_CONFIG &&
+          (Search.segment_chinese? || Search.segment_japanese?)
+      end
+
       def word_query
         posts = self.class.publicly_visible_posts.where(user_id: user.id, created_at: date)
         stem = "strip(to_tsvector('#{Search.ts_config}', #{Search.wrap_unaccent("word")}))"
+        lex_join = segmented_search_data? ? "LEFT JOIN" : "INNER JOIN"
 
         DB.query(<<~SQL)
           WITH popular_words AS (
@@ -98,10 +104,10 @@ module DiscourseRewind
               stem, nentry DESC, word
           )
           SELECT
-            ndoc, nentry, original_word
+            ndoc, nentry, COALESCE(original_word, popular_words.word) AS original_word
           FROM
             popular_words
-          INNER JOIN
+          #{lex_join}
             lex ON lex.stem = strip(to_tsvector('#{SIMPLE_TS_CONFIG}', popular_words.word))
           ORDER BY
             ndoc + nentry DESC, popular_words.word
