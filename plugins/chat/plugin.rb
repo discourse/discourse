@@ -558,7 +558,7 @@ after_initialize do
     {
       create_message: {
         actions: %w[chat/api/channel_messages#create],
-        params: %i[chat_channel_id],
+        path_params: %i[chat_channel_id],
       },
     },
   )
