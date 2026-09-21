@@ -121,7 +121,7 @@ module MarkdownEndpoint
           %w[show feed].include?(action_name) &&
             route_path.match?(%r{\A/t/(?:[^/]+/)?\d+(?:/\d+)?(?:\.rss)?\z})
         when "list"
-          route_path.match?(%r{\A/(?:latest|hot|top)(?:\.rss)?\z}) ||
+          route_path.match?(%r{\A/(?:latest|new|unread|hot|top)(?:\.rss)?\z}) ||
             route_path.match?(%r{\A/c/.+/\d+(?:\.rss)?\z})
         when "tags"
           (action_name == "index" && route_path == "/tags") ||

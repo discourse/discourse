@@ -31,6 +31,8 @@ Discourse::Application.routes.draw do
           } do
       {
         "latest" => "list#latest",
+        "new" => "list#new",
+        "unread" => "list#unread",
         "hot" => "list#hot",
         "top" => "list#top",
         "categories" => "categories#index",

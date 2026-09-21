@@ -174,8 +174,8 @@ RSpec.describe "Markdown endpoints" do
   it "limits Markdown and discovery to the supported routes" do
     tag = Fabricate(:tag)
     paths = [
-      "/new",
-      "/unread",
+      "/unseen",
+      "/bookmarks",
       "/top/yearly",
       "/c/#{category.slug}/#{category.id}/none",
       "/c/#{category.slug}/#{category.id}/l/latest",
@@ -507,6 +507,73 @@ RSpec.describe "Markdown endpoints" do
     end
   end
 
+  it "serves personalized new and unread lists with discovery and native filtering" do
+    SiteSetting.enable_unified_new = true
+    new_topic = Fabricate(:post).topic
+    unread_topic = Fabricate(:new_reply_topic, current_user: user)
+    read_topic = Fabricate(:read_topic, current_user: user)
+    sign_in(user)
+
+    { "/new" => new_topic, "/unread" => unread_topic }.each do |path, expected_topic|
+      get "#{path}.json"
+      expected_ids =
+        response.parsed_body.fetch("topic_list").fetch("topics").map { |entry| entry.fetch("id") }
+      expect(expected_ids).to include(expected_topic.id)
+
+      ["#{path}.md", path].each do |url|
+        get url, headers: { "ACCEPT" => "text/markdown" }
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).to eq("text/markdown")
+        ids = response.body.scan(%r{^## \[.*\]\([^\n]*/t/[^\n]+/(\d+)\)$}).flatten.map(&:to_i)
+        expect(ids).to match_array(expected_ids)
+        expect(response.body).not_to include(read_topic.title)
+      end
+
+      get path, headers: { "ACCEPT" => "text/html" }
+      expect(response.headers["Link"]).to include(
+        "<#{Discourse.base_url}#{path}.md>; rel=\"alternate\"",
+      )
+      expect(response.body).to include('type="text/markdown"')
+    end
+
+    get "/new.md", params: { subset: "replies" }
+    expect(response.body).to include(unread_topic.title)
+    expect(response.body).not_to include(new_topic.title)
+  end
+
+  it "requires authentication for new and unread Markdown lists" do
+    %w[/new /unread].each do |path|
+      ["#{path}.md", path].each do |url|
+        get url, headers: { "ACCEPT" => "text/markdown" }
+        expect(response).to have_http_status(:not_found)
+        expect(response.media_type).not_to eq("text/markdown")
+      end
+    end
+  end
+
+  it "paginates personalized lists while preserving subset filters" do
+    SiteSetting.enable_unified_new = true
+    2.times { Fabricate(:new_reply_topic, current_user: user) }
+    sign_in(user)
+
+    %w[/new /unread].each do |path|
+      get "#{path}.md", params: { per_page: 1, subset: "replies" }
+      first_title = response.body[/^## \[(.*?)\]/, 1]
+      next_url = response.body[/\[Next page\]\(([^)]+)\)/, 1]
+      expect(next_url).to start_with("#{Discourse.base_url}#{path}.md?")
+      expect(Rack::Utils.parse_nested_query(URI(next_url).query)).to include(
+        "page" => "1",
+        "per_page" => "1",
+        "subset" => "replies",
+      )
+
+      get URI(next_url).request_uri
+      expect(response).to have_http_status(:ok)
+      expect(response.body[/^## \[(.*?)\]/, 1]).not_to eq(first_title)
+      expect(response.body).to include("[Previous page](#{Discourse.base_url}#{path}.md?")
+    end
+  end
+
   it "retains native list pagination" do
     TopicQuery::DEFAULT_PER_PAGE_COUNT.times do |index|
       listed_topic = Fabricate(:topic, user: user, title: "Paginated topic #{index}")
@@ -747,6 +814,16 @@ RSpec.describe "Markdown endpoints" do
 
   it "keeps Markdown routes and discovery absent while disabled" do
     SiteSetting.experimental_markdown_endpoints = false
+
+    sign_in(user)
+    %w[/new /unread].each do |path|
+      get "#{path}.md"
+      expect(response).to have_http_status(:not_found)
+
+      get path, headers: { "ACCEPT" => "text/markdown" }
+      expect(response.media_type).not_to eq("text/markdown")
+      expect(response.headers["Link"]).to be_blank
+    end
 
     get "/t/#{topic.slug}/#{topic.id}.md"
     expect(response).to have_http_status(:not_found)
