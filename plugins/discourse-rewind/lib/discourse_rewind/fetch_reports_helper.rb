@@ -4,7 +4,7 @@ module DiscourseRewind
   module FetchReportsHelper
     extend self
 
-    REWIND_REPORT_VERSION = "2"
+    REWIND_REPORT_VERSION = "3"
     CACHE_DURATION = Rails.env.development? ? 10.seconds : 3.days
 
     def cache_key(user_id, year)

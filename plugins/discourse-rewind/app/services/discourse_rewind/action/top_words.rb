@@ -47,22 +47,16 @@ module DiscourseRewind
       end
 
       def word_query
-        DB.query(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
+        posts = self.class.publicly_visible_posts.where(user_id: user.id, created_at: date)
+
+        DB.query(<<~SQL)
           WITH popular_words AS (
             SELECT
               *
             FROM
               ts_stat(
                 $INNERSQL$
-                  SELECT
-                    search_data
-                  FROM
-                    post_search_data
-                  INNER JOIN
-                    posts ON posts.id = post_search_data.post_id
-                  WHERE
-                    posts.user_id = :user_id
-                    AND posts.created_at BETWEEN :date_start AND :date_end
+                  #{posts.joins(:post_search_data).select(:search_data).to_sql}
                 $INNERSQL$
               ) AS search_data
             WHERE LENGTH(word) >= 2
@@ -84,15 +78,7 @@ module DiscourseRewind
               word as original_word
             FROM
               ts_stat ($INNERSQL$
-                SELECT
-                  to_tsvector('simple',
-                    regexp_replace(raw, 'https?://[^\\s]+', ' ', 'g')
-                  )
-                FROM
-                  posts AS p
-                WHERE
-                  p.user_id = :user_id
-                  AND p.created_at BETWEEN :date_start AND :date_end
+                #{posts.select("to_tsvector('simple', regexp_replace(raw, 'https?://[^\\s]+', ' ', 'g'))").to_sql}
               $INNERSQL$)
             WHERE LENGTH(word) >= 2
             AND word ~ '^[a-zA-Z]+$'

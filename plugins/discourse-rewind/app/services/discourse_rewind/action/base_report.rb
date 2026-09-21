@@ -10,6 +10,14 @@ module DiscourseRewind
         raise NotImplementedError
       end
 
+      def self.publicly_visible_topics
+        Topic.listable_topics.visible.secured
+      end
+
+      def self.publicly_visible_posts
+        Post.visible.merge(publicly_visible_topics).where.not(post_type: Post.types[:whisper])
+      end
+
       def self.enabled?
         true
       end
