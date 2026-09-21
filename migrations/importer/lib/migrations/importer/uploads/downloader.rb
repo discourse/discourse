@@ -4,7 +4,7 @@ module Migrations
   module Importer
     module Uploads
       # Downloads remote upload sources and reuses files recorded in the download
-      # cache. Workers only read the filename map; the pipeline's single writer
+      # cache. Workers read the filename map while the pipeline's single writer
       # adds newly recorded downloads through {#remember}.
       class Downloader
         class DownloadFailedError < StandardError
@@ -18,12 +18,13 @@ module Migrations
         def initialize(cache_path:, downloads:)
           @cache_path = cache_path
           @downloads = downloads
+          @downloads_mutex = Mutex.new
         end
 
         def download(url:, id:)
           path = cache_path(id)
 
-          if File.exist?(path) && (filename = @downloads[id])
+          if File.exist?(path) && (filename = @downloads_mutex.synchronize { @downloads[id] })
             return path, filename, nil
           end
 
@@ -31,7 +32,7 @@ module Migrations
         end
 
         def remember(id, filename)
-          @downloads[id] = filename
+          @downloads_mutex.synchronize { @downloads[id] = filename }
         end
 
         private
