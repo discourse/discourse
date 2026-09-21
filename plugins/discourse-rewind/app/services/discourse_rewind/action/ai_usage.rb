@@ -60,7 +60,7 @@ module DiscourseRewind
         feature_usage =
           base_query
             .group(:feature_name)
-            .order("SUM(usage_count) DESC")
+            .order("SUM(usage_count) DESC", :feature_name)
             .limit(5)
             .pluck(:feature_name, Arel.sql("SUM(usage_count)"))
             .to_h
@@ -70,7 +70,7 @@ module DiscourseRewind
           base_query
             .where.not(language_model: nil)
             .group(:language_model)
-            .order("SUM(usage_count) DESC")
+            .order("SUM(usage_count) DESC", :language_model)
             .limit(5)
             .pluck(:language_model, Arel.sql("SUM(usage_count)"))
             .to_h
