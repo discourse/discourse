@@ -56,7 +56,7 @@ class ReviewableFlaggedPost < Reviewable
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
-    if post.user_deleted?
+    if post.user_deleted? || post.trashed?
       build_action(actions, :agree_and_keep_deleted, icon: "far-eye-slash", bundle: agree_bundle)
     else
       if !post.hidden?
