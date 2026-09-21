@@ -357,9 +357,6 @@ module Migrations
               id: record[:id],
               original_filename: record[:original_filename],
             )
-            # Keep the in-memory cache current so a later row that hits the same
-            # download id finds it. Writer-thread only, matching the insert above.
-            @downloader.remember(record[:id], record[:original_filename])
           end
 
           def retry_policy

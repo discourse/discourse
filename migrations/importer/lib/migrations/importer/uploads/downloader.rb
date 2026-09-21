@@ -4,8 +4,8 @@ module Migrations
   module Importer
     module Uploads
       # Downloads remote upload sources and reuses files recorded in the download
-      # cache. Workers read the filename map while the pipeline's single writer
-      # adds newly recorded downloads through {#remember}.
+      # cache. Workers share an immutable snapshot of the filename map; source IDs
+      # are unique and processed once, so new entries are only needed by the next run.
       class Downloader
         class DownloadFailedError < StandardError
         end
@@ -17,22 +17,17 @@ module Migrations
 
         def initialize(cache_path:, downloads:)
           @cache_path = cache_path
-          @downloads = downloads
-          @downloads_mutex = Mutex.new
+          @downloads = downloads.freeze
         end
 
         def download(url:, id:)
           path = cache_path(id)
 
-          if File.exist?(path) && (filename = @downloads_mutex.synchronize { @downloads[id] })
+          if File.exist?(path) && (filename = @downloads[id])
             return path, filename, nil
           end
 
           fetch(url, id, path)
-        end
-
-        def remember(id, filename)
-          @downloads_mutex.synchronize { @downloads[id] = filename }
         end
 
         private
