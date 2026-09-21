@@ -4,6 +4,8 @@ class McpOauthTokensController < ApplicationController
   OAUTH_PARAMETERS = %w[code refresh_token token code_verifier].freeze
 
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
+  # Token exchange is an OAuth client call, not a Discourse session.
+  skip_before_action :redirect_to_login_if_required
   before_action :validate_request_format
 
   def create

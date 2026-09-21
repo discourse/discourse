@@ -88,6 +88,19 @@ describe "MCP transport" do
     expect(response.parsed_body.dig("error", "code")).to eq(-32_001)
   end
 
+  it "returns an OAuth challenge on login_required sites instead of a session 403" do
+    SiteSetting.login_required = true
+
+    post "/mcp", params: payload.to_json, headers: headers.except("HTTP_AUTHORIZATION")
+
+    expect(response.status).to eq(401)
+    expect(response.headers["WWW-Authenticate"]).to eq(
+      %(Bearer resource_metadata="#{DiscourseMcp.protected_resource_metadata_url}"),
+    )
+    expect(response.parsed_body.dig("error", "code")).to eq(-32_001)
+    expect(response.parsed_body["error_type"]).not_to eq("not_logged_in")
+  end
+
   it "rejects an invalid bearer credential with an RFC 6750 error" do
     post "/mcp",
          params: payload.to_json,

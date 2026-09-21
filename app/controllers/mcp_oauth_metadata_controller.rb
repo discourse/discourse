@@ -2,6 +2,9 @@
 
 class McpOauthMetadataController < ApplicationController
   skip_before_action :check_xhr, :preload_json
+  # OAuth discovery documents must be public so MCP clients can start the
+  # authorization flow on login_required sites.
+  skip_before_action :redirect_to_login_if_required
   before_action :ensure_mcp_enabled
 
   def protected_resource
