@@ -22182,6 +22182,13 @@ CREATE UNIQUE INDEX index_linked_topics_on_topic_id_and_sequence ON public.linke
 
 
 --
+-- Name: index_livestream_topic_chat_channels_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_livestream_topic_chat_channels_on_chat_channel_id ON public.livestream_topic_chat_channels USING btree (chat_channel_id);
+
+
+--
 -- Name: index_llm_credit_allocations_on_llm_model_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25383,6 +25390,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260921015711'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),
