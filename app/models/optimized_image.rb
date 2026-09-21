@@ -333,48 +333,51 @@ class OptimizedImage < ActiveRecord::Base
   private_constant :INSTRUCTION_METHODS
 
   def self.optimize(operation, from, to, dimensions, opts = {})
-    instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
-    convert_with(instructions, from, to, opts, operation:)
+    instructions = nil
+
+    begin
+      ImageProcessing::OutputFile.write(to) do |temporary_path|
+        instructions =
+          public_send(INSTRUCTION_METHODS.fetch(operation), from, temporary_path, dimensions, opts)
+        ImageMagick.magick(
+          *instructions,
+          operation: operation,
+          read: [from],
+          write: [temporary_path],
+          nice: 10,
+          timeout: MAX_CONVERT_SECONDS,
+        )
+      end
+
+      allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
+      FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
+      true
+    rescue => e
+      if opts[:raise_on_error]
+        raise e
+      else
+        error = +"Failed to optimize image:"
+
+        if e.message =~ /\A(?:convert|magick):([^`]+)/
+          error << $1
+        else
+          error << " unknown reason"
+        end
+
+        Discourse.warn(
+          error,
+          upload_id: opts[:upload_id],
+          location: to,
+          error_message: e.message,
+          instructions: instructions,
+        )
+        false
+      end
+    end
   end
 
   MAX_PNGQUANT_SIZE = 500_000
   MAX_CONVERT_SECONDS = 20
-
-  def self.convert_with(instructions, from, to, opts = {}, operation:)
-    ImageMagick.magick(
-      *instructions,
-      operation:,
-      read: [from],
-      write: [File.dirname(to)],
-      nice: 10,
-      timeout: MAX_CONVERT_SECONDS,
-    )
-
-    allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
-    FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
-    true
-  rescue => e
-    if opts[:raise_on_error]
-      raise e
-    else
-      error = +"Failed to optimize image:"
-
-      if e.message =~ /\A(?:convert|magick):([^`]+)/
-        error << $1
-      else
-        error << " unknown reason"
-      end
-
-      Discourse.warn(
-        error,
-        upload_id: opts[:upload_id],
-        location: to,
-        error_message: e.message,
-        instructions: instructions,
-      )
-      false
-    end
-  end
 end
 
 # == Schema Information
