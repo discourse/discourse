@@ -22,6 +22,10 @@ module DiscourseRewind
         true
       end
 
+      def self.plugin_enabled?(name)
+        Discourse.plugins_by_name[name]&.enabled?
+      end
+
       def should_use_fake_data?
         return false if ENV["DISCOURSE_REWIND_USE_REAL_DATA"] == "1"
         Rails.env.development?
