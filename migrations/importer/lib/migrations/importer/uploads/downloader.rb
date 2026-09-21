@@ -91,6 +91,8 @@ module Migrations
             end
 
           filename = File.basename(uri.path).presence || "file" if filename.blank?
+          filename = File.basename(filename.tr("\\", "/"))
+          filename = "file" if filename.in?(%w[. .. /])
 
           if File.extname(filename).blank? && response.content_type.present?
             ext = MiniMime.lookup_by_content_type(response.content_type)&.extension

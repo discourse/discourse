@@ -19,5 +19,25 @@ RSpec.describe Migrations::Importer::Uploads::Downloader do
         [path, "image.png", nil],
       )
     end
+
+    it "uses only the basename from a content disposition filename" do
+      url = "https://example.com/download"
+      response =
+        Struct.new(:header, :content_type).new(
+          { "Content-Disposition" => "attachment; filename*=UTF-8''..%5C..%5Cimage.png" },
+          "image/png",
+        )
+      destination = Object.new
+      destination.define_singleton_method(:get) do |&block|
+        block.call(response, "contents", URI(url))
+      end
+      stub_const("FinalDestination", Class.new)
+      FinalDestination.stubs(:new).with(url).returns(destination)
+
+      _path, filename, download_record = downloader.download(url:, id: "1")
+
+      expect(filename).to eq("image.png")
+      expect(download_record[:original_filename]).to eq("image.png")
+    end
   end
 end
