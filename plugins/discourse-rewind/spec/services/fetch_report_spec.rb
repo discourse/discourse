@@ -215,6 +215,88 @@ RSpec.describe(DiscourseRewind::FetchReport) do
       end
     end
 
+    context "when viewing someone else's AI usage" do
+      fab!(:owner, :user)
+
+      let(:params) do
+        {
+          index: DiscourseRewind::FetchReports::REPORTS.index(DiscourseRewind::Action::AiUsage),
+          for_user_username: owner.username,
+        }
+      end
+      let(:report) do
+        {
+          data: {
+            total_requests: 1,
+            model_usage: [{ name: "secret-model", count: 1 }],
+          },
+          identifier: "ai-usage",
+        }
+      end
+
+      before do
+        freeze_time DateTime.parse("2021-12-22")
+        owner.user_option.update!(discourse_rewind_share_publicly: true)
+        DiscourseRewind::Action::AiUsage.stubs(:call).returns(report)
+      end
+
+      it "hides the models" do
+        expect(result.report[:data]).to eq(total_requests: 1)
+      end
+
+      context "when the viewer is the owner" do
+        let(:guardian) { owner.guardian }
+
+        it "shows the models" do
+          expect(result.report).to eq(report)
+        end
+      end
+
+      context "when the viewer is an admin" do
+        let(:guardian) { Fabricate(:admin).guardian }
+
+        it "shows the models" do
+          expect(result.report).to eq(report)
+        end
+      end
+    end
+
+    context "when viewing someone else's invites" do
+      fab!(:owner, :user)
+
+      let(:params) do
+        {
+          index: DiscourseRewind::FetchReports::REPORTS.index(DiscourseRewind::Action::Invites),
+          for_user_username: owner.username,
+        }
+      end
+      let(:report) { { data: { total_invites: 1 }, identifier: "invites" } }
+
+      before do
+        freeze_time DateTime.parse("2021-12-22")
+        owner.user_option.update!(discourse_rewind_share_publicly: true)
+        DiscourseRewind::Action::Invites.stubs(:call).returns(report)
+      end
+
+      it { is_expected.to fail_to_find_a_model(:report) }
+
+      context "when the viewer is the owner" do
+        let(:guardian) { owner.guardian }
+
+        it "shows the invites" do
+          expect(result.report).to eq(report)
+        end
+      end
+
+      context "when the viewer is a moderator" do
+        let(:guardian) { Fabricate(:moderator).guardian }
+
+        it "shows the invites" do
+          expect(result.report).to eq(report)
+        end
+      end
+    end
+
     context "with for_user_username parameter" do
       fab!(:other_user, :user)
       fab!(:admin, :admin)
