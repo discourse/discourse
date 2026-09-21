@@ -9,7 +9,7 @@ class ReviewablesController < ApplicationController
   before_action :ensure_can_see, except: [:destroy]
 
   around_action :with_deleted_content,
-                only: %i[index show],
+                only: %i[index show perform],
                 if: ->(controller) { controller.guardian.is_staff? }
 
   def index
