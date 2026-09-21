@@ -1169,7 +1169,23 @@ class Plugin::Instance
   # @param route [String] Rails controller action, in `controller#action` form
   # @param anonymous [Boolean] whether logged-out visitors may use this homepage
   # @param server_side [Boolean] whether navigation requires a full page request
-  def register_homepage(id, name:, path:, route:, anonymous: false, server_side: false)
+  # @param enabled [Proc, nil] site-wide condition for offering this homepage in
+  #   the admin setting; while it returns false, a site that selected it falls
+  #   back to the top menu homepage
+  # @param available [Proc, nil] called with `guardian:` and `request:` (which
+  #   may be nil); when it returns false the visitor gets the regular top menu
+  #   homepage instead. It runs whenever the homepage is resolved, including on
+  #   page loads and topic list requests, so keep it cheap.
+  def register_homepage(
+    id,
+    name:,
+    path:,
+    route:,
+    anonymous: false,
+    server_side: false,
+    enabled: nil,
+    available: nil
+  )
     id = id.to_s
 
     if !id.match?(/\A[a-z0-9][a-z0-9_-]*\z/)
@@ -1186,6 +1202,12 @@ class Plugin::Instance
     end
     if ![true, false].include?(server_side)
       raise ArgumentError, "homepage server_side must be true or false"
+    end
+    if !enabled.nil? && !enabled.respond_to?(:call)
+      raise ArgumentError, "homepage enabled must be callable"
+    end
+    if !available.nil? && !available.respond_to?(:call)
+      raise ArgumentError, "homepage available must be callable"
     end
 
     registered_ids =
@@ -1204,6 +1226,8 @@ class Plugin::Instance
         route: route.to_s,
         anonymous: anonymous,
         server_side: server_side,
+        enabled: enabled,
+        available: available,
       },
       self,
     )

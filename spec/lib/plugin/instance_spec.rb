@@ -1223,6 +1223,8 @@ TEXT
           route: "sample_plugin/homepage#index",
           anonymous: true,
           server_side: false,
+          enabled: nil,
+          available: nil,
         },
       )
 
@@ -1258,6 +1260,26 @@ TEXT
           server_side: nil,
         )
       end.to raise_error(ArgumentError, /server_side/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          available: true,
+        )
+      end.to raise_error(ArgumentError, /available/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          enabled: true,
+        )
+      end.to raise_error(ArgumentError, /enabled/)
 
       plugin_instance.register_homepage(
         "sample_homepage",
