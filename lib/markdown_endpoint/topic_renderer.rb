@@ -25,13 +25,13 @@ module MarkdownEndpoint
       buffer << "\n\n---\n\n_[View the full topic](#{@topic.url})._" if single_post?
       unless single_post?
         {
-          "Previous page" => @topic_view.prev_page,
-          "Next page" => @topic_view.next_page,
+          "previous_page" => @topic_view.prev_page,
+          "next_page" => @topic_view.next_page,
         }.each do |label, page|
           next unless page
 
           query = @query.merge("page" => page).to_query
-          buffer << "\n\n[#{label}](#{@topic.url}.md?#{query})"
+          buffer << "\n\n[#{I18n.t("markdown_endpoints.#{label}")}](#{@topic.url}.md?#{query})"
         end
       end
       buffer << "\n"

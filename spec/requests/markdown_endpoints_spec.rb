@@ -215,7 +215,9 @@ RSpec.describe "Markdown endpoints" do
     expect(response).to have_http_status(:not_found)
   end
 
-  it "paginates rendered posts with Markdown navigation links" do
+  it "paginates rendered posts with translated Markdown navigation links" do
+    TranslationOverride.upsert!("en", "markdown_endpoints.previous_page", "Earlier posts")
+    TranslationOverride.upsert!("en", "markdown_endpoints.next_page", "Later posts")
     replies =
       2
         .upto(TopicView::CHUNK_SIZE + 1)
@@ -224,16 +226,20 @@ RSpec.describe "Markdown endpoints" do
         end
 
     get "/t/#{topic.slug}/#{topic.id}.md"
-    expect(response.body).to include(post.raw, "**Page:** 1", "[Next page](#{topic.url}.md?page=2)")
+    expect(response.body).to include(
+      post.raw,
+      "**Page:** 1",
+      "[Later posts](#{topic.url}.md?page=2)",
+    )
     expect(response.body).not_to include(replies.last.raw)
 
     get "/t/#{topic.slug}/#{topic.id}.md?page=2"
     expect(response.body).to include(
       replies.last.raw,
       "**Page:** 2",
-      "[Previous page](#{topic.url}.md?page=1)",
+      "[Earlier posts](#{topic.url}.md?page=1)",
     )
-    expect(response.body).not_to include(post.raw, "[Next page]")
+    expect(response.body).not_to include(post.raw, "[Later posts]")
   end
 
   it "renders just the requested post" do
