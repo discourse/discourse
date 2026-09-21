@@ -15,18 +15,18 @@ import UserField from "discourse/components/user-field";
 import WelcomeHeader from "discourse/components/welcome-header";
 import lazyHash from "discourse/helpers/lazy-hash";
 import valueEntered from "discourse/helpers/value-entered";
-import { ajax } from "discourse/lib/ajax";
+import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
-import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import {
   applyBehaviorTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
+import { allowsImages } from "discourse/lib/uploads";
 import DiscourseURL from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
@@ -59,8 +59,9 @@ export default class CodeLoginForm extends Component {
   @tracked notice;
   @tracked resendCooldown = 0;
   @tracked otpGeneration = 0;
-  @tracked newAccount;
-  @tracked accountUser;
+  @tracked canUploadAvatar = false;
+  @tracked pendingAvatar;
+  @tracked pendingAvatarUrl;
   @tracked name = "";
   @tracked accountPassword = "";
   @tracked showOptionalPassword = false;
@@ -73,10 +74,9 @@ export default class CodeLoginForm extends Component {
   @tracked usernameAvailable = false;
   @tracked usernameChecking = false;
   @tracked usernameError;
-  @tracked usernameEditable = true;
+  @tracked generatedUsername = false;
   @tracked regenerating = false;
   @tracked avatarTemplate;
-  @tracked avatarDetailsLoaded = false;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   @tracked secondFactorToken;
   @tracked securityKeyCredential;
@@ -95,8 +95,11 @@ export default class CodeLoginForm extends Component {
   });
   #cooldownTimer;
   #draftEmail;
-  #postSignupRedirectUrl;
+  #collectedUserFields = false;
+  #generatedUsernameAutoSubmits = 0;
   #usernameCheckSeq = 0;
+  #usernameDebounce;
+  @tracked _signupTrustLevel = 0;
   @tracked _step;
 
   constructor() {
@@ -114,6 +117,9 @@ export default class CodeLoginForm extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#cooldownTimer);
+    cancel(this.#usernameDebounce);
+    this.#usernameCheckSeq++;
+    this.#clearPendingAvatarUrl();
   }
 
   // Tracked-backed so the parent can react to step transitions via onStepChange.
@@ -164,8 +170,8 @@ export default class CodeLoginForm extends Component {
     return this.step === "user-fields";
   }
 
-  get isCompleteStep() {
-    return this.step === "complete";
+  get isSignupDetailsStep() {
+    return this.step === "signup-details";
   }
 
   get isAccountDetailsStep() {
@@ -174,6 +180,14 @@ export default class CodeLoginForm extends Component {
 
   get isPendingApprovalStep() {
     return this.step === "pending-approval";
+  }
+
+  get signupDetailsTitle() {
+    return i18n(
+      this.generatedUsername
+        ? "code_login.account_details_title"
+        : "code_login.signup_details_title"
+    );
   }
 
   get heading() {
@@ -206,12 +220,9 @@ export default class CodeLoginForm extends Component {
           title: i18n("code_login.user_fields_title"),
           subtitle: i18n("code_login.user_fields_instructions"),
         };
-      case "complete":
+      case "signup-details":
         return {
-          title: i18n("code_login.account_ready_title"),
-          subtitle: this.usernameEditable
-            ? i18n("code_login.account_ready_edit")
-            : null,
+          title: this.signupDetailsTitle,
         };
       case "second-factor":
         return { title: i18n("login.second_factor_title"), subtitle: null };
@@ -224,11 +235,15 @@ export default class CodeLoginForm extends Component {
     if (this.verifying || this.passwordValidation.failed) {
       return true;
     }
-    // When the username can't be changed there's nothing to validate.
-    if (!this.usernameEditable) {
-      return false;
-    }
     return !this.usernameAvailable || this.usernameChecking;
+  }
+
+  get previewAvatarTemplate() {
+    return (
+      this.pendingAvatarUrl ||
+      this.pendingAvatar?.url ||
+      (this.username.trim() ? this.avatarTemplate : null)
+    );
   }
 
   get userFields() {
@@ -348,6 +363,14 @@ export default class CodeLoginForm extends Component {
     this.code = "";
     this.codeError = null;
     this.notice = null;
+    this.username = "";
+    this.usernameAvailable = false;
+    this.usernameError = null;
+    this.generatedUsername = false;
+    this.#generatedUsernameAutoSubmits = 0;
+    this.avatarTemplate = null;
+    this.pendingAvatar = null;
+    this.#clearPendingAvatarUrl();
     this.otpGeneration++;
     this.#clearSignupContinuation();
     this.step = "email";
@@ -392,13 +415,22 @@ export default class CodeLoginForm extends Component {
 
     if (
       !this.isPasswordReset &&
-      (this.isUserFieldsStep || this.#prefillUserFields())
+      (this.#collectedUserFields ||
+        this.isUserFieldsStep ||
+        this.#prefillUserFields())
     ) {
       data.user_fields = {};
       this.userFields.forEach((f) => (data.user_fields[f.field.id] = f.value));
       if (this.nameRequired) {
         data.name = this.name.trim();
       }
+    }
+
+    if (this.isSignupDetailsStep) {
+      data.username = this.username.trim();
+    }
+    if (this.isSignup && this.args.signupContext) {
+      data.signup_context = this.args.signupContext;
     }
 
     try {
@@ -411,9 +443,30 @@ export default class CodeLoginForm extends Component {
           data,
         });
       const result =
-        this.isSignup && this.isCodeStep
+        this.isSignupDetailsStep && !this.isInvite
           ? await applyBehaviorTransformer("create-account", verify)
           : await verify();
+
+      if (this.isDestroying) {
+        return;
+      }
+
+      if (result?.success === false && result.message) {
+        this.codeError = result.message;
+        return;
+      }
+
+      if (result?.username_required) {
+        this.setupSignupDetails(result);
+        this.step = "signup-details";
+        return;
+      }
+
+      if (result?.username_errors) {
+        this.usernameError = result.username_errors.join(" ");
+        this.usernameAvailable = false;
+        return;
+      }
 
       if (
         (result?.user_fields_required || result?.name_required) &&
@@ -441,7 +494,7 @@ export default class CodeLoginForm extends Component {
         if (this.isSecondFactorStep) {
           this.securityKeyCredential = null;
           this.codeError = result.error;
-        } else if (this.isUserFieldsStep) {
+        } else if (this.isUserFieldsStep || this.isSignupDetailsStep) {
           this.codeError = result.error;
         } else {
           this.codeError = result.error;
@@ -469,20 +522,28 @@ export default class CodeLoginForm extends Component {
       }
 
       if (result?.account_created) {
-        this.setupNewAccount(result);
-        this.step = "complete";
+        await this.#savePendingAvatar(result);
+        if (this.isDestroying) {
+          return;
+        }
+        this.redirectAfterLogin(result.redirect_url);
         return;
       }
 
       this.redirectAfterLogin(result?.redirect_url);
     } catch (e) {
+      if (this.isDestroying) {
+        return;
+      }
       if (isReadOnlyError(e)) {
         this.codeError = this.login.readOnlyLoginMessage;
       } else {
         popupAjaxError(e);
       }
     } finally {
-      this.verifying = false;
+      if (!this.isDestroying) {
+        this.verifying = false;
+      }
     }
   }
 
@@ -520,28 +581,21 @@ export default class CodeLoginForm extends Component {
     ) {
       return;
     }
+    this.#collectedUserFields = true;
     return this.verifyCode();
   }
 
-  // The account is logged in server-side but the app is still in its anonymous
-  // boot state, so username/avatar are edited through authenticated requests on
-  // a User model built from the verify response rather than the current user.
-  setupNewAccount(result) {
-    const user = result.user;
-    this.newAccount = user;
-    // can_upload_avatar isn't in UserSerializer, so carry it from the response.
-    this.accountUser = User.create({
-      ...user,
-      can_upload_avatar: result.can_upload_avatar,
-    });
-    this.usernameEditable = result.can_edit_username;
-    this.username = result.prefill_username ? user.username : "";
-    this.avatarTemplate = user.avatar_template;
-    // Set when the server held back a DiscourseConnect provider handoff so this
-    // step could run; continuing resumes it.
-    this.#postSignupRedirectUrl = result.redirect_url;
-
-    if (this.usernameEditable && this.username) {
+  setupSignupDetails(result) {
+    this.username = result.username || "";
+    this.generatedUsername = !!result.generated_username;
+    this.avatarTemplate = result.avatar_template;
+    this._signupTrustLevel = result.trust_level ?? 0;
+    this.canUploadAvatar =
+      result.can_upload_avatar && allowsImages(false, this.siteSettings);
+    if (this.generatedUsername) {
+      this.usernameAvailable = !!this.username;
+      schedule("afterRender", () => this.#autoCreateGeneratedAccount());
+    } else if (this.username) {
       this.checkUsernameAvailability();
     }
   }
@@ -577,9 +631,13 @@ export default class CodeLoginForm extends Component {
       this.usernameAvailable = false;
       await this.checkUsernameAvailability();
     } catch (e) {
-      popupAjaxError(e);
+      if (!this.isDestroying) {
+        popupAjaxError(e);
+      }
     } finally {
-      this.regenerating = false;
+      if (!this.isDestroying) {
+        this.regenerating = false;
+      }
     }
   }
 
@@ -588,10 +646,20 @@ export default class CodeLoginForm extends Component {
     this.username = event.target.value;
     this.usernameAvailable = false;
     this.usernameError = null;
-    discourseDebounce(this, this.checkUsernameAvailability, 350);
+    this.avatarTemplate = null;
+    cancel(this.#usernameDebounce);
+    this.#usernameDebounce = discourseDebounce(
+      this,
+      this.checkUsernameAvailability,
+      350
+    );
   }
 
   async checkUsernameAvailability() {
+    if (this.isDestroying) {
+      return;
+    }
+
     const username = this.username?.trim();
     if (!username) {
       this.usernameAvailable = false;
@@ -603,19 +671,22 @@ export default class CodeLoginForm extends Component {
     const seq = ++this.#usernameCheckSeq;
     this.usernameChecking = true;
     try {
-      const result = await User.checkUsername(
-        username,
-        this.email,
-        this.newAccount?.id
-      );
+      const result = await User.checkUsername(username, this.email);
 
-      if (seq !== this.#usernameCheckSeq) {
+      if (
+        this.isDestroying ||
+        seq !== this.#usernameCheckSeq ||
+        username !== this.username.trim()
+      ) {
         return;
       }
 
       if (result.available) {
         this.usernameAvailable = true;
         this.usernameError = null;
+        if (result.avatar_template) {
+          this.avatarTemplate = result.avatar_template;
+        }
       } else {
         this.usernameAvailable = false;
         this.usernameError =
@@ -627,43 +698,36 @@ export default class CodeLoginForm extends Component {
             : i18n("code_login.username_taken"));
       }
     } catch {
-      if (seq === this.#usernameCheckSeq) {
+      if (!this.isDestroying && seq === this.#usernameCheckSeq) {
         this.usernameAvailable = false;
       }
     } finally {
-      if (seq === this.#usernameCheckSeq) {
+      if (!this.isDestroying && seq === this.#usernameCheckSeq) {
         this.usernameChecking = false;
       }
     }
   }
 
   @action
-  async changeAvatar() {
-    try {
-      // The picker needs the gravatar/system/upload state, loaded on demand.
-      if (!this.avatarDetailsLoaded) {
-        await this.accountUser.findDetails();
-        this.avatarDetailsLoaded = true;
-      }
-    } catch (e) {
-      return popupAjaxError(e);
-    }
-
+  changeAvatar() {
     this.modal.show(AvatarSelectorModal, {
       model: {
-        user: this.accountUser,
-        onAvatarChange: () => this.avatarChanged(),
+        deferSave: true,
+        avatarTemplate: this.avatarTemplate,
+        canUploadAvatar: this.canUploadAvatar,
+        trustLevel: this._signupTrustLevel,
+        selection: this.pendingAvatar,
+        onSelect: this.selectPendingAvatar,
       },
     });
   }
 
-  async avatarChanged() {
-    // pickAvatar doesn't update the model, so reload to show the new avatar.
-    try {
-      await this.accountUser.findDetails();
-      this.avatarTemplate = this.accountUser.avatar_template;
-    } catch (e) {
-      popupAjaxError(e);
+  @action
+  selectPendingAvatar(selection) {
+    this.#clearPendingAvatarUrl();
+    this.pendingAvatar = selection;
+    if (selection?.file) {
+      this.pendingAvatarUrl = URL.createObjectURL(selection.file);
     }
   }
 
@@ -700,10 +764,17 @@ export default class CodeLoginForm extends Component {
     });
 
     try {
-      const result = await ajax("/session/login-code/verify", {
-        type: "POST",
-        data,
-      });
+      const result = await applyBehaviorTransformer("create-account", () =>
+        ajax("/session/login-code/verify", {
+          type: "POST",
+          data,
+        })
+      );
+
+      if (result?.success === false && result.message) {
+        this.codeError = result.message;
+        return;
+      }
 
       if (result?.pending_approval) {
         this.accountPassword = "";
@@ -736,29 +807,9 @@ export default class CodeLoginForm extends Component {
 
   @action
   async continueAfterSignup() {
-    if (this.continueDisabled) {
-      return;
+    if (!this.continueDisabled) {
+      await this.verifyCode();
     }
-
-    this.verifying = true;
-
-    const username = this.username.trim();
-    if (
-      this.usernameEditable &&
-      username.toLowerCase() !== this.newAccount.username.toLowerCase()
-    ) {
-      try {
-        await this.accountUser.changeUsername(username);
-      } catch (e) {
-        this.verifying = false;
-        popupAjaxError(e);
-        return;
-      }
-    }
-
-    // Leave the button disabled and spinning through the redirect so it doesn't
-    // flash back to its idle state before the page navigates away.
-    this.redirectAfterLogin(this.#postSignupRedirectUrl);
   }
 
   @action
@@ -819,6 +870,10 @@ export default class CodeLoginForm extends Component {
           email: this.email,
           signup: this.isSignup,
           invite_key: this.isInvite ? this.args.inviteKey : undefined,
+          signup_context:
+            this.isSignup && this.args.signupContext
+              ? this.args.signupContext
+              : undefined,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },
@@ -841,12 +896,12 @@ export default class CodeLoginForm extends Component {
   redirectAfterLogin(redirectUrl) {
     const destinationUrl = cookie("destination_url");
     if (redirectUrl) {
-      window.location.assign(redirectUrl);
+      DiscourseURL.redirectTo(redirectUrl);
     } else if (destinationUrl) {
       removeCookie("destination_url");
-      window.location.assign(destinationUrl);
+      DiscourseURL.redirectTo(destinationUrl);
     } else {
-      window.location.assign(getURL("/"));
+      DiscourseURL.redirectTo("/");
     }
   }
 
@@ -865,6 +920,29 @@ export default class CodeLoginForm extends Component {
       this.resendCooldown -= 1;
       this.tickCooldown();
     }, 1000);
+  }
+
+  #autoCreateGeneratedAccount() {
+    if (
+      this.isDestroying ||
+      !this.generatedUsername ||
+      !this.isSignupDetailsStep ||
+      !applyValueTransformer("code-login-auto-create-account", true, {
+        context: this.args.context,
+        generatedUsername: true,
+      })
+    ) {
+      return;
+    }
+
+    if (this.#generatedUsernameAutoSubmits >= 2) {
+      this.generatedUsername = false;
+      this.checkUsernameAvailability();
+      return;
+    }
+
+    this.#generatedUsernameAutoSubmits++;
+    this.verifyCode();
   }
 
   #setupSignupContinuation(result) {
@@ -920,6 +998,46 @@ export default class CodeLoginForm extends Component {
   #clearSignupContinuation() {
     this.signupToken = null;
     this.sessionStore.remove(SIGNUP_CONTINUATION_KEY);
+  }
+
+  #clearPendingAvatarUrl() {
+    if (this.pendingAvatarUrl) {
+      URL.revokeObjectURL(this.pendingAvatarUrl);
+      this.pendingAvatarUrl = null;
+    }
+  }
+
+  async #savePendingAvatar(result) {
+    const selection = this.pendingAvatar;
+    if (!selection) {
+      return;
+    }
+
+    const user = User.create(result.user);
+    try {
+      await updateCsrfToken();
+      if (selection.file && result.can_upload_avatar) {
+        const data = new FormData();
+        data.append("type", "avatar");
+        data.append("user_id", user.id);
+        data.append("files[]", selection.file);
+        const upload = await ajax("/uploads.json", {
+          type: "POST",
+          data,
+          processData: false,
+          contentType: false,
+          timeout: 30000,
+          ignoreUnsent: false,
+        });
+        if (upload?.id) {
+          await user.pickAvatar(upload.id, "custom");
+        }
+      } else if (selection.url) {
+        await user.selectAvatar(selection.url);
+      }
+    } catch {
+      // Avatar customization must not block an account that was successfully created.
+    }
   }
 
   // A signup flow can gather the required signup fields before the code is
@@ -1091,13 +1209,6 @@ export default class CodeLoginForm extends Component {
               {{this.codeInstructions}}
             </p>
           {{/unless}}
-
-          {{#if this.isSignup}}
-            <PluginOutlet
-              @name="code-login-after-code"
-              @outletArgs={{lazyHash context=@context}}
-            />
-          {{/if}}
 
           {{#each this.otpGenerationArray as |generation|}}
             <DOtp
@@ -1288,6 +1399,11 @@ export default class CodeLoginForm extends Component {
             {{/each}}
           </div>
 
+          <PluginOutlet
+            @name="code-login-after-code"
+            @outletArgs={{lazyHash context=@context}}
+          />
+
           <div aria-live="polite" class="code-login-form__error" role="alert">
             {{this.codeError}}
           </div>
@@ -1304,33 +1420,36 @@ export default class CodeLoginForm extends Component {
         </div>
       {{else if this.isPendingApprovalStep}}
         <div class="code-login-form__pending-approval-step" role="status"></div>
-      {{else if this.isCompleteStep}}
-        <div class="code-login-form__complete-step">
+      {{else if this.isSignupDetailsStep}}
+        <div class="code-login-form__signup-details-step">
           {{#unless this.isSignup}}
             <h2 class="code-login-form__title">
-              {{i18n "code_login.account_ready_title"}}
+              {{this.signupDetailsTitle}}
             </h2>
-            {{#if this.usernameEditable}}
-              <p class="code-login-form__instructions">
-                {{i18n "code_login.account_ready_edit"}}
-              </p>
-            {{/if}}
           {{/unless}}
 
-          <div class="code-login-form__new-account">
-            <button
-              class="code-login-form__avatar"
-              title={{i18n "code_login.change_avatar"}}
-              type="button"
-              {{on "click" this.changeAvatar}}
-            >
-              {{dBoundAvatarTemplate this.avatarTemplate "huge"}}
-              <span class="code-login-form__avatar-edit">
-                {{dIcon "pencil"}}
-              </span>
-            </button>
+          {{#unless this.generatedUsername}}
+            <div class="code-login-form__new-account">
+              <button
+                aria-label={{i18n "code_login.change_avatar"}}
+                class="code-login-form__avatar"
+                disabled={{this.verifying}}
+                title={{i18n "code_login.change_avatar"}}
+                type="button"
+                {{on "click" this.changeAvatar}}
+              >
+                {{#if this.previewAvatarTemplate}}
+                  {{dBoundAvatarTemplate this.previewAvatarTemplate "huge"}}
+                {{else}}
+                  <span class="code-login-form__avatar-placeholder">
+                    {{dIcon "user"}}
+                  </span>
+                {{/if}}
+                <span class="code-login-form__avatar-edit">
+                  {{dIcon "pencil"}}
+                </span>
+              </button>
 
-            {{#if this.usernameEditable}}
               <div class="code-login-form__username-field">
                 <label for="code-login-username">
                   {{i18n "code_login.username_label"}}
@@ -1342,6 +1461,7 @@ export default class CodeLoginForm extends Component {
                     autocomplete="off"
                     class="code-login-form__new-account-username
                       {{if this.regenerating '--swapping'}}"
+                    disabled={{this.verifying}}
                     id="code-login-username"
                     name="username"
                     placeholder={{i18n "code_login.username_placeholder"}}
@@ -1356,6 +1476,7 @@ export default class CodeLoginForm extends Component {
                         {{if this.regenerating '--rolling'}}"
                       @action={{this.regenerateUsername}}
                       @ariaLabel="code_login.regenerate_username"
+                      @disabled={{this.verifying}}
                       @icon="dice"
                       @title="code_login.regenerate_username"
                     />
@@ -1370,12 +1491,22 @@ export default class CodeLoginForm extends Component {
                   {{this.usernameError}}
                 </div>
               </div>
-            {{else}}
-              <div class="code-login-form__new-account-username">
-                {{this.newAccount.username}}
-              </div>
-            {{/if}}
-          </div>
+            </div>
+          {{/unless}}
+
+          {{#unless this.isInvite}}
+            <PluginOutlet
+              @name="code-login-after-code"
+              @outletArgs={{lazyHash context=@context}}
+            />
+          {{/unless}}
+
+          {{#if this.codeError}}
+            <p
+              class="code-login-form__error"
+              role="alert"
+            >{{this.codeError}}</p>
+          {{/if}}
 
           <DButton
             class="btn-large btn-primary code-login-form__continue-to-site"

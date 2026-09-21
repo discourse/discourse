@@ -901,7 +901,12 @@ RSpec.describe SessionController do
         new_code = EmailLoginCode.generate!(email: new_email)
 
         expect do
-          post "/session/login-code/verify.json", params: { email: new_email, code: new_code.code }
+          post "/session/login-code/verify.json",
+               params: {
+                 email: new_email,
+                 code: new_code.code,
+                 username: "archived-new-user",
+               }
         end.not_to change { User.count }
 
         expect(response.status).to eq(503)
@@ -933,6 +938,7 @@ RSpec.describe SessionController do
                invite_key: invite.invite_key,
                email: "attacker@example.com",
                code:,
+               username: "invited-person",
              }
 
         invited_user = User.find_by_email(invite.email)
@@ -946,6 +952,28 @@ RSpec.describe SessionController do
         expect(invited_user.user_password).to be_nil
         expect(invite.reload).to be_redeemed
         expect(login_code.reload.consumed_at).to be_present
+      end
+
+      it "keeps the invite and code available until a username is chosen" do
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(User.find_by_email(invite.email)).to be_nil
+        expect(session[:current_user_id]).to be_nil
+        expect(invite.reload).not_to be_redeemed
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "returns the invitee trust level for the deferred avatar selector" do
+        SiteSetting.default_trust_level = 0
+        SiteSetting.default_invitee_trust_level = 2
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["trust_level"]).to eq(2)
       end
 
       it "activates an existing inactive invitee and keeps them signed in" do
@@ -1099,7 +1127,12 @@ RSpec.describe SessionController do
         invite.update!(topics: [Fabricate(:topic)])
         begin_discourse_connect_provider_handoff
 
-        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               code:,
+               username: "invited-person",
+             }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["account_created"]).to eq(true)
@@ -1172,7 +1205,9 @@ RSpec.describe SessionController do
                  username:,
                }
 
-          expect(response.parsed_body["error"]).to include(I18n.t("login.reserved_username")),
+          expect(response.parsed_body["username_errors"]).to include(
+            I18n.t("login.reserved_username"),
+          ),
           username
           expect(User.find_by_email("newuser@example.com")).to be_nil
           expect(ReviewableUser.count).to eq(0)
@@ -1230,7 +1265,7 @@ RSpec.describe SessionController do
         signup_token = response.parsed_body["signup_token"]
         expect(response.status).to eq(200)
         expect(response.parsed_body["signup_details_required"]).to eq(true)
-        expect(response.parsed_body["username"]).to be_present
+        expect(response.parsed_body["username"]).to be_nil
         expect(signup_token).to be_present
         expect(User.find_by_email("newuser@example.com")).to be_nil
         expect(session[:current_user_id]).to be_nil
@@ -1369,7 +1404,12 @@ RSpec.describe SessionController do
         SiteSetting.must_approve_users = true
         SiteSetting.auto_approve_email_domains = "example.com"
 
-        post "/session/login-code/verify.json", params: { email: " NEWUSER@example.com ", code: }
+        post "/session/login-code/verify.json",
+             params: {
+               email: " NEWUSER@example.com ",
+               code:,
+               username: "newuser",
+             }
 
         new_user = User.find_by_email("newuser@example.com")
         expect(response.parsed_body["account_created"]).to eq(true)
@@ -1377,71 +1417,267 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(new_user.id)
       end
 
-      it "creates and logs in a new user" do
+      it "does not allow the client to enable generated username completion" do
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               generated_username: true,
+             }
+
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["generated_username"]).to eq(false)
+        expect(
+          request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_INDEX_KEY],
+        ).to be_nil
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "rejects invalid generated candidates and falls back to manual selection after bounded retries" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+        UserNameSuggester.stubs(:suggest).returns("account-created")
+        RandomUsernameGenerator
+          .expects(:generate)
+          .times(4)
+          .returns("moderator", "account-created", "admin", "account-created")
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(
+          response.parsed_body.slice("username_required", "generated_username", "username"),
+        ).to eq("username_required" => true, "generated_username" => false, "username" => nil)
+        expect(login_code.reload.consumed_at).to be_nil
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
+      end
+
+      it "returns a fresh valid candidate when a generated username becomes route-conflicting" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+        UserNameSuggester.stubs(:suggest).returns("first-candidate", "second-candidate")
+        UsernameValidator
+          .stubs(:clashing_with_existing_route?)
+          .with("first-candidate")
+          .returns(false, true)
+        UsernameValidator
+          .stubs(:clashing_with_existing_route?)
+          .with("second-candidate")
+          .returns(false)
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "first-candidate",
+             }
+
+        expect(
+          response.parsed_body.slice("username_required", "generated_username", "username"),
+        ).to eq(
+          "username_required" => true,
+          "generated_username" => true,
+          "username" => "second-candidate",
+        )
+        expect(login_code.reload.consumed_at).to be_nil
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
+      end
+
+      it "returns a fresh generated candidate after a collision without consuming the code" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+        UserNameSuggester.stubs(:suggest).returns("first-candidate", "second-candidate")
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        Fabricate(:user, username: response.parsed_body["username"])
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "first-candidate",
+             }
+
+        expect(
+          response.parsed_body.slice("username_required", "generated_username", "username"),
+        ).to eq(
+          "username_required" => true,
+          "generated_username" => true,
+          "username" => "second-candidate",
+        )
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "second-candidate",
+               generated_username: false,
+             }
+
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(User.find_by_email("newuser@example.com").username).to eq("second-candidate")
+        expect(
+          request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_INDEX_KEY],
+        ).to be_nil
+        expect(
+          request.server_session[
+            "#{SessionController::GENERATED_USERNAME_SIGNUP_KEY_PREFIX}#{login_code.id}"
+          ],
+        ).to be_nil
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
+      end
+
+      it "clears generated proofs when a different existing account authenticates" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        proof_key = "#{SessionController::GENERATED_USERNAME_SIGNUP_KEY_PREFIX}#{login_code.id}"
+        expect(request.server_session[proof_key]).to be_present
+
+        existing_user = Fabricate(:user, email: "existing@example.com")
+        existing_code = EmailLoginCode.generate!(email: existing_user.email)
+        post "/session/login-code/verify.json",
+             params: {
+               email: existing_user.email,
+               code: existing_code.code,
+             }
+
+        expect(session[:current_user_id]).to eq(existing_user.id)
+        expect(request.server_session[proof_key]).to be_nil
+        expect(
+          request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_INDEX_KEY],
+        ).to be_nil
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
+      end
+
+      it "returns the default trust level for the deferred avatar selector" do
+        SiteSetting.default_trust_level = 1
+        SiteSetting.default_invitee_trust_level = 2
+
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
         expect(response.status).to eq(200)
-
-        new_user = User.find_by_email("newuser@example.com")
-        expect(new_user).to be_active
-        expect(session[:current_user_id]).to eq(new_user.id)
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["trust_level"]).to eq(1)
       end
 
-      it "returns the flags the account-ready step needs" do
+      it "waits for username selection before creating or authenticating an account" do
+        User.set_callback(:create, :after, :ensure_in_trust_level_group)
+
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
-        body = response.parsed_body
-        expect(body["account_created"]).to eq(true)
-        expect(body["can_edit_username"]).to eq(true)
-        # The avatar picker needs the upload permission, which isn't on
-        # UserSerializer. (Its value depends on automatic group membership,
-        # added on commit, so only assert the flag is present here.)
-        expect(body).to have_key("can_upload_avatar")
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["username"]).to be_nil
+        expect(response.parsed_body["avatar_template"]).to be_nil
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "chosen-name",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(response.parsed_body["can_upload_avatar"]).to eq(true)
+        new_user = User.find_by_email("newuser@example.com")
+        expect(new_user).to be_active
+        expect(new_user.username).to eq("chosen-name")
+        expect(session[:current_user_id]).to eq(new_user.id)
+      ensure
+        User.skip_callback(:create, :after, :ensure_in_trust_level_group)
       end
 
-      it "defers a pending DiscourseConnect provider handoff to the account-ready step" do
+      it "rejects a taken username without creating an account or consuming the code" do
+        Fabricate(:user, username: "chosen-name")
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "chosen-name",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username_errors"]).to be_present
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "defers a pending DiscourseConnect provider handoff until signup is complete" do
         payload = begin_discourse_connect_provider_handoff
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(cookies[:sso_payload]).to be_present
+        expect(session[:current_user_id]).to be_nil
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "chosen-name",
+             }
+
         body = response.parsed_body
         expect(body["account_created"]).to eq(true)
         expect(body["redirect_url"]).to end_with("/session/sso_provider?#{payload}")
-        # Consumed, so a later login isn't sent through this handoff.
         expect(cookies[:sso_payload]).to be_blank
       end
 
       it "does not derive the username from the email when email-based suggestions are off" do
+        SiteSetting.enable_random_usernames = true
         SiteSetting.use_email_for_username_and_name_suggestions = false
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
-        new_user = User.find_by_email("newuser@example.com")
-        expect(new_user.username).not_to include("newuser")
-        expect(new_user.username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+        expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
       end
 
-      it "falls back to the generic username when random usernames are disabled" do
-        SiteSetting.use_email_for_username_and_name_suggestions = false
-        SiteSetting.enable_random_usernames = false
-
-        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
-
-        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
-        # A generic placeholder isn't worth prefilling, so the client makes the
-        # user pick a username instead.
-        expect(response.parsed_body["prefill_username"]).to eq(false)
-      end
-
-      it "flags a randomly generated username for prefill" do
-        SiteSetting.use_email_for_username_and_name_suggestions = false
-
-        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
-
-        expect(response.parsed_body["prefill_username"]).to eq(true)
-      end
-
-      it "does not flag the fallback for prefill when generation is on but yields nothing" do
+      it "leaves the suggestion blank when random generation yields nothing" do
+        SiteSetting.enable_random_usernames = true
         SiteSetting.use_email_for_username_and_name_suggestions = false
         # Unicode words pass validation while unicode usernames are on, then
         # stop being usable once the site turns them off.
@@ -1452,8 +1688,9 @@ RSpec.describe SessionController do
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
-        expect(User.find_by_email("newuser@example.com").username).to match(/\Auser\d*\z/)
-        expect(response.parsed_body["prefill_username"]).to eq(false)
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["username"]).to be_nil
+        expect(User.find_by_email("newuser@example.com")).to be_nil
       end
 
       it "derives the username from the email when email-based suggestions are on" do
@@ -1461,7 +1698,7 @@ RSpec.describe SessionController do
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
-        expect(User.find_by_email("newuser@example.com").username).to eq("newuser")
+        expect(response.parsed_body["username"]).to eq("newuser")
       end
 
       it "appends a numeric suffix when the email-derived name is taken" do
@@ -1470,21 +1707,20 @@ RSpec.describe SessionController do
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
-        expect(User.find_by_email("newuser@example.com").username).to eq("newuser1")
+        expect(response.parsed_body["username"]).to eq("newuser1")
       end
 
       context "when the email can't produce a username suggestion" do
         let(:login_code) { EmailLoginCode.generate!(email: "----@example.com") }
 
-        it "assigns a random username instead of the generic fallback" do
+        it "suggests a random username instead of the generic fallback" do
+          SiteSetting.enable_random_usernames = true
           SiteSetting.use_email_for_username_and_name_suggestions = true
 
           post "/session/login-code/verify.json", params: { email: "----@example.com", code: }
 
-          expect(response.parsed_body["account_created"]).to eq(true)
-          expect(User.find_by_email("----@example.com").username).to match(
-            /\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/,
-          )
+          expect(response.parsed_body["username_required"]).to eq(true)
+          expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
         end
       end
 
@@ -1507,6 +1743,7 @@ RSpec.describe SessionController do
              params: {
                email: "newuser@example.com",
                code:,
+               username: "chosen-name",
              },
              env: {
                REMOTE_ADDR: ip_address,
@@ -1543,6 +1780,20 @@ RSpec.describe SessionController do
                  },
                }
 
+          expect(response.parsed_body["username_required"]).to eq(true)
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+          expect(login_code.reload.consumed_at).to be_nil
+
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 username: "chosen-name",
+                 user_fields: {
+                   user_field.id.to_s => "Dev",
+                 },
+               }
+
           new_user = User.find_by_email("newuser@example.com")
           expect(new_user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
           expect(session[:current_user_id]).to eq(new_user.id)
@@ -1553,6 +1804,7 @@ RSpec.describe SessionController do
                params: {
                  email: "newuser@example.com",
                  code:,
+                 username: "chosen-name",
                  user_fields: {
                    "0" => "",
                  },
@@ -1583,6 +1835,18 @@ RSpec.describe SessionController do
                  name: "Jane Doe",
                }
 
+          expect(response.parsed_body["username_required"]).to eq(true)
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+          expect(login_code.reload.consumed_at).to be_nil
+
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 username: "chosen-name",
+                 name: "Jane Doe",
+               }
+
           new_user = User.find_by_email("newuser@example.com")
           expect(new_user.name).to eq("Jane Doe")
           expect(session[:current_user_id]).to eq(new_user.id)
@@ -1593,6 +1857,7 @@ RSpec.describe SessionController do
                params: {
                  email: "newuser@example.com",
                  code:,
+                 username: "chosen-name",
                  name: "a" * 256,
                }
 
@@ -1607,6 +1872,7 @@ RSpec.describe SessionController do
                params: {
                  email: "newuser@example.com",
                  code:,
+                 username: "chosen-name",
                  name: "   ",
                }
 

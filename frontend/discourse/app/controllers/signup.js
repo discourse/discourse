@@ -37,7 +37,10 @@ export default class SignupPageController extends Controller {
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
   @tracked codeSignupStep = "email";
+  @tracked signupContext;
   @autoTrackedArray rejectedEmails = [];
+
+  queryParams = [{ signupContext: "signup_context" }];
 
   accountChallenge = 0;
   accountHoneypot = 0;
