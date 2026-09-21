@@ -76,6 +76,7 @@ module Migrations
           return if uri.present?
 
           if response.code.to_i >= 400
+            # `value` raises the matching Net::HTTP exception for error responses.
             response.value
           else
             throw :done
