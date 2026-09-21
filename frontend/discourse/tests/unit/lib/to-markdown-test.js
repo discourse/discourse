@@ -364,7 +364,7 @@ helloWorld();</code>consectetur.`;
   });
 
   test("leaves other preformatted structures unchanged", async function (assert) {
-    const { default: codeBlock } =
+    const { normalizeCodeBlockLines } =
       await import("discourse/static/prosemirror/extensions/code-block");
     const doc = new DOMParser().parseFromString(
       "<pre><code>first\n  last</code></pre><pre><code><div>first</div><div>last</div></code></pre><pre><code>first<div>last<br></div></code></pre><div>outside<br></div>",
@@ -372,7 +372,7 @@ helloWorld();</code>consectetur.`;
     );
     const original = doc.body.innerHTML;
 
-    codeBlock.transformParsedHTML(doc);
+    normalizeCodeBlockLines(doc);
 
     assert.strictEqual(
       doc.body.innerHTML,

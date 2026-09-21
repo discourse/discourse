@@ -295,8 +295,6 @@ export interface RichEditorExtension {
     | ((params: PluginParams) => Record<string, MarkSerializerSpec>);
   /** Markdown token parsers keyed by token name. */
   parse?: Record<string, RichParseSpec>;
-  /** Normalizes parsed HTML before HTML-to-Markdown conversion. */
-  transformParsedHTML?: (doc: Document) => void;
   /** ProseMirror plugins contributed by the extension. */
   plugins?: RichPlugin;
   /** Node views keyed by node name. */

@@ -195,7 +195,7 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
-function normalizeCodeBlockLines(doc) {
+export function normalizeCodeBlockLines(doc) {
   let changed = false;
 
   for (const code of doc.querySelectorAll("pre > code")) {
@@ -287,7 +287,6 @@ const extension = {
       };
     },
   }),
-  transformParsedHTML: normalizeCodeBlockLines,
   plugins: [
     ({ pmState: { Plugin } }) =>
       new Plugin({
