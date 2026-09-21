@@ -100,6 +100,31 @@ RSpec.describe DiscourseRewind::Action::TopWords do
       expect(call_report[:data].map { |word| word[:word] }).to include("chevaux", "élèves")
     end
 
+    it "shows words from locales whose search data is segmented" do
+      SiteSetting.default_locale = "ja"
+      post = Fabricate(:post, user:, raw: "東京に行きました。" * 20, created_at: random_datetime)
+      index(post)
+
+      expect(call_report[:data].map { |word| word[:word] }).to include("まし")
+    end
+
+    it "ignores unstemmed words on English sites that segment Japanese" do
+      SiteSetting.search_tokenize_japanese = true
+
+      expect(call_report[:data].map { |word| word[:word] }).to eq(
+        %w[apple orange banana grape cucumber],
+      )
+    end
+
+    it "ignores quoted words on sites whose search data is not segmented" do
+      SiteSetting.default_locale = "ko"
+      raw = "[quote=\"someone, post:1, topic:2\"]\n#{"인용 " * 20}\n[/quote]\n#{"나의 " * 5}"
+      post = Fabricate(:post, user:, raw:, created_at: random_datetime)
+      index(post)
+
+      expect(call_report[:data].map { |word| word[:word] }).to include("나의").and exclude("인용")
+    end
+
     it "only counts words from the user's publicly visible posts" do
       raw = "confidential " * 10
       [
