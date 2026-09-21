@@ -689,6 +689,67 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .exists("valid details submit for approval");
   });
 
+  test("preserves approval signup details when an account creation transformer rejects submission", async function (assert) {
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+    this.owner.lookup("service:session-store").setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "user@example.com",
+        expiresAt: Date.now() + 60_000,
+        signupToken: "signup-token",
+        username: "",
+      },
+    });
+
+    let rejected = true;
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer("create-account", async ({ next }) =>
+        rejected ? { success: false, message: "Complete the CAPTCHA" } : next()
+      );
+    });
+    let verificationRequests = 0;
+    pretender.post("/session/login-code/verify", () => {
+      verificationRequests++;
+      return response({ pending_approval: true });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn("#code-login-username", "chosen-name");
+    await waitFor(".code-login-form__submit-approval:not([disabled])");
+    await click(".code-login-form__submit-approval");
+
+    assert.false(redirect.called, "a rejected submission does not redirect");
+    assert.strictEqual(
+      verificationRequests,
+      0,
+      "rejection prevents account creation"
+    );
+    assert
+      .dom("#code-login-username")
+      .hasValue("chosen-name", "the username is preserved");
+    assert
+      .dom(".code-login-form__account-details-step")
+      .includesText(
+        "Complete the CAPTCHA",
+        "the rejection is shown for correction"
+      );
+    assert
+      .dom(".code-login-form__submit-approval")
+      .isNotDisabled("submission can be retried");
+
+    rejected = false;
+    await click(".code-login-form__submit-approval");
+
+    assert.strictEqual(
+      verificationRequests,
+      1,
+      "corrected details are submitted once"
+    );
+    assert
+      .dom(".code-login-form__pending-approval-step")
+      .exists("the retry reaches pending approval");
+  });
+
   test("ignores missing and expired signup continuations", async function (assert) {
     const sessionStore = this.owner.lookup("service:session-store");
 

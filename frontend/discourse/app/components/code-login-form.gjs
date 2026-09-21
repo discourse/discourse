@@ -771,6 +771,11 @@ export default class CodeLoginForm extends Component {
         })
       );
 
+      if (result?.success === false && result.message) {
+        this.codeError = result.message;
+        return;
+      }
+
       if (result?.pending_approval) {
         this.accountPassword = "";
         this.#clearSignupContinuation();
@@ -1393,6 +1398,11 @@ export default class CodeLoginForm extends Component {
               </div>
             {{/each}}
           </div>
+
+          <PluginOutlet
+            @name="code-login-after-code"
+            @outletArgs={{lazyHash context=@context}}
+          />
 
           <div aria-live="polite" class="code-login-form__error" role="alert">
             {{this.codeError}}
