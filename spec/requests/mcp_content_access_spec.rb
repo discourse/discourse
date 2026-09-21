@@ -480,6 +480,41 @@ describe "MCP content access" do
     expect(notifications.pluck("id")).to eq([private_notification.id, other_notification.id])
   end
 
+  it "filters private-message bookmarks before the limit unless the read scope is granted" do
+    public_bookmark = Fabricate(:bookmark, user:, updated_at: 3.minutes.ago)
+    private_topic_bookmark =
+      Fabricate(
+        :bookmark,
+        user:,
+        bookmarkable: message.topic,
+        name: "Private topic bookmark note",
+        updated_at: 2.minutes.ago,
+      )
+    private_post_bookmark =
+      Fabricate(
+        :bookmark,
+        user:,
+        bookmarkable: message,
+        name: "Private post bookmark note",
+        updated_at: 1.minute.ago,
+      )
+    authorize
+
+    call_tool("discourse_bookmark_list", { limit: 2 })
+
+    expect(response.status).to eq(200)
+    bookmarks = response.parsed_body.dig("result", "structuredContent", "bookmarks")
+    expect(bookmarks.pluck("id")).to eq([public_bookmark.id])
+    expect(response.body).not_to include(private_topic_bookmark.name, private_post_bookmark.name)
+
+    authorize("mcp:private-messages:read")
+    call_tool("discourse_bookmark_list", { limit: 2 })
+
+    expect(response.status).to eq(200)
+    bookmarks = response.parsed_body.dig("result", "structuredContent", "bookmarks")
+    expect(bookmarks.pluck("id")).to eq([private_post_bookmark.id, private_topic_bookmark.id])
+  end
+
   it "filters hidden private-message posts when category moderation is enabled" do
     SiteSetting.enable_category_group_moderation = true
     authorize("mcp:private-messages:read")

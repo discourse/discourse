@@ -1534,6 +1534,7 @@ lt:
     email_too_long: "Jūsų pateiktas el. pašto adresas per ilgas. Pašto dėžutės pavadinimai turi būti ne ilgesni kaip 254 simboliai, o domenų vardai – ne ilgesni kaip 253 simboliai."
     wrong_invite_code: "Įvestas pakvieto kodas buvo neteisingas."
     reserved_username: "Šis vartotojo vardas neleidžiamas."
+    missing_username: "Prašome įvesti vartotojo vardą"
     auth_complete: "Autentifikavimas baigtas."
     click_to_continue: "Jei norite tęsti, paspauskite čia."
     already_logged_in: "Atsiprašau! Šis kvietimas skirtas naujiems vartotojams, kurie dar neturi esamos paskyros."
@@ -2195,7 +2196,7 @@ lt:
         Administracija patvirtino jūsų paskyrą %{site_name}.
 
         Dabar galite pasiekti savo naują paskyrą prisijungę adresu:
-        %{base_url}
+        %{login_url}
 
         Jei aukščiau pateiktos nuorodos negalima spustelėti, pabandykite ją nukopijuoti ir įklijuoti į žiniatinklio naršyklės adreso juostą.
 
@@ -2671,6 +2672,8 @@ lt:
         complete: "Įrašas ištrintas."
       delete_and_agree_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
+      disagree_and_keep_deleted:
+        title: "Palikti įrašą ištrintą"
       disagree_bundle:
         title: "Ne"
       ignore:

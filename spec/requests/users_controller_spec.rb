@@ -471,6 +471,26 @@ RSpec.describe UsersController do
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(1)
       end
 
+      it "rejects a password reset after a previewed token is superseded" do
+        new_password = "attacker-controlled-password"
+
+        get "/u/password-reset/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+
+        post "/session/forgot_password.json", params: { login: user1.username }
+        expect(response.status).to eq(200)
+        expect(email_token.reload.expired).to eq(true)
+
+        put "/u/password-reset/#{email_token.token}.json", params: { password: new_password }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("password_reset.no_token", base_url: Discourse.base_url),
+        )
+        expect(user1.reload.confirm_password?(new_password)).to eq(false)
+      end
+
       context "with rate limiting" do
         before { RateLimiter.enable }
 
@@ -4700,6 +4720,38 @@ RSpec.describe UsersController do
         SiteSetting.email_editable = true
 
         sign_in(user1)
+      end
+
+      it "invalidates password reset links for a demoted primary email" do
+        old_email = user1.email
+        new_primary_email = other_email.email
+        password_reset_token =
+          Fabricate(
+            :email_token,
+            user: user1,
+            email: old_email,
+            scope: EmailToken.scopes[:password_reset],
+          ).token
+
+        put "/u/#{user1.username}/preferences/primary-email.json",
+            params: {
+              email: new_primary_email,
+            }
+
+        expect(response.status).to eq(200)
+        expect(user1.reload.email).to eq(new_primary_email)
+
+        sign_out
+        new_password = SecureRandom.hex
+        put "/u/password-reset/#{password_reset_token}.json", params: { password: new_password }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("password_reset.no_token", base_url: Discourse.base_url),
+        )
+        expect(user1.reload.emails).to contain_exactly(old_email, new_primary_email)
+        expect(user1.confirm_password?(new_password)).to eq(false)
       end
 
       it "changes user's primary email" do

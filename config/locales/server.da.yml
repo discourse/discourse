@@ -1741,6 +1741,7 @@ da:
     password_too_long: "Kodeord er begrænset til 200 tegn."
     email_too_long: "Den mailadresse, du har opgivet, er for lang. Navnet i mailadressen må ikke overstige 254 tegn, og domænenavnet må ikke overstige 253 tegn."
     reserved_username: "Dette brugernavn er ikke tilladt."
+    missing_username: "Indtast venligst et brugernavn"
     auth_complete: "Godkendelsen er gennemført."
     click_to_continue: "Klik her for at fortsætte."
     second_factor_title: "To-faktor Godkendelse"
@@ -2746,7 +2747,7 @@ da:
         En medarbejder godkendte din konto på %{site_name}..
 
         Du kan nu få adgang til din nye konto ved at logge ind på:
-        %{base_url}
+        %{login_url}
 
         Hvis ovenstående link ikke kan klikkes på, kan du prøve at kopiere og indsætte den i adresselinjen i din webbrowser.
 

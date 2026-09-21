@@ -71,6 +71,7 @@ zh_CN:
   site_settings:
     ai_ask_ai_report_weekly_enabled: "每周自动生成一份“Ask AI”报告，涵盖过去七天的完整数据。报告会显示在仪表盘上。如果在 {{setting:ai_ask_ai_report_recipient_groups}}中选择了群组，这些群组还会收到一条私信。此功能需要启用“Ask AI”并配置报告语言模型。手动生成报告的功能仍然可用。"
     ai_ask_ai_report_agent: "用于将用户问题分组到 Ask AI 控制面板报告中的代理。"
+    ai_ask_ai_report_exclude_groups: "从新的“Ask AI”报告中排除这些群组成员提出的问题。留空则包含所有人的问题。"
     ai_ask_ai_report_max_asks: "每份报告分析的最大请求数。使用所选时间段内的所有请求，或截至此限制的最新请求，以较少者为准。较大的报告需要更多模型上下文信息，因此可能费用更高。"
     ai_ask_ai_report_recipient_groups: "接收每周自动发送的报告私信的群组，也可添加到手动发送的报告私信中。报告包含用户提出的问题。留空则仅在仪表盘上显示自动报告。"
     discourse_ai_enabled: "启用 Discourse AI 插件。"
@@ -287,7 +288,7 @@ zh_CN:
   discourse_ai:
     ask_ai_reports:
       no_model: "在生成报告之前，请配置默认的AI语言模型。"
-      no_asks: "这段时间内没有提出任何要求。"
+      no_asks: "此期间没有符合报告设置的问题。"
       title: "用户提问： %{start} – %{end}"
       coverage: "分析了本阶段最新的 %{count} 个 %{total} 问题。问题可能涉及多个学科。"
       ungrouped_name: "未分组的问题"

@@ -36,6 +36,8 @@ sk:
         ```text
         %{logs}
         ````
+    discourse_post_event_reminder:
+      title: "Pripomenutie udalosti"
   site_settings:
     map_events_to_color: "Priraďte farbu každej značke alebo kategórii."
     map_events_title: "Prepíše „Udalosti“ v názve bočného panela „Nadchádzajúce udalosti“ pre každú kategóriu."
@@ -63,6 +65,17 @@ sk:
     event_participation_buttons: "Zoznam tlačidiel účasti na udalosti, ktoré môžu používatelia používať."
     sidebar_show_upcoming_events: "Zobrazenie odkazu na nadchádzajúce udalosti v bočnom paneli v časti \"Viac\"."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} sa práve začína"
+        ongoing: "%{title} práve prebieha"
+        after: "%{title} sa skončila"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  a %{count} iné"
+        few: "  a %{count} ďalšie"
+        many: "  a %{count} ďalších"
+        other: "  a %{count} ďalších"
     category_type:
       default_calendar_view:
         day: "Deň"

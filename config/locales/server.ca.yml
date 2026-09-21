@@ -2413,7 +2413,7 @@ ca:
     signup_after_approval:
       title: "Registre després d'aprovació"
       subject_template: "El vostre compte ha estat aprovat en %{site_name}!"
-      text_body_template: "Benvingut a %{site_name}!\n\nUn membre de l'equip responsable ha aprovat el vostre compte en %{site_name}. \n\nAra podeu accedir al compte nou iniciant sessió en: \n%{base_url} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del navegador web. \n\n%{new_user_tips} \n\nCreiem en el [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n"
+      text_body_template: "Benvingut a %{site_name}!\n\nUn membre de l'equip responsable ha aprovat el vostre compte en %{site_name}. \n\nAra podeu accedir al compte nou iniciant sessió en: \n%{login_url} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del navegador web. \n\n%{new_user_tips} \n\nCreiem en el [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n"
     signup:
       title: "Registre"
       subject_template: "[%{email_prefix}] Confirmeu el vostre compte nou"

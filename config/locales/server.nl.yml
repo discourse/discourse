@@ -2830,6 +2830,7 @@ nl:
     wrong_invite_code: "De ingevoerde code is ongeldig."
     reserved_username: "Die gebruikersnaam is niet toegestaan."
     missing_user_field: "Je hebt niet alle verplichte gebruikersvelden ingevuld"
+    missing_username: "Voer een gebruikersnaam in"
     auth_complete: "Authenticatie is voltooid."
     click_to_continue: "Klik hier om door te gaan."
     already_logged_in: "Sorry! Deze uitnodiging is bedoeld voor nieuwe gebruikers die nog geen bestaand account hebben."
@@ -4307,7 +4308,7 @@ nl:
         Een medewerker heeft je account op %{site_name} goedgekeurd.
 
         Je kunt nu toegang krijgen tot je nieuwe account door je aan te melden op:
-        %{base_url}
+        %{login_url}
 
         Als je niet op de bovenstaande link kunt klikken, kopieer en plak deze dan in de adresbalk van je webbrowser.
 
@@ -5145,6 +5146,8 @@ nl:
         title: "Bericht herstellen"
         description: "Niet akkoord met markering en bericht herstellen"
         complete: "Bericht hersteld."
+      disagree_and_keep_deleted:
+        title: "Bericht verwijderd houden"
       disagree_bundle:
         title: "Nee"
       disagree:

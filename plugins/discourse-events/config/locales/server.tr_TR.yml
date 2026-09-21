@@ -40,6 +40,8 @@ tr_TR:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Etkinlik hatırlatıcısı"
   site_settings:
     map_events_to_color: "Her etikete veya kategoriye bir renk atayın."
     map_events_title: "Her kategori için \"Yaklaşan Etkinlikler\" kenar çubuğu başlığındaki \"Etkinlikler\"in üzerine yazar."
@@ -69,6 +71,15 @@ tr_TR:
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
     calendar_first_day_of_week: "Takvim görüntüsü için haftanın ilk gününü ayarlayın. Seçenekler Cumartesi, Pazar veya Pazartesi'dir."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} başlamak üzere"
+        ongoing: "%{title} devam ediyor"
+        after: "%{title} sona erdi"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  ve %{count} üye daha"
+        other: "  ve %{count} üye daha"
     category_type:
       default_calendar_view:
         day: "Gün"

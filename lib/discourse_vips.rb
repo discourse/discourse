@@ -161,7 +161,7 @@ module DiscourseVips
         timeout:,
         nice: 10,
       )
-      File.rename(output.path, output_path)
+      FileUtils.copy_file(output.path, output_path)
     end
     nil
   end

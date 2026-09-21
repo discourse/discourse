@@ -13,6 +13,11 @@ th:
             topic_id:
               label: หมายเลขกระทู้
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "การแจ้งเตือน"
+            none: "ไม่มี"
       disable_holiday: "ปิดใช้งาน"
       enable_holiday: "เปิดใช้งาน"
       date: "วันที่"

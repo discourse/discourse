@@ -36,6 +36,8 @@ fi:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Tapahtumamuistutus"
   site_settings:
     map_events_to_color: "Määritä jokaiselle tunnisteelle tai alueelle väri."
     map_events_title: "Korvaa \"Tapahtumat\" \"Tulevat tapahtumat\" -sivupalkin otsikossa aluekohtaisesti."
@@ -63,6 +65,15 @@ fi:
     event_participation_buttons: "Luettelo tapahtuman osallistumispainikkeista, joita käyttäjät voivat käyttää."
     sidebar_show_upcoming_events: "Näytä tulevat tapahtumat -linkki sivupalkissa Lisää-kohdan alla."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} on alkamassa"
+        ongoing: "%{title} on käynnissä"
+        after: "%{title} on päättynyt"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  ja %{count} muu"
+        other: "  ja %{count} muuta"
     category_type:
       default_calendar_view:
         day: "Päivä"

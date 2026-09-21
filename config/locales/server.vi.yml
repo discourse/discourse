@@ -1642,6 +1642,7 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     wrong_invite_code: "Mã mời bạn đã nhập không chính xác."
     reserved_username: "Tên đăng nhập không được cho phép."
+    missing_username: "Vui lòng nhập tên người dùng"
     missing_full_name: "Vui lòng nhập đầy đủ họ và tên"
     auth_complete: "Xác thực đã hoàn tất."
     click_to_continue: "Nhấn vào đây để tiếp tục."
@@ -2821,6 +2822,9 @@ vi:
         complete: "Tút đã bị xóa."
       delete_and_agree_replies:
         confirm: "Bạn có chắc muốn xóa các câu trả lời của tút?"
+      disagree_and_keep_deleted:
+        title: "Giữ tút bị xóa"
+        complete: "Đã giữ nguyên trạng thái xóa bài viết."
       disagree_bundle:
         title: "Không"
       ignore:

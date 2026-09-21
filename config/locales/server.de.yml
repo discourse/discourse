@@ -3108,6 +3108,7 @@ de:
     wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
     reserved_username: "Der Benutzername ist nicht erlaubt."
     missing_user_field: "Du hast nicht alle erforderlichen Benutzerfelder ausgefüllt"
+    missing_username: "Bitte einen Benutzernamen eingeben"
     missing_full_name: "Bitte gib deinen vollständigen Namen ein"
     auth_complete: "Authentifizierung ist abgeschlossen."
     click_to_continue: "Klicke hier, um fortzufahren."
@@ -4603,7 +4604,7 @@ de:
         Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} genehmigt.
 
         Du kannst dein neues Konto nun verwenden, indem du dich hier anmeldest:
-        %{base_url}
+        %{login_url}
 
         Wenn sich der oben stehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Browsers einzufügen.
 
@@ -5727,6 +5728,9 @@ de:
         title: "Beitrag wiederherstellen"
         description: "Der Meldung widersprechen und den Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt."
+      disagree_and_keep_deleted:
+        title: "Beitrag gelöscht lassen"
+        complete: "Beitrag gelöscht gelassen."
       disagree_bundle:
         title: "Nein"
       disagree:

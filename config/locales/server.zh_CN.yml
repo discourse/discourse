@@ -19,6 +19,8 @@ zh_CN:
       filter_required: "筛选视图需要一个非空白的筛选器。"
       invalid_post_selection: "帖子选择选项无效"
       invalid_search_query: "搜索查询无效"
+      invalid_reviewable_status: "可审核状态无效"
+      invalid_reviewable_type: "可审核类型无效"
       group_mailbox_sent: "群组私信邮箱不支持已发送消息"
       invalid_upload_data: "上传的数据不是有效的 base64 编码。"
       invalid_upload_source: "请提供带有文件名的 base64 编码数据或一个远程 URL。"
@@ -30,6 +32,26 @@ zh_CN:
       private_message_not_found: "未找到私人消息"
       private_message_recipient_required: "至少需要一位私信接收者"
       private_message_single_recipient: "请提供一个用户、群组或电子邮件收件人"
+      post_revision_not_found: "未找到修订后的帖子"
+      reviewable_action_failed: "可审核操作失败"
+      reviewable_action_unavailable: "可审核的操作已不可用"
+      reviewable_confirmation_required: "需要明确确认才能进行可审核的操作"
+      reviewable_conflict: "自上次阅读以来，可审核内容已发生更改。"
+      reviewable_fields_unavailable: "以下字段不被审核操作接受： %{fields}"
+      reviewable_not_found: "未找到可审核内容"
+      reviewable_reject_reason_required: "此操作需要提供拒绝理由。"
+      site_setting_confirmation_required: "此站点设置需要明确确认"
+      site_setting_change_confirmation_required: "更改网站设置需要明确确认。"
+      site_setting_conflict: "自上次阅读以来，网站设置已更改。"
+      site_setting_dependency: "这些站点设置依赖项未满足： %{settings}"
+      site_setting_no_change: "请求的网站设置更改无效。"
+      site_setting_not_found: "未找到网站设置"
+      site_setting_sensitive: "此工具无法读取或更改敏感的网站设置。"
+      site_setting_type_unsupported: "此工具无法更改此站点设置类型。"
+      site_setting_update_failed: "网站设置无法更新"
+      site_setting_value_forbidden: "重置站点设置时，请勿提供值。"
+      site_setting_value_required: "设置站点设置时，请提供值"
+      site_setting_verification_failed: "无法验证站点设置更新。"
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
@@ -3152,6 +3174,7 @@ zh_CN:
     wrong_invite_code: "您输入的邀请码不正确。"
     reserved_username: "不允许使用该用户名。"
     missing_user_field: "您尚未填写所有必填用户字段"
+    missing_username: "请输入一个用户名"
     missing_full_name: "请输入您的全名"
     auth_complete: "身份验证完成。"
     click_to_continue: "点击此处继续。"
@@ -4655,7 +4678,7 @@ zh_CN:
         管理人员批准了您在 %{site_name} 上的帐户。
 
         您现在可以通过以下网址访问您的新帐户：
-        %{base_url}
+        %{login_url}
 
         如果无法点击以上链接，请尝试将其复制并粘贴到您的网络浏览器的地址栏中。
 
@@ -5519,6 +5542,10 @@ zh_CN:
         title: "恢复帖子"
         description: "不同意举报，并恢复帖子"
         complete: "帖子已恢复。"
+      disagree_and_keep_deleted:
+        title: "保持帖子删除"
+        description: "不同意举报，请删除帖子。"
+        complete: "帖子保持删除状态。"
       disagree_bundle:
         title: "否"
       disagree:
