@@ -331,11 +331,14 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def hidden_tags
-    @hidden_tags ||= DiscourseTagging.hidden_tag_names(scope)
+    @hidden_tags ||= Tag.where.not(id: DiscourseTagging.filter_visible(Tag, scope)).pluck(:name)
   end
 
   def filter_tags(tags)
-    tags.is_a?(Array) && tags.any? ? tags - hidden_tags : tags
+    return tags unless tags.is_a?(Array) && tags.any?
+
+    tags = DiscourseTagging.filter_visible(Tag.where(name: tags), scope).pluck(:name)
+    tags & DiscourseTagging.visible_tags(scope).where(name: tags).pluck(:name)
   end
 
   def filter_category_id(category_id)
