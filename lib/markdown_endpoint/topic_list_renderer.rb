@@ -60,7 +60,7 @@ module MarkdownEndpoint
     end
 
     def render_topic(topic)
-      lines = ["## [#{escape_text(topic.title)}](#{topic.url})"]
+      lines = ["## [#{escape_text(EmojiConverter.convert(topic.title))}](#{topic.url})"]
       lines.concat(["", '<div class="topic-metadata">', ""])
       metadata = []
       if topic.user

@@ -56,9 +56,7 @@ module MarkdownEndpoint
         .css("img.emoji")
         .each do |image|
           shortcode = image["title"] || image["alt"] || ""
-          name, tone = shortcode.delete_prefix(":").delete_suffix(":").split(":", 2)
-          unicode = Emoji.lookup_unicode([Emoji.resolve_alias(name), tone].compact.join(":"))
-          image.replace(preserved_inline(unicode || shortcode))
+          image.replace(preserved_inline(EmojiConverter.convert(shortcode)))
         end
     end
 

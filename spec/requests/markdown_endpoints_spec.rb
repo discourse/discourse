@@ -32,6 +32,21 @@ RSpec.describe "Markdown endpoints" do
     response.headers.fetch("Vary", "").split(",").map(&:strip)
   end
 
+  it "converts emoji in topic headings and list links while preserving Markdown escaping" do
+    topic.update_columns(title: "Emoji [demo] :smile: :wave:t4: :thumbsup:t6: :custom_emoji:")
+    title = "Emoji \\[demo\\] 😄 👋🏽 👍🏿 :custom\\_emoji:"
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to start_with("# #{title}\n")
+
+    get "/latest.md"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("## [#{title}](#{topic.url})")
+  end
+
   it "serves latest topics for Markdown requests to the homepage" do
     get "/", headers: { "ACCEPT" => "text/markdown" }
 
