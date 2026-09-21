@@ -149,15 +149,16 @@ export type StateFunction = (
 ) => Record<string, unknown>;
 
 type RichPluginValue = Plugin | PluginSpec<unknown>;
-export type RichPlugin =
+type RichPluginFactory = (
+  params: PluginParams
+) =>
   | RichPluginValue
   | RichPluginValue[]
-  | ((
-      params: PluginParams
-    ) =>
-      | RichPluginValue
-      | RichPluginValue[]
-      | Promise<RichPluginValue | RichPluginValue[]>);
+  | Promise<RichPluginValue | RichPluginValue[]>;
+export type RichPlugin =
+  | RichPluginValue
+  | RichPluginFactory
+  | (RichPluginValue | RichPluginFactory)[];
 
 export type ParseFunction = (
   state: unknown,
@@ -294,6 +295,8 @@ export interface RichEditorExtension {
     | ((params: PluginParams) => Record<string, MarkSerializerSpec>);
   /** Markdown token parsers keyed by token name. */
   parse?: Record<string, RichParseSpec>;
+  /** Normalizes parsed HTML before HTML-to-Markdown conversion. */
+  transformParsedHTML?: (doc: Document) => void;
   /** ProseMirror plugins contributed by the extension. */
   plugins?: RichPlugin;
   /** Node views keyed by node name. */

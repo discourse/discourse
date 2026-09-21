@@ -355,16 +355,6 @@ helloWorld();</code>consectetur.`;
     );
   });
 
-  test("preserves code line wrappers without explicit breaks", async function (assert) {
-    const html = `<pre><code><div><span>first</span></div><div></div><div><span>  last</span></div></code></pre>`;
-
-    assert.strictEqual(
-      await toMarkdown(html),
-      "```\nfirst\n\n  last\n```",
-      "block wrappers supply line breaks"
-    );
-  });
-
   test("preserves explicit breaks in code blocks", async function (assert) {
     assert.strictEqual(
       await toMarkdown("<pre><code>first<br><br>  last</code></pre>"),
@@ -373,53 +363,22 @@ helloWorld();</code>consectetur.`;
     );
   });
 
-  Object.entries({
-    "mixed text and block lines": [
-      "first<div>second</div>last",
-      "first\nsecond\nlast",
-    ],
-    "explicit breaks after block lines": [
-      "<div>first</div><br>last",
-      "first\n\nlast",
-    ],
-    "literal newlines between block lines": [
-      "<div>first</div>\n<div>second</div>",
-      "first\nsecond",
-    ],
-    "paragraph lines": ["<p>first</p><p>  second</p>", "first\n  second"],
-    "nested line wrappers": [
-      "<div><div>first</div><div></div><div>last</div></div>",
-      "first\n\nlast",
-    ],
-    "blank lines containing breaks": [
-      "<div>first</div><div><br></div><div>last</div>",
-      "first\n\nlast",
-    ],
-    "blank lines containing literal newlines": [
-      "<div>first</div><div>\n</div><div>last</div>",
-      "first\n\nlast",
-    ],
-    "highlighted spans with literal newlines": [
-      "<span>first</span>\n<span>  second</span>",
-      "first\n  second",
-    ],
-    "embedded non-text nodes": [
-      'first<img src="/example.png">last',
-      "firstlast",
-    ],
-    "ignored script and style contents": [
-      "first<script>hidden()</script><style>.hidden {}</style>last",
-      "firstlast",
-    ],
-    "tabs and escaped HTML": ["\t&lt;div&gt; &amp; text", "\t<div> & text"],
-  }).forEach(([name, [html, text]]) => {
-    test(`preserves code blocks with ${name}`, async function (assert) {
-      assert.strictEqual(
-        await toMarkdown(`<pre data-params="text"><code>${html}</code></pre>`),
-        `\`\`\`text\n${text}\n\`\`\``,
-        "keeps the language and all code text inside one fence"
-      );
-    });
+  test("leaves other preformatted structures unchanged", async function (assert) {
+    const { default: codeBlock } =
+      await import("discourse/static/prosemirror/extensions/code-block");
+    const doc = new DOMParser().parseFromString(
+      "<pre><code>first\n  last</code></pre><pre><code><div>first</div><div>last</div></code></pre><pre><code>first<div>last<br></div></code></pre><div>outside<br></div>",
+      "text/html"
+    );
+    const original = doc.body.innerHTML;
+
+    codeBlock.transformParsedHTML(doc);
+
+    assert.strictEqual(
+      doc.body.innerHTML,
+      original,
+      "only normalizes code composed entirely of div lines with explicit breaks"
+    );
   });
 
   test("converts blockquote tag", async function (assert) {

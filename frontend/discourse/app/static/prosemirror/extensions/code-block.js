@@ -1,7 +1,6 @@
 import { setBlockType, toggleMark } from "prosemirror-commands";
 import { highlightPlugin } from "prosemirror-highlightjs";
 import { schema as markdownSchema } from "prosemirror-markdown";
-import { Fragment } from "prosemirror-model";
 import { TextSelection } from "prosemirror-state";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 
@@ -196,77 +195,28 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
-function codeBlockContent(dom, schema) {
-  let text = "";
-  let pendingBreak = false;
+function normalizeCodeBlockLines(doc) {
+  let changed = false;
 
-  function appendText(value) {
-    if (!value) {
-      return;
-    }
-
+  for (const code of doc.querySelectorAll("pre > code")) {
+    const lines = [...code.childNodes];
     if (
-      pendingBreak &&
-      text &&
-      !text.endsWith("\n") &&
-      !value.startsWith("\n")
+      !lines.length ||
+      !lines.every(
+        (line) => line.nodeName === "DIV" && line.lastChild?.nodeName === "BR"
+      )
     ) {
-      text += "\n";
+      continue;
     }
-    text += value;
-    pendingBreak = false;
+
+    // Each line already has an explicit break; block wrappers would split the code block.
+    for (const line of lines) {
+      line.replaceWith(...line.childNodes);
+    }
+    changed = true;
   }
 
-  function visit(node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      appendText(node.nodeValue.replace(/\r\n?/g, "\n"));
-      return;
-    }
-
-    if (
-      node.nodeType !== Node.ELEMENT_NODE ||
-      node.matches("head, noscript, object, script, style, title")
-    ) {
-      return;
-    }
-
-    if (node.tagName === "BR") {
-      if (pendingBreak && text && !text.endsWith("\n")) {
-        text += "\n";
-      }
-      appendText("\n");
-      return;
-    }
-
-    const isBlock = node.matches(
-      "address, article, aside, blockquote, dd, div, dl, dt, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, li, main, nav, ol, p, pre, section, table, tr, ul"
-    );
-    if (isBlock) {
-      if (text && !text.endsWith("\n")) {
-        text += "\n";
-      }
-      pendingBreak = false;
-    }
-
-    const start = text.length;
-    for (const child of node.childNodes) {
-      visit(child);
-    }
-
-    if (isBlock) {
-      if (text.length === start) {
-        text += "\n";
-      }
-      pendingBreak = true;
-    }
-  }
-
-  // Only text belongs inside code blocks; parsing nested elements can close them.
-  for (const child of dom.childNodes) {
-    visit(child);
-  }
-
-  return text ? Fragment.from(schema.text(text)) : Fragment.empty;
+  return changed;
 }
 
 function convertSelectionToCodeBlock(schema) {
@@ -301,10 +251,6 @@ const extension = {
     code_block: {
       createGapCursor: true,
       ...markdownSchema.nodes.code_block.spec,
-      parseDOM: markdownSchema.nodes.code_block.spec.parseDOM.map((rule) => ({
-        ...rule,
-        getContent: codeBlockContent,
-      })),
     },
   },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
@@ -341,22 +287,34 @@ const extension = {
       };
     },
   }),
-  async plugins({ getContext }) {
-    return highlightPlugin(
-      (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
-      ["code_block", "html_block", "preview_source"],
+  transformParsedHTML: normalizeCodeBlockLines,
+  plugins: [
+    ({ pmState: { Plugin } }) =>
+      new Plugin({
+        props: {
+          transformPastedHTML(html) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            return normalizeCodeBlockLines(doc) ? doc.body.innerHTML : html;
+          },
+        },
+      }),
+    async ({ getContext }) => {
+      return highlightPlugin(
+        (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
+        ["code_block", "html_block", "preview_source"],
 
-      // NOTE: If the language has not been set with the code block, we default to plain
-      // text rather than autodetecting. This is to work around an infinite loop issue
-      // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
-      // for > 10 seconds, for example:
-      //
-      // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
-      //
-      // We can remove this if we find some other workaround.
-      (node) => node.attrs.params || "text"
-    );
-  },
+        // NOTE: If the language has not been set with the code block, we default to plain
+        // text rather than autodetecting. This is to work around an infinite loop issue
+        // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
+        // for > 10 seconds, for example:
+        //
+        // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
+        //
+        // We can remove this if we find some other workaround.
+        (node) => node.attrs.params || "text"
+      );
+    },
+  ],
 };
 
 export default extension;
