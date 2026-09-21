@@ -20,6 +20,7 @@ module DiscourseRewind
         most_viewed_tags =
           TopicViewItem
             .joins(:topic)
+            .merge(Topic.listable_topics.secured)
             .joins("INNER JOIN topic_tags ON topic_tags.topic_id = topics.id")
             .joins("INNER JOIN tags ON tags.id = topic_tags.tag_id")
             .where(user: user, viewed_at: date, tags: { id: Tag.visible(Guardian.new).pluck(:id) })
