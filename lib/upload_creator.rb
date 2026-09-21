@@ -391,7 +391,7 @@ class UploadCreator
     opts = { quality: target_quality } if target_quality
 
     read = [@file.path]
-    write = [File.dirname(jpeg_tempfile.path)]
+    write = [jpeg_tempfile.path]
 
     begin
       execute_convert(from, to, opts, read:, write:)
@@ -421,7 +421,7 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(from, to)
 
     read = [@file.path]
-    write = [File.dirname(jpeg_tempfile.path)]
+    write = [jpeg_tempfile.path]
 
     begin
       execute_convert(from, to, {}, read:, write:)
