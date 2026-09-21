@@ -5774,6 +5774,7 @@ pl_PL:
       no_description: "Proszę dodaj opis do tej kategorii."
       change_in_category_topic: "Edytuj opis"
       latest_topics: "Ostatnie tematy"
+      view_all_topics: "Wyświetl wszystkie tematy (%{number})"
       description_updated: "Opis zaktualizowano"
       description_expand: "Pokaż więcej"
       description_collapse: "Pokaż mniej"
