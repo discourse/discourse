@@ -2,13 +2,22 @@
 
 module MarkdownEndpoint
   class TopicListRenderer
-    def initialize(topics:, title:, url:, page:, next_page_url: nil, previous_page_url: nil)
+    def initialize(
+      topics:,
+      title:,
+      url:,
+      page:,
+      next_page_url: nil,
+      previous_page_url: nil,
+      user: nil
+    )
       @topics = topics.to_a
       @title = title
       @url = url
       @page = page.to_i
       @next_page_url = next_page_url
       @previous_page_url = previous_page_url
+      @timestamp = Timestamp.new(user)
       preload_users
     end
 
@@ -52,11 +61,17 @@ module MarkdownEndpoint
 
     def render_topic(topic)
       lines = ["## [#{escape_text(topic.title)}](#{topic.url})"]
-      lines << ""
+      lines.concat(["", '<div class="topic-metadata">', ""])
+      metadata = []
       if topic.user
-        lines << "**Author:** [@#{escape_text(topic.user.username)}](#{topic.user.full_url})"
+        metadata << "**Author:** [@#{escape_text(topic.user.username)}](#{topic.user.full_url})"
       end
-      lines << "**Last posted:** #{topic.last_posted_at.iso8601}" if topic.last_posted_at
+      metadata << "**#{I18n.t("markdown_endpoints.replies")}:** #{[topic.posts_count - 1, 0].max}"
+      if topic.last_posted_at
+        metadata << "**#{I18n.t("markdown_endpoints.last_updated")}:** #{@timestamp.render(topic.last_posted_at, url: topic.url)}"
+      end
+      lines << metadata.join("\\\n")
+      lines.concat(["", "</div>"])
       excerpt = Nokogiri::HTML5.fragment(topic.excerpt.to_s).text.squish
       lines.concat(["", escape_text(excerpt)]) if excerpt.present?
       lines.join("\n")

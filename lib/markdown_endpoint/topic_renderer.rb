@@ -10,6 +10,7 @@ module MarkdownEndpoint
       @guardian = guardian
       @post_number = post_number&.to_i
       @query = query
+      @timestamp = Timestamp.new(guardian.user)
     end
 
     def render
@@ -62,7 +63,7 @@ module MarkdownEndpoint
       lines << "**Category:** #{escape_text(@topic.category.name)}" if @topic.category
       tags = @topic_view.visible_tags.map(&:name)
       lines << "**Tags:** #{tags.map { |tag| escape_text(tag) }.join(", ")}" if tags.present?
-      lines << "**Created:** #{@topic.created_at.iso8601}"
+      lines << "**Created:** #{@timestamp.render(@topic.created_at, url: @topic.url)}"
       lines << "**Posts on this page:** #{visible_post_count}"
       lines << "**Page:** #{@topic_view.page}" unless single_post?
       lines << "**Showing post:** #{@post_number}" if single_post?
@@ -73,9 +74,19 @@ module MarkdownEndpoint
       serializer = BasicPostSerializer.new(post, scope: @guardian, root: false)
       serializer.topic_view = @topic_view
       cooked = serializer.cooked.to_s
-      author = " by [@#{escape_text(post.user.username)}](#{post.user.full_url})" if post.user
-      heading = "## Post #{post.post_number}#{author} - #{post.created_at.iso8601}"
-      "#{heading}\n\n#{cached_body(cooked)}"
+      lines = ['<div class="post-metadata">', ""]
+      if post.user
+        avatar_url = UrlHelper.absolute(post.user.avatar_template.gsub("{size}", "32"))
+        avatar_url = "#{Discourse.base_protocol}:#{avatar_url}" if avatar_url.start_with?("//")
+        avatar_url = URI::DEFAULT_PARSER.escape(avatar_url, /[\s<>"()\\]/)
+        author = escape_text(post.user.username)
+        author_link = "![#{author}](#{avatar_url}) [@#{author}](#{post.user.full_url})"
+        lines << "### #{I18n.t("markdown_endpoints.post_author", author: author_link)}"
+      end
+      lines << "#### #{I18n.t("markdown_endpoints.post_date", timestamp: @timestamp.render(post.created_at, url: post.full_url))}"
+      lines.concat(["", "</div>", ""])
+      lines << cached_body(cooked)
+      lines.join("\n")
     end
 
     def cached_body(cooked)

@@ -29,6 +29,7 @@ module TopicListResponder
         render_markdown(
           MarkdownEndpoint::TopicListRenderer.new(
             topics: list.topics,
+            user: current_user,
             title: title,
             url: markdown_alternate_url,
             page: params[:page],

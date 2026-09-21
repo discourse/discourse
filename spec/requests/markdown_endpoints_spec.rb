@@ -250,6 +250,7 @@ RSpec.describe "Markdown endpoints" do
 
   it "links topic and post authors to subfolder-safe user profiles" do
     set_subfolder "/forum"
+    SiteSetting.external_system_avatars_url = ""
     author = Fabricate(:user, username: "reply_author")
     reply = Fabricate(:post, topic: topic, user: author)
 
@@ -257,23 +258,115 @@ RSpec.describe "Markdown endpoints" do
     expect(response.body).to include(
       "**Author:** [@#{user.username}](#{Discourse.base_url}/u/#{user.encoded_username})",
     )
+    expect(response.body).not_to include("![")
 
     get "/t/#{topic.slug}/#{topic.id}.md"
     expect(response.body).to include(
-      "## Post 1 by [@#{user.username}](#{Discourse.base_url}/u/#{user.encoded_username})",
-      "## Post #{reply.post_number} by [@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
+      "[@#{user.username}](#{Discourse.base_url}/u/#{user.encoded_username})",
+      "### Author: ![reply\\_author](#{Discourse.base_url}/letter_avatar/reply_author/32/#{LetterAvatar.version}.png) [@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
+      "\n#### Post date: ",
     )
 
     get "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md"
     expect(response.body).to include(
-      "by [@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
+      "[@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
     )
 
     reply.update_columns(user_id: nil)
     get "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md"
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("## Post #{reply.post_number} - ")
-    expect(response.body).not_to include("by [@")
+    expect(response.body).to include("#### Post date: ")
+    expect(response.body).not_to include("### Author:")
+  end
+
+  it "wraps list metadata separately from titles and excerpts with Markdown block boundaries" do
+    topic.update!(excerpt: "An excerpt outside metadata", last_posted_at: post.created_at)
+
+    get "/latest.md"
+
+    metadata = response.body.scan(%r{<div class="topic-metadata">\n\n(.*?)\n\n</div>}m)
+    expect(metadata.size).to eq(1)
+    expect(metadata.first.first).to include("**Author:**", "**Replies:**", "**Last updated:**")
+    expect(metadata.first.first).to include("\\\n**Replies:**", "\\\n**Last updated:**")
+    expect(metadata.first.first).not_to include(topic.title, topic.excerpt)
+    expect(response.body).to include(
+      "## [#{topic.title}](#{topic.url})\n\n<div class=\"topic-metadata\">",
+      "</div>\n\n#{topic.excerpt}",
+    )
+  end
+
+  it "wraps each post's headings separately from its body with Markdown block boundaries" do
+    reply = Fabricate(:post, topic: topic, user: user, raw: "Another visible body")
+
+    [
+      "/t/#{topic.slug}/#{topic.id}.md",
+      "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md",
+    ].each do |path|
+      get path
+
+      posts = path.end_with?("/#{reply.post_number}.md") ? [reply] : [post, reply]
+      metadata = response.body.scan(%r{<div class="post-metadata">\n\n(.*?)\n\n</div>}m).flatten
+      expect(metadata.size).to eq(posts.size)
+      posts
+        .zip(metadata)
+        .each do |rendered_post, block|
+          expect(block).to include("### Author: ![", "\n#### Post date: ")
+          expect(block).not_to include(rendered_post.raw)
+          expect(response.body).to include("</div>\n\n#{rendered_post.raw}")
+        end
+    end
+  end
+
+  it "uses absolute, Markdown-safe URLs for custom post avatars" do
+    SiteSetting.default_avatars = "//cdn.example.com/avatar(1).png"
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+
+    expect(response.body).to include(
+      "### Author: ![#{user.username}](#{Discourse.base_protocol}://cdn.example.com/avatar%281%29.png)",
+    )
+  end
+
+  it "formats timestamps in the reader's timezone with precise link titles and list reply counts" do
+    timestamp = Time.utc(2026, 7, 15, 16, 30, 45)
+    post.update_columns(created_at: timestamp)
+    topic.update_columns(last_posted_at: timestamp, posts_count: 3)
+    user.user_option.update!(timezone: "America/Toronto")
+    sign_in(user)
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response.body).to include(
+      %(#### Post date: [July 15, 2026, 12:30pm EDT](#{post.full_url} "2026-07-15T12:30:45-04:00")),
+    )
+
+    get "/latest.md"
+    expect(response.body).to include(
+      "**Replies:** 2",
+      %(**Last updated:** [July 15, 2026, 12:30pm EDT](#{topic.url} "2026-07-15T12:30:45-04:00")),
+    )
+  end
+
+  it "uses the application timezone for anonymous timestamps" do
+    post.update_columns(created_at: Time.utc(2026, 1, 15, 16, 30, 45))
+
+    Time.use_zone("America/New_York") do
+      get "/t/#{topic.slug}/#{topic.id}.md"
+      expect(response.body).to include(
+        %([January 15, 2026, 11:30am EST](#{post.full_url} "2026-01-15T11:30:45-05:00")),
+      )
+    end
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response.body).to include(
+      %([January 15, 2026, 4:30pm UTC](#{post.full_url} "2026-01-15T16:30:45Z")),
+    )
+
+    user.user_option.update!(timezone: nil)
+    sign_in(user)
+    get "/t/#{topic.slug}/#{topic.id}.md"
+    expect(response.body).to include(
+      %([January 15, 2026, 4:30pm UTC](#{post.full_url} "2026-01-15T16:30:45Z")),
+    )
   end
 
   it "preserves topic author filters through discovery and pagination" do
