@@ -7,17 +7,16 @@ module DiscourseAi
 
     def index
       post = find_post
-      guardian.ensure_can_edit!(post)
+      locale = caption_locale(post)
+      ensure_can_edit_caption!(post, locale)
 
-      render json: {
-               captions:
-                 DiscourseAi::PostImageCaptions.editable_captions(post, caption_locale(post)),
-             }
+      render json: { captions: DiscourseAi::PostImageCaptions.editable_captions(post, locale) }
     end
 
     def update
       post = find_post
-      guardian.ensure_can_edit!(post)
+      locale = caption_locale(post)
+      ensure_can_edit_caption!(post, locale)
 
       description = params[:description].to_s.strip
 
@@ -45,7 +44,7 @@ module DiscourseAi
       image_caption =
         DiscourseAi::PostImageCaptions.update_caption(
           post,
-          caption_locale(post),
+          locale,
           params[:base62_sha1],
           description,
         )
@@ -64,8 +63,19 @@ module DiscourseAi
       Post.find(params[:post_id])
     end
 
+    def ensure_can_edit_caption!(post, locale)
+      if locale == DiscourseAi::PostImageCaptions.original_locale(post)
+        guardian.ensure_can_edit!(post)
+      else
+        guardian.ensure_can_localize_post!(post)
+      end
+    end
+
     def caption_locale(post)
-      params[:locale].presence || DiscourseAi::PostImageCaptions.original_locale(post)
+      locale = params[:locale]
+      raise Discourse::InvalidAccess unless locale.nil? || locale.is_a?(String)
+
+      locale.presence || DiscourseAi::PostImageCaptions.original_locale(post)
     end
   end
 end
