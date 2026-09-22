@@ -26,6 +26,12 @@ module DiscourseMcp
 
         return ToolHelpers.text_and_structured(draft_key:, found: false) if draft.blank?
 
+        topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
+        if draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) ||
+             (topic_id && Topic.exists?(id: topic_id.to_i, archetype: Archetype.private_message))
+          request_context.ensure_scopes!(Scopes::PRIVATE_MESSAGES_READ)
+        end
+
         parsed = JSON.parse(draft)
         parsed = {} if !parsed.is_a?(Hash)
         ToolHelpers.text_and_structured(
