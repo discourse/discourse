@@ -619,6 +619,10 @@ export default class ChatChannel extends Component {
 
   @action
   async onSendMessage(message) {
+    if (this.pane.sending) {
+      return;
+    }
+
     if (
       message.message.length > this.siteSettings.chat_maximum_message_length
     ) {
@@ -630,11 +634,17 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    await message.cook();
-    if (message.editing) {
-      await this.#sendEditMessage(message);
-    } else {
-      await this.#sendNewMessage(message);
+    this.pane.sending = true;
+
+    try {
+      await message.cook();
+      if (message.editing) {
+        await this.#sendEditMessage(message);
+      } else {
+        await this.#sendNewMessage(message);
+      }
+    } finally {
+      this.pane.sending = false;
     }
   }
 
@@ -676,8 +686,6 @@ export default class ChatChannel extends Component {
   }
 
   async #sendEditMessage(message) {
-    this.pane.sending = true;
-
     const data = {
       message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
@@ -691,13 +699,10 @@ export default class ChatChannel extends Component {
       popupAjaxError(e);
     } finally {
       message.editing = false;
-      this.pane.sending = false;
     }
   }
 
   async #sendNewMessage(message) {
-    this.pane.sending = true;
-
     await this.args.channel.stageMessage(message);
 
     message.manager = this.args.channel.messagesManager;
@@ -720,8 +725,6 @@ export default class ChatChannel extends Component {
       this.scrollToLatestMessage();
     } catch (error) {
       this._onSendError(message.id, error);
-    } finally {
-      this.pane.sending = false;
     }
   }
 
