@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -38,6 +39,13 @@ export default class BundleAnalyzerModal extends Component {
     );
   };
 
+  // Read here rather than in the template: the template compiler lists its
+  // scope as object shorthand, and the macro that swaps `DEBUG` for a literal
+  // would rewrite the key as well as the value.
+  get developmentBuild() {
+    return DEBUG;
+  }
+
   @action
   setTab(key) {
     this.tab = key;
@@ -58,46 +66,54 @@ export default class BundleAnalyzerModal extends Component {
       @title={{i18n "dev_tools.bundle_analyzer.title"}}
     >
       <:body>
-        <div {{didInsert this.load}}>
-          <DTabs
-            @active={{this.tab}}
-            @label={{i18n "dev_tools.bundle_analyzer.title"}}
-            @onActivate={{this.setTab}}
-            as |tabs|
-          >
-            <tabs.Tab
-              @key="core"
-              @label={{i18n "dev_tools.bundle_analyzer.core"}}
+        {{#if this.developmentBuild}}
+          {{! A development build is unminified and chunked differently, so its
+              sizes describe nothing anyone ships. }}
+          <div class="ba-empty">
+            {{i18n "dev_tools.bundle_analyzer.production_only"}}
+          </div>
+        {{else}}
+          <div {{didInsert this.load}}>
+            <DTabs
+              @active={{this.tab}}
+              @label={{i18n "dev_tools.bundle_analyzer.title"}}
+              @onActivate={{this.setTab}}
+              as |tabs|
             >
-              {{#if this.error}}
-                <div class="ba-empty">
-                  {{i18n
-                    "dev_tools.bundle_analyzer.load_failed"
-                    error=this.error
-                  }}
-                </div>
-              {{else if this.analysis}}
-                <Report @analysis={{this.analysis}} />
-              {{/if}}
-            </tabs.Tab>
+              <tabs.Tab
+                @key="core"
+                @label={{i18n "dev_tools.bundle_analyzer.core"}}
+              >
+                {{#if this.error}}
+                  <div class="ba-empty">
+                    {{i18n
+                      "dev_tools.bundle_analyzer.load_failed"
+                      error=this.error
+                    }}
+                  </div>
+                {{else if this.analysis}}
+                  <Report @analysis={{this.analysis}} />
+                {{/if}}
+              </tabs.Tab>
 
-            <tabs.Tab
-              @key="plugins"
-              @label={{i18n "dev_tools.bundle_analyzer.plugins"}}
-            >
-              {{#if this.pluginError}}
-                <div class="ba-empty">
-                  {{i18n
-                    "dev_tools.bundle_analyzer.load_failed"
-                    error=this.pluginError
-                  }}
-                </div>
-              {{else if this.plugins}}
-                <PluginsReport @analysis={{this.plugins}} />
-              {{/if}}
-            </tabs.Tab>
-          </DTabs>
-        </div>
+              <tabs.Tab
+                @key="plugins"
+                @label={{i18n "dev_tools.bundle_analyzer.plugins"}}
+              >
+                {{#if this.pluginError}}
+                  <div class="ba-empty">
+                    {{i18n
+                      "dev_tools.bundle_analyzer.load_failed"
+                      error=this.pluginError
+                    }}
+                  </div>
+                {{else if this.plugins}}
+                  <PluginsReport @analysis={{this.plugins}} />
+                {{/if}}
+              </tabs.Tab>
+            </DTabs>
+          </div>
+        {{/if}}
       </:body>
     </DModal>
   </template>
