@@ -72,7 +72,7 @@ after_initialize do
     {
       run_queries: {
         actions: %w[discourse_data_explorer/query#run discourse_data_explorer/query#public_run],
-        params: %i[id],
+        path_params: %i[id],
       },
     },
   )

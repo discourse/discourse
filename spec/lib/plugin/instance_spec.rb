@@ -457,7 +457,7 @@ TEXT
   end
 
   describe ".register_seedfu_fixtures" do
-    it "should add the new path to SeedFu's fixtures path" do
+    it "adds the new path to SeedFu's fixtures path" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_seedfu_fixtures(["some_path"])
       plugin.register_seedfu_fixtures("some_path2")
@@ -480,7 +480,7 @@ TEXT
       plugin
     end
 
-    it "should add the right callback" do
+    it "adds the right callback" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_create) { called += 1 }
@@ -494,7 +494,7 @@ TEXT
       expect(called).to eq(1)
     end
 
-    it "should add the right callback with options" do
+    it "adds the right callback with options" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_commit, on: :create) { called += 1 }
@@ -796,6 +796,21 @@ TEXT
         *actions,
       )
     end
+
+    it "retains path parameters and replaces conflicting mapping arrays" do
+      plugin_instance.add_api_key_scope(
+        :topics,
+        read: {
+          actions: %w[topics#show],
+          path_params: %i[topic_id],
+        },
+      )
+
+      mapping = ApiKeyScope.scope_mappings.dig(:topics, :read)
+
+      expect(mapping[:actions]).to eq(%w[topics#show])
+      expect(mapping[:path_params]).to eq(%i[topic_id])
+    end
   end
 
   describe "#add_directory_column" do
@@ -918,6 +933,7 @@ TEXT
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
+
     fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
@@ -1067,7 +1083,7 @@ TEXT
   describe "#add_request_rate_limiter" do
     after { Middleware::RequestTracker.reset_rate_limiters_stack }
 
-    it "should raise an error if `after` and `before` kwarg are provided" do
+    it "raises an error if `after` and `before` kwarg are provided" do
       plugin = Plugin::Instance.new
 
       expect do
@@ -1081,7 +1097,7 @@ TEXT
       end.to raise_error(ArgumentError, "only one of `after` or `before` can be provided")
     end
 
-    it "should raise an error if value of `after` kwarg is invalid" do
+    it "raises an error if value of `after` kwarg is invalid" do
       plugin = Plugin::Instance.new
 
       expect {
@@ -1097,7 +1113,7 @@ TEXT
       )
     end
 
-    it "should raise an error if value of `before` kwarg is invalid" do
+    it "raises an error if value of `before` kwarg is invalid" do
       plugin = Plugin::Instance.new
 
       expect {

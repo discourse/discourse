@@ -137,7 +137,12 @@ after_initialize do
 
   add_api_key_scope(
     :discourse_ai,
-    { update_personas: { actions: %w[discourse_ai/admin/ai_personas#update] } },
+    {
+      update_personas: {
+        actions: %w[discourse_ai/admin/ai_personas#update],
+        path_params: %i[id],
+      },
+    },
   )
 
   plugin_icons = %w[
