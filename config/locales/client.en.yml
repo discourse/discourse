@@ -480,6 +480,7 @@ en:
         title: "Bundle analysis"
         core: "Core"
         plugins: "Plugins"
+        only_loaded: "Only show loaded chunks"
         production_only: "Only available for production builds"
         load_failed: "Failed to load bundle-analysis.json: %{error}"
 

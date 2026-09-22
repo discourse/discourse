@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { brotliLabel, fmt } from "./analysis";
 import LoadedChunks from "./loaded-chunks";
 import PluginCard, { pluginMatches } from "./plugin-card";
@@ -10,6 +11,11 @@ export default class PluginsReport extends Component {
   @tracked filter = "";
 
   loaded = new LoadedChunks(this.args.analysis.chunks);
+
+  constructor() {
+    super(...arguments);
+    this.args.analysis.loaded = this.loaded;
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -27,7 +33,7 @@ export default class PluginsReport extends Component {
   @cached
   get visible() {
     return this.analysis.plugins
-      .filter((p) => pluginMatches(p, this.filter))
+      .filter((p) => this.#hasContent(p) && pluginMatches(p, this.filter))
       .sort(
         (a, b) =>
           this.analysis.totalsFor(b).raw - this.analysis.totalsFor(a).raw
@@ -37,6 +43,11 @@ export default class PluginsReport extends Component {
   @action
   updateFilter(event) {
     this.filter = event.target.value.trim().toLowerCase();
+  }
+
+  // A plugin with nothing left to show is dropped rather than listed at zero.
+  #hasContent(plugin) {
+    return Object.keys(plugin.chunks).some((f) => this.analysis.includes(f));
   }
 
   <template>
@@ -60,6 +71,11 @@ export default class PluginsReport extends Component {
           placeholder="Filter plugins / chunks / modules / routes…"
           type="search"
           {{on "input" this.updateFilter}}
+        />
+        <DToggleSwitch
+          @label="dev_tools.bundle_analyzer.only_loaded"
+          @state={{@view.onlyLoaded}}
+          {{on "click" @toggleOnlyLoaded}}
         />
       </div>
 

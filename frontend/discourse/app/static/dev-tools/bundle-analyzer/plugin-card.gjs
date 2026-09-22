@@ -57,7 +57,9 @@ export default class PluginCard extends ExpandableRow {
     const others = Object.values(this.plugin.entrypoints).filter(
       (f) => f !== base
     );
-    return [base, ...others].filter(Boolean);
+    return [base, ...others].filter(
+      (f) => f && this.graph.staticClosure(f).size > 0
+    );
   }
 
   @cached

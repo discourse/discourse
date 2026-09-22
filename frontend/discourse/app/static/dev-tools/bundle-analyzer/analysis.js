@@ -49,8 +49,10 @@ export default class Analysis extends ChunkTotals {
     this.usedByEntries = this.#computeUsedBy();
   }
 
+  // Stops at a chunk the view excludes. A chunk's static imports are fetched
+  // with it, so a hidden one has nothing loaded beneath it to reach.
   staticClosure(file, set = new Set()) {
-    if (set.has(file) || !this.chunks[file]) {
+    if (set.has(file) || !this.chunks[file] || !this.includes(file)) {
       return set;
     }
     set.add(file);

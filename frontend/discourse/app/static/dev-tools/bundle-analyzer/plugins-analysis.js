@@ -29,6 +29,10 @@ export default class PluginsAnalysis extends ChunkTotals {
         entrypoints: Object.values(plugin.entrypoints),
         dynamicEntrypoints: [...routeBundlesByFile(plugin).keys()],
       });
+      // Shared by reference, so the toggle reaches a plugin's own graph as
+      // well as the totals on its row.
+      graph.loaded = this.loaded;
+      graph.view = this.view;
       this.#graphs.set(plugin.plugin, graph);
     }
 

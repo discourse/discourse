@@ -11,6 +11,7 @@ import Analysis from "./analysis";
 import PluginsAnalysis from "./plugins-analysis";
 import PluginsReport from "./plugins-report";
 import Report from "./report";
+import ViewFilter from "./view-filter";
 
 export default class BundleAnalyzerModal extends Component {
   @tracked analysis;
@@ -19,11 +20,14 @@ export default class BundleAnalyzerModal extends Component {
   @tracked pluginError;
   @tracked tab = "core";
 
+  // One filter behind both tabs, handed to each analysis as it is built.
+  view = new ViewFilter();
+
   // Both reports are resolved through the page's import map, which Rails rebuilds
   // from the manifests on every render, so each names the current build.
   load = async () => {
     this.analysis = await this.#fetch("discourse/bundle-analysis").then(
-      (data) => data && new Analysis(data),
+      (data) => data && this.#withView(new Analysis(data)),
       (e) => {
         this.error = e.message;
       }
@@ -32,7 +36,7 @@ export default class BundleAnalyzerModal extends Component {
     // A plugin report only exists once plugins have been compiled, and its
     // absence should not take the core report down with it.
     this.plugins = await this.#fetch("discourse/bundle-analysis-plugins").then(
-      (data) => data && new PluginsAnalysis(data),
+      (data) => data && this.#withView(new PluginsAnalysis(data)),
       (e) => {
         this.pluginError = e.message;
       }
@@ -49,6 +53,16 @@ export default class BundleAnalyzerModal extends Component {
   @action
   setTab(key) {
     this.tab = key;
+  }
+
+  @action
+  toggleOnlyLoaded() {
+    this.view.onlyLoaded = !this.view.onlyLoaded;
+  }
+
+  #withView(analysis) {
+    analysis.view = this.view;
+    return analysis;
   }
 
   async #fetch(specifier) {
@@ -92,7 +106,11 @@ export default class BundleAnalyzerModal extends Component {
                     }}
                   </div>
                 {{else if this.analysis}}
-                  <Report @analysis={{this.analysis}} />
+                  <Report
+                    @analysis={{this.analysis}}
+                    @toggleOnlyLoaded={{this.toggleOnlyLoaded}}
+                    @view={{this.view}}
+                  />
                 {{/if}}
               </tabs.Tab>
 
@@ -108,7 +126,11 @@ export default class BundleAnalyzerModal extends Component {
                     }}
                   </div>
                 {{else if this.plugins}}
-                  <PluginsReport @analysis={{this.plugins}} />
+                  <PluginsReport
+                    @analysis={{this.plugins}}
+                    @toggleOnlyLoaded={{this.toggleOnlyLoaded}}
+                    @view={{this.view}}
+                  />
                 {{/if}}
               </tabs.Tab>
             </DTabs>

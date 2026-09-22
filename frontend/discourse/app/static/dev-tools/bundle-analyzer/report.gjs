@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { brotliLabel } from "./analysis";
 import EntrypointCard from "./entrypoint-card";
 import LoadedChunks from "./loaded-chunks";
@@ -11,6 +12,13 @@ export default class Report extends Component {
   @tracked filter = "";
 
   loaded = new LoadedChunks(this.args.analysis.chunks);
+
+  constructor() {
+    super(...arguments);
+    // The graph answers every size question, so it is the graph that has to
+    // know what the reader excluded.
+    this.args.analysis.loaded = this.loaded;
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -39,12 +47,12 @@ export default class Report extends Component {
     const others = this.analysis.entrypoints
       .filter((f) => f !== base)
       .sort((a, b) => this.#addedSize(b) - this.#addedSize(a));
-    return [base, ...others].filter((f) => this.#cardMatches(f));
+    return [base, ...others].filter((f) => this.#visible(f));
   }
 
   get dynamicVisible() {
     return this.analysis.dynamicEntrypoints
-      .filter((f) => this.#cardMatches(f))
+      .filter((f) => this.#visible(f))
       .sort((a, b) => this.#addedSize(b) - this.#addedSize(a));
   }
 
@@ -63,6 +71,12 @@ export default class Report extends Component {
     return [...this.analysis.staticClosure(file)]
       .filter((x) => !base.has(x))
       .reduce((n, x) => n + this.analysis.sortSize(x), 0);
+  }
+
+  #visible(file) {
+    return (
+      this.analysis.staticClosure(file).size > 0 && this.#cardMatches(file)
+    );
   }
 
   #cardMatches(file) {
@@ -110,6 +124,11 @@ export default class Report extends Component {
           placeholder="Filter files / modules…"
           type="search"
           {{on "input" this.updateFilter}}
+        />
+        <DToggleSwitch
+          @label="dev_tools.bundle_analyzer.only_loaded"
+          @state={{@view.onlyLoaded}}
+          {{on "click" @toggleOnlyLoaded}}
         />
       </div>
 
