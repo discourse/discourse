@@ -95,10 +95,6 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
-  def is_gzip_req?
-    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
-  end
-
   def generate_import_map(plugin_assets)
     imports =
       plugin_assets
@@ -160,11 +156,7 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      if is_brotli_req?
-        path = path.sub("/assets/js/", "/assets/br/")
-      elsif is_gzip_req?
-        path = path.sub("/assets/js/", "/assets/gz/")
-      end
+      path = path.sub("/assets/js/", "/assets/br/") if is_brotli_req?
     end
 
     path
