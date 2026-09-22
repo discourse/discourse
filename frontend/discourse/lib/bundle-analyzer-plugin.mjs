@@ -14,9 +14,6 @@ export const BUNDLE_ANALYSIS_RE =
 // build, so the report shows the transfer size a browser really sees and no
 // chunk is compressed twice.
 
-const DYNAMIC_IMPORT_RE =
-  /\bimport\s*\(\s*(?:\/\*[\s\S]*?\*\/\s*)*(['"`])([^'"`\n]+?)\1/g;
-
 // rolldown's `chunk.name` keeps the original seed-module name even when
 // chunkFileNames renames the file; derive the real label from the filename.
 const FILE_NAME_RE = /(?:.*\/)?(.+)-[a-z0-9]+\.digested\.js$/;
@@ -29,18 +26,6 @@ function nameFromFile(fileName) {
 // naming a chunk is recognisable against the cards.
 function fileStem(fileName) {
   return fileName.replace(/^assets\/js\//, "").replace(/\.digested\.js$/, "");
-}
-
-function offsetToLineCol(text, offset) {
-  let line = 1;
-  let last = 0;
-  for (let i = 0; i < offset; i++) {
-    if (text.charCodeAt(i) === 10) {
-      line++;
-      last = i + 1;
-    }
-  }
-  return { line, column: offset - last + 1 };
 }
 
 function rel(id) {
@@ -61,71 +46,8 @@ function rel(id) {
 // dynamically `import()`-ed, so dynamic chunks can be traced back to the exact
 // file + line that triggers their download.
 export default function bundleAnalyzerPlugin({ devMode } = {}) {
-  const sitesByResolvedId = new Map();
-
-  function addSite(resolvedId, site) {
-    let list = sitesByResolvedId.get(resolvedId);
-    if (!list) {
-      list = [];
-      sitesByResolvedId.set(resolvedId, list);
-    }
-    if (
-      !list.some((s) => s.importer === site.importer && s.line === site.line)
-    ) {
-      list.push(site);
-    }
-  }
-
   return {
     name: "bundle-analyzer",
-
-    async transform(code, id) {
-      let source = code;
-      try {
-        source = fs.readFileSync(id, "utf8");
-      } catch {
-        // virtual module: fall back to the transformed code
-      }
-
-      if (!source.includes("import(")) {
-        return null;
-      }
-
-      DYNAMIC_IMPORT_RE.lastIndex = 0;
-      let match;
-      const pending = [];
-      while ((match = DYNAMIC_IMPORT_RE.exec(source))) {
-        const specifier = match[2];
-        const lineStart = source.lastIndexOf("\n", match.index) + 1;
-        const lineText = source.slice(lineStart, match.index);
-        if (lineText.includes("@type") || /^\s*[*]/.test(lineText)) {
-          continue;
-        }
-        const { line, column } = offsetToLineCol(source, match.index);
-        pending.push({ specifier, line, column });
-      }
-
-      await Promise.all(
-        pending.map(async ({ specifier, line, column }) => {
-          let resolved;
-          try {
-            resolved = await this.resolve(specifier, id);
-          } catch {
-            resolved = null;
-          }
-          if (resolved?.id) {
-            addSite(resolved.id, {
-              importer: rel(id),
-              specifier,
-              line,
-              column,
-            });
-          }
-        })
-      );
-
-      return null;
-    },
 
     async generateBundle(_options, bundle) {
       const chunks = {};
@@ -160,41 +82,21 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
           }))
           .sort((a, b) => b.renderedLength - a.renderedLength);
 
-        let importSites = sitesByResolvedId.get(chunk.facadeModuleId) || [];
-        if (importSites.length === 0 && chunk.facadeModuleId) {
-          const info = this.getModuleInfo(chunk.facadeModuleId);
-          importSites = (info?.dynamicImporters || []).map((imp) => ({
-            importer: rel(imp),
-            specifier: null,
-            line: null,
-            column: null,
-          }));
+        // Asked per module rather than of the facade, so a chunk several
+        // dynamic entries were merged into still names what pulls it in.
+        const importers = new Set();
+        for (const moduleId of Object.keys(chunk.modules)) {
+          for (const imp of this.getModuleInfo(moduleId)?.dynamicImporters ??
+            []) {
+            importers.add(rel(imp));
+          }
         }
-        // A facade-less chunk has no single module to trace back, so collect the
-        // source sites of every module in it that is imported dynamically.
-        if (importSites.length === 0) {
-          const seen = new Set();
-          importSites = Object.keys(chunk.modules)
-            .flatMap((moduleId) => sitesByResolvedId.get(moduleId) || [])
-            .filter((site) => {
-              const key = `${site.importer}:${site.line}`;
-              if (seen.has(key)) {
-                return false;
-              }
-              seen.add(key);
-              return true;
-            });
-        }
-        // Nothing in the chunk is imported by name, so fall back to the chunks
-        // that pull it in.
-        if (importSites.length === 0) {
-          importSites = (dynamicTargets.get(fileName) || []).map((imp) => ({
-            importer: fileStem(imp),
-            specifier: null,
-            line: null,
-            column: null,
-          }));
-        }
+
+        // Nothing inside the chunk records an importer, so name the chunks that
+        // pull it in instead.
+        const importSites = importers.size
+          ? [...importers]
+          : (dynamicTargets.get(fileName) ?? []).map(fileStem);
 
         chunks[fileName] = {
           file: fileName,

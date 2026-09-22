@@ -1,5 +1,4 @@
 import { cached } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { brotliLabel, fmt, routeName, stem } from "./analysis";
 import ChunkRow from "./chunk-row";
@@ -135,13 +134,9 @@ export default class EntrypointCard extends ExpandableRow {
                 <code>{{url}}</code>
               </div>
             {{else}}
-              {{#each this.chunk.importSites as |s|}}
+              {{#each this.chunk.importSites as |importer|}}
                 <div class="ba-site">imported by
-                  <code>{{s.importer}}{{if s.line (concat ":" s.line)}}</code>
-                  {{#if s.specifier}}
-                    —
-                    <span class="ba-pill">import("{{s.specifier}}")</span>
-                  {{/if}}
+                  <code>{{importer}}</code>
                 </div>
               {{else}}
                 <div class="ba-site pill">
