@@ -59,8 +59,8 @@ describe DiscourseAutomation::AdminAutomationsController do
           Fabricate(:api_key, user: admin).tap do |key|
             ApiKeyScope.create!(
               api_key_id: key.id,
-              resource: "automation",
-              action: "trigger_automation",
+              resource: "automations_trigger",
+              action: "post",
               allowed_parameters: {
                 "id" => [automation.id.to_s],
               },
