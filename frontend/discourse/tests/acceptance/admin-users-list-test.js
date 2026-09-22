@@ -289,6 +289,162 @@ acceptance("Admin - Users List - pagination", function (needs) {
   });
 });
 
+acceptance("Admin - Users List - staff account types", function (needs) {
+  needs.user();
+
+  let lastRequest;
+  let requestCount;
+
+  needs.pretender((server, helper) => {
+    requestCount = 0;
+    server.get("/admin/users/list/staff.json", (request) => {
+      requestCount++;
+      lastRequest = request.queryParams;
+      return helper.response(
+        lastRequest.account_type === "bot" && !lastRequest.filter
+          ? []
+          : [{ id: 2, username: "sam" }]
+      );
+    });
+  });
+
+  test("selects account types and resets to human accounts", async function (assert) {
+    await visit("/admin/users/list/staff");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("human", "defaults to humans");
+    assert.strictEqual(
+      lastRequest.account_type,
+      "human",
+      "requests human accounts"
+    );
+
+    await fillIn(".d-filter-controls__dropdown", "bot");
+
+    assert.strictEqual(
+      lastRequest.account_type,
+      "bot",
+      "requests bot accounts"
+    );
+    assert.true(
+      currentURL().includes("account_type=bot"),
+      "stores the selection in the URL"
+    );
+    assert
+      .dom(".admin-users-list__no-results")
+      .doesNotExist("does not duplicate the filtered empty state");
+    assert
+      .dom(".d-filter-controls__no-results p")
+      .hasText(i18n("search.no_results"), "shows the standard empty message");
+
+    await fillIn(".d-filter-controls__dropdown", "all");
+
+    assert.strictEqual(
+      lastRequest.account_type,
+      "all",
+      "requests all accounts"
+    );
+
+    await visit(
+      "/admin/users/list/staff?username=sam&filter=sam&account_type=all&order=username"
+    );
+    await click(".d-filter-controls__reset");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("human", "restores the default selection");
+    assert.strictEqual(
+      lastRequest.account_type,
+      "human",
+      "reloads human accounts"
+    );
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/list/staff?order=username",
+      "clears all filter parameters while preserving sorting"
+    );
+
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
+    );
+
+    assert.strictEqual(
+      lastRequest.account_type,
+      "human",
+      "sorting keeps the default account type"
+    );
+    assert.strictEqual(
+      lastRequest.filter,
+      "",
+      "sorting does not restore the cleared search"
+    );
+  });
+
+  test("restores URL filters, keeps them when sorting, and clears them between tabs", async function (assert) {
+    await visit("/admin/users/list/staff?account_type=bot&filter=sam");
+
+    assert.strictEqual(requestCount, 1, "loads once when entering the route");
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("bot", "restores the account type");
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("sam", "restores the search");
+
+    for (let clickCount = 1; clickCount <= 4; clickCount++) {
+      await click(
+        ".users-list .directory-table__column-header--username.sortable"
+      );
+
+      assert.strictEqual(
+        requestCount,
+        clickCount + 1,
+        "loads once per sort change"
+      );
+      assert.strictEqual(
+        lastRequest.order,
+        "username",
+        "requests the selected sort"
+      );
+      assert.strictEqual(
+        lastRequest.account_type,
+        "bot",
+        "preserves the account type"
+      );
+      assert.strictEqual(lastRequest.filter, "sam", "preserves the search");
+      assert
+        .dom(".d-filter-controls__input")
+        .hasValue("sam", "keeps the search visible");
+      assert.true(
+        currentURL().includes("filter=sam"),
+        "keeps the search in the URL"
+      );
+    }
+
+    await fillIn(".d-filter-controls__dropdown", "all");
+
+    assert.strictEqual(
+      lastRequest.filter,
+      "sam",
+      "keeps the search when changing account type"
+    );
+
+    await click(".admin-users-tabs__new a");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("all", "shows the activation filter");
+
+    await click(".admin-users-tabs__staff a");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("human", "returns to human accounts");
+    assert.dom(".d-filter-controls__input").hasValue("", "clears the search");
+  });
+});
+
 acceptance("Admin - Users List - bulk search", function (needs) {
   needs.user();
 

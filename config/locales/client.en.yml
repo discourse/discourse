@@ -9987,6 +9987,10 @@ en:
           all: "All users"
           activated: "Activated"
           not_activated: "Not activated"
+        account_type_filter:
+          human: "Human accounts"
+          bot: "Bot accounts"
+          all: "All accounts"
         approved: "Approved?"
         titles:
           active: "Active users"
