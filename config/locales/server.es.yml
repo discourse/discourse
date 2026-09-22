@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 es:
+  markdown_endpoints:
+    latest: "Recientes"
+    categories: "Categorías"
+    tags: "Etiquetas"
+    previous_page: "Página anterior"
+    next_page: "Página siguiente"
+    replies: "Respuestas"
+    last_updated: "Última actualización"
   mcp:
     errors:
       draft_too_long: "El borrador es demasiado largo"

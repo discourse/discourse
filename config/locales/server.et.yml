@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 et:
+  markdown_endpoints:
+    latest: "Värskeimad"
+    categories: "Liigid"
+    tags: "Sildid"
+    previous_page: "Eelmine leht"
+    next_page: "Järgmine leht"
+    replies: "Vastused"
   mcp:
     errors:
       draft_too_long: "Mustand on liiga pikk"

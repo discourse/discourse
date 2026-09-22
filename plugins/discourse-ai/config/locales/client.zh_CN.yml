@@ -1537,6 +1537,7 @@ zh_CN:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          homepage_option: "AI 机器人对话"
           header: "我能帮上什么忙？"
           submit: "提交问题"
           disclaimer: "生成式 AI 可能会犯错。请验证重要信息。"

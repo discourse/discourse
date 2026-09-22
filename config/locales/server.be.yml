@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 be:
+  markdown_endpoints:
+    latest: "Апошняя"
+    categories: "катэгорыі"
+    tags: "Цэтлікі"
+    replies: "Адказы"
   mcp:
     errors:
       topic_not_found: "Тэма не знойдзена"

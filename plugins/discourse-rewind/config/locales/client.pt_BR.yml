@@ -12,7 +12,6 @@ pt_BR:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "Reticulando splines..."
       viewing_other_user: "Você está visualizando o relatório Discourse Rewind de <strong>%{username}</strong>."
@@ -92,18 +91,14 @@ pt_BR:
             one: "A melhor postagem de %{username}"
             other: "As %{count} melhores postagens de %{username}"
         ai_usage:
-          title: Uso de IA
           total_requests: Total de Reqs.
           total_tokens: Total de Tokens
           success_rate: Taxa de Sucesso
-          favorite_features: Recursos mais utilizados
-          favorite_models: Modelos de IA mais utilizados
           wake_up: "Acorda, %{username}..."
           system_title: "USO DE IA DETECTADO"
           section_features: "TOP RECURSOS"
           section_models: "TOP MODELOS"
         assignments:
-          title: Atribuições
           total_assigned: Atribuídos a mim
           total_assigned_others: "Atribuiu a %{username}"
           completed: Tarefas concluídas
@@ -112,13 +107,6 @@ pt_BR:
           completion_rate: Taxa de conclusão
         chat_usage:
           title: Atividade de chat
-          total_messages: Total de mensagens
-          dm_messages: Mensagens diretas
-          unique_dm_channels: Conversas por mensagem direta
-          reactions_received: Reações recebidas
-          avg_message_length: Tamanho Médio de Mensagem
-          favorite_channels: Canais favoritos
-          messages: mensagens
           bot_name: XxRewindBotxX
           author: Você
           author_others: "%{username}"
@@ -144,28 +132,7 @@ pt_BR:
           message_4: "O tamanho médio de suas mensagens foi de <strong>%{length}</strong> caracteres"
           message_5: "Seus canais favoritos:"
           dancing_baby_alt: "Bebê dançante"
-        favorite_gifs:
-          title:
-            one: Seu GIF favorito
-            other: Seus %{count} GIFs favoritos
-          title_others:
-            one: "O GIF favorito de %{username}"
-            other: "Os %{count} GIFs favoritos de %{username}"
-          total_usage:
-            one: Usado %{count} vez
-            other: Usado %{count} vezes no total
         invites:
-          title: Convites
-          total_invites: Total de convites enviados
-          redeemed: Convites aceitos
-          redemption_rate: Taxa de aceitação
-          avg_trust_level: Nível de confiança médio
-          invitee_impact: Impacto dos seus convidados
-          invitee_impact_others: "Impacto dos convidados de %{username}"
-          invitee_posts: Postagens criadas
-          invitee_topics: Tópicos iniciados
-          invitee_likes: Curtidas Dadas
-          most_active_invitee: Convidado mais ativo
           guest_book_title: Livro de visitas
           guest_book_subtitle: Seus convites comunitários
           guest_book_subtitle_others: "Convites comunitários de %{username}"
@@ -178,22 +145,9 @@ pt_BR:
           label_likes_given: "Curtidas dadas:"
           section_most_active: Hóspede mais ativo
         new_user_interactions:
-          title: Mentoria para novos usuários
-          subtitle:
-            one: Você ajudou %{count} novo usuário este ano
-            other: Você ajudou %{count} novos usuários este ano
-          subtitle_others:
-            one: "%{username} ajudou %{count} novo usuário este ano"
-            other: "%{username} ajudou %{count} novos usuários este ano"
           new_member:
             one: "%{count} novo membro"
             other: "%{count} novos membros"
-          total_interactions: Total de interações
-          unique_new_users: Novos usuários exclusivos
-          likes_given: Curtidas Dadas
-          replies: Respostas às postagens
-          mentions: Menções
-          topics_with_new_users: Tópicos com novos usuários
           contributions_helped: suas contribuições ajudaram
           contributions_helped_others: "As contribuições de %{username} ajudaram"
         time_of_day_activity:

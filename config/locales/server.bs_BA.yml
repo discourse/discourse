@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  markdown_endpoints:
+    latest: "Zadnje"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Previous page"
+    next_page: "Next page"
+    replies: "Odgovori"
   mcp:
     errors:
       topic_not_found: "Tema nije pronađena"

@@ -2748,8 +2748,6 @@ zh_TW:
       signup_instructions: "輸入你的電子郵件地址以加入此社群。我們會傳送一組代碼供你確認，之後即可開始使用！"
       user_fields_title: "即將完成"
       user_fields_instructions: "只需再提供幾項資料，即可完成帳戶建立。"
-      account_ready_title: "你的帳戶已準備就緒！🎉"
-      account_ready_edit: "選擇你的使用者名稱與頭像"
       account_ready_continue: "繼續"
       username_label: "使用者名稱"
       username_placeholder: "選擇使用者名稱"

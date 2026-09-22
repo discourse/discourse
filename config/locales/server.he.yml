@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 he:
+  markdown_endpoints:
+    latest: "אחרונות"
+    categories: "קטגוריות"
+    tags: "תגיות"
+    replies: "תשובות"
+    last_updated: "עדכון אחרון"
   mcp:
     errors:
       draft_too_long: "הטיוטה ארוכה מדי"

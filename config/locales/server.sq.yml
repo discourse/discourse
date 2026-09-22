@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 sq:
+  markdown_endpoints:
+    latest: "Më të fundit"
+    categories: "Categories"
+    tags: "Etiketat"
+    previous_page: "Faqe mëparshme"
+    next_page: "Faqja tjetër"
+    replies: "Përgjigjet"
+    last_updated: "Përditësimi i fundit"
   mcp:
     errors:
       draft_too_long: "Mesazhi shembull është shumë i gjatë"

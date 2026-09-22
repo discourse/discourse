@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 ro:
+  markdown_endpoints:
+    latest: "Ultimele"
+    categories: "Categorii"
+    tags: "Etichete"
+    previous_page: "Pagina precedentă"
+    next_page: "Pagina următoare"
+    replies: "Răspunsuri"
+    last_updated: "Ultima actualizare"
   mcp:
     errors:
       topic_not_found: "Subiectul nu a fost găsit"

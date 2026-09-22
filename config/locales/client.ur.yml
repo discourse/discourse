@@ -2887,8 +2887,6 @@ ur:
       signup_instructions: "اس فورم میں شمولیت کے لیے اپنا ای میل درج کریں۔ ہم آپ کو تصدیق کے لیے ایک کوڈ بھیجیں گے جس سے آپ کی شروعات ہو جائے گی!"
       user_fields_title: "تقریباً مکمل"
       user_fields_instructions: "چند مزید تفصیلات، آپ کے اکاؤنٹ کی تخلیق کو انجام دینے کے لیے۔"
-      account_ready_title: "آپ کا اکاؤنٹ تیار ہے! 🎉"
-      account_ready_edit: "اپنا اسم صارف اور اوتار منتخب کریں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
       username_placeholder: "ایک اسم صارف منتخب کریں"

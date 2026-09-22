@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 th:
+  markdown_endpoints:
+    latest: "ล่าสุด"
+    categories: "หมวดหมู่"
+    tags: "ป้าย"
+    previous_page: "หน้าก่อนหน้า"
+    next_page: "หน้าถัดไป"
+    replies: "ตอบ"
   mcp:
     errors:
       topic_not_found: "ไม่พบกระทู้"

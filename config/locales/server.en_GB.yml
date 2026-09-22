@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 en_GB:
+  markdown_endpoints:
+    categories: "Categories"
   llms_txt:
     links:
       categories:

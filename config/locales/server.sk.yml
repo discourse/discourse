@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 sk:
+  markdown_endpoints:
+    latest: "Najnovšie"
+    categories: "Kategórie"
+    tags: "Značky"
+    previous_page: "Predchádzajúca stránka"
+    next_page: "Nasledujúca stránka"
+    replies: "Odpovede"
+    last_updated: "Posledná aktualizácia"
   mcp:
     errors:
       draft_too_long: "Koncept je príliš dlhý"

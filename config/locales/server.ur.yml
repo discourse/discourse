@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ur:
+  markdown_endpoints:
+    latest: "تازہ ترین"
+    categories: "زمرہ جات"
+    tags: "ٹیگز"
+    replies: "جوابات"
+    last_updated: "آخری اپ ڈیٹ"
   mcp:
     errors:
       topic_not_found: "موضوع نہیں ملا"

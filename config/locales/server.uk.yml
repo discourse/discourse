@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 uk:
+  markdown_endpoints:
+    latest: "Остання"
+    categories: "Розділи"
+    tags: "Теґи"
+    previous_page: "Попередня сторінка"
+    next_page: "Наступна сторінка"
+    replies: "Відповіді"
+    last_updated: "Останнє оновлення"
   mcp:
     errors:
       draft_too_long: "Чернетка занадто довга"

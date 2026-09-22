@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 hr:
+  markdown_endpoints:
+    latest: "Posljednje"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Prethodna stranica"
+    next_page: "Slijedeća stranica"
+    replies: "Odgovori"
+    last_updated: "Posljednje ažuriranje"
   mcp:
     errors:
       topic_not_found: "Tema nije pronađena"

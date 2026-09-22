@@ -2823,8 +2823,6 @@ fr:
       signup_instructions: "Saisissez votre adresse e-mail pour rejoindre cette communauté. Nous vous enverrons un code de confirmation et vous pourrez ensuite commencer !"
       user_fields_title: "Presque terminé"
       user_fields_instructions: "Encore quelques détails pour finaliser la création de votre compte."
-      account_ready_title: "Votre compte est prêt ! 🎉"
-      account_ready_edit: "Choisissez votre nom d'utilisateur et votre avatar."
       account_ready_continue: "Continuer"
       pending_approval_title: "Votre compte est en attente d'approbation."
       pending_approval_instructions: "Un membre de notre équipe doit approuver votre compte avant que vous puissiez vous connecter. Nous vous enverrons un courriel une fois votre compte approuvé."

@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ug:
+  markdown_endpoints:
+    latest: "ئاخىرقى"
+    categories: "سەھىپە"
+    tags: "بەلگە"
+    replies: "جاۋاب"
+    last_updated: "ئاخىرقى يېڭىلانغان ۋاقىت"
   mcp:
     errors:
       draft_too_long: "دەسلەپكى نۇسخا بەك ئۇزۇن"
