@@ -222,7 +222,7 @@ module Plugin
             *tree.values,
             AssetProcessor::BASE_COMPILER_VERSION,
             AssetProcessor.ember_version,
-            minify?.to_s,
+            production_build?.to_s,
             plugin.name,
             frontend_config.to_json,
           ].join,
@@ -352,14 +352,22 @@ module Plugin
 
     private
 
+    # The core build reads `EMBER_ENV`, so a plugin bundle is minified and
+    # compressed exactly when the core bundle it ships beside is. Part of the
+    # digest below, so a bundle built for one environment is never reused as
+    # the other's.
+    def production_build?
+      ENV["EMBER_ENV"] == "production"
+    end
+
     def minify?
-      Rails.env.production?
+      production_build?
     end
 
     # Compressed beside the chunk for `brotli_static`, the way core's build emits
-    # its own. Only where we minify: a development bundle is never served.
+    # its own. Only for a bundle that ships.
     def compress?
-      minify?
+      production_build?
     end
 
     # Max quality, matching what the compression step after the build would have
