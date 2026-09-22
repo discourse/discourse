@@ -7598,6 +7598,29 @@ RSpec.describe TopicsController do
           expect(result.visible).to eq(true)
         end
 
+        it "restricts reload messages when publishing to a read-restricted category" do
+          restricted_group = Fabricate(:group)
+          restricted_category = Fabricate(:private_category, group: restricted_group)
+          excluded_user = Fabricate(:user)
+          restricted_group.add(moderator)
+
+          messages =
+            MessageBus.track_publish("/topic/#{topic.id}") do
+              put "/t/#{topic.id}/publish.json",
+                  params: {
+                    destination_category_id: restricted_category.id,
+                  }
+            end
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["basic_topic"]["id"]).to eq(topic.id)
+          expect(excluded_user.guardian.can_see?(topic.reload)).to eq(false)
+          reload_message =
+            messages.find { |message| message.data == { reload_topic: true, refresh_stream: true } }
+          expect(reload_message).to be_present
+          expect(reload_message.group_ids).to contain_exactly(restricted_group.id)
+        end
+
         it "fails if the destination category is the shared drafts category" do
           put "/t/#{topic.id}/publish.json",
               params: {
