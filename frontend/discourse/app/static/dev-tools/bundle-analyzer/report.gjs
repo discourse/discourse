@@ -1,34 +1,11 @@
-import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { cached } from "@glimmer/tracking";
 import { eq } from "discourse/truth-helpers";
-import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { brotliLabel } from "./analysis";
+import AnalyzerToolbar from "./analyzer-toolbar";
 import EntrypointCard from "./entrypoint-card";
-import LoadedChunks from "./loaded-chunks";
+import FilterableReport from "./filterable-report";
 
-export default class Report extends Component {
-  @tracked filter = "";
-
-  loaded = new LoadedChunks(this.args.analysis.chunks);
-
-  constructor() {
-    super(...arguments);
-    // The graph answers every size question, so it is the graph that has to
-    // know what the reader excluded.
-    this.args.analysis.loaded = this.loaded;
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.loaded.teardown();
-  }
-
-  get analysis() {
-    return this.args.analysis;
-  }
-
+export default class Report extends FilterableReport {
   // discourse.js is the baseline every other entrypoint measures against.
   get baselineFile() {
     const { entrypoints, chunks } = this.analysis;
@@ -42,28 +19,34 @@ export default class Report extends Component {
     return this.analysis.staticClosure(this.baselineFile);
   }
 
+  @cached
   get staticVisible() {
     const base = this.baselineFile;
-    const others = this.analysis.entrypoints
-      .filter((f) => f !== base)
-      .sort((a, b) => this.#addedSize(b) - this.#addedSize(a));
+    const others = this.#bySizeDescending(
+      this.analysis.entrypoints.filter((f) => f !== base)
+    );
     return [base, ...others].filter((f) => this.#visible(f));
   }
 
+  @cached
   get dynamicVisible() {
-    return this.analysis.dynamicEntrypoints
-      .filter((f) => this.#visible(f))
-      .sort((a, b) => this.#addedSize(b) - this.#addedSize(a));
+    return this.#bySizeDescending(
+      this.analysis.dynamicEntrypoints.filter((f) => this.#visible(f))
+    );
   }
 
+  @cached
   get loadedTotals() {
-    const files = [...this.loaded.files].filter((f) => this.analysis.chunks[f]);
-    return { count: files.length, ...this.analysis.totals(new Set(files)) };
+    return this.analysis.totals(
+      [...this.loaded.files].filter((f) => this.analysis.chunks[f])
+    );
   }
 
-  @action
-  updateFilter(event) {
-    this.filter = event.target.value.trim().toLowerCase();
+  // Sized once per file, not once per comparison: each call walks the file's
+  // whole import closure.
+  #bySizeDescending(files) {
+    const sizes = new Map(files.map((f) => [f, this.#addedSize(f)]));
+    return files.sort((a, b) => sizes.get(b) - sizes.get(a));
   }
 
   #addedSize(file) {
@@ -112,25 +95,19 @@ export default class Report extends Component {
         <span class="ba-sub">
           <span class="ba-loaded-dot">●</span>
           loaded in this browser:
-          {{this.loadedTotals.count}}
+          {{this.loadedTotals.files}}
           chunks ·
           {{brotliLabel this.loadedTotals}}
           br
         </span>
       </div>
 
-      <div class="ba-toolbar">
-        <input
-          placeholder="Filter files / modules…"
-          type="search"
-          {{on "input" this.updateFilter}}
-        />
-        <DToggleSwitch
-          @label="dev_tools.bundle_analyzer.only_loaded"
-          @state={{@view.onlyLoaded}}
-          {{on "click" @toggleOnlyLoaded}}
-        />
-      </div>
+      <AnalyzerToolbar
+        @filter={{this.filter}}
+        @onFilter={{this.updateFilter}}
+        @placeholder="Filter files / modules…"
+        @view={{@view}}
+      />
 
       <section>
         <h2>Static entrypoints</h2>

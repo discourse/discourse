@@ -28,10 +28,22 @@ function fileStem(fileName) {
   return fileName.replace(/^assets\/js\//, "").replace(/\.digested\.js$/, "");
 }
 
+const relCache = new Map();
+
 function rel(id) {
   if (!id) {
     return null;
   }
+  const cached = relCache.get(id);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const result = relUncached(id);
+  relCache.set(id, result);
+  return result;
+}
+
+function relUncached(id) {
   // Show third-party deps as their package-relative path (dropping the pnpm
   // store prefix); everything else relative to the build cwd, including sibling
   // workspace packages above it (e.g. ../pretty-text/...).
@@ -107,8 +119,6 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
           rawSize,
           brotliSize: brotliSizeOf(bundle, fileName),
           imports: chunk.imports,
-          dynamicImports: chunk.dynamicImports,
-          moduleCount: modules.length,
           modules,
           importSites,
         };

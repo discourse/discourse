@@ -62,14 +62,6 @@ export default class Analysis extends ChunkTotals {
     return set;
   }
 
-  closureOf(files) {
-    const set = new Set();
-    for (const f of files) {
-      this.staticClosure(f, set);
-    }
-    return set;
-  }
-
   // True when a chunk matches the filter by its file path, its name, or any of
   // the source module paths bundled inside it.
   chunkMatches(file, filter) {

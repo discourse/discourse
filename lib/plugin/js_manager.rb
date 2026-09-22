@@ -63,8 +63,10 @@ module Plugin
 
     # Logical path of the merged report, or nil before anything has been compiled.
     def self.bundle_analysis_asset
-      file = Dir.glob(Rails.root.join(BUNDLE_ANALYSIS_DIR, "js/plugins/*.json")).first
-      "js/plugins/#{File.basename(file)}" if file
+      get_set_cache("bundle_analysis") do
+        file = Dir.glob(Rails.root.join(BUNDLE_ANALYSIS_DIR, "js/plugins/*.json")).first
+        logical_path(File.basename(file)) if file
+      end
     end
 
     def self.logical_path(file_name)
@@ -145,15 +147,11 @@ module Plugin
     # analyzer's url changes whenever any plugin is recompiled.
     def merge_bundle_analysis!
       plugins =
-        Discourse
-          .plugins
-          .filter_map do |plugin|
-            path =
-              Rails.root.join(
-                "app/assets/generated/#{plugin.directory_name}/#{BUNDLE_ANALYSIS_NAME}",
-              )
-            JSON.parse(File.read(path)) if File.exist?(path)
-          end
+        Discourse.plugins.filter_map do |plugin|
+          path =
+            Rails.root.join("app/assets/generated/#{plugin.directory_name}/#{BUNDLE_ANALYSIS_NAME}")
+          JSON.parse(File.read(path)) if File.exist?(path)
+        end
 
       json = JSON.generate(generatedAt: Time.now.utc.iso8601, plugins:)
       digest = Digest::SHA256.hexdigest(json).first(12)
@@ -248,7 +246,7 @@ module Plugin
         compiler =
           Plugin::JsCompiler.new(
             plugin.name,
-            minify: minify?,
+            minify: production_build?,
             tree: tree,
             entrypoints: entrypoints_config,
             filename_prefix:,
@@ -275,10 +273,8 @@ module Plugin
             name: info["name"],
             isEntry: info["isEntry"],
             rawSize: code.bytesize,
-            brotliSize: (compress_to_brotli(js_path) if compress?),
+            brotliSize: (compress_to_brotli(js_path) if production_build?),
             imports: info["imports"],
-            dynamicImports: info["dynamicImports"],
-            moduleCount: info["modules"].length,
             modules: info["modules"],
           }
 
@@ -300,7 +296,6 @@ module Plugin
             plugin: plugin.directory_name,
             entrypoints: manifest.transform_values { it[:fileName] },
             routeBundles: manifest.transform_values { it[:routeBundles] || [] },
-            externalPluginImports: manifest.values.flat_map { it[:externalPluginImports] }.uniq,
             chunks: analysis_chunks,
           ),
         )
@@ -359,16 +354,6 @@ module Plugin
     # bundle built one way is never reused as the other.
     def production_build?
       Rails.env.production? || ENV["EMBER_ENV"] == "production"
-    end
-
-    def minify?
-      production_build?
-    end
-
-    # Compressed beside the chunk for `brotli_static`, the way core's build emits
-    # its own. Only for a bundle that ships.
-    def compress?
-      production_build?
     end
 
     # Max quality, matching what the compression step after the build would have

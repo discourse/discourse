@@ -58,59 +58,6 @@
   margin: -4px 0 12px;
 }
 
-.bundle-analyzer .ba-cards {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-.bundle-analyzer .ba-card {
-  background: var(--ba-panel);
-  border: 1px solid var(--ba-border);
-  border-radius: 8px;
-  padding: 12px 16px;
-  min-width: 150px;
-}
-.bundle-analyzer .ba-card .k {
-  color: var(--ba-muted);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.bundle-analyzer .ba-card .v {
-  font-size: 20px;
-  font-weight: 600;
-  margin-top: 2px;
-}
-
-.bundle-analyzer .ba-baseline {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.bundle-analyzer .ba-baseline label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ba-muted);
-  cursor: pointer;
-}
-.bundle-analyzer .ba-baseline label.on {
-  color: var(--ba-text);
-}
-
-.bundle-analyzer input[type="search"] {
-  background: var(--ba-panel2);
-  border: 1px solid var(--ba-border);
-  border-radius: 6px;
-  color: var(--ba-text);
-  padding: 7px 10px;
-  width: 280px;
-  font-size: 13px;
-}
-
 .bundle-analyzer .ba-toolbar {
   display: flex;
   gap: 12px;
@@ -118,25 +65,6 @@
   margin-bottom: 12px;
   flex-wrap: wrap;
 }
-.bundle-analyzer .ba-seg {
-  display: inline-flex;
-  border: 1px solid var(--ba-border);
-  border-radius: 6px;
-  overflow: hidden;
-}
-.bundle-analyzer .ba-seg button {
-  background: var(--ba-panel);
-  color: var(--ba-muted);
-  border: 0;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 12px;
-}
-.bundle-analyzer .ba-seg button.on {
-  background: var(--ba-accent);
-  color: var(--secondary);
-}
-
 .bundle-analyzer .ba-row {
   border: 1px solid var(--ba-border);
   border-radius: 8px;

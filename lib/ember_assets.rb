@@ -145,7 +145,9 @@ class EmberAssets < ActiveSupport::CurrentAttributes
   # Logical path of the bundle analyzer's report, digested so each build gets
   # its own URL. Nil when the frontend has not been built.
   def self.bundle_analysis_asset
-    read_manifest!(exception: false)&.dig("bundleAnalysis")&.delete_prefix("assets/")
+    cache[:bundle_analysis] ||= read_manifest!(exception: false)&.dig(
+      "bundleAnalysis",
+    )&.delete_prefix("assets/")
   end
 
   def self.is_ember_asset?(name)

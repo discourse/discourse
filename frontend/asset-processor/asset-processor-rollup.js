@@ -219,9 +219,6 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
-            dynamicImports: chunk.dynamicImports.filter((i) =>
-              bundle.output.find((c) => c.fileName === i)
-            ),
             // Sizes per source module, for the analyzer's breakdown. Ids are
             // relative to the plugin, matching how its sources are named.
             modules: Object.entries(chunk.modules)

@@ -1,3 +1,4 @@
+import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { barWidth, fmt, matches, routeName, stem } from "./analysis";
 import ExpandableRow from "./expandable-row";
@@ -33,6 +34,7 @@ export default class ChunkRow extends ExpandableRow {
     return this.chunk.modules.length ? this.chunk.modules[0].renderedLength : 1;
   }
 
+  @cached
   get visibleModules() {
     return this.chunk.modules.filter((m) => matches(m.id, this.args.filter));
   }
@@ -40,10 +42,7 @@ export default class ChunkRow extends ExpandableRow {
   // A filter matching a module path inside this chunk opens it, revealing the
   // matching source path without a click.
   get autoExpanded() {
-    return (
-      !!this.args.filter &&
-      this.chunk.modules.some((m) => matches(m.id, this.args.filter))
-    );
+    return !!this.args.filter && this.visibleModules.length > 0;
   }
 
   get brotliLabel() {
@@ -82,7 +81,9 @@ export default class ChunkRow extends ExpandableRow {
           {{else}}
             <span class="ba-label" title={{@file}}>
               {{this.stemmed}}
-              <span class="ba-pill">· {{this.chunk.moduleCount}} modules</span>
+              <span class="ba-pill">·
+                {{this.chunk.modules.length}}
+                modules</span>
             </span>
           {{/if}}
         </span>

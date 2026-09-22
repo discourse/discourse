@@ -48,6 +48,7 @@ export default class EntrypointCard extends ExpandableRow {
 
   // For the baseline everything counts as the initial load; for everyone else,
   // only the chunks not already in the baseline.
+  @cached
   get added() {
     if (this.args.baseline) {
       return [...this.loadSet];
@@ -55,10 +56,12 @@ export default class EntrypointCard extends ExpandableRow {
     return [...this.loadSet].filter((f) => !this.args.baselineClosure.has(f));
   }
 
+  @cached
   get addedTotals() {
     return this.analysis.totals(this.added);
   }
 
+  @cached
   get fullTotals() {
     return this.analysis.totals(this.loadSet);
   }
@@ -74,6 +77,17 @@ export default class EntrypointCard extends ExpandableRow {
   // Every card on screen matches the active filter, so a filter opens them all.
   get autoExpanded() {
     return !!this.args.filter;
+  }
+
+  // A url the route table maps to this bundle, else the source that imports it.
+  get sites() {
+    if (this.args.urls) {
+      return this.args.urls.map((label) => ({ lead: "loaded on", label }));
+    }
+    return (this.chunk.importSites ?? []).map((label) => ({
+      lead: "imported by",
+      label,
+    }));
   }
 
   get addedSorted() {
@@ -129,24 +143,18 @@ export default class EntrypointCard extends ExpandableRow {
       {{#if this.expanded}}
         <div class="ba-body">
           <div class="ba-sites">
-            {{#each @urls as |url|}}
-              <div class="ba-site">loaded on
-                <code>{{url}}</code>
+            {{#each this.sites as |site|}}
+              <div class="ba-site">{{site.lead}}
+                <code>{{site.label}}</code>
               </div>
             {{else}}
-              {{#each this.chunk.importSites as |importer|}}
-                <div class="ba-site">imported by
-                  <code>{{importer}}</code>
-                </div>
-              {{else}}
-                <div class="ba-site pill">
-                  {{#if this.loadedOnDemand}}
-                    no import site found
-                  {{else}}
-                    loaded as a top-level entrypoint
-                  {{/if}}
-                </div>
-              {{/each}}
+              <div class="ba-site pill">
+                {{#if this.loadedOnDemand}}
+                  no import site found
+                {{else}}
+                  loaded as a top-level entrypoint
+                {{/if}}
+              </div>
             {{/each}}
           </div>
           {{#if @baseline}}

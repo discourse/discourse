@@ -15,15 +15,15 @@ export default class LoadedChunks {
       this.byBasename.set(basename(file), file);
     }
 
-    this.refresh();
-
     try {
       this.observer = new PerformanceObserver((list) =>
         this.#add(list.getEntries())
       );
+      // Buffered, so this replays what the page already fetched.
       this.observer.observe({ type: "resource", buffered: true });
     } catch {
-      // Resource Timing unsupported; the one-off refresh() above still works.
+      // PerformanceObserver unsupported; take the one reading available.
+      this.#add(performance.getEntriesByType("resource"));
     }
   }
 
@@ -31,25 +31,20 @@ export default class LoadedChunks {
     return this.files.has(file);
   }
 
-  refresh() {
-    this.#add(performance.getEntriesByType("resource"), true);
-  }
-
   teardown() {
     this.observer?.disconnect();
   }
 
-  #add(entries, replace = false) {
-    const next = replace ? new Set() : new Set(this.files);
-    let changed = replace;
+  #add(entries) {
+    let next;
     for (const entry of entries) {
       const file = this.byBasename.get(basename(entry.name));
-      if (file && !next.has(file)) {
+      if (file && !this.files.has(file)) {
+        next ??= new Set(this.files);
         next.add(file);
-        changed = true;
       }
     }
-    if (changed) {
+    if (next) {
       this.files = next;
     }
   }

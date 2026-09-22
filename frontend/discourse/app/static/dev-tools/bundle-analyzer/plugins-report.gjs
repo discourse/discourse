@@ -1,48 +1,23 @@
-import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import { cached } from "@glimmer/tracking";
 import { brotliLabel, fmt } from "./analysis";
-import LoadedChunks from "./loaded-chunks";
+import AnalyzerToolbar from "./analyzer-toolbar";
+import FilterableReport from "./filterable-report";
 import PluginCard, { pluginMatches } from "./plugin-card";
 
-export default class PluginsReport extends Component {
-  @tracked filter = "";
-
-  loaded = new LoadedChunks(this.args.analysis.chunks);
-
-  constructor() {
-    super(...arguments);
-    this.args.analysis.loaded = this.loaded;
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.loaded.teardown();
-  }
-
-  get analysis() {
-    return this.args.analysis;
-  }
-
+export default class PluginsReport extends FilterableReport {
   get totals() {
     return this.analysis.totals(Object.keys(this.analysis.chunks));
   }
 
   @cached
   get visible() {
-    return this.analysis.plugins
-      .filter((p) => this.#hasContent(p) && pluginMatches(p, this.filter))
-      .sort(
-        (a, b) =>
-          this.analysis.totalsFor(b).raw - this.analysis.totalsFor(a).raw
-      );
-  }
-
-  @action
-  updateFilter(event) {
-    this.filter = event.target.value.trim().toLowerCase();
+    const shown = this.analysis.plugins.filter(
+      (p) => this.#hasContent(p) && pluginMatches(p, this.filter)
+    );
+    const sizes = new Map(
+      shown.map((p) => [p, this.analysis.totalsFor(p).raw])
+    );
+    return shown.sort((a, b) => sizes.get(b) - sizes.get(a));
   }
 
   // A plugin with nothing left to show is dropped rather than listed at zero.
@@ -66,18 +41,12 @@ export default class PluginsReport extends Component {
         </span>
       </div>
 
-      <div class="ba-toolbar">
-        <input
-          placeholder="Filter plugins / chunks / modules / routes…"
-          type="search"
-          {{on "input" this.updateFilter}}
-        />
-        <DToggleSwitch
-          @label="dev_tools.bundle_analyzer.only_loaded"
-          @state={{@view.onlyLoaded}}
-          {{on "click" @toggleOnlyLoaded}}
-        />
-      </div>
+      <AnalyzerToolbar
+        @filter={{this.filter}}
+        @onFilter={{this.updateFilter}}
+        @placeholder="Filter plugins / chunks / modules / routes…"
+        @view={{@view}}
+      />
 
       <section>
         <div class="ba-hint">
