@@ -5,6 +5,7 @@ import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import I18n from "discourse-i18n";
 
 async function setupEditor() {
   const state = new (class {
@@ -74,6 +75,393 @@ module(
   "Integration | Component | ProsemirrorEditor | Text manipulation | applySurround",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    for (const [name, markdown] of [
+      ["hard breaks", "one\ntwo"],
+      ["paragraphs", "one\n\ntwo"],
+      ["blank lines", "one\n\n\ntwo"],
+      ["formatted lines", "**one**\n_two_"],
+    ]) {
+      test(`surrounds ${name} independently in multiline mode`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, markdown);
+        if (name === "blank lines") {
+          const { view, schema } = state.textManipulation;
+          view.dispatch(
+            view.state.tr.insert(5, schema.nodes.paragraph.create())
+          );
+        }
+        selectAll(state);
+
+        state.textManipulation.applySurroundSelection(
+          "<kbd>",
+          "</kbd>",
+          "code_text",
+          { multiline: true }
+        );
+
+        assert
+          .dom(".ProseMirror kbd")
+          .exists({ count: 2 }, "each line has its own wrapper");
+        assert
+          .dom(".ProseMirror kbd:first-of-type")
+          .hasText("one", "the first line is preserved");
+        assert.false(
+          state.textManipulation.view.state.selection.empty,
+          "the formatted content stays selected"
+        );
+        if (name === "blank lines") {
+          assert
+            .dom(".ProseMirror > p")
+            .exists({ count: 3 }, "the empty paragraph is preserved");
+          assert
+            .dom(".ProseMirror > p:nth-child(2) kbd")
+            .doesNotExist("empty lines are not wrapped by default");
+        }
+        if (name === "formatted lines") {
+          assert
+            .dom(".ProseMirror kbd strong, .ProseMirror strong kbd")
+            .hasText("one", "bold survives");
+          assert
+            .dom(".ProseMirror kbd em, .ProseMirror em kbd")
+            .hasText("two", "italic survives");
+        }
+      });
+    }
+
+    test("multiline surround preserves text outside the selection and undoes in one step", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello one\ntwo world");
+      const { view } = state.textManipulation;
+      view.dispatch(
+        closeHistory(
+          view.state.tr.setSelection(
+            TextSelection.create(view.state.doc, 7, 14)
+          )
+        )
+      );
+      state.textManipulation.applySurroundSelection(
+        "<kbd>",
+        "</kbd>",
+        "code_text",
+        { multiline: true }
+      );
+      assert
+        .dom(".ProseMirror kbd:first-of-type")
+        .hasText("one", "only the selected first line is wrapped");
+      assert
+        .dom(".ProseMirror kbd:last-of-type")
+        .hasText("two", "only the selected last line is wrapped");
+      undo(view.state, view.dispatch);
+      assert.strictEqual(
+        getMarkdown(state).trim(),
+        "hello one\ntwo world",
+        "one undo restores both lines"
+      );
+    });
+
+    test("multiline surround preserves the containing blockquote", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "> one\n> two");
+      selectAll(state);
+      state.textManipulation.applySurroundSelection(
+        "<kbd>",
+        "</kbd>",
+        "code_text",
+        { multiline: true }
+      );
+      assert
+        .dom(".ProseMirror blockquote kbd")
+        .exists({ count: 2 }, "both lines stay inside the quote");
+    });
+
+    test("applies a multiline heading prefix across hard breaks", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "one\ntwo");
+      selectAll(state);
+      state.textManipulation.applySurroundSelection("# ", "", "heading_text", {
+        multiline: true,
+      });
+      assert
+        .dom(".ProseMirror h1")
+        .exists({ count: 2 }, "each selected line becomes a heading");
+      assert.strictEqual(
+        getMarkdown(state).trim(),
+        "# one\n\n# two",
+        "both lines retain their content without literal prefixes"
+      );
+    });
+
+    test("multiline heading prefixes preserve unselected boundary text", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello\nworld\nafter");
+      state.textManipulation.selectText(4, 5);
+      state.textManipulation.applySurroundSelection("# ", "", "heading_text", {
+        multiline: true,
+      });
+      assert
+        .dom(".ProseMirror > p:first-child")
+        .hasText("hel# lo", "a prefix in the middle of a line stays literal");
+      assert
+        .dom(".ProseMirror h1")
+        .hasText("world", "a heading includes the rest of its line");
+      assert
+        .dom(".ProseMirror > p:last-child")
+        .hasText("after", "the following line is preserved");
+      assert
+        .dom(".ProseMirror br")
+        .doesNotExist("block boundaries replace the original hard breaks");
+    });
+
+    test("applies a line-start heading prefix to the remaining paragraph", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      state.textManipulation.selectText(1, 5);
+      state.textManipulation.applySurroundSelection("# ", "", "heading_text", {
+        multiline: false,
+      });
+      assert
+        .dom(".ProseMirror h1")
+        .hasText("hello world", "the complete line becomes a heading");
+      const { view } = state.textManipulation;
+      assert.strictEqual(
+        view.state.doc.textBetween(
+          view.state.selection.from,
+          view.state.selection.to
+        ),
+        "hello",
+        "only the original text stays selected"
+      );
+    });
+
+    test("keeps a heading prefix literal in the middle of a paragraph", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      state.textManipulation.selectText(7, 5);
+      state.textManipulation.applySurroundSelection("# ", "", "heading_text", {
+        multiline: false,
+      });
+      assert
+        .dom(".ProseMirror p")
+        .hasText("hello # world", "mid-line markdown remains literal");
+      assert.dom(".ProseMirror h1").doesNotExist("no block is introduced");
+    });
+
+    test("honors a caller-adjusted surround selection", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+      const selected = state.textManipulation.getSelected();
+      selected.start = 7;
+      selected.value = "world";
+      state.textManipulation.applySurround(
+        selected,
+        "<small>",
+        "</small>",
+        "wrap_text"
+      );
+      assert
+        .dom(".ProseMirror small")
+        .hasText("world", "only the supplied range is wrapped");
+      assert
+        .dom(".ProseMirror p")
+        .hasText("hello world", "the preceding text is retained");
+    });
+
+    for (const tag of [
+      "big",
+      "small",
+      "sub",
+      "sup",
+      "mark",
+      "ins",
+      "del",
+      "ruby",
+    ]) {
+      test(`preserves selection after an inline ${tag} surround`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "hello **world**");
+        state.textManipulation.selectText(7, 5);
+        state.textManipulation.applySurroundSelection(
+          `<${tag}>`,
+          `</${tag}>`,
+          "wrap_text",
+          { multiline: false }
+        );
+        assert
+          .dom(`.ProseMirror ${tag} strong, .ProseMirror strong ${tag}`)
+          .hasText("world", "existing formatting is preserved");
+        const { view } = state.textManipulation;
+        assert.strictEqual(
+          view.state.doc.textBetween(
+            view.state.selection.from,
+            view.state.selection.to
+          ),
+          "world",
+          "the content remains selected"
+        );
+      });
+    }
+
+    test("selects an image created from a selected URL", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "https://example.com/image.png");
+      selectAll(state);
+      state.textManipulation.applySurroundSelection(
+        '<img src="',
+        '" alt="">',
+        "wrap_text",
+        { multiline: false }
+      );
+      await settled();
+      assert
+        .dom(".ProseMirror img")
+        .hasAttribute(
+          "src",
+          "https://example.com/image.png",
+          "the selected URL becomes an image"
+        );
+      assert.strictEqual(
+        state.textManipulation.view.state.selection.node?.type.name,
+        "image",
+        "the image is selected"
+      );
+    });
+
+    for (const [edge, markdown] of [
+      ["leading", "![a](https://example.com/image.png) hello"],
+      ["trailing", "hello ![a](https://example.com/image.png)"],
+    ]) {
+      test(`preserves a selected ${edge} image when surrounding text`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, markdown);
+        selectAll(state);
+        state.textManipulation.applySurroundSelection(
+          "<small>",
+          "</small>",
+          "wrap_text",
+          {
+            multiline: false,
+          }
+        );
+        await settled();
+        const { view } = state.textManipulation;
+        assert
+          .dom(".ProseMirror small img")
+          .exists("the image is inside the wrapper");
+        const { from, to } = view.state.selection;
+        assert.strictEqual(
+          view.state.doc.textBetween(from, to).trim(),
+          "hello",
+          "the text remains selected"
+        );
+        view.dispatch(view.state.tr.insertText("replacement"));
+        assert
+          .dom(".ProseMirror img")
+          .doesNotExist("replacing the selection removes the image too");
+        assert
+          .dom(".ProseMirror")
+          .hasText(
+            "replacement",
+            "typing replaces the complete selected content"
+          );
+      });
+    }
+
+    test("keeps an unselected image outside a restored heading selection", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world ![a](https://example.com/image.png)");
+      state.textManipulation.selectText(1, 5);
+      state.textManipulation.applySurroundSelection("# ", "", "heading_text", {
+        multiline: false,
+      });
+      await settled();
+      const { view } = state.textManipulation;
+      const { from, to } = view.state.selection;
+      assert.strictEqual(
+        view.state.doc.textBetween(from, to),
+        "hello",
+        "only the original text is selected"
+      );
+      view.dispatch(view.state.tr.insertText("replacement"));
+      assert
+        .dom(".ProseMirror h1 img")
+        .exists("the unselected image is preserved");
+      assert
+        .dom(".ProseMirror h1")
+        .hasText("replacement world", "the unselected text is preserved");
+    });
+
+    test("restores a partial image and text selection after applying a heading", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "![a](https://example.com/image.png) hello world");
+      state.textManipulation.selectText(1, 7);
+      state.textManipulation.applySurroundSelection("# ", "", "heading_text", {
+        multiline: false,
+      });
+      await settled();
+      const { view } = state.textManipulation;
+      view.dispatch(view.state.tr.insertText("replacement"));
+      assert
+        .dom(".ProseMirror img")
+        .doesNotExist("the selected image is replaced");
+      assert
+        .dom(".ProseMirror h1")
+        .hasText(
+          "replacement world",
+          "the unselected suffix remains outside the selection"
+        );
+    });
+
+    test("trims leading whitespace in toolbar selections", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      state.textManipulation.selectText(6, 6);
+      const selected = state.textManipulation.getSelected(true);
+      state.textManipulation.applySurround(
+        selected,
+        "<small>",
+        "</small>",
+        "wrap_text"
+      );
+      assert
+        .dom(".ProseMirror small")
+        .hasText("world", "leading whitespace stays outside the wrapper");
+      assert.strictEqual(
+        selected.start,
+        7,
+        "the selection starts after whitespace"
+      );
+    });
+
+    test("selects the rendered content of a structured placeholder", async function (assert) {
+      const state = await setupEditor();
+      const translations = I18n.translations[I18n.locale].js.composer;
+      const original = translations.wrap_text;
+      translations.wrap_text = "日本語<rp>(</rp><rt>にほんご</rt><rp>)</rp>";
+      try {
+        state.textManipulation.applySurroundSelection(
+          "<ruby>",
+          "</ruby>",
+          "wrap_text",
+          { multiline: false }
+        );
+        assert
+          .dom(".ProseMirror ruby rt")
+          .hasText("にほんご", "the annotation is rendered");
+        const { view } = state.textManipulation;
+        assert.strictEqual(
+          view.state.doc.textBetween(
+            view.state.selection.from,
+            view.state.selection.to
+          ),
+          "日本語(にほんご)",
+          "the complete parsed placeholder is selected"
+        );
+      } finally {
+        translations.wrap_text = original;
+      }
+    });
 
     test("toggles bold mark via parser detection", async function (assert) {
       const state = await setupEditor();
@@ -380,6 +768,35 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    test("honors inline mode for a custom prefix across paragraphs", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "one\n\ntwo");
+      selectAll(state);
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "? ",
+        "list_item",
+        { multiline: false }
+      );
+      assert.strictEqual(
+        getMarkdown(state).trim(),
+        "? one\n\ntwo",
+        "the prefix is applied once"
+      );
+    });
+
+    test("honors a caller-adjusted list selection", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+      const selected = state.textManipulation.getSelected();
+      selected.start = 7;
+      state.textManipulation.applyList(selected, "? ", "list_item");
+      assert
+        .dom(".ProseMirror p")
+        .hasText("hello ? world", "only the supplied range is prefixed");
+    });
+
     test("applies bullet list via parser detection", async function (assert) {
       const state = await setupEditor();
       setContent(state, "hello world");
@@ -655,6 +1072,17 @@ module(
       state.textManipulation.applyList(sel, "? ", "list_item");
 
       assert.strictEqual(getMarkdown(state).trim(), "? line one\n? line two");
+      const { view } = state.textManipulation;
+      assert.strictEqual(
+        view.state.doc.textBetween(
+          view.state.selection.from,
+          view.state.selection.to,
+          "\n",
+          "\n"
+        ),
+        "? line one\n? line two",
+        "all prefixed lines remain selected"
+      );
     });
   }
 );

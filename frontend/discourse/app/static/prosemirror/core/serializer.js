@@ -2,6 +2,7 @@ import {
   defaultMarkdownSerializer,
   MarkdownSerializerState,
 } from "prosemirror-markdown";
+import { Fragment, Node } from "prosemirror-model";
 import expelBoundaryPunctuation from "../lib/expel-boundary-punctuation";
 
 export default class Serializer {
@@ -24,7 +25,21 @@ export default class Serializer {
 
   convert(doc) {
     const state = new MarkdownSerializerState(this.nodes, this.marks, {});
-    state.renderContent(expelBoundaryPunctuation(doc).content);
+    const normalized = expelBoundaryPunctuation(doc);
+    const content =
+      normalized instanceof Fragment ? normalized : normalized.content;
+    if (content.firstChild?.isInline) {
+      const parent =
+        normalized instanceof Node
+          ? normalized
+          : content.firstChild.type.schema.nodes.paragraph.create(
+              null,
+              content
+            );
+      state.renderInline(parent);
+    } else {
+      state.renderContent(content);
+    }
 
     if (this.#afterSerializers) {
       for (const afterSerializer of this.#afterSerializers) {
