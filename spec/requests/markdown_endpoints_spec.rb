@@ -12,6 +12,25 @@ RSpec.describe "Markdown endpoints" do
 
   after { category.clear_url_cache }
 
+  it "respects the upcoming change promotion policy and explicit opt-in" do
+    SiteSetting.promote_upcoming_changes_on_status = "stable"
+
+    get "/latest.md"
+    expect(response).to have_http_status(:not_found)
+
+    get "/latest", headers: { "ACCEPT" => "text/html" }
+    expect(response.headers["Link"]).to be_blank
+
+    SiteSetting.enable_markdown_endpoints = true
+
+    get "/latest.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq("text/markdown")
+
+    get "/latest", headers: { "ACCEPT" => "text/html" }
+    expect(response.headers["Link"]).to include("/latest.md")
+  end
+
   it "keeps HTML tag-intersection redirects out of Markdown routes" do
     tag = Fabricate(:tag)
 

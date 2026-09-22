@@ -4548,8 +4548,6 @@ mcp:
     hidden: true
 
 api:
-  enable_markdown_endpoints:
-    default: true
   retain_web_hook_events_period_days:
     default: 30
     max: 36500
@@ -4783,6 +4781,15 @@ dashboard:
     client: true
 
 experimental:
+  enable_markdown_endpoints:
+    default: false
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413006"
+      allow_enabled_for:
+        - everyone
   enable_generated_llms_txt:
     default: false
     hidden: true
