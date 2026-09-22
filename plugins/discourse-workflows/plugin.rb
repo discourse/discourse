@@ -83,6 +83,7 @@ after_initialize do
   DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
     DiscourseWorkflows.register_node(node_class, self)
   end
+  DiscourseWorkflows::Registry.reset_indexes!
 
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
     "DiscourseWorkflows::CredentialTypes::BasicAuth",

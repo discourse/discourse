@@ -58,6 +58,7 @@ RSpec.describe DiscourseWorkflows::Registry do
       WorkflowReloadSpec::Credential.name,
       plugin,
     )
+    described_class.reset_indexes!
     allow(DiscourseWorkflows::EventListener).to receive(:handle) do |klass, *args|
       handled << [klass, args]
     end
@@ -68,6 +69,7 @@ RSpec.describe DiscourseWorkflows::Registry do
     DiscoursePluginRegistry._raw_discourse_workflows_nodes.replace(@registered_nodes)
     DiscoursePluginRegistry._raw_discourse_workflows_credential_types.replace(@credential_types)
     DiscourseWorkflows::NodeType.registered_nodes.replace(@node_classes)
+    described_class.reset_indexes!
     loader.unload
     loader.unregister
     FileUtils.remove_entry(directory)

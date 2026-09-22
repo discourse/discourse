@@ -699,6 +699,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       before do
         DiscoursePluginRegistry.register_discourse_workflows_node(unavailable_node_class, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
       end
 
       after { unregister_workflow_nodes(unavailable_node_class) }
@@ -773,6 +774,7 @@ RSpec.describe DiscourseWorkflows::Executor do
         plugin = Plugin::Instance.new
         DiscoursePluginRegistry.register_discourse_workflows_node(v1_node_class, plugin)
         DiscoursePluginRegistry.register_discourse_workflows_node(v2_node_class, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
       end
 
       after { unregister_workflow_nodes(v1_node_class, v2_node_class) }
@@ -854,6 +856,7 @@ RSpec.describe DiscourseWorkflows::Executor do
           oversized_output_node_class,
           plugin,
         )
+        DiscourseWorkflows::Registry.reset_indexes!
       end
 
       after do

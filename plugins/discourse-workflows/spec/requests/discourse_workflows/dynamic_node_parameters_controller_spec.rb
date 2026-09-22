@@ -147,6 +147,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         end
 
       DiscoursePluginRegistry.register_discourse_workflows_node(node_class, Plugin::Instance.new)
+      DiscourseWorkflows::Registry.reset_indexes!
 
       post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
            params: {
@@ -229,6 +230,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
 
       DiscoursePluginRegistry.register_discourse_workflows_node(v1, Plugin::Instance.new)
       DiscoursePluginRegistry.register_discourse_workflows_node(v2, Plugin::Instance.new)
+      DiscourseWorkflows::Registry.reset_indexes!
 
       post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
            params: {
@@ -272,6 +274,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         end
 
       DiscoursePluginRegistry.register_discourse_workflows_node(node_class, Plugin::Instance.new)
+      DiscourseWorkflows::Registry.reset_indexes!
 
       post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
            params: {
@@ -300,6 +303,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         end
 
       DiscoursePluginRegistry.register_discourse_workflows_node(node_class, Plugin::Instance.new)
+      DiscourseWorkflows::Registry.reset_indexes!
 
       post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
            params: {

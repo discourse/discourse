@@ -293,6 +293,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
 
         DiscoursePluginRegistry.register_discourse_workflows_node(v1, Plugin::Instance.new)
         DiscoursePluginRegistry.register_discourse_workflows_node(v2, Plugin::Instance.new)
+        DiscourseWorkflows::Registry.reset_indexes!
 
         result =
           described_class.call(
@@ -322,6 +323,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         plugin = Plugin::Instance.new
         DiscoursePluginRegistry.register_discourse_workflows_node(v1, plugin)
         DiscoursePluginRegistry.register_discourse_workflows_node(v2, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
         workflow.update!(
           nodes: [
             {

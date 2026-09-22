@@ -192,6 +192,7 @@ RSpec.describe DiscourseWorkflows::Executor do
       before do
         plugin = Plugin::Instance.new
         DiscoursePluginRegistry.register_discourse_workflows_node(timeout_wait_node_class, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
       end
 
       after { unregister_workflow_nodes(timeout_wait_node_class) }

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Registry do
+  before { described_class.reset_indexes! }
+
   describe ".find_credential_type" do
     it "finds a credential type by identifier" do
       result = described_class.find_credential_type("basic_auth")

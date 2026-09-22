@@ -46,8 +46,12 @@ module DiscourseWorkflows
       end
 
       def find_credential_type(identifier, include_disabled_plugins: false)
-        credential_types(include_disabled_plugins: include_disabled_plugins).find do |type|
-          type.identifier == identifier
+        if include_disabled_plugins
+          credential_types(include_disabled_plugins: true).find do |type|
+            type.identifier == identifier
+          end
+        else
+          resolve_class(credential_type_index[identifier])
         end
       end
 
@@ -62,6 +66,10 @@ module DiscourseWorkflows
 
       def available_versions(identifier, include_disabled_plugins: false)
         versions_by_identifier(include_disabled_plugins: include_disabled_plugins)[identifier] || []
+      end
+
+      def reset_indexes!
+        @credential_type_index = nil
       end
 
       private
@@ -88,6 +96,11 @@ module DiscourseWorkflows
           .transform_values do |keys|
             keys.map(&:second).sort_by { |version| Gem::Version.new(version) }
           end
+      end
+
+      def credential_type_index
+        @credential_type_index ||=
+          credential_types.to_h { |klass| [klass.identifier, klass.name || klass] }
       end
     end
   end

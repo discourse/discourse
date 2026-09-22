@@ -926,6 +926,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         )
       end
     DiscoursePluginRegistry.register_discourse_workflows_node(schema_node, Plugin::Instance.new)
+    DiscourseWorkflows::Registry.reset_indexes!
     operations = [
       {
         op: "add_node",

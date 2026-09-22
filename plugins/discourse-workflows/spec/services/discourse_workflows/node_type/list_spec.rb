@@ -251,6 +251,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         unavailable_class,
         Plugin::Instance.new,
       )
+      DiscourseWorkflows::Registry.reset_indexes!
 
       result = described_class.call(guardian: admin.guardian)
       unavailable =
@@ -293,6 +294,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
       DiscoursePluginRegistry.register_discourse_workflows_node(v1, Plugin::Instance.new)
       DiscoursePluginRegistry.register_discourse_workflows_node(v2, Plugin::Instance.new)
+      DiscourseWorkflows::Registry.reset_indexes!
 
       result = described_class.call(guardian: admin.guardian)
       node_type =
