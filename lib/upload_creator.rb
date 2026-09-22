@@ -345,20 +345,23 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(from, to)
 
     from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
 
     from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
 
     opts = { flatten: false } # Preserve transparency
 
     read = [@file.path]
-    write = [File.dirname(png_tempfile.path)]
 
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
+    ImageProcessing::OutputFile.write(to) do |temporary_path|
+      converted_path = OptimizedImage.prepend_decoder!(temporary_path)
+      write = [temporary_path]
+
+      begin
+        execute_convert(from, converted_path, opts, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, converted_path, opts.merge(debug: true), read:, write:)
+      end
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
