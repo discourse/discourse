@@ -2,8 +2,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminUsersListShowRoute extends DiscourseRoute {
   queryParams = {
-    order: { refreshModel: true },
-    asc: { refreshModel: true },
     username: { refreshModel: true },
   };
 
