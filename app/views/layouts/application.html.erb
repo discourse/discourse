@@ -66,8 +66,6 @@
 
     <%= preload_script 'js/browser-detect' %>
 
-    <%= preload_script "vendor", type_module: true %>
-
     <%= module_preloads_for "discourse", (staff? ? "admin/compat-modules" : nil) %>
 
     <%- unless customization_disabled? %>
