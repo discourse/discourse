@@ -505,6 +505,59 @@ RSpec.describe NotificationsController do
           end
         end
 
+        context "with names disabled" do
+          fab!(:mentioner) { Fabricate(:user, name: "Hidden Mentioner Name") }
+
+          before { SiteSetting.enable_names = false }
+
+          it "does not expose a mentioner's full name" do
+            post = Fabricate(:post, user: mentioner, raw: "@#{user.username}")
+            PostAlerter.post_created(post)
+
+            mention_notification =
+              user.notifications.find_by!(notification_type: Notification.types[:mentioned])
+            expect(mention_notification.data_hash[:display_name]).to eq(mentioner.name)
+
+            get "/notifications.json"
+
+            expect(response.status).to eq(200)
+            notification =
+              response.parsed_body["notifications"].find do |item|
+                item["id"] == mention_notification.id
+              end
+            expect(notification["data"]).not_to have_key("display_name")
+            expect(response.body).not_to include(mentioner.name)
+          end
+        end
+
+        context "with user-menu avatars enabled and names disabled" do
+          fab!(:liker) { Fabricate(:user, name: "Hidden Liker Name") }
+          fab!(:liked_post) { Fabricate(:post, user: user) }
+
+          before do
+            SiteSetting.enable_names = false
+            SiteSetting.show_user_menu_avatars = true
+            user.user_option.update!(
+              like_notification_frequency: UserOption.like_notification_frequency_type[:always],
+            )
+            PostActionNotifier.enable
+            PostActionCreator.like(liker, liked_post)
+          end
+
+          it "does not expose a liker's name" do
+            get "/notifications.json"
+
+            expect(response.status).to eq(200)
+            liked_notification =
+              response.parsed_body["notifications"].find do |notification|
+                notification["notification_type"] == Notification.types[:liked]
+              end
+            expect(liked_notification["acting_user_avatar_template"]).to be_present
+            expect(liked_notification).not_to have_key("acting_user_name")
+            expect(response.body).not_to include(liker.name)
+          end
+        end
+
         context "when a notification topic has localizations" do
           fab!(:english_topic) { Fabricate(:topic, locale: "en") }
           fab!(:topic_localization_es) do
