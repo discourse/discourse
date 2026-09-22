@@ -2,7 +2,7 @@
 
 class McpOauthAuthorizationsController < ApplicationController
   layout "no_ember"
-  requires_login only: [:create]
+  requires_login except: [:show]
   skip_before_action :check_xhr, :preload_json
   skip_after_action :conditionally_allow_site_embedding
   before_action :redirect_to_login, only: [:show], unless: :current_user
