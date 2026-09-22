@@ -4,14 +4,10 @@ describe McpOauthAuthorizationsController do
   fab!(:admin)
   fab!(:user)
 
-  before do
-    sign_in(admin)
-    SiteSetting.mcp_server_enabled = true
-  end
+  before { SiteSetting.mcp_server_enabled = true }
 
   describe "#show" do
     it "redirects anonymous users to login and preserves the authorization request" do
-      sign_out
       client =
         McpOauthClient.create!(
           client_id: "login-client",
@@ -40,7 +36,7 @@ describe McpOauthAuthorizationsController do
       expect(destination_url).to eq("http://test.localhost#{authorization_url}")
 
       sign_in(admin)
-      get destination_url
+      get URI(destination_url).request_uri
 
       expect(response.status).to eq(200)
       expect(response.body).to include(client.name)
@@ -49,8 +45,6 @@ describe McpOauthAuthorizationsController do
 
   describe "#create" do
     it "rejects anonymous consent submissions" do
-      sign_out
-
       post "/oauth2/mcp/authorize", params: { decision: "approve" }
 
       expect(response.status).to eq(403)
@@ -59,6 +53,7 @@ describe McpOauthAuthorizationsController do
   end
 
   it "labels the OAuth resource as the MCP server" do
+    sign_in(admin)
     client =
       McpOauthClient.create!(
         client_id: "consent-page-client",
@@ -85,6 +80,7 @@ describe McpOauthAuthorizationsController do
   end
 
   it "prevents the authorization page from being framed when site embedding is enabled" do
+    sign_in(admin)
     SiteSetting.allow_embedding_site_in_an_iframe = true
     SiteSetting.content_security_policy = false
     client =
@@ -113,6 +109,7 @@ describe McpOauthAuthorizationsController do
   end
 
   it "rejects an authorization request without the initial scope" do
+    sign_in(admin)
     client =
       McpOauthClient.create!(
         client_id: "missing-initial-scope-client",
@@ -202,6 +199,7 @@ describe McpOauthAuthorizationsController do
   end
 
   it "authorizes a loopback redirect using the client's active port" do
+    sign_in(admin)
     client =
       McpOauthClient.create!(
         client_id: "loopback-client",
@@ -228,6 +226,7 @@ describe McpOauthAuthorizationsController do
   end
 
   it "shows consent when a metadata client supports public authentication as a choice" do
+    sign_in(admin)
     client_id = "https://client.example.com/oauth/client.json"
     redirect_uri = "https://client.example.com/callback"
     SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
@@ -285,6 +284,7 @@ describe McpOauthAuthorizationsController do
   end
 
   it "rate limits metadata lookups across unique client IDs" do
+    sign_in(admin)
     SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     RateLimiter.enable
     allow(DiscourseMcp::OAuth::ClientResolver).to receive(:fetch_metadata) do |uri|
