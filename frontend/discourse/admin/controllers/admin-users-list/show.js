@@ -14,6 +14,7 @@ import DiscourseURL, { applyQueryParams } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 const MAX_BULK_SELECT_LIMIT = 100;
+const USERS_PER_PAGE = 100;
 
 export default class AdminUsersListShowController extends Controller {
   @service modal;
@@ -314,7 +315,7 @@ export default class AdminUsersListShowController extends Controller {
     })
       .then((result) => {
         this.#results[page] = result;
-        if (result.length === 0) {
+        if (result.length < USERS_PER_PAGE) {
           this.#canLoadMore = false;
         }
       })
