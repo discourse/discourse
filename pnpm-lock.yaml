@@ -267,7 +267,7 @@ importers:
         version: 6.1.20(@fullcalendar/core@6.1.20)(moment@2.30.1)
       '@fullcalendar/moment-timezone':
         specifier: ^6.1.20
-        version: 6.1.20(@fullcalendar/core@6.1.20)(moment-timezone@0.6.3)
+        version: 6.1.20(@fullcalendar/core@6.1.20)(moment-timezone@0.6.4)
       '@fullcalendar/timegrid':
         specifier: ^6.1.20
         version: 6.1.20(@fullcalendar/core@6.1.20)
@@ -365,8 +365,8 @@ importers:
         specifier: 2.30.1
         version: 2.30.1
       moment-timezone:
-        specifier: 0.6.3
-        version: 0.6.3
+        specifier: 0.6.4
+        version: 0.6.4
       morphlex:
         specifier: ^1.4.0
         version: 1.4.0
@@ -6105,8 +6105,8 @@ packages:
     resolution: {integrity: sha512-SGFVW+UHYZlNGkFfMHev141IUTDh47r/t0yb1sZxrSect6+E88anirPFAiBA/aH/VSESYQ7AWpE2hzLIxf9ILA==}
     engines: {node: 20 || 22 || 24 || 26}
 
-  moment-timezone@0.6.3:
-    resolution: {integrity: sha512-pVEPA/HCFHHbwJ130ywnzYuZpkEGcP6Daa/OwNebpA18MybeFHmQilAGGovXgWijQ8vQtmud9jZrziUBgsykfg==}
+  moment-timezone@0.6.4:
+    resolution: {integrity: sha512-JHUK8Mgheach4uMQmIV/pIfrv0ubPiDCPPqc7Mi604je1UblP6Gbm+FfV+Oh88KP03rZqGCZG3t0wmpfdlDv+w==}
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -9628,10 +9628,10 @@ snapshots:
     dependencies:
       '@fullcalendar/core': 6.1.20
 
-  '@fullcalendar/moment-timezone@6.1.20(@fullcalendar/core@6.1.20)(moment-timezone@0.6.3)':
+  '@fullcalendar/moment-timezone@6.1.20(@fullcalendar/core@6.1.20)(moment-timezone@0.6.4)':
     dependencies:
       '@fullcalendar/core': 6.1.20
-      moment-timezone: 0.6.3
+      moment-timezone: 0.6.4
 
   '@fullcalendar/moment@6.1.20(@fullcalendar/core@6.1.20)(moment@2.30.1)':
     dependencies:
@@ -14335,7 +14335,7 @@ snapshots:
 
   mktemp@2.0.4: {}
 
-  moment-timezone@0.6.3:
+  moment-timezone@0.6.4:
     dependencies:
       moment: 2.30.1
 
