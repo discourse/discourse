@@ -4784,6 +4784,7 @@ experimental:
   enable_markdown_endpoints:
     default: false
     hidden: true
+    client: true
     upcoming_change:
       status: "beta"
       impact: "feature,all_members"
