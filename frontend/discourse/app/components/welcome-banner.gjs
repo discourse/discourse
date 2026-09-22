@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { next } from "@ember/runloop";
+import { registerDestructor } from "@ember/destroyable";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
@@ -17,6 +18,9 @@ import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
+
+const claimedLocations = new Map();
+const reportedLocations = new Set();
 
 export const ALL_PAGES_EXCLUDED_ROUTES = [
   "account-created.edit-email",
@@ -130,6 +134,46 @@ export default class WelcomeBanner extends Component {
     return () => this.appEvents.off("header:keyboard-trigger", cb);
   });
 
+  constructor() {
+    super(...arguments);
+
+    const { location } = this.args;
+    if (location === undefined) {
+      return;
+    }
+
+    claimedLocations.set(location, (claimedLocations.get(location) ?? 0) + 1);
+    registerDestructor(this, () => {
+      const remaining = claimedLocations.get(location) - 1;
+      if (remaining > 0) {
+        claimedLocations.set(location, remaining);
+      } else {
+        claimedLocations.delete(location);
+      }
+    });
+
+    // Other render points are constructed in this same pass, so wait for them
+    // before deciding that nobody claimed the location.
+    schedule("afterRender", this, this.#reportUnclaimedLocation);
+  }
+
+  // Where the banner renders. Core offers the site setting's locations; a
+  // customization can return a location of its own and render the banner independently,
+  // as long as it passes a @location that matches the transformer's value
+  get location() {
+    return applyValueTransformer(
+      "welcome-banner-location",
+      this.siteSettings.welcome_banner_location
+    );
+  }
+
+  // A bare <WelcomeBanner> without a @location arg will render regardless of the claimed location
+  get matchesLocation() {
+    return (
+      this.args.location === undefined || this.args.location === this.location
+    );
+  }
+
   get displayForRoute() {
     const { currentRouteName } = this.router;
     const { top_menu, welcome_banner_page_visibility } = this.siteSettings;
@@ -194,7 +238,11 @@ export default class WelcomeBanner extends Component {
   }
 
   get shouldDisplay() {
-    return this.siteSettings.enable_welcome_banner && this.displayForRoute;
+    return (
+      this.siteSettings.enable_welcome_banner &&
+      this.matchesLocation &&
+      this.displayForRoute
+    );
   }
 
   get bodyClasses() {
@@ -206,7 +254,7 @@ export default class WelcomeBanner extends Component {
   }
 
   get locationClass() {
-    return `--location-${dasherize(this.siteSettings.welcome_banner_location)}`;
+    return `--location-${dasherize(this.location)}`;
   }
 
   get bgImgClass() {
@@ -234,6 +282,31 @@ export default class WelcomeBanner extends Component {
         `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
       );
     }
+  }
+
+  #reportUnclaimedLocation() {
+    if (this.isDestroying) {
+      return;
+    }
+
+    const { location } = this;
+    if (
+      !this.siteSettings.enable_welcome_banner ||
+      !this.displayForRoute ||
+      claimedLocations.has(location) ||
+      reportedLocations.has(location)
+    ) {
+      return;
+    }
+
+    reportedLocations.add(location);
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Welcome banner: no render point for location "${location}", so the ` +
+        `banner will not be shown. Either render <WelcomeBanner @location="${location}" /> ` +
+        "where you want it, or check the value returned by the " +
+        "welcome-banner-location transformer."
+    );
   }
 
   #shouldDisplayForRoute(
