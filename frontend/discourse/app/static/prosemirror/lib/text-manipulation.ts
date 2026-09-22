@@ -349,13 +349,12 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     const isList =
       probe.type === this.schema.nodes.bullet_list ||
       probe.type === this.schema.nodes.ordered_list;
-    const item = isList ? singleChild(probe) : null;
-    const paragraph = isList
-      ? item?.type === this.schema.nodes.list_item
-        ? singleChild(item)
-        : null
-      : singleChild(probe);
-    if (paragraph?.type !== this.schema.nodes.paragraph) {
+    const container = isList ? singleChild(probe) : probe;
+    const paragraph = singleChild(container);
+    if (
+      (isList && container?.type !== this.schema.nodes.list_item) ||
+      paragraph?.type !== this.schema.nodes.paragraph
+    ) {
       this.#applyListFallback(head, exampleKey, opts);
       return;
     }
@@ -764,14 +763,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     let replacementFrom = from;
     let replacementTo = to;
 
-    // A line-start prefix applies to the remaining text on that line as well.
-    if (
-      !tail &&
-      from !== to &&
-      withinTextblock &&
-      startsLine &&
-      $from.parent.content.size > 0
-    ) {
+    if (!tail && from !== to && withinTextblock && startsLine) {
       replacementTo = $to.end();
       if (opts?.multiline) {
         $from.parent.forEach((child, offset) => {

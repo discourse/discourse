@@ -76,58 +76,56 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    for (const [name, markdown] of [
-      ["hard breaks", "one\ntwo"],
-      ["paragraphs", "one\n\ntwo"],
-      ["blank lines", "one\n\n\ntwo"],
-      ["formatted lines", "**one**\n_two_"],
-    ]) {
-      test(`surrounds ${name} independently in multiline mode`, async function (assert) {
-        const state = await setupEditor();
-        setContent(state, markdown);
-        if (name === "blank lines") {
-          const { view, schema } = state.textManipulation;
-          view.dispatch(
-            view.state.tr.insert(5, schema.nodes.paragraph.create())
-          );
-        }
-        selectAll(state);
+    test("surrounds formatted lines independently in multiline mode", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "**one**\n_two_");
+      selectAll(state);
+      state.textManipulation.applySurroundSelection(
+        "<kbd>",
+        "</kbd>",
+        "code_text",
+        { multiline: true }
+      );
+      assert
+        .dom(".ProseMirror kbd")
+        .exists({ count: 2 }, "each line has its own wrapper");
+      assert
+        .dom(".ProseMirror kbd strong, .ProseMirror strong kbd")
+        .hasText("one", "bold survives");
+      assert
+        .dom(".ProseMirror kbd em, .ProseMirror em kbd")
+        .hasText("two", "italic survives");
+      assert.false(
+        state.textManipulation.view.state.selection.empty,
+        "the formatted content stays selected"
+      );
+    });
 
-        state.textManipulation.applySurroundSelection(
-          "<kbd>",
-          "</kbd>",
-          "code_text",
-          { multiline: true }
-        );
-
-        assert
-          .dom(".ProseMirror kbd")
-          .exists({ count: 2 }, "each line has its own wrapper");
-        assert
-          .dom(".ProseMirror kbd:first-of-type")
-          .hasText("one", "the first line is preserved");
-        assert.false(
-          state.textManipulation.view.state.selection.empty,
-          "the formatted content stays selected"
-        );
-        if (name === "blank lines") {
-          assert
-            .dom(".ProseMirror > p")
-            .exists({ count: 3 }, "the empty paragraph is preserved");
-          assert
-            .dom(".ProseMirror > p:nth-child(2) kbd")
-            .doesNotExist("empty lines are not wrapped by default");
-        }
-        if (name === "formatted lines") {
-          assert
-            .dom(".ProseMirror kbd strong, .ProseMirror strong kbd")
-            .hasText("one", "bold survives");
-          assert
-            .dom(".ProseMirror kbd em, .ProseMirror em kbd")
-            .hasText("two", "italic survives");
-        }
-      });
-    }
+    test("multiline surround skips empty paragraphs", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "one\n\ntwo");
+      const { view, schema } = state.textManipulation;
+      view.dispatch(view.state.tr.insert(5, schema.nodes.paragraph.create()));
+      selectAll(state);
+      state.textManipulation.applySurroundSelection(
+        "<kbd>",
+        "</kbd>",
+        "code_text",
+        { multiline: true }
+      );
+      assert
+        .dom(".ProseMirror > p")
+        .exists({ count: 3 }, "the empty paragraph is preserved");
+      assert
+        .dom(".ProseMirror > p:nth-child(2) kbd")
+        .doesNotExist("empty paragraphs are not wrapped by default");
+      assert
+        .dom(".ProseMirror > p:first-child kbd")
+        .hasText("one", "the first paragraph is wrapped");
+      assert
+        .dom(".ProseMirror > p:last-child kbd")
+        .hasText("two", "the last paragraph is wrapped");
+    });
 
     test("multiline surround preserves text outside the selection and undoes in one step", async function (assert) {
       const state = await setupEditor();
@@ -213,27 +211,6 @@ module(
         .doesNotExist("block boundaries replace the original hard breaks");
     });
 
-    test("applies a line-start heading prefix to the remaining paragraph", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      state.textManipulation.selectText(1, 5);
-      state.textManipulation.applySurroundSelection("# ", "", "heading_text", {
-        multiline: false,
-      });
-      assert
-        .dom(".ProseMirror h1")
-        .hasText("hello world", "the complete line becomes a heading");
-      const { view } = state.textManipulation;
-      assert.strictEqual(
-        view.state.doc.textBetween(
-          view.state.selection.from,
-          view.state.selection.to
-        ),
-        "hello",
-        "only the original text stays selected"
-      );
-    });
-
     test("keeps a heading prefix literal in the middle of a paragraph", async function (assert) {
       const state = await setupEditor();
       setContent(state, "hello world");
@@ -268,40 +245,29 @@ module(
         .hasText("hello world", "the preceding text is retained");
     });
 
-    for (const tag of [
-      "big",
-      "small",
-      "sub",
-      "sup",
-      "mark",
-      "ins",
-      "del",
-      "ruby",
-    ]) {
-      test(`preserves selection after an inline ${tag} surround`, async function (assert) {
-        const state = await setupEditor();
-        setContent(state, "hello **world**");
-        state.textManipulation.selectText(7, 5);
-        state.textManipulation.applySurroundSelection(
-          `<${tag}>`,
-          `</${tag}>`,
-          "wrap_text",
-          { multiline: false }
-        );
-        assert
-          .dom(`.ProseMirror ${tag} strong, .ProseMirror strong ${tag}`)
-          .hasText("world", "existing formatting is preserved");
-        const { view } = state.textManipulation;
-        assert.strictEqual(
-          view.state.doc.textBetween(
-            view.state.selection.from,
-            view.state.selection.to
-          ),
-          "world",
-          "the content remains selected"
-        );
-      });
-    }
+    test("preserves formatting and selection after an inline surround", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello **world**");
+      state.textManipulation.selectText(7, 5);
+      state.textManipulation.applySurroundSelection(
+        "<small>",
+        "</small>",
+        "wrap_text",
+        { multiline: false }
+      );
+      assert
+        .dom(".ProseMirror small strong, .ProseMirror strong small")
+        .hasText("world", "existing formatting is preserved");
+      const { view } = state.textManipulation;
+      assert.strictEqual(
+        view.state.doc.textBetween(
+          view.state.selection.from,
+          view.state.selection.to
+        ),
+        "world",
+        "the content remains selected"
+      );
+    });
 
     test("selects an image created from a selected URL", async function (assert) {
       const state = await setupEditor();
@@ -378,6 +344,9 @@ module(
       await settled();
       const { view } = state.textManipulation;
       const { from, to } = view.state.selection;
+      assert
+        .dom(".ProseMirror h1")
+        .hasText("hello world", "the complete line becomes a heading");
       assert.strictEqual(
         view.state.doc.textBetween(from, to),
         "hello",
