@@ -46,6 +46,14 @@ end
 require_relative "lib/chat/engine"
 
 after_initialize do
+  original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
+  MessageBus.group_ids_lookup do |env|
+    host = RailsMultisite::ConnectionManagement.host(env)
+    RailsMultisite::ConnectionManagement.with_hostname(host) do
+      Chat.message_bus_group_ids_for(original_message_bus_group_ids_lookup&.call(env))
+    end
+  end
+
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
