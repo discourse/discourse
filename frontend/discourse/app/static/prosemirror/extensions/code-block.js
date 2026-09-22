@@ -195,10 +195,34 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
-export function normalizeCodeBlockLines(doc) {
+const LANGUAGE_CLASS = /^lang(?:uage)?-(.+)$/;
+
+function codeBlockLanguage(...elements) {
+  for (const element of elements) {
+    for (const className of element.classList) {
+      const language = className.match(LANGUAGE_CLASS)?.[1];
+      // `auto` is a request to autodetect, not a language
+      if (language && language !== "auto") {
+        return language;
+      }
+    }
+  }
+}
+
+export function normalizeCodeBlocks(doc) {
   let changed = false;
 
   for (const code of doc.querySelectorAll("pre > code")) {
+    const pre = code.parentElement;
+
+    if (!pre.hasAttribute("data-params")) {
+      const language = codeBlockLanguage(code, pre, pre.parentElement);
+      if (language) {
+        pre.setAttribute("data-params", language);
+        changed = true;
+      }
+    }
+
     const lines = [...code.childNodes];
     if (
       !lines.length ||
@@ -208,6 +232,9 @@ export function normalizeCodeBlockLines(doc) {
     ) {
       continue;
     }
+
+    // The final break ends the last line; keeping it would add a blank one.
+    lines.at(-1).lastChild.remove();
 
     // Each line already has an explicit break; block wrappers would split the code block.
     for (const line of lines) {
@@ -254,6 +281,7 @@ const extension = {
     },
   },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
+  transformParsedHTML: normalizeCodeBlocks,
   keymap: () => ({
     Tab: indentCodeBlock(),
     "Shift-Tab": indentCodeBlock(true),
@@ -293,7 +321,7 @@ const extension = {
         props: {
           transformPastedHTML(html) {
             const doc = new DOMParser().parseFromString(html, "text/html");
-            return normalizeCodeBlockLines(doc) ? doc.body.innerHTML : html;
+            return normalizeCodeBlocks(doc) ? doc.body.innerHTML : html;
           },
         },
       }),

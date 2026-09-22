@@ -62,7 +62,7 @@ module(
       const [editor] = await setupRichEditor(assert, "");
 
       editor.view.pasteHTML(
-        '<pre data-params="text"><code><div><span>first</span><br></div><div><br></div><div>  last<br></div></code></pre>'
+        '<pre class="language-bash"><code><div><span>first</span><br></div><div><br></div><div>  last<br></div></code></pre>'
       );
       await settled();
 
@@ -71,12 +71,12 @@ module(
         .exists({ count: 1 }, "keeps one code block");
       assert.strictEqual(
         editor.view.state.doc.firstChild.textContent,
-        "first\n\n  last\n",
+        "first\n\n  last",
         "preserves line breaks and indentation in the pasted code"
       );
       assert.strictEqual(
         editor.view.state.doc.firstChild.attrs.params,
-        "text",
+        "bash",
         "preserves the code language"
       );
     });

@@ -68,7 +68,6 @@ export default async function toMarkdown(html) {
       { createSchema },
       { default: Serializer },
       { transformWordHtml },
-      { normalizeCodeBlockLines },
       { isBoundary },
     ] = await Promise.all([
       import("prosemirror-model"),
@@ -79,7 +78,6 @@ export default async function toMarkdown(html) {
         /* dynamicChunkName: "prosemirror-serializer" */ "discourse/static/prosemirror/core/serializer"
       ),
       import("discourse/static/prosemirror/extensions/word-paste"),
-      import("discourse/static/prosemirror/extensions/code-block"),
       import("discourse/static/prosemirror/lib/plugin-utils"),
     ]);
 
@@ -96,7 +94,6 @@ export default async function toMarkdown(html) {
     );
 
     restoreReplacedSpaces(parsedDoc.body);
-    normalizeCodeBlockLines(parsedDoc);
 
     for (const ext of extensions) {
       if (typeof ext.transformParsedHTML === "function") {
