@@ -1,6 +1,11 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Users List", function (needs) {
@@ -218,6 +223,69 @@ acceptance("Admin - Users List - email permissions", function (needs) {
     assert
       .dom(".admin-users__subheader-show-emails")
       .exists("shows the permitted action");
+  });
+});
+
+acceptance("Admin - Users List - pagination", function (needs) {
+  needs.user();
+
+  let lastRequest;
+  let requestCount;
+  let users;
+
+  needs.pretender((server, helper) => {
+    requestCount = 0;
+    users = [{ id: 2, username: "sam" }];
+    server.get("/admin/users/list/active.json", (request) => {
+      requestCount++;
+      lastRequest = request.queryParams;
+      return helper.response(users);
+    });
+  });
+
+  test("loads more users only after a full page", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
+    const scrollToBottom = () =>
+      observations
+        .findLast(({ element }) =>
+          element.matches(".users-list-container > .load-more-sentinel")
+        )
+        .trigger();
+
+    try {
+      await visit("/admin/users/list/active");
+      await scrollToBottom();
+
+      assert.strictEqual(requestCount, 1, "fetches the complete list once");
+
+      const pageSize = 100;
+      users = Array.from({ length: pageSize }, (_, index) => ({
+        id: index + 1,
+        username: `user${index + 1}`,
+      }));
+      await click(
+        ".users-list .directory-table__column-header--username.sortable"
+      );
+
+      users = [{ id: pageSize + 1, username: "lastuser" }];
+      await scrollToBottom();
+
+      assert.strictEqual(
+        lastRequest.page,
+        "2",
+        "loads the next page after a full page"
+      );
+      assert
+        .dom(".users-list .user")
+        .exists({ count: pageSize + 1 }, "appends the remaining user");
+
+      await scrollToBottom();
+
+      assert.strictEqual(requestCount, 3, "stops after the final short page");
+    } finally {
+      disableLoadMoreObserver();
+    }
   });
 });
 
