@@ -264,7 +264,7 @@ importers:
         version: 6.1.20(@fullcalendar/core@6.1.20)
       '@fullcalendar/moment':
         specifier: ^6.1.20
-        version: 6.1.20(@fullcalendar/core@6.1.20)(moment@2.30.1)
+        version: 6.1.20(@fullcalendar/core@6.1.20)(moment@2.31.0)
       '@fullcalendar/moment-timezone':
         specifier: ^6.1.20
         version: 6.1.20(@fullcalendar/core@6.1.20)(moment-timezone@0.6.3)
@@ -321,7 +321,7 @@ importers:
         version: 4.5.1
       chartjs-adapter-moment:
         specifier: ^1.0.1
-        version: 1.0.1(chart.js@4.5.1)(moment@2.30.1)
+        version: 1.0.1(chart.js@4.5.1)(moment@2.31.0)
       chartjs-plugin-datalabels:
         specifier: 2.2.0
         version: 2.2.0(chart.js@4.5.1)
@@ -362,8 +362,8 @@ importers:
         specifier: ^1.3.2
         version: 1.3.2
       moment:
-        specifier: 2.30.1
-        version: 2.30.1
+        specifier: 2.31.0
+        version: 2.31.0
       moment-timezone:
         specifier: 0.6.3
         version: 0.6.3
@@ -6108,8 +6108,8 @@ packages:
   moment-timezone@0.6.3:
     resolution: {integrity: sha512-pVEPA/HCFHHbwJ130ywnzYuZpkEGcP6Daa/OwNebpA18MybeFHmQilAGGovXgWijQ8vQtmud9jZrziUBgsykfg==}
 
-  moment@2.30.1:
-    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
+  moment@2.31.0:
+    resolution: {integrity: sha512-0acOTfMiWOheYS4eoWb80yYMb/JLvVv9SHbs2PehaDzfUG0Bw855SKyk0IKTnPGa5+U2bmi3W68l1+sGLX/pvw==}
 
   morgan@1.12.0:
     resolution: {integrity: sha512-OHpTRQwn2ezasILW8iKe+Yww1XsfWsZIpUOLF7RDb2g5GwO3trPaRwi7+8BDiJ7HFx2Kg2mfUdCBcVhwYlOz2g==}
@@ -9633,10 +9633,10 @@ snapshots:
       '@fullcalendar/core': 6.1.20
       moment-timezone: 0.6.3
 
-  '@fullcalendar/moment@6.1.20(@fullcalendar/core@6.1.20)(moment@2.30.1)':
+  '@fullcalendar/moment@6.1.20(@fullcalendar/core@6.1.20)(moment@2.31.0)':
     dependencies:
       '@fullcalendar/core': 6.1.20
-      moment: 2.30.1
+      moment: 2.31.0
 
   '@fullcalendar/timegrid@6.1.20(@fullcalendar/core@6.1.20)':
     dependencies:
@@ -11508,10 +11508,10 @@ snapshots:
     dependencies:
       '@kurkle/color': 0.3.4
 
-  chartjs-adapter-moment@1.0.1(chart.js@4.5.1)(moment@2.30.1):
+  chartjs-adapter-moment@1.0.1(chart.js@4.5.1)(moment@2.31.0):
     dependencies:
       chart.js: 4.5.1
-      moment: 2.30.1
+      moment: 2.31.0
 
   chartjs-plugin-datalabels@2.2.0(chart.js@4.5.1):
     dependencies:
@@ -14337,9 +14337,9 @@ snapshots:
 
   moment-timezone@0.6.3:
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
-  moment@2.30.1: {}
+  moment@2.31.0: {}
 
   morgan@1.12.0:
     dependencies:
