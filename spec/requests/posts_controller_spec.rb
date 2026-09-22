@@ -1882,6 +1882,38 @@ RSpec.describe PostsController do
         expect(cooked.at_css(".onebox-attack")).to be_nil
       end
 
+      it "does not persist sibling HTML from oEmbed with an allowed iframe" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        iframe_source = "https://www.youtube.com/embed/dQw4w9WgXcQ"
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            html:
+              "<iframe src=\"#{iframe_source}\"></iframe><style>.onebox-attack { position: fixed; inset: 0; z-index: 9999; }</style><div class=\"onebox-attack\">overlay</div>",
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Allowed iframe oEmbed" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(%("id":#{response.parsed_body["id"]}))
+
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css("iframe")["src"]).to eq(iframe_source)
+        expect(cooked.at_css("style")).to be_nil
+        expect(cooked.at_css(".onebox-attack")).to be_nil
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
