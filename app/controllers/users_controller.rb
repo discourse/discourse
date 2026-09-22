@@ -650,7 +650,8 @@ class UsersController < ApplicationController
     return render_available_true(username) if changing_case_of_own_username(target_user, username)
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
-    email = params[:email] || target_user.try(:email)
+    email = target_user&.email
+    email = params[:email] if !email && !SiteSetting.hide_email_address_taken?
     result = checker.check_username(username, email)
     result[:avatar_template] = User.default_template(username) if result[:available]
     render json: result
@@ -713,11 +714,12 @@ class UsersController < ApplicationController
 
   def user_from_params_or_current_user
     return current_user if !params[:for_user_id]
-    raise Discourse::InvalidAccess if !current_user
+    return User.find(params[:for_user_id]) if current_user&.admin?
 
-    user = User.find(params[:for_user_id])
-    guardian.ensure_can_edit_username!(user)
-    user
+    if current_user&.id == params[:for_user_id].to_i
+      guardian.ensure_can_edit_username!(current_user)
+    end
+    current_user
   end
 
   def create
