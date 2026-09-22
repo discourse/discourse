@@ -250,6 +250,9 @@ class DiscourseVipsWorker
       end
 
       image = image.autorot
+      if image.get_typeof("icc-profile-data") != 0
+        image = image.icc_transform("srgb", embedded: true)
+      end
       image = image.colourspace(image.bands == 2 ? :b_w : :srgb) if image.has_alpha?
 
       image.jpegsave(

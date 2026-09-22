@@ -164,6 +164,25 @@ RSpec.describe DiscourseVips do
       end
     end
 
+    it "converts embedded color profiles to sRGB" do
+      input_path = file_from_fixtures("should_be_jpeg.heic").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.heif_to_jpeg(
+          input_path:,
+          output_path:,
+          quality: 90,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
+
+        expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq("987552")
+      end
+    end
+
     it "preserves image dimensions without changing the source" do
       input_path = file_from_fixtures("should_be_jpeg.heic").path
       original_content = File.binread(input_path)
