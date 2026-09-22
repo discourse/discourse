@@ -345,6 +345,42 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(await toMarkdown(html), output);
   });
 
+  test("keeps highlighted code lines in a single code block", async function (assert) {
+    const html = `<p>Before <code>id</code>.</p><pre><code><div class="token-line"><span class="token plain">website </span><span class="token comment"># Root directory</span><br></div><div class="token-line"><span>   └── docs</span><br></div><div class="token-line"><span></span><br></div><div class="token-line"><span>      └── hello.md</span><br></div></code></pre><p>After.</p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "Before `id`.\n\n```\nwebsite # Root directory\n   └── docs\n\n      └── hello.md\n\n```\n\nAfter.",
+      "preserves code boundaries, indentation, and blank lines"
+    );
+  });
+
+  test("preserves explicit breaks in code blocks", async function (assert) {
+    assert.strictEqual(
+      await toMarkdown("<pre><code>first<br><br>  last</code></pre>"),
+      "```\nfirst\n\n  last\n```",
+      "explicit breaks remain newlines"
+    );
+  });
+
+  test("leaves other preformatted structures unchanged", async function (assert) {
+    const { normalizeCodeBlockLines } =
+      await import("discourse/static/prosemirror/extensions/code-block");
+    const doc = new DOMParser().parseFromString(
+      "<pre><code>first\n  last</code></pre><pre><code><div>first</div><div>last</div></code></pre><pre><code>first<div>last<br></div></code></pre><div>outside<br></div>",
+      "text/html"
+    );
+    const original = doc.body.innerHTML;
+
+    normalizeCodeBlockLines(doc);
+
+    assert.strictEqual(
+      doc.body.innerHTML,
+      original,
+      "only normalizes code composed entirely of div lines with explicit breaks"
+    );
+  });
+
   test("converts blockquote tag", async function (assert) {
     let html = "<blockquote>Lorem ipsum</blockquote>";
     let output = "> Lorem ipsum";

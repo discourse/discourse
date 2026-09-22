@@ -149,15 +149,16 @@ export type StateFunction = (
 ) => Record<string, unknown>;
 
 type RichPluginValue = Plugin | PluginSpec<unknown>;
-export type RichPlugin =
+type RichPluginFactory = (
+  params: PluginParams
+) =>
   | RichPluginValue
   | RichPluginValue[]
-  | ((
-      params: PluginParams
-    ) =>
-      | RichPluginValue
-      | RichPluginValue[]
-      | Promise<RichPluginValue | RichPluginValue[]>);
+  | Promise<RichPluginValue | RichPluginValue[]>;
+export type RichPlugin =
+  | RichPluginValue
+  | RichPluginFactory
+  | (RichPluginValue | RichPluginFactory)[];
 
 export type ParseFunction = (
   state: unknown,

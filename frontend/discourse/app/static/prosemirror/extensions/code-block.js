@@ -195,6 +195,30 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
+export function normalizeCodeBlockLines(doc) {
+  let changed = false;
+
+  for (const code of doc.querySelectorAll("pre > code")) {
+    const lines = [...code.childNodes];
+    if (
+      !lines.length ||
+      !lines.every(
+        (line) => line.nodeName === "DIV" && line.lastChild?.nodeName === "BR"
+      )
+    ) {
+      continue;
+    }
+
+    // Each line already has an explicit break; block wrappers would split the code block.
+    for (const line of lines) {
+      line.replaceWith(...line.childNodes);
+    }
+    changed = true;
+  }
+
+  return changed;
+}
+
 function convertSelectionToCodeBlock(schema) {
   return (editorState, dispatch) => {
     const { from, to } = editorState.selection;
@@ -263,22 +287,33 @@ const extension = {
       };
     },
   }),
-  async plugins({ getContext }) {
-    return highlightPlugin(
-      (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
-      ["code_block", "html_block", "preview_source"],
+  plugins: [
+    ({ pmState: { Plugin } }) =>
+      new Plugin({
+        props: {
+          transformPastedHTML(html) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            return normalizeCodeBlockLines(doc) ? doc.body.innerHTML : html;
+          },
+        },
+      }),
+    async ({ getContext }) => {
+      return highlightPlugin(
+        (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
+        ["code_block", "html_block", "preview_source"],
 
-      // NOTE: If the language has not been set with the code block, we default to plain
-      // text rather than autodetecting. This is to work around an infinite loop issue
-      // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
-      // for > 10 seconds, for example:
-      //
-      // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
-      //
-      // We can remove this if we find some other workaround.
-      (node) => node.attrs.params || "text"
-    );
-  },
+        // NOTE: If the language has not been set with the code block, we default to plain
+        // text rather than autodetecting. This is to work around an infinite loop issue
+        // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
+        // for > 10 seconds, for example:
+        //
+        // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
+        //
+        // We can remove this if we find some other workaround.
+        (node) => node.attrs.params || "text"
+      );
+    },
+  ],
 };
 
 export default extension;
