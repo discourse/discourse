@@ -6,9 +6,10 @@ import ChunkRow from "./chunk-row";
 import ExpandableRow from "./expandable-row";
 
 // One entrypoint (static or dynamic), rolled up into an expandable card that
-// shows the chunks it pulls in. `@baseline` marks discourse.js, the basis every
-// other card measures its "additional" bytes against; that card shows its full
-// initial load instead of a delta.
+// shows the chunks it pulls in. `@baseline` marks the card every other one
+// measures its "additional" bytes against; that card shows its full initial
+// load instead of a delta. `@urls` names what loads a bundle that no import
+// site points at, which is how a plugin's routes reach theirs.
 export default class EntrypointCard extends ExpandableRow {
   get analysis() {
     return this.args.analysis;
@@ -129,22 +130,28 @@ export default class EntrypointCard extends ExpandableRow {
       {{#if this.expanded}}
         <div class="ba-body">
           <div class="ba-sites">
-            {{#each this.chunk.importSites as |s|}}
-              <div class="ba-site">imported by
-                <code>{{s.importer}}{{if s.line (concat ":" s.line)}}</code>
-                {{#if s.specifier}}
-                  —
-                  <span class="ba-pill">import("{{s.specifier}}")</span>
-                {{/if}}
+            {{#each @urls as |url|}}
+              <div class="ba-site">loaded on
+                <code>{{url}}</code>
               </div>
             {{else}}
-              <div class="ba-site pill">
-                {{#if this.loadedOnDemand}}
-                  no import site found
-                {{else}}
-                  loaded as a top-level entrypoint
-                {{/if}}
-              </div>
+              {{#each this.chunk.importSites as |s|}}
+                <div class="ba-site">imported by
+                  <code>{{s.importer}}{{if s.line (concat ":" s.line)}}</code>
+                  {{#if s.specifier}}
+                    —
+                    <span class="ba-pill">import("{{s.specifier}}")</span>
+                  {{/if}}
+                </div>
+              {{else}}
+                <div class="ba-site pill">
+                  {{#if this.loadedOnDemand}}
+                    no import site found
+                  {{else}}
+                    loaded as a top-level entrypoint
+                  {{/if}}
+                </div>
+              {{/each}}
             {{/each}}
           </div>
           {{#if @baseline}}

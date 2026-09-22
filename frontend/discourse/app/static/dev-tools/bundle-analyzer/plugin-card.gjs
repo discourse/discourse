@@ -1,12 +1,18 @@
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
+import { eq } from "discourse/truth-helpers";
 import { brotliLabel, fmt, matches } from "./analysis";
+import EntrypointCard from "./entrypoint-card";
 import ExpandableRow from "./expandable-row";
-import PluginChunkRow from "./plugin-chunk-row";
+import { routeBundlesByFile } from "./plugins-analysis";
 
-// One plugin, rolled up into an expandable card. A plugin is built on its own,
-// so its sizes stand apart from core's; what it shares with core is the shape of
-// the question — what an entrypoint costs, and what each route adds on top.
+// One plugin, expanding to the same cards the core tab is built from: what it
+// loads up front, and what its routes load on demand.
+//
+// `main` is the baseline — a plugin loads it on every page, so an admin or test
+// entrypoint reads as what it adds on top. A route bundle measures against the
+// entrypoint that owns it instead, since reaching one of its urls means that
+// entrypoint is already loaded.
 export default class PluginCard extends ExpandableRow {
   get analysis() {
     return this.args.analysis;
@@ -14,6 +20,10 @@ export default class PluginCard extends ExpandableRow {
 
   get plugin() {
     return this.args.plugin;
+  }
+
+  get graph() {
+    return this.analysis.graphFor(this.plugin);
   }
 
   get autoExpanded() {
@@ -24,51 +34,39 @@ export default class PluginCard extends ExpandableRow {
     return this.analysis.totalsFor(this.plugin);
   }
 
-  @cached
-  get entrypoints() {
-    return Object.entries(this.plugin.entrypoints).map(([name, file]) => {
-      return { name, file, totals: this.analysis.totals(this.#closure(file)) };
-    });
+  get baselineFile() {
+    const { entrypoints } = this.plugin;
+    return entrypoints.main ?? Object.values(entrypoints)[0];
   }
 
-  // One row per bundle, listing every url that loads it. Routes are mapped url by
-  // url, and a plugin usually points a whole group of them at one bundle; a row
-  // each would repeat the same bytes and read like a separate download per url.
-  //
-  // Each bundle is counted against its own entrypoint, so the number is what
-  // landing on one of its urls adds rather than what it weighs in total.
+  @cached
+  get baselineClosure() {
+    return this.graph.staticClosure(this.baselineFile);
+  }
+
+  get entrypoints() {
+    const base = this.baselineFile;
+    const others = Object.values(this.plugin.entrypoints).filter(
+      (f) => f !== base
+    );
+    return [base, ...others].filter(Boolean);
+  }
+
   @cached
   get routeBundles() {
-    const rows = [];
-    for (const [entry, bundles] of Object.entries(this.plugin.routeBundles)) {
-      const base = this.#closure(this.plugin.entrypoints[entry]);
-      const urlsByFile = new Map();
-      for (const { url, fileName } of bundles) {
-        if (!urlsByFile.has(fileName)) {
-          urlsByFile.set(fileName, []);
-        }
-        urlsByFile.get(fileName).push(url);
-      }
-      for (const [file, urls] of urlsByFile) {
-        const added = [...this.#closure(file)].filter((f) => !base.has(f));
-        rows.push({ entry, urls, file, totals: this.analysis.totals(added) });
-      }
-    }
-    return rows.sort((a, b) => b.totals.raw - a.totals.raw);
-  }
-
-  get chunkRows() {
-    return Object.values(this.plugin.chunks).sort(
-      (a, b) => (b.brotliSize ?? b.rawSize) - (a.brotliSize ?? a.rawSize)
-    );
-  }
-
-  #closure(file) {
-    return this.analysis.closureOf(this.plugin, file);
+    return [...routeBundlesByFile(this.plugin)]
+      .map(([file, { entry, urls }]) => ({
+        file,
+        urls,
+        base: this.graph.staticClosure(this.plugin.entrypoints[entry]),
+      }))
+      .sort(
+        (a, b) => this.graph.sortSize(b.file) - this.graph.sortSize(a.file)
+      );
   }
 
   <template>
-    <div class="ba-row ba-plugin-row {{if this.expanded 'open'}}">
+    <div class="ba-row {{if this.expanded 'open'}}">
       <button class="ba-head" type="button" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
@@ -82,57 +80,38 @@ export default class PluginCard extends ExpandableRow {
       </button>
       {{#if this.expanded}}
         <div class="ba-body">
+          <div class="ba-hint">Loaded up front when the plugin is active.</div>
           <div class="ba-sub-list">
-            {{#each this.entrypoints as |e|}}
-              <div class="ba-plugin-line">
-                <span class="ba-name">
-                  <span class="ba-badge entry">{{e.name}}</span>
-                  <span class="ba-label" title={{e.file}}>{{e.file}}</span>
-                </span>
-                <span class="ba-num">{{brotliLabel e.totals}}
-                  <span class="ba-pill">br</span></span>
-                <span class="ba-num muted">{{fmt e.totals.raw}}
-                  <span class="ba-pill">raw</span></span>
-                <span class="ba-num pill">{{e.totals.files}}f</span>
-              </div>
+            {{#each this.entrypoints as |f|}}
+              <EntrypointCard
+                @analysis={{this.graph}}
+                @baseline={{eq f this.baselineFile}}
+                @baselineClosure={{this.baselineClosure}}
+                @file={{f}}
+                @filter={{@filter}}
+                @loaded={{@loaded}}
+              />
             {{/each}}
           </div>
 
           {{#if this.routeBundles}}
-            <div class="ba-pill" style="margin:8px 0 4px">
-              Route bundles — loaded on demand when a url matches.
+            <div class="ba-hint" style="margin-top:10px">
+              Loaded on demand when a url matches. Each counts only what it adds
+              on top of the entrypoint that loads it.
             </div>
             <div class="ba-sub-list">
               {{#each this.routeBundles as |b|}}
-                <div class="ba-plugin-line --routes">
-                  <span class="ba-name">
-                    <span class="ba-badge route">{{b.entry}}</span>
-                    <span class="ba-route-urls">
-                      {{#each b.urls as |u|}}
-                        <code>{{u}}</code>
-                      {{/each}}
-                    </span>
-                  </span>
-                  <span class="ba-num">+{{brotliLabel b.totals}}
-                    <span class="ba-pill">added</span></span>
-                  <span class="ba-num muted">+{{fmt b.totals.raw}}
-                    <span class="ba-pill">raw</span></span>
-                  <span class="ba-num pill">+{{b.totals.files}}f</span>
-                </div>
+                <EntrypointCard
+                  @analysis={{this.graph}}
+                  @baselineClosure={{b.base}}
+                  @file={{b.file}}
+                  @filter={{@filter}}
+                  @loaded={{@loaded}}
+                  @urls={{b.urls}}
+                />
               {{/each}}
             </div>
           {{/if}}
-
-          <div class="ba-pill" style="margin:8px 0 4px">Chunks</div>
-          <div class="ba-sub-list">
-            {{#each this.chunkRows as |c|}}
-              <PluginChunkRow
-                @analysis={{@analysis}}
-                @chunk={{c}}
-                @filter={{@filter}}
-              />
-            {{/each}}
-          </div>
         </div>
       {{/if}}
     </div>

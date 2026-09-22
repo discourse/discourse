@@ -3,10 +3,18 @@ import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { brotliLabel, fmt } from "./analysis";
+import LoadedChunks from "./loaded-chunks";
 import PluginCard, { pluginMatches } from "./plugin-card";
 
 export default class PluginsReport extends Component {
   @tracked filter = "";
+
+  loaded = new LoadedChunks(this.args.analysis.chunks);
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.loaded.teardown();
+  }
 
   get analysis() {
     return this.args.analysis;
@@ -66,6 +74,7 @@ export default class PluginsReport extends Component {
             <PluginCard
               @analysis={{this.analysis}}
               @filter={{this.filter}}
+              @loaded={{this.loaded}}
               @plugin={{p}}
             />
           {{else}}
