@@ -2590,6 +2590,7 @@ cs:
     wrong_invite_code: "Zadaný kód pozvánky byl nesprávný."
     reserved_username: "Toto uživatelské jméno není povoleno."
     missing_user_field: "Nevyplnili jste všechna požadovaná uživatelská pole"
+    missing_username: "Zadejte uživatelské jméno"
     auth_complete: "Ověřování je dokončeno."
     click_to_continue: "Pro pokračování klikněte zde."
     already_logged_in: "Promiňte! Tato pozvánka je určena pro nové uživatele, kteří ještě nemají existující účet."
@@ -3729,7 +3730,7 @@ cs:
         Člen redakce schválil váš účet do %{site_name}.
 
         Ke svému novému účtu se nyní můžete přihlásit na adrese:
-        %{base_url}
+        %{login_url}
 
         Pokud na výše uvedený odkaz nelze kliknout, zkuste jej zkopírovat a vložit do adresního řádku webového prohlížeče.
 
@@ -4473,6 +4474,8 @@ cs:
       disagree_and_restore:
         title: "Obnovit příspěvek"
         complete: "Příspěvek obnoven."
+      disagree_and_keep_deleted:
+        title: "Ponechat příspěvek smazaný"
       disagree_bundle:
         title: "Ne"
       disagree:

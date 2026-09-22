@@ -925,6 +925,7 @@ sl:
     password_too_long: "Geslo je omejeno na 200 znakov."
     email_too_long: "Vaš e-naslov je predolg. E-naslov je lahko dolg največ 254 znakov, od tega domena največ 253 znakov."
     reserved_username: "Uporabniško ime ni dovoljeno."
+    missing_username: "Vnesite uporabniško ime"
     auth_complete: "Avtentikacija je končana."
     click_to_continue: "Kliknite tukaj za nadaljevanje."
     second_factor_title: "Preverjanje v dveh korakih"
@@ -1673,7 +1674,7 @@ sl:
         Član osebja foruma je potrdil vaš račun pri %{site_name}.
 
         Do vašega računa lahko dostopate s prijavo na:
-        %{base_url}
+        %{login_url}
 
         Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
 

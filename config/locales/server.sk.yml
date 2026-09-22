@@ -2873,6 +2873,7 @@ sk:
     wrong_invite_code: "Zadaný kód pozvánky bol nesprávny."
     reserved_username: "Toto užívateľské meno nie je povolené."
     missing_user_field: "Nevyplnili ste všetky požadované polia používateľa"
+    missing_username: "Zadajte používateľské meno"
     auth_complete: "Overovanie je dokončené."
     click_to_continue: "Kliknutím sem pokračujte."
     already_logged_in: "Prepáčte! Táto pozvánka je určená pre nových používateľov, ktorí ešte nemajú vytvorené konto."
@@ -4191,7 +4192,7 @@ sk:
         Člen personálu schválil váš účet na %{site_name}.
 
         Teraz môžete pristupovať k svojmu novému účtu prihlásením na:
-        %{base_url}
+        %{login_url}
 
         Ak vyššie uvedený odkaz nie je klikateľný, skúste ho skopírovať a vložiť do adresného riadku vášho webového prehliadača.
 
@@ -4981,6 +4982,8 @@ sk:
       disagree_and_restore:
         title: "Obnoviť príspevok"
         complete: "Príspevok bol obnovený."
+      disagree_and_keep_deleted:
+        title: "Ponechať príspevok odstránený"
       disagree_bundle:
         title: "Nie"
       disagree:

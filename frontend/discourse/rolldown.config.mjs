@@ -78,7 +78,6 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       discourse: "discourse.js",
-      vendor: "vendor.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",

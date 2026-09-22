@@ -65,6 +65,8 @@ module DiscourseMcp
       registry = DiscourseMcp.registry
       register_read_tools(registry)
       register_write_tools(registry)
+      register_moderation_tools(registry)
+      register_site_setting_tools(registry)
       register_resources(registry)
       register_prompts(registry)
     end
@@ -290,11 +292,11 @@ module DiscourseMcp
               },
               from: {
                 type: "string",
-                pattern: "\\A[0-9]{4}-[0-9]{2}-[0-9]{2}\\z",
+                pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
               },
               to: {
                 type: "string",
-                pattern: "\\A[0-9]{4}-[0-9]{2}-[0-9]{2}\\z",
+                pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
               },
             },
             required: %w[topic_id],
@@ -318,7 +320,7 @@ module DiscourseMcp
               },
               order: {
                 type: "string",
-                pattern: "\\A[a-z0-9_]+\\z",
+                pattern: "^[a-z0-9_]+$",
               },
               ascending: {
                 type: "boolean",
@@ -1152,6 +1154,343 @@ module DiscourseMcp
       )
     end
 
+    def register_moderation_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_review_queue_count",
+        title: "Get review queue count",
+        description:
+          "Returns the number of pending reviewable records visible to the authenticated reviewer.",
+        implementation: Tools::GetReviewQueueCount,
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_list_reviewables",
+        title: "List reviewables",
+        description:
+          "Lists reviewable records visible to the authenticated reviewer, including their current actions.",
+        implementation: Tools::ListReviewables,
+        input_schema:
+          object_schema(
+            {
+              offset: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              status: {
+                type: "string",
+                enum: Tools::ModerationSupport::STATUSES,
+                default: "pending",
+              },
+              type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              topic_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              priority: {
+                type: "string",
+                enum: %w[low medium high],
+              },
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              reviewed_by: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              claimed_by: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              flagged_by: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              from_date: {
+                type: "string",
+                format: "date-time",
+              },
+              to_date: {
+                type: "string",
+                format: "date-time",
+              },
+              sort_order: {
+                type: "string",
+                enum: %w[score score_asc created_at created_at_asc],
+              },
+              score_type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_list_reviewable_topics",
+        title: "List reviewable topics",
+        description:
+          "Lists topic-level signals from pending reviewables visible to the authenticated reviewer.",
+        implementation: Tools::ListReviewableTopics,
+        input_schema:
+          object_schema(
+            {
+              offset: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+                default: 100,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_get_reviewable",
+        title: "Get reviewable",
+        description:
+          "Returns one visible reviewable with its current version, evidence, and available actions.",
+        implementation: Tools::GetReviewable,
+        input_schema:
+          object_schema(
+            {
+              reviewable_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              include_explanation: {
+                type: "boolean",
+              },
+            },
+            required: %w[reviewable_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_get_user_moderation_summary",
+        title: "Get user moderation summary",
+        description: "Returns staff-visible moderation counters for a user.",
+        implementation: Tools::GetUserModerationSummary,
+        input_schema:
+          object_schema(
+            { username: { type: "string", minLength: 1, maxLength: 60 } },
+            required: %w[username],
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_get_post_revision",
+        title: "Get post revision",
+        description: "Returns a post revision visible to the authenticated reviewer.",
+        implementation: Tools::GetPostRevision,
+        input_schema:
+          object_schema(
+            {
+              post_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              revision: {
+                oneOf: [{ const: "latest" }, { type: "integer", minimum: 2 }],
+                default: "latest",
+              },
+            },
+            required: %w[post_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_perform_reviewable_action",
+        title: "Perform reviewable action",
+        description:
+          "Performs one currently available action on a visible reviewable after a fresh permission check.",
+        implementation: Tools::PerformReviewableAction,
+        input_schema:
+          object_schema(
+            {
+              reviewable_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              action_id: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              expected_version: {
+                type: "integer",
+                minimum: 0,
+              },
+              additional_fields: {
+                type: "object",
+                maxProperties: 20,
+                propertyNames: {
+                  pattern: "^[a-z0-9_]+$",
+                },
+                additionalProperties: {
+                  oneOf: [
+                    { type: "string", maxLength: 2_000 },
+                    { type: "boolean" },
+                    { type: "integer" },
+                    { type: "number" },
+                  ],
+                },
+              },
+              confirm: {
+                const: true,
+              },
+            },
+            required: %w[reviewable_id action_id confirm],
+          ),
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: false,
+          openWorldHint: true,
+        },
+        risk: :moderation,
+      )
+    end
+
+    def register_site_setting_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_site_settings",
+        title: "List site settings",
+        description:
+          "Lists admin-visible site settings while masking secret and credential-like values.",
+        implementation: Tools::ListSiteSettings,
+        input_schema:
+          object_schema(
+            {
+              categories: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 200,
+                },
+                maxItems: 50,
+              },
+              plugin: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              names: {
+                type: "array",
+                items: {
+                  type: "string",
+                  pattern: "^[a-z0-9_]+$",
+                  maxLength: 200,
+                },
+                maxItems: 100,
+              },
+              overridden_only: {
+                type: "boolean",
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 500,
+                default: 100,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      setting_value_schema = {
+        oneOf: [
+          { type: "string", maxLength: 20_000 },
+          { type: "number" },
+          { type: "boolean" },
+          {
+            type: "array",
+            items: {
+              oneOf: [{ type: "string", maxLength: 2_000 }, { type: "number" }],
+            },
+            maxItems: 200,
+          },
+        ],
+      }
+      register_tool(
+        registry,
+        "discourse_update_site_setting",
+        title: "Update site setting",
+        description:
+          "Sets or resets one ordinary site setting after a current-value check and explicit confirmation.",
+        implementation: Tools::UpdateSiteSetting,
+        input_schema:
+          object_schema(
+            {
+              setting: {
+                type: "string",
+                pattern: "^[a-z0-9_]+$",
+                maxLength: 200,
+              },
+              operation: {
+                type: "string",
+                enum: %w[set reset_to_default],
+              },
+              value: setting_value_schema,
+              expected_current_value: setting_value_schema,
+              confirm_change: {
+                const: true,
+              },
+              confirm_required_setting: {
+                const: true,
+              },
+            },
+            required: %w[setting operation expected_current_value confirm_change],
+          ),
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: true,
+          openWorldHint: true,
+        },
+        risk: :administration,
+      )
+    end
+
     def register_resources(registry)
       register_resource_template(
         registry,
@@ -1161,7 +1500,7 @@ module DiscourseMcp
         implementation: Resources::Topic,
         input_schema:
           object_schema(
-            { uri: { type: "string", pattern: "\\Adiscourse://topic/[0-9]+\\z" } },
+            { uri: { type: "string", pattern: "^discourse://topic/[0-9]+$" } },
             required: %w[uri],
           ),
         annotations: READ_ONLY,
@@ -1174,7 +1513,7 @@ module DiscourseMcp
         implementation: Resources::Post,
         input_schema:
           object_schema(
-            { uri: { type: "string", pattern: "\\Adiscourse://post/[0-9]+\\z" } },
+            { uri: { type: "string", pattern: "^discourse://post/[0-9]+$" } },
             required: %w[uri],
           ),
         annotations: READ_ONLY,

@@ -87,6 +87,7 @@ class UsersController < ApplicationController
                   update_security_key
                 ]
   before_action :respond_to_suspicious_request, only: [:create]
+  before_action :ensure_random_username_access, only: [:generate_random_username]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
@@ -109,6 +110,7 @@ class UsersController < ApplicationController
                        email_login
                        admin_login
                        confirm_admin
+                       generate_random_username
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
@@ -608,8 +610,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def render_available_true
-    render(json: { available: true })
+  def render_available_true(username = nil)
+    result = { available: true }
+    result[:avatar_template] = User.default_template(username) if username
+    render json: result
   end
 
   def changing_case_of_own_username(target_user, username)
@@ -643,16 +647,16 @@ class UsersController < ApplicationController
     target_user = user_from_params_or_current_user
 
     # The special case where someone is changing the case of their own username
-    return render_available_true if changing_case_of_own_username(target_user, username)
+    return render_available_true(username) if changing_case_of_own_username(target_user, username)
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
-    render json: checker.check_username(username, email)
+    result = checker.check_username(username, email)
+    result[:avatar_template] = User.default_template(username) if result[:available]
+    render json: result
   end
 
   def generate_random_username
-    raise Discourse::NotFound if !SiteSetting.enable_random_usernames
-
     RateLimiter.new(nil, "random-username-#{request.remote_ip}", 20, 1.minute).performed!
 
     username = RandomUsernameGenerator.generate
@@ -708,7 +712,12 @@ class UsersController < ApplicationController
   end
 
   def user_from_params_or_current_user
-    params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
+    return current_user if !params[:for_user_id]
+    raise Discourse::InvalidAccess if !current_user
+
+    user = User.find(params[:for_user_id])
+    guardian.ensure_can_edit_username!(user)
+    user
   end
 
   def create
@@ -2182,6 +2191,19 @@ class UsersController < ApplicationController
 
   private
 
+  def ensure_random_username_access
+    raise Discourse::NotFound if !SiteSetting.enable_random_usernames
+    return redirect_to_login_if_required if current_user
+    return if !SiteSetting.login_required?
+
+    signup_token = request.headers["X-Discourse-Signup-Token"].to_s
+    signup_proof =
+      if signup_token.match?(/\A[0-9a-f]{64}\z/)
+        server_session["#{SessionController::LOGIN_CODE_SIGNUP_KEY_PREFIX}#{signup_token}"]
+      end
+    raise Discourse::InvalidAccess if !signup_proof.is_a?(Hash)
+  end
+
   def assign_topic_post_count(user_serializer)
     topic_id = params[:include_post_count_for].to_i
     if topic_id != 0 && guardian.can_see?(Topic.find_by_id(topic_id))
@@ -2217,9 +2239,17 @@ class UsersController < ApplicationController
 
     if @user
       server_session["password-#{token}"] = @user.id
-    else
-      user_id = server_session["password-#{token}"].to_i
-      @user = User.find(user_id) if user_id > 0
+    elsif user_id = server_session["password-#{token}"].to_i
+      confirmed_token =
+        EmailToken
+          .active
+          .where(
+            token_hash: EmailToken.hash_token(token),
+            scope: [nil, EmailToken.scopes[:password_reset]],
+            confirmed: true,
+          )
+          .find_by(user_id: user_id)
+      @user = confirmed_token&.user
     end
 
     @error = I18n.t("password_reset.no_token", base_url: Discourse.base_url) if !@user
@@ -2271,9 +2301,12 @@ class UsersController < ApplicationController
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
     permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
-    permitted.concat(UserUpdater::OPTION_ATTR - [:understood_languages])
+    permitted.concat(
+      UserUpdater::OPTION_ATTR - %i[understood_languages hidden_composer_toolbar_buttons],
+    )
     permitted << UserUpdater::LEGACY_SHOW_ORIGINAL_CONTENT_ATTR
     permitted << { understood_languages: [] }
+    permitted << { hidden_composer_toolbar_buttons: [] }
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
@@ -2331,16 +2364,7 @@ class UsersController < ApplicationController
   end
 
   def clashing_with_existing_route?(username)
-    normalized_username = User.normalize_username(username)
-    http_verbs = %w[GET POST PUT DELETE PATCH]
-    allowed_actions = %w[show update destroy]
-
-    http_verbs.any? do |verb|
-      path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
-      allowed_actions.exclude?(path[:action])
-    rescue ActionController::RoutingError
-      false
-    end
+    UsernameValidator.clashing_with_existing_route?(username)
   end
 
   def confirm_server_session

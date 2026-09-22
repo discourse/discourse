@@ -1747,7 +1747,7 @@ sw:
         Msaidizi amethibitisha akaunti yako kwenye %{site_name}.
 
         Unaweza kuingia kwenye akaunti yako kupitia:
-        %{base_url}
+        %{login_url}
 
         Kama kiungo hakiwezi kubonyezwa, jaribu kunakili na kubandika kwenye sehemu ya kuandika anwani ya mtandao ndani ya kivinjari.
 

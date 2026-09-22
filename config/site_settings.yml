@@ -696,7 +696,7 @@ login:
         - everyone
   enable_random_usernames:
     client: true
-    default: true
+    default: false
     area: "login"
     depends_on:
       - enable_local_logins_via_code
@@ -4781,6 +4781,10 @@ dashboard:
     client: true
 
 experimental:
+  experimental_markdown_endpoints:
+    default: false
+    hidden: true
+    area: "experimental"
   enable_generated_llms_txt:
     default: false
     hidden: true
@@ -4833,6 +4837,15 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_composer_toolbar_customization:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412749"
   enable_category_hashtag_cards:
     default: false
     client: true

@@ -1,4 +1,16 @@
 en:
+  markdown_endpoints:
+    latest: "Latest"
+    categories: "Categories"
+    tags: "Tags"
+    parent: "Parent: %{parent}"
+    previous_page: "Previous page"
+    next_page: "Next page"
+    empty: "No entries to display."
+    replies: "Replies"
+    post_author: "Author: %{author}"
+    post_date: "Post date: %{timestamp}"
+    last_updated: "Last updated"
   mcp:
     errors:
       draft_sequence_conflict: "Draft sequence conflict"
@@ -13,6 +25,8 @@ en:
       filter_required: "A nonblank filter is required for the filtered view"
       invalid_post_selection: "The post selection options are invalid"
       invalid_search_query: "The search query is invalid"
+      invalid_reviewable_status: "The reviewable status is invalid"
+      invalid_reviewable_type: "The reviewable type is invalid"
       group_mailbox_sent: "Group private-message mailboxes do not support sent messages"
       invalid_upload_data: "The upload data is not valid base64"
       invalid_upload_source: "Provide either base64 data with a filename or one remote URL"
@@ -24,6 +38,26 @@ en:
       private_message_not_found: "Personal message not found"
       private_message_recipient_required: "At least one private-message recipient is required"
       private_message_single_recipient: "Provide exactly one user, group, or email recipient"
+      post_revision_not_found: "Post revision not found"
+      reviewable_action_failed: "The reviewable action failed"
+      reviewable_action_unavailable: "The reviewable action is no longer available"
+      reviewable_confirmation_required: "Explicit confirmation is required for a reviewable action"
+      reviewable_conflict: "The reviewable changed since it was read"
+      reviewable_fields_unavailable: "These fields are not accepted by the reviewable action: %{fields}"
+      reviewable_not_found: "Reviewable not found"
+      reviewable_reject_reason_required: "A reject reason is required for this action"
+      site_setting_confirmation_required: "This site setting requires explicit confirmation"
+      site_setting_change_confirmation_required: "Explicit confirmation is required to change a site setting"
+      site_setting_conflict: "The site setting changed since it was read"
+      site_setting_dependency: "These site setting dependencies are not satisfied: %{settings}"
+      site_setting_no_change: "The requested site setting change has no effect"
+      site_setting_not_found: "Site setting not found"
+      site_setting_sensitive: "Sensitive site settings cannot be read or changed by this tool"
+      site_setting_type_unsupported: "This site setting type cannot be changed by this tool"
+      site_setting_update_failed: "The site setting could not be updated"
+      site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
+      site_setting_value_required: "Provide a value when setting a site setting"
+      site_setting_verification_failed: "The site setting update could not be verified"
       topic_not_found: "Topic not found"
       topic_update_required: "Provide at least one topic field to update"
       top_period_only_for_top_view: "Top period is only supported by the top view"
@@ -3083,6 +3117,7 @@ en:
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
+    enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
@@ -3143,6 +3178,7 @@ en:
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
     enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
+    experimental_markdown_endpoints: "Serve supported topics and topic lists as Markdown through .md URLs and Accept negotiation. Normal visibility and profile privacy rules always apply."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3559,6 +3595,7 @@ en:
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the required user fields"
+    missing_username: "Please enter a username"
     missing_full_name: "Please enter your full name"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
@@ -5239,7 +5276,7 @@ en:
         A staff member approved your account on %{site_name}.
 
         You can now access your new account by logging in at:
-        %{base_url}
+        %{login_url}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 

@@ -29,6 +29,7 @@ import Topic from "./topic";
 
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
+const HTTP_NOT_FOUND = 404;
 
 let _uncategorized;
 
@@ -140,14 +141,7 @@ export default class Category extends RestModel {
   }
 
   static findByIds(ids = []) {
-    const categories = [];
-    ids.forEach((id) => {
-      const found = Category.findById(id);
-      if (found) {
-        categories.push(found);
-      }
-    });
-    return categories;
+    return ids.map((id) => Category.findById(id)).filter(Boolean);
   }
 
   static hasAsyncFoundAll(ids) {
@@ -157,8 +151,9 @@ export default class Category extends RestModel {
 
   static async asyncFindByIds(ids = []) {
     ids = ids.map((x) => parseInt(x, 10));
+    const site = Site.current();
 
-    if (!Site.current().lazy_load_categories || this.hasAsyncFoundAll(ids)) {
+    if (!site.lazy_load_categories || this.hasAsyncFoundAll(ids)) {
       return this.findByIds(ids);
     }
 
@@ -172,16 +167,19 @@ export default class Category extends RestModel {
       );
     }
 
-    const categories = ids.map((id) =>
-      Site.current().updateCategory(result.get(id))
-    );
+    const loadedCategoryIds = site.loadedCategoryIds || new Set();
+    for (const id of ids) {
+      const category = result.get(id);
+      if (category) {
+        site.updateCategory(category);
+      } else {
+        site.removeCategory(id);
+      }
+      loadedCategoryIds.add(id);
+    }
+    site.set("loadedCategoryIds", loadedCategoryIds);
 
-    // Update loadedCategoryIds list
-    const loadedCategoryIds = Site.current().loadedCategoryIds || new Set();
-    ids.forEach((id) => loadedCategoryIds.add(id));
-    Site.current().set("loadedCategoryIds", loadedCategoryIds);
-
-    return categories;
+    return this.findByIds(ids);
   }
 
   static async asyncFindById(id) {
@@ -990,11 +988,16 @@ export default class Category extends RestModel {
 }
 
 const categoryMultiCache = new MultiCache(async (ids) => {
-  const result = await ajax("/categories/find", { data: { ids } });
+  try {
+    const { categories } = await ajax("/categories/find", { data: { ids } });
+    return new Map(categories.map((category) => [category.id, category]));
+  } catch (error) {
+    if (error.jqXHR?.status === HTTP_NOT_FOUND) {
+      return new Map();
+    }
 
-  return new Map(
-    result["categories"].map((category) => [category.id, category])
-  );
+    throw error;
+  }
 });
 
 export function resetCategoryCache() {

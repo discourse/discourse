@@ -82,6 +82,7 @@ class PostMover
         new_topic
       end
     enqueue_jobs(topic)
+    DiscourseEvent.trigger(:topic_created, topic, @options, user, continue_on_error: true)
     topic
   end
 

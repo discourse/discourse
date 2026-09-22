@@ -13,6 +13,11 @@ nb_NO:
             topic_id:
               label: Emne-ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Varsling"
+            none: "Ingen"
       disable_holiday: "Deaktiver"
       enable_holiday: "Aktiver"
       date: "Dato"

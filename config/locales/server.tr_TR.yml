@@ -2830,6 +2830,7 @@ tr_TR:
     wrong_invite_code: "Girdiğiniz davet kodu yanlış."
     reserved_username: "Bu kullanıcı adına izin verilmiyor."
     missing_user_field: "Tüm gerekli kullanıcı alanlarını doldurmadınız"
+    missing_username: "Lütfen bir kullanıcı adı girin"
     auth_complete: "Kimlik doğrulama tamamlandı."
     click_to_continue: "Devam etmek için buraya tıklayın."
     already_logged_in: "Üzgünüz! Bu davet, halihazırda mevcut bir hesabı olmayan yeni kullanıcılara yöneliktir."
@@ -4281,7 +4282,7 @@ tr_TR:
       title: "Onaydan Sonra Kayıt"
       preview: "Yeni hesap onaylandı."
       subject_template: "%{site_name}'ta onaylandınız!"
-      text_body_template: "%{site_name}'a hoş geldiniz!\n\nBir personel, %{site_name}'daki hesabınızı onayladı.\n\nArtık yeni hesabınıza %{base_url} adresinden giriş yaparak erişebilirsiniz\n\nYukarıdaki bağlantı tıklanabilir değilse kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin. \n\n%{new_user_tips} \n\nHer zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nKeyfini çıkarın!\n"
+      text_body_template: "%{site_name}'a hoş geldiniz!\n\nBir personel, %{site_name}'daki hesabınızı onayladı.\n\nArtık yeni hesabınıza %{login_url} adresinden giriş yaparak erişebilirsiniz\n\nYukarıdaki bağlantı tıklanabilir değilse kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin. \n\n%{new_user_tips} \n\nHer zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nKeyfini çıkarın!\n"
     signup_after_reject:
       title: "Reddedildikten Sonra Kayıt"
       subject_template: "%{site_name}'ta reddedildiniz"
@@ -5105,6 +5106,8 @@ tr_TR:
         title: "Gönderiyi geri yükle"
         description: "Bayrağa onay verme ve gönderiyi geri yükle"
         complete: "Gönderi geri yüklendi."
+      disagree_and_keep_deleted:
+        title: "Gönderiyi silinmiş olarak tut"
       disagree_bundle:
         title: "Hayır"
       disagree:

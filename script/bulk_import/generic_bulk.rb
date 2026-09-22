@@ -695,6 +695,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_user_stats
     merge_delta_user_aliases if delta_import?
+    import_user_associated_groups
 
     import_permalink_normalizations
     import_permalinks
@@ -2009,6 +2010,71 @@ class BulkImport::Generic < BulkImport::Base
     )
   ensure
     rows&.close
+  end
+
+  # An authenticator that provides group claims rewrites each user's
+  # associated groups on every login, and only a destroyed claim row removes
+  # the user from the Discourse groups that claim granted. Imported members
+  # hold group_users rows alone, so seed the claim rows a login would have
+  # created for the linked groups they already belong to; their next login
+  # then reconciles against the provider like any other user's. A group
+  # granted by several claims seeds all of them, and the login keeps only the
+  # ones the provider still returns.
+  def import_user_associated_groups
+    puts "", "Importing user associated groups..."
+
+    provider_names = Discourse.enabled_authenticators.select(&:provides_groups?).map(&:name)
+    if provider_names.empty?
+      puts "  Skipped: no enabled authenticator provides group claims"
+      return
+    end
+
+    links =
+      GroupAssociatedGroup
+        .joins(:associated_group)
+        .where(associated_groups: { provider_name: provider_names })
+        .pluck(:group_id, :associated_group_id)
+    if links.empty?
+      puts "  Skipped: no Discourse group is linked to a #{provider_names.join(", ")} group"
+      return
+    end
+
+    associated_group_ids_by_group_id =
+      links.group_by(&:first).transform_values { |pairs| pairs.map(&:last).uniq }
+    imported_user_ids = @users.values.to_set
+    existing_claims =
+      UserAssociatedGroup
+        .where(associated_group_id: links.map(&:last).uniq)
+        .pluck(:user_id, :associated_group_id)
+        .to_set
+
+    memberships =
+      GroupUser
+        .where(group_id: associated_group_ids_by_group_id.keys)
+        .order(:user_id, :group_id)
+        .pluck(:user_id, :group_id)
+
+    seeded_associated_group_ids = Set.new
+    seeded_user_ids = Set.new
+    claims =
+      memberships.flat_map do |user_id, group_id|
+        next [] if imported_user_ids.exclude?(user_id)
+
+        associated_group_ids_by_group_id[group_id].filter_map do |associated_group_id|
+          next unless existing_claims.add?([user_id, associated_group_id])
+
+          seeded_associated_group_ids << associated_group_id
+          seeded_user_ids << user_id
+          { user_id: user_id, associated_group_id: associated_group_id }
+        end
+      end
+
+    create_user_associated_groups(claims) { |claim| claim }
+
+    # The daily cleanup drops associated groups unused for a week; the seeded
+    # claims count as use.
+    AssociatedGroup.where(id: seeded_associated_group_ids.to_a).update_all(last_used: Time.zone.now)
+    puts "  Seeded #{claims.size} group claim(s) for #{seeded_user_ids.size} imported user(s)"
   end
 
   def import_topics

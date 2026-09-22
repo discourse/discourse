@@ -12733,7 +12733,8 @@ CREATE TABLE public.user_options (
     chat_channel_list_sort_dms integer DEFAULT 2 NOT NULL,
     chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
     chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL,
-    event_reminder_preference integer DEFAULT 0 NOT NULL
+    event_reminder_preference integer DEFAULT 0 NOT NULL,
+    hidden_composer_toolbar_buttons character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -19221,6 +19222,13 @@ CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING bt
 
 
 --
+-- Name: idx_bpe_crawler_created_at_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_crawler_created_at_covering ON public.browser_pageview_events USING btree (created_at) INCLUDE (topic_id, user_id, ip_address) WHERE (score > 55);
+
+
+--
 -- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19267,6 +19275,13 @@ CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING b
 --
 
 CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
+
+
+--
+-- Name: idx_bpe_session_created_at_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_session_created_at_covering ON public.browser_pageview_events USING btree (session_id, created_at) INCLUDE (user_id, score);
 
 
 --
@@ -22179,6 +22194,13 @@ CREATE UNIQUE INDEX index_linked_topics_on_topic_id_and_original_topic_id ON pub
 --
 
 CREATE UNIQUE INDEX index_linked_topics_on_topic_id_and_sequence ON public.linked_topics USING btree (topic_id, sequence);
+
+
+--
+-- Name: index_livestream_topic_chat_channels_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_livestream_topic_chat_channels_on_chat_channel_id ON public.livestream_topic_chat_channels USING btree (chat_channel_id);
 
 
 --
@@ -25383,6 +25405,10 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260921081150'),
+('20260921074918'),
+('20260921015711'),
+('20260918061735'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),

@@ -2786,6 +2786,7 @@ pt_BR:
     wrong_invite_code: "O código de convite inserido estava incorreto."
     reserved_username: "Este nome de usuário(a) não é permitido."
     missing_user_field: "Você não completou todos campos de usuário(a) obrigatórios"
+    missing_username: "Digite um nome do(a) usuário(a)"
     auth_complete: "A autenticação está completa."
     click_to_continue: "Clique aqui para continuar."
     already_logged_in: "Desculpe! Este convite foi elaborado para usuários(as) novos(as), que ainda nao têm uma conta ativa."
@@ -4127,7 +4128,7 @@ pt_BR:
         Um membro da equipe aprovou sua conta em %{site_name}.
 
         Agora você pode acessar sua nova conta entrando em:
-        %{base_url}
+        %{login_url}
 
         Se não for possível clicar no link acima, tente copiar e colar na barra de endereço do seu navegador.
 
@@ -4963,6 +4964,8 @@ pt_BR:
         title: "Restaurar postagem"
         description: "Discordar da denúncia e restaurar a publicação."
         complete: "Postagem restaurada."
+      disagree_and_keep_deleted:
+        title: "Manter a postagem excluída"
       disagree_bundle:
         title: "Não"
       disagree:

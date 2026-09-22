@@ -2653,6 +2653,7 @@ ja:
     wrong_invite_code: "入力した招待コードは間違っています。"
     reserved_username: "そのユーザー名は許可されていません"
     missing_user_field: "すべての必須ユーザーフィールドに入力されていません。"
+    missing_username: "ユーザー名を入力してください"
     auth_complete: "認証が完了しました。"
     click_to_continue: "ここをクリックして続行します。"
     already_logged_in: "この招待は既存のアカウントが存在しない新規ユーザーを対象としています。"
@@ -3972,7 +3973,7 @@ ja:
       title: "登録 - 承認後"
       preview: "新しいアカウントが承認されました。"
       subject_template: "%{site_name} での承認が完了しました！"
-      text_body_template: "%{site_name} へようこそ！\n\nスタッフメンバーが %{site_name} のあなたのアカウントを承認しました。\n\nこれで、次の場所からログインすると、新しいアカウントにアクセスできるようになりました。\n%{base_url}\n\n上記のリンクをクリックできない場合は、それをコピーしてウェブブラウザのアドレスバーに貼り付けてください。\n\n%{new_user_tips}\n\nコミュニティーでは常に[礼節ある行動](%{base_url}/guidelines)を取ってもらえると信じています。 \n\nではお楽しみください！\n"
+      text_body_template: "%{site_name} へようこそ！\n\nスタッフメンバーが %{site_name} のあなたのアカウントを承認しました。\n\nこれで、次の場所からログインすると、新しいアカウントにアクセスできるようになりました。\n%{login_url}\n\n上記のリンクをクリックできない場合は、それをコピーしてウェブブラウザのアドレスバーに貼り付けてください。\n\n%{new_user_tips}\n\nコミュニティーでは常に[礼節ある行動](%{base_url}/guidelines)を取ってもらえると信じています。 \n\nではお楽しみください！\n"
     signup_after_reject:
       title: "登録 - 拒否後"
       subject_template: "%{site_name} での承認が拒否されました"
@@ -4783,6 +4784,8 @@ ja:
         title: "投稿を復元する"
         description: "通報を却下して投稿を復元します"
         complete: "投稿を復元しました。"
+      disagree_and_keep_deleted:
+        title: "投稿を削除されたままにする"
       disagree_bundle:
         title: "いいえ"
       disagree:

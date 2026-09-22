@@ -13,6 +13,11 @@ bg:
             topic_id:
               label: Тема ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Известие"
+            none: "Без"
       disable_holiday: "Деактивиране"
       enable_holiday: "Позволи"
       date: "Дата"

@@ -1,15 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "fileutils"
 require "landlock"
 require "msgpack"
 require "socket"
-require "tempfile"
 require "tmpdir"
 require "vips"
 
-raise LoadError, "libvips 8.13 or newer is required" if !Vips.at_least_libvips?(8, 13)
+raise LoadError, "libvips 8.18 or newer is required" if !Vips.at_least_libvips?(8, 18)
 
 class DiscourseVipsWorker
   class InvalidImage < StandardError
@@ -26,11 +24,21 @@ class DiscourseVipsWorker
     DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
     private_constant :DYNAMIC_LINKER_CACHE_PATH
 
-    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
+    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail sharpen].freeze
     private_constant :WARM_OPERATIONS
 
     SVG_DIMENSIONS_RLIMITS = { cpu_seconds: 1, memory_bytes: 1024 * 1024 * 1024 }.freeze
     private_constant :SVG_DIMENSIONS_RLIMITS
+
+    SVG_TO_PNG_MAX_INPUT_BYTES = 3 * 1024 * 1024
+    private_constant :SVG_TO_PNG_MAX_INPUT_BYTES
+
+    SVG_TO_PNG_RLIMITS = {
+      cpu_seconds: 1,
+      memory_bytes: 1024 * 1024 * 1024,
+      file_size_bytes: 1024 * 1024,
+    }.freeze
+    private_constant :SVG_TO_PNG_RLIMITS
 
     def self.warm
       WARM_OPERATIONS.each do |name|
@@ -61,6 +69,25 @@ class DiscourseVipsWorker
         png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "reencode-jpeg"
         reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "svg-to-png"
+        svg_to_png(input_path: arguments[0], output_path: arguments[1])
+      when "thumbnail"
+        thumbnail(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          width: arguments[2],
+          height: arguments[3],
+          scale: arguments[4],
+          max_pixels: arguments[5],
+          size: arguments[6],
+          crop: arguments[7],
+          sharpen: arguments[8],
+          quality: arguments[9],
+          strip_metadata: arguments[10],
+          gravity: arguments[11],
+          input_format: arguments[12],
+          output_format: arguments[13],
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -202,10 +229,7 @@ class DiscourseVipsWorker
         block_loaders(allowed: %w[VipsForeignLoadJpeg])
         begin
           image = Vips::Image.jpegload(input_path, access: :random)
-          Tempfile.create(%w[reencoded .jpg]) do |reencoded_file|
-            save_jpeg(image, input_path:, output_path: reencoded_file.path, quality:)
-            FileUtils.copy_file(reencoded_file.path, output_path)
-          end
+          save_jpeg(image, input_path:, output_path:, quality:)
           nil
         rescue Vips::Error => error
           raise InvalidImage, error.message
@@ -220,9 +244,12 @@ class DiscourseVipsWorker
         raise ArgumentError, "JPEG conversion requires separate input and output files"
       end
 
-      image.autorot.jpegsave(
+      image = image.autorot
+      image = image.colourspace(image.bands == 2 ? :b_w : :srgb) if image.has_alpha?
+
+      image.jpegsave(
         output_path,
-        background: [255, 255, 255],
+        background: [255],
         Q: Integer(quality),
         interlace: false,
         # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
@@ -247,6 +274,123 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :svg_dimensions
+
+    def self.svg_to_png(input_path:, output_path:)
+      new(rlimits: SVG_TO_PNG_RLIMITS) do
+        if File.expand_path(input_path) == File.expand_path(output_path) ||
+             (File.exist?(output_path) && File.identical?(input_path, output_path))
+          raise ArgumentError, "SVG input and PNG output must be different files"
+        end
+        if File.size(input_path) > SVG_TO_PNG_MAX_INPUT_BYTES
+          raise ArgumentError, "SVG exceeds #{SVG_TO_PNG_MAX_INPUT_BYTES} bytes"
+        end
+
+        block_loaders(allowed: %w[VipsForeignLoadSvg])
+        Vips.concurrency_set(1)
+        image = Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)
+        image.flatten(background: [255, 255, 255]).pngsave(output_path)
+        nil
+      end
+    end
+    private_class_method :svg_to_png
+
+    def self.thumbnail(
+      input_path:,
+      output_path:,
+      width:,
+      height:,
+      scale:,
+      max_pixels:,
+      size:,
+      crop:,
+      sharpen:,
+      quality:,
+      strip_metadata:,
+      gravity:,
+      input_format:,
+      output_format:
+    )
+      new do
+        raise ArgumentError, "invalid sharpening flag" if !%w[true false].include?(sharpen)
+        if !%w[true false].include?(strip_metadata)
+          raise ArgumentError, "invalid metadata stripping flag"
+        end
+        quality = quality.empty? ? nil : Integer(quality)
+
+        loaders = {
+          "jpg" => "VipsForeignLoadJpeg",
+          "jpeg" => "VipsForeignLoadJpeg",
+          "png" => "VipsForeignLoadPng",
+          "gif" => "VipsForeignLoadNsgif",
+          "webp" => "VipsForeignLoadWebp",
+          "avif" => "VipsForeignLoadHeif",
+        }
+        allowed = loaders.values
+        if !input_format.empty?
+          loader =
+            loaders.fetch(input_format.downcase) { raise ArgumentError, "unsupported input format" }
+          allowed = [loader]
+        end
+        block_loaders(allowed: allowed)
+
+        source =
+          begin
+            Vips::Image.new_from_file(input_path)
+          rescue Vips::Error => error
+            raise InvalidImage, error.message
+          end
+
+        if !width.empty? && !height.empty?
+          width = Integer(width)
+          height = Integer(height)
+        else
+          max_pixels = max_pixels.empty? ? nil : Integer(max_pixels)
+          scale =
+            if max_pixels
+              raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
+
+              source = source.autorot
+              Math.sqrt(max_pixels.fdiv(source.width * source.height))
+            else
+              Float(scale)
+            end
+          raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
+
+          if max_pixels
+            width = (source.width * scale).floor.clamp(1, max_pixels)
+            height = (source.height * scale).floor.clamp(1, max_pixels)
+          else
+            width = [([source.width, source.height].max * scale).round, 1].max
+            height = width
+          end
+        end
+
+        image =
+          Vips::Image.thumbnail(
+            input_path,
+            width,
+            height: height,
+            size: size.to_sym,
+            crop: crop.to_sym,
+            output_profile: "srgb",
+          )
+        image = image.gravity(gravity.to_sym, width, height) if !gravity.empty?
+        image = image.sharpen if sharpen == "true"
+        options = { strip: strip_metadata == "true" }
+        options[:Q] = quality if quality
+        if output_format.empty?
+          image.write_to_file(output_path, **options)
+        else
+          image.write_to_target(
+            Vips::Target.new_to_file(output_path),
+            ".#{output_format.downcase}",
+            **options,
+          )
+        end
+        nil
+      end
+    end
+    private_class_method :thumbnail
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
@@ -367,7 +511,12 @@ class DiscourseVipsWorker
 
   def run_sandboxed(request:, operation:)
     Dir.mktmpdir("discourse-vips-") do |scratch|
-      sandbox_paths = operation.sandbox_paths(scratch:, read: request.fetch("read"), write: request.fetch("write"))
+      sandbox_paths =
+        operation.sandbox_paths(
+          scratch:,
+          read: request.fetch("read"),
+          write: request.fetch("write"),
+        )
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),

@@ -10,6 +10,10 @@ module DiscourseMcp
     DRAFTS_WRITE = "mcp:drafts:write"
     PRIVATE_MESSAGES_READ = "mcp:private-messages:read"
     PRIVATE_MESSAGES_WRITE = "mcp:private-messages:write"
+    MODERATION_READ = "mcp:moderation:read"
+    MODERATION_WRITE = "mcp:moderation:write"
+    SITE_SETTINGS_READ = "mcp:site-settings:read"
+    SITE_SETTINGS_WRITE = "mcp:site-settings:write"
   end
 
   PROTOCOL_VERSION = "2026-07-28"

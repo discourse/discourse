@@ -11,6 +11,7 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import categoryVariables from "discourse/helpers/category-variables";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { number } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
@@ -123,6 +124,16 @@ export default class CategoryCardContents extends CardContentsBase {
         currentUser: this.currentUser,
       }
     );
+  }
+
+  @computed("category.totalTopicCount")
+  get topicCount() {
+    return this.category?.totalTopicCount ?? 0;
+  }
+
+  @computed("topicCount")
+  get showViewAll() {
+    return this.topicCount > LATEST_TOPICS_COUNT;
   }
 
   didInsertElement() {
@@ -357,6 +368,14 @@ export default class CategoryCardContents extends CardContentsBase {
                 <li><FeaturedTopic @topic={{topic}} /></li>
               {{/each}}
             </ul>
+            {{#if this.showViewAll}}
+              <a class="category-card__view-all" href={{this.category.url}}>
+                {{i18n
+                  "category.view_all_topics"
+                  number=(number this.topicCount)
+                }}
+              </a>
+            {{/if}}
           </div>
         {{else if (eq this.latestTopics null)}}
           <DSkeleton class="card-row category-card__latest" @count={{3}} />

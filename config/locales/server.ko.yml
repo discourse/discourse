@@ -1968,6 +1968,7 @@ ko:
     email_too_long: "제공한 이메일이 너무 깁니다. 메일함 이름은 254자 이하여야 하며 도메인 이름은 253자 이하여야 합니다."
     wrong_invite_code: "입력한 초대 코드가 잘못되었습니다."
     reserved_username: "이 아이디는 허용되지 않습니다."
+    missing_username: "사용자명을 입력 해주세요"
     auth_complete: "인증이 완료되었습니다."
     click_to_continue: "계속하려면 여기를 클릭하세요."
     already_logged_in: "이 초대는 기존 계정이 없는 신규 사용자를 위한 것입니다."
@@ -3101,18 +3102,18 @@ ko:
       text_body_template: |
         %{site_name}에 오신 것을 환영합니다!
 
-        운영진이 %{site_name} 계정을 승인했습니다.
+        %{site_name}에서 사용자님의 계정이 승인되었습니다.
 
-        아래 링크에서 새 계정에 액세스할 수 있습니다.
-        %{base_url}
+        아래 링크를 클릭하면 새 계정에 로그인 할 수 있습니다.
+        %{login_url}
 
-        위 링크를 클릭할 수 없으면 웹 브라우저의 주소 표시줄에 복사하여 붙여 넣으세요.
+        위 링크를 클릭 할 수 없으면 웹 브라우저의 주소 표시 줄에 복사하여 붙여 넣으십시오.
 
         %{new_user_tips}
 
-        [성숙한 커뮤니티 활동](%{base_url}/guidelines)을 해 주시리라 믿습니다.
+        사이트 이용은 [커뮤니티의 가이드라인](%{base_url}/guidelines)을 참고해 주시기 바랍니다.
 
-        즐거운 시간 보내세요!
+        즐거운 시간 되세요!
     signup_after_reject:
       title: "가입 거부"
       subject_template: "%{site_name}에서 가입이 거부되었습니다."
@@ -3661,6 +3662,8 @@ ko:
         complete: "게시물 삭제됨."
       delete_and_agree_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
+      disagree_and_keep_deleted:
+        title: "게시물 삭제 유지"
       disagree_bundle:
         title: "아니오"
       ignore:

@@ -502,7 +502,13 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     border-left: 2px solid var(--discourse-boards-column-color);
   }
 
-  &[draggable="false"] {
+  // iOS turns a long press on text into a selection instead of a drag
+  &[data-drag-source] {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  &:not([data-drag-source]) {
     cursor: not-allowed;
   }
 
@@ -714,17 +720,6 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
       background: var(--primary-low);
     }
   }
-}
-
-.discourse-boards-card--drag-image {
-  position: fixed;
-  box-sizing: border-box;
-  top: -9999px;
-  left: -9999px;
-  margin: 0;
-  pointer-events: none;
-  box-shadow: var(--shadow-card);
-  cursor: grabbing;
 }
 
 @keyframes discourse-boards-card-drop-highlight {

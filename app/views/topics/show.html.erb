@@ -80,7 +80,7 @@
                 <% if emit_md %>
                   <meta itemprop='url' content='<%= Discourse.base_url %>/u/<%= u.username %>'>
                 <% end %>
-                <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+                <%= "(#{u.name})" if SiteSetting.display_name_on_posts && SiteSetting.enable_names? && u.name.present? %>
                 <%
                   post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
                   who_username = post_custom_fields["action_code_who"] || ""

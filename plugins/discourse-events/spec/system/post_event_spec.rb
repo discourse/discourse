@@ -417,7 +417,7 @@ describe "Post event" do
         post = PostCreator.create!(admin, title:, raw:)
 
         event = DiscourseEvents::Events::Event.find_by(post:)
-        event.set_next_date
+        event.set_next_recurrent_event_date
 
         sign_in(viewer)
 

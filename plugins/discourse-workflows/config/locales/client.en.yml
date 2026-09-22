@@ -479,6 +479,8 @@ en:
           get: "Get group"
           check_membership: "Check membership"
         username: "User"
+        set_primary_group: "Set as primary group"
+        set_primary_group_description: "Make this the user's primary group after adding them. The primary group is used for their title and flair."
         manage_groups: "Manage groups"
         actor_username: "Performed by user"
       user:

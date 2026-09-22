@@ -41,6 +41,25 @@ pl_PL:
         ```tekst
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Przypomnienie o wydarzeniu"
+      subject_template: ":date: %{subject}"
+      text_body_template: |
+        **%{date_range} (%{timezone})**
+
+        %{description}
+
+        %{location_section}
+
+        #### Goście
+
+        %{guests}
+
+        %{additional_guests}
+
+        %{join_event}
+
+        [Przejdź do tematu wydarzenia](%{event_url})
   site_settings:
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
@@ -75,6 +94,7 @@ pl_PL:
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
     enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
+    enable_improved_event_reminders: "Umożliwia członkom wybór, czy przypomnienia o wydarzeniach będą wysyłane jako wiadomości osobiste, powiadomienia, czy w ogóle."
     livestream_allowed_hosts: "Organizatorzy, których można używać do transmisji wydarzeń na żywo."
     livestream_allowed_hosts_invalid: "Te wpisy nie są hostami: %{hosts}. Podaj sam host (na przykład zoom.us), który zezwala na wszystkie adresy URL na nim i jego subdomeny."
     livestream_zoom_enabled: "Włącz osadzanie wideo Zoom w przypadku tematów transmitowanych na żywo."
@@ -83,6 +103,26 @@ pl_PL:
     livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
     livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} wkrótce się rozpocznie"
+        ongoing: "%{title} trwa"
+        after: "%{title} dobiegło końca"
+      location: |-
+        #### Lokalizacja
+
+        %{location}
+      guest: "- %{name}"
+      guest_with_role: "- %{name} (*%{role}*)"
+      roles:
+        organizer: "Organizator"
+        host: "Gospodarz"
+      additional_guests:
+        one: "  i %{count} inny"
+        few: "  i %{count} inne"
+        many: "  i %{count} innych"
+        other: "  i %{count} innych"
+      join_event: "[Dołącz do wydarzenia](%{url})"
     category_type:
       default_calendar_view:
         label: "Domyślny widok kalendarza"

@@ -41,6 +41,8 @@ de:
         ```Text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Ereigniserinnerung"
   site_settings:
     map_events_to_color: "Weise jedem Schlagwort oder jeder Kategorie eine Farbe zu."
     map_events_title: "Überschreibt „Ereignisse“ im Titel der Seitenleiste „Anstehende Ereignisse“ pro Kategorie."
@@ -82,6 +84,15 @@ de:
     livestream_embeddable_chat_allowed_paths: "Erlaubte Pfade für den einbettbaren Livestream-Chat."
     livestream_enable_modal_chat_on_mobile: "Zeige den Livestream-Chat auf Mobilgeräten in einer Dialogbox an."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} fängt gleich an"
+        ongoing: "%{title} ist im Gange"
+        after: "%{title} ist beendet"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  und %{count} andere Person"
+        other: "  und %{count} andere"
     category_type:
       default_calendar_view:
         label: "Standardansicht des Kalenders"

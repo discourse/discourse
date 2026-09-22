@@ -2,6 +2,8 @@
 
 require "sidekiq/web"
 require "mini_scheduler/web"
+require_relative "../lib/markdown_endpoint/accept_header"
+require_relative "../lib/markdown_endpoint/request_constraint"
 
 # The following constants have been replaced with `RouteFormat` and are deprecated.
 USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined?(USERNAME_ROUTE_FORMAT)
@@ -10,6 +12,50 @@ BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined?(BACKUP_ROUTE_
 Discourse::Application.routes.draw do
   def patch(*)
   end # Disable PATCH requests
+
+  constraints MarkdownEndpoint::RequestConstraint.new do
+    get "/",
+        to: "list#latest",
+        format: false,
+        defaults: {
+          format: :md,
+        },
+        constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+
+    scope format: false,
+          constraints: {
+            topic_id: /\d+/,
+            post_number: /\d+/,
+            tag_id: /\d+/,
+            category_slug_path_with_id: %r{.+/\d+},
+          } do
+      {
+        "latest" => "list#latest",
+        "new" => "list#new",
+        "unread" => "list#unread",
+        "hot" => "list#hot",
+        "top" => "list#top",
+        "categories" => "categories#index",
+        "tags" => "tags#index",
+        "c/*category_slug_path_with_id" => "list#category_default",
+        "tag/:tag_slug/:tag_id" => "tags#show",
+        "tag/:tag_name" => "tags#show",
+        "t/:topic_id/:post_number" => "topics#show",
+        "t/:topic_id" => "topics#show",
+        "t/:slug/:topic_id/:post_number" => "topics#show",
+        "t/:slug/:topic_id" => "topics#show",
+      }.each do |path, action|
+        # Require the format so HTML URL generation cannot select a Markdown route.
+        get "#{path}.:format", to: action, constraints: { format: /md/ }
+        get path,
+            to: action,
+            defaults: {
+              format: :md,
+            },
+            constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+      end
+    end
+  end
 
   scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     relative_url_root =
@@ -696,7 +742,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/search/users" => "users#search_users"
 
       get(
-        { "#{root_path}/account-created/" => "users#account_created" }.merge(
+        **{ "#{root_path}/account-created/" => "users#account_created" }.merge(
           index == 1 ? { as: :users_account_created } : { as: :old_account_created },
         ),
       )
@@ -704,7 +750,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/account-created/resent" => "users#account_created"
       get "#{root_path}/account-created/edit-email" => "users#account_created"
       get(
-        { "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
+        **{ "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
           index == 1 ? { as: :password_reset_token } : {},
         ),
       )
@@ -718,7 +764,7 @@ Discourse::Application.routes.draw do
             token: /[0-9a-f]+/,
           }
       put(
-        {
+        **{
           "#{root_path}/activate-account/:token" => "users#perform_account_activation",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -733,7 +779,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
-        {
+        **{
           "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -782,7 +828,7 @@ Discourse::Application.routes.draw do
             format: :json,
           }
       get(
-        {
+        **{
           "#{root_path}/:username" => "users#show",
           :constraints => {
             username: RouteFormat.username,
@@ -1893,33 +1939,38 @@ Discourse::Application.routes.draw do
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
     get "/tag_groups/filter/search" => "tag_groups#search", :format => :json
 
-    Discourse.filters.each do |filter|
-      root to: "list##{filter}",
-           constraints: HomePageConstraint.new("#{filter}"),
-           as: "list_#{filter}"
-    end
+    # Allow the controller to fall back to HTML when Markdown loses Accept negotiation.
+    scope constraints: { format: %r{(json|html|markdown|\*/\*)} } do
+      Discourse.filters.each do |filter|
+        root to: "list##{filter}",
+             constraints: HomePageConstraint.new("#{filter}"),
+             as: "list_#{filter}"
+      end
 
-    DiscoursePluginRegistry._raw_homepage_options.each do |registration|
-      option = registration[:value]
-      get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+      DiscoursePluginRegistry._raw_homepage_options.each do |registration|
+        option = registration[:value]
+        get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+      end
+
+      # special case for categories
+      root to: "categories#index",
+           constraints: HomePageConstraint.new("categories"),
+           as: "categories_index"
+
+      root to: "finish_installation#index",
+           constraints: HomePageConstraint.new("finish_installation"),
+           as: "installation_redirect"
+
+      root to: "home_page#custom",
+           constraints: HomePageConstraint.new("custom"),
+           as: "home_page_custom"
+
+      root to: "home_page#blank",
+           constraints: HomePageConstraint.new("blank"),
+           as: "home_page_blank"
     end
 
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
-
-    # special case for categories
-    root to: "categories#index",
-         constraints: HomePageConstraint.new("categories"),
-         as: "categories_index"
-
-    root to: "finish_installation#index",
-         constraints: HomePageConstraint.new("finish_installation"),
-         as: "installation_redirect"
-
-    root to: "home_page#custom",
-         constraints: HomePageConstraint.new("custom"),
-         as: "home_page_custom"
-
-    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
 
     get "/custom" => "home_page#custom"
 

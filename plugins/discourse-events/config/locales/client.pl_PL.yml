@@ -45,7 +45,21 @@ pl_PL:
           rsvp_to_event: "Potwierdź obecność na wydarzeniu, aby rozpocząć czat"
           rsvp_to_event_with_link: "Potwierdź obecność na <a href='%{url}'>wydarzeniu</a> , aby rozpocząć czat"
           rsvp_body: "Nawiąż kontakt z innymi uczestnikami przed, w trakcie i po wydarzeniu."
+      calendar_prompt:
+        title: "Dodać to wydarzenie do kalendarza?"
+        subscribed: 'To wydarzenie zostanie dodane do Twojego subskrybowanego kalendarza <a href="%{calendarUrl}"></a>.'
+        dismiss: "Odrzuć monit kalendarza"
+        subscribe: "Subskrybuj swoje wydarzenia"
+        subscribe_with_preferences: "Subskrybuj wydarzenia lub zmień preferencje powiadomień"
       preferences:
+        reminders:
+          title: "Przypomnienia o wydarzeniach"
+          description: "Dotyczy wydarzeń, w których bierzesz udział lub którymi jesteś zainteresowany. Organizator decyduje, kiedy wysłać przypomnienia."
+          preference: "Wysyłaj przypomnienia o wydarzeniach za pośrednictwem"
+          preferences:
+            personal_message: "Wyślij prywatną wiadomość"
+            notification: "Powiadomienie"
+            none: "Brak"
         all_events: "Wydarzenia Discourse – wszystkie wydarzenia"
         all_events_description: "Wszystkie wydarzenia na forum"
         my_events: "Wydarzenia Discourse – moje wydarzenia"
