@@ -12,6 +12,11 @@ module DiscourseAi
       before_action :rate_limiter_performed!
 
       RATE_LIMITS = { "default" => { amount: 6, interval: 3.minutes } }.freeze
+      STREAM_LOCATION_CONTEXTS = {
+        "composer" => "composer",
+        "post" => "post",
+        "helper" => "post",
+      }.freeze
 
       def suggest
         input = get_text_param!
@@ -161,16 +166,15 @@ module DiscourseAi
 
       def stream_suggestion
         text = get_text_param!
-
-        location = params[:location]
-        raise Discourse::InvalidParameters.new(:location) if !location
+        location = normalized_stream_location
 
         raise Discourse::InvalidParameters.new(:mode) if params[:mode].blank?
 
         assistant = DiscourseAi::AiHelper::Assistant.new
 
+        assistant.ensure_mode_access_for_location!(params[:mode], current_user, location)
+
         if params[:mode] == DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST
-          assistant.ensure_mode_access!(params[:mode], current_user)
           return suggest_thumbnails(text)
         end
 
@@ -181,11 +185,6 @@ module DiscourseAi
         # to stream we must have an appropriate client_id
         # otherwise we may end up streaming the data to the wrong client
         raise Discourse::InvalidParameters.new(:client_id) if params[:client_id].blank?
-
-        # The UI only renders modes from `current_user.ai_helper_prompts`, but a crafted
-        # API request can still hit this endpoint directly. Enforce the selected agent's
-        # group restrictions here before enqueueing async work.
-        assistant.ensure_mode_access!(params[:mode], current_user)
 
         channel_id = next_channel_id
         progress_channel = "discourse_ai_helper/stream_suggestions/#{channel_id}"
@@ -272,17 +271,20 @@ module DiscourseAi
       end
 
       def ensure_can_request_stream_suggestions
-        location = params[:location]
-        raise Discourse::InvalidParameters.new(:location) if location.blank?
-
         allowed_groups =
-          if location == "composer"
+          if normalized_stream_location == "composer"
             SiteSetting.composer_ai_helper_allowed_groups_map
           else
             SiteSetting.post_ai_helper_allowed_groups_map
           end
 
         ensure_user_is_in_any_allowed_group!(allowed_groups)
+      end
+
+      def normalized_stream_location
+        STREAM_LOCATION_CONTEXTS.fetch(params[:location]) do
+          raise Discourse::InvalidParameters.new(:location)
+        end
       end
 
       def ensure_user_is_in_any_allowed_group!(allowed_groups)
