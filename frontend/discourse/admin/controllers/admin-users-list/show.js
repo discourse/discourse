@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { dependentKeyCompat } from "@ember/object/compat";
+import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import BulkUserDeleteConfirmation from "discourse/admin/components/bulk-user-delete-confirmation";
@@ -29,36 +28,25 @@ export default class AdminUsersListShowController extends Controller {
   @tracked listFilter = null;
   @tracked initialFilter = null;
 
-  query = null;
-  order = null;
-  asc = null;
-  showEmails = false;
+  @tracked query = null;
+  @tracked order = null;
+  @tracked asc = null;
+  @tracked showEmails = false;
+
   lastSelected = null;
 
-  _page = 1;
-  _results = trackedArray();
-  _canLoadMore = true;
-
-  @computed("siteSettings.moderators_view_emails")
-  get canModeratorsViewEmails() {
-    return this.siteSettings.moderators_view_emails;
-  }
-
-  @dependentKeyCompat
-  get searchHint() {
-    return i18n(`search_hint`);
-  }
+  #page = 1;
+  #results = trackedArray();
+  #canLoadMore = true;
 
   get users() {
-    return this._results.flat();
+    return this.#results.flat();
   }
 
-  @computed("query")
   get title() {
     return i18n("admin.users.titles." + this.query);
   }
 
-  @computed("showEmails")
   get columnCount() {
     let colCount = 7; // note that the first column is hardcoded in the template
 
@@ -73,35 +61,22 @@ export default class AdminUsersListShowController extends Controller {
     return colCount;
   }
 
-  @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
       this.model?.id,
-      this.canModeratorsViewEmails,
+      this.siteSettings.moderators_view_emails,
       this.currentUser
     ).canCheckEmails;
   }
 
-  @computed("model.id", "currentUser.id")
-  get canAdminCheckEmails() {
-    return new CanCheckEmailsHelper(
-      this.model?.id,
-      this.canModeratorsViewEmails,
-      this.currentUser
-    ).canAdminCheckEmails;
-  }
-
-  @computed("query")
   get showSilenceReason() {
     return this.query === "silenced";
   }
 
-  @computed("query")
   get showSuspendReason() {
     return this.query === "suspended";
   }
 
-  @computed("query")
   get showActivationFilter() {
     return this.query === "new";
   }
@@ -120,10 +95,10 @@ export default class AdminUsersListShowController extends Controller {
   }
 
   resetFilters() {
-    this._page = 1;
-    this._results.length = 0;
-    this._canLoadMore = true;
-    return this._refreshUsers();
+    this.#page = 1;
+    this.#results.length = 0;
+    this.#canLoadMore = true;
+    return this.#refreshUsers();
   }
 
   stripHtml(html) {
@@ -157,13 +132,13 @@ export default class AdminUsersListShowController extends Controller {
     if (this.refreshing) {
       return;
     }
-    this._page += 1;
-    this._refreshUsers();
+    this.#page += 1;
+    this.#refreshUsers();
   }
 
   @action
   toggleEmailVisibility() {
-    this.toggleProperty("showEmails");
+    this.showEmails = !this.showEmails;
     this.resetFilters();
   }
 
@@ -323,13 +298,13 @@ export default class AdminUsersListShowController extends Controller {
     });
   }
 
-  _refreshUsers() {
-    if (!this._canLoadMore) {
+  #refreshUsers() {
+    if (!this.#canLoadMore) {
       return;
     }
 
-    const page = this._page;
-    this.set("refreshing", true);
+    const page = this.#page;
+    this.refreshing = true;
 
     return AdminUser.findAll(this.query, {
       filter: this.listFilter,
@@ -340,13 +315,13 @@ export default class AdminUsersListShowController extends Controller {
       page,
     })
       .then((result) => {
-        this._results[page] = result;
+        this.#results[page] = result;
         if (result.length === 0) {
-          this._canLoadMore = false;
+          this.#canLoadMore = false;
         }
       })
       .finally(() => {
-        this.set("refreshing", false);
+        this.refreshing = false;
       });
   }
 }

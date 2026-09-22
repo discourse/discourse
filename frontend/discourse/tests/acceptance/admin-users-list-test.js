@@ -185,6 +185,26 @@ acceptance("Admin - Users List", function (needs) {
   });
 });
 
+acceptance("Admin - Users List - email permissions", function (needs) {
+  needs.user({ admin: false, moderator: true });
+  needs.settings({ moderators_view_emails: false });
+
+  test("shows the email action only when moderators can view emails", async function (assert) {
+    await visit("/admin/users/list/active");
+
+    assert
+      .dom(".admin-users__subheader-show-emails")
+      .doesNotExist("hides the unauthorized action");
+
+    this.siteSettings.moderators_view_emails = true;
+    await visit("/admin/users/list/new");
+
+    assert
+      .dom(".admin-users__subheader-show-emails")
+      .exists("shows the permitted action");
+  });
+});
+
 acceptance("Admin - Users List - bulk search", function (needs) {
   needs.user();
 

@@ -7,43 +7,24 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
     username: { refreshModel: true },
   };
 
-  // TODO: this has been introduced to fix a bug in admin-users-list-show
-  // loading AdminUser model multiple times without refactoring the controller
-  beforeModel(transition) {
-    const routeName = "adminUsersList.show";
+  setupController(controller, model, transition) {
+    super.setupController(...arguments);
 
-    if (transition.targetName === routeName) {
-      const params = transition.routeInfos.find(
-        (a) => a.name === routeName
-      ).params;
-      const controller = this.controllerFor(routeName);
-      if (controller) {
-        controller.setProperties({
-          order: transition.to.queryParams.order,
-          asc: transition.to.queryParams.asc,
-          // `filter` is deliberately not a registered query param (its name
-          // would clash with the :filter segment); `username` is kept as a
-          // legacy fallback for old links. `initialFilter` seeds the filter
-          // controls input; `listFilter` is the live value sent to the server.
-          listFilter:
-            transition.to.queryParams.filter ??
-            transition.to.queryParams.username,
-          initialFilter:
-            transition.to.queryParams.filter ??
-            transition.to.queryParams.username,
-          query: params.filter,
-          activation:
-            params.filter === "new"
-              ? transition.to.queryParams.activation
-              : null,
-          refreshing: false,
-          bulkSelectedUsersMap: {},
-          bulkSelectedUserIdsSet: new Set(),
-          displayBulkActions: false,
-        });
+    const query = transition.to.params.filter;
+    const { queryParams } = transition.to;
+    const filter = queryParams.filter ?? queryParams.username;
 
-        controller.resetFilters();
-      }
-    }
+    controller.setProperties({
+      order: queryParams.order,
+      asc: queryParams.asc,
+      listFilter: filter,
+      initialFilter: filter,
+      query,
+      activation: query === "new" ? queryParams.activation : null,
+      bulkSelectedUsersMap: {},
+      displayBulkActions: false,
+    });
+
+    controller.resetFilters();
   }
 }
