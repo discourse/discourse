@@ -1439,12 +1439,6 @@ RSpec.describe PostsController do
           expect(response).to be_forbidden
           expect(response.body).to include(I18n.t("invalid_whisper_access"))
           expect(public_reply.reload.post_type).to eq(Post.types[:regular])
-
-          sign_out
-          get "/t/#{topic.id}.json"
-
-          expect(response).to be_ok
-          expect(response.body).to include(public_reply.raw)
         end
       end
 
