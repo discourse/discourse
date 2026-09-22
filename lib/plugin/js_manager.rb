@@ -352,12 +352,12 @@ module Plugin
 
     private
 
-    # The core build reads `EMBER_ENV`, so a plugin bundle is minified and
-    # compressed exactly when the core bundle it ships beside is. Part of the
-    # digest below, so a bundle built for one environment is never reused as
-    # the other's.
+    # Either signal means a bundle that ships: the Rails environment for the
+    # callers that set only that, and `EMBER_ENV` so a production core bundle
+    # gets production plugin bundles beside it. Part of the digest below, so a
+    # bundle built one way is never reused as the other.
     def production_build?
-      ENV["EMBER_ENV"] == "production"
+      Rails.env.production? || ENV["EMBER_ENV"] == "production"
     end
 
     def minify?
