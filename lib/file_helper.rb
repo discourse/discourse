@@ -162,46 +162,44 @@ class FileHelper
         end
 
       result = nil
-      Tempfile.create(
-        ["image-optimization-", File.extname(filename)],
-        File.dirname(filename),
-      ) do |temporary|
-        input = File.expand_path(filename)
-        commands.each do |command|
-          output =
-            begin
-              Discourse::SafeExec.capture(
-                "nice",
-                "-n",
-                "10",
-                *command,
-                "--",
-                input,
-                env: {
-                  **ENV.slice("PATH"),
-                  "MALLOC_ARENA_MAX" => "2",
-                },
-                unsetenv_others: true,
-                read: [*Discourse::SafeExec.default_read_paths, input],
-                write: [],
-                execute: Discourse::SafeExec.default_execute_paths,
-                timeout: 15,
-                rlimits: ImageMagick::RLIMITS,
-                seccomp_deny_network: true,
-                max_output_bytes: File.size(input) * 2,
-              )
-            rescue Discourse::Utils::CommandError, Errno::ENOENT
-              next
-            end
-          next if output.empty? || output.bytesize >= File.size(input)
+      input = File.expand_path(filename)
+      commands.each do |command|
+        Tempfile.create(
+          ["image-optimization-", File.extname(filename)],
+          File.dirname(input),
+        ) do |temporary|
+          begin
+            Discourse::SafeExec.capture(
+              "sh",
+              "-c",
+              'exec "$@" > "$0"',
+              temporary.path,
+              "nice",
+              "-n",
+              "10",
+              *command,
+              "--",
+              input,
+              env: {
+                **ENV.slice("PATH"),
+                "MALLOC_ARENA_MAX" => "2",
+              },
+              unsetenv_others: true,
+              read: [*Discourse::SafeExec.default_read_paths, input],
+              write: [temporary.path],
+              execute: Discourse::SafeExec.default_execute_paths,
+              timeout: 15,
+              rlimits: ImageMagick::RLIMITS,
+              seccomp_deny_network: true,
+            )
+          rescue Discourse::Utils::CommandError, Errno::ENOENT
+            next
+          end
+          next if temporary.size.zero? || temporary.size >= File.size(input)
 
-          File.binwrite(temporary.path, output)
-          input = temporary.path
+          temporary.chmod(File.stat(input).mode)
+          File.rename(temporary.path, input)
           result = filename
-        end
-        if result
-          temporary.chmod(File.stat(filename).mode)
-          File.rename(temporary.path, filename)
         end
       end
       result
