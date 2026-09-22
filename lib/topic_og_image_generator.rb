@@ -324,14 +324,16 @@ class TopicOgImageGenerator
       svg_path = File.join(directory, "#{basename}.svg")
       png_path = File.join(directory, "#{basename}.png")
       File.binwrite(svg_path, bytes)
-      ImageMagick.magick(
-        "MSVG:#{svg_path}",
-        png_path,
-        operation: :topic_og_asset_render,
-        read: [svg_path],
-        write: [directory],
-        timeout: 10,
-      )
+      ImageProcessing::OutputFile.write(png_path) do |temporary_path|
+        ImageMagick.magick(
+          "MSVG:#{svg_path}",
+          temporary_path,
+          operation: :topic_og_asset_render,
+          read: [svg_path],
+          write: [temporary_path],
+          timeout: 10,
+        )
+      end
       return png_path if File.exist?(png_path)
 
       return nil
@@ -373,23 +375,25 @@ class TopicOgImageGenerator
 
       File.write(svg_path, build_svg(asset_directory: dir))
 
-      ImageMagick.magick(
-        "-background",
-        "none",
-        "-size",
-        "#{OG_WIDTH}x#{OG_HEIGHT}",
-        "MSVG:#{svg_path}",
-        "-depth",
-        "8",
-        "-define",
-        "png:compression-level=9",
-        png_path,
-        operation: :topic_og_render,
-        read: [dir],
-        write: [dir],
-        nice: 10,
-        timeout: 20,
-      )
+      ImageProcessing::OutputFile.write(png_path) do |temporary_path|
+        ImageMagick.magick(
+          "-background",
+          "none",
+          "-size",
+          "#{OG_WIDTH}x#{OG_HEIGHT}",
+          "MSVG:#{svg_path}",
+          "-depth",
+          "8",
+          "-define",
+          "png:compression-level=9",
+          temporary_path,
+          operation: :topic_og_render,
+          read: [dir],
+          write: [temporary_path],
+          nice: 10,
+          timeout: 20,
+        )
+      end
 
       return nil unless File.exist?(png_path)
       FileHelper.optimize_image!(png_path)
