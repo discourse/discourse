@@ -734,9 +734,18 @@ class PostsController < ApplicationController
     guardian.ensure_can_change_post_type!
     post = find_post_from_params
     params.require(:post_type)
-    raise Discourse::InvalidParameters.new(:post_type) if Post.types[params[:post_type].to_i].blank?
+    post_type = params[:post_type].to_i
+    raise Discourse::InvalidParameters.new(:post_type) if Post.types[post_type].blank?
 
-    post.revise(current_user, post_type: params[:post_type].to_i)
+    if post_type == Post.types[:whisper] && !guardian.can_create_whisper?
+      raise Discourse::InvalidAccess.new(
+              "invalid_whisper_access",
+              nil,
+              custom_message: "invalid_whisper_access",
+            )
+    end
+
+    post.revise(current_user, post_type: post_type)
 
     render body: nil
   end
