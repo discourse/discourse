@@ -10,7 +10,7 @@ module Migrations
 
       def migrate(migrations_path)
         @migrations_path = migrations_path
-        @db = Connection.open_database(path: @db_path)
+        @db = Connection.open_database(path: @db_path, journal_mode: "delete")
 
         if new_database?
           create_schema_migrations_table
