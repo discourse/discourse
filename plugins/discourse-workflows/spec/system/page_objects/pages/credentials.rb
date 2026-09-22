@@ -41,6 +41,28 @@ module PageObjects
           self
         end
 
+        def edit_credential(name)
+          row = find("tr", text: name)
+          row.find("button", text: I18n.t("js.discourse_workflows.edit"), exact_text: true).click
+          self
+        end
+
+        def has_connection_action?(label)
+          page.has_button?(label, class: "workflows-credential-connection__connect")
+        end
+
+        def has_connection_status?(status)
+          page.has_css?(".workflows-credential-connection__status", text: status)
+        end
+
+        def has_masked_client_secret?
+          page.has_field?(
+            "client_secret",
+            with: ::DiscourseWorkflows::Credential::REDACTED_VALUE,
+            type: "password",
+          )
+        end
+
         def submit_credential_modal
           find(".d-modal .btn-primary[type='submit']").click
           self

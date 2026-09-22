@@ -73,8 +73,6 @@ class Plugin::Instance
     raise ArgumentError, "Provide a node class or a block, not both" if node_class && block
     raise ArgumentError, "Provide a node class or a block" if !node_class && !block
 
-    register_discourse_workflows_node_cache_reset!
-
     registration = block || node_class
     if DiscourseWorkflows.node_registration_ready?
       DiscourseWorkflows.register_plugin_node_registration(self, registration)
@@ -85,16 +83,5 @@ class Plugin::Instance
 
   def discourse_workflows_node_registrations
     @discourse_workflows_node_registrations ||= []
-  end
-
-  private
-
-  def register_discourse_workflows_node_cache_reset!
-    return if @discourse_workflows_node_cache_reset_registered
-    return if enabled_site_setting.blank?
-
-    @discourse_workflows_node_cache_reset_registered = true
-    @discourse_workflows_node_cache_reset_handler =
-      on_enabled_change { DiscourseWorkflows::Registry.reset_indexes! }
   end
 end

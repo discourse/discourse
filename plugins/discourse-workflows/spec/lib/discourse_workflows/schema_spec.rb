@@ -439,7 +439,6 @@ RSpec.describe DiscourseWorkflows::Schema do
         end
       DiscoursePluginRegistry.register_discourse_workflows_node(trigger_class, Plugin::Instance.new)
       DiscoursePluginRegistry.register_discourse_workflows_node(join_class, Plugin::Instance.new)
-      DiscourseWorkflows::Registry.reset_indexes!
       graph =
         build_workflow_graph do |builder|
           builder.node "current", "trigger:schema_version_test"
@@ -480,7 +479,6 @@ RSpec.describe DiscourseWorkflows::Schema do
         end
       DiscoursePluginRegistry.register_discourse_workflows_node(v1_class, Plugin::Instance.new)
       DiscoursePluginRegistry.register_discourse_workflows_node(v2_class, Plugin::Instance.new)
-      DiscourseWorkflows::Registry.reset_indexes!
       graph =
         build_workflow_graph do |builder|
           builder.node "legacy", "trigger:schema_default_version_test"

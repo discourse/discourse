@@ -7,7 +7,6 @@ module DiscourseWorkflowsSpecHelper
     before do
       SiteSetting.enable_discourse_workflows = true
       SiteSetting.external_system_avatars_url = "https://example.com/avatar/{username}.png"
-      DiscourseWorkflows::Registry.reset_indexes!
       Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
       Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.clear
       Jobs::DiscourseWorkflows::ResumeWebhookWaiting.jobs.clear

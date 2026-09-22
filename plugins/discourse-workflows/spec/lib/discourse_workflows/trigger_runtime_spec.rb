@@ -16,7 +16,6 @@ RSpec.describe DiscourseWorkflows::TriggerRuntime do
         passive_trigger_class,
         Plugin::Instance.new,
       )
-      DiscourseWorkflows::Registry.reset_indexes!
 
       graph =
         build_workflow_graph do |graph_builder|

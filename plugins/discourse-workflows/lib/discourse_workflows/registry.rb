@@ -33,14 +33,22 @@ module DiscourseWorkflows
         nodes.select { |n| n.identifier.start_with?("flow:") }
       end
 
-      def credential_types
-        DiscoursePluginRegistry.discourse_workflows_credential_types.map do |reference|
-          resolve_class(reference)
-        end
+      def credential_types(include_disabled_plugins: false)
+        references =
+          if include_disabled_plugins
+            DiscoursePluginRegistry._raw_discourse_workflows_credential_types.map do |entry|
+              entry[:value]
+            end
+          else
+            DiscoursePluginRegistry.discourse_workflows_credential_types
+          end
+        references.map { |reference| resolve_class(reference) }.uniq
       end
 
-      def find_credential_type(identifier)
-        resolve_class(credential_type_index[identifier])
+      def find_credential_type(identifier, include_disabled_plugins: false)
+        credential_types(include_disabled_plugins: include_disabled_plugins).find do |type|
+          type.identifier == identifier
+        end
       end
 
       def find_node_type(identifier, version: nil, include_disabled_plugins: false)
@@ -54,10 +62,6 @@ module DiscourseWorkflows
 
       def available_versions(identifier, include_disabled_plugins: false)
         versions_by_identifier(include_disabled_plugins: include_disabled_plugins)[identifier] || []
-      end
-
-      def reset_indexes!
-        @credential_type_index = nil
       end
 
       private
@@ -84,11 +88,6 @@ module DiscourseWorkflows
           .transform_values do |keys|
             keys.map(&:second).sort_by { |version| Gem::Version.new(version) }
           end
-      end
-
-      def credential_type_index
-        @credential_type_index ||=
-          credential_types.to_h { |klass| [klass.identifier, klass.name || klass] }
       end
     end
   end

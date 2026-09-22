@@ -41,6 +41,30 @@ en:
       header_auth:
         name: "Header name"
         value: "Header value"
+      oauth2:
+        client_id: "Client ID"
+        client_secret: "Client secret"
+        token_url: "Token URL"
+        api_origin: "API origin"
+        api_origin_description: "Only send this credential to this HTTPS origin, for example https://api.example.com."
+        revoke_url: "Revocation URL"
+        revoke_url_description: "Optional RFC 7009 endpoint. When set, disconnecting or changing this credential revokes its token at the provider."
+        token_lifetime: "Assumed token lifetime"
+        token_lifetime_description: "Seconds. Only used when the provider omits expires_in. Set it at or below the provider's session timeout so tokens are renewed before they go stale."
+        scope: "Scope"
+        token_auth_method: "Client authentication"
+        request_body: "Request body"
+        http_basic: "HTTP Basic"
+        setup: "Enter your OAuth2 app credentials and token URL. Use a space-separated scope if required. Workflows obtain and cache access tokens automatically."
+        test_connection: "Test connection"
+        status: "Connection"
+        statuses:
+          connected: "Active"
+          not_connected: "Not tested"
+          reconnect_required: "Check configuration"
+        last_refreshed: "Last refreshed"
+        results:
+          connected: "Connection tested successfully. The credential is ready to use."
       run_scope:
         per_item: "One run per item"
         all_items: "One run for all items"
@@ -1332,6 +1356,7 @@ en:
       credentials:
         title: "Credentials"
         description: "Encrypted credentials for authenticating workflow integrations"
+        advanced: "Advanced"
         add: "Add credential"
         edit: "Edit credential"
         name: "Name"

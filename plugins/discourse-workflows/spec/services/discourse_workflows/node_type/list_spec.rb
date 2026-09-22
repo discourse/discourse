@@ -207,7 +207,9 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
             identifier: "basic_auth",
             display_name: "Basic Auth",
             property_schema: DiscourseWorkflows::CredentialTypes::BasicAuth.property_schema,
+            oauth2: false,
           ),
+          a_hash_including(identifier: "oauth2_client_credentials", oauth2: true),
         )
       end
 
@@ -217,11 +219,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(http_request[:credentials]).to contain_exactly(
           a_hash_including(
             name: "auth",
-            credential_types: %w[basic_auth bearer_token header_auth],
+            credential_types: %w[basic_auth bearer_token header_auth oauth2_client_credentials],
             required: false,
             display_options: {
               show: {
-                authentication: %w[basic_auth bearer_token header_auth],
+                authentication: %w[basic_auth bearer_token header_auth oauth2_client_credentials],
               },
             },
           ),
@@ -249,7 +251,6 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         unavailable_class,
         Plugin::Instance.new,
       )
-      DiscourseWorkflows::Registry.reset_indexes!
 
       result = described_class.call(guardian: admin.guardian)
       unavailable =
@@ -292,7 +293,6 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
       DiscoursePluginRegistry.register_discourse_workflows_node(v1, Plugin::Instance.new)
       DiscoursePluginRegistry.register_discourse_workflows_node(v2, Plugin::Instance.new)
-      DiscourseWorkflows::Registry.reset_indexes!
 
       result = described_class.call(guardian: admin.guardian)
       node_type =

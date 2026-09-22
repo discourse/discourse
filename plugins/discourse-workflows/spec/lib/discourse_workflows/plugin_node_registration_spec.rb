@@ -110,9 +110,6 @@ RSpec.describe DiscourseWorkflows do
       SiteSetting.discourse_sample_plugin_enabled = true
       DiscourseEvent.trigger(event_name, "payload")
       expect(handled).to eq([[node_class, ["payload"]]])
-    ensure
-      handler = plugin.instance_variable_get(:@discourse_workflows_node_cache_reset_handler)
-      DiscourseEvent.off(:site_setting_changed, &handler) if handler
     end
 
     it "does not subscribe a node that declares no trigger event" do

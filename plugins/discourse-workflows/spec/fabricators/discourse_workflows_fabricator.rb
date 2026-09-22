@@ -119,3 +119,15 @@ Fabricator(
   latest_response { {} }
   proposed_patch { {} }
 end
+
+Fabricator(:discourse_workflows_oauth2_credential, from: :discourse_workflows_credential) do
+  credential_type "oauth2_client_credentials"
+  data do
+    {
+      "token_url" => "https://auth.example.com/token",
+      "api_origin" => "https://api.example.com",
+      "client_id" => "workflow-client",
+      "client_secret" => "workflow-secret",
+    }
+  end
+end

@@ -8,7 +8,6 @@ module DiscourseWorkflows
         references.include?(entry[:value])
       end
       NodeType.registered_nodes.reject! { |node_class| node_classes.include?(node_class) }
-      Registry.reset_indexes!
     end
   end
 end
