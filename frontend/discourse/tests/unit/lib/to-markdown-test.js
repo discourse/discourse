@@ -346,12 +346,52 @@ helloWorld();</code>consectetur.`;
   });
 
   test("keeps highlighted code lines in a single code block", async function (assert) {
-    const html = `<p>Before <code>id</code>.</p><pre><code><div class="token-line"><span class="token plain">website </span><span class="token comment"># Root directory</span><br></div><div class="token-line"><span>   └── docs</span><br></div><div class="token-line"><span></span><br></div><div class="token-line"><span>      └── hello.md</span><br></div></code></pre><p>After.</p>`;
+    const html = `<p>Before <code>id</code>.</p><pre class="language-bash"><code><div class="token-line"><span class="token plain">website </span><span class="token comment"># Root directory</span><br></div><div class="token-line"><span>   └── docs</span><br></div><div class="token-line"><span></span><br></div><div class="token-line"><span>      └── hello.md</span><br></div></code></pre><p>After.</p>`;
 
     assert.strictEqual(
       await toMarkdown(html),
-      "Before `id`.\n\n```\nwebsite # Root directory\n   └── docs\n\n      └── hello.md\n\n```\n\nAfter.",
-      "preserves code boundaries, indentation, and blank lines"
+      "Before `id`.\n\n```bash\nwebsite # Root directory\n   └── docs\n\n      └── hello.md\n```\n\nAfter.",
+      "preserves code boundaries, indentation, blank lines, and the language"
+    );
+  });
+
+  test("reads the code language from a wrapper around the pre", async function (assert) {
+    const html = `<div class="language-ruby"><pre><code><div>puts :hi<br></div></code></pre></div>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "```ruby\nputs :hi\n```",
+      "a language class on the container is used when the pre has none"
+    );
+  });
+
+  test("reads the code language from the code element", async function (assert) {
+    const html = `<pre><code class="lang-ruby">puts :hi</code></pre>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "```ruby\nputs :hi\n```",
+      "the short class prefix is recognized"
+    );
+  });
+
+  test("ignores the autodetect language marker", async function (assert) {
+    const html = `<pre><code class="lang-auto">puts :hi</code></pre>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "```\nputs :hi\n```",
+      "autodetection is not a language"
+    );
+  });
+
+  test("keeps an explicit language over a class", async function (assert) {
+    const html = `<pre data-params="ruby" class="language-bash"><code><div>puts :hi<br></div></code></pre>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "```ruby\nputs :hi\n```",
+      "data-params wins over a language class"
     );
   });
 
@@ -364,7 +404,7 @@ helloWorld();</code>consectetur.`;
   });
 
   test("leaves other preformatted structures unchanged", async function (assert) {
-    const { normalizeCodeBlockLines } =
+    const { normalizeCodeBlocks } =
       await import("discourse/static/prosemirror/extensions/code-block");
     const doc = new DOMParser().parseFromString(
       "<pre><code>first\n  last</code></pre><pre><code><div>first</div><div>last</div></code></pre><pre><code>first<div>last<br></div></code></pre><div>outside<br></div>",
@@ -372,7 +412,7 @@ helloWorld();</code>consectetur.`;
     );
     const original = doc.body.innerHTML;
 
-    normalizeCodeBlockLines(doc);
+    normalizeCodeBlocks(doc);
 
     assert.strictEqual(
       doc.body.innerHTML,
