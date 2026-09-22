@@ -402,29 +402,40 @@ export default class DashboardTraffic extends Component {
               @options={{this.chartOptions}}
             />
           </div>
-          {{#if this.showTrafficExplorerLink}}
-            <LinkTo
-              class="db-traffic__see-details"
-              @query={{this.explorerQuery}}
-              @route="adminSiteTraffic"
+          <div class="db-section__footer">
+
+            <a
+              class="db-traffic__learn-more"
+              href="https://meta.discourse.org/t/improving-how-we-detect-and-flag-likely-crawlers-in-your-traffic-data/409316/9"
+              rel="noopener noreferrer"
+              target="_blank"
             >
-              {{i18n "admin.dashboard.site_traffic.see_details"}}
-              {{dIcon "arrow-right"}}
-            </LinkTo>
-          {{else}}
-            <LinkTo
-              class="db-traffic__see-details"
-              @model="site_traffic"
-              @query={{hash
-                start_date=this.reportQuery.start_date
-                end_date=this.reportQuery.end_date
-              }}
-              @route="adminReports.show"
-            >
-              {{i18n "admin.dashboard.site_traffic.see_details"}}
-              {{dIcon "arrow-right"}}
-            </LinkTo>
-          {{/if}}
+              {{dIcon "up-right-from-square"}}
+              {{i18n "admin.dashboard.site_traffic.crawler_learn_more"}}
+            </a>
+
+            {{#if this.showTrafficExplorerLink}}
+              <LinkTo
+                class="db-traffic__see-details"
+                @query={{this.explorerQuery}}
+                @route="adminSiteTraffic"
+              >
+                {{i18n "admin.dashboard.site_traffic.see_details"}}
+              </LinkTo>
+            {{else}}
+              <LinkTo
+                class="db-traffic__see-details"
+                @model="site_traffic"
+                @query={{hash
+                  start_date=this.reportQuery.start_date
+                  end_date=this.reportQuery.end_date
+                }}
+                @route="adminReports.show"
+              >
+                {{i18n "admin.dashboard.site_traffic.see_details"}}
+              </LinkTo>
+            {{/if}}
+          </div>
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>
