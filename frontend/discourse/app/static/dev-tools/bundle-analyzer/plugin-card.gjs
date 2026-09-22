@@ -30,6 +30,14 @@ export default class PluginCard extends ExpandableRow {
     return !!this.args.filter;
   }
 
+  // Lit as soon as any one of its chunks has been fetched, so a collapsed list
+  // says which plugins this page actually pulled in.
+  get isLoaded() {
+    return Object.keys(this.plugin.chunks).some((f) =>
+      this.args.loaded?.has(f)
+    );
+  }
+
   get totals() {
     return this.analysis.totalsFor(this.plugin);
   }
@@ -66,10 +74,18 @@ export default class PluginCard extends ExpandableRow {
   }
 
   <template>
-    <div class="ba-row {{if this.expanded 'open'}}">
+    <div
+      class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
+    >
       <button class="ba-head" type="button" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
+          {{#if this.isLoaded}}
+            <span
+              class="ba-loaded-dot"
+              title="Loaded in this browser session"
+            >●</span>
+          {{/if}}
           <span class="ba-badge entry">plugin</span>
           <span class="ba-label">{{this.plugin.plugin}}</span>
         </span>

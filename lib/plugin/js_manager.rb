@@ -170,7 +170,12 @@ module Plugin
       map_dir = "#{base_output_dir}/map/plugins"
 
       entrypoints = { "main" => "assets/javascripts", "admin" => "admin/assets/javascripts" }
-      entrypoints["test"] = "test/javascripts" if Rails.env.local?
+      # Same rule the core build applies to its own test entrypoint: a bundle
+      # that ships has no tests in it, and `FORCE_BUILD_TESTS` is the one lever
+      # that puts them back in either build.
+      if !production_build? || ENV["FORCE_BUILD_TESTS"]
+        entrypoints["test"] = "test/javascripts"
+      end
 
       tree = {}
       entrypoints_config = {}
