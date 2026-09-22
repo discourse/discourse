@@ -140,6 +140,7 @@ class Category < ActiveRecord::Base
     end
   end
 
+  after_commit :enqueue_upload_security_updates, on: :update, if: :saved_change_to_read_restricted?
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
@@ -1146,6 +1147,10 @@ class Category < ActiveRecord::Base
     else
       self.slug
     end
+  end
+
+  def enqueue_upload_security_updates
+    Jobs.enqueue(:update_category_upload_security, category_id: id)
   end
 
   def cannot_delete_reason
