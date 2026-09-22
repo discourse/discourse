@@ -583,6 +583,7 @@ CREATE TABLE user_options
     enable_smart_lists                             BOOLEAN,
     enable_upcoming_change_available_notifications BOOLEAN,
     external_links_in_new_tab                      BOOLEAN,
+    hidden_composer_toolbar_buttons                TEXT,
     hide_presence                                  BOOLEAN,
     hide_profile                                   BOOLEAN,
     hide_profile_and_presence                      BOOLEAN,
