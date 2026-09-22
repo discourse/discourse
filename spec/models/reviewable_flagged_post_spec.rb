@@ -140,15 +140,24 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:agree_and_suspend)).to eq(true)
       end
 
-      it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
-        post.update!(hidden: true)
-        post.topic.trash!
+      it "offers flag resolution without visibility or delete actions for soft-deleted posts" do
+        post.update!(reply_count: 3)
         post.trash!
-        expect(reviewable.actions_for(guardian).has?(:ignore_and_do_nothing)).to eq(false)
-        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore)).to eq(false)
-        expect(
-          reviewable.actions_for(guardian).bundles.find { |bundle| bundle.id.include?("-ignore") },
-        ).to be_blank
+
+        [false, true].product([false, true])
+          .each do |hidden, user_deleted|
+            post.update!(hidden:, user_deleted:)
+
+            expect(reviewable.actions_for(guardian).to_a.map(&:server_action)).to contain_exactly(
+              "agree_and_keep_deleted",
+              "disagree_and_keep_deleted",
+              "ignore_and_do_nothing",
+              "agree_and_silence",
+              "agree_and_suspend",
+              "delete_user",
+              "delete_user_block",
+            )
+          end
       end
 
       context "when flagged as potential_spam" do

@@ -985,9 +985,9 @@ RSpec.describe ReviewablesController do
         end
       end
 
-      describe "ReviewableFlaggedPost with deleted post" do
+      context "with a deleted flagged post" do
         fab!(:admin)
-        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
         fab!(:post)
 
         before do
@@ -995,54 +995,65 @@ RSpec.describe ReviewablesController do
           SiteSetting.reviewable_claiming = "optional"
         end
 
-        it "allows performing actions on reviewable when post is deleted" do
-          result = PostActionCreator.spam(user, post)
+        it "agrees with flags while keeping the post deleted" do
+          result = PostActionCreator.spam(flagger, post)
           reviewable = result.reviewable
-
-          expect(reviewable.pending?).to eq(true)
-          expect(reviewable.target_id).to eq(post.id)
-
-          # Delete the post but keep reviewable pending
           PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
-          reviewable.reload
-          post.reload
 
-          expect(post.deleted_at).not_to be_nil
-          expect(reviewable.pending?).to eq(true),
-          "Reviewable should still be pending after post deletion"
+          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json",
+              params: {
+                version: reviewable.reload.version,
+              }
 
-          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
-
-          expect(response.status).to eq(200),
-          "Expected 200 but got #{response.status}. " \
-            "This means target association is not loading as expected. " \
-            "Body: #{response.parsed_body}"
-
-          json = response.parsed_body
-          expect(json.dig("reviewable_perform_result", "success")).to eq(true)
-
-          reviewable.reload
-          expect(reviewable.approved?).to eq(true)
+          expect(response).to have_http_status(:ok)
+          expect(reviewable.reload).to be_approved
+          expect(post.reload).to be_trashed
         end
 
-        it "does not return 403 when reviewable has deleted post" do
-          result = PostActionCreator.spam(user, post)
-          reviewable = result.reviewable
+        it "keeps a deleted reply hidden and its author silenced when disagreeing" do
+          reply = Fabricate(:post, topic: post.topic)
+          reviewable = PostActionCreator.spam(flagger, reply).reviewable
+          reply.update!(hidden: true)
+          UserSilencer.silence(reply.user, admin, post_id: reply.id)
+          PostDestroyer.new(admin, reply, reviewable_id: reviewable.id).destroy
 
-          # Delete the post but keep reviewable pending
+          put "/review/#{reviewable.id}/perform/disagree_and_keep_deleted.json",
+              params: {
+                version: reviewable.reload.version,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(reviewable.reload).to be_rejected
+          expect(reply.reload).to be_trashed
+          expect(reply).to be_hidden
+          expect(reply.user.reload).to be_silenced
+          expect(
+            Jobs::SendSystemMessage.jobs.map { |job| job["args"].first["message_type"] },
+          ).not_to include("flags_disagreed")
+        end
+
+        it "lets category moderators dismiss flags in a deleted topic" do
+          SiteSetting.enable_category_group_moderation = true
+          group_user = Fabricate(:group_user)
+          Fabricate(
+            :category_moderation_group,
+            category: post.topic.category,
+            group: group_user.group,
+          )
+          reviewable = PostActionCreator.spam(flagger, post).reviewable
+          post.update!(hidden: true)
           PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
-          reviewable.reload
+          sign_in(group_user.user)
 
-          expect(reviewable.pending?).to eq(true), "Reviewable should still be pending"
+          put "/review/#{reviewable.id}/perform/ignore_and_do_nothing.json",
+              params: {
+                version: reviewable.reload.version,
+              }
 
-          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
-
-          expect(response.status).not_to eq(403),
-          "Got 403 InvalidAction. " \
-            "This means actions_for returned empty due to post.blank? being true. " \
-            "The preload: false fix should prevent this."
-
-          expect(response.status).to eq(200)
+          expect(response).to have_http_status(:ok)
+          expect(reviewable.reload).to be_ignored
+          expect(post.reload).to be_trashed
+          expect(post).to be_hidden
         end
       end
     end

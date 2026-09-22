@@ -6196,6 +6196,10 @@ en:
         title: "Restore post"
         description: "Disagree with flag and restore post"
         complete: "Post restored."
+      disagree_and_keep_deleted:
+        title: "Keep post deleted"
+        description: "Disagree with flag and keep the post deleted."
+        complete: "Post kept deleted."
       disagree_bundle:
         title: "No"
       disagree:
