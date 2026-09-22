@@ -9,6 +9,55 @@ describe McpOauthAuthorizationsController do
     SiteSetting.mcp_server_enabled = true
   end
 
+  describe "#show" do
+    it "redirects anonymous users to login and preserves the authorization request" do
+      sign_out
+      client =
+        McpOauthClient.create!(
+          client_id: "login-client",
+          name: "Login client",
+          registration_type: "pre_registered",
+          trust_state: "approved",
+          redirect_uris: ["http://127.0.0.1/callback"],
+        )
+      authorization_url =
+        "/oauth2/mcp/authorize?" +
+          {
+            client_id: client.client_id,
+            redirect_uri: client.redirect_uris.first,
+            response_type: "code",
+            code_challenge: "a" * 43,
+            code_challenge_method: "S256",
+            resource: DiscourseMcp.resource_url,
+            scope: "mcp:profile:read mcp:content:read",
+            state: "client-state",
+          }.to_query
+
+      get authorization_url
+
+      expect(response).to redirect_to("/login")
+      destination_url = cookies[:destination_url]
+      expect(destination_url).to eq("http://test.localhost#{authorization_url}")
+
+      sign_in(admin)
+      get destination_url
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(client.name)
+    end
+  end
+
+  describe "#create" do
+    it "rejects anonymous consent submissions" do
+      sign_out
+
+      post "/oauth2/mcp/authorize", params: { decision: "approve" }
+
+      expect(response.status).to eq(403)
+      expect(McpOauthAuthorization.count).to eq(0)
+    end
+  end
+
   it "labels the OAuth resource as the MCP server" do
     client =
       McpOauthClient.create!(
