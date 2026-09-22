@@ -1016,10 +1016,18 @@ class Plugin::Instance
   # Register a new API key scope.
   #
   # Example:
-  # add_api_key_scope(:groups, { delete: { actions: %w[groups#add_members], params: %i[id] } })
+  # add_api_key_scope(
+  #   :groups,
+  #   { delete: { actions: %w[groups#remove_member], path_params: %i[id] } },
+  # )
   #
-  # This scope lets you add members to a group. Additionally, you can specify which group ids are allowed.
-  # The delete action is added to the groups resource.
+  # Use path_params for resource identifiers selected by the Rails route, and params for intentional
+  # query or body restrictions. Query and body values cannot satisfy path_params. Aliases are only
+  # for route parameters containing the same literal identifier. All configured restrictions in one
+  # scope row must match; use separate rows for alternate identifier systems.
+  #
+  # This scope lets you remove members from a group. Additionally, you can specify which group ids
+  # are allowed. Registering an existing resource and action replaces conflicting mapping arrays.
   def add_api_key_scope(resource, action)
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
