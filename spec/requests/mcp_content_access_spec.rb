@@ -61,7 +61,7 @@ describe "MCP content access" do
     expect(response.body).not_to include(message.raw)
   end
 
-  it "requires the dedicated moderation and site-setting scopes" do
+  it "requires the dedicated moderation, site-setting, and theme scopes" do
     authorize
     operations = {
       "discourse_get_review_queue_count" => [{}, "mcp:moderation:read"],
@@ -88,6 +88,9 @@ describe "MCP content access" do
         },
         "mcp:site-settings:write",
       ],
+      "discourse_get_theme" => [{ theme_id: -1 }, "mcp:themes:read"],
+      "discourse_create_theme" => [{ name: "Not created" }, "mcp:themes:write"],
+      "discourse_update_theme" => [{ theme_id: 1, name: "Not applied" }, "mcp:themes:write"],
     }
 
     operations.each do |name, (arguments, scope)|
@@ -96,6 +99,107 @@ describe "MCP content access" do
     end
 
     expect(SiteSetting.title).not_to eq("Not applied")
+  end
+
+  it "requires theme write scope even when site-setting scopes are granted" do
+    user.update!(admin: true)
+    authorize("mcp:site-settings:read", "mcp:site-settings:write")
+    theme = Fabricate(:theme)
+
+    call_tool("discourse_create_theme", { name: "Not created" })
+    expect_missing_scope("mcp:themes:write")
+
+    call_tool("discourse_update_theme", { theme_id: theme.id, name: "Not applied" })
+    expect_missing_scope("mcp:themes:write")
+  end
+
+  it "allows theme readers to inspect themes without granting write access" do
+    user.update!(admin: true)
+    authorize("mcp:themes:read")
+    theme = Fabricate(:theme)
+    theme.set_field(target: :common, name: "header", value: "<div>Theme header</div>")
+    theme.save!
+
+    call_tool("discourse_get_theme", { theme_id: theme.id })
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "theme")).to include(
+      "id" => theme.id,
+      "name" => theme.name,
+      "theme_fields" => [include("name" => "header", "value" => "<div>Theme header</div>")],
+    )
+
+    call_tool("discourse_get_theme", { theme_id: -1 })
+    expect(response.parsed_body.dig("result", "structuredContent", "theme", "id")).to eq(-1)
+
+    call_tool("discourse_create_theme", { name: "Not created" })
+    expect_missing_scope("mcp:themes:write")
+    call_tool("discourse_update_theme", { theme_id: theme.id, name: "Not applied" })
+    expect_missing_scope("mcp:themes:write")
+  end
+
+  it "keeps theme tools admin-only when theme scopes are granted" do
+    authorize("mcp:themes:read", "mcp:themes:write")
+
+    {
+      "discourse_get_theme" => {
+        theme_id: -1,
+      },
+      "discourse_create_theme" => {
+        name: "Not created",
+      },
+      "discourse_update_theme" => {
+        theme_id: -1,
+        user_selectable: true,
+      },
+    }.each do |name, arguments|
+      call_tool(name, arguments)
+      expect(response.status).to eq(403)
+      expect(response.parsed_body.dig("error", "message")).to eq("Not authorized")
+    end
+  end
+
+  it "allows theme writers to attach components to built-in themes" do
+    user.update!(admin: true)
+    authorize("mcp:themes:write")
+    component = Fabricate(:theme, component: true)
+    foundation = Theme.find(-1)
+    horizon = Theme.find(-2)
+
+    call_tool(
+      "discourse_update_theme",
+      { theme_id: foundation.id, child_theme_ids: [component.id] },
+    )
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "isError")).to eq(false)
+    expect(foundation.reload.child_theme_ids).to contain_exactly(component.id)
+
+    call_tool("discourse_update_theme", { theme_id: component.id, parent_theme_ids: [horizon.id] })
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "isError")).to eq(false)
+    expect(component.reload.parent_theme_ids).to contain_exactly(horizon.id)
+  end
+
+  it "returns an actionable tool error for an unknown theme field type" do
+    user.update!(admin: true)
+    authorize("mcp:themes:write")
+    theme = Fabricate(:theme)
+
+    call_tool(
+      "discourse_update_theme",
+      {
+        theme_id: theme.id,
+        theme_fields: [{ name: "unknown_field", target: "common", value: "content" }],
+      },
+    )
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    expect(response.parsed_body.dig("result", "content", 0, "text")).to include(
+      "No type could be guessed",
+    )
   end
 
   it "does not let a moderation scope bypass Guardian" do

@@ -589,6 +589,256 @@ describe DiscourseMcp::Tools do
     end
   end
 
+  describe DiscourseMcp::Tools::CreateTheme do
+    it "creates a theme with fields for an admin and rejects everyone else" do
+      expect do
+        described_class.call(
+          arguments: {
+            "name" => "MCP Theme",
+            "user_selectable" => true,
+            "theme_fields" => [
+              { "name" => "header", "target" => "common", "value" => "<div>hello</div>" },
+              { "name" => "scss", "target" => "desktop", "value" => "body { color: red; }" },
+            ],
+          },
+          request_context: request_context(user),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      result =
+        described_class.call(
+          arguments: {
+            "name" => "MCP Theme",
+            "user_selectable" => true,
+            "theme_fields" => [
+              { "name" => "header", "target" => "common", "value" => "<div>hello</div>" },
+              { "name" => "scss", "target" => "desktop", "value" => "body { color: red; }" },
+            ],
+          },
+          request_context: request_context(admin),
+        ).fetch(:structuredContent)
+
+      theme = result[:theme]
+      expect(theme).to include(
+        name: "MCP Theme",
+        user_selectable: true,
+        component: false,
+        default: false,
+      )
+      expect(theme[:id]).to be_present
+      expect(theme[:theme_fields]).to contain_exactly(
+        include(name: "header", target: "common", value: "<div>hello</div>"),
+        include(name: "scss", target: "desktop", value: "body { color: red; }"),
+      )
+      expect(Theme.find(theme[:id])).to have_attributes(name: "MCP Theme", user_id: admin.id)
+    end
+
+    it "reports contract and model failures from the create service" do
+      expect do
+        described_class.call(arguments: { "name" => "" }, request_context: request_context(admin))
+      end.to raise_error(DiscourseMcp::ToolError)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "name" => "Bad component",
+            "component" => true,
+            "color_scheme_id" => Fabricate(:color_scheme).id,
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(DiscourseMcp::ToolError, /color/i)
+    end
+
+    it "blocks creation when remote themes are allowlisted" do
+      GlobalSetting.stubs(:allowed_theme_repos).returns("https://github.com/discourse/sample-theme")
+
+      expect do
+        described_class.call(
+          arguments: {
+            "name" => "Blocked Theme",
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+  end
+
+  describe DiscourseMcp::Tools::UpdateTheme do
+    fab!(:theme) { Fabricate(:theme, user: admin) }
+
+    it "is admin-only" do
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "name" => "Renamed",
+          },
+          request_context: request_context(moderator),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "updates attributes and fields" do
+      result =
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "name" => "Renamed Theme",
+            "user_selectable" => true,
+            "enabled" => false,
+            "theme_fields" => [
+              { "name" => "header", "target" => "common", "value" => "<div>updated</div>" },
+            ],
+          },
+          request_context: request_context(admin),
+        ).fetch(:structuredContent)
+
+      expect(result[:theme]).to include(
+        id: theme.id,
+        name: "Renamed Theme",
+        user_selectable: true,
+        enabled: false,
+      )
+      expect(result[:theme][:theme_fields]).to contain_exactly(
+        include(name: "header", target: "common", value: "<div>updated</div>"),
+      )
+      expect(theme.reload).to have_attributes(
+        name: "Renamed Theme",
+        user_selectable: true,
+        enabled: false,
+      )
+      expect(theme.theme_fields.find_by(name: "header").value).to eq("<div>updated</div>")
+    end
+
+    it "clears a field when its value is blank" do
+      theme.set_field(target: :common, name: "header", value: "<div>bye</div>")
+      theme.save!
+
+      result =
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "theme_fields" => [{ "name" => "header", "target" => "common", "value" => "" }],
+          },
+          request_context: request_context(admin),
+        ).fetch(:structuredContent)
+
+      expect(result[:theme][:theme_fields]).to be_empty
+      expect(theme.reload.theme_fields.find_by(name: "header")).to be_nil
+    end
+
+    it "requires at least one field to update" do
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(DiscourseMcp::ToolError, I18n.t("mcp.errors.theme_update_required"))
+    end
+
+    it "reports a missing theme" do
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => 999_999,
+            "name" => "Nope",
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(DiscourseMcp::ToolError, I18n.t("mcp.errors.theme_not_found"))
+    end
+
+    it "rejects non-editable attributes on system themes" do
+      system_theme = Theme.find(-1)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => system_theme.id,
+            "name" => "Renamed system theme",
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => system_theme.id,
+            "enabled" => false,
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "preserves component attributes when the requested default is invalid" do
+      component = Fabricate(:theme, component: true)
+      original_name = component.name
+      original_default = SiteSetting.default_theme_id
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => component.id,
+            "name" => "Not saved",
+            "default" => true,
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(DiscourseMcp::ToolError, I18n.t("themes.errors.component_no_default"))
+
+      expect(component.reload.name).to eq(original_name)
+      expect(SiteSetting.default_theme_id).to eq(original_default)
+    end
+
+    it "rolls back component relationships when a later field assignment fails" do
+      original_component = Fabricate(:theme, component: true)
+      replacement_component = Fabricate(:theme, component: true)
+      theme.update!(child_theme_ids: [original_component.id])
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "child_theme_ids" => [replacement_component.id],
+            "theme_fields" => [
+              { "name" => "unknown_field", "target" => "common", "value" => "content" },
+            ],
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(DiscourseMcp::ToolError, /No type could be guessed/)
+
+      expect(theme.reload.child_theme_ids).to contain_exactly(original_component.id)
+    end
+
+    it "sets and clears the default theme" do
+      described_class.call(
+        arguments: {
+          "theme_id" => theme.id,
+          "default" => true,
+        },
+        request_context: request_context(admin),
+      )
+      expect(theme.reload).to be_default
+      expect(SiteSetting.default_theme_id).to eq(theme.id)
+
+      described_class.call(
+        arguments: {
+          "theme_id" => theme.id,
+          "default" => false,
+        },
+        request_context: request_context(admin),
+      )
+      expect(theme.reload).not_to be_default
+      expect(SiteSetting.default_theme_id).not_to eq(theme.id)
+    end
+  end
+
   it "registers the selected tools under separate read and write scopes" do
     expected = {
       "discourse_get_review_queue_count" => [DiscourseMcp::Scopes::MODERATION_READ],
@@ -600,6 +850,9 @@ describe DiscourseMcp::Tools do
       "discourse_perform_reviewable_action" => [DiscourseMcp::Scopes::MODERATION_WRITE],
       "discourse_list_site_settings" => [DiscourseMcp::Scopes::SITE_SETTINGS_READ],
       "discourse_update_site_setting" => [DiscourseMcp::Scopes::SITE_SETTINGS_WRITE],
+      "discourse_get_theme" => [DiscourseMcp::Scopes::THEMES_READ],
+      "discourse_create_theme" => [DiscourseMcp::Scopes::THEMES_WRITE],
+      "discourse_update_theme" => [DiscourseMcp::Scopes::THEMES_WRITE],
     }
 
     actual =
