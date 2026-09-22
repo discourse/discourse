@@ -2730,6 +2730,7 @@ zh_CN:
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
       discourse_id_registration: "无法使用 Discourse ID 自动注册。这可能是由于网络连接问题、防火墙限制或 Discourse ID 服务无法访问。请查看服务器日志了解更多详情或联系支持团队。"
+      auth_provider_credentials_missing: "必须先设置 %{settings} 才能启用此设置。"
       linkedin_oidc_credentials: "启用此设置前，必须先配置 LinkedIn OIDC 凭据 ('linkedin_oidc_client_id' 和 'linkedin_oidc_client_secret')。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
