@@ -1917,6 +1917,9 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
+      composer_toolbar:
+        title: "Composer toolbar"
+        instructions: "Choose which buttons appear in the composer toolbar. Keyboard shortcuts keep working for hidden buttons."
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
       automatically_translate: "Automatically translate topics and posts in other languages"
       content_languages:
@@ -3152,8 +3155,7 @@ en:
       signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
       user_fields_title: "Almost done"
       user_fields_instructions: "Just a few more details to finish creating your account."
-      account_ready_title: "Your account is ready! 🎉"
-      account_ready_edit: "Pick your username and avatar"
+      signup_details_title: "Choose your username and avatar"
       account_ready_continue: "Continue"
       account_details_title: "Finish creating your account"
       account_details_instructions: "Choose how you’ll appear to the community before submitting your account for approval."

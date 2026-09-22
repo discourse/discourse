@@ -845,6 +845,21 @@ TEXT
         *actions,
       )
     end
+
+    it "retains path parameters and replaces conflicting mapping arrays" do
+      plugin_instance.add_api_key_scope(
+        :topics,
+        read: {
+          actions: %w[topics#show],
+          path_params: %i[topic_id],
+        },
+      )
+
+      mapping = ApiKeyScope.scope_mappings.dig(:topics, :read)
+
+      expect(mapping[:actions]).to eq(%w[topics#show])
+      expect(mapping[:path_params]).to eq(%i[topic_id])
+    end
   end
 
   describe "#add_directory_column" do

@@ -1632,6 +1632,9 @@ en:
             "1": "Mixtral-8x7B V0.1"
         conversations:
           homepage_option: "AI bot conversations"
+          preview:
+            title: "Log in to ask a question"
+            body: "Get answers from AI, and keep your conversations here to come back to later."
           header: "What can I help with?"
           submit: "Submit question"
           disclaimer: "Generative AI can make mistakes. Verify important information."

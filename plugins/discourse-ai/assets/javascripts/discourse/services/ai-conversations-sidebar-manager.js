@@ -22,6 +22,7 @@ const TITLE_CHANNEL = `/discourse-ai/ai-bot/topic-titles`;
 
 export default class AiConversationsSidebarManager extends Service {
   @service appEvents;
+  @service currentUser;
   @service sidebarState;
   @service messageBus;
   @service routeHistory;
@@ -80,7 +81,9 @@ export default class AiConversationsSidebarManager extends Service {
       this._attachScrollListener
     );
 
-    this._watchForTitleUpdates();
+    if (this.currentUser) {
+      this._watchForTitleUpdates();
+    }
   }
 
   willDestroy() {
@@ -121,6 +124,12 @@ export default class AiConversationsSidebarManager extends Service {
     this.sidebarState.setPanel(AI_CONVERSATIONS_PANEL);
     this.sidebarState.setSeparatedMode();
     this.sidebarState.hideSwitchPanelButtons();
+
+    // Anonymous visitors get the panel for its login prompt, but have no
+    // conversations to list.
+    if (!this.currentUser) {
+      return true;
+    }
 
     // don't render sidebar multiple times
     if (this._didInit) {

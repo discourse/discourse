@@ -610,8 +610,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def render_available_true
-    render(json: { available: true })
+  def render_available_true(username = nil)
+    result = { available: true }
+    result[:avatar_template] = User.default_template(username) if username
+    render json: result
   end
 
   def changing_case_of_own_username(target_user, username)
@@ -645,11 +647,13 @@ class UsersController < ApplicationController
     target_user = user_from_params_or_current_user
 
     # The special case where someone is changing the case of their own username
-    return render_available_true if changing_case_of_own_username(target_user, username)
+    return render_available_true(username) if changing_case_of_own_username(target_user, username)
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
-    render json: checker.check_username(username, email)
+    result = checker.check_username(username, email)
+    result[:avatar_template] = User.default_template(username) if result[:available]
+    render json: result
   end
 
   def generate_random_username
@@ -708,7 +712,12 @@ class UsersController < ApplicationController
   end
 
   def user_from_params_or_current_user
-    params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
+    return current_user if !params[:for_user_id]
+    raise Discourse::InvalidAccess if !current_user
+
+    user = User.find(params[:for_user_id])
+    guardian.ensure_can_edit_username!(user)
+    user
   end
 
   def create
@@ -2292,9 +2301,12 @@ class UsersController < ApplicationController
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
     permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
-    permitted.concat(UserUpdater::OPTION_ATTR - [:understood_languages])
+    permitted.concat(
+      UserUpdater::OPTION_ATTR - %i[understood_languages hidden_composer_toolbar_buttons],
+    )
     permitted << UserUpdater::LEGACY_SHOW_ORIGINAL_CONTENT_ATTR
     permitted << { understood_languages: [] }
+    permitted << { hidden_composer_toolbar_buttons: [] }
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS

@@ -36,6 +36,18 @@ module PageObjects
         page.has_no_css?(HOMEPAGE_WRAPPER_CLASS)
       end
 
+      def has_anonymous_card?
+        page.has_css?(".ai-bot-anonymous-card")
+      end
+
+      def click_anonymous_card
+        page.find(".ai-bot-anonymous-card").click
+      end
+
+      def has_input_value?(value)
+        page.has_field?("ai-bot-conversations-input", with: value)
+      end
+
       def has_no_new_question_button?
         page.has_no_css?(".ai-new-question-button")
       end

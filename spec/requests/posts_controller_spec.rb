@@ -3479,6 +3479,90 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "does not expose tag names restricted to an inaccessible category" do
+        SiteSetting.tagging_enabled = true
+        public_tag = Fabricate(:tag, name: "public-revision-tag")
+        restricted_tag = Fabricate(:tag, name: "restricted-revision-tag")
+        revised_post = Fabricate(:post, version: 2)
+        revision =
+          Fabricate(
+            :post_revision,
+            post: revised_post,
+            modifications: {
+              "tags" => [[public_tag.name], [public_tag.name, restricted_tag.name]],
+            },
+          )
+
+        revised_post.topic.update!(tags: [public_tag, restricted_tag])
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Group[:staff]),
+          tag: restricted_tag,
+        )
+
+        [
+          "/posts/#{revised_post.id}/revisions/#{revision.number}.json",
+          "/posts/#{revised_post.id}/revisions/latest.json",
+        ].each do |url|
+          get url
+
+          expect(response).to have_http_status(:ok)
+          expect(response.body).not_to include(restricted_tag.name)
+        end
+      end
+
+      it "does not disclose category-restricted tag names to anonymous users" do
+        SiteSetting.tagging_enabled = true
+
+        restricted_tag = Fabricate(:tag, name: "classified-tag")
+        revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "tags" => [[restricted_tag.name], []],
+            },
+          )
+        private_category = Fabricate(:private_category, group: Group[:staff])
+        tag_group = Fabricate(:tag_group, tags: [restricted_tag])
+        CategoryTagGroup.create!(category: private_category, tag_group: tag_group)
+
+        get "/posts/#{post.id}/revisions/#{revision.number}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(restricted_tag.name)
+      end
+
+      it "does not disclose historical tags restricted to inaccessible categories" do
+        SiteSetting.tagging_enabled = true
+
+        restricted_tag = Fabricate(:tag, name: "restricted-historical-tag")
+        visible_previous_tag = Fabricate(:tag, name: "visible-previous-tag")
+        visible_current_tag = Fabricate(:tag, name: "visible-current-tag")
+        private_category = Fabricate(:private_category, group: Group[:staff])
+        CategoryTag.create!(category: private_category, tag: restricted_tag)
+        post.topic.update!(tags: [visible_current_tag])
+        revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "tags" => [
+                [visible_previous_tag.name, restricted_tag.name],
+                [visible_current_tag.name],
+              ],
+            },
+          )
+
+        get "/posts/#{post.id}/revisions/#{revision.number}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tags_changes"]).to eq(
+          "previous" => [visible_previous_tag.name],
+          "current" => [visible_current_tag.name],
+        )
+        expect(response.body).not_to include(restricted_tag.name)
+      end
+
       it "omits unseen reply target post numbers" do
         SiteSetting.editing_grace_period = 0
         SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]

@@ -50,6 +50,21 @@ RSpec.describe "Markdown endpoints" do
     response.headers.fetch("Vary", "").split(",").map(&:strip)
   end
 
+  it "converts emoji in topic headings and list links while preserving Markdown escaping" do
+    topic.update_columns(title: "Emoji [demo] :smile: :wave:t4: :thumbsup:t6: :custom_emoji:")
+    title = "Emoji \\[demo\\] 😄 👋🏽 👍🏿 :custom\\_emoji:"
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to start_with("# #{title}\n")
+
+    get "/latest.md"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("## [#{title}](#{topic.url})")
+  end
+
   it "serves latest topics for Markdown requests to the homepage" do
     get "/", headers: { "ACCEPT" => "text/markdown" }
 
@@ -414,6 +429,20 @@ RSpec.describe "Markdown endpoints" do
       expect(response.body).not_to include(excluded.raw)
       expect(response.body).to include("username_filters=#{user.username}")
     end
+  end
+
+  it "links identical polls to their own posts when caching Markdown bodies" do
+    cooked = '<div class="poll"></div>'
+    post.update_columns(cooked:)
+    reply = Fabricate(:post, topic:, user:, cooked:)
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include(
+      "_Poll ([view on site](#{post.full_url}))_",
+      "_Poll ([view on site](#{reply.full_url}))_",
+    )
   end
 
   it "invalidates transformed bodies after cooked-only changes in the same second" do

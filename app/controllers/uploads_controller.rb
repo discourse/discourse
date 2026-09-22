@@ -82,7 +82,11 @@ class UploadsController < ApplicationController
           retain_hours:,
         )
     rescue => e
-      render json: failed_json.merge(message: e.message&.split("\n")&.first),
+      Rails.logger.error(
+        "Failed to create upload: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}",
+      )
+
+      render json: failed_json.merge(message: I18n.t("upload.failed")),
              status: :unprocessable_entity
     else
       render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422

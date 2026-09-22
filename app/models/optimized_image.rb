@@ -325,6 +325,11 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height, opts = {})
+    if opts[:quality].nil? &&
+         image_extension(path: to, ext_path: to, opts: opts).match?(/\Ajpe?g\z/i)
+      opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
+    end
+
     if GlobalSetting.enable_vips_image_processing
       ensure_safe_paths!(from, to)
       resize_with_vips(from: from, to: to, width: width, height: height, opts: opts)
@@ -348,8 +353,6 @@ class OptimizedImage < ActiveRecord::Base
       quality: opts[:quality],
       strip_metadata: SiteSetting.strip_image_metadata,
       timeout: MAX_CONVERT_SECONDS,
-      read: [from],
-      write: [File.dirname(to)],
     )
     optimize_image(to: to)
   rescue => error
@@ -381,8 +384,6 @@ class OptimizedImage < ActiveRecord::Base
       quality: opts[:quality],
       strip_metadata: SiteSetting.strip_image_metadata,
       timeout: MAX_CONVERT_SECONDS,
-      read: [from],
-      write: [File.dirname(to)],
     )
     optimize_image(to: to)
   rescue => error
@@ -430,8 +431,6 @@ class OptimizedImage < ActiveRecord::Base
       operation: :optimized_image_downsize,
       strip_metadata: SiteSetting.strip_image_metadata,
       timeout: MAX_CONVERT_SECONDS,
-      read: [from],
-      write: [File.dirname(to)],
     )
     optimize_image(to: to)
   rescue => error
@@ -447,16 +446,20 @@ class OptimizedImage < ActiveRecord::Base
   private_constant :INSTRUCTION_METHODS
 
   def self.optimize(operation, from, to, dimensions, opts = {})
-    instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
+    instructions = nil
     begin
-      ImageMagick.magick(
-        *instructions,
-        operation: operation,
-        read: [from],
-        write: [File.dirname(to)],
-        nice: 10,
-        timeout: MAX_CONVERT_SECONDS,
-      )
+      ImageProcessing::OutputFile.write(to) do |temporary_path|
+        instructions =
+          public_send(INSTRUCTION_METHODS.fetch(operation), from, temporary_path, dimensions, opts)
+        ImageMagick.magick(
+          *instructions,
+          operation: operation,
+          read: [from],
+          write: [temporary_path],
+          nice: 10,
+          timeout: MAX_CONVERT_SECONDS,
+        )
+      end
       optimize_image(to: to)
     rescue => error
       handle_optimization_error(error: error, to: to, opts: opts, instructions: instructions)

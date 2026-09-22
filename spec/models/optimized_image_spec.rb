@@ -195,6 +195,21 @@ RSpec.describe OptimizedImage do
       before { global_setting :enable_vips_image_processing, true }
 
       include_examples "resize processing"
+
+      it "uses the configured quality for JPEG output" do
+        low_quality_path = File.join(directory, "low-quality.jpg")
+        high_quality_path = File.join(directory, "high-quality.jpg")
+        FileUtils.cp(file_from_fixtures("logo.jpg").path, low_quality_path)
+        FileUtils.cp(file_from_fixtures("logo.jpg").path, high_quality_path)
+
+        SiteSetting.image_preview_jpg_quality = 50
+        described_class.resize(low_quality_path, low_quality_path, 100, 100)
+
+        SiteSetting.image_preview_jpg_quality = 90
+        described_class.resize(high_quality_path, high_quality_path, 100, 100)
+
+        expect(File.size(low_quality_path)).to be < File.size(high_quality_path)
+      end
     end
   end
 
