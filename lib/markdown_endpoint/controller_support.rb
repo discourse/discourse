@@ -48,7 +48,7 @@ module MarkdownEndpoint
     end
 
     def markdown_alternate_url
-      return unless SiteSetting.experimental_markdown_endpoints
+      return unless SiteSetting.enable_markdown_endpoints
 
       path = markdown_alternate_path
       return if path.blank?
@@ -79,7 +79,7 @@ module MarkdownEndpoint
       return if request.path.end_with?(".md")
 
       accept = request.headers["Accept"]
-      if SiteSetting.experimental_markdown_endpoints && markdown_supported_response? &&
+      if SiteSetting.enable_markdown_endpoints && markdown_supported_response? &&
            AcceptHeader.preferred?(accept)
         return
       end

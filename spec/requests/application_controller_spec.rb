@@ -1964,7 +1964,7 @@ RSpec.describe ApplicationController do
     it "is not included by default" do
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Link"]).to eq(nil)
+      expect(response.headers["Link"].to_s).not_to include("rel=preconnect", 'rel="preload"')
     end
 
     context "when in preconnect mode" do
@@ -1984,7 +1984,7 @@ RSpec.describe ApplicationController do
         expect(response.headers["X-Discourse-Early-Hint"]).to include(
           "<https://cdn.example.com>; rel=preconnect",
         )
-        expect(response.headers["Link"]).to eq(nil)
+        expect(response.headers["Link"].to_s).not_to include("rel=preconnect", 'rel="preload"')
       end
 
       it "is skipped for non-app URLs" do
