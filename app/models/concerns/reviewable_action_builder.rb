@@ -121,20 +121,6 @@ module ReviewableActionBuilder
     end
   end
 
-  # Returns the post associated with the reviewable, if applicable.
-  # This method assumes that the including class has a `target` that is a Post or
-  # a `target_id` that can be used to look up the Post.
-  #
-  # @return [Post, nil] The post associated with the reviewable, or nil if not found.
-  def target_post
-    @post ||=
-      if defined?(target) && target.is_a?(Post)
-        target
-      elsif defined?(target_id)
-        Post.with_deleted.find_by(id: target_id)
-      end
-  end
-
   # Options for deleting a user, used by perform_delete_user and perform_delete_and_block_user.
   def delete_opts
     {

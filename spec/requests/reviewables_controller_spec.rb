@@ -115,18 +115,35 @@ RSpec.describe ReviewablesController do
           expect(topic_json["title"]).to eq(topic.title)
         end
 
-        it "does not return information for trashed topics and posts to category mods" do
+        it "returns information for trashed topics and posts to category mods" do
           SiteSetting.enable_category_group_moderation = true
           sign_in(category_mod)
           post1.trash!
           topic.trash!
 
           get "/review.json"
-          expect(response.code).to eq("200")
+          expect(response).to have_http_status(:ok)
           json = response.parsed_body
 
           reviewable_json = json["reviewables"].find { |r| r["id"] == reviewable.id }
-          expect(reviewable_json["raw"]).to be_blank
+          expect(reviewable_json["raw"]).to eq(post1.raw)
+          expect(reviewable_json["cooked"]).to eq(post1.cooked)
+          expect(reviewable_json["deleted_at"]).to be_present
+          expect(reviewable_json).not_to have_key("blank_post")
+          expect(json["topics"].find { |item| item["id"] == topic.id }["title"]).to eq(topic.title)
+        end
+
+        it "excludes inaccessible whispers from the list and counts" do
+          SiteSetting.enable_category_group_moderation = true
+          post1.update!(post_type: Post.types[:whisper])
+          sign_in(category_mod)
+
+          get "/review.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["reviewables"]).to be_empty
+          expect(response.parsed_body["meta"]["total_rows_reviewables"]).to eq(0)
+          expect(response.parsed_body["meta"]["unseen_reviewable_count"]).to eq(0)
         end
       end
 
@@ -685,8 +702,61 @@ RSpec.describe ReviewablesController do
         end
       end
 
+      context "with a category moderator and a trashed target" do
+        fab!(:post1, :post)
+        fab!(:reviewable) do
+          Fabricate(
+            :reviewable,
+            target_id: post1.id,
+            target_type: "Post",
+            topic: post1.topic,
+            type: "ReviewableFlaggedPost",
+            category: post1.topic.category,
+          )
+        end
+        fab!(:group_user)
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          Fabricate(
+            :category_moderation_group,
+            category: post1.topic.category,
+            group: group_user.group,
+          )
+          sign_in(group_user.user)
+        end
+
+        it "returns the trashed content" do
+          post1.trash!
+          post1.topic.trash!
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["reviewable"]).to include(
+            "raw" => post1.raw,
+            "cooked" => post1.cooked,
+            "deleted_at" => be_present,
+          )
+
+          post1.delete
+          get "/review/#{reviewable.id}.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["reviewable"]["blank_post"]).to eq(true)
+        end
+
+        it "returns 404 for an inaccessible whisper" do
+          post1.update!(post_type: Post.types[:whisper])
+
+          get "/review/#{reviewable.id}.json"
+
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
       context "with an inaccessible conversation" do
-        it "does not serialize the conversation" do
+        it "does not serialize the deleted conversation of a deleted target" do
           SiteSetting.enable_category_group_moderation = true
 
           category = Fabricate(:category)
@@ -720,6 +790,10 @@ RSpec.describe ReviewablesController do
             )
 
           expect(Guardian.new(group_user.user).can_see?(meta_post.topic)).to eq(false)
+
+          post.trash!
+          meta_post.trash!
+          meta_post.topic.trash!
 
           sign_in(group_user.user)
           get "/review/#{reviewable.id}.json"
@@ -761,6 +835,54 @@ RSpec.describe ReviewablesController do
     describe "#perform" do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
+
+      it "approves a user whose ID matches an inaccessible post" do
+        moderator = Fabricate(:moderator)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        target_id = [Post.with_deleted.maximum(:id), User.maximum(:id)].compact.max + 1
+        Fabricate(:post, id: target_id, topic: private_topic, user: moderator)
+        user = Fabricate(:user, id: target_id, approved: false)
+        user_reviewable = Fabricate(:reviewable_user, target: user, created_by: moderator)
+        sign_in(moderator)
+
+        put "/review/#{user_reviewable.id}/perform/approve_user.json",
+            params: {
+              version: user_reviewable.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(user.reload).to be_approved
+      end
+
+      it "returns 404 to category moderators for an inaccessible whisper" do
+        SiteSetting.enable_category_group_moderation = true
+        group_user = Fabricate(:group_user)
+        whisper = Fabricate(:post, post_type: Post.types[:whisper])
+        Fabricate(
+          :category_moderation_group,
+          category: whisper.topic.category,
+          group: group_user.group,
+        )
+        flagged_whisper =
+          Fabricate(
+            :reviewable,
+            target_id: whisper.id,
+            target_type: "Post",
+            topic: whisper.topic,
+            type: "ReviewableFlaggedPost",
+            category: whisper.topic.category,
+          )
+        sign_in(group_user.user)
+
+        put "/review/#{flagged_whisper.id}/perform/ignore.json",
+            params: {
+              version: flagged_whisper.version,
+            }
+
+        expect(response).to have_http_status(:not_found)
+        expect(flagged_whisper.reload).to be_pending
+      end
 
       it "includes the statuses of the other reviewables resolved by the action in the response" do
         sign_in(Fabricate(:admin))
@@ -847,6 +969,47 @@ RSpec.describe ReviewablesController do
         expect(job).to be_blank
       end
 
+      it "keeps removed likes removed after deleting and recovering a flagged post" do
+        admin = Fabricate(:admin)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        post = Fabricate(:post)
+        like = PostActionCreator.like(flagger, post).post_action
+        PostActionDestroyer.destroy(flagger, post, :like)
+        flagged_reviewable = PostActionCreator.spam(flagger, post).reviewable
+        sign_in(admin)
+
+        put "/review/#{flagged_reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: flagged_reviewable.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        PostDestroyer.new(admin, post.reload).recover
+
+        expect(like.reload).to be_trashed
+      end
+
+      it "releases a deleted topic's claim when agreeing before a silence" do
+        SiteSetting.reviewable_claiming = "optional"
+        admin = Fabricate(:admin)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        post = Fabricate(:post)
+        flagged_reviewable = PostActionCreator.spam(flagger, post).reviewable
+        claim = Fabricate(:reviewable_claimed_topic, topic: post.topic, user: admin)
+        PostDestroyer.new(admin, post, reviewable_id: flagged_reviewable.id).destroy
+        sign_in(admin)
+
+        put "/review/#{flagged_reviewable.id}/perform/agree_and_silence.json",
+            params: {
+              version: flagged_reviewable.reload.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_reviewable.reload).to be_approved
+        expect(ReviewableClaimedTopic.exists?(claim.id)).to eq(false)
+        expect(post.reload).to be_trashed
+      end
+
       context "with claims" do
         fab!(:qp, :reviewable_queued_post)
 
@@ -879,6 +1042,78 @@ RSpec.describe ReviewablesController do
           expect(response.code).to eq("409")
           json = response.parsed_body
           expect(json["errors"]).to be_present
+        end
+      end
+
+      context "with a deleted flagged post" do
+        fab!(:admin)
+        fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:post)
+
+        before do
+          sign_in(admin)
+          SiteSetting.reviewable_claiming = "optional"
+        end
+
+        it "agrees with flags while keeping the post deleted" do
+          result = PostActionCreator.spam(flagger, post)
+          reviewable = result.reviewable
+          PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
+
+          put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json",
+              params: {
+                version: reviewable.reload.version,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(reviewable.reload).to be_approved
+          expect(post.reload).to be_trashed
+        end
+
+        it "keeps a deleted reply hidden and its author silenced when disagreeing" do
+          reply = Fabricate(:post, topic: post.topic)
+          reviewable = PostActionCreator.spam(flagger, reply).reviewable
+          reply.update!(hidden: true)
+          UserSilencer.silence(reply.user, admin, post_id: reply.id)
+          PostDestroyer.new(admin, reply, reviewable_id: reviewable.id).destroy
+
+          put "/review/#{reviewable.id}/perform/disagree_and_keep_deleted.json",
+              params: {
+                version: reviewable.reload.version,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(reviewable.reload).to be_rejected
+          expect(reply.reload).to be_trashed
+          expect(reply).to be_hidden
+          expect(reply.user.reload).to be_silenced
+          expect(
+            Jobs::SendSystemMessage.jobs.map { |job| job["args"].first["message_type"] },
+          ).not_to include("flags_disagreed")
+        end
+
+        it "lets category moderators dismiss flags in a deleted topic" do
+          SiteSetting.enable_category_group_moderation = true
+          group_user = Fabricate(:group_user)
+          Fabricate(
+            :category_moderation_group,
+            category: post.topic.category,
+            group: group_user.group,
+          )
+          reviewable = PostActionCreator.spam(flagger, post).reviewable
+          post.update!(hidden: true)
+          PostDestroyer.new(admin, post, reviewable_id: reviewable.id).destroy
+          sign_in(group_user.user)
+
+          put "/review/#{reviewable.id}/perform/ignore_and_do_nothing.json",
+              params: {
+                version: reviewable.reload.version,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(reviewable.reload).to be_ignored
+          expect(post.reload).to be_trashed
+          expect(post).to be_hidden
         end
       end
     end

@@ -142,6 +142,13 @@ RSpec.describe Reviewable, type: :model do
       expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
     end
 
+    it "includes flagged private messages for moderators outside the conversation" do
+      flagged_reviewable =
+        Fabricate(:reviewable_flagged_post, target: pm_post, topic: pm_topic, category: nil)
+
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: flagged_reviewable.id)
+    end
+
     it "includes private-message reviewables for participating moderators" do
       participant_moderator = Fabricate(:moderator)
       participant_topic =
@@ -157,6 +164,65 @@ RSpec.describe Reviewable, type: :model do
       expect(described_class.viewable_by(participant_moderator)).to exist(
         id: participant_reviewable.id,
       )
+    end
+  end
+
+  describe ".viewable_by with post targets" do
+    fab!(:group)
+    fab!(:reviewer) { Fabricate(:user, groups: [group]) }
+    fab!(:category)
+    fab!(:moderation_group) { Fabricate(:category_moderation_group, category:, group:) }
+    fab!(:topic) { Fabricate(:topic, category:) }
+    fab!(:post) { Fabricate(:post, topic:) }
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: post, topic:, category:) }
+
+    before { SiteSetting.enable_category_group_moderation = true }
+
+    it "checks whisper group membership" do
+      post.update!(post_type: Post.types[:whisper])
+      expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+
+      SiteSetting.whispers_allowed_groups = group.id.to_s
+      expect(described_class.viewable_by(reviewer)).to exist(id: reviewable.id)
+    end
+
+    it "excludes shared drafts the reviewer cannot see" do
+      Fabricate(:shared_draft, topic:)
+
+      expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+    end
+
+    it "excludes targets moved to categories the reviewer does not moderate" do
+      [
+        Fabricate(:category),
+        Fabricate(:private_category, group: Fabricate(:group)),
+      ].each do |other_category|
+        topic.update_columns(category_id: other_category.id)
+
+        expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+      end
+    end
+
+    it "checks the target's current private-message topic when reviewable metadata is stale" do
+      post.update_columns(topic_id: Fabricate(:private_message_topic).id)
+
+      expect(described_class.viewable_by(reviewer)).not_to exist(id: reviewable.id)
+    end
+
+    it "loads hidden and deleted targets only within an explicit deleted-content scope" do
+      post.update!(hidden: true)
+      post.trash!
+      topic.trash!
+
+      loaded =
+        described_class.with_deleted_content do
+          described_class.viewable_by(reviewer).find(reviewable.id)
+        end
+
+      expect(loaded.target).to eq(post)
+      expect(loaded.topic).to eq(topic)
+      expect(described_class.find(reviewable.id).target).to be_nil
+      expect(described_class.find(reviewable.id).topic).to be_nil
     end
   end
 
@@ -499,9 +565,44 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#update_fields" do
+    it "rejects edits to an inaccessible target before changing its payload" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      reviewable.target.topic.update_columns(category_id: private_category.id)
+      original_payload = reviewable.payload.deep_dup
+
+      expect do
+        reviewable.update_fields({ payload: { raw: "Updated content" } }, Fabricate(:moderator))
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(reviewable.reload.payload).to eq(original_payload)
+    end
+  end
+
   describe "#perform" do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
+
+    it "hides actions and denies execution for an inaccessible target" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      reviewable.target.topic.update_columns(category_id: private_category.id)
+
+      expect(reviewable.actions_for(moderator.guardian).bundles).to be_empty
+      expect { reviewable.perform(moderator, :ignore) }.to raise_error(Reviewable::InvalidAction)
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "allows moderators to review flagged private messages outside their conversations" do
+      topic = Fabricate(:private_message_topic)
+      reviewable =
+        Fabricate(:reviewable_flagged_post, target: Fabricate(:post, topic:), topic:, category: nil)
+
+      reviewable.perform(moderator, :ignore)
+
+      expect(reviewable.reload).to be_ignored
+    end
 
     it "rolls back the transaction when the action fails" do
       reviewable = Fabricate(:reviewable_queued_post)
