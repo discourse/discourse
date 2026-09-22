@@ -22,8 +22,11 @@ export default class EntrypointCard extends ExpandableRow {
     return routeName(this.chunk);
   }
 
-  get isDynamic() {
-    return this.chunk.isDynamicEntry;
+  // Not `isDynamicEntry`: rolldown sets that only when a dynamically-imported
+  // module gets a chunk to itself, and clears it once several of them share
+  // one. Both are fetched on demand, so ask what the chunk is instead.
+  get loadedOnDemand() {
+    return !this.chunk.isEntry;
   }
 
   get isLoaded() {
@@ -101,7 +104,7 @@ export default class EntrypointCard extends ExpandableRow {
             <span class="ba-badge base">baseline</span>
           {{else if this.route}}
             <span class="ba-badge route">route: {{this.route}}</span>
-          {{else if this.isDynamic}}
+          {{else if this.loadedOnDemand}}
             <span class="ba-badge dyn">dynamic</span>
           {{else}}
             <span class="ba-badge entry">entry</span>
@@ -140,8 +143,8 @@ export default class EntrypointCard extends ExpandableRow {
               </div>
             {{else}}
               <div class="ba-site pill">
-                {{#if this.isDynamic}}
-                  no static import site found
+                {{#if this.loadedOnDemand}}
+                  no import site found
                 {{else}}
                   loaded as a top-level entrypoint
                 {{/if}}
