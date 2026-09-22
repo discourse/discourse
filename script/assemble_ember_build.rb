@@ -144,11 +144,20 @@ if Etc.nprocessors > 2
   build_env["JOBS"] ||= "2"
 end
 
-if low_memory_environment?
+low_memory = low_memory_environment?
+
+if low_memory
   log "Node.js heap_size_limit is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
   build_env["NODE_OPTIONS"] = "--max_old_space_size=2048"
   build_env["CHEAP_SOURCE_MAPS"] = "1"
   build_env["JOBS"] = "1"
+end
+
+# Brotli compression runs on node's libuv threadpool, which holds four threads
+# whatever the machine has, and scales almost linearly with them. A low-memory
+# box keeps that default, since every thread holds a compression window.
+if !low_memory && !ENV.key?("UV_THREADPOOL_SIZE")
+  build_env["UV_THREADPOOL_SIZE"] = Etc.nprocessors.to_s
 end
 
 core_build_reusable =
