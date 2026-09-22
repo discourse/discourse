@@ -1723,6 +1723,34 @@ RSpec.describe Category do
     end
   end
 
+  describe "upload security updates" do
+    it "enqueues an update whenever read restrictions change" do
+      category = Fabricate(:category)
+
+      expect_enqueued_with(
+        job: :update_category_upload_security,
+        args: {
+          category_id: category.id,
+        },
+      ) { category.update!(permissions: { admins: :full }) }
+
+      expect_enqueued_with(
+        job: :update_category_upload_security,
+        args: {
+          category_id: category.id,
+        },
+      ) { category.update!(permissions: { everyone: :full }) }
+    end
+
+    it "does not enqueue an update when read restrictions stay unchanged" do
+      category = Fabricate(:category)
+
+      expect_not_enqueued_with(job: :update_category_upload_security) do
+        category.update!(permissions: { everyone: :readonly })
+      end
+    end
+  end
+
   describe "category hashtag remapping" do
     it "enqueues a remap job when the slug changes" do
       category = Fabricate(:category, slug: "support")
