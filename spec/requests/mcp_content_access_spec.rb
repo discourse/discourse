@@ -248,6 +248,46 @@ describe "MCP content access" do
     end
   end
 
+  it "requires private-message read scope for private-message drafts" do
+    topic = Fabricate(:topic, user:)
+    topic_draft_key = "topic_#{topic.id}"
+    message_draft_key = "topic_#{message.topic_id}"
+    compose_draft_key = "#{Draft::NEW_PRIVATE_MESSAGE}_#{Time.zone.now.to_i}"
+    private_reply = "Private reply draft"
+    private_title = "Private compose title"
+    private_compose = "Private compose draft"
+    Draft.set(user, topic_draft_key, 0, { reply: "Public topic draft" }.to_json)
+    Draft.set(user, message_draft_key, 0, { reply: private_reply }.to_json)
+    Draft.set(user, compose_draft_key, 0, { title: private_title, reply: private_compose }.to_json)
+    authorize("mcp:drafts:read")
+
+    call_tool("discourse_get_draft", { draft_key: topic_draft_key })
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "data", "reply")).to eq(
+      "Public topic draft",
+    )
+
+    {
+      message_draft_key => private_reply,
+      compose_draft_key => private_compose,
+    }.each do |draft_key, reply|
+      call_tool("discourse_get_draft", { draft_key: })
+      expect_missing_scope("mcp:private-messages:read")
+      expect(response.body).not_to include(reply)
+    end
+    expect(response.body).not_to include(private_title)
+
+    authorize("mcp:drafts:read", "mcp:private-messages:read")
+    call_tool("discourse_get_draft", { draft_key: compose_draft_key })
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "data", "reply")).to eq(
+      private_compose,
+    )
+    expect(response.parsed_body.dig("result", "structuredContent", "data", "title")).to eq(
+      private_title,
+    )
+  end
+
   it "requires the read scope for private-message resources and draft prompts" do
     authorize
     { "topic" => message.topic_id, "post" => message.id }.each do |type, id|
