@@ -2988,6 +2988,7 @@ pl_PL:
       markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       google_oauth2_hd_groups: "Przed włączeniem tego ustawienia musisz skonfigurować wszystkie ustawienia 'google oauth2 hd'."
       discourse_id_registration: "Automatyczna rejestracja przy użyciu Discourse ID się nie powiodła. Może to być spowodowane problemami z łącznością sieciową, ograniczeniami zapory ogniowej lub niedostępnością usługi Discourse ID. Sprawdź dzienniki serwera, aby uzyskać więcej informacji lub skontaktuj się z pomocą techniczną."
+      auth_provider_credentials_missing: "Przed włączeniem tego ustawienia należy ustawić %{settings}."
       linkedin_oidc_credentials: "Musisz skonfigurować poświadczenia LinkedIn OIDC (\"linkedin_oidc_client_id\" i \"linkedin_oidc_client_secret\") przed włączeniem tego ustawienia."
       search_tokenize_chinese_enabled: "Musisz wyłączyć 'search_tokenize_chinese' przed włączeniem tego ustawienia."
       search_tokenize_japanese_enabled: "Musisz wyłączyć 'search_tokenize_japanese' przed włączeniem tego ustawienia."
