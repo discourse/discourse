@@ -277,7 +277,7 @@ class NewPostManager
         target_created_by: @user,
       )
     reviewable.payload["title"] = @args[:title] if @args[:title].present?
-    reviewable.category_id = args[:category] if args[:category].present?
+    reviewable.category_id = args[:category] if @args[:topic_id].blank? && args[:category].present?
     reviewable.created_new!
 
     create_options = reviewable.create_options.merge(creator_opts)

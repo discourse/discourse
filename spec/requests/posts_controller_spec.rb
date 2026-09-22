@@ -1795,6 +1795,34 @@ RSpec.describe PostsController do
         end
       end
 
+      it "prevents category-Y reviewers from approving a queued reply in category X" do
+        SiteSetting.enable_category_group_moderation = true
+        topic_category = Fabricate(:category)
+        topic_category.update!(require_reply_approval: true)
+        review_category = Fabricate(:category)
+        topic = Fabricate(:topic, category: topic_category)
+        review_group = Fabricate(:group)
+        reviewer = Fabricate(:user, refresh_auto_groups: true)
+        review_group.add(reviewer)
+        Fabricate(:category_moderation_group, category: review_category, group: review_group)
+
+        raw = "queued reply in category X"
+        post "/posts.json", params: { raw: raw, topic_id: topic.id, category: review_category.id }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["action"]).to eq("enqueued")
+        reviewable = ReviewableQueuedPost.find_by!(target_created_by: user)
+
+        sign_in(reviewer)
+        expect do
+          put "/review/#{reviewable.id}/perform/approve_post.json?version=#{reviewable.version}"
+        end.not_to change(Post, :count)
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(raw)
+        expect(reviewable.reload).to be_pending
+      end
+
       it "silences correctly based on auto_silence_first_post_regex" do
         SiteSetting.auto_silence_first_post_regex = "I love candy|i eat s[1-5]"
 
