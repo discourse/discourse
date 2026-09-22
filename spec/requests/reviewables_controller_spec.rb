@@ -836,6 +836,25 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
+      it "approves a user whose ID matches an inaccessible post" do
+        moderator = Fabricate(:moderator)
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        target_id = [Post.with_deleted.maximum(:id), User.maximum(:id)].compact.max + 1
+        Fabricate(:post, id: target_id, topic: private_topic, user: moderator)
+        user = Fabricate(:user, id: target_id, approved: false)
+        user_reviewable = Fabricate(:reviewable_user, target: user, created_by: moderator)
+        sign_in(moderator)
+
+        put "/review/#{user_reviewable.id}/perform/approve_user.json",
+            params: {
+              version: user_reviewable.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(user.reload).to be_approved
+      end
+
       it "returns 404 to category moderators for an inaccessible whisper" do
         SiteSetting.enable_category_group_moderation = true
         group_user = Fabricate(:group_user)
