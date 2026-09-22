@@ -624,7 +624,8 @@ class UsersController < ApplicationController
     return render_available_true if changing_case_of_own_username(target_user, username)
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
-    email = params[:email] || target_user.try(:email)
+    email = target_user&.email
+    email = params[:email] if !email && !SiteSetting.hide_email_address_taken?
     render json: checker.check_username(username, email)
   end
 
@@ -663,7 +664,13 @@ class UsersController < ApplicationController
   end
 
   def user_from_params_or_current_user
-    params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
+    return current_user if !params[:for_user_id]
+    return User.find(params[:for_user_id]) if current_user&.admin?
+
+    if current_user&.id == params[:for_user_id].to_i
+      guardian.ensure_can_edit_username!(current_user)
+    end
+    current_user
   end
 
   def create
