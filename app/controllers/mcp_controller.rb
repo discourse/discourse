@@ -2,6 +2,9 @@
 
 class McpController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
+  # Unauthenticated clients must receive an RFC 9728 WWW-Authenticate challenge,
+  # not the site-wide login_required 403.
+  skip_before_action :redirect_to_login_if_required
   before_action :ensure_mcp_enabled
   before_action :validate_origin
 

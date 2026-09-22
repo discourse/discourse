@@ -41,4 +41,18 @@ describe McpOauthMetadataController do
     expect(response.status).to eq(200)
     expect(response.parsed_body["client_id_metadata_document_supported"]).to eq(true)
   end
+
+  it "publishes discovery documents on login_required sites" do
+    SiteSetting.login_required = true
+
+    get "/.well-known/oauth-protected-resource/mcp"
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["resource"]).to eq(DiscourseMcp.resource_url)
+
+    get "/.well-known/oauth-authorization-server"
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["authorization_endpoint"]).to eq(
+      "#{Discourse.base_url}/oauth2/mcp/authorize",
+    )
+  end
 end
