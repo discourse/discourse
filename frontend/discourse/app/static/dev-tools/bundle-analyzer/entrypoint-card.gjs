@@ -1,7 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { fmt, routeName, stem } from "./analysis";
+import { brotliLabel, fmt, routeName, stem } from "./analysis";
 import ChunkRow from "./chunk-row";
 import ExpandableRow from "./expandable-row";
 
@@ -63,16 +63,12 @@ export default class EntrypointCard extends ExpandableRow {
     return this.analysis.totals(this.loadSet);
   }
 
-  // Brotli total is "…" until every chunk in the set is measured, so a parent
-  // never momentarily looks smaller than it really is.
   get addedBrotliLabel() {
-    const t = this.addedTotals;
-    return t.brotliReady ? fmt(t.brotli) : "…";
+    return brotliLabel(this.addedTotals);
   }
 
   get fullBrotliLabel() {
-    const t = this.fullTotals;
-    return t.brotliReady ? fmt(t.brotli) : "…";
+    return brotliLabel(this.fullTotals);
   }
 
   // Every card on screen matches the active filter, so a filter opens them all.

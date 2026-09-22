@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
-import { fmt } from "./analysis";
+import { brotliLabel } from "./analysis";
 import EntrypointCard from "./entrypoint-card";
 import LoadedChunks from "./loaded-chunks";
 
@@ -100,11 +100,7 @@ export default class Report extends Component {
           loaded in this browser:
           {{this.loadedTotals.count}}
           chunks ·
-          {{if
-            this.loadedTotals.brotliReady
-            (fmt this.loadedTotals.brotli)
-            "…"
-          }}
+          {{brotliLabel this.loadedTotals}}
           br
         </span>
       </div>

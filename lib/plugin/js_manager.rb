@@ -264,7 +264,8 @@ module Plugin
         result.each do |file_name, info|
           code = info["code"]
           code += "\n//# sourceMappingURL=../../map/plugins/#{file_name}.map\n" if info["map"]
-          File.write("#{js_dir}/#{file_name}", code)
+          js_path = "#{js_dir}/#{file_name}"
+          File.write(js_path, code)
 
           File.write("#{map_dir}/#{file_name}.map", info["map"]) if info["map"]
 
@@ -273,6 +274,7 @@ module Plugin
             name: info["name"],
             isEntry: info["isEntry"],
             rawSize: code.bytesize,
+            brotliSize: (compress_to_brotli(js_path) if compress?),
             imports: info["imports"],
             dynamicImports: info["dynamicImports"],
             moduleCount: info["modules"].length,
@@ -352,6 +354,19 @@ module Plugin
 
     def minify?
       Rails.env.production?
+    end
+
+    # Compressed beside the chunk for `brotli_static`, the way core's build emits
+    # its own. Only where we minify: a development bundle is never served.
+    def compress?
+      minify?
+    end
+
+    # Max quality, matching what the compression step after the build would have
+    # done for this file. Returns the compressed size for the analyzer's report.
+    def compress_to_brotli(path)
+      system("brotli", "-f", "--quality=11", "-o", "#{path}.br", path, exception: true)
+      File.size("#{path}.br")
     end
 
     def cache?

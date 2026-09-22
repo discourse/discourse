@@ -23,6 +23,12 @@ export function fmt(n) {
   return n + " B";
 }
 
+// Brotli is measured by the build. A set holding a chunk it did not compress
+// reads as a dash rather than a total that silently counts that chunk as zero.
+export function brotliLabel(totals) {
+  return totals.brotliReady ? fmt(totals.brotli) : "—";
+}
+
 export function barWidth(length, max) {
   return trustHTML(`width:${Math.max(2, (length / max) * 100)}%`);
 }

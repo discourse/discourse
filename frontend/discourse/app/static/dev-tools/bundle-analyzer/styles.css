@@ -292,11 +292,11 @@
 }
 
 .bundle-analyzer .ba-plugin-row > .ba-head {
-  grid-template-columns: 1fr 130px;
+  grid-template-columns: 1fr 130px 130px;
 }
 .bundle-analyzer .ba-plugin-line {
   display: grid;
-  grid-template-columns: 1fr 130px 70px;
+  grid-template-columns: 1fr 130px 130px 70px;
   gap: 8px;
   align-items: center;
   padding: 3px 0;

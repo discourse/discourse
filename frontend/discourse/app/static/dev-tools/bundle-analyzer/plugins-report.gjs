@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { fmt } from "./analysis";
+import { brotliLabel, fmt } from "./analysis";
 import PluginCard, { pluginMatches } from "./plugin-card";
 
 export default class PluginsReport extends Component {
@@ -39,6 +39,8 @@ export default class PluginsReport extends Component {
           plugins ·
           {{this.analysis.chunkCount}}
           chunks ·
+          {{brotliLabel this.totals}}
+          br /
           {{fmt this.totals.raw}}
           raw · generated
           {{this.analysis.data.generatedAt}}

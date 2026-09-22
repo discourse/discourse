@@ -38,7 +38,13 @@ export default class PluginChunkRow extends ExpandableRow {
             <span class="ba-pill">· {{this.chunk.moduleCount}} modules</span>
           </span>
         </span>
-        <span class="ba-num">{{fmt this.chunk.rawSize}}
+        <span class="ba-num">{{if
+            this.chunk.brotliSize
+            (fmt this.chunk.brotliSize)
+            "—"
+          }}
+          <span class="ba-pill">br</span></span>
+        <span class="ba-num muted">{{fmt this.chunk.rawSize}}
           <span class="ba-pill">raw</span></span>
       </button>
       {{#if this.expanded}}

@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
-import { fmt, matches } from "./analysis";
+import { brotliLabel, fmt, matches } from "./analysis";
 import ExpandableRow from "./expandable-row";
 import PluginChunkRow from "./plugin-chunk-row";
 
@@ -59,7 +59,7 @@ export default class PluginCard extends ExpandableRow {
 
   get chunkRows() {
     return Object.values(this.plugin.chunks).sort(
-      (a, b) => b.rawSize - a.rawSize
+      (a, b) => (b.brotliSize ?? b.rawSize) - (a.brotliSize ?? a.rawSize)
     );
   }
 
@@ -75,7 +75,9 @@ export default class PluginCard extends ExpandableRow {
           <span class="ba-badge entry">plugin</span>
           <span class="ba-label">{{this.plugin.plugin}}</span>
         </span>
-        <span class="ba-num"><b>{{fmt this.totals.raw}}</b>
+        <span class="ba-num"><b>{{brotliLabel this.totals}}</b>
+          <span class="ba-pill">br</span></span>
+        <span class="ba-num muted">{{fmt this.totals.raw}}
           <span class="ba-pill">raw</span></span>
       </button>
       {{#if this.expanded}}
@@ -87,7 +89,9 @@ export default class PluginCard extends ExpandableRow {
                   <span class="ba-badge entry">{{e.name}}</span>
                   <span class="ba-label" title={{e.file}}>{{e.file}}</span>
                 </span>
-                <span class="ba-num">{{fmt e.totals.raw}}
+                <span class="ba-num">{{brotliLabel e.totals}}
+                  <span class="ba-pill">br</span></span>
+                <span class="ba-num muted">{{fmt e.totals.raw}}
                   <span class="ba-pill">raw</span></span>
                 <span class="ba-num pill">{{e.totals.files}}f</span>
               </div>
@@ -109,8 +113,10 @@ export default class PluginCard extends ExpandableRow {
                       {{/each}}
                     </span>
                   </span>
-                  <span class="ba-num">+{{fmt b.totals.raw}}
+                  <span class="ba-num">+{{brotliLabel b.totals}}
                     <span class="ba-pill">added</span></span>
+                  <span class="ba-num muted">+{{fmt b.totals.raw}}
+                    <span class="ba-pill">raw</span></span>
                   <span class="ba-num pill">+{{b.totals.files}}f</span>
                 </div>
               {{/each}}

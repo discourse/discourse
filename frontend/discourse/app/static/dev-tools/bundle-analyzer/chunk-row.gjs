@@ -48,7 +48,7 @@ export default class ChunkRow extends ExpandableRow {
 
   get brotliLabel() {
     const size = this.args.analysis.brotliOf(this.args.file);
-    return size == null ? "…" : fmt(size);
+    return size == null ? "—" : fmt(size);
   }
 
   <template>
