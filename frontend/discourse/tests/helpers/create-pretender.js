@@ -719,6 +719,13 @@ export function applyDefaultHandlers() {
     return response({ category });
   });
 
+  pretender.post("/categories/evaluate_permissions.json", () =>
+    response({
+      success: "OK",
+      current_user_will_lose_access: false,
+    })
+  );
+
   pretender.post("/categories", () =>
     response(fixturesByUrl["/c/11/show.json"])
   );

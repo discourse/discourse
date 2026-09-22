@@ -550,7 +550,7 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   about_page_extra_groups:
     client: true

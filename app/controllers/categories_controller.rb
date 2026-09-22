@@ -159,6 +159,21 @@ class CategoriesController < ApplicationController
     render_serialized(@category, CategorySerializer)
   end
 
+  def evaluate_permissions
+    Category::EvaluatePermissions.call(service_params) do
+      on_success { render json: success_json.merge(current_user_will_lose_access: false) }
+      on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
+      on_failed_policy(:user_will_have_access) do
+        render_json_error(
+          I18n.t("category.errors.self_lockout"),
+          extras: {
+            current_user_will_lose_access: true,
+          },
+        )
+      end
+    end
+  end
+
   MAX_DESCRIPTION_PARAM_LENGTH = 1000
   def create
     guardian.ensure_can_create!(Category)

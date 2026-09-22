@@ -20,8 +20,9 @@ module DiscourseAi
         if channel.direct_message_channel?
           AiAgent
             .allowed_modalities(allow_chat_direct_messages: true)
-            .find do |p|
-              p[:user_id].in?(channel.allowed_user_ids) && (user.group_ids & p[:allowed_group_ids])
+            .find do |agent|
+              agent[:user_id].in?(channel.allowed_user_ids) &&
+                user.in_any_groups?(agent[:allowed_group_ids])
             end
         else
           # let's defer on the parse if there is no @ in the message
@@ -30,7 +31,9 @@ module DiscourseAi
             if mentions.present?
               AiAgent
                 .allowed_modalities(allow_chat_channel_mentions: true)
-                .find { |p| p[:username].in?(mentions) && (user.group_ids & p[:allowed_group_ids]) }
+                .find do |agent|
+                  agent[:username].in?(mentions) && user.in_any_groups?(agent[:allowed_group_ids])
+                end
             end
           end
         end
