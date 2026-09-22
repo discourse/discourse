@@ -31,8 +31,17 @@ describe "Navigating with breadcrumbs" do
     expect(discovery.topic_list).to have_topic(c2_child_topic)
     expect(discovery.topic_list).to have_topics(count: 2)
 
-    # When using breadcrumbs for navigation, default_list_filter does not apply
+    # Navigating to a category via breadcrumbs applies its default_list_filter
     discovery.category_drop.select_row_by_value(category3.id)
+    expect(page).to have_current_path("/c/#{category3.slug}/#{category3.id}/none")
+    expect(discovery.topic_list).to have_topic(c3_topic)
+    expect(discovery.topic_list).to have_topics(count: 1)
+
+    expect(discovery.subcategory_drop).to have_selected_name("no subcategories")
+
+    # "Remove filter" is the explicit way to see subcategory topics
+    discovery.subcategory_drop.select_row_by_value("all-categories")
+    expect(page).to have_current_path("/c/#{category3.slug}/#{category3.id}/all")
     expect(discovery.topic_list).to have_topic(c3_topic)
     expect(discovery.topic_list).to have_topic(c3_child_topic)
     expect(discovery.topic_list).to have_topics(count: 2)
