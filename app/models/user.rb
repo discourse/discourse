@@ -285,6 +285,8 @@ class User < ActiveRecord::Base
           )
         end
 
+  scope :bot_users, -> { where("users.id <= 0") }
+
   scope :human_users,
         ->(allowed_bot_user_ids: nil) do
           if allowed_bot_user_ids.present?

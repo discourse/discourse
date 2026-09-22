@@ -5,6 +5,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import BulkUserDeleteConfirmation from "discourse/admin/components/bulk-user-delete-confirmation";
 import BulkUserSuspendConfirmation from "discourse/admin/components/bulk-user-suspend-confirmation";
+import { USER_ACCOUNT_TYPES } from "discourse/admin/lib/user-account-types";
 import AdminUser from "discourse/admin/models/admin-user";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import discourseDebounce from "discourse/lib/debounce";
@@ -25,6 +26,7 @@ export default class AdminUsersListShowController extends Controller {
   @tracked displayBulkActions = false;
   @tracked bulkSelectedUsersMap = {};
 
+  @tracked accountType = USER_ACCOUNT_TYPES.HUMAN;
   @tracked activation = null;
   @tracked refreshing = false;
   @tracked listFilter = null;
@@ -79,6 +81,10 @@ export default class AdminUsersListShowController extends Controller {
     return this.query === "suspended";
   }
 
+  get showAccountTypeFilter() {
+    return this.query === "staff";
+  }
+
   get showActivationFilter() {
     return this.query === "new";
   }
@@ -88,7 +94,9 @@ export default class AdminUsersListShowController extends Controller {
       !this.refreshing &&
       this.users.length === 0 &&
       !this.listFilter &&
-      !this.activation
+      !this.activation &&
+      (!this.showAccountTypeFilter ||
+        this.accountType === USER_ACCOUNT_TYPES.HUMAN)
     );
   }
 
@@ -121,11 +129,13 @@ export default class AdminUsersListShowController extends Controller {
   onResetFilters() {
     this.listFilter = null;
     this.activation = null;
+    this.accountType = USER_ACCOUNT_TYPES.HUMAN;
     DiscourseURL.replaceState(
       applyQueryParams(this.router.currentURL, {
         username: null,
         filter: null,
         activation: null,
+        account_type: null,
       })
     );
     this.resetFilters();
@@ -153,6 +163,12 @@ export default class AdminUsersListShowController extends Controller {
     DiscourseURL.replaceState(
       applyQueryParams(this.router.currentURL, { order: field, asc })
     );
+    this.resetFilters();
+  }
+
+  @action
+  onAccountTypeChange(value) {
+    this.accountType = value;
     this.resetFilters();
   }
 
@@ -311,6 +327,7 @@ export default class AdminUsersListShowController extends Controller {
       order: this.order,
       asc: this.asc,
       activation: this.activation,
+      account_type: this.showAccountTypeFilter ? this.accountType : undefined,
       page,
     })
       .then((result) => {
