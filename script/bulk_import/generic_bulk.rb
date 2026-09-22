@@ -494,6 +494,7 @@ class BulkImport::Generic < BulkImport::Base
 
         if current_read_restricted != expected_read_restricted
           category.update_column(:read_restricted, expected_read_restricted)
+          Jobs.enqueue(:update_category_upload_security, category_id: category.id)
           updated_count += 1
         else
           skipped_count += 1
