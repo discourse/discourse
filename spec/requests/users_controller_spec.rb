@@ -2237,18 +2237,95 @@ RSpec.describe UsersController do
   end
 
   describe "#check_username" do
-    it "rejects anonymous checks against another account" do
-      get "/u/check_username.json", params: { username: "AvailableName", for_user_id: user1.id }
+    it "does not disclose staged accounts or user IDs to anonymous username checks" do
+      SiteSetting.hide_email_address_taken = true
+      staged_user = Fabricate(:user, staged: true, email: "staged@example.com")
 
-      expect(response.status).to eq(403)
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: staged_user.id,
+          }
+      known_user_status = response.status
+      known_user_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: staged_user.id + 1_000_000,
+          }
+      missing_user_status = response.status
+      missing_user_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: staged_user.username,
+            email: staged_user.email,
+          }
+      matching_email_status = response.status
+      matching_email_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: staged_user.username,
+            email: "other@example.com",
+          }
+      nonmatching_email_status = response.status
+      nonmatching_email_response = response.parsed_body
+
+      expect(
+        [known_user_status, missing_user_status, matching_email_status, nonmatching_email_status],
+      ).to eq([200, 200, 200, 200])
+      expect(known_user_response).to eq(missing_user_response)
+      expect(matching_email_response).to eq(nonmatching_email_response)
+      expect(matching_email_response["available"]).to eq(false)
     end
 
-    it "rejects checks against another account by a regular user" do
+    it "allows anonymous signup to claim a staged account with its matching email when email privacy is disabled" do
+      SiteSetting.hide_email_address_taken = false
+      staged_user = Fabricate(:user, staged: true, email: "staged@example.com")
+
+      get "/u/check_username.json",
+          params: {
+            username: staged_user.username,
+            email: staged_user.email,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["available"]).to eq(true)
+    end
+
+    it "ignores an ordinary user's target-user parameter" do
+      target_user = Fabricate(:user)
       sign_in(user1)
 
-      get "/u/check_username.json", params: { username: "AvailableName", for_user_id: admin.id }
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: target_user.id,
+          }
+      existing_target_status = response.status
+      existing_target_response = response.parsed_body
 
-      expect(response.status).to eq(403)
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: target_user.id + 1_000_000,
+          }
+      missing_target_status = response.status
+      missing_target_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: target_user.username,
+            for_user_id: target_user.id,
+          }
+
+      expect([existing_target_status, missing_target_status, response.status]).to eq(
+        [200, 200, 200],
+      )
+      expect(existing_target_response).to eq(missing_target_response)
+      expect(response.parsed_body["available"]).to eq(false)
     end
 
     it "allows a new account to check its own username and avatar" do
