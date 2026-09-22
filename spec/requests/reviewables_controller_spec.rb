@@ -969,6 +969,47 @@ RSpec.describe ReviewablesController do
         expect(job).to be_blank
       end
 
+      it "keeps removed likes removed after deleting and recovering a flagged post" do
+        admin = Fabricate(:admin)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        post = Fabricate(:post)
+        like = PostActionCreator.like(flagger, post).post_action
+        PostActionDestroyer.destroy(flagger, post, :like)
+        flagged_reviewable = PostActionCreator.spam(flagger, post).reviewable
+        sign_in(admin)
+
+        put "/review/#{flagged_reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: flagged_reviewable.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        PostDestroyer.new(admin, post.reload).recover
+
+        expect(like.reload).to be_trashed
+      end
+
+      it "releases a deleted topic's claim when agreeing before a silence" do
+        SiteSetting.reviewable_claiming = "optional"
+        admin = Fabricate(:admin)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        post = Fabricate(:post)
+        flagged_reviewable = PostActionCreator.spam(flagger, post).reviewable
+        claim = Fabricate(:reviewable_claimed_topic, topic: post.topic, user: admin)
+        PostDestroyer.new(admin, post, reviewable_id: flagged_reviewable.id).destroy
+        sign_in(admin)
+
+        put "/review/#{flagged_reviewable.id}/perform/agree_and_silence.json",
+            params: {
+              version: flagged_reviewable.reload.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_reviewable.reload).to be_approved
+        expect(ReviewableClaimedTopic.exists?(claim.id)).to eq(false)
+        expect(post.reload).to be_trashed
+      end
+
       context "with claims" do
         fab!(:qp, :reviewable_queued_post)
 

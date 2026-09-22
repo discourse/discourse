@@ -8,7 +8,7 @@ class ReviewablesController < ApplicationController
   before_action :version_required, only: %i[update perform]
   before_action :ensure_can_see, except: [:destroy]
 
-  around_action :with_deleted_content, only: %i[index show perform]
+  around_action :with_deleted_content, only: %i[index show]
 
   def index
     offset = params[:offset].to_i
@@ -250,7 +250,7 @@ class ReviewablesController < ApplicationController
 
     result = nil
     begin
-      reviewable = find_reviewable
+      reviewable = with_deleted_content { find_reviewable }
 
       if error = claim_error?(reviewable)
         return render_json_error(error)
