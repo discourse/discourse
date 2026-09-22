@@ -24,8 +24,11 @@ const ResetButton = <template>
   <DButton
     class="btn-default d-filter-controls__reset"
     @action={{@action}}
+    @ariaLabel="filter_controls.reset"
+    @disabled={{@disabled}}
     @icon="arrow-rotate-left"
-    @label="filter_controls.reset"
+    @label={{@label}}
+    @title="filter_controls.reset"
   />
 </template>;
 
@@ -174,14 +177,6 @@ export default class DFilterControls extends Component {
   // state; with no drawer to hide behind they render on their own
   get showStandaloneAdditionalFilters() {
     return !this.showDropdownFilterToggle;
-  }
-
-  get showFilterResetButton() {
-    return (
-      this.showResetButton &&
-      !this.showDropdownFilterToggle &&
-      this.hasActiveFilters
-    );
   }
 
   get showTextFilter() {
@@ -513,8 +508,11 @@ export default class DFilterControls extends Component {
                 }}
                 @title="filter_controls.toggle"
               />
-              {{#if (and this.showResetButton this.hasActiveFilters)}}
-                <ResetButton @action={{this.resetFilters}} />
+              {{#if this.showResetButton}}
+                <ResetButton
+                  @action={{this.resetFilters}}
+                  @disabled={{not this.hasActiveFilters}}
+                />
               {{/if}}
             {{/if}}
           </div>
@@ -584,8 +582,11 @@ export default class DFilterControls extends Component {
           </div>
         {{/if}}
 
-        {{#if this.showFilterResetButton}}
-          <ResetButton @action={{this.resetFilters}} />
+        {{#if (and this.showResetButton (not this.showDropdownFilterToggle))}}
+          <ResetButton
+            @action={{this.resetFilters}}
+            @disabled={{not this.hasActiveFilters}}
+          />
         {{/if}}
 
         {{yield to="actions"}}
@@ -603,7 +604,10 @@ export default class DFilterControls extends Component {
             <p>{{@noResultsMessage}}</p>
           {{/if}}
           {{#if this.showResetButton}}
-            <ResetButton @action={{this.resetFilters}} />
+            <ResetButton
+              @action={{this.resetFilters}}
+              @label="filter_controls.reset"
+            />
           {{/if}}
         </div>
       {{/if}}
