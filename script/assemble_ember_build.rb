@@ -184,24 +184,13 @@ if ARGV.include?("--compress")
     *Dir.glob("#{EMBER_APP_DIR}/dist/**/*.{js,wasm}"),
     *Dir.glob("app/assets/generated/**/*.{js,wasm}"),
   ]
-  # Each format is checked on its own: the core build emits its own `.br`, and
-  # only the gzip is left to do for those files.
+  # Both builds compress the chunks they emit, so what is usually left here is
+  # the wasm.
   Parallel.map(files, in_threads: 4) do |file|
-    needs_brotli = !File.exist?("#{file}.br")
-    needs_gzip = !File.exist?("#{file}.gz")
-    next if !needs_brotli && !needs_gzip
+    next if File.exist?("#{file}.br")
 
     start = Time.now
-
-    if needs_brotli
-      system("brotli", "-f", "--quality=11", "-o", "#{file}.br", file, exception: true)
-    end
-
-    if needs_gzip
-      IO.popen(["gzip", "-f", "-9", "-c", file], "rb") { |io| File.write("#{file}.gz", io.read) }
-      raise "gzip failed for #{file}" unless $?.success?
-    end
-
+    system("brotli", "-f", "--quality=11", "-o", "#{file}.br", file, exception: true)
     puts "Compressed #{file} in #{(Time.now - start).round(2)}s"
   end
 end
