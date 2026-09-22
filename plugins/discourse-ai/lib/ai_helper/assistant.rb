@@ -309,6 +309,11 @@ module DiscourseAi
         ai_agent
       end
 
+      def ensure_mode_access_for_location!(helper_mode, user, location)
+        ensure_mode_access!(helper_mode, user)
+        raise Discourse::InvalidAccess if !location_map(helper_mode).include?(location)
+      end
+
       private
 
       def agent_has_image_generation_tool?(agent)
