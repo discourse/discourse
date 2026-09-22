@@ -1,5 +1,5 @@
 import { trustHTML } from "@ember/template";
-import BrotliStore from "./brotli-store";
+import ChunkTotals from "./chunk-totals";
 
 // Strips the assets/js/ prefix and .digested.js suffix for a readable label.
 export function stem(file) {
@@ -33,9 +33,7 @@ export function matches(text, filter) {
 
 // Wraps the raw report JSON and answers the graph questions the UI needs:
 // static-import closures, per-chunk sizing, and which entrypoints reach a chunk.
-export default class Analysis extends BrotliStore {
-  brotliCacheKey = "discourse_bundle_analyzer_brotli";
-
+export default class Analysis extends ChunkTotals {
   constructor(data) {
     super();
     this.data = data;
@@ -43,10 +41,6 @@ export default class Analysis extends BrotliStore {
     this.entrypoints = data.entrypoints;
     this.dynamicEntrypoints = data.dynamicEntrypoints;
     this.usedByEntries = this.#computeUsedBy();
-  }
-
-  urlFor(file) {
-    return file;
   }
 
   staticClosure(file, set = new Set()) {
@@ -83,14 +77,14 @@ export default class Analysis extends BrotliStore {
     );
   }
 
-  // Sort key: brotli when we have it, otherwise raw (so ordering is stable
-  // before brotli finishes and tightens up as sizes arrive).
+  // Sort by what a browser downloads, falling back to raw bytes for a report
+  // whose build did not compress.
   sortSize(file) {
     const c = this.chunks[file];
     if (!c) {
       return 0;
     }
-    return this.brotli.get(file) ?? c.rawSize;
+    return this.brotliOf(file) ?? c.rawSize;
   }
 
   #computeUsedBy() {

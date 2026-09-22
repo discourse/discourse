@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
 import { fmt } from "./analysis";
-import BrotliSizes from "./brotli-sizes";
 import EntrypointCard from "./entrypoint-card";
 import LoadedChunks from "./loaded-chunks";
 
@@ -12,12 +11,10 @@ export default class Report extends Component {
   @tracked filter = "";
 
   loaded = new LoadedChunks(this.args.analysis.chunks);
-  brotli = new BrotliSizes(this.args.analysis);
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.loaded.teardown();
-    this.brotli.teardown();
   }
 
   get analysis() {
@@ -110,12 +107,6 @@ export default class Report extends Component {
           }}
           br
         </span>
-        {{#unless this.analysis.brotliDone}}
-          <span class="ba-sub">
-            computing brotli…
-            {{this.analysis.brotliCount}}/{{this.analysis.chunkCount}}
-          </span>
-        {{/unless}}
       </div>
 
       <div class="ba-toolbar">

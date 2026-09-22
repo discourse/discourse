@@ -8,10 +8,6 @@ export default class PluginChunkRow extends ExpandableRow {
     return this.args.chunk;
   }
 
-  get brotli() {
-    return this.args.analysis.brotliOf(this.chunk.file);
-  }
-
   get maxModule() {
     return this.chunk.modules[0]?.renderedLength || 1;
   }
@@ -42,9 +38,7 @@ export default class PluginChunkRow extends ExpandableRow {
             <span class="ba-pill">· {{this.chunk.moduleCount}} modules</span>
           </span>
         </span>
-        <span class="ba-num">{{if this.brotli (fmt this.brotli) "…"}}
-          <span class="ba-pill">br</span></span>
-        <span class="ba-num muted">{{fmt this.chunk.rawSize}}
+        <span class="ba-num">{{fmt this.chunk.rawSize}}
           <span class="ba-pill">raw</span></span>
       </button>
       {{#if this.expanded}}

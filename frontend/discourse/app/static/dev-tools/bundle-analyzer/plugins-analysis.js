@@ -1,11 +1,9 @@
-import BrotliStore from "./brotli-store";
+import ChunkTotals from "./chunk-totals";
 
 // Wraps the merged plugin report. Every plugin is built on its own, so sizing is
-// per plugin; the flat chunk map underneath exists for the brotli pass, and is
-// safe because each build prefixes its filenames with the plugin's directory.
-export default class PluginsAnalysis extends BrotliStore {
-  brotliCacheKey = "discourse_bundle_analyzer_brotli_plugins";
-
+// per plugin; the flat chunk map underneath is safe because each build prefixes
+// its filenames with the plugin's directory.
+export default class PluginsAnalysis extends ChunkTotals {
   constructor(data) {
     super();
     this.data = data;
@@ -13,10 +11,6 @@ export default class PluginsAnalysis extends BrotliStore {
     this.chunks = Object.fromEntries(
       data.plugins.flatMap((p) => Object.entries(p.chunks))
     );
-  }
-
-  urlFor(file) {
-    return `assets/js/plugins/${file}`;
   }
 
   // Everything a plugin's entrypoint pulls in synchronously.

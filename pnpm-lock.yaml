@@ -316,9 +316,6 @@ importers:
       ace-builds:
         specifier: ^1.44.0
         version: 1.44.0
-      brotli-wasm:
-        specifier: ^3.0.1
-        version: 3.0.1
       chart.js:
         specifier: 4.5.1
         version: 4.5.1
@@ -3540,10 +3537,6 @@ packages:
   broccoli@4.0.0:
     resolution: {integrity: sha512-p5el5/ig0QeRGFPkLMPdm7KblkTm44eicEWfwnRTz6hncghVuRZ0+XDAtCi7ynxobeE/mey5Q7lAulFkgNzxVA==}
     engines: {node: '>= 20.19.*'}
-
-  brotli-wasm@3.0.1:
-    resolution: {integrity: sha512-U3K72/JAi3jITpdhZBqzSUq+DUY697tLxOuFXB+FpAE/Ug+5C3VZrv4uA674EUZHxNAuQ9wETXNqQkxZD6oL4A==}
-    engines: {node: '>=v18.0.0'}
 
   browserslist-to-esbuild@2.1.1:
     resolution: {integrity: sha512-KN+mty6C3e9AN8Z5dI1xeN15ExcRNeISoC3g7V0Kax/MMF9MSoYA2G7lkTTcVUFntiEjkpI0HNgqJC1NjdyNUw==}
@@ -11396,8 +11389,6 @@ snapshots:
       watch-detector: 1.0.3
     transitivePeerDependencies:
       - supports-color
-
-  brotli-wasm@3.0.1: {}
 
   browserslist-to-esbuild@2.1.1(browserslist@4.28.8):
     dependencies:

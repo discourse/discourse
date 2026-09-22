@@ -4,12 +4,6 @@ import { fmt, matches } from "./analysis";
 import ExpandableRow from "./expandable-row";
 import PluginChunkRow from "./plugin-chunk-row";
 
-// Brotli totals read "…" until every chunk in the set is measured, so a card
-// never momentarily looks smaller than it is.
-function label(totals) {
-  return totals.brotliReady ? fmt(totals.brotli) : "…";
-}
-
 // One plugin, rolled up into an expandable card. A plugin is built on its own,
 // so its sizes stand apart from core's; what it shares with core is the shape of
 // the question — what an entrypoint costs, and what each route adds on top.
@@ -30,15 +24,10 @@ export default class PluginCard extends ExpandableRow {
     return this.analysis.totalsFor(this.plugin);
   }
 
-  get brotliLabel() {
-    return label(this.totals);
-  }
-
   @cached
   get entrypoints() {
     return Object.entries(this.plugin.entrypoints).map(([name, file]) => {
-      const totals = this.analysis.totals(this.#closure(file));
-      return { name, file, totals, label: label(totals) };
+      return { name, file, totals: this.analysis.totals(this.#closure(file)) };
     });
   }
 
@@ -62,8 +51,7 @@ export default class PluginCard extends ExpandableRow {
       }
       for (const [file, urls] of urlsByFile) {
         const added = [...this.#closure(file)].filter((f) => !base.has(f));
-        const totals = this.analysis.totals(added);
-        rows.push({ entry, urls, file, totals, label: label(totals) });
+        rows.push({ entry, urls, file, totals: this.analysis.totals(added) });
       }
     }
     return rows.sort((a, b) => b.totals.raw - a.totals.raw);
@@ -71,16 +59,12 @@ export default class PluginCard extends ExpandableRow {
 
   get chunkRows() {
     return Object.values(this.plugin.chunks).sort(
-      (a, b) => this.#sortSize(b) - this.#sortSize(a)
+      (a, b) => b.rawSize - a.rawSize
     );
   }
 
   #closure(file) {
     return this.analysis.closureOf(this.plugin, file);
-  }
-
-  #sortSize(chunk) {
-    return this.analysis.brotliOf(chunk.file) ?? chunk.rawSize;
   }
 
   <template>
@@ -91,9 +75,7 @@ export default class PluginCard extends ExpandableRow {
           <span class="ba-badge entry">plugin</span>
           <span class="ba-label">{{this.plugin.plugin}}</span>
         </span>
-        <span class="ba-num"><b>{{this.brotliLabel}}</b>
-          <span class="ba-pill">br</span></span>
-        <span class="ba-num muted">{{fmt this.totals.raw}}
+        <span class="ba-num"><b>{{fmt this.totals.raw}}</b>
           <span class="ba-pill">raw</span></span>
       </button>
       {{#if this.expanded}}
@@ -105,9 +87,7 @@ export default class PluginCard extends ExpandableRow {
                   <span class="ba-badge entry">{{e.name}}</span>
                   <span class="ba-label" title={{e.file}}>{{e.file}}</span>
                 </span>
-                <span class="ba-num">{{e.label}}
-                  <span class="ba-pill">br</span></span>
-                <span class="ba-num muted">{{fmt e.totals.raw}}
+                <span class="ba-num">{{fmt e.totals.raw}}
                   <span class="ba-pill">raw</span></span>
                 <span class="ba-num pill">{{e.totals.files}}f</span>
               </div>
@@ -129,10 +109,8 @@ export default class PluginCard extends ExpandableRow {
                       {{/each}}
                     </span>
                   </span>
-                  <span class="ba-num">+{{b.label}}
+                  <span class="ba-num">+{{fmt b.totals.raw}}
                     <span class="ba-pill">added</span></span>
-                  <span class="ba-num muted">+{{fmt b.totals.raw}}
-                    <span class="ba-pill">raw</span></span>
                   <span class="ba-num pill">+{{b.totals.files}}f</span>
                 </div>
               {{/each}}

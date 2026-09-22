@@ -3,18 +3,10 @@ import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { fmt } from "./analysis";
-import BrotliSizes from "./brotli-sizes";
 import PluginCard, { pluginMatches } from "./plugin-card";
 
 export default class PluginsReport extends Component {
   @tracked filter = "";
-
-  brotli = new BrotliSizes(this.args.analysis);
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.brotli.teardown();
-  }
 
   get analysis() {
     return this.args.analysis;
@@ -47,18 +39,10 @@ export default class PluginsReport extends Component {
           plugins ·
           {{this.analysis.chunkCount}}
           chunks ·
-          {{if this.totals.brotliReady (fmt this.totals.brotli) "…"}}
-          br /
           {{fmt this.totals.raw}}
           raw · generated
           {{this.analysis.data.generatedAt}}
         </span>
-        {{#unless this.analysis.brotliDone}}
-          <span class="ba-sub">
-            computing brotli…
-            {{this.analysis.brotliCount}}/{{this.analysis.chunkCount}}
-          </span>
-        {{/unless}}
       </div>
 
       <div class="ba-toolbar">

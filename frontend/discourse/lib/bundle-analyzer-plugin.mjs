@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import * as fs from "fs";
 import { relative } from "path";
+import { brotliSizeOf } from "./brotli-assets-plugin.mjs";
 
 // The report describes the finished bundle, so its content only exists once
 // every chunk is hashed and named — too late for rolldown to fingerprint it as
@@ -9,9 +10,9 @@ import { relative } from "path";
 export const BUNDLE_ANALYSIS_RE =
   /^assets\/js\/bundle-analysis-\w+\.digested\.json$/;
 
-// Brotli sizes are intentionally NOT computed here — brotli at max quality is
-// the slowest part of the build. The dev-tools UI computes them on demand in a
-// web worker instead (see bundle-analyzer/brotli-sizes.js).
+// Sizes come from whatever `brotli-assets-plugin` compressed earlier in the
+// build, so the report shows the transfer size a browser really sees and no
+// chunk is compressed twice.
 
 const DYNAMIC_IMPORT_RE =
   /\bimport\s*\(\s*(?:\/\*[\s\S]*?\*\/\s*)*(['"`])([^'"`\n]+?)\1/g;
@@ -202,6 +203,7 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
           isEntry: chunk.isEntry,
           isDynamicEntry: chunk.isDynamicEntry,
           rawSize,
+          brotliSize: brotliSizeOf(bundle, fileName),
           imports: chunk.imports,
           dynamicImports: chunk.dynamicImports,
           moduleCount: modules.length,

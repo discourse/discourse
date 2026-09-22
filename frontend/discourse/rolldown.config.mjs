@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import brotliAssetsPlugin from "./lib/brotli-assets-plugin.mjs";
 import bundleAnalyzerPlugin, {
   BUNDLE_ANALYSIS_RE,
 } from "./lib/bundle-analyzer-plugin.mjs";
@@ -114,6 +115,7 @@ export function buildConfig({ devMode } = {}) {
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
+      brotliAssetsPlugin({ enabled: isProduction }),
       bundleAnalyzerPlugin({ devMode }),
       {
         name: "forbid-plugin-imports",
