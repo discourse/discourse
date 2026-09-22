@@ -1414,6 +1414,28 @@ RSpec.describe PostsController do
         expect(post.reload.post_type).to eq(Post.types[:regular])
       end
 
+      it "prevents moderators outside whisper groups from converting public replies to whispers" do
+        whisper_group = Fabricate(:group)
+        SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:)
+        public_reply = Fabricate(:post, topic:, raw: "public reply that must remain visible")
+
+        put "/posts/#{public_reply.id}/post_type.json", params: { post_type: Post.types[:whisper] }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).to include(I18n.t("invalid_whisper_access"))
+          expect(public_reply.reload.post_type).to eq(Post.types[:regular])
+
+          sign_out
+          get "/t/#{topic.id}.json"
+
+          expect(response).to be_ok
+          expect(response.body).to include(public_reply.raw)
+        end
+      end
+
       it "rejects changing an opening post to a whisper" do
         opening_post = Fabricate(:post)
 
