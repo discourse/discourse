@@ -10,13 +10,14 @@ import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { applyQueryParams } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 const MAX_BULK_SELECT_LIMIT = 100;
 
 export default class AdminUsersListShowController extends Controller {
   @service modal;
+  @service router;
   @service toasts;
 
   @tracked bulkSelect = false;
@@ -119,11 +120,13 @@ export default class AdminUsersListShowController extends Controller {
   onResetFilters() {
     this.listFilter = null;
     this.activation = null;
-    // `filter` is owned by the filter controls; drop the remaining params here
-    const url = new URL(window.location.href);
-    url.searchParams.delete("username");
-    url.searchParams.delete("activation");
-    DiscourseURL.replaceState(url.pathname + url.search);
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, {
+        username: null,
+        filter: null,
+        activation: null,
+      })
+    );
     this.resetFilters();
   }
 
@@ -144,22 +147,17 @@ export default class AdminUsersListShowController extends Controller {
 
   @action
   updateOrder(field, asc) {
-    this.setProperties({
-      order: field,
-      asc,
-    });
+    this.order = field;
+    this.asc = asc;
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, { order: field, asc })
+    );
+    this.resetFilters();
   }
 
   @action
   onActivationChange(value) {
     this.activation = value === "all" ? null : value;
-    const url = new URL(window.location.href);
-    if (this.activation) {
-      url.searchParams.set("activation", this.activation);
-    } else {
-      url.searchParams.delete("activation");
-    }
-    DiscourseURL.replaceState(url.pathname + url.search);
     this.resetFilters();
   }
 

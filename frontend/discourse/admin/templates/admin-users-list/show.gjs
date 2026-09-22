@@ -61,6 +61,10 @@ export default <template>
 
   <DFilterControls
     @array={{@controller.users}}
+    @dropdownFilterQueryParam={{if
+      @controller.showActivationFilter
+      "activation"
+    }}
     @dropdownOptions={{if
       @controller.showActivationFilter
       ACTIVATION_FILTER_OPTIONS

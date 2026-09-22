@@ -182,6 +182,22 @@ acceptance("Admin - Users List", function (needs) {
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText("notactivated");
+    assert.true(
+      currentURL().includes("activation=not_activated"),
+      "stores the activation filter in the URL"
+    );
+
+    await visit(
+      "/admin/users/list/new?username=sam&activation=not_activated&order=username"
+    );
+    await click(".d-filter-controls__reset");
+
+    assert.dom(".users-list .user").exists({ count: 2 }, "reloads all users");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/list/new?order=username",
+      "clears both legacy search and activation while preserving sorting"
+    );
   });
 });
 
@@ -253,6 +269,25 @@ acceptance("Admin - Users List - bulk search", function (needs) {
     assert
       .dom(".d-filter-controls__input")
       .isFocused("keeps focus while the URL updates");
+
+    for (let clickCount = 0; clickCount < 2; clickCount++) {
+      await click(
+        ".users-list .directory-table__column-header--username.sortable"
+      );
+
+      assert.strictEqual(
+        lastFilter,
+        "sam,bob",
+        "sorting preserves the typed search"
+      );
+      assert
+        .dom(".d-filter-controls__input")
+        .hasValue("sam,bob", "keeps the typed search visible");
+      assert.true(
+        decodeURIComponent(currentURL()).includes("filter=sam,bob"),
+        "sorting preserves the search URL"
+      );
+    }
 
     await fillIn(".d-filter-controls__input", "");
 
