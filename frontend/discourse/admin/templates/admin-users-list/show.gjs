@@ -67,7 +67,7 @@ export default <template>
     }}
     @dropdownValue={{or @controller.activation "all"}}
     @initialTextFilter={{@controller.initialFilter}}
-    @inputPlaceholder={{@controller.searchHint}}
+    @inputPlaceholder={{i18n "search_hint"}}
     @loading={{@controller.refreshing}}
     @noResultsMessage={{i18n "search.no_results"}}
     @onDropdownFilterChange={{@controller.onActivationChange}}
