@@ -330,9 +330,10 @@ class GroupsController < ApplicationController
 
     include_custom_fields = params[:include_custom_fields] == "true"
 
-    allowed_fields =
-      User.allowed_user_custom_fields(guardian) +
-        UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    allowed_fields = User.allowed_user_custom_fields(guardian)
+    if guardian.is_staff?
+      allowed_fields += UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    end
 
     if params[:order] && %w[last_posted_at last_seen_at].include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"

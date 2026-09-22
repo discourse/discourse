@@ -1041,6 +1041,45 @@ RSpec.describe GroupsController do
         expect(response_custom_fields[user_field_name]).to eq("A custom field")
       end
 
+      it "does not sort members by private custom fields for anonymous viewers" do
+        private_user_field = Fabricate(:user_field)
+        private_user_field_name = "user_field_#{private_user_field.id}"
+        first_member = Fabricate(:user, username: "alphabetical_first")
+        second_member = Fabricate(:user, username: "alphabetical_second")
+        group.add(first_member)
+        group.add(second_member)
+
+        UserCustomField.create!(
+          user_id: first_member.id,
+          name: private_user_field_name,
+          value: "second private value",
+        )
+        UserCustomField.create!(
+          user_id: second_member.id,
+          name: private_user_field_name,
+          value: "first private value",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: private_user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+
+        members = response.parsed_body["members"]
+        expect(members.flat_map { |member| member.fetch("custom_fields").values }).not_to include(
+          "first private value",
+          "second private value",
+        )
+        expect(members.map { |member| member["id"] }).to eq(
+          [first_member.id, second_member.id, user.id],
+        )
+      end
+
       it "allows sorting by custom fields" do
         group.add(user2)
         UserCustomField.create!(user_id: user2.id, name: user_field_name, value: "C custom field")
