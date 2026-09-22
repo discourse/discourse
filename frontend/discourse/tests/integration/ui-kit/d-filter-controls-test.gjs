@@ -5,6 +5,7 @@ import { click, fillIn, render, select, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
+import { i18n } from "discourse-i18n";
 
 const SAMPLE_DATA = [
   {
@@ -169,13 +170,13 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".custom-filter").exists("renders the additional filter");
     assert
       .dom(".d-filter-controls__reset")
-      .doesNotExist("hides reset while the additional filter is inactive");
+      .isDisabled("disables reset while the additional filter is inactive");
 
     this.set("additionalFiltersActive", true);
 
     assert
       .dom(".d-filter-controls__reset")
-      .exists("shows reset while the additional filter is active");
+      .isEnabled("enables reset while the additional filter is active");
 
     await click(".d-filter-controls__reset");
 
@@ -273,6 +274,16 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".d-filter-controls__dropdown")
       .exists("reveals the dropdown after toggling filters");
+
+    await select(".d-filter-controls__dropdown", "feature");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .exists({ count: 1 }, "shows a single reset button")
+      .isEnabled("enables reset for the active dropdown");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .doesNotExist("does not duplicate reset outside the drawer controls");
   });
 
   test("can show expanded dropdowns without a filter toggle", async function (assert) {
@@ -309,32 +320,6 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".d-filter-controls__reset")
       .exists({ count: 1 }, "shows reset when an expanded filter is active");
-  });
-
-  test("shows one reset button with a forced single-dropdown toggle", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @dropdownOptions={{this.dropdownOptions}}
-          @forceShowDropdownFilterToggle={{true}}
-          @searchableProps={{this.searchableProps}}
-        />
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-
-    assert
-      .dom(".d-filter-controls__reset")
-      .exists({ count: 1 }, "shows a single reset button");
-    assert
-      .dom(".d-filter-controls > .d-filter-controls__reset")
-      .doesNotExist("does not show a second reset button after the dropdowns");
   });
 
   test("filters data by single dropdown (client-side)", async function (assert) {
@@ -443,7 +428,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".item[data-id='3']").exists("shows the correct item");
   });
 
-  test("shows reset button when filters are active", async function (assert) {
+  test("keeps reset visible and enables it only for active filters", async function (assert) {
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
 
@@ -451,6 +436,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       <template>
         <DFilterControls
           @array={{this.data}}
+          @loading={{this.loading}}
           @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
@@ -466,8 +452,38 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
 
     assert
       .dom(".d-filter-controls__reset")
-      .doesNotExist("no reset button initially");
+      .isDisabled("reset is visible and disabled initially");
+    assert
+      .dom(".d-filter-controls__reset .d-button-label")
+      .doesNotExist("Reset has no visible text label");
+    assert
+      .dom(".d-filter-controls__reset")
+      .hasAttribute(
+        "title",
+        i18n("filter_controls.reset"),
+        "provides a tooltip"
+      )
+      .hasAttribute(
+        "aria-label",
+        i18n("filter_controls.reset"),
+        "provides an accessible name"
+      );
 
+    await fillIn(".filter-input", "first");
+
+    assert.dom(".item").exists({ count: 1 }, "filters matching items");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .isEnabled("enables reset when the search has results");
+
+    this.set("loading", true);
+    await settled();
+
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .isEnabled("reset stays available during a reload");
+
+    this.set("loading", false);
     await fillIn(".filter-input", "nonexistent");
 
     assert
@@ -475,7 +491,21 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .exists("shows no results message");
     assert
       .dom(".d-filter-controls__reset")
-      .exists("shows reset button after filtering");
+      .isEnabled("enables reset after filtering");
+    assert
+      .dom(".d-filter-controls__no-results .d-filter-controls__reset")
+      .hasText(i18n("filter_controls.reset"), "labels the empty-state reset");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset .d-button-label")
+      .doesNotExist("keeps the toolbar reset icon-only");
+
+    await click(".d-filter-controls > .d-filter-controls__reset");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .isDisabled("reset stays visible after restoring defaults");
+    assert.dom(".item").exists({ count: 3 }, "restores all items");
+    assert.dom(".filter-input").hasValue("", "clears the search");
   });
 
   test("can hide the built-in no-results state", async function (assert) {
@@ -521,97 +551,6 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".d-filter-controls__reset")
       .doesNotExist("does not render the reset button");
-  });
-
-  test("reset button clears filters", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
-        >
-          <:content as |filteredData|>
-            <div class="results">
-              {{#each filteredData as |item|}}
-                <div class="item" data-id={{item.id}}>{{item.name}}</div>
-              {{/each}}
-            </div>
-          </:content>
-        </DFilterControls>
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-
-    assert.dom(".item").exists({ count: 1 }, "shows filtered results");
-
-    await fillIn(".filter-input", "firstblah");
-    assert
-      .dom(".item")
-      .doesNotExist("does not show any results when filters find none");
-
-    await click(".d-filter-controls__reset");
-
-    assert.dom(".item").exists({ count: 3 }, "shows all items after reset");
-    assert.dom(".filter-input").hasValue("", "clears text input");
-  });
-
-  test("shows the reset button next to the input when a text filter finds results", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
-        >
-          <:content as |filteredData|>
-            <div class="results">
-              {{#each filteredData as |item|}}
-                <div class="item" data-id={{item.id}}>{{item.name}}</div>
-              {{/each}}
-            </div>
-          </:content>
-        </DFilterControls>
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-    assert
-      .dom(".d-filter-controls > .d-filter-controls__reset")
-      .exists("shows the reset button beside the input");
-  });
-
-  test("keeps the reset button visible while loading", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("onTextFilterChange", () => {});
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @loading={{true}}
-          @onTextFilterChange={{this.onTextFilterChange}}
-        >
-          <:content as |filteredData|>
-            <div class="results">
-              {{#each filteredData as |item|}}
-                <div class="item" data-id={{item.id}}>{{item.name}}</div>
-              {{/each}}
-            </div>
-          </:content>
-        </DFilterControls>
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-    assert
-      .dom(".d-filter-controls > .d-filter-controls__reset")
-      .exists("reset button stays put during a reload");
   });
 
   test("respects minItemsForFilter parameter", async function (assert) {
