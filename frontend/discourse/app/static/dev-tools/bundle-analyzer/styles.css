@@ -154,7 +154,7 @@
   color: inherit;
   background: var(--ba-panel);
   display: grid;
-  grid-template-columns: 1fr 110px 100px 70px;
+  grid-template-columns: 1fr 130px 130px;
   gap: 8px;
   align-items: center;
   padding: 9px 12px;
@@ -291,12 +291,9 @@
   box-shadow: inset 3px 0 0 var(--ba-good);
 }
 
-.bundle-analyzer .ba-plugin-row > .ba-head,
-.bundle-analyzer .ba-plugin-line {
-  grid-template-columns: 1fr 130px 130px 70px;
-}
 .bundle-analyzer .ba-plugin-line {
   display: grid;
+  grid-template-columns: 1fr 130px 130px 70px;
   gap: 8px;
   align-items: center;
   padding: 3px 0;

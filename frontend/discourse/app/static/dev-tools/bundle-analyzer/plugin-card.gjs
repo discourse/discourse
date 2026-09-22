@@ -95,7 +95,6 @@ export default class PluginCard extends ExpandableRow {
           <span class="ba-pill">br</span></span>
         <span class="ba-num muted">{{fmt this.totals.raw}}
           <span class="ba-pill">raw</span></span>
-        <span class="ba-num pill">{{this.chunkRows.length}}f</span>
       </button>
       {{#if this.expanded}}
         <div class="ba-body">

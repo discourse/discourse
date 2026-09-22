@@ -88,12 +88,7 @@ export default class EntrypointCard extends ExpandableRow {
     <div
       class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
     >
-      <button
-        class="ba-head"
-        style="grid-template-columns:1fr 130px 130px 70px"
-        type="button"
-        {{on "click" this.toggle}}
-      >
+      <button class="ba-head" type="button" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
           {{#if this.isLoaded}}
@@ -125,15 +120,11 @@ export default class EntrypointCard extends ExpandableRow {
             <span class="ba-pill">initial</span></span>
           <span class="ba-num muted">{{fmt this.fullTotals.raw}}
             <span class="ba-pill">raw</span></span>
-          <span class="ba-num pill">{{this.loadSet.size}}f</span>
         {{else}}
           <span class="ba-num"><b>+{{this.addedBrotliLabel}}</b>
             <span class="ba-pill">added</span></span>
           <span class="ba-num muted">+{{fmt this.addedTotals.raw}}
             <span class="ba-pill">raw</span></span>
-          <span
-            class="ba-num pill"
-          >+{{this.added.length}}/{{this.loadSet.size}}f</span>
         {{/if}}
       </button>
       {{#if this.expanded}}
