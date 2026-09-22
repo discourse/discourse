@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sw:
+  markdown_endpoints:
+    latest: "Hivi Karibuni"
+    categories: "Kategoria"
+    tags: "Lebo"
+    previous_page: "Ukurasa uliopita"
+    next_page: "Ukurasa ujao"
+    replies: "Majibu"
   mcp:
     errors:
       topic_not_found: "Mada haijapatikana"

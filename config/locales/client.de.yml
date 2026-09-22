@@ -2824,8 +2824,6 @@ de:
       signup_instructions: "Gib deine E-Mail-Adresse ein, um dieser Community beizutreten. Wir schicken dir einen Bestätigungscode, und dann kann es losgehen!"
       user_fields_title: "Fast geschafft"
       user_fields_instructions: "Nur noch ein paar Details, um die Einrichtung deines Kontos abzuschließen."
-      account_ready_title: "Dein Konto ist startklar! 🎉"
-      account_ready_edit: "Wähle deinen Benutzernamen und Avatar"
       account_ready_continue: "Weiter"
       username_label: "Benutzername"
       username_placeholder: "Wähle einen Benutzernamen"

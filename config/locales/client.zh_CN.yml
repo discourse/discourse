@@ -2795,8 +2795,6 @@ zh_CN:
       signup_instructions: "输入您的电子邮件地址即可加入此社区。我们将向您发送验证码，验证通过后您就可以加入了！"
       user_fields_title: "即将完成"
       user_fields_instructions: "只需再填写一些详细信息，即可完成帐户创建。"
-      account_ready_title: "您的帐户已就绪！🎉"
-      account_ready_edit: "选择您的用户名和头像"
       account_ready_continue: "继续"
       account_details_title: "完成账户创建"
       account_details_instructions: "在提交帐户以供审核之前，请选择您在社区中的显示方式。"

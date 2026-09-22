@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 id:
+  markdown_endpoints:
+    latest: "Terbaru"
+    categories: "Kategori"
+    tags: "Label"
+    previous_page: "Halaman sebelumnya"
+    next_page: "Halaman berikutnya"
+    replies: "balasan"
+    last_updated: "Terakhir diperbarui"
   mcp:
     errors:
       draft_too_long: "Draf terlalu panjang"

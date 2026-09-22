@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 ca:
+  markdown_endpoints:
+    latest: "Més recents"
+    categories: "Categories"
+    tags: "Etiquetes"
+    previous_page: "Pàgina anterior"
+    next_page: "Pàgina següent"
+    replies: "Respostes"
+    last_updated: "Darrera actualització"
   mcp:
     errors:
       topic_not_found: "Tema no trobat"

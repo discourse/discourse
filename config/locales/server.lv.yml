@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 lv:
+  markdown_endpoints:
+    latest: "Pēdējais"
+    categories: "Sadaļas"
+    tags: "Birkas"
+    previous_page: "Iepriekšējo lapu"
+    next_page: "Nākošo lapu"
+    replies: "Atbildes"
+    last_updated: "Pēdējoreiz atjaunots"
   mcp:
     errors:
       topic_not_found: "Tēma nav atrasta "

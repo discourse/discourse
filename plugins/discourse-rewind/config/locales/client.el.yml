@@ -7,7 +7,6 @@
 el:
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       viewing_other_user: "Βλέπετε την αναφορά Discourse Rewind του χρήστη <strong>%{username}</strong>."
       cannot_view_rewind: >
         Δεν μπορείτε να δείτε αυτήν την αναφορά Discourse Rewind. Ίσως ο κάτοχος δεν την έχει κοινοποιήσει δημόσια;<br><br> $> _<br><br>
@@ -22,13 +21,6 @@ el:
           title: Χρόνος ανάγνωσης
         chat_usage:
           title: Δραστηριότητα Συνομιλίας
-          total_messages: Συνολικά Μηνύματα
-          dm_messages: Άμεσα Μηνύματα
-          unique_dm_channels: Συνομιλίες Άμεσων Μηνυμάτων
-          reactions_received: Ληφθείσες Αντιδράσεις
-          avg_message_length: Μέσο Μήκος Μηνύματος
-          favorite_channels: Αγαπημένα Κανάλια
-          messages: μηνύματα
           bot_name: XxRewindBotxX
           author: Εσείς
           author_others: "%{username}"
@@ -55,14 +47,9 @@ el:
           message_5: "Τα αγαπημένα σας κανάλια:"
           dancing_baby_alt: "Μωρό που χορεύει"
         invites:
-          title: Προσκλήσεις
-          invitee_posts: Δημιουργημένες Αναρτήσεις
-          invitee_likes: Μου αρέσει που δόθηκαν
           label_invitations_sent: "Οι προσκλήσεις στάλθηκαν:"
           label_likes_given: "\"Μου αρέσει\" που δόθηκαν:"
         new_user_interactions:
-          likes_given: Μου αρέσει που δόθηκαν
-          mentions: Επισημάνσεις
           contributions_helped_others: "Οι συνεισφορές του χρήστη %{username} βοήθησαν"
         writing_analysis:
           menu_other: Άλλα

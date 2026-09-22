@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 hu:
+  markdown_endpoints:
+    latest: "Legutóbbi"
+    categories: "Kategóriák"
+    tags: "Címkék"
+    previous_page: "Előző oldal"
+    next_page: "Következő oldal"
+    replies: "Válaszok"
+    last_updated: "Legutóbb frissítve"
   mcp:
     errors:
       draft_too_long: "A vázlat túl hosszú"

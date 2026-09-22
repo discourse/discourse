@@ -147,7 +147,6 @@ zh_TW:
     ai_bot_enabled: "啟用 AI 機器人模組。"
     ai_bot_enabled_llms: "可供 AI 機器人對話選擇的 LLM"
     ai_bot_enable_chat_warning: "發起私人訊息聊天時顯示警告。可編輯翻譯字串 discourse_ai.ai_bot.pm_warning 來覆寫"
-    ai_bot_allowed_groups: "當 GPT 機器人可存取私人訊息時，它會回覆這些群組的成員。"
     ai_bot_debugging_allowed_groups: "允許這些群組在貼文上看到偵錯按鈕，以顯示原始 AI 請求與回應"
     ai_bot_public_sharing_allowed_groups: "允許這些群組透過唯一的公開連結，向大眾分享 AI 私人訊息。注意：若網站要求登入，分享內容也會要求登入。"
     ai_bot_add_to_header: "在頁首顯示按鈕，以開始與 AI 機器人的私人訊息"

@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ar:
+  markdown_endpoints:
+    latest: "الحديثة"
+    categories: "الفئات"
+    tags: "الوسوم"
+    replies: "الردود"
+    last_updated: "آخر تحديث"
   mcp:
     errors:
       draft_too_long: "المسودة طويلة للغاية"

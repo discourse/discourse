@@ -1992,6 +1992,9 @@ pl_PL:
       external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
+      composer_toolbar:
+        title: "Pasek narzędzi kompozytora"
+        instructions: "Wybierz, które przyciski będą wyświetlane na pasku narzędzi kompozytora. Skróty klawiaturowe nadal działają dla ukrytych przycisków."
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
       automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
       content_languages:
@@ -3221,8 +3224,7 @@ pl_PL:
       signup_instructions: "Podaj swój adres e-mail, aby dołączyć do tej społeczności. Wyślemy Ci kod potwierdzający i gotowe!"
       user_fields_title: "Prawie gotowe"
       user_fields_instructions: "Jeszcze tylko kilka szczegółów, aby zakończyć tworzenie konta."
-      account_ready_title: "Twoje konto jest gotowe! 🎉"
-      account_ready_edit: "Wybierz swoją nazwę użytkownika i awatar"
+      signup_details_title: "Wybierz swoją nazwę użytkownika i awatar"
       account_ready_continue: "Kontynuuj"
       account_details_title: "Zakończ tworzenie konta"
       account_details_instructions: "Zanim prześlesz swoje konto do zatwierdzenia, wybierz sposób, w jaki będziesz widoczny dla społeczności."

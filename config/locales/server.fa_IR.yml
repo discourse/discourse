@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  markdown_endpoints:
+    latest: "آخرین"
+    categories: "دسته‌بندی‌ها"
+    tags: "برچسب‌ها"
+    replies: "پاسخ‌ها"
+    last_updated: "آخرین به روز رسانی"
   mcp:
     errors:
       draft_too_long: "پیش‌نویس خیلی طولانی است"

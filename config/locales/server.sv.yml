@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 sv:
+  markdown_endpoints:
+    latest: "Senaste"
+    categories: "Kategorier"
+    tags: "Taggar"
+    previous_page: "Föregående sida"
+    next_page: "Nästa sida"
+    replies: "Svar"
+    last_updated: "Senast uppdaterat"
   mcp:
     errors:
       draft_too_long: "Utkastet är för långt"

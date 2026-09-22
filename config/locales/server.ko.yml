@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 ko:
+  markdown_endpoints:
+    latest: "최신"
+    categories: "카테고리"
+    tags: "태그"
+    previous_page: "이전 페이지"
+    next_page: "다음 페이지"
+    replies: "댓글"
+    last_updated: "마지막 업데이트"
   mcp:
     errors:
       topic_not_found: "글을 찾을 수 없음"

@@ -15,15 +15,7 @@ be:
         reading_time:
           title: чытанне часу
         chat_usage:
-          messages: паведамленні
           author: Вы
           author_others: "%{username}"
-        invites:
-          title: Запрашэнні
-          invitee_posts: паведамленняў створаны
-          invitee_likes: упадабаныя
-        new_user_interactions:
-          likes_given: упадабаныя
-          mentions: Згадкі
         writing_analysis:
           menu_other: Іншае

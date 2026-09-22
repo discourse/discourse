@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 el:
+  markdown_endpoints:
+    latest: "Πρόσφατα"
+    categories: "Κατηγορίες"
+    tags: "Ετικέτες"
+    previous_page: "Προηγούμενη σελίδα"
+    next_page: "Επόμενη σελίδα"
+    replies: "Απαντήσεις"
+    last_updated: "Τελευταία ενημέρωση"
   mcp:
     errors:
       draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο"

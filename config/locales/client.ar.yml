@@ -3347,8 +3347,6 @@ ar:
       signup_instructions: "أدخل عنوان بريدك الإلكتروني للانضمام إلى هذا المجتمع. سنرسل إليك رمزًا لتأكيده وستصبح جاهزًا للانطلاق!"
       user_fields_title: "أوشكت على الانتهاء"
       user_fields_instructions: "بضع تفاصيل إضافية للانتهاء من إنشاء حسابك."
-      account_ready_title: "حسابك جاهز! 🎉"
-      account_ready_edit: "اختر اسم المستخدم الخاص بك وصورتك الرمزية"
       account_ready_continue: "متابعة"
       username_label: "اسم المستخدم"
       username_placeholder: "اختر اسم مستخدم"

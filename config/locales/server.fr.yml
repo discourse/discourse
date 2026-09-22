@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 fr:
+  markdown_endpoints:
+    latest: "Récents"
+    categories: "Catégories"
+    tags: "Étiquettes"
+    previous_page: "Page précédente"
+    next_page: "Page suivante"
+    replies: "Réponses"
+    last_updated: "Dernière mise à jour "
   mcp:
     errors:
       draft_too_long: "Le brouillon est trop long"

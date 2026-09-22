@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 da:
+  markdown_endpoints:
+    latest: "Seneste"
+    categories: "Kategorier"
+    tags: "Mærker"
+    previous_page: "Forrige side"
+    next_page: "Næste side"
+    replies: "Svar"
+    last_updated: "Sidst opdateret"
   mcp:
     errors:
       topic_not_found: "Emne ikke fundet"

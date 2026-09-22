@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 lt:
+  markdown_endpoints:
+    latest: "Naujausia"
+    categories: "Kategorijos"
+    tags: "Žymos"
+    previous_page: "Praeitas puslapis"
+    next_page: "Kitas puslapis"
+    replies: "Atsakymai"
+    last_updated: "Paskutinį kartą atnaujinta"
   mcp:
     errors:
       topic_not_found: "Tema nerasta"
