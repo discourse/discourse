@@ -53,7 +53,18 @@ class TopicPublisher
       force: true,
     )
 
-    MessageBus.publish("/topic/#{@topic.id}", reload_topic: true, refresh_stream: true)
+    secure_audience = @topic.secure_audience_publish_messages
+    if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+      secure_audience = [
+        secure_audience,
+        @topic.reload.secure_audience_publish_messages,
+      ].last
+      MessageBus.publish(
+        "/topic/#{@topic.id}",
+        { reload_topic: true, refresh_stream: true },
+        secure_audience,
+      )
+    end
 
     @topic
   end
