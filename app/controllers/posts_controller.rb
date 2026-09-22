@@ -743,6 +743,14 @@ class PostsController < ApplicationController
       raise Discourse::InvalidParameters.new(:post_type)
     end
 
+    if post_type == Post.types[:whisper] && !guardian.can_create_whisper?
+      raise Discourse::InvalidAccess.new(
+              "invalid_whisper_access",
+              nil,
+              custom_message: "invalid_whisper_access",
+            )
+    end
+
     post.revise(current_user, post_type: post_type)
 
     render body: nil
