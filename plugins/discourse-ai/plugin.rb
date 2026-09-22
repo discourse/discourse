@@ -215,7 +215,10 @@ after_initialize do
     DiscourseAi::PostImageCaptions.remove_existing_caption_metadata(doc)
   end
 
-  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
+  add_api_key_scope(
+    :ai,
+    { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update], path_params: %i[id] } },
+  )
 
   add_api_key_scope(
     :ai,
@@ -228,6 +231,7 @@ after_initialize do
           discourse_ai/admin/ai_artifacts#update
           discourse_ai/admin/ai_artifacts#destroy
         ],
+        path_params: %i[id],
       },
     },
   )

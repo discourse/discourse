@@ -166,6 +166,39 @@ RSpec.describe ApiKey do
         expect(key.request_allowed?(env)).to eq(true)
       end
 
+      it "rejects query parameters that try to satisfy a path restriction" do
+        request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
+        request.set_header("action_dispatch.request.query_parameters", { "topic_id" => "3" })
+
+        expect(key.request_allowed?(env)).to eq(false)
+      end
+
+      it "allows separate scope rows to match alternate route selectors" do
+        key.api_key_scopes = [
+          scope,
+          ApiKeyScope.new(
+            resource: "topics",
+            action: "read",
+            allowed_parameters: {
+              external_id: "external-3",
+            },
+          ),
+        ]
+        request.path_parameters = {
+          controller: "topics",
+          action: "show_by_external_id",
+          external_id: "external-3",
+        }
+
+        expect(key.request_allowed?(env)).to eq(true)
+      end
+
+      it "rejects a row when a configured path selector is missing" do
+        scope.allowed_parameters = { topic_id: "3", external_id: "external-3" }
+
+        expect(key.request_allowed?(env)).to eq(false)
+      end
+
       it "allow the request when the scope has an alias" do
         request.path_parameters = { controller: "topics", action: "show", id: "3" }
         expect(key.request_allowed?(env)).to eq(true)
