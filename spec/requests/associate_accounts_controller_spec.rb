@@ -30,6 +30,23 @@ RSpec.describe Users::AssociateAccountsController do
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
     end
 
+    it "requires a trusted session to associate an external account" do
+      user.update!(created_at: 8.minutes.ago)
+      sign_in(user)
+
+      post "/auth/google_oauth2?reconnect=true"
+      expect(response.status).to eq(302)
+
+      get "/auth/google_oauth2/callback.json"
+      expect(response.status).to eq(302)
+
+      uri = URI.parse(response.redirect_url)
+      expect { post "#{uri.path}.json" }.not_to change { UserAssociatedAccount.count }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("invalid_access")
+    end
+
     it "associates the external account" do
       sign_in(user)
 
