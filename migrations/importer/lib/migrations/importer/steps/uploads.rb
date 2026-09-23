@@ -60,7 +60,7 @@ module Migrations
         SQL
 
         def execute
-          unless files_db_attached?
+          if !files_db_attached?
             notice("No files database configured; skipping upload import")
             return
           end
