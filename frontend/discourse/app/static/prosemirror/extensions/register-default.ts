@@ -4,6 +4,7 @@ import {
   type RichEditorExtension,
 } from "discourse/lib/composer/rich-editor-extensions";
 import bulletList from "./bullet-list";
+import callout from "./callout";
 import code from "./code";
 import codeBlock from "./code-block";
 import emoji from "./emoji";
@@ -50,6 +51,7 @@ const defaultExtensions: RichEditorExtension[] = [
   heading,
   codeBlock,
   quote,
+  callout,
   hashtag,
   mention,
   strikethrough,

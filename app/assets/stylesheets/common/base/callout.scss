@@ -1,0 +1,42 @@
+.callout {
+  --callout-color: var(--tertiary);
+  margin-block: 1em;
+  padding: 0.75em;
+  background: var(--d-post-aside-background);
+  border-left: 5px solid var(--callout-color);
+
+  &[data-callout-type="tip"] {
+    --callout-color: var(--success);
+  }
+
+  &[data-callout-type="important"] {
+    // the palette has no purple, so derive one from the accent and danger colors
+    --callout-color: color-mix(in oklch, var(--tertiary), var(--danger));
+  }
+
+  &[data-callout-type="warning"] {
+    --callout-color: var(--highlight);
+  }
+
+  &[data-callout-type="caution"] {
+    --callout-color: var(--danger);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0 0 0.5em;
+    font-weight: bold;
+  }
+
+  &__content {
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+}

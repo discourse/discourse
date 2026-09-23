@@ -1,6 +1,7 @@
 import * as anchor from "./anchor";
 import * as bbcodeBlock from "./bbcode-block";
 import * as bbcodeInline from "./bbcode-inline";
+import * as callouts from "./callouts";
 import * as censored from "./censored";
 import * as code from "./code";
 import * as customTypographerReplacements from "./custom-typographer-replacements";
@@ -39,6 +40,7 @@ export default [
   feature("custom-typographer-replacements", customTypographerReplacements),
   feature("code", code),
   feature("censored", censored),
+  feature("callouts", callouts),
   feature("bbcode-inline", bbcodeInline),
   feature("bbcode-block", bbcodeBlock),
   feature("anchor", anchor),

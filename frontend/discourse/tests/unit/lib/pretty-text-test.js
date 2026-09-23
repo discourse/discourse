@@ -489,6 +489,153 @@ eviltrout</p>
     );
   });
 
+  test("Callouts", function (assert) {
+    const callout = (type, title, emoji, content, attrs = "") =>
+      `<div class="callout" data-callout-type="${type}"${attrs}>
+<p class="callout__title"><img src="/images/emoji/twitter/${emoji}.png?v=${v}" title=":${emoji}:" class="emoji" alt=":${emoji}:" loading="lazy" width="20" height="20"> ${title}</p>
+<div class="callout__content">
+${content}
+</div>
+</div>`;
+
+    assert.cooked(
+      "> [!NOTE]\n> Useful information.",
+      callout(
+        "note",
+        "Note",
+        "information_source",
+        "<p>Useful information.</p>"
+      ),
+      "converts a blockquote starting with a marker"
+    );
+
+    [
+      ["TIP", "tip", "Tip", "bulb"],
+      ["IMPORTANT", "important", "Important", "exclamation"],
+      ["WARNING", "warning", "Warning", "warning"],
+      ["CAUTION", "caution", "Caution", "stop_sign"],
+    ].forEach(([marker, type, title, emoji]) => {
+      assert.cooked(
+        `> [!${marker}]\n> Text`,
+        callout(type, title, emoji, "<p>Text</p>"),
+        `supports the ${type} type`
+      );
+    });
+
+    assert.cooked(
+      "> [!tip]\n> Text",
+      callout("tip", "Tip", "bulb", "<p>Text</p>"),
+      "matches the type case-insensitively"
+    );
+
+    assert.cooked(
+      "> [!NOTE]\n>\n> First\n>\n> - item",
+      callout(
+        "note",
+        "Note",
+        "information_source",
+        "<p>First</p>\n<ul>\n<li>item</li>\n</ul>"
+      ),
+      "supports block content after a blank line"
+    );
+
+    assert.cooked(
+      "> [!NOTE emoji=heart]\n> Text",
+      callout(
+        "note",
+        "Note",
+        "heart",
+        "<p>Text</p>",
+        ' data-callout-emoji="heart"'
+      ),
+      "supports a custom emoji"
+    );
+
+    assert.cooked(
+      "> [!NOTE emoji=:heart:]\n> Text",
+      callout(
+        "note",
+        "Note",
+        "heart",
+        "<p>Text</p>",
+        ' data-callout-emoji="heart"'
+      ),
+      "supports a custom emoji wrapped in colons"
+    );
+
+    assert.cooked(
+      "> [!NOTE emoji=not_an_emoji]\n> Text",
+      callout(
+        "note",
+        "Note",
+        "information_source",
+        "<p>Text</p>",
+        ' data-callout-emoji="not_an_emoji"'
+      ),
+      "falls back to the default emoji for an unknown emoji"
+    );
+
+    assert.cookedOptions(
+      "> [!NOTE emoji=heart]\n> Text",
+      { emojiDenyList: ["heart"] },
+      callout(
+        "note",
+        "Note",
+        "information_source",
+        "<p>Text</p>",
+        ' data-callout-emoji="heart"'
+      ),
+      "falls back to the default emoji for a denied emoji"
+    );
+
+    assert.cookedOptions(
+      "> [!NOTE]\n> Text",
+      { siteSettings: { enable_emoji: false } },
+      `<div class="callout" data-callout-type="note">
+<p class="callout__title">Note</p>
+<div class="callout__content">
+<p>Text</p>
+</div>
+</div>`,
+      "omits the emoji when emojis are disabled"
+    );
+
+    assert.cooked(
+      "> [!NOTE]\n> Outer\n>\n> > [!TIP]\n> > Inner",
+      callout(
+        "note",
+        "Note",
+        "information_source",
+        `<p>Outer</p>\n${callout("tip", "Tip", "bulb", "<p>Inner</p>")}`
+      ),
+      "supports nested callouts"
+    );
+
+    assert.cooked(
+      "> [!NOTE] Text",
+      "<blockquote>\n<p>[!NOTE] Text</p>\n</blockquote>",
+      "requires the marker to be alone on its line"
+    );
+
+    assert.cooked(
+      "> [!NOTE]",
+      "<blockquote>\n<p>[!NOTE]</p>\n</blockquote>",
+      "requires content after the marker"
+    );
+
+    assert.cooked(
+      "> [!DANGER]\n> Text",
+      "<blockquote>\n<p>[!DANGER]<br>\nText</p>\n</blockquote>",
+      "ignores unknown types"
+    );
+
+    assert.cooked(
+      "> [!NOTE color=red]\n> Text",
+      "<blockquote>\n<p>[!NOTE color=red]<br>\nText</p>\n</blockquote>",
+      "ignores unknown options"
+    );
+  });
+
   test("Mentions", function (assert) {
     assert.cooked(
       "Hello @sam",

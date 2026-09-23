@@ -3076,6 +3076,37 @@ HTML
     end
   end
 
+  describe "callouts" do
+    it "converts a blockquote starting with a callout marker" do
+      cooked = PrettyText.cook("> [!NOTE]\n> Useful information.")
+
+      html = <<~HTML
+        <div class="callout" data-callout-type="note">
+        <p class="callout__title"><img src="/images/emoji/twitter/information_source.png?v=#{Emoji::EMOJI_VERSION}" title=":information_source:" class="emoji" alt=":information_source:" loading="lazy" width="20" height="20"> Note</p>
+        <div class="callout__content">
+        <p>Useful information.</p>
+        </div>
+        </div>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "supports a custom emoji" do
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload))
+      Emoji.clear_cache
+
+      cooked = PrettyText.cook("> [!TIP emoji=trout]\n> Useful advice.")
+
+      expect(cooked).to include('data-callout-emoji="trout"')
+      expect(cooked).to match(%r{<p class="callout__title"><img src[^>]+trout[^>]+> Tip</p>})
+    end
+
+    it "keeps a regular blockquote when the marker has no content" do
+      expect(PrettyText.cook("> [!NOTE]")).to eq("<blockquote>\n<p>[!NOTE]</p>\n</blockquote>")
+    end
+  end
+
   it "adds anchor links to headings" do
     cooked = PrettyText.cook("# Hello world")
 

@@ -437,6 +437,20 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(await toMarkdown(html), output);
   });
 
+  test("converts callouts", async function (assert) {
+    const html = `<div class="callout" data-callout-type="tip" data-callout-emoji="heart">
+<p class="callout__title"><img src="/images/emoji/twitter/heart.png?v=${v}" title=":heart:" class="emoji" alt=":heart:"> Tip</p>
+<div class="callout__content">
+<p>Lorem ipsum</p>
+</div>
+</div>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "> [!TIP emoji=heart]\n> Lorem ipsum"
+    );
+  });
+
   test("converts ol list tag", async function (assert) {
     const html = `Testing
     <ol>

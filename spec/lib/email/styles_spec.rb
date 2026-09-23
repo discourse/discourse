@@ -252,6 +252,16 @@ RSpec.describe Email::Styles do
       expect(fragment.to_s.squish).to match(%r{^<blockquote.+</blockquote>$})
     end
 
+    it "styles callouts" do
+      fragment =
+        html_fragment(
+          '<div class="callout" data-callout-type="note"><p class="callout__title">Note</p><div class="callout__content"><p>lorem ipsum</p></div></div>',
+        )
+
+      expect(fragment.at("div.callout")["style"]).to include("border-left:5px solid #e9e9e9")
+      expect(fragment.at("p.callout__title")["style"]).to include("font-weight:bold")
+    end
+
     it "styles user onebox avatar and layout for email" do
       user_onebox_html = <<~HTML
         <aside class="onebox">

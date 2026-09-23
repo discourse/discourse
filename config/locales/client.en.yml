@@ -5091,6 +5091,12 @@ en:
     post:
       accessible_heading: "post by %{username} %{date}"
       heading_anchor: "Heading link"
+      callouts:
+        note: "Note"
+        tip: "Tip"
+        important: "Important"
+        warning: "Warning"
+        caution: "Caution"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"

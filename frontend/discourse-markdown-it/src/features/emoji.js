@@ -115,7 +115,7 @@ function getEmojiName(content, pos, state, inlineEmoji) {
 }
 
 // straight forward :smile: to emoji image
-function getEmojiTokenByName(name, state) {
+export function getEmojiTokenByName(name, state) {
   let info;
   if ((info = imageFor(name, state.md.options.discourse))) {
     let token = new state.Token("emoji", "img", 0);

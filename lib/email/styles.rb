@@ -133,6 +133,12 @@ module Email
         "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin-left: 0; padding: 12px;",
       )
 
+      style(
+        "div.callout",
+        "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin-bottom: 10px; padding: 12px;",
+      )
+      style("div.callout p.callout__title", "margin-top: 0; font-weight: bold;")
+
       # Oneboxes
       style(
         "aside.onebox",
