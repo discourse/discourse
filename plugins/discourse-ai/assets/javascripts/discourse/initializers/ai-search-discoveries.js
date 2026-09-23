@@ -231,9 +231,7 @@ export default apiInitializer((api) => {
         !event.shiftKey &&
         query &&
         (searchTerm.args.typeFilter !== DEFAULT_TYPE_FILTER ||
-          (discobotDiscoveries.lastQuery === query &&
-            !discobotDiscoveries.errorMessage &&
-            !discobotDiscoveries.discoveryTimedOut))
+          discobotDiscoveries.lastQuery === query)
       ) {
         searchTerm.args.fullSearch();
         searchTerm.args.closeSearchMenu();
