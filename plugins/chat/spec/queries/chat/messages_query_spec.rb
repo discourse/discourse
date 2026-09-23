@@ -79,21 +79,21 @@ RSpec.describe Chat::MessagesQuery do
       )
     end
 
-    it "includes messages sharing the target creation time" do
+    it "returns a message created at the same time as the target" do
       same_time_message =
         Fabricate(:chat_message, chat_channel: channel, created_at: target_message.created_at)
 
       expect(query[:future_messages]).to eq([same_time_message, message_3])
     end
 
-    it "paginates to the past by creation time when a later id was created earlier" do
-      earlier_message = Fabricate(:chat_message, chat_channel: channel, created_at: 1.day.ago)
+    it "returns a message inserted after the target but dated before it when loading the past" do
+      backdated_message = Fabricate(:chat_message, chat_channel: channel, created_at: 1.day.ago)
       options[:direction] = "past"
 
-      expect(query[:messages]).to eq([message_1, earlier_message])
+      expect(query[:messages]).to eq([message_1, backdated_message])
     end
 
-    it "paginates to the future by creation time when an earlier id was created later" do
+    it "returns a message inserted before the target but dated after it when loading the future" do
       message_1.update!(created_at: 1.hour.ago)
       options[:direction] = "future"
 
