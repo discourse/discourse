@@ -7,7 +7,7 @@ module Migrations
         @intermediate_db = Database.connect(config[:intermediate_db])
         @discourse_db = DiscourseDB.new
         @shared_data = SharedData.new(@discourse_db)
-        @config = config[:config]
+        @config = config.except(:intermediate_db, :mappings_db, :files_db)
         @options = options
 
         attach_mappings_db(config[:mappings_db], options[:reset])

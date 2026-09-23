@@ -2,6 +2,5 @@ intermediate_db: "/shared/import/intermediate.db"
 mappings_db: "/shared/import/mappings.db"
 files_db: "/shared/import/files.db"
 
-config:
-  # if false, allows reserved usernames only for admins
-  always_allow_reserved_usernames: true
+# if false, allows reserved usernames only for admins
+always_allow_reserved_usernames: true
