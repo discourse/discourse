@@ -34,13 +34,13 @@ module Migrations
           end
 
           def produce(emit_work:, emit_result:)
-            # `upload_id` is the migration environment's `uploads.id`; `source_id`
-            # is the original id from `upload_results`, which is what the
+            # `upload_id` is the migration environment's `uploads.id`; `original_id`
+            # is the id from `upload_results`, which is what the
             # post/avatar sets below are keyed on.
             sql = <<~SQL
               SELECT u.id AS upload_id,
                      u.sha1 AS upload_sha1,
-                     r.id AS source_id,
+                     r.id AS original_id,
                      r.markdown,
                      r.file_type
                 FROM upload_results r
@@ -54,10 +54,10 @@ module Migrations
               if @optimized_upload_ids.include?(upload_id) ||
                    row[:file_type] != UploadFileType::IMAGE
                 emit_result.call(skipped_status(upload_id))
-              elsif @post_upload_ids.include?(row[:source_id])
+              elsif @post_upload_ids.include?(row[:original_id])
                 row[:type] = "post"
                 emit_work.call(row)
-              elsif @avatar_upload_ids.include?(row[:source_id])
+              elsif @avatar_upload_ids.include?(row[:original_id])
                 row[:type] = "avatar"
                 emit_work.call(row)
               else
