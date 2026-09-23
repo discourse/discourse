@@ -245,21 +245,37 @@ class Stylesheet::Manager::Builder
   end
 
   def default_digest
-    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.fs_asset_cachebuster}-#{plugins_digest}-#{current_hostname}"
+    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.fs_asset_cachebuster}-#{plugins_digest}-#{current_hostname}-#{GlobalSetting.cdn_url}-#{default_palette_digest}-#{font_targets_digest}"
+  end
+
+  def default_palette_digest
+    scheme = Theme.find_default&.color_scheme
+    "#{scheme&.id}-#{scheme&.version}"
+  end
+
+  def font_targets_digest
+    if Stylesheet::Importer::FONT_TARGETS.include?(@target.to_s.delete_suffix("_rtl"))
+      fonts_digest
+    else
+      ""
+    end
+  end
+
+  def fonts_digest
+    "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
   end
 
   def color_scheme_digest
     cs = @color_scheme || theme&.color_scheme
 
-    fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
-
     digest_string = "#{current_hostname}-"
     if cs
       theme_color_defs = resolve_baked_field(:common, :color_definitions)
       digest_string +=
-        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
+        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts_digest}"
     else
-      digest_string += "defaults-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
+      digest_string += "defaults-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts_digest}"
+      digest_string += "-#{default_palette_digest}" if theme&.component
 
       if cdn_url = GlobalSetting.cdn_url
         digest_string += "-#{cdn_url}"
