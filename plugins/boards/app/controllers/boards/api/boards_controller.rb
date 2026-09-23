@@ -106,7 +106,7 @@ module Boards
 
         assignments_by_topic = preload_all_assignments(cards, visible_topic_ids)
         topic_users_by_topic = preload_topic_users(cards, visible_topic_ids)
-        tags_by_id = preload_floater_card_tags(cards)
+        tags_by_id = preload_visible_card_tags(cards, visible_topic_ids)
 
         tag_name_map = build_tag_name_map(@board)
         board_columns = @board.columns.to_a
@@ -384,10 +384,20 @@ module Boards
         TopicUser.lookup_for(current_user, topics)
       end
 
-      def preload_floater_card_tags(cards)
+      def preload_visible_card_tags(cards, visible_topic_ids)
         return {} unless SiteSetting.tagging_enabled
 
-        tag_ids = cards.reject(&:topic?).flat_map(&:tag_ids).uniq
+        tag_ids =
+          cards
+            .flat_map do |card|
+              if card.topic?
+                visible_topic_ids.include?(card.topic_id) ? card.topic&.tags&.map(&:id) : []
+              else
+                card.tag_ids
+              end
+            end
+            .compact
+            .uniq
         return {} if tag_ids.empty?
 
         DiscourseTagging.filter_visible(Tag.where(id: tag_ids), guardian).index_by(&:id)

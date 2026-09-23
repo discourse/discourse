@@ -26,7 +26,10 @@ module Boards
     end
 
     def tags
-      object.tags.map(&:name)
+      tags_by_id = @options[:tags_by_id]
+      return object.tags.filter_map { |tag| tags_by_id[tag.id]&.name } unless tags_by_id.nil?
+
+      DiscourseTagging.filter_visible(object.tags, scope).pluck(:name)
     end
 
     def highest_post_number

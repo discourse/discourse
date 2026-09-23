@@ -26,8 +26,12 @@ module Boards
       publish_card_event!(board, "card_moved", card_payload, client_id:)
     end
 
-    def self.publish_card_deleted!(board, card_id, client_id:)
-      publish!(board, { type: "card_deleted", client_id: client_id, card_id: card_id })
+    def self.publish_card_deleted!(board, card_id, topic:, client_id:)
+      if topic
+        publish_board_updated!(board, client_id:)
+      else
+        publish!(board, { type: "card_deleted", client_id: client_id, card_id: card_id })
+      end
     end
 
     def self.publish_column_cleared!(board, column_id, client_id:)
@@ -61,12 +65,11 @@ module Boards
     end
 
     def self.publish_card_event!(board, type, card_payload, client_id:)
-      # Strip topic data from broadcast payloads to prevent leaking
-      # private topic details to board readers who lack category access.
-      # Clients merge with existing state or refetch through the
-      # authorized show endpoint.
-      safe_payload = card_payload.except("topic", :topic)
-      publish!(board, { type: type, client_id: client_id, card: safe_payload })
+      if card_payload[:card_type] == "topic" || card_payload["card_type"] == "topic"
+        publish_board_updated!(board, client_id:)
+      else
+        publish!(board, { type: type, client_id: client_id, card: card_payload })
+      end
     end
     private_class_method :publish_card_event!
 

@@ -155,6 +155,42 @@ RSpec.describe Boards::Api::CardsController do
       expect(messages.first.data).to eq(reload_topic: true, client_id: "test-client")
     end
 
+    it "publishes a metadata-free update for a restricted topic card" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+
+      sign_in(admin)
+      messages =
+        MessageBus.track_publish("/boards/#{board.id}") do
+          post "/boards/api/boards/#{board.id}/cards.json",
+               params: {
+                 card: {
+                   column_id: col_todo.id,
+                   topic_id: private_topic.id,
+                 },
+               }
+        end
+
+      expect(response.status).to eq(201)
+      expect(response.parsed_body.dig("card", "topic_id")).to eq(private_topic.id)
+      expect(messages).to contain_exactly(
+        have_attributes(
+          data: {
+            type: "board_updated",
+            client_id: nil,
+          },
+          group_ids: contain_exactly(write_group.id, read_group.id),
+        ),
+      )
+
+      sign_in(reader)
+      get "/boards/api/boards/#{board.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("columns", 0, "cards")).to eq([])
+      expect(response.body).not_to include(private_topic.title)
+    end
+
     it "allows topic cards in different columns when another insert races" do
       inserted_competitor = false
       allow(Boards::CardOrdering).to receive(
@@ -1026,7 +1062,7 @@ RSpec.describe Boards::Api::CardsController do
       expect(body["card"]["topic_id"]).to eq(topic.id)
     end
 
-    it "publishes card_deleted + card_created events for adoption" do
+    it "publishes card_deleted + board_updated events for adoption" do
       existing_topic_card =
         board.cards.create!(
           card_type: :topic,
@@ -1059,7 +1095,7 @@ RSpec.describe Boards::Api::CardsController do
 
       expect(response.status).to eq(200)
       types = messages.map { |m| m.data[:type] }
-      expect(types).to contain_exactly("card_deleted", "card_created")
+      expect(types).to contain_exactly("card_deleted", "board_updated")
     end
 
     it "rejects promoting a floater to a topic the user cannot see" do
@@ -1720,7 +1756,7 @@ RSpec.describe Boards::Api::CardsController do
       sign_in(writer)
 
       messages =
-        MessageBus.track_publish("/topic/#{topic.id}") do
+        MessageBus.track_publish do
           expect do
             delete "/boards/api/boards/#{board.id}/cards/#{card.id}.json",
                    params: {
@@ -1730,8 +1766,23 @@ RSpec.describe Boards::Api::CardsController do
         end
 
       expect(response.status).to eq(204)
-      expect(messages.size).to eq(1)
-      expect(messages.first.data).to eq(reload_topic: true, client_id: "test-client")
+      expect(messages).to contain_exactly(
+        have_attributes(
+          channel: "/boards/#{board.id}",
+          data: {
+            type: "board_updated",
+            client_id: "test-client",
+          },
+          group_ids: contain_exactly(write_group.id, read_group.id),
+        ),
+        have_attributes(
+          channel: "/topic/#{topic.id}",
+          data: {
+            reload_topic: true,
+            client_id: "test-client",
+          },
+        ),
+      )
     end
 
     it "returns 404 when deleting a topic card whose topic is hidden" do
