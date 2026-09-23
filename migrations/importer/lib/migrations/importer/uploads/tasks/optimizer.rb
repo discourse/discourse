@@ -30,37 +30,49 @@ module Migrations
             @system_user = Discourse.system_user
             @category_id = Category.last.id
 
-            load_tracking_sets
+            files_db.execute("ATTACH DATABASE ? AS intermediate", intermediate_db.path)
+            @max_count = files_db.query_value(<<~SQL, UploadFileType::IMAGE)
+                SELECT COUNT(*)
+                  FROM upload_results r
+                       JOIN uploads u ON u.id = r.upload_id
+                 WHERE r.file_type = ?
+              SQL
           end
 
           def produce(emit_work:, emit_result:)
-            # `upload_id` is the migration environment's `uploads.id`; `original_id`
-            # is the id from `upload_results`, which is what the
-            # post/avatar sets below are keyed on.
             sql = <<~SQL
               SELECT u.id AS upload_id,
                      u.sha1 AS upload_sha1,
                      r.id AS original_id,
-                     r.markdown
+                     r.markdown,
+                     CASE
+                       WHEN EXISTS (
+                         SELECT 1
+                           FROM optimized_images oi
+                          WHERE oi.upload_id = u.id
+                       ) THEN NULL
+                       WHEN EXISTS (
+                         SELECT 1
+                           FROM intermediate.embed_uploads eu
+                          WHERE eu.upload_id = r.id
+                       ) THEN 'post'
+                       WHEN EXISTS (
+                         SELECT 1
+                           FROM intermediate.users iu
+                          WHERE iu.uploaded_avatar_id = r.id
+                       ) THEN 'avatar'
+                     END AS type
                 FROM upload_results r
                      JOIN uploads u ON u.id = r.upload_id
-               WHERE r.file_type = #{UploadFileType::IMAGE}
-               ORDER BY u.id
+               WHERE r.file_type = ?
+               ORDER BY r.upload_id
             SQL
 
-            files_db.query(sql) do |row|
-              upload_id = row[:upload_id]
-
-              if @optimized_upload_ids.include?(upload_id)
-                emit_result.call(skip_status(upload_id))
-              elsif @post_upload_ids.include?(row[:original_id])
-                row[:type] = "post"
-                emit_work.call(row)
-              elsif @avatar_upload_ids.include?(row[:original_id])
-                row[:type] = "avatar"
+            files_db.query(sql, UploadFileType::IMAGE) do |row|
+              if row[:type]
                 emit_work.call(row)
               else
-                emit_result.call(skip_status(upload_id))
+                emit_result.call(skip_status(row[:upload_id]))
               end
             end
           end
@@ -97,42 +109,6 @@ module Migrations
           end
 
           private
-
-          def load_tracking_sets
-            [
-              Thread.new { @optimized_upload_ids = load_optimized_upload_ids },
-              Thread.new { @post_upload_ids = load_post_upload_ids },
-              Thread.new { @avatar_upload_ids = load_avatar_upload_ids },
-              Thread.new { @max_count = load_max_count },
-            ].each(&:join)
-          end
-
-          def load_optimized_upload_ids
-            load_existing_ids(files_db, "SELECT DISTINCT upload_id AS id FROM optimized_images")
-          end
-
-          def load_post_upload_ids
-            load_existing_ids(
-              intermediate_db,
-              "SELECT DISTINCT upload_id AS id FROM embed_uploads WHERE upload_id IS NOT NULL",
-            )
-          end
-
-          def load_avatar_upload_ids
-            load_existing_ids(
-              intermediate_db,
-              "SELECT uploaded_avatar_id AS id FROM users WHERE uploaded_avatar_id IS NOT NULL",
-            )
-          end
-
-          def load_max_count
-            files_db.query_value(<<~SQL)
-              SELECT COUNT(*)
-                FROM upload_results r
-                     JOIN uploads u ON u.id = r.upload_id
-               WHERE r.file_type = #{UploadFileType::IMAGE}
-            SQL
-          end
 
           def attempt_optimization(row, post)
             upload = Upload.find_by(sha1: row[:upload_sha1])

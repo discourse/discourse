@@ -232,6 +232,7 @@ CREATE TABLE embed_uploads
 );
 
 CREATE INDEX idx_embed_uploads_owner_type_owner_id ON embed_uploads (owner_type, owner_id);
+CREATE INDEX idx_embed_uploads_upload_id ON embed_uploads (upload_id) WHERE upload_id IS NOT NULL;
 
 CREATE TABLE group_users
 (
@@ -659,4 +660,5 @@ CREATE TABLE users
     views                     INTEGER
 );
 
+CREATE INDEX idx_users_uploaded_avatar_id ON users (uploaded_avatar_id) WHERE uploaded_avatar_id IS NOT NULL;
 
