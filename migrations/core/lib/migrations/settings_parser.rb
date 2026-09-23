@@ -10,10 +10,21 @@ module Migrations
 
     REQUIRED_KEYS = %i[intermediate_db root_paths]
 
-    # Keys that used to live in the settings file and now come from CLI flags
-    # only. A leftover key here is almost certainly a stale config, so we point
-    # the user at the flag instead of silently ignoring it.
-    REMOVED_KEYS = { fix_missing: "--fix-missing", create_optimized_images: "--optimize" }.freeze
+    # Keys that are not supported in the settings file. Each one fails the
+    # validation with a message that says what to do, so a setting that would
+    # have no effect is not accepted without a word.
+    REMOVED_KEYS = {
+      fix_missing: "has moved to the --fix-missing flag",
+      create_optimized_images: "has moved to the --optimize flag",
+      thread_count_factor: "is not used anymore, the number of workers now adjusts itself",
+    }.freeze
+
+    REMOVED_SITE_SETTINGS = {
+      authorized_extensions: "is not used anymore, all extensions are allowed",
+      max_attachment_size_kb: "is not used anymore, the limit is always 100 MB",
+      max_image_size_kb: "is not used anymore, the limit is always 100 MB",
+      max_image_megapixels: "is not used anymore, the limit is always 150 megapixels",
+    }.freeze
 
     def initialize(options)
       @options = options
@@ -55,12 +66,20 @@ module Migrations
     end
 
     def validate_removed_keys
-      REMOVED_KEYS.each do |key, flag|
-        next unless @options.key?(key)
-
-        raise ValidationError,
-              "`#{key}` has moved to the #{flag} flag; remove it from the settings file."
+      REMOVED_KEYS.each do |key, reason|
+        raise_removed_key("`#{key}`", reason) if @options.key?(key)
       end
+
+      site_settings = @options[:site_settings]
+      return unless site_settings.is_a?(Hash)
+
+      REMOVED_SITE_SETTINGS.each do |key, reason|
+        raise_removed_key("`site_settings.#{key}`", reason) if site_settings.key?(key)
+      end
+    end
+
+    def raise_removed_key(name, reason)
+      raise ValidationError, "#{name} #{reason}; remove it from the settings file."
     end
 
     def validate_paths
@@ -82,9 +101,9 @@ module Migrations
       end
     end
 
-    # Both files live next to the IntermediateDB by default; either can still be
-    # set explicitly in the settings file. Deriving them here means the rest of
-    # the run reads final values and never has to fall back to a default.
+    # Both paths can be set in the settings file. Otherwise they are derived from
+    # the IntermediateDB path here, so the rest of the run only reads final
+    # values.
     def apply_defaults
       intermediate_db = @options[:intermediate_db]
 

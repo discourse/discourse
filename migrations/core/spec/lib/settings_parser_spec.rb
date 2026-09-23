@@ -39,6 +39,35 @@ RSpec.describe Migrations::SettingsParser do
         "`create_optimized_images` has moved to the --optimize flag; remove it from the settings file.",
       )
     end
+
+    it "rejects thread_count_factor" do
+      expect { described_class.new(valid_options(thread_count_factor: 1.5)) }.to raise_error(
+        described_class::ValidationError,
+        /\A`thread_count_factor` is not used anymore, the number of workers now adjusts itself/,
+      )
+    end
+
+    %i[
+      authorized_extensions
+      max_attachment_size_kb
+      max_image_size_kb
+      max_image_megapixels
+    ].each do |key|
+      it "rejects the #{key} site setting" do
+        options = valid_options(site_settings: { :secure_uploads => false, key => 1 })
+
+        expect { described_class.new(options) }.to raise_error(
+          described_class::ValidationError,
+          /\A`site_settings.#{key}` is not used anymore, .+; remove it from the settings file\.\z/,
+        )
+      end
+    end
+
+    it "accepts the site settings that are still used" do
+      options = valid_options(site_settings: { secure_uploads: false, enable_s3_uploads: true })
+
+      expect { described_class.new(options) }.not_to raise_error
+    end
   end
 
   describe "derived paths" do

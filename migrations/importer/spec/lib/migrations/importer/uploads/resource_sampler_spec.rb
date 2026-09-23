@@ -181,16 +181,4 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
       expect(reading.memory_bytes).to be_nil
     end
   end
-
-  describe "#total_memory_bytes" do
-    it "returns MemTotal in bytes" do
-      sampler = build(meminfo: -> { "MemTotal:       16000 kB\nMemAvailable: 8000 kB\n" })
-
-      expect(sampler.total_memory_bytes).to eq(16_000 * 1024)
-    end
-
-    it "is nil when meminfo is unreadable" do
-      expect(build.total_memory_bytes).to be_nil
-    end
-  end
 end

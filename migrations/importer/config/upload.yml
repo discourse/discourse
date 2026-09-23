@@ -13,13 +13,13 @@ root_paths:
 
 # Where files fetched from URLs are cached. Defaults to a `downloads` directory
 # next to the intermediate_db above.
-#download_cache_path: "/shared/import/upload-cache"
+#download_cache_path: "/shared/import/downloads"
 
-# Sometimes a file can be found at one of several locations. List path
-# transformations to try; the first that resolves to an existing file wins.
+# Rewrites for a source file's path, tried when the path as recorded is not
+# found under a root path. A list of [from, to] pairs; the first one that
+# finds an existing file wins.
 #path_replacements:
-#  - ["/foo/", "/bar/"]
-#  - ["/foo/", "/bar/baz/"]
+#  - ["/old/prefix/", "/new/prefix/"]
 
 # Delete uploads from files.db that are not found in the IntermediateDB.
 delete_surplus_uploads: false
