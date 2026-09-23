@@ -41,18 +41,17 @@ module Migrations
               SELECT u.id AS upload_id,
                      u.sha1 AS upload_sha1,
                      r.id AS original_id,
-                     r.markdown,
-                     r.file_type
+                     r.markdown
                 FROM upload_results r
                      JOIN uploads u ON u.id = r.upload_id
+               WHERE r.file_type = #{UploadFileType::IMAGE}
                ORDER BY u.id
             SQL
 
             files_db.query(sql) do |row|
               upload_id = row[:upload_id]
 
-              if @optimized_upload_ids.include?(upload_id) ||
-                   row[:file_type] != UploadFileType::IMAGE
+              if @optimized_upload_ids.include?(upload_id)
                 emit_result.call(skipped_status(upload_id))
               elsif @post_upload_ids.include?(row[:original_id])
                 row[:type] = "post"
@@ -130,7 +129,12 @@ module Migrations
           end
 
           def load_max_count
-            files_db.query_value("SELECT COUNT(*) FROM upload_results WHERE upload_id IS NOT NULL")
+            files_db.query_value(<<~SQL)
+              SELECT COUNT(*)
+                FROM upload_results r
+                     JOIN uploads u ON u.id = r.upload_id
+               WHERE r.file_type = #{UploadFileType::IMAGE}
+            SQL
           end
 
           def attempt_optimization(row, post)

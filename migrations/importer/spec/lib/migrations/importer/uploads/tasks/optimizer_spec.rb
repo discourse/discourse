@@ -34,7 +34,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
   # `before_run` to the work emitted by `produce` — against real, migrated
   # databases so queries that drift from the schema fail here.
   describe "enqueueing" do
-    it "enqueues post images and avatars and skips the rest" do
+    it "enqueues referenced images and emits skipped results for the remaining images" do
       insert_uploaded_image(source_id: "s-post", upload_id: 1)
       insert_uploaded_image(source_id: "s-avatar", upload_id: 2)
       insert_uploaded_image(source_id: "s-unreferenced", upload_id: 3)
@@ -55,12 +55,12 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
 
       work, skipped = run_enqueue
 
-      expect(work.map { |row| row.values_at(:source_id, :type) }).to contain_exactly(
+      expect(work.map { |row| row.values_at(:original_id, :type) }).to contain_exactly(
         %w[s-post post],
         %w[s-avatar avatar],
       )
-      expect(skipped.map { |result| result[:id] }).to contain_exactly(3, 4, 5)
-      expect(optimizer.max_count).to eq(5)
+      expect(skipped.map { |result| result[:id] }).to contain_exactly(3, 4)
+      expect(optimizer.max_count).to eq(4)
     end
 
     it "enqueues nothing when no post or avatar references an upload" do
