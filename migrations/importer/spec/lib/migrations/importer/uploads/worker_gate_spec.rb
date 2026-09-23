@@ -27,18 +27,6 @@ RSpec.describe Migrations::Importer::Uploads::WorkerGate do
     worker
   end
 
-  # Bounded spin for state another thread is about to reach; fails instead of
-  # hanging if it never does.
-  def wait_until(timeout: 5)
-    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
-    until yield
-      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
-        raise "condition not reached within #{timeout}s"
-      end
-      Thread.pass
-    end
-  end
-
   describe "clamping" do
     it "keeps the target within [min, max]" do
       gate = described_class.new(target: 10, max: 4)

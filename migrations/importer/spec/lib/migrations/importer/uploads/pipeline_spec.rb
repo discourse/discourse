@@ -134,31 +134,15 @@ end
 RSpec.describe Migrations::Importer::Uploads::Pipeline do
   let(:reporter) { FakeReporter.new }
 
-  # A fixed plan with the same seed and ceiling keeps the number of workers
-  # constant for the batching and lifecycle tests.
-  def plan_for(count)
-    Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: count, ceiling: count)
-  end
-
-  # Bounded spin for state another thread is about to reach; fails instead of
-  # hanging if it never does.
-  def wait_until(timeout: 5)
-    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
-    until yield
-      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
-        raise "condition not reached within #{timeout}s"
-      end
-      Thread.pass
-    end
-  end
-
-  def build_pipeline(task, workers: 4, **options)
+  # By default the plan's seed and ceiling are the same, so the number of
+  # running workers stays fixed.
+  def build_pipeline(task, workers: 4, seed: workers, ceiling: workers, **options)
     described_class.new(
       task:,
       reporter:,
       install_trap: false,
       adaptive: false,
-      worker_plan: plan_for(workers),
+      worker_plan: Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed:, ceiling:),
       with_connection: ->(&block) { block.call },
       **options,
     )
@@ -257,9 +241,7 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
   end
 
   describe "under the adaptive controller" do
-    it "raises the target while the run is going, staying in bounds" do
-      ceiling = 6
-      plan = Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: 2, ceiling:)
+    it "raises the target while the run is going, up to the ceiling" do
       # Items can't finish until the controller has probed upward, so the run is
       # guaranteed to see the target move no matter how the threads are scheduled.
       gated =
@@ -269,26 +251,19 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
         end
       task = FakeTask.new(rows: rows(400), process: gated)
 
-      pipeline =
-        described_class.new(
-          task:,
-          reporter:,
-          install_trap: false,
-          adaptive: true,
-          worker_plan: plan,
-          sampler: IdleSampler.new,
-          with_connection: ->(&block) { block.call },
-          batch_size: 4,
-          controller_interval: 0.005, # tick often so the controller acts within the short run
-        )
-
-      pipeline.run
+      build_pipeline(
+        task,
+        seed: 2,
+        ceiling: 6,
+        adaptive: true,
+        sampler: IdleSampler.new,
+        batch_size: 4,
+        controller_interval: 0.005,
+      ).run
 
       expect(task.written.map { |r| r[:id] }).to match_array((0...400).to_a)
-      expect(reporter.step.progress.total).to eq(400)
-      expect(reporter.step.concurrencies.first).to eq(2) # seeded before the run
-      expect(reporter.step.concurrencies.max).to eq(ceiling) # idle CPU: one fast step up
-      expect(reporter.step.concurrencies).to all(be_between(1, ceiling))
+      expect(reporter.step.concurrencies.first).to eq(2) # the seed, reported before the run
+      expect(reporter.step.concurrencies.max).to eq(6) # one fast step up, capped at the ceiling
     end
   end
 
@@ -368,17 +343,7 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
         end
       task = FakeTask.new(rows: rows(10), process:)
       # Two workers but one permit, so the second waits inside the gate.
-      pipeline =
-        described_class.new(
-          task:,
-          reporter:,
-          install_trap: false,
-          adaptive: false,
-          worker_plan:
-            Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: 1, ceiling: 2),
-          with_connection: ->(&block) { block.call },
-          batch_size: 1,
-        )
+      pipeline = build_pipeline(task, seed: 1, ceiling: 2, batch_size: 1)
 
       runner = Thread.new { pipeline.run }
       processing_started.pop

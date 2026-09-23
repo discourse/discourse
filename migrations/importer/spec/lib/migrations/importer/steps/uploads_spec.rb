@@ -48,28 +48,23 @@ RSpec.describe "Migrations::Importer::Steps::Uploads::InlineImport", :rails do
     expect { inline_import.run }.to raise_error(/root_paths/)
   end
 
-  it "runs without root_paths when every pending upload has a url or data" do
-    pending_rows({ id: "a", filename: "a.png", url: "https://example.com/a.png" })
+  context "when every pending upload has a url or data" do
+    before do
+      pending_rows({ id: "a", filename: "a.png", url: "https://example.com/a.png" })
+      inline_import.run
+    end
 
-    inline_import.run
+    it "runs the pipeline without root_paths" do
+      expect(pipeline).to have_received(:run)
+    end
 
-    expect(pipeline).to have_received(:run)
-  end
+    it "configures the database pool before it builds the pipeline" do
+      expect(uploads::DatabasePool).to have_received(:configure!).ordered
+      expect(uploads::Pipeline).to have_received(:new).ordered
+    end
 
-  it "configures the database pool before it builds the pipeline" do
-    pending_rows({ id: "a", filename: "a.png", url: "https://example.com/a.png" })
-
-    inline_import.run
-
-    expect(uploads::DatabasePool).to have_received(:configure!).ordered
-    expect(uploads::Pipeline).to have_received(:new).ordered
-  end
-
-  it "creates the download cache directory" do
-    pending_rows({ id: "a", filename: "a.png", url: "https://example.com/a.png" })
-
-    inline_import.run
-
-    expect(File.directory?(@cache_path)).to be(true)
+    it "creates the download cache directory" do
+      expect(File.directory?(@cache_path)).to be(true)
+    end
   end
 end

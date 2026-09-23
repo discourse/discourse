@@ -27,6 +27,10 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
   # Host-wide /proc/stat that always reads as fully idle, to show that the
   # cgroup reading is used instead.
   let(:idle_proc_stat) { sequence("cpu  0 0 0 100 0\n", "cpu  0 0 0 200 0\n") }
+  # busy 200 -> 300, total 1000 -> 1200: 50% busy
+  let(:half_busy_proc_stat) do
+    sequence("cpu  100 0 100 800 0\nintr 100\n", "cpu  150 0 150 900 0\nintr 900\n")
+  end
 
   describe "CPU under a cgroup v2 quota" do
     it "measures the cgroup's usage against its quota, not the whole host" do
@@ -46,7 +50,7 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
     it "falls back to /proc/stat when the cgroup has no quota" do
       sampler =
         build(
-          proc_stat: sequence("cpu  100 0 100 800 0\n", "cpu  150 0 150 900 0\n"),
+          proc_stat: half_busy_proc_stat,
           cgroup_cpu_max: -> { "max 100000\n" },
           cgroup_cpu_stat: sequence("usage_usec 0\n", "usage_usec 9000000\n"),
           clock: sequence(0.0, 1.0),
@@ -56,11 +60,7 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
     end
 
     it "falls back to /proc/stat when cpu.stat is unreadable" do
-      sampler =
-        build(
-          proc_stat: sequence("cpu  100 0 100 800 0\n", "cpu  150 0 150 900 0\n"),
-          cgroup_cpu_max: -> { "200000 100000\n" },
-        )
+      sampler = build(proc_stat: half_busy_proc_stat, cgroup_cpu_max: -> { "200000 100000\n" })
 
       expect(sampler.sample.cpu_busy).to be_within(0.001).of(0.5)
     end
@@ -79,18 +79,6 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
   end
 
   describe "CPU from /proc/stat" do
-    it "reports the busy fraction over the interval since the last sample" do
-      # baseline busy=200 total=1000; next busy=300 total=1200 => 100/200 = 0.5
-      proc_stat =
-        sequence(
-          "cpu  100 0 100 800 0 0 0 0 0 0\nintr 1\n",
-          "cpu  150 0 150 900 0 0 0 0 0 0\nintr 1\n",
-        )
-      sampler = build(proc_stat:)
-
-      expect(sampler.sample.cpu_busy).to be_within(0.001).of(0.5)
-    end
-
     it "counts iowait as idle, not busy" do
       # Only iowait moves (400 jiffies), everything else flat => 0% busy.
       proc_stat = sequence("cpu  100 0 100 800 0 0 0 0 0 0\n", "cpu  100 0 100 800 400 0 0 0 0 0\n")
@@ -106,7 +94,7 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
       # => (3-1) / 4 = 0.5
       times = sequence(Process::Tms.new(1.0, 0.0, 0.0, 0.0), Process::Tms.new(2.0, 0.0, 1.0, 0.0))
       clock = sequence(0.0, 1.0)
-      sampler = build(usable_cpus: 4, proc_stat: -> { nil }, process_times: times, clock:)
+      sampler = build(usable_cpus: 4, process_times: times, clock:)
 
       expect(sampler.sample.cpu_busy).to be_within(0.001).of(0.5)
     end
@@ -156,12 +144,7 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
     end
 
     it "uses memory.current as is when memory.stat is unreadable" do
-      sampler =
-        build(
-          cgroup_max: -> { "2000000000\n" },
-          cgroup_current: -> { "1900000000\n" },
-          cgroup_memory_stat: -> { nil },
-        )
+      sampler = build(cgroup_max: -> { "2000000000\n" }, cgroup_current: -> { "1900000000\n" })
 
       expect(sampler.sample.memory_bytes).to eq(100_000_000)
     end
