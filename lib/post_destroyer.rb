@@ -46,21 +46,10 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(
-    performed_by,
-    post,
-    reviewable_id = nil,
-    defer_reply_flags: true,
-    reviewable_outcome_id: nil
-  )
+  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(
-      performed_by,
-      post,
-      reviewable_id: reviewable_id,
-      reviewable_outcome_id: reviewable_outcome_id,
-    ).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
 
     options = { defer_flags: defer_reply_flags }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
@@ -208,12 +197,11 @@ class PostDestroyer
 
     Post.transaction do
       permanent? ? @post.destroy! : @post.trash!(@user)
-      if @opts[:reviewable_outcome_id].present?
+      if (outcome_reviewable_id = @opts[:outcome_reviewable_id] || @opts[:reviewable_id])
         DiscourseEvent.trigger(
           :reviewable_restriction_applied,
           {
-            outcome_id: @opts[:reviewable_outcome_id],
-            reviewable_id: @opts[:outcome_reviewable_id] || @opts[:reviewable_id],
+            reviewable_id: outcome_reviewable_id,
             user_id: @post.user_id,
             restriction_type: ["visibility_restriction_removal"],
           },

@@ -17,12 +17,7 @@ module Jobs
       deleted_count = 0
 
       loop do
-        delete =
-          user.delete_posts_in_batches(
-            guardian,
-            reviewable_id: args[:reviewable_id],
-            reviewable_outcome_id: args[:reviewable_outcome_id],
-          )
+        delete = user.delete_posts_in_batches(guardian, reviewable_id: args[:reviewable_id])
         break if delete.empty?
         deleted_count += delete.size
       end

@@ -10,6 +10,6 @@ class CreateReviewableOutcomes < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :reviewable_outcomes, %i[reviewable_id id]
+    add_index :reviewable_outcomes, :reviewable_id, unique: true
   end
 end

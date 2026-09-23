@@ -622,31 +622,25 @@ RSpec.describe Reviewable, type: :model do
       }.not_to change { ReviewableOutcome.count }
     end
 
-    it "keeps separate outcomes when an ignored flag is reopened and automatically hidden" do
+    it "updates the outcome when an ignored flag is reopened and automatically hidden" do
       SiteSetting.reviewable_outcome_reporting_enabled = true
       reviewable =
         PostActionCreator.off_topic(Fabricate(:user, refresh_auto_groups: true), post).reviewable
       original_type_source = reviewable.type_source
 
-      first_result = reviewable.perform(moderator, :ignore_and_do_nothing)
+      reviewable.perform(moderator, :ignore_and_do_nothing)
+      outcome_id = reviewable.reload.reviewable_outcome.id
       reopened =
         PostActionCreator.illegal(Fabricate(:user, refresh_auto_groups: true), post).reviewable
-      second_result = reopened.perform(moderator, :agree_and_hide, outcome_source: "automated")
+      reopened.perform(moderator, :agree_and_hide, outcome_source: "automated")
 
       expect(reopened.id).to eq(reviewable.id)
-      expect([first_result.outcome_id, second_result.outcome_id]).to eq(
-        reviewable.reviewable_outcomes.order(:id).pluck(:id),
-      )
-      expect(
-        reviewable
-          .reviewable_outcomes
-          .order(:id)
-          .pluck(:outcome_source, :legal_basis, :restriction_type),
-      ).to eq(
-        [
-          ["human", "tos_violation", nil],
-          ["automated", "illegal content", ["visibility_restriction_disable"]],
-        ],
+      expect(ReviewableOutcome.where(reviewable_id: reviewable.id).count).to eq(1)
+      expect(reopened.reload.reviewable_outcome).to have_attributes(
+        id: outcome_id,
+        outcome_source: "automated",
+        legal_basis: "illegal content",
+        restriction_type: ["visibility_restriction_disable"],
       )
       expect(reopened.reload.type_source).to eq(original_type_source)
     end
@@ -657,7 +651,7 @@ RSpec.describe Reviewable, type: :model do
 
       reviewable.perform(moderator, :delete_and_ignore, outcome_source: "human")
 
-      expect(reviewable.reviewable_outcomes.pick(:restriction_type)).to eq(
+      expect(reviewable.reload.reviewable_outcome.restriction_type).to eq(
         ["visibility_restriction_removal"],
       )
     end

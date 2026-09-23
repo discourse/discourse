@@ -4,7 +4,6 @@ class ReviewableOutcome::AddRestrictions
   include Service::Base
 
   params do
-    attribute :outcome_id, :integer
     attribute :reviewable_id, :integer
     attribute :user_id, :integer
     attribute :restriction_type, :array
@@ -23,32 +22,29 @@ class ReviewableOutcome::AddRestrictions
     end
   end
 
-  only_if :reporting_enabled_for_outcome? do
-    model :outcome
-    policy :outcome_matches_penalized_user
+  only_if :reporting_enabled_for_reviewable? do
+    model :outcome, optional: true
     transaction { step :add_restrictions }
   end
 
   private
 
-  def reporting_enabled_for_outcome?(params:)
-    SiteSetting.reviewable_outcome_reporting_enabled && params.outcome_id.present?
+  def reporting_enabled_for_reviewable?(params:)
+    SiteSetting.reviewable_outcome_reporting_enabled && params.reviewable_id.present?
   end
 
   def fetch_outcome(params:)
-    ReviewableOutcome.find_by(id: params.outcome_id)
-  end
-
-  def outcome_matches_penalized_user(outcome:, params:)
-    reviewable = outcome.reviewable
-    reviewable && outcome.reviewable_id == params.reviewable_id &&
-      (
-        reviewable.target_created_by_id == params.user_id ||
-          (reviewable.target_type == "User" && reviewable.target_id == params.user_id)
-      )
+    ReviewableOutcome.find_by(reviewable_id: params.reviewable_id)
   end
 
   def add_restrictions(outcome:, params:)
+    return unless outcome
+
+    reviewable = outcome.reviewable
+    reviewed_user_id =
+      reviewable.target_type == "User" ? reviewable.target_id : reviewable.target_created_by_id
+    return unless reviewed_user_id == params.user_id
+
     outcome.with_lock do
       outcome.restriction_type = (Array(outcome.restriction_type) | params.restriction_type)
       outcome.save!

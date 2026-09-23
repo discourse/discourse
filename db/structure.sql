@@ -23205,10 +23205,10 @@ CREATE INDEX index_reviewable_notes_on_user_id ON public.reviewable_notes USING 
 
 
 --
--- Name: index_reviewable_outcomes_on_reviewable_id_and_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_reviewable_outcomes_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_reviewable_outcomes_on_reviewable_id_and_id ON public.reviewable_outcomes USING btree (reviewable_id, id);
+CREATE UNIQUE INDEX index_reviewable_outcomes_on_reviewable_id ON public.reviewable_outcomes USING btree (reviewable_id);
 
 
 --

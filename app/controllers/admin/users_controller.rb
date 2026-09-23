@@ -81,12 +81,9 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def delete_posts_batch
-    deleted_posts =
-      @user.delete_posts_in_batches(
-        guardian,
-        reviewable_id: params[:reviewable_id],
-        reviewable_outcome_id: params[:reviewable_outcome_id],
-      )
+    reviewable_id =
+      ReviewableOutcome.reviewable_id_for_recent_penalty(user: @user, actor: current_user)
+    deleted_posts = @user.delete_posts_in_batches(guardian, reviewable_id: reviewable_id)
     # staff action logs will have an entry for each post
 
     render json: { posts_deleted: deleted_posts.length }
@@ -102,10 +99,9 @@ class Admin::UsersController < Admin::StaffController
 
     if threshold > 0 && post_count > threshold
       job_args = { user_id: @user.id, acting_user_id: current_user.id }
-      if params[:reviewable_outcome_id].present?
-        job_args[:reviewable_id] = params[:reviewable_id]
-        job_args[:reviewable_outcome_id] = params[:reviewable_outcome_id]
-      end
+      reviewable_id =
+        ReviewableOutcome.reviewable_id_for_recent_penalty(user: @user, actor: current_user)
+      job_args[:reviewable_id] = reviewable_id if reviewable_id
       Jobs.enqueue(:delete_user_posts, job_args)
       render json: { job_enqueued: true, post_count: post_count }
     else

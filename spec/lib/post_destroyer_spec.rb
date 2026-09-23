@@ -1133,7 +1133,7 @@ RSpec.describe PostDestroyer do
 
       PostDestroyer.new(moderator, second_post).destroy
 
-      expect(reviewable.reload.reviewable_outcomes.last).to have_attributes(
+      expect(reviewable.reload.reviewable_outcome).to have_attributes(
         outcome_source: "human",
         restriction_type: ["visibility_restriction_removal"],
       )
@@ -1328,12 +1328,7 @@ RSpec.describe PostDestroyer do
         reviewable = ReviewableFlaggedPost.find_by!(target: post)
         outcome = Fabricate(:reviewable_outcome, reviewable: reviewable)
 
-        PostDestroyer.delete_with_replies(
-          reporter,
-          post,
-          reviewable.id,
-          reviewable_outcome_id: outcome.id,
-        )
+        PostDestroyer.delete_with_replies(reporter, post, reviewable.id)
 
         expect(reply.reload).to be_trashed
         expect(reviewable_reply.reload).to be_ignored

@@ -10,15 +10,10 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :version,
     :reviewable_count,
     :unseen_reviewable_count,
-    :outcome_id,
   )
 
   def success
     object.success?
-  end
-
-  def include_outcome_id?
-    object.outcome_id.present?
   end
 
   def reviewable_updates

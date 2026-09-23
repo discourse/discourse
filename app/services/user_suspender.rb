@@ -10,8 +10,7 @@ class UserSuspender
     by_user:,
     message: nil,
     post_id: nil,
-    reviewable_id: nil,
-    reviewable_outcome_id: nil
+    reviewable_id: nil
   )
     @user = user
     @suspended_till = suspended_till
@@ -20,7 +19,6 @@ class UserSuspender
     @message = message
     @post_id = post_id
     @reviewable_id = reviewable_id
-    @reviewable_outcome_id = reviewable_outcome_id
   end
 
   def suspend
@@ -62,11 +60,10 @@ class UserSuspender
       suspended_till: @suspended_till,
       suspended_at: suspended_at,
     )
-    if @reviewable_outcome_id.present?
+    if @reviewable_id.present?
       DiscourseEvent.trigger(
         :reviewable_restriction_applied,
         {
-          outcome_id: @reviewable_outcome_id,
           reviewable_id: @reviewable_id,
           user_id: @user.id,
           restriction_type: ["account_restriction_suspension"],

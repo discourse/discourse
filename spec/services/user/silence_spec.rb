@@ -88,7 +88,7 @@ RSpec.describe User::Silence do
 
     context "when silence follows a reviewable handling" do
       let(:reviewable) { Fabricate(:reviewable_user, target: user) }
-      let(:outcome) { Fabricate(:reviewable_outcome, reviewable:) }
+      let!(:outcome) { Fabricate(:reviewable_outcome, reviewable:) }
       let(:params) do
         {
           user_id:,
@@ -96,7 +96,6 @@ RSpec.describe User::Silence do
           silenced_till:,
           other_user_ids: [other_user.id],
           reviewable_id: reviewable.id,
-          reviewable_outcome_id: outcome.id,
         }
       end
 

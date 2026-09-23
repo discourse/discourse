@@ -15,7 +15,7 @@ RSpec.describe Reviewable::RecordOutcome do
 
     context "when reporting is disabled" do
       it "does not write an outcome" do
-        expect { result }.not_to change { reviewable.reviewable_outcomes.count }
+        expect { result }.not_to change { ReviewableOutcome.count }
       end
     end
 
@@ -24,9 +24,11 @@ RSpec.describe Reviewable::RecordOutcome do
 
       it "records the handling with no restriction" do
         expect(result).to run_successfully
-        expect(
-          reviewable.reviewable_outcomes.pluck(:outcome_source, :legal_basis, :restriction_type),
-        ).to eq([["human", "tos_violation", nil]])
+        expect(reviewable.reload.reviewable_outcome).to have_attributes(
+          outcome_source: "human",
+          legal_basis: "tos_violation",
+          restriction_type: nil,
+        )
       end
 
       it "records the illegal-content basis and every supplied restriction" do
@@ -38,16 +40,27 @@ RSpec.describe Reviewable::RecordOutcome do
         ]
 
         expect(result).to run_successfully
-        expect(
-          reviewable.reviewable_outcomes.pluck(:outcome_source, :legal_basis, :restriction_type),
-        ).to eq(
-          [
-            [
-              "automated",
-              "illegal content",
-              %w[visibility_restriction_disable account_restriction_suspension],
-            ],
-          ],
+        expect(reviewable.reload.reviewable_outcome).to have_attributes(
+          outcome_source: "automated",
+          legal_basis: "illegal content",
+          restriction_type: %w[visibility_restriction_disable account_restriction_suspension],
+        )
+      end
+
+      it "replaces an earlier outcome when the later decision applies no restriction" do
+        outcome =
+          Fabricate(
+            :reviewable_outcome,
+            reviewable:,
+            outcome_source: "automated",
+            restriction_type: ["visibility_restriction_disable"],
+          )
+
+        expect { result }.not_to change { ReviewableOutcome.count }
+        expect(outcome.reload).to have_attributes(
+          outcome_source: "human",
+          legal_basis: "tos_violation",
+          restriction_type: nil,
         )
       end
 

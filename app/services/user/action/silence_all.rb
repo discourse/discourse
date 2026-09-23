@@ -25,7 +25,6 @@ class User::Action::SilenceAll < Service::ActionBase
           reason:,
           post_id:,
           reviewable_id:,
-          reviewable_outcome_id: user.id == params.user_id ? params.reviewable_outcome_id : nil,
         )
         .tap do |silencer|
           next unless silencer.silence
@@ -37,7 +36,6 @@ class User::Action::SilenceAll < Service::ActionBase
           )
         end
     rescue => err
-      raise if params.reviewable_outcome_id.present? && user.id == params.user_id
       Discourse.warn_exception(err, message: "failed to silence user with ID #{user.id}")
     end
   end

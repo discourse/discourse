@@ -13,7 +13,6 @@ class User::Suspend
     attribute :post_action, :string
     attribute :post_edit, :string
     attribute :reviewable_id, :integer
-    attribute :reviewable_outcome_id, :integer
 
     validates :user_id, presence: true
     validates :reason, presence: true, length: { maximum: 300 }

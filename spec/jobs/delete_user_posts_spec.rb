@@ -23,7 +23,6 @@ RSpec.describe Jobs::DeleteUserPosts do
       user_id: user.id,
       acting_user_id: admin.id,
       reviewable_id: reviewable.id,
-      reviewable_outcome_id: outcome.id,
     )
 
     expect(outcome.reload.restriction_type).to eq(["visibility_restriction_removal"])

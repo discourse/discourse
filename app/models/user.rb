@@ -1385,12 +1385,7 @@ class User < ActiveRecord::Base
     (since_reply.count >= SiteSetting.newuser_max_replies_per_topic)
   end
 
-  def delete_posts_in_batches(
-    guardian,
-    batch_size = 20,
-    reviewable_id: nil,
-    reviewable_outcome_id: nil
-  )
+  def delete_posts_in_batches(guardian, batch_size = 20, reviewable_id: nil)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
     reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
@@ -1401,12 +1396,7 @@ class User < ActiveRecord::Base
       .order("post_number desc")
       .limit(batch_size)
       .each do |post|
-        PostDestroyer.new(
-          guardian.user,
-          post,
-          outcome_reviewable_id: reviewable_id,
-          reviewable_outcome_id: reviewable_outcome_id,
-        ).destroy
+        PostDestroyer.new(guardian.user, post, outcome_reviewable_id: reviewable_id).destroy
       end
   end
 

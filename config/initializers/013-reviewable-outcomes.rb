@@ -7,8 +7,6 @@ DiscourseEvent.on(:reviewable_handled) do |event|
       params: event.slice(:outcome_source, :restriction_type),
     )
   raise ActiveRecord::RecordInvalid.new(result.outcome) unless result.success?
-
-  event[:outcome] = result.outcome
 end
 
 DiscourseEvent.on(:reviewable_restriction_applied) do |details|

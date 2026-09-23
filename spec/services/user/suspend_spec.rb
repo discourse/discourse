@@ -94,7 +94,7 @@ RSpec.describe User::Suspend do
           target_created_by: user,
         )
       end
-      let(:outcome) { Fabricate(:reviewable_outcome, reviewable:) }
+      let!(:outcome) { Fabricate(:reviewable_outcome, reviewable:) }
       let(:params) do
         {
           user_id:,
@@ -104,7 +104,6 @@ RSpec.describe User::Suspend do
           post_id: post.id,
           post_action: "delete",
           reviewable_id: reviewable.id,
-          reviewable_outcome_id: outcome.id,
         }
       end
 

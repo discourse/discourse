@@ -32,7 +32,7 @@ class Reviewable < ActiveRecord::Base
   belongs_to :category
 
   has_many :reviewable_histories, dependent: :destroy
-  has_many :reviewable_outcomes
+  has_one :reviewable_outcome
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
 
@@ -431,19 +431,17 @@ class Reviewable < ActiveRecord::Base
       if result.transition_to
         update_count = transition_to(result.transition_to, performed_by, record_outcome: false)
         if outcome_snapshot && !pending?
-          outcome =
-            record_outcome!(
-              outcome_source:
-                args.fetch(:outcome_source) do
-                  performed_by.human? && performed_by.staff? ? "human" : "automated"
-                end,
-              restriction_type:
-                (
-                  Array(args[:restriction_type]) |
-                    Array(outcome_restrictions_applied_since(outcome_snapshot))
-                ).presence,
-            )
-          result.outcome_id = outcome&.id
+          record_outcome!(
+            outcome_source:
+              args.fetch(:outcome_source) do
+                performed_by.human? && performed_by.staff? ? "human" : "automated"
+              end,
+            restriction_type:
+              (
+                Array(args[:restriction_type]) |
+                  Array(outcome_restrictions_applied_since(outcome_snapshot))
+              ).presence,
+          )
         end
       end
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
@@ -1032,9 +1030,10 @@ class Reviewable < ActiveRecord::Base
   private
 
   def record_outcome!(outcome_source:, restriction_type:)
-    event = { reviewable: self, outcome_source:, restriction_type: }
-    DiscourseEvent.trigger(:reviewable_handled, event)
-    event[:outcome]
+    DiscourseEvent.trigger(
+      :reviewable_handled,
+      { reviewable: self, outcome_source:, restriction_type: },
+    )
   end
 
   def outcome_restriction_snapshot

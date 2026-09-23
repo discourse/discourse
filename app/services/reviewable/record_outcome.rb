@@ -11,7 +11,7 @@ class Reviewable::RecordOutcome
   end
 
   only_if :reporting_enabled? do
-    model :outcome, :create_outcome
+    model :outcome, :record_outcome
   end
 
   private
@@ -20,11 +20,14 @@ class Reviewable::RecordOutcome
     SiteSetting.reviewable_outcome_reporting_enabled
   end
 
-  def create_outcome(reviewable:, params:)
-    reviewable.reviewable_outcomes.create(
-      outcome_source: params.outcome_source,
-      legal_basis: reviewable.potentially_illegal? ? "illegal content" : "tos_violation",
-      restriction_type: params.restriction_type,
-    )
+  def record_outcome(reviewable:, params:)
+    reviewable.with_lock do
+      outcome = reviewable.reviewable_outcome || reviewable.build_reviewable_outcome
+      outcome.outcome_source = params.outcome_source
+      outcome.legal_basis = reviewable.potentially_illegal? ? "illegal content" : "tos_violation"
+      outcome.restriction_type = params.restriction_type
+      outcome.save
+      outcome
+    end
   end
 end

@@ -348,7 +348,7 @@ RSpec.describe ReviewableUser, type: :model do
         )
 
         expect(reviewable.reload.target).to be_nil
-        expect(reviewable.reviewable_outcomes.pick(:restriction_type)).to eq(
+        expect(reviewable.reviewable_outcome.restriction_type).to eq(
           ["account_restriction_termination"],
         )
       end
@@ -360,7 +360,7 @@ RSpec.describe ReviewableUser, type: :model do
         reviewable.perform(moderator, :delete_user, outcome_source: "human")
 
         expect(reviewable.reload.target).to be_present
-        expect(reviewable.reviewable_outcomes.pick(:restriction_type)).to be_nil
+        expect(reviewable.reviewable_outcome.restriction_type).to be_nil
       end
 
       it "allows us to reject a user" do

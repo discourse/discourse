@@ -13,7 +13,6 @@ RSpec.describe ReviewableOutcome::AddRestrictions do
     fab!(:outcome, :reviewable_outcome)
     let(:params) do
       {
-        outcome_id: outcome.id,
         reviewable_id: outcome.reviewable_id,
         user_id: outcome.reviewable.target_created_by_id,
         restriction_type: ["account_restriction_suspension"],
@@ -43,37 +42,34 @@ RSpec.describe ReviewableOutcome::AddRestrictions do
         )
       end
 
-      it "refuses to attach a penalty to another reviewable" do
+      it "does not attach a penalty when the reviewable has no outcome" do
         params[:reviewable_id] = Fabricate(:reviewable_flagged_post).id
 
-        expect(result).to fail_a_policy(:outcome_matches_penalized_user)
+        expect(result).to run_successfully
         expect(outcome.reload.restriction_type).to be_nil
       end
 
-      it "refuses to attach a penalty to another user" do
+      it "does not attach a penalty to another user" do
         params[:user_id] = Fabricate(:user).id
 
-        expect(result).to fail_a_policy(:outcome_matches_penalized_user)
+        expect(result).to run_successfully
         expect(outcome.reload.restriction_type).to be_nil
       end
 
-      context "when the outcome is missing" do
-        let(:params) do
-          {
-            outcome_id: 0,
-            reviewable_id: outcome.reviewable_id,
-            user_id: outcome.reviewable.target_created_by_id,
-            restriction_type: ["account_restriction_suspension"],
-          }
-        end
+      it "adds suspension for an account reviewable" do
+        user = Fabricate(:user)
+        reviewable = Fabricate(:reviewable_user, target: user)
+        account_outcome = Fabricate(:reviewable_outcome, reviewable:)
+        params[:reviewable_id] = reviewable.id
+        params[:user_id] = user.id
 
-        it { is_expected.to fail_to_find_a_model(:outcome) }
+        expect(result).to run_successfully
+        expect(account_outcome.reload.restriction_type).to eq(["account_restriction_suspension"])
       end
 
       context "when the restriction is invalid" do
         let(:params) do
           {
-            outcome_id: outcome.id,
             reviewable_id: outcome.reviewable_id,
             user_id: outcome.reviewable.target_created_by_id,
             restriction_type: ["unknown"],
