@@ -53,20 +53,17 @@ module Migrations
         def setup_databases
           run_files_db_migrations
 
-          files_db = Database.connect(settings[:output_db_path])
+          files_db = Database.connect(settings[:files_db])
           # The generated `FilesDB::*` models insert through this module-level
           # connection; the tasks use the same object directly for their reads and
           # deletes.
           Database::FilesDB.setup(files_db)
 
-          { files_db:, intermediate_db: Database.connect(settings[:source_db_path]) }
+          { files_db:, intermediate_db: Database.connect(settings[:intermediate_db]) }
         end
 
         def run_files_db_migrations
-          Database.migrate(
-            settings[:output_db_path],
-            migrations_path: Database::FILES_DB_SCHEMA_PATH,
-          )
+          Database.migrate(settings[:files_db], migrations_path: Database::FILES_DB_SCHEMA_PATH)
         end
 
         def configure_services
