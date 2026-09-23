@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
-  # The upload-creation seam is stubbed (that is the Rails-backed part); what is
-  # exercised here is the writer path: shaping a worker result and landing it in
-  # `mapped.ids` + `mapped.upload_markdown` on a real SQLite connection.
-  service_class = Migrations::Importer::Uploads::UploadCreationService
-  status = service_class::Status
-
+  # The upload service is a double, because creating uploads needs Rails. These
+  # tests cover how a worker result is built and how the writer stores it in
+  # `mapped.ids` and `mapped.upload_markdown` on a real SQLite connection.
   subject(:task) do
     described_class
       .new(
@@ -40,13 +37,14 @@ RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
   end
 
   let(:db) { @db }
-  let(:service) { instance_double(service_class) }
+  let(:enums) { Migrations::Database::FilesDB::Enums }
+  let(:service) { instance_double(Migrations::Importer::Uploads::UploadCreationService) }
   let(:reporter) { instance_double(Migrations::Reporting::Reporter::StepHandle, notice: nil) }
 
   def ok_result(source_id, upload_id, markdown)
     Migrations::Importer::Uploads::UploadCreationService::Result.new(
       source_id:,
-      status: Migrations::Importer::Uploads::UploadCreationService::Status::OK,
+      status: enums::UploadResultStatus::OK,
       upload: Data.define(:id).new(upload_id),
       markdown:,
       skip_reason: nil,
@@ -72,6 +70,16 @@ RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
     end
   end
 
+  describe "#store_external?" do
+    it "asks the upload service's store" do
+      allow(service).to receive(:discourse_store).and_return(
+        instance_double("FileStore::BaseStore", external?: true),
+      )
+
+      expect(task.store_external?).to be(true)
+    end
+  end
+
   describe "#process" do
     it "shapes a plain entry from the service result, owned by the mapped user" do
       allow(service).to receive(:create).with(
@@ -83,7 +91,7 @@ RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
 
       expect(entry).to include(
         original_id: "a",
-        status: status::OK,
+        status: enums::UploadResultStatus::OK,
         discourse_id: 71,
         markdown: "![](x)",
       )
@@ -100,7 +108,7 @@ RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
     it "records the mapping and the markdown for a created upload" do
       entry = {
         original_id: "a",
-        status: status::OK,
+        status: enums::UploadResultStatus::OK,
         discourse_id: 71,
         markdown: "![](x)",
         skip_details: nil,
@@ -116,18 +124,45 @@ RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
       expect(upload_markdown).to contain_exactly({ original_id: "a", markdown: "![](x)" })
     end
 
-    it "leaves a skipped source unmapped so it surfaces downstream" do
-      entry = { original_id: "a", status: status::SKIPPED, skip_details: nil, download: nil }
+    it "leaves a missing source file unmapped and reports it" do
+      entry = {
+        original_id: "a",
+        filename: "a.png",
+        status: enums::UploadResultStatus::SKIPPED,
+        skip_details: nil,
+        download: nil,
+      }
 
       expect(task.write(entry)).to eq(:skip)
       task.after_run
 
+      expect(reporter).to have_received(:notice).with(/upload a \(a\.png\)/)
       expect(mapped_ids).to be_empty
       expect(upload_markdown).to be_empty
     end
 
+    it "reports a failed insert as an error instead of raising" do
+      allow(db).to receive(:insert).and_raise(StandardError, "disk full")
+      entry = {
+        original_id: "a",
+        status: enums::UploadResultStatus::OK,
+        discourse_id: 71,
+        markdown: "![](x)",
+        skip_details: nil,
+        download: nil,
+      }
+
+      expect(task.write(entry)).to eq(:error)
+      expect(reporter).to have_received(:notice).with(/record upload a: disk full/)
+    end
+
     it "notices and counts an error, without mapping it" do
-      entry = { original_id: "a", status: status::ERROR, skip_details: "boom", download: nil }
+      entry = {
+        original_id: "a",
+        status: enums::UploadResultStatus::ERROR,
+        skip_details: "boom",
+        download: nil,
+      }
 
       expect(task.write(entry)).to eq(:error)
       task.after_run

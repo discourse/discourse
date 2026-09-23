@@ -34,6 +34,14 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
                       :s3_cdn_url,
                       :s3_endpoint,
                       :enable_s3_uploads
+
+        def get(name)
+          instance_variable_get(:"@#{name}")
+        end
+
+        def set(name, value)
+          instance_variable_set(:"@#{name}", value)
+        end
       end
     end
   end
@@ -93,6 +101,32 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
     options[:enable_s3_uploads] = false
 
     expect { configure }.to output(/enable_s3_uploads is false/).to_stderr
+  end
+
+  it "puts the previous S3 settings back when the check fails" do
+    SiteSetting.enable_s3_uploads = false
+    SiteSetting.s3_upload_bucket = "old-bucket"
+    SiteSetting.s3_access_key_id = "old-key"
+    SiteSetting.s3_endpoint = "http://old.local"
+    stub_public_access(Net::HTTPForbidden.new("1.1", "403", "Forbidden"))
+
+    expect { configure }.to raise_error(described_class::S3UploadsConfigurationError)
+
+    expect(SiteSetting.enable_s3_uploads).to be(false)
+    expect(SiteSetting.s3_upload_bucket).to eq("old-bucket")
+    expect(SiteSetting.s3_access_key_id).to eq("old-key")
+    expect(SiteSetting.s3_endpoint).to eq("http://old.local")
+    expect(SiteSetting.s3_secret_access_key).to be_nil
+  end
+
+  it "keeps the new S3 settings when the check passes" do
+    SiteSetting.s3_upload_bucket = "old-bucket"
+    stub_public_access(Net::HTTPOK.new("1.1", "200", "OK"))
+
+    configure
+
+    expect(SiteSetting.enable_s3_uploads).to be(true)
+    expect(SiteSetting.s3_upload_bucket).to eq("uploads.example.com")
   end
 
   describe "the S3 endpoint" do

@@ -59,10 +59,10 @@ module Migrations
           ORDER BY u.id
         SQL
 
-        # A files DB means `disco upload` already created the uploads and this is
-        # a plain column copy (`super`). Without one — small migrations that skip
-        # the separate upload run — we upload the source files inline, straight
-        # into the live target site, instead of skipping.
+        # A files DB means `disco upload` already created the uploads, so this
+        # step only copies them (`super`). Without a files DB, the step creates
+        # the uploads itself, directly on the target site. That is meant for
+        # small migrations that skip the separate `disco upload` run.
         def execute
           if files_db_attached?
             super
@@ -72,11 +72,10 @@ module Migrations
         end
 
         # Uploads the `upload_sources` that no upload run produced, using the same
-        # {Importer::Uploads::UploadCreationService} `disco upload` uses. It records where
-        # each file landed in the mappings DB: `mapped.ids` for id resolution and
-        # `mapped.upload_markdown` for the posts placeholder resolver (which reads
-        # `files.upload_results.markdown` when a files DB is attached, and this
-        # table otherwise).
+        # {Importer::Uploads::UploadCreationService} `disco upload` uses. Each
+        # created upload is recorded in the mappings DB: its id in `mapped.ids`,
+        # and its Markdown in `mapped.upload_markdown` for later steps that need
+        # to reference the upload.
         class InlineImport
           def initialize(step)
             @step = step
@@ -86,11 +85,26 @@ module Migrations
           end
 
           def run
-            return if Importer::Uploads::InlineWorkList.pending_count(@intermediate_db) == 0
-            raise_unconfigured if @settings[:root_paths].blank?
+            work_list =
+              Importer::Uploads::InlineWorkList.rows(
+                @intermediate_db,
+                system_user_id: Discourse::SYSTEM_USER_ID,
+              )
+            return if work_list.empty?
+
+            if @settings[:root_paths].blank? &&
+                 Importer::Uploads::InlineWorkList.needs_root_paths?(work_list)
+              raise_unconfigured
+            end
+
+            # Must run before the pipeline reads the pool size for its worker limit.
+            Importer::Uploads::DatabasePool.configure!
 
             pipeline =
-              Importer::Uploads::Pipeline.new(task: build_task, reporter: reuse_step_reporter)
+              Importer::Uploads::Pipeline.new(
+                task: build_task(work_list),
+                reporter: ExistingStepReporter.new(@reporter),
+              )
             pipeline.run
 
             raise Interrupt if pipeline.interrupted?
@@ -98,24 +112,18 @@ module Migrations
 
           private
 
-          def build_task
-            work_list =
-              Importer::Uploads::InlineWorkList.rows(
-                @intermediate_db,
-                system_user_id: Discourse::SYSTEM_USER_ID,
-              )
-
+          def build_task(work_list)
             service =
-              Importer::Uploads::UploadCreationService.new(
-                locator:
-                  Importer::Uploads::SourceFileLocator.new(
-                    root_paths: @settings[:root_paths],
-                    path_replacements: @settings[:path_replacements] || [],
-                  ),
-                downloader:
-                  Importer::Uploads::Downloader.new(cache_path: download_cache_path, downloads: {}),
+              Importer::Uploads::UploadCreationService.build(
+                root_paths: @settings[:root_paths],
+                path_replacements: @settings[:path_replacements],
+                cache_path: @settings[:download_cache_path],
+                # Inline mode does not store the original filenames of downloads,
+                # so a new run downloads every URL again, even when the file is
+                # still in the cache.
+                downloads: {
+                },
                 discourse_store: Discourse.store,
-                retry_policy: Importer::Uploads::UploadCreationService.default_retry_policy,
               )
 
             Importer::Uploads::InlineImportTask.new(
@@ -125,41 +133,23 @@ module Migrations
             )
           end
 
-          # Resolved up front (defaults to a `downloads` directory next to the
-          # IntermediateDB), so we only have to make sure it exists here.
-          def download_cache_path
-            path = @settings[:download_cache_path]
-            FileUtils.mkdir_p(path)
-            path
-          end
-
-          # The pipeline drives its own step through a reporter, but here we are
-          # already inside the executor's uploads step. This hands the pipeline the
-          # existing step handle so its progress and notices land on that row; the
-          # executor still owns the final `finish`, so we swallow the pipeline's.
-          def reuse_step_reporter
-            ReuseStepReporter.new(@reporter)
-          end
-
           def raise_unconfigured
             raise I18n.t("importer.uploads.inline_not_configured")
           end
         end
 
-        # See {InlineImport#reuse_step_reporter}.
-        class ReuseStepReporter
+        # The pipeline starts its own step through a reporter, but inline mode
+        # already runs inside the executor's uploads step. This object is both
+        # the reporter and the step for the pipeline, and passes everything on
+        # to the existing step, so progress and notices show up there. The
+        # executor finishes that step itself, so `finish` does nothing.
+        class ExistingStepReporter
           def initialize(step_handle)
-            @step_handle = PipelineStepHandle.new(step_handle)
+            @step_handle = step_handle
           end
 
           def start_step(_title)
-            @step_handle
-          end
-        end
-
-        class PipelineStepHandle
-          def initialize(step_handle)
-            @step_handle = step_handle
+            self
           end
 
           def notice(message)
@@ -174,12 +164,11 @@ module Migrations
             @step_handle.with_progress(max_progress:, &block)
           end
 
-          # No-op: the executor finishes the step in its own `ensure`.
           def finish(outcome: nil)
           end
         end
 
-        # Inline mode reaches these off the step; the files-DB copy path does not.
+        # Used by {InlineImport}.
         def intermediate_db
           @intermediate_db
         end

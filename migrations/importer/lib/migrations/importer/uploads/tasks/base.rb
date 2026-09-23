@@ -35,14 +35,6 @@ module Migrations
             nil
           end
 
-          # Whether uploads land on an external store (S3). The pipeline's worker
-          # bounds lean on this: an external store's uploads spend most of their
-          # time parked on network latency, so many more workers pay off than on a
-          # local, CPU-bound store.
-          def store_external?
-            discourse_store.external?
-          end
-
           protected
 
           attr_reader :reporter

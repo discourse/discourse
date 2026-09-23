@@ -15,6 +15,18 @@ module Migrations
         MAX_IMAGE_SIZE_KB = 102_400
         MAX_IMAGE_MEGAPIXELS = 150
 
+        # `enable_s3_uploads` comes first, so that turning S3 off again is done
+        # before the other values are put back.
+        S3_SETTINGS = %i[
+          enable_s3_uploads
+          s3_access_key_id
+          s3_secret_access_key
+          s3_upload_bucket
+          s3_region
+          s3_cdn_url
+          s3_endpoint
+        ].freeze
+
         def initialize(options)
           @options = options
         end
@@ -62,7 +74,12 @@ module Migrations
           RailsMultisite::ConnectionManagement.current_db_override = @options[:multisite_db_name]
         end
 
+        # When the check fails, the previous S3 settings are put back, so the
+        # site is not left with the values from the settings file (for example
+        # the template's placeholders).
         def configure_s3
+          previous_values = S3_SETTINGS.to_h { |name| [name, SiteSetting.get(name)] }
+
           SiteSetting.s3_access_key_id = @options[:s3_access_key_id]
           SiteSetting.s3_secret_access_key = @options[:s3_secret_access_key]
           SiteSetting.s3_upload_bucket = @options[:s3_upload_bucket]
@@ -78,6 +95,9 @@ module Migrations
           end
 
           verify_s3_uploads_configuration!
+        rescue StandardError
+          previous_values&.each { |name, value| SiteSetting.set(name, value) }
+          raise
         end
 
         def verify_s3_uploads_configuration!

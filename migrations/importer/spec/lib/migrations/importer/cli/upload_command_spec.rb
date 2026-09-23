@@ -36,7 +36,7 @@ RSpec.describe Migrations::Importer::CLI::UploadCommand do
       )
     end
 
-    it "OR-s the --fix-missing flag into the settings" do
+    it "turns on fix_missing with the --fix-missing flag" do
       described_class.new(["--fix-missing"]).call
 
       expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!).with(
@@ -44,7 +44,7 @@ RSpec.describe Migrations::Importer::CLI::UploadCommand do
       )
     end
 
-    it "OR-s the --optimize flag into the settings" do
+    it "turns on create_optimized_images with the --optimize flag" do
       described_class.new(["--optimize"]).call
 
       expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!).with(
