@@ -21,3 +21,5 @@ en:
       fixer_error: "could not check upload %{id}: %{error}"
       optimizer_upload_not_found: "could not find upload with sha1 %{sha1}"
       interrupted: "Interrupted. The run is resumable — run the command again to continue."
+      s3_uploads_disabled: "WARNING: S3 upload settings are configured, but enable_s3_uploads is false. Files will be stored locally."
+      s3_public_access_failed: "The S3 test upload could not be read without credentials (HTTP %{status}). Check the bucket's public access configuration, including s3_enable_access_control_tags."
