@@ -14,20 +14,6 @@ RSpec.describe Jobs::DeleteUserPosts do
     expect(topic.reload.posts.count).to eq(0)
   end
 
-  it "adds removal to the matching reviewable outcome after deleting posts" do
-    SiteSetting.reviewable_outcome_reporting_enabled = true
-    reviewable = Fabricate(:reviewable_user, target: user)
-    outcome = Fabricate(:reviewable_outcome, reviewable:)
-
-    described_class.new.execute(
-      user_id: user.id,
-      acting_user_id: admin.id,
-      reviewable_id: reviewable.id,
-    )
-
-    expect(outcome.reload.restriction_type).to eq(["visibility_restriction_removal"])
-  end
-
   it "sends a system message with deletion count and invites admins" do
     described_class.new.execute(user_id: user.id, acting_user_id: admin.id)
     system_message = Post.where(user: Discourse.system_user).last

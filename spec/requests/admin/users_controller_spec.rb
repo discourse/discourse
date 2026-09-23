@@ -3041,22 +3041,6 @@ RSpec.describe Admin::UsersController do
           expect(response.status).to eq(200)
           expect(response.parsed_body["posts_deleted"]).to eq(3)
         end
-
-        it "records removal for a reviewable outcome after deleting posts" do
-          SiteSetting.reviewable_outcome_reporting_enabled = true
-          reviewable = Fabricate(:reviewable_user, target: user)
-          outcome = Fabricate(:reviewable_outcome, reviewable:)
-          StaffActionLogger.new(staff_user).log_user_suspend(
-            user,
-            "spam",
-            reviewable_id: reviewable.id,
-          )
-
-          put "/admin/users/#{user.id}/delete_posts_batch.json"
-
-          expect(response.status).to eq(200)
-          expect(outcome.reload.restriction_type).to eq(["visibility_restriction_removal"])
-        end
       end
 
       context "when there are no posts left to be deleted" do
@@ -3069,17 +3053,13 @@ RSpec.describe Admin::UsersController do
     end
 
     context "when logged in as an admin" do
-      let(:staff_user) { admin }
-
-      before { sign_in(staff_user) }
+      before { sign_in(admin) }
 
       include_examples "post batch deletion possible"
     end
 
     context "when logged in as a moderator" do
-      let(:staff_user) { moderator }
-
-      before { sign_in(staff_user) }
+      before { sign_in(moderator) }
 
       include_examples "post batch deletion possible"
 
@@ -3145,24 +3125,6 @@ RSpec.describe Admin::UsersController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["job_enqueued"]).to eq(true)
             expect(response.parsed_body["post_count"]).to eq(2)
-          end
-
-          it "passes the recent penalty's reviewable to the deletion job" do
-            SiteSetting.reviewable_outcome_reporting_enabled = true
-            reviewable = Fabricate(:reviewable_user, target: target_user)
-            Fabricate(:reviewable_outcome, reviewable:)
-            StaffActionLogger.new(acting_user).log_user_suspend(
-              target_user,
-              "spam",
-              reviewable_id: reviewable.id,
-            )
-
-            post "/admin/users/#{target_user.id}/delete_posts_decider.json"
-
-            expect(Jobs).to have_received(:enqueue).with(
-              :delete_user_posts,
-              include(reviewable_id: reviewable.id),
-            )
           end
         end
 

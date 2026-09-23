@@ -197,11 +197,11 @@ class PostDestroyer
 
     Post.transaction do
       permanent? ? @post.destroy! : @post.trash!(@user)
-      if (outcome_reviewable_id = @opts[:outcome_reviewable_id] || @opts[:reviewable_id])
+      if @opts[:reviewable_id].present?
         DiscourseEvent.trigger(
           :reviewable_restriction_applied,
           {
-            reviewable_id: outcome_reviewable_id,
+            reviewable_id: @opts[:reviewable_id],
             user_id: @post.user_id,
             restriction_type: ["visibility_restriction_removal"],
           },

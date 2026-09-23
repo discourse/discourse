@@ -622,6 +622,15 @@ RSpec.describe Reviewable, type: :model do
       }.not_to change { ReviewableOutcome.count }
     end
 
+    it "classifies a system-user decision as automated" do
+      SiteSetting.reviewable_outcome_reporting_enabled = true
+      reviewable = Fabricate(:reviewable_flagged_post)
+
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
+
+      expect(reviewable.reload.reviewable_outcome.outcome_source).to eq("automated")
+    end
+
     it "updates the outcome when an ignored flag is reopened and automatically hidden" do
       SiteSetting.reviewable_outcome_reporting_enabled = true
       reviewable =

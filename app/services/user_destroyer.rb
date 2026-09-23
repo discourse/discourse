@@ -184,7 +184,7 @@ class UserDestroyer
           user: Discourse.system_user,
           content: I18n.t("reviewables.target_user_deleted"),
         )
-        reviewable.transition_to(:ignored, Discourse.system_user, outcome_source: "automated")
+        reviewable.transition_to(:ignored, Discourse.system_user)
       end
   end
 

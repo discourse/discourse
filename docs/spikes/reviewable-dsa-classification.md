@@ -54,9 +54,8 @@ suspension, silence, and post deletion methods report confirmed actions, and
 the listener updates that reviewable's row. A failed action leaves the
 restriction array unchanged.
 
-The modal's `delete_all` option starts a separate batch request or background
-job after the penalty. The server finds the reviewable ID in the recent staff
-penalty history and adds removal only after at least one post is deleted.
+The modal's `delete_all` option is a separate bulk operation. Its deletions are
+not attributed to the reviewable outcome.
 
 ## Data Explorer example
 

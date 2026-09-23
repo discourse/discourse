@@ -1385,7 +1385,7 @@ class User < ActiveRecord::Base
     (since_reply.count >= SiteSetting.newuser_max_replies_per_topic)
   end
 
-  def delete_posts_in_batches(guardian, batch_size = 20, reviewable_id: nil)
+  def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
     reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
@@ -1395,9 +1395,7 @@ class User < ActiveRecord::Base
     posts
       .order("post_number desc")
       .limit(batch_size)
-      .each do |post|
-        PostDestroyer.new(guardian.user, post, outcome_reviewable_id: reviewable_id).destroy
-      end
+      .each { |p| PostDestroyer.new(guardian.user, p).destroy }
   end
 
   def suspended?

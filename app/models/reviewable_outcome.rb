@@ -18,20 +18,6 @@ class ReviewableOutcome < ActiveRecord::Base
 
   before_validation { self.restriction_type = restriction_type.presence&.uniq }
 
-  def self.reviewable_id_for_recent_penalty(user:, actor:)
-    return unless SiteSetting.reviewable_outcome_reporting_enabled
-
-    UserHistory
-      .where(
-        target_user_id: user.id,
-        acting_user_id: actor.id,
-        action: [UserHistory.actions[:suspend_user], UserHistory.actions[:silence_user]],
-      )
-      .where("created_at >= ?", 10.minutes.ago)
-      .order(id: :desc)
-      .pick(:reviewable_id)
-  end
-
   private
 
   def valid_restriction_types
