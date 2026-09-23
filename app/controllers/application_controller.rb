@@ -779,6 +779,18 @@ class ApplicationController < ActionController::Base
     raise Discourse::NotLoggedIn.new if current_user.blank?
   end
 
+  def session_is_trusted?
+    server_session_confirmed? || user_just_created?
+  end
+
+  def server_session_confirmed?
+    server_session["confirmed-session-#{current_user.id}"] == "true"
+  end
+
+  def user_just_created?
+    current_user.created_at > 5.minutes.ago
+  end
+
   def ensure_staff
     raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
   end

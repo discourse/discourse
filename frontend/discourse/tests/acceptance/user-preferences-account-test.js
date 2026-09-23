@@ -39,6 +39,10 @@ acceptance("User Preferences - Account", function (needs) {
       });
     });
 
+    server.get("/u/trusted-session.json", () => {
+      return helper.response({ failed: "FAILED" });
+    });
+
     server.put("/u/eviltrout/preferences/avatar/pick", (request) => {
       pickAvatarRequestData = helper.parsePostData(request.requestBody);
       return helper.response({ success: true });
@@ -143,6 +147,18 @@ acceptance("User Preferences - Account", function (needs) {
         ".pref-associated-accounts table tr.facebook .associated-account__actions"
       )
       .includesHtml("Connect");
+  });
+
+  test("connecting an account requires a trusted session", async function (assert) {
+    await visit("/u/eviltrout/preferences/account");
+    await click(".pref-associated-accounts .btn-danger");
+    await click(".pref-associated-accounts .btn-primary");
+
+    assert
+      .dom(".dialog-body .confirm-session")
+      .exists(
+        "prompts the user to confirm their identity before connecting an account"
+      );
   });
 
   test("avatars are selectable for staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {

@@ -1906,10 +1906,6 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def user_just_created
-    current_user.created_at > 5.minutes.ago
-  end
-
   def check_confirmed_session
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
@@ -2404,14 +2400,6 @@ class UsersController < ApplicationController
     end
 
     server_session["confirmed-session-#{current_user.id}"] = "true"
-  end
-
-  def server_session_confirmed?
-    server_session["confirmed-session-#{current_user.id}"] == "true"
-  end
-
-  def session_is_trusted?
-    server_session_confirmed? || user_just_created
   end
 
   def summary_cache_key(user)

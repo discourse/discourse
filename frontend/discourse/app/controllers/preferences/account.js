@@ -2,6 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -299,8 +300,23 @@ export default class AccountController extends Controller {
   }
 
   @action
-  connectAccount(method) {
-    method.doLogin({ reconnect: true });
+  async connectAccount(method) {
+    try {
+      const trustedSession = await this.model.trustedSession();
+
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: i18n("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () => method.doLogin({ reconnect: true }),
+        });
+      } else {
+        method.doLogin({ reconnect: true });
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action

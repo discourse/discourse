@@ -4,6 +4,7 @@ class Users::AssociateAccountsController < ApplicationController
   SERVER_SESSION_PREFIX = "omniauth_reconnect"
 
   before_action :ensure_logged_in
+  before_action :ensure_trusted_session, only: :connect
 
   def connect_info
     account_description = authenticator.description_for_auth_hash(auth_hash)
@@ -31,6 +32,10 @@ class Users::AssociateAccountsController < ApplicationController
   end
 
   private
+
+  def ensure_trusted_session
+    raise Discourse::InvalidAccess unless session_is_trusted?
+  end
 
   def auth_hash
     @auth_hash ||=
