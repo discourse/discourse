@@ -36,6 +36,7 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
                       :s3_upload_bucket,
                       :s3_region,
                       :s3_cdn_url,
+                      :s3_endpoint,
                       :enable_s3_uploads
       end
     end
@@ -76,6 +77,17 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
     allow(Net::HTTP).to receive(:get_response).and_return(response)
 
     expect { configure }.not_to raise_error
+  end
+
+  it "checks public access with the endpoint's scheme" do
+    SiteSetting.s3_endpoint = "http://minio.local:9000"
+    allow(Net::HTTP).to receive(:get_response).and_return(Net::HTTPOK.new("1.1", "200", "OK"))
+
+    configure
+
+    expect(Net::HTTP).to have_received(:get_response).with(
+      an_object_satisfying { |uri| uri.scheme == "http" },
+    )
   end
 
   it "warns when S3 is configured but disabled" do

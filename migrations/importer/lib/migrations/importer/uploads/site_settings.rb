@@ -95,8 +95,15 @@ module Migrations
           end
         end
 
+        # An S3-compatible store configured through `s3_endpoint` may speak plain
+        # HTTP; AWS itself is always HTTPS.
+        def store_scheme
+          endpoint = SiteSetting.s3_endpoint.presence
+          endpoint ? URI(endpoint).scheme : "https"
+        end
+
         def verify_public_access!(upload)
-          response = Net::HTTP.get_response(URI("https:#{upload.url}"))
+          response = Net::HTTP.get_response(URI("#{store_scheme}:#{upload.url}"))
           return if response.is_a?(Net::HTTPSuccess)
 
           raise S3UploadsConfigurationError,
