@@ -16,7 +16,10 @@ module Migrations
         path = File.expand_path(path, Migrations.root_path)
         FileUtils.mkdir_p(File.dirname(path))
 
-        db = Extralite::Database.new(path)
+        # Extralite's own statement cache is never finalized on `close`, which
+        # keeps the connection alive as a zombie and leaves the WAL unflushed;
+        # `PreparedStatementCache` covers the hot statements anyway.
+        db = Extralite::Database.new(path, stmt_cache: false)
         db.pragma(
           busy_timeout: 60_000, # 60 seconds
           journal_mode:,
