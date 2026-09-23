@@ -33,6 +33,8 @@ class Stylesheet::Manager::Builder
         end
         return true
       end
+
+      return true if hydrate_from_cache!
     end
 
     rtl = @target.to_s.end_with?("_rtl")

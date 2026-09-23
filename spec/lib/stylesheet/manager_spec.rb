@@ -18,6 +18,20 @@ RSpec.describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
+  describe "Builder#compile" do
+    it "hydrates from StylesheetCache instead of recompiling when the file is missing" do
+      builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
+      Stylesheet::Manager.rm_cache_folder
+      StylesheetCache.where(target: builder.qualified_target, digest: builder.digest).delete_all
+      StylesheetCache.add(builder.qualified_target, builder.digest, "body{}", nil)
+      Stylesheet::Compiler.expects(:compile_asset).never
+
+      builder.compile
+
+      expect(File.read(builder.stylesheet_fullpath)).to eq("body{}")
+    end
+  end
+
   describe "themes with components" do
     let(:child_theme) do
       Fabricate(:theme, component: true, name: "a component").tap do |c|
