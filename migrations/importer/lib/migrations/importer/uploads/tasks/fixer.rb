@@ -12,6 +12,7 @@ module Migrations
         # deletions.
         class Fixer < Base
           ERROR_SAMPLE_SIZE = 5
+          private_constant :ERROR_SAMPLE_SIZE
 
           def title
             "Fixing missing uploads"
