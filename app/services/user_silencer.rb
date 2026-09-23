@@ -58,6 +58,18 @@ class UserSilencer
         silence_message_params: silence_message_params,
       )
 
+      if @opts[:reviewable_outcome_id].present?
+        DiscourseEvent.trigger(
+          :reviewable_restriction_applied,
+          {
+            outcome_id: @opts[:reviewable_outcome_id],
+            reviewable_id: @opts[:reviewable_id],
+            user_id: @user.id,
+            restriction_type: ["account_restriction_suspension"],
+          },
+        )
+      end
+
       silence_message_params.merge!(post_alert_options: { skip_send_email: true })
       SystemMessage.create(@user, message_type, silence_message_params)
       true

@@ -18,12 +18,22 @@ class User::Action::TriggerPostAction < Service::ActionBase
 
   def delete
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.new(user, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(
+      user,
+      post,
+      reviewable_id: reviewable_id,
+      reviewable_outcome_id: params.reviewable_outcome_id,
+    ).destroy
   end
 
   def delete_replies
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.delete_with_replies(user, post, reviewable_id)
+    PostDestroyer.delete_with_replies(
+      user,
+      post,
+      reviewable_id,
+      reviewable_outcome_id: params.reviewable_outcome_id,
+    )
   end
 
   def edit

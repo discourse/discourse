@@ -30,27 +30,29 @@ the table reports restriction types, not the number of affected posts.
 off, handling does not create outcomes. Disabling it later leaves prior rows
 queryable.
 
-`Reviewable#perform` records a successful transition out of pending in its
-existing transaction. It compares the affected post, topic, and user before
-and after the action, so a deletion followed by an `ignored` status still
-reports removal, while a failed user deletion does not report termination.
+`Reviewable#perform` emits a handled event for a successful transition out of
+pending in its existing transaction. The event compares the affected post,
+topic, and user before and after the action, so a deletion followed by an
+`ignored` status still reports removal, while a failed user deletion does not
+report termination.
 Callers pass decision provenance explicitly for known automation paths. Direct
 reviewable transitions record automated handling.
 
-Two Discourse `Service::Base` services own writes:
+An initializer receives those events and calls two Discourse `Service::Base`
+services that own writes:
 
 - `Reviewable::RecordOutcome` validates source and creates the row with a legal
   basis snapshot and confirmed restrictions.
 - `ReviewableOutcome::AddRestrictions` locks a specific outcome row and adds
-  confirmed, deduplicated categories. It verifies that the outcome belongs to
-  the reviewable and affected user.
+  deduplicated categories. It verifies that the outcome belongs to the
+  reviewable and affected user.
 
 Suspension and silence happen in a separate request after some reviewable
 actions. The first request returns the new outcome ID; the penalty request
-passes it through. A successful penalty updates that exact row, including any
-post deletion performed by the same request. A failed penalty leaves the
-restriction array unchanged. This ID avoids attaching a delayed penalty to a
-newer outcome after reopening.
+passes it to the central suspension, silence, or post deletion method. Those
+methods report confirmed actions, and the listener updates that exact row. A
+failed action leaves the restriction array unchanged. This ID avoids attaching
+a delayed penalty to a newer outcome after reopening.
 
 The modal's `delete_all` option starts a separate batch request or background
 job after the penalty. It carries the same outcome ID through that flow and

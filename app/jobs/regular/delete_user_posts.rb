@@ -17,24 +17,14 @@ module Jobs
       deleted_count = 0
 
       loop do
-        delete = user.delete_posts_in_batches(guardian)
+        delete =
+          user.delete_posts_in_batches(
+            guardian,
+            reviewable_id: args[:reviewable_id],
+            reviewable_outcome_id: args[:reviewable_outcome_id],
+          )
         break if delete.empty?
         deleted_count += delete.size
-
-        if args[:reviewable_outcome_id].present?
-          result =
-            ReviewableOutcome::AddRestrictions.call(
-              params: {
-                outcome_id: args[:reviewable_outcome_id],
-                reviewable_id: args[:reviewable_id],
-                user_id: user.id,
-                restriction_type: ["visibility_restriction_removal"],
-              },
-            )
-          unless result.success?
-            raise Discourse::InvalidParameters.new("reviewable outcome could not be updated")
-          end
-        end
       end
 
       post =

@@ -1322,6 +1322,23 @@ RSpec.describe PostDestroyer do
         delete_with_replies
         expect(reviewable_reply.reload).to be_ignored
       end
+
+      it "records the primary restriction and handles replies by other users" do
+        SiteSetting.reviewable_outcome_reporting_enabled = true
+        reviewable = ReviewableFlaggedPost.find_by!(target: post)
+        outcome = Fabricate(:reviewable_outcome, reviewable: reviewable)
+
+        PostDestroyer.delete_with_replies(
+          reporter,
+          post,
+          reviewable.id,
+          reviewable_outcome_id: outcome.id,
+        )
+
+        expect(reply.reload).to be_trashed
+        expect(reviewable_reply.reload).to be_ignored
+        expect(outcome.reload.restriction_type).to eq(%w[visibility_restriction_removal])
+      end
     end
 
     context "when not deferring reply flags" do

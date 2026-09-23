@@ -1032,17 +1032,9 @@ class Reviewable < ActiveRecord::Base
   private
 
   def record_outcome!(outcome_source:, restriction_type:)
-    result =
-      Reviewable::RecordOutcome.call(
-        reviewable: self,
-        params: {
-          outcome_source:,
-          restriction_type:,
-        },
-      )
-    raise ActiveRecord::RecordInvalid.new(result.outcome) unless result.success?
-
-    result.outcome
+    event = { reviewable: self, outcome_source:, restriction_type: }
+    DiscourseEvent.trigger(:reviewable_handled, event)
+    event[:outcome]
   end
 
   def outcome_restriction_snapshot

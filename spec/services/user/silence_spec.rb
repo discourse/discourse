@@ -85,5 +85,28 @@ RSpec.describe User::Silence do
         )
       end
     end
+
+    context "when silence follows a reviewable handling" do
+      let(:reviewable) { Fabricate(:reviewable_user, target: user) }
+      let(:outcome) { Fabricate(:reviewable_outcome, reviewable:) }
+      let(:params) do
+        {
+          user_id:,
+          reason:,
+          silenced_till:,
+          other_user_ids: [other_user.id],
+          reviewable_id: reviewable.id,
+          reviewable_outcome_id: outcome.id,
+        }
+      end
+
+      before { SiteSetting.reviewable_outcome_reporting_enabled = true }
+
+      it "records account suspension on the reviewed user's outcome" do
+        expect(result).to run_successfully
+        expect([user, other_user].map(&:reload)).to all be_silenced
+        expect(outcome.reload.restriction_type).to eq(["account_restriction_suspension"])
+      end
+    end
   end
 end

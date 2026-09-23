@@ -100,6 +100,7 @@ RSpec.describe User::Suspend do
           user_id:,
           reason:,
           suspend_until:,
+          other_user_ids: [other_user.id],
           post_id: post.id,
           post_action: "delete",
           reviewable_id: reviewable.id,
@@ -112,6 +113,7 @@ RSpec.describe User::Suspend do
       it "adds both account suspension and post removal to that outcome" do
         expect(result).to run_successfully
         expect(user.reload).to be_suspended
+        expect(other_user.reload).to be_suspended
         expect(post.reload).to be_trashed
         expect(outcome.reload.restriction_type).to eq(
           %w[account_restriction_suspension visibility_restriction_removal],

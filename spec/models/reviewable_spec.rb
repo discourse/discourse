@@ -628,7 +628,7 @@ RSpec.describe Reviewable, type: :model do
         PostActionCreator.off_topic(Fabricate(:user, refresh_auto_groups: true), post).reviewable
       original_type_source = reviewable.type_source
 
-      first_result = reviewable.perform(moderator, :ignore_and_do_nothing, outcome_source: "human")
+      first_result = reviewable.perform(moderator, :ignore_and_do_nothing)
       reopened =
         PostActionCreator.illegal(Fabricate(:user, refresh_auto_groups: true), post).reviewable
       second_result = reopened.perform(moderator, :agree_and_hide, outcome_source: "automated")
