@@ -7,7 +7,7 @@ module Migrations
   module Database
     class Connection
       TRANSACTION_BATCH_SIZE = 1000
-      PREPARED_STATEMENT_CACHE_SIZE = 5
+      PREPARED_STATEMENT_CACHE_SIZE = 32
 
       # `journal_mode` defaults to WAL for the run DB. A shard passes "off": it has a
       # single writer, is never read while written, and is thrown away on any
