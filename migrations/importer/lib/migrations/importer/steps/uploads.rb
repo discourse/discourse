@@ -72,7 +72,7 @@ module Migrations
         end
 
         # Uploads the `upload_sources` that no upload run produced, using the same
-        # {Uploads::UploadCreationService} `disco upload` uses. It records where
+        # {Importer::Uploads::UploadCreationService} `disco upload` uses. It records where
         # each file landed in the mappings DB: `mapped.ids` for id resolution and
         # `mapped.upload_markdown` for the posts placeholder resolver (which reads
         # `files.upload_results.markdown` when a files DB is attached, and this
@@ -86,7 +86,7 @@ module Migrations
           end
 
           def run
-            return if Uploads::InlineWorkList.pending_count(@intermediate_db) == 0
+            return if Importer::Uploads::InlineWorkList.pending_count(@intermediate_db) == 0
             raise_unconfigured if @settings[:root_paths].blank?
 
             # `clean_up_uploads` would sweep these freshly created uploads before
@@ -95,7 +95,8 @@ module Migrations
             # target site, so we leave it alone.
             SiteSetting.clean_up_uploads = false
 
-            pipeline = Uploads::Pipeline.new(task: build_task, reporter: reuse_step_reporter)
+            pipeline =
+              Importer::Uploads::Pipeline.new(task: build_task, reporter: reuse_step_reporter)
             pipeline.run
 
             raise Interrupt if pipeline.interrupted?
@@ -105,24 +106,25 @@ module Migrations
 
           def build_task
             work_list =
-              Uploads::InlineWorkList.rows(
+              Importer::Uploads::InlineWorkList.rows(
                 @intermediate_db,
                 system_user_id: Discourse::SYSTEM_USER_ID,
               )
 
             service =
-              Uploads::UploadCreationService.new(
+              Importer::Uploads::UploadCreationService.new(
                 locator:
-                  Uploads::SourceFileLocator.new(
+                  Importer::Uploads::SourceFileLocator.new(
                     root_paths: @settings[:root_paths],
                     path_replacements: @settings[:path_replacements] || [],
                   ),
-                downloader: Uploads::Downloader.new(cache_path: download_cache_path, downloads: {}),
+                downloader:
+                  Importer::Uploads::Downloader.new(cache_path: download_cache_path, downloads: {}),
                 discourse_store: Discourse.store,
-                retry_policy: Uploads::UploadCreationService.default_retry_policy,
+                retry_policy: Importer::Uploads::UploadCreationService.default_retry_policy,
               )
 
-            Uploads::InlineImportTask.new(
+            Importer::Uploads::InlineImportTask.new(
               work_list:,
               intermediate_db: @intermediate_db,
               upload_service: service,
