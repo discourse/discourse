@@ -83,8 +83,7 @@ module Migrations
 
           # An earlier source file already used this FilesDB upload. Map this
           # source id to the Discourse upload we created for it and skip the
-          # copy. Without this the mapping was lost and later references to the
-          # deduplicated source ids resolved to NULL.
+          # copy.
           if (discourse_id = @files_db_upload_ids[files_db_upload_id])
             row[:id] = discourse_id
             return nil
