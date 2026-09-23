@@ -20,7 +20,7 @@ PATH
       colored2
       concurrent-ruby
       digest-xxhash
-      extralite-bundle
+      extralite-bundle (>= 3.1)
       i18n
       json
       lru_redux
@@ -227,7 +227,7 @@ GEM
     erubi (1.13.1)
     excon (1.7.1)
       logger
-    extralite-bundle (3.0.1)
+    extralite-bundle (3.1.0)
     fabrication (3.0.0)
     faker (3.5.3)
       i18n (>= 1.8.11, < 2)
@@ -1057,7 +1057,7 @@ CHECKSUMS
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   excon (1.7.1) sha256=dd2d870eece1b5ce4e4f9efd938e67a69ccd8c003c3825b638b937e1082eaac2
-  extralite-bundle (3.0.1) sha256=49b9b6d459b194b44519d80936d6a98a9e54522e34a8a725fd4e81fdb3944aac
+  extralite-bundle (3.1.0) sha256=5c8a305df3621959b723d5012a1c6173d3c6d62ebf6dfeef875ce6b95d483ae0
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
   faker (3.5.3) sha256=b961482dc0bb15ccb9a98ea7878b925669e9ae8f5e59b607da540b768137d765
   faraday (2.14.4) sha256=9bb4408c44621b0dbaaaa39e5dbfc4dbe58cc6751b6eb94d16ae9e1f2f2fab6e
