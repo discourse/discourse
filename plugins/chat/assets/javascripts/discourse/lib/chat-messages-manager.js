@@ -6,11 +6,6 @@ import {
 } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
-/**
- * Staged messages only carry the sender's clock, so they sort after every
- * confirmed message. Server timestamps arrive without milliseconds, so ids
- * break ties.
- */
 function compareMessages(a, b) {
   if (a.staged !== b.staged) {
     return a.staged ? 1 : -1;
