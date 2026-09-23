@@ -671,6 +671,56 @@ RSpec.describe PostsController do
       end
     end
 
+    context "with default wiki-edit settings" do
+      fab!(:private_group, :group)
+      fab!(:author) do
+        Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true).tap do |user|
+          private_group.add(user)
+        end
+      end
+      fab!(:editor) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      fab!(:outsider) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      fab!(:private_category) { Fabricate(:private_category, group: private_group) }
+      fab!(:public_category, :category)
+      fab!(:wiki_post) do
+        create_post(
+          user: author,
+          category: private_category,
+          title: "Restricted topic title",
+          raw: "Restricted wiki body",
+        ).tap { |post| post.update!(wiki: true) }
+      end
+
+      before do
+        private_group.add(editor)
+        sign_in(editor)
+      end
+
+      it "does not let a trust level 1 wiki editor move another user's restricted topic to a public category" do
+        expect(SiteSetting.edit_wiki_post_allowed_groups_map).to include(
+          Group::AUTO_GROUPS[:trust_level_1],
+        )
+
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              post: {
+                category_id: public_category.id,
+                raw: "Restricted wiki body",
+              },
+            }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(wiki_post.reload.topic.category_id).to eq(private_category.id)
+
+        sign_in(outsider)
+        get "/t/#{wiki_post.topic.id}.json"
+
+        expect(response).to be_not_found
+        expect(response.body).not_to include(wiki_post.reload.raw)
+      end
+    end
+
     describe "when logged in as a regular user" do
       before { sign_in(user) }
 
