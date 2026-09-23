@@ -16,9 +16,10 @@ module Migrations
         path = File.expand_path(path, Migrations.root_path)
         FileUtils.mkdir_p(File.dirname(path))
 
-        # Extralite's own statement cache is never finalized on `close`, which
+        # Extralite 3.1.0's statement cache is never finalized on `close`, which
         # keeps the connection alive as a zombie and leaves the WAL unflushed;
-        # `PreparedStatementCache` covers the hot statements anyway.
+        # `PreparedStatementCache` covers the hot statements anyway. TODO: Revisit
+        # `stmt_cache` when upgrading Extralite.
         db = Extralite::Database.new(path, stmt_cache: false)
         db.pragma(
           busy_timeout: 60_000, # 60 seconds
