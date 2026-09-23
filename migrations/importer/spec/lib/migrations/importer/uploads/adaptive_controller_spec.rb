@@ -2,6 +2,8 @@
 
 RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
   let(:gb) { 1024**3 }
+  let(:window) { described_class::PROBE_GRADE_TICKS }
+  let(:fast_step) { described_class::INCREASE_STEP_FAST }
 
   # A sampler whose reading the test sets before each tick.
   let(:scripted_sampler_class) do
@@ -23,10 +25,18 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
   # Builds a controller wired to a real gate, a scripted sampler, and mutable
   # `state` (time, completed, work) the test drives by hand — no real thread, no
   # sleeping. Returns everything the tests poke at.
-  def build(target:, ceiling:, **reading_opts)
+  def build(
+    target:,
+    ceiling:,
+    sampler: nil,
+    interval: described_class::DEFAULT_INTERVAL,
+    **reading_opts
+  )
     gate = Migrations::Importer::Uploads::WorkerGate.new(target:, max: ceiling)
-    sampler = scripted_sampler_class.new
-    sampler.reading = reading(cpu: 0.1, **reading_opts)
+    unless sampler
+      sampler = scripted_sampler_class.new
+      sampler.reading = reading(cpu: 0.1, **reading_opts)
+    end
     step = instance_double(Migrations::Reporting::Reporter::StepHandle)
     allow(step).to receive(:report_concurrency)
     state = { time: 0.0, completed: 0, work: true }
@@ -39,6 +49,7 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
         ceiling:,
         work_available: -> { state[:work] },
         completed_count: -> { state[:completed] },
+        interval:,
         clock: -> { state[:time] },
       )
 
@@ -51,8 +62,16 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
     state[:completed] += (rate * seconds).to_i
   end
 
+  # One tick per rate, each a second apart.
+  def run_ticks(h, *rates)
+    rates.each do |rate|
+      advance(h[:state], rate:)
+      h[:controller].tick
+    end
+  end
+
   describe ".plan" do
-    it "seeds from today's heuristic and caps by the store factor on a local store" do
+    it "seeds from the CPU count and caps by the store factor on a local store" do
       plan =
         described_class.plan(
           usable_cpus: 8,
@@ -63,7 +82,6 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
 
       expect(plan.seed).to eq(12) # 8 * 1.5 * 1
       expect(plan.ceiling).to eq(32) # 4 * 8, tighter than the pool and fds
-      expect(plan.floor).to eq(2)
     end
 
     it "seeds higher and allows many more workers against an external store" do
@@ -126,25 +144,22 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
       h[:controller].tick
       expect(h[:gate].target).to eq(1) # 3 / 2 = 1, below the floor of 2 on purpose
 
-      # Even with the box now healthy and work waiting, the freeze holds the target
+      # Even with the machine now healthy and work waiting, the freeze holds the target
       # for several ticks before the controller probes upward again.
       h[:sampler].reading = reading(cpu: 0.1)
       4.times do |i|
-        advance(h[:state], rate: 100)
-        h[:controller].tick
+        run_ticks(h, 100)
         expect(h[:gate].target).to eq(1), "grew too early on freeze tick #{i}"
       end
 
-      advance(h[:state], rate: 100)
-      h[:controller].tick
+      run_ticks(h, 100)
       expect(h[:gate].target).to be > 1 # freeze lifted, probing resumes
     end
 
     it "blocks increases while memory is merely low, without shrinking" do
       h = build(target: 4, ceiling: 16, mem_fraction: 0.20, mem_bytes: gb)
 
-      advance(h[:state], rate: 100)
-      h[:controller].tick
+      run_ticks(h, *[100] * window)
 
       expect(h[:gate].target).to eq(4) # caution: no growth, but no shrink either
     end
@@ -154,8 +169,7 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
       # threshold only binds when the absolute one agrees.
       h = build(target: 4, ceiling: 16, mem_fraction: 0.05, mem_bytes: 8 * gb)
 
-      advance(h[:state], rate: 100)
-      h[:controller].tick
+      run_ticks(h, *[100] * window)
 
       expect(h[:gate].target).to be > 4 # neither emergency nor caution: it probes
     end
@@ -169,15 +183,26 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
       h[:controller].tick
       expect(h[:gate].target).to eq(14) # 16 - max(16/8, 1) = 14
 
-      # Cooldown: in-flight subprocesses lag the signal, so hold for a tick.
+      # Cooldown, then a fresh throughput window at the new target, before it
+      # probes again.
       h[:sampler].reading = reading(cpu: 0.1)
-      advance(h[:state], rate: 100)
-      h[:controller].tick
+      run_ticks(h, *[100] * (window - 1))
       expect(h[:gate].target).to eq(14)
 
-      advance(h[:state], rate: 100)
+      run_ticks(h, 100)
+      expect(h[:gate].target).to be > 14
+    end
+
+    it "never raises a target that a memory emergency pushed below the floor" do
+      h = build(target: 3, ceiling: 16)
+      h[:sampler].reading = reading(cpu: 0.1, mem_fraction: 0.05, mem_bytes: gb / 2)
       h[:controller].tick
-      expect(h[:gate].target).to be > 14 # cooldown elapsed
+      expect(h[:gate].target).to eq(1)
+
+      h[:sampler].reading = reading(cpu: 0.99)
+      run_ticks(h, 100, 100)
+
+      expect(h[:gate].target).to eq(1)
     end
   end
 
@@ -186,73 +211,159 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
       h = build(target: 4, ceiling: 16)
       h[:state][:work] = false
 
-      advance(h[:state], rate: 100)
-      h[:controller].tick
+      run_ticks(h, *[100] * window)
 
       expect(h[:gate].target).to eq(4)
     end
 
-    it "jumps by 4 when the box is idle and by 1 when it is busy" do
-      idle = build(target: 4, ceiling: 32)
-      advance(idle[:state], rate: 100)
-      idle[:controller].tick
-      expect(idle[:gate].target).to eq(8) # +4 at cpu 0.1
-
-      busy = build(target: 4, ceiling: 32, mem_fraction: 0.9)
-      busy[:sampler].reading = reading(cpu: 0.7)
-      advance(busy[:state], rate: 100)
-      busy[:controller].tick
-      expect(busy[:gate].target).to eq(5) # +1 at cpu 0.7
-    end
-
-    it "reverts and holds after two probes that each buy less than 5% throughput" do
+    it "waits for a full throughput window before the first probe" do
       h = build(target: 4, ceiling: 32)
 
-      advance(h[:state], seconds: 1.0, rate: 100) # baseline rate 100/s
-      h[:controller].tick
-      expect(h[:gate].target).to eq(8) # first probe
+      run_ticks(h, *[100] * (window - 1))
+      expect(h[:gate].target).to eq(4)
 
-      advance(h[:state], seconds: 1.0, rate: 100) # still 100/s -> no gain
-      h[:controller].tick
-      expect(h[:gate].target).to eq(12) # second probe, first low-gain result
-
-      advance(h[:state], seconds: 1.0, rate: 100) # still flat -> plateau
-      h[:controller].tick
-      expect(h[:gate].target).to eq(8) # reverts the last +4 step
-
-      # And it holds: no probing for a while even though everything looks inviting.
-      advance(h[:state], seconds: 1.0, rate: 100)
-      h[:controller].tick
+      run_ticks(h, 100)
       expect(h[:gate].target).to eq(8)
+    end
+
+    it "jumps by 4 when the CPU is idle and by 1 when it is busy" do
+      idle = build(target: 4, ceiling: 32)
+      run_ticks(idle, *[100] * window)
+      expect(idle[:gate].target).to eq(8) # +4 at cpu 0.1
+
+      busy = build(target: 4, ceiling: 32)
+      busy[:sampler].reading = reading(cpu: 0.7)
+      run_ticks(busy, *[100] * window)
+      expect(busy[:gate].target).to eq(5) # +1 at cpu 0.7
     end
 
     it "keeps probing when each increase actually pays off" do
       h = build(target: 4, ceiling: 32)
 
-      advance(h[:state], seconds: 1.0, rate: 100)
-      h[:controller].tick
+      run_ticks(h, *[100] * window)
       expect(h[:gate].target).to eq(8)
 
-      advance(h[:state], seconds: 1.0, rate: 200) # doubled -> big gain
-      h[:controller].tick
+      run_ticks(h, *[200] * window) # doubled -> big gain
       expect(h[:gate].target).to eq(12)
 
-      advance(h[:state], seconds: 1.0, rate: 400) # doubled again
-      h[:controller].tick
+      run_ticks(h, *[400] * window) # doubled again
       expect(h[:gate].target).to eq(16) # no revert; streak reset by the gains
+    end
+
+    it "grades a probe on the whole window, not on a single noisy tick" do
+      h = build(target: 4, ceiling: 32)
+      run_ticks(h, *[100] * window)
+      expect(h[:gate].target).to eq(8)
+
+      # Completions arrive in bursts; single ticks read 0 while the window as a
+      # whole is 10% up.
+      run_ticks(h, 0, 0)
+      expect(h[:gate].target).to eq(8) # not graded yet
+      run_ticks(h, 330)
+      expect(h[:gate].target).to eq(12)
+
+      run_ticks(h, 0, 0, 363)
+      expect(h[:gate].target).to eq(16) # two bursty gains, no plateau
+    end
+
+    it "treats a zero baseline as no information, neither gain nor loss" do
+      h = build(target: 4, ceiling: 32)
+      run_ticks(h, *[100] * window)
+      expect(h[:gate].target).to eq(8)
+
+      run_ticks(h, *[0] * window) # weak probe: streak 1, next probe starts from zero
+      expect(h[:gate].target).to eq(12)
+
+      run_ticks(h, *[100] * window) # zero baseline: must not reset the streak
+      expect(h[:gate].target).to eq(16)
+
+      run_ticks(h, *[100] * window) # weak again: streak 2 -> plateau
+      expect(h[:gate].target).to eq(4)
+    end
+  end
+
+  describe "plateau" do
+    it "reverts to the target from before the weak streak and holds there" do
+      h = build(target: 4, ceiling: 32)
+
+      run_ticks(h, *[100] * window)
+      expect(h[:gate].target).to eq(8) # first probe
+
+      run_ticks(h, *[100] * window) # flat -> first weak probe
+      expect(h[:gate].target).to eq(12) # second probe
+
+      run_ticks(h, *[100] * window) # still flat -> plateau
+      expect(h[:gate].target).to eq(4) # both weak steps undone
+
+      hold_ticks = described_class::PLATEAU_HOLD_SECONDS - 1
+      hold_ticks.times do |i|
+        run_ticks(h, 100)
+        expect(h[:gate].target).to eq(4), "moved during the hold on tick #{i}"
+      end
+    end
+
+    it "does not drift upward over many plateau cycles at flat throughput" do
+      h = build(target: 4, ceiling: 64)
+      targets = []
+
+      400.times do
+        run_ticks(h, 100)
+        targets << h[:gate].target
+      end
+
+      # A weak streak can briefly reach PLATEAU_LOW_GAIN_LIMIT steps above the
+      # pre-streak target, but every cycle returns to it.
+      expect(targets.max).to eq(4 + described_class::PLATEAU_LOW_GAIN_LIMIT * fast_step)
+      expect(targets.last(described_class::PLATEAU_HOLD_SECONDS)).to include(4)
+      expect(targets.count(4)).to be > targets.size / 2
+    end
+
+    it "keeps an earlier probe that paid off when a later streak reverts" do
+      h = build(target: 4, ceiling: 32)
+
+      run_ticks(h, *[100] * window)
+      run_ticks(h, *[200] * window) # gain: 8 stays, probe to 12
+      run_ticks(h, *[200] * window) # weak, probe to 16
+      run_ticks(h, *[200] * window) # weak again -> back to 8
+
+      expect(h[:gate].target).to eq(8)
     end
   end
 
   describe "#start / #stop" do
-    it "runs ticks on a background thread and stops cleanly" do
-      h = build(target: 2, ceiling: 16)
-      ticks = Queue.new
-      allow(h[:controller]).to receive(:tick) { ticks << :tick }
+    # Records each sample on a queue so the test can wait for real ticks.
+    let(:recording_sampler_class) do
+      Struct.new(:ticks, :reading, :failures) do
+        def sample
+          ticks << :tick
+          if failures > 0
+            self.failures -= 1
+            raise "sampler exploded"
+          end
+          reading
+        end
+      end
+    end
 
-      h[:controller].instance_variable_set(:@interval, 0.001)
+    it "runs ticks on a background thread and stops cleanly" do
+      sampler = recording_sampler_class.new(Queue.new, reading(cpu: 0.1), 0)
+      h = build(target: 2, ceiling: 16, sampler:, interval: 0.001)
+
       h[:controller].start
-      ticks.pop # at least one tick ran
+      sampler.ticks.pop # at least one tick ran
       expect { h[:controller].stop }.not_to raise_error
+    end
+
+    it "reports a failing tick once and keeps ticking" do
+      sampler = recording_sampler_class.new(Queue.new, reading(cpu: 0.1), 2)
+      h = build(target: 2, ceiling: 16, sampler:, interval: 0.001)
+      allow(h[:step]).to receive(:notice)
+
+      h[:controller].start
+      4.times { sampler.ticks.pop } # past both failures, so the loop survived them
+      h[:controller].stop
+
+      expect(h[:step]).to have_received(:notice).once.with(/sampler exploded/)
     end
   end
 end

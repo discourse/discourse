@@ -15,10 +15,67 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
       meminfo: -> { nil },
       cgroup_max: -> { nil },
       cgroup_current: -> { nil },
+      cgroup_memory_stat: -> { nil },
+      cgroup_cpu_max: -> { nil },
+      cgroup_cpu_stat: -> { nil },
       process_times: -> { Process::Tms.new(0.0, 0.0, 0.0, 0.0) },
       clock: -> { 0.0 },
     }
     described_class.new(**defaults, **overrides)
+  end
+
+  # Host-wide /proc/stat that always reads as fully idle, to show that the
+  # cgroup reading is used instead.
+  let(:idle_proc_stat) { sequence("cpu  0 0 0 100 0\n", "cpu  0 0 0 200 0\n") }
+
+  describe "CPU under a cgroup v2 quota" do
+    it "measures the cgroup's usage against its quota, not the whole host" do
+      # 2 CPUs of quota; 1.5 CPU-seconds used over 1s of wall => 75% busy,
+      # while the host-wide /proc/stat says the machine is idle.
+      sampler =
+        build(
+          proc_stat: idle_proc_stat,
+          cgroup_cpu_max: -> { "200000 100000\n" },
+          cgroup_cpu_stat: sequence("usage_usec 1000000\nuser_usec 1\n", "usage_usec 2500000\n"),
+          clock: sequence(10.0, 11.0),
+        )
+
+      expect(sampler.sample.cpu_busy).to be_within(0.001).of(0.75)
+    end
+
+    it "falls back to /proc/stat when the cgroup has no quota" do
+      sampler =
+        build(
+          proc_stat: sequence("cpu  100 0 100 800 0\n", "cpu  150 0 150 900 0\n"),
+          cgroup_cpu_max: -> { "max 100000\n" },
+          cgroup_cpu_stat: sequence("usage_usec 0\n", "usage_usec 9000000\n"),
+          clock: sequence(0.0, 1.0),
+        )
+
+      expect(sampler.sample.cpu_busy).to be_within(0.001).of(0.5)
+    end
+
+    it "falls back to /proc/stat when cpu.stat is unreadable" do
+      sampler =
+        build(
+          proc_stat: sequence("cpu  100 0 100 800 0\n", "cpu  150 0 150 900 0\n"),
+          cgroup_cpu_max: -> { "200000 100000\n" },
+        )
+
+      expect(sampler.sample.cpu_busy).to be_within(0.001).of(0.5)
+    end
+
+    it "reads zero rather than mixing units when the source changes between samples" do
+      sampler =
+        build(
+          proc_stat: -> { "cpu  100 0 100 800 0\n" },
+          cgroup_cpu_max: -> { "200000 100000\n" },
+          cgroup_cpu_stat: sequence("usage_usec 1000000\n"), # gone on the next read
+          clock: -> { 5.0 },
+        )
+
+      expect(sampler.sample.cpu_busy).to eq(0.0)
+    end
   end
 
   describe "CPU from /proc/stat" do
@@ -75,6 +132,38 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
       # cgroup headroom 500 MB is tighter than the 8 GB host figure.
       expect(reading.memory_bytes).to eq(500_000_000)
       expect(reading.memory_fraction).to be_within(0.001).of(0.25)
+    end
+
+    it "does not count reclaimable page cache as used cgroup memory" do
+      memory_stat = <<~STAT
+        anon 600000000
+        file 1300000000
+        active_file 400000000
+        inactive_file 900000000
+      STAT
+      sampler =
+        build(
+          cgroup_max: -> { "2000000000\n" },
+          cgroup_current: -> { "1900000000\n" },
+          cgroup_memory_stat: -> { memory_stat },
+        )
+
+      reading = sampler.sample
+      # Working set 1.9 GB - 0.9 GB inactive file = 1.0 GB, so 1.0 GB is free
+      # rather than the 0.1 GB that memory.current alone suggests.
+      expect(reading.memory_bytes).to eq(1_000_000_000)
+      expect(reading.memory_fraction).to be_within(0.001).of(0.5)
+    end
+
+    it "uses memory.current as is when memory.stat is unreadable" do
+      sampler =
+        build(
+          cgroup_max: -> { "2000000000\n" },
+          cgroup_current: -> { "1900000000\n" },
+          cgroup_memory_stat: -> { nil },
+        )
+
+      expect(sampler.sample.memory_bytes).to eq(100_000_000)
     end
 
     it "ignores an unlimited cgroup (memory.max == 'max')" do
