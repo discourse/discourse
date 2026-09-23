@@ -7,8 +7,9 @@ module Migrations
         depends_on :users
         store_mapped_ids true
 
-        # sha1 => id of an upload that already exists on the target site, so we
-        # can reuse it instead of copying the same file again.
+        # sha1 => id of an upload that already exists on the target site. Secure
+        # uploads use a random sha1, so this identifies the same upload without
+        # deduplicating different secure uploads that contain the same file.
         requires_mapping :existing_sha1s, "SELECT sha1, id FROM uploads"
 
         column_names %i[
@@ -89,7 +90,7 @@ module Migrations
             return nil
           end
 
-          # The same file already exists on the target site. Reuse it. We only
+          # The upload already exists on the target site. Reuse it. We only
           # match on a real sha1 because it is nullable and NULLs are not equal.
           if sha1 && (discourse_id = @existing_sha1s[sha1])
             @files_db_upload_ids[files_db_upload_id] = discourse_id
