@@ -3,11 +3,16 @@
 module Migrations
   module Importer
     module Uploads
-      # Shared "is this file in the store?" helpers. The upload tasks and the
-      # inline upload service both need to check whether a file landed in the
-      # Discourse store (local dir or S3), so the logic lives here instead of being
-      # copied. The including object only has to expose `discourse_store`.
+      # Helpers about the Discourse store (local dir or S3) for the upload tasks,
+      # the inline upload task and the upload service. The including object only
+      # has to expose `discourse_store`.
       module StoreProbe
+        # The pipeline allows more workers for an external store (S3), because
+        # those uploads mostly wait on the network instead of using the CPU.
+        def store_external?
+          discourse_store.external?
+        end
+
         def add_multisite_prefix(path)
           return path if !Rails.configuration.multisite
 

@@ -3,14 +3,11 @@
 module Migrations
   module Importer
     module Uploads
-      # One home for every place `disco upload` short-circuits Discourse's
-      # `UploadCreator` hot paths, so the migration-only monkeypatches are
-      # greppable in a single file instead of scattered around. Each is safe only
-      # because a migration is a single, resumable, batch process — not the
-      # multi-request production app `UploadCreator` is written for.
-      #
-      # The measured deltas below come from the profiling harness in
-      # `migrations/tooling/scripts/benchmarks/` (`upload_creator_profile.rb`).
+      # Patches to Discourse's upload code that `disco upload` applies, so that
+      # `UploadCreator` does less work per upload. They are all in this file, so
+      # they are easy to find. Each one is only safe because a migration is a
+      # single, resumable batch process, and not the web app with many parallel
+      # requests that `UploadCreator` is written for.
       module DiscoursePatches
         # Thread-local flag set around `UploadCreator#create_for`, read by the
         # `DistributedMutex` patch below.
@@ -21,15 +18,14 @@ module Migrations
             return if @applied
             @applied = true
 
-            disable_synchronous_commit!
             memoize_uploader_user!
             upsert_user_uploads!
             bypass_upload_distributed_mutex!
           end
 
-          # The uploader is always `Discourse::SYSTEM_USER_ID` for a migration, so
-          # the user row is constant across the whole run. Loaded once here (on the
-          # main thread, before any worker starts) and shared read-only.
+          # `disco upload` creates every upload for `Discourse::SYSTEM_USER_ID`, so
+          # the row is loaded once, on the main thread before any worker starts,
+          # and the workers only read it.
           def uploader_user
             @uploader_user ||= ::User.find_by(id: Discourse::SYSTEM_USER_ID)
           end
@@ -40,66 +36,30 @@ module Migrations
 
           private
 
-          # THE big lever. Every `create_for` commits three separate write
-          # transactions, and with the default `synchronous_commit=on` each COMMIT
-          # blocks on a WAL fsync — ~5.5-8 ms apiece on the profiling box, so
-          # ~16-24 ms/upload of pure durability latency. That is ~100% of an
-          # upload's SQL time (the server executes in µs) and dominates an
-          # attachment's whole cost.
-          #
-          # Turning `synchronous_commit` off lets COMMIT return without waiting for
-          # the WAL flush. The only thing at risk is the last fraction of a second
-          # of commits on an OS/hardware crash — and for this importer those rows
-          # simply reprocess on the next run: it is resume-safe by design (each
-          # task skips ids already recorded), so a lost tail is re-derived, never
-          # lost data.
-          #
-          # Applied session-scoped through the AR pool's `:variables` config rather
-          # than `ALTER DATABASE`: Rails runs `SET SESSION synchronous_commit TO
-          # 'off'` in `configure_connection` on every connection it opens or
-          # reconnects, so it covers every session the workers check out, survives
-          # the adaptive gate's connection churn, needs no reset (it dies with the
-          # process), and never touches other sessions on the database.
-          def disable_synchronous_commit!
-            config = ActiveRecord::Base.connection_db_config.configuration_hash.deep_dup
-            (config[:variables] ||= {})[:synchronous_commit] = "off"
-            ActiveRecord::Base.establish_connection(config)
-          end
-
-          # `UploadValidator` calls `upload.user&.staff?` several times per upload,
-          # each firing a `User Load` for the same constant system user (~0.2-0.5 ms
-          # + a round-trip per upload). Return the memoized row instead. Warmed here
-          # so the workers only ever read it. Measured delta: one `User Load` query
-          # removed per upload.
+          # `Upload#user` returns the loaded system user instead of querying the
+          # same row again for every upload.
           def memoize_uploader_user!
             ::Upload.prepend(UploaderUser)
             uploader_user
           end
 
-          # `create_for` does a find-or-create on the `user_uploads` join, which is
-          # two round-trips (SELECT then INSERT). The table has a unique index on
-          # `(upload_id, user_id)`, so a single `INSERT … ON CONFLICT DO NOTHING`
-          # keeps the same idempotency (a re-run's existing row is left untouched)
-          # in one round-trip. Measured delta: one `UserUpload Load` query removed
-          # per upload.
+          # `UserUpload.find_or_create_by!` becomes a single
+          # `INSERT … ON CONFLICT DO NOTHING` on the unique `(upload_id, user_id)`
+          # index: one query instead of a SELECT and an INSERT. An existing row
+          # stays as it is, so a second call for the same pair is safe. It
+          # returns nil instead of the record.
           def upsert_user_uploads!
             ::UserUpload.singleton_class.prepend(UserUploadUpsert)
           end
 
-          # `create_for` wraps its whole body in
-          # `DistributedMutex.synchronize("upload_<user>_<filename>")`, a Redis lock
-          # that guards two creators racing on the same sha1. A single-writer import
-          # never races itself, and the one real race it can hit — two workers
-          # creating the same sha1 — is already handled downstream: the `uploads`
-          # sha1 unique index rejects the loser's INSERT and the pipeline's retry
-          # policy recovers by looking up the winner's row (see the
-          # `ActiveRecord::RecordNotUnique` recover handler in `Tasks::Uploader`).
-          # So the lock is redundant here; bypassing it removes 2-3 Redis
-          # round-trips per upload (negligible against image cooking on a local
-          # Redis, real network hops on production infra).
+          # `DistributedMutex.synchronize` does not take its Redis lock while
+          # `UploadCreator#create_for` runs on the same thread. The Redis lock is
+          # not needed there: `UploadCreationService` already makes sure that
+          # uploads with the same content are not created at the same time, with
+          # an in-process lock per content hash.
           #
-          # Scoped precisely to `create_for` via a thread-local rather than by
-          # matching the lock key, so no other `DistributedMutex` use is affected.
+          # A thread-local flag set around `create_for` turns the bypass on, not
+          # the lock key, so no other `DistributedMutex` use is affected.
           def bypass_upload_distributed_mutex!
             ::UploadCreator.prepend(CreatorMutexScope)
             ::DistributedMutex.singleton_class.prepend(MutexBypass)

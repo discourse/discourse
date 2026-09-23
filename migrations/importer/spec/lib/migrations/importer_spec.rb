@@ -50,13 +50,13 @@ RSpec.describe Migrations::Importer do
       expect(config.dig(:uploads, :download_cache_path)).to eq("/custom/cache")
     end
 
-    it "does not add an uploads section when there is none" do
+    it "derives the inline download_cache_path when there is no uploads section" do
       allow(File).to receive(:exist?).and_return(false)
       config = { intermediate_db:, always_allow_reserved_usernames: true }
 
       described_class.resolve_config_defaults(config)
 
-      expect(config).not_to have_key(:uploads)
+      expect(config[:uploads]).to eq({ download_cache_path: derived_cache })
     end
   end
 end

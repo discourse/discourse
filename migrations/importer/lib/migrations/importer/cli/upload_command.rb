@@ -23,7 +23,7 @@ module Migrations
                    "migrations/importer/config if it exists, otherwise the upload.yml template there."
           option "--reset",
                  "Delete files.db before running so uploads are created from scratch. " \
-                   "The download cache is kept, so URLs are not fetched again."
+                   "Downloaded files stay on disk, but every URL is downloaded again."
           option "--fix-missing",
                  "Verify each upload's file exists on the store (and its S3 ACL); " \
                    "broken records are deleted and re-uploaded in the same run."
@@ -45,8 +45,6 @@ module Migrations
           path = @options[:settings] || default_settings_path
           raise NoSettingsFound, "Settings file not found: #{path}" unless File.exist?(path)
 
-          # The flag and the yml key are OR-ed: passing the flag turns the mode on,
-          # but a `true` in the settings file can't be turned back off from the CLI.
           settings = SettingsParser.parse!(path)
           settings[:fix_missing] = true if @options[:fix_missing]
           settings[:create_optimized_images] = true if @options[:optimize]

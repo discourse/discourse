@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
+require "digest/xxhash"
 require "tempfile"
 
 module Migrations
   module Importer
     module Uploads
-      # The single seam both upload paths run through. Given one `upload_sources`
-      # row it locates or downloads the bytes, hands them to core's
-      # `UploadCreator`, verifies the file actually reached the store, retries the
-      # handful of failures worth retrying, and returns a frozen {Result}.
+      # Creates a single upload, for both upload paths. Given one `upload_sources` row,
+      # it finds or downloads the file, passes it to core's `UploadCreator`,
+      # checks that the file is in the store, retries the few failures that are
+      # worth retrying, and returns a frozen {Result}.
       #
       # It does no queueing and no DB writes: `disco upload` and the inline import
       # path each persist the {Result} their own way, on their own writer thread.
@@ -22,6 +23,17 @@ module Migrations
 
         # Created but not in the store yet: try once more, then give up.
         POST_STORE_RETRIES = 1
+
+        # Uploads with the same content must not be created at the same time:
+        # `UploadCreator` can destroy an upload with the same sha1 that another
+        # thread has not finished yet.
+        #
+        # The workers are threads of one process, so an in-process lock is
+        # enough. The lock is picked by a fast non-cryptographic hash of the
+        # content. When two different files get the same lock, they only wait
+        # for each other; nothing breaks.
+        CREATE_LOCK_COUNT = 256
+        CREATE_LOCKS = Array.new(CREATE_LOCK_COUNT) { Mutex.new }.freeze
 
         # The outcome of one row. `upload` is the core `Upload` (nil unless
         # created), `markdown` is its rendered reference, and `download` is a fresh
@@ -57,6 +69,15 @@ module Migrations
           ]
           classes << Aws::S3::Errors::ServiceError if defined?(Aws::S3::Errors::ServiceError)
           RetryPolicy.new(transient_errors: classes)
+        end
+
+        def self.build(root_paths:, path_replacements:, cache_path:, downloads:, discourse_store:)
+          new(
+            locator: SourceFileLocator.new(root_paths:, path_replacements: path_replacements || []),
+            downloader: Downloader.new(cache_path:, downloads:),
+            discourse_store:,
+            retry_policy: default_retry_policy,
+          )
         end
 
         def initialize(locator:, downloader:, discourse_store:, retry_policy:)
@@ -114,10 +135,7 @@ module Migrations
         private
 
         def build_metadata(row)
-          Metadata.new(
-            original_filename: row[:display_filename] || row[:filename],
-            description: row[:description].presence,
-          )
+          Metadata.new(original_filename: row[:filename], description: row[:description].presence)
         end
 
         # Creates the upload, retrying only what is worth retrying (see
@@ -172,16 +190,24 @@ module Migrations
             end,
           }
 
+          lock = create_lock_for(path)
+
           @retry_policy.run(recover:) do
             copy_to_tempfile(path) do |file|
-              UploadCreator.new(
-                file,
-                metadata.original_filename,
-                type: row[:type],
-                origin: metadata.origin_url,
-              ).create_for(user_id)
+              creator =
+                UploadCreator.new(
+                  file,
+                  metadata.original_filename,
+                  type: row[:type],
+                  origin: metadata.origin_url,
+                )
+              lock.synchronize { creator.create_for(user_id) }
             end
           end
+        end
+
+        def create_lock_for(path)
+          CREATE_LOCKS[Digest::XXH3_64bits.file(path).idigest % CREATE_LOCK_COUNT]
         end
 
         def upload_valid?(upload)

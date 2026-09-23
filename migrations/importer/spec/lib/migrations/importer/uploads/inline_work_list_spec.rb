@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::Uploads::InlineWorkList do
-  # Runs against real migrated SQLite databases (intermediate + mappings), like
-  # the optimizer/step smoke specs. No Rails needed — this is just SQL.
-  let(:uploads_type) { Migrations::Importer::MappingType::UPLOADS }
-  let(:users_type) { Migrations::Importer::MappingType::USERS }
+  # Runs against real migrated SQLite databases (intermediate and mappings).
+  # No Rails needed, this is just SQL.
+  let(:mapping_type) { Migrations::Importer::MappingType }
   let(:system_user_id) { -1 }
 
   around do |example|
@@ -31,13 +30,15 @@ RSpec.describe Migrations::Importer::Uploads::InlineWorkList do
 
   let(:db) { @db }
 
-  def add_source(id:, user_id: nil)
+  def add_source(id:, user_id: nil, url: nil, data: nil)
     db.execute(
-      "INSERT INTO upload_sources (id, filename, user_id, type) VALUES (?, ?, ?, ?)",
+      "INSERT INTO upload_sources (id, filename, user_id, type, url, data) VALUES (?, ?, ?, ?, ?, ?)",
       id,
       "#{id}.png",
       user_id,
-      uploads_type,
+      mapping_type::UPLOADS,
+      url,
+      data && Migrations::Database.to_blob(data),
     )
   end
 
@@ -50,17 +51,9 @@ RSpec.describe Migrations::Importer::Uploads::InlineWorkList do
     )
   end
 
-  it "counts only the sources without an uploads mapping yet" do
-    add_source(id: "a")
-    add_source(id: "b")
-    map_id(original_id: "b", type: uploads_type, discourse_id: 999)
-
-    expect(described_class.pending_count(db)).to eq(1)
-  end
-
   it "returns the pending rows with the owning user resolved from the users map" do
     add_source(id: "a", user_id: "orig-7")
-    map_id(original_id: "orig-7", type: users_type, discourse_id: 42)
+    map_id(original_id: "orig-7", type: mapping_type::USERS, discourse_id: 42)
 
     rows = described_class.rows(db, system_user_id:)
 
@@ -79,10 +72,30 @@ RSpec.describe Migrations::Importer::Uploads::InlineWorkList do
   it "excludes sources already mapped as uploads on a re-run" do
     add_source(id: "a")
     add_source(id: "b")
-    map_id(original_id: "a", type: uploads_type, discourse_id: 100)
+    map_id(original_id: "a", type: mapping_type::UPLOADS, discourse_id: 100)
 
     rows = described_class.rows(db, system_user_id:)
 
     expect(rows.map { |r| r[:id] }).to eq(["b"])
+  end
+
+  describe ".needs_root_paths?" do
+    it "is false when every pending row has a url or a data blob" do
+      add_source(id: "a", url: "https://example.com/a.png")
+      add_source(id: "b", data: "bytes")
+
+      expect(described_class.needs_root_paths?(described_class.rows(db, system_user_id:))).to be(
+        false,
+      )
+    end
+
+    it "is true when a pending row has to be read from disk" do
+      add_source(id: "a", url: "https://example.com/a.png")
+      add_source(id: "b")
+
+      expect(described_class.needs_root_paths?(described_class.rows(db, system_user_id:))).to be(
+        true,
+      )
+    end
   end
 end

@@ -8,13 +8,6 @@ module Migrations
       # own each upload (falling back to the system user). Kept apart from the step
       # so the query can be tested against a plain SQLite fixture without Rails.
       module InlineWorkList
-        PENDING_COUNT_SQL = <<~SQL
-          SELECT COUNT(*)
-          FROM upload_sources us
-               LEFT JOIN mapped.ids mup ON us.id = mup.original_id AND mup.type = ?1
-          WHERE mup.original_id IS NULL
-        SQL
-
         ROWS_SQL = <<~SQL
           SELECT us.*, COALESCE(mu.discourse_id, ?3) AS resolved_user_id
           FROM upload_sources us
@@ -23,10 +16,6 @@ module Migrations
           WHERE mup.original_id IS NULL
           ORDER BY us.id
         SQL
-
-        def self.pending_count(intermediate_db)
-          intermediate_db.count(PENDING_COUNT_SQL, MappingType::UPLOADS)
-        end
 
         # Pulls the whole pending set into memory (data blobs included) so the
         # pipeline's workers never read the IntermediateDB connection. Fine because
@@ -40,6 +29,12 @@ module Migrations
             system_user_id,
           ) { |row| rows << row }
           rows
+        end
+
+        # Rows without a `url` or `data` blob are read from disk, and only those
+        # need the configured `root_paths`.
+        def self.needs_root_paths?(rows)
+          rows.any? { |row| row[:url].blank? && row[:data].blank? }
         end
       end
     end

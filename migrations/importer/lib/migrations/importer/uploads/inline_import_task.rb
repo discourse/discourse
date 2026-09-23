@@ -10,12 +10,12 @@ module Migrations
       # each upload is owned by its mapped importer user, and that the results go
       # to `mapped.ids` + `mapped.upload_markdown` instead of the files DB.
       #
-      # CRITICAL: the IntermediateDB connection (with `mapped` attached) is not
-      # thread-safe. The work list is materialized before the pipeline starts, and
-      # from then on the connection is touched only from the pipeline's single
-      # writer thread ({#write}) — never from the workers.
+      # The IntermediateDB connection (with `mapped` attached) is not
+      # thread-safe. The work list is loaded before the pipeline starts, and after
+      # that only the pipeline's single writer thread ({#write}) uses the
+      # connection, never the workers.
       class InlineImportTask
-        Status = Database::FilesDB::Enums::UploadResultStatus
+        include StoreProbe
 
         INSERT_MAPPED_ID_SQL = <<~SQL
           INSERT INTO mapped.ids (original_id, type, discourse_id)
@@ -53,8 +53,8 @@ module Migrations
           @work_list.size
         end
 
-        def store_external?
-          Discourse.store.external?
+        def discourse_store
+          @upload_service.discourse_store
         end
 
         def build_worker_resource
@@ -67,15 +67,16 @@ module Migrations
           @work_list.each { |row| emit_work.call(row) }
         end
 
-        # Runs on a worker thread — no IntermediateDB access. Shapes a plain hash
-        # (never the live `Upload` object) so nothing AR-backed crosses to the
-        # writer thread.
+        # Runs on a worker thread, so it must not use the IntermediateDB. It
+        # returns a plain hash and not the `Upload`, so no AR object is passed to
+        # the writer thread.
         def process(row, _resource)
           result = @upload_service.create(row, user_id: row[:resolved_user_id])
           return nil if result.nil?
 
           {
             original_id: row[:id],
+            filename: row[:filename],
             status: result.status,
             discourse_id: result.upload&.id,
             markdown: result.markdown,
@@ -88,16 +89,23 @@ module Migrations
         # IntermediateDB connection.
         def write(entry)
           case entry[:status]
-          when Status::OK
+          when UploadCreationService::Status::OK
             @intermediate_db.insert(
               INSERT_MAPPED_ID_SQL,
               [entry[:original_id], MappingType::UPLOADS, entry[:discourse_id]],
             )
             @intermediate_db.insert(INSERT_MARKDOWN_SQL, [entry[:original_id], entry[:markdown]])
             :ok
-          when Status::SKIPPED
-            # Left unmapped on purpose: the source id later surfaces as an
-            # unresolved embed through the existing downstream mechanism.
+          when UploadCreationService::Status::SKIPPED
+            # Left unmapped on purpose, so later steps treat references to it
+            # as unresolved.
+            @reporter.notice(
+              I18n.t(
+                "importer.uploads.file_not_found",
+                id: entry[:original_id],
+                filename: entry[:filename],
+              ),
+            )
             :skip
           else
             @reporter.notice(
@@ -109,6 +117,11 @@ module Migrations
             )
             :error
           end
+        rescue StandardError => e
+          @reporter.notice(
+            I18n.t("importer.uploads.insert_failed", id: entry[:original_id], error: e.message),
+          )
+          :error
         end
       end
     end

@@ -10,8 +10,6 @@ module Migrations
         # rows on the pipeline's worker threads, and writes each {Result} on the
         # single writer thread.
         class Uploader < Base
-          Status = Database::FilesDB::Enums::UploadResultStatus
-          SkipReason = Database::FilesDB::Enums::UploadSkipReason
           UploadFileType = Database::FilesDB::Enums::UploadFileType
 
           UPLOAD_COLUMNS =
@@ -58,9 +56,9 @@ module Migrations
             return nil if result.nil?
 
             case result.status
-            when Status::OK
+            when UploadCreationService::Status::OK
               success_result(row, result.upload, result.markdown, result.download)
-            when Status::SKIPPED
+            when UploadCreationService::Status::SKIPPED
               missing_result(row)
             else
               error_result(
@@ -75,7 +73,7 @@ module Migrations
           def write(result)
             record_download(result[:download]) if result[:download]
 
-            if result[:status] == Status::ERROR
+            if result[:status] == UploadCreationService::Status::ERROR
               reporter.notice(
                 I18n.t(
                   "importer.uploads.upload_failed",
@@ -107,19 +105,12 @@ module Migrations
           private
 
           def build_upload_service
-            UploadCreationService.new(
-              locator:
-                SourceFileLocator.new(
-                  root_paths: settings[:root_paths],
-                  path_replacements: settings[:path_replacements] || [],
-                ),
-              downloader:
-                Downloader.new(
-                  cache_path: settings[:download_cache_path],
-                  downloads: reusable_downloads,
-                ),
+            UploadCreationService.build(
+              root_paths: settings[:root_paths],
+              path_replacements: settings[:path_replacements],
+              cache_path: settings[:download_cache_path],
+              downloads: reusable_downloads,
               discourse_store:,
-              retry_policy: UploadCreationService.default_retry_policy,
             )
           end
 
@@ -186,7 +177,7 @@ module Migrations
           def success_result(row, upload, markdown, download_record)
             {
               id: row[:id],
-              status: Status::OK,
+              status: UploadCreationService::Status::OK,
               skip_reason: nil,
               skip_details: nil,
               markdown:,
@@ -199,8 +190,8 @@ module Migrations
           def missing_result(row)
             {
               id: row[:id],
-              status: Status::SKIPPED,
-              skip_reason: SkipReason::FILE_NOT_FOUND,
+              status: UploadCreationService::Status::SKIPPED,
+              skip_reason: UploadCreationService::SkipReason::FILE_NOT_FOUND,
               skip_details: nil,
               markdown: nil,
               file_type: nil,
@@ -212,7 +203,7 @@ module Migrations
           def error_result(row, skip_reason:, skip_details:, download:)
             {
               id: row[:id],
-              status: Status::ERROR,
+              status: UploadCreationService::Status::ERROR,
               skip_reason:,
               skip_details:,
               markdown: nil,
@@ -240,9 +231,9 @@ module Migrations
 
           def outcome_for(status)
             case status
-            when Status::OK
+            when UploadCreationService::Status::OK
               :ok
-            when Status::SKIPPED
+            when UploadCreationService::Status::SKIPPED
               :skip
             else
               :error
