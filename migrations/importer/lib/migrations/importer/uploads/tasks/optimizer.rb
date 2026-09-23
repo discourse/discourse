@@ -90,10 +90,10 @@ module Migrations
           end
 
           def process(row, post)
-            retry_policy.run { attempt_optimization(row, post) } || error_status(row)
-          rescue StandardError
+            retry_policy.run { attempt_optimization(row, post) } || no_images_status(row)
+          rescue StandardError => e
             # Permanent failure, or a transient one past its retry budget.
-            error_status(row)
+            error_status(row, e.message)
           end
 
           def write(result)
@@ -113,6 +113,7 @@ module Migrations
           def attempt_optimization(row, post)
             upload = Upload.find_by(sha1: row[:upload_sha1])
             return upload_not_found_status(row) if upload.nil?
+            return skip_status(row[:upload_id]) if row[:type] == "post" && fits_in_post?(upload)
 
             images = create_optimized_images(row[:type], row[:markdown], upload, post)
             return if images.blank?
@@ -126,13 +127,36 @@ module Migrations
           def create_optimized_images(type, markdown, upload, post)
             case type
             when "post"
-              post.update_columns(baked_at: nil, cooked: "", raw: markdown)
-              post.reload
-              post.rebake!
+              cook_and_process(post, markdown)
               OptimizedImage.where(upload_id: upload.id).to_a
             when "avatar"
               @avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
             end
+          end
+
+          # The cooked post processor only makes thumbnails for images it has to
+          # lightbox, so an image within the limits has nothing to record.
+          def fits_in_post?(upload)
+            upload.width.to_i <= SiteSetting.max_image_width &&
+              upload.height.to_i <= SiteSetting.max_image_height
+          end
+
+          # What `Post#rebake!` does, minus the job it enqueues for the post
+          # processor: `Jobs.run_immediately!` only makes that job synchronous
+          # outside development, and the optimized images have to exist before
+          # this returns.
+          def cook_and_process(post, markdown)
+            post.update_columns(
+              raw: markdown,
+              cooked: post.cook(markdown, topic_id: post.topic_id),
+              baked_at: Time.zone.now,
+              baked_version: Post::BAKED_VERSION,
+            )
+            post.reload
+
+            processor = CookedPostProcessor.new(post)
+            processor.post_process
+            post.update_column(:cooked, processor.html)
           end
 
           def verify_optimized_images(images)
@@ -160,8 +184,20 @@ module Migrations
             }
           end
 
-          def error_status(row)
-            { id: row[:upload_id], status: :error }
+          def error_status(row, error)
+            {
+              id: row[:upload_id],
+              status: :error,
+              error: I18n.t("importer.uploads.optimizer_failed", sha1: row[:upload_sha1], error:),
+            }
+          end
+
+          def no_images_status(row)
+            {
+              id: row[:upload_id],
+              status: :error,
+              error: I18n.t("importer.uploads.optimizer_no_images", sha1: row[:upload_sha1]),
+            }
           end
 
           # The migration-environment row's sha1 has no matching Discourse
