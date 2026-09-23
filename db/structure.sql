@@ -17837,6 +17837,13 @@ CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING bt
 
 
 --
+-- Name: idx_bpe_crawler_created_at_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_crawler_created_at_covering ON public.browser_pageview_events USING btree (created_at) INCLUDE (topic_id, user_id, ip_address) WHERE (score > 55);
+
+
+--
 -- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17883,6 +17890,13 @@ CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING b
 --
 
 CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
+
+
+--
+-- Name: idx_bpe_session_created_at_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_session_created_at_covering ON public.browser_pageview_events USING btree (session_id, created_at) INCLUDE (user_id, score);
 
 
 --
@@ -23459,6 +23473,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260921081150'),
+('20260921074918'),
 ('20260914213908'),
 ('20260914172801'),
 ('20260914172757'),
