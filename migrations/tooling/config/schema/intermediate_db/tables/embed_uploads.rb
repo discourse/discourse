@@ -33,4 +33,5 @@ Migrations::Tooling::Schema.table :embed_uploads do
   add_column :original_markdown, :text
 
   index :owner_type, :owner_id
+  index :upload_id, where: "upload_id IS NOT NULL"
 end
