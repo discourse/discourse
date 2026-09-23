@@ -66,8 +66,53 @@ module Migrations
           Database.migrate(settings[:files_db], migrations_path: Database::FILES_DB_SCHEMA_PATH)
         end
 
+        # Cap a single ImageMagick convert so it can't be the one process that
+        # balloons past a memory tick and OOMs the box between the controller's
+        # samples. This is a per-process backstop under the adaptive controller's
+        # box-wide memory watch.
+        MAGICK_MEMORY_CAP = 2 * 1024**3 # 2 GB
+
         def configure_services
+          # Resize the pool first. Anything below that re-establishes the AR
+          # connection captures the pool size as it stands at that moment (it
+          # deep-dups the current config), so a resize afterwards would be
+          # thrown away. Keep this ahead of the rest of the service setup.
+          adjust_db_pool_size
+          configure_image_memory_limits
           configure_site_settings
+          DiscoursePatches.apply!
+        end
+
+        # The worker pool opens one Discourse DB connection per thread, so the AR
+        # pool has to be wide enough to hand them all out. Grow it up to the
+        # server's `max_connections`; leave it alone if it is already that big.
+        def adjust_db_pool_size
+          max_db_connections = ::DB.query_single("SHOW max_connections").first.to_i
+          current_size = ActiveRecord::Base.connection_pool.size
+          return if current_size >= max_db_connections
+
+          db_config = ActiveRecord::Base.connection_db_config.configuration_hash.dup
+          db_config[:pool] = max_db_connections
+          ActiveRecord::Base.establish_connection(db_config)
+        end
+
+        # A convert's peak memory is also bounded by `max_image_megapixels` (set in
+        # {SiteSettings}), which caps how large an image we'll decode in the first
+        # place. This adds a hard resource ceiling on top of that.
+        #
+        # An explicit `MAGICK_MEMORY_LIMIT` in the environment wins — the operator
+        # asked for it. So does a stricter `policy.xml`: the environment can only
+        # *lower* ImageMagick's limits, never raise them past what policy allows.
+        def configure_image_memory_limits
+          return if ENV["MAGICK_MEMORY_LIMIT"]
+
+          total = ResourceSampler.new(usable_cpus: 1).total_memory_bytes
+          bound = total ? [MAGICK_MEMORY_CAP, total / 8].min : MAGICK_MEMORY_CAP
+
+          ENV["MAGICK_MEMORY_LIMIT"] = bound.to_s
+          ENV["MAGICK_MAP_LIMIT"] ||= (bound * 2).to_s
+
+          puts I18n.t("importer.uploads.image_memory_limit", mib: bound / 1024 / 1024)
         end
 
         def configure_site_settings
