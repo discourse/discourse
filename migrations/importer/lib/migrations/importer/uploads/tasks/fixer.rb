@@ -7,8 +7,9 @@ module Migrations
     module Uploads
       module Tasks
         # Verifies that every recorded upload still has its file in the store, and
-        # removes the rows whose file has gone missing so a later run recreates
-        # them. Read-only on the workers; the writer thread does the deletions.
+        # removes the rows whose file has gone missing so the following uploader
+        # task recreates them. Read-only on the workers; the writer thread does the
+        # deletions.
         class Fixer < Base
           def title
             "Fixing missing uploads"
@@ -78,8 +79,8 @@ module Migrations
           # Drops the upload everywhere it's recorded — the Discourse record, the
           # migration-environment row, its optimized images, and every result that
           # points at it.
-          # With the result rows gone, the uploader's incremental skip no longer
-          # sees those source ids and recreates them on the next run.
+          # With the result rows gone, the following uploader task's incremental
+          # skip no longer sees those source ids and recreates them.
           def remove_missing_upload(upload_id)
             Upload.delete_by(id: upload_id)
             files_db.execute("DELETE FROM optimized_images WHERE upload_id = ?", upload_id)
