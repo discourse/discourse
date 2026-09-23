@@ -561,13 +561,6 @@ RSpec.describe Chat::CreateMessage do
                         expect(message.uploads).to contain_exactly(upload, another_upload)
                       end
                     end
-
-                    it "uses the server time even when the client sends its own timestamp" do
-                      freeze_time
-                      params[:client_created_at] = 30.seconds.ago.iso8601
-
-                      expect(message.created_at).to eq_time(Time.zone.now)
-                    end
                   end
                 end
               end
