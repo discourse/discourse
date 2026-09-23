@@ -52,7 +52,7 @@ module Migrations
               upload_id = row[:upload_id]
 
               if @optimized_upload_ids.include?(upload_id)
-                emit_result.call(skipped_status(upload_id))
+                emit_result.call(skip_status(upload_id))
               elsif @post_upload_ids.include?(row[:original_id])
                 row[:type] = "post"
                 emit_work.call(row)
@@ -60,7 +60,7 @@ module Migrations
                 row[:type] = "avatar"
                 emit_work.call(row)
               else
-                emit_result.call(skipped_status(upload_id))
+                emit_result.call(skip_status(upload_id))
               end
             end
           end
@@ -85,18 +85,15 @@ module Migrations
           end
 
           def write(result)
-            case result[:status]
-            when :ok
+            if result[:status] == :ok
               result[:optimized_images].each do |attributes|
                 Database::FilesDB::OptimizedImage.create(**attributes)
               end
-              :ok
-            when :skipped
-              :skip
             else
               reporter.notice(result[:error]) if result[:error]
-              :error
             end
+
+            result[:status]
           end
 
           private
@@ -203,8 +200,8 @@ module Migrations
             }
           end
 
-          def skipped_status(upload_id)
-            { id: upload_id, status: :skipped }
+          def skip_status(upload_id)
+            { id: upload_id, status: :skip }
           end
 
           def optimized_image_attributes(image)

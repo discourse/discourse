@@ -60,6 +60,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
         %w[s-avatar avatar],
       )
       expect(skipped.map { |result| result[:id] }).to contain_exactly(3, 4)
+      expect(skipped.map { |result| result[:status] }.uniq).to eq([:skip])
       expect(optimizer.max_count).to eq(4)
     end
 
