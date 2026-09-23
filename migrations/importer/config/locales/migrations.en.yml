@@ -17,8 +17,13 @@ en:
       surplus_found: "found %{count} surplus uploads (run with delete_surplus_uploads to remove them)"
       upload_failed: "failed to create upload %{id}: %{error}"
       insert_failed: "failed to record upload %{id}: %{error}"
-      fixer_missing: "removed missing upload %{id}"
-      fixer_error: "could not check upload %{id}: %{error}"
+      fixer_missing_summary:
+        one: "removed %{count} missing upload"
+        other: "removed %{count} missing uploads"
+      fixer_error_detail: "upload %{id}: %{error}"
+      fixer_error_summary:
+        one: "could not check %{count} upload (error: %{errors})"
+        other: "could not check %{count} uploads (sample errors: %{errors})"
       optimizer_upload_not_found: "could not find upload with sha1 %{sha1}"
       interrupted: "Interrupted. The run is resumable — run the command again to continue."
       s3_uploads_disabled: "WARNING: S3 upload settings are configured, but enable_s3_uploads is false. Files will be stored locally."

@@ -11,6 +11,8 @@ module Migrations
         # task recreates them. Read-only on the workers; the writer thread does the
         # deletions.
         class Fixer < Base
+          ERROR_SAMPLE_SIZE = 5
+
           def title
             "Fixing missing uploads"
           end
@@ -23,6 +25,37 @@ module Migrations
             # `discourse_store.external?` never changes during a run, so resolve it
             # once instead of on every processed row.
             @external_store = discourse_store.external?
+            @missing_count = 0
+            @error_count = 0
+            @error_samples = []
+          end
+
+          def after_run
+            super
+
+            if @missing_count.positive?
+              reporter.notice(
+                I18n.t("importer.uploads.fixer_missing_summary", count: @missing_count),
+              )
+            end
+
+            return if @error_count.zero?
+
+            errors =
+              @error_samples.map do |result|
+                I18n.t(
+                  "importer.uploads.fixer_error_detail",
+                  id: result[:upload_id],
+                  error: result[:error],
+                )
+              end
+            reporter.notice(
+              I18n.t(
+                "importer.uploads.fixer_error_summary",
+                count: @error_count,
+                errors: errors.join("; "),
+              ),
+            )
           end
 
           def produce(emit_work:, **)
@@ -56,16 +89,11 @@ module Migrations
               :ok
             when :missing
               remove_missing_upload(result[:upload_id])
-              reporter.notice(I18n.t("importer.uploads.fixer_missing", id: result[:upload_id]))
+              @missing_count += 1
               :warning
             else
-              reporter.notice(
-                I18n.t(
-                  "importer.uploads.fixer_error",
-                  id: result[:upload_id],
-                  error: result[:error],
-                ),
-              )
+              @error_count += 1
+              @error_samples << result if @error_samples.size < ERROR_SAMPLE_SIZE
               :error
             end
           end
