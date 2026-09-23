@@ -50,7 +50,7 @@ module Migrations
 
       def migrate_and_attach(db_path, schema_path, alias_name)
         Database.migrate(db_path, migrations_path: schema_path)
-        @intermediate_db.execute("ATTACH DATABASE ? AS #{alias_name}", db_path)
+        @intermediate_db.attach_database(db_path, name: alias_name)
       end
 
       def optimize_intermediate_db

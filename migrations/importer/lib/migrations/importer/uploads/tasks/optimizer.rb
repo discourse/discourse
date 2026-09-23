@@ -30,7 +30,7 @@ module Migrations
             @system_user = Discourse.system_user
             @category_id = Category.last.id
 
-            files_db.execute("ATTACH DATABASE ? AS intermediate", intermediate_db.path)
+            files_db.attach_database(intermediate_db.path, name: "intermediate")
             @max_count = files_db.query_value(<<~SQL, UploadFileType::IMAGE)
                 SELECT COUNT(*)
                   FROM upload_results r

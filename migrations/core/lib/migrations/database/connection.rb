@@ -94,11 +94,15 @@ module Migrations
       end
 
       # `ATTACH` can't run inside a transaction, so commit any open batch first.
+      def attach_database(path, name:)
+        commit_transaction
+        @db.execute("ATTACH DATABASE ? AS #{quote_identifier(name)}", path)
+      end
+
       # `dedupe_tables` merge with `INSERT OR IGNORE`; the rest raise on a
       # duplicate row (see `Consolidator`).
       def merge_database(other_path, tables:, dedupe_tables: [])
-        commit_transaction
-        @db.execute("ATTACH DATABASE ? AS merge_source", other_path)
+        attach_database(other_path, name: "merge_source")
         begin
           tables.each do |table|
             quoted = quote_identifier(table)
