@@ -50,37 +50,11 @@ const STEPS = [
       this.designWizard.start({ onComplete: this.#onComplete });
     }
   },
-  class InviteCollaborators extends OnboardingStep {
-    static name = "invite_collaborators";
-
-    @service appEvents;
-
-    icon = "paper-plane";
-
-    constructor() {
-      super(...arguments);
-      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    willDestroy() {
-      super.willDestroy(...arguments);
-      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    @action
-    performAction() {
-      showCreateInviteModal(this, {
-        model: { invites: trackedArray(), defaultRole: "admin" },
-      });
-    }
-  },
   class StartPosting extends OnboardingStep {
     static name = "start_posting";
 
-    @service composer;
     @service appEvents;
     @service modal;
-    @service siteSettings;
 
     icon = "comments";
 
@@ -106,8 +80,10 @@ const STEPS = [
       );
     }
 
-    completeStep() {
-      return this.markAsCompleted();
+    completeStep(_post, composer) {
+      return this.markAsCompleted({
+        topicOption: composer?.adminOnboardingTopicOption,
+      });
     }
 
     showStartPostingOptions() {
@@ -129,20 +105,33 @@ const STEPS = [
       });
     }
 
-    openTopic(topicKey) {
-      this.composer.openNewTopic({
-        title: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.title`
-        ),
-        body: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.body`
-        ),
-      });
-    }
-
     @action
     async performAction() {
       this.showStartPostingOptions();
+    }
+  },
+  class InviteCollaborators extends OnboardingStep {
+    static name = "invite_collaborators";
+
+    @service appEvents;
+
+    icon = "paper-plane";
+
+    constructor() {
+      super(...arguments);
+      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    willDestroy() {
+      super.willDestroy(...arguments);
+      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    @action
+    performAction() {
+      showCreateInviteModal(this, {
+        model: { invites: trackedArray(), defaultRole: "admin" },
+      });
     }
   },
 ];

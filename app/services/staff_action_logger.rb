@@ -322,10 +322,22 @@ class StaffActionLogger
   def log_admin_onboarding_step_completed(step, opts = {})
     raise Discourse::InvalidParameters.new(:step) if step.blank?
 
+    topic_option = opts[:topic_option]
+    details = opts[:details]
+    if topic_option.present?
+      details = I18n.t(
+        "staff_action_logs.admin_onboarding_topic_option",
+        option: I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{topic_option}.title"),
+        option_id: topic_option,
+      )
+    end
+
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:admin_onboarding_step_completed],
         subject: step,
+        new_value: topic_option,
+        details: details,
       ),
     )
   end

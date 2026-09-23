@@ -2,6 +2,8 @@
 
 describe "Admin Onboarding Banner" do
   fab!(:admin)
+  fab!(:staff_category) { Fabricate(:private_category, name: "Staff", group: Group[:staff]) }
+  fab!(:general_category) { Fabricate(:category, name: "General") }
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
@@ -11,6 +13,8 @@ describe "Admin Onboarding Banner" do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
+    SiteSetting.staff_category_id = staff_category.id
+    SiteSetting.general_category_id = general_category.id
     SiteSetting.enable_invite_modal_with_roles = false
     SiteSetting.enable_site_owner_onboarding = true
     SiteSetting.default_theme_id = Theme.foundation_theme.id
@@ -26,6 +30,7 @@ describe "Admin Onboarding Banner" do
 
     it "shows all three onboarding steps" do
       visit("/")
+      expect(banner.step_names).to eq(%w[select_theme start_posting invite_collaborators])
       expect(banner.step("select_theme")).to be_present
       expect(banner.step("invite_collaborators")).to be_present
       expect(banner.step("start_posting")).to be_present
@@ -61,7 +66,10 @@ describe "Admin Onboarding Banner" do
       predefined_topics_modal.select_topic(0)
 
       expect(composer).to be_opened
-      expect(composer.composer_input.value).not_to be_empty
+      expect(composer.composer_input.value).to eq(
+        I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_categories.body"),
+      )
+      expect(composer.category_chooser).to have_selected_name(staff_category.name)
 
       composer.composer_input.set("Testing topic selection")
       composer.create
@@ -69,6 +77,23 @@ describe "Admin Onboarding Banner" do
 
       visit("/")
       expect(banner.step_completed?("start_posting")).to eq(true)
+
+      log = UserHistory.find_by!(
+        action: UserHistory.actions[:admin_onboarding_step_completed],
+        acting_user_id: admin.id,
+        subject: "start_posting",
+      )
+      expect(log.new_value).to eq("plan_categories")
+      expect(Topic.last.category_id).to eq(staff_category.id)
+
+      logs = PageObjects::Pages::AdminStaffActionLogs.new
+      logs.visit
+      logs.show_details(log)
+      expect(page).to have_css(
+        ".log-details-modal",
+        text: "Selected option: What categories should we start with?",
+      )
+      expect(page).to have_css(".log-details-modal", text: "Option ID: plan_categories")
     end
 
     it "can cancel topic selection without completing step" do

@@ -7,6 +7,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 const designWizardData = () => ({
   themes: [
@@ -141,6 +142,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   needs.settings({
     enable_site_owner_onboarding: true,
     general_category_id: 1,
+    staff_category_id: 3,
     default_composer_category: 1,
   });
 
@@ -249,21 +251,106 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     );
   });
 
-  test("it can complete `start_posting` step with predefined data", async function (assert) {
-    const step = withStep("start_posting", assert);
+  test("posting comes before inviting collaborators", async function (assert) {
     await visit("/");
+    assert.deepEqual(
+      [...document.querySelectorAll(".onboarding-step")].map((step) => step.id),
+      ["select_theme", "start_posting", "invite_collaborators"]
+    );
+  });
 
-    step.isNotChecked();
+  for (const [option, categoryId] of [
+    ["plan_categories", 3],
+    ["plan_invites", 3],
+    ["introduce_yourself", 1],
+    ["write_your_own", 1],
+  ]) {
+    test(`it completes posting with ${option}`, async function (assert) {
+      const step = withStep("start_posting", assert);
+      const composer = this.container.lookup("service:composer");
+      await visit("/");
+      step.isNotChecked();
+      await step.clickAction();
+      assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
+      assert.dom(`[data-topic-option="${option}"] .badge-category__name`).exists();
+      await click(`[data-topic-option="${option}"]`);
 
-    await step.clickAction();
+      assert.strictEqual(composer.model.categoryId, categoryId);
+      assert.strictEqual(composer.model.adminOnboardingTopicOption, option);
+      assert.strictEqual(
+        composer.model.serializeDraftData().adminOnboardingTopicOption,
+        option,
+        "saves attribution with the draft"
+      );
+      const custom = option === "write_your_own";
+      assert.dom("#reply-title").hasValue(
+        custom ? "" : i18n(`admin_onboarding_banner.start_posting.icebreakers.${option}.title`)
+      );
+      assert.dom(".d-editor-input").hasValue(
+        custom ? "" : i18n(`admin_onboarding_banner.start_posting.icebreakers.${option}.body`)
+      );
+      assert.strictEqual(loggedEvents.length, 0, "opening a card is not completion");
 
-    assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
-    await click(".predefined-topic-options-modal__card:last-child");
+      await fillIn("#reply-title", "A title tailored to this community");
+      await fillIn(".d-editor-input", "A conversation tailored to this community.");
+      await click(".create");
+      await visit("/");
+      step.isChecked();
+      assert.deepEqual(loggedEvents, [{
+        event: "step_completed",
+        step: "start_posting",
+        topic_option: option,
+      }], "logs the original choice even after editing its contents");
+    });
+  }
 
+  test("unavailable categories cannot fall back to public posting", async function (assert) {
+    this.siteSettings.staff_category_id = -1;
+    await visit("/");
+    await withStep("start_posting", assert).clickAction();
+    assert.dom('[data-topic-option="plan_categories"]').isDisabled();
+    assert.dom('[data-topic-option="plan_invites"]').isDisabled();
+    assert.dom('[data-topic-option="introduce_yourself"]').isEnabled();
+    assert.dom('[data-topic-option="write_your_own"]').isEnabled();
+  });
+
+  test("discarding a suggestion does not attribute an unrelated topic to it", async function (assert) {
+    await visit("/");
+    await withStep("start_posting", assert).clickAction();
+    await click('[data-topic-option="plan_categories"]');
+    await click("#reply-control .discard-button");
+    await click(".discard-draft-modal__discard-btn");
+    assert.strictEqual(loggedEvents.length, 0);
+
+    const composer = this.container.lookup("service:composer");
+    await composer.openNewTopic({
+      title: "An unrelated conversation",
+      body: "This was not created from an onboarding option.",
+    });
+    await settled();
+    assert.strictEqual(composer.model.adminOnboardingTopicOption, null);
     await click(".create");
     await visit("/");
+    assert.strictEqual(loggedEvents.length, 1);
+    assert.strictEqual(loggedEvents[0].step, "start_posting");
+    assert.notOk(loggedEvents[0].topic_option);
+  });
 
-    step.isChecked();
+  test("reopening a saved draft preserves the selected option", async function (assert) {
+    await visit("/");
+    await withStep("start_posting", assert).clickAction();
+    await click('[data-topic-option="plan_invites"]');
+    const composer = this.container.lookup("service:composer");
+    const { draftKey, draftSequence } = composer.model;
+    const draft = JSON.stringify(composer.model.serializeDraftData());
+    await click("#reply-control .discard-button");
+    await click(".discard-draft-modal__discard-btn");
+    await composer.open({ draft, draftKey, draftSequence });
+    await settled();
+    assert.strictEqual(composer.model.adminOnboardingTopicOption, "plan_invites");
+    await click(".create");
+    await visit("/");
+    assert.strictEqual(loggedEvents[0].topic_option, "plan_invites");
   });
 
   test("it can complete `start_posting` step with registered posting-options", async function (assert) {

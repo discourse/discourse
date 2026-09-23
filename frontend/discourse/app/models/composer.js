@@ -102,6 +102,7 @@ const CLOSED = "closed",
     archetypeId: "archetypeId",
     whisper: "whisper",
     metaData: "metaData",
+    adminOnboardingTopicOption: "adminOnboardingTopicOption",
     composerTime: "composerTime",
     typingTime: "typingTime",
     postId: "post.id",
@@ -1541,6 +1542,7 @@ export default class Composer extends RestModel {
     this.setProperties({
       archetypeId: opts.archetypeId || this.site.default_archetype,
       metaData: opts.metaData ? EmberObject.create(opts.metaData) : null,
+      adminOnboardingTopicOption: opts.adminOnboardingTopicOption ?? null,
       reply: opts.reply || this.reply || "",
     });
 

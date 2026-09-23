@@ -3,34 +3,55 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import Category from "discourse/models/category";
 import DModal from "discourse/ui-kit/d-modal";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
 
 export default class PredefinedTopicOptions extends Component {
   @service composer;
+  @service siteSettings;
 
-  icebreakerTopics = [
-    "fun_facts",
-    "coolest_thing_you_have_seen_today",
-    "introduce_yourself",
-    "what_is_your_favorite_food",
-  ];
+  get topics() {
+    const staff = Category.findById(this.siteSettings.staff_category_id);
+    const general = Category.findById(this.siteSettings.general_category_id);
 
-  openTopic(topicKey) {
-    this.composer.openNewTopic({
-      title: i18n(
-        `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.title`
-      ),
-      body: i18n(
-        `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.body`
-      ),
-    });
+    return [
+      { key: "plan_categories", category: staff },
+      { key: "plan_invites", category: staff },
+      { key: "introduce_yourself", category: general },
+      { key: "write_your_own", category: general },
+    ].map((topic) => ({
+      ...topic,
+      disabled: !topic.category?.canCreateTopic,
+    }));
   }
 
   @action
   handleSelectTopic(topic) {
+    if (topic.disabled) {
+      return;
+    }
+
     this.args.closeModal();
-    this.openTopic(topic);
+    const custom = topic.key === "write_your_own";
+
+    this.composer.openNewTopic({
+      title: custom
+        ? ""
+        : i18n(
+            `admin_onboarding_banner.start_posting.icebreakers.${topic.key}.title`
+          ),
+      body: custom
+        ? ""
+        : i18n(
+            `admin_onboarding_banner.start_posting.icebreakers.${topic.key}.body`
+          ),
+      category: topic.category,
+      // Draft metadata follows this composer, not the last card clicked. It
+      // survives draft restoration and is discarded with an abandoned topic.
+      adminOnboardingTopicOption: topic.key,
+    });
   }
 
   <template>
@@ -44,26 +65,37 @@ export default class PredefinedTopicOptions extends Component {
     >
       <:body>
         <div class="predefined-topic-options-modal__list">
-          {{#each this.icebreakerTopics as |topic|}}
+          {{#each this.topics as |topic|}}
             <button
               class="predefined-topic-options-modal__card"
               type="button"
+              data-topic-option={{topic.key}}
+              disabled={{topic.disabled}}
+              title={{if
+                topic.disabled
+                (i18n "admin_onboarding_banner.start_posting.category_unavailable")
+              }}
               {{on "click" (fn this.handleSelectTopic topic)}}
             >
-              <span class="predefined-topic-options-modal__title">
-                {{i18n
-                  (concat
-                    "admin_onboarding_banner.start_posting.icebreakers."
-                    topic
-                    ".title"
-                  )
-                }}
+              <span class="predefined-topic-options-modal__heading">
+                <span class="predefined-topic-options-modal__title">
+                  {{i18n
+                    (concat
+                      "admin_onboarding_banner.start_posting.icebreakers."
+                      topic.key
+                      ".title"
+                    )
+                  }}
+                </span>
+                {{#if topic.category}}
+                  {{dCategoryBadge topic.category}}
+                {{/if}}
               </span>
               <p class="predefined-topic-options-modal__body">
                 {{i18n
                   (concat
                     "admin_onboarding_banner.start_posting.icebreakers."
-                    topic
+                    topic.key
                     ".body"
                   )
                 }}

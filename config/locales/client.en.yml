@@ -602,19 +602,20 @@ en:
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
         back: "Back"
+        category_unavailable: "This category is unavailable for posting."
         icebreakers:
-          fun_facts:
-            title: "What are some fun facts about you?"
-            body: "Hi everyone! I'm excited to start this new community. To kick things off, let's share a fun fact about ourselves. I'll go first: I love hiking and exploring new trails! What's something interesting about you?"
-          coolest_thing_you_have_seen_today:
-            title: "What's the coolest thing you've seen today?"
-            body: "What's the coolest thing you've seen or experienced today? It could be anything from a beautiful sunset to a random act of kindness. I'll start: I saw a dog helping an elderly person cross the street!"
+          plan_categories:
+            title: "What categories should we start with?"
+            body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
+          plan_invites:
+            title: "Which members should we invite before we launch?"
+            body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
           introduce_yourself:
             title: "Introduce yourself"
             body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
-          what_is_your_favorite_food:
-            title: "What is your favorite food?"
-            body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+          write_your_own:
+            title: "Write your own"
+            body: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
