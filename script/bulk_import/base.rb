@@ -1513,7 +1513,7 @@ class BulkImport::Base
   end
 
   def process_user_stat(user_stat)
-    user_stat[:user_id] = user_id_from_imported_id(user_email[:imported_user_id])
+    user_stat[:user_id] = user_id_from_imported_id(user_stat[:imported_user_id])
     user_stat[:topics_entered] ||= 0
     user_stat[:time_read] ||= 0
     user_stat[:days_visited] ||= 0
