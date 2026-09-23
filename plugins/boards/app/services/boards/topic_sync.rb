@@ -359,16 +359,8 @@ module Boards
       archived_ids = Board.where(id: board_groups.keys, archived: true).pluck(:id)
       board_groups = board_groups.except(*archived_ids)
 
-      deleted_by_board.each do |board_id, card_ids|
-        card_ids.each do |card_id|
-          publish_to_board(board_groups, board_id, type: "card_deleted", card_id: card_id)
-        end
-      end
-
-      created_cards.each do |card|
-        payload = CardSerializer.new(card, root: false).as_json.except("topic", :topic)
-        publish_to_board(board_groups, card.board_id, type: "card_created", card: payload)
-      end
+      board_ids = (deleted_by_board.keys + created_cards.map(&:board_id)).uniq
+      board_ids.each { |board_id| publish_to_board(board_groups, board_id, type: "board_updated") }
     end
     private_class_method :publish_sync_changes
 
