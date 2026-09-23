@@ -198,6 +198,27 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(400)
     end
 
+    it "keeps the no-limit default above the explicit limit cap" do
+      51.times { Fabricate(:user_badge, badge: badge) }
+
+      get "/user_badges.json", params: { badge_id: badge.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_badge_info"]["user_badges"].length).to eq(51)
+    end
+
+    it "returns 400 for a blank badge_id rather than falling back to the feed" do
+      get "/user_badges.json", params: { badge_id: "" }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns 400 when badge_ids exceeds the maximum" do
+      get "/user_badges.json", params: { badge_ids: (1..101).to_a.join(",") }
+
+      expect(response.status).to eq(400)
+    end
+
     it "returns 400 for an array-form badge_type_id" do
       get "/user_badges.json", params: { badge_type_id: [BadgeType::Gold] }
 

@@ -49,9 +49,9 @@ export default class UserBadge extends RestCompatModel {
     return requestMany(this, findUserBadgesByBadgeId(badgeId, options));
   }
 
-  // One request for the most recent grants across several badges (or, with an
-  // empty list, every enabled badge) — the aggregate feed behind client-side
-  // "recently earned" leaderboards. `options` may set `badgeTypeId`/`limit`.
+  // One request for the most recent grants across several badges (or every
+  // enabled listable badge when the list is empty). `options` may set
+  // `badgeTypeId`/`limit`.
   static findByBadgeIds(badgeIds, options = {}) {
     return requestMany(this, findUserBadgesByBadgeIds(badgeIds, options));
   }

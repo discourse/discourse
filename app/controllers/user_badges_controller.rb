@@ -2,7 +2,8 @@
 
 class UserBadgesController < ApplicationController
   MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
-  MAX_INDEX_LIMIT = 50
+  MAX_INDEX_LIMIT = 400
+  MAX_BADGE_IDS = 100
 
   before_action :ensure_badges_enabled
   before_action :ensure_logged_in, only: %i[create destroy toggle_favorite]
@@ -189,14 +190,15 @@ class UserBadgesController < ApplicationController
   def selected_badge_ids
     return parse_badge_ids(params[:badge_ids]) if params.key?(:badge_ids)
 
-    if params[:badge_name].present?
+    if params.key?(:badge_name)
       badge = Badge.find_by(name: params[:badge_name], enabled: true)
       raise Discourse::NotFound if badge.blank?
 
       return [badge.id]
     end
 
-    if params[:badge_id].present?
+    if params.key?(:badge_id)
+      params.require(:badge_id)
       badge = Badge.find_by(id: params[:badge_id], enabled: true)
       raise Discourse::NotFound if badge.blank?
 
@@ -210,15 +212,21 @@ class UserBadgesController < ApplicationController
     return nil if raw.blank?
 
     tokens = raw.is_a?(Array) ? raw.flatten : raw.to_s.split(/[,|\s+]/)
-    tokens
-      .flat_map { |token| token.to_s.split(/[,|\s+]/) }
-      .filter_map { |token| Integer(token, exception: false) }
-      .select(&:positive?)
-      .uniq
+    ids =
+      tokens
+        .flat_map { |token| token.to_s.split(/[,|\s+]/) }
+        .filter_map { |token| Integer(token, exception: false) }
+        .select(&:positive?)
+        .uniq
+    raise Discourse::InvalidParameters.new(:badge_ids) if ids.length > MAX_BADGE_IDS
+
+    ids
   end
 
   def index_limit
-    limit = fetch_int_from_params(:limit, min: 1, default: MAX_BADGES)
+    limit = fetch_int_from_params(:limit, default: nil, min: 1)
+    return MAX_BADGES if limit.nil?
+
     [limit, MAX_INDEX_LIMIT].min
   end
 
