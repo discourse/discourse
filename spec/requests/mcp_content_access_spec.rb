@@ -138,6 +138,49 @@ describe "MCP content access" do
     expect_missing_scope("mcp:themes:write")
   end
 
+  it "returns component relationships so writers can preserve existing attachments" do
+    user.update!(admin: true)
+    authorize("mcp:themes:read", "mcp:themes:write")
+    existing_component = Fabricate(:theme, component: true)
+    new_component = Fabricate(:theme, component: true)
+    theme = Fabricate(:theme, child_theme_ids: [existing_component.id])
+
+    call_tool("discourse_get_theme", { theme_id: theme.id })
+    theme_json = response.parsed_body.dig("result", "structuredContent", "theme")
+    expect(theme_json["child_theme_ids"]).to contain_exactly(existing_component.id)
+    expect(theme_json["parent_theme_ids"]).to eq([])
+
+    call_tool(
+      "discourse_update_theme",
+      { theme_id: theme.id, child_theme_ids: theme_json["child_theme_ids"] + [new_component.id] },
+    )
+    expect(
+      response.parsed_body.dig("result", "structuredContent", "theme", "child_theme_ids"),
+    ).to contain_exactly(existing_component.id, new_component.id)
+
+    call_tool("discourse_get_theme", { theme_id: existing_component.id })
+    expect(
+      response.parsed_body.dig("result", "structuredContent", "theme", "parent_theme_ids"),
+    ).to contain_exactly(theme.id)
+  end
+
+  it "allows readers to inspect remote theme source" do
+    user.update!(admin: true)
+    authorize("mcp:themes:read")
+    remote_theme = RemoteTheme.create!(remote_url: "https://example.com/theme.git")
+    theme = Fabricate(:theme, remote_theme:)
+    source = "<div>Remote theme header</div>"
+    theme.set_field(target: :common, name: "header", value: source)
+    theme.save!
+
+    call_tool("discourse_get_theme", { theme_id: theme.id })
+
+    expect(response.status).to eq(200)
+    expect(
+      response.parsed_body.dig("result", "structuredContent", "theme", "theme_fields"),
+    ).to contain_exactly(include("name" => "header", "value" => source))
+  end
+
   it "keeps theme tools admin-only when theme scopes are granted" do
     authorize("mcp:themes:read", "mcp:themes:write")
 

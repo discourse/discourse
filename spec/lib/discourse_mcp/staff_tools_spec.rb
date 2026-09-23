@@ -711,6 +711,38 @@ describe DiscourseMcp::Tools do
       expect(theme.theme_fields.find_by(name: "header").value).to eq("<div>updated</div>")
     end
 
+    it "records component enable and disable actions with the acting admin" do
+      component = Fabricate(:theme, component: true)
+      freeze_time
+
+      described_class.call(
+        arguments: {
+          "theme_id" => component.id,
+          "enabled" => false,
+        },
+        request_context: request_context(admin),
+      )
+
+      expect(component.reload.disabled_by).to eq(admin)
+      expect(component.disabled_at).to eq_time(Time.current)
+
+      described_class.call(
+        arguments: {
+          "theme_id" => component.id,
+          "enabled" => true,
+        },
+        request_context: request_context(admin),
+      )
+
+      expect(component.reload).to be_enabled
+      expect(
+        UserHistory.where(context: component.id.to_s).pluck(:action, :acting_user_id),
+      ).to contain_exactly(
+        [UserHistory.actions[:disable_theme_component], admin.id],
+        [UserHistory.actions[:enable_theme_component], admin.id],
+      )
+    end
+
     it "clears a field when its value is blank" do
       theme.set_field(target: :common, name: "header", value: "<div>bye</div>")
       theme.save!

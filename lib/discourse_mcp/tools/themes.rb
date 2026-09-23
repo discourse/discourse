@@ -60,18 +60,20 @@ module DiscourseMcp
           dark_color_scheme_id: theme.dark_color_scheme_id,
           default: theme.default?,
           remote_theme_id: theme.remote_theme_id,
+          child_theme_ids: theme.child_theme_ids,
+          parent_theme_ids: theme.parent_theme_ids,
           created_at: theme.created_at.iso8601,
           updated_at: theme.updated_at.iso8601,
-          theme_fields: theme.theme_fields.map { |field| theme_field_json(theme, field) },
+          theme_fields: theme.theme_fields.map { |field| theme_field_json(field) },
         }
       end
 
-      def theme_field_json(theme, field)
+      def theme_field_json(field)
         {
           name: field.name,
           target: ::Theme.lookup_target(field.target_id)&.to_s,
           type_id: field.type_id,
-          value: theme.remote_theme_id.nil? ? field.value : nil,
+          value: field.value,
           upload_id: field.upload_id,
           error: field.error.presence,
         }
@@ -172,7 +174,15 @@ module DiscourseMcp
 
           apply_default(theme, arguments)
           theme = ::Theme.include_relations.find(theme.id)
-          StaffActionLogger.new(guardian.user).log_theme_change(original_json, theme)
+          logger = StaffActionLogger.new(guardian.user)
+          logger.log_theme_change(original_json, theme)
+          if theme.component? && arguments.key?("enabled")
+            if theme.enabled?
+              logger.log_theme_component_enabled(theme)
+            else
+              logger.log_theme_component_disabled(theme)
+            end
+          end
         end
 
         ToolHelpers.text_and_structured(theme: ThemeSupport.theme_json(theme))
