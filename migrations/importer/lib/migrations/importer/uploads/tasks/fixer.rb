@@ -34,7 +34,7 @@ module Migrations
           def after_run
             super
 
-            if @missing_count.positive?
+            if @missing_count > 0
               reporter.notice(
                 I18n.t("importer.uploads.fixer_missing_summary", count: @missing_count),
               )
