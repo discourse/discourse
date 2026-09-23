@@ -1,30 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::Uploads::DiscoursePatches do
-  # The patches on the AR models need a booted Rails and are not tested here.
-  # Without Rails, this covers the DistributedMutex bypass: a thread-local flag
-  # set around `create_for` makes the mutex run the block without the lock.
+  # `apply!` patches the real Rails classes for the whole process, so these
+  # examples prepend the two modules to small host classes instead. They cover
+  # the DistributedMutex bypass only; the ActiveRecord patches need a booted
+  # Rails and are not covered here.
 
-  after { Thread.current[described_class::MUTEX_BYPASS_KEY] = nil }
-
-  # A stand-in for UploadCreator: prepending the scope module should set the
-  # flag for the duration of the call and restore it afterwards.
-  let(:creator_class) do
-    Class.new do
-      prepend Migrations::Importer::Uploads::DiscoursePatches::CreatorMutexScope
-
-      attr_reader :flag_during_call
-
-      def create_for(_user_id)
-        @flag_during_call = Migrations::Importer::Uploads::DiscoursePatches.bypassing_upload_mutex?
-        yield if block_given?
-        :created
-      end
-    end
-  end
-
-  # A stand-in for DistributedMutex: prepending the bypass on its singleton
-  # yields directly while the flag is set, and defers to the original otherwise.
+  # Takes its lock unless the bypass is on, like DistributedMutex.
   let(:mutex_class) do
     Class.new do
       class << self
@@ -40,70 +22,40 @@ RSpec.describe Migrations::Importer::Uploads::DiscoursePatches do
     end
   end
 
-  describe ".bypassing_upload_mutex?" do
-    it "is falsey outside a create_for call" do
-      expect(described_class.bypassing_upload_mutex?).to be_falsey
-    end
-  end
+  # Uses the mutex inside `create_for`, like UploadCreator.
+  let(:creator_class) do
+    Class.new do
+      prepend Migrations::Importer::Uploads::DiscoursePatches::CreatorMutexScope
 
-  describe "CreatorMutexScope" do
-    it "sets the flag while create_for runs and clears it after" do
-      creator = creator_class.new
-
-      expect(creator.create_for(1)).to eq(:created)
-      expect(creator.flag_during_call).to be(true)
-      expect(described_class.bypassing_upload_mutex?).to be_falsey
-    end
-
-    it "restores the previous flag value when calls nest" do
-      creator = creator_class.new
-
-      creator.create_for(1) do
-        expect(described_class.bypassing_upload_mutex?).to be(true)
-        creator.create_for(2)
-        # the nested call must not have reset the outer flag to nil
-        expect(described_class.bypassing_upload_mutex?).to be(true)
+      def initialize(mutex)
+        @mutex = mutex
       end
 
-      expect(described_class.bypassing_upload_mutex?).to be_falsey
+      def create_for(_user_id)
+        @mutex.synchronize("upload_-1_file.png") { yield if block_given? }
+        :created
+      end
     end
   end
 
-  describe "MutexBypass" do
-    it "yields directly and skips the lock while bypassing" do
-      Thread.current[described_class::MUTEX_BYPASS_KEY] = true
+  it "skips the mutex lock inside create_for and takes it again afterwards" do
+    creator = creator_class.new(mutex_class)
 
-      result = mutex_class.synchronize("upload_-1_file.png") { :block_ran }
+    expect(creator.create_for(-1)).to eq(:created)
+    expect(mutex_class.locked).to be_nil
 
-      expect(result).to eq(:block_ran)
-      expect(mutex_class.locked).to be_nil
+    expect(mutex_class.synchronize("upload_-1_file.png") { :block_ran }).to eq(:block_ran)
+    expect(mutex_class.locked).to be(true)
+  end
+
+  it "keeps the bypass on for the rest of an outer create_for after a nested one" do
+    creator = creator_class.new(mutex_class)
+
+    creator.create_for(1) do
+      creator.create_for(2)
+      expect(described_class.bypassing_upload_mutex?).to be(true)
     end
 
-    it "takes the real lock when not bypassing" do
-      result = mutex_class.synchronize("upload_-1_file.png") { :block_ran }
-
-      expect(result).to eq(:block_ran)
-      expect(mutex_class.locked).to be(true)
-    end
-
-    it "bypasses the lock inside a create_for call" do
-      creator =
-        Class
-          .new do
-            prepend Migrations::Importer::Uploads::DiscoursePatches::CreatorMutexScope
-
-            def initialize(mutex)
-              @mutex = mutex
-            end
-
-            def create_for(_user_id)
-              @mutex.synchronize("key") { :ok }
-            end
-          end
-          .new(mutex_class)
-
-      expect(creator.create_for(-1)).to eq(:ok)
-      expect(mutex_class.locked).to be_nil
-    end
+    expect(described_class.bypassing_upload_mutex?).to be_falsey
   end
 end

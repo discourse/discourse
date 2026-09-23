@@ -42,51 +42,30 @@ RSpec.describe Migrations::Importer::Uploads::UploadCreationService do
       expect(result).to be_nil
     end
 
-    it "maps a size overrun to the upload-size-exceeded skip reason" do
-      allow(downloader).to receive(:download).and_raise(
-        downloader_errors::UploadSizeExceededError.new("too big"),
-      )
+    it "maps download failures to their skip reasons" do
+      {
+        downloader_errors::UploadSizeExceededError => enums::UploadSkipReason::UPLOAD_SIZE_EXCEEDED,
+        downloader_errors::DownloadFailedError => enums::UploadSkipReason::DOWNLOAD_ERROR,
+      }.each do |error_class, skip_reason|
+        allow(downloader).to receive(:download).and_raise(error_class.new("boom"))
 
-      result = service.create({ id: "abc", url: "https://x/a.png" }, user_id: 1)
+        result = service.create({ id: "abc", url: "https://x/a.png" }, user_id: 1)
 
-      expect(result.status).to eq(enums::UploadResultStatus::ERROR)
-      expect(result.skip_reason).to eq(enums::UploadSkipReason::UPLOAD_SIZE_EXCEEDED)
-      expect(result.skip_details).to eq("too big")
-    end
-
-    it "maps a download failure to the download-error skip reason" do
-      allow(downloader).to receive(:download).and_raise(
-        downloader_errors::DownloadFailedError.new("boom"),
-      )
-
-      result = service.create({ id: "abc", url: "https://x/a.png" }, user_id: 1)
-
-      expect(result.status).to eq(enums::UploadResultStatus::ERROR)
-      expect(result.skip_reason).to eq(enums::UploadSkipReason::DOWNLOAD_ERROR)
+        expect(result).to have_attributes(
+          status: enums::UploadResultStatus::ERROR,
+          skip_reason:,
+          skip_details: "boom",
+        )
+      end
     end
 
     context "when the upload creator runs" do
+      # Records each create. When `hold` is set, a create waits on it until the
+      # test lets it continue.
       let(:creator_class) do
         Class.new do
           class << self
-            attr_accessor :filenames, :running, :max_running
-
-            def reset!
-              @filenames = Queue.new
-              @running = 0
-              @max_running = 0
-              @counter_lock = Mutex.new
-            end
-
-            def track
-              @counter_lock.synchronize do
-                @running += 1
-                @max_running = [@max_running, @running].max
-              end
-              sleep(0.05)
-            ensure
-              @counter_lock.synchronize { @running -= 1 }
-            end
+            attr_accessor :filenames, :started, :hold
           end
 
           def initialize(_file, filename, type:, origin:)
@@ -94,7 +73,8 @@ RSpec.describe Migrations::Importer::Uploads::UploadCreationService do
           end
 
           def create_for(_user_id)
-            self.class.track
+            self.class.started << true
+            self.class.hold&.pop
             Struct.new(:persisted?, :errors).new(
               false,
               Struct.new(:full_messages).new(["not saved"]),
@@ -111,7 +91,8 @@ RSpec.describe Migrations::Importer::Uploads::UploadCreationService do
       end
 
       before do
-        creator_class.reset!
+        creator_class.filenames = Queue.new
+        creator_class.started = Queue.new
         stub_const("UploadCreator", creator_class)
         stub_const("ActiveRecord::RecordNotUnique", Class.new(StandardError))
       end
@@ -132,17 +113,22 @@ RSpec.describe Migrations::Importer::Uploads::UploadCreationService do
       end
 
       it "does not create two uploads with the same content at the same time" do
-        first = source_file("first.png", "same bytes")
-        second = source_file("second.png", "same bytes")
+        creator_class.hold = Queue.new
+        paths = [source_file("first.png", "same bytes"), source_file("second.png", "same bytes")]
         allow(locator).to receive(:find_file_in_paths) { |row| row[:path] }
 
-        [first, second].map do |path|
+        threads =
+          paths.map do |path|
             Thread.new { service.create({ id: path, filename: "a.png", path: }, user_id: 1) }
           end
-          .each(&:join)
+        creator_class.started.pop
+        wait_until { threads.all? { |thread| thread.status == "sleep" } }
 
-        expect(creator_class.filenames.size).to eq(2)
-        expect(creator_class.max_running).to eq(1)
+        expect(creator_class.started).to be_empty
+
+        2.times { creator_class.hold << :go }
+        threads.each(&:join)
+        expect(creator_class.started.size).to eq(1)
       end
     end
 

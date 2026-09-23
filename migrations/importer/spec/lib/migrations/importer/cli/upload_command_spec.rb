@@ -12,35 +12,27 @@ RSpec.describe Migrations::Importer::CLI::UploadCommand do
   end
 
   describe "#call" do
-    it "parses the settings and runs the uploads without touching files.db" do
+    it "runs the uploads with the parsed settings, without touching files.db or the modes" do
       described_class.new([]).call
 
       expect(Migrations::Database).not_to have_received(:delete_database)
       expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!).with(
-        parsed_settings,
+        { files_db: files_db_path },
       )
     end
 
     it "deletes files.db before running when --reset is given" do
       described_class.new(["--reset"]).call
 
-      expect(Migrations::Database).to have_received(:delete_database).with(files_db_path)
-      expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!)
-    end
-
-    it "leaves the modes off when no flag is passed" do
-      described_class.new([]).call
-
-      expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!).with(
-        hash_excluding(:fix_missing, :create_optimized_images),
-      )
+      expect(Migrations::Database).to have_received(:delete_database).with(files_db_path).ordered
+      expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!).ordered
     end
 
     it "turns on fix_missing with the --fix-missing flag" do
       described_class.new(["--fix-missing"]).call
 
       expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!).with(
-        hash_including(fix_missing: true),
+        { files_db: files_db_path, fix_missing: true },
       )
     end
 
@@ -48,7 +40,7 @@ RSpec.describe Migrations::Importer::CLI::UploadCommand do
       described_class.new(["--optimize"]).call
 
       expect(Migrations::Importer::Uploads::Uploads).to have_received(:perform!).with(
-        hash_including(create_optimized_images: true),
+        { files_db: files_db_path, create_optimized_images: true },
       )
     end
 

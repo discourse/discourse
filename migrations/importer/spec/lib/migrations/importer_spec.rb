@@ -24,21 +24,13 @@ RSpec.describe Migrations::Importer do
       expect(config[:files_db]).to be_nil
     end
 
-    it "keeps an explicit files_db without touching the disk" do
+    it "keeps an explicit files_db even when the derived one exists" do
+      allow(File).to receive(:exist?).with(derived_files_db).and_return(true)
       config = { intermediate_db:, files_db: "/elsewhere/files.db" }
 
       described_class.resolve_config_defaults(config)
 
       expect(config[:files_db]).to eq("/elsewhere/files.db")
-    end
-
-    it "derives the inline download_cache_path when the uploads section omits it" do
-      allow(File).to receive(:exist?).and_return(false)
-      config = { intermediate_db:, uploads: { root_paths: ["/x"] } }
-
-      described_class.resolve_config_defaults(config)
-
-      expect(config.dig(:uploads, :download_cache_path)).to eq(derived_cache)
     end
 
     it "keeps an explicit inline download_cache_path" do

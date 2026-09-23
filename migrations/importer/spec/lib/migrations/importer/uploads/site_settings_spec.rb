@@ -47,7 +47,8 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
   end
 
   let(:upload) do
-    double(
+    instance_double(
+      "Upload",
       persisted?: true,
       errors: [],
       url: "//uploads.example.com/original/test.txt",
@@ -60,9 +61,8 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
     stub_const("Discourse", Module.new)
     stub_const("Discourse::SYSTEM_USER_ID", -1)
 
-    upload_creator = double(create_for: upload)
-    upload_creator_class = class_double("UploadCreator", new: upload_creator)
-    stub_const("UploadCreator", upload_creator_class)
+    upload_creator = instance_double("UploadCreator", create_for: upload)
+    class_double("UploadCreator", new: upload_creator).as_stubbed_const
   end
 
   def stub_public_access(response)
@@ -85,22 +85,33 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
     expect { configure }.not_to raise_error
   end
 
-  it "checks public access with the endpoint's scheme" do
+  it "points the store at the configured endpoint and checks public access with its scheme" do
     options[:s3_endpoint] = "http://minio.local:9000"
-    SiteSetting.s3_endpoint = options[:s3_endpoint]
-    allow(Net::HTTP).to receive(:get_response).and_return(Net::HTTPOK.new("1.1", "200", "OK"))
+    stub_public_access(Net::HTTPOK.new("1.1", "200", "OK"))
 
     configure
 
+    expect(SiteSetting.s3_endpoint).to eq("http://minio.local:9000")
     expect(Net::HTTP).to have_received(:get_response).with(
       an_object_satisfying { |uri| uri.scheme == "http" },
     )
   end
 
-  it "warns when S3 is configured but disabled" do
+  it "clears an endpoint the target site has when the settings file has none" do
+    SiteSetting.s3_endpoint = "http://minio.local:9000"
+    stub_public_access(Net::HTTPOK.new("1.1", "200", "OK"))
+
+    configure
+
+    expect(SiteSetting.s3_endpoint).to eq("")
+  end
+
+  it "warns and leaves the S3 settings alone when S3 is configured but disabled" do
+    SiteSetting.s3_endpoint = "http://minio.local:9000"
     options[:enable_s3_uploads] = false
 
     expect { configure }.to output(/enable_s3_uploads is false/).to_stderr
+    expect(SiteSetting.s3_endpoint).to eq("http://minio.local:9000")
   end
 
   it "puts the previous S3 settings back when the check fails" do
@@ -127,28 +138,5 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
 
     expect(SiteSetting.enable_s3_uploads).to be(true)
     expect(SiteSetting.s3_upload_bucket).to eq("uploads.example.com")
-  end
-
-  describe "the S3 endpoint" do
-    before { stub_public_access(Net::HTTPOK.new("1.1", "200", "OK")) }
-
-    it "points the store at the configured endpoint" do
-      options[:s3_endpoint] = "http://minio.local:9000"
-      configure
-      expect(SiteSetting.s3_endpoint).to eq("http://minio.local:9000")
-    end
-
-    it "clears an endpoint the target site carries when the settings file has none" do
-      SiteSetting.s3_endpoint = "http://minio.local:9000"
-      configure
-      expect(SiteSetting.s3_endpoint).to eq("")
-    end
-
-    it "leaves the endpoint alone when the run doesn't use S3" do
-      SiteSetting.s3_endpoint = "http://minio.local:9000"
-      options[:enable_s3_uploads] = false
-      expect { configure }.to output.to_stderr
-      expect(SiteSetting.s3_endpoint).to eq("http://minio.local:9000")
-    end
   end
 end

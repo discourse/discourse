@@ -1,34 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::Uploads::InlineWorkList do
-  # Runs against real migrated SQLite databases (intermediate and mappings).
-  # No Rails needed, this is just SQL.
+  include_context "with mapped intermediate db"
+
   let(:mapping_type) { Migrations::Importer::MappingType }
   let(:system_user_id) { -1 }
-
-  around do |example|
-    Dir.mktmpdir do |dir|
-      intermediate_path = File.join(dir, "intermediate.db")
-      mappings_path = File.join(dir, "mappings.db")
-
-      Migrations::Database.migrate(
-        intermediate_path,
-        migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
-      )
-      Migrations::Database.migrate(
-        mappings_path,
-        migrations_path: Migrations::Database::MAPPINGS_DB_SCHEMA_PATH,
-      )
-
-      @db = Migrations::Database.connect(intermediate_path)
-      @db.execute("ATTACH DATABASE ? AS mapped", mappings_path)
-      example.run
-    ensure
-      @db&.close
-    end
-  end
-
-  let(:db) { @db }
 
   def add_source(id:, user_id: nil, url: nil, data: nil)
     db.execute(
@@ -51,22 +27,16 @@ RSpec.describe Migrations::Importer::Uploads::InlineWorkList do
     )
   end
 
-  it "returns the pending rows with the owning user resolved from the users map" do
+  it "resolves the owning user from the users map and falls back to the system user" do
     add_source(id: "a", user_id: "orig-7")
+    add_source(id: "b", user_id: "unmapped")
     map_id(original_id: "orig-7", type: mapping_type::USERS, discourse_id: 42)
 
     rows = described_class.rows(db, system_user_id:)
 
-    expect(rows.map { |r| r[:id] }).to eq(["a"])
-    expect(rows.first[:resolved_user_id]).to eq(42)
-  end
-
-  it "falls back to the system user when the source user is unmapped" do
-    add_source(id: "a", user_id: "unmapped")
-
-    rows = described_class.rows(db, system_user_id:)
-
-    expect(rows.first[:resolved_user_id]).to eq(system_user_id)
+    expect(rows.map { |r| r.values_at(:id, :resolved_user_id) }).to eq(
+      [["a", 42], ["b", system_user_id]],
+    )
   end
 
   it "excludes sources already mapped as uploads on a re-run" do
@@ -80,22 +50,22 @@ RSpec.describe Migrations::Importer::Uploads::InlineWorkList do
   end
 
   describe ".needs_root_paths?" do
+    def needs_root_paths?
+      described_class.needs_root_paths?(described_class.rows(db, system_user_id:))
+    end
+
     it "is false when every pending row has a url or a data blob" do
       add_source(id: "a", url: "https://example.com/a.png")
       add_source(id: "b", data: "bytes")
 
-      expect(described_class.needs_root_paths?(described_class.rows(db, system_user_id:))).to be(
-        false,
-      )
+      expect(needs_root_paths?).to be(false)
     end
 
     it "is true when a pending row has to be read from disk" do
       add_source(id: "a", url: "https://example.com/a.png")
       add_source(id: "b")
 
-      expect(described_class.needs_root_paths?(described_class.rows(db, system_user_id:))).to be(
-        true,
-      )
+      expect(needs_root_paths?).to be(true)
     end
   end
 end

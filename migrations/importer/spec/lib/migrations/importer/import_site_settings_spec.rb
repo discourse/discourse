@@ -51,16 +51,12 @@ RSpec.describe Migrations::Importer::ImportSiteSettings do
     end
 
     describe "#apply!" do
-      it "sets every import setting and disables rate limits" do
+      it "extends the purge grace periods and keeps them after the restore" do
         site_settings.apply!
+        expect(SiteSetting.purge_unactivated_users_grace_period_days).to eq(60)
+        expect(SiteSetting.purge_deleted_uploads_grace_period_days).to eq(90)
 
-        described_class::SETTINGS.each { |name, value| expect(SiteSetting.get(name)).to eq(value) }
-        expect(RateLimiter).to have_received(:disable)
-      end
-
-      it "extends the purge grace periods" do
-        site_settings.apply!
-
+        site_settings.restore!
         expect(SiteSetting.purge_unactivated_users_grace_period_days).to eq(60)
         expect(SiteSetting.purge_deleted_uploads_grace_period_days).to eq(90)
       end
@@ -75,32 +71,15 @@ RSpec.describe Migrations::Importer::ImportSiteSettings do
     end
 
     describe "#restore!" do
-      it "puts the previous values back and enables rate limits" do
-        site_settings.apply!
-        site_settings.restore!
-
-        expect(SiteSetting.get(:min_post_length)).to eq(20)
-        expect(SiteSetting.get(:clean_up_uploads)).to be(true)
-        expect(SiteSetting.get(:authorized_extensions)).to eq("jpg|png")
-        expect(RateLimiter).to have_received(:enable)
-      end
-
-      it "keeps a value that was changed during the import" do
+      it "puts the previous values back but keeps a value changed during the import" do
         site_settings.apply!
         SiteSetting.set(:min_post_length, 5)
 
         restored = site_settings.restore!
 
+        expect(SiteSetting.get(:authorized_extensions)).to eq("jpg|png")
         expect(SiteSetting.get(:min_post_length)).to eq(5)
         expect(restored).to eq(described_class::SETTINGS.size - 1)
-      end
-
-      it "does not roll back the purge grace periods" do
-        site_settings.apply!
-        site_settings.restore!
-
-        expect(SiteSetting.purge_unactivated_users_grace_period_days).to eq(60)
-        expect(SiteSetting.purge_deleted_uploads_grace_period_days).to eq(90)
       end
 
       it "does nothing when the settings were never applied" do
@@ -128,8 +107,7 @@ RSpec.describe Migrations::Importer::ImportSiteSettings do
 
     it "loosens the settings for the run and puts them back afterwards" do
       site_settings.apply!
-      expect(SiteSetting.min_post_length).to eq(1)
-      expect(SiteSetting.clean_up_uploads).to be(false)
+      described_class::SETTINGS.each { |name, value| expect(SiteSetting.get(name)).to eq(value) }
       expect(RateLimiter).to be_disabled
 
       site_settings.restore!

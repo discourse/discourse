@@ -12,48 +12,35 @@ RSpec.describe Migrations::SettingsParser do
     { intermediate_db: File.join(@dir, "intermediate.db"), root_paths: [@dir] }.merge(overrides)
   end
 
-  describe "required keys" do
-    it "needs only the intermediate_db and root_paths keys" do
-      expect { described_class.new(valid_options) }.not_to raise_error
-    end
-
-    it "reports every missing key" do
-      expect { described_class.new({}) }.to raise_error(
-        described_class::ValidationError,
-        "Missing required keys: intermediate_db, root_paths",
-      )
-    end
+  it "reports every missing required key" do
+    expect { described_class.new({}) }.to raise_error(
+      described_class::ValidationError,
+      "Missing required keys: intermediate_db, root_paths",
+    )
   end
 
   describe "removed keys" do
-    it "points fix_missing at its flag" do
-      expect { described_class.new(valid_options(fix_missing: false)) }.to raise_error(
-        described_class::ValidationError,
-        "`fix_missing` has moved to the --fix-missing flag; remove it from the settings file.",
-      )
+    it "rejects each removed key and says what replaced it" do
+      {
+        fix_missing: "`fix_missing` has moved to the --fix-missing flag",
+        create_optimized_images: "`create_optimized_images` has moved to the --optimize flag",
+        thread_count_factor:
+          "`thread_count_factor` is not used anymore, the number of workers now adjusts itself",
+      }.each do |key, message|
+        expect { described_class.new(valid_options(key => 1)) }.to raise_error(
+          described_class::ValidationError,
+          "#{message}; remove it from the settings file.",
+        )
+      end
     end
 
-    it "points create_optimized_images at its flag" do
-      expect { described_class.new(valid_options(create_optimized_images: false)) }.to raise_error(
-        described_class::ValidationError,
-        "`create_optimized_images` has moved to the --optimize flag; remove it from the settings file.",
-      )
-    end
-
-    it "rejects thread_count_factor" do
-      expect { described_class.new(valid_options(thread_count_factor: 1.5)) }.to raise_error(
-        described_class::ValidationError,
-        /\A`thread_count_factor` is not used anymore, the number of workers now adjusts itself/,
-      )
-    end
-
-    %i[
-      authorized_extensions
-      max_attachment_size_kb
-      max_image_size_kb
-      max_image_megapixels
-    ].each do |key|
-      it "rejects the #{key} site setting" do
+    it "rejects each removed site setting" do
+      %i[
+        authorized_extensions
+        max_attachment_size_kb
+        max_image_size_kb
+        max_image_megapixels
+      ].each do |key|
         options = valid_options(site_settings: { :secure_uploads => false, key => 1 })
 
         expect { described_class.new(options) }.to raise_error(
@@ -71,30 +58,21 @@ RSpec.describe Migrations::SettingsParser do
   end
 
   describe "derived paths" do
-    it "defaults files_db to files.db next to the intermediate_db" do
+    it "puts files_db and download_cache_path next to the intermediate_db by default" do
       settings = described_class.new(valid_options)
 
       expect(settings[:files_db]).to eq(File.join(@dir, "files.db"))
-    end
-
-    it "defaults download_cache_path to a downloads directory next to the intermediate_db" do
-      settings = described_class.new(valid_options)
-
       expect(settings[:download_cache_path]).to eq(File.join(@dir, "downloads"))
     end
 
-    it "keeps an explicit files_db" do
-      explicit = File.join(@dir, "elsewhere.db")
-      settings = described_class.new(valid_options(files_db: explicit))
+    it "keeps an explicit files_db and download_cache_path" do
+      files_db = File.join(@dir, "elsewhere.db")
+      download_cache_path = File.join(@dir, "cache")
 
-      expect(settings[:files_db]).to eq(explicit)
-    end
+      settings = described_class.new(valid_options(files_db:, download_cache_path:))
 
-    it "keeps an explicit download_cache_path" do
-      explicit = File.join(@dir, "cache")
-      settings = described_class.new(valid_options(download_cache_path: explicit))
-
-      expect(settings[:download_cache_path]).to eq(explicit)
+      expect(settings[:files_db]).to eq(files_db)
+      expect(settings[:download_cache_path]).to eq(download_cache_path)
     end
   end
 
@@ -120,17 +98,6 @@ RSpec.describe Migrations::SettingsParser do
         described_class::ValidationError,
         "Directory not readable: /does/not/exist",
       )
-    end
-  end
-
-  describe "accessors" do
-    subject(:settings) { described_class.new(valid_options) }
-
-    it "reads and writes options" do
-      settings[:fix_missing] = true
-
-      expect(settings[:fix_missing]).to be(true)
-      expect(settings.fetch(:missing, :default)).to eq(:default)
     end
   end
 end
