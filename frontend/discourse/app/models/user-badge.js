@@ -1,6 +1,7 @@
 import { dependentKeyCompat } from "@ember/object/compat";
 import {
   findUserBadgesByBadgeId,
+  findUserBadgesByBadgeIds,
   findUserBadgesByUsername,
   grantUserBadge,
   toggleFavoriteUserBadge,
@@ -46,6 +47,13 @@ export default class UserBadge extends RestCompatModel {
 
   static findByBadgeId(badgeId, options = {}) {
     return requestMany(this, findUserBadgesByBadgeId(badgeId, options));
+  }
+
+  // One request for the most recent grants across several badges (or, with an
+  // empty list, every enabled badge) — the aggregate feed behind client-side
+  // "recently earned" leaderboards. `options` may set `badgeTypeId`/`limit`.
+  static findByBadgeIds(badgeIds, options = {}) {
+    return requestMany(this, findUserBadgesByBadgeIds(badgeIds, options));
   }
 
   static grant(badgeId, username, reason) {
