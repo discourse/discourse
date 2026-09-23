@@ -4,6 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 export default class AdminSiteTextEditRoute extends Route {
   queryParams = {
     locale: { replace: true },
+    themeId: { replace: true },
   };
 
   async model(params) {

@@ -250,6 +250,12 @@ $mobile-breakpoint: 700px;
       min-width: 0;
     }
 
+    .site-texts__theme {
+      grid-column: 1 / -1;
+      width: min(100%, 20em);
+      min-width: 0;
+    }
+
     label {
       display: block;
       margin-bottom: var(--space-2);
@@ -257,7 +263,8 @@ $mobile-breakpoint: 700px;
       font-size: var(--font-down-1);
     }
 
-    .locale-search {
+    .locale-search,
+    .theme-search {
       width: 100%;
     }
 
@@ -271,7 +278,8 @@ $mobile-breakpoint: 700px;
     }
 
     .d-filter-controls__dropdowns {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: var(--space-4);
       align-items: start;
       padding: var(--space-4);
