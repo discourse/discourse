@@ -18,6 +18,12 @@ RSpec.describe "Admin onboarding banner locale keys" do
     expect(steps).to include("select_theme")
   end
 
+  it "defines every topic option recorded by the staff action log" do
+    options = banner.fetch("start_posting").fetch("icebreakers")
+    expect(options.keys).to contain_exactly(*UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS)
+    expect(options.values).to all(include("title", "body"))
+  end
+
   it "defines title, description, action and completed for every step" do
     missing =
       steps.each_with_object({}) do |step, hash|

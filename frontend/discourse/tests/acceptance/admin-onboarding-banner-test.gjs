@@ -131,7 +131,7 @@ const withStep = (id, assert) => {
 };
 
 acceptance("Admin - Onboarding Banner", function (needs) {
-  let loggedEvents = [];
+  const loggedEvents = [];
 
   needs.user({
     admin: true,
@@ -147,7 +147,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   });
 
   needs.hooks.beforeEach(function () {
-    loggedEvents = [];
+    loggedEvents.length = 0;
     this.schemeLinks = [];
 
     // registered so afterEach tears them down even when an assertion throws
@@ -333,7 +333,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await visit("/");
     assert.strictEqual(loggedEvents.length, 1);
     assert.strictEqual(loggedEvents[0].step, "start_posting");
-    assert.notOk(loggedEvents[0].topic_option);
+    assert.strictEqual(loggedEvents[0].topic_option, undefined);
   });
 
   test("reopening a saved draft preserves the selected option", async function (assert) {
