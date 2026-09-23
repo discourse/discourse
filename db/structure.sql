@@ -17823,13 +17823,6 @@ CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browse
 
 
 --
--- Name: idx_bpe_beacon_created_at_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (source = 2);
-
-
---
 -- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17883,13 +17876,6 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 --
 
 CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)));
-
-
---
--- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
 
 
 --
@@ -23473,6 +23459,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260922233816'),
 ('20260921081150'),
 ('20260921074918'),
 ('20260914213908'),
