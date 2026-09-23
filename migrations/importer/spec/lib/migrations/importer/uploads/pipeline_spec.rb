@@ -66,9 +66,8 @@ class FakeTask
   attr_accessor :reporter
   attr_reader :written, :before_run_called, :after_run_called
 
-  def initialize(rows:, worker_count: 4, skip_ids: [], process: nil, write: nil)
+  def initialize(rows:, skip_ids: [], process: nil, write: nil)
     @rows = rows
-    @worker_count = worker_count
     @skip_ids = skip_ids
     @process = process || ->(row, _resource) { row }
     @write = write || ->(_result) { :ok }
@@ -79,8 +78,6 @@ class FakeTask
   def title
     "Fake"
   end
-
-  attr_reader :worker_count
 
   def store_external?
     false
@@ -124,7 +121,7 @@ class FakeTask
   end
 end
 
-# A sampler that always says the box is idle with plenty of memory, so the
+# A sampler that always says the CPU is idle and there is plenty of memory, so the
 # controller is free to probe the target upward while the run is going.
 class IdleSampler
   Reading = Migrations::Importer::Uploads::ResourceSampler::Reading
@@ -137,23 +134,31 @@ end
 RSpec.describe Migrations::Importer::Uploads::Pipeline do
   let(:reporter) { FakeReporter.new }
 
-  # A fixed plan pinned to the task's worker_count keeps concurrency deterministic
-  # for the batching/lifecycle tests: the gate seeds and caps at that number.
+  # A fixed plan with the same seed and ceiling keeps the number of workers
+  # constant for the batching and lifecycle tests.
   def plan_for(count)
-    Migrations::Importer::Uploads::AdaptiveController::Plan.new(
-      seed: count,
-      floor: 1,
-      ceiling: count,
-    )
+    Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: count, ceiling: count)
   end
 
-  def build_pipeline(task, **options)
+  # Bounded spin for state another thread is about to reach; fails instead of
+  # hanging if it never does.
+  def wait_until(timeout: 5)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+    until yield
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        raise "condition not reached within #{timeout}s"
+      end
+      Thread.pass
+    end
+  end
+
+  def build_pipeline(task, workers: 4, **options)
     described_class.new(
       task:,
       reporter:,
       install_trap: false,
       adaptive: false,
-      worker_plan: plan_for(task.worker_count),
+      worker_plan: plan_for(workers),
       with_connection: ->(&block) { block.call },
       **options,
     )
@@ -164,9 +169,9 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
   end
 
   it "runs the task lifecycle and writes every produced row exactly once" do
-    task = FakeTask.new(rows: rows(1000), worker_count: 4)
+    task = FakeTask.new(rows: rows(1000))
 
-    build_pipeline(task).run
+    build_pipeline(task, workers: 4).run
 
     expect(task.before_run_called).to be(true)
     expect(task.after_run_called).to be(true)
@@ -179,9 +184,9 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
   it "batches the producer output and reports progress once per batch" do
     # One worker keeps the order deterministic: 10 rows in batches of 4 arrive as
     # [4, 4, 2], and the writer reports progress once per popped array.
-    task = FakeTask.new(rows: rows(10), worker_count: 1)
+    task = FakeTask.new(rows: rows(10))
 
-    build_pipeline(task, batch_size: 4).run
+    build_pipeline(task, workers: 1, batch_size: 4).run
 
     increments = reporter.step.progress.updates.map { |u| u[:increment_by] }
     expect(increments).to eq([4, 4, 2])
@@ -189,9 +194,9 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
 
   it "drops rows whose process returns nil, counting only what was written" do
     dropper = ->(row, _resource) { row[:id].even? ? row : nil }
-    task = FakeTask.new(rows: rows(100), worker_count: 3, process: dropper)
+    task = FakeTask.new(rows: rows(100), process: dropper)
 
-    build_pipeline(task).run
+    build_pipeline(task, workers: 3).run
 
     written_ids = task.written.map { |r| r[:id] }
     expect(written_ids).to all(be_even)
@@ -203,15 +208,9 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
     # Every row is pre-skipped, so a worker that raises proves none reach it.
     exploding = ->(_row, _resource) { raise "workers should not see skipped rows" }
     skip_ids = [1, 3, 5]
-    task =
-      FakeTask.new(
-        rows: skip_ids.map { |id| { id: } },
-        worker_count: 2,
-        skip_ids:,
-        process: exploding,
-      )
+    task = FakeTask.new(rows: skip_ids.map { |id| { id: } }, skip_ids:, process: exploding)
 
-    build_pipeline(task).run
+    build_pipeline(task, workers: 2).run
 
     expect(task.written.map { |r| r[:id] }).to match_array(skip_ids)
     expect(task.written).to all(include(skipped: true))
@@ -228,9 +227,9 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
         :ok
       end
     end
-    task = FakeTask.new(rows: rows(9), worker_count: 1, write: classifier)
+    task = FakeTask.new(rows: rows(9), write: classifier)
 
-    build_pipeline(task, batch_size: 9).run
+    build_pipeline(task, workers: 1, batch_size: 9).run
 
     update = reporter.step.progress.updates.sum { |u| u[:skip_count] }
     errors = reporter.step.progress.updates.sum { |u| u[:error_count] }
@@ -239,14 +238,36 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
     expect(reporter.step.progress.total).to eq(9)
   end
 
+  it "counts each item as a worker finishes it, not when the writer gets the batch" do
+    pipeline = nil
+    seen_counts = []
+    recorder =
+      lambda do |row, _resource|
+        seen_counts << pipeline.processed_count
+        row
+      end
+    # One worker and one batch: nothing reaches the writer until every row is done.
+    task = FakeTask.new(rows: rows(10), process: recorder)
+    pipeline = build_pipeline(task, workers: 1, batch_size: 10)
+
+    pipeline.run
+
+    expect(seen_counts).to eq((0...10).to_a)
+    expect(pipeline.processed_count).to eq(10)
+  end
+
   describe "under the adaptive controller" do
-    it "processes every row while the controller tunes the gate, staying in bounds" do
+    it "raises the target while the run is going, staying in bounds" do
       ceiling = 6
-      plan =
-        Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: 2, floor: 2, ceiling:)
-      # A touch of work per item so the run outlives a few controller ticks.
-      slow = ->(row, _resource) { sleep(0.001) && row }
-      task = FakeTask.new(rows: rows(400), worker_count: 2, process: slow)
+      plan = Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: 2, ceiling:)
+      # Items can't finish until the controller has probed upward, so the run is
+      # guaranteed to see the target move no matter how the threads are scheduled.
+      gated =
+        lambda do |row, _resource|
+          wait_until { reporter.step.concurrencies.any? { |count| count > 2 } }
+          row
+        end
+      task = FakeTask.new(rows: rows(400), process: gated)
 
       pipeline =
         described_class.new(
@@ -265,9 +286,9 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
 
       expect(task.written.map { |r| r[:id] }).to match_array((0...400).to_a)
       expect(reporter.step.progress.total).to eq(400)
-      # Every reported target stayed within the plan's bounds.
-      expect(reporter.step.concurrencies).to all(be_between(1, ceiling))
       expect(reporter.step.concurrencies.first).to eq(2) # seeded before the run
+      expect(reporter.step.concurrencies.max).to eq(ceiling) # idle CPU: one fast step up
+      expect(reporter.step.concurrencies).to all(be_between(1, ceiling))
     end
   end
 
@@ -288,8 +309,8 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
     end
 
     it "stops early, drains, and finishes as interrupted when the flag is set" do
-      task = FakeTask.new(rows: rows(1000), worker_count: 4)
-      pipeline = build_pipeline(task)
+      task = FakeTask.new(rows: rows(1000))
+      pipeline = build_pipeline(task, workers: 4)
 
       pipeline.handle_interrupt # flag set before the run starts
       pipeline.run # must not hang
@@ -310,14 +331,14 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
           release_worker.pop
           row
         end
-      task = FakeTask.new(rows: rows(100), worker_count: 1, process:)
+      task = FakeTask.new(rows: rows(100), process:)
       task.define_singleton_method(:produce) do |emit_work:, emit_result:|
         @rows.each do |row|
           producer_at_capacity << true if row[:id] == 2
           emit_work.call(row)
         end
       end
-      pipeline = build_pipeline(task, batch_size: 1, work_queue_slots: 1)
+      pipeline = build_pipeline(task, workers: 1, batch_size: 1, work_queue_slots: 1)
 
       runner = Thread.new { pipeline.run }
       processing_started.pop
@@ -327,6 +348,52 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
 
       expect(runner.join(1)).to eq(runner)
       expect(reporter.step.finished_outcome).to eq(:interrupted)
+    ensure
+      runner&.kill
+      runner&.join
+    end
+
+    it "does not let a worker waiting at the gate process another item after Ctrl-C" do
+      processing_started = Queue.new
+      release_worker = Queue.new
+      calls = 0
+      process =
+        lambda do |row, _resource|
+          calls += 1
+          if calls == 1
+            processing_started << true
+            release_worker.pop
+          end
+          row
+        end
+      task = FakeTask.new(rows: rows(10), process:)
+      # Two workers but one permit, so the second waits inside the gate.
+      pipeline =
+        described_class.new(
+          task:,
+          reporter:,
+          install_trap: false,
+          adaptive: false,
+          worker_plan:
+            Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: 1, ceiling: 2),
+          with_connection: ->(&block) { block.call },
+          batch_size: 1,
+        )
+
+      runner = Thread.new { pipeline.run }
+      processing_started.pop
+      # The producer is done, so the queue holds rows and a sleeping idle worker
+      # can only be waiting for a permit, past the interrupt check before it.
+      wait_until do
+        threads = Thread.list.select { |t| t.name.to_s.start_with?("uploads-") }
+        threads.none? { |t| t.name == "uploads-producer" } &&
+          threads.count { |t| t.name.start_with?("uploads-worker-") && t.status == "sleep" } == 2
+      end
+      pipeline.handle_interrupt
+      release_worker << true
+
+      expect(runner.join(5)).to eq(runner)
+      expect(calls).to eq(1)
     ensure
       runner&.kill
       runner&.join

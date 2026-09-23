@@ -17,6 +17,7 @@ en:
       surplus_found: "found %{count} surplus uploads (run with delete_surplus_uploads to remove them)"
       upload_failed: "failed to create upload %{id}: %{error}"
       insert_failed: "failed to record upload %{id}: %{error}"
+      adaptive_controller_failed: "Worker tuning failed, keeping the current worker count until it recovers: %{error}"
       fixer_missing_summary:
         one: "removed %{count} missing upload"
         other: "removed %{count} missing uploads"

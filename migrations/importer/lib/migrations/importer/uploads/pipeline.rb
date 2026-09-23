@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "concurrent/atomic/atomic_fixnum"
+
 module Migrations
   module Importer
     module Uploads
@@ -9,13 +11,11 @@ module Migrations
       # SIGINT handling. The tasks stay thin: they only say what to read, how to
       # process one row, and how to write one result.
       #
-      # The worker pool is spawned at full size (the plan's ceiling) once, but how
-      # many of them may run at a time is governed by a {WorkerGate} that an
-      # {AdaptiveController} tunes as it watches CPU, memory, and throughput — no
-      # static worker count, because the benchmarks showed the right number depends
-      # entirely on the store and the workload. A worker takes a gate permit around
-      # each item, so shrinking or growing the pool is just workers parking or
-      # waking at the next item boundary — no threads killed or respawned.
+      # All workers (the plan's ceiling) are started once. A {WorkerGate} decides
+      # how many of them may run at the same time, and an {AdaptiveController}
+      # changes that number while it watches CPU, memory, and throughput. A worker
+      # holds a gate permit for one item at a time, so a change takes effect at
+      # the next item and no thread is stopped or started.
       #
       # Rows and results both travel in batches, never one at a time — a per-row
       # SizedQueue handoff costs 2-8x throughput here. The producer fills arrays of
@@ -28,8 +28,8 @@ module Migrations
       #   * `reporter=` — receives the step handle (for notices from `write`)
       #   * `before_run` / `after_run` — setup and teardown on the main thread
       #   * `max_count` — the progress total (known after `before_run`), or nil
-      #   * `store_external?` — whether uploads land on an external store (S3),
-      #     which shapes the worker bounds
+      #   * `store_external?` — whether uploads go to an external store (S3),
+      #     which changes the worker limits
       #   * `produce(emit_work:, emit_result:)` — the producer body; calls
       #     `emit_work` for rows the workers should process and `emit_result` for
       #     results it already knows (e.g. rows skipped up front)
@@ -70,12 +70,19 @@ module Migrations
           @on_double_interrupt = on_double_interrupt
 
           @interrupt_requested = false
-          @completed = 0
+          @processed = Concurrent::AtomicFixnum.new(0)
         end
 
         # @return [Boolean] whether the run stopped early because of Ctrl-C
         def interrupted?
           @interrupt_requested
+        end
+
+        # Items the workers have finished so far. Each item is counted when it
+        # finishes, not when the writer gets its batch, so the controller sees
+        # the throughput per item and not in steps of whole batches.
+        def processed_count
+          @processed.value
         end
 
         def run
@@ -176,13 +183,18 @@ module Migrations
             batch.each do |row|
               break if @interrupt_requested
 
-              # Take the permit outside `with_connection`: a worker parked in
-              # `acquire` (because the gate shrank) must not pin an AR connection.
-              # The permit is held only around one item, so shrinking takes effect
-              # within one item's time.
+              # Take the permit outside `with_connection`: a worker that waits in
+              # `acquire` (because the target went down) must not hold an AR
+              # connection. The permit is held for one item only, so a lower
+              # target takes effect within one item's time.
               @gate.acquire
               begin
+                # A worker that waited at the gate can wake up long after the
+                # check above.
+                break if @interrupt_requested
+
                 result = @with_connection.call { @task.process(row, resource) }
+                @processed.increment
                 results << result if result
               ensure
                 @gate.release
@@ -224,15 +236,8 @@ module Migrations
               warning_count: warnings,
               error_count: errors,
             )
-
-            # Single writer thread, so a plain read on the other side (the
-            # controller) is safe — it only needs an approximate rate.
-            @completed += batch.size
           end
         end
-
-        # --- Adaptive worker sizing. The plan gives the seed and the hard bounds;
-        # the gate enforces the live target; the controller moves it. ---
 
         def build_plan
           AdaptiveController.plan(
@@ -245,9 +250,9 @@ module Migrations
 
         # More workers means more open files (tempfiles, store sockets, DB
         # handles), so give the process all the descriptors the OS already allows
-        # by lifting the soft limit to the hard one. Best-effort: an unprivileged
-        # process can always raise its own soft limit up to the hard cap, but
-        # rescue anyway so a locked-down environment doesn't abort the run.
+        # by raising the soft limit to the hard one. Any process may do that, but
+        # a restricted environment could still refuse, and that must not stop
+        # the run.
         def raise_file_limit!
           soft, hard = Process.getrlimit(Process::RLIMIT_NOFILE)
           if soft < hard
@@ -269,7 +274,7 @@ module Migrations
               step:,
               ceiling: @plan.ceiling,
               work_available: -> { !@work_queue.empty? },
-              completed_count: -> { @completed },
+              completed_count: -> { processed_count },
               interval: @controller_interval,
             )
           controller.start

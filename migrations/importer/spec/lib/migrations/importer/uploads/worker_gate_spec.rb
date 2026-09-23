@@ -1,17 +1,41 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::Uploads::WorkerGate do
-  # Spawns a worker that acquires a permit, announces itself on `admitted`, then
-  # parks until the test pushes to `hold` and releases. Blocking pops act as
-  # latches, so the test never sleeps: `admitted.pop` returns exactly when a
-  # worker got in, and `expect(admitted).to be_empty` shows one is still parked.
-  def acquirer(gate, admitted, hold)
-    Thread.new do
-      Thread.current.report_on_exception = false
-      gate.acquire
-      admitted << :in
-      hold.pop
-      gate.release
+  # A worker thread that acquires a permit, pushes itself onto `admitted`, then
+  # waits until the test releases it. Blocking pops act as latches, so the test
+  # knows exactly which worker got in and can release that one specifically.
+  let(:acquirer_class) do
+    Struct.new(:thread, :hold) do
+      def release_and_join
+        hold << :go
+        thread.join
+      end
+    end
+  end
+
+  def acquirer(gate, admitted)
+    hold = Queue.new
+    worker = acquirer_class.new(nil, hold)
+    worker.thread =
+      Thread.new do
+        Thread.current.report_on_exception = false
+        gate.acquire
+        admitted << worker
+        hold.pop
+        gate.release
+      end
+    worker
+  end
+
+  # Bounded spin for state another thread is about to reach; fails instead of
+  # hanging if it never does.
+  def wait_until(timeout: 5)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+    until yield
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        raise "condition not reached within #{timeout}s"
+      end
+      Thread.pass
     end
   end
 
@@ -32,41 +56,41 @@ RSpec.describe Migrations::Importer::Uploads::WorkerGate do
     it "admits up to the target and blocks the rest until a permit frees up" do
       gate = described_class.new(target: 2, max: 4)
       admitted = Queue.new
-      hold = Queue.new
-      threads = Array.new(3) { acquirer(gate, admitted, hold) }
+      workers = Array.new(3) { acquirer(gate, admitted) }
 
-      2.times { expect(admitted.pop).to eq(:in) }
-      expect(admitted).to be_empty # the third is blocked at the target
+      first = admitted.pop
+      second = admitted.pop
+      wait_until { gate.waiting == 1 }
       expect(gate.active).to eq(2)
-      expect(gate.waiting).to eq(1)
+      expect(admitted.size).to eq(0)
 
-      hold << :go # one admitted worker releases; the blocked one wakes
-      expect(admitted.pop).to eq(:in)
+      first.release_and_join # frees a permit; the blocked one wakes
+      third = admitted.pop
+      expect(workers).to contain_exactly(first, second, third)
       expect(gate.active).to eq(2)
+      expect(gate.waiting).to eq(0)
 
-      2.times { hold << :go }
-      threads.each(&:join)
+      [second, third].each(&:release_and_join)
       expect(gate.active).to eq(0)
     end
   end
 
   describe "growing the target" do
-    it "wakes parked workers so they take the new slots" do
+    it "wakes waiting workers so they take the new slots" do
       gate = described_class.new(target: 1, max: 4)
       admitted = Queue.new
-      hold = Queue.new
-      threads = Array.new(3) { acquirer(gate, admitted, hold) }
+      workers = Array.new(3) { acquirer(gate, admitted) }
 
-      expect(admitted.pop).to eq(:in)
-      expect(admitted).to be_empty
-      expect(gate.waiting).to eq(2)
+      admitted.pop
+      wait_until { gate.waiting == 2 }
+      expect(gate.active).to eq(1)
 
       gate.target = 3
-      2.times { expect(admitted.pop).to eq(:in) }
+      2.times { admitted.pop }
       expect(gate.active).to eq(3)
+      expect(gate.waiting).to eq(0)
 
-      3.times { hold << :go }
-      threads.each(&:join)
+      workers.each(&:release_and_join)
     end
   end
 
@@ -74,29 +98,29 @@ RSpec.describe Migrations::Importer::Uploads::WorkerGate do
     it "stops admitting until enough workers have released" do
       gate = described_class.new(target: 3, max: 4)
       admitted = Queue.new
-      hold = Queue.new
-      threads = Array.new(3) { acquirer(gate, admitted, hold) }
+      workers = Array.new(3) { acquirer(gate, admitted) }
 
-      3.times { expect(admitted.pop).to eq(:in) }
+      3.times { admitted.pop }
       expect(gate.active).to eq(3)
 
       gate.target = 1
+      latecomer = acquirer(gate, admitted)
+      wait_until { gate.waiting == 1 }
 
-      # A newcomer must wait until active drops below the new target of 1.
-      latecomer_admitted = Queue.new
-      latecomer_hold = Queue.new
-      threads << acquirer(gate, latecomer_admitted, latecomer_hold)
+      # Each release is joined, so the permit is back before the asserts run.
+      workers[0].release_and_join
+      expect(gate.active).to eq(2)
+      expect(gate.waiting).to eq(1)
 
-      hold << :go # active 3 -> 2, still >= 1, newcomer stays blocked
-      expect(latecomer_admitted).to be_empty
-      hold << :go # active 2 -> 1, still >= 1, newcomer stays blocked
-      expect(latecomer_admitted).to be_empty
+      workers[1].release_and_join
+      expect(gate.active).to eq(1)
+      expect(gate.waiting).to eq(1)
 
-      hold << :go # active 1 -> 0, newcomer finally gets in
-      expect(latecomer_admitted.pop).to eq(:in)
+      workers[2].release_and_join # active drops below the new target of 1
+      expect(admitted.pop).to eq(latecomer)
 
-      latecomer_hold << :go
-      threads.each(&:join)
+      latecomer.release_and_join
+      expect(gate.active).to eq(0)
     end
   end
 end
