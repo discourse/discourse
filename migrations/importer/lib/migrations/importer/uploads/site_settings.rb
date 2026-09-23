@@ -83,8 +83,8 @@ module Migrations
                   Discourse::SYSTEM_USER_ID,
                 )
 
-              unless upload.present? && upload.persisted? && upload.errors.blank? &&
-                       upload.url.start_with?("//")
+              if upload.blank? || !upload.persisted? || upload.errors.present? ||
+                   !upload.url.start_with?("//")
                 raise S3UploadsConfigurationError, "Failed to upload to S3"
               end
 
