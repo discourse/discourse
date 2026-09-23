@@ -67,13 +67,6 @@ module Migrations
           Reading.new(cpu_busy:, memory_fraction: fraction, memory_bytes: bytes)
         end
 
-        # MemTotal in bytes, or nil. Used once at startup to size the ImageMagick
-        # memory limits; not part of the per-tick sampling.
-        def total_memory_bytes
-          meminfo = parse_meminfo
-          meminfo && meminfo[:total]
-        end
-
         private
 
         # Busy fraction (0.0..1.0) over the interval since the last call.

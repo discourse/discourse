@@ -11,19 +11,21 @@ mappings_db: "/shared/import/mappings.db"
 # if false, allows reserved usernames only for admins
 always_allow_reserved_usernames: true
 
-# Inline upload mode. Only used when no `files_db` is configured above, i.e.
-# small migrations that skip the separate `disco upload` run. The uploads step
-# then creates the uploads itself, straight into the live target site. When
-# there are uploads to import and neither a files_db nor this section is set,
-# the import stops with an error.
+# Inline upload mode. Used when no files DB exists: `files_db` is not set above
+# and there is no `files.db` next to the intermediate_db. This is for small
+# migrations that skip the separate `disco upload` run. The uploads step then
+# creates the uploads itself, straight into the live target site. When some
+# uploads are files on disk and `root_paths` is not set, the import stops with
+# an error.
 #uploads:
-#  # Directories the source files live under (required for inline mode).
+#  # Directories the source files live under.
 #  root_paths:
 #    - "/shared/import/uploads"
-#  # Optional rewrites applied to each source's relative path, tried after the
-#  # verbatim path, as a list of [from, to] pairs.
+#  # Rewrites for a source file's path, tried when the path as recorded is not
+#  # found under a root path. A list of [from, to] pairs; the first one that
+#  # finds an existing file wins.
 #  #path_replacements:
-#  #  - ["/old/prefix", "/new/prefix"]
-#  # Where URL-backed sources are cached; defaults to a `downloads` directory
-#  # next to the intermediate_db above.
-#  #download_cache_path: "/shared/import/upload-cache"
+#  #  - ["/old/prefix/", "/new/prefix/"]
+#  # Where files fetched from URLs are cached. Defaults to a `downloads`
+#  # directory next to the intermediate_db above.
+#  #download_cache_path: "/shared/import/downloads"
