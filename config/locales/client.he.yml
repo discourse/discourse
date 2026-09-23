@@ -2987,6 +2987,7 @@ he:
       enter: "Enter"
       option: "אפשרות"
       period: "פרק זמן"
+      tab: "Tab"
       delete: "מחיקה"
       home: "בית"
     conditional_loading_section:

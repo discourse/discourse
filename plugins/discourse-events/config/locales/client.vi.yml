@@ -9,25 +9,15 @@ vi:
     admin:
       site_settings:
         categories:
-          discourse_post_event: "Sự kiện Discourse"
           discourse_events: "Sự kiện"
-      web_hooks:
-        calendar_event:
-          group_name: "Sự kiện lịch"
-          calendar_event_created: "Đã tạo sự kiện lịch"
-          calendar_event_updated: "Đã cập nhật sự kiện lịch"
-          calendar_event_destroyed: "Đã xóa sự kiện lịch"
   js:
     notifications:
       titles:
         event_reminder: "Lời nhắc sự kiện"
         event_invitation: "Lời mời sự kiện"
-      popup:
-        event_reminder: Nhắc nhở sự kiện
     discourse_automation:
       triggerables:
         event_started:
-          title: Sự kiện đã bắt đầu
           fields:
             topic_id:
               label: ID Chủ đề
@@ -233,8 +223,6 @@ vi:
         week: "Tuần"
         day: "Ngày"
         year: "Năm"
-    discourse_calendar:
-      invite_user_notification: "%{username} đã mời bạn tham gia: %{description}"
     group_timezones:
       search: "Tìm kiếm..."
     discourse_workflows:
