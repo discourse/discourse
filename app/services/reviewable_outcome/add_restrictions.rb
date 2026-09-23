@@ -26,7 +26,6 @@ class ReviewableOutcome::AddRestrictions
   only_if :reporting_enabled_for_outcome? do
     model :outcome
     policy :outcome_matches_penalized_user
-
     transaction { step :add_restrictions }
   end
 
