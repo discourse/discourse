@@ -4,6 +4,10 @@ en:
     done: "Done. Total runtime: %{runtime}"
     site_setting_log_message: "Updated by import script"
     site_settings:
+      applied: "Changed site settings for the import (limits, emails, cleanup jobs, rate limits)"
+      restored:
+        one: "Restored %{count} site setting changed for the import"
+        other: "Restored %{count} site settings changed for the import"
       id_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original %{type_name} ID '%{original_id}' to Discourse ID"
       username_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original username '%{original_username}' to Discourse username"
     fallback_names:
