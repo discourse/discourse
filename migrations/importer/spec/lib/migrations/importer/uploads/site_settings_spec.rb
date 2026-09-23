@@ -80,7 +80,8 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
   end
 
   it "checks public access with the endpoint's scheme" do
-    SiteSetting.s3_endpoint = "http://minio.local:9000"
+    options[:s3_endpoint] = "http://minio.local:9000"
+    SiteSetting.s3_endpoint = options[:s3_endpoint]
     allow(Net::HTTP).to receive(:get_response).and_return(Net::HTTPOK.new("1.1", "200", "OK"))
 
     configure
