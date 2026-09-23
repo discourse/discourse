@@ -5012,3 +5012,11 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  sidebar_user_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413150"

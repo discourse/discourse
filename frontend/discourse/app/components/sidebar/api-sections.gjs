@@ -50,6 +50,7 @@ export default class SidebarApiSections extends Component {
         @expandWhenActive={{@expandActiveSection}}
         @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
         @section={{section}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
     {{/each}}
   </template>

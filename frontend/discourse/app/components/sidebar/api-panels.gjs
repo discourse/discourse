@@ -15,6 +15,7 @@ export default class SidebarApiPanels extends Component {
         @collapsable={{@collapsableSections}}
         @expandActiveSection={{this.sidebarState.currentPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.sidebarState.currentPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
     </div>
   </template>

@@ -6633,6 +6633,7 @@ en:
         forum:
           label: Forum
       back_to_forum: "Back to Forum"
+      back_to_admin: "Back to Admin"
       filter_links: "Filter links..."
       clear_filter: "Clear filter"
       no_results:

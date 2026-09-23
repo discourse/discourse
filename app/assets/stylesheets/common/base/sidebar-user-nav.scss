@@ -1,0 +1,67 @@
+@use "lib/viewport";
+
+body.user-nav-panel-active {
+  .user-navigation-primary {
+    display: none;
+  }
+
+  // The panel replaces every one of these navs
+  .user-navigation-secondary {
+    display: none;
+  }
+
+  &.user-messages-page
+    .user-navigation-secondary:has(.navigation-controls > *) {
+    display: flex;
+    justify-content: flex-end;
+
+    .messages-nav,
+    .category-breadcrumb {
+      display: none;
+    }
+  }
+
+  .user-main .about.collapsed-info {
+    .details .primary {
+      .avatar {
+        width: 38px;
+        height: 38px;
+        margin-top: var(--space-half);
+      }
+
+      .user-profile-names__primary {
+        font-size: var(--font-up-1);
+        line-height: var(--line-height-medium);
+      }
+
+      .user-profile-names__secondary {
+        font-size: var(--font-0);
+      }
+    }
+  }
+
+  @include viewport.until(sm) {
+    .user-content tbody {
+      border-top: none;
+    }
+  }
+}
+
+body.user-nav-from-profile {
+  .admin-users.admin-config-page {
+    display: none;
+  }
+
+  .admin-container {
+    margin-top: 0;
+  }
+}
+
+.sidebar-sections.user-nav-panel {
+  .sidebar-section-link-wrapper:has(.--inbox)
+    + .sidebar-section-link-wrapper:not(:has(.--inbox)) {
+    margin-top: 0.25em;
+    padding-top: 0.25em;
+    border-top: 1px solid var(--d-sidebar-section-border-color);
+  }
+}
