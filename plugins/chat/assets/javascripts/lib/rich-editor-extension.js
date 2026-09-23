@@ -50,8 +50,13 @@ const extension = {
 
             metaElement.innerHTML = i18n("chat.quote.original_channel", {
               channel: dReplaceEmoji(node.attrs.channel),
-              channelLink,
+              channelLink: "",
             });
+
+            const metaLinkElement = metaElement.querySelector("a");
+            if (metaLinkElement && channelLink) {
+              metaLinkElement.href = channelLink;
+            }
           } else {
             channelLinkElement = document.createElement("a");
             channelLinkElement.classList.add("chat-transcript-channel");
