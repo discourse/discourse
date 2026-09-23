@@ -18,6 +18,16 @@ RSpec.describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
+  describe "#stylesheet_details" do
+    it "refreshes hrefs when a font setting changes" do
+      href = manager.stylesheet_details(:embed)[0][:new_href]
+
+      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+
+      expect(manager.stylesheet_details(:embed)[0][:new_href]).not_to eq(href)
+    end
+  end
+
   describe "Builder#compile" do
     it "hydrates from StylesheetCache instead of recompiling when the file is missing" do
       builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
@@ -479,6 +489,33 @@ RSpec.describe Stylesheet::Manager do
 
       builder = Stylesheet::Manager::Builder.new(target: :admin, manager: manager)
       expect(builder.digest).to eq(builder.default_digest)
+    end
+
+    it "accounts for the default theme's color scheme in default and component digests" do
+      scheme = Fabricate(:color_scheme)
+      SiteSetting.default_theme_id = Fabricate(:theme, color_scheme: scheme).id
+      component = Fabricate(:theme, component: true)
+      common = -> { Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest }
+      component_common = -> do
+        Stylesheet::Manager::Builder.new(
+          target: :common_theme,
+          theme: component,
+          manager: manager,
+        ).digest
+      end
+
+      expect {
+        ColorSchemeRevisor.revise(scheme, { colors: [{ name: "primary", hex: "CC0000" }] })
+      }.to change(&common).and change(&component_common)
+    end
+
+    it "accounts for fonts in the default digest of font-bearing targets only" do
+      embed = -> { Stylesheet::Manager::Builder.new(target: :embed, manager: manager).digest }
+      common = -> { Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest }
+
+      expect { SiteSetting.base_font = DiscourseFonts.fonts[2][:key] }.to change(
+        &embed
+      ).and not_change(&common)
     end
 
     it "returns different digest based on hostname" do
