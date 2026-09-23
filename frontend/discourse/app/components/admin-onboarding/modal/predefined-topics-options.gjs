@@ -68,13 +68,15 @@ export default class PredefinedTopicOptions extends Component {
           {{#each this.topics as |topic|}}
             <button
               class="predefined-topic-options-modal__card"
-              type="button"
               data-topic-option={{topic.key}}
               disabled={{topic.disabled}}
               title={{if
                 topic.disabled
-                (i18n "admin_onboarding_banner.start_posting.category_unavailable")
+                (i18n
+                  "admin_onboarding_banner.start_posting.category_unavailable"
+                )
               }}
+              type="button"
               {{on "click" (fn this.handleSelectTopic topic)}}
             >
               <span class="predefined-topic-options-modal__heading">

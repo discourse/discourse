@@ -26,7 +26,11 @@ RSpec.describe Admin::OnboardingEventsController do
       UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS.each do |option|
         it "logs the selected #{option} option with readable details" do
           post "/admin/onboarding/events.json",
-               params: { event: "step_completed", step: "start_posting", topic_option: option }
+               params: {
+                 event: "step_completed",
+                 step: "start_posting",
+                 topic_option: option,
+               }
 
           expect(response.status).to eq(204)
           log = UserHistory.last
@@ -35,7 +39,8 @@ RSpec.describe Admin::OnboardingEventsController do
           expect(log.details).to eq(
             I18n.t(
               "staff_action_logs.admin_onboarding_topic_option",
-              option: I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.title"),
+              option:
+                I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.title"),
               option_id: option,
             ),
           )
@@ -43,7 +48,11 @@ RSpec.describe Admin::OnboardingEventsController do
       end
 
       it "still logs posting completed outside the suggested options" do
-        post "/admin/onboarding/events.json", params: { event: "step_completed", step: "start_posting" }
+        post "/admin/onboarding/events.json",
+             params: {
+               event: "step_completed",
+               step: "start_posting",
+             }
 
         expect(response.status).to eq(204)
         expect(UserHistory.last.new_value).to be_nil
@@ -53,7 +62,11 @@ RSpec.describe Admin::OnboardingEventsController do
       it "rejects an unknown topic option without logging" do
         expect {
           post "/admin/onboarding/events.json",
-               params: { event: "step_completed", step: "start_posting", topic_option: "unknown" }
+               params: {
+                 event: "step_completed",
+                 step: "start_posting",
+                 topic_option: "unknown",
+               }
         }.not_to change { UserHistory.count }
 
         expect(response.status).to eq(400)
@@ -62,7 +75,11 @@ RSpec.describe Admin::OnboardingEventsController do
       it "rejects a topic option for another step without logging" do
         expect {
           post "/admin/onboarding/events.json",
-               params: { event: "step_completed", step: "select_theme", topic_option: "plan_categories" }
+               params: {
+                 event: "step_completed",
+                 step: "select_theme",
+                 topic_option: "plan_categories",
+               }
         }.not_to change { UserHistory.count }
 
         expect(response.status).to eq(400)

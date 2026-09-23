@@ -33,7 +33,10 @@ module PageObjects
       end
 
       def show_details(user_history)
-        log_row(user_history).find(".details a", text: I18n.t("admin_js.admin.logs.staff_actions.show")).click
+        log_row(user_history).find(
+          ".details a",
+          text: I18n.t("admin_js.admin.logs.staff_actions.show"),
+        ).click
       end
 
       def filter_by_action(action)

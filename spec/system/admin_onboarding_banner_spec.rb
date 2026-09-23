@@ -78,11 +78,12 @@ describe "Admin Onboarding Banner" do
       visit("/")
       expect(banner.step_completed?("start_posting")).to eq(true)
 
-      log = UserHistory.find_by!(
-        action: UserHistory.actions[:admin_onboarding_step_completed],
-        acting_user_id: admin.id,
-        subject: "start_posting",
-      )
+      log =
+        UserHistory.find_by!(
+          action: UserHistory.actions[:admin_onboarding_step_completed],
+          acting_user_id: admin.id,
+          subject: "start_posting",
+        )
       expect(log.new_value).to eq("plan_categories")
       expect(Topic.last.category_id).to eq(staff_category.id)
 

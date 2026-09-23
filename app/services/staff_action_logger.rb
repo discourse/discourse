@@ -325,11 +325,13 @@ class StaffActionLogger
     topic_option = opts[:topic_option]
     details = opts[:details]
     if topic_option.present?
-      details = I18n.t(
-        "staff_action_logs.admin_onboarding_topic_option",
-        option: I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{topic_option}.title"),
-        option_id: topic_option,
-      )
+      details =
+        I18n.t(
+          "staff_action_logs.admin_onboarding_topic_option",
+          option:
+            I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{topic_option}.title"),
+          option_id: topic_option,
+        )
     end
 
     UserHistory.create!(

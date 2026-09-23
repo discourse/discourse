@@ -272,7 +272,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       step.isNotChecked();
       await step.clickAction();
       assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
-      assert.dom(`[data-topic-option="${option}"] .badge-category__name`).exists();
+      assert
+        .dom(`[data-topic-option="${option}"] .badge-category__name`)
+        .exists();
       await click(`[data-topic-option="${option}"]`);
 
       assert.strictEqual(composer.model.categoryId, categoryId);
@@ -283,24 +285,49 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "saves attribution with the draft"
       );
       const custom = option === "write_your_own";
-      assert.dom("#reply-title").hasValue(
-        custom ? "" : i18n(`admin_onboarding_banner.start_posting.icebreakers.${option}.title`)
+      assert
+        .dom("#reply-title")
+        .hasValue(
+          custom
+            ? ""
+            : i18n(
+                `admin_onboarding_banner.start_posting.icebreakers.${option}.title`
+              )
+        );
+      assert
+        .dom(".d-editor-input")
+        .hasValue(
+          custom
+            ? ""
+            : i18n(
+                `admin_onboarding_banner.start_posting.icebreakers.${option}.body`
+              )
+        );
+      assert.strictEqual(
+        loggedEvents.length,
+        0,
+        "opening a card is not completion"
       );
-      assert.dom(".d-editor-input").hasValue(
-        custom ? "" : i18n(`admin_onboarding_banner.start_posting.icebreakers.${option}.body`)
-      );
-      assert.strictEqual(loggedEvents.length, 0, "opening a card is not completion");
 
       await fillIn("#reply-title", "A title tailored to this community");
-      await fillIn(".d-editor-input", "A conversation tailored to this community.");
+      await fillIn(
+        ".d-editor-input",
+        "A conversation tailored to this community."
+      );
       await click(".create");
       await visit("/");
       step.isChecked();
-      assert.deepEqual(loggedEvents, [{
-        event: "step_completed",
-        step: "start_posting",
-        topic_option: option,
-      }], "logs the original choice even after editing its contents");
+      assert.deepEqual(
+        loggedEvents,
+        [
+          {
+            event: "step_completed",
+            step: "start_posting",
+            topic_option: option,
+          },
+        ],
+        "logs the original choice even after editing its contents"
+      );
     });
   }
 
@@ -347,7 +374,10 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await click(".discard-draft-modal__discard-btn");
     await composer.open({ draft, draftKey, draftSequence });
     await settled();
-    assert.strictEqual(composer.model.adminOnboardingTopicOption, "plan_invites");
+    assert.strictEqual(
+      composer.model.adminOnboardingTopicOption,
+      "plan_invites"
+    );
     await click(".create");
     await visit("/");
     assert.strictEqual(loggedEvents[0].topic_option, "plan_invites");
