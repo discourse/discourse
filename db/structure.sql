@@ -17865,10 +17865,10 @@ CREATE INDEX idx_bpe_created_at_session_id ON public.browser_pageview_events USI
 
 
 --
--- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_ip_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING btree (ip_address, user_agent, created_at);
+CREATE INDEX idx_bpe_ip_created_at ON public.browser_pageview_events USING btree (ip_address, created_at);
 
 
 --
@@ -23459,6 +23459,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260923080644'),
+('20260923080642'),
 ('20260922233816'),
 ('20260921081150'),
 ('20260921074918'),
