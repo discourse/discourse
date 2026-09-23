@@ -25,10 +25,6 @@ module Migrations
             @external_store = discourse_store.external?
           end
 
-          # The pipeline also passes `emit_result:` (for rows a task resolves up
-          # front); the fixer resolves nothing early, so it is ignored. An
-          # underscore-prefixed keyword would NOT do that — it renames the required
-          # keyword and the pipeline's call raises ArgumentError.
           def produce(emit_work:, **)
             files_db.query("SELECT id AS upload_id, url FROM uploads ORDER BY id DESC") do |row|
               emit_work.call(row)
