@@ -4304,6 +4304,7 @@ sq:
         site_traffic:
           series:
             anonymous: "Anonim"
+          crawler_learn_more: "Mësoni më shumë"
         period:
           custom: "Grupet e krijuara"
         reports:

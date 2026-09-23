@@ -4106,6 +4106,7 @@ sl:
         site_traffic:
           series:
             anonymous: "Anonimni"
+          crawler_learn_more: "Več o tem"
         period:
           last_7_days: "Zadnjih 7 dni"
           last_30_days: "Zadnjih 30 dni"

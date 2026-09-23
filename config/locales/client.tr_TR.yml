@@ -6565,6 +6565,7 @@ tr_TR:
           series:
             anonymous: "Anonim"
             crawlers: "Gezginler"
+          crawler_learn_more: "Daha fazla bilgi edin"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"

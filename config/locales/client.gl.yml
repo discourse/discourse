@@ -3810,6 +3810,7 @@ gl:
           series:
             anonymous: "Anónimo"
             crawlers: "Rastrexadores"
+          crawler_learn_more: "Saber máis"
         period:
           custom: "Personalizado"
         reports:

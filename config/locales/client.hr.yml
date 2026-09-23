@@ -6014,6 +6014,7 @@ hr:
         site_traffic:
           series:
             anonymous: "Anonimno"
+          crawler_learn_more: "Saznajte više"
         period:
           last_7_days: "Zadnjih 7 dana"
           last_30_days: "Zadnjih 30 dana"

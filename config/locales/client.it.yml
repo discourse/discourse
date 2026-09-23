@@ -5838,6 +5838,7 @@ it:
           series:
             anonymous: "Anonimo"
             crawlers: "Crawler"
+          crawler_learn_more: "Scopri di più"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"

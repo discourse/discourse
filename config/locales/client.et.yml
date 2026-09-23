@@ -3092,6 +3092,7 @@ et:
         site_traffic:
           series:
             anonymous: "Anonüümne"
+          crawler_learn_more: "Uuri veel"
         period:
           custom: "Individuaalne"
         reports:

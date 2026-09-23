@@ -8427,6 +8427,7 @@ ar:
             embedded: "مشاهدات الصفحات المضمَّنة"
             crawlers: "زاحفات الويب"
           see_details: "عرض التفاصيل"
+          crawler_learn_more: "معرفة المزيد"
         period:
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"

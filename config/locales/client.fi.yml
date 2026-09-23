@@ -5840,6 +5840,7 @@ fi:
           series:
             anonymous: "Anonyymeja"
             crawlers: "Hakurobotit"
+          crawler_learn_more: "Lue lisää"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"

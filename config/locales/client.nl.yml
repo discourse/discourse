@@ -6539,6 +6539,7 @@ nl:
           series:
             anonymous: "Anoniem"
             crawlers: "Crawlers"
+          crawler_learn_more: "Meer info"
         period:
           last_7_days: "Afgelopen 7 dagen"
           last_30_days: "Afgelopen 30 dagen"

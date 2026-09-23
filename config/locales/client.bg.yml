@@ -3778,6 +3778,7 @@ bg:
         site_traffic:
           series:
             anonymous: "Анонимен"
+          crawler_learn_more: "Научете повече"
         period:
           last_7_days: "Последните 7 дни"
           last_30_days: "Последните 30 дни"

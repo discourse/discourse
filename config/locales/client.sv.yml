@@ -4777,6 +4777,7 @@ sv:
           series:
             anonymous: "Anonym"
             crawlers: "Sökrobotar"
+          crawler_learn_more: "Läs mer"
         period:
           last_7_days: "Senaste 7 dagarna"
           last_30_days: "Senaste 30 dagarna"

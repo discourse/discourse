@@ -6758,6 +6758,7 @@ cs:
           series:
             anonymous: "Anonymní"
             crawlers: "Vyhledávače"
+          crawler_learn_more: "Zjistit více"
         period:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"

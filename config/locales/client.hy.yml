@@ -4181,6 +4181,7 @@ hy:
           series:
             anonymous: "Անանուն"
             crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
+          crawler_learn_more: "Իմանալ ավելին"
         period:
           custom: "Մասնավոր"
         reports:

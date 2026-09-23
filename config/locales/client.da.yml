@@ -4826,6 +4826,7 @@ da:
           series:
             anonymous: "Anonym"
             crawlers: "Crawlere"
+          crawler_learn_more: "Lær mere"
         period:
           last_7_days: "Seneste 7 dage"
           last_30_days: "Seneste 30 dage"

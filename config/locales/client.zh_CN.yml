@@ -7435,6 +7435,7 @@ zh_CN:
             embedded: "嵌入式页面浏览量"
             crawlers: "抓取工具"
           see_details: "查看详细信息"
+          crawler_learn_more: "了解详情"
         period:
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"

@@ -7171,6 +7171,7 @@ de:
             embedded: "Eingebettete Seitenaufrufe"
             crawlers: "Crawler"
           see_details: "Details anzeigen"
+          crawler_learn_more: "Mehr erfahren"
         period:
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"

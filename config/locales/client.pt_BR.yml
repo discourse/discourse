@@ -6433,6 +6433,7 @@ pt_BR:
           series:
             anonymous: "Anônimo(a)"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Saiba mais"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"

@@ -5994,6 +5994,7 @@ vi:
           series:
             anonymous: "Ẩn danh"
             crawlers: "Trình thu thập thông tin"
+          crawler_learn_more: "Tìm hiểu thêm"
         period:
           last_7_days: "7 ngày qua"
           last_30_days: "30 ngày qua"

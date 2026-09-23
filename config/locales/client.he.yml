@@ -2987,6 +2987,7 @@ he:
       enter: "Enter"
       option: "אפשרות"
       period: "פרק זמן"
+      tab: "Tab"
       delete: "מחיקה"
       home: "בית"
     conditional_loading_section:
@@ -6670,6 +6671,7 @@ he:
           series:
             anonymous: "אלמוני"
             crawlers: "סורקי אינטרנט"
+          crawler_learn_more: "מידע נוסף"
         period:
           last_7_days: "7 הימים האחרונים"
           last_30_days: "30 הימים האחרונים"

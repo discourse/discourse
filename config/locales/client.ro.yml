@@ -4489,6 +4489,7 @@ ro:
             anonymous: "Anonimi"
             crawlers: "Crawlere"
           see_details: "Vezi detalii"
+          crawler_learn_more: "Află mai multe"
         period:
           last_7_days: "Ultimele 7 zile"
           last_30_days: "Ultimele 30 de zile"

@@ -4565,6 +4565,7 @@ lt:
         site_traffic:
           series:
             anonymous: "Anonimas"
+          crawler_learn_more: "Sužinoti daugiau"
         period:
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"
