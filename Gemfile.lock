@@ -231,7 +231,7 @@ GEM
     fabrication (3.0.0)
     faker (3.5.3)
       i18n (>= 1.8.11, < 2)
-    faraday (2.14.3)
+    faraday (2.14.4)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -309,7 +309,7 @@ GEM
       simpleidn (~> 0.2)
     jwt (3.2.0)
       base64
-    landlock (0.5.1)
+    landlock (0.6.0)
     language_server-protocol (3.17.0.6)
     libv8-node (24.12.0.1-aarch64-linux)
     libv8-node (24.12.0.1-aarch64-linux-musl)
@@ -1060,7 +1060,7 @@ CHECKSUMS
   extralite-bundle (3.0.1) sha256=49b9b6d459b194b44519d80936d6a98a9e54522e34a8a725fd4e81fdb3944aac
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
   faker (3.5.3) sha256=b961482dc0bb15ccb9a98ea7878b925669e9ae8f5e59b607da540b768137d765
-  faraday (2.14.3) sha256=1882247e6766615c8220b4392bf1d27f6ebb63d8e28267587cef1fb0bf37f278
+  faraday (2.14.4) sha256=9bb4408c44621b0dbaaaa39e5dbfc4dbe58cc6751b6eb94d16ae9e1f2f2fab6e
   faraday-multipart (1.2.0) sha256=7d89a949693714176f612323ca13746a2ded204031a6ba528adee788694ef757
   faraday-net_http (3.4.4) sha256=0e78af151747ed1b00f33e25973b4bc220d7f16c00c39676817c8b12331eb588
   faraday-retry (2.4.0) sha256=7b79c48fb7e56526faf247b12d94a680071ff40c9fda7cf1ec1549439ad11ebe
@@ -1102,7 +1102,7 @@ CHECKSUMS
   json_completer (1.2.0) sha256=4665749172634eccb208c562eb59ea81dd7a612a1fa9a36df441ac473ff177b1
   json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
   jwt (3.2.0) sha256=5419b1fe37b1da0982bd07051f573a8b8789ab724c2aa7e785e4784a3ed217d7
-  landlock (0.5.1) sha256=4c66c5ea238ce0fb4dbf0ea8697da3af01f396f86b34f1f5c323969bc524eba0
+  landlock (0.6.0) sha256=fb8ae70640636a170770dcd28c77a5a0e29d4edce29f9f421b6d641f02f6f3b6
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   libv8-node (24.12.0.1-aarch64-linux) sha256=22bd0246cde85d70c88cf772727ac3677a20ac1d169105f82efe5f1f7c39f755
   libv8-node (24.12.0.1-aarch64-linux-musl) sha256=791b5960f79525e87d1bd1e5f2bf3715ef2a38bac6c97f297853e98a8411ba89
