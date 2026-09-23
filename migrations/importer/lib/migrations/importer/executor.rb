@@ -9,6 +9,7 @@ module Migrations
         @shared_data = SharedData.new(@discourse_db)
         @config = config.except(:intermediate_db, :mappings_db, :files_db)
         @options = options
+        @site_settings = ImportSiteSettings.new
 
         attach_mappings_db(config[:mappings_db], options[:reset])
         attach_files_db(config[:files_db])
@@ -18,6 +19,7 @@ module Migrations
         runtime =
           DateHelper.track_time do
             optimize_intermediate_db
+            apply_site_settings
             execute_steps
           ensure
             cleanup
@@ -89,8 +91,21 @@ module Migrations
         end
       end
 
+      def apply_site_settings
+        @site_settings.apply!
+        puts I18n.t("importer.site_settings.applied")
+      end
+
+      # Runs after the reporter is closed, so the notice appears below its output.
+      def restore_site_settings
+        restored = @site_settings.restore!
+        puts I18n.t("importer.site_settings.restored", count: restored) if restored
+      end
+
       def cleanup
         @reporter&.close
+        restore_site_settings
+      ensure
         @intermediate_db.close
         @discourse_db.close
       end

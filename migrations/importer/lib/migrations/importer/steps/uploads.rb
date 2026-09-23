@@ -89,12 +89,6 @@ module Migrations
             return if Importer::Uploads::InlineWorkList.pending_count(@intermediate_db) == 0
             raise_unconfigured if @settings[:root_paths].blank?
 
-            # `clean_up_uploads` would sweep these freshly created uploads before
-            # the later post steps attach them. Everything else about uploads
-            # (extensions, size limits, S3 credentials) is already real on the live
-            # target site, so we leave it alone.
-            SiteSetting.clean_up_uploads = false
-
             pipeline =
               Importer::Uploads::Pipeline.new(task: build_task, reporter: reuse_step_reporter)
             pipeline.run
