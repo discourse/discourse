@@ -272,6 +272,7 @@ class ReviewablesController < ApplicationController
           reviewable.type == reviewable_param[:type].to_s.classify
         end
       args.merge!(params.slice(*plugin_params.map { |pp| pp[:param] }).permit!)
+
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
       if reviewable.type == "ReviewableUser" && !reviewable.pending? && reviewable.target.blank?
