@@ -11088,6 +11088,37 @@ ALTER SEQUENCE public.topic_custom_fields_id_seq OWNED BY public.topic_custom_fi
 
 
 --
+-- Name: topic_embed_aliases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.topic_embed_aliases (
+    id bigint NOT NULL,
+    topic_embed_id bigint NOT NULL,
+    url_key text NOT NULL,
+    url_hash character varying(64) NOT NULL
+);
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.topic_embed_aliases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.topic_embed_aliases_id_seq OWNED BY public.topic_embed_aliases.id;
+
+
+--
 -- Name: topic_embeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15737,6 +15768,13 @@ ALTER TABLE ONLY public.topic_custom_fields ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: topic_embed_aliases id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases ALTER COLUMN id SET DEFAULT nextval('public.topic_embed_aliases_id_seq'::regclass);
+
+
+--
 -- Name: topic_embeds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18547,6 +18585,14 @@ ALTER TABLE ONLY public.topic_allowed_users
 
 ALTER TABLE ONLY public.topic_custom_fields
     ADD CONSTRAINT topic_custom_fields_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: topic_embed_aliases topic_embed_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases
+    ADD CONSTRAINT topic_embed_aliases_pkey PRIMARY KEY (id);
 
 
 --
@@ -23836,6 +23882,20 @@ CREATE UNIQUE INDEX index_topic_custom_fields_on_topic_id_and_slack_thread_id ON
 
 
 --
+-- Name: index_topic_embed_aliases_on_topic_embed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embed_aliases_on_topic_embed_id ON public.topic_embed_aliases USING btree (topic_embed_id);
+
+
+--
+-- Name: index_topic_embed_aliases_on_url_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_topic_embed_aliases_on_url_hash ON public.topic_embed_aliases USING btree (url_hash);
+
+
+--
 -- Name: index_topic_embeds_on_embed_url; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25504,6 +25564,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),
 ('20260922233816'),
