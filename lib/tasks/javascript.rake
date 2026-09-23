@@ -50,6 +50,13 @@ task "javascript:update_constants" => :environment do
     export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
   JS
 
+  send_shortcuts =
+    UserOption
+      .send_shortcuts
+      .keys
+      .map { |key| %(export const SEND_SHORTCUT_#{key.upcase} = "#{key}";) }
+      .join("\n")
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
@@ -96,6 +103,8 @@ task "javascript:update_constants" => :environment do
     export const POSTING_REVIEW_GROUP_BASED_MODES = #{CategorySetting::GROUP_BASED_MODES.to_json};
 
     export const USER_OPTION_COMPOSITION_MODES = #{UserOption.composition_mode_types.to_json};
+
+    #{send_shortcuts}
 
     export const UPCOMING_CHANGES_USER_ENABLED_REASONS = #{UpcomingChanges.user_enabled_reasons.to_json};
 
