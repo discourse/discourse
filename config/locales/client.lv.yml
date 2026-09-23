@@ -3207,6 +3207,7 @@ lv:
         site_traffic:
           series:
             anonymous: "Anonīmi"
+          crawler_learn_more: "Uzzināt vairāk"
         period:
           last_7_days: "Pēdējās 7 dienas"
           last_30_days: "Pēdējās 30 dienas"

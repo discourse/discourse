@@ -5923,6 +5923,7 @@ ja:
           series:
             anonymous: "匿名ユーザー"
             crawlers: "クローラー"
+          crawler_learn_more: "もっと読む"
         period:
           last_7_days: "過去 7 日間"
           last_30_days: "過去 30 日間"

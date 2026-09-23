@@ -2745,6 +2745,7 @@ sw:
         site_traffic:
           series:
             anonymous: "Asiyejulikana"
+          crawler_learn_more: "Jifunze zaidi"
         period:
           custom: "Binafsi"
         reports:

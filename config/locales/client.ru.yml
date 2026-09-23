@@ -6922,6 +6922,7 @@ ru:
             anonymous: "Анонимные просмотры"
             embedded: "Встроенные просмотры страниц"
             crawlers: "Поисковые роботы"
+          crawler_learn_more: "Подробнее"
         period:
           last_7_days: "За последние 7 дней"
           last_30_days: "За последние 30 дней"

@@ -6469,6 +6469,7 @@ es:
           series:
             anonymous: "Anónimas"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Más información"
         period:
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"

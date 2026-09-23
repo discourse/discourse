@@ -5333,6 +5333,7 @@ fa_IR:
           series:
             anonymous: "ناشناس"
             crawlers: "خزنده‌ها"
+          crawler_learn_more: "بیشتر بدانید"
         period:
           last_7_days: "۷ روز گذشته"
           last_30_days: "۳۰ روز گذشته"

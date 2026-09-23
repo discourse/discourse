@@ -7169,6 +7169,7 @@ fr:
             embedded: "Pages vues intégrées"
             crawlers: "Robots d'indexation"
           see_details: "Voir les détails"
+          crawler_learn_more: "En savoir plus…"
         period:
           last_7_days: "Ces 7 derniers jours"
           last_30_days: "30 derniers jours"

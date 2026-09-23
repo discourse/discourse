@@ -3522,6 +3522,7 @@ bs_BA:
         site_traffic:
           series:
             anonymous: "Anoniman"
+          crawler_learn_more: "Saznaj više"
         period:
           custom: "Custom"
         reports:

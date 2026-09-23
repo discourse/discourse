@@ -7159,6 +7159,7 @@ zh_TW:
             embedded: "內嵌頁面瀏覽量"
             crawlers: "爬蟲"
           see_details: "查看詳情"
+          crawler_learn_more: "了解更多"
         period:
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"

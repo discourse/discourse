@@ -4997,6 +4997,7 @@ pt:
         site_traffic:
           series:
             anonymous: "Anónimo"
+          crawler_learn_more: "Saiba mais"
         period:
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"

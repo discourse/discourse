@@ -4712,6 +4712,7 @@ te:
           series:
             anonymous: "అనామక"
             crawlers: "క్రాలర్లు"
+          crawler_learn_more: "మరింత తెలుసుకోండి"
         period:
           last_3_months: "గత 3 నెలలు"
           custom: "అనురూప"

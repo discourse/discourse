@@ -3475,6 +3475,7 @@ ca:
           series:
             anonymous: "Anònim"
             crawlers: "Rastrejadors"
+          crawler_learn_more: "Per a saber-ne més"
         period:
           last_7_days: "Els darrers 7 dies"
           last_30_days: "Els darrers 30 dies"

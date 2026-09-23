@@ -6269,6 +6269,7 @@ ug:
           series:
             anonymous: "نامسىز"
             crawlers: "ئۆمىلىگۈچ"
+          crawler_learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
         period:
           last_3_months: "ئۆتكەن 3 ئاي"
           custom: "ئىختىيارى"

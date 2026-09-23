@@ -4214,6 +4214,7 @@ ko:
           series:
             anonymous: "익명"
             crawlers: "겉옷"
+          crawler_learn_more: "더 보기"
         period:
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"

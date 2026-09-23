@@ -2365,6 +2365,7 @@ be:
           series:
             anonymous: "ананімны"
             crawlers: "Краўлеры пошукавых сістэм"
+          crawler_learn_more: "Даведацца больш"
         reports:
           today: "сёння"
           yesterday: "учора"

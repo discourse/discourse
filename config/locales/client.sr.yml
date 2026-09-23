@@ -3190,6 +3190,7 @@ sr:
             anonymous: "Anonimno"
             embedded: "Ugrađeni pregledi stranica"
             crawlers: "Pretraživači"
+          crawler_learn_more: "Saznaj više"
         period:
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"

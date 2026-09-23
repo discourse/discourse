@@ -6339,6 +6339,7 @@ hu:
           series:
             anonymous: "Névtelen"
             crawlers: "Keresőrobotok"
+          crawler_learn_more: "Tudjon meg többet"
         period:
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"

@@ -8490,6 +8490,7 @@ pl_PL:
             embedded: "Osadzone wyświetlenia stron"
             crawlers: "Boty indeksujące"
           see_details: "Zobacz szczegóły"
+          crawler_learn_more: "Dowiedz się więcej"
         period:
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"
@@ -10292,6 +10293,10 @@ pl_PL:
           all: "Wszyscy użytkownicy"
           activated: "Aktywowane"
           not_activated: "Nie aktywowano"
+        account_type_filter:
+          human: "Konta ludzkie"
+          bot: "Konta botów"
+          all: "Wszystkie konta"
         approved: "Zatwierdzony?"
         titles:
           active: "Aktywni użytkownicy"
