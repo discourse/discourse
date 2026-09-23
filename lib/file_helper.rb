@@ -191,6 +191,7 @@ class FileHelper
               timeout: 15,
               rlimits: ImageMagick::RLIMITS,
               seccomp_deny_network: true,
+              seccomp_deny_child_processes: true,
             )
           rescue Discourse::Utils::CommandError, Errno::ENOENT
             next
