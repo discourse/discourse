@@ -29,14 +29,17 @@ module PageObjects
       end
 
       def toggle_only_show_overridden
+        expand_filters
         find("#toggle-overridden").click
       end
 
       def toggle_only_show_outdated
+        expand_filters
         find("#toggle-outdated").click
       end
 
       def toggle_only_show_results_in_selected_locale
+        expand_filters
         find("#toggle-only-locale").click
       end
 
@@ -53,8 +56,15 @@ module PageObjects
         find(".save-changes").click
       end
 
+      def expand_filters
+        if find(".d-filter-controls__toggle-filters")["aria-expanded"] == "false"
+          find(".d-filter-controls__toggle-filters").click
+        end
+        self
+      end
+
       def click_replace_text_button
-        find(".reseed button").click
+        click_button(I18n.t("admin_js.admin.reseed.action.label"))
       end
     end
   end

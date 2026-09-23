@@ -51,7 +51,7 @@ export default <template>
               "admin.site_text.search_label"
             }}</label>
           <DFilterInput
-            class="site-text-search"
+            class="no-blur site-text-search"
             id="site-text-search"
             placeholder={{i18n "admin.site_text.search"}}
             @filterAction={{@controller.updateSearch}}
