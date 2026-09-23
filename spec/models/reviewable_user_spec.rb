@@ -337,6 +337,32 @@ RSpec.describe ReviewableUser, type: :model do
     end
 
     context "when rejecting" do
+      it "records account termination when the user is deleted" do
+        SiteSetting.reviewable_outcome_reporting_enabled = true
+
+        reviewable.perform(
+          moderator,
+          :delete_user,
+          reject_reason: "reject reason",
+          outcome_source: "human",
+        )
+
+        expect(reviewable.reload.target).to be_nil
+        expect(reviewable.reviewable_outcomes.pick(:restriction_type)).to eq(
+          ["account_restriction_termination"],
+        )
+      end
+
+      it "records no restriction when existing posts prevent user deletion" do
+        SiteSetting.reviewable_outcome_reporting_enabled = true
+        Fabricate(:post, user: reviewable.target)
+
+        reviewable.perform(moderator, :delete_user, outcome_source: "human")
+
+        expect(reviewable.reload.target).to be_present
+        expect(reviewable.reviewable_outcomes.pick(:restriction_type)).to be_nil
+      end
+
       it "allows us to reject a user" do
         result = reviewable.perform(moderator, :delete_user, reject_reason: "reject reason")
         expect(result.success?).to eq(true)

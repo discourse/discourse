@@ -161,6 +161,7 @@ class ReviewableUser < Reviewable
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
         delete_args[:reviewable_id] = id
+        delete_args[:outcome_source] = args[:outcome_source]
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess

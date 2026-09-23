@@ -614,6 +614,54 @@ RSpec.describe Reviewable, type: :model do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
 
+    it "leaves outcome reporting off by default" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+
+      expect {
+        reviewable.perform(moderator, :ignore_and_do_nothing, outcome_source: "human")
+      }.not_to change { ReviewableOutcome.count }
+    end
+
+    it "keeps separate outcomes when an ignored flag is reopened and automatically hidden" do
+      SiteSetting.reviewable_outcome_reporting_enabled = true
+      reviewable =
+        PostActionCreator.off_topic(Fabricate(:user, refresh_auto_groups: true), post).reviewable
+      original_type_source = reviewable.type_source
+
+      first_result = reviewable.perform(moderator, :ignore_and_do_nothing, outcome_source: "human")
+      reopened =
+        PostActionCreator.illegal(Fabricate(:user, refresh_auto_groups: true), post).reviewable
+      second_result = reopened.perform(moderator, :agree_and_hide, outcome_source: "automated")
+
+      expect(reopened.id).to eq(reviewable.id)
+      expect([first_result.outcome_id, second_result.outcome_id]).to eq(
+        reviewable.reviewable_outcomes.order(:id).pluck(:id),
+      )
+      expect(
+        reviewable
+          .reviewable_outcomes
+          .order(:id)
+          .pluck(:outcome_source, :legal_basis, :restriction_type),
+      ).to eq(
+        [
+          ["human", "tos_violation", nil],
+          ["automated", "illegal content", ["visibility_restriction_disable"]],
+        ],
+      )
+      expect(reopened.reload.type_source).to eq(original_type_source)
+    end
+
+    it "records post removal even when the flags are ignored" do
+      SiteSetting.reviewable_outcome_reporting_enabled = true
+      reviewable = Fabricate(:reviewable_flagged_post)
+
+      reviewable.perform(moderator, :delete_and_ignore, outcome_source: "human")
+
+      expect(reviewable.reviewable_outcomes.pick(:restriction_type)).to eq(
+        ["visibility_restriction_removal"],
+      )
+    end
+
     it "hides actions and denies execution for an inaccessible target" do
       reviewable = Fabricate(:reviewable_flagged_post)
       private_category = Fabricate(:private_category, group: Fabricate(:group))

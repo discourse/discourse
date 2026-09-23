@@ -13,6 +13,7 @@ class User::Suspend
     attribute :post_action, :string
     attribute :post_edit, :string
     attribute :reviewable_id, :integer
+    attribute :reviewable_outcome_id, :integer
 
     validates :user_id, presence: true
     validates :reason, presence: true, length: { maximum: 300 }
@@ -32,6 +33,9 @@ class User::Suspend
   step :suspend
   model :post, optional: true
   step :perform_post_action
+  only_if :reviewable_outcome_present? do
+    step :record_reviewable_restrictions
+  end
 
   private
 
@@ -57,5 +61,30 @@ class User::Suspend
 
   def perform_post_action(guardian:, post:, params:)
     User::Action::TriggerPostAction.call(guardian:, post:, params:)
+  end
+
+  def reviewable_outcome_present?(user:, params:)
+    params.reviewable_outcome_id.present? && user.suspended?
+  end
+
+  def record_reviewable_restrictions(user:, post:, params:)
+    restrictions = ["account_restriction_suspension"]
+    if post && params.post_action.in?(%w[delete delete_replies]) &&
+         Post.with_deleted.find_by(id: post.id)&.trashed?
+      restrictions << "visibility_restriction_removal"
+    end
+
+    result =
+      ReviewableOutcome::AddRestrictions.call(
+        params: {
+          outcome_id: params.reviewable_outcome_id,
+          reviewable_id: params.reviewable_id,
+          user_id: user.id,
+          restriction_type: restrictions,
+        },
+      )
+    unless result.success?
+      raise Discourse::InvalidParameters.new("reviewable outcome could not be updated")
+    end
   end
 end

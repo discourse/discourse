@@ -84,6 +84,21 @@ class Admin::UsersController < Admin::StaffController
     deleted_posts = @user.delete_posts_in_batches(guardian)
     # staff action logs will have an entry for each post
 
+    if deleted_posts.present? && params[:reviewable_outcome_id].present?
+      result =
+        ReviewableOutcome::AddRestrictions.call(
+          params: {
+            outcome_id: params[:reviewable_outcome_id],
+            reviewable_id: params[:reviewable_id],
+            user_id: @user.id,
+            restriction_type: ["visibility_restriction_removal"],
+          },
+        )
+      unless result.success?
+        raise Discourse::InvalidParameters.new("reviewable outcome could not be updated")
+      end
+    end
+
     render json: { posts_deleted: deleted_posts.length }
   end
 
@@ -96,7 +111,12 @@ class Admin::UsersController < Admin::StaffController
     threshold = SiteSetting.delete_all_posts_background_threshold.to_i
 
     if threshold > 0 && post_count > threshold
-      Jobs.enqueue(:delete_user_posts, user_id: @user.id, acting_user_id: current_user.id)
+      job_args = { user_id: @user.id, acting_user_id: current_user.id }
+      if params[:reviewable_outcome_id].present?
+        job_args[:reviewable_id] = params[:reviewable_id]
+        job_args[:reviewable_outcome_id] = params[:reviewable_outcome_id]
+      end
+      Jobs.enqueue(:delete_user_posts, job_args)
       render json: { job_enqueued: true, post_count: post_count }
     else
       render json: { job_enqueued: false, post_count: post_count }

@@ -167,9 +167,10 @@ export default class AdminUser extends User {
     });
   }
 
-  deleteAllPosts() {
+  deleteAllPosts(outcomeParams = {}) {
     return ajax(`/admin/users/${this.get("id")}/delete_posts_batch`, {
       type: "PUT",
+      data: outcomeParams,
     });
   }
 

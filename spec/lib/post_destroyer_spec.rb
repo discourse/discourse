@@ -1127,6 +1127,18 @@ RSpec.describe PostDestroyer do
       )
     end
 
+    it "records a moderator's direct deletion of a flagged post as human" do
+      SiteSetting.reviewable_outcome_reporting_enabled = true
+      reviewable = flag_result.reviewable
+
+      PostDestroyer.new(moderator, second_post).destroy
+
+      expect(reviewable.reload.reviewable_outcomes.last).to have_attributes(
+        outcome_source: "human",
+        restriction_type: ["visibility_restriction_removal"],
+      )
+    end
+
     it "does not send the flags_agreed_and_post_deleted message for system deletions" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
       PostDestroyer.new(Discourse.system_user, second_post, context: "Automated testing").destroy

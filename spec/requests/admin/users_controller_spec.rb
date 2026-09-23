@@ -3041,6 +3041,21 @@ RSpec.describe Admin::UsersController do
           expect(response.status).to eq(200)
           expect(response.parsed_body["posts_deleted"]).to eq(3)
         end
+
+        it "records removal for a reviewable outcome after deleting posts" do
+          SiteSetting.reviewable_outcome_reporting_enabled = true
+          reviewable = Fabricate(:reviewable_user, target: user)
+          outcome = Fabricate(:reviewable_outcome, reviewable:)
+
+          put "/admin/users/#{user.id}/delete_posts_batch.json",
+              params: {
+                reviewable_id: reviewable.id,
+                reviewable_outcome_id: outcome.id,
+              }
+
+          expect(response.status).to eq(200)
+          expect(outcome.reload.restriction_type).to eq(["visibility_restriction_removal"])
+        end
       end
 
       context "when there are no posts left to be deleted" do

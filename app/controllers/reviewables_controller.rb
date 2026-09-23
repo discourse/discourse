@@ -188,7 +188,7 @@ class ReviewablesController < ApplicationController
       )
     raise Discourse::NotFound.new if reviewable.blank?
 
-    reviewable.perform(current_user, :delete, { guardian: @guardian })
+    reviewable.perform(current_user, :delete, { guardian: @guardian, outcome_source: "human" })
 
     render json: success_json
   end
@@ -253,7 +253,7 @@ class ReviewablesController < ApplicationController
   end
 
   def perform
-    args = { version: params[:version].to_i }
+    args = { version: params[:version].to_i, outcome_source: "human" }
 
     result = nil
     begin
@@ -272,6 +272,7 @@ class ReviewablesController < ApplicationController
           reviewable.type == reviewable_param[:type].to_s.classify
         end
       args.merge!(params.slice(*plugin_params.map { |pp| pp[:param] }).permit!)
+      args[:outcome_source] = "human"
 
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e

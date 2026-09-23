@@ -3420,6 +3420,9 @@ spam:
       - optional
       - required
 
+  reviewable_outcome_reporting_enabled:
+    default: false
+
   reviewable_default_topics:
     default: false
     client: true

@@ -150,13 +150,16 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    UserDestroyer.new(performed_by).destroy(post.user, delete_opts.merge(reviewable_id: id))
+    UserDestroyer.new(performed_by).destroy(
+      post.user,
+      delete_opts.merge(reviewable_id: id, outcome_source: args[:outcome_source]),
+    )
 
     agree
   end
 
   def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts.merge(reviewable_id: id)
+    delete_options = delete_opts.merge(reviewable_id: id, outcome_source: args[:outcome_source])
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 

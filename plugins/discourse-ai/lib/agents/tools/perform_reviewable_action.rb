@@ -95,6 +95,7 @@ module DiscourseAi
                 action_id,
                 version: reviewable.version,
                 guardian: guardian,
+                outcome_source: "automated",
               )
           rescue Reviewable::InvalidAction
             return(

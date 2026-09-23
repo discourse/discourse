@@ -32,6 +32,7 @@ class Reviewable < ActiveRecord::Base
   belongs_to :category
 
   has_many :reviewable_histories, dependent: :destroy
+  has_many :reviewable_outcomes
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
 
@@ -421,11 +422,30 @@ class Reviewable < ActiveRecord::Base
     update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
+      outcome_snapshot =
+        outcome_restriction_snapshot if SiteSetting.reviewable_outcome_reporting_enabled && pending?
       result = public_send(perform_method, performed_by, args)
 
       raise ActiveRecord::Rollback unless result.success?
 
-      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+      if result.transition_to
+        update_count = transition_to(result.transition_to, performed_by, record_outcome: false)
+        if outcome_snapshot && !pending?
+          outcome =
+            record_outcome!(
+              outcome_source:
+                args.fetch(:outcome_source) do
+                  performed_by.human? && performed_by.staff? ? "human" : "automated"
+                end,
+              restriction_type:
+                (
+                  Array(args[:restriction_type]) |
+                    Array(outcome_restrictions_applied_since(outcome_snapshot))
+                ).presence,
+            )
+          result.outcome_id = outcome&.id
+        end
+      end
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
     end
@@ -459,28 +479,42 @@ class Reviewable < ActiveRecord::Base
     reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
-  def transition_to(status_symbol, performed_by)
-    # Claims are held per topic, so one left behind would claim the topic's next reviewable.
-    # Released while still pending so the unclaim is recorded on this reviewable's timeline.
-    if topic_id && pending? && status_symbol.to_sym != :pending
-      ReviewableClaimedTopic.release_manual_claim(topic_id, performed_by)
+  def transition_to(
+    status_symbol,
+    performed_by,
+    record_outcome: true,
+    outcome_source: "automated",
+    restriction_type: nil
+  )
+    Reviewable.transaction do
+      was_pending = pending?
+      # Claims are held per topic, so one left behind would claim the topic's next reviewable.
+      # Released while still pending so the unclaim is recorded on this reviewable's timeline.
+      if topic_id && pending? && status_symbol.to_sym != :pending
+        ReviewableClaimedTopic.release_manual_claim(topic_id, performed_by)
+      end
+
+      self.status = status_symbol
+      save!
+
+      log_history(:transitioned, performed_by)
+      DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
+
+      if score_status = ReviewableScore.score_transitions[status_symbol]
+        updatable_reviewable_scores.update_all(
+          status: score_status,
+          reviewed_by_id: performed_by.id,
+          reviewed_at: Time.zone.now,
+        )
+      end
+
+      if record_outcome && was_pending && !pending? &&
+           SiteSetting.reviewable_outcome_reporting_enabled
+        record_outcome!(outcome_source:, restriction_type:)
+      end
+
+      status_previously_changed?(from: "pending")
     end
-
-    self.status = status_symbol
-    save!
-
-    log_history(:transitioned, performed_by)
-    DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
-
-    if score_status = ReviewableScore.score_transitions[status_symbol]
-      updatable_reviewable_scores.update_all(
-        status: score_status,
-        reviewed_by_id: performed_by.id,
-        reviewed_at: Time.zone.now,
-      )
-    end
-
-    status_previously_changed?(from: "pending")
   end
 
   def self.bulk_perform_targets(performed_by, action, type, target_ids, args = nil)
@@ -996,6 +1030,64 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  def record_outcome!(outcome_source:, restriction_type:)
+    result =
+      Reviewable::RecordOutcome.call(
+        reviewable: self,
+        params: {
+          outcome_source:,
+          restriction_type:,
+        },
+      )
+    raise ActiveRecord::RecordInvalid.new(result.outcome) unless result.success?
+
+    result.outcome
+  end
+
+  def outcome_restriction_snapshot
+    post = target_post
+    affected_topic_id = target_type == "Topic" ? target_id : post&.topic_id
+    affected_user_id = target_type == "User" ? target_id : target_created_by_id
+    affected_user = User.find_by(id: affected_user_id) if affected_user_id
+
+    {
+      post_id: post&.id,
+      post_deleted: post&.trashed?,
+      post_hidden: post&.hidden?,
+      topic_id: affected_topic_id,
+      topic_deleted: Topic.with_deleted.find_by(id: affected_topic_id)&.trashed?,
+      user_id: affected_user_id,
+      user_present: affected_user.present?,
+      user_suspended: affected_user&.suspended?,
+      user_silenced: affected_user&.silenced?,
+    }
+  end
+
+  def outcome_restrictions_applied_since(snapshot)
+    post = Post.with_deleted.find_by(id: snapshot[:post_id]) if snapshot[:post_id]
+    topic = Topic.with_deleted.find_by(id: snapshot[:topic_id]) if snapshot[:topic_id]
+    user = User.find_by(id: snapshot[:user_id]) if snapshot[:user_id]
+    restrictions = []
+
+    if (snapshot[:post_id] && !snapshot[:post_deleted] && (!post || post.trashed?)) ||
+         (snapshot[:topic_id] && !snapshot[:topic_deleted] && (!topic || topic.trashed?))
+      restrictions << "visibility_restriction_removal"
+    end
+    if snapshot[:post_id] && !snapshot[:post_hidden] && post&.hidden?
+      restrictions << "visibility_restriction_disable"
+    end
+    restrictions << "account_restriction_termination" if snapshot[:user_present] && !user
+    if user &&
+         (
+           (!snapshot[:user_suspended] && user.suspended?) ||
+             (!snapshot[:user_silenced] && user.silenced?)
+         )
+      restrictions << "account_restriction_suspension"
+    end
+
+    restrictions.presence
+  end
 
   def can_review_target?(guardian)
     post = target_post

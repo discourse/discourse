@@ -83,5 +83,40 @@ RSpec.describe User::Suspend do
         expect(result[:full_reason]).to eq("spam\n\nit was spam")
       end
     end
+
+    context "when suspension follows a reviewable handling" do
+      let(:post) { Fabricate(:post, user:) }
+      let(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          target: post,
+          topic: post.topic,
+          target_created_by: user,
+        )
+      end
+      let(:outcome) { Fabricate(:reviewable_outcome, reviewable:) }
+      let(:params) do
+        {
+          user_id:,
+          reason:,
+          suspend_until:,
+          post_id: post.id,
+          post_action: "delete",
+          reviewable_id: reviewable.id,
+          reviewable_outcome_id: outcome.id,
+        }
+      end
+
+      before { SiteSetting.reviewable_outcome_reporting_enabled = true }
+
+      it "adds both account suspension and post removal to that outcome" do
+        expect(result).to run_successfully
+        expect(user.reload).to be_suspended
+        expect(post.reload).to be_trashed
+        expect(outcome.reload.restriction_type).to eq(
+          %w[account_restriction_suspension visibility_restriction_removal],
+        )
+      end
+    end
   end
 end

@@ -39,7 +39,9 @@ export default class DeleteUserPostsProgress extends Component {
   @action
   async deletePosts() {
     try {
-      const progress = await this.args.model.user.deleteAllPosts();
+      const progress = await this.args.model.user.deleteAllPosts(
+        this.args.model.outcomeParams
+      );
       this.deletedPosts = progress.posts_deleted;
       this.totalDeletedPosts += progress.posts_deleted;
       this.args.model.updateUserPostCount(

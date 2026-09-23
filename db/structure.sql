@@ -9421,6 +9421,40 @@ ALTER SEQUENCE public.reviewable_notes_id_seq OWNED BY public.reviewable_notes.i
 
 
 --
+-- Name: reviewable_outcomes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reviewable_outcomes (
+    id bigint NOT NULL,
+    reviewable_id bigint NOT NULL,
+    outcome_source character varying NOT NULL,
+    legal_basis character varying NOT NULL,
+    restriction_type character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: reviewable_outcomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reviewable_outcomes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reviewable_outcomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reviewable_outcomes_id_seq OWNED BY public.reviewable_outcomes.id;
+
+
+--
 -- Name: reviewable_scores; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15353,6 +15387,13 @@ ALTER TABLE ONLY public.reviewable_notes ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: reviewable_outcomes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviewable_outcomes ALTER COLUMN id SET DEFAULT nextval('public.reviewable_outcomes_id_seq'::regclass);
+
+
+--
 -- Name: reviewable_scores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18095,6 +18136,14 @@ ALTER TABLE ONLY public.reviewable_histories
 
 ALTER TABLE ONLY public.reviewable_notes
     ADD CONSTRAINT reviewable_notes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reviewable_outcomes reviewable_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviewable_outcomes
+    ADD CONSTRAINT reviewable_outcomes_pkey PRIMARY KEY (id);
 
 
 --
@@ -23170,6 +23219,13 @@ CREATE INDEX index_reviewable_notes_on_user_id ON public.reviewable_notes USING 
 
 
 --
+-- Name: index_reviewable_outcomes_on_reviewable_id_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviewable_outcomes_on_reviewable_id_and_id ON public.reviewable_outcomes USING btree (reviewable_id, id);
+
+
+--
 -- Name: index_reviewable_scores_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25405,6 +25461,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260923050022'),
 ('20260921120000'),
 ('20260921081150'),
 ('20260921074918'),

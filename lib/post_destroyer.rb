@@ -395,19 +395,28 @@ class PostDestroyer
 
   def agree(reviewable)
     notify_deletion(reviewable)
-    result =
-      reviewable.perform(
-        @user,
-        :agree_and_keep,
-        post_was_deleted: true,
-        guardian: Discourse.system_user.guardian,
-      )
-    reviewable.transition_to(result.transition_to, @user)
+    reviewable.perform(
+      @user,
+      :agree_and_keep,
+      post_was_deleted: true,
+      guardian: Discourse.system_user.guardian,
+      restriction_type: ["visibility_restriction_removal"],
+      outcome_source: reviewable_outcome_source,
+    )
   end
 
   def ignore(reviewable)
     reviewable.perform_ignore_and_do_nothing(@user, post_was_deleted: true)
-    reviewable.transition_to(:ignored, @user)
+    reviewable.transition_to(
+      :ignored,
+      @user,
+      restriction_type: ["visibility_restriction_removal"],
+      outcome_source: reviewable_outcome_source,
+    )
+  end
+
+  def reviewable_outcome_source
+    @opts[:outcome_source] || (@user.human? && @user.staff? ? "human" : "automated")
   end
 
   def handle_reviewable_after_deletion
@@ -428,6 +437,7 @@ class PostDestroyer
     )
 
     return unless @post.reviewable_flag
+    return if @post.reviewable_flag.id == @opts[:reviewable_id]
     return unless SiteSetting.notify_users_after_responses_deleted_on_flagged_post
     return if @post.reviewable_flag.potentially_illegal?
 
@@ -587,7 +597,13 @@ class PostDestroyer
       return
     end
 
-    reviewables.find_each { |reviewable| reviewable.transition_to(:ignored, Discourse.system_user) }
+    reviewables.find_each do |reviewable|
+      reviewable.transition_to(
+        :ignored,
+        Discourse.system_user,
+        restriction_type: ["visibility_restriction_removal"],
+      )
+    end
   end
 
   def user_penalized_for_post?

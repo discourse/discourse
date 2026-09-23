@@ -124,7 +124,10 @@ export default class AdminToolsService extends Service {
           }
 
           if (result?.shouldDeleteAllPosts) {
-            return this.deletePostsDecider(loadedUser);
+            return this.deletePostsDecider(loadedUser, {
+              reviewableId: result.reviewableId,
+              reviewableOutcomeId: result.reviewableOutcomeId,
+            });
           }
         },
       },
@@ -139,11 +142,19 @@ export default class AdminToolsService extends Service {
     return this.showControlModal("suspend", user, opts);
   }
 
-  async deletePostsDecider(user) {
+  async deletePostsDecider(user, { reviewableId, reviewableOutcomeId } = {}) {
+    const outcomeParams =
+      Number.isInteger(reviewableOutcomeId) && Number.isInteger(reviewableId)
+        ? {
+            reviewable_id: reviewableId,
+            reviewable_outcome_id: reviewableOutcomeId,
+          }
+        : {};
     const response = await ajax(
       `/admin/users/${user.id}/delete_posts_decider`,
       {
         type: "POST",
+        data: outcomeParams,
       }
     );
 
@@ -160,6 +171,7 @@ export default class AdminToolsService extends Service {
     this.modal.show(DeleteUserPostsProgressModal, {
       model: {
         user,
+        outcomeParams,
         updateUserPostCount(count) {
           user.set("post_count", count);
         },

@@ -642,13 +642,14 @@ export default class ReviewableItem extends Component {
           data,
         }
       )
-        .then((result) =>
-          this._performResult(
+        .then(async (result) => {
+          await this._performResult(
             result.reviewable_perform_result,
             performableAction,
             reviewable
-          )
-        )
+          );
+          return result.reviewable_perform_result.outcome_id;
+        })
         .finally(() => {
           this.updating = false;
           this.disabled = false;

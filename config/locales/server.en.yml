@@ -2664,6 +2664,7 @@ en:
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use <a href='%{base_path}/admin/customize/watched_words/action/silence'>Silence Watched Words</a> instead."
     moderator_guide_topic: "The topic that outlines how you moderate your community. Link will be visible on the review queue for moderators and admins."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
+    reviewable_outcome_reporting_enabled: "Record the source, legal basis, and restrictions for each reviewable handling decision so they can be queried in Data Explorer."
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."

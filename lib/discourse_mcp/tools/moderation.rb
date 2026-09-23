@@ -430,6 +430,7 @@ module DiscourseMcp
           ModerationSupport.action_arguments(reviewable, action, additional_fields).merge(
             version: reviewable.version,
             guardian:,
+            outcome_source: "automated",
           )
 
         result =

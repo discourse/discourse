@@ -14,6 +14,8 @@ class UserDestroyer
   # Returns false if the user failed to be deleted.
   # Returns a frozen instance of the User if the delete succeeded.
   def destroy(user, opts = {})
+    @outcome_source =
+      opts[:outcome_source] || (@actor.human? && @actor.staff? ? "human" : "automated")
     raise Discourse::InvalidParameters.new("user is nil") unless user && user.is_a?(User)
     raise PostsExistError if !opts[:delete_posts] && user.posts.joins(:topic).count != 0
     @guardian.ensure_can_delete_user!(user)
@@ -46,7 +48,7 @@ class UserDestroyer
         delete_posts(user, category_topic_ids, opts)
       end
 
-      resolve_reviewables_targeting(user)
+      resolve_reviewables_targeting(user, excluding_reviewable_id: opts[:reviewable_id])
 
       user.post_actions.find_each { |post_action| post_action.remove_act!(Discourse.system_user) }
 
@@ -126,7 +128,9 @@ class UserDestroyer
 
     # The account reviewable's own perform step handles the deletion it initiated.
     reviewable = ReviewableUser.pending.find_by(target: user)
-    reviewable.perform(@actor, :delete_user) if reviewable && reviewable.id != opts[:reviewable_id]
+    if reviewable && reviewable.id != opts[:reviewable_id]
+      reviewable.perform(@actor, :delete_user, outcome_source: @outcome_source)
+    end
 
     result
   end
@@ -149,7 +153,7 @@ class UserDestroyer
         actions = reviewable.actions_for(@guardian)
 
         if actions.has?(:agree_and_keep) || actions.has?(:agree_and_keep_hidden)
-          reviewable.perform(@actor, :agree_and_keep)
+          reviewable.perform(@actor, :agree_and_keep, outcome_source: @outcome_source)
         end
       end
 
@@ -157,7 +161,7 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_and_delete)
-          reviewable.perform(@actor, :reject_and_delete)
+          reviewable.perform(@actor, :reject_and_delete, outcome_source: @outcome_source)
         end
       end
 
@@ -165,21 +169,22 @@ class UserDestroyer
       .where(target_created_by: user)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_post)
-          reviewable.perform(@actor, :reject_post)
+          reviewable.perform(@actor, :reject_post, outcome_source: @outcome_source)
         end
       end
   end
 
-  def resolve_reviewables_targeting(user)
+  def resolve_reviewables_targeting(user, excluding_reviewable_id:)
     Reviewable
       .pending
       .where(target_created_by: user)
+      .where.not(id: excluding_reviewable_id)
       .find_each do |reviewable|
         reviewable.reviewable_notes.create!(
           user: Discourse.system_user,
           content: I18n.t("reviewables.target_user_deleted"),
         )
-        reviewable.transition_to(:ignored, Discourse.system_user)
+        reviewable.transition_to(:ignored, Discourse.system_user, outcome_source: "automated")
       end
   end
 

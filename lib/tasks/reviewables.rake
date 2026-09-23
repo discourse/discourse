@@ -80,7 +80,7 @@ task "reviewables:mass-handle", %i[reviewable_type username action_id] => :envir
       puts "Performing #{action_id.inspect} on #{count} #{reviewable_class} records..."
       failed = []
       relation.find_each do |reviewable|
-        result = reviewable.perform(acting_user, action_id)
+        result = reviewable.perform(acting_user, action_id, outcome_source: "automated")
 
         if result.success?
           putc "."

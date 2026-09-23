@@ -31,6 +31,7 @@ export default class PenalizeUser extends Component {
   @tracked message;
   @tracked readyToDeleteAll = false;
   #beforeCompleted = false;
+  #reviewableOutcomeId;
 
   constructor() {
     super(...arguments);
@@ -96,7 +97,7 @@ export default class PenalizeUser extends Component {
     let result;
     try {
       if (this.args.model.before && !this.#beforeCompleted) {
-        await this.args.model.before();
+        this.#reviewableOutcomeId = await this.args.model.before();
         this.#beforeCompleted = true;
       }
 
@@ -109,6 +110,10 @@ export default class PenalizeUser extends Component {
         other_user_ids: this.otherUserIds,
         reviewable_id: this.args.model.reviewableId,
       };
+
+      if (Number.isInteger(this.#reviewableOutcomeId)) {
+        opts.reviewable_outcome_id = this.#reviewableOutcomeId;
+      }
 
       if (this.args.model.penaltyType === "suspend") {
         opts.suspend_until = this.penalizeUntil;
@@ -124,6 +129,8 @@ export default class PenalizeUser extends Component {
       if (this.args.model.successCallback) {
         await this.args.model.successCallback({
           ...result,
+          reviewableId: this.args.model.reviewableId,
+          reviewableOutcomeId: this.#reviewableOutcomeId,
           shouldDeleteAllPosts:
             this.postAction === "delete_all" && this.readyToDeleteAll,
         });
