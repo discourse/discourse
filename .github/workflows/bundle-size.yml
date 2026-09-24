@@ -1,0 +1,138 @@
+name: Bundle size
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bundle-size-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build ${{ matrix.revision }} bundle report
+    runs-on: ${{ github.repository_owner == 'discourse' && 'cdck-linux-8-core' || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        revision: [base, pr]
+    env:
+      EMBER_ENV: production
+      SKIP_DB_AND_REDIS: "1"
+      CI: "1"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Compare the result of merging this PR with its exact target base.
+          ref: ${{ matrix.revision == 'base' && github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build production core
+        run: pnpm build
+
+      - name: Collect report and build identity
+        run: |
+          mkdir -p bundle-report
+          node --input-type=module <<'JS'
+          import fs from "node:fs";
+          import { execFileSync } from "node:child_process";
+          const root = "frontend/discourse/dist";
+          const manifest = JSON.parse(fs.readFileSync(`${root}/manifest/manifest.json`, "utf8"));
+          if (!manifest.bundleAnalysis) {
+            throw new Error("Build did not produce a bundle analysis report");
+          }
+          fs.copyFileSync(`${root}/${manifest.bundleAnalysis}`, "bundle-report/report.json");
+          fs.writeFileSync("bundle-report/build.json", JSON.stringify({
+            commit: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
+            node: process.version,
+            brotli: process.versions.brotli,
+            emberEnv: process.env.EMBER_ENV,
+          }, null, 2));
+          JS
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: bundle-size-${{ matrix.revision }}
+          path: bundle-report/
+          if-no-files-found: error
+          retention-days: 14
+
+  compare:
+    name: Bundle size comparison
+    needs: build
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:release
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Require both builds to succeed
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: test "$BUILD_RESULT" = success
+
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Test comparison logic
+        run: node --test script/bundle-analysis.test.mjs
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: bundle-size-base
+          path: bundle-reports/base
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: bundle-size-pr
+          path: bundle-reports/pr
+
+      - name: Check build identities
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_SHA: ${{ github.sha }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from "node:fs";
+          import assert from "node:assert/strict";
+          const read = (revision) => JSON.parse(fs.readFileSync(`bundle-reports/${revision}/build.json`, "utf8"));
+          const base = read("base"), pr = read("pr");
+          assert.equal(base.commit, process.env.BASE_SHA);
+          assert.equal(pr.commit, process.env.PR_SHA);
+          for (const key of ["node", "brotli", "emberEnv"]) {
+            assert.equal(base[key], pr[key], `Builds differ in ${key}`);
+          }
+          JS
+
+      - name: Compare main entrypoint and static dependencies
+        run: |
+          node script/bundle-analysis.mjs diff \
+            bundle-reports/base/report.json bundle-reports/pr/report.json \
+            --entry discourse --percent 10 --bytes 25600 2>&1 | tee bundle-size.txt
+
+      - name: Publish comparison summary
+        if: ${{ always() }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_SHA: ${{ github.sha }}
+        run: |
+          if [ -f bundle-size.txt ]; then
+            {
+              echo "Base: $BASE_SHA; PR merge: $PR_SHA"
+              echo '```text'
+              cat bundle-size.txt
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
