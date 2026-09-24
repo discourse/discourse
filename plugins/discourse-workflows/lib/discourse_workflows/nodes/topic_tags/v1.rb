@@ -121,8 +121,10 @@ module DiscourseWorkflows
           )
         end
 
-        def tag_topic!(topic, guardian, tag_names, append: false)
-          unless DiscourseTagging.tag_topic_by_names(topic, guardian, tag_names, append:)
+        def tag_topic!(topic, guardian, tag_names, append: false, &)
+          guardian.ensure_can_edit_tags!(topic)
+
+          unless DiscourseTagging.tag_topic_by_names(topic, guardian, tag_names, append:, &)
             raise_node_error!(
               I18n.t(
                 "discourse_workflows.errors.topic_tags.operation_failed",

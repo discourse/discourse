@@ -11,15 +11,64 @@ RSpec.describe "Discourse Workflows" do
     sign_in(admin)
   end
 
-  it "creates a workflow with trigger and action" do
+  it "creates a workflow and switches between modifying and replacing topic tags" do
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+
     editor_page.visit_new
     editor_page.click_empty_state_add_node
     editor_page.select_node_type("trigger:topic_closed")
     editor_page.click_add_node
-    editor_page.select_node_type("action:topic_tags", operation: "add")
+    editor_page.select_node_type("action:topic_tags")
+    editor_page.double_click_node(1)
+
+    expect(editor_page).to have_combined_topic_tag_fields
+
+    editor_page.set_tagged_topic(topic)
+    editor_page.select_topic_tag_mode("Replace all")
+    expect(editor_page).to have_replacement_topic_tag_fields
+    editor_page.add_replacement_tag(tag)
+    expect(editor_page).to have_saved_node_configuration
+
+    page.refresh
+    expect(editor_page).to have_replacement_topic_tag_fields
+    expect(editor_page).to have_replacement_tag(tag)
+
+    editor_page.select_topic_tag_mode("Modify")
+    expect(editor_page).to have_combined_topic_tag_fields
+
+    editor_page.close_node_configurator
 
     workflows_page.visit_index
     expect(workflows_page).to have_workflow("My workflow")
+  end
+
+  it "keeps the operation expression and tag picker for existing topic tag nodes" do
+    node_id = "topic-tags"
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "action:topic_tags",
+            "typeVersion" => "1.0",
+            "name" => "Legacy topic tags",
+            "parameters" => {
+              "operation" => "={{ $json.operation }}",
+              "topic_id" => topic.id.to_s,
+              "tag_names" => [tag.name],
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+
+    expect(editor_page).to have_legacy_topic_tag_fields
   end
 
   it "creates a workflow with condition node" do

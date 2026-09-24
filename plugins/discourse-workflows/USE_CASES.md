@@ -58,6 +58,7 @@ For each run, record:
 
 ## Known edge cases to keep testing
 
+- `action:topic_tags` version `2.0` defaults to `mode: modify`: `add_tag_names` and `remove_tag_names` apply together, preserving unrelated tags and allowing implicit parent tags. `mode: replace` sets the complete tag set from `replace_tag_names`; an empty value clears all tags. Replacement uses the current topic state under a lock and rejects category or parent-tag rules that change the requested final set. Only the selected mode's fields are evaluated; invalid names and expression errors stop the action before any tag changes. Both modes enforce the actor’s permission to edit the topic’s tags and return the final `tag_names`; rejected changes neither persist nor emit tag-change events. Existing tag names remain usable after the maximum tag length is reduced. Version `1.0` retains `operation` and `tag_names`.
 - Topic-only triggers that need author/post fields should use `action:topic` get before filtering or messaging.
 - Generic prompts like "when someone posts" should use `trigger:post_created` for all regular posts; do not ask whether to include replies unless the prompt explicitly narrows the scope.
 - Actions that replace item JSON require downstream nodes to use the action output schema, not the original trigger schema.
