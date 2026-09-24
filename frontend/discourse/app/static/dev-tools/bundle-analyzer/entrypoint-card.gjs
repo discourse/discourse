@@ -42,6 +42,11 @@ export default class EntrypointCard extends ExpandableRow {
   }
 
   @cached
+  // The card can survive on a dependency while its own chunk is out of view.
+  get rootVisible() {
+    return this.analysis.includes(this.args.file);
+  }
+
   get loadSet() {
     return this.analysis.visibleClosure(this.args.file);
   }
@@ -184,13 +189,15 @@ export default class EntrypointCard extends ExpandableRow {
             </div>
           {{/if}}
           <div class="ba-sub-list">
-            <ChunkRow
-              @analysis={{@analysis}}
-              @file={{@file}}
-              @filter={{@filter}}
-              @loaded={{@loaded}}
-              @root={{true}}
-            />
+            {{#if this.rootVisible}}
+              <ChunkRow
+                @analysis={{@analysis}}
+                @file={{@file}}
+                @filter={{@filter}}
+                @loaded={{@loaded}}
+                @root={{true}}
+              />
+            {{/if}}
             {{#each this.addedSorted as |f|}}
               <ChunkRow
                 @added={{this.markAdded}}

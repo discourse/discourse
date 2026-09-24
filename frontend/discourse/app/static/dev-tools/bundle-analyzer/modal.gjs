@@ -45,9 +45,11 @@ export default class BundleAnalyzerModal extends Component {
   };
 
   #observers = [];
+  #destroyed = false;
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.#destroyed = true;
     this.#observers.forEach((o) => o.teardown());
   }
 
@@ -66,6 +68,9 @@ export default class BundleAnalyzerModal extends Component {
   // The graph answers every size question, so the graph is what holds the
   // reader's filter and the browser's record of what it fetched.
   #prepare(analysis) {
+    if (this.#destroyed) {
+      return null;
+    }
     analysis.view = this.view;
     analysis.loaded = new LoadedChunks(analysis.chunks);
     this.#observers.push(analysis.loaded);

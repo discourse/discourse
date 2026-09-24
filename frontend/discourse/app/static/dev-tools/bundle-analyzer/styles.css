@@ -124,11 +124,7 @@
   color: var(--ba-muted);
 }
 .bundle-analyzer .ba-body {
-  display: none;
   padding: 0 12px 12px 32px;
-}
-.bundle-analyzer .ba-row.open > .ba-body {
-  display: block;
 }
 
 .bundle-analyzer .ba-badge {

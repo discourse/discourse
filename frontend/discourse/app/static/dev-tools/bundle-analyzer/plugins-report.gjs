@@ -1,10 +1,21 @@
-import { cached } from "@glimmer/tracking";
+import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { brotliLabel, fmt } from "./analysis";
 import AnalyzerToolbar from "./analyzer-toolbar";
-import FilterableReport from "./filterable-report";
 import PluginCard, { pluginMatches } from "./plugin-card";
 
-export default class PluginsReport extends FilterableReport {
+export default class PluginsReport extends Component {
+  @tracked filter = "";
+
+  get analysis() {
+    return this.args.analysis;
+  }
+
+  get loaded() {
+    return this.analysis.loaded;
+  }
+
   get totals() {
     return this.analysis.totals(Object.keys(this.analysis.chunks));
   }
@@ -18,6 +29,11 @@ export default class PluginsReport extends FilterableReport {
       shown.map((p) => [p, this.analysis.totalsFor(p).raw])
     );
     return shown.sort((a, b) => sizes.get(b) - sizes.get(a));
+  }
+
+  @action
+  updateFilter(event) {
+    this.filter = event.target.value.trim().toLowerCase();
   }
 
   // A plugin with nothing left to show is dropped rather than listed at zero.

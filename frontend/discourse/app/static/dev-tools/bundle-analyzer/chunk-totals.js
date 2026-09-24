@@ -1,9 +1,8 @@
 // Totals over a set of chunks.
 //
 // A brotli size is whatever the build measured when it compressed the chunk.
-// A report without them — a plugin build, which does not compress yet — totals
-// its raw bytes and says the brotli figure is not ready, so a caller shows
-// nothing rather than a number that is really a zero.
+// A report without them totals its raw bytes and says the brotli figure is not
+// ready, so a caller shows nothing rather than a number that is really a zero.
 export default class ChunkTotals {
   // The browser's record of what it fetched, and the shared toggle saying
   // whether anything else counts. Both are assigned by whoever owns the view,

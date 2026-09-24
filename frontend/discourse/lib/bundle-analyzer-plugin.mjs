@@ -53,9 +53,8 @@ function relUncached(id) {
   return relative(process.cwd(), id);
 }
 
-// Records, per resolved module id, the source locations where it is
-// dynamically `import()`-ed, so dynamic chunks can be traced back to the exact
-// file + line that triggers their download.
+// Describes the finished bundle: what each chunk weighs, what is inside it, and
+// which files dynamically import it.
 export default function bundleAnalyzerPlugin({ enabled } = {}) {
   return {
     name: "bundle-analyzer",

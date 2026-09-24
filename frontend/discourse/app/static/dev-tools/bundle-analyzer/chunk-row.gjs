@@ -3,8 +3,8 @@ import { on } from "@ember/modifier";
 import { barWidth, fmt, matches, routeName, stem } from "./analysis";
 import ExpandableRow from "./expandable-row";
 
-// One expandable chunk row. `@root` renders it as the minimal "dynamic
-// entrypoint root" header; `@added` flags it as new vs. the initial load.
+// One expandable chunk row. `@root` marks the card's own chunk rather than one
+// it pulls in; `@added` flags it as new vs. the initial load.
 export default class ChunkRow extends ExpandableRow {
   get chunk() {
     return this.args.analysis.chunks[this.args.file];

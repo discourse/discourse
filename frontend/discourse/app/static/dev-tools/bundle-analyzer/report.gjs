@@ -1,11 +1,22 @@
-import { cached } from "@glimmer/tracking";
+import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
 import { brotliLabel } from "./analysis";
 import AnalyzerToolbar from "./analyzer-toolbar";
 import EntrypointCard from "./entrypoint-card";
-import FilterableReport from "./filterable-report";
 
-export default class Report extends FilterableReport {
+export default class Report extends Component {
+  @tracked filter = "";
+
+  get analysis() {
+    return this.args.analysis;
+  }
+
+  get loaded() {
+    return this.analysis.loaded;
+  }
+
   // discourse.js is the baseline every other entrypoint measures against.
   get baselineFile() {
     const { entrypoints, chunks } = this.analysis;
@@ -40,6 +51,11 @@ export default class Report extends FilterableReport {
     return this.analysis.totals(
       [...this.loaded.files].filter((f) => this.analysis.chunks[f])
     );
+  }
+
+  @action
+  updateFilter(event) {
+    this.filter = event.target.value.trim().toLowerCase();
   }
 
   // Sized once per file, not once per comparison: each call walks the file's
