@@ -119,8 +119,8 @@ module Migrations
           from_cgroup_cpu || from_proc_stat || from_process_times
         end
 
-        # Usage against the quota, so the fraction is "of the CPU time the cgroup
-        # may use", matching `usable_cpus`, which also follows the quota.
+        # Usage against the tighter of the quota and process affinity, matching
+        # the budget represented by `usable_cpus`.
         def from_cgroup_cpu
           quota_cpus = cgroup_quota_cpus
           return nil if quota_cpus.nil?
@@ -131,7 +131,7 @@ module Migrations
           {
             source: :cgroup,
             busy: usage.to_i,
-            total: @clock.call * MICROSECONDS_PER_SECOND * quota_cpus,
+            total: @clock.call * MICROSECONDS_PER_SECOND * [quota_cpus, @usable_cpus].min,
           }
         end
 

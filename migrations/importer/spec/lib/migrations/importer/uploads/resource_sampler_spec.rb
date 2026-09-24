@@ -47,6 +47,18 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
       expect(sampler.sample.cpu_busy).to be_within(0.001).of(0.75)
     end
 
+    it "uses process affinity when it is tighter than the cgroup quota" do
+      sampler =
+        build(
+          usable_cpus: 1,
+          cgroup_cpu_max: -> { "400000 100000\n" },
+          cgroup_cpu_stat: sequence("usage_usec 1000000\n", "usage_usec 2000000\n"),
+          clock: sequence(10.0, 11.0),
+        )
+
+      expect(sampler.sample.cpu_busy).to eq(1.0)
+    end
+
     it "falls back to /proc/stat when the cgroup has no quota" do
       sampler =
         build(
