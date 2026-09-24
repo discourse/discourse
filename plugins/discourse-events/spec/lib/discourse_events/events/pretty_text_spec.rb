@@ -77,8 +77,7 @@ describe PrettyText do
           cooked = PrettyText.cook(post_1.raw)
           result = PrettyText.format_for_email(cooked, post_1)
 
-          expect(result).to include("(America/New_York)")
-          expect(result).to include("June 5, 2018 6:39 PM")
+          expect(result).to include("June 5, 2018 2:39 PM (America/New_York)")
         end
       end
 
@@ -339,12 +338,19 @@ describe PrettyText do
           ).reload
         end
 
-        it "does not display a stale date (matching the on-site card)" do
+        it "displays the last occurrence (matching the on-site card)" do
+          Fabricate(
+            :event_date,
+            event: post_1.event,
+            starts_at: Time.utc(2018, 5, 15, 10),
+            ends_at: Time.utc(2018, 5, 15, 11),
+            finished_at: Time.utc(2018, 5, 15, 11),
+          )
+
           cooked = PrettyText.cook(post_1.raw)
           result = PrettyText.format_for_email(cooked, post_1)
 
-          expect(result).not_to include("May 1, 2018")
-          expect(result).to include(">-</td>")
+          expect(result).to include("May 15, 2018 10:00 AM (UTC) → May 15, 2018 11:00 AM (UTC)")
         end
       end
 

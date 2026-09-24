@@ -164,10 +164,7 @@ module DiscourseEvents
         bump = parsed_reminders.find { |reminder| reminder[:type] == BUMP_TOPIC_REMINDER }
         return if bump.nil?
 
-        bump_from = starts_at
-        return if bump_from.nil?
-
-        date = bump_from - Event.reminder_offset(bump)
+        date = starts_at - Event.reminder_offset(bump)
         Jobs.enqueue(:discourse_post_event_bump_topic, topic_id: post.topic_id, date: date.iso8601)
       end
 
@@ -206,7 +203,6 @@ module DiscourseEvents
       def expired?
         return recurrence_expired? if recurring?
 
-        return true if starts_at.nil?
         (ends_at || starts_at.end_of_day) <= Time.now
       end
 
@@ -214,8 +210,6 @@ module DiscourseEvents
       # model: joining opens EARLY_ACCESS_MINUTES before the start and, when the
       # event has an end time, closes GRACE_PERIOD_MINUTES after it.
       def currently_within_event_timeframe?
-        return false if starts_at.nil?
-
         now = Time.zone.now
 
         if all_day
@@ -229,12 +223,10 @@ module DiscourseEvents
       end
 
       def starts_at
-        return nil if recurring? && recurrence_expired?
         current_event_date&.starts_at || original_starts_at
       end
 
       def ends_at
-        return nil if recurring? && recurrence_expired?
         current_event_date&.ends_at || original_ends_at
       end
 
@@ -248,7 +240,6 @@ module DiscourseEvents
       end
 
       def on_going_event_invitees
-        return [] if starts_at.nil? # Can't determine ongoing status without start time
         if !ends_at && starts_at < Time.now && (!all_day || starts_at.end_of_day <= Time.now)
           return []
         end
@@ -363,7 +354,7 @@ module DiscourseEvents
       end
 
       def create_notification!(user, post, predefined_attendance: false)
-        return if post.event.starts_at.nil? || post.event.starts_at < Time.current
+        return if post.event.starts_at < Time.current
         return if !Guardian.new(user).can_see?(post)
 
         message =
@@ -390,7 +381,7 @@ module DiscourseEvents
       end
 
       def ongoing?
-        return false if closed || expired? || starts_at.nil?
+        return false if closed || expired?
         finishes_at = ends_at || starts_at.end_of_day
         (starts_at..finishes_at).cover?(Time.now)
       end
