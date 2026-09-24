@@ -43,9 +43,11 @@ module SystemDrivers
   end
 
   def self.register!(example)
+    headless = (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0"
     base_options = {
       browser_type: :chromium,
-      headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
+      channel: headless ? "chromium-headless-shell" : "chromium",
+      headless: headless,
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
