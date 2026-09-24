@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
-import { brotliLabel, fmt, routeName, stem } from "./analysis";
+import { brotliLabel, fileName, fmt, label, routeName } from "./analysis";
 import ChunkRow from "./chunk-row";
 import ExpandableRow from "./expandable-row";
 
@@ -37,8 +37,12 @@ export default class EntrypointCard extends ExpandableRow {
     return !this.args.baseline;
   }
 
-  get stemmed() {
-    return stem(this.args.file);
+  get label() {
+    return label(this.chunk);
+  }
+
+  get fileName() {
+    return fileName(this.args.file);
   }
 
   @cached
@@ -87,11 +91,11 @@ export default class EntrypointCard extends ExpandableRow {
   // A url the route table maps to this bundle, else the source that imports it.
   get sites() {
     if (this.args.urls) {
-      return this.args.urls.map((label) => ({ lead: "loaded on", label }));
+      return this.args.urls.map((url) => ({ lead: "loaded on", label: url }));
     }
-    return (this.chunk.importSites ?? []).map((label) => ({
+    return (this.chunk.importSites ?? []).map((importer) => ({
       lead: "imported by",
-      label,
+      label: importer,
     }));
   }
 
@@ -136,7 +140,7 @@ export default class EntrypointCard extends ExpandableRow {
               this.chunk.facadeModuleId
               @file
             }}
-          >{{this.stemmed}}</span>
+          >{{this.label}}</span>
         </span>
         {{#if @baseline}}
           <span class="ba-num"><b>{{this.fullBrotliLabel}}</b>
@@ -153,6 +157,9 @@ export default class EntrypointCard extends ExpandableRow {
       {{#if this.expanded}}
         <div class="ba-body">
           <div class="ba-sites">
+            <div class="ba-site">file
+              <code>{{this.fileName}}</code>
+            </div>
             {{#each this.sites as |site|}}
               <div class="ba-site">{{site.lead}}
                 <code>{{site.label}}</code>

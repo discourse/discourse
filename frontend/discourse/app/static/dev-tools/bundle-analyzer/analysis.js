@@ -1,10 +1,25 @@
 import { trustHTML } from "@ember/template";
 import ChunkTotals from "./chunk-totals";
 
-// Strips the assets/js/ prefix and .digested.js suffix for a readable label.
-export function stem(file) {
-  return file.replace(/^assets\/js\//, "").replace(/\.digested\.js$/, "");
+// The filename, without the directory it sits in.
+export function fileName(file) {
+  return file.replace(/^assets\/js\//, "");
 }
+
+// What to call a chunk on screen. A named one goes by its name, since the hash
+// beside it distinguishes builds rather than chunks. An unnamed one has only
+// its hash to tell it from its siblings, so it keeps it.
+export function label(chunk) {
+  if (!chunk) {
+    return "";
+  }
+  return chunk.name && chunk.name !== ANONYMOUS
+    ? chunk.name
+    : fileName(chunk.file).replace(/\.digested\.js$/, "");
+}
+
+// What the build calls a chunk it cannot name after a module.
+const ANONYMOUS = "chunk";
 
 export function routeName(chunk) {
   const m = (chunk?.facadeModuleId || "").match(
@@ -87,27 +102,19 @@ export default class Analysis extends ChunkTotals {
     return new Set([...closure].filter((f) => this.includes(f)));
   }
 
-  // Whether an entrypoint is worth a card: it still has chunks in view, and
-  // something under it answers the filter. `base` is the closure whose chunks
-  // this card does not own — omitted for the card everything else measures
-  // against, which owns its whole subtree.
+  // Whether an entrypoint is worth a card, judged on exactly what the card
+  // shows: the chunks it adds over `base`, still in view. A card measured on
+  // its whole closure survives on chunks the baseline owns and then renders
+  // empty. `base` is omitted for the card everything else measures against,
+  // which owns its whole subtree.
   cardVisible(file, filter, base = null) {
     const closure = this.visibleClosure(file);
-    if (closure.size === 0) {
+    const own = base ? [...closure].filter((f) => !base.has(f)) : [...closure];
+
+    if (own.length === 0) {
       return false;
     }
-    if (!filter) {
-      return true;
-    }
-    for (const f of closure) {
-      if (base && f !== file && base.has(f)) {
-        continue;
-      }
-      if (this.chunkMatches(f, filter)) {
-        return true;
-      }
-    }
-    return false;
+    return !filter || own.some((f) => this.chunkMatches(f, filter));
   }
 
   // Sort by what a browser downloads, falling back to raw bytes for a report

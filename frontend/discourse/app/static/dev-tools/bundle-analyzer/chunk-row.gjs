@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
-import { barWidth, fmt, matches, routeName, stem } from "./analysis";
+import { barWidth, fileName, fmt, label, matches, routeName } from "./analysis";
 import ExpandableRow from "./expandable-row";
 
 // One expandable chunk row. `@root` marks the card's own chunk rather than one
@@ -18,8 +18,12 @@ export default class ChunkRow extends ExpandableRow {
     return this.args.loaded?.has(this.args.file);
   }
 
-  get stemmed() {
-    return stem(this.args.file);
+  get label() {
+    return label(this.chunk);
+  }
+
+  get fileName() {
+    return fileName(this.args.file);
   }
 
   get usedBy() {
@@ -27,7 +31,9 @@ export default class ChunkRow extends ExpandableRow {
   }
 
   get usedByLabel() {
-    return this.usedBy.length ? this.usedBy.map(stem).join(", ") : "—";
+    return this.usedBy.length
+      ? this.usedBy.map((f) => label(this.args.analysis.chunks[f])).join(", ")
+      : "—";
   }
 
   get maxModule() {
@@ -85,7 +91,7 @@ export default class ChunkRow extends ExpandableRow {
             <span class="ba-label root">entrypoint chunk</span>
           {{else}}
             <span class="ba-label" title={{@file}}>
-              {{this.stemmed}}
+              {{this.label}}
               <span class="ba-pill">·
                 {{this.chunk.modules.length}}
                 modules</span>
@@ -99,6 +105,9 @@ export default class ChunkRow extends ExpandableRow {
       </button>
       {{#if this.expanded}}
         <div class="ba-body">
+          <div class="ba-site">file
+            <code>{{this.fileName}}</code>
+          </div>
           <div class="ba-pill" style="margin:2px 0 6px">
             Used by entrypoints:
             {{this.usedByLabel}}
