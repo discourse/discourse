@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
+import * as fs from "fs";
 import { relative } from "path";
-import { brotliSizeOf } from "./brotli-assets-plugin.mjs";
 
 // The report describes the finished bundle, so its content only exists once
 // every chunk is hashed and named — too late for rolldown to fingerprint it as
@@ -55,7 +55,11 @@ function relUncached(id) {
 
 // Describes the finished bundle: what each chunk weighs, what is inside it, and
 // which files dynamically import it.
-export default function bundleAnalyzerPlugin({ enabled } = {}) {
+export default function bundleAnalyzerPlugin({
+  enabled,
+  brotliSizes,
+  pruneStale,
+} = {}) {
   return {
     name: "bundle-analyzer",
 
@@ -119,7 +123,7 @@ export default function bundleAnalyzerPlugin({ enabled } = {}) {
           isEntry: chunk.isEntry,
           isDynamicEntry: chunk.isDynamicEntry,
           rawSize,
-          brotliSize: brotliSizeOf(bundle, fileName),
+          brotliSize: brotliSizes?.get(fileName) ?? null,
           imports: chunk.imports,
           modules,
           importSites,
@@ -151,6 +155,19 @@ export default function bundleAnalyzerPlugin({ enabled } = {}) {
       const fileName = `assets/js/bundle-analysis-${digest}.digested.json`;
 
       this.emitFile({ type: "asset", fileName, source: json });
+
+      // A watching build leaves its output directory in place, so yesterday's
+      // reports pile up beside today's. Each is the size of the bundle it
+      // describes.
+      if (pruneStale) {
+        const dir = "./dist/assets/js";
+        for (const entry of fs.readdirSync(dir)) {
+          const path = `assets/js/${entry}`;
+          if (BUNDLE_ANALYSIS_RE.test(path) && path !== fileName) {
+            fs.rmSync(`${dir}/${entry}`);
+          }
+        }
+      }
     },
   };
 }
