@@ -8,6 +8,7 @@ describe McpOauthAuthorizationsController do
 
   describe "#show" do
     it "redirects anonymous users to login and preserves the authorization request" do
+      SiteSetting.login_required = true
       client =
         McpOauthClient.create!(
           client_id: "login-client",
@@ -45,6 +46,8 @@ describe McpOauthAuthorizationsController do
 
   describe "#create" do
     it "rejects anonymous consent submissions" do
+      SiteSetting.login_required = true
+
       post "/oauth2/mcp/authorize", params: { decision: "approve" }
 
       expect(response.status).to eq(403)
