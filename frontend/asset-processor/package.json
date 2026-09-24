@@ -13,7 +13,7 @@
     "@babel/core": "^7.29.7",
     "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/preset-env": "^7.29.2",
-    "@babel/standalone": "^8.0.4",
+    "@babel/standalone": "^8.0.5",
     "@csstools/postcss-light-dark-function": "^3.0.3",
     "@glimmer/syntax": "^0.95.0",
     "@rollup/browser": "^4.63.1",
