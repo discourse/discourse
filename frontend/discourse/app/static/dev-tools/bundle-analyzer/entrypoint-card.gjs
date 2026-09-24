@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
-import { brotliLabel, fileName, fmt, label, routeName } from "./analysis";
+import { brotliLabel, fmt, label, routeName } from "./analysis";
 import ChunkRow from "./chunk-row";
 import ExpandableRow from "./expandable-row";
 
@@ -39,10 +39,6 @@ export default class EntrypointCard extends ExpandableRow {
 
   get label() {
     return label(this.chunk);
-  }
-
-  get fileName() {
-    return fileName(this.args.file);
   }
 
   @cached
@@ -156,9 +152,6 @@ export default class EntrypointCard extends ExpandableRow {
       {{#if this.expanded}}
         <div class="ba-body">
           <div class="ba-sites">
-            <div class="ba-site">file
-              <code>{{this.fileName}}</code>
-            </div>
             {{#each this.sites as |site|}}
               <div class="ba-site">{{site.lead}}
                 <code>{{site.label}}</code>
