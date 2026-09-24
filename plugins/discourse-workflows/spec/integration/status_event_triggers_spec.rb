@@ -49,6 +49,29 @@ RSpec.describe "Workflow status event triggers" do
     )
   end
 
+  it "dispatches rejected reviewables to the matching outcome trigger" do
+    reviewable = Fabricate(:reviewable_flagged_post)
+    create_workflow("rejected", "trigger:reviewable_status_changed", "statuses" => ["rejected"])
+    create_workflow("fixed-rejected", "trigger:reviewable_rejected", "statuses" => ["approved"])
+    create_workflow("approved", "trigger:reviewable_approved")
+
+    reviewable.transition_to(:rejected, admin)
+
+    expect(enqueued_jobs.map { |job| job["trigger_node_id"] }).to contain_exactly(
+      "rejected",
+      "fixed-rejected",
+    )
+    enqueued_jobs.each do |job|
+      expect(job.dig("trigger_data", "reviewable")).to include(
+        "id" => reviewable.id,
+        "status" => "rejected",
+      )
+      expect(job["trigger_data"]).to match_node_output_schema(
+        DiscourseWorkflows::Nodes::ReviewableStatusChanged::V1,
+      )
+    end
+  end
+
   def create_workflow(trigger_id, trigger_type, configuration = {})
     graph =
       build_workflow_graph do |graph_builder|
