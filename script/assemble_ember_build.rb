@@ -68,7 +68,9 @@ def resolved_ember_env
 end
 
 def build_info
-  { "ember_env" => resolved_ember_env, "core_tree_hash" => core_tree_hash }
+  info = { "ember_env" => resolved_ember_env, "core_tree_hash" => core_tree_hash }
+  info["minify"] = true if ENV["DISCOURSE_CI_MINIFY"] == "1"
+  info
 end
 
 def existing_core_build_usable?
@@ -94,6 +96,7 @@ end
 
 def download_prebuild_assets!
   return false if !DOWNLOAD_PRE_BUILT_ASSETS
+  return false if ENV["DISCOURSE_CI_MINIFY"] == "1"
 
   status_output = capture("git", "status", "--porcelain", *JS_SOURCE_PATHS).strip
   git_is_clean = status_output.empty?
