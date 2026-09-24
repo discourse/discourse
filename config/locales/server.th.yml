@@ -5,7 +5,16 @@
 # https://translate.discourse.org/
 
 th:
+  markdown_endpoints:
+    latest: "ล่าสุด"
+    categories: "หมวดหมู่"
+    tags: "ป้าย"
+    previous_page: "หน้าก่อนหน้า"
+    next_page: "หน้าถัดไป"
+    replies: "ตอบ"
   mcp:
+    errors:
+      topic_not_found: "ไม่พบกระทู้"
     oauth:
       deny: "ปฏิเสธ"
   llms_txt:
@@ -384,6 +393,7 @@ th:
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
     not_available: "ใช้การไม่ได้ ลอง%{suggestion}?"
     omniauth_confirm_button: "ดำเนินการต่อ"
+    missing_username: "กรุณากรอกชื่อผู้ใช้"
   admin:
     email:
       sent_test: "ส่งแล้ว!"

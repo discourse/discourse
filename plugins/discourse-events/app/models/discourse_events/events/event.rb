@@ -12,7 +12,15 @@ module DiscourseEvents
       MAX_NAME_LENGTH = 255
       MAX_DESCRIPTION_LENGTH = 1000
       MAX_HOSTS = 10
+      MAX_LOCATION_LENGTH = 1000
+      MAX_URL_LENGTH = 1000
+      MAX_RAW_INVITEES = 10
+      MAX_ATTENDEES_LIMIT = 2_147_483_647
+      DEFAULT_DURATION_SECONDS = 3600
       DEFAULT_TIMEZONE = "UTC"
+      NOTIFICATION_REMINDER = "notification"
+      BUMP_TOPIC_REMINDER = "bumpTopic"
+      REMINDER_TYPES = [NOTIFICATION_REMINDER, BUMP_TOPIC_REMINDER]
 
       self.table_name = "discourse_post_event_events"
       self.ignored_columns = %w[starts_at ends_at]
@@ -53,10 +61,13 @@ module DiscourseEvents
                 },
                 unless: ->(event) { event.name.blank? }
       validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
+      validates :location, length: { maximum: MAX_LOCATION_LENGTH }
+      validates :url, length: { maximum: MAX_URL_LENGTH }
       validates :max_attendees,
                 numericality: {
                   only_integer: true,
                   greater_than: 0,
+                  less_than_or_equal_to: MAX_ATTENDEES_LIMIT,
                   allow_nil: true,
                 }
 
@@ -121,38 +132,28 @@ module DiscourseEvents
       end
 
       def destroy_topic_custom_field
-        if post && post.is_first_post?
-          TopicCustomField.where(
-            topic_id: post.topic_id,
-            name: TOPIC_POST_EVENT_STARTS_AT,
-          ).delete_all
+        return if !post&.is_first_post?
 
-          TopicCustomField.where(topic_id: post.topic_id, name: TOPIC_POST_EVENT_ENDS_AT).delete_all
-
-          TopicCustomField.where(topic_id: post.topic_id, name: TOPIC_POST_EVENT_ALL_DAY).delete_all
-        end
+        TopicCustomField.where(
+          topic_id: post.topic_id,
+          name: [TOPIC_POST_EVENT_STARTS_AT, TOPIC_POST_EVENT_ENDS_AT, TOPIC_POST_EVENT_ALL_DAY],
+        ).delete_all
       end
 
       def create_or_update_event_date
-        starts_at_changed = saved_change_to_original_starts_at
-        ends_at_changed = saved_change_to_original_ends_at
+        return unless dates_changed?
+        return set_next_recurrent_event_date if advancing_recurrence?
+        return unless sync_event_date
 
-        return if !starts_at_changed && !ends_at_changed
-
-        set_next_date
+        reset_non_going_invitees
+        notify_if_new_event
+        publish_update!
       end
 
-      def set_next_date
-        return if closed
+      def set_next_recurrent_event_date
+        return unless sync_event_date
 
-        next_date_result = calculate_next_date
-
-        return event_dates.update_all(finished_at: Time.current) if next_date_result.nil?
-
-        starts_at, ends_at = next_date_result
-        finish_previous_event_dates(starts_at) if dates_changed?
-        upsert_event_date(starts_at, ends_at)
-        reset_invitee_notifications
+        reset_invitees_for_next_occurrence
         notify_if_new_event
         publish_update!
       end
@@ -160,31 +161,50 @@ module DiscourseEvents
       def set_topic_bump
         return if closed
 
-        date = nil
+        bump = parsed_reminders.find { |reminder| reminder[:type] == BUMP_TOPIC_REMINDER }
+        return if bump.nil?
 
-        return if reminders.blank? || starts_at.nil?
-        reminders
-          .split(",")
-          .each do |reminder|
-            type, value, unit = reminder.split(".")
-            next if type != "bumpTopic" || !validate_reminder_unit(unit)
-            date = starts_at - value.to_i.public_send(unit)
-            break
-          end
+        bump_from = starts_at
+        return if bump_from.nil?
 
-        return if date.blank?
+        date = bump_from - Event.reminder_offset(bump)
         Jobs.enqueue(:discourse_post_event_bump_topic, topic_id: post.topic_id, date: date.iso8601)
       end
 
-      def validate_reminder_unit(input)
-        ActiveSupport::Duration::PARTS.any? { |part| part.to_s == input }
+      def parsed_reminders
+        reminders
+          .to_s
+          .split(",")
+          .filter_map do |reminder|
+            unit, value, type = Event.split_reminder(reminder)
+            next if !Event.valid_reminder_unit?(unit)
+
+            { type: type.presence || NOTIFICATION_REMINDER, value: value.to_i, unit: unit }
+          end
+      end
+
+      def self.split_reminder(reminder)
+        parts = reminder.strip.split(".")
+        parts.reverse if parts.size.between?(2, 3)
+      end
+
+      def self.reminder_offset(reminder)
+        reminder[:value].public_send(reminder[:unit])
+      end
+
+      def self.valid_reminder_unit?(unit)
+        ActiveSupport::Duration::PARTS.any? { |part| part.to_s == unit }
+      end
+
+      def self.valid_reminder?(reminder)
+        unit, value, type = split_reminder(reminder)
+
+        valid_reminder_unit?(unit) && value.match?(/\A[+-]?\d+\z/) &&
+          (type.nil? || REMINDER_TYPES.include?(type))
       end
 
       def expired?
-        if recurring?
-          return false if recurrence_until.nil?
-          return Time.current > recurrence_until
-        end
+        return recurrence_expired? if recurring?
 
         return true if starts_at.nil?
         (ends_at || starts_at.end_of_day) <= Time.now
@@ -209,12 +229,12 @@ module DiscourseEvents
       end
 
       def starts_at
-        return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+        return nil if recurring? && recurrence_expired?
         current_event_date&.starts_at || original_starts_at
       end
 
       def ends_at
-        return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+        return nil if recurring? && recurrence_expired?
         current_event_date&.ends_at || original_ends_at
       end
 
@@ -243,10 +263,13 @@ module DiscourseEvents
       end
 
       def raw_invitees_length
-        if raw_invitees && raw_invitees.length > 10
+        if raw_invitees && raw_invitees.length > MAX_RAW_INVITEES
           errors.add(
             :base,
-            I18n.t("discourse_post_event.errors.models.event.raw_invitees_length", count: 10),
+            I18n.t(
+              "discourse_post_event.errors.models.event.raw_invitees_length",
+              count: MAX_RAW_INVITEES,
+            ),
           )
         end
       end
@@ -385,6 +408,10 @@ module DiscourseEvents
         @statuses ||= Enum.new(standalone: 0, public: 1, private: 2)
       end
 
+      def self.resolve_status(raw_status, fallback)
+        statuses[raw_status&.to_sym] || fallback
+      end
+
       def public?
         status == Event.statuses[:public]
       end
@@ -402,16 +429,15 @@ module DiscourseEvents
       end
 
       def most_likely_going(limit = SiteSetting.displayed_invitees_limit)
-        going = invitees.order(%i[status created_at user_id]).limit(limit)
+        going = invitees.order(%i[status created_at user_id]).limit(limit).to_a
 
-        if private? && going.count < limit
+        if private? && going.size < limit
           # invitees are only created when an attendance is set
           # so we create a dummy invitee object with only what's needed for serializer
-          going =
-            going +
-              missing_users(going.pluck(:user_id))
-                .limit(limit - going.count)
-                .map { |user| Invitee.new(user: user, post_id: id) }
+          going +=
+            missing_users(going.map(&:user_id))
+              .limit(limit - going.size)
+              .map { |user| Invitee.new(user: user, post_id: id) }
         end
 
         going
@@ -501,13 +527,10 @@ module DiscourseEvents
       end
 
       def self.handle_post_event_webhooks(post, event_before)
-        had_event_before = event_before.present?
-
-        if post.event && had_event_before
-          WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
-        elsif post.event && !had_event_before
-          WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
-        elsif !post.event && had_event_before
+        if post.event
+          hook = event_before ? :calendar_event_updated : :calendar_event_created
+          WebHook.enqueue_calendar_event_hooks(hook, post.event)
+        elsif event_before
           payload = WebHook.build_calendar_event_payload(event_before)
           WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
         end
@@ -554,23 +577,11 @@ module DiscourseEvents
       end
 
       def update_with_params!(params)
-        case params[:status] ? params[:status].to_i : status
-        when Event.statuses[:private]
-          if params.key?(:raw_invitees)
-            params = params.merge(raw_invitees: Array(params[:raw_invitees]) - [PUBLIC_GROUP])
-          else
-            params = params.merge(raw_invitees: Array(raw_invitees) - [PUBLIC_GROUP])
-          end
-          update!(params)
-          enforce_private_invitees!
-        when Event.statuses[:public]
-          update!(params.merge(raw_invitees: [PUBLIC_GROUP]))
-        when Event.statuses[:standalone]
-          update!(params.merge(raw_invitees: []))
-          invitees.destroy_all
-        end
+        apply_params_for_status(params) { update!(it) }
+      end
 
-        publish_update!
+      def update_with_params(params)
+        apply_params_for_status(params) { update(it) }
       end
 
       def chat_channel_sync
@@ -590,15 +601,7 @@ module DiscourseEvents
         next_starts_at = calculate_next_recurring_date
         return nil unless next_starts_at
 
-        next_ends_at =
-          if original_ends_at
-            next_starts_at + (original_ends_at - original_starts_at)
-          elsif all_day
-            next_starts_at.end_of_day
-          else
-            next_starts_at + 3600
-          end
-        [next_starts_at, next_ends_at]
+        [next_starts_at, derive_next_ends_at(next_starts_at)]
       end
 
       def calculate_next_occurrence_from(from_time)
@@ -610,21 +613,14 @@ module DiscourseEvents
         next_starts_at = calculate_next_recurring_date_from(from_time)
         return nil unless next_starts_at
 
-        next_ends_at =
-          if original_ends_at
-            next_starts_at + (original_ends_at - original_starts_at)
-          elsif all_day
-            next_starts_at.end_of_day
-          else
-            next_starts_at + 3600
-          end
-        { starts_at: next_starts_at, ends_at: next_ends_at }
+        { starts_at: next_starts_at, ends_at: derive_next_ends_at(next_starts_at) }
       end
 
       def duration
         return nil unless original_starts_at
 
-        duration_seconds = original_ends_at ? original_ends_at - original_starts_at : 3600
+        duration_seconds =
+          original_ends_at ? original_ends_at - original_starts_at : DEFAULT_DURATION_SECONDS
         hours = (duration_seconds / 3600)
         minutes = ((duration_seconds % 3600) / 60)
         seconds = (duration_seconds % 60)
@@ -682,6 +678,26 @@ module DiscourseEvents
         association(:event_hosts).reset
       end
 
+      def apply_params_for_status(params)
+        case params[:status] ? params[:status].to_i : status
+        when Event.statuses[:private]
+          params =
+            params.merge(
+              raw_invitees: Array(params.fetch(:raw_invitees, raw_invitees)) - [PUBLIC_GROUP],
+            )
+          return self if !yield(params)
+          enforce_private_invitees!
+        when Event.statuses[:public]
+          return self if !yield(params.merge(raw_invitees: [PUBLIC_GROUP]))
+        when Event.statuses[:standalone]
+          return self if !yield(params.merge(raw_invitees: []))
+          invitees.destroy_all
+        end
+
+        publish_update!
+        self
+      end
+
       def reset_invitees_topic_tracking
         topic_id = post&.topic_id
         return if topic_id.nil?
@@ -691,6 +707,40 @@ module DiscourseEvents
 
       def dates_changed?
         saved_change_to_original_starts_at || saved_change_to_original_ends_at
+      end
+
+      def advancing_recurrence?
+        recurrence.present? && original_starts_at <= Time.current
+      end
+
+      def sync_event_date
+        return false if closed
+
+        next_date_result = calculate_next_date
+
+        if next_date_result.nil?
+          event_dates.update_all(finished_at: Time.current)
+          return false
+        end
+
+        starts_at, ends_at = next_date_result
+        finish_previous_event_dates(starts_at) if dates_changed?
+        upsert_event_date(starts_at, ends_at)
+        true
+      end
+
+      def recurrence_expired?
+        recurrence_until.present? && recurrence_until < Time.current
+      end
+
+      def derive_next_ends_at(next_starts_at)
+        if original_ends_at
+          next_starts_at + (original_ends_at - original_starts_at)
+        elsif all_day
+          next_starts_at.end_of_day
+        else
+          next_starts_at + DEFAULT_DURATION_SECONDS
+        end
       end
 
       def finish_previous_event_dates(current_starts_at)
@@ -716,20 +766,26 @@ module DiscourseEvents
         end
       end
 
-      def reset_invitee_notifications
-        invitees.where(
-          "status != :going OR recurring = FALSE",
-          going: Invitee.statuses[:going],
-        ).update_all(status: nil, notified: false, recurring: false)
+      def reset_non_going_invitees
+        invitees
+          .where.not(status: Invitee.statuses[:going])
+          .update_all(status: nil, notified: false, recurring: false)
+      end
+
+      def reset_invitees_for_next_occurrence
+        # Keep the columns qualified: PostgreSQL updates a joined relation through an alias, so an
+        # unqualified name matches two copies of the table.
+        invitees
+          .where.not(status: Invitee.statuses[:going])
+          .or(invitees.where(recurring: false))
+          .update_all(status: nil, notified: false, recurring: false)
       end
 
       def notify_if_new_event
-        is_generating_future_recurrence = recurrence.present? && original_starts_at <= Time.current
+        return if advancing_recurrence?
 
-        unless is_generating_future_recurrence
-          notify_invitees!
-          notify_missing_invitees!
-        end
+        notify_invitees!
+        notify_missing_invitees!
       end
 
       def calculate_next_recurring_date

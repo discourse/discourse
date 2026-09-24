@@ -16,6 +16,19 @@ hy:
         image_generation_custom:
           name: "Մասնավոր"
     ai_bot:
+      navigation:
+        users:
+          title: "Օգտատերեր"
+        groups:
+          title: "Խմբեր"
+        categories:
+          title: "Կատեգորիաներ"
+        tags:
+          title: "Պիտակներ"
+        themes:
+          title: "Թեմաներ"
+        backups:
+          title: "Պահուտսներ"
       read_post:
         unknown_post: "գրառում"
       tool_summary:

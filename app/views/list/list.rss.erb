@@ -7,9 +7,10 @@
     <link><%= @link %></link>
     <description><%= @description %></description>
     <% if lang %><language><%= lang.sub('_', '-')%></language><% end %>
+    <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
+    <% if markdown_alternate_url %><atom:link href="<%= markdown_alternate_url %>" rel="alternate" type="text/markdown" /><% end %>
     <% if @topic_list.topics && @topic_list.topics.length > 0 %>
       <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
-      <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
       <% @topic_list.topics.each do |topic| %>
         <% topic_url = topic.url -%>
         <item>

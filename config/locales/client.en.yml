@@ -409,6 +409,7 @@ en:
       tooltip: "Notification level: %{level}"
 
     back_button: "Back"
+    confirm_button: "Confirm"
 
     welcome_banner:
       header:
@@ -513,6 +514,9 @@ en:
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
     multiple_errors: "Multiple errors occurred: %{errors}"
+    too_many_requests:
+      one: "You’ve performed this action too many times. Please wait %{count} second before trying again."
+      other: "You’ve performed this action too many times. Please wait %{count} seconds before trying again."
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -1909,6 +1913,9 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
+      composer_toolbar:
+        title: "Composer toolbar"
+        instructions: "Choose which buttons appear in the composer toolbar. Keyboard shortcuts keep working for hidden buttons."
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
       automatically_translate: "Automatically translate topics and posts in other languages"
       content_languages:
@@ -2940,6 +2947,10 @@ en:
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
       signup_disabled: "Signing up is disabled while the site is in read only mode."
+    site_archived:
+      enabled: "This site is in archive mode. Please continue to browse, but replying, likes, and other actions are disabled."
+      enabled_anonymous: "This site is in archive mode. Please continue to browse or log in, but replying, likes, and other actions are disabled."
+      signup_disabled: "Signing up is disabled while the site is in archive mode."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
       enabled_anonymous: "This site is in staff only mode. Please continue to browse, but signing up is unavailable and only staff members can log in."
@@ -3092,6 +3103,7 @@ en:
         login: "Log In"
 
     forgot_password:
+      code_instructions: "If a matching account exists, we sent a verification code to its email address. Enter the code to reset your password."
       title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
@@ -3139,9 +3151,14 @@ en:
       signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
       user_fields_title: "Almost done"
       user_fields_instructions: "Just a few more details to finish creating your account."
-      account_ready_title: "Your account is ready! 🎉"
-      account_ready_edit: "Pick your username and avatar"
+      signup_details_title: "Choose your username and avatar"
       account_ready_continue: "Continue"
+      account_details_title: "Finish creating your account"
+      account_details_instructions: "Choose how you’ll appear to the community before submitting your account for approval."
+      create_password_optional: "Create a password (optional)"
+      submit_for_approval: "Submit for approval"
+      pending_approval_title: "Your account is awaiting approval."
+      pending_approval_instructions: "A staff member must approve your account before you can log in. We’ll email you when it’s approved."
       username_label: "Username"
       username_placeholder: "Choose a username"
       regenerate_username: "Suggest a random username"
@@ -4080,6 +4097,9 @@ en:
       full_page_title: "Search"
       results: "results"
       no_results: "No results found."
+      results_announcement:
+        one: "%{count} result found."
+        other: "%{count} results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"
       results_page: "Search results for '%{term}'"
@@ -5550,6 +5570,8 @@ en:
       list: "List categories"
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
+      latest_topics: "Latest topics"
+      view_all_topics: "View all topics (%{number})"
       description_updated: "Description updated"
       description_expand: "Show more"
       description_collapse: "Show less"
@@ -5867,6 +5889,8 @@ en:
       with_category: "%{filter} %{category} topics"
       filter:
         title: "Filtered results for %{filter}"
+        results_for: "Results for: %{query}"
+        reset: "reset"
         button:
           label: "Filter"
       latest:
@@ -6146,16 +6170,21 @@ en:
       favorite_count: "%{count}/%{max} badges marked as favorite"
 
     download_calendar:
-      title: "Download calendar"
+      title: "Add to calendar"
+      calendar: "Calendar"
       save_ics: "Download .ics file"
       save_google: "Add to Google calendar"
+      save_outlook: "Add to Microsoft Outlook"
+      save_apple: "Add to Apple Calendar"
       remember: "Don’t ask me again"
-      remember_explanation: "(you can change this preference in your user prefs)"
+      remember_explanation: "You can change this preference later in your profile preferences."
       download: "Download"
       default_calendar: "Default calendar"
       default_calendar_instruction: "Determine which calendar should be used when dates are saved"
       add_to_calendar: "Add to calendar"
       google: "Google Calendar"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Calendar"
       ics: "ICS"
       default_title: "Scheduled Event"
     tagging:
@@ -8179,6 +8208,7 @@ en:
             embedded: "Embedded pageviews"
             crawlers: "Crawlers"
           see_details: "See details"
+          crawler_learn_more: "Learn more"
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"
@@ -8934,6 +8964,14 @@ en:
           disable:
             title: "Disable read-only mode"
             label: "Disable read-only"
+        site_archived:
+          enable:
+            title: "Enable archive mode"
+            label: "Enable archive mode"
+            confirm: "Are you sure you want to enable archive mode? Users will still be able to log in and browse, but all write actions will be disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
+          disable:
+            title: "Disable archive mode"
+            label: "Disable archive mode"
         logs:
           none: "No logs yet…"
         columns:
@@ -9946,6 +9984,10 @@ en:
           all: "All users"
           activated: "Activated"
           not_activated: "Not activated"
+        account_type_filter:
+          human: "Human accounts"
+          bot: "Bot accounts"
+          all: "All accounts"
         approved: "Approved?"
         titles:
           active: "Active users"
@@ -10347,13 +10389,27 @@ en:
 
       site_text:
         description: "You can customize any of the text on your forum."
-        search: "Search for the text you'd like to edit"
+        search: "Search text or translation keys"
+        search_label: "Search"
+        filters: "Filters"
+        filters_active:
+          one: "Filters (%{count})"
+          other: "Filters (%{count})"
+        edit_title: "Edit site text"
+        default_text: "Default text"
+        value_label: "Your text · %{language}"
+        invalid_title: "Invalid interpolation placeholders"
+        invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
+        status:
+          customized: "Customized"
+          outdated: "Outdated"
+          invalid: "Invalid"
         title: "Site texts"
         edit: "Edit"
-        revert: "Revert Changes"
+        revert: "Revert to default"
         revert_confirm: "Are you sure you want to revert your changes?"
-        go_back: "Back to Search"
-        recommended: "We recommend customizing the following text to suit your needs:"
+        go_back: "Back to results"
+        recommended: "Suggested texts to customize"
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
         show_untranslated: "Only show untranslated"

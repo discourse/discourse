@@ -114,6 +114,9 @@ export default class DataTablesManager extends PaginatedListManager {
             "discourse_workflows.data_tables.columns"
           }}</th>
         <th class="d-table__header-cell">{{i18n
+            "discourse_workflows.data_tables.rows"
+          }}</th>
+        <th class="d-table__header-cell">{{i18n
             "discourse_workflows.data_tables.size"
           }}</th>
         <th class="d-table__header-cell"></th>
@@ -132,7 +135,13 @@ export default class DataTablesManager extends PaginatedListManager {
           <div class="d-table__mobile-label">
             {{i18n "discourse_workflows.data_tables.columns"}}
           </div>
-          {{dataTable.columns.length}}
+          {{dataTable.column_count}}
+        </td>
+        <td class="d-table__cell --detail">
+          <div class="d-table__mobile-label">
+            {{i18n "discourse_workflows.data_tables.rows"}}
+          </div>
+          {{dataTable.row_count}}
         </td>
         <td class="d-table__cell --detail">
           <div class="d-table__mobile-label">

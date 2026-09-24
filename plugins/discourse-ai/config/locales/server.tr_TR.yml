@@ -110,7 +110,6 @@ tr_TR:
     ai_bot_enabled: "YZ Bot modülünü etkinleştirin."
     ai_bot_enabled_llms: "AI bot konuşmaları için seçilebilecek LLM'ler"
     ai_bot_enable_chat_warning: "PM sohbeti başlatıldığında bir uyarı göster. Çeviri dizesini düzenleyerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "GPT Botunun Kişisel Mesaja erişimi olduğunda, bu grupların üyelerine yanıt verir."
     ai_bot_debugging_allowed_groups: "Bu grupların gönderilerde ham YZ talebini ve yanıtını görüntüleyen bir hata ayıklama düğmesi görmesine izin verin"
     ai_bot_public_sharing_allowed_groups: "Bu grupların, herkese açık benzersiz bir bağlantı aracılığıyla YZ kişisel mesajlarını herkese açık şekilde paylaşmasına izin verin. Not: Siteniz giriş yapılmasını gerektiriyorsa paylaşımlar da giriş yapılmasını gerektirir."
     ai_bot_add_to_header: "AI Bot ile özel mesaj başlatmak için başlıkta bir düğme göster"
@@ -349,10 +348,28 @@ tr_TR:
       configuration_missing: "YZ spam algılama yapılandırması eksik. Etkinleştirmeden önce \"Yönetici > Eklentiler > Discourse YZ > Spam\" bölümüne yapılandırmayı ekleyin."
       logging_subject: "Spam tespiti"
     ai_bot:
+      navigation:
+        settings:
+          title: "Site ayarları"
+        users:
+          title: "Kullanıcılar"
+        groups:
+          title: "Gruplar"
+        review:
+          title: "Değerlendirme kuyruğu"
+        categories:
+          title: "Kategoriler"
+        tags:
+          title: "Etiketler"
+        themes:
+          title: "Temalar"
+        authentication:
+          title: "Giriş ve kimlik doğrulama"
+        backups:
+          title: "Yedeklemeler"
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"
-      tool_pending_approval: "Bu işlemin gerçekleştirilebilmesi için moderatör onayı gereklidir."
       read_post:
         unknown_post: "gönderi"
       chat_tool_approval:

@@ -116,8 +116,7 @@ module DiscourseAi
       def find_artifact
         @artifact = AiArtifact.find_by(id: params[:artifact_id])
         raise Discourse::NotFound if !@artifact
-        raise Discourse::NotFound if !@artifact.public? && guardian.anonymous?
-        raise Discourse::NotFound if !@artifact.public? && !guardian.can_see?(@artifact.post)
+        raise Discourse::NotFound if !@artifact.available_to?(guardian)
       end
     end
   end

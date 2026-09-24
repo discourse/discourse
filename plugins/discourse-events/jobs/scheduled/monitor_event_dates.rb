@@ -6,11 +6,14 @@ module Jobs
       every 1.minute
 
       def execute(args)
-        DiscourseEvents::Events::EventDate.pending.find_each do |event_date|
-          send_reminder(event_date)
-          trigger_events(event_date)
-          finish(event_date)
-        end
+        DiscourseEvents::Events::EventDate
+          .pending
+          .includes(:event)
+          .find_each do |event_date|
+            send_reminder(event_date)
+            trigger_events(event_date)
+            finish(event_date)
+          end
       end
 
       def send_reminder(event_date)
@@ -18,6 +21,7 @@ module Jobs
           ::Jobs.enqueue(
             :discourse_post_event_send_reminder,
             event_id: event_date.event.id,
+            event_date_id: event_date.id,
             reminder: reminder[:description],
           )
           event_date.update!(reminder_counter: event_date.reminder_counter + 1)
@@ -41,7 +45,7 @@ module Jobs
         return if !event_date.ended?
         event_date.update!(finished_at: Time.current)
 
-        # The occurrence goes along with the event: `set_next_date` below moves
+        # The occurrence goes along with the event: `set_next_recurrent_event_date` below moves
         # the event on to the next one, so it can no longer name the one that ended.
         DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
         MessageBus.publish(
@@ -51,35 +55,26 @@ module Jobs
         )
 
         return if event_date.event.recurrence.blank?
-        event_date.event.set_next_date
+        event_date.event.set_next_recurrent_event_date
         event_date.event.set_topic_bump
       end
 
       def due_reminders(event_date)
-        return [] if event_date.event.reminders.blank?
         event_date
           .event
-          .reminders
-          .split(",")
-          .map do |reminder|
-            unit, value, type = reminder.split(".").reverse
-
-            next if type === "bumpTopic" || !validate_reminder_unit(unit)
-            reminder = "notification.#{value}.#{unit}" if type.blank?
-
-            date = event_date.starts_at - value.to_i.public_send(unit)
-            { description: reminder, date: date }
+          .parsed_reminders
+          .reject do |reminder|
+            reminder[:type] == DiscourseEvents::Events::Event::BUMP_TOPIC_REMINDER
           end
-          .compact
+          .map do |reminder|
+            {
+              description: "#{reminder[:type]}.#{reminder[:value]}.#{reminder[:unit]}",
+              date: event_date.starts_at - DiscourseEvents::Events::Event.reminder_offset(reminder),
+            }
+          end
           .select { |reminder| reminder[:date] <= Time.current }
           .sort_by { |reminder| reminder[:date] }
           .drop(event_date.reminder_counter)
-      end
-
-      private
-
-      def validate_reminder_unit(input)
-        ActiveSupport::Duration::PARTS.any? { |part| part.to_s == input }
       end
     end
   end

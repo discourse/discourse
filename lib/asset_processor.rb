@@ -41,6 +41,7 @@ class AssetProcessor
         "The file '#{file_path}' uses the deprecated `.js.es6` extension. Use `.js` instead.",
         {
           id: "discourse.es6-extension",
+          reportAtCallSite: true,
           url: "https://meta.discourse.org/t/398894",
         }
       );

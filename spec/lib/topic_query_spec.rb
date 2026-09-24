@@ -44,6 +44,15 @@ RSpec.describe TopicQuery do
     )
   end
 
+  describe "#list_filter" do
+    it "exposes the filter fragments it could not parse" do
+      topic_query = TopicQuery.new(nil, q: "status:nonsense")
+      topic_query.list_filter
+
+      expect(topic_query.invalid_filters).to eq(["status:nonsense"])
+    end
+  end
+
   describe "secure category" do
     it "filters categories out correctly" do
       category = Fabricate(:category_with_definition)

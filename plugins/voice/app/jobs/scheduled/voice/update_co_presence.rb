@@ -17,6 +17,7 @@ module Jobs
           user_ids =
             ::Voice::ParticipantTracker
               .user_ids(room_id)
+              .select(&:positive?)
               .sort
               .first(SiteSetting.voice_max_room_participants)
           next if user_ids.size < 2

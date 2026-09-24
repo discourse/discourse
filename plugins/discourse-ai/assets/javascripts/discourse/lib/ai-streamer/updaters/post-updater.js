@@ -1,6 +1,7 @@
 import loadMorphlex from "discourse/lib/load-morphlex";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { cook } from "discourse/lib/text";
+import decorateAiThinking from "../../decorate-ai-thinking";
 import { addProgressDecoration } from "../progress-handlers";
 import StreamUpdater from "./stream-updater";
 
@@ -75,6 +76,8 @@ export default class PostUpdater extends StreamUpdater {
       `<div>${value}</div>`,
       this.morphingOptions
     );
+
+    decorateAiThinking(this.postElement.querySelector(".cooked"));
 
     if (done) {
       this.post.set("cooked", value);

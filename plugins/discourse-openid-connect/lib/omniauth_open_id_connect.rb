@@ -134,6 +134,7 @@ module OmniAuth
           discover! if options[:discovery]
 
           oauth2_callback_phase = super
+          raise env["omniauth.error"] if env["omniauth.error"].is_a?(Faraday::Error)
           return oauth2_callback_phase if env["omniauth.error"]
 
           oauth2_callback_phase
@@ -253,7 +254,8 @@ module OmniAuth
         return super if options.use_userinfo
         response =
           client.request(:post, options[:client_options][:token_url], body: get_token_options)
-        ::OAuth2::AccessToken.from_hash(client, response.parsed)
+        parsed = response.parsed
+        ::OAuth2::AccessToken.new(client, parsed["id_token"].to_s, parsed)
       end
     end
   end

@@ -74,7 +74,6 @@ it:
     ai_pm_summarization_allowed_groups: "Gruppi autorizzati a creare e visualizzare riepiloghi nei messaggi privati."
     ai_summary_gists_enabled: "Genera automaticamente brevi riepiloghi delle ultime risposte negli argomenti"
     ai_bot_enabled: "Abilita il modulo Bot IA."
-    ai_bot_allowed_groups: "Quando il bot GPT ha accesso a un MP, risponderà ai membri di questi gruppi."
     ai_bot_debugging_allowed_groups: "Consenti a questi gruppi di vedere un pulsante di debug sui post che mostra la richiesta e la risposta IA non elaborate"
     ai_bot_public_sharing_allowed_groups: "Consenti a questi gruppi di condividere messaggi personali dell'IA con il pubblico tramite un link univoco disponibile al pubblico. Nota: se il tuo sito richiede l'accesso, anche le condivisioni richiederanno l'accesso."
     ai_bot_github_access_token: "Token di accesso GitHub da utilizzare con gli strumenti GitHub IA (richiesto per il supporto della ricerca)"
@@ -241,6 +240,25 @@ it:
       configuration_missing: "Nessuna configurazione per il rilevamento IA dello spam trovata. Prima di abilitare l'opzione, aggiungi la configurazione in \"Amministrazione > Plugin > Discourse AI > Spam\"."
       logging_subject: "Rilevamento spam"
     ai_bot:
+      navigation:
+        settings:
+          title: "Impostazioni del sito"
+        users:
+          title: "Utenti"
+        groups:
+          title: "Gruppi"
+        review:
+          title: "Coda di revisione"
+        categories:
+          title: "Categorie"
+        tags:
+          title: "Etichette"
+        themes:
+          title: "Temi"
+        authentication:
+          title: "Accesso e autenticazione"
+        backups:
+          title: "Backup"
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[MP di bot IA senza titolo]"
       read_post:

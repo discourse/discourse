@@ -551,6 +551,7 @@ tr_TR:
       direct_messages:
         title: "DM'ler"
         aria_label: "Doğrudan mesajlara geç"
+        new_group: "Yeni grup sohbeti"
         create: "Git"
         leave: "Kanaldan ayrıl"
         close: "Kanalı kapat"

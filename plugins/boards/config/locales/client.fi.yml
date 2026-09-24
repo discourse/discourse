@@ -6,7 +6,23 @@
 
 fi:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Otsikko"
+        icon: "Kuvake"
+        color: "Väri"
+        tag_name: "Tunniste"
+        default_sort_priority: "Prioriteetti"
+      create_board:
+        name: "Nimi"
+        slug: "Polkutunnus"
+        tag_names: "Tunnisteet"
+        category_ids: "Kategoriat"
     boards:
+      status:
+        all: "Kaikki"
+        open: "Avoinna"
+        archived: "Arkistoitu"
       board:
         remove_card: "Poista"
         new_topic: "Uusi ketju..."

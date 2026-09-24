@@ -11,6 +11,17 @@ sr:
         image_generation_custom:
           name: "Posebna"
     ai_bot:
+      navigation:
+        users:
+          title: "Korisnici"
+        groups:
+          title: "Grupe"
+        categories:
+          title: "Kategorije"
+        tags:
+          title: "Tagovi"
+        backups:
+          title: "Sigurnosne kopije"
       read_post:
         unknown_post: "post"
       tool_summary:

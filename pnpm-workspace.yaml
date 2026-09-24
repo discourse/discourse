@@ -66,7 +66,6 @@ packages:
 - "plugins/voice"
 - "themes/horizon"
 patchedDependencies:
-  "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch"
   "babel-plugin-debug-macros@0.3.4": "patches/babel-plugin-debug-macros@0.3.4.patch"
   "licensee": "patches/licensee.patch"
   # https://github.com/warp-drive-data/warp-drive/pull/11037
@@ -77,8 +76,6 @@ patchedDependencies:
 peerDependencyRules:
   allowedVersions:
     "@mixer/parallel-prettier>prettier": "*"
-    "ember-this-fallback>ember-source": "*"
-    "ember-this-fallback>ember-cli-htmlbars": "*"
     "@fullcalendar/moment-timezone>moment-timezone": "*"
   ignoreMissing:
     - "webpack"

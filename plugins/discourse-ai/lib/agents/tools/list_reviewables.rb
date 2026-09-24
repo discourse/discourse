@@ -110,9 +110,12 @@ module DiscourseAi
               )
           end
 
-          reviewables = relation.to_a
+          rows =
+            Reviewable.with_deleted_content do
+              relation.map { |reviewable| serialize_reviewable(reviewable) }
+            end
 
-          if reviewables.empty?
+          if rows.empty?
             return(
               {
                 status: "success",
@@ -121,8 +124,6 @@ module DiscourseAi
               }
             )
           end
-
-          rows = reviewables.map { |r| serialize_reviewable(r) }
 
           {
             status: "success",
@@ -158,13 +159,11 @@ module DiscourseAi
           result[:available_actions] = available_action_ids(reviewable)
 
           case reviewable
-          when ReviewableFlaggedPost
-            serialize_flagged_post(result, reviewable)
           when ReviewableQueuedPost
             serialize_queued_post(result, reviewable)
           when ReviewableUser
             serialize_user(result, reviewable)
-          when ReviewablePost
+          when ReviewableFlaggedPost, ReviewablePost
             serialize_post(result, reviewable)
           end
 
@@ -192,16 +191,6 @@ module DiscourseAi
         def available_action_ids(reviewable)
           actions = reviewable.actions_for(guardian)
           actions.bundles.flat_map { |bundle| bundle.actions.map { |a| a.server_action } }
-        end
-
-        def serialize_flagged_post(result, reviewable)
-          post = reviewable.post
-          return unless post
-
-          result[:post_id] = post.id
-          result[:post_number] = post.post_number
-          result[:post_excerpt] = post.excerpt(300, strip_links: true, text_entities: true)
-          result[:topic_title] = post.topic&.title
         end
 
         def serialize_queued_post(result, reviewable)

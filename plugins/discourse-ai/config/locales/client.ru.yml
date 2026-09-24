@@ -24,6 +24,8 @@ ru:
             title: "Спросить AI"
         ask_ai:
           title: "Спросить AI"
+          reports:
+            retry_questions: "Повторить"
           date: "Дата"
           outcomes:
             failed: "Не удалась"

@@ -12,7 +12,6 @@ zh_TW:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: 回顧
       loading: "正在整理資料…"
       viewing_other_user: "您正在查看<strong>%{username}</strong>的 Discourse Rewind 報告。"
@@ -82,18 +81,14 @@ zh_TW:
           title_others:
             other: "%{username} 最佳的 %{count} 篇貼文"
         ai_usage:
-          title: AI 使用情況
           total_requests: 總請求數
           total_tokens: Token 總數
           success_rate: 成功率
-          favorite_features: 最常使用的功能
-          favorite_models: 最常使用的 AI 模型
           wake_up: "醒醒，%{username}…"
           system_title: "偵測到 AI 使用情況"
           section_features: "熱門功能"
           section_models: "熱門模型"
         assignments:
-          title: 指派
           total_assigned: 指派給我
           total_assigned_others: "指派給 %{username}"
           completed: 已完成的指派
@@ -102,13 +97,6 @@ zh_TW:
           completion_rate: 完成率
         chat_usage:
           title: 聊天活動
-          total_messages: 訊息總數
-          dm_messages: 私訊
-          unique_dm_channels: 私訊對話
-          reactions_received: 收到的反應
-          avg_message_length: 平均訊息長度
-          favorite_channels: 最愛的頻道
-          messages: 訊息
           bot_name: XxRewindBotxX
           author: 你
           author_others: "%{username}"
@@ -126,25 +114,7 @@ zh_TW:
           message_4: "您的平均訊息長度為 <strong>%{length}</strong> 個字元"
           message_5: "您最愛的頻道："
           dancing_baby_alt: "跳舞的嬰兒"
-        favorite_gifs:
-          title:
-            other: 您最愛的 %{count} 個 GIF
-          title_others:
-            other: "%{username} 最愛的 %{count} 個 GIF"
-          total_usage:
-            other: 總共使用 %{count} 次
         invites:
-          title: 邀請
-          total_invites: 發送的邀請總數
-          redeemed: 已接受的邀請
-          redemption_rate: 接受率
-          avg_trust_level: 平均信任等級
-          invitee_impact: 您邀請對象的影響力
-          invitee_impact_others: "%{username} 邀請對象的影響力"
-          invitee_posts: 已發表的貼文
-          invitee_topics: 已建立的主題
-          invitee_likes: 給出的讚
-          most_active_invitee: 最活躍的受邀者
           guest_book_title: 訪客簿
           guest_book_subtitle: 您的社群邀請
           guest_book_subtitle_others: "%{username} 的社群邀請"
@@ -157,19 +127,8 @@ zh_TW:
           label_likes_given: "給出的讚："
           section_most_active: 最活躍的訪客
         new_user_interactions:
-          title: 指導新使用者
-          subtitle:
-            other: 您今年協助了 %{count} 位新使用者
-          subtitle_others:
-            other: "%{username} 今年協助了 %{count} 位新使用者"
           new_member:
             other: "%{count} 位新成員"
-          total_interactions: 互動總數
-          unique_new_users: 不重複的新使用者
-          likes_given: 給出的讚
-          replies: 回覆貼文
-          mentions: 提及
-          topics_with_new_users: 含新使用者的主題
           contributions_helped: 您的貢獻協助了
           contributions_helped_others: "%{username} 的貢獻協助了"
         time_of_day_activity:

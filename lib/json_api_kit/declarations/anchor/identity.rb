@@ -3,19 +3,15 @@
 module JsonApiKit
   module Declarations
     class Anchor
-      class Identity
-        def initialize(name, value)
-          @name = name
-          @value = value
+      class Identity < Anchor
+        def accepts?(anchoring) = anchoring.single_value?
+
+        def locatable_in?(_order) = true
+
+        def locate(anchoring, scope:, order:, guardian:)
+          order.locate(scope.where(scope.primary_key => anchoring.value)) or
+            raise NoRow.new(name, anchoring.value)
         end
-
-        def locate(scope, order:)
-          order.locate(scope.where(scope.primary_key => value)) or raise NoRow.new(name, value)
-        end
-
-        private
-
-        attr_reader :name, :value
       end
     end
   end

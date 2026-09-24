@@ -35,7 +35,7 @@ export default class ChatChannelListOptionsButton extends Component {
 
   <template>
     <DButton
-      class="chat-channel-list-options-button title-action"
+      class="btn-transparent chat-channel-list-options-button title-action"
       ...attributes
       @action={{this.openMenu}}
       @forwardEvent={{true}}

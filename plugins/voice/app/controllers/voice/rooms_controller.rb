@@ -30,6 +30,7 @@ module Voice
                     ensure_chat_session
                     chat_message
                     kick
+                    invite_agent
                     flag
                     heartbeat
                     toggle_mute
@@ -180,8 +181,8 @@ module Voice
           # empty — an occupied LiveKit room must never be split, and silent
           # degradation hides outages from ops.
           if SiteSetting.voice_livekit_mesh_fallback &&
-               Voice::ParticipantTracker.user_ids(@room.id).empty?
-            Voice::ParticipantTracker.clear_transport_pin(@room.id)
+               Voice::ParticipantTracker.human_user_ids(@room.id).empty?
+            Voice::AgentManager.evict_agents_in_room!(@room)
             transport = "mesh"
           else
             return(render_json_error(I18n.t("voice.errors.livekit_unavailable"), status: 503))
@@ -310,10 +311,19 @@ module Voice
         return(render_json_error(I18n.t("voice.errors.livekit_room_instance_ended"), status: 410))
       end
 
+      # The reconnect ladder may have outlived presence, but it must still
+      # claim a slot atomically before receiving a new LiveKit join token.
+      admission =
+        Voice::ParticipantTracker.add_within_capacity(
+          @room.id,
+          current_user.id,
+          @room.effective_max_participants,
+        )
+      return render_json_error(I18n.t("voice.errors.room_full"), status: 422) if admission == :full
+
       # The reconnect ladder only runs while the client considers itself in the
-      # call, so an explicit token request voids any leave/kick tombstone.
+      # call, so an admitted explicit token request voids any leave/kick tombstone.
       Voice::ParticipantTracker.clear_left(@room.id, current_user.id)
-      Voice::ParticipantTracker.add(@room.id, current_user.id)
       # The session may have expired along with the lapsed presence — mint a
       # fresh one so heartbeat/state keep working after the reconnect.
       participant_session_id =
@@ -365,9 +375,8 @@ module Voice
       session = close_session_for(@room.id, current_user.id)
       Voice::ParticipantTracker.mark_left(@room.id, current_user.id)
       Voice::ParticipantTracker.remove(@room.id, current_user.id)
-      if Voice::ParticipantTracker.user_ids(@room.id).empty?
-        Voice::Livekit::RoomServiceClient.delete_room(@room)
-        Voice::ParticipantTracker.clear_transport_pin(@room.id)
+      if Voice::ParticipantTracker.human_user_ids(@room.id).empty?
+        Voice::AgentManager.evict_agents_in_room!(@room)
       end
       Voice::UserStatusManager.clear_voice_status(current_user)
       Voice::RoomBroadcaster.publish_participants(@room)
@@ -485,6 +494,17 @@ module Voice
 
     alias toggle_mute state
 
+    def invite_agent
+      raise Discourse::InvalidAccess unless guardian.can_invite_voice_agent?(@room)
+      dispatch_id =
+        Voice::AgentDispatcher.dispatch!(room: @room, agent_name: params.require(:agent_name))
+      render json: { dispatch_id: }, status: :created
+    rescue Voice::AgentManager::AuthorizationError
+      render_json_error(I18n.t("voice.errors.agent_dispatch_forbidden"), status: 403)
+    rescue Voice::AgentDispatcher::DispatchError
+      render_json_error(I18n.t("voice.errors.agent_dispatch_failed"), status: 503)
+    end
+
     def kick
       guardian.ensure_can_manage_voice_room!(@room)
 
@@ -497,6 +517,8 @@ module Voice
       if user_id == @room.creator_id
         raise Discourse::InvalidParameters.new(I18n.t("voice.errors.cannot_kick_creator"))
       end
+
+      Voice::AgentManager.evict!(room: @room, user_id: user_id) if user_id.negative?
 
       session = close_session_for(@room.id, user_id)
       Voice::ParticipantTracker.mark_left(@room.id, user_id)
@@ -511,7 +533,13 @@ module Voice
 
       # The client-side kicked handler already forces a clean leave; this
       # additionally evicts the media session from the SFU.
-      Voice::Livekit::RoomServiceClient.remove_participant(@room, user_id)
+      Voice::Livekit::RoomServiceClient.remove_participant(@room, user_id) unless user_id.negative?
+
+      if Voice::ParticipantTracker.human_user_ids(@room.id).empty? &&
+           Voice::AgentManager.provider_room?(@room.id)
+        Voice::AgentManager.evict_agents_in_room!(@room)
+        Voice::RoomBroadcaster.publish_participants(@room)
+      end
 
       head :no_content
     end

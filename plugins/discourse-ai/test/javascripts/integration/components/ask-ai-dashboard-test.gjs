@@ -1,11 +1,57 @@
-import { find, render, triggerEvent } from "@ember/test-helpers";
+import { trackedObject } from "@ember/reactive/collections";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ModalContainer from "discourse/components/modal-container";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 import AskAiDashboard from "discourse/plugins/discourse-ai/admin/components/dashboard/ask-ai";
 
 module("Integration | Component | AskAiDashboard", function (hooks) {
   setupRenderingTest(hooks);
+  hooks.beforeEach(() => {
+    pretender.get("/admin/plugins/discourse-ai/ask-ai-reports", () =>
+      response({ reports: [] })
+    );
+  });
+
+  test("waits for refreshed dashboard dates before allowing report generation", async function (assert) {
+    const state = trackedObject({
+      loading: true,
+      data: { questions: 1, start_date: "2026-08-01", end_date: "2026-08-31" },
+    });
+    await render(
+      <template>
+        <ModalContainer /><AskAiDashboard
+          @data={{state.data}}
+          @loading={{state.loading}}
+        />
+      </template>
+    );
+    assert
+      .dom(".ask-ai-reports__generate")
+      .isDisabled("cannot capture stale dates during refresh");
+    state.data = {
+      questions: 1,
+      start_date: "2026-09-01",
+      end_date: "2026-09-09",
+    };
+    state.loading = false;
+    await settled();
+    await click(".ask-ai-reports__generate");
+    assert
+      .dom(".d-modal", document)
+      .includesText("Sep 1, 2026", "confirms the refreshed period");
+    assert
+      .dom(".d-modal", document)
+      .doesNotIncludeText("Aug 1, 2026", "does not use the previous period");
+  });
 
   test("renders metrics, activity, and outcomes", async function (assert) {
     const data = {
@@ -38,13 +84,13 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
       .exists("uses the shared summary header");
     assert
       .dom(".ask-ai-dashboard .db-section__row")
-      .exists({ count: 1 }, "groups content in a shared dashboard row");
+      .exists({ count: 2 }, "groups content in shared dashboard rows");
     assert
       .dom(".ask-ai-dashboard .db-section__row > .db-section__row-block")
-      .exists({ count: 2 }, "uses shared blocks for the chart and outcomes");
+      .exists({ count: 3 }, "uses shared blocks for metrics and reports");
     assert
       .dom(".ask-ai-dashboard .db-section__row-block-title")
-      .exists({ count: 2 }, "uses consistent block headings");
+      .exists({ count: 3 }, "uses consistent block headings");
     assert
       .dom("[data-outcome]")
       .exists({ count: 3 }, "only shows outcomes that occurred");

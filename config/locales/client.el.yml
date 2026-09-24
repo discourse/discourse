@@ -356,6 +356,7 @@ el:
     notifications_tracking:
       tooltip: "Επίπεδο ειδοποίησης: %{level}"
     back_button: "Πίσω"
+    confirm_button: "Επιβεβαίωση"
     welcome_banner:
       header:
         new_members: "Καλώς ήρθες, %{preferred_display_name}!"
@@ -4671,6 +4672,7 @@ el:
       list: "Λίστα κατηγοριών"
       no_description: "Παρακαλώ πρόσθεσε μια περιγραφή στην κατηγορία"
       change_in_category_topic: "Επεξεργασία περιγραφής"
+      latest_topics: "Τελευταία θέματα"
       description_updated: "Η περιγραφή ενημερώθηκε"
       description_expand: "Δείτε περισσότερα"
       description_collapse: "Δείξε λιγότερα"
@@ -4938,6 +4940,7 @@ el:
       with_category: "%{filter} %{category} θέματα"
       filter:
         title: "Φιλτραρισμένα αποτελέσματα για %{filter}"
+        reset: "επαναφορά"
         button:
           label: "Φίλτρο"
       latest:
@@ -5200,16 +5203,18 @@ el:
       favorite_max_not_reached: "Σήμανση αυτού του παράσημου ως αγαπημένου"
       favorite_count: "%{count}/%{max} παράσημα σημασμένα ως αγαπημένα"
     download_calendar:
-      title: "Λήψη ημερολογίου"
+      title: "Προσθήκη στο ημερολόγιο"
+      calendar: "Ημερολόγιο"
       save_ics: "Λήψη αρχείου .ics"
       save_google: "Προσθήκη στο ημερολόγιο Google"
       remember: "Μην με ρωτήσετε ξανά"
-      remember_explanation: "(μπορείτε να αλλάξετε αυτήν την προτίμηση στις προτιμήσεις χρήστη)"
       download: "Κατέβασμα"
       default_calendar: "Προεπιλεγμένο ημερολόγιο"
       default_calendar_instruction: "Προσδιορίστε ποιο ημερολόγιο θα χρησιμοποιείται κατά την αποθήκευση ημερομηνιών"
       add_to_calendar: "Προσθήκη στο ημερολόγιο"
       google: "Ημερολόγιο Google"
+      outlook: "Microsoft Outlook"
+      apple: "Ημερολόγιο Apple"
       ics: "ICS"
       default_title: "Προγραμματισμένη Εκδήλωση"
     tagging:
@@ -6547,6 +6552,7 @@ el:
             embedded: "Ενσωματωμένες προβολές σελίδας"
             crawlers: "Ανιχνευτές"
           see_details: "Δείτε λεπτομέρειες"
+          crawler_learn_more: "Μάθετε περισσότερα"
         period:
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"

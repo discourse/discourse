@@ -437,22 +437,7 @@ module DiscourseMcp
     end
 
     def ensure_scopes!(primitive)
-      missing = primitive.required_scopes.reject { |scope| request_context.scopes.include?(scope) }
-      return if missing.empty?
-
-      required_scopes = primitive.required_scopes.join(" ")
-      raise Error.new(
-              "Insufficient scope",
-              code: -32_001,
-              http_status: 403,
-              data: {
-                required_scopes: primitive.required_scopes,
-              },
-              headers: {
-                "WWW-Authenticate" =>
-                  Authenticator.challenge(scope: required_scopes, error: "insufficient_scope"),
-              },
-            )
+      request_context.ensure_scopes!(primitive.required_scopes)
     end
   end
 end

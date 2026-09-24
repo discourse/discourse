@@ -202,6 +202,20 @@ describe OmniAuth::Strategies::OpenIDConnect do
           expect(@app_called).to eq(true)
         end
 
+        it "handles a blank access_token alongside the id_token" do
+          stub_request(:post, "https://id.example.com/token").to_return(
+            status: 200,
+            body: { access_token: "", id_token: @token }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          expect(strategy.callback_phase[0]).to eq(200)
+          expect(strategy.uid).to eq("someuserid")
+          expect(strategy.extra[:id_token]).to eq(@token)
+        end
+
         it "checks the nonce" do
           strategy.session["omniauth.nonce"] = "overriddenNonce"
           expect(strategy.callback_phase[0]).to eq(302)

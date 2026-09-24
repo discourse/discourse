@@ -306,15 +306,19 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            ImageMagick.identify(
-              "-ping",
-              "-format",
-              "%w %h",
-              "MSVG:#{path}",
-              operation: :upload_svg_dimensions,
-              read: [path],
-              timeout: MAX_IDENTIFY_SECONDS,
-            ).split(" ")
+            if GlobalSetting.enable_vips_image_processing
+              DiscourseVips.svg_dimensions(input_path: path, timeout: MAX_IDENTIFY_SECONDS)
+            else
+              ImageMagick.identify(
+                "-ping",
+                "-format",
+                "%w %h",
+                "MSVG:#{path}",
+                operation: :upload_svg_dimensions,
+                read: [path],
+                timeout: MAX_IDENTIFY_SECONDS,
+              ).split(" ")
+            end
           rescue StandardError
             [0, 0]
           end
@@ -378,8 +382,8 @@ class Upload < ActiveRecord::Base
   def calculate_dominant_color!(local_path = nil)
     color = nil
 
-    color = "" if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg" ||
-      (GlobalSetting.enable_vips_image_processing && extension == "ico")
+    color = "" if !FileHelper.is_supported_image?("image.#{extension}") ||
+      %w[svg ico].include?(extension)
 
     if color.nil?
       local_path ||=
@@ -444,7 +448,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, test_quality)
+  def target_jpeg_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
         ImageMagick.identify(

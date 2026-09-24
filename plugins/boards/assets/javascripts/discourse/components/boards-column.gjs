@@ -9,8 +9,9 @@ import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { autoScrollSpeedForPointer } from "../lib/boards-auto-scroll";
 import { isRecencyColumn } from "../lib/boards-card-ordering";
 import {
   columnColorVariable,
@@ -54,17 +55,6 @@ export default class BoardsColumn extends Component {
   @service modal;
 
   @tracked showAllCards = false;
-
-  autoScrollFrame = null;
-  autoScrollSpeed = 0;
-  autoScrollContainer = null;
-  autoScrollHasDocumentListeners = false;
-  stopAutoScroll = () => this.#stopAutoScroll();
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.#stopAutoScroll();
-  }
 
   get cardCount() {
     return this.args.column.cards?.length || 0;
@@ -121,7 +111,7 @@ export default class BoardsColumn extends Component {
       model: {
         card: {},
         isNew: true,
-        canWrite: true,
+        board: this.args.board,
         onCreateCard: (data) =>
           this.args.onAddCard({ ...data, columnId: this.args.column.id }),
       },
@@ -170,30 +160,30 @@ export default class BoardsColumn extends Component {
   }
 
   @action
-  dragOver(event) {
-    event.preventDefault();
+  canDropCard({ source }) {
+    // Recency columns sort themselves, so reordering within one is meaningless.
+    return !(
+      this.isRecencySorted && source.data.fromColumnId === this.args.column.id
+    );
+  }
+
+  @action
+  dragOver({ element, location }) {
     const dragData = this.args.dragData;
     if (!dragData) {
-      this.#stopAutoScroll();
       return;
     }
 
-    event.currentTarget.classList.add("discourse-boards-column--drag-target");
+    element.classList.add("discourse-boards-column--drag-target");
 
-    const cardsContainer = event.currentTarget.querySelector(
+    const cardsContainer = element.querySelector(
       ".discourse-boards-column__cards"
     );
     if (!cardsContainer) {
-      this.#stopAutoScroll();
       return;
     }
 
-    this.#updateAutoScroll(cardsContainer, event.clientY);
-
-    if (this.isRecencySorted && dragData.fromColumnId === this.args.column.id) {
-      this.removeDropIndicator(event.currentTarget, { animate: true });
-      return;
-    }
+    const { clientY } = location.current.input;
 
     let indicator = cardsContainer.querySelector(
       ".discourse-boards-column__drop-indicator"
@@ -223,7 +213,7 @@ export default class BoardsColumn extends Component {
           continue;
         }
         const rect = cardEl.getBoundingClientRect();
-        if (event.clientY <= rect.top + rect.height / 2) {
+        if (clientY <= rect.top + rect.height / 2) {
           insertBefore = cardEl;
           break;
         }
@@ -276,39 +266,25 @@ export default class BoardsColumn extends Component {
   }
 
   @action
-  dragLeave(event) {
-    event.preventDefault();
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      event.currentTarget.classList.remove(
-        "discourse-boards-column--drag-target"
-      );
-      this.removeDropIndicator(event.currentTarget, { animate: true });
-      this.#stopAutoScroll();
-    }
+  dragLeave({ element }) {
+    element.classList.remove("discourse-boards-column--drag-target");
+    this.removeDropIndicator(element, { animate: true });
   }
 
   @action
-  drop(event) {
-    event.preventDefault();
-    event.currentTarget.classList.remove(
-      "discourse-boards-column--drag-target"
-    );
-    this.#stopAutoScroll();
+  drop({ element, location }) {
+    element.classList.remove("discourse-boards-column--drag-target");
 
     const dragData = this.args.dragData;
     if (!dragData) {
-      this.removeDropIndicator(event.currentTarget, { animate: false });
+      this.removeDropIndicator(element, { animate: false });
       return;
     }
 
-    if (this.isRecencySorted && dragData.fromColumnId === this.args.column.id) {
-      this.removeDropIndicator(event.currentTarget, { animate: false });
-      return;
-    }
-
-    const cardsContainer = event.currentTarget.querySelector(
+    const cardsContainer = element.querySelector(
       ".discourse-boards-column__cards"
     );
+    const { clientY } = location.current.input;
     let afterCardId = null;
 
     if (cardsContainer && !this.isRecencySorted) {
@@ -321,14 +297,13 @@ export default class BoardsColumn extends Component {
           continue;
         }
         const rect = cardEl.getBoundingClientRect();
-        if (event.clientY > rect.top + rect.height / 2) {
+        if (clientY > rect.top + rect.height / 2) {
           afterCardId = elCardId;
         }
       }
     }
 
-    this.removeDropIndicator(event.currentTarget, { animate: false });
-
+    // The board viewer removes the placeholder once the move settles.
     this.args.onDrop(
       dragData.cardId,
       this.args.column.id,
@@ -374,88 +349,6 @@ export default class BoardsColumn extends Component {
     }
   }
 
-  #updateAutoScroll(cardsContainer, clientY) {
-    const speed = autoScrollSpeedForPointer(
-      clientY,
-      cardsContainer.getBoundingClientRect()
-    );
-
-    if (
-      (speed < 0 && cardsContainer.scrollTop <= 0) ||
-      (speed > 0 &&
-        cardsContainer.scrollTop + cardsContainer.clientHeight >=
-          cardsContainer.scrollHeight)
-    ) {
-      this.#stopAutoScroll();
-      return;
-    }
-
-    this.autoScrollSpeed = speed;
-    this.autoScrollContainer = cardsContainer;
-    this.#ensureAutoScrollDocumentListeners();
-
-    if (speed === 0) {
-      this.#stopAutoScroll();
-      return;
-    }
-
-    if (!this.autoScrollFrame) {
-      this.#autoScroll();
-    }
-  }
-
-  #autoScroll() {
-    this.autoScrollFrame = requestAnimationFrame(() => {
-      this.autoScrollFrame = null;
-
-      const container = this.autoScrollContainer;
-      if (!container || this.autoScrollSpeed === 0) {
-        return;
-      }
-
-      const previousScrollTop = container.scrollTop;
-      container.scrollTop += this.autoScrollSpeed;
-
-      if (container.scrollTop === previousScrollTop) {
-        this.#stopAutoScroll();
-        return;
-      }
-
-      this.#autoScroll();
-    });
-  }
-
-  #ensureAutoScrollDocumentListeners() {
-    if (this.autoScrollHasDocumentListeners) {
-      return;
-    }
-
-    document.addEventListener("dragend", this.stopAutoScroll, true);
-    document.addEventListener("drop", this.stopAutoScroll, true);
-    this.autoScrollHasDocumentListeners = true;
-  }
-
-  #removeAutoScrollDocumentListeners() {
-    if (!this.autoScrollHasDocumentListeners) {
-      return;
-    }
-
-    document.removeEventListener("dragend", this.stopAutoScroll, true);
-    document.removeEventListener("drop", this.stopAutoScroll, true);
-    this.autoScrollHasDocumentListeners = false;
-  }
-
-  #stopAutoScroll() {
-    if (this.autoScrollFrame) {
-      cancelAnimationFrame(this.autoScrollFrame);
-      this.autoScrollFrame = null;
-    }
-
-    this.autoScrollSpeed = 0;
-    this.autoScrollContainer = null;
-    this.#removeAutoScrollDocumentListeners();
-  }
-
   #indicatorMatchesPosition(cardsContainer, indicator, insertBefore) {
     if (indicator.parentElement !== cardsContainer) {
       return false;
@@ -478,9 +371,15 @@ export default class BoardsColumn extends Component {
       data-column-id={{@column.id}}
       data-default-sort={{@column.default_sort}}
       style={{columnColorVariable @column.color}}
-      {{on "dragover" this.dragOver}}
-      {{on "dragleave" this.dragLeave}}
-      {{on "drop" this.drop}}
+      {{dDragAndDropTarget
+        accepts="boards-card"
+        canDrop=this.canDropCard
+        indicator=false
+        onDrag=this.dragOver
+        onDragEnter=this.dragOver
+        onDragLeave=this.dragLeave
+        onDrop=this.drop
+      }}
     >
       <div class="discourse-boards-column__header">
         <span class="discourse-boards-column__header-content">
@@ -492,7 +391,7 @@ export default class BoardsColumn extends Component {
             {{this.cardCount}}
           </span>
         </span>
-        {{#if @canManage}}
+        {{#if @board.canManage}}
           <DMenu
             @icon="ellipsis"
             @identifier="boards-column-controls"
@@ -550,13 +449,15 @@ export default class BoardsColumn extends Component {
         {{/if}}
       </div>
 
-      <div class="discourse-boards-column__cards">
+      <div
+        class="discourse-boards-column__cards"
+        {{dDragAndDropAutoScroll types="boards-card"}}
+      >
         {{#if this.visibleCards.length}}
           {{#each this.visibleCards key="id" as |card|}}
             <BoardsCard
               @allSameCategory={{@allSameCategory}}
               @board={{@board}}
-              @canWrite={{@canWrite}}
               @card={{card}}
               @columnColor={{@column.color}}
               @columnIcon={{@column.icon}}
@@ -564,6 +465,7 @@ export default class BoardsColumn extends Component {
               @columnTitle={{@column.fancyTitle}}
               @isDropHighlighted={{eq @dropHighlightCardId card.id}}
               @isLinkHighlighted={{eq @linkHighlightCardId card.id}}
+              @isPendingDrop={{eq @pendingDropCardId card.id}}
               @onDeleteCard={{@onDeleteCard}}
               @onDragEnd={{@onDragEnd}}
               @onDragStart={{@onDragStart}}
@@ -589,7 +491,7 @@ export default class BoardsColumn extends Component {
         {{/if}}
       </div>
 
-      {{#if @canWrite}}
+      {{#if @board.canWrite}}
         <div class="discourse-boards-column__footer">
           <DMenu
             @icon="plus"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseEvents::Events::Event do
+RSpec.describe DiscourseEvents::Events::Event do
   before do
     freeze_time DateTime.parse("2020-04-24 14:10")
     Jobs.run_immediately!
@@ -18,6 +18,26 @@ describe DiscourseEvents::Events::Event do
     is_expected.to validate_length_of(:name).is_at_least(
       DiscourseEvents::Events::Event::MIN_NAME_LENGTH,
     ).is_at_most(DiscourseEvents::Events::Event::MAX_NAME_LENGTH)
+  end
+
+  it do
+    is_expected.to validate_length_of(:location).is_at_most(
+      DiscourseEvents::Events::Event::MAX_LOCATION_LENGTH,
+    )
+  end
+
+  it do
+    is_expected.to validate_length_of(:url).is_at_most(
+      DiscourseEvents::Events::Event::MAX_URL_LENGTH,
+    )
+  end
+
+  it do
+    is_expected.to validate_numericality_of(:max_attendees)
+      .only_integer
+      .is_greater_than(0)
+      .is_less_than_or_equal_to(DiscourseEvents::Events::Event::MAX_ATTENDEES_LIMIT)
+      .allow_nil
   end
 
   describe "#warm_livestream_onebox" do
@@ -367,10 +387,10 @@ describe DiscourseEvents::Events::Event do
   end
 
   describe "topic custom fields callback" do
-    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    let!(:notified_user) { Fabricate(:user) }
-    let(:topic) { Fabricate(:topic, user: user) }
-    let!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+    fab!(:notified_user, :user)
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
     let(:second_post) { Fabricate(:post, topic: topic) }
     let!(:starts_at) { Time.zone.parse("2020-04-24 14:15:00") }
     let!(:ends_at) { Time.zone.parse("2020-04-24 16:15:00") }
@@ -534,6 +554,48 @@ describe DiscourseEvents::Events::Event do
             expect(post_event.starts_at).to eq_time(alt_starts_at)
             expect(post_event.ends_at).to eq_time(alt_ends_at)
           end
+
+          it "preserves going invitees and resets other responses when the date changes" do
+            going_user = Fabricate(:user)
+            interested_user = Fabricate(:user)
+            invitee_klass = DiscourseEvents::Events::Invitee
+
+            post_event.create_invitees(
+              [
+                {
+                  user_id: going_user.id,
+                  status: invitee_klass.statuses[:going],
+                  notified: true,
+                  recurring: false,
+                },
+                {
+                  user_id: interested_user.id,
+                  status: invitee_klass.statuses[:interested],
+                  notified: true,
+                  recurring: false,
+                },
+              ],
+            )
+
+            post_event.update_with_params!(
+              original_starts_at: alt_starts_at,
+              original_ends_at: alt_ends_at,
+            )
+
+            going_invitee = post_event.invitees.find_by(user_id: going_user.id)
+            interested_invitee = post_event.invitees.find_by(user_id: interested_user.id)
+
+            expect(going_invitee).to have_attributes(
+              status: invitee_klass.statuses[:going],
+              notified: true,
+              recurring: false,
+            )
+            expect(interested_invitee).to have_attributes(
+              status: nil,
+              notified: true,
+              recurring: false,
+            )
+          end
         end
 
         context "when the associated post is not the OP" do
@@ -648,9 +710,9 @@ describe DiscourseEvents::Events::Event do
   end
 
   describe "#ongoing?" do
-    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    let(:topic) { Fabricate(:topic, user: user) }
-    let!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     context "with ends_at" do
       context "with starts_at < current date" do
@@ -734,9 +796,9 @@ describe DiscourseEvents::Events::Event do
   end
 
   describe "#currently_within_event_timeframe?" do
-    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    let(:topic) { Fabricate(:topic, user: user) }
-    let!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     def event_with(starts_at:, ends_at: nil, all_day: false)
       DiscourseEvents::Events::Event.create!(
@@ -823,9 +885,9 @@ describe DiscourseEvents::Events::Event do
   end
 
   describe "#expired?" do
-    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
-    let(:topic) { Fabricate(:topic, user: user) }
-    let!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     context "with ends_at" do
       context "when starts_at < current date" do
@@ -974,8 +1036,78 @@ describe DiscourseEvents::Events::Event do
     end
   end
 
+  describe "#parsed_reminders" do
+    fab!(:post_1, :post)
+
+    def event_with_reminders(reminders)
+      Fabricate(:event, post: post_1, reminders: reminders)
+    end
+
+    it "parses type, value and unit" do
+      event = event_with_reminders("notification.15.minutes,bumpTopic.3.days")
+
+      expect(event.parsed_reminders).to eq(
+        [
+          { type: "notification", value: 15, unit: "minutes" },
+          { type: "bumpTopic", value: 3, unit: "days" },
+        ],
+      )
+    end
+
+    it "defaults the type to notification for legacy reminders without one" do
+      event = event_with_reminders("15.minutes")
+
+      expect(event.parsed_reminders).to eq([{ type: "notification", value: 15, unit: "minutes" }])
+    end
+
+    it "keeps negative values used for reminders after the event" do
+      event = event_with_reminders("notification.-30.minutes")
+
+      expect(event.parsed_reminders).to eq([{ type: "notification", value: -30, unit: "minutes" }])
+    end
+
+    it "strips padding and plus signs" do
+      event = event_with_reminders("notification.15.minutes, bumpTopic.+3.days")
+
+      expect(event.parsed_reminders).to eq(
+        [
+          { type: "notification", value: 15, unit: "minutes" },
+          { type: "bumpTopic", value: 3, unit: "days" },
+        ],
+      )
+    end
+
+    it "skips reminders with an unknown unit" do
+      event = event_with_reminders("notification.1.fortnights,notification.1.hours")
+
+      expect(event.parsed_reminders).to eq([{ type: "notification", value: 1, unit: "hours" }])
+    end
+
+    it "is empty without reminders" do
+      expect(event_with_reminders(nil).parsed_reminders).to eq([])
+    end
+  end
+
+  describe ".valid_reminder?" do
+    it "accepts known types, legacy type-less reminders, padding and signed values" do
+      expect(described_class.valid_reminder?("notification.15.minutes")).to eq(true)
+      expect(described_class.valid_reminder?("bumpTopic.1.days")).to eq(true)
+      expect(described_class.valid_reminder?("15.minutes")).to eq(true)
+      expect(described_class.valid_reminder?(" notification.+15.minutes ")).to eq(true)
+      expect(described_class.valid_reminder?("notification.-30.minutes")).to eq(true)
+    end
+
+    it "rejects unknown units, types, non-numeric values and wrong arity" do
+      expect(described_class.valid_reminder?("notification.1.fortnights")).to eq(false)
+      expect(described_class.valid_reminder?("notification.abc.minutes")).to eq(false)
+      expect(described_class.valid_reminder?("foo.1.minutes")).to eq(false)
+      expect(described_class.valid_reminder?("15")).to eq(false)
+      expect(described_class.valid_reminder?("a.notification.15.minutes")).to eq(false)
+    end
+  end
+
   describe "#duration" do
-    let!(:post_1) { Fabricate(:post) }
+    fab!(:post_1, :post)
 
     context "when event has both starts_at and ends_at" do
       it "returns duration in HH:MM:SS format" do
@@ -1017,8 +1149,8 @@ describe DiscourseEvents::Events::Event do
   end
 
   describe "#update_with_params!" do
-    let!(:post_1) { Fabricate(:post) }
-    let!(:user_1) { Fabricate(:user) }
+    fab!(:post_1, :post)
+    fab!(:user_1, :user)
     let(:group_1) do
       Fabricate(:group).tap do |g|
         g.add(user_1)
@@ -1027,6 +1159,84 @@ describe DiscourseEvents::Events::Event do
     end
 
     before { freeze_time }
+
+    context "when changing recurring event dates" do
+      subject(:update_dates) do
+        event.update_with_params!(
+          original_starts_at: 2.days.ago,
+          original_ends_at: 2.days.ago + 1.hour,
+        )
+      end
+
+      fab!(:user, :user)
+
+      let(:event) do
+        Fabricate(
+          :event,
+          recurrence: "every_week",
+          original_starts_at: 1.day.ago,
+          original_ends_at: 1.day.ago + 1.hour,
+        )
+      end
+      let(:status) { DiscourseEvents::Events::Invitee.statuses[:going] }
+      let(:recurring) { true }
+      let!(:invitee) { Fabricate(:invitee, event:, user:, status:, notified: true) }
+      let(:reset_attendance) { { "status" => nil, "notified" => false, "recurring" => false } }
+
+      before do
+        # Preserve stored combinations that the invitee save callback would normalize.
+        invitee.update_columns(recurring:)
+      end
+
+      context "with a going recurring invitee" do
+        it "preserves attendance and notification state" do
+          expect { update_dates }.not_to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }
+        end
+      end
+
+      context "with a going invitee without recurring attendance" do
+        let(:recurring) { false }
+
+        it "resets attendance and notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+
+      context "with a declined recurring invitee" do
+        let(:status) { DiscourseEvents::Events::Invitee.statuses[:not_going] }
+
+        it "resets attendance and notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+
+      context "with a NULL status and recurring attendance" do
+        let(:status) { nil }
+
+        it "preserves attendance and notification state" do
+          expect { update_dates }.not_to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }
+        end
+      end
+
+      context "with a NULL status without recurring attendance" do
+        let(:status) { nil }
+        let(:recurring) { false }
+
+        it "resets notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+    end
 
     context "with a private event" do
       let!(:event_1) do
@@ -1115,11 +1325,11 @@ describe DiscourseEvents::Events::Event do
   end
 
   describe "#missing_users" do
-    let!(:post_1) { Fabricate(:post) }
-    let!(:user_1) { Fabricate(:user) }
-    let!(:user_2) { Fabricate(:user) }
-    let!(:user_3) { Fabricate(:user) }
-    let!(:group_1) do
+    fab!(:post_1, :post)
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
+    fab!(:user_3, :user)
+    fab!(:group_1) do
       Fabricate(:group).tap do |g|
         g.add(user_1)
         g.add(user_2)
@@ -1127,13 +1337,13 @@ describe DiscourseEvents::Events::Event do
         g.save!
       end
     end
-    let!(:group_2) do
+    fab!(:group_2) do
       Fabricate(:group).tap do |g|
         g.add(user_2)
         g.save!
       end
     end
-    let!(:event_1) do
+    fab!(:event_1) do
       Fabricate(
         :event,
         post: post_1,
@@ -1197,15 +1407,13 @@ describe DiscourseEvents::Events::Event do
   describe "#starts_at and #ends_at for expired recurring events" do
     context "when recurring event has expired (past recurrence_until)" do
       let(:expired_recurring_event) do
-        event =
-          Fabricate(
-            :event,
-            recurrence: "every_week",
-            recurrence_until: 1.day.ago,
-            original_starts_at: 1.week.ago,
-            original_ends_at: 1.week.ago + 2.hours,
-          )
-        event
+        Fabricate(
+          :event,
+          recurrence: "every_week",
+          recurrence_until: 1.day.ago,
+          original_starts_at: 1.week.ago,
+          original_ends_at: 1.week.ago + 2.hours,
+        )
       end
 
       it "returns nil for starts_at since no future dates can be computed" do

@@ -86,7 +86,7 @@ RSpec.describe UserAvatarsController do
   end
 
   describe "#show" do
-    context "when invalid" do
+    shared_examples "avatar extension correction" do
       after { FileUtils.rm(Discourse.store.path_for(upload)) }
 
       let :upload do
@@ -102,7 +102,7 @@ RSpec.describe UserAvatarsController do
         user
       end
 
-      it "automatically corrects bad avatar extensions" do
+      it "corrects a PNG avatar mislabeled as JPEG" do
         orig = Discourse.store.path_for(upload)
 
         upload.update_columns(
@@ -124,6 +124,18 @@ RSpec.describe UserAvatarsController do
         upload.reload
         expect(upload.extension).to eq("png")
       end
+    end
+
+    context "when an avatar has an incorrect extension with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "avatar extension correction"
+    end
+
+    context "when an avatar has an incorrect extension with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "avatar extension correction"
     end
 
     it "serves sanitized SVG avatars without DTD entities" do

@@ -3,6 +3,7 @@ import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
+import { adjustedRangeEnd } from "discourse/lib/time-utils";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import { i18n } from "discourse-i18n";
 
@@ -10,8 +11,6 @@ import { i18n } from "discourse-i18n";
 export default class DDateTimeInputRange extends Component {
   from = null;
   to = null;
-  onChangeTo = null;
-  onChangeFrom = null;
   toTimeFirst = false;
   showToTime = true;
   showFromTime = true;
@@ -19,34 +18,17 @@ export default class DDateTimeInputRange extends Component {
 
   @action
   onChangeRanges(options, value) {
-    if (this.onChange) {
-      const state = {
-        from: this.from,
-        to: this.to,
-      };
-
-      const diff = {};
-
-      if (options.prop === "from") {
-        if (this.to && value?.isAfter(this.to)) {
-          diff[options.prop] = value;
-          diff["to"] = value.clone().add(1, "hour");
-        } else {
-          diff[options.prop] = value;
-        }
-      }
-
-      if (options.prop === "to") {
-        if (value && value.isBefore(this.from)) {
-          diff[options.prop] = this.from.clone().add(1, "hour");
-        } else {
-          diff[options.prop] = value;
-        }
-      }
-
-      const newState = { ...state, ...diff };
-      this.onChange(newState);
+    if (!this.onChange) {
+      return;
     }
+
+    const from = options.prop === "from" ? value : this.from;
+    const to = options.prop === "from" ? this.to : value;
+
+    this.onChange({
+      from,
+      to: adjustedRangeEnd(from, to, { dateOnly: !this.showToTime }),
+    });
   }
 
   <template>
