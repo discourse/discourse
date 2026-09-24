@@ -15,6 +15,10 @@ class PostVotingCommentSerializer < ApplicationSerializer
 
   attr_accessor :comments_user_voted
 
+  def include_name?
+    SiteSetting.enable_names?
+  end
+
   def name
     object.user&.name
   end
