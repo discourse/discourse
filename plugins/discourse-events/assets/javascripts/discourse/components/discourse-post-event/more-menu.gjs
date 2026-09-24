@@ -5,7 +5,6 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { downloadCalendar } from "discourse/lib/download-calendar";
 import { exportEntity } from "discourse/lib/export-csv";
 import { cook } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -13,6 +12,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import addEventToCalendar from "../../lib/add-event-to-calendar";
 import {
   buildParams,
   removeEvent,
@@ -76,24 +76,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
   addToCalendar() {
     this.menuApi.close();
 
-    const event = this.args.event;
-
-    downloadCalendar(
-      event.name || event.post.topic.title,
-      [
-        {
-          startsAt: event.startsAt,
-          endsAt: event.endsAt,
-          timezone: event.timezone,
-          allDay: event.allDay,
-        },
-      ],
-      {
-        rrule: event.rrule,
-        location: event.location,
-        details: event.description,
-      }
-    );
+    addEventToCalendar(this.args.event);
   }
 
   @action

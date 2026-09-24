@@ -16,6 +16,21 @@ te:
         image_generation_custom:
           name: "అనురూప"
     ai_bot:
+      navigation:
+        users:
+          title: "సభ్యులు"
+        groups:
+          title: "సమూహాలు"
+        review:
+          title: "సమీక్షను క్యూ"
+        categories:
+          title: "వర్గాలు"
+        tags:
+          title: "ట్యాగులు"
+        themes:
+          title: "థీమ్స్"
+        backups:
+          title: "బ్యాకప్పులు"
       read_post:
         unknown_post: "పోస్ట్"
       tool_summary:

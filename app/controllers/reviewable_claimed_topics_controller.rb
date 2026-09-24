@@ -16,8 +16,8 @@ class ReviewableClaimedTopicsController < ApplicationController
     end
 
     claim.log_topic_history(:claimed, current_user)
+    claim.publish_change(current_user, claimed: true)
 
-    notify_users(topic, current_user, automatic)
     render json: success_json
   end
 
@@ -28,33 +28,8 @@ class ReviewableClaimedTopicsController < ApplicationController
       raise Discourse::NotFound
     end
 
-    if claim = ReviewableClaimedTopic.find_by(topic_id: topic.id)
-      claim.delete
-      claim.log_topic_history(:unclaimed, current_user)
-      notify_users(topic, current_user, claim.automatic, claimed: false)
-    end
+    ReviewableClaimedTopic.find_by(topic_id: topic.id)&.release(current_user)
 
     render json: success_json
-  end
-
-  private
-
-  def notify_users(topic, user, automatic, claimed: true)
-    group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
-
-    if SiteSetting.enable_category_group_moderation? && topic.category
-      group_ids.merge(topic.category.moderating_group_ids)
-    end
-
-    data = {
-      topic_id: topic.id,
-      user: BasicUserSerializer.new(user, root: false).as_json,
-      automatic:,
-      claimed:,
-    }
-
-    MessageBus.publish("/reviewable_claimed", data, group_ids: group_ids.to_a)
-
-    Jobs.enqueue(:refresh_users_reviewable_counts, group_ids: group_ids.to_a)
   end
 end

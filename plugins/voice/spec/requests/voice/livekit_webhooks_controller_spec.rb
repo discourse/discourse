@@ -71,6 +71,7 @@ RSpec.describe Voice::LivekitWebhooksController do
     room_name: Voice::Livekit.room_name(room),
     identity: user.id.to_s,
     sid: "PA_test",
+    metadata: nil,
     created_at: 1.minute.from_now
   )
     {
@@ -84,6 +85,7 @@ RSpec.describe Voice::LivekitWebhooksController do
       "participant" => {
         "sid" => sid,
         "identity" => identity,
+        "metadata" => metadata,
       },
     }
   end
@@ -94,6 +96,69 @@ RSpec.describe Voice::LivekitWebhooksController do
   end
 
   describe "#create" do
+    it "reconciles a dashboard agent without letting stale events restore a kicked bot" do
+      SiteSetting.voice_livekit_url = "wss://test.livekit.cloud"
+      SiteSetting.voice_livekit_agent_enabled = true
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, user.id)
+      dispatch = nil
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/CreateDispatch",
+      ).to_return do |request|
+        dispatch =
+          JSON.parse(request.body).merge(
+            "id" => "AD_test",
+            "state" => {
+              "jobs" => [
+                {
+                  "dispatchId" => "AD_test",
+                  "state" => {
+                    "status" => "JS_RUNNING",
+                    "participantIdentity" => "agent-test",
+                  },
+                },
+              ],
+            },
+          )
+        { status: 200, body: dispatch.to_json }
+      end
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/ListDispatch",
+      ).to_return { { status: 200, body: { agentDispatches: [dispatch] }.to_json } }
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.RoomService/ListParticipants",
+      ).to_return(
+        status: 200,
+        body: {
+          participants: [{ identity: "agent-test", kind: "AGENT", sid: "PA_current" }],
+        }.to_json,
+      )
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.RoomService/UpdateParticipant",
+      ).to_return(status: 200, body: "{}")
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/DeleteDispatch",
+      ).to_return(status: 200, body: "{}")
+      Voice::AgentDispatcher.dispatch!(room:, agent_name: "assistant")
+      bot = Voice::AgentBot.user
+
+      post_webhook(event_for(event: "participant_joined", identity: "agent-test"))
+      expect(response.status).to eq(200)
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to eq([bot.id])
+
+      post_webhook(event_for(identity: "agent-test", sid: "PA_old"))
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to eq([bot.id])
+
+      Voice::AgentManager.evict!(room:, user_id: bot.id)
+      post_webhook(event_for(event: "participant_joined", identity: "agent-test"))
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
+    end
+
     context "with an invalid delivery" do
       it "rejects a request with no Authorization token and records no delivery" do
         body = event_for.to_json
@@ -246,6 +311,10 @@ RSpec.describe Voice::LivekitWebhooksController do
       end
 
       it "leaves the session row open for CloseOrphanedSessions to close" do
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/DeleteRoom",
+        ).to_return(status: 200, body: "{}")
         sign_in(user)
         post "/voice/rooms/#{room.id}/join.json"
         expect(response.status).to eq(200)

@@ -5,7 +5,16 @@
 # https://translate.discourse.org/
 
 he:
+  markdown_endpoints:
+    latest: "אחרונות"
+    categories: "קטגוריות"
+    tags: "תגיות"
+    replies: "תשובות"
+    last_updated: "עדכון אחרון"
   mcp:
+    errors:
+      draft_too_long: "הטיוטה ארוכה מדי"
+      topic_not_found: "הנושא לא נמצא"
     oauth:
       deny: "דחייה"
       approve: "אישור"
@@ -1216,7 +1225,7 @@ he:
   uploads:
     marked_insecure_from_theme_component_reason: "ההעלאה בה נעשה שימוש ברכיב ערכת עיצוב"
   unsubscribe:
-    title: "בטלו את המנוי"
+    unsubscribe: "ביטול מנוי"
     stop_watching_topic: "הפסיקו לצפות בנושא זה, %{link}"
     mute_topic: "השתיקו את כל ההתראות של נושא זה, %{link}"
     unwatch_category: "הפסיקו לצפות בכל הנושאים בקטגוריה %{category}"
@@ -1744,12 +1753,6 @@ he:
       host_names: "הקובץ config/database.yml אצלך משתמש בכתובת ברירת המחדל - localhost. נא לעדכן אותה להשתמש בכתובת השרת שלך."
       queue_size: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
       ram: "בשרת שלך יש פחות מגיגה זיכרון בסך הכול. מומלץ לפחות גיגה של זיכרון."
-      google_oauth2_config: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      facebook_config: 'השרת מוגדר לאפשר הרשמה דרך פייסבוק (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      twitter_config: 'השרת מוגדר לאפשר הרשמה דרך טוויטר (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      github_config: 'השרת מוגדר לאפשר הרשמה דרך GitHub‏ (enable_github_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      s3_upload_config: 'השרת מוגדר להעלות קבצים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_upload_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
-      s3_backup_config: 'השרת מוגדר להעלות גיבויים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_backup_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
       s3_cdn: 'השרת מוגדר להעלות קבצים ל־S3, אך לא מוגדר CDN של S3. זה יכול להוביל לעלויות S3 גבוהות ולביצועים ירודים של האתר. <a href="https://meta.discourse.org/t/-/148916" target="_blank">ניתן לעיין בעמוד „שימוש באחסון אובייקטים להעלאות” למידע נוסף</a>.'
       image_magick: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
       failing_emails: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
@@ -2578,7 +2581,6 @@ he:
         other: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
-      linkedin_oidc_credentials: "יש להגדיר פרטי גישה ל־LinkedIn מסוג OIDC‏ (‚linkedin_oidc_client_id’ ואת ‚linkedin_oidc_client_secret’) בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
@@ -2623,8 +2625,6 @@ he:
       tags_any: "הצגת נושאים עם לפחות אחת מבין התגיות שצוינו (מופרדות בפסיקים)"
       tags_all: "הצגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
       exclude_tag: "החרגת נושאים עם תגית מסוימת"
-      exclude_tags_any: "החרגת נושאים עם לפחות אחת מבין התגיות שצוינו (מופרדות בפסיקים)"
-      exclude_tags_all: "החרגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
       tag_group: "הצגת נושאים עם תגיות מקבוצת תגיות מסוימת"
       exclude_tag_group: "החרגת נושאים עם תגיות מקבוצת תגיות מסוימת"
       activity_before: "הצגת נושאים עם פעילות אחרונה לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
@@ -2632,7 +2632,6 @@ he:
       created_before: "הצגת נושאים שנוצרו לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
       created_after: "הצגת נושאים שנוצרו אחרי תאריך (YYYY-MM-DD או כמות ימים)"
       created_by: "הצגת נושאים שנוצרו על ידי משתמש/ת או קבוצה מסוימים"
-      created_by_user: "הצגת נושאים שנוצרו על ידי שם משתמש או קבוצה (ללא @)"
       created_by_multiple: "הצגת נושאים שנוצרו על ידי אחד או אחת מבין המשתמשים או הקבוצות שצוינו (מופרדים בפסיקים)"
       latest_post_before: "הצגת נושאים עם פוסט אחרון לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
       latest_post_after: "הצגת נושאים עם פוסט אחרון אחרי תאריך (YYYY-MM-DD או כמות ימים לפני)"
@@ -2853,6 +2852,7 @@ he:
     wrong_invite_code: "קוד ההזמנה שהקלדת שגוי."
     reserved_username: "שם משתמש זה אינו מורשה."
     missing_user_field: "לא מילאת את כל שדות המשתמש/ת הנחוצים"
+    missing_username: "נא למלא שם משתמש"
     auth_complete: "אימות הושלם."
     click_to_continue: "יש ללחוץ כאן כדי להמשיך."
     already_logged_in: "מחילה! ההזמנה הזו מיועדת למשתמשים חדשים, שעוד אין להם חשבון."
@@ -4213,7 +4213,7 @@ he:
         חבר סגל אישר את החשבון שלך אצל %{site_name}.
 
         מעתה יתאפשר לך לגשת לחשבון החדש שלך על ידי כניסה אליו בכתובת:
-        %{base_url}
+        %{login_url}
 
         אם אין אפשרות ללחוץ על הקישור שלהלן, כדאי לנסות להעתיק ולהדביק אותו לסרגל הכתובות של הדפדפן.
 
@@ -5028,6 +5028,8 @@ he:
       disagree_and_restore:
         title: "שחזור פוסט"
         complete: "הפוסט שוחזר."
+      disagree_and_keep_deleted:
+        title: "להשאיר את הפוסט מחוק"
       disagree_bundle:
         title: "לא"
       disagree:

@@ -19,6 +19,7 @@ ja:
         no_results: "結果がありません"
     explorer:
       default_query: "デフォルト"
+      view_query: "表示"
       or: "または"
       admins_only: "データエクスプローラーは管理者のみが利用できます。"
       allow_groups: "このクエリへのアクセスをグループに許可する"

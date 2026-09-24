@@ -25,6 +25,25 @@ cs:
         illustrate_post: "Ilustrovat příspěvek"
         replace_dates: "Chytré datumy"
     ai_bot:
+      navigation:
+        settings:
+          title: "Nastavení webu"
+        users:
+          title: "Uživatelé"
+        groups:
+          title: "Skupiny"
+        review:
+          title: "Fronta recenzí"
+        categories:
+          title: "Kategorie"
+        tags:
+          title: "Tagy"
+        themes:
+          title: "Motivy"
+        authentication:
+          title: "Přihlášení a ověřování"
+        backups:
+          title: "Zálohy"
       default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
       read_post:
         unknown_post: "příspěvek"

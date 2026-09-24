@@ -1,4 +1,5 @@
 @use "lib/viewport";
+@use "lib/container";
 
 .chat-browse-view {
   position: relative;
@@ -26,8 +27,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
 
-    @include viewport.until(md) {
-      grid-template-columns: repeat(1, 1fr);
+    @include container.until(md) {
       gap: 1rem;
     }
   }

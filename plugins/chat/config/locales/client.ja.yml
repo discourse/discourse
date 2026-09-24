@@ -497,6 +497,7 @@ ja:
       direct_messages:
         title: "DM"
         aria_label: "ダイレクトメッセージに切り替える"
+        new_group: "新しいグループチャット"
         create: "開始"
         leave: "チャンネルから退出する"
         close: "チャンネルを閉鎖する"

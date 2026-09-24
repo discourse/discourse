@@ -102,7 +102,6 @@ ja:
     ai_summary_gists_enabled: "トピック内の最新の返信の簡単な要約を自動的に生成する"
     ai_bot_enabled: "AI ボットモジュールを有効にします。"
     ai_bot_enabled_llms: "AI ボット会話に選択できる LLM"
-    ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"
     ai_bot_debugging_allowed_groups: "これらのグループが生の AI リクエストと応答を表示するデバッグボタンを投稿に表示することを許可する"
     ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可する。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
     ai_bot_add_to_header: "AI ボットとの PM を開始するためのボタンをヘッダーに表示する"
@@ -286,6 +285,25 @@ ja:
       configuration_missing: "AI 迷惑行為検出の構成が見つかりません。有効にする前に、「管理者」>「プラグイン」>「Discourse AI」>「迷惑行為」で構成を追加してください。"
       logging_subject: "迷惑行為の検出"
     ai_bot:
+      navigation:
+        settings:
+          title: "サイトの設定"
+        users:
+          title: "ユーザー"
+        groups:
+          title: "グループ"
+        review:
+          title: "レビューキュー"
+        categories:
+          title: "カテゴリ"
+        tags:
+          title: "タグ"
+        themes:
+          title: "テーマ"
+        authentication:
+          title: "ログインと認証"
+        backups:
+          title: "バックアップ"
       reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
       default_pm_prefix: "[無題の AI ボット PM]"
       thinking: "思考中"

@@ -5,7 +5,18 @@
 # https://translate.discourse.org/
 
 fi:
+  markdown_endpoints:
+    latest: "Tuoreimmat"
+    categories: "Kategoriat"
+    tags: "Tunnisteet"
+    previous_page: "Edellinen sivu"
+    next_page: "Seuraava sivu"
+    replies: "Vastaukset"
+    last_updated: "Viimeksi päivitetty"
   mcp:
+    errors:
+      draft_too_long: "Luonnos on liian pitkä"
+      topic_not_found: "Ketjua ei löytynyt"
     oauth:
       deny: "Hylkää"
       approve: "Anna käyttöoikeus"
@@ -1134,7 +1145,7 @@ fi:
   uploads:
     marked_insecure_from_theme_component_reason: "latausta käytetään teemakomponentissa"
   unsubscribe:
-    title: "Peru tilaus"
+    unsubscribe: "Peru tilaus"
     stop_watching_topic: "Lopeta ketjun tarkkailu, %{link}"
     mute_topic: "Vaimenna kaikki ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
@@ -1644,12 +1655,6 @@ fi:
       host_names: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
       queue_size: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq-prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
       ram: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
-      google_oauth2_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lue lisää tästä oppaasta</a>.'
-      facebook_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Lue lisää tästä oppaasta</a>.'
-      twitter_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Lue lisää tästä oppaasta</a>.'
-      github_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Lue lisää tästä oppaasta</a>.'
-      s3_upload_config: 'Palvelin on määritetty tallentamaan sivustolle ladatut tiedostot S3:een, mutta ainakin yksi seuraavista asetuksista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
-      s3_backup_config: 'Palvelin on määritetty tallentamaan varmuuskopiot S3:een, mutta ainakin yksi seuraavista asetuksista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
       s3_cdn: 'Palvelin on määritetty siirtämään ladatut tiedostot S3:een, mutta S3:n CDN-asetuksia ei ole määritelty. Tämä voi johtaa kalliisiin S3-kustannuksiin ja hitaampaan sivuston suorituskykyyn. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Lue lisätietoja objektitallennustilan käytöstä tiedostojen lataamisessa palvelimeen</a>.'
       image_magick: 'Palvelin on määritetty luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="https://www.imagemagick.org/script/download.php" target="_blank">lataa uusin versio</a>.'
       failing_emails: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="%{base_path}/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
@@ -2452,7 +2457,6 @@ fi:
         other: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
       markdown_linkify_tlds: "Et voi lisätä arvoa \"*\"."
       google_oauth2_hd_groups: "Sinun täytyy määrittää kaikki \"google oauth2 hd\" -asetukset ennen kuin otat tämän asetuksen käyttöön."
-      linkedin_oidc_credentials: "Sinun täytyy määrittää LinkedIn OIDC -tunnistetiedot (\"linkedin_oidc_client_id\" ja \"linkedin_oidc_client_secret\") ennen tämän asetuksen käyttöönottoa."
       search_tokenize_chinese_enabled: "\"search_tokenize_chinese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Et voi ottaa DiscourseConnectia käyttöön, jos 2FA on pakotettu."
@@ -2498,8 +2502,6 @@ fi:
       tags_any: "Näytä ketjut millä tahansa määritetyillä tunnisteilla (pilkuilla erotettuna)"
       tags_all: "Näytä ketjut kaikilla määritetyillä tunnisteilla (plus-merkillä erotettuna)"
       exclude_tag: "Jätä pois ketjut tietyllä tunnisteella"
-      exclude_tags_any: "Jätä pois ketjut millä tahansa määritetyillä tunnisteilla (pilkuilla erotettuna)"
-      exclude_tags_all: "Jätä pois ketjut kaikilla määritetyillä tunnisteilla (plus-merkillä erotettuna)"
       tag_group: "Näytä ketjut, joilla on tietyn tunnisteiryhmän tunnisteita"
       exclude_tag_group: "Jätä pois ketjut, joilla on tietyn tunnisteiryhmän tunnisteita"
       activity_before: "Näytä ketjut, joissa viimeisin toiminta on ennen tiettyä päivämäärää (VVVV-KK-PP tai päivää sitten)"
@@ -2694,6 +2696,7 @@ fi:
     wrong_invite_code: "Antamasi kutsukoodi oli väärä."
     reserved_username: "Käyttäjätunnus ei ole sallittu."
     missing_user_field: "Et ole täyttänyt kaikkia pakollisia käyttäjäkenttiä"
+    missing_username: "Syötä käyttäjätunnus"
     auth_complete: "Todennus suoritettu."
     click_to_continue: "Jatka klikkaamalla tästä."
     already_logged_in: "Tämä kutsu on tarkoitettu uusille käyttäjille, joilla ei vielä ole olemassa olevaa tiliä."
@@ -3981,7 +3984,7 @@ fi:
         Henkilökunnan jäsen hyväksyi tilisi sivustolle %{site_name}.
 
         Voit kirjautua sisään osoitteessa:
-        %{base_url}
+        %{login_url}
 
         Jos et voi klikata linkkiä, yritä kopioida ja liittää se selaimesi osoiteriville.
 
@@ -4658,6 +4661,8 @@ fi:
       disagree_and_restore:
         title: "Palauta viesti"
         complete: "Viesti palautettu."
+      disagree_and_keep_deleted:
+        title: "Pidä viesti poistettuna"
       disagree_bundle:
         title: "Ei"
       disagree:

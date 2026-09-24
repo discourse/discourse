@@ -1066,6 +1066,76 @@ RSpec.describe CategoriesController do
           expect(category.topic_title_placeholder).to eq("test topic title placeholder")
         end
 
+        it "revokes anonymous access to existing uploads when a public category becomes private" do
+          setup_s3
+          SiteSetting.secure_uploads = true
+          topic = Fabricate(:topic, category: category)
+          post = Fabricate(:post, topic: topic)
+          upload = Fabricate(:upload_s3, access_control_post: post)
+          UploadReference.create!(upload: upload, target: post)
+          stub_upload(upload)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to redirect_to(upload.url)
+
+          sign_in(admin)
+          put "/categories/#{category.id}.json",
+              params: {
+                permissions: {
+                  "admins" => CategoryGroup.permission_types[:full],
+                },
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["category"]["read_restricted"]).to eq(true)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to have_http_status(:forbidden)
+          expect(response.body).to include(I18n.t("page_forbidden.title"))
+        end
+
+        it "revokes anonymous access to uploads retained in a deleted topic" do
+          setup_s3
+          SiteSetting.secure_uploads = true
+          topic = Fabricate(:topic, category: category)
+          post = Fabricate(:post, topic: topic)
+          upload = Fabricate(:upload_s3, access_control_post: post)
+          UploadReference.create!(upload: upload, target: post)
+          stub_upload(upload)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to redirect_to(upload.url)
+
+          sign_in(admin)
+          delete "/t/#{topic.id}.json"
+
+          expect(response).to have_http_status(:ok)
+          expect(Topic.with_deleted.find(topic.id)).to be_trashed
+          expect(Post.with_deleted.find(post.id)).to be_trashed
+
+          put "/categories/#{category.id}.json",
+              params: {
+                permissions: {
+                  "admins" => CategoryGroup.permission_types[:full],
+                },
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["category"]["read_restricted"]).to eq(true)
+
+          delete "/session/#{admin.username}.json"
+          get upload.short_path
+
+          expect(response).to have_http_status(:forbidden)
+          expect(response.body).to include(I18n.t("page_forbidden.title"))
+        end
+
         it "updates description and revises category topic OP to stay in sync" do
           cat = Fabricate(:category_with_definition, user: admin)
           raw_description = "New **markdown** description here"

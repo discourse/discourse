@@ -488,6 +488,7 @@ ar:
     notifications_tracking:
       tooltip: "مستوى الإشعارات: %{level}"
     back_button: "الرجوع"
+    confirm_button: "تأكيد"
     welcome_banner:
       header:
         new_members: "مرحبًا بك، %{preferred_display_name}!"
@@ -3346,8 +3347,6 @@ ar:
       signup_instructions: "أدخل عنوان بريدك الإلكتروني للانضمام إلى هذا المجتمع. سنرسل إليك رمزًا لتأكيده وستصبح جاهزًا للانطلاق!"
       user_fields_title: "أوشكت على الانتهاء"
       user_fields_instructions: "بضع تفاصيل إضافية للانتهاء من إنشاء حسابك."
-      account_ready_title: "حسابك جاهز! 🎉"
-      account_ready_edit: "اختر اسم المستخدم الخاص بك وصورتك الرمزية"
       account_ready_continue: "متابعة"
       username_label: "اسم المستخدم"
       username_placeholder: "اختر اسم مستخدم"
@@ -6009,6 +6008,7 @@ ar:
       list: "إدراج الفئات"
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
+      latest_topics: "أحدث الموضوعات"
       description_updated: "تم تحديث الوصف"
       description_expand: "عرض المزيد"
       description_collapse: "عرض أقل"
@@ -6345,6 +6345,7 @@ ar:
       with_category: "موضوعات %{filter} في %{category}"
       filter:
         title: "تمت تصفية النتائج حسب %{filter}"
+        reset: "إعادة التعيين"
         button:
           label: "المرشح"
       latest:
@@ -6657,16 +6658,18 @@ ar:
       favorite_max_not_reached: "وضع علامة على هذه الشارة كمفضَّلة"
       favorite_count: "تم وضع علامة على %{count}/%{max} شارة كمفضَّلة"
     download_calendar:
-      title: "تنزيل التقويم"
+      title: "إضافة إلى التقويم"
+      calendar: "التقويم"
       save_ics: "تنزيل ملف .ics"
       save_google: "إضافة إلى تقويم Google"
       remember: "لا تسألني مرة أخرى"
-      remember_explanation: "(يمكنك تغيير هذا التفضيل في تفضيلات المستخدم لديك)"
       download: "تنزيل"
       default_calendar: "التقويم الافتراضي"
       default_calendar_instruction: "حدِّد التقويم الذي ينبغي استخدامه عند حفظ التواريخ"
       add_to_calendar: "إضافة إلى التقويم"
       google: "تقويم Google"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Calendar"
       ics: "ICS"
       default_title: "حدث مجدول"
     tagging:
@@ -8424,6 +8427,7 @@ ar:
             embedded: "مشاهدات الصفحات المضمَّنة"
             crawlers: "زاحفات الويب"
           see_details: "عرض التفاصيل"
+          crawler_learn_more: "معرفة المزيد"
         period:
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"

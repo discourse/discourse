@@ -17,6 +17,8 @@ el:
           discourse_ai: "Discourse AI"
       dashboard:
         ask_ai:
+          reports:
+            retry_questions: "Επανάληψη"
           date: "Ημερομηνία"
           outcomes:
             failed: "Απέτυχε"

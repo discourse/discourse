@@ -144,6 +144,36 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     );
   });
 
+  test("editing a local-time event preserves its wall-clock time", async function (assert) {
+    const event = eventWith({
+      starts_at: "2026-09-30T20:15:00",
+      ends_at: "2026-09-30T22:15:00",
+      timezone: "Europe/Madrid",
+      show_local_time: true,
+    });
+
+    let savedDates;
+    await renderAdvanced(event, {
+      onUpdate: (startsAt, endsAt) => {
+        savedDates = { startsAt, endsAt };
+      },
+    });
+
+    await fillIn(`[data-name="description"] textarea`, "Updated description");
+    await click(".btn-primary");
+
+    assert.strictEqual(
+      savedDates.startsAt.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "the start remains anchored to the event timezone"
+    );
+    assert.strictEqual(
+      savedDates.endsAt.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 22:15 +02:00",
+      "the end remains anchored to the event timezone"
+    );
+  });
+
   test("typed custom field survives a compact-screen edit in between", async function (assert) {
     this.siteSettings.discourse_post_event_allowed_custom_fields = "test1";
 

@@ -505,7 +505,8 @@ after_initialize do
       required: %w[post_id accepted],
       additionalProperties: false,
     },
-    required_scopes: %w[discourse-solved:write],
+    output_schema: DiscourseSolved::McpTools::SetSolution::OUTPUT_SCHEMA,
+    required_scopes: DiscourseSolved::McpTools::SetSolution::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

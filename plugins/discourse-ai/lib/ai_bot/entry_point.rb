@@ -42,6 +42,13 @@ module DiscourseAi
         SQL
       end
 
+      # Anonymous users can't converse with a bot. Adding them to
+      # `ai_bot_allowed_groups` only lets them preview the conversations page.
+      def self.anonymous_preview_allowed?
+        SiteSetting.ai_bot_enabled &&
+          SiteSetting.ai_bot_allowed_groups_map.include?(Group::AUTO_GROUPS[:anonymous_users])
+      end
+
       def self.personal_message_bot_user_ids(user)
         return [] if user.blank? || !SiteSetting.ai_bot_enabled
 
@@ -93,6 +100,31 @@ module DiscourseAi
         TopicView.default_post_custom_fields << POST_AI_LLM_NAME_FIELD
 
         plugin.register_topic_custom_field_type(TOPIC_AI_BOT_PM_FIELD, :string)
+
+        plugin.register_homepage(
+          "ai-conversations",
+          name: "discourse_ai.ai_bot.conversations.homepage_option",
+          path: "/discourse-ai/ai-bot/conversations",
+          route: "discourse_ai/ai_bot/conversations#index",
+          anonymous: true,
+          enabled: -> { SiteSetting.ai_bot_enabled },
+          available: ->(guardian:, request:) do
+            if guardian.anonymous?
+              DiscourseAi::AiBot::EntryPoint.anonymous_preview_allowed? &&
+                !CrawlerDetection.crawler_layout_request?(request)
+            else
+              DiscourseAi::AiBot::EntryPoint.personal_message_bot_user_ids(guardian.user).present?
+            end
+          end,
+        )
+
+        plugin.add_to_serializer(
+          :site,
+          :ai_bot_anonymous_preview,
+          include_condition: -> do
+            scope.anonymous? && DiscourseAi::AiBot::EntryPoint.anonymous_preview_allowed?
+          end,
+        ) { true }
 
         # Hide bot PMs from the personal inbox queries (Latest, New, Unread)
         # so human conversations are not buried under bot replies. Sent and

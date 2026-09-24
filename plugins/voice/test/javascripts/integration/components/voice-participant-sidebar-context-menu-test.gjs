@@ -2,6 +2,7 @@ import Service from "@ember/service";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import VoiceParticipantSidebarContextMenu from "discourse/plugins/voice/discourse/components/voice-participant-sidebar-context-menu";
 
@@ -38,6 +39,39 @@ module(
       this.closeMenu = () => {
         this.closed = true;
       };
+    });
+
+    test("kicks a bot without an expulsion dialog", async function (assert) {
+      this.menuData.participant = {
+        id: -2,
+        username: "livekit_agent_bot",
+        external_agent: true,
+      };
+      this.menuData.canManageRoom = true;
+      let kicked = false;
+      pretender.delete("/voice/rooms/1/kick", (request) => {
+        kicked = true;
+        assert.strictEqual(
+          request.requestBody,
+          "user_id=-2",
+          "sends only the bot ID"
+        );
+        return response(204);
+      });
+      await render(
+        <template>
+          <VoiceParticipantSidebarContextMenu
+            @close={{this.closeMenu}}
+            @data={{this.menuData}}
+          />
+        </template>
+      );
+
+      await click(".voice-participant-sidebar-context-menu__kick-btn");
+
+      assert.true(kicked);
+      assert.true(this.closed);
+      assert.dom(".d-modal").doesNotExist();
     });
 
     test("spotlights the participant for the viewer", async function (assert) {

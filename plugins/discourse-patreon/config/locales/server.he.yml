@@ -21,8 +21,6 @@ he:
     patreon_donation_prompt_enabled: "להפעיל הודעת בקשת תרומה?"
     patreon_donation_prompt_show_after_topics: "הצגת הודעת בקשה תרומה לאחר n נושאים"
     patreon_donation_prompt_campaign_url: "כתובת בקשב לתרומה במסע פרסום"
-    errors:
-      patreon_creator_username_not_set: "עליך להגדיר את שם המשתמש ב־Discourse ליוצר Patreon בטרם הפעלת כניסה עם Patreon."
   patreon:
     error:
       invalid_response: "תגובה שגויה מה־API של Patreon"

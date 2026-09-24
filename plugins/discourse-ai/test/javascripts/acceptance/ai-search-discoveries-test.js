@@ -5,6 +5,7 @@ import {
   fillIn,
   find,
   findAll,
+  focus,
   settled,
   triggerKeyEvent,
   visit,
@@ -474,13 +475,18 @@ acceptance("AI Discoveries - header search", function (needs) {
       .exists("all topics is offered");
     await click(".ai-discoveries-search-options__option.--topic");
     assert
-      .dom(".search-context")
-      .exists("the topic chip appears before typing");
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .hasClass("is-active", "the topic scope is selected before typing");
+    assert
+      .dom(".search-menu .search-context")
+      .doesNotExist("the options show the scope, so the input carries no chip");
     assert.dom("#icon-search-input").isFocused("the query is ready for typing");
 
     await fillIn("#icon-search-input", "雰囲気");
     await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
-    assert.dom(".search-context").exists("typing preserves the selected topic");
+    assert
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .hasClass("is-active", "typing preserves the selected topic");
     assert
       .dom(".search-result-post")
       .exists("the query returns posts within the topic");
@@ -509,9 +515,6 @@ acceptance("AI Discoveries - header search", function (needs) {
     await click(".ai-discoveries-search-options__option.--topic");
 
     assert
-      .dom(".search-menu .search-context")
-      .exists("the input shows the removable topic scope");
-    assert
       .dom(".ai-discoveries-search-options__option.--topic")
       .hasClass("is-active", "the inline option also shows the selected scope");
     assert
@@ -524,7 +527,6 @@ acceptance("AI Discoveries - header search", function (needs) {
     assert
       .dom(".ai-discoveries-search-options__option.--topic")
       .hasClass("is-active", "editing keeps the topic scope selected");
-    assert.dom(".search-menu .search-context").exists("the chip stays visible");
 
     await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
     assert.strictEqual(
@@ -533,22 +535,11 @@ acceptance("AI Discoveries - header search", function (needs) {
       "the edited query still searches within the topic"
     );
 
-    await click(".search-menu .search-context");
-    assert
-      .dom(".search-menu .search-context")
-      .doesNotExist("the chip removes the scope");
+    await click(".ai-discoveries-search-options__option.--search");
+
     assert
       .dom("#icon-search-input")
-      .hasValue("dev tooling 猫", "removing the scope keeps the query");
-    assert
-      .dom(".ai-discoveries-search-options__option.--topic")
-      .doesNotHaveClass(
-        "is-active",
-        "removing the chip deselects the topic option"
-      );
-
-    await click(".ai-discoveries-search-options__option.--topic");
-    await click(".ai-discoveries-search-options__option.--search");
+      .hasValue("dev tooling 猫", "widening the scope keeps the query");
 
     assert
       .dom(".ai-discoveries-search-options__option.--topic")
@@ -562,13 +553,13 @@ acceptance("AI Discoveries - header search", function (needs) {
     await triggerKeyEvent(document, "keypress", "/".charCodeAt(0));
     await fillIn("#icon-search-input", "雰囲");
     await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
 
     assert
-      .dom(".search-menu .search-context")
-      .exists("the topic scope is selected");
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .hasClass("is-active", "the topic scope is selected");
     assert
       .dom("#icon-search-input")
       .isFocused("the short query is ready to edit");
@@ -584,8 +575,8 @@ acceptance("AI Discoveries - header search", function (needs) {
 
     assert.strictEqual(discoveryRequests, 0, "Enter does not switch to Ask AI");
     assert
-      .dom(".search-menu .search-context")
-      .exists("the corrected search stays scoped");
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .hasClass("is-active", "the corrected search stays scoped");
     assert.dom(".search-result-post").exists("matching posts are displayed");
     assert.dom("#icon-search-input").isFocused("the query remains editable");
   });
@@ -601,13 +592,15 @@ acceptance("AI Discoveries - header search", function (needs) {
       await fillIn("#icon-search-input", term);
       await triggerKeyEvent("#icon-search-input", "keyup", "Backspace");
       assert
-        .dom(".search-context")
-        .exists("deleting query text keeps the topic chip");
+        .dom(".ai-discoveries-search-options__option.--topic")
+        .hasClass("is-active", "deleting query text keeps the topic scope");
     }
 
     await fillIn("#icon-search-input", "猫の雰囲気");
     await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
-    assert.dom(".search-context").exists("the replacement query stays scoped");
+    assert
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .hasClass("is-active", "the replacement query stays scoped");
     assert
       .dom(".search-result-post")
       .exists("the replacement query searches the topic");
@@ -616,8 +609,11 @@ acceptance("AI Discoveries - header search", function (needs) {
     await triggerKeyEvent("#icon-search-input", "keydown", "Backspace");
     await triggerKeyEvent("#icon-search-input", "keyup", "Backspace");
     assert
-      .dom(".search-context")
-      .doesNotExist("Backspace in an already empty box removes the chip");
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .doesNotHaveClass(
+        "is-active",
+        "Backspace in an already empty box releases the scope"
+      );
   });
 
   test("reopening search after selecting a post keeps the topic scope and results", async function (assert) {
@@ -648,7 +644,6 @@ acceptance("AI Discoveries - header search", function (needs) {
     await triggerKeyEvent(document, "keypress", "/".charCodeAt(0));
 
     assert.dom("#icon-search-input").hasValue("dev", "the query is restored");
-    assert.dom(".search-context").exists("the topic chip is restored");
     assert
       .dom(".ai-discoveries-search-options__option.--topic")
       .hasClass("is-active", "the topic option still matches the results");
@@ -661,9 +656,10 @@ acceptance("AI Discoveries - header search", function (needs) {
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
     await visit("/latest");
     await triggerKeyEvent(document, "keypress", "/".charCodeAt(0));
-    assert
-      .dom(".search-context")
-      .doesNotExist("leaving the topic clears its scope");
+    assert.false(
+      getOwner(this).lookup("service:search").inTopicContext,
+      "leaving the topic clears its scope"
+    );
     assert
       .dom(".search-result-post")
       .doesNotExist("the old topic's posts are no longer shown");
@@ -699,7 +695,10 @@ acceptance("AI Discoveries - header search", function (needs) {
     await Promise.all([selectTopic, closeSearch, navigateAway]);
     await triggerKeyEvent(document, "keypress", "/".charCodeAt(0));
 
-    assert.dom(".search-context").doesNotExist("the topic scope is cleared");
+    assert.false(
+      getOwner(this).lookup("service:search").inTopicContext,
+      "the topic scope is cleared"
+    );
     assert
       .dom(".ai-discoveries-search-options__option.--search")
       .exists("all topics remains available");
@@ -716,11 +715,11 @@ acceptance("AI Discoveries - header search", function (needs) {
     await fillIn("#icon-search-input", "dev");
 
     await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
 
     assert
       .dom(".ai-discoveries-search-options__option.--topic")
-      .isFocused("arrow navigation focuses the topic scope option");
+      .isFocused("right moves along the options to the topic scope");
 
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
     assert
@@ -743,19 +742,19 @@ acceptance("AI Discoveries - header search", function (needs) {
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
     assert
-      .dom(".ai-discoveries-search-options__option.--search")
-      .isFocused("up from the first result skips advanced search");
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .isFocused("up from the first result returns to the option last used");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     assert
       .dom(results[0])
-      .isFocused("down from the buttons skips advanced search");
+      .isFocused("down from the options enters the results");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
     assert
-      .dom(".ai-discoveries-search-options__option.--topic")
-      .isFocused("the topic scope remains reachable with arrow keys");
+      .dom("#icon-search-input")
+      .isFocused("the options are a single stop on the way up to the query");
   });
 
   test("still offers itself from a message inbox", async function (assert) {
@@ -822,6 +821,64 @@ acceptance("AI Discoveries - header search", function (needs) {
     });
   });
 
+  test("the answer and its sources are reachable with the arrow keys", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+    find(".ai-discoveries-search-options__option.--ask").dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
+    await waitFor(".ai-discobot-discoveries");
+    await waitUntil(() => submittedRequestId);
+    await publishToMessageBus("/discourse-ai/discoveries", {
+      request_id: submittedRequestId,
+      query: "dev",
+      ai_discover_reply: "An answer.",
+      sources: [
+        {
+          url: "/t/internationalization-localization/280",
+          title: "Internationalization / localization",
+        },
+      ],
+      answerable: true,
+      done: true,
+    });
+    await waitFor(".ai-discovery-source");
+    await waitFor(".ai-search-discoveries__default-toggle");
+
+    assert
+      .dom(".ai-search-discoveries__discovery")
+      .hasAria(
+        "label",
+        i18n("discourse_ai.discobot_discoveries.answer_label"),
+        "the answer is named"
+      );
+
+    await focus(".ai-discoveries-search-options__option.--ask");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert
+      .dom(".ai-search-discoveries__discovery")
+      .isFocused("down from the options lands on the answer");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert
+      .dom(".ai-discovery-source")
+      .isFocused("and continues into its sources");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert
+      .dom(".ai-search-discoveries__default-toggle")
+      .isFocused("then on to the controls beneath the answer");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert
+      .dom(".ai-discoveries-search-options__option.--ask")
+      .isFocused("up retraces the way back to the options");
+  });
+
   test("the toggle beside an answer saves the preference on the spot", async function (assert) {
     let saved;
     pretender.put("/u/eviltrout.json", (request) => {
@@ -842,6 +899,11 @@ acceptance("AI Discoveries - header search", function (needs) {
     );
     await waitFor(".ai-discobot-discoveries");
     await waitUntil(() => submittedRequestId);
+
+    assert
+      .dom(".ai-search-discoveries__default-toggle")
+      .doesNotExist("the preference waits until there is an answer to judge");
+
     await publishToMessageBus("/discourse-ai/discoveries", {
       request_id: submittedRequestId,
       query: "dev",
@@ -849,6 +911,16 @@ acceptance("AI Discoveries - header search", function (needs) {
       answerable: true,
       done: true,
     });
+
+    assert
+      .dom(".ai-search-discoveries__default-toggle")
+      .hasAria(
+        "labelledby",
+        find(
+          ".ai-search-discoveries__default-preference .d-toggle-switch__checkbox-label"
+        ).id,
+        "and is named by its label"
+      );
 
     await click(".ai-search-discoveries__default-toggle");
 
