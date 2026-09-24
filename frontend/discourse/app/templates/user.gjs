@@ -4,6 +4,7 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserNav from "discourse/components/user-nav";
 import UserProfileAvatar from "discourse/components/user-profile-avatar";
+import bodyClass from "discourse/helpers/body-class";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
@@ -19,6 +20,10 @@ import { i18n } from "discourse-i18n";
 import CollapsedInfo from "./user/collapsed-info";
 
 export default <template>
+  {{#if @controller.userNavPanelActive}}
+    {{bodyClass "user-nav-panel-active"}}
+  {{/if}}
+
   <PluginOutlet
     @connectorTagName="div"
     @name="above-user-profile"

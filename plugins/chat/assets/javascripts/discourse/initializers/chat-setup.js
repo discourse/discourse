@@ -32,6 +32,15 @@ class ChatSetupInit {
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     withPluginApi((api) => {
+      api.addUserNavPreferencesLink({
+        name: "preferences-chat",
+        route: "preferences.chat",
+        label: "chat.title_capitalized",
+        icon: "d-chat",
+        displayed: ({ siteSettings, currentUser, user }) =>
+          siteSettings.chat_enabled && (user?.can_chat || currentUser?.admin),
+      });
+
       api.registerReviewableComponent(
         "ReviewableChatMessage",
         async () =>

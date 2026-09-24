@@ -74,6 +74,7 @@ export default class SidebarHamburgerDropdown extends Component {
                   <ApiPanels
                     @collapsableSections={{this.collapsableSections}}
                     @currentUser={{this.currentUser}}
+                    @toggleNavigationMenu={{@toggleNavigationMenu}}
                   />
                 {{/if}}
                 <PluginOutlet @name="after-sidebar-sections" />

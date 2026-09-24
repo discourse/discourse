@@ -18,6 +18,19 @@ export default {
     }
 
     withPluginApi((api) => {
+      api.addUserNavPreferencesLink({
+        name: "preferences-rewind",
+        route: "preferences.rewind",
+        label: "discourse_rewind.title",
+        icon: "repeat",
+        // Same conditions as `RewindPreferencesNav` in the horizontal nav: the
+        // site setting gates the tab so it does not vanish when a user turns
+        // rewind off for themselves, and `active` reflects the viewer's state.
+        displayed: ({ siteSettings, owner }) =>
+          siteSettings.discourse_rewind_enabled &&
+          !!owner.lookup("service:rewind")?.active,
+      });
+
       if (this.rewind.enabled) {
         api.addQuickAccessProfileItem({
           icon: "repeat",
