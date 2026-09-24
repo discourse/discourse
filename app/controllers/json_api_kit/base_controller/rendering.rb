@@ -11,6 +11,12 @@ module JsonApiKit
         rescue_from(Discourse::InvalidAccess) do
           render_document(Document::Errors.new(Forbidden.new))
         end
+
+        rescue_from(Request::Invalid) do |error|
+          render_document(Document::Errors.new(*error.refusals))
+        end
+
+        rescue_from(Error) { |error| render_document(Document::Errors.new(error)) }
       end
 
       def rescue_with_handler(*)
