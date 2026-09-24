@@ -854,6 +854,26 @@ RSpec.describe PostAlerter do
       expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
     end
 
+    it "notifies only members of a newly added group on revision" do
+      Jobs.run_immediately!
+      post = create_post_with_alerts(raw: "Hello @group")
+      evil_trout.notifications.destroy_all
+
+      another_group =
+        Fabricate(:group, name: "another-group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      another_group.add(coding_horror)
+
+      expect {
+        post.revise(post.user, raw: "Hello @group and @another-group")
+      }.to not_change(evil_trout.notifications, :count).and change(
+              coding_horror.notifications,
+              :count,
+            ).by(1)
+      expect(coding_horror.notifications.last.notification_type).to eq(
+        Notification.types[:group_mentioned],
+      )
+    end
+
     it "triggers :before_create_notifications_for_users" do
       events = DiscourseEvent.track_events { post }
       expect(events).to include(
@@ -881,6 +901,33 @@ RSpec.describe PostAlerter do
           raw: "New raw content that still mentions @eviltrout",
         )
       }.not_to change(evil_trout.notifications, :count)
+    end
+
+    it "notifies only a newly mentioned user when the previous notification is gone" do
+      post = create_post_with_alerts(user: user, raw: "Hello @eviltrout")
+      evil_trout.notifications.destroy_all
+
+      expect {
+        post.revise(post.user, raw: "Hello @eviltrout and @codinghorror")
+      }.to not_change(evil_trout.notifications, :count).and change(
+              coding_horror.notifications,
+              :count,
+            ).by(1)
+      expect(coding_horror.notifications.last.notification_type).to eq(
+        Notification.types[:mentioned],
+      )
+    end
+
+    it "notifies a user mentioned directly after a group mention" do
+      mentionable_group =
+        Fabricate(:group, name: "mentionable-group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+      mentionable_group.add(evil_trout)
+      post = create_post_with_alerts(user: user, raw: "Hello @mentionable-group")
+
+      expect {
+        post.revise(post.user, raw: "Hello @mentionable-group and @eviltrout")
+      }.to change(evil_trout.notifications, :count).by(1)
+      expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
     end
 
     it "doesn't notify the user who created the topic in regular mode" do

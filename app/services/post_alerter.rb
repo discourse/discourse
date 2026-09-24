@@ -138,13 +138,13 @@ class PostAlerter
       (post.post_type == Post.types[:whisper] && post.action_code.nil?)
   end
 
-  def after_save_post(post, new_record = false)
+  def after_save_post(post, new_record = false, added_mentions: nil)
     notified = [post.user, post.last_editor].uniq
 
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
 
     # mentions (users/groups)
-    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post)
+    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post, added_mentions)
 
     if mentioned_groups || mentioned_users || mentioned_here
       mentioned_opts = {}
@@ -765,8 +765,9 @@ class PostAlerter
   end
 
   # TODO: Move to post-analyzer?
-  def extract_mentions(post)
+  def extract_mentions(post, added_mentions = nil)
     mentions = post.raw_mentions
+    mentions = mentions & added_mentions if added_mentions
     return if mentions.blank?
 
     groups = Group.where("LOWER(name) IN (?)", mentions)
