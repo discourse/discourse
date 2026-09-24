@@ -471,6 +471,26 @@ RSpec.describe UsersController do
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(1)
       end
 
+      it "rejects a password reset after a previewed token is superseded" do
+        new_password = "attacker-controlled-password"
+
+        get "/u/password-reset/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+
+        post "/session/forgot_password.json", params: { login: user1.username }
+        expect(response.status).to eq(200)
+        expect(email_token.reload.expired).to eq(true)
+
+        put "/u/password-reset/#{email_token.token}.json", params: { password: new_password }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("password_reset.no_token", base_url: Discourse.base_url),
+        )
+        expect(user1.reload.confirm_password?(new_password)).to eq(false)
+      end
+
       context "with rate limiting" do
         before { RateLimiter.enable }
 
@@ -979,7 +999,7 @@ RSpec.describe UsersController do
       context "with local logins disabled" do
         before do
           SiteSetting.enable_local_logins = false
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
         end
 
         it "blocks registration without authenticator information" do
@@ -1462,7 +1482,7 @@ RSpec.describe UsersController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
-          SiteSetting.enable_twitter_logins = true
+          enable_auth_provider(:twitter)
           get "/auth/twitter/callback.json"
         end
 
@@ -1544,7 +1564,7 @@ RSpec.describe UsersController do
             info: OmniAuth::AuthHash::InfoHash.new(nickname: "testosama", name: "Osama Test"),
           )
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
-          SiteSetting.enable_twitter_logins = true
+          enable_auth_provider(:twitter)
           get "/auth/twitter/callback.json"
         end
 
@@ -2217,6 +2237,116 @@ RSpec.describe UsersController do
   end
 
   describe "#check_username" do
+    it "does not disclose staged accounts or user IDs to anonymous username checks" do
+      SiteSetting.hide_email_address_taken = true
+      staged_user = Fabricate(:user, staged: true, email: "staged@example.com")
+
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: staged_user.id,
+          }
+      known_user_status = response.status
+      known_user_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: staged_user.id + 1_000_000,
+          }
+      missing_user_status = response.status
+      missing_user_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: staged_user.username,
+            email: staged_user.email,
+          }
+      matching_email_status = response.status
+      matching_email_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: staged_user.username,
+            email: "other@example.com",
+          }
+      nonmatching_email_status = response.status
+      nonmatching_email_response = response.parsed_body
+
+      expect(
+        [known_user_status, missing_user_status, matching_email_status, nonmatching_email_status],
+      ).to eq([200, 200, 200, 200])
+      expect(known_user_response).to eq(missing_user_response)
+      expect(matching_email_response).to eq(nonmatching_email_response)
+      expect(matching_email_response["available"]).to eq(false)
+    end
+
+    it "allows anonymous signup to claim a staged account with its matching email when email privacy is disabled" do
+      SiteSetting.hide_email_address_taken = false
+      staged_user = Fabricate(:user, staged: true, email: "staged@example.com")
+
+      get "/u/check_username.json",
+          params: {
+            username: staged_user.username,
+            email: staged_user.email,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["available"]).to eq(true)
+    end
+
+    it "ignores an ordinary user's target-user parameter" do
+      target_user = Fabricate(:user)
+      sign_in(user1)
+
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: target_user.id,
+          }
+      existing_target_status = response.status
+      existing_target_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: "availableusername",
+            for_user_id: target_user.id + 1_000_000,
+          }
+      missing_target_status = response.status
+      missing_target_response = response.parsed_body
+
+      get "/u/check_username.json",
+          params: {
+            username: target_user.username,
+            for_user_id: target_user.id,
+          }
+
+      expect([existing_target_status, missing_target_status, response.status]).to eq(
+        [200, 200, 200],
+      )
+      expect(existing_target_response).to eq(missing_target_response)
+      expect(response.parsed_body["available"]).to eq(false)
+    end
+
+    it "allows a new account to check its own username and avatar" do
+      sign_in(user1)
+
+      get "/u/check_username.json", params: { username: user1.username, for_user_id: user1.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["available"]).to eq(true)
+      expect(response.parsed_body["avatar_template"]).to eq(User.default_template(user1.username))
+    end
+
+    it "rejects account-specific checks when username editing is forbidden" do
+      sign_in(user1)
+      SiteSetting.username_change_period = 0
+
+      get "/u/check_username.json", params: { username: "AvailableName", for_user_id: user1.id }
+
+      expect(response.status).to eq(403)
+    end
+
     it "raises an error without any parameters" do
       get "/u/check_username.json"
       expect(response.status).to eq(400)
@@ -2287,6 +2417,9 @@ RSpec.describe UsersController do
       it "returns the username's availability" do
         expect(response.status).to eq(200)
         expect(response.parsed_body["available"]).to eq(true)
+        expect(response.parsed_body["avatar_template"]).to eq(
+          User.default_template(request.params[:username]),
+        )
       end
     end
 
@@ -2339,6 +2472,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["available"]).to eq(nil)
         expect(response.parsed_body["errors"]).to be_present
+        expect(response.parsed_body).not_to have_key("avatar_template")
       end
     end
 
@@ -2409,11 +2543,57 @@ RSpec.describe UsersController do
   end
 
   describe "#generate_random_username" do
+    before { SiteSetting.enable_random_usernames = true }
+
     it "returns a generated username" do
       get "/u/random-username.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+      username = response.parsed_body["username"]
+      expect(username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+      expect(response.parsed_body["avatar_template"]).to eq(User.default_template(username))
+    end
+
+    context "when login is required" do
+      before { SiteSetting.login_required = true }
+
+      it "rejects an anonymous request without a verified signup continuation" do
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows a verified passwordless signup continuation" do
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.must_approve_users = true
+        login_code = EmailLoginCode.generate!(email: "newuser@example.com")
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: login_code.email,
+               code: login_code.code,
+             }
+        signup_token = response.parsed_body["signup_token"]
+
+        get "/u/random-username.json", headers: { "X-Discourse-Signup-Token" => signup_token }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username"]).to be_present
+        expect(User.find_by_email(login_code.email)).to be_nil
+        expect(session[:current_user_id]).to be_nil
+      end
+    end
+
+    it "keeps an uploaded avatar when generating a username" do
+      user = Fabricate(:user)
+      upload = Fabricate(:upload, user:)
+      user.update!(uploaded_avatar_id: upload.id)
+      sign_in(user)
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["avatar_template"]).to eq(user.avatar_template)
     end
 
     it "rate limits requests per IP" do
@@ -2484,6 +2664,18 @@ RSpec.describe UsersController do
     it "return success if user email is taken by staged user" do
       get "/u/check_email.json", params: { email: Fabricate(:staged).email }
       expect(response.parsed_body["success"]).to be_present
+    end
+
+    it "rate limits requests per IP instead of failing open" do
+      RateLimiter.enable
+
+      10.times { get "/u/check_email.json", params: { email: "available@example.com" } }
+      get "/u/check_email.json", params: { email: user1.email }
+
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to be_present
+      expect(response.parsed_body["success"]).to be_blank
+      expect(response.parsed_body["extras"]["wait_seconds"]).to be > 0
     end
   end
 
@@ -4646,6 +4838,38 @@ RSpec.describe UsersController do
         sign_in(user1)
       end
 
+      it "invalidates password reset links for a demoted primary email" do
+        old_email = user1.email
+        new_primary_email = other_email.email
+        password_reset_token =
+          Fabricate(
+            :email_token,
+            user: user1,
+            email: old_email,
+            scope: EmailToken.scopes[:password_reset],
+          ).token
+
+        put "/u/#{user1.username}/preferences/primary-email.json",
+            params: {
+              email: new_primary_email,
+            }
+
+        expect(response.status).to eq(200)
+        expect(user1.reload.email).to eq(new_primary_email)
+
+        sign_out
+        new_password = SecureRandom.hex
+        put "/u/password-reset/#{password_reset_token}.json", params: { password: new_password }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq(
+          I18n.t("password_reset.no_token", base_url: Discourse.base_url),
+        )
+        expect(user1.reload.emails).to contain_exactly(old_email, new_primary_email)
+        expect(user1.confirm_password?(new_password)).to eq(false)
+      end
+
       it "changes user's primary email" do
         put "/u/#{user1.username}/preferences/primary-email.json",
             params: {
@@ -5452,7 +5676,7 @@ RSpec.describe UsersController do
         context "for an external provider" do
           before do
             sign_in(admin)
-            SiteSetting.enable_google_oauth2_logins = true
+            enable_auth_provider(:google_oauth2)
             UserAssociatedAccount.create!(
               user: user1,
               provider_uid: "myuid",

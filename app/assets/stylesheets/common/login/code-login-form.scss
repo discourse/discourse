@@ -49,8 +49,10 @@
 
   &__code-step,
   &__second-factor-step,
+  &__account-details-step,
   &__user-fields-step,
-  &__complete-step {
+  &__signup-details-step,
+  &__pending-approval-step {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -62,10 +64,52 @@
     }
   }
 
+  &__account-details-step,
   &__user-fields-step {
     .user-fields {
       align-self: stretch;
       margin-top: 0.5em;
+    }
+  }
+
+  &__account-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-self: stretch;
+    gap: 1em 0.5em;
+
+    &.--with-username-generator {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .code-login-form__username-field {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      gap: 0.25em 0.5em;
+
+      > label,
+      > .code-login-form__error {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .code-login-form__username-input {
+      display: contents;
+    }
+
+    .code-login-form__name-field {
+      grid-column: 1 / -1;
+    }
+
+    .code-login-form__password-field,
+    .code-login-form__create-password {
+      grid-column: 1;
+    }
+
+    .code-login-form__password-field input {
+      width: 100%;
+      min-width: 0;
     }
   }
 
@@ -77,6 +121,12 @@
   }
 
   &__name {
+    width: 100%;
+    margin: 0;
+  }
+
+  &__password-field {
+    align-self: stretch;
     width: 100%;
     margin: 0;
   }
@@ -100,6 +150,22 @@
 
     .avatar {
       display: block;
+    }
+  }
+
+  &__avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 144px;
+    height: 144px;
+    border-radius: 50%;
+    background: var(--primary-low);
+    color: var(--primary-medium);
+
+    .d-icon {
+      width: 50%;
+      height: 50%;
     }
   }
 

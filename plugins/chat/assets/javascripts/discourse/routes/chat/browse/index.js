@@ -1,5 +1,5 @@
 import { service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatBrowseIndexRoute extends DiscourseRoute {
@@ -9,7 +9,7 @@ export default class ChatBrowseIndexRoute extends DiscourseRoute {
 
   beforeModel() {
     if (!this.siteSettings.enable_public_channels) {
-      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(discoveryHomepageRoute());
     }
   }
 

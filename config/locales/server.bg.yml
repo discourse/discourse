@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 bg:
+  markdown_endpoints:
+    latest: "Последни"
+    categories: "Категории"
+    tags: "Етикети"
+    previous_page: "Предишна страница"
+    next_page: "Следваща страница"
+    replies: "Отговори"
+    last_updated: "Последна актуализация"
   mcp:
+    errors:
+      topic_not_found: "Темата не е намерена"
     oauth:
       deny: "Отказ"
   llms_txt:
@@ -499,7 +509,7 @@ bg:
         make: "Тази тема сега е банер. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя."
         remove: "Тази тема вече не е банер. Тя няма да се появява повече най-отгоре на всяка страница."
   unsubscribe:
-    title: "Отписвам"
+    unsubscribe: "Отписвам"
     log_out: "Изход "
     digest_frequency:
       never: "никога"
@@ -1052,6 +1062,7 @@ bg:
     new_registrations_disabled: "В момента новите регистации са забранени."
     password_too_long: "Паролата е ограничена до 200 символа."
     reserved_username: "Това потребителско име не е разрешено."
+    missing_username: "Моля, въведете потребителско име"
     auth_complete: "Удостоверяването е завършено."
     click_to_continue: "Кликнете тук, за да продължите."
     second_factor_title: "Двуфакторна автентификация"

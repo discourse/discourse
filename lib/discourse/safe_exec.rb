@@ -22,6 +22,7 @@ module Discourse
       bind_tcp: nil,
       rlimits: {},
       seccomp_deny_network: false,
+      seccomp_deny_child_processes: false,
       max_output_bytes: nil,
       truncate_output: false
     )
@@ -42,6 +43,7 @@ module Discourse
             bind_tcp: bind_tcp,
             rlimits: rlimits,
             seccomp_deny_network: seccomp_deny_network,
+            seccomp_deny_child_processes: seccomp_deny_child_processes,
             max_output_bytes: max_output_bytes,
             truncate_output: truncate_output,
           )

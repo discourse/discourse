@@ -406,6 +406,24 @@ RSpec.describe Report do
 
     let(:report) { Report.find("page_view_total_reqs") }
 
+    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
+      SiteSetting.use_legacy_pageviews = false
+      ApplicationRequest.create!(
+        date: Date.current - 2,
+        req_type: :page_view_anon_browser,
+        count: 4,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+
+      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }])
+      expect(report.total).to eq(12)
+    end
+
     context "with no data" do
       it "returns no page-view requests" do
         expect(report.data).to be_empty
@@ -944,19 +962,20 @@ RSpec.describe Report do
         result =
           PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: "bad").perform
 
-        result.reviewable.perform(flagger, :agree_and_hide)
+        reviewer = Fabricate(:admin)
+        result.reviewable.perform(reviewer, :agree_and_hide)
         expect(result.success).to eq(true)
         expect(report.data).to be_present
 
         exporter = Jobs::ExportCsvFile.new
         exporter.entity = "report"
         exporter.extra = ActiveSupport::HashWithIndifferentAccess.new(name: "flags_status")
-        exporter.current_user = flagger
+        exporter.current_user = reviewer
         exported_csv = []
         exporter.report_export { |entry| exported_csv << entry }
         expect(exported_csv[0]).to eq(["Type", "Assigned", "Poster", "Flagger", "Resolution time"])
         expect(exported_csv[1]).to eq(
-          ["spam", flagger.username, post.user.username, flagger.username, "0.0"],
+          ["spam", reviewer.username, post.user.username, flagger.username, "0.0"],
         )
       end
     end
@@ -1791,6 +1810,78 @@ RSpec.describe Report do
 
     let(:reports) { Report.find("site_traffic") }
 
+    it "reports initial beacon pageviews even without piggyback history" do
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon, count: 9)
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_logged_in, count: 3)
+
+      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
+
+      expect(series["page_view_anon_browser"]).to eq([{ x: Date.current, y: 8 }])
+      expect(series["page_view_logged_in_browser"]).to eq([{ x: Date.current, y: 2 }])
+      expect(series["page_view_other"]).to eq([{ x: Date.current, y: 2 }])
+    end
+
+    it "keeps piggyback counts in the browser series after an isolated day of beacon data" do
+      ApplicationRequest.create!(
+        date: Date.current - 2,
+        req_type: :page_view_anon_browser_beacon,
+        count: 1,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 30)
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon, count: 30)
+
+      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
+
+      expect(series["page_view_anon_browser"].last).to eq({ x: Date.current, y: 30 })
+      expect(series["page_view_other"].last).to eq({ x: Date.current, y: 0 })
+    end
+
+    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
+      ApplicationRequest.create!(
+        date: Date.current - 2,
+        req_type: :page_view_anon_browser,
+        count: 4,
+      )
+      ApplicationRequest.create!(
+        date: Date.current - 2,
+        req_type: :page_view_logged_in_browser,
+        count: 6,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
+
+      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
+
+      expect(series["page_view_anon_browser"]).to eq(
+        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }],
+      )
+      expect(series["page_view_logged_in_browser"]).to eq(
+        [{ x: Date.current - 2, y: 6 }, { x: Date.current, y: 2 }],
+      )
+      expect(series["page_view_other"]).to eq(
+        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
+      )
+    end
+
     context "with no data" do
       it "returns empty site-traffic series" do
         reports.data.each { |report| expect(report[:data]).to be_empty }
@@ -1808,6 +1899,32 @@ RSpec.describe Report do
         CachedCounting.reset
         ApplicationRequest.disable
         CachedCounting.disable
+      end
+
+      it "clamps daily other traffic to zero while preserving browser counts" do
+        freeze_time Time.utc(2024, 1, 3)
+        dates = [2.days.ago.to_date, 1.day.ago.to_date, Time.zone.today]
+
+        dates
+          .zip([6, 4, 3])
+          .each do |date, logged_in_count|
+            ApplicationRequest.write_cache!(:page_view_anon, 2, date)
+            ApplicationRequest.write_cache!(:page_view_logged_in, logged_in_count, date)
+            ApplicationRequest.write_cache!(:page_view_anon_browser, 5, date)
+            ApplicationRequest.write_cache!(:page_view_logged_in_browser, 1, date)
+          end
+
+        series = reports.data.index_by { |report| report[:req] }
+
+        expect(series["page_view_other"][:data]).to eq(
+          dates.zip([2, 0, 0]).map { |date, count| { x: date, y: count } },
+        )
+        expect(series["page_view_anon_browser"][:data]).to eq(
+          dates.map { |date| { x: date, y: 5 } },
+        )
+        expect(series["page_view_logged_in_browser"][:data]).to eq(
+          dates.map { |date| { x: date, y: 1 } },
+        )
       end
 
       it "exposes embedded pageviews as their own series without polluting other series" do
@@ -2442,32 +2559,6 @@ RSpec.describe Report do
       it "hides legacy pageview reports" do
         Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
           expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
-        end
-      end
-    end
-
-    context "with browser pageview reports" do
-      it "hides them from admins when persist_browser_pageview_events is disabled" do
-        SiteSetting.persist_browser_pageview_events = false
-
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(true)
-        end
-      end
-
-      it "exposes them to admins when persist_browser_pageview_events is enabled" do
-        SiteSetting.persist_browser_pageview_events = true
-
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: admin_guardian)).to eq(false)
-        end
-      end
-
-      it "always hides them from moderators, even when persist_browser_pageview_events is enabled" do
-        SiteSetting.persist_browser_pageview_events = true
-
-        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
-          expect(Report.hidden?(report_type, guardian: moderator_guardian)).to eq(true)
         end
       end
     end

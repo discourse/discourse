@@ -208,6 +208,10 @@ module DiscourseEvents
       end
 
       def self.filter_by_tags(events, params, guardian)
+        if ActiveModel::Type::Boolean.new.cast(params[:no_tags])
+          return events.where.not(topics: { id: TopicTag.select(:topic_id) })
+        end
+
         tag_names =
           Array(params[:tags])
             .flat_map { |tag| tag.to_s.split(",") }

@@ -9,6 +9,8 @@ ko:
     admin:
       dashboard:
         ask_ai:
+          reports:
+            retry_questions: "재시도"
           date: "날짜"
           outcomes:
             failed: "실패"

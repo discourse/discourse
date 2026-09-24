@@ -141,20 +141,19 @@ module DiscourseEvents
       end
 
       def create_or_update_event_date
-        set_next_date if dates_changed?
+        return unless dates_changed?
+        return set_next_recurrent_event_date if advancing_recurrence?
+        return unless sync_event_date
+
+        reset_non_going_invitees
+        notify_if_new_event
+        publish_update!
       end
 
-      def set_next_date
-        return if closed
+      def set_next_recurrent_event_date
+        return unless sync_event_date
 
-        next_date_result = calculate_next_date
-
-        return event_dates.update_all(finished_at: Time.current) if next_date_result.nil?
-
-        starts_at, ends_at = next_date_result
-        finish_previous_event_dates(starts_at) if dates_changed?
-        upsert_event_date(starts_at, ends_at)
-        reset_invitee_notifications
+        reset_invitees_for_next_occurrence
         notify_if_new_event
         publish_update!
       end
@@ -710,6 +709,26 @@ module DiscourseEvents
         saved_change_to_original_starts_at || saved_change_to_original_ends_at
       end
 
+      def advancing_recurrence?
+        recurrence.present? && original_starts_at <= Time.current
+      end
+
+      def sync_event_date
+        return false if closed
+
+        next_date_result = calculate_next_date
+
+        if next_date_result.nil?
+          event_dates.update_all(finished_at: Time.current)
+          return false
+        end
+
+        starts_at, ends_at = next_date_result
+        finish_previous_event_dates(starts_at) if dates_changed?
+        upsert_event_date(starts_at, ends_at)
+        true
+      end
+
       def recurrence_expired?
         recurrence_until.present? && recurrence_until < Time.current
       end
@@ -747,20 +766,26 @@ module DiscourseEvents
         end
       end
 
-      def reset_invitee_notifications
-        invitees.where(
-          "status != :going OR recurring = FALSE",
-          going: Invitee.statuses[:going],
-        ).update_all(status: nil, notified: false, recurring: false)
+      def reset_non_going_invitees
+        invitees
+          .where.not(status: Invitee.statuses[:going])
+          .update_all(status: nil, notified: false, recurring: false)
+      end
+
+      def reset_invitees_for_next_occurrence
+        # Keep the columns qualified: PostgreSQL updates a joined relation through an alias, so an
+        # unqualified name matches two copies of the table.
+        invitees
+          .where.not(status: Invitee.statuses[:going])
+          .or(invitees.where(recurring: false))
+          .update_all(status: nil, notified: false, recurring: false)
       end
 
       def notify_if_new_event
-        is_generating_future_recurrence = recurrence.present? && original_starts_at <= Time.current
+        return if advancing_recurrence?
 
-        unless is_generating_future_recurrence
-          notify_invitees!
-          notify_missing_invitees!
-        end
+        notify_invitees!
+        notify_missing_invitees!
       end
 
       def calculate_next_recurring_date

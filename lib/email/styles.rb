@@ -444,6 +444,7 @@ module Email
     def to_html
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
       replace_relative_urls
+      make_all_links_absolute
       deduplicate_styles
 
       @fragment.to_html
@@ -481,14 +482,9 @@ module Email
     end
 
     def make_all_links_absolute
-      site_uri = URI(Discourse.base_url)
       @fragment
-        .css("a")
-        .each do |link|
-          link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
-        rescue URI::Error
-          # leave it
-        end
+        .css("a[href]")
+        .each { |link| link["href"] = UrlHelper.absolute_without_cdn(link["href"]) }
     end
 
     private

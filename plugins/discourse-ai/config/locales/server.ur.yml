@@ -28,6 +28,23 @@ ur:
     spam_detection:
       bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:
+      navigation:
+        settings:
+          title: "سائٹ کی ترتیبات"
+        users:
+          title: "اراکین"
+        groups:
+          title: "گروپس"
+        review:
+          title: "قطار کا جائزہ"
+        categories:
+          title: "زمرہ جات"
+        tags:
+          title: "ٹیگز"
+        themes:
+          title: "تِھیمز"
+        backups:
+          title: "بیک اَپس"
       read_post:
         unknown_post: "دھاگہ"
       tool_options:

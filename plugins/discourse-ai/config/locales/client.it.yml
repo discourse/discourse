@@ -21,6 +21,8 @@ it:
             title: "Chiedi all'IA"
         ask_ai:
           title: "Chiedi all'IA"
+          reports:
+            retry_questions: "Riprova"
           date: "Data"
           outcomes:
             failed: "Non riuscito"

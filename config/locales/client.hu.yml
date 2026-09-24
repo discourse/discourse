@@ -348,6 +348,7 @@ hu:
     notifications_tracking:
       tooltip: "Értesítési szint: %{level}"
     back_button: "Vissza"
+    confirm_button: "Megerősítés"
     welcome_banner:
       header:
         new_members: "Üdvözöljük, %{preferred_display_name}!"
@@ -4502,6 +4503,7 @@ hu:
       list: "Kategóriák felsorolása"
       no_description: "Adjon leírást ehhez a kategóriához."
       change_in_category_topic: "Leírás szerkesztése"
+      latest_topics: "Legutóbbi témák"
       description_expand: "Több megjelenítése"
       description_collapse: "Kevesebb megjelenítése"
       already_used: "Ezt a színt már egy másik kategória is használja."
@@ -4794,6 +4796,7 @@ hu:
       with_category: "%{filter} %{category} Témák"
       filter:
         title: "Szűrt eredmények: %{filter}"
+        reset: "alaphelyzet"
         button:
           label: "Szűrő"
       latest:
@@ -5005,11 +5008,11 @@ hu:
       favorite_max_not_reached: "Jelölje ezt a jelvényt kedvencnek"
       favorite_count: "%{count}/%{max} jelvény kedvencnek jelölve"
     download_calendar:
-      title: "Naptár letöltése"
+      title: "Hozzáadás a naptárhoz"
+      calendar: "Naptár"
       save_ics: ".ics fájl letöltése"
       save_google: "Hozzáadás a Google naptárhoz"
       remember: "Ne kérdezze többet"
-      remember_explanation: "(ezt a beállítást a felhasználói beállítások között módosíthatod)"
       download: "Letöltés"
       default_calendar: "Alapértelmezett naptár"
       default_calendar_instruction: "Határozza meg, hogy melyik naptárat kell használni a dátumok mentésekor"
@@ -6336,6 +6339,7 @@ hu:
           series:
             anonymous: "Névtelen"
             crawlers: "Keresőrobotok"
+          crawler_learn_more: "Tudjon meg többet"
         period:
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"

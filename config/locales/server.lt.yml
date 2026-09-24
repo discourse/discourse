@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 lt:
+  markdown_endpoints:
+    latest: "Naujausia"
+    categories: "Kategorijos"
+    tags: "Žymos"
+    previous_page: "Praeitas puslapis"
+    next_page: "Kitas puslapis"
+    replies: "Atsakymai"
+    last_updated: "Paskutinį kartą atnaujinta"
   mcp:
+    errors:
+      topic_not_found: "Tema nerasta"
     oauth:
       deny: "Atsisakyti"
       approve: "Leisti"
@@ -824,7 +834,7 @@ lt:
   uploads:
     marked_insecure_from_theme_component_reason: "įkėlimas naudojamas temos komponente"
   unsubscribe:
-    title: "Nebeprenumeruoti"
+    unsubscribe: "Nebeprenumeruoti"
     stop_watching_topic: "Nebestebėti šios temos, %{link}"
     mute_topic: "Nutildyti visus šios temos pranešimus, %{link}"
     unwatch_category: "Nustokite žiūrėti visas temas %{category}"
@@ -1532,6 +1542,7 @@ lt:
     email_too_long: "Jūsų pateiktas el. pašto adresas per ilgas. Pašto dėžutės pavadinimai turi būti ne ilgesni kaip 254 simboliai, o domenų vardai – ne ilgesni kaip 253 simboliai."
     wrong_invite_code: "Įvestas pakvieto kodas buvo neteisingas."
     reserved_username: "Šis vartotojo vardas neleidžiamas."
+    missing_username: "Prašome įvesti vartotojo vardą"
     auth_complete: "Autentifikavimas baigtas."
     click_to_continue: "Jei norite tęsti, paspauskite čia."
     already_logged_in: "Atsiprašau! Šis kvietimas skirtas naujiems vartotojams, kurie dar neturi esamos paskyros."
@@ -2193,7 +2204,7 @@ lt:
         Administracija patvirtino jūsų paskyrą %{site_name}.
 
         Dabar galite pasiekti savo naują paskyrą prisijungę adresu:
-        %{base_url}
+        %{login_url}
 
         Jei aukščiau pateiktos nuorodos negalima spustelėti, pabandykite ją nukopijuoti ir įklijuoti į žiniatinklio naršyklės adreso juostą.
 
@@ -2669,6 +2680,8 @@ lt:
         complete: "Įrašas ištrintas."
       delete_and_agree_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
+      disagree_and_keep_deleted:
+        title: "Palikti įrašą ištrintą"
       disagree_bundle:
         title: "Ne"
       ignore:

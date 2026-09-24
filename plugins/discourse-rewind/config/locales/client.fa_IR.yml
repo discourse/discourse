@@ -15,16 +15,8 @@ fa_IR:
         reading_time:
           title: زمان مطالعه
         chat_usage:
-          messages: پیام‌ها
           author: شما
           author_others: "%{username}"
           status_online: "● آنلاین"
-        invites:
-          title: دعوت‌ها
-          invitee_posts: نوشته‌های ایجاد شده
-          invitee_likes: پسند‌های اعطایی
-        new_user_interactions:
-          likes_given: پسند‌های اعطایی
-          mentions: اشاره‌ها
         writing_analysis:
           menu_other: دیگر

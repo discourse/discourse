@@ -24,6 +24,8 @@ de:
             title: "KI fragen"
         ask_ai:
           title: "KI fragen"
+          reports:
+            retry_questions: "Erneut versuchen"
           date: "Datum"
           outcomes:
             failed: "Fehlgeschlagen"
@@ -267,7 +269,6 @@ de:
           runner_username: "Ausführen als"
           runner_username_tooltip: "Benutzer, dessen Berechtigungen für die Sichtbarkeit von Uploads und KI-Agent-Tools verwendet werden. Nutze das System für die automatisierte Abwicklung von Workflows."
           upload_ids: "Upload-IDs"
-          upload_ids_tooltip: "Optionale Upload-IDs, die an die Aufforderung angehängt werden sollen. Bild-Uploads sind enthalten, wenn der Agent Vision aktiviert hat; Dokumenten-Uploads sind enthalten, wenn das ausgewählte LLM ihren Dateityp unterstützt."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wähle einen Agenten aus …"
       bot_chats:

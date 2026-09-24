@@ -19,6 +19,7 @@ ur:
         no_results: "کوئی نتائج نہیں"
     explorer:
       default_query: "ڈِیفالٹ"
+      view_query: "مشاهده"
       or: "یا"
       admins_only: "ڈیٹا ایکسپلورر صرف منتظمین کو دستیاب ہے۔"
       title: "ڈیٹا ایکسپلورر"

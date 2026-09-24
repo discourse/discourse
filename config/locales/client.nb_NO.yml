@@ -218,6 +218,7 @@ nb_NO:
       message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
     back_button: "Forrige"
+    confirm_button: "Bekreft"
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
@@ -3708,6 +3709,7 @@ nb_NO:
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
       no_description: "Legg til en beskrivelse for denne kategorien."
+      latest_topics: "Siste emner"
       description_expand: "Vis mer"
       description_collapse: "Vis mindre"
       already_used: "Denne fargen er i bruk av en annen kategori"
@@ -3932,6 +3934,7 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "tilbakestill"
         button:
           label: "Filtrer"
       latest:
@@ -4686,6 +4689,7 @@ nb_NO:
         site_traffic:
           series:
             anonymous: "Anonym"
+          crawler_learn_more: "Finn ut mer"
         period:
           last_7_days: "Siste 7 dager"
           last_30_days: "Siste 30 dager"
