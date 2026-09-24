@@ -21,6 +21,8 @@ ja:
             title: "AI に尋ねる"
         ask_ai:
           title: "AI に尋ねる"
+          reports:
+            retry_questions: "再試行"
           date: "日付"
           outcomes:
             failed: "失敗しました"

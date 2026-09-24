@@ -376,6 +376,7 @@ fr:
     notifications_tracking:
       tooltip: "Niveau de notification : %{level}"
     back_button: "Retour"
+    confirm_button: "Confirmer"
     welcome_banner:
       header:
         new_members: "Bienvenue, %{preferred_display_name}!"
@@ -2822,9 +2823,9 @@ fr:
       signup_instructions: "Saisissez votre adresse e-mail pour rejoindre cette communauté. Nous vous enverrons un code de confirmation et vous pourrez ensuite commencer !"
       user_fields_title: "Presque terminé"
       user_fields_instructions: "Encore quelques détails pour finaliser la création de votre compte."
-      account_ready_title: "Votre compte est prêt ! 🎉"
-      account_ready_edit: "Choisissez votre nom d'utilisateur et votre avatar."
       account_ready_continue: "Continuer"
+      pending_approval_title: "Votre compte est en attente d'approbation."
+      pending_approval_instructions: "Un membre de notre équipe doit approuver votre compte avant que vous puissiez vous connecter. Nous vous enverrons un courriel une fois votre compte approuvé."
       username_label: "Nom d'utilisateur"
       username_placeholder: "Choisissez un nom d'utilisateur"
       change_avatar: "Changer d'avatar"
@@ -5001,6 +5002,7 @@ fr:
       list: "Répertorier les catégories"
       no_description: "Veuillez ajouter une description pour cette catégorie."
       change_in_category_topic: "Modifier la description"
+      latest_topics: "Sujets récents"
       description_updated: "Description mise à jour"
       description_expand: "Afficher plus"
       description_collapse: "Afficher moins"
@@ -5298,6 +5300,7 @@ fr:
       with_category: "Sujets %{filter} sur %{category}"
       filter:
         title: "Résultats filtrés pour %{filter}"
+        reset: "rétablir"
         button:
           label: "Filtrer"
       latest:
@@ -5566,16 +5569,18 @@ fr:
       favorite_max_not_reached: "Faire de ce badge un de mes préférés"
       favorite_count: "%{count} badge(s) sur %{max} préféré(s)"
     download_calendar:
-      title: "Télécharger le calendrier"
+      title: "Ajouter au calendrier"
+      calendar: "Calendrier"
       save_ics: "Télécharger le fichier .ics"
       save_google: "Ajouter à Google Agenda"
       remember: "Ne plus me le proposer"
-      remember_explanation: "(vous pouvez changer ce réglage dans vos préférences utilisateur)"
       download: "Télécharger"
       default_calendar: "Calendrier par défaut"
       default_calendar_instruction: "Définir le calendrier à utiliser lorsqu'une date est enregistrée"
       add_to_calendar: "Ajouter au calendrier"
       google: "Google Agenda"
+      outlook: "Microsoft Outlook"
+      apple: "Calendrier d'Apple"
       ics: "ICS"
       default_title: "Événement programmé"
     tagging:
@@ -7164,6 +7169,7 @@ fr:
             embedded: "Pages vues intégrées"
             crawlers: "Robots d'indexation"
           see_details: "Voir les détails"
+          crawler_learn_more: "En savoir plus…"
         period:
           last_7_days: "Ces 7 derniers jours"
           last_30_days: "30 derniers jours"

@@ -23,8 +23,8 @@ en:
         description: "Write a custom SQL query to surface anything specific to your community."
     explorer:
       resize_editor: "Resize the query editor"
-      default_query: "Default"
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
+      view_query: "View"
       queries: "Queries"
       query_created: "Query created!"
       mode:
@@ -145,6 +145,8 @@ en:
         other: "Showing top %{count} results."
       query_name: "Query"
       query_groups: "Groups"
+      query_tags: "Tags"
+      default_tag_mandatory: "The default tag cannot be removed from bundled queries."
       link: "Link for"
       report_name: "Report"
       query_description: "Description"
@@ -154,6 +156,8 @@ en:
       save_params: "Set defaults"
       reset_params: "Reset"
       search_placeholder: "Search..."
+      filter_by_tag: "Filter by tag"
+      filter_by_this_tag: "Filter the list by this tag"
       no_search_results: "Sorry, we couldn't find any results matching your text."
       form:
         errors:

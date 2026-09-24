@@ -21,6 +21,8 @@ lt:
             title: "Paklauskite AI"
         ask_ai:
           title: "Paklauskite AI"
+          reports:
+            retry_questions: "Bandykite dar kartą"
           date: "Data"
           outcomes:
             failed: "Nepavyko"

@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyMixin
+  include ArchivedSiteMixin
   include ThemeResolver
   include VaryHeader
 
@@ -41,6 +42,7 @@ class ApplicationController < ActionController::Base
   before_action :clear_notifications
   around_action :with_resolved_locale
   before_action :block_if_readonly_mode
+  before_action :block_if_archived
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
@@ -163,7 +165,7 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t("site_setting_missing", name: e.message), status: 500
   end
 
-  rescue_from ActionController::RoutingError, PluginDisabled do
+  rescue_from ActionController::RoutingError, ActionDispatch::MissingController, PluginDisabled do
     # This error is raised outside of the normal request response cycle and is called via the
     # `DiscoursePublicExceptions` middleware which creates a new instance of the ApplicationController.
     # As a result, controller actions hooks are not called and we need to explicitly call `dont_cache_page` here.
@@ -265,6 +267,21 @@ class ApplicationController < ActionController::Base
         end
         format.html do
           render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+        end
+      end
+    end
+  end
+
+  rescue_from Discourse::SiteArchived do
+    unless response_body
+      respond_to do |format|
+        format.json do
+          render_json_error I18n.t("site_archived_error"), type: :site_archived, status: 503
+        end
+        format.html do
+          render status: :service_unavailable,
+                 layout: "no_ember",
+                 template: "exceptions/site_archived"
         end
       end
     end

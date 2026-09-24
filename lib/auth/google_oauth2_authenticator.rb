@@ -18,8 +18,12 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     "https://accounts.google.com"
   end
 
-  def enabled?
-    SiteSetting.enable_google_oauth2_logins
+  def enable_setting
+    :enable_google_oauth2_logins
+  end
+
+  def required_settings
+    %i[google_oauth2_client_id google_oauth2_client_secret]
   end
 
   def primary_email_verified?(auth_token)

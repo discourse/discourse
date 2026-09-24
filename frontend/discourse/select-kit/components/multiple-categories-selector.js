@@ -24,6 +24,7 @@ export const LIMITED_RESULTS_NOTICE_VALUE =
   allowUncategorized: true,
   displayCategoryDescription: false,
   selectedChoiceComponent: SelectedChoiceCategory,
+  showAncestorsInSelectedChoice: false,
 })
 @pluginApiIdentifiers(["multiple-categories-selector"])
 export default class MultipleCategoriesSelector extends MultiSelectComponent {

@@ -321,6 +321,7 @@ fi:
       message: "Olemme päivittäneet tämän sivuston, <span>päivitä</span> sivu, jotta asiat toimivat sujuvasti."
       dismiss: "Sulje"
     back_button: "Takaisin"
+    confirm_button: "Vahvista"
     welcome_banner:
       header:
         logged_in_members: "Tervetuloa takaisin, %{preferred_display_name}!"
@@ -4190,6 +4191,7 @@ fi:
       list: "Listaa alueet"
       no_description: "Lisää alueelle kuvaus."
       change_in_category_topic: "Muokkaa kuvausta"
+      latest_topics: "Tuoreimmat ketjut"
       description_expand: "Näytä lisää"
       description_collapse: "Näytä vähemmän"
       already_used: "Tämä väri on jo käytössä toisella alueella"
@@ -4448,6 +4450,7 @@ fi:
       with_category: "%{filter} %{category} ketjut"
       filter:
         title: "Suodatetut tulokset suodattimella %{filter}"
+        reset: "palauta"
         button:
           label: "Suodatin"
       latest:
@@ -4653,11 +4656,11 @@ fi:
       favorite_max_not_reached: "Merkitse tämä kunniamerkki suosikiksi"
       favorite_count: "%{count}/%{max} kunniamerkkiä merkitty suosikeiksi"
     download_calendar:
-      title: "Lataa kalenteri"
+      title: "Lisää kalenteriin"
+      calendar: "Kalenteri"
       save_ics: "Lataa .ics-tiedosto"
       save_google: "Lisää Google-kalenteriin"
       remember: "Älä kysy uudelleen"
-      remember_explanation: "(voit muuttaa tätä asetusta käyttäjäasetuksissasi)"
       download: "Lataa"
       default_calendar: "Oletuskalenteri"
       default_calendar_instruction: "Määritä, mitä kalenteria käytetään, kun päivämäärät tallennetaan"
@@ -5837,6 +5840,7 @@ fi:
           series:
             anonymous: "Anonyymeja"
             crawlers: "Hakurobotit"
+          crawler_learn_more: "Lue lisää"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"

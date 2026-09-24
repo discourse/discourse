@@ -14,6 +14,14 @@ RSpec.describe Voice::UserStatusManager do
   end
 
   describe ".set_voice_status" do
+    it "leaves agent status unchanged" do
+      bot = Fabricate(:user, id: -1400)
+
+      described_class.set_voice_status(bot, room)
+
+      expect(bot.reload.user_status).to be_nil
+    end
+
     it "sets the user's status with room name and no expiry" do
       described_class.set_voice_status(user, room)
 

@@ -206,6 +206,10 @@ export default class Composer extends RestModel {
     return Object.keys(_draft_serializer);
   }
 
+  static isEditDraft(draft) {
+    return isEdit(draft?.action) && !!draft.postId;
+  }
+
   @service dialog;
   @service siteSettings;
   @service currentUser;

@@ -317,6 +317,7 @@ da:
       message: "Vi har opdateret dette websted. <span>Genopfrisk siden</span> for at undgå problemer."
       dismiss: "Afvis alle"
     back_button: "Tilbage"
+    confirm_button: "Bekræft"
     welcome_banner:
       header:
         logged_in_members: "Velkommen tilbage, %{preferred_display_name}!"
@@ -3600,6 +3601,7 @@ da:
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "Rediger beskrivelse"
+      latest_topics: "Seneste emner"
       description_expand: "Vis mere"
       description_collapse: "Vis mindre"
       already_used: "Denne farve er blevet brugt af en anden kategori"
@@ -3809,6 +3811,7 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "nulstil"
         button:
           label: "Filter"
       latest:
@@ -3993,7 +3996,7 @@ da:
       favorite_max_not_reached: "Markér dette emblem som favorit"
       favorite_count: "%{count}/%{max} emblemer markeret som favoritter"
     download_calendar:
-      title: "Hent kalender"
+      title: "Føj til kalender"
       save_ics: "Hent .ics fil"
       save_google: "Tilføj til Google kalender"
       remember: "Spørg mig ikke igen"
@@ -4823,6 +4826,7 @@ da:
           series:
             anonymous: "Anonym"
             crawlers: "Crawlere"
+          crawler_learn_more: "Lær mere"
         period:
           last_7_days: "Seneste 7 dage"
           last_30_days: "Seneste 30 dage"

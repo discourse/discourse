@@ -32,7 +32,7 @@ class TopicRetriever
 
   def perform_retrieve
     # It's possible another process or job found the embed already. So if that happened bail out.
-    return if TopicEmbed.where(embed_url: @embed_url).exists?
+    return if TopicEmbed.topic_id_for_embed(@embed_url)
 
     username =
       SiteSetting.embed_by_username.presence || SiteSetting.site_contact_username.presence ||

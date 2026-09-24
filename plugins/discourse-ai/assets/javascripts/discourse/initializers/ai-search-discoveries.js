@@ -1,5 +1,6 @@
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
 import { i18n } from "discourse-i18n";
@@ -225,6 +226,18 @@ export default apiInitializer((api) => {
       const query = search.activeGlobalSearchTerm?.trim();
 
       const enterAsks = !search.inTopicContext && asksByDefault();
+      if (
+        enterAsks &&
+        !event.shiftKey &&
+        query &&
+        (searchTerm.args.typeFilter !== DEFAULT_TYPE_FILTER ||
+          discobotDiscoveries.lastQuery === query)
+      ) {
+        searchTerm.args.fullSearch();
+        searchTerm.args.closeSearchMenu();
+        return false;
+      }
+
       if (event.shiftKey !== enterAsks && query) {
         // asking honours no scope, so picking it leaves any behind
         searchTerm.args.clearTopicContext();
@@ -255,6 +268,13 @@ export default apiInitializer((api) => {
     "search-menu-input-wrapper-classes",
     ({ value, context }) =>
       offersDiscoveries(context?.location) ? [...value, "--with-ask-ai"] : value
+  );
+
+  // the options row always shows which scope is selected
+  api.registerValueTransformer(
+    "search-menu-search-context-enabled",
+    ({ value, context }) =>
+      offersDiscoveries(context?.location) ? false : value
   );
 
   // advanced search is offered in the options row instead

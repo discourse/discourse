@@ -79,6 +79,17 @@ describe "Admin dashboard Support section" do
       expect(support).to have_selected_category(support_category)
     end
 
+    it "shows the parent category next to a selected support sub-category in the filter" do
+      support_subcategory = Fabricate(:support_category, parent_category: support_category)
+
+      dashboard.visit
+      support.select_category(support_subcategory)
+      support.close_category_filter
+
+      support.expand_category_filter
+      expect(support).to have_selected_category_with_parent(support_subcategory)
+    end
+
     it "does not persist a moderator's category selection" do
       sign_in(moderator)
 

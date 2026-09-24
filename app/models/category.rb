@@ -183,6 +183,7 @@ class Category < ActiveRecord::Base
     end
   end
 
+  after_commit :enqueue_upload_security_updates, on: :update, if: :saved_change_to_read_restricted?
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
@@ -1298,6 +1299,10 @@ class Category < ActiveRecord::Base
     saved_change_to_slug? || saved_change_to_parent_category_id?
   end
 
+  def enqueue_upload_security_updates
+    Jobs.enqueue(:update_category_upload_security, category_id: id)
+  end
+
   def enqueue_category_hashtag_remap
     old_slug = saved_change_to_slug? ? slug_before_last_save : slug
     old_parent_category_id =
@@ -1307,28 +1312,26 @@ class Category < ActiveRecord::Base
         parent_category_id
       end
 
-    enqueue_category_hashtag_remap_job(
-      category_id: id,
-      old_ref:
-        Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
-      new_ref: slug_ref,
-    )
+    type = CategoryHashtagDataSource.type
+    remaps = [
+      {
+        type:,
+        id:,
+        old_ref:
+          Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
+      },
+    ]
 
     if saved_change_to_slug?
-      subcategories.find_each do |subcategory|
-        enqueue_category_hashtag_remap_job(
-          category_id: subcategory.id,
-          old_ref: [old_slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
-          new_ref: [slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
-        )
-      end
+      remaps +=
+        subcategories
+          .pluck(:id, :slug)
+          .map do |sub_id, sub_slug|
+            { type:, id: sub_id, old_ref: [old_slug, sub_slug].join(Category::SLUG_REF_SEPARATOR) }
+          end
     end
-  end
 
-  def enqueue_category_hashtag_remap_job(category_id:, old_ref:, new_ref:)
-    return if old_ref.blank? || new_ref.blank? || old_ref == new_ref
-
-    DB.after_commit { Jobs.enqueue(:remap_category_hashtag, category_id:, old_ref:, new_ref:) }
+    HashtagRemapper.enqueue(remaps)
   end
 
   def cannot_delete_reason

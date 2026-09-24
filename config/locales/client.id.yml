@@ -181,6 +181,7 @@ id:
     emails_are_disabled_non_staff: "Surel keluar telah dimatikan untuk pengguna yang bukan staf."
     software_update_prompt:
       dismiss: "Bubar"
+    confirm_button: "Konfirmasi"
     welcome_banner:
       header:
         anonymous_members: "Selamat datang ke %{site_name}!"
@@ -2049,6 +2050,7 @@ id:
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
+      latest_topics: "Topik Terbaru"
       description_expand: "Tampilkan lebih banyak"
       description_collapse: "Tampilkan lebih sedikit"
       permissions:
@@ -2145,6 +2147,7 @@ id:
       with_topics: "%{filter} topik"
       with_category: "%{filter} %{category} topik"
       filter:
+        reset: "reset"
         button:
           label: "Filter"
       latest:

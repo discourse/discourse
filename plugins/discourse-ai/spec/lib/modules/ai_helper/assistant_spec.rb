@@ -47,6 +47,26 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
   describe("#available_prompts") do
     before { DiscourseAi::AiHelper::Assistant.clear_prompt_cache! }
 
+    it "keeps proofreader available when granular permissions are toggled with warm caches" do
+      agent = AiAgent.find(SiteSetting.ai_helper_proofreader_agent)
+      agent.update!(allowed_group_ids: [Fabricate(:group).id, Group::AUTO_GROUPS[:everyone]])
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(assistant.available_prompts(user).map { |prompt| prompt[:name] }).to include(
+        described_class::PROOFREAD,
+      )
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      expect(assistant.available_prompts(user).map { |prompt| prompt[:name] }).to include(
+        described_class::PROOFREAD,
+      )
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(assistant.available_prompts(user).map { |prompt| prompt[:name] }).to include(
+        described_class::PROOFREAD,
+      )
+    end
+
     it "returns all available prompts" do
       prompts = assistant.available_prompts(user)
 

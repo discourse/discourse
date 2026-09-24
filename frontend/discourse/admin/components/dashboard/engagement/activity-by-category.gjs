@@ -205,7 +205,10 @@ export default class ActivityByCategory extends Component {
         <MultipleCategoriesSelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onCategoriesChange}}
-          @options={{hash maximum=MAX_CATEGORIES}}
+          @options={{hash
+            maximum=MAX_CATEGORIES
+            showAncestorsInSelectedChoice=true
+          }}
         />
       </div>
 
@@ -336,7 +339,11 @@ export default class ActivityByCategory extends Component {
                 <tr>
                   <td class="db-activity-table__cell-category">
                     {{#if row.category}}
-                      {{dCategoryBadge row.category}}
+                      {{dCategoryBadge
+                        row.category
+                        ancestors=row.category.predecessors
+                        hideParent=true
+                      }}
                     {{else}}
                       <span
                         aria-hidden="true"

@@ -17,6 +17,8 @@ ug:
           discourse_ai: "Discourse AI"
       dashboard:
         ask_ai:
+          reports:
+            retry_questions: "قايتا سىنا"
           date: "چېسلا"
           outcomes:
             failed: "مەغلۇب بولدى"

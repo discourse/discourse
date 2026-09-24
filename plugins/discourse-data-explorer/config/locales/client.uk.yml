@@ -31,6 +31,7 @@ uk:
       resize_editor: "Змінити розмір редактора запитів"
       default_query: "Стандартна"
       default_query_notice: "Це запит за замовчуванням, SQL-код не можна редагувати. Щоб редагувати SQL-код, створіть новий запит."
+      view_query: "Вигляд"
       queries: "Запити"
       query_created: "Запит створено!"
       mode:

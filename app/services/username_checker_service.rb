@@ -18,7 +18,8 @@ class UsernameCheckerService
 
   def check_username_availability(username, email)
     available =
-      User.username_available?(username, email, allow_reserved_username: @allow_reserved_username)
+      !UsernameValidator.clashing_with_existing_route?(username) &&
+        User.username_available?(username, email, allow_reserved_username: @allow_reserved_username)
 
     if available
       { available: true, is_developer: is_developer?(email) }

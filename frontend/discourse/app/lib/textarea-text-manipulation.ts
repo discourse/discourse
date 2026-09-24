@@ -484,7 +484,7 @@ export default class TextareaTextManipulation implements TextManipulation {
     if (canPasteHtml && plainText) {
       if (isInlinePasting) {
         canPasteHtml = !(
-          lineVal.match(/^```/) ||
+          isCodeBlock ||
           this.isInside(pre, /`/g) ||
           lineVal.match(/^    /)
         );
@@ -1089,8 +1089,22 @@ export default class TextareaTextManipulation implements TextManipulation {
     };
   }
 
-  #isAfterStartedCodeFence(beforeText: string): number | null {
-    return this.isInside(beforeText, /(^|\n)```/g);
+  #isAfterStartedCodeFence(beforeText: string): boolean {
+    let openingFence: string | undefined;
+
+    for (const [, fence, trailingText] of beforeText.matchAll(
+      /^ {0,3}(`{3,}|~{3,})(.*)$/gm
+    )) {
+      if (openingFence) {
+        if (fence.startsWith(openingFence) && !trailingText.trim()) {
+          openingFence = undefined;
+        }
+      } else if (fence[0] === "~" || !trailingText.includes("`")) {
+        openingFence = fence;
+      }
+    }
+
+    return Boolean(openingFence);
   }
 
   // perform the same operation over many lines of text

@@ -260,6 +260,7 @@ lt:
       message: "Atnaujinome šią svetainę, <span>prašome atnaujinti</span> , kad viskas veiktų sklandžiai."
       dismiss: "Praleisti"
     back_button: "Atgal"
+    confirm_button: "Patvirtinti"
     welcome_banner:
       header:
         logged_in_members: "Sveikas sugrįžęs, %{preferred_display_name}!"
@@ -3534,6 +3535,7 @@ lt:
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"
       delete_error: "Įvyko klaida ištrinant kategoriją."
       no_description: "Prašome pridėti aprašymą šiai kategorijai."
+      latest_topics: "Naujausios temos"
       description_expand: "Rodyti daugiau"
       description_collapse: "Rodyti mažiau"
       already_used: "Ši spalva jau priskirta prie kitos kategorijos"
@@ -3746,6 +3748,7 @@ lt:
       with_topics: "%{filter} temos"
       with_category: "%{filter} %{category} temos"
       filter:
+        reset: "iš naujo"
         button:
           label: "Filtruoti"
       latest:
@@ -3934,7 +3937,7 @@ lt:
       favorite_max_not_reached: "Pažymėkite šį ženklelį kaip mėgstamiausią"
       favorite_count: "%{count}/%{max} ženkleliai pažymėti kaip mėgstamiausi"
     download_calendar:
-      title: "Atsisiųsti kalendorių"
+      title: "Pridėti prie kalendoriaus"
       save_ics: "Atsisiųsti.ics failą"
       save_google: "Pridėti prie „Google“ kalendoriaus"
       remember: "Daugiau manęs neklausti"
@@ -4562,6 +4565,7 @@ lt:
         site_traffic:
           series:
             anonymous: "Anonimas"
+          crawler_learn_more: "Sužinoti daugiau"
         period:
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"

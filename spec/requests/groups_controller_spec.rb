@@ -1058,6 +1058,45 @@ RSpec.describe GroupsController do
         expect(response_custom_fields[user_field_name]).to eq("A custom field")
       end
 
+      it "does not sort members by private custom fields for anonymous viewers" do
+        private_user_field = Fabricate(:user_field)
+        private_user_field_name = "user_field_#{private_user_field.id}"
+        first_member = Fabricate(:user, username: "alphabetical_first")
+        second_member = Fabricate(:user, username: "alphabetical_second")
+        group.add(first_member)
+        group.add(second_member)
+
+        UserCustomField.create!(
+          user_id: first_member.id,
+          name: private_user_field_name,
+          value: "second private value",
+        )
+        UserCustomField.create!(
+          user_id: second_member.id,
+          name: private_user_field_name,
+          value: "first private value",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: private_user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+
+        members = response.parsed_body["members"]
+        expect(members.flat_map { |member| member.fetch("custom_fields").values }).not_to include(
+          "first private value",
+          "second private value",
+        )
+        expect(members.map { |member| member["id"] }).to eq(
+          [first_member.id, second_member.id, user.id],
+        )
+      end
+
       it "allows sorting by custom fields" do
         group.add(user2)
         UserCustomField.create!(user_id: user2.id, name: user_field_name, value: "C custom field")
@@ -1834,7 +1873,50 @@ RSpec.describe GroupsController do
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
 
     fab!(:bot)
-    let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
+    let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
+
+    it "lists bot members of automatic groups not created by core" do
+      group.update_columns(automatic: true)
+      group.add(bot)
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["members"].map { |m| m["id"] }).to contain_exactly(
+        user1.id,
+        user2.id,
+        user3.id,
+        bot.id,
+      )
+      expect(response.parsed_body["meta"]["total"]).to eq(4)
+    end
+
+    it "does not list bot members of hand-managed groups" do
+      group.add(bot)
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["members"].map { |m| m["id"] }).to contain_exactly(
+        user1.id,
+        user2.id,
+        user3.id,
+      )
+      expect(response.parsed_body["meta"]["total"]).to eq(3)
+    end
+
+    it "does not list bot members of core automatic groups" do
+      sign_in(admin)
+      Group[:admins].add(bot)
+
+      get "/groups/admins/members.json"
+
+      expect(response.status).to eq(200)
+      member_ids = response.parsed_body["members"].map { |m| m["id"] }
+      expect(member_ids).to include(admin.id)
+      expect(member_ids).not_to include(bot.id)
+      expect(response.parsed_body["meta"]["total"]).to eq(Group[:admins].human_users.count)
+    end
 
     it "allows members to be sorted by supported columns" do
       get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }

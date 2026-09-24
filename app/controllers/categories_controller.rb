@@ -71,6 +71,14 @@ class CategoriesController < ApplicationController
       end
 
       format.json { render_serialized(@category_list, CategoryListSerializer) }
+      format.md do
+        render_markdown(
+          MarkdownEndpoint::DirectoryRenderer.new.categories(
+            @category_list,
+            params.permit(:page, :parent_category_id, :include_subcategories, :tag).to_h,
+          ),
+        )
+      end
     end
   end
 
@@ -870,6 +878,7 @@ class CategoriesController < ApplicationController
       parent_category_id: parent_category&.id,
       include_topics: include_topics,
       include_subcategories: include_subcategories,
+      include_pagination: request.format.md?,
       tag: params[:tag],
       page: params[:page].try(:to_i) || 1,
     }

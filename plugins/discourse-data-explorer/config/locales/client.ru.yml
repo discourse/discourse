@@ -27,6 +27,7 @@ ru:
     explorer:
       default_query: "По умолчанию"
       default_query_notice: "Это запрос по умолчанию, SQL-код нельзя редактировать. Чтобы отредактировать SQL-код, создайте новый запрос."
+      view_query: "Вид"
       queries: "Запросы"
       query_created: "Запрос создан!"
       mode:

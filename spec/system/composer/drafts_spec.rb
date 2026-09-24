@@ -289,6 +289,48 @@ describe "Composer - Drafts" do
     end
   end
 
+  context "when resuming a saved edit draft" do
+    fab!(:post_1) { Fabricate(:post, topic:, user: current_user, raw: "original post content") }
+    fab!(:post_2) { Fabricate(:post, topic:, user: current_user, raw: "another post content") }
+
+    before do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post_1, :edit)
+      composer.fill_content("edited post content")
+      composer.close
+
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+    end
+
+    it "lets the user finish their edit after clicking reply" do
+      topic_page.click_reply_button
+
+      expect(composer).to have_content("edited post content")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+
+      composer.create
+
+      expect(composer).to be_closed
+      expect(topic_page).to have_post_content(
+        post_number: post_1.post_number,
+        content: "edited post content",
+      )
+    end
+
+    it "shows the user their saved edit when they edit the same post again" do
+      topic_page.click_post_action_button(post_1, :edit)
+
+      expect(composer).to have_content("edited post content")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+    end
+
+    it "shows the user the original content when they edit a different post" do
+      topic_page.click_post_action_button(post_2, :edit)
+
+      expect(composer).to have_content("another post content")
+    end
+  end
+
   context "when replying to a different topic with an active draft" do
     fab!(:other_topic, :topic_with_op)
 
