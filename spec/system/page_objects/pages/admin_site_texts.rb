@@ -33,7 +33,9 @@ module PageObjects
         selector = PageObjects::Components::SelectKit.new(".theme-search")
         selector.expand
         selector.select_row_by_value(theme.id)
-        selector.collapse
+        # the combo-box closes itself on change; calling `collapse` here would
+        # re-open it via a header click that can land on the clear button
+        selector.has_selected_value?(theme.id)
       end
 
       def open_theme_filter
