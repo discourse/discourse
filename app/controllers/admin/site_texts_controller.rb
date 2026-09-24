@@ -28,7 +28,13 @@ class Admin::SiteTextsController < Admin::AdminController
     outdated = params[:outdated] == "true"
     untranslated = params[:untranslated] == "true"
     only_selected_locale = params[:only_selected_locale] == "true"
-    extras = { themes: Theme.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } } }
+    extras = {
+      themes:
+        Theme
+          .order(:name, :id)
+          .pluck(:id, :name, :enabled)
+          .map { |id, name, enabled| { id:, name:, enabled: } },
+    }
     theme = Theme.find(params[:theme_id]) if params[:theme_id].present?
 
     query = params[:q] || ""
