@@ -72,7 +72,8 @@ module Migrations
         # or the import would turn any readable file on the box into an upload.
         def contained_file(root, candidate)
           path = File.realpath(File.join(root, candidate))
-          return nil unless path.start_with?("#{root}/") && File.file?(path)
+          root_prefix = root.end_with?(File::SEPARATOR) ? root : "#{root}#{File::SEPARATOR}"
+          return nil unless path.start_with?(root_prefix) && File.file?(path)
 
           path
         rescue SystemCallError
