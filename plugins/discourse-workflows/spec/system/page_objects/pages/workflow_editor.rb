@@ -118,6 +118,45 @@ module PageObjects
           page.has_css?(".workflows-configurator-modal__save-status--saved")
         end
 
+        def add_status_filter(status)
+          selector = PageObjects::Components::SelectKit.new("[data-name='statuses'] .multi-select")
+          selector.expand
+          selector.select_row_by_value(status)
+          self
+        end
+
+        def has_status_filter?(status)
+          page.has_css?("[data-name='statuses'] .select-kit-header", text: status)
+        end
+
+        def filter_topics_by_category(category)
+          selector =
+            PageObjects::Components::SelectKit.new("[data-name='category_ids'] .category-selector")
+          selector.expand
+          selector.select_row_by_value(category.id)
+          self
+        end
+
+        def has_fixed_topic_filters?(category)
+          page.has_css?("[data-name='category_ids'] .select-kit-header", text: category.name) &&
+            page.has_css?("[data-name='include_subcategories']") &&
+            page.has_css?("[data-name='tag_names'] .mini-tag-chooser") &&
+            page.has_no_css?("[data-name='statuses']")
+        end
+
+        def filter_reviewable_type(type)
+          selector =
+            PageObjects::Components::SelectKit.new("[data-name='reviewable_types'] .multi-select")
+          selector.expand
+          selector.select_row_by_value(type)
+          self
+        end
+
+        def has_fixed_reviewable_filter?(type)
+          page.has_css?("[data-name='reviewable_types'] .select-kit-header", text: type) &&
+            page.has_no_css?("[data-name='statuses']")
+        end
+
         def has_workflow_path?(workflow)
           page.has_current_path?(workflow_path(workflow))
         end
@@ -161,6 +200,8 @@ module PageObjects
 
         NODE_TYPE_LABELS = {
           "trigger:topic_closed" => "Topic closed",
+          "trigger:topic_reopened" => "Topic reopened",
+          "trigger:reviewable_rejected" => "Review item rejected",
           "trigger:post_created" => "Post created",
           "trigger:topic_created" => "Topic created",
           "trigger:webhook" => "Webhook",

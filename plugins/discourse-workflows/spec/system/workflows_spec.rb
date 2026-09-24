@@ -82,6 +82,54 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_workflow("My workflow")
   end
 
+  it "lets an admin add fixed event triggers while keeping existing status filters editable" do
+    category = Fabricate(:category)
+    node_id = "existing-status"
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "trigger:topic_status_changed",
+            "typeVersion" => "1.0",
+            "name" => "Topic status changed",
+            "parameters" => {
+              "statuses" => ["closed"],
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+    expect(editor_page).to have_status_filter("Closed")
+    editor_page.add_status_filter("reopened")
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_status_filter("Reopened")
+
+    editor_page.close_node_configurator
+    editor_page.click_add_node
+    editor_page.select_node_type("trigger:topic_reopened")
+    editor_page.double_click_node(1)
+    editor_page.filter_topics_by_category(category)
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_node_configurator(name: "Topic reopened")
+    expect(editor_page).to have_fixed_topic_filters(category)
+
+    editor_page.close_node_configurator
+    editor_page.click_add_node
+    editor_page.select_node_type("trigger:reviewable_rejected")
+    editor_page.double_click_node(2)
+    editor_page.filter_reviewable_type("ReviewableQueuedPost")
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_node_configurator(name: "Review item rejected")
+    expect(editor_page).to have_fixed_reviewable_filter("Reviewable queued post")
+  end
+
   it "renders the failed-run warning icon based on the most recent execution" do
     failed_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
     recovered_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
