@@ -266,7 +266,7 @@ module Migrations
         # the byte limit decides: a 256 GB server with dozens of GB free is not
         # low on memory just because that is less than 25%.
         def memory_below?(sample, fraction, bytes)
-          sample.memory_fraction < fraction && sample.memory_bytes < bytes
+          sample.memory_below?(fraction, bytes)
         end
 
         # A back-off never raises the target: a memory emergency may have pushed it
