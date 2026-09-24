@@ -64,6 +64,8 @@ For each run, record:
 - Topic status triggers are separate nodes: `topic_closed`, `topic_reopened`, `topic_archived`, `topic_unarchived`, `topic_listed`, `topic_unlisted`, `topic_pinned`, `topic_unpinned`, `topic_pinned_globally`, and `topic_unpinned_globally` (all prefixed with `trigger:`). They share category and tag filters. Closing includes automatic closes; unpin events use the previous pin scope. Workflow and AI actions use the same status updater.
 - Review outcome triggers are `trigger:reviewable_approved`, `trigger:reviewable_rejected`, `trigger:reviewable_ignored`, `trigger:reviewable_deleted`, and `trigger:reviewable_pending`. They share the reviewable-type filter. Pending handles an existing item returning to review; use `trigger:reviewable_created` for new items.
 - Connect multiple event triggers to the same downstream node to handle several events. Existing `trigger:topic_status_changed` and `trigger:reviewable_status_changed` nodes remain editable and executable, but are hidden from the picker and AI discovery. Fixed-event nodes have no status selector and ignore any supplied `statuses` configuration.
+- `trigger:user_trust_level_changed` exposes old and new levels, including demotions. `trigger:user_first_logged_in` follows the first-login event, whose first-visit check uses `last_seen_at`.
+- `trigger:user_moderation_changed` exposes `change`, the affected `user`, optional `actor` and `reason`, and `expires_at`. Automatic suspension expiry is announced for suspensions scheduled after this functionality is deployed; existing suspensions are not backfilled.
 - Topic-only triggers that need author/post fields should use `action:topic` get before filtering or messaging.
 - Generic prompts like "when someone posts" should use `trigger:post_created` for all regular posts; do not ask whether to include replies unless the prompt explicitly narrows the scope.
 - Actions that replace item JSON require downstream nodes to use the action output schema, not the original trigger schema.
@@ -77,3 +79,11 @@ For each run, record:
 - `trigger:post_destroyed` and `trigger:post_recovered` expose `$json.user` as the acting moderator, not the post author; use `$json.post.username` for the author.
 - DM/personal-message notifications should use `action:send_personal_message` instead of chat or topic reply nodes.
 - Forum `search`/`read` should not be used for node/schema discovery; use `workflow_node_catalog` and `workflow_validate_patch`.
+
+## Moderation entrypoints
+
+Live suspensions from admin actions (single and bulk), AI tools, and automation use `UserSuspender`. Manual unsuspension and scheduled expiry use the same class. Expiry preserves historical suspension dates and deduplicates its event through staff history; clearing those dates would change badge eligibility.
+
+`UserSilencer` already handles admin, review queue, spam, chat, AI, and workflow silence actions, manual unsilencing, and scheduled unsilencing. No additional silence service is needed.
+
+Direct field writes intentionally remain in historical imports, anonymous shadow-account synchronization, and AI bot self-repair. These restore or copy state rather than perform independent human moderation actions, so they must not send moderation messages or create duplicate workflow events.

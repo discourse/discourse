@@ -27,7 +27,7 @@ RSpec.describe DiscourseWorkflows do
 
     before do
       DiscourseWorkflows.node_registration_ready = true
-      allow(DiscourseWorkflows::EventListener).to receive(:handle) do |klass, *args|
+      allow(DiscourseWorkflows::EventListener).to receive(:handle) do |klass, *args, **|
         handled << [klass, args]
       end
     end
