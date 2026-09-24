@@ -1601,6 +1601,7 @@ Discourse::Application.routes.draw do
 
     get "embed/topics" => "embed#topics"
     get "embed/comments" => "embed#comments"
+    get "embed/status" => "embed#status"
     get "embed/count" => "embed#count"
     get "embed/info" => "embed#info"
 
