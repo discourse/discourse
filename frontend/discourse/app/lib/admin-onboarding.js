@@ -14,7 +14,11 @@ export async function logOnboardingEvent(event, step, topicOption) {
   try {
     await ajax("/admin/onboarding/events", {
       type: "POST",
-      data: { event, step, topic_option: topicOption },
+      data: {
+        event,
+        ...(step && { step }),
+        ...(topicOption && { topic_option: topicOption }),
+      },
     });
   } catch {
     // intentionally ignored
