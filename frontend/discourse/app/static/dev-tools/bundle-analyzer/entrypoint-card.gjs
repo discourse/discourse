@@ -43,7 +43,7 @@ export default class EntrypointCard extends ExpandableRow {
 
   @cached
   get loadSet() {
-    return this.analysis.staticClosure(this.args.file);
+    return this.analysis.visibleClosure(this.args.file);
   }
 
   // For the baseline everything counts as the initial load; for everyone else,
@@ -101,7 +101,12 @@ export default class EntrypointCard extends ExpandableRow {
     <div
       class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
     >
-      <button class="ba-head" type="button" {{on "click" this.toggle}}>
+      <button
+        aria-expanded={{if this.expanded "true" "false"}}
+        class="ba-head"
+        type="button"
+        {{on "click" this.toggle}}
+      >
         <span class="ba-name">
           <span class="ba-tw">▶</span>
           {{#if this.isLoaded}}

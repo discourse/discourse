@@ -76,7 +76,12 @@ export default class PluginCard extends ExpandableRow {
         urls,
         base: this.graph.staticClosure(this.plugin.entrypoints[entry]),
       }))
-      .filter((b) => this.graph.cardVisible(b.file, this.args.filter, b.base))
+      .filter(
+        (b) =>
+          this.graph.cardVisible(b.file, this.args.filter, b.base) ||
+          (this.graph.visibleClosure(b.file).size > 0 &&
+            b.urls.some((u) => matches(u, this.args.filter)))
+      )
       .sort(
         (a, b) => this.graph.sortSize(b.file) - this.graph.sortSize(a.file)
       );
@@ -86,7 +91,12 @@ export default class PluginCard extends ExpandableRow {
     <div
       class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
     >
-      <button class="ba-head" type="button" {{on "click" this.toggle}}>
+      <button
+        aria-expanded={{if this.expanded "true" "false"}}
+        class="ba-head"
+        type="button"
+        {{on "click" this.toggle}}
+      >
         <span class="ba-name">
           <span class="ba-tw">▶</span>
           {{#if this.isLoaded}}

@@ -51,7 +51,7 @@ export default class Report extends FilterableReport {
 
   #addedSize(file) {
     const base = this.baselineClosure;
-    return [...this.analysis.staticClosure(file)]
+    return [...this.analysis.visibleClosure(file)]
       .filter((x) => !base.has(x))
       .reduce((n, x) => n + this.analysis.sortSize(x), 0);
   }
@@ -90,9 +90,7 @@ export default class Report extends FilterableReport {
       <section>
         <h2>Static entrypoints</h2>
         <div class="ba-hint">
-          Loaded up front via
-          <code>&lt;script&gt;</code>
-          tags.
+          Entry chunks the build produces — script tags and workers.
           <code>discourse</code>
           is the baseline; every other card counts only the bytes it adds on top
           of it.

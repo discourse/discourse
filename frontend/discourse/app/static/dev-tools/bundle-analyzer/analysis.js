@@ -49,10 +49,11 @@ export default class Analysis extends ChunkTotals {
     this.usedByEntries = this.#computeUsedBy();
   }
 
-  // Stops at a chunk the view excludes. A chunk's static imports are fetched
-  // with it, so a hidden one has nothing loaded beneath it to reach.
+  // Topology: what a chunk pulls in synchronously, whatever the reader is
+  // looking at. Baseline subtraction reads this, so "additional" keeps meaning
+  // the same thing when the view narrows.
   staticClosure(file, set = new Set()) {
-    if (set.has(file) || !this.chunks[file] || !this.includes(file)) {
+    if (set.has(file) || !this.chunks[file]) {
       return set;
     }
     set.add(file);
@@ -77,12 +78,21 @@ export default class Analysis extends ChunkTotals {
     );
   }
 
+  // The part of that closure still in view.
+  visibleClosure(file) {
+    const closure = this.staticClosure(file);
+    if (!this.view?.onlyLoaded) {
+      return closure;
+    }
+    return new Set([...closure].filter((f) => this.includes(f)));
+  }
+
   // Whether an entrypoint is worth a card: it still has chunks in view, and
   // something under it answers the filter. `base` is the closure whose chunks
   // this card does not own — omitted for the card everything else measures
   // against, which owns its whole subtree.
   cardVisible(file, filter, base = null) {
-    const closure = this.staticClosure(file);
+    const closure = this.visibleClosure(file);
     if (closure.size === 0) {
       return false;
     }

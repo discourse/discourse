@@ -54,7 +54,12 @@ export default class ChunkRow extends ExpandableRow {
     <div
       class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
     >
-      <button class="ba-head" type="button" {{on "click" this.toggle}}>
+      <button
+        aria-expanded={{if this.expanded "true" "false"}}
+        class="ba-head"
+        type="button"
+        {{on "click" this.toggle}}
+      >
         <span class="ba-name">
           <span class="ba-tw">▶</span>
           {{#if this.isLoaded}}
@@ -77,7 +82,7 @@ export default class ChunkRow extends ExpandableRow {
             {{/if}}
           {{/unless}}
           {{#if @root}}
-            <span class="ba-label root">dynamic entrypoint root</span>
+            <span class="ba-label root">entrypoint chunk</span>
           {{else}}
             <span class="ba-label" title={{@file}}>
               {{this.stemmed}}
@@ -97,6 +102,10 @@ export default class ChunkRow extends ExpandableRow {
           <div class="ba-pill" style="margin:2px 0 6px">
             Used by entrypoints:
             {{this.usedByLabel}}
+          </div>
+          <div class="ba-pill" style="margin-bottom:4px">
+            Module sizes are source bytes as rendered into the chunk, before it
+            is minified — they explain proportions, not transfer size.
           </div>
           {{#each this.visibleModules as |m|}}
             <div class="ba-mod" title={{m.id}}>
