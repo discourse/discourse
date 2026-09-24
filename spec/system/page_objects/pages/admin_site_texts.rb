@@ -36,12 +36,28 @@ module PageObjects
         selector.collapse
       end
 
+      def open_theme_filter
+        expand_filters
+        PageObjects::Components::SelectKit.new(".theme-search").expand
+      end
+
+      def has_theme_option?(theme, disabled: false)
+        has_css?(
+          ".theme-search .select-kit-row[data-value='#{theme.id}']",
+          text: "#{theme.name} ##{theme.id}#{disabled ? " Disabled" : ""}",
+          exact_text: true,
+        )
+      end
+
       def has_no_theme_filter?
         has_no_css?(".theme-search")
       end
 
       def has_selected_theme?(theme)
-        has_css?(".d-filter-controls__dropdowns .theme-search .select-kit-header", text: theme.name)
+        has_css?(
+          ".d-filter-controls__dropdowns .theme-search .select-kit-header",
+          text: "#{theme.name} ##{theme.id}",
+        )
       end
 
       def has_all_site_texts_selected?

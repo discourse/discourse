@@ -10398,6 +10398,7 @@ en:
         search_label: "Search"
         theme: "Theme or component"
         all_themes: "All site texts"
+        theme_disabled: "Disabled"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"

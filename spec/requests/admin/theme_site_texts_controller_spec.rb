@@ -45,6 +45,7 @@ RSpec.describe Admin::SiteTextsController do
       expect(response.parsed_body["extras"]["themes"]).to include(
         "id" => theme.id,
         "name" => theme.name,
+        "enabled" => true,
       )
     end
 
