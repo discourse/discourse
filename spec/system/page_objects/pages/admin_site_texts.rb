@@ -42,11 +42,20 @@ module PageObjects
       end
 
       def has_theme_option?(theme, disabled: false)
-        has_css?(
-          ".theme-search .select-kit-row[data-value='#{theme.id}']",
-          text: "#{theme.name} ##{theme.id}#{disabled ? " Disabled" : ""}",
-          exact_text: true,
-        )
+        row = ".theme-search .select-kit-row[data-value='#{theme.id}']"
+        return false unless has_css?("#{row} .site-text-theme-row__name", exact_text: theme.name)
+        unless has_css?("#{row} .site-text-theme-row__badge.--id", exact_text: "##{theme.id}")
+          return false
+        end
+
+        if disabled
+          has_css?(
+            "#{row} .site-text-theme-row__badge.--disabled",
+            exact_text: I18n.t("admin_js.admin.site_text.theme_disabled"),
+          )
+        else
+          has_no_css?("#{row} .site-text-theme-row__badge.--disabled")
+        end
       end
 
       def has_no_theme_filter?
