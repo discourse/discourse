@@ -75,12 +75,18 @@ export default class EntrypointCard extends ExpandableRow {
     return this.analysis.totals(this.loadSet);
   }
 
-  get addedBrotliLabel() {
-    return brotliLabel(this.addedTotals);
+  // The baseline card shows its whole load; every other shows what it adds, and
+  // the `+` is what says which.
+  get shownTotals() {
+    return this.args.baseline ? this.fullTotals : this.addedTotals;
   }
 
-  get fullBrotliLabel() {
-    return brotliLabel(this.fullTotals);
+  get prefix() {
+    return this.args.baseline ? "" : "+";
+  }
+
+  get shownBrotli() {
+    return brotliLabel(this.shownTotals);
   }
 
   // Every card on screen matches the active filter, so a filter opens them all.
@@ -142,17 +148,10 @@ export default class EntrypointCard extends ExpandableRow {
             }}
           >{{this.label}}</span>
         </span>
-        {{#if @baseline}}
-          <span class="ba-num"><b>{{this.fullBrotliLabel}}</b>
-            <span class="ba-pill">initial</span></span>
-          <span class="ba-num muted">{{fmt this.fullTotals.raw}}
-            <span class="ba-pill">raw</span></span>
-        {{else}}
-          <span class="ba-num"><b>+{{this.addedBrotliLabel}}</b>
-            <span class="ba-pill">added</span></span>
-          <span class="ba-num muted">+{{fmt this.addedTotals.raw}}
-            <span class="ba-pill">raw</span></span>
-        {{/if}}
+        <span class="ba-num"><b>{{this.prefix}}{{this.shownBrotli}}</b>
+          <span class="ba-pill">br</span></span>
+        <span class="ba-num muted">{{this.prefix}}{{fmt this.shownTotals.raw}}
+          <span class="ba-pill">raw</span></span>
       </button>
       {{#if this.expanded}}
         <div class="ba-body">
@@ -178,18 +177,18 @@ export default class EntrypointCard extends ExpandableRow {
             <div class="ba-pill" style="margin-bottom:6px">
               Initial load:
               <b>{{this.loadSet.size}}</b>
-              files ({{this.fullBrotliLabel}}
+              files ({{this.shownBrotli}}
               br /
-              {{fmt this.fullTotals.raw}}
+              {{fmt this.shownTotals.raw}}
               raw).
             </div>
           {{else}}
             <div class="ba-pill" style="margin-bottom:6px">
               Adds
               <b>{{this.added.length}}</b>
-              new files ({{this.addedBrotliLabel}}
+              new files ({{this.shownBrotli}}
               br /
-              {{fmt this.addedTotals.raw}}
+              {{fmt this.shownTotals.raw}}
               raw); full subtree is
               {{this.loadSet.size}}
               files.
