@@ -18,7 +18,7 @@
    `.bundle-analyzer` and cannot use its palette. */
 .bundle-analyzer-modal .ba-tab-size {
   margin-left: 0.5em;
-  padding: 0 0.4em;
+  padding: 0.2em 0.45em;
   border-radius: var(--d-border-radius);
   background: color-mix(in srgb, currentcolor 12%, transparent);
   font-size: var(--font-down-2);
