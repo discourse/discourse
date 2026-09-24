@@ -9,17 +9,24 @@ tests into additional jobs. A skipped test suite is not a successful optimizatio
 During exploratory revisions, run only the two slow system-test jobs. Restore
 the complete ten-entry matrix before final validation or any success claim.
 
+Stack validated incremental improvements. The eight-minute target applies to
+their combined effect; an individual experiment need not reach it alone. Assess
+each gain alongside CPU, memory, reliability, and its interaction with prior gains.
+
 Use this draft PR for final measurements. Pin proxy experiments to main revision
-f7be7d7b8a5d3f7b3fc6216240763da9fa3a40b6. Run exploratory benchmarks with act on
+f7be7d7b8a5d3f7b3fc6216240763da9fa3a40b6. Keep this pin fixed unless explicitly
+asked to advance it. Run exploratory benchmarks with act on
 an isolated 16-vCPU host, recording the image digest, source revision, runtime
 cache, seed, CPU totals, and peak container memory. Proxy timings do not establish
 the GitHub Actions target. Keep diagnostic scripts and raw profiles private.
 
 Historical controlled measurements used base revision
 0708de39bcebe79c8469dfd88cd568c8e71b42c7 and a temporary PR-head checkout.
-GitHub measurements use normal PR merge checkout. Record the actual tested
-revision and distinguish source changes from optimization effects. Record
-external plugin/theme revisions and cache behavior when assessing noisy results.
+Exploratory GitHub measurements check out the PR head to preserve the fixed
+base plus optimization commits. Earlier measurements used PR merge checkout.
+Record the actual tested revision and distinguish source changes from optimization
+effects. Record external plugin/theme revisions and cache behavior when assessing
+noisy results.
 
 ## Procedure
 
