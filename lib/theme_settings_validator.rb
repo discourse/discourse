@@ -54,6 +54,7 @@ class ThemeSettingsValidator
           translation_prefix: "string",
         )
       when types[:objects]
+        errors.concat(validate_object_translations(opts[:schema]))
         errors.concat(
           SchemaSettingsObjectValidator.validate_objects(schema: opts[:schema], objects: value),
         )
@@ -79,10 +80,44 @@ class ThemeSettingsValidator
       errors
     end
 
+    def translatable_object_schema?(schema)
+      schema
+        &.fetch(:properties, {})
+        &.any? do |_, spec|
+          spec[:translatable] == true ||
+            (spec[:type] == "objects" && translatable_object_schema?(spec[:schema]))
+        end
+    end
+
     private
 
     def types
       ThemeSetting.types
+    end
+
+    def validate_object_translations(schema)
+      return [] if schema.blank?
+      errors = []
+      if translatable_object_schema?(schema) &&
+           (
+             schema.dig(:properties, :translation_key, :type) != "string" ||
+               schema.dig(:properties, :translation_key, :required) != true
+           )
+        errors << I18n.t(
+          "themes.settings_errors.translatable_requires_translation_key",
+          schema: schema[:name],
+        )
+      end
+      schema[:properties].each do |property, spec|
+        if spec[:translatable] == true && spec[:type] != "string"
+          errors << I18n.t(
+            "themes.settings_errors.translatable_requires_string",
+            property: property,
+          )
+        end
+        errors.concat(validate_object_translations(spec[:schema])) if spec[:type] == "objects"
+      end
+      errors
     end
 
     def validate_object_schema_resolve_group_membership(schema)

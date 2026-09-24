@@ -135,6 +135,103 @@ RSpec.describe Admin::SiteTextsController do
     end
   end
 
+  describe "object-editor translations" do
+    let(:object_key) { "resource_sections.getting_started.guidelines.label" }
+    let(:object_text_id) { "js.theme_translations.#{theme.id}.#{object_key}" }
+
+    before do
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+      )
+      theme.save!
+    end
+
+    it "lists dynamic defaults, filters changed text, and dismisses the outdated warning" do
+      get "/admin/customize/site_texts.json", params: { theme_id: theme.id, locale: "ja" }
+      expect(response.parsed_body["site_texts"]).to include(
+        include(
+          "id" => object_text_id,
+          "value" => "Community guidelines",
+          "default_locale" => "en",
+        ),
+      )
+      put "/admin/customize/site_texts/#{object_text_id}.json",
+          params: {
+            site_text: {
+              locale: "ja",
+              value: "ガイドライン",
+            },
+          }
+      expect(response.status).to eq(200)
+      objects = theme.settings[:resource_sections].value
+      objects[0]["links"][0]["label"] = "Updated guidelines"
+      theme.update_setting(:resource_sections, objects)
+      get "/admin/customize/site_texts.json",
+          params: {
+            theme_id: theme.id,
+            locale: "ja",
+            outdated: true,
+          }
+      expect(response.parsed_body["site_texts"]).to contain_exactly(
+        include(
+          "id" => object_text_id,
+          "status" => "outdated",
+          "old_default" => "Community guidelines",
+          "new_default" => "Updated guidelines",
+        ),
+      )
+      put "/admin/customize/site_texts/#{object_text_id}/dismiss_outdated.json",
+          params: {
+            locale: "ja",
+          }
+      expect(response.status).to eq(200)
+      get "/admin/customize/site_texts/#{object_text_id}.json", params: { locale: "ja" }
+      expect(response.parsed_body["site_text"]).to include(
+        "status" => "up_to_date",
+        "value" => "ガイドライン",
+      )
+    end
+
+    it "rejects invalid placeholders without changing the existing translation" do
+      put "/admin/customize/site_texts/#{object_text_id}.json",
+          params: {
+            site_text: {
+              locale: "ja",
+              value: "%{unknown}",
+            },
+          }
+      expect(response.status).to eq(422)
+      expect(ThemeTranslationOverride.where(theme: theme, translation_key: object_key)).to be_empty
+    end
+
+    it "reports legacy invalid overrides separately from outdated overrides" do
+      record =
+        ThemeTranslationOverride.create!(
+          theme: theme,
+          translation_key: object_key,
+          locale: "ja",
+          value: "Guidelines",
+        )
+      record.update_columns(value: "%{unknown}")
+      get "/admin/customize/site_texts.json",
+          params: {
+            theme_id: theme.id,
+            locale: "ja",
+            outdated: true,
+          }
+      expect(response.parsed_body["site_texts"]).to contain_exactly(
+        include("id" => object_text_id, "status" => "invalid_interpolation_keys"),
+      )
+      put "/admin/customize/site_texts/#{object_text_id}/dismiss_outdated.json",
+          params: {
+            locale: "ja",
+          }
+      expect(response.status).to eq(422)
+    end
+  end
+
   describe "#update" do
     it "edits and reverts a theme text without creating a site override" do
       put path, params: { site_text: { locale: "ja", value: "Custom intro" } }

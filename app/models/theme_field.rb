@@ -221,6 +221,8 @@ class ThemeField < ActiveRecord::Base
     data = {}
     fallback_data.each { |hash| data.merge!(hash) }
 
+    data.deep_merge!(theme.object_translation_data) unless internal
+
     if with_overrides
       overrides = theme.translation_override_hash.deep_symbolize_keys
       data.deep_merge!(overrides)

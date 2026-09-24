@@ -6,6 +6,64 @@ RSpec.describe "Admin editing objects type" do
   fab!(:admin)
   before { sign_in(admin) }
 
+  context "with translated fields" do
+    fab!(:theme)
+    let(:site_texts_page) { PageObjects::Pages::AdminSiteTexts.new }
+    let(:key) { "resource_sections.getting_started.guidelines.label" }
+
+    before do
+      theme.set_field(
+        target: :settings,
+        name: "yaml",
+        value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+      )
+      theme.save!
+    end
+
+    it "previews nested keys and opens the component's translations in Site texts" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      expect(admin_objects_setting_editor_page).to have_translation_key(key)
+      admin_objects_setting_editor_page.manage_translations
+      expect(page).to have_current_path("/admin/customize/site_texts?theme_id=#{theme.id}")
+      site_texts_page.select_locale("ja")
+      site_texts_page.edit_translation(
+        "js.theme_translations.#{theme.id}.#{key}",
+        locale: "ja",
+        theme_id: theme.id,
+      )
+      expect(page).to have_content("Default text · English")
+      site_texts_page.override_translation("ガイドライン")
+      expect(page).to have_css(".saved")
+      expect(
+        theme.theme_translation_overrides.find_by!(locale: "ja", translation_key: key).value,
+      ).to eq("ガイドライン")
+    end
+
+    it "refreshes theme translations after saving object text" do
+      themes_page = PageObjects::Pages::AdminCustomizeThemes.new
+      themes_page.visit(theme)
+      expect(themes_page).to have_translation(key, "Community guidelines")
+      themes_page.click_edit_objects_setting_button("resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      admin_objects_setting_editor_page.fill_in_field("label", "Updated guidelines").save
+
+      expect(themes_page).to have_translation(key, "Updated guidelines")
+      page.refresh
+      expect(themes_page).to have_translation(key, "Updated guidelines")
+    end
+
+    it "keeps the editor open and preserves saved values when identifiers conflict" do
+      admin_objects_setting_editor_page.visit_theme(theme, "resource_sections")
+      admin_objects_setting_editor_page.click_child_link("Community guidelines")
+      admin_objects_setting_editor_page.fill_in_field("translation_key", "title").save
+      expect(admin_objects_setting_editor_page).to have_validation_error
+      expect(
+        theme.reload.settings[:resource_sections].value[0]["links"][0]["translation_key"],
+      ).to eq("guidelines")
+    end
+  end
+
   describe "when editing a theme setting of objects type" do
     fab!(:theme)
 

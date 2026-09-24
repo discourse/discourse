@@ -6,11 +6,12 @@ import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import Tree from "discourse/admin/components/schema-setting/editor/tree";
 import FieldInput from "discourse/admin/components/schema-setting/field";
+import hasTranslatableFields from "discourse/admin/lib/has-translatable-fields";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
-import { gt, not } from "discourse/truth-helpers";
+import { and, eq, gt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -58,6 +59,32 @@ export default class SchemaSettingNewEditor extends Component {
 
   get activeSchema() {
     return this.#resolveSchemaFromPaths(this.activeSchemaPaths);
+  }
+
+  get translationKeys() {
+    if (!this.activeObject || !hasTranslatableFields(this.schema)) {
+      return [];
+    }
+    let schema = this.schema;
+    let objects = this.data;
+    const parts = [this.args.setting.setting];
+    for (let index = 0; index < this.activeDataPaths.length; index += 2) {
+      const object = objects[this.activeDataPaths[index]];
+      const property = this.activeDataPaths[index + 1];
+      parts.push(object.translation_key);
+      objects = object[property];
+      schema = schema.properties[property].schema;
+      if (!hasTranslatableFields(schema)) {
+        return [];
+      }
+    }
+    parts.push(this.activeObject.translation_key);
+    if (parts.some((part) => !part)) {
+      return [];
+    }
+    return Object.entries(schema.properties)
+      .filter(([, spec]) => spec.translatable === true)
+      .map(([field]) => `${parts.join(".")}.${field}`);
   }
 
   get fields() {
@@ -360,6 +387,10 @@ export default class SchemaSettingNewEditor extends Component {
           {{#each this.fields as |field|}}
             <FieldInput
               @description={{field.description}}
+              @isTranslationIdentifier={{and
+                (eq field.name "translation_key")
+                (hasTranslatableFields this.activeSchema)
+              }}
               @label={{field.label}}
               @name={{field.name}}
               @onValueChange={{fn this.inputFieldChanged field}}
@@ -368,6 +399,17 @@ export default class SchemaSettingNewEditor extends Component {
               @value={{get this.activeObject field.name}}
             />
           {{/each}}
+
+          {{#if this.translationKeys.length}}
+            <div class="schema-setting-editor__translation-keys">
+              <h3>{{i18n "admin.site_text.usable_keys"}}</h3>
+              <ul>
+                {{#each this.translationKeys as |key|}}
+                  <li><code>{{key}}</code></li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
 
           <div class="schema-setting-editor__field-actions">
             <DButton

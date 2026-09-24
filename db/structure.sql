@@ -10868,7 +10868,8 @@ CREATE TABLE public.theme_translation_overrides (
     translation_key character varying NOT NULL,
     value character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    original_translation text
 );
 
 
@@ -25564,6 +25565,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260923151316'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),

@@ -25,8 +25,6 @@ class ThemeTranslationManager
     untranslated: false,
     only_selected_locale: false
   )
-    return [] if outdated || (untranslated && locale.to_s == "en")
-
     regexp = I18n::Backend::DiscourseI18n.create_search_regexp(query)
     themes = Theme.includes(:locale_fields, :theme_translation_overrides)
     themes = themes.where(id: theme.id) if theme
@@ -36,7 +34,16 @@ class ThemeTranslationManager
         translated_keys = locale_translation_keys(selected_theme, locale:) if untranslated
         selected_theme.translations.filter_map do |entry|
           next if overridden && !entry.has_record?
-          next if untranslated && (entry.has_record? || translated_keys.include?(entry.key))
+          if untranslated &&
+               (
+                 entry.default_locale == locale.to_s || entry.has_record? ||
+                   translated_keys.include?(entry.key)
+               )
+            next
+          end
+          if outdated && !%w[outdated invalid_interpolation_keys].include?(entry.db_record&.status)
+            next
+          end
 
           record = entry.site_text
           if regexp.match?(record[:id]) || regexp.match?(record[:value])
@@ -80,16 +87,27 @@ class ThemeTranslationManager
     @theme = theme
   end
 
+  def default_locale
+    theme.object_translation_defaults.dig(key, :locale) || "en"
+  end
+
   def site_text
+    override = db_record
+    source_default =
+      (
+        override || ThemeTranslationOverride.new(theme:, locale: @locale, translation_key: key)
+      ).current_default
     {
       id: "js.theme_translations.#{theme.id}.#{key}",
       value: value,
-      status: "up_to_date",
-      old_default: nil,
-      new_default: default,
+      status: override&.status || "up_to_date",
+      old_default: override&.original_translation,
+      new_default: override&.status == "outdated" ? source_default : default,
+      default_text: source_default,
+      default_locale: default_locale,
       overridden: has_record?,
       can_revert: has_record?,
-      interpolation_keys: I18nInterpolationKeysFinder.find(default).sort,
+      interpolation_keys: I18nInterpolationKeysFinder.find(source_default || default).sort,
     }
   end
 

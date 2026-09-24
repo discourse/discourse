@@ -96,6 +96,29 @@ describe Jobs::LocalizeThemeTranslations do
     job.execute(theme_id: theme.id)
   end
 
+  it "translates object-editor text alongside locale-file text" do
+    theme.set_field(
+      target: :settings,
+      name: "yaml",
+      value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+    )
+    theme.save!
+    translator = mock
+    translator.stubs(:translate).returns("translated")
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+    job.execute(theme_id: theme.id)
+
+    expect(
+      theme.theme_translation_overrides.where(locale: "fr").pluck(:translation_key),
+    ).to contain_exactly(
+      "greeting",
+      "resource_sections.getting_started.title",
+      "resource_sections.getting_started.guidelines.label",
+      "resource_sections.getting_started.guidelines.description",
+    )
+  end
+
   it "preserves overrides and translations shipped in locale files by default" do
     theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Bonjour\n")
     theme.save!
@@ -155,6 +178,41 @@ describe Jobs::LocalizeThemeTranslations do
     expect(theme.theme_translation_overrides.reload.find_by!(locale: "fr").value).to eq(
       "Manual translation",
     )
+  end
+
+  it "uses the declared object default language when selected source text is missing" do
+    theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+      cards:
+        type: objects
+        default:
+          - translation_key: welcome
+            title: Bonjour
+        schema:
+          name: card
+          translations:
+            default_locale: fr
+          properties:
+            translation_key:
+              type: string
+              required: true
+            title:
+              type: string
+              translatable: true
+    YAML
+    theme.save!
+    SiteSetting.content_localization_supported_locales = "fr|es"
+    translator = mock
+    translator.stubs(:translate).returns("translated")
+    DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+    job.execute(theme_id: theme.id)
+
+    expect(
+      theme
+        .theme_translation_overrides
+        .where(translation_key: "cards.welcome.title")
+        .pluck(:locale),
+    ).to eq(["es"])
   end
 
   describe "with a non-en source locale" do

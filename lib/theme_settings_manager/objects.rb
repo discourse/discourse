@@ -18,9 +18,17 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
     objects = remove_disallowed_groups(objects)
     ensure_is_valid_value!(objects)
     objects = SchemaSettingsObjectValidator.normalize_uploads(schema:, objects:)
-    record = has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
-    theme.reload
-    record.json_value
+    # Lock a separate instance to preserve pending changes on the caller's theme.
+    Theme
+      .find(theme.id)
+      .with_lock do
+        previous_keys = theme.object_translation_defaults(reload: true).keys
+        record =
+          has_record? ? update_record!(json_value: objects) : create_record!(json_value: objects)
+        theme.object_translation_defaults(reload: true)
+        theme.refresh_object_translations!(previous_keys: previous_keys)
+        record.json_value
+      end
   end
 
   def schema
@@ -54,7 +62,79 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
     Category.secured(guardian).where(id: category_ids)
   end
 
+  def translations?
+    ThemeSettingsValidator.translatable_object_schema?(schema)
+  end
+
+  def translation_defaults
+    return {} unless translations?
+    metadata = schema[:translations] || {}
+    invalid_translation_keys! unless metadata.is_a?(Hash)
+    locale = metadata[:default_locale] || "en"
+    invalid_translation_keys! unless LocaleSiteSetting.valid_value?(locale)
+    entries = collect_translation_defaults(schema, value, name.to_s, locale, {})
+    entries
+      .keys
+      .sort
+      .each_cons(2) do |parent, child|
+        if child.start_with?("#{parent}.")
+          raise Discourse::InvalidParameters.new(
+                  I18n.t("themes.settings_errors.nested_translation_key_conflict", key: parent),
+                )
+        end
+      end
+    entries
+  end
+
   private
+
+  def collect_translation_defaults(schema, objects, prefix, locale, entries)
+    return entries unless ThemeSettingsValidator.translatable_object_schema?(schema)
+    unless schema.dig(:properties, :translation_key, :type) == "string" &&
+             schema.dig(:properties, :translation_key, :required) == true
+      invalid_translation_keys!
+    end
+    fields =
+      schema[:properties].filter_map do |field, spec|
+        next unless spec[:translatable] == true
+        unless /\A[a-z][a-z0-9_]*\z/.match?(field.to_s) && spec[:type] == "string"
+          invalid_translation_keys!
+        end
+        field
+      end
+    seen = Set.new
+    objects.each do |object|
+      object = object.with_indifferent_access
+      identifier = object[:translation_key].to_s
+      unless identifier.length <= 80 && /\A[a-z][a-z0-9_]*\z/.match?(identifier) &&
+               seen.add?(identifier)
+        invalid_translation_keys!
+      end
+      object_prefix = "#{prefix}.#{identifier}"
+      fields.each do |field|
+        key = "#{object_prefix}.#{field}"
+        invalid_translation_keys! if key.bytesize > 400 || entries.key?(key)
+        entries[key] = { text: object[field].to_s, locale: locale }
+      end
+      schema[:properties].each do |property, spec|
+        next unless spec[:type] == "objects"
+        collect_translation_defaults(
+          spec[:schema],
+          object[property] || [],
+          object_prefix,
+          locale,
+          entries,
+        )
+      end
+    end
+    entries
+  end
+
+  def invalid_translation_keys!
+    raise Discourse::InvalidParameters.new(
+            I18n.t("themes.settings_errors.invalid_translation_keys"),
+          )
+  end
 
   def remove_disallowed_groups_from_objects(objects, properties)
     objects.each do |object|

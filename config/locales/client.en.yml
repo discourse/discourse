@@ -9347,6 +9347,7 @@ en:
                 one: "at least %{count} tag is required"
                 other: "at least %{count} tags are required"
             string:
+              invalid_translation_identifier: "Start with a lowercase letter and use only lowercase letters, numbers, and underscores."
               too_short:
                 one: "must be at least %{count} character"
                 other: "must be at least %{count} characters"
@@ -10399,12 +10400,15 @@ en:
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
+        usable_keys: "Translation keys"
+        manage_translations: "Manage translations"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"
           other: "Filters (%{count})"
         edit_title: "Edit site text"
         default_text: "Default text"
+        default_text_language: "Default text · %{language}"
         value_label: "Your text · %{language}"
         invalid_title: "Invalid interpolation placeholders"
         invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."

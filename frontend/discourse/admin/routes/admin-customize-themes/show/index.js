@@ -1,5 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import hasTranslatableFields from "discourse/admin/lib/has-translatable-fields";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -26,6 +27,14 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
       editingName: false,
       userLocale: parentController.get("model.extras.locale"),
     });
+
+    if (
+      model.settings?.some((setting) =>
+        hasTranslatableFields(setting.objects_schema)
+      )
+    ) {
+      controller.updateLocale(controller.locale);
+    }
   }
 
   @action

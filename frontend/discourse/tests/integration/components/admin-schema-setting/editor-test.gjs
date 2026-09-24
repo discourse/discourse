@@ -93,6 +93,107 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    test("previews keys from stable object identifiers", async function (assert) {
+      const schema = {
+        name: "link",
+        identifier: "label",
+        properties: {
+          translation_key: { type: "string" },
+          label: { type: "string", translatable: true },
+          destination: { type: "string" },
+        },
+      };
+      const setting = {
+        setting: "resources",
+        value: [
+          {
+            translation_key: "guidelines",
+            label: "Guidelines",
+            destination: "/guidelines",
+          },
+        ],
+      };
+      await render(
+        <template>
+          <AdminSchemaSettingEditor @schema={{schema}} @setting={{setting}} />
+        </template>
+      );
+      assert
+        .dom(".schema-setting-editor__translation-keys code")
+        .hasText(
+          "resources.guidelines.label",
+          "shows the component's usable key"
+        );
+      await fillIn('.schema-field[data-name="label"] input', "Community rules");
+      assert
+        .dom(".schema-setting-editor__translation-keys code")
+        .hasText(
+          "resources.guidelines.label",
+          "editing text preserves the key"
+        );
+      await fillIn('.schema-field[data-name="translation_key"] input', "rules");
+      assert
+        .dom(".schema-setting-editor__translation-keys code")
+        .hasText(
+          "resources.rules.label",
+          "editing the identifier updates the preview"
+        );
+    });
+
+    test("validates translation identifiers without restricting ordinary text", async function (assert) {
+      const schema = {
+        name: "card",
+        identifier: "title",
+        properties: {
+          translation_key: { type: "string", required: true },
+          title: { type: "string", translatable: true },
+        },
+      };
+      const setting = {
+        setting: "welcome_cards",
+        value: [{ translation_key: "welcome", title: "Welcome home!" }],
+      };
+      await render(
+        <template>
+          <AdminSchemaSettingEditor @schema={{schema}} @setting={{setting}} />
+        </template>
+      );
+
+      const input = '.schema-field[data-name="translation_key"] input';
+      const error =
+        '.schema-field[data-name="translation_key"] .schema-field__input-error';
+      for (const value of [
+        "Welcome",
+        "1welcome",
+        "_welcome",
+        "welcome-home",
+        "welcome home",
+        "welcome.home",
+        "welcôme",
+      ]) {
+        await fillIn(input, value);
+        assert
+          .dom(error)
+          .hasText(
+            "Start with a lowercase letter and use only lowercase letters, numbers, and underscores.",
+            value
+          );
+      }
+      for (const value of ["a", "welcome", "welcome_home2"]) {
+        await fillIn(input, value);
+        assert.dom(error).doesNotExist(value);
+      }
+      await fillIn(input, "");
+      assert.dom(error).hasText(i18n("admin.customize.schema.fields.required"));
+      await fillIn(
+        '.schema-field[data-name="title"] input',
+        "Welcome Home! 123"
+      );
+      assert
+        .dom('.schema-field[data-name="title"] .schema-field__input-error')
+        .doesNotExist();
+    });
+
     test("activates the first node by default", async function (assert) {
       const setting = schemaAndData(1);
 

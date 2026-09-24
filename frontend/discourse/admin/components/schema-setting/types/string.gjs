@@ -30,6 +30,15 @@ export default class SchemaSettingTypeString extends Component {
       }
     }
 
+    if (
+      this.args.isTranslationIdentifier &&
+      !/^[a-z][a-z0-9_]*$/.test(this.value)
+    ) {
+      return i18n(
+        "admin.customize.schema.fields.string.invalid_translation_identifier"
+      );
+    }
+
     if (this.minLength && valueLength < this.minLength) {
       return i18n("admin.customize.schema.fields.string.too_short", {
         count: this.minLength,

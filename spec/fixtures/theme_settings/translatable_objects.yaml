@@ -1,0 +1,41 @@
+resource_sections:
+  type: objects
+  default:
+    - translation_key: getting_started
+      title: Resources
+      links:
+        - translation_key: guidelines
+          label: Community guidelines
+          description: Learn how to take part.
+          destination: /guidelines
+          internal_note: Leave untranslated
+  schema:
+    name: section
+    identifier: title
+    properties:
+      translation_key:
+        type: string
+        required: true
+      title:
+        type: string
+        translatable: true
+      links:
+        type: objects
+        schema:
+          name: link
+          identifier: label
+          properties:
+            translation_key:
+              type: string
+              required: true
+            label:
+              type: string
+              translatable: true
+            destination:
+              type: string
+            internal_note:
+              type: string
+              translatable: false
+            description:
+              type: string
+              translatable: true
