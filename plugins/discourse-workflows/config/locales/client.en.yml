@@ -418,12 +418,19 @@ en:
           "true": "is true"
           "false": "is false"
       topic_tags:
+        mode: "Mode"
+        mode_modify: "Modify"
+        mode_replace: "Replace all"
         operation: "Operation"
         operations:
           add: "Add tag"
           remove: "Remove tag"
         topic_id: "Topic ID"
         tag_names: "Tags"
+        add_tag_names: "Add tags"
+        remove_tag_names: "Remove tags"
+        replace_tag_names: "Tags"
+        replace_tag_names_description: "Leave empty to remove all tags."
         actor_username: "Performed by user"
       tag_group:
         operation: "Operation"

@@ -127,7 +127,10 @@ en:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
       topic_tags:
+        unknown_mode: "Unknown tag mode: %{mode}."
         no_tag_names: "No tag names provided."
+        overlapping_tag_names: "The same tags cannot be added and removed: %{tag_names}."
+        unapplied_tag_names: "Tag changes could not be applied: %{tag_names}."
         operation_failed: "Tag operation failed: %{errors}"
         personal_message_not_allowed: "'%{username}' cannot tag personal messages. Add one of their groups to the 'pm_tags_allowed_for_groups' site setting."
       tag_group:

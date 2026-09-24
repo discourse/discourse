@@ -63,6 +63,57 @@ module PageObjects
           page.has_no_css?(".workflows-configurator-modal")
         end
 
+        def has_combined_topic_tag_fields?
+          page.has_css?("[data-name='add_tag_names'] .mini-tag-chooser") &&
+            page.has_css?("[data-name='remove_tag_names'] .mini-tag-chooser") &&
+            page.has_no_css?("[data-name='replace_tag_names']") &&
+            page.has_no_css?("[data-name='operation']")
+        end
+
+        def select_topic_tag_mode(mode)
+          find("[data-name='mode'] select").select(mode)
+          self
+        end
+
+        def set_tagged_topic(topic)
+          find("[data-name='topic_id'] input[type='text']").fill_in(with: topic.id)
+          self
+        end
+
+        def add_replacement_tag(tag)
+          selector =
+            PageObjects::Components::SelectKit.new(
+              "[data-name='replace_tag_names'] .mini-tag-chooser",
+            )
+          selector.expand
+          selector.search(tag.name)
+          selector.select_row_by_value(tag.id)
+          self
+        end
+
+        def has_replacement_topic_tag_fields?
+          page.has_css?("[data-name='mode'] option:checked", text: "Replace all", visible: :all) &&
+            page.has_css?("[data-name='replace_tag_names'] .mini-tag-chooser") &&
+            page.has_css?(
+              "[data-name='replace_tag_names']",
+              text: I18n.t("js.discourse_workflows.topic_tags.replace_tag_names_description"),
+            ) && page.has_no_css?("[data-name='add_tag_names']") &&
+            page.has_no_css?("[data-name='remove_tag_names']")
+        end
+
+        def has_replacement_tag?(tag)
+          page.has_css?("[data-name='replace_tag_names'] .select-kit-header", text: tag.name)
+        end
+
+        def has_legacy_topic_tag_fields?
+          page.has_css?(
+            "[data-name='operation'] .cm-wf-reference-pill__path",
+            exact_text: "operation",
+          ) && page.has_css?("[data-name='tag_names'] .mini-tag-chooser") &&
+            page.has_no_css?("[data-name='add_tag_names']") &&
+            page.has_no_css?("[data-name='remove_tag_names']")
+        end
+
         def has_saved_node_configuration?
           page.has_css?(".workflows-configurator-modal__save-status--saved")
         end
@@ -133,10 +184,6 @@ module PageObjects
           "action:badge" => {
             "grant" => "Grant badge",
             "revoke" => "Revoke badge",
-          },
-          "action:topic_tags" => {
-            "add" => "Add",
-            "remove" => "Remove",
           },
           "action:group" => {
             "add" => "Add to group",

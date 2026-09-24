@@ -278,6 +278,13 @@ module DiscourseWorkflows
         parameter_resolver.resolve(path, item_index, default:, options:)
       end
 
+      def ensure_no_expression_errors!
+        error = @resolver.expression_errors.first
+        return unless error
+
+        raise NodeError, "#{error[:expression]}: #{error[:error]}"
+      end
+
       def helpers
         @helpers ||=
           ContextHelpers.new(
