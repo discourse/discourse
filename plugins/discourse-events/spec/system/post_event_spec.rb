@@ -378,20 +378,27 @@ describe "Post event" do
     end
   end
 
-  it "shows '-' for expired recurring events instead of dates" do
-    title = "An expired recurring event"
+  it "keeps showing the last occurrence of an expired recurring event" do
+    freeze_time Time.utc(2026, 8, 31)
     raw = <<~MD
-      [event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']
+      [event start='2026-09-01 10:00' end='2026-09-01 11:00' recurrence='every_week' recurrenceUntil='2026-09-22 23:59']
       [/event]
     MD
-    post = PostCreator.create!(admin, title:, raw:)
+    post = PostCreator.create!(admin, title: "An expired recurring event", raw:)
+    PostCreator.create!(admin, topic_id: post.topic_id, raw: "Minutes of the last meeting")
 
+    [1, 8, 15, 22].each do |day|
+      freeze_time Time.utc(2026, 9, day, 11, 1)
+      Jobs::DiscourseCalendar::MonitorEventDates.new.execute({})
+    end
+
+    freeze_time Time.utc(2026, 9, 24)
     visit(post.topic.url)
 
-    expect(page).to have_css(".discourse-post-event")
-    expect(page).to have_css(".event-date .month", text: "-")
-    expect(page).to have_css(".event-date .day", text: "-")
-    expect(page).to have_css(".event-dates", text: "-")
+    expect(page).to have_css(".event-date .month", text: "SEP")
+    expect(page).to have_css(".event-date .day", text: "22")
+    expect(page).to have_css(".event-dates .discourse-local-date")
+    expect(page).to have_css("#post_2", text: "Minutes of the last meeting")
   end
 
   context "with DST handling for recurring events" do

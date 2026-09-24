@@ -1416,38 +1416,11 @@ RSpec.describe DiscourseEvents::Events::Event do
         )
       end
 
-      it "returns nil for starts_at since no future dates can be computed" do
-        expect(expired_recurring_event.starts_at).to be_nil
-      end
-
-      it "returns nil for ends_at since no future dates can be computed" do
-        expect(expired_recurring_event.ends_at).to be_nil
-      end
-
-      it "serializer handles nil starts_at correctly" do
-        serializer =
-          DiscourseEvents::Events::EventSerializer.new(
-            expired_recurring_event,
-            scope: Guardian.new,
-            root: false,
-          )
-        json = JSON.parse(serializer.to_json)
-
-        expect(json["starts_at"]).to be_nil
-        expect(json["ends_at"]).to be_nil
-      end
-
-      it "basic serializer handles expired recurring events correctly" do
-        serializer =
-          DiscourseEvents::Events::BasicEventSerializer.new(
-            expired_recurring_event,
-            root: false,
-            scope: Guardian.new,
-          )
-        json = JSON.parse(serializer.to_json)
-
-        expect(json["starts_at"]).to be_nil
-        expect(json["ends_at"]).to be_nil
+      it "keeps the last known dates" do
+        expect(expired_recurring_event.starts_at).to eq_time(
+          expired_recurring_event.original_starts_at,
+        )
+        expect(expired_recurring_event.ends_at).to eq_time(expired_recurring_event.original_ends_at)
       end
     end
 
