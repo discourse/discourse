@@ -90,11 +90,13 @@ module Migrations
         def write(entry)
           case entry[:status]
           when UploadCreationService::Status::OK
-            @intermediate_db.insert(
-              INSERT_MAPPED_ID_SQL,
-              [entry[:original_id], MappingType::UPLOADS, entry[:discourse_id]],
-            )
-            @intermediate_db.insert(INSERT_MARKDOWN_SQL, [entry[:original_id], entry[:markdown]])
+            @intermediate_db.with_savepoint do
+              @intermediate_db.insert(
+                INSERT_MAPPED_ID_SQL,
+                [entry[:original_id], MappingType::UPLOADS, entry[:discourse_id]],
+              )
+              @intermediate_db.insert(INSERT_MARKDOWN_SQL, [entry[:original_id], entry[:markdown]])
+            end
             :ok
           when UploadCreationService::Status::SKIPPED
             # Left unmapped on purpose, so later steps treat references to it
