@@ -15,8 +15,18 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     SiteSetting.openid_connect_allow_association_change
   end
 
-  def enabled?
-    SiteSetting.openid_connect_enabled
+  def enable_setting
+    :openid_connect_enabled
+  end
+
+  # PKCE and mTLS client authentication each replace the client secret, so
+  # demanding it unconditionally would disable working installations.
+  def required_settings
+    settings = %i[openid_connect_discovery_document openid_connect_client_id]
+    if !SiteSetting.openid_connect_use_pkce && !mtls_configured?
+      settings << :openid_connect_client_secret
+    end
+    settings
   end
 
   def primary_email_verified?(auth)
@@ -206,11 +216,16 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).tr("+/", "-_").tr("=", "")
   end
 
+  def mtls_configured?
+    SiteSetting.openid_connect_mtls_client_cert.present? &&
+      SiteSetting.openid_connect_mtls_client_key.present?
+  end
+
   def mtls_ssl_options
+    return {} if !mtls_configured?
+
     cert_pem = SiteSetting.openid_connect_mtls_client_cert
     key_pem = SiteSetting.openid_connect_mtls_client_key
-    return {} if cert_pem.blank? || key_pem.blank?
-
     key_passcode = SiteSetting.openid_connect_mtls_client_key_passcode.presence
 
     {

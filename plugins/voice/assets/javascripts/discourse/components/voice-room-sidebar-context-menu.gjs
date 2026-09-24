@@ -7,6 +7,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 import VoiceInviteUsersModal from "./modal/voice-invite-users";
 import VoiceRoomInfoModal from "./modal/voice-room-info";
+import VoiceInviteAgentButton from "./voice-invite-agent-button";
 
 export default class VoiceRoomSidebarContextMenu extends Component {
   @service modal;
@@ -73,6 +74,11 @@ export default class VoiceRoomSidebarContextMenu extends Component {
 
   <template>
     <DDropdownMenu class="voice-room-sidebar-context-menu" as |dropdown|>
+      <VoiceInviteAgentButton
+        @closeMenu={{@close}}
+        @item={{dropdown.item}}
+        @room={{this.room}}
+      />
       <dropdown.item>
         <DButton
           class="voice-room-sidebar-context-menu__open-page"

@@ -178,6 +178,7 @@ gl:
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         anonymous_members: "Dámoslle a benvida a %{site_name}!"
@@ -2865,6 +2866,7 @@ gl:
       delete_confirm: "Confirma a eliminación desta categoría?"
       delete_error: "Produciuse un erro elimando esta categoría."
       no_description: "Engada unha descrición a esta categoría."
+      latest_topics: "Últimos temas"
       already_used: "Esta cor usouna outra categoría"
       security: "Seguranza"
       security_add_group: "Engadir grupo"
@@ -3058,6 +3060,7 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
+        reset: "restabelecer"
         button:
           label: "Filtro"
       latest:
@@ -3807,6 +3810,7 @@ gl:
           series:
             anonymous: "Anónimo"
             crawlers: "Rastrexadores"
+          crawler_learn_more: "Saber máis"
         period:
           custom: "Personalizado"
         reports:

@@ -98,6 +98,7 @@ class TagsController < ::ApplicationController
       format.html { render :index }
 
       format.json { render json: { tags: @tags, extras: @extras } }
+      format.md { render_markdown(MarkdownEndpoint::DirectoryRenderer.new.tags(@tags, @extras)) }
     end
   end
 
@@ -467,6 +468,12 @@ class TagsController < ::ApplicationController
       new_synonym_names = params[:synonyms]
     end
 
+    new_synonym_names =
+      DiscourseTagging.tags_for_saving(new_synonym_names, Guardian.new(Discourse.system_user)) || []
+    synonyms = Tag.where(id: synonym_tag_ids).or(Tag.where_name(new_synonym_names))
+    synonym_tag_ids = DiscourseTagging.editable_synonym_ids(synonyms, guardian)
+    new_synonym_names -= synonyms.map(&:name)
+
     value = DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:, new_synonym_names:)
     if value.is_a?(Hash)
       render json: failed_json.merge(failed_tags: value)
@@ -550,7 +557,14 @@ class TagsController < ::ApplicationController
     end
 
     url += ".json" if request.format.json?
-    url += "?#{request.query_string}" if request.query_string.present?
+    if request.format.md?
+      url += ".md"
+      query =
+        request.query_parameters.slice(*MarkdownEndpoint::ControllerSupport::SAFE_QUERY_PARAMETERS)
+      url += "?#{query.to_query}" if query.present?
+    elsif request.query_string.present?
+      url += "?#{request.query_string}"
+    end
     redirect_to url, status: :moved_permanently
   end
 

@@ -1,6 +1,41 @@
 # frozen_string_literal: true
 
 describe OAuth2BasicAuthenticator do
+  describe "configuration" do
+    let(:authenticator) { described_class.new }
+
+    before do
+      SiteSetting.oauth2_client_id = "client"
+      SiteSetting.oauth2_client_secret = ""
+      SiteSetting.oauth2_authorize_url = "https://id.example.com/authorize"
+      SiteSetting.oauth2_token_url = "https://id.example.com/token"
+    end
+
+    it "allows the provider to be enabled with an empty client secret" do
+      SiteSetting.oauth2_enabled = true
+
+      expect(authenticator.required_settings).to eq(
+        %i[oauth2_client_id oauth2_authorize_url oauth2_token_url],
+      )
+      expect(authenticator).to be_configured
+      expect(authenticator).to be_enabled
+    end
+
+    it "still requires the client ID and endpoint URLs" do
+      SiteSetting.oauth2_enabled = true
+
+      authenticator.required_settings.each do |setting|
+        value = SiteSetting.public_send(setting)
+        SiteSetting.public_send("#{setting}=", "")
+
+        expect(authenticator).not_to be_configured
+        expect(authenticator).not_to be_enabled
+
+        SiteSetting.public_send("#{setting}=", value)
+      end
+    end
+  end
+
   describe "after_authenticate" do
     before { SiteSetting.oauth2_user_json_url = "https://provider.com/user" }
 
@@ -434,6 +469,91 @@ describe OAuth2BasicAuthenticator do
       )
 
     expect(result).to eq false
+  end
+
+  describe "debug logging" do
+    let(:authenticator) { described_class.new }
+    let(:messages) { [] }
+
+    before do
+      SiteSetting.oauth2_debug_auth = true
+      allow(Rails.logger).to receive(:warn) { |message| messages << message }
+    end
+
+    it "redacts bearer credentials and URL substitutions and omits the user response" do
+      access_token = "access-token-value"
+      provider_id = "provider-user-id"
+      response_secret = "response-client-secret"
+      response_email = "private@example.com"
+      SiteSetting.oauth2_user_json_url =
+        "https://provider.com/users/:id/tokens/:token?access_token=query-token-value&view=profile"
+      SiteSetting.oauth2_json_email_path = "account.email"
+      response_body = {
+        account: {
+          email: response_email,
+          client_secret: response_secret,
+          refresh_token: "response-refresh-token",
+        },
+      }.to_json
+      user_json_url =
+        "https://provider.com/users/#{provider_id}/tokens/#{access_token}?access_token=query-token-value&view=profile"
+      request =
+        stub_request(:get, user_json_url).with(
+          headers: {
+            "Authorization" => "Bearer #{access_token}",
+          },
+        ).to_return(status: 200, body: response_body)
+
+      result = authenticator.fetch_user_details(access_token, provider_id)
+
+      expect(result[:email]).to eq(response_email)
+      expect(request).to have_been_requested.once
+      expect(messages.join).to include("view=profile", "[FILTERED]", "[OMITTED]")
+      expect(messages.join).not_to include(
+        access_token,
+        "query-token-value",
+        provider_id,
+        response_secret,
+        response_email,
+        "response-refresh-token",
+      )
+    end
+
+    it "redacts credentials, identity information, and extra authentication data" do
+      auth =
+        OmniAuth::AuthHash.new(
+          "provider" => "oauth2_basic",
+          "credentials" => {
+            "token" => "access-token-value",
+            "refresh_token" => "refresh-token-value",
+          },
+          "uid" => "provider-user-id",
+          "info" => {
+            "name" => "Private Name",
+            "email" => "private@example.com",
+          },
+          "extra" => {
+            "id_token" => "id-token-value",
+          },
+        )
+      original_auth = auth.deep_dup
+      SiteSetting.oauth2_callback_user_id_path = "uid"
+      SiteSetting.oauth2_fetch_user_details = false
+      SiteSetting.oauth2_email_verified = true
+
+      authenticator.after_authenticate(auth)
+
+      expect(messages.join).to include("after_authenticate response", "[FILTERED]")
+      expect(messages.join).not_to include(
+        "access-token-value",
+        "refresh-token-value",
+        "provider-user-id",
+        "Private Name",
+        "private@example.com",
+        "id-token-value",
+      )
+      expect(auth).to eq(original_auth)
+    end
   end
 
   describe "token_callback" do

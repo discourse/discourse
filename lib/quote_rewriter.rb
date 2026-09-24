@@ -44,15 +44,60 @@ class QuoteRewriter
       end
   end
 
-  def rewrite_raw_display_name(raw, old_display_name, new_display_name)
+  def rewrite_display_name(raw:, cooked:, old_display_name:, new_display_name:, username:)
+    hide_display_name = !SiteSetting.enable_names?
+    display_name = hide_display_name ? username : new_display_name
+    username_to_remove = username if hide_display_name
+    rewritten_raw =
+      rewrite_raw_display_name(
+        raw,
+        old_display_name,
+        display_name,
+        username_to_remove: username_to_remove,
+      )
+
+    return { raw: raw, cooked: cooked } if rewritten_raw == raw
+    return { raw: rewritten_raw, cooked: cooked } if cooked.nil?
+
+    doc = Nokogiri::HTML5.fragment(cooked)
+    rewrite_cooked_display_name(
+      doc,
+      old_display_name,
+      display_name,
+      hide_display_name: hide_display_name,
+    )
+
+    { raw: rewritten_raw, cooked: doc.to_html }
+  end
+
+  def rewrite_raw_display_name(raw, old_display_name, new_display_name, username_to_remove: nil)
     escaped_old_display_name = Regexp.escape(old_display_name)
     pattern =
       /(?<pre>\[quote\s*=\s*["'']?)#{escaped_old_display_name}(?<post>\,[^\]]*username[^\]]*\])/i
 
-    raw.gsub(pattern, "\\k<pre>#{new_display_name}\\k<post>")
+    raw.gsub(pattern) do |quote|
+      match = pattern.match(quote)
+      pre = match[:pre]
+      post = match[:post]
+
+      if username_to_remove
+        username_attribute = /,\s*username:\s*#{Regexp.escape(username_to_remove)}(?=\s*[,"'\]])/i
+        rewritten_post = post.sub(username_attribute, "")
+        next quote if rewritten_post == post
+
+        post = rewritten_post
+      end
+
+      "#{pre}#{new_display_name}#{post}"
+    end
   end
 
-  def rewrite_cooked_display_name(cooked, old_display_name, new_display_name)
+  def rewrite_cooked_display_name(
+    cooked,
+    old_display_name,
+    new_display_name,
+    hide_display_name: false
+  )
     formatted_old_display_name = PrettyText::Helpers.format_username(old_display_name)
     escaped_old_display_name = Regexp.escape(formatted_old_display_name)
     pattern = /(?<=\s)#{escaped_old_display_name}(?=:)/i
@@ -62,7 +107,9 @@ class QuoteRewriter
       .each do |aside|
         next unless div = aside.at_css("div.title")
 
-        if aside["data-display-name"] == old_display_name
+        if hide_display_name && aside["data-display-name"] == old_display_name
+          aside.remove_attribute("data-display-name")
+        elsif aside["data-display-name"] == old_display_name
           aside["data-display-name"] = new_display_name
         end
 

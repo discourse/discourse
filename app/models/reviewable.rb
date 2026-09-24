@@ -355,8 +355,10 @@ class Reviewable < ActiveRecord::Base
 
   def actions_for(guardian, args = nil)
     args ||= {}
-    built_actions =
-      Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
+    built_actions = Actions.new(self, guardian)
+    return built_actions if !can_review_target?(guardian)
+
+    build_actions(built_actions, guardian, args)
 
     # Empty bundles can cause big issues on the client side, so we remove them
     # here. It's not valid anyway to have a bundle with no actions, but you can
@@ -384,6 +386,7 @@ class Reviewable < ActiveRecord::Base
 
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
+    raise Discourse::InvalidAccess if !can_review_target?(performed_by.guardian)
 
     (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)
@@ -433,18 +436,19 @@ class Reviewable < ActiveRecord::Base
       result.affected_reviewable_ids |= resolved_reviewable_ids(affected_candidate_ids)
     end
 
-    unless status == :pending
-      if update_count || result.remove_reviewable_ids.present?
-        Jobs.enqueue(
-          :notify_reviewable,
-          reviewable_id: id,
-          performing_username: performed_by.username,
-          updated_reviewable_ids: result.remove_reviewable_ids,
-        )
-      end
+    # An action that leaves the reviewable pending didn't resolve it, so it stays in the queue.
+    result.remove_reviewable_ids -= [id] if pending?
 
-      notify_users(result, guardian)
+    if update_count || result.remove_reviewable_ids.present?
+      Jobs.enqueue(
+        :notify_reviewable,
+        reviewable_id: id,
+        performing_username: performed_by.username,
+        updated_reviewable_ids: result.remove_reviewable_ids,
+      )
     end
+
+    notify_users(result, guardian)
 
     result
   end
@@ -456,6 +460,12 @@ class Reviewable < ActiveRecord::Base
   end
 
   def transition_to(status_symbol, performed_by)
+    # Claims are held per topic, so one left behind would claim the topic's next reviewable.
+    # Released while still pending so the unclaim is recorded on this reviewable's timeline.
+    if topic_id && pending? && status_symbol.to_sym != :pending
+      ReviewableClaimedTopic.release_manual_claim(topic_id, performed_by)
+    end
+
     self.status = status_symbol
     save!
 
@@ -478,6 +488,10 @@ class Reviewable < ActiveRecord::Base
     viewable_by(performed_by)
       .where(type: type, target_id: target_ids)
       .each { |r| r.perform(performed_by, action, args) }
+  end
+
+  def self.with_deleted_content
+    Post.unscoped { Topic.unscoped { PostAction.unscoped { yield } } }
   end
 
   def self.viewable_by(user, order: nil, preload: true)
@@ -529,15 +543,26 @@ class Reviewable < ActiveRecord::Base
         )
         .where(
           "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-          Guardian.new(user).allowed_category_ids,
+          user.guardian.allowed_category_ids,
         )
 
-    exclude_private_messages_hidden_from(result, user)
+    result = exclude_private_messages_hidden_from(result, user)
+    visible_target =
+      user.guardian.reviewable_post_scope.where("posts.id = reviewable_target.id").select(:id)
+
+    result.where(<<~SQL)
+      NOT EXISTS (
+        SELECT 1 FROM posts reviewable_target
+        WHERE reviewables.target_type = 'Post'
+          AND reviewable_target.id = reviewables.target_id
+          AND NOT EXISTS (#{visible_target.to_sql})
+      )
+    SQL
   end
 
   def self.exclude_private_messages_hidden_from(result, user)
     visible_private_message_ids =
-      Guardian.new(user).private_message_topic_scope(Topic.unscoped).select(:id)
+      user.guardian.private_message_topic_scope(Topic.unscoped).select(:id)
 
     result.where(<<~SQL, private_message: Archetype.private_message)
         NOT EXISTS (
@@ -971,6 +996,11 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  def can_review_target?(guardian)
+    post = target_post
+    !post || guardian.can_review_post?(post)
+  end
 
   def target_post
     return if target_type != "Post"

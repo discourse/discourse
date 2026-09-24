@@ -9,6 +9,8 @@ hu:
     admin:
       dashboard:
         ask_ai:
+          reports:
+            retry_questions: "Újra"
           date: "Dátum"
           outcomes:
             failed: "Sikertelen"

@@ -7,6 +7,11 @@ RSpec.describe InvitesController do
   describe "#show" do
     fab!(:invite)
 
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     it "shows the accept invite page" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
@@ -70,7 +75,7 @@ RSpec.describe InvitesController do
       it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
         SiteSetting.enable_local_logins_via_code = true
         SiteSetting.public_send("#{setting}=", false)
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
 
         get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
@@ -1351,6 +1356,11 @@ RSpec.describe InvitesController do
   end
 
   describe "#perform_accept_invitation" do
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     context "when anonymous invite acceptance uses email codes" do
       fab!(:invite)
 
@@ -1533,7 +1543,7 @@ RSpec.describe InvitesController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
 
           get "/auth/google_oauth2/callback.json"
           expect(response.status).to eq(302)
@@ -1754,6 +1764,41 @@ RSpec.describe InvitesController do
         expect(User.count).to eq(user_count + 1)
       end
 
+      it "does not grant a bounded invite after another request has consumed its capacity" do
+        group = Fabricate(:group)
+        invite.update!(invited_by: admin)
+        InvitedGroup.create!(invite: invite, group: group)
+        stale_invite = Invite.find(invite.id)
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: "first@example.com",
+              password: "verystrongpassword",
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
+
+        allow(Invite).to receive(:find_by).with(invite_key: invite.invite_key).and_return(
+          stale_invite,
+        )
+
+        expect {
+          put "/invites/show/#{invite.invite_key}.json",
+              params: {
+                email: "second@example.com",
+                password: "verystrongpassword",
+              }
+        }.not_to change { User.count }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_found_json"))
+        expect(invite.reload.redemption_count).to eq(1)
+        expect(invite.invited_users.count).to eq(1)
+        expect(
+          GroupUser.where(group: group, user_id: invite.invited_users.select(:user_id)).count,
+        ).to eq(1)
+      end
+
       it "sends an activation email and does not activate the user" do
         expect {
           put "/invites/show/#{invite.invite_key}.json",
@@ -1906,7 +1951,8 @@ RSpec.describe InvitesController do
         end
 
         it "adds the user to the private topic" do
-          topic = Fabricate(:private_message_topic)
+          Group.refresh_automatic_groups_for_user!(invite.invited_by)
+          topic = Fabricate(:private_message_topic, user: invite.invited_by)
           TopicInvite.create!(invite: invite, topic: topic)
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
           expect(response.status).to eq(200)

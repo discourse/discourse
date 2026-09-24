@@ -36,6 +36,8 @@ fi:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Tapahtumamuistutus"
   site_settings:
     map_events_to_color: "Määritä jokaiselle tunnisteelle tai alueelle väri."
     map_events_title: "Korvaa \"Tapahtumat\" \"Tulevat tapahtumat\" -sivupalkin otsikossa aluekohtaisesti."
@@ -63,6 +65,15 @@ fi:
     event_participation_buttons: "Luettelo tapahtuman osallistumispainikkeista, joita käyttäjät voivat käyttää."
     sidebar_show_upcoming_events: "Näytä tulevat tapahtumat -linkki sivupalkissa Lisää-kohdan alla."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} on alkamassa"
+        ongoing: "%{title} on käynnissä"
+        after: "%{title} on päättynyt"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  ja %{count} muu"
+        other: "  ja %{count} muuta"
     category_type:
       default_calendar_view:
         day: "Päivä"
@@ -94,10 +105,8 @@ fi:
           raw_invitees_length: "Tapahtuma on rajoitettu %{count} käyttäjään/ryhmään."
           raw_invitees:
             only_group: "Tapahtuma hyväksyy vain ryhmien nimiä."
-          ends_at_before_starts_at: "Tapahtuma ei voi päättyä ennen kuin se alkaa."
           start_must_be_present_and_a_valid_date: "Tapahtuma vaatii kelvollisen alkamispäivän."
           end_must_be_a_valid_date: "Päättymispäivän täytyy olla kelvollinen päivämäärä."
-          invalid_recurrence: "Toistuvuuden on oltava jokin seuraavista: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Aikavyöhykettä ei tunnisteta."
           acting_user_not_allowed_to_create_event: "Nykyinen käyttäjä ei saa luoda tapahtumia."
           acting_user_not_allowed_to_act_on_this_event: "Nykyinen käyttäjä ei saa tehdä toimia tässä tapahtumassa."

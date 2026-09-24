@@ -201,6 +201,8 @@ class PostCreator
   end
 
   def create
+    raise Discourse::SiteArchived if SiteSetting.site_archived
+
     if valid?
       transaction do
         build_post_stats

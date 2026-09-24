@@ -31,6 +31,7 @@ zh_CN:
       resize_editor: "调整查询编辑器大小"
       default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
+      view_query: "查看"
       queries: "查询"
       query_created: "查询已创建！"
       mode:
@@ -39,6 +40,7 @@ zh_CN:
         ai: "使用 AI 生成"
       or: "或者"
       admins_only: "数据资源管理器仅供管理员使用。"
+      hidden_relation: "您无权访问此内容。"
       allow_groups: "允许群组访问此查询"
       title: "数据资源管理器"
       create: "创建"

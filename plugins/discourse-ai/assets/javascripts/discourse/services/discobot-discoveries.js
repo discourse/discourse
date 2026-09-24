@@ -218,6 +218,10 @@ export default class DiscobotDiscoveries extends Service {
     const requestId = buildRequestId();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
+    this.a11y.announce(
+      i18n("discourse_ai.discobot_discoveries.asking"),
+      "polite"
+    );
 
     this.scheduleDiscoveryTimeout();
 

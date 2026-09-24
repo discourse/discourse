@@ -5,11 +5,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import CodeLoginForm from "discourse/components/code-login-form";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -18,11 +20,12 @@ export default class ForgotPassword extends Component {
   @service siteSettings;
 
   @tracked
-  emailOrUsername = cookie("email") || this.args.model?.emailOrUsername || "";
+  emailOrUsername = this.args.model?.emailOrUsername ?? cookie("email") ?? "";
   @tracked disabled = false;
   @tracked helpSeen = false;
   @tracked offerHelp;
   @tracked flash;
+  @tracked codeSent = this.args.model?.codeSent ?? false;
 
   get submitDisabled() {
     if (this.disabled) {
@@ -32,6 +35,11 @@ export default class ForgotPassword extends Component {
     } else {
       return isEmpty(this.emailOrUsername.trim());
     }
+  }
+
+  @action
+  changeLogin() {
+    this.codeSent = false;
   }
 
   @action
@@ -59,6 +67,11 @@ export default class ForgotPassword extends Component {
         data: { login: this.emailOrUsername.trim() },
         type: "POST",
       });
+
+      if (data.email_code && data.user_found !== false) {
+        this.codeSent = true;
+        return;
+      }
 
       const emailOrUsername = escapeExpression(this.emailOrUsername);
 
@@ -101,7 +114,14 @@ export default class ForgotPassword extends Component {
       @title={{i18n "forgot_password.title"}}
     >
       <:body>
-        {{#if this.offerHelp}}
+        {{#if this.codeSent}}
+          <CodeLoginForm
+            @context="password-reset"
+            @initialEmail={{this.emailOrUsername}}
+            @initialStep="code"
+            @onChangeEmail={{this.changeLogin}}
+          />
+        {{else if this.offerHelp}}
           {{trustHTML this.offerHelp}}
         {{else if this.siteSettings.hide_email_address_taken}}
           <label for="username-or-email">
@@ -149,7 +169,7 @@ export default class ForgotPassword extends Component {
               @label="forgot_password.button_help"
             />
           {{/unless}}
-        {{else}}
+        {{else if (not this.codeSent)}}
           <DButton
             class="btn-primary forgot-password-reset"
             type="submit"

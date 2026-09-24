@@ -24,8 +24,11 @@ const ResetButton = <template>
   <DButton
     class="btn-default d-filter-controls__reset"
     @action={{@action}}
+    @ariaLabel="filter_controls.reset"
+    @disabled={{@disabled}}
     @icon="arrow-rotate-left"
-    @label="filter_controls.reset"
+    @label={{@label}}
+    @title="filter_controls.reset"
   />
 </template>;
 
@@ -34,6 +37,8 @@ const ResetButton = <template>
  *
  * client: provide searchableProps and filterFn in dropdownOptions
  * server: provide onTextFilterChange or onDropdownFilterChange callbacks
+ *
+ * The inlineFilters block places controls beside the search input, outside the drawer.
  *
  * @component DFilterControls
  * @param {Array} array - The dataset to display
@@ -60,6 +65,7 @@ const ResetButton = <template>
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {Function} [onFilterDropdownsToggle] - Callback fired when the dropdown drawer is opened or
  *                                               closed, receiving the new expanded state as a boolean
+ * @param {String} [toggleLabel] - Optional translated label for the filter drawer button.
  * @param {Boolean} [additionalFiltersActive=false] - Whether filters rendered in the additionalFilters block are active.
  *                                                     The block renders alongside the dropdowns, sharing the drawer
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
@@ -174,14 +180,6 @@ export default class DFilterControls extends Component {
   // state; with no drawer to hide behind they render on their own
   get showStandaloneAdditionalFilters() {
     return !this.showDropdownFilterToggle;
-  }
-
-  get showFilterResetButton() {
-    return (
-      this.showResetButton &&
-      !this.showDropdownFilterToggle &&
-      this.hasActiveFilters
-    );
   }
 
   get showTextFilter() {
@@ -502,8 +500,11 @@ export default class DFilterControls extends Component {
               />
             {{/if}}
 
+            {{yield to="inlineFilters"}}
+
             {{#if this.showDropdownFilterToggle}}
               <DButton
+                aria-expanded={{if this.showFilterDropdowns "true" "false"}}
                 class="btn-default d-filter-controls__toggle-filters"
                 @action={{this.toggleFilters}}
                 @icon={{if
@@ -512,9 +513,13 @@ export default class DFilterControls extends Component {
                   "filter"
                 }}
                 @title="filter_controls.toggle"
+                @translatedLabel={{@toggleLabel}}
               />
-              {{#if (and this.showResetButton this.hasActiveFilters)}}
-                <ResetButton @action={{this.resetFilters}} />
+              {{#if this.showResetButton}}
+                <ResetButton
+                  @action={{this.resetFilters}}
+                  @disabled={{not this.hasActiveFilters}}
+                />
               {{/if}}
             {{/if}}
           </div>
@@ -549,7 +554,7 @@ export default class DFilterControls extends Component {
                   {{/each}}
                 </DNativeSelect>
               {{/each-in}}
-            {{else}}
+            {{else if this.dropdownOptions.length}}
               <DNativeSelect
                 aria-label={{this.singleDropdownLabel}}
                 class={{dConcatClass
@@ -584,8 +589,11 @@ export default class DFilterControls extends Component {
           </div>
         {{/if}}
 
-        {{#if this.showFilterResetButton}}
-          <ResetButton @action={{this.resetFilters}} />
+        {{#if (and this.showResetButton (not this.showDropdownFilterToggle))}}
+          <ResetButton
+            @action={{this.resetFilters}}
+            @disabled={{not this.hasActiveFilters}}
+          />
         {{/if}}
 
         {{yield to="actions"}}
@@ -603,7 +611,10 @@ export default class DFilterControls extends Component {
             <p>{{@noResultsMessage}}</p>
           {{/if}}
           {{#if this.showResetButton}}
-            <ResetButton @action={{this.resetFilters}} />
+            <ResetButton
+              @action={{this.resetFilters}}
+              @label="filter_controls.reset"
+            />
           {{/if}}
         </div>
       {{/if}}

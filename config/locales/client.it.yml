@@ -321,6 +321,7 @@ it:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     back_button: "Indietro"
+    confirm_button: "Conferma"
     welcome_banner:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
@@ -4187,6 +4188,7 @@ it:
       list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
+      latest_topics: "Argomenti più recenti"
       description_expand: "Mostra altro"
       description_collapse: "Mostra meno"
       already_used: "Questo colore è già stato usato in un'altra categoria."
@@ -4445,6 +4447,7 @@ it:
       with_category: "%{filter} %{category} argomenti"
       filter:
         title: "Risultati filtrati per %{filter}"
+        reset: "reimposta"
         button:
           label: "Filtro"
       latest:
@@ -4650,11 +4653,11 @@ it:
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
     download_calendar:
-      title: "Scarica il calendario"
+      title: "Aggiungi al calendario"
+      calendar: "Calendario"
       save_ics: "Scarica il file.ics"
       save_google: "Aggiungi al calendario di Google"
       remember: "Non chiedermelo più"
-      remember_explanation: "(puoi cambiare questa impostazione nelle tue preferenze utente)"
       download: "Scarica"
       default_calendar: "Calendario predefinito"
       default_calendar_instruction: "Determina quale calendario usare quando si salvano le date"
@@ -5835,6 +5838,7 @@ it:
           series:
             anonymous: "Anonimo"
             crawlers: "Crawler"
+          crawler_learn_more: "Scopri di più"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"

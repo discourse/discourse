@@ -158,6 +158,23 @@ CREATE FUNCTION discourse_functions.raise_topic_timers_topic_id_readonly() RETUR
 $$;
 
 
+--
+-- Name: skip_piggyback_browser_pageview_events(); Type: FUNCTION; Schema: discourse_functions; Owner: -
+--
+
+CREATE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF NEW.source = 1 THEN
+    RETURN NULL;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -1372,6 +1389,109 @@ ALTER SEQUENCE public.ask_ai_logs_id_seq OWNED BY public.ask_ai_logs.id;
 
 
 --
+-- Name: ask_ai_report_subject_asks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_report_subject_asks (
+    id bigint NOT NULL,
+    ask_ai_report_subject_id bigint NOT NULL,
+    ask_ai_log_id bigint NOT NULL
+);
+
+
+--
+-- Name: ask_ai_report_subject_asks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_report_subject_asks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_report_subject_asks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_report_subject_asks_id_seq OWNED BY public.ask_ai_report_subject_asks.id;
+
+
+--
+-- Name: ask_ai_report_subjects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_report_subjects (
+    id bigint NOT NULL,
+    ask_ai_report_id bigint NOT NULL,
+    name character varying NOT NULL,
+    description text NOT NULL,
+    "position" integer NOT NULL,
+    ask_count integer NOT NULL
+);
+
+
+--
+-- Name: ask_ai_report_subjects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_report_subjects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_report_subjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_report_subjects_id_seq OWNED BY public.ask_ai_report_subjects.id;
+
+
+--
+-- Name: ask_ai_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_reports (
+    id bigint NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    requested_by_id bigint NOT NULL,
+    report_status integer DEFAULT 0 NOT NULL,
+    send_to_groups boolean DEFAULT false NOT NULL,
+    total_ask_count integer NOT NULL,
+    reported_ask_count integer NOT NULL,
+    topic_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    selected_ask_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    summary text DEFAULT ''::text NOT NULL
+);
+
+
+--
+-- Name: ask_ai_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_reports_id_seq OWNED BY public.ask_ai_reports.id;
+
+
+--
 -- Name: assignments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2115,6 +2235,27 @@ CREATE TABLE public.browser_pageview_event_scores (
 
 
 --
+-- Name: browser_pageview_event_scores_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_event_scores_backup (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    automation_ua_score smallint NOT NULL,
+    known_asn_score smallint NOT NULL,
+    velocity_score smallint NOT NULL,
+    churn_score smallint NOT NULL,
+    rapid_nav_score smallint NOT NULL,
+    referrer_score smallint NOT NULL,
+    engagement_score smallint NOT NULL,
+    ip_rotation_score smallint NOT NULL,
+    datacenter_asn_score smallint NOT NULL,
+    single_request_no_referrer_score smallint NOT NULL,
+    stale_browser_score smallint NOT NULL
+);
+
+
+--
 -- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2152,7 +2293,35 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL,
+    source smallint DEFAULT 2 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer,
+    browser smallint,
+    language character varying(255),
+    normalized_language character varying
+);
+
+
+--
+-- Name: browser_pageview_events_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_events_backup (
+    id bigint NOT NULL,
+    url character varying(2000) NOT NULL,
+    ip_address inet NOT NULL,
+    referrer character varying(2000),
+    user_agent character varying(1000) NOT NULL,
+    session_id character varying(32) NOT NULL,
+    topic_id integer,
+    user_id integer,
+    country_code character varying(2),
+    created_at timestamp without time zone NOT NULL,
+    asn integer,
+    score integer,
+    normalized_referrer character varying(2000),
+    normalized_referrer_version smallint,
+    source smallint NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
     browser smallint,
@@ -3793,6 +3962,68 @@ ALTER SEQUENCE public.data_explorer_query_stats_id_seq OWNED BY public.data_expl
 
 
 --
+-- Name: data_explorer_query_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_query_tags (
+    id bigint NOT NULL,
+    query_id bigint NOT NULL,
+    query_tag_id bigint NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_query_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_query_tags_id_seq OWNED BY public.data_explorer_query_tags.id;
+
+
+--
+-- Name: data_explorer_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_tags (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_tags.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4330,7 +4561,11 @@ CREATE TABLE public.discourse_kanban_boards (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     category_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
-    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL
+    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    archived boolean DEFAULT false NOT NULL,
+    archived_at timestamp(6) without time zone,
+    archived_by_id bigint,
+    original_slug character varying
 );
 
 
@@ -5646,7 +5881,8 @@ CREATE TABLE public.email_login_codes (
     expires_at timestamp(6) without time zone NOT NULL,
     consumed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    purpose integer DEFAULT 0 NOT NULL
 );
 
 
@@ -10852,6 +11088,37 @@ ALTER SEQUENCE public.topic_custom_fields_id_seq OWNED BY public.topic_custom_fi
 
 
 --
+-- Name: topic_embed_aliases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.topic_embed_aliases (
+    id bigint NOT NULL,
+    topic_embed_id bigint NOT NULL,
+    url_key text NOT NULL,
+    url_hash character varying(64) NOT NULL
+);
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.topic_embed_aliases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.topic_embed_aliases_id_seq OWNED BY public.topic_embed_aliases.id;
+
+
+--
 -- Name: topic_embeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12558,7 +12825,9 @@ CREATE TABLE public.user_options (
     chat_channel_list_sort_starred integer DEFAULT 0 NOT NULL,
     chat_channel_list_sort_dms integer DEFAULT 2 NOT NULL,
     chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
-    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL
+    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL,
+    event_reminder_preference integer DEFAULT 0 NOT NULL,
+    hidden_composer_toolbar_buttons character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -13707,6 +13976,27 @@ ALTER TABLE ONLY public.ask_ai_logs ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: ask_ai_report_subject_asks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_report_subject_asks_id_seq'::regclass);
+
+
+--
+-- Name: ask_ai_report_subjects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subjects ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_report_subjects_id_seq'::regclass);
+
+
+--
+-- Name: ask_ai_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_reports ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_reports_id_seq'::regclass);
+
+
+--
 -- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14124,6 +14414,20 @@ ALTER TABLE ONLY public.data_explorer_query_groups ALTER COLUMN id SET DEFAULT n
 --
 
 ALTER TABLE ONLY public.data_explorer_query_stats ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_query_stats_id_seq'::regclass);
+
+
+--
+-- Name: data_explorer_query_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_query_tags_id_seq'::regclass);
+
+
+--
+-- Name: data_explorer_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_tags_id_seq'::regclass);
 
 
 --
@@ -15464,6 +15768,13 @@ ALTER TABLE ONLY public.topic_custom_fields ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: topic_embed_aliases id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases ALTER COLUMN id SET DEFAULT nextval('public.topic_embed_aliases_id_seq'::regclass);
+
+
+--
 -- Name: topic_embeds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16173,6 +16484,30 @@ ALTER TABLE ONLY public.ask_ai_logs
 
 
 --
+-- Name: ask_ai_report_subject_asks ask_ai_report_subject_asks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT ask_ai_report_subject_asks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_report_subjects ask_ai_report_subjects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subjects
+    ADD CONSTRAINT ask_ai_report_subjects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_reports ask_ai_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_reports
+    ADD CONSTRAINT ask_ai_reports_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: assignments assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16269,11 +16604,27 @@ ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
 
 
 --
+-- Name: browser_pageview_event_scores_backup browser_pageview_event_scores_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores_backup
+    ADD CONSTRAINT browser_pageview_event_scores_backup_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: browser_pageview_event_scores browser_pageview_event_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.browser_pageview_event_scores
     ADD CONSTRAINT browser_pageview_event_scores_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_events_backup browser_pageview_events_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_events_backup
+    ADD CONSTRAINT browser_pageview_events_backup_pkey PRIMARY KEY (id);
 
 
 --
@@ -16658,6 +17009,22 @@ ALTER TABLE ONLY public.data_explorer_query_groups
 
 ALTER TABLE ONLY public.data_explorer_query_stats
     ADD CONSTRAINT data_explorer_query_stats_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_explorer_query_tags data_explorer_query_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags
+    ADD CONSTRAINT data_explorer_query_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_explorer_tags data_explorer_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags
+    ADD CONSTRAINT data_explorer_tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -18221,6 +18588,14 @@ ALTER TABLE ONLY public.topic_custom_fields
 
 
 --
+-- Name: topic_embed_aliases topic_embed_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases
+    ADD CONSTRAINT topic_embed_aliases_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: topic_embeds topic_embeds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -18971,17 +19346,17 @@ CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browse
 
 
 --
--- Name: idx_bpe_beacon_created_at_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (source = 2);
-
-
---
 -- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC) WHERE (browser IS NULL);
+CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (browser IS NULL);
+
+
+--
+-- Name: idx_bpe_crawler_created_at_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_crawler_created_at_covering ON public.browser_pageview_events USING btree (created_at) INCLUDE (topic_id, user_id, ip_address) WHERE (score > 55);
 
 
 --
@@ -18992,6 +19367,13 @@ CREATE INDEX idx_bpe_created_at_country_code ON public.browser_pageview_events U
 
 
 --
+-- Name: idx_bpe_created_at_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC);
+
+
+--
 -- Name: idx_bpe_created_at_normalized_referrer; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18999,31 +19381,38 @@ CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_e
 
 
 --
--- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_created_at_session_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING btree (ip_address, user_agent, created_at);
-
-
---
--- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
+CREATE INDEX idx_bpe_created_at_session_id ON public.browser_pageview_events USING btree (created_at, session_id, source);
 
 
 --
--- Name: idx_bpe_normalized_url_version; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_ip_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events USING btree (normalized_url_version);
+CREATE INDEX idx_bpe_ip_created_at ON public.browser_pageview_events USING btree (ip_address, created_at);
 
 
 --
--- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_referrer_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
+CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)));
+
+
+--
+-- Name: idx_bpe_session_created_at_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_session_created_at_covering ON public.browser_pageview_events USING btree (session_id, created_at) INCLUDE (user_id, score);
+
+
+--
+-- Name: idx_bpe_url_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_url_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
 
 
 --
@@ -19122,6 +19511,27 @@ CREATE INDEX idx_chat_messages_thread_id_id_user_id_not_deleted ON public.chat_m
 --
 
 CREATE INDEX idx_chat_pinned_messages_channel_created ON public.chat_pinned_messages USING btree (chat_channel_id, created_at DESC);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_query_tag; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_query_tag ON public.data_explorer_query_tags USING btree (query_id, query_tag_id);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_tag_query; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_tag_query ON public.data_explorer_query_tags USING btree (query_tag_id, query_id);
+
+
+--
+-- Name: idx_data_explorer_tags_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_tags_on_name ON public.data_explorer_tags USING btree (name);
 
 
 --
@@ -20326,6 +20736,41 @@ CREATE INDEX index_ask_ai_logs_on_asked_at ON public.ask_ai_logs USING btree (as
 --
 
 CREATE INDEX index_ask_ai_logs_on_user_id_and_asked_at ON public.ask_ai_logs USING btree (user_id, asked_at);
+
+
+--
+-- Name: index_ask_ai_report_subject_asks_on_ask_ai_log_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_report_subject_asks_on_ask_ai_log_id ON public.ask_ai_report_subject_asks USING btree (ask_ai_log_id);
+
+
+--
+-- Name: index_ask_ai_report_subject_asks_on_subject_and_log; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ask_ai_report_subject_asks_on_subject_and_log ON public.ask_ai_report_subject_asks USING btree (ask_ai_report_subject_id, ask_ai_log_id);
+
+
+--
+-- Name: index_ask_ai_report_subjects_on_ask_ai_report_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ask_ai_report_subjects_on_ask_ai_report_id_and_position ON public.ask_ai_report_subjects USING btree (ask_ai_report_id, "position");
+
+
+--
+-- Name: index_ask_ai_reports_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_reports_on_created_at ON public.ask_ai_reports USING btree (created_at);
+
+
+--
+-- Name: index_ask_ai_reports_on_start_date_and_end_date_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_reports_on_start_date_and_end_date_and_created_at ON public.ask_ai_reports USING btree (start_date, end_date, created_at);
 
 
 --
@@ -21897,6 +22342,13 @@ CREATE UNIQUE INDEX index_linked_topics_on_topic_id_and_sequence ON public.linke
 
 
 --
+-- Name: index_livestream_topic_chat_channels_on_chat_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_livestream_topic_chat_channels_on_chat_channel_id ON public.livestream_topic_chat_channels USING btree (chat_channel_id);
+
+
+--
 -- Name: index_llm_credit_allocations_on_llm_model_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23430,10 +23882,31 @@ CREATE UNIQUE INDEX index_topic_custom_fields_on_topic_id_and_slack_thread_id ON
 
 
 --
+-- Name: index_topic_embed_aliases_on_topic_embed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embed_aliases_on_topic_embed_id ON public.topic_embed_aliases USING btree (topic_embed_id);
+
+
+--
+-- Name: index_topic_embed_aliases_on_url_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_topic_embed_aliases_on_url_hash ON public.topic_embed_aliases USING btree (url_hash);
+
+
+--
 -- Name: index_topic_embeds_on_embed_url; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_topic_embeds_on_embed_url ON public.topic_embeds USING btree (embed_url);
+
+
+--
+-- Name: index_topic_embeds_on_lower_embed_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embeds_on_lower_embed_url ON public.topic_embeds USING btree (lower((embed_url)::text));
 
 
 --
@@ -24823,6 +25296,13 @@ CREATE TRIGGER discourse_rss_polling_rss_feeds_author_readonly BEFORE INSERT OR 
 
 
 --
+-- Name: browser_pageview_events skip_piggyback_browser_pageview_events; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER skip_piggyback_browser_pageview_events BEFORE INSERT OR UPDATE OF source ON public.browser_pageview_events FOR EACH ROW WHEN ((new.source = ANY (ARRAY[1, 2]))) EXECUTE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events();
+
+
+--
 -- Name: topic_timers topic_timers_topic_id_readonly; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -24934,6 +25414,14 @@ ALTER TABLE ONLY public.user_security_keys
 
 
 --
+-- Name: ask_ai_report_subject_asks fk_rails_969b09bee9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT fk_rails_969b09bee9 FOREIGN KEY (ask_ai_report_subject_id) REFERENCES public.ask_ai_report_subjects(id) ON DELETE CASCADE;
+
+
+--
 -- Name: reviewable_notes fk_rails_9ea278a8aa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -25022,6 +25510,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: ask_ai_report_subject_asks fk_rails_e54eb07de5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT fk_rails_e54eb07de5 FOREIGN KEY (ask_ai_log_id) REFERENCES public.ask_ai_logs(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ad_plugin_house_ads_categories fk_rails_ea323de4ce; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -25068,6 +25564,30 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260923141924'),
+('20260923080644'),
+('20260923080642'),
+('20260922233816'),
+('20260921120000'),
+('20260921081150'),
+('20260921074918'),
+('20260921015711'),
+('20260918061735'),
+('20260917145657'),
+('20260915204557'),
+('20260915191328'),
+('20260914213908'),
+('20260914172801'),
+('20260914172757'),
+('20260914140746'),
+('20260914032737'),
+('20260910110851'),
+('20260910033302'),
+('20260910030427'),
+('20260910030404'),
+('20260910030345'),
+('20260909181443'),
+('20260909132955'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
@@ -25077,8 +25597,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260903195501'),
 ('20260903065141'),
 ('20260902150024'),
+('20260902075239'),
 ('20260901020329'),
 ('20260831162602'),
+('20260831011840'),
+('20260831011839'),
+('20260831011836'),
 ('20260828145150'),
 ('20260827064809'),
 ('20260826133816'),

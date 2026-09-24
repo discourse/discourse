@@ -181,10 +181,22 @@ export default class DEditor extends Component {
     return this.editorComponent !== TextareaEditor;
   }
 
+  get hiddenToolbarButtons() {
+    if (
+      !this.userToolbarPreferences ||
+      !this.siteSettings.enable_composer_toolbar_customization
+    ) {
+      return [];
+    }
+
+    return this.currentUser?.user_option?.hidden_composer_toolbar_buttons ?? [];
+  }
+
   setupToolbar() {
-    this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities", "site")
-    );
+    this.toolbar = new Toolbar({
+      ...this.getProperties("siteSettings", "showLink", "capabilities", "site"),
+      hiddenButtons: this.hiddenToolbarButtons,
+    });
     this.toolbar.context = this;
 
     _createCallbacks.forEach((cb) => cb(this.toolbar));

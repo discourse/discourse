@@ -10,16 +10,27 @@ export function downloadCalendar(title, dates, options = {}) {
   const formattedDates = formatDates(dates);
   title = (title || i18n("download_calendar.default_title")).trim();
 
-  switch (currentUser?.user_option.default_calendar) {
-    case "ics":
-      downloadIcs(title, formattedDates, options);
-      break;
+  const defaultCalendar = currentUser?.user_option.default_calendar;
+
+  if (["ics", "google", "outlook", "apple"].includes(defaultCalendar)) {
+    addToCalendar(defaultCalendar, title, formattedDates, options);
+  } else {
+    _displayModal(title, formattedDates, options);
+  }
+}
+
+export function addToCalendar(calendar, title, dates, options = {}) {
+  switch (calendar) {
     case "google":
-      downloadGoogle(title, formattedDates, options);
+      downloadGoogle(title, dates, options);
       break;
-    case "none_selected":
-    default:
-      _displayModal(title, formattedDates, options);
+    case "outlook":
+      downloadOutlook(title, dates, options);
+      break;
+    case "apple":
+    case "ics":
+      downloadIcs(title, dates, options);
+      break;
   }
 }
 
@@ -69,6 +80,51 @@ export function downloadGoogle(title, dates, options = {}) {
 
     if (options.details) {
       link.searchParams.append("details", options.details);
+    }
+
+    window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
+  });
+}
+
+export function downloadOutlook(title, dates, options = {}) {
+  const parsedRrule = _parseRRule(options.rrule);
+
+  if (parsedRrule && _hasFreq(parsedRrule)) {
+    downloadIcs(title, dates, options);
+    return;
+  }
+
+  dates.forEach((date) => {
+    const link = new URL(
+      "https://outlook.live.com/calendar/0/deeplink/compose"
+    );
+    link.searchParams.append("path", "/calendar/action/compose");
+    link.searchParams.append("rru", "addevent");
+    link.searchParams.append("subject", title);
+
+    if (date.allDay) {
+      const { startDate, endDate } = _allDayMoments(date);
+      link.searchParams.append("startdt", startDate.format("YYYY-MM-DD"));
+      link.searchParams.append("enddt", endDate.format("YYYY-MM-DD"));
+      link.searchParams.append("allday", "true");
+    } else {
+      link.searchParams.append(
+        "startdt",
+        _formatDateForOutlookApi(date.startsAt, date.timezone)
+      );
+      link.searchParams.append(
+        "enddt",
+        _formatDateForOutlookApi(date.endsAt, date.timezone)
+      );
+      link.searchParams.append("allday", "false");
+    }
+
+    if (options.location) {
+      link.searchParams.append("location", options.location);
+    }
+
+    if (options.details) {
+      link.searchParams.append("body", options.details);
     }
 
     window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
@@ -194,6 +250,161 @@ function _allDayMoments(date) {
   return { startDate, endDate };
 }
 
+const ICAL_WEEKDAYS = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+
+function _formatIcsUtcOffset(offsetMinutes) {
+  const totalSeconds = Math.round(offsetMinutes * 60);
+  const sign = totalSeconds < 0 ? "-" : "+";
+  const absoluteSeconds = Math.abs(totalSeconds);
+  const hours = Math.floor(absoluteSeconds / 3600);
+  const minutes = Math.floor((absoluteSeconds % 3600) / 60);
+  const seconds = absoluteSeconds % 60;
+
+  return (
+    sign +
+    String(hours).padStart(2, "0") +
+    String(minutes).padStart(2, "0") +
+    (seconds ? String(seconds).padStart(2, "0") : "")
+  );
+}
+
+function _vTimezoneTransition(zone, index) {
+  const transitionAt = zone.untils[index];
+  const offsetFrom = -zone.offsets[index];
+  const offsetTo = -zone.offsets[index + 1];
+  const localStart = moment.utc(transitionAt).utcOffset(offsetFrom);
+  const day = localStart.date();
+  const ordinal = day + 7 > localStart.daysInMonth() ? -1 : Math.ceil(day / 7);
+
+  return {
+    localStart: localStart.format("YYYYMMDDTHHmmss"),
+    month: localStart.month() + 1,
+    byDay: `${ordinal}${ICAL_WEEKDAYS[localStart.day()]}`,
+    offsetFrom,
+    offsetTo,
+    name: zone.abbrs[index + 1],
+  };
+}
+
+function _sameVTimezoneRule(a, b) {
+  return (
+    a.month === b.month &&
+    a.byDay === b.byDay &&
+    a.localStart.slice(8) === b.localStart.slice(8) &&
+    a.offsetFrom === b.offsetFrom &&
+    a.offsetTo === b.offsetTo
+  );
+}
+
+function _renderVTimezoneObservance(observance) {
+  const type =
+    observance.offsetTo > observance.offsetFrom ? "DAYLIGHT" : "STANDARD";
+  const lines = [
+    `BEGIN:${type}`,
+    `DTSTART:${observance.localStart}`,
+    `RRULE:FREQ=YEARLY;BYMONTH=${observance.month};BYDAY=${observance.byDay}`,
+    `TZOFFSETFROM:${_formatIcsUtcOffset(observance.offsetFrom)}`,
+    `TZOFFSETTO:${_formatIcsUtcOffset(observance.offsetTo)}`,
+  ];
+
+  if (observance.name) {
+    lines.push(`TZNAME:${_escapeIcsValue(observance.name)}`);
+  }
+
+  lines.push(`END:${type}`);
+
+  return lines.map(_foldLine).join("\r\n") + "\r\n";
+}
+
+function _fixedVTimezone(timezone, referenceMs) {
+  const reference = moment.tz(referenceMs, timezone);
+  const offset = reference.utcOffset();
+  const start = reference
+    .clone()
+    .subtract(1, "year")
+    .startOf("year")
+    .format("YYYYMMDDTHHmmss");
+
+  return (
+    "BEGIN:VTIMEZONE\r\n" +
+    _foldLine(`TZID:${timezone}`) +
+    "\r\n" +
+    "BEGIN:STANDARD\r\n" +
+    `DTSTART:${start}\r\n` +
+    `TZOFFSETFROM:${_formatIcsUtcOffset(offset)}\r\n` +
+    `TZOFFSETTO:${_formatIcsUtcOffset(offset)}\r\n` +
+    _foldLine(`TZNAME:${_escapeIcsValue(reference.zoneAbbr())}`) +
+    "\r\n" +
+    "END:STANDARD\r\n" +
+    "END:VTIMEZONE\r\n"
+  );
+}
+
+function _generateVTimezone(timezone, referenceMs) {
+  const zone = moment.tz.zone(timezone);
+
+  if (!zone) {
+    return "";
+  }
+
+  let previousIndex = -1;
+  let nextIndex = -1;
+
+  for (let i = 0; i < zone.untils.length - 1; i++) {
+    const transitionAt = zone.untils[i];
+
+    if (!Number.isFinite(transitionAt)) {
+      break;
+    }
+
+    if (transitionAt <= referenceMs) {
+      previousIndex = i;
+    } else {
+      nextIndex = i;
+      break;
+    }
+  }
+
+  if (previousIndex === -1 || nextIndex === -1) {
+    return _fixedVTimezone(timezone, referenceMs);
+  }
+
+  const previous = _vTimezoneTransition(zone, previousIndex);
+  const next = _vTimezoneTransition(zone, nextIndex);
+  const followingPreviousIndex = previousIndex + 2;
+  const followingNextIndex = nextIndex + 2;
+
+  // A current seasonal pair reverses the same two UTC offsets and repeats
+  // the same calendar rules in the following cycle. Otherwise, use the
+  // current fixed offset rather than inventing an open-ended yearly rule.
+  if (
+    previous.offsetFrom !== next.offsetTo ||
+    previous.offsetTo !== next.offsetFrom ||
+    followingNextIndex >= zone.untils.length - 1
+  ) {
+    return _fixedVTimezone(timezone, referenceMs);
+  }
+
+  const followingPrevious = _vTimezoneTransition(zone, followingPreviousIndex);
+  const followingNext = _vTimezoneTransition(zone, followingNextIndex);
+
+  if (
+    !_sameVTimezoneRule(previous, followingPrevious) ||
+    !_sameVTimezoneRule(next, followingNext)
+  ) {
+    return _fixedVTimezone(timezone, referenceMs);
+  }
+
+  return (
+    "BEGIN:VTIMEZONE\r\n" +
+    _foldLine(`TZID:${timezone}`) +
+    "\r\n" +
+    _renderVTimezoneObservance(previous) +
+    _renderVTimezoneObservance(next) +
+    "END:VTIMEZONE\r\n"
+  );
+}
+
 /**
  * Generate ICS calendar data for the given dates
  *
@@ -205,6 +416,37 @@ function _allDayMoments(date) {
 export function generateIcsData(title, dates, options = {}) {
   let data = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Discourse//EN\r\n";
   const parsedRrule = _parseRRule(options.rrule);
+
+  const timezoneStarts = new Map();
+
+  for (const date of dates) {
+    if (date.allDay) {
+      continue;
+    }
+
+    const timezone = date.timezone || options.timezone;
+
+    if (!timezone || !moment.tz.zone(timezone)) {
+      continue;
+    }
+
+    const startsAt = moment.tz(date.startsAt, timezone);
+
+    if (!startsAt.isValid()) {
+      continue;
+    }
+
+    const existing = timezoneStarts.get(timezone);
+
+    if (existing === undefined || startsAt.valueOf() < existing) {
+      timezoneStarts.set(timezone, startsAt.valueOf());
+    }
+  }
+
+  for (const [timezone, startsAt] of timezoneStarts) {
+    data += _generateVTimezone(timezone, startsAt);
+  }
+
   dates.forEach((date) => {
     let rrule = parsedRrule;
 
@@ -280,4 +522,9 @@ function _displayModal(title, dates, options = {}) {
 function _formatDateForGoogleApi(date, timezone) {
   const momentDate = timezone ? moment.tz(date, timezone) : moment(date);
   return momentDate.utc().format("YYYYMMDD[T]HHmmss[Z]");
+}
+
+function _formatDateForOutlookApi(date, timezone) {
+  const momentDate = timezone ? moment.tz(date, timezone) : moment(date);
+  return momentDate.toISOString();
 }

@@ -304,6 +304,7 @@ vi:
       message: "Chúng tôi đã cập nhật trang này, <span>vui lòng tải lại trang</span> để cho mọi thứ hoạt động ổn định."
       dismiss: "Hủy bỏ"
     back_button: "Quay lại"
+    confirm_button: "Xác nhận"
     welcome_banner:
       header:
         new_members: "Chào mừng, %{preferred_display_name}!"
@@ -4211,6 +4212,7 @@ vi:
       list: "Danh sách chuyên mục"
       no_description: "Hãy thêm mô tả cho chuyên mục này"
       change_in_category_topic: "Sửa mô tả"
+      latest_topics: "Chủ đề mới nhất"
       description_expand: "Hiện thêm"
       description_collapse: "Thu gọn"
       already_used: "Màu này đã được dùng bởi chuyên mục khác"
@@ -4482,6 +4484,7 @@ vi:
       with_category: "%{filter} %{category} chủ đề"
       filter:
         title: "Kết quả đã lọc cho %{filter}"
+        reset: "trạng thái đầu"
         button:
           label: "Lọc"
       latest:
@@ -4680,11 +4683,11 @@ vi:
       favorite_max_not_reached: "Đánh dấu huy hiệu này là yêu thích"
       favorite_count: "%{count}/%{max} huy hiệu được đánh dấu yêu thích"
     download_calendar:
-      title: "Tải xuống lịch"
+      title: "Thêm vào lịch"
+      calendar: "Lịch"
       save_ics: "Tải xuống tệp .ics"
       save_google: "Thêm vào lịch Google"
       remember: "Đừng hỏi tôi nữa"
-      remember_explanation: "(bạn có thể thay đổi tùy chọn này trong prefs người dùng của mình)"
       download: "Tải xuống"
       default_calendar: "Lịch mặc định"
       default_calendar_instruction: "Xác định lịch nào sẽ được sử dụng khi ngày tháng được lưu"
@@ -5991,6 +5994,7 @@ vi:
           series:
             anonymous: "Ẩn danh"
             crawlers: "Trình thu thập thông tin"
+          crawler_learn_more: "Tìm hiểu thêm"
         period:
           last_7_days: "7 ngày qua"
           last_30_days: "30 ngày qua"

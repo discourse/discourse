@@ -17,6 +17,11 @@ module PageObjects
         self
       end
 
+      def invite_members
+        find(".group-members-manage button.group-members-invite").click
+        self
+      end
+
       def delete_group
         page.find("[data-test-selector='delete-group-button']").click
         page.find(".dialog-footer .btn-danger").click

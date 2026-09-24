@@ -30,6 +30,7 @@ import {
   customFieldFormName,
   defaultEventState,
   defaultReminderFor,
+  eventDateInTimezone,
   getCustomFieldNames,
   isLivestreamUrl,
   livestreamSource,
@@ -639,7 +640,7 @@ export default class PostEventBuilder extends Component {
     if (this.event.allDay) {
       return moment(this.event.startsAt, "YYYY-MM-DD");
     }
-    return moment(this.event.startsAt).tz(this.event.timezone || "UTC");
+    return eventDateInTimezone(this.event.startsAt, this.event.timezone);
   }
 
   #initEndsAt() {
@@ -649,7 +650,7 @@ export default class PostEventBuilder extends Component {
     if (this.event.allDay) {
       return moment(this.event.endsAt, "YYYY-MM-DD");
     }
-    return moment(this.event.endsAt).tz(this.event.timezone || "UTC");
+    return eventDateInTimezone(this.event.endsAt, this.event.timezone);
   }
 
   #snapshotFormData() {

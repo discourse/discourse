@@ -269,6 +269,26 @@ RSpec.describe Voice::AdminLivekitController do
         expect(room_status["presence_user_ids"]).to eq([user.id, other_user.id].sort)
       end
 
+      it "includes bot identities without interpreting malformed identities as users" do
+        bot = Fabricate(:user, id: -1400)
+        Voice::ParticipantTracker.add(room.id, bot.id)
+        list_participants_stub.to_return(
+          status: 200,
+          body: {
+            participants:
+              [user, other_user, bot].map { |participant| { identity: participant.id.to_s } } +
+                [{ identity: "#{user.id}-agent" }, { identity: "0" }],
+          }.to_json,
+        )
+
+        get_status
+
+        room_status = response.parsed_body["rooms"].first
+        expect(room_status["livekit_user_ids"]).to eq([user.id, other_user.id, bot.id].sort)
+        expect(room_status["missing_on_livekit"]).to be_empty
+        expect(room_status["missing_in_presence"]).to be_empty
+      end
+
       it "skips per-room probes when the server is already unreachable" do
         list_rooms_stub.to_timeout
         participants_stub = list_participants_stub

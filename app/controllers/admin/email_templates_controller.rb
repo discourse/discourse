@@ -20,6 +20,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         invite_password_instructions
         new_version_mailer
         new_version_mailer_with_notes
+        password_reset_code_mailer
         system_messages.backup_failed
         system_messages.backup_succeeded
         system_messages.bulk_invite_failed

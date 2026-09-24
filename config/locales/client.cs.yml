@@ -393,6 +393,7 @@ cs:
     notifications_tracking:
       tooltip: "Úroveň oznámení: %{level}"
     back_button: "Zpět"
+    confirm_button: "Potvrdit"
     welcome_banner:
       header:
         new_members: "Vítejte, %{preferred_display_name}!"
@@ -4863,6 +4864,7 @@ cs:
       list: "Přehled kategorií"
       no_description: "Doplňte prosím popis této kategorie."
       change_in_category_topic: "Úprava popisu"
+      latest_topics: "Nejnovější témata"
       description_expand: "Zobrazit více"
       description_collapse: "Zobrazit méně"
       already_used: "Tato barva je již použita jinou kategorií"
@@ -5175,6 +5177,7 @@ cs:
       with_category: "%{filter} %{category} témata"
       filter:
         title: "Filtrované výsledky pro %{filter}"
+        reset: "resetovat"
         button:
           label: "Filtr"
       latest:
@@ -5407,11 +5410,11 @@ cs:
       favorite_max_not_reached: "Označit tento odznak jako oblíbený"
       favorite_count: "%{count}/%{max} odznaků označeno jako oblíbené"
     download_calendar:
-      title: "Stáhnout kalendář"
+      title: "Přidat do kalendáře"
+      calendar: "Kalendář"
       save_ics: "Stáhnout soubor .ics"
       save_google: "Přidat do kalendáře Google"
       remember: "Již se mě neptejte"
-      remember_explanation: "(toto nastavení můžete změnit v předvolbách uživatele)"
       download: "Stáhnout"
       default_calendar: "Výchozí kalendář"
       default_calendar_instruction: "Určí, který kalendář se má použít při ukládání dat"
@@ -6755,6 +6758,7 @@ cs:
           series:
             anonymous: "Anonymní"
             crawlers: "Vyhledávače"
+          crawler_learn_more: "Zjistit více"
         period:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"

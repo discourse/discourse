@@ -10,8 +10,8 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -28,6 +28,7 @@ import {
 } from "../../lib/voice/video-grid-layout";
 import VoiceInviteUsersModal from "../modal/voice-invite-users";
 import VoiceRoomInfoModal from "../modal/voice-room-info";
+import VoiceInviteAgentButton from "../voice-invite-agent-button";
 import VoiceCallControls from "./call-controls";
 import VoiceCallSubmenu from "./call-submenu";
 import VoiceCaptionOverlay from "./caption-overlay";
@@ -418,7 +419,7 @@ export default class VoiceRoomPage extends Component {
     }
 
     // Nothing to return to, e.g. the room page was opened directly.
-    this.router.replaceWith(`discovery.${defaultHomepage()}`);
+    this.router.replaceWith(homepageNavigationDestination());
   }
 
   @action
@@ -698,6 +699,11 @@ export default class VoiceRoomPage extends Component {
                 >
                   <:content as |roomMenu|>
                     <DDropdownMenu as |dropdown|>
+                      <VoiceInviteAgentButton
+                        @closeMenu={{roomMenu.close}}
+                        @item={{dropdown.item}}
+                        @room={{this.room}}
+                      />
                       {{#if this.chatAvailable}}
                         <dropdown.item>
                           <DButton

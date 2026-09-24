@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "tmpdir"
-
 RSpec.describe Migrations::Converters::EmbedBuffer do
   subject(:buffer) { described_class.new(owner_type:) }
 
@@ -26,6 +24,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           quoted_user_id: 2,
           quoted_username: "bob",
           quoted_name: "Bob B",
+          original_markdown: "[quote=\"bob, post:3, topic:8\"]",
         )
 
       expect(buffer.quotes).to contain_exactly(
@@ -37,6 +36,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           quoted_user_id: 2,
           quoted_username: "bob",
           quoted_name: "Bob B",
+          original_markdown: "[quote=\"bob, post:3, topic:8\"]",
         },
       )
     end
@@ -48,6 +48,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           text: "here",
           target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::TOPIC,
           target_id: 9,
+          original_markdown: "[here](https://example.com)",
+          url_offset: 7,
         )
 
       expect(buffer.links).to contain_exactly(
@@ -60,16 +62,32 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           target_name: nil,
           target_topic_id: nil,
           target_post_number: nil,
+          target_tag_path: nil,
           target_suffix: nil,
+          original_markdown: "[here](https://example.com)",
+          url_offset: 7,
+          label_url_offset: nil,
         },
       )
     end
 
     it "records a mention descriptor keyed for IntermediateDB::EmbedMention" do
-      token = buffer.mention(mention_type: mention_type::USER, target_id: 7, name: "bob")
+      token =
+        buffer.mention(
+          mention_type: mention_type::USER,
+          target_id: 7,
+          name: "bob",
+          original_markdown: "@bob",
+        )
 
       expect(buffer.mentions).to contain_exactly(
-        { placeholder: token, mention_type: mention_type::USER, target_id: 7, name: "bob" },
+        {
+          placeholder: token,
+          mention_type: mention_type::USER,
+          target_id: 7,
+          name: "bob",
+          original_markdown: "@bob",
+        },
       )
     end
 
@@ -87,7 +105,13 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "records a hashtag descriptor keyed for IntermediateDB::EmbedHashtag" do
-      token = buffer.hashtag(hashtag_type: hashtag_type::CATEGORY, target_id: nil, name: "support")
+      token =
+        buffer.hashtag(
+          hashtag_type: hashtag_type::CATEGORY,
+          target_id: nil,
+          name: "support",
+          original_markdown: "#support",
+        )
 
       expect(buffer.hashtags).to contain_exactly(
         {
@@ -95,6 +119,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           hashtag_type: hashtag_type::CATEGORY,
           target_id: nil,
           name: "support",
+          original_markdown: "#support",
         },
       )
     end
@@ -134,7 +159,12 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       token = buffer.upload(upload_id: "abc123", original_markdown: "![x](/uploads/x.png)")
 
       expect(buffer.uploads).to contain_exactly(
-        { placeholder: token, upload_id: "abc123", original_markdown: "![x](/uploads/x.png)" },
+        {
+          placeholder: token,
+          upload_id: "abc123",
+          original_markdown: "![x](/uploads/x.png)",
+          external_host: nil,
+        },
       )
     end
 
@@ -222,24 +252,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
   end
 
   describe "#write_for" do
-    around do |example|
-      Dir.mktmpdir do |dir|
-        db_path = File.join(dir, "intermediate.db")
-        Migrations::Database.migrate(
-          db_path,
-          migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
-        )
-        @db = Migrations::Database.connect(db_path)
-        Migrations::Database::IntermediateDB.setup(@db)
-        example.run
-      ensure
-        Migrations::Database::IntermediateDB.setup(nil)
-      end
-    end
-
-    def rows(table)
-      [].tap { |out| @db.query("SELECT * FROM #{table}") { |row| out << row } }
-    end
+    include_context "with intermediate database"
 
     it "inserts each recorded embed into its linkage table under the owner" do
       quote = buffer.quote(quoted_user_id: 5)

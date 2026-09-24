@@ -5,12 +5,13 @@ RSpec.describe DiscourseAi::Embeddings::ProviderHealth do
 
   after { described_class.clear!(definition) }
 
-  def error(category)
+  def error(category, retry_after: nil)
     DiscourseAi::Inference::EmbeddingInferenceError.new(
       provider: definition.provider,
       category: category,
       http_status: 429,
       provider_error_code: category,
+      retry_after: retry_after,
     )
   end
 
@@ -68,12 +69,24 @@ RSpec.describe DiscourseAi::Embeddings::ProviderHealth do
     expect(pause_ttl).to be_between(29, 30)
   end
 
-  it "does not pause temporary rate limits" do
+  it "pauses rate limits for the advertised Retry-After" do
+    expect {
+      described_class.request!(definition) { raise error(:rate_limited, retry_after: 90) }
+    }.to raise_error(DiscourseAi::Inference::EmbeddingInferenceError)
+
+    expect(described_class).to be_paused(definition)
+    expect(pause_ttl).to be_between(89, 90)
+  end
+
+  it "pauses rate limits for the minimum delay when there is no Retry-After" do
     expect { described_class.request!(definition) { raise error(:rate_limited) } }.to raise_error(
       DiscourseAi::Inference::EmbeddingInferenceError,
     )
 
-    expect(described_class).not_to be_paused(definition)
+    expect(pause_ttl).to be_between(
+      described_class::MIN_RATE_LIMIT_PAUSE.to_i - 1,
+      described_class::MIN_RATE_LIMIT_PAUSE.to_i,
+    )
   end
 
   it "does not share health state with unsaved definitions" do

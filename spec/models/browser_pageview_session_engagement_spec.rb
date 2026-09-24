@@ -39,6 +39,31 @@ RSpec.describe BrowserPageviewSessionEngagement do
       expect(described_class.find_by(session_id: "sess-1").time_to_first_interaction_ms).to be_nil
     end
 
+    it "clamps counters that exceed the integer column limit" do
+      described_class.upsert_from_payload(**attributes.merge(mouse_move_events: 2**33))
+
+      expect(described_class.find_by(session_id: "sess-1").mouse_move_events).to eq(
+        described_class::MAX_COLUMN_VALUE,
+      )
+    end
+
+    it "drops a time to first interaction that exceeds the integer column limit" do
+      described_class.upsert_from_payload(
+        **attributes.merge(time_to_first_interaction_ms: 3_781_140_981),
+      )
+
+      expect(described_class.find_by(session_id: "sess-1").time_to_first_interaction_ms).to be_nil
+    end
+
+    it "keeps a previously recorded time to first interaction when a later one is out of range" do
+      described_class.upsert_from_payload(**attributes.merge(time_to_first_interaction_ms: 800))
+      described_class.upsert_from_payload(
+        **attributes.merge(time_to_first_interaction_ms: 3_781_140_981),
+      )
+
+      expect(described_class.find_by(session_id: "sess-1").time_to_first_interaction_ms).to eq(800)
+    end
+
     it "truncates an over-long session id to the column limit" do
       long_id = "a" * (described_class::MAX_SESSION_ID_LENGTH + 10)
 

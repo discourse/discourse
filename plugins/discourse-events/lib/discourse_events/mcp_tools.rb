@@ -3,6 +3,24 @@
 module DiscourseEvents
   module McpTools
     class ListEvents
+      REQUIRED_SCOPES = %w[discourse-calendar:read].freeze
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          events: {
+            type: "array",
+            items:
+              DiscourseMcp::OutputSchema.object(
+                id: DiscourseMcp::OutputSchema::INTEGER,
+                post_id: DiscourseMcp::OutputSchema::INTEGER,
+                topic_id: DiscourseMcp::OutputSchema::INTEGER,
+                name: DiscourseMcp::OutputSchema::STRING,
+                starts_at: DiscourseMcp::OutputSchema::STRING_OR_NULL,
+                ends_at: DiscourseMcp::OutputSchema::STRING_OR_NULL,
+                status: DiscourseMcp::OutputSchema::ANY,
+              ),
+          },
+        )
+
       def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 50).to_i.clamp(1, 100)
         events =
