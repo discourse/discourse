@@ -64,6 +64,10 @@ module JsonApiKit
       raise ArgumentError, "#{source} #{conflict.message}"
     end
 
+    def current_resource_type(type) = type_renames.current(type)
+
+    def previous_resource_type(type) = type_renames.previous(type)
+
     def current_names(name) = transformations.current_names(current_type(name))
 
     def current_attributes(attributes)
@@ -78,16 +82,20 @@ module JsonApiKit
       transformations.previous_values(attributes).transform_keys { previous_type(it) }
     end
 
-    def current_default_sorts
-      default_sorts.convert_names { transformations.current_names(it).sole }
+    def current_default_sort(default) = default.convert_names { current_names(it).sole }
+
+    def each_current_default_sort(type)
+      default_sorts.each_for(type) do |default|
+        yield default.convert_names { transformations.current_names(it).sole }
+      end
     end
 
     private
 
     attr_reader :transformations, :type_renames, :default_sorts
 
-    def current_type(name) = name.convert_type { type_renames.current(it) }
+    def current_type(name) = name.convert_type { current_resource_type(it) }
 
-    def previous_type(name) = name.convert_type { type_renames.previous(it) }
+    def previous_type(name) = name.convert_type { previous_resource_type(it) }
   end
 end

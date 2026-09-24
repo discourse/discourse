@@ -34,23 +34,28 @@ RSpec.describe JsonApiKit::VersionChange::DefaultSorts do
     end
   end
 
-  describe "#convert_names" do
-    subject(:converted_defaults) { default_sorts.convert_names { it.with(value: it.value.upcase) } }
+  describe "#each_for" do
+    subject(:resource_defaults) { default_sorts.each_for(type).to_a }
 
-    it "converts the names in every default" do
-      expect(converted_defaults).to match(
-        [
-          have_attributes(type: "TOPICS", ordering: { "POSTED_AT" => :desc }),
-          have_attributes(type: "USERS", ordering: { "USERNAME" => :asc }),
-        ],
-      )
+    let(:type) { "topics" }
+
+    it "yields only the requested resource's default" do
+      expect(resource_defaults).to eq([topic_default])
+    end
+
+    context "when the resource has no default declaration" do
+      let(:type) { "posts" }
+
+      it "returns no defaults" do
+        expect(resource_defaults).to be_empty
+      end
     end
 
     context "when the collection is empty" do
       let(:defaults) { [] }
 
       it "returns no defaults" do
-        expect(converted_defaults).to be_empty
+        expect(resource_defaults).to be_empty
       end
     end
   end
@@ -83,8 +88,39 @@ RSpec.describe JsonApiKit::VersionChange do
     end
   end
 
-  describe "#current_default_sorts" do
-    subject(:default_sorts) { version_change.current_default_sorts }
+  describe "#current_default_sort" do
+    subject(:current_default) { version_change.current_default_sort(default_sort) }
+
+    let(:default_sort) { JsonApiKit::DefaultSort.new(type, posted_at: :desc) }
+    let(:type) { "topics" }
+
+    it "translates an existing default's sort names" do
+      expect(current_default).to have_attributes(
+        type: "topics",
+        ordering: {
+          "created_at" => :desc,
+        },
+      )
+    end
+
+    context "when the resource type also changes" do
+      let(:type) { "discussions" }
+
+      before { change_class.renamed_type from: :discussions, to: :topics }
+
+      it "translates the type before the sort names" do
+        expect(current_default).to have_attributes(
+          type: "topics",
+          ordering: {
+            "created_at" => :desc,
+          },
+        )
+      end
+    end
+  end
+
+  describe "#each_current_default_sort" do
+    subject(:default_sorts) { version_change.enum_for(:each_current_default_sort, "topics").to_a }
 
     it "translates sort names within the declaring change" do
       expect(default_sorts.sole).to have_attributes(
@@ -100,6 +136,22 @@ RSpec.describe JsonApiKit::VersionChange do
 
       it "returns no default overrides" do
         expect(default_sorts).to be_empty
+      end
+    end
+
+    context "when type names are reused in the same change" do
+      before do
+        change_class.renamed_type from: :topics, to: :archives
+        change_class.renamed_type from: :discussions, to: :topics
+      end
+
+      it "preserves the declaration's current type" do
+        expect(default_sorts.sole).to have_attributes(
+          type: "topics",
+          ordering: {
+            "created_at" => :desc,
+          },
+        )
       end
     end
   end
