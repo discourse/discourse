@@ -246,6 +246,75 @@ RSpec.describe Boards::Api::BoardsController do
       expect(response.body).not_to include(hidden_tag.name)
     end
 
+    it "hides restricted tags attached to topic cards from anonymous board readers" do
+      hidden_tag = Fabricate(:tag, name: "staff-topic")
+      visible_tag = Fabricate(:tag, name: "public-topic")
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      topic = Fabricate(:topic, category:, tags: [hidden_tag, visible_tag])
+      board =
+        Fabricate(
+          :boards_board,
+          name: "Public Roadmap",
+          slug: "public-roadmap-topics",
+          created_by: admin,
+        )
+      Fabricate(
+        :access_control_list,
+        target: board,
+        permission: "view",
+        allowed_group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+      )
+      column = board.columns.create!(title: "Visible", position: 0)
+      board.cards.create!(card_type: :topic, topic:, column:, position: 0, created_by: admin)
+
+      get "/boards/api/boards/#{board.id}.json"
+
+      expect(response.status).to eq(200)
+      topic_data = response.parsed_body["columns"].first["cards"].first["topic"]
+      expect(topic_data["tags"]).to contain_exactly(visible_tag.name)
+      expect(response.body).not_to include(hidden_tag.name)
+    end
+
+    it "uses one tag visibility query for all topic cards" do
+      hidden_tag = Fabricate(:tag, name: "staff-topic")
+      visible_tag = Fabricate(:tag, name: "public-topic")
+      other_visible_tag = Fabricate(:tag, name: "another-public-topic")
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      board =
+        Fabricate(
+          :boards_board,
+          name: "Public Roadmap",
+          slug: "public-roadmap-topic-tags",
+          created_by: admin,
+        )
+      Fabricate(
+        :access_control_list,
+        target: board,
+        permission: "view",
+        allowed_group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+      )
+      column = board.columns.create!(title: "Visible", position: 0)
+      [visible_tag, other_visible_tag].each do |tag|
+        topic = Fabricate(:topic, category:, tags: [hidden_tag, tag])
+        board.cards.create!(
+          card_type: :topic,
+          topic:,
+          column:,
+          position: board.cards.count,
+          created_by: admin,
+        )
+      end
+
+      queries = track_sql_queries { get "/boards/api/boards/#{board.id}.json" }
+      visibility_queries = queries.grep(/"tag_group_memberships"/)
+      topic_tags =
+        response.parsed_body["columns"].first["cards"].map { |card| card["topic"]["tags"] }
+
+      expect(response.status).to eq(200)
+      expect(topic_tags).to contain_exactly([visible_tag.name], [other_visible_tag.name])
+      expect(visibility_queries.size).to eq(1)
+    end
+
     it "hides restricted tags attached to floater cards from users who can read the board" do
       hidden_tag = Fabricate(:tag, name: "staff-floater")
       visible_tag = Fabricate(:tag, name: "public-floater")
