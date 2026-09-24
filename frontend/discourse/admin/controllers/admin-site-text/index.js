@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import ReseedModal from "discourse/admin/components/modal/reseed";
 import discourseDebounce from "discourse/lib/debounce";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { i18n } from "discourse-i18n";
 
 let lastSearch;
 
@@ -40,6 +41,27 @@ export default class AdminSiteTextIndexController extends Controller {
 
   #page = 0;
   #results = trackedArray();
+
+  get activeFilterCount() {
+    return [
+      this.resolvedOverridden,
+      this.resolvedOutdated,
+      this.resolvedOnlySelectedLocale,
+      this.resolvedUntranslated,
+    ].filter(Boolean).length;
+  }
+
+  get hasActiveFilters() {
+    return this.activeFilterCount > 0;
+  }
+
+  get filterLabel() {
+    return this.hasActiveFilters
+      ? i18n("admin.site_text.filters_active", {
+          count: this.activeFilterCount,
+        })
+      : i18n("admin.site_text.filters");
+  }
 
   get siteTexts() {
     return this.#results.flat();
@@ -127,6 +149,21 @@ export default class AdminSiteTextIndexController extends Controller {
   toggleOnlySelectedLocale() {
     this.onlySelectedLocale = this.resolvedOnlySelectedLocale ? null : true;
     this.resetSearch();
+  }
+
+  @action
+  resetFilters() {
+    this.overridden = null;
+    this.outdated = null;
+    this.untranslated = null;
+    this.onlySelectedLocale = null;
+    this.resetSearch();
+  }
+
+  @action
+  updateSearch(event) {
+    this.q = event.target.value;
+    this.search();
   }
 
   @action

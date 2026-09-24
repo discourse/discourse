@@ -28,7 +28,12 @@ describe Admin::McpController do
       expect(response.status).to eq(200)
       scopes = response.parsed_body["available_scopes"]
       expect(scopes).to eq(scopes.uniq.sort)
-      expect(scopes).to include("mcp:profile:read", "mcp:content:read", "mcp:content:write")
+      expect(scopes).to include(
+        "mcp:profile:read",
+        "mcp:profile:write",
+        "mcp:content:read",
+        "mcp:content:write",
+      )
       expect(response.parsed_body["primitives"]).to be_present
     end
   end

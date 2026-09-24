@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { isArray } from "@ember/array";
-import { fn } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import Tree from "discourse/admin/components/schema-setting/editor/tree";
 import FieldInput from "discourse/admin/components/schema-setting/field";
@@ -26,9 +25,12 @@ export default class SchemaSettingNewEditor extends Component {
   @autoTrackedArray activeSchemaPaths = [];
   @autoTrackedArray history = [];
 
-  inputFieldObserver = new Map();
-  data = this.#trackNestedArrays(cloneJSON(this.args.setting.value));
   schema = this.args.schema;
+  data = trackedArray(
+    cloneJSON(this.args.setting.value).map((object) =>
+      this.#prepareObject(object, this.schema)
+    )
+  );
 
   get backButtonText() {
     if (this.history.length === 0) {
@@ -50,28 +52,32 @@ export default class SchemaSettingNewEditor extends Component {
     return this.#resolveDataFromPaths(this.activeDataPaths);
   }
 
+  get activeObject() {
+    return this.activeData[this.activeIndex];
+  }
+
   get activeSchema() {
     return this.#resolveSchemaFromPaths(this.activeSchemaPaths);
   }
 
   get fields() {
     const list = [];
-    const activeObject = this.activeData[this.activeIndex];
 
-    if (activeObject) {
-      for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
-        if (spec.type === "objects") {
-          continue;
-        }
+    if (!this.activeObject) {
+      return list;
+    }
 
-        list.push({
-          name,
-          spec,
-          value: activeObject[name],
-          description: this.fieldDescription(name, spec),
-          label: this.fieldLabel(name, spec),
-        });
+    for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
+      if (spec.type === "objects") {
+        continue;
       }
+
+      list.push({
+        name,
+        spec,
+        description: this.fieldDescription(name, spec),
+        label: this.fieldLabel(name, spec),
+      });
     }
 
     return list;
@@ -96,7 +102,6 @@ export default class SchemaSettingNewEditor extends Component {
     this.activeIndex = index;
     this.activeDataPaths.push(parentNodeIndex, propertyName);
     this.activeSchemaPaths.push(propertyName);
-    this.inputFieldObserver.clear();
   }
 
   @action
@@ -109,7 +114,7 @@ export default class SchemaSettingNewEditor extends Component {
     let title;
 
     if (schema.properties[schema.identifier]?.type === "categories") {
-      title = this.activeData[index][schema.identifier]
+      title = object[schema.identifier]
         ?.map((categoryId) => {
           return (
             this.args.setting.metadata?.categories?.[categoryId]?.name ||
@@ -123,11 +128,6 @@ export default class SchemaSettingNewEditor extends Component {
     }
 
     return title || `${schema.name} ${index + 1}`;
-  }
-
-  @action
-  registerInputFieldObserver(index, callback) {
-    this.inputFieldObserver[index] = callback;
   }
 
   descriptions(fieldName, key) {
@@ -173,12 +173,13 @@ export default class SchemaSettingNewEditor extends Component {
     this.activeDataPaths = lastDataPaths;
     this.activeSchemaPaths = lastSchemaPaths;
     this.activeIndex = lastIndex;
-    this.inputFieldObserver.clear();
   }
 
   @action
   addChildItem(propertyName, parentNodeIndex) {
-    this.activeData[parentNodeIndex][propertyName].push({});
+    this.activeData[parentNodeIndex][propertyName].push(
+      this.#prepareObject({}, this.activeSchema.properties[propertyName].schema)
+    );
 
     this.onChildClick(
       this.activeData[parentNodeIndex][propertyName].length - 1,
@@ -189,7 +190,7 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   addItem() {
-    this.activeData.push({});
+    this.activeData.push(this.#prepareObject({}, this.activeSchema));
     this.activeIndex = this.activeData.length - 1;
   }
 
@@ -218,11 +219,7 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   inputFieldChanged(field, newVal) {
-    this.activeData[this.activeIndex][field.name] = newVal;
-
-    if (field.name === this.activeSchema.identifier) {
-      this.inputFieldObserver[this.activeIndex]();
-    }
+    this.activeObject[field.name] = newVal;
   }
 
   @action
@@ -292,46 +289,25 @@ export default class SchemaSettingNewEditor extends Component {
 
   #swapAdjacentItems(fromIndex, toIndex) {
     const item = this.activeData[fromIndex];
-    const fromCallback = this.inputFieldObserver[fromIndex];
-    const toCallback = this.inputFieldObserver[toIndex];
 
-    // Move the data
     this.activeData.splice(fromIndex, 1);
     this.activeData.splice(toIndex, 0, item);
-
-    // Swap the observer callbacks to match new positions
-    this.inputFieldObserver[toIndex] = fromCallback;
-    this.inputFieldObserver[fromIndex] = toCallback;
   }
 
-  /**
-   * Recursively converts nested arrays to TrackedArrays for reactivity
-   *
-   * @param {*} input - The input value to convert
-   * @returns {TrackedArray|*} The converted value with TrackedArrays
-   *
-   * @private
-   */
-  #trackNestedArrays(input) {
-    // Return early if input is null/undefined/empty
-    if (!input) {
-      return input;
+  #prepareObject(object, schema) {
+    for (const [name, spec] of Object.entries(schema.properties)) {
+      if (spec.type === "objects") {
+        object[name] = trackedArray(
+          (object[name] || []).map((child) =>
+            this.#prepareObject(child, spec.schema)
+          )
+        );
+      } else if (Array.isArray(object[name])) {
+        object[name] = trackedArray(object[name]);
+      }
     }
 
-    // If input is an array, convert it to a TrackedArray and recursively convert its items
-    if (isArray(input)) {
-      return trackedArray(input.map((item) => this.#trackNestedArrays(item)));
-    }
-
-    // If input is an object, recursively convert its values
-    if (typeof input === "object") {
-      Object.keys(input).forEach((key) => {
-        input[key] = this.#trackNestedArrays(input[key]);
-      });
-    }
-
-    // Return the input after converting any arrays to TrackedArrays
-    return input;
+    return trackedObject(object);
   }
 
   async _confirmRemove(warning) {
@@ -366,7 +342,6 @@ export default class SchemaSettingNewEditor extends Component {
             @data={{this.activeData}}
             @generateSchemaTitle={{this.generateSchemaTitle}}
             @onChildClick={{this.onChildClick}}
-            @registerInputFieldObserver={{this.registerInputFieldObserver}}
             @schema={{this.activeSchema}}
             @updateIndex={{this.updateIndex}}
           />
@@ -390,7 +365,7 @@ export default class SchemaSettingNewEditor extends Component {
               @onValueChange={{fn this.inputFieldChanged field}}
               @setting={{@setting}}
               @spec={{field.spec}}
-              @value={{field.value}}
+              @value={{get this.activeObject field.name}}
             />
           {{/each}}
 

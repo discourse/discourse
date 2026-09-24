@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 pt:
+  markdown_endpoints:
+    latest: "Mais Recente"
+    categories: "Categorias"
+    tags: "Etiquetas"
+    previous_page: "Página anterior"
+    next_page: "Próxima página"
+    replies: "Respostas"
+    last_updated: "Última atualização"
   mcp:
+    errors:
+      topic_not_found: "Tópico não encontrado"
     oauth:
       deny: "Rejeitar"
       approve: "Autorizar"
@@ -709,7 +719,7 @@ pt:
   unsubscribed:
     topic_description: "Para re-subscrever a %{link}, use o controle de notificação no fundo ou à direita do tópico."
   unsubscribe:
-    title: "Cancelar subscrição"
+    unsubscribe: "Cancelar a Subscrição"
     stop_watching_topic: "Parar de vigiar este tópico, %{link}"
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"
@@ -1423,6 +1433,7 @@ pt:
     password_too_long: "As palavras-passe estão limitadas a 200 caracteres."
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
+    missing_username: "Por favor introduza um nome de utilizador"
     second_factor_title: "Autenticação em Dois Passos"
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
     second_factor_toggle:

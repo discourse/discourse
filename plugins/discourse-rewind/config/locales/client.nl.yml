@@ -12,7 +12,6 @@ nl:
           discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rewind
       title: Rewind
       loading: "Splines retirculeren..."
       viewing_other_user: "Je bekijkt het Discourse Rewind-rapport van <strong>%{username}</strong> ."
@@ -92,18 +91,14 @@ nl:
             one: "Het beste bericht van %{username}"
             other: "De %{count} beste berichten van %{username}"
         ai_usage:
-          title: AI-gebruik
           total_requests: Totaal aantal verzoeken
           total_tokens: Totaal aantal tokens
           success_rate: Succespercentage
-          favorite_features: Meest gebruikte functies
-          favorite_models: Meest gebruikte AI-modellen
           wake_up: "Wakker worden %{username}..."
           system_title: "AI-GEBRUIK GEDETECTEERD"
           section_features: "TOPFUNCTIES"
           section_models: "TOPMODELLEN"
         assignments:
-          title: Toewijzingen
           total_assigned: Toegewezen aan mij
           total_assigned_others: "Toegewezen aan %{username}"
           completed: Voltooide toewijzingen
@@ -112,13 +107,6 @@ nl:
           completion_rate: Voltooiingspercentage
         chat_usage:
           title: Chatactiviteit
-          total_messages: Totaal aantal berichten
-          dm_messages: Directe berichten
-          unique_dm_channels: Conversaties via directe berichten
-          reactions_received: Ontvangen reacties
-          avg_message_length: Gemiddelde berichtlengte
-          favorite_channels: Favoriete kanalen
-          messages: berichten
           bot_name: XxRewindBotxX
           author: Jij
           author_others: "%{username}"
@@ -144,28 +132,7 @@ nl:
           message_4: "Je gemiddelde berichtlengte is <strong>%{length}</strong> tekens"
           message_5: "Je favoriete kanalen:"
           dancing_baby_alt: "Dansende baby"
-        favorite_gifs:
-          title:
-            one: Je favoriete GIF
-            other: Je %{count} favoriete GIF's
-          title_others:
-            one: "De favoriete GIF van %{username}"
-            other: "De %{count} favoriete GIF's van %{username}"
-          total_usage:
-            one: '%{count} keer gebruikt'
-            other: '%{count} keer gebruikt'
         invites:
-          title: Uitnodigingen
-          total_invites: Totaal aantal verzonden uitnodigingen
-          redeemed: Geaccepteerde uitnodigingen
-          redemption_rate: Acceptatiepercentage
-          avg_trust_level: Gemiddeld vertrouwensniveau
-          invitee_impact: Impact van je uitgenodigden
-          invitee_impact_others: "Impact van de uitgenodigden van %{username}"
-          invitee_posts: Gemaakte berichten
-          invitee_topics: Gestarte topics
-          invitee_likes: Gegeven likes
-          most_active_invitee: Meest actieve uitgenodigde
           guest_book_title: Gastenboek
           guest_book_subtitle: Je community-uitnodigingen
           guest_book_subtitle_others: "De community-uitnodigingen van %{username}"
@@ -178,22 +145,9 @@ nl:
           label_likes_given: "Gegeven likes:"
           section_most_active: Meest actieve gast
         new_user_interactions:
-          title: Nieuwe gebruikers mentoreren
-          subtitle:
-            one: Je hebt dit jaar %{count} nieuwe gebruiker geholpen
-            other: Je hebt dit jaar %{count} nieuwe gebruikers geholpen
-          subtitle_others:
-            one: "%{username} heeft dit jaar %{count} nieuwe gebruiker geholpen"
-            other: "%{username} heeft dit jaar %{count} nieuwe gebruikers geholpen"
           new_member:
             one: "%{count} nieuw lid"
             other: "%{count} nieuwe leden"
-          total_interactions: Totaal aantal interacties
-          unique_new_users: Unieke nieuwe gebruikers
-          likes_given: Gegeven likes
-          replies: Antwoorden op berichten
-          mentions: Vermeldingen
-          topics_with_new_users: Topics met nieuwe gebruikers
           contributions_helped: je bijdragen hielpen
           contributions_helped_others: "De bijdragen van %{username} hielpen"
         time_of_day_activity:

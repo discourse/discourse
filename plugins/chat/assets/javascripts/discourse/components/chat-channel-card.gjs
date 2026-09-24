@@ -59,7 +59,7 @@ export default <template>
             <ToggleChannelMembershipButton
               @channel={{@channel}}
               @options={{hash
-                leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
+                leaveClass="btn-default btn-small chat-channel-card__leave-btn"
                 labelType="short"
               }}
             />

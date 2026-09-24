@@ -35,7 +35,7 @@ class OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
       else
         "failed"
       end
-    Rails.logger.warn("OAuth2 Basic: token request #{detail}: #{e.class} #{e.message}")
+    Rails.logger.warn("OAuth2 Basic: token request #{detail}: #{e.class}")
     fail!(:oauth2_basic_request_failed, e)
   end
 

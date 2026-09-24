@@ -379,6 +379,7 @@ ur:
     notifications_tracking:
       tooltip: "اطلاع کی سطح: %{level}"
     back_button: "واپس"
+    confirm_button: "تصدیق کریں"
     welcome_banner:
       header:
         new_members: "خوش آمدید، %{preferred_display_name}!"
@@ -2886,8 +2887,6 @@ ur:
       signup_instructions: "اس فورم میں شمولیت کے لیے اپنا ای میل درج کریں۔ ہم آپ کو تصدیق کے لیے ایک کوڈ بھیجیں گے جس سے آپ کی شروعات ہو جائے گی!"
       user_fields_title: "تقریباً مکمل"
       user_fields_instructions: "چند مزید تفصیلات، آپ کے اکاؤنٹ کی تخلیق کو انجام دینے کے لیے۔"
-      account_ready_title: "آپ کا اکاؤنٹ تیار ہے! 🎉"
-      account_ready_edit: "اپنا اسم صارف اور اوتار منتخب کریں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
       username_placeholder: "ایک اسم صارف منتخب کریں"
@@ -4980,6 +4979,7 @@ ur:
       list: "زمرہ جات کی فہرست دیکھیں"
       no_description: "براہ مہربانی اس زمرہ کی تفصیل شامل کریں۔"
       change_in_category_topic: "تفصیل میں ترمیم کریں"
+      latest_topics: "تازہ ترین ٹاپک"
       description_updated: "تفصیل اپ ڈیٹ ہو گئی"
       description_expand: "مزید دکھائیں"
       description_collapse: "کم دکھائیں"
@@ -5267,6 +5267,7 @@ ur:
       with_category: "%{filter} %{category} ٹاپک"
       filter:
         title: "%{filter}کے لیے فلٹر شدہ نتائج"
+        reset: "ری سیٹ"
         button:
           label: "فِلٹر"
       latest:
@@ -5511,16 +5512,18 @@ ur:
       favorite_max_not_reached: "اس تمغہ کو پسندیدہ کے بطور نشان زد کریں"
       favorite_count: "%{max} تمغات کو پسندیدہ کے طور پر %{count}نشان زد کیا گیا"
     download_calendar:
-      title: "کیلنڈر ڈاؤن لوڈ کریں"
+      title: "کیلنڈر میں شامل کریں"
+      calendar: "کیلنڈر"
       save_ics: ".ics فائل ڈاؤن لوڈ کریں"
       save_google: "گوگل کیلنڈر میں شامل کریں"
       remember: "مجھے دوبارہ مت پوچھیں"
-      remember_explanation: "(آپ اس ترجیح کو اپنے رکن کی ترجیحات میں تبدیل کر سکتے ہیں)"
       download: "ڈاؤن لوڈ"
       default_calendar: "ڈیفالٹ کیلنڈر"
       default_calendar_instruction: "تعین کریں کہ تاریخیں محفوظ ہونے پر کون سا کیلنڈر استعمال کیا جائے"
       add_to_calendar: "کیلنڈر میں شامل کریں"
       google: "گوگل کیلنڈر"
+      outlook: "مائیکروسافٹ آؤٹ لک"
+      apple: "ایپل کیلنڈر"
       ics: "ICS"
       default_title: "طے شدہ ایونٹس"
     tagging:
@@ -6981,6 +6984,7 @@ ur:
             anonymous: "گمنام"
             crawlers: "کرالرز"
           see_details: "تفصیلات دیکھیں"
+          crawler_learn_more: "مزید جانیں"
         period:
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"

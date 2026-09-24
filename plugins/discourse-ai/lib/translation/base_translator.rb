@@ -3,6 +3,10 @@
 module DiscourseAi
   module Translation
     class BaseTranslator
+      DEFAULT_OUTPUT_TOKEN_BUDGET = 4096
+      TRANSLATION_EXPANSION_FACTOR = 2
+      PROMPT_TOKEN_RESERVE = 256
+
       def initialize(
         text:,
         target_locale:,
@@ -33,17 +37,40 @@ module DiscourseAi
         return nil if model.blank?
 
         bot = DiscourseAi::Agents::Bot.as(translation_user, agent:, model:)
+        tokenizer = model.tokenizer_class
+        payload_overhead = tokenizer.size(formatted_content(""))
+        output_tokens = output_token_budget(model, agent, payload_overhead)
+        chunk_size = output_tokens / TRANSLATION_EXPANSION_FACTOR
+        chunks =
+          ContentSplitter.split(content: @text, chunk_size:) do |text|
+            [tokenizer.size(text), tokenizer.size(formatted_content(text)) - payload_overhead].max
+          end
 
         translated =
-          ContentSplitter
-            .split(content: @text, chunk_size: model.max_output_tokens)
-            .map { |text| get_translation(text:, bot:, translation_user:, model:) }
+          chunks
+            .map { |text| get_translation(text:, bot:, translation_user:, model:, output_tokens:) }
             .join("")
 
         strip_control_characters(translated)
       end
 
       private
+
+      def output_token_budget(model, agent, payload_overhead)
+        prompt_tokens =
+          [
+            agent.system_prompt,
+            JSON.generate(agent.response_format),
+            *Array(agent.examples).flatten,
+          ].sum { |text| model.tokenizer_class.size(text) }
+        available_tokens =
+          model.max_prompt_tokens - prompt_tokens - payload_overhead - PROMPT_TOKEN_RESERVE
+
+        [
+          model.max_output_tokens || DEFAULT_OUTPUT_TOKEN_BUDGET,
+          available_tokens * TRANSLATION_EXPANSION_FACTOR / (TRANSLATION_EXPANSION_FACTOR + 1),
+        ].min
+      end
 
       def formatted_content(content)
         payload = { content:, target_locale: @target_locale }
@@ -61,7 +88,7 @@ module DiscourseAi
         text.gsub(/[\u0000-\u0008\u000B-\u001F\u007F\u0080-\u009F]/, "")
       end
 
-      def get_translation(text:, bot:, translation_user:, model:)
+      def get_translation(text:, bot:, translation_user:, model:, output_tokens:)
         context =
           DiscourseAi::Agents::BotContext.new(
             user: translation_user,
@@ -71,7 +98,7 @@ module DiscourseAi
             topic: @topic,
             post: @post,
           )
-        llm_args = { max_tokens: model.max_output_tokens }
+        llm_args = { max_tokens: model.max_output_tokens && output_tokens }
 
         structured_output = nil
         result = +""

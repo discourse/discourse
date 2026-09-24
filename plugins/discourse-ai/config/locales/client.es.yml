@@ -24,6 +24,8 @@ es:
             title: "Preguntar a la IA"
         ask_ai:
           title: "Preguntar a la IA"
+          reports:
+            retry_questions: "Reintentar"
           date: "Fecha"
           outcomes:
             failed: "Falló"

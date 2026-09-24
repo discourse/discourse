@@ -230,16 +230,30 @@ $number-input-width: var(--form-kit-small-input);
     max-width: var(--form-kit-max-input);
     flex-direction: row-reverse;
     align-items: center;
+    bottom: var(--powered-by-height, 0);
+
+    @include viewport.until(sm) {
+      &__main-label {
+        display: none;
+      }
+    }
+
+    @include viewport.from(sm) {
+      bottom: calc(var(--powered-by-height, 0px) + var(--space-5));
+
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--powered-by-height, 0px) + var(--space-5)
+        );
+      }
+    }
 
     .controls {
       flex-direction: row-reverse;
       margin-right: auto;
     }
   }
-}
-
-#main-outlet:has(.edit-category) + .powered-by-discourse {
-  display: none; // hide for now due to alignment
 }
 
 .edit-category-description-container {

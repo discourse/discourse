@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import Category from "discourse/models/category";
 import { eq, or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -15,18 +15,31 @@ import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { loadCategories } from "../lib/boards-categories";
 import BoardsBoardSettings from "./modal/boards-board-settings";
-
-function boardCategories(board) {
-  return (board.category_ids || [])
-    .map((id) => Category.findById(id))
-    .filter(Boolean);
-}
 
 export default class BoardsPage extends Component {
   @service modal;
   @service router;
   @service toasts;
+
+  get statusOptions() {
+    return {
+      status: [
+        { value: "all", label: i18n("boards.status.all") },
+        {
+          value: "open",
+          label: i18n("boards.status.open"),
+          filterFn: (board) => !board.archived,
+        },
+        {
+          value: "archived",
+          label: i18n("boards.status.archived"),
+          filterFn: (board) => board.archived,
+        },
+      ],
+    };
+  }
 
   @action
   openNewBoardModal() {
@@ -84,12 +97,17 @@ export default class BoardsPage extends Component {
       </DPageHeader>
 
       <DFilterControls
+        @additionalFiltersActive={{true}}
         @array={{@boards}}
+        @defaultDropdownValue={{hash status="open"}}
+        @dropdownFilterQueryParams={{hash status="status"}}
+        @dropdownOptions={{this.statusOptions}}
         @inputPlaceholder={{i18n "boards.filter_boards"}}
         @minItemsForFilter={{1}}
         @noResultsMessage={{i18n "boards.filter_boards_no_results"}}
         @searchableProps={{array "name"}}
         @showCustomEmptyState={{true}}
+        @showResetButton={{false}}
         @textFilterQueryParam="filter"
       >
         <:content as |filteredBoards|>
@@ -108,9 +126,16 @@ export default class BoardsPage extends Component {
 
                 {{#if (or board.category_ids.length board.tag_names.length)}}
                   <div class="discourse-boards-board-card__constraints">
-                    {{#each (boardCategories board) as |category|}}
-                      {{dBoundCategoryLink category link=false}}
-                    {{/each}}
+                    <DAsyncContent
+                      @asyncData={{loadCategories}}
+                      @context={{board.category_ids}}
+                    >
+                      <:content as |categories|>
+                        {{#each categories as |category|}}
+                          {{dBoundCategoryLink category link=false}}
+                        {{/each}}
+                      </:content>
+                    </DAsyncContent>
                     {{#if board.tag_names.length}}
                       <div class="list-tags">
                         {{dDiscourseTags null tags=board.tag_names}}

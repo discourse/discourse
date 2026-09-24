@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  markdown_endpoints:
+    latest: "Siste"
+    categories: "Kategorier"
+    tags: "Stikkord"
+    previous_page: "Forrige side"
+    next_page: "Neste side"
+    replies: "Svar"
+    last_updated: "Sist oppdatert"
   mcp:
+    errors:
+      topic_not_found: "Fant ikke emnet"
     oauth:
       deny: "Avslå"
       approve: "Autoriser"
@@ -617,7 +627,7 @@ nb_NO:
     topic_description: "For å melde deg på %{link} igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
     private_topic_description: "For å melde deg på igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
   unsubscribe:
-    title: "Avmeld"
+    unsubscribe: "Avmeld"
     stop_watching_topic: "Slutt å følge dette emnet, %{link}"
     mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"
@@ -1137,6 +1147,7 @@ nb_NO:
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
+    missing_username: "Skriv inn et brukernavn"
     second_factor_title: "To-faktor autentisering"
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
     second_factor_toggle:

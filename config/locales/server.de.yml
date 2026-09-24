@@ -5,7 +5,20 @@
 # https://translate.discourse.org/
 
 de:
+  markdown_endpoints:
+    latest: "Aktuelle"
+    categories: "Kategorien"
+    tags: "Schlagwörter"
+    previous_page: "Vorherige Seite"
+    next_page: "Nächste Seite"
+    replies: "Antworten"
+    last_updated: "Zuletzt aktualisiert"
   mcp:
+    errors:
+      draft_too_long: "Der Entwurf ist zu lang"
+      post_not_found: "Beitrag nicht gefunden"
+      topic_not_found: "Thema nicht gefunden"
+      user_not_found: "Benutzer nicht gefunden"
     oauth:
       resource: "MCP-Server"
       deny: "ablehnen"
@@ -1198,7 +1211,8 @@ de:
   uploads:
     marked_insecure_from_theme_component_reason: "in Theme-Komponente verwendeter Upload"
   unsubscribe:
-    title: "Abbestellen"
+    title: "%{email} abmelden"
+    unsubscribe: "Abbestellen"
     stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
     mute_topic: "Alle Benachrichtigungen für dieses Thema stummschalten, %{link}"
     unwatch_category: "Themen in %{category} nicht mehr beobachten"
@@ -1767,13 +1781,7 @@ de:
       sidekiq_check: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
       queue_size: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq-Worker starten."
       ram: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
-      google_oauth2_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Google OAuth2 erlaubt (enable_google_oauth2_logins), aber die Client-ID und die Client-Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-      facebook_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die Geheimnis-Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-      twitter_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-      github_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit GitHub erlaubt (enable_github_logins), aber die Client-ID und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
       github_onebox_backoff: "GitHub begrenzt die Serverauslastung, daher werden GitHub-Links möglicherweise erst angezeigt, wenn das Limit zurückgesetzt wurde. Wenn du {{setting:github_onebox_access_tokens}} konfigurierst, wird das Limit deutlich erhöht."
-      s3_upload_config: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
-      s3_backup_config: 'Der Server ist so konfiguriert, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
       s3_cdn: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber es ist kein S3-CDN konfiguriert. Dies kann zu hohen S3-Kosten und einer langsameren Performance der Website führen. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Unter „Objektspeicher für Uploads verwenden“ erfährst du mehr</a>.'
       image_magick: 'Der Server ist so konfiguriert, dass er Vorschaubilder von großen Bildern erstellt, aber ImageMagick ist nicht installiert. Installiere ImageMagick mit deinem bevorzugten Paketmanager oder <a href="https://www.imagemagick.org/script/download.php" target="_blank">lade die aktuelle Version herunter</a>.'
       failing_emails: '%{num_failed_jobs} E-Mail-Jobs sind fehlgeschlagen. Überprüfe deine app.yml und stelle sicher, dass die Mailservereinstellungen korrekt sind. <a href="%{base_path}/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq anzeigen</a>.'
@@ -2797,7 +2805,6 @@ de:
       markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung müssen zuerst alle „google oauth2 hd“-Einstellungen festgelegt werden."
       discourse_id_registration: "Die automatische Registrierung bei Discourse ID ist fehlgeschlagen. Das kann an Problemen mit der Netzwerkverbindung, an Firewall-Einschränkungen oder daran liegen, dass der Discourse ID-Dienst nicht erreichbar ist. Bitte überprüfe die Server-Logs für weitere Details oder kontaktiere den Support."
-      linkedin_oidc_credentials: "Du musst die LinkedIn-OIDC-Anmeldedaten („linkedin_oidc_client_id“ und „linkedin_oidc_client_secret“) konfigurieren, bevor du diese Einstellung aktivierst."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
@@ -2889,8 +2896,6 @@ de:
       tags_any: "Themen mit einem der angegebenen Schlagwörter anzeigen (durch Kommas getrennt)"
       tags_all: "Themen mit allen angegebenen Schlagwörtern anzeigen (durch Pluszeichen getrennt)"
       exclude_tag: "Themen mit einem bestimmten Schlagwort ausschließen"
-      exclude_tags_any: "Themen mit einem der angegebenen Schlagwörter ausschließen (durch Kommas getrennt)"
-      exclude_tags_all: "Themen mit allen angegebenen Schlagwörtern ausschließen (durch Kommas getrennt)"
       tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe anzeigen"
       exclude_tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe ausschließen"
       activity_before: "Themen mit letzter Aktivität vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
@@ -2900,7 +2905,6 @@ de:
       created_before: "Themen anzeigen, die vor einem bestimmten Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
       created_after: "Themen anzeigen, die nach einem Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
       created_by: "Themen anzeigen, die von einem bestimmten Benutzer oder Mitgliedern einer Gruppe erstellt wurden"
-      created_by_user: "Themen anzeigen, die von 'Benutzername' oder einem Mitglied aus 'Gruppe' erstellt wurden (ohne @)"
       created_by_multiple: "Themen anzeigen, die von einem der angegebenen Benutzer oder Gruppen erstellt wurden (durch Kommas getrennt)"
       latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
       latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
@@ -3113,6 +3117,7 @@ de:
     wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
     reserved_username: "Der Benutzername ist nicht erlaubt."
     missing_user_field: "Du hast nicht alle erforderlichen Benutzerfelder ausgefüllt"
+    missing_username: "Bitte einen Benutzernamen eingeben"
     missing_full_name: "Bitte gib deinen vollständigen Namen ein"
     auth_complete: "Authentifizierung ist abgeschlossen."
     click_to_continue: "Klicke hier, um fortzufahren."
@@ -4608,7 +4613,7 @@ de:
         Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} genehmigt.
 
         Du kannst dein neues Konto nun verwenden, indem du dich hier anmeldest:
-        %{base_url}
+        %{login_url}
 
         Wenn sich der oben stehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Browsers einzufügen.
 
@@ -5732,6 +5737,9 @@ de:
         title: "Beitrag wiederherstellen"
         description: "Der Meldung widersprechen und den Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt."
+      disagree_and_keep_deleted:
+        title: "Beitrag gelöscht lassen"
+        complete: "Beitrag gelöscht gelassen."
       disagree_bundle:
         title: "Nein"
       disagree:

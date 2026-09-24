@@ -592,6 +592,19 @@ RSpec.describe TagsController do
       expect(response.redirect_url).to match(%r{/tag/test/#{tag.id}/l/top\.json\?period=daily})
     end
 
+    it "preserves raw query strings in HTML and JSON redirects" do
+      synonym = Fabricate(:tag, target_tag: tag)
+      query = "encoded=first%20value&duplicate=one&duplicate=two&path=%2Ffoo%2fbar"
+
+      get "/tag/#{tag.name}?#{query}"
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to end_with("/tag/test/#{tag.id}?#{query}")
+
+      get "/tag/#{synonym.name}/l/top.json?#{query}"
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to end_with("/tag/test/#{tag.id}/l/top.json?#{query}")
+    end
+
     it "is not creating infinite redirect loop when tag is a synonym of itself" do
       tag.update!(target_tag_id: tag.id)
 
@@ -2467,6 +2480,32 @@ RSpec.describe TagsController do
       sign_in(admin)
       post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "synonym1" }] }
       expect(response.status).to eq(200)
+    end
+
+    it "does not merge hidden tags submitted by ID or name" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      hidden_tag_by_id = Fabricate(:tag, name: "hidden-tag-by-id")
+      hidden_tag_by_name = Fabricate(:tag, name: "hidden-tag-by-name")
+      topic = Fabricate(:topic, tags: [hidden_tag_by_id, hidden_tag_by_name])
+      Fabricate(
+        :tag_group,
+        permissions: {
+          "staff" => 1,
+        },
+        tags: [hidden_tag_by_id, hidden_tag_by_name],
+      )
+
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json",
+           params: {
+             tags: [{ id: hidden_tag_by_id.id }, { name: hidden_tag_by_name.name }],
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(hidden_tag_by_id.reload.target_tag_id).to be_nil
+      expect(hidden_tag_by_name.reload.target_tag_id).to be_nil
+      expect_same_tag_names(topic.reload.tags, [hidden_tag_by_id, hidden_tag_by_name])
     end
 
     context "when signed in as admin" do

@@ -555,7 +555,8 @@ RSpec.describe InviteRedeemer do
       end
 
       it "adds the user to the appropriate private topic and no others" do
-        topic1 = Fabricate(:private_message_topic)
+        invite.invited_by.change_trust_level!(TrustLevel[2])
+        topic1 = Fabricate(:private_message_topic, user: invite.invited_by)
         topic2 = Fabricate(:private_message_topic)
         TopicInvite.create(invite: invite, topic: topic1)
         user =
@@ -568,6 +569,29 @@ RSpec.describe InviteRedeemer do
           ).redeem
         expect(TopicAllowedUser.exists?(topic: topic1, user: user)).to eq(true)
         expect(TopicAllowedUser.exists?(topic: topic2, user: user)).to eq(false)
+      end
+
+      it "does not add the user to a private topic when the inviter can no longer invite to it" do
+        invite.invited_by.change_trust_level!(TrustLevel[2])
+        topic = Fabricate(:private_message_topic, user: invite.invited_by)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        expect(invite.invited_by.guardian.can_invite_to?(topic)).to eq(true)
+
+        topic.topic_allowed_users.where(user_id: invite.invited_by_id).destroy_all
+
+        expect(invite.invited_by.guardian.can_invite_to?(topic)).to eq(false)
+
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+          ).redeem
+
+        expect(TopicAllowedUser.exists?(topic: topic, user: user)).to eq(false)
       end
 
       context "when a redeeming user is passed in" do
@@ -583,7 +607,8 @@ RSpec.describe InviteRedeemer do
         end
 
         it "adds the user to the appropriate private topic and no others" do
-          topic1 = Fabricate(:private_message_topic)
+          invite.invited_by.change_trust_level!(TrustLevel[2])
+          topic1 = Fabricate(:private_message_topic, user: invite.invited_by)
           topic2 = Fabricate(:private_message_topic)
           TopicInvite.create(invite: invite, topic: topic1)
           InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user).redeem
@@ -592,7 +617,8 @@ RSpec.describe InviteRedeemer do
         end
 
         it "does not create a topic allowed user record if the invited user is already in the topic" do
-          topic1 = Fabricate(:private_message_topic)
+          invite.invited_by.change_trust_level!(TrustLevel[2])
+          topic1 = Fabricate(:private_message_topic, user: invite.invited_by)
           TopicInvite.create(invite: invite, topic: topic1)
           TopicAllowedUser.create(topic: topic1, user: redeeming_user)
           expect {

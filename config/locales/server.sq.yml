@@ -5,7 +5,18 @@
 # https://translate.discourse.org/
 
 sq:
+  markdown_endpoints:
+    latest: "Më të fundit"
+    categories: "Categories"
+    tags: "Etiketat"
+    previous_page: "Faqe mëparshme"
+    next_page: "Faqja tjetër"
+    replies: "Përgjigjet"
+    last_updated: "Përditësimi i fundit"
   mcp:
+    errors:
+      draft_too_long: "Mesazhi shembull është shumë i gjatë"
+      topic_not_found: "Tema nuk u gjet"
     oauth:
       deny: "Mohoni"
       approve: "Autorizo"
@@ -432,7 +443,7 @@ sq:
   unsubscribed:
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
-    title: "Çregjistrohuni"
+    unsubscribe: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
     log_out: "Shkëputu"
@@ -955,6 +966,7 @@ sq:
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "Ky emër nuk lejohet."
+    missing_username: "Ju lutemi shkruani një emër përdoruesi"
   admin:
     email:
       sent_test: "u dërgua!"

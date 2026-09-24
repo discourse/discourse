@@ -31,6 +31,7 @@ pl_PL:
       resize_editor: "Zmień rozmiar edytora zapytań"
       default_query: "Domyślny"
       default_query_notice: "To jest zapytanie domyślne, którego nie można edytować. Aby edytować zapytanie SQL, utwórz nowe zapytanie."
+      view_query: "Widok"
       queries: "Zapytania"
       query_created: "Zapytanie utworzone!"
       mode:
@@ -39,6 +40,7 @@ pl_PL:
         ai: "Generuj za pomocą AI"
       or: "lub"
       admins_only: "Eksplorator danych jest dostępny wyłącznie dla administratorów."
+      hidden_relation: "Nie masz dostępu do tej treści."
       allow_groups: "Zezwól grupom na dostęp do tego zapytania"
       title: "Eksplorator danych"
       create: "Utwórz"

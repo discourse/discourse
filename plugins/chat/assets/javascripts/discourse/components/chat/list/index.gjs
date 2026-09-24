@@ -54,7 +54,7 @@ export default class List extends Component {
   }
 
   async debouncedLoadCollection() {
-    await this.args.collection.load({ limit: 10 });
+    await this.args.collection.load({ limit: 10 }).catch(() => {});
   }
 
   <template>

@@ -80,6 +80,14 @@ RSpec.describe UserOption do
       user = Fabricate(:user)
       expect(user.user_option.composition_mode).to eq(UserOption.composition_mode_types[:markdown])
     end
+
+    it "stores each supported default calendar" do
+      %w[ics google outlook apple].each do |calendar|
+        user.user_option.update!(default_calendar: calendar)
+
+        expect(user.user_option.reload.default_calendar).to eq(calendar)
+      end
+    end
   end
 
   describe "understood languages" do
