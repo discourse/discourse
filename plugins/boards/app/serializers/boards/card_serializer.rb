@@ -80,15 +80,19 @@ module Boards
     def ordered_tags
       return [] unless SiteSetting.tagging_enabled
 
-      tag_ids = visible_tag_ids(object.tag_ids)
+      tag_ids = normalized_tag_ids(object.tag_ids)
       tags_by_id = @options[:tags_by_id]
-      return Card.ordered_tags(tag_ids) if tags_by_id.blank?
+      return tag_ids.filter_map { |tag_id| tags_by_id[tag_id] } unless tags_by_id.nil?
 
-      tag_ids.filter_map { |tag_id| tags_by_id[tag_id] }
+      Card.ordered_tags(visible_tag_ids(tag_ids))
+    end
+
+    def normalized_tag_ids(tag_ids)
+      Array(tag_ids).compact_blank.map(&:to_i).reject(&:zero?).uniq
     end
 
     def visible_tag_ids(tag_ids)
-      normalized_tag_ids = Array(tag_ids).compact_blank.map(&:to_i).reject(&:zero?).uniq
+      normalized_tag_ids = normalized_tag_ids(tag_ids)
       guardian = scope || Guardian.new
       return normalized_tag_ids if normalized_tag_ids.blank? || guardian.is_admin?
 

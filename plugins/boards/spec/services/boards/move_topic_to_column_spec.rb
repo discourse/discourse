@@ -122,15 +122,13 @@ RSpec.describe Boards::MoveTopicToColumn do
         expect(result[:card].column_changed_at).to be_present
       end
 
-      it "publishes a card_created event scoped to board read groups" do
+      it "publishes a board_updated event scoped to board read groups" do
         expect(messages).to contain_exactly(
           have_attributes(
-            data:
-              include(
-                type: "card_created",
-                client_id: client_id,
-                card: include(topic_id: topic.id),
-              ),
+            data: {
+              type: "board_updated",
+              client_id: client_id,
+            },
             group_ids: contain_exactly(write_group.id, read_group.id),
           ),
         )
@@ -155,9 +153,9 @@ RSpec.describe Boards::MoveTopicToColumn do
         expect(result[:card]).to have_attributes(id: existing_card.id, created_by_id: writer.id)
       end
 
-      it "publishes a card_moved message" do
+      it "publishes a board_updated message" do
         expect(messages).to contain_exactly(
-          have_attributes(data: include(type: "card_moved", client_id: client_id)),
+          have_attributes(data: { type: "board_updated", client_id: client_id }),
         )
       end
 

@@ -78,4 +78,25 @@ RSpec.describe Boards::CardTopicSerializer do
         ),
     )
   end
+
+  describe "topic tags" do
+    let!(:tag) { Fabricate(:tag) }
+    let!(:tagged_topic) { Fabricate(:topic, category:, tags: [tag]) }
+
+    it "returns visible tag names when tagging is enabled" do
+      SiteSetting.tagging_enabled = true
+
+      payload = described_class.new(tagged_topic, root: false, scope: Guardian.new(viewer)).as_json
+
+      expect(payload[:tags]).to eq([tag.name])
+    end
+
+    it "returns no tags when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      payload = described_class.new(tagged_topic, root: false, scope: Guardian.new(viewer)).as_json
+
+      expect(payload[:tags]).to eq([])
+    end
+  end
 end
