@@ -21,6 +21,8 @@ import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
+export const LOAD_MORE_ROOT_MARGIN = "0px 0px 600px 0px";
+
 export default class DiscoveryTopics extends Component {
   @service documentTitle;
   @service currentUser;
@@ -279,7 +281,12 @@ export default class DiscoveryTopics extends Component {
           @topics={{@model.topics}}
         />
 
-        <DLoadMore @action={{this.loadMore}} />
+        <DLoadMore
+          @action={{this.loadMore}}
+          @enabled={{@model.canLoadMore}}
+          @isLoading={{@model.loadingMore}}
+          @rootMargin={{LOAD_MORE_ROOT_MARGIN}}
+        />
       {{/if}}
 
       <span class="after-topic-list-plugin-outlet-wrapper">
