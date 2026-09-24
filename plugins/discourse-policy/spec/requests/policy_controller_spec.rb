@@ -332,6 +332,37 @@ describe DiscoursePolicy::PolicyController do
     end
   end
 
+  describe "policy validation" do
+    fab!(:admin)
+    fab!(:editor, :trust_level_4)
+    fab!(:audience_group, :group)
+    fab!(:target_group, :group)
+    fab!(:post) { Fabricate(:post, user: admin, raw: "Original content") }
+
+    before do
+      audience_group.add(editor)
+      target_group.add_owner(admin)
+    end
+
+    it "rejects an HTML policy from an editor without policy permissions" do
+      raw = <<~HTML
+        <div class="policy" data-group="#{audience_group.name}" data-add-users-to-group="#{target_group.name}">
+        I agree
+        </div>
+      HTML
+
+      sign_in(editor)
+      put "/posts/#{post.id}.json", params: { post: { raw: raw } }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_policy.errors.no_policy_permission"),
+      )
+      expect(post.reload.raw).to eq("Original content")
+      expect(post.post_policy).to be_nil
+    end
+  end
+
   describe "wiki policy posts" do
     fab!(:admin)
 
