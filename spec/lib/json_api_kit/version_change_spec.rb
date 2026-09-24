@@ -151,18 +151,18 @@ RSpec.describe JsonApiKit::VersionChange do
     end
   end
 
-  describe "#current" do
-    subject(:current_name) { version_change.current(name) }
+  describe "#current_names" do
+    subject(:current_names) { version_change.current_names(name) }
 
     it "returns the name after the change" do
-      expect(current_name).to eq(name.with(value: "name"))
+      expect(current_names).to eq([name.with(value: "name")])
     end
 
     context "when the name is the sort derived from the attribute" do
       let(:name) { JsonApiKit::Name::Sort.new(value: "label", type: "things") }
 
       it "renames it" do
-        expect(current_name).to eq(name.with(value: "name"))
+        expect(current_names).to eq([name.with(value: "name")])
       end
     end
 
@@ -170,7 +170,7 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:name) { JsonApiKit::Name::Anchor.new(value: "label", type: "things") }
 
       it "renames it" do
-        expect(current_name).to eq(name.with(value: "name"))
+        expect(current_names).to eq([name.with(value: "name")])
       end
     end
 
@@ -178,14 +178,14 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:name) { JsonApiKit::Name::Filter.new(value: "label", type: "things") }
 
       it "returns the name" do
-        expect(current_name).to eq(name)
+        expect(current_names).to eq([name])
       end
 
       context "when the change renames the filter" do
         let(:change_class) { JsonApiKitSpec::RenameThingsSortAndFilter }
 
         it "returns the new name of the filter" do
-          expect(current_name).to eq(name.with(value: "name"))
+          expect(current_names).to eq([name.with(value: "name")])
         end
       end
     end
@@ -195,18 +195,18 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:name) { JsonApiKit::Name::Field.new(value: "posted_time", type: "things") }
 
       it "returns the name it merges into" do
-        expect(current_name).to eq(name.with(value: "posted_at"))
+        expect(current_names).to eq([name.with(value: "posted_at")])
       end
     end
 
     context "with several resources" do
+      subject(:current_names) { [name, other_name].flat_map { version_change.current_names(it) } }
+
       let(:change_class) { JsonApiKitSpec::RenameThingsAndPeople }
       let(:other_name) { JsonApiKit::Name::Field.new(value: "handle", type: "people") }
 
       it "renames the names of every resource" do
-        expect([version_change.current(name), version_change.current(other_name)]).to eq(
-          [name.with(value: "name"), other_name.with(value: "username")],
-        )
+        expect(current_names).to eq([name.with(value: "name"), other_name.with(value: "username")])
       end
     end
   end
@@ -251,25 +251,6 @@ RSpec.describe JsonApiKit::VersionChange do
         it "returns the value the converter gives for null" do
           expect(current_attributes).to eq(name.with(value: "title") => "")
         end
-      end
-    end
-  end
-
-  describe "#previous" do
-    subject(:previous_name) { version_change.previous(name) }
-
-    let(:name) { JsonApiKit::Name::Field.new(value: "name", type: "things") }
-
-    it "returns the name before the change" do
-      expect(previous_name).to eq(name.with(value: "label"))
-    end
-
-    context "when the change merges several names into the name" do
-      let(:change_class) { JsonApiKitSpec::MergeThingsDateAndTimeIntoPostedAt }
-      let(:name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "things") }
-
-      it "returns the first of them" do
-        expect(previous_name).to eq(name.with(value: "posted_date"))
       end
     end
   end

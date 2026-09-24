@@ -8,6 +8,33 @@ RSpec.describe JsonApiKit::VersionChange::Converter do
   let(:date_name) { JsonApiKit::Name::Field.new(value: "posted_date", type: "topics") }
   let(:time_name) { JsonApiKit::Name::Field.new(value: "posted_time", type: "topics") }
 
+  describe ".for" do
+    subject(:converter) { described_class.for(:up, callable, from: names, to: destinations) }
+
+    let(:destinations) { [date_name.with(value: "posted_at")] }
+
+    it "builds a converter for one destination" do
+      expect(converter).to be_an_instance_of(described_class)
+    end
+
+    context "when the declaration has several destinations" do
+      let(:destinations) { [date_name, time_name] }
+      let(:callable) { ->(date, time) { [date, time] } }
+
+      it "builds a tuple converter" do
+        expect(converter).to be_an_instance_of(described_class::Tuple)
+      end
+    end
+
+    context "when one attribute has an array value" do
+      let(:callable) { ->(date, time) { [date, time] } }
+
+      it "preserves the array as one attribute value" do
+        expect(converter.call("2026-08-01", "00:00:00")).to eq(%w[2026-08-01 00:00:00])
+      end
+    end
+  end
+
   describe ".new" do
     context "when the callable does not respond to call" do
       let(:callable) { nil }

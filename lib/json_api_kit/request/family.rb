@@ -32,8 +32,10 @@ module JsonApiKit
         "#{direction}#{declared_name(yield(name), path)}"
       end
 
-      def declared_name(name, path)
-        glossary.declared_name(name).value
+      def declared_name(name, path) = declared_names(name, path).sole
+
+      def declared_names(name, path)
+        glossary.declared_names(name).map(&:value)
       rescue Glossary::NotAMemberName => error
         raise error.at(ParameterName.new(*path).to_s)
       end
