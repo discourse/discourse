@@ -8,7 +8,13 @@ module JsonApiKit
       end
 
       def declared_attributes(attributes)
-        changes.reduce(attributes) { |result, change| change.current_attributes(result) }
+        changes
+          .each_with_index
+          .reduce(attributes) do |result, (change, index)|
+            change.current_attributes(result)
+          rescue VersionChange::Converter::Failure => failure
+            raise failure.convert_names { member_names(it, changes: changes.take(index)) }
+          end
       end
 
       def declared_name(name)
@@ -31,7 +37,7 @@ module JsonApiKit
 
       def current_name(name) = changes.reduce(name) { |result, change| change.current(result) }
 
-      def member_names(name)
+      def member_names(name, changes: self.changes)
         changes
           .reverse_each
           .reduce([name]) { |names, change| names.flat_map { change.previous_names(it) } }

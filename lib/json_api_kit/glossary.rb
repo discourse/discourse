@@ -56,13 +56,17 @@ module JsonApiKit
 
     def declared_attributes(attributes)
       attributes.each_key { declared_name(it) }
-      rules.reduce(attributes) { |result, rule| rule.declared_attributes(result) }
-    rescue VersionChange::Converter::Failure => failure
-      raise BadValue.new(failure.names.map { member_name(it) })
+      rules
+        .each_with_index
+        .reduce(attributes) do |result, (rule, index)|
+          rule.declared_attributes(result)
+        rescue VersionChange::Converter::Failure => failure
+          raise BadValue.new(member_names_before(failure.names, index))
+        end
     end
 
     def declared_name(name)
-      declared_names[name] ||= rules.reduce(name) { |result, rule| rule.declared_name(result) }
+      declared_names[name] ||= declare_name(name, rules)
     rescue Correction => correction
       raise NotAMemberName.new(name, member_name(correction.name))
     end
@@ -73,6 +77,8 @@ module JsonApiKit
         .reduce(name) { |result, rule| rule.member_name(result) }
     end
 
+    def member_type(type) = member_name(Name::Type.new(value: type)).value
+
     def member_attributes(attributes)
       rules.reverse_each.reduce(attributes) { |result, rule| rule.member_attributes(result) }
     end
@@ -80,5 +86,25 @@ module JsonApiKit
     private
 
     attr_reader :rules, :declared_names, :member_names
+
+    def member_names_before(names, rule_index)
+      rules
+        .take(rule_index)
+        .reverse_each
+        .reduce(names) { |result, rule| result.map { rule.member_name(it) } }
+    end
+
+    def declare_name(name, remaining_rules)
+      remaining_rules.reduce(name) do |result, rule|
+        rule.declared_name(result)
+      rescue Correction => correction
+        raise Correction.new(
+                declare_name(
+                  correction.name,
+                  remaining_rules.drop(remaining_rules.index(rule) + 1),
+                ),
+              )
+      end
+    end
   end
 end

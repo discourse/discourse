@@ -53,7 +53,7 @@ RSpec.describe JsonApiKit::Glossary do
   subject(:glossary) { described_class.new([described_class::CasingRule]) }
 
   let(:version) { JsonApiKit::Timeline::FIRST_RELEASE }
-  let(:change) { JsonApiKitSpec::GlossaryChange.new(__FILE__) }
+  let(:version_change) { JsonApiKitSpec::GlossaryChange.new(__FILE__) }
   let(:name) { JsonApiKit::Name::Field.new(value:, type: "topics") }
   let(:value) { "createdAt" }
 
@@ -150,6 +150,32 @@ RSpec.describe JsonApiKit::Glossary do
       end
     end
 
+    context "when conversion fails between two rules" do
+      let(:glossary) { described_class.new([first_rule, failing_rule, last_rule]) }
+      let(:first_rule) { JsonApiKitSpec::MarkingRule.new("first") }
+      let(:last_rule) { JsonApiKitSpec::MarkingRule.new("last") }
+      let(:failing_rule) do
+        Class
+          .new do
+            def declared_name(name) = name
+
+            def declared_attributes(attributes)
+              raise JsonApiKit::VersionChange::Converter::Failure.new(attributes.keys)
+            end
+
+            def member_name(name) = name.convert { "#{it}>failure" }
+          end
+          .new
+      end
+
+      it "translates failure names through the preceding rules only" do
+        expect { declared_attributes }.to raise_error(
+          described_class::BadValue,
+          "This version cannot convert the value of createdAt<first>first.",
+        )
+      end
+    end
+
     context "with several rules" do
       subject(:glossary) { described_class.new([mark_a, mark_b]) }
 
@@ -157,13 +183,49 @@ RSpec.describe JsonApiKit::Glossary do
       let(:mark_b) { JsonApiKitSpec::MarkingRule.new("b") }
 
       it "applies them in order" do
-        expect(declared_attributes).to eq(name.with(value: "createdAt<a<b") => "Anchors and pages")
+        expect(declared_attributes).to eq(
+          name.with(value: "createdAt<a<b", type: "topics<a<b") => "Anchors and pages",
+        )
       end
     end
   end
 
   describe "#declared_name" do
     subject(:declared_name) { glossary.declared_name(name) }
+
+    context "when a casing correction precedes a type change" do
+      let(:glossary) { described_class.resource(version) }
+      let(:name) { JsonApiKit::Name::Field.new(value:, type: "discussions") }
+      let(:value) { "created_at" }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            renamed_type from: :discussions, to: :topics
+            resource :topics do
+              renamed_attribute from: :posted_at, to: :created_at
+            end
+          end
+          .new(__FILE__)
+      end
+
+      before { allow(JsonApiKit::VersionChange).to receive(:after).and_return([version_change]) }
+
+      it "translates the correction through the remaining rules" do
+        expect { declared_name }.to raise_error(
+          having_attributes(member: name.with(value: "postedAt")),
+        )
+      end
+
+      context "when only the casing is incorrect" do
+        let(:value) { "posted_at" }
+
+        it "still rejects the original name" do
+          expect { declared_name }.to raise_error(
+            having_attributes(member: name.with(value: "postedAt")),
+          )
+        end
+      end
+    end
 
     it "returns the declared name" do
       expect(declared_name).to eq(name.with(value: "created_at"))
@@ -213,7 +275,9 @@ RSpec.describe JsonApiKit::Glossary do
       let(:value) { "postedAt" }
 
       before do
-        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return([change])
+        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+          [version_change],
+        )
       end
 
       it "returns the current name" do
@@ -241,7 +305,7 @@ RSpec.describe JsonApiKit::Glossary do
 
         before do
           allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
-            [change, JsonApiKitSpec::GlossaryReuseChange.new(__FILE__)],
+            [version_change, JsonApiKitSpec::GlossaryReuseChange.new(__FILE__)],
           )
         end
 
@@ -258,7 +322,32 @@ RSpec.describe JsonApiKit::Glossary do
       let(:mark_b) { JsonApiKitSpec::MarkingRule.new("b") }
 
       it "applies them in order" do
-        expect(declared_name).to eq(name.with(value: "createdAt<a<b"))
+        expect(declared_name).to eq(name.with(value: "createdAt<a<b", type: "topics<a<b"))
+      end
+    end
+  end
+
+  describe "#member_type" do
+    subject(:member_type) { glossary.member_type("discussion_threads") }
+
+    it "returns the type in camel case" do
+      expect(member_type).to eq("discussionThreads")
+    end
+
+    context "when the type has a historical name" do
+      let(:glossary) { described_class.resource(version) }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            renamed_type from: :forum_topics, to: :discussion_threads
+          end
+          .new(__FILE__)
+      end
+
+      before { allow(JsonApiKit::VersionChange).to receive(:after).and_return([version_change]) }
+
+      it "returns the historical type in camel case" do
+        expect(member_type).to eq("forumTopics")
       end
     end
   end
@@ -293,7 +382,9 @@ RSpec.describe JsonApiKit::Glossary do
       let(:mark_b) { JsonApiKitSpec::MarkingRule.new("b") }
 
       it "applies them in reverse order" do
-        expect(member_attributes).to eq(name.with(value: "title>b>a") => "Anchors and pages")
+        expect(member_attributes).to eq(
+          name.with(value: "title>b>a", type: "topics>b>a") => "Anchors and pages",
+        )
       end
     end
   end
@@ -323,7 +414,9 @@ RSpec.describe JsonApiKit::Glossary do
       subject(:glossary) { described_class.resource(version) }
 
       before do
-        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return([change])
+        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+          [version_change],
+        )
       end
 
       it "returns the name of this version, on the wire" do
@@ -338,7 +431,7 @@ RSpec.describe JsonApiKit::Glossary do
       let(:mark_b) { JsonApiKitSpec::MarkingRule.new("b") }
 
       it "applies them in reverse order" do
-        expect(member_name).to eq(name.with(value: "created_at>b>a"))
+        expect(member_name).to eq(name.with(value: "created_at>b>a", type: "topics>b>a"))
       end
     end
   end
