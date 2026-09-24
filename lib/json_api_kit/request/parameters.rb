@@ -30,9 +30,7 @@ module JsonApiKit
 
       attr_reader :raw, :glossary, :resource
 
-      def family_for(key) = FAMILIES.fetch(key, Family::Other).new(glossary:, type: member_type)
-
-      def member_type = glossary.member_type(resource.type)
+      def family_for(key) = FAMILIES.fetch(key, Family::Other).new(glossary:, resource:)
 
       def declared_name(family)
         glossary.declared_name(Name::Member.new(value: family)).value
