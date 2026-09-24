@@ -185,11 +185,7 @@ export function buildConfig({ devMode } = {}) {
         },
       },
       brotliAssetsPlugin({ enabled: isProduction, sizes: brotliSizes }),
-      bundleAnalyzerPlugin({
-        brotliSizes,
-        enabled: isProduction,
-        pruneStale: devMode,
-      }),
+      bundleAnalyzerPlugin({ brotliSizes, pruneStale: devMode }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {

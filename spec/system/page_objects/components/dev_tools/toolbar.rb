@@ -83,6 +83,11 @@ module PageObjects
           self
         end
 
+        def open_bundle_analyzer
+          find(".dev-tools-toolbar .bundle-analyzer-button").click
+          self
+        end
+
         def has_toolbar?
           page.has_css?(".dev-tools-toolbar")
         end

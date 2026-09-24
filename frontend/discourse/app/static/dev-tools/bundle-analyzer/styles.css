@@ -13,6 +13,21 @@
   width: min(1200px, 92vw);
   max-width: 92vw;
 }
+/* Deliberately hard to miss: it is the only thing between a reader and numbers
+   that look authoritative and are not. */
+.bundle-analyzer-modal .ba-warning {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+.bundle-analyzer-modal .ba-warning h2 {
+  margin: 0 0 0.5em;
+}
+.bundle-analyzer-modal .ba-warning p {
+  max-width: 34em;
+  margin: 0 auto 1.5em;
+  color: var(--primary-high);
+}
+
 .bundle-analyzer {
   --ba-bg: var(--secondary);
   --ba-panel: var(--primary-very-low);

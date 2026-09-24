@@ -55,19 +55,11 @@ function relUncached(id) {
 
 // Describes the finished bundle: what each chunk weighs, what is inside it, and
 // which files dynamically import it.
-export default function bundleAnalyzerPlugin({
-  enabled,
-  brotliSizes,
-  pruneStale,
-} = {}) {
+export default function bundleAnalyzerPlugin({ brotliSizes, pruneStale } = {}) {
   return {
     name: "bundle-analyzer",
 
     async generateBundle(_options, bundle) {
-      if (!enabled) {
-        return;
-      }
-
       const chunks = {};
       const entrypoints = [];
       const dynamicEntrypoints = [];

@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import "./styles.css";
+import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import Analysis from "./analysis";
@@ -16,6 +18,10 @@ export default class BundleAnalyzerModal extends Component {
   @tracked plugins;
   @tracked error;
   @tracked pluginError;
+
+  // A development build's sizes are not what anyone downloads, so it says so
+  // before showing any, once per opening.
+  @tracked warningAccepted = false;
 
   // One filter behind both tabs, handed to each analysis as it is built.
   view = new ViewFilter();
@@ -60,6 +66,15 @@ export default class BundleAnalyzerModal extends Component {
     return DEBUG;
   }
 
+  get showWarning() {
+    return this.developmentBuild && !this.warningAccepted;
+  }
+
+  @action
+  acceptWarning() {
+    this.warningAccepted = true;
+  }
+
   // The graph answers every size question, so the graph is what holds the
   // reader's filter and the browser's record of what it fetched.
   #prepare(analysis) {
@@ -87,11 +102,15 @@ export default class BundleAnalyzerModal extends Component {
       @title={{i18n "dev_tools.bundle_analyzer.title"}}
     >
       <:body>
-        {{#if this.developmentBuild}}
-          {{! A development build is unminified and chunked differently, so its
-              sizes describe nothing anyone ships. }}
-          <div class="ba-empty">
-            {{i18n "dev_tools.bundle_analyzer.production_only"}}
+        {{#if this.showWarning}}
+          <div class="ba-warning">
+            <h2>{{i18n "dev_tools.bundle_analyzer.development_title"}}</h2>
+            <p>{{i18n "dev_tools.bundle_analyzer.development_warning"}}</p>
+            <DButton
+              class="btn-primary"
+              @action={{this.acceptWarning}}
+              @label="dev_tools.bundle_analyzer.development_continue"
+            />
           </div>
         {{else}}
           <div {{didInsert this.load}}>
