@@ -71,7 +71,6 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
-      DISCOURSE_SYSTEM_HEADLESS_SHELL: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
       DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
@@ -314,11 +313,7 @@ jobs:
 
       - name: Install playwright
         if: matrix.build_type == 'system'
-        run: |
-          pnpm playwright-install
-          if [ "$DISCOURSE_SYSTEM_HEADLESS_SHELL" = "1" ]; then
-            pnpm exec playwright install chromium-headless-shell
-          fi
+        run: pnpm playwright-install
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -565,6 +560,10 @@ jobs:
         if: steps.check-artifacts.outputs.exists == 'true'
         with:
           fetch-depth: 1
+          sparse-checkout: |
+            frontend/discourse/lib/deprecation-report-cli.js
+            frontend/discourse/lib/deprecation-report-format.js
+          sparse-checkout-cone-mode: false
 
       - uses: actions/download-artifact@v7
         if: steps.check-artifacts.outputs.exists == 'true'

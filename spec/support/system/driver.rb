@@ -59,8 +59,6 @@ module SystemDrivers
       colorScheme: example.metadata[:color_scheme],
     }
 
-    base_options.delete(:channel) if ENV["DISCOURSE_SYSTEM_HEADLESS_SHELL"] == "1"
-
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
       base_options[:browser] = :remote
       base_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]

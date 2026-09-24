@@ -28,6 +28,9 @@ Record the actual tested revision and distinguish source changes from optimizati
 effects. Record external plugin/theme revisions and cache behavior when assessing
 noisy results.
 
+Chromium headless shell is prohibited. Retain modern Chromium headless mode
+with the explicit chromium channel in all experiments and final CI.
+
 ## Procedure
 
 1. Measure the original workflows on this documentation-only baseline commit.
