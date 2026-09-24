@@ -17,6 +17,9 @@ RSpec.describe DiscourseWorkflows::EventListener do
     DiscourseWorkflows::WorkflowDependency.clear_cache!
   end
 
+  # The in-memory trigger cache outlives the DB rollback and would fire in later specs.
+  after { DiscourseWorkflows::WorkflowDependency.clear_cache! }
+
   it "enqueues a job when a matching event fires" do
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
