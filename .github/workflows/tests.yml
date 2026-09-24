@@ -187,9 +187,8 @@ jobs:
             run: |
               bin/rake db:migrate
               if [ "${{ matrix.build_type }}" = "system" ] && { [ "${{ matrix.target }}" = "core" ] || [ "${{ matrix.target }}" = "core-plugins" ]; }; then
-                for worker in $(seq 1 "$PARALLEL_TEST_PROCESSORS"); do
-                  createdb --maintenance-db=postgres --template=discourse_test "discourse_test_$worker"
-                done
+                seq 1 "$PARALLEL_TEST_PROCESSORS" | xargs -P 4 -I {} \
+                  createdb --maintenance-db=postgres --template=discourse_test "discourse_test_{}"
               fi
 
           - name: Create and migrate parallel databases
