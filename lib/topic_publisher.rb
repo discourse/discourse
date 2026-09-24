@@ -29,10 +29,12 @@ class TopicPublisher
         # Clean up any publishing artifacts
         SharedDraft.where(topic: @topic).delete_all
 
-        TopicTimer.where(topic: @topic).update_all(
-          deleted_at: DateTime.now,
-          deleted_by_id: @published_by.id,
-        )
+        TopicTimer
+          .where(topic: @topic)
+          .find_each do |timer|
+            reason = timer.publishing_to_category? ? :completed : :cancelled
+            timer.finish!(reason, by_user: @published_by)
+          end
 
         op = @topic.first_post
 

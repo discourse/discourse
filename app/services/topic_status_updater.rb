@@ -81,11 +81,12 @@ TopicStatusUpdater =
       end
 
       if @topic_timer
-        if status.manually_closing_topic? || status.closing_topic?
-          topic.delete_topic_timer(TopicTimer.types[:close])
-          topic.delete_topic_timer(TopicTimer.types[:silent_close])
-        elsif status.manually_opening_topic? || status.opening_topic?
-          topic.delete_topic_timer(TopicTimer.types[:open])
+        reason = status.autoclosed? ? :completed : :cancelled
+        if status.closing_topic?
+          topic.delete_topic_timer(TopicTimer.types[:close], by_user: user, reason: reason)
+          topic.delete_topic_timer(TopicTimer.types[:silent_close], by_user: user, reason: reason)
+        elsif status.opening_topic?
+          topic.delete_topic_timer(TopicTimer.types[:open], by_user: user, reason: reason)
           topic.inherit_auto_close_from_category
         end
       end
@@ -188,10 +189,6 @@ TopicStatusUpdater =
 
         def manually_closing_topic?
           closed? && enabled?
-        end
-
-        def manually_opening_topic?
-          closed? && disabled?
         end
       end
   end

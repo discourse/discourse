@@ -1699,10 +1699,10 @@ class Topic < ActiveRecord::Base
     @slow_mode_topic_timer ||= topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])
   end
 
-  def delete_topic_timer(status_type, by_user: Discourse.system_user)
+  def delete_topic_timer(status_type, by_user: Discourse.system_user, reason: :cancelled)
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
-    topic_timers.find_by(options)&.trash!(by_user)
+    topic_timers.find_by(options)&.finish!(reason, by_user: by_user)
     @public_topic_timer = nil
     nil
   end

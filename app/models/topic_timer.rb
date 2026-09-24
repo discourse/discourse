@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class TopicTimer < BaseTimer
+  EVENT_ATTRIBUTES = %w[
+    status_type
+    execute_at
+    category_id
+    user_id
+    based_on_last_post
+    duration_minutes
+  ].freeze
+  REMOVAL_REASONS = %i[cancelled completed].freeze
+
   belongs_to :user
   belongs_to :topic, foreign_key: :timerable_id
   belongs_to :category
@@ -48,6 +58,29 @@ class TopicTimer < BaseTimer
     end
   end
 
+  after_save :publish_timer_change
+  after_destroy do
+    DiscourseEvent.trigger(:topic_timer_changed, self, :cancelled, nil) unless trashed?
+  end
+
+  def trash!(trashed_by = nil)
+    finish!(:cancelled, by_user: trashed_by)
+  end
+
+  def finish!(reason, by_user: Discourse.system_user)
+    if REMOVAL_REASONS.exclude?(reason)
+      raise ArgumentError, "Unknown timer removal reason: #{reason}"
+    end
+
+    with_lock do
+      next false if trashed?
+
+      trash_update(Time.current, by_user&.id)
+      DiscourseEvent.trigger(:topic_timer_changed, self, reason, nil)
+      true
+    end
+  end
+
   def runnable?
     return false if deleted_at.present?
     return false if execute_at > Time.zone.now
@@ -55,6 +88,19 @@ class TopicTimer < BaseTimer
   end
 
   private
+
+  def publish_timer_change
+    if previously_new_record?
+      DiscourseEvent.trigger(:topic_timer_changed, self, :created, nil)
+      return
+    end
+
+    changes = saved_changes.slice(*EVENT_ATTRIBUTES)
+    return if changes.empty?
+
+    previous = attributes.slice(*EVENT_ATTRIBUTES).merge(changes.transform_values(&:first))
+    DiscourseEvent.trigger(:topic_timer_changed, self, :updated, previous)
+  end
 
   def executed_at_in_future?
     return if created_at.blank? || (execute_at > created_at)
