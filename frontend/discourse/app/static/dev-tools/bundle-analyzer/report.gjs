@@ -30,20 +30,17 @@ export default class Report extends Component {
     return this.analysis.staticClosure(this.baselineFile);
   }
 
+  // One list: the badge on a card already says how it loads, and splitting on
+  // that buried the biggest dynamic entries below every static one.
   @cached
-  get staticVisible() {
+  get visible() {
     const base = this.baselineFile;
     const others = this.#bySizeDescending(
-      this.analysis.entrypoints.filter((f) => f !== base)
+      [...this.analysis.entrypoints, ...this.analysis.dynamicEntrypoints]
+        .filter((f) => f !== base)
+        .filter((f) => this.#visible(f))
     );
-    return [base, ...others].filter((f) => this.#visible(f));
-  }
-
-  @cached
-  get dynamicVisible() {
-    return this.#bySizeDescending(
-      this.analysis.dynamicEntrypoints.filter((f) => this.#visible(f))
-    );
+    return (this.#visible(base) ? [base] : []).concat(others);
   }
 
   @cached
@@ -104,15 +101,14 @@ export default class Report extends Component {
       />
 
       <section>
-        <h2>Static entrypoints</h2>
         <div class="ba-hint">
-          Entry chunks the build produces — script tags and workers.
+          Everything the build can load on its own.
           <code>discourse</code>
           is the baseline; every other card counts only the bytes it adds on top
-          of it.
+          of it. The badge says how a card is reached.
         </div>
         <div>
-          {{#each this.staticVisible as |f|}}
+          {{#each this.visible as |f|}}
             <EntrypointCard
               @analysis={{this.analysis}}
               @baseline={{eq f this.baselineFile}}
@@ -123,30 +119,6 @@ export default class Report extends Component {
             />
           {{else}}
             <div class="ba-empty">No matches.</div>
-          {{/each}}
-        </div>
-      </section>
-
-      <section>
-        <h2>Dynamic entrypoints</h2>
-        <div class="ba-hint">
-          Each is loaded on demand via
-          <code>import()</code>. “Additional” counts only chunks not already in
-          the
-          <code>discourse</code>
-          baseline above.
-        </div>
-        <div>
-          {{#each this.dynamicVisible as |f|}}
-            <EntrypointCard
-              @analysis={{this.analysis}}
-              @baselineClosure={{this.baselineClosure}}
-              @file={{f}}
-              @filter={{this.filter}}
-              @loaded={{this.loaded}}
-            />
-          {{else}}
-            <div class="ba-empty">No dynamic entrypoints.</div>
           {{/each}}
         </div>
       </section>

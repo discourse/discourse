@@ -45,14 +45,6 @@
 .bundle-analyzer section {
   margin-bottom: 28px;
 }
-.bundle-analyzer h2 {
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ba-muted);
-  margin: 0 0 12px;
-}
-
 .bundle-analyzer .ba-header {
   margin-bottom: 16px;
 }
