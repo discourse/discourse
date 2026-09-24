@@ -49,8 +49,11 @@
   margin: -4px 0 12px;
 }
 
-/* The select fills its container by default, which in a flex toolbar means all
-   of it. */
+/* The filter takes the slack so the scope and the switch sit at the right edge.
+   The select is full width by default, which in a flex row means all of it. */
+.bundle-analyzer .ba-toolbar .filter-input-container {
+  flex: 1;
+}
 .bundle-analyzer .ba-toolbar .d-native-select {
   width: auto;
 }
