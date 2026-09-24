@@ -272,6 +272,8 @@ export default class ExpressionWrapper extends Component {
         <ExpressionInput
           @autofocus={{true}}
           @field={{@field}}
+          @inputId={{@inputId}}
+          @inputLabel={{@inputLabel}}
           @placeholder={{@placeholder}}
           @session={{@session}}
         />

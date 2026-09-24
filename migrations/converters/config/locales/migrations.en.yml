@@ -1,0 +1,10 @@
+en:
+  converters:
+    discourse:
+      posts:
+        foreign_hosts: "Internal-looking links on unconfigured hosts"
+        post_failed: "Failed to process post"
+        embeds_not_extracted: "Post embeds not extracted"
+        slow_parse: "Post body needed the slow markdown parse"
+      custom_emojis:
+        upload_missing: "Custom emoji skipped: its upload is missing"

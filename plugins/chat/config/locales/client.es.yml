@@ -551,6 +551,7 @@ es:
       direct_messages:
         title: "MDs"
         aria_label: "Cambiar a mensajes directos"
+        new_group: "Nuevo chat de grupo"
         create: "Ir"
         leave: "Abandonar canal"
         close: "Cerrar canal"

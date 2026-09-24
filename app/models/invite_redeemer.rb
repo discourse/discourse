@@ -97,8 +97,12 @@ class InviteRedeemer
     email_token: nil,
     email_verified: false
   )
-    if username && UsernameValidator.new(username).valid_format? &&
-         User.username_available?(username, email)
+    raise Discourse::SiteArchived if SiteSetting.site_archived
+
+    if email_verified && username.present?
+      available_username = username
+    elsif username && UsernameValidator.new(username).valid_format? &&
+          User.username_available?(username, email)
       available_username = username
     elsif email_verified
       available_username =
@@ -287,15 +291,15 @@ class InviteRedeemer
   end
 
   def mark_invite_redeemed
-    @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
+    invite.with_lock("FOR UPDATE NOWAIT") do
+      return false if !can_redeem_invite?
 
-    if @invited_user_record.present?
-      invite.with_lock("FOR UPDATE NOWAIT") do
-        Invite.increment_counter(:redemption_count, invite.id)
-        invite.save!
-      end
-      delete_duplicate_invites
+      @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
+      Invite.increment_counter(:redemption_count, invite.id)
+      invite.save!
     end
+
+    delete_duplicate_invites if @invited_user_record.present?
 
     @invited_user_record.present?
   end
@@ -304,18 +308,21 @@ class InviteRedeemer
     # Should not happen because of ensure_email_is_present!, but better to cover bases.
     return if email.blank?
 
-    topic_ids =
-      TopicInvite
-        .joins(:invite)
-        .joins(:topic)
-        .where("topics.archetype = ?", Archetype.private_message)
-        .where("invites.email = ?", email)
-        .pluck(:topic_id)
-    topic_ids.each do |id|
-      if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
-        TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id)
+    TopicInvite
+      .includes(:topic, invite: :invited_by)
+      .joins(:invite)
+      .joins(:topic)
+      .where("topics.archetype = ?", Archetype.private_message)
+      .where("invites.email = ?", email)
+      .find_each do |topic_invite|
+        topic = topic_invite.topic
+        inviter = topic_invite.invite.invited_by
+        next if inviter.blank? || !inviter.guardian.can_invite_to?(topic)
+
+        if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: topic.id)
+          TopicAllowedUser.create!(user_id: invited_user.id, topic_id: topic.id)
+        end
       end
-    end
   end
 
   def add_user_to_groups

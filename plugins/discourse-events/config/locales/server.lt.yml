@@ -20,6 +20,12 @@ lt:
   site_settings:
     calendar_categories: "Rodyti kalendorių kategorijos viršuje. categoryId yra privalomas. pvz.: categoryId=6;weekends=false;defaultView=year;\n Kiti galimi nustatymai: weekends(true/false) ir defaultView(day,week,month,year)."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} netrukus prasidės"
+        ongoing: "%{title} vyksta"
+        after: "%{title} jau baigėsi"
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "Diena"

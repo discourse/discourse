@@ -69,8 +69,10 @@ export default class ChatMessageFlag {
         take_action: opts.takeAction,
         queue_for_review: opts.queue_for_review,
       });
+      return true;
     } catch (error) {
       popupAjaxError(error);
+      return false;
     }
   }
 

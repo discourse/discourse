@@ -11,6 +11,7 @@ ug:
         no_results: "نەتىجە يوق"
     explorer:
       default_query: "كۆڭۈلدىكى"
+      view_query: "كۆرۈنۈش"
       or: "ياكى"
       create: "قۇر"
       ai:

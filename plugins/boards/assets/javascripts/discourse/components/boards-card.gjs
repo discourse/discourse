@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import TopicStatus from "discourse/components/topic-status";
 import DMenu from "discourse/float-kit/components/d-menu";
-import discourseLater from "discourse/lib/later";
 import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import Category from "discourse/models/category";
+import { not, or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -22,7 +22,9 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { i18n } from "discourse-i18n";
+import { loadCategory } from "../lib/boards-categories";
 import { boardsBoardUrl, boardsCardUrl } from "../lib/boards-urls";
 import AutoLinkedText from "./auto-linked-text";
 import BoardsCardDetailModal from "./modal/boards-card-detail";
@@ -41,18 +43,34 @@ export default class BoardsCard extends Component {
   @service siteSettings;
 
   @tracked dragging = false;
-  dragHideTimer = null;
-  dragImageElement = null;
+
+  /**
+   * Links and images inside the card start their own native drag, which no
+   * column accepts. Tags and badges are rendered HTML that can't bind
+   * `draggable`, so it is switched off on whatever is pressed.
+   */
+  suppressNestedNativeDrag = modifier((element) => {
+    const onPointerDown = (event) => {
+      if (!element.hasAttribute("data-drag-source")) {
+        return;
+      }
+      const nested = event.target.closest?.("a, img");
+      if (nested && element.contains(nested)) {
+        nested.draggable = false;
+      }
+    };
+
+    element.addEventListener("pointerdown", onPointerDown, { capture: true });
+    return () =>
+      element.removeEventListener("pointerdown", onPointerDown, {
+        capture: true,
+      });
+  });
 
   willDestroy() {
     super.willDestroy(...arguments);
-    const isActiveDragSource =
-      this.dragging || this.dragHideTimer || this.dragImageElement;
 
-    this.#clearDragHideTimer();
-    this.#cleanupDragImage();
-
-    if (isActiveDragSource) {
+    if (this.dragging) {
       this.#removeDropIndicators();
     }
   }
@@ -90,9 +108,10 @@ export default class BoardsCard extends Component {
       return [];
     }
 
+    const columnTagNames = this.columnTagNames;
     return tags.filter((tag) => {
       const name = typeof tag === "string" ? tag : tag.name;
-      return !this.columnTagNames.has(name?.toLowerCase());
+      return !columnTagNames.has(name?.toLowerCase());
     });
   }
 
@@ -102,8 +121,9 @@ export default class BoardsCard extends Component {
         return null;
       }
 
+      const columnTagNames = this.columnTagNames;
       const filtered = this.topic.tags.filter(
-        (tag) => !this.columnTagNames.has(tag.toLowerCase())
+        (tag) => !columnTagNames.has(tag.toLowerCase())
       );
 
       return filtered.length ? renderTags(null, { tags: filtered }) : null;
@@ -113,11 +133,8 @@ export default class BoardsCard extends Component {
     return tags.length ? renderTags(null, { tags }) : null;
   }
 
-  get category() {
-    if (this.args.allSameCategory || !this.topic?.category_id) {
-      return null;
-    }
-    return Category.findById(this.topic.category_id);
+  get categoryId() {
+    return this.args.allSameCategory ? null : this.topic?.category_id;
   }
 
   get isDetailed() {
@@ -144,10 +161,6 @@ export default class BoardsCard extends Component {
       return [floaterAssignment];
     }
     return [];
-  }
-
-  get assignedUser() {
-    return this.allAssignedUsers[0] ?? null;
   }
 
   get assignedGroup() {
@@ -199,7 +212,7 @@ export default class BoardsCard extends Component {
   }
 
   get canShowActions() {
-    return this.args.canWrite;
+    return this.args.board.canWrite;
   }
 
   get showAssignButton() {
@@ -212,9 +225,10 @@ export default class BoardsCard extends Component {
 
   get canAssign() {
     return (
+      !this.args.board.archived &&
       this.siteSettings.assign_enabled &&
       this.currentUser?.can_assign &&
-      (this.isTopicCard || this.args.canWrite)
+      (this.isTopicCard || this.args.board.canWrite)
     );
   }
 
@@ -244,14 +258,6 @@ export default class BoardsCard extends Component {
     }));
   }
 
-  get floaterTagsHtml() {
-    const tags = this.args.card.tags;
-    if (this.isTopicCard || !tags?.length) {
-      return null;
-    }
-    return renderTags(null, { tags });
-  }
-
   @action
   openDetailModal() {
     const board = this.args.board;
@@ -264,7 +270,7 @@ export default class BoardsCard extends Component {
       .show(BoardsCardDetailModal, {
         model: {
           card: this.args.card,
-          canWrite: this.args.canWrite,
+          board: this.args.board,
           onUpdateCard: this.args.onUpdateCard,
         },
       })
@@ -387,35 +393,31 @@ export default class BoardsCard extends Component {
   }
 
   @action
-  dragStart(event) {
-    if (!this.args.canWrite) {
-      event.preventDefault();
-      return;
-    }
-
-    const cardRect = event.currentTarget.getBoundingClientRect();
-    this.#setDragImage(event, event.currentTarget, cardRect);
+  dragStart({ source }) {
+    const cardElement = source.element;
+    const cardHeight = cardElement.getBoundingClientRect().height;
 
     this.args.onDragStart({
       cardId: this.args.card.id,
       topicId: this.args.card.topic_id,
       fromColumnId: this.args.card.column_id,
-      cardHeight: cardRect.height,
+      cardHeight,
       hasPlacedIndicator: false,
     });
-    event.dataTransfer.effectAllowed = "move";
-    event.stopPropagation();
 
-    this.#scheduleDragSourceHide(event.currentTarget, cardRect.height);
+    if (shouldInsertSourceDropIndicator()) {
+      this.#insertSourceDropIndicator(cardElement, cardHeight);
+    }
+    this.dragging = true;
   }
 
   @action
   dragEnd() {
     this.args.onDragEnd?.(this.args.card.id);
-    this.#clearDragHideTimer();
-    this.#removeDropIndicators();
+    if (!this.args.isPendingDrop) {
+      this.#removeDropIndicators();
+    }
     this.dragging = false;
-    this.#cleanupDragImage();
   }
 
   #openFloaterAssignModal() {
@@ -431,59 +433,6 @@ export default class BoardsCard extends Component {
         },
       },
     });
-  }
-
-  #scheduleDragSourceHide(cardElement, cardHeight) {
-    this.#clearDragHideTimer();
-
-    this.dragHideTimer = discourseLater(this, () => {
-      this.dragHideTimer = null;
-
-      if (!this.isDestroying) {
-        if (shouldInsertSourceDropIndicator()) {
-          this.#insertSourceDropIndicator(cardElement, cardHeight);
-        }
-        this.dragging = true;
-      }
-    });
-  }
-
-  #clearDragHideTimer() {
-    if (this.dragHideTimer) {
-      cancel(this.dragHideTimer);
-      this.dragHideTimer = null;
-    }
-  }
-
-  #setDragImage(event, cardElement, cardRect) {
-    if (!event.dataTransfer?.setDragImage) {
-      return;
-    }
-
-    this.#cleanupDragImage();
-
-    const dragImage = cardElement.cloneNode(true);
-    dragImage.classList.remove("discourse-boards-card--dragging");
-    dragImage.classList.add("discourse-boards-card--drag-image");
-    dragImage.style.width = `${cardRect.width}px`;
-    dragImage.style.height = `${cardRect.height}px`;
-    dragImage.setAttribute("aria-hidden", "true");
-
-    document.body.append(dragImage);
-    this.dragImageElement = dragImage;
-
-    // Fallback for programmatic or test drags where the pointer coordinates are 0.
-    const offsetX =
-      event.clientX > 0 ? Math.max(event.clientX - cardRect.left, 0) : 24;
-    const offsetY =
-      event.clientY > 0 ? Math.max(event.clientY - cardRect.top, 0) : 24;
-
-    event.dataTransfer.setDragImage(dragImage, offsetX, offsetY);
-  }
-
-  #cleanupDragImage() {
-    this.dragImageElement?.remove();
-    this.dragImageElement = null;
   }
 
   #insertSourceDropIndicator(cardElement, cardHeight) {
@@ -515,18 +464,23 @@ export default class BoardsCard extends Component {
     <div
       class={{dConcatClass
         "discourse-boards-card"
-        (if this.dragging "discourse-boards-card--dragging")
+        (if (or this.dragging @isPendingDrop) "discourse-boards-card--dragging")
         (unless this.isTopicCard "discourse-boards-card--floater")
         (if @isDropHighlighted "discourse-boards-card--drop-highlighted")
         (if @isLinkHighlighted "discourse-boards-card--link-highlighted")
       }}
       data-card-id={{@card.id}}
       data-topic-id={{@card.topic_id}}
-      draggable={{if @canWrite "true" "false"}}
       role="button"
       tabindex="0"
-      {{on "dragstart" this.dragStart}}
-      {{on "dragend" this.dragEnd}}
+      {{dDragAndDropSource
+        type="boards-card"
+        data=(hash cardId=@card.id fromColumnId=@card.column_id)
+        disabled=(not @board.canWrite)
+        onDragEnd=this.dragEnd
+        onDragStart=this.dragStart
+      }}
+      {{this.suppressNestedNativeDrag}}
       {{on "click" this.onCardClick}}
       {{on "keydown" this.onCardKeydown}}
     >
@@ -612,12 +566,21 @@ export default class BoardsCard extends Component {
       {{/if}}
 
       <div class="discourse-boards-card__row discourse-boards-card__meta-data">
-        {{#if this.category}}
-          <div
-            class="discourse-boards-card__category discourse-boards-card__row-item"
+        {{#if this.categoryId}}
+          <DAsyncContent
+            @asyncData={{loadCategory}}
+            @context={{this.categoryId}}
           >
-            {{dCategoryBadge this.category}}
-          </div>
+            <:content as |category|>
+              {{#if category}}
+                <div
+                  class="discourse-boards-card__category discourse-boards-card__row-item"
+                >
+                  {{dCategoryBadge category}}
+                </div>
+              {{/if}}
+            </:content>
+          </DAsyncContent>
         {{/if}}
         {{#if this.isDetailed}}
           <div class="discourse-boards-card__row-item">

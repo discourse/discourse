@@ -7,13 +7,6 @@ def brotli_s3_path(path)
   "#{path[0..-ext.length]}br#{ext}"
 end
 
-def gzip_s3_path(path)
-  return path.sub(%r{^assets/js/}, "assets/gz/").sub(/\.gz$/, "") if path.start_with?("assets/js/")
-
-  ext = File.extname(path)
-  "#{path[0..-ext.length]}gz#{ext}"
-end
-
 def existing_assets
   @existing_assets ||= Set.new(helper.list("assets/").map(&:key))
 end
@@ -73,10 +66,6 @@ def assets
 
     if File.exist?(fullpath + ".br")
       results << [fullpath + ".br", brotli_s3_path(asset_path), content_type, "br"]
-    end
-
-    if File.exist?(fullpath + ".gz")
-      results << [fullpath + ".gz", gzip_s3_path(asset_path), content_type, "gzip"]
     end
   end
 

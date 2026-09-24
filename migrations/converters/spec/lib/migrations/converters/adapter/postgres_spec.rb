@@ -39,6 +39,18 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
       end
     end
 
+    it "registers its fork hook before it opens the socket" do
+      hooks_at_connect = nil
+      allow(PG::Connection).to receive(:new) do
+        hooks_at_connect = Migrations::ForkManager.hook_count
+        connection
+      end
+
+      create_adapter { |adapter| adapter.close }
+
+      expect(hooks_at_connect).to eq(1)
+    end
+
     it "implements the whole PartitionSource interface" do
       create_adapter do |adapter|
         expect(Migrations::Conversion::PartitionSource.missing_from(adapter)).to be_empty

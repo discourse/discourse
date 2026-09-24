@@ -213,6 +213,7 @@ vi:
           latest: "Gần đây"
       direct_messages:
         title: "Tin nhắn"
+        new_group: "Nhóm chat mới"
       channel_list:
         title: "Các kênh"
         options:

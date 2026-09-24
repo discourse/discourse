@@ -220,6 +220,7 @@ ca:
       message: "Hem actualitzat aquest lloc, <span>si us plau, refresqueu</span> per mantenir les coses funcionant sense problemes."
       dismiss: "Descarta-ho"
     back_button: "Enrere"
+    confirm_button: "Confirma"
     welcome_banner:
       header:
         logged_in_members: "Benvingut de nou, %{preferred_display_name}!"
@@ -2595,6 +2596,7 @@ ca:
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"
       delete_error: "Hi ha hagut un error en suprimir aquesta categoria"
       no_description: "Introduïu una descripció per a aquesta categoria."
+      latest_topics: "Temes més recents"
       already_used: "Aquest color ha estat utilitzat per una altra categoria"
       security: "Seguretat"
       permissions:
@@ -2774,6 +2776,7 @@ ca:
       with_topics: "%{filter} temes"
       with_category: "%{filter} %{category} temes"
       filter:
+        reset: "restableix"
         button:
           label: "Filtre"
       latest:
@@ -3472,6 +3475,7 @@ ca:
           series:
             anonymous: "Anònim"
             crawlers: "Rastrejadors"
+          crawler_learn_more: "Per a saber-ne més"
         period:
           last_7_days: "Els darrers 7 dies"
           last_30_days: "Els darrers 30 dies"

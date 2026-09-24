@@ -6,7 +6,22 @@
 
 he:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "כותרת"
+        icon: "סמל"
+        color: "צבע"
+        tag_name: "תגית"
+        default_sort_priority: "עדיפות"
+      create_board:
+        name: "שם"
+        slug: "מזהה ייצוגי"
+        tag_names: "תגיות"
+        category_ids: "קטגוריות"
     boards:
+      status:
+        all: "הכול"
+        open: "פתוח"
       board:
         remove_card: "הסרה"
         new_topic: "נושא חדש..."

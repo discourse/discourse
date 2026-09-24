@@ -97,6 +97,22 @@ Discourse::Application.routes.draw do
       :constraints => StaffConstraint.new
 
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
+    get "/ask-ai-reports/:report_id/subjects/:subject_id/asks" =>
+          "discourse_ai/admin/ask_ai_reports#asks",
+        :format => :json
+
+    get "/ask-ai-reports/:report_id/subjects/:subject_id/asks/:id" =>
+          "discourse_ai/admin/ask_ai_reports#ask",
+        :format => :json
+
+    resources :ask_ai_reports,
+              only: %i[index create],
+              path: "ask-ai-reports",
+              controller: "discourse_ai/admin/ask_ai_reports",
+              defaults: {
+                format: :json,
+              }
+
     get "/admin-dashboard-highlights" => "discourse_ai/admin/admin_dashboard_highlights#show",
         :format => :json
 

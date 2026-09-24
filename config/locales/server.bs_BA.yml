@@ -5,7 +5,16 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  markdown_endpoints:
+    latest: "Zadnje"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Previous page"
+    next_page: "Next page"
+    replies: "Odgovori"
   mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
     oauth:
       deny: "odbiti"
   llms_txt:
@@ -400,7 +409,7 @@ bs_BA:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
   unsubscribe:
-    title: "Odjavi se"
+    unsubscribe: "Odjavi se"
     log_out: "Izloguj se"
     digest_frequency:
       never: "nikad"
@@ -869,6 +878,7 @@ bs_BA:
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
+    missing_username: "Unesite korisničko ime"
     click_to_continue: "Klikni ovdje da nastavite dalje"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
     second_factor_toggle:

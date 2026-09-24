@@ -23,5 +23,6 @@ end
 #
 # Indexes
 #
-#  unique_livestream_topic_chat_channels  (topic_id,chat_channel_id) UNIQUE
+#  index_livestream_topic_chat_channels_on_chat_channel_id  (chat_channel_id)
+#  unique_livestream_topic_chat_channels                    (topic_id,chat_channel_id) UNIQUE
 #

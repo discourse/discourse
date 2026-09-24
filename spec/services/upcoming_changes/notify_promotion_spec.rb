@@ -105,6 +105,34 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       end
     end
 
+    context "when the change dependencies are not met" do
+      let(:setting_name) { :set_locale_from_cookie }
+
+      before do
+        SiteSetting.allow_user_locale = false
+        mock_upcoming_change_metadata(
+          set_locale_from_cookie: {
+            impact: "feature,all_members",
+            status: :stable,
+          },
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:change_dependencies_met) }
+
+      it "does not notify admins, record a promotion, or trigger an enabled event" do
+        events = nil
+
+        expect {
+          events = DiscourseEvent.track_events(:upcoming_change_enabled) { result }
+        }.to not_change { Notification.count }.and(not_change { UpcomingChangeEvent.count }).and(
+          not_change { UserHistory.count },
+        )
+
+        expect(events).to be_empty
+      end
+    end
+
     context "when the change has already been promoted" do
       let(:changes_already_promoted) { [:enable_upload_debug_mode] }
 

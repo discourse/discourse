@@ -7,10 +7,11 @@ module DiscourseAutomation
 
     def post_checked
       post = Post.find(params[:post_id])
-      guardian.ensure_can_edit!(post)
-
       topic = post.topic
       raise Discourse::NotFound if topic.blank?
+
+      post = topic.first_post
+      guardian.ensure_can_edit!(post)
 
       topic.custom_fields[DiscourseAutomation::TOPIC_LAST_CHECKED_BY] = current_user.username
       topic.custom_fields[DiscourseAutomation::TOPIC_LAST_CHECKED_AT] = Time.zone.now.to_s

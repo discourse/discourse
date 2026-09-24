@@ -4,6 +4,46 @@ describe DiscourseAi::AiBot::EntryPoint do
   before { enable_current_plugin }
 
   describe "#inject_into" do
+    describe "registers conversations as a homepage option" do
+      fab!(:user)
+      fab!(:bot_allowed_group, :group)
+      fab!(:llm_model)
+
+      before do
+        toggle_enabled_bots(bots: [llm_model])
+        SiteSetting.ai_bot_enabled = true
+        SiteSetting.ai_bot_allowed_groups = bot_allowed_group.id.to_s
+        SiteSetting.top_menu = "latest|new|top|categories"
+        SiteSetting.default_homepage = "ai-conversations"
+        bot_allowed_group.add(user)
+      end
+
+      it "offers conversations as a default homepage choice" do
+        expect(HomepageSiteSetting.choices).to include("ai-conversations")
+        expect(HomepageHelper.resolve(nil, user)).to eq("ai-conversations")
+      end
+
+      it "is not offered, and falls back to the top menu homepage, when the bot is disabled" do
+        SiteSetting.ai_bot_enabled = false
+
+        expect(HomepageSiteSetting.choices).not_to include("ai-conversations")
+        expect(HomepageHelper.resolve(nil, user)).to eq("latest")
+      end
+
+      it "falls back to the top menu homepage for anonymous visitors" do
+        expect(HomepageHelper.resolve).to eq("latest")
+        expect(Site.json_for(Guardian.new)).not_to include("ai_bot_anonymous_preview")
+      end
+
+      it "offers anonymous visitors a preview when they're in the allowed groups" do
+        SiteSetting.ai_bot_allowed_groups =
+          "#{bot_allowed_group.id}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+
+        expect(HomepageHelper.resolve).to eq("ai-conversations")
+        expect(JSON.parse(Site.json_for(Guardian.new))["ai_bot_anonymous_preview"]).to eq(true)
+      end
+    end
+
     describe "subscribes to the post_created event" do
       fab!(:admin)
       fab!(:bot_allowed_group, :group)

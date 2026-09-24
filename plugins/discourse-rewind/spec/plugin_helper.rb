@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 module DiscourseRewindSpecHelper
+  def date
+    Time.zone.local(2021).all_year
+  end
+
   def call_report
-    # user + date should be defined via fab! in the spec
-    described_class.call(user:, date:, guardian: user.guardian)
+    described_class.call(user:, date:)
   end
 
   def random_datetime

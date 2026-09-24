@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 voice_badge_group = "Voice"
+voice_badges_enabled = SiteSetting.voice_enabled && SiteSetting.voice_badges_enabled
 
 BadgeGrouping.seed(:name) do |g|
   g.name = voice_badge_group
@@ -62,7 +63,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -89,7 +90,7 @@ end
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = true
+    b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -107,7 +108,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -126,7 +127,7 @@ end
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = true
+    b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -150,7 +151,7 @@ end
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = true
+    b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -180,7 +181,7 @@ end
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = true
+    b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -204,7 +205,7 @@ end
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = true
+    b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -222,7 +223,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -248,7 +249,7 @@ end
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = true
+    b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -266,7 +267,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -291,7 +292,7 @@ end
     b.auto_revoke = false
     b.default_badge_grouping_id = voice_grouping.id
     b.trigger = Badge::Trigger::None
-    b.default_enabled = true
+    b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
     b.system = true
   end
@@ -309,7 +310,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -323,7 +324,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -337,7 +338,7 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -358,7 +359,7 @@ Badge.seed(:name) do |b|
   b.auto_revoke = false
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.system = true
 end
 
@@ -372,7 +373,9 @@ Badge.seed(:name) do |b|
   b.query = nil
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
-  b.default_enabled = true
+  b.default_enabled = voice_badges_enabled
   b.default_allow_title = true
   b.system = true
 end
+
+Voice::BadgeGranterHooks.disable_all! unless voice_badges_enabled

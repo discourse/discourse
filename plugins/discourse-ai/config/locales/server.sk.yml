@@ -72,7 +72,6 @@ sk:
     ai_pm_summarization_allowed_groups: "Skupiny môžu vytvárať a zobrazovať súhrny v PM."
     ai_summary_gists_enabled: "Automatické generovanie stručných zhrnutí najnovších odpovedí v témach"
     ai_bot_enabled: "Povolenie modulu AI Bot."
-    ai_bot_allowed_groups: "Keď má bot GPT prístup k PM, bude odpovedať členom týchto skupín."
     ai_bot_debugging_allowed_groups: "Povoľte týmto skupinám zobrazenie tlačidla na ladenie príspevkov, ktoré zobrazuje nespracovanú požiadavku a odpoveď AI."
     ai_bot_public_sharing_allowed_groups: "Umožnite týmto skupinám zdieľať osobné správy AI s verejnosťou prostredníctvom jedinečného verejne dostupného prepojenia. Poznámka: ak vaša stránka vyžaduje prihlásenie, aj zdieľania budú vyžadovať prihlásenie."
     ai_bot_github_access_token: "Prístupový token GitHub na použitie s nástrojmi AI GitHub (vyžaduje sa pre podporu vyhľadávania)"
@@ -241,6 +240,25 @@ sk:
       configuration_missing: "Chýba konfigurácia detekcie nevyžiadanej pošty AI. Pred povolením pridajte konfiguráciu do \"Admin > Plugins > Discourse AI > Spam\"."
       logging_subject: "Detekcia spamu"
     ai_bot:
+      navigation:
+        settings:
+          title: "Nastavenia stránky"
+        users:
+          title: "Používatelia"
+        groups:
+          title: "Skupiny"
+        review:
+          title: "Fronta na posúdenie"
+        categories:
+          title: "Kategórie"
+        tags:
+          title: "Značky"
+        themes:
+          title: "Témy"
+        authentication:
+          title: "Prihlásenie a overenie"
+        backups:
+          title: "Zálohy"
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
       read_post:

@@ -14,6 +14,17 @@ bg:
         image_generation_custom:
           name: "По избор"
     ai_bot:
+      navigation:
+        users:
+          title: "Потребители"
+        groups:
+          title: "Групи"
+        categories:
+          title: "Категории"
+        tags:
+          title: "Етикети"
+        backups:
+          title: "Бекъпи"
       read_post:
         unknown_post: "публикация"
       tool_summary:

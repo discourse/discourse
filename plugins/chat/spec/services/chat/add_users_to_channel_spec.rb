@@ -142,7 +142,7 @@ RSpec.describe Chat::AddUsersToChannel do
         end
 
         it "only notifies the newly added users" do
-          expect(result.added_user_ids).to eq users.last(2).map(&:id)
+          expect(result.added_user_ids).to contain_exactly(*users.last(2).map(&:id))
         end
 
         it "respects membership settings for existing users" do

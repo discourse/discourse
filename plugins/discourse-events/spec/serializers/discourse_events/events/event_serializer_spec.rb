@@ -326,7 +326,7 @@ describe DiscourseEvents::Events::EventSerializer do
         )
       end
 
-      before { recurring_event.set_next_date }
+      before { recurring_event.set_next_recurrent_event_date }
 
       it "serializes starts_at using the next occurrence" do
         json =

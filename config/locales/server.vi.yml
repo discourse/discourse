@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 vi:
+  markdown_endpoints:
+    latest: "Gần đây"
+    categories: "Danh mục"
+    tags: "Thẻ"
+    previous_page: "Trang trước"
+    next_page: "Trang sau"
+    replies: "Lượt trả lời"
+    last_updated: "Cập nhật lần cuối"
   mcp:
+    errors:
+      topic_not_found: "Không tìm thấy chủ đề"
     oauth:
       deny: "Từ chối"
   llms_txt:
@@ -737,7 +747,7 @@ vi:
   unsubscribed:
     title: "Đã cập nhật tùy chọn email!"
   unsubscribe:
-    title: "Hủy đăng ký"
+    unsubscribe: "Bỏ theo dõi"
     stop_watching_topic: "Ngừng giám sát chủ đề này, %{link}"
     unwatch_category: "Ngừng giám sát tất cả chủ đề trong %{category}"
     log_out: "Đăng Xuất"
@@ -1108,9 +1118,6 @@ vi:
       host_names: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
       queue_size: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
       ram: "Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB ."
-      google_oauth2_config: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Google OAuth2 (enable_google_oauth2_logins), nhưng id máy khách và giá trị bí mật của máy khách không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
-      facebook_config: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Facebook (enable_facebook_logins), nhưng giá trị id ứng dụng và bí mật ứng dụng không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang web</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
-      s3_backup_config: 'Máy chủ được định cấu hình để tải các bản sao lưu lên S3, nhưng ít nhất một cài đặt sau chưa được đặt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile hoặc s3_backup_bucket. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem "Cách thiết lập tải hình ảnh lên S3?" để tìm hiểu thêm</a>.'
       s3_cdn: 'Máy chủ được cấu hình để tải lên các tập tin lên S3, nhưng không có S3 CDN cấu hình. Điều này có thể dẫn đến chi phí S3 đắt tiền và hiệu suất trang web chậm hơn. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Xem “Sử dụng lưu trữ đối tượng để tải lên” để tìm hiểu thêm</a>.'
       subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
       email_polling_errored_recently:
@@ -1492,8 +1499,6 @@ vi:
       tags_any: "Hiển thị chủ đề chứa bất kỳ thẻ cụ thể (phân cách bằng dấu phẩy)"
       tags_all: "Hiển thị chủ đề chứa bất kỳ thẻ cụ thể (phân cách bằng dấu cộng)"
       exclude_tag: "Loại trừ chủ đề chứa thẻ cụ thể"
-      exclude_tags_any: "Loại trừ chủ đề chứa bất kỳ thẻ cụ thể (phân cách bằng dấu phẩy)"
-      exclude_tags_all: "Loại trừ chủ đề có chứa tất cả thẻ cụ thể (phân cách bằng dấu cộng)"
       tag_group: "Hiển thị chủ đề chứa thẻ từ một nhóm thẻ cụ thể"
       exclude_tag_group: "Loại trừ chủ đề chứa thẻ từ một nhóm thẻ cụ thể"
       activity_before: "Hiển thị chủ đề có hoạt động cuối cùng trước một ngày cụ thể (YYYY-MM-DD hoặc số ngày trước)"
@@ -1501,7 +1506,6 @@ vi:
       created_before: "Hiển thị chủ đề đã tạo trước một ngày cụ thể (YYYY-MM-DD hoặc số ngày trước)"
       created_after: "Hiển thị chủ đề đã tạo sau một ngày cụ thể (YYYY-MM-DD hoặc số ngày trước)"
       created_by: "Hiển thị chủ đề được tạo bởi một thành viên hoặc nhóm cụ thể"
-      created_by_user: "Hiển thị chủ đề được tạo bởi một thành viên hoặc nhóm cụ thể (không có @)"
       created_by_multiple: "Hiển thị chủ đề được tạo bởi bất kỳ thành viên hoặc nhóm cụ thể (phân cách bằng dấu phẩy)"
       latest_post_before: "Hiển thị chủ đề có tút cuối cùng trước một ngày cụ thể (YYYY-MM-DD hoặc số ngày trước)"
       latest_post_after: "Hiển thị chủ đề có tút cuối cùng sau một ngày cụ thể (YYYY-MM-DD hoặc số ngày trước)"
@@ -1646,6 +1650,7 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     wrong_invite_code: "Mã mời bạn đã nhập không chính xác."
     reserved_username: "Tên đăng nhập không được cho phép."
+    missing_username: "Vui lòng nhập tên người dùng"
     missing_full_name: "Vui lòng nhập đầy đủ họ và tên"
     auth_complete: "Xác thực đã hoàn tất."
     click_to_continue: "Nhấn vào đây để tiếp tục."
@@ -2825,6 +2830,9 @@ vi:
         complete: "Tút đã bị xóa."
       delete_and_agree_replies:
         confirm: "Bạn có chắc muốn xóa các câu trả lời của tút?"
+      disagree_and_keep_deleted:
+        title: "Giữ tút bị xóa"
+        complete: "Đã giữ nguyên trạng thái xóa bài viết."
       disagree_bundle:
         title: "Không"
       ignore:
