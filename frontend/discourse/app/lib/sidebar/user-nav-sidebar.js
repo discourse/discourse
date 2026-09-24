@@ -655,11 +655,13 @@ function buildSection(config) {
     }
 
     get links() {
-      return this.#buildLinks(config.links);
+      return buildLinks(config.links, getOwner(this));
     }
 
     get moreLinks() {
-      return config.moreLinks ? this.#buildLinks(config.moreLinks) : [];
+      return config.moreLinks
+        ? buildLinks(config.moreLinks, getOwner(this))
+        : [];
     }
 
     get actions() {
@@ -711,24 +713,24 @@ function buildSection(config) {
 
       return this.links.length > 0 || this.moreLinks.length > 0;
     }
-
-    #buildLinks(builder) {
-      const context = navContext(getOwner(this));
-
-      if (!context.user?.username) {
-        return [];
-      }
-
-      return builder(context)
-        .filter((link) => !link.displayed || link.displayed(context))
-        .map((link) => resolveLink(link, context))
-        .filter(
-          (link) =>
-            link.href || routeExists(context.router, link.route, link.models)
-        )
-        .map((link) => new UserNavSectionLink(link));
-    }
   };
+}
+
+function buildLinks(builder, owner) {
+  const context = navContext(owner);
+
+  if (!context.user?.username) {
+    return [];
+  }
+
+  return builder(context)
+    .filter((link) => !link.displayed || link.displayed(context))
+    .map((link) => resolveLink(link, context))
+    .filter(
+      (link) =>
+        link.href || routeExists(context.router, link.route, link.models)
+    )
+    .map((link) => new UserNavSectionLink(link));
 }
 
 export default class UserNavSidebarPanel extends BaseCustomSidebarPanel {
