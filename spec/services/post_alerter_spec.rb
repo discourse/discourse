@@ -863,12 +863,10 @@ RSpec.describe PostAlerter do
         Fabricate(:group, name: "another-group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
       another_group.add(coding_horror)
 
-      expect {
-        post.revise(post.user, raw: "Hello @group and @another-group")
-      }.to not_change(evil_trout.notifications, :count).and change(
-              coding_horror.notifications,
-              :count,
-            ).by(1)
+      expect { post.revise(post.user, raw: "Hello @group and @another-group") }.to not_change(
+        evil_trout.notifications,
+        :count,
+      ).and change(coding_horror.notifications, :count).by(1)
       expect(coding_horror.notifications.last.notification_type).to eq(
         Notification.types[:group_mentioned],
       )
@@ -907,12 +905,10 @@ RSpec.describe PostAlerter do
       post = create_post_with_alerts(user: user, raw: "Hello @eviltrout")
       evil_trout.notifications.destroy_all
 
-      expect {
-        post.revise(post.user, raw: "Hello @eviltrout and @codinghorror")
-      }.to not_change(evil_trout.notifications, :count).and change(
-              coding_horror.notifications,
-              :count,
-            ).by(1)
+      expect { post.revise(post.user, raw: "Hello @eviltrout and @codinghorror") }.to not_change(
+        evil_trout.notifications,
+        :count,
+      ).and change(coding_horror.notifications, :count).by(1)
       expect(coding_horror.notifications.last.notification_type).to eq(
         Notification.types[:mentioned],
       )
@@ -920,13 +916,18 @@ RSpec.describe PostAlerter do
 
     it "notifies a user mentioned directly after a group mention" do
       mentionable_group =
-        Fabricate(:group, name: "mentionable-group", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+        Fabricate(
+          :group,
+          name: "mentionable-group",
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+        )
       mentionable_group.add(evil_trout)
       post = create_post_with_alerts(user: user, raw: "Hello @mentionable-group")
 
-      expect {
-        post.revise(post.user, raw: "Hello @mentionable-group and @eviltrout")
-      }.to change(evil_trout.notifications, :count).by(1)
+      expect { post.revise(post.user, raw: "Hello @mentionable-group and @eviltrout") }.to change(
+        evil_trout.notifications,
+        :count,
+      ).by(1)
       expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
     end
 
