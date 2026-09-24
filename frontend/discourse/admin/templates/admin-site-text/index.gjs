@@ -126,6 +126,22 @@ export default <template>
           @disabled={{not @controller.hasActiveFilters}}
           @label="filter_controls.reset"
         />
+        <div class="site-texts__theme">
+          <label>{{i18n "admin.site_text.theme"}}</label>
+          <ComboBox
+            class="theme-search"
+            @content={{@controller.availableThemes}}
+            @onChange={{@controller.updateTheme}}
+            @options={{hash
+              filterable=true
+              castInteger=true
+              clearable=true
+              none="admin.site_text.all_themes"
+              headerAriaLabel=(i18n "admin.site_text.theme")
+            }}
+            @value={{@controller.themeId}}
+          />
+        </div>
       </:additionalFilters>
     </DFilterControls>
   </div>

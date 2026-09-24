@@ -10395,6 +10395,8 @@ en:
         description: "You can customize any of the text on your forum."
         search: "Search text or translation keys"
         search_label: "Search"
+        theme: "Theme or component"
+        all_themes: "All site texts"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"

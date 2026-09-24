@@ -17,6 +17,7 @@ export default class AdminSiteTextIndexController extends Controller {
   @service modal;
   @service store;
 
+  @tracked themeId = null;
   @tracked locale;
   @tracked q;
   @tracked overridden;
@@ -31,6 +32,7 @@ export default class AdminSiteTextIndexController extends Controller {
   @tracked canLoadMore = true;
 
   queryParams = [
+    { themeId: "theme_id" },
     "q",
     "overridden",
     "outdated",
@@ -44,6 +46,7 @@ export default class AdminSiteTextIndexController extends Controller {
 
   get activeFilterCount() {
     return [
+      this.themeId,
       this.resolvedOverridden,
       this.resolvedOutdated,
       this.resolvedOnlySelectedLocale,
@@ -61,6 +64,10 @@ export default class AdminSiteTextIndexController extends Controller {
           count: this.activeFilterCount,
         })
       : i18n("admin.site_text.filters");
+  }
+
+  get availableThemes() {
+    return this.extras.themes ?? [];
   }
 
   get siteTexts() {
@@ -123,6 +130,7 @@ export default class AdminSiteTextIndexController extends Controller {
     this.router.transitionTo("adminSiteText.edit", siteText.get("id"), {
       queryParams: {
         locale: this.resolvedLocale,
+        theme_id: this.themeId,
       },
     });
   }
@@ -153,6 +161,7 @@ export default class AdminSiteTextIndexController extends Controller {
 
   @action
   resetFilters() {
+    this.themeId = null;
     this.overridden = null;
     this.outdated = null;
     this.untranslated = null;
@@ -173,6 +182,12 @@ export default class AdminSiteTextIndexController extends Controller {
       lastSearch = q;
       discourseDebounce(this, this.resetSearch, 400);
     }
+  }
+
+  @action
+  updateTheme(value) {
+    this.themeId = value;
+    this.resetSearch();
   }
 
   @action
@@ -200,6 +215,7 @@ export default class AdminSiteTextIndexController extends Controller {
     try {
       this.model = await this.store.find("site-text", {
         q: this.q,
+        theme_id: this.themeId,
         overridden: this.resolvedOverridden,
         outdated: this.resolvedOutdated,
         locale: this.resolvedLocale,

@@ -29,7 +29,7 @@ export default <template>
     </DPageHeader>
     <LinkTo
       class="go-back"
-      @query={{hash locale=@controller.locale}}
+      @query={{hash locale=@controller.locale theme_id=@controller.themeId}}
       @route="adminSiteText.index"
     >
       {{dIcon "arrow-left"}}
