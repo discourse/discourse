@@ -1103,10 +1103,7 @@ RSpec.describe ReviewablesController do
 
           put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
 
-          expect(response.status).to eq(200),
-          "Expected 200 but got #{response.status}. " \
-            "This means target association is not loading as expected. " \
-            "Body: #{response.parsed_body}"
+          expect(response.status).to eq(200), "Expected 200 but got #{response.status}. "
 
           json = response.parsed_body
           expect(json.dig("reviewable_perform_result", "success")).to eq(true)
@@ -1127,10 +1124,7 @@ RSpec.describe ReviewablesController do
 
           put "/review/#{reviewable.id}/perform/agree_and_keep_deleted.json?version=#{reviewable.version}"
 
-          expect(response.status).not_to eq(403),
-          "Got 403 InvalidAction. " \
-            "This means actions_for returned empty due to post.blank? being true. " \
-            "The preload: false fix should prevent this."
+          expect(response.status).not_to eq(403), "Got 403 InvalidAction. "
 
           expect(response.status).to eq(200)
         end
