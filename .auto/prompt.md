@@ -6,9 +6,11 @@ and peak job-container memory separately. Record OOM counters and test retries.
 Preserve the complete test matrix, test selection, assertions, retries, and
 failure reporting. Keep the existing job count and test groups; do not split
 tests into additional jobs. A skipped test suite is not a successful optimization.
+During exploratory revisions, run only the two slow system-test jobs. Restore
+the complete ten-entry matrix before final validation or any success claim.
 
 Use this draft PR for final measurements. Pin proxy experiments to main revision
-7ae654854083fceda0dac33348ba0a427a985c9c. Run exploratory benchmarks with act on
+f7be7d7b8a5d3f7b3fc6216240763da9fa3a40b6. Run exploratory benchmarks with act on
 an isolated 16-vCPU host, recording the image digest, source revision, runtime
 cache, seed, CPU totals, and peak container memory. Proxy timings do not establish
 the GitHub Actions target. Keep diagnostic scripts and raw profiles private.

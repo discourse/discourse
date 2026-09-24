@@ -79,24 +79,8 @@ jobs:
       matrix:
         include:
           - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
             build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
           - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
             build_type: system
 
     steps:
@@ -109,7 +93,7 @@ jobs:
           system_test_cores=$(nproc)
           system_test_workers=$((system_test_cores / 2 + 2))
           if [ "$system_test_cores" -eq 16 ] && { [ "${{ matrix.target }}" = "core" ] || [ "${{ matrix.target }}" = "core-plugins" ]; }; then
-            system_test_workers=15
+            system_test_workers=20
           fi
           echo "PARALLEL_TEST_PROCESSORS=$system_test_workers" >> $GITHUB_ENV
 
