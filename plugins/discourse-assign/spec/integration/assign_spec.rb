@@ -14,6 +14,50 @@ describe "integration tests" do
     # should not explode for now
   end
 
+  describe "private message MessageBus access" do
+    fab!(:admin)
+    fab!(:private_message_post) { Fabricate(:private_message_post, user: admin) }
+    fab!(:private_message) { private_message_post.topic }
+
+    before do
+      SiteSetting.unassign_on_close = true
+      Fabricate(
+        :topic_assignment,
+        topic: private_message,
+        assigned_to: admin,
+        assigned_by_user: admin,
+      )
+    end
+
+    it "does not expose assignment refreshes for private messages to nonparticipants" do
+      channel = "/topic/#{private_message.id}"
+      message_id = MessageBus.last_id(channel)
+
+      sign_in(admin)
+      put "/t/#{private_message.id}/status.json", params: { status: "closed", enabled: true }
+
+      expect(response.status).to eq(200)
+      expect(private_message.reload.assignment.active).to eq(false)
+
+      cookies.to_hash.keys.each { |key| cookies.delete(key) }
+      get "/t/#{private_message.id}.json"
+      expect(response.status).to eq(404)
+
+      post "/message-bus/poll?dlp=t", params: { channel => message_id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to include(
+        include(
+          "channel" => channel,
+          "data" => {
+            "reload_topic" => true,
+            "refresh_stream" => true,
+          },
+        ),
+      )
+    end
+  end
+
   describe "for a private message" do
     let(:post) { Fabricate(:private_message_post) }
     let(:pm) { post.topic }
