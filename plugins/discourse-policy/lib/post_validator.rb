@@ -7,10 +7,7 @@ module DiscoursePolicy
     end
 
     def validate_post
-      old_raw = @post.changes[:raw]&.first
       new_raw = @post.raw
-
-      return true if !old_raw&.include?("[/policy]") && !new_raw.include?("[/policy]")
 
       old_policies = extract_policies(@post.cooked)
       new_policies = extract_policies(PrettyText.cook(new_raw, {}))
