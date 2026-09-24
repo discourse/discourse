@@ -77,6 +77,29 @@ export default class Analysis extends ChunkTotals {
     );
   }
 
+  // Whether an entrypoint is worth a card: it still has chunks in view, and
+  // something under it answers the filter. `base` is the closure whose chunks
+  // this card does not own — omitted for the card everything else measures
+  // against, which owns its whole subtree.
+  cardVisible(file, filter, base = null) {
+    const closure = this.staticClosure(file);
+    if (closure.size === 0) {
+      return false;
+    }
+    if (!filter) {
+      return true;
+    }
+    for (const f of closure) {
+      if (base && f !== file && base.has(f)) {
+        continue;
+      }
+      if (this.chunkMatches(f, filter)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Sort by what a browser downloads, falling back to raw bytes for a report
   // whose build did not compress.
   sortSize(file) {

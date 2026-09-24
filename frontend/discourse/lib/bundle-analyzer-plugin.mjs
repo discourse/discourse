@@ -1,5 +1,4 @@
 import { createHash } from "crypto";
-import * as fs from "fs";
 import { relative } from "path";
 import { brotliSizeOf } from "./brotli-assets-plugin.mjs";
 
@@ -57,11 +56,15 @@ function relUncached(id) {
 // Records, per resolved module id, the source locations where it is
 // dynamically `import()`-ed, so dynamic chunks can be traced back to the exact
 // file + line that triggers their download.
-export default function bundleAnalyzerPlugin({ devMode } = {}) {
+export default function bundleAnalyzerPlugin({ enabled } = {}) {
   return {
     name: "bundle-analyzer",
 
     async generateBundle(_options, bundle) {
+      if (!enabled) {
+        return;
+      }
+
       const chunks = {};
       const entrypoints = [];
       const dynamicEntrypoints = [];
@@ -131,7 +134,6 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
       }
 
       const data = {
-        generatedAt: new Date().toISOString(),
         emberEnv: process.env.EMBER_ENV || "development",
         entrypoints,
         dynamicEntrypoints,
@@ -150,19 +152,6 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
       const fileName = `assets/js/bundle-analysis-${digest}.digested.json`;
 
       this.emitFile({ type: "asset", fileName, source: json });
-
-      if (devMode) {
-        // The dev engine leaves emitted assets unwritten, and keeps the output
-        // directory between builds, so clear the reports this one replaces.
-        const dir = "./dist/assets/js";
-        fs.mkdirSync(dir, { recursive: true });
-        for (const stale of fs.readdirSync(dir)) {
-          if (BUNDLE_ANALYSIS_RE.test(`assets/js/${stale}`)) {
-            fs.rmSync(`${dir}/${stale}`);
-          }
-        }
-        fs.writeFileSync(`./dist/${fileName}`, json);
-      }
     },
   };
 }

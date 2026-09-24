@@ -36,8 +36,7 @@ export default class PluginsReport extends FilterableReport {
           {{brotliLabel this.totals}}
           br /
           {{fmt this.totals.raw}}
-          raw · generated
-          {{this.analysis.data.generatedAt}}
+          raw ·
         </span>
       </div>
 

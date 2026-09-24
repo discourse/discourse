@@ -114,8 +114,6 @@ export function buildConfig({ devMode } = {}) {
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
-      brotliAssetsPlugin({ enabled: isProduction }),
-      bundleAnalyzerPlugin({ devMode }),
       {
         name: "forbid-plugin-imports",
         resolveId: {
@@ -185,6 +183,8 @@ export function buildConfig({ devMode } = {}) {
           }
         },
       },
+      brotliAssetsPlugin({ enabled: isProduction }),
+      bundleAnalyzerPlugin({ enabled: isProduction }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {

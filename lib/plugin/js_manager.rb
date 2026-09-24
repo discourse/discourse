@@ -153,13 +153,14 @@ module Plugin
           JSON.parse(File.read(path)) if File.exist?(path)
         end
 
-      json = JSON.generate(generatedAt: Time.now.utc.iso8601, plugins:)
+      json = JSON.generate(plugins:)
       digest = Digest::SHA256.hexdigest(json).first(12)
 
       dir = Rails.root.join(BUNDLE_ANALYSIS_DIR, "js/plugins")
       FileUtils.mkdir_p(dir)
-      Dir.glob("#{dir}/*.json").each { FileUtils.rm_f(it) }
-      File.write("#{dir}/bundle-analysis-plugins-#{digest}.digested.json", json)
+      current = "#{dir}/bundle-analysis-plugins-#{digest}.digested.json"
+      File.write(current, json)
+      Dir.glob("#{dir}/*.json").each { FileUtils.rm_f(it) if it != current }
     end
 
     def compile_js_bundle(plugin)

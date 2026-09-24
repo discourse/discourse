@@ -57,29 +57,8 @@ export default class Report extends FilterableReport {
   }
 
   #visible(file) {
-    return (
-      this.analysis.staticClosure(file).size > 0 && this.#cardMatches(file)
-    );
-  }
-
-  #cardMatches(file) {
-    if (!this.filter) {
-      return true;
-    }
-    // Match if any chunk this entrypoint introduces (its subtree, minus the
-    // shared baseline) matches by path / name / bundled module path. The
-    // baseline card owns everything in its own subtree.
-    const base = this.baselineClosure;
-    const isBaseline = file === this.baselineFile;
-    for (const f of this.analysis.staticClosure(file)) {
-      if (!isBaseline && f !== file && base.has(f)) {
-        continue;
-      }
-      if (this.analysis.chunkMatches(f, this.filter)) {
-        return true;
-      }
-    }
-    return false;
+    const base = file === this.baselineFile ? null : this.baselineClosure;
+    return this.analysis.cardVisible(file, this.filter, base);
   }
 
   <template>
@@ -89,8 +68,7 @@ export default class Report extends FilterableReport {
           {{this.analysis.data.emberEnv}}
           ·
           {{this.analysis.chunkCount}}
-          chunks · generated
-          {{this.analysis.data.generatedAt}}
+          chunks ·
         </span>
         <span class="ba-sub">
           <span class="ba-loaded-dot">●</span>

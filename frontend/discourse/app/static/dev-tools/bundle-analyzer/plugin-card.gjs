@@ -58,7 +58,13 @@ export default class PluginCard extends ExpandableRow {
       (f) => f !== base
     );
     return [base, ...others].filter(
-      (f) => f && this.graph.staticClosure(f).size > 0
+      (f) =>
+        f &&
+        this.graph.cardVisible(
+          f,
+          this.args.filter,
+          f === base ? null : this.baselineClosure
+        )
     );
   }
 
@@ -70,6 +76,7 @@ export default class PluginCard extends ExpandableRow {
         urls,
         base: this.graph.staticClosure(this.plugin.entrypoints[entry]),
       }))
+      .filter((b) => this.graph.cardVisible(b.file, this.args.filter, b.base))
       .sort(
         (a, b) => this.graph.sortSize(b.file) - this.graph.sortSize(a.file)
       );
