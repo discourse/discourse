@@ -3,7 +3,7 @@
 require "tmpdir"
 require "zip"
 
-RSpec.describe "Persistent system browser" do
+RSpec.describe SystemPersistentDriver do
   around(:each) do |example|
     previous_browser_cache = ENV["DISCOURSE_SYSTEM_BROWSER_CACHE"]
     ENV["DISCOURSE_SYSTEM_BROWSER_CACHE"] = "1"

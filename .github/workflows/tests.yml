@@ -328,6 +328,31 @@ jobs:
         if: matrix.build_type == 'system'
         run: pnpm playwright-install
 
+      - name: Restore native system driver
+        if: matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
+        id: native-driver-cache
+        uses: actions/cache@v6
+        with:
+          path: .github/ci/native-driver/rust/target/release/discourse-cdp-bridge
+          key: native-driver-${{ runner.os }}-${{ runner.arch }}-rust-1.85.1-${{ hashFiles('.github/ci/native-driver/rust/Cargo.toml', '.github/ci/native-driver/rust/Cargo.lock', '.github/ci/native-driver/rust/src/**') }}
+
+      - name: Build native system driver
+        if: matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && steps.native-driver-cache.outputs.cache-hit != 'true'
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends rustc=1.85.1+dfsg1-1+deb13u1 cargo=1.85.1+dfsg1-1+deb13u1
+          cargo build --locked --release --manifest-path .github/ci/native-driver/rust/Cargo.toml
+
+      - name: Configure native system driver
+        if: matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
+        run: |
+          node -e 'console.log("DISCOURSE_SYSTEM_CHROMIUM_PATH=" + require("playwright").chromium.executablePath())' >> "$GITHUB_ENV"
+          echo 'SPEC_OPTS=--require ./.github/ci/native-driver/native-lifecycle-waits.rb' >> "$GITHUB_ENV"
+          echo 'NATIVE_CDP_REUSE_TAB=1' >> "$GITHUB_ENV"
+          echo 'NATIVE_CDP_DIRECT_FILL=1' >> "$GITHUB_ENV"
+          echo 'NATIVE_CDP_DIRECT_EVAL=1' >> "$GITHUB_ENV"
+          echo 'NATIVE_CDP_ATOMIC_FILL=1' >> "$GITHUB_ENV"
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
