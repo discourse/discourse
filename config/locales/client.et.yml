@@ -2292,6 +2292,7 @@ et:
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
       no_description: "Palun lisa sellele kategooriale kirjeldus."
+      latest_topics: "Viimased teemad"
       already_used: "Teine kategooria juba kasutab seda värvi"
       security: "Turve"
       permissions:
@@ -2460,6 +2461,7 @@ et:
       with_topics: "%{filter} teemat"
       with_category: "%{filter} %{category} teemat"
       filter:
+        reset: "nulli"
         button:
           label: "Filter"
       latest:
@@ -3090,6 +3092,7 @@ et:
         site_traffic:
           series:
             anonymous: "Anonüümne"
+          crawler_learn_more: "Uuri veel"
         period:
           custom: "Individuaalne"
         reports:

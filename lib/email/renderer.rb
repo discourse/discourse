@@ -25,7 +25,7 @@ module Email
               template: "layouts/email_template",
               format: :html,
               locals: {
-                html_body: PrettyText.cook(text).html_safe,
+                html_body: PrettyText.cook(text, user_id: @opts[:user_id]).html_safe,
                 email_preview: email_preview,
               },
             )

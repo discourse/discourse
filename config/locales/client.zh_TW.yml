@@ -351,6 +351,7 @@ zh_TW:
     notifications_tracking:
       tooltip: "通知層級：%{level}"
     back_button: "上一步"
+    confirm_button: "確認"
     welcome_banner:
       header:
         new_members: "歡迎你，%{preferred_display_name}！"
@@ -2747,8 +2748,6 @@ zh_TW:
       signup_instructions: "輸入你的電子郵件地址以加入此社群。我們會傳送一組代碼供你確認，之後即可開始使用！"
       user_fields_title: "即將完成"
       user_fields_instructions: "只需再提供幾項資料，即可完成帳戶建立。"
-      account_ready_title: "你的帳戶已準備就緒！🎉"
-      account_ready_edit: "選擇你的使用者名稱與頭像"
       account_ready_continue: "繼續"
       username_label: "使用者名稱"
       username_placeholder: "選擇使用者名稱"
@@ -4857,6 +4856,7 @@ zh_TW:
       list: "列出分類"
       no_description: "請為此分類新增描述。"
       change_in_category_topic: "編輯描述"
+      latest_topics: "最新主題"
       description_updated: "說明已更新"
       description_expand: "顯示更多"
       description_collapse: "顯示更少"
@@ -5148,6 +5148,7 @@ zh_TW:
       with_category: "%{filter} %{category} 話題"
       filter:
         title: "%{filter}的篩選結果"
+        reset: "重設"
         button:
           label: "過濾"
       latest:
@@ -5406,16 +5407,18 @@ zh_TW:
       favorite_max_not_reached: "將此徽章標記為收藏"
       favorite_count: "%{count}/%{max} 個徽章已被標記為收藏"
     download_calendar:
-      title: "下載行事曆"
+      title: "新增至行事曆"
+      calendar: "行事曆"
       save_ics: "下載 .ics 文件"
       save_google: "新增至 Google 行事曆"
       remember: "不再詢問"
-      remember_explanation: "(您可以在使用者偏好設定中變更此偏好設定）"
       download: "下載"
       default_calendar: "預設行事曆"
       default_calendar_instruction: "確定儲存日期時應使用哪個行事曆"
       add_to_calendar: "新增至行事曆"
       google: "Google 行事曆"
+      outlook: "Microsoft Outlook"
+      apple: "Apple 行事曆"
       ics: "ICS"
       default_title: "排程活動"
     tagging:
@@ -7156,6 +7159,7 @@ zh_TW:
             embedded: "內嵌頁面瀏覽量"
             crawlers: "爬蟲"
           see_details: "查看詳情"
+          crawler_learn_more: "了解更多"
         period:
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"

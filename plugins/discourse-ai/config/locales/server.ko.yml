@@ -16,6 +16,21 @@ ko:
         image_generation_custom:
           name: "사용자 정의"
     ai_bot:
+      navigation:
+        users:
+          title: "사용자들"
+        groups:
+          title: "그룹"
+        review:
+          title: "대기열 검토"
+        categories:
+          title: "카테고리"
+        tags:
+          title: "태그"
+        themes:
+          title: "테마"
+        backups:
+          title: "백업"
       read_post:
         unknown_post: "글"
       tool_summary:

@@ -35,6 +35,14 @@ jobs:
         || 'ubuntu-latest'
       }}
     container: discourse/discourse_test:release
+    services:
+      minio:
+        image: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'bitnami/minio@sha256:50cec18ac4184af4671a78aedd5554942c8ae105d51a465fa82037949046da01' || '' }}
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+          MINIO_DEFAULT_BUCKETS: discoursetest
+          MINIO_DOMAIN: minio.local
     timeout-minutes: >-
       ${{
         matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
@@ -52,15 +60,18 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
-      MINIO_RUNNER_LOG_LEVEL: WARN
+      S3_SYSTEM_TEST_ENDPOINT: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'http://minio.local:9000' || '' }}
+      S3_SYSTEM_TEST_BUCKET: discoursetest
+      S3_SYSTEM_TEST_ACCESS_KEY_ID: minioadmin
+      S3_SYSTEM_TEST_SECRET_ACCESS_KEY: minioadmin
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
-      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
+      DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
     strategy:
       fail-fast: false
@@ -178,8 +189,9 @@ jobs:
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
-          echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+          minio_ip="$(getent ahostsv4 minio | awk 'NR == 1 { print $1 }')"
+          echo "$minio_ip minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+          curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://minio.local:9000/minio/health/ready
 
       - name: Create databases
         run: bin/rake db:create
@@ -393,6 +405,24 @@ jobs:
           end
           RUBY
 
+      - name: Prepare JS deprecation reports
+        if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
+        run: |
+          # Replace stale results even when a rerun produces no report files.
+          if ! compgen -G 'tmp/deprecation-reports/*.json' > /dev/null; then
+            mkdir -p tmp/deprecation-reports
+            printf '%s\n' '{"format":1,"files":[],"unresolved":[]}' > "tmp/deprecation-reports/${DEPRECATION_REPORT_GROUP}-empty.json"
+          fi
+
+      - name: Upload JS deprecation reports
+        uses: actions/upload-artifact@v7
+        if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
+        with:
+          name: deprecation-reports-${{ matrix.build_type }}-${{ matrix.target }}
+          overwrite: true
+          if-no-files-found: error
+          path: tmp/deprecation-reports/*.json
+
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'system'
@@ -511,6 +541,49 @@ jobs:
             printf 'Cgroup OOM events: %s; OOM kills: %s.\n\n' "${oom/null/unavailable}" "${oom_kill/null/unavailable}"
             printf 'Peak covers the container cgroup and descendants since creation, including page cache. Runner MemTotal is host capacity, not the container limit.\n'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  deprecation-report:
+    name: JS deprecation report
+    if: always() && github.repository == 'discourse/discourse' && needs.build.result != 'skipped'
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Check for JS deprecation reports
+        id: check-artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          artifact_ids=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" --jq '.artifacts[] | select(.name | startswith("deprecation-reports-")) | .id')
+          if [ -n "$artifact_ids" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v7
+        if: steps.check-artifacts.outputs.exists == 'true'
+        with:
+          fetch-depth: 1
+
+      - uses: actions/download-artifact@v7
+        if: steps.check-artifacts.outputs.exists == 'true'
+        with:
+          pattern: deprecation-reports-*
+          path: tmp/deprecation-report-parts
+          merge-multiple: true
+
+      - name: Build combined JS deprecation report
+        if: steps.check-artifacts.outputs.exists == 'true'
+        run: node frontend/discourse/lib/deprecation-report-cli.js merge tmp/js-deprecation-report.json tmp/deprecation-report-parts/*.json
+
+      - name: Upload combined JS deprecation report
+        uses: actions/upload-artifact@v7
+        if: steps.check-artifacts.outputs.exists == 'true'
+        with:
+          name: js-deprecation-report
+          path: tmp/js-deprecation-report.json
+          overwrite: true
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'

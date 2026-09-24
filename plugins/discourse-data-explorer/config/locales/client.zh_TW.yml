@@ -31,6 +31,7 @@ zh_TW:
       resize_editor: "調整查詢編輯器大小"
       default_query: "預設"
       default_query_notice: "這是預設查詢，無法編輯 SQL。若要編輯 SQL，請建立新查詢。"
+      view_query: "查看"
       queries: "查詢"
       query_created: "查詢已建立！"
       mode:

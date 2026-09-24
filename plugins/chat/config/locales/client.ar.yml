@@ -696,6 +696,7 @@ ar:
       direct_messages:
         title: "الرسائل المباشرة"
         aria_label: "التبديل إلى الرسائل المباشرة"
+        new_group: "دردشة جماعية جديدة"
         create: "إنشاء"
         cannot_create: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
       channel_list:

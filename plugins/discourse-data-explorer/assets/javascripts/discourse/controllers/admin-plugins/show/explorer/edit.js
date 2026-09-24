@@ -20,6 +20,7 @@ import {
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
+const DEFAULT_QUERY_TAG = "default";
 const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class PluginsExplorerController extends Controller {
@@ -122,6 +123,10 @@ export default class PluginsExplorerController extends Controller {
       });
   }
 
+  get mandatoryTags() {
+    return this.model.is_default ? DEFAULT_QUERY_TAG : null;
+  }
+
   get hasResults() {
     return !!this.results?.rows?.length;
   }
@@ -166,6 +171,7 @@ export default class PluginsExplorerController extends Controller {
       description: this.model.description ?? "",
       sql: this.model.sql ?? "",
       group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
     };
     this.dirty = false;
   }
@@ -180,12 +186,14 @@ export default class PluginsExplorerController extends Controller {
       description: this.model.description ?? "",
       sql: this.model.sql ?? "",
       group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
     };
     this.dirty =
       current.name !== this._pristine.name ||
       current.description !== this._pristine.description ||
       current.sql !== this._pristine.sql ||
-      current.group_ids !== this._pristine.group_ids;
+      current.group_ids !== this._pristine.group_ids ||
+      current.tags !== this._pristine.tags;
   }
 
   initView() {
@@ -373,6 +381,15 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  updateTags(value) {
+    const tags = this.model.is_default
+      ? [DEFAULT_QUERY_TAG, ...value.filter((tag) => tag !== DEFAULT_QUERY_TAG)]
+      : value;
+    this.model.set("tags", tags);
+    this.recomputeDirty();
+  }
+
+  @action
   editName() {
     this.editingName = true;
   }
@@ -483,10 +500,11 @@ export default class PluginsExplorerController extends Controller {
         return;
       }
     }
+    const stringifiedParams = JSON.stringify(params);
     this.setProperties({
       loading: true,
       showResults: false,
-      params: JSON.stringify(params),
+      params: params === null ? null : stringifiedParams,
     });
 
     ajax(
@@ -496,7 +514,7 @@ export default class PluginsExplorerController extends Controller {
       {
         type: "POST",
         data: {
-          params: JSON.stringify(params),
+          params: stringifiedParams,
           explain,
         },
       }

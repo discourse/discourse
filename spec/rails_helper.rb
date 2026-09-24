@@ -26,6 +26,7 @@ require "rspec-multi-mock"
 require_relative "support/server_error_tracking"
 
 ENV["RAILS_ENV"] ||= "test"
+ENV["RACK_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
@@ -190,13 +191,17 @@ RSpec.configure do |config|
     # Rebase the seeded DB settings as defaults, then swap in the in-memory provider.
     TestLocalProcessProvider.install!
 
+    s3_system_test_urls = []
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].present?
+      s3_endpoint = URI(ENV.fetch("S3_SYSTEM_TEST_ENDPOINT"))
+      s3_bucket_endpoint = s3_endpoint.dup
+      s3_bucket_endpoint.host = "#{ENV.fetch("S3_SYSTEM_TEST_BUCKET")}.#{s3_endpoint.host}"
+      s3_system_test_urls = [s3_endpoint.to_s, s3_bucket_endpoint.to_s]
+    end
+
     WebMock.disable_net_connect!(
       allow_localhost: true,
-      allow: [
-        *MinioRunner.config.minio_urls,
-        URI(MinioRunner::MinioBinary.platform_binary_url).host,
-        ENV["CAPYBARA_REMOTE_DRIVER_URL"],
-      ].compact,
+      allow: [*s3_system_test_urls, ENV["CAPYBARA_REMOTE_DRIVER_URL"]].compact,
     )
 
     # Registering this from inside before(:suite) makes it run at the end of the
@@ -301,6 +306,7 @@ RSpec.configure do |config|
     expect(deprecation_error).to be_nil, deprecation_error
 
     EmberDeprecations.record_counts($playwright_logger&.logs, example.metadata)
+    EmberDeprecations.record_details($playwright_logger&.logs, example.metadata)
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
 

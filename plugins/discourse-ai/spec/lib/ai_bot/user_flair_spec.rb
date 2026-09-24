@@ -38,6 +38,35 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
     expect(group.users).to contain_exactly(bot_user)
   end
 
+  it "gives a new AI users group a default bio" do
+    Fabricate(:ai_agent, user: bot_user)
+
+    group = Group.find_by(name: described_class::GROUP_NAME)
+    expect(group.bio_raw).to eq(I18n.t("discourse_ai.ai_bot.ai_users_bio"))
+    expect(group.bio_cooked).to be_present
+  end
+
+  it "gives an existing AI users group without a bio the default bio" do
+    Fabricate(:ai_agent, user: bot_user)
+    group = Group.find_by(name: described_class::GROUP_NAME)
+    group.update_columns(bio_raw: nil, bio_cooked: nil)
+
+    described_class.sync_all!
+
+    expect(group.reload.bio_raw).to eq(I18n.t("discourse_ai.ai_bot.ai_users_bio"))
+    expect(group.bio_cooked).to be_present
+  end
+
+  it "keeps an edited bio on an existing AI users group" do
+    Fabricate(:ai_agent, user: bot_user)
+    group = Group.find_by(name: described_class::GROUP_NAME)
+    group.update!(bio_raw: "Our helpful bots")
+
+    described_class.sync_all!
+
+    expect(group.reload.bio_raw).to eq("Our helpful bots")
+  end
+
   it "updates the flair icon on an existing AI users group" do
     agent = Fabricate(:ai_agent, user: bot_user)
     group = Group.find_by(name: described_class::GROUP_NAME)

@@ -5,7 +5,16 @@
 # https://translate.discourse.org/
 
 te:
+  markdown_endpoints:
+    latest: "తాజా"
+    categories: "వర్గాలు"
+    tags: "ట్యాగులు"
+    previous_page: "గత పుట"
+    next_page: "తరువాతి పుట"
+    replies: "ప్రత్యుత్తరాలు"
   mcp:
+    errors:
+      topic_not_found: "విషయం కనిపించలేదు"
     oauth:
       deny: "తిరస్కరించండి"
       approve: "అధికారం ఇవ్వండి"
@@ -633,7 +642,7 @@ te:
   uploads:
     marked_insecure_from_theme_component_reason: "థీమ్ భాగంలో ఉపయోగించిన అప్లోడ్"
   unsubscribe:
-    title: "చందాను తీసివేయండి"
+    unsubscribe: "చందాను తీసివేయండి"
     stop_watching_topic: "ఈ విషయాన్నీ అనుసరించటం ఆపివేయండి, %{link}"
     unwatch_category: "%{category} లో అన్ని విషయాలను అనుసరించడం ఆపివేయండి"
     mailing_list_mode: "మెయిలింగ్ జాబితా మోడ్ను ఆపివేయండి"
@@ -1729,6 +1738,7 @@ te:
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
     reserved_username: "ఆ సభ్యనామం అనుమతించబడదు."
+    missing_username: "దయచేసి సభ్యనామం నమోదు చేయండి"
     click_to_continue: "కొనసాగించడానికి ఇక్కడ క్లిక్ చేయండి."
     second_factor_title: "రెండు-కారకాల ప్రమాణీకరణ"
     second_factor_backup_description: "దయచేసి మీ బ్యాకప్ కోడ్‌లలో ఒకదానిని నమోదు చేయండి:"
@@ -2073,7 +2083,7 @@ te:
         ఒక సిబ్బంది మీ ఖాతాను %{site_name}లో ఆమోదించారు.
 
         మీరు ఇప్పుడు ఇక్కడ లాగిన్ చేయడం ద్వారా మీ కొత్త ఖాతాను యాక్సెస్ చేయవచ్చు:
-        %{base_url}
+        %{login_url}
 
         పై లింక్ క్లిక్ చేయలేకపోతే, దాన్ని కాపీ చేసి మీ వెబ్ బ్రౌజర్ చిరునామా బార్‌లో అతికించడానికి ప్రయత్నించండి.
 
@@ -2536,6 +2546,8 @@ te:
         title: "పోస్ట్ మరియు ప్రత్యుత్తరాలను తొలగించండి"
       disagree_and_restore:
         title: "పోస్ట్‌ని పునరుద్ధరించండి"
+      disagree_and_keep_deleted:
+        title: "పోస్ట్‌ను తొలగించి ఉంచండి"
       disagree_bundle:
         title: "లేదు"
       disagree:

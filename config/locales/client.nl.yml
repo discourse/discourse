@@ -349,6 +349,7 @@ nl:
     notifications_tracking:
       tooltip: "Meldingsniveau: %{level}"
     back_button: "Terug"
+    confirm_button: "Bevestigen"
     welcome_banner:
       header:
         new_members: "Welkom, %{preferred_display_name}!"
@@ -4667,6 +4668,7 @@ nl:
       list: "Categorieën weergeven"
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
+      latest_topics: "Nieuwste topics"
       description_updated: "Beschrijving bijgewerkt"
       description_expand: "Meer weergeven"
       description_collapse: "Minder weergeven"
@@ -4962,6 +4964,7 @@ nl:
       with_category: "%{filter} topics in %{category}"
       filter:
         title: "Gefilterde resultaten voor %{filter}"
+        reset: "resetten"
         button:
           label: "Filter"
       latest:
@@ -5174,16 +5177,18 @@ nl:
       favorite_max_not_reached: "Deze badge markeren als favoriet"
       favorite_count: "%{count}/%{max} badges gemarkeerd als favoriet"
     download_calendar:
-      title: "Agenda downloaden"
+      title: "Toevoegen aan agenda"
+      calendar: "Kalender"
       save_ics: ".ics-bestand downloaden"
       save_google: "Toevoegen aan Google-agenda"
       remember: "Niet meer vragen"
-      remember_explanation: "(je kunt deze voorkeur wijzigen in je gebruikersvoorkeuren)"
       download: "Downloaden"
       default_calendar: "Standaardagenda"
       default_calendar_instruction: "Bepaal welke agenda moet worden gebruikt wanneer datums worden opgeslagen"
       add_to_calendar: "Toevoegen aan agenda"
       google: "Google-agenda"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Agenda"
       ics: "ICS"
       default_title: "Geplande gebeurtenis"
     tagging:
@@ -6534,6 +6539,7 @@ nl:
           series:
             anonymous: "Anoniem"
             crawlers: "Crawlers"
+          crawler_learn_more: "Meer info"
         period:
           last_7_days: "Afgelopen 7 dagen"
           last_30_days: "Afgelopen 30 dagen"

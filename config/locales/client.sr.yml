@@ -2374,6 +2374,7 @@ sr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      latest_topics: "Poslednje teme"
       description_expand: "Pokaži više"
       description_collapse: "Pokaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
@@ -2493,6 +2494,7 @@ sr:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "resetuj"
         button:
           label: "Filter"
       latest:
@@ -3188,6 +3190,7 @@ sr:
             anonymous: "Anonimno"
             embedded: "Ugrađeni pregledi stranica"
             crawlers: "Pretraživači"
+          crawler_learn_more: "Saznaj više"
         period:
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"

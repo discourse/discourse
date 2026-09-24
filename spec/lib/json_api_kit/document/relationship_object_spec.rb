@@ -73,8 +73,8 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
         expect(relationship_object.to_h[:links]).to eq(
           self: relationship_url,
           related: related_url,
-          prev: "#{relationship_url}?page%5Bbefore%5D=read-back-here",
-          next: "#{relationship_url}?page%5Bafter%5D=read-on-here",
+          prev: "#{relationship_url}?page[before]=read-back-here",
+          next: "#{relationship_url}?page[after]=read-on-here",
         )
       end
     end

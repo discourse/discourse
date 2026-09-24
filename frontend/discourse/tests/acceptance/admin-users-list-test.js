@@ -1,6 +1,11 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Users List", function (needs) {
@@ -182,6 +187,261 @@ acceptance("Admin - Users List", function (needs) {
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText("notactivated");
+    assert.true(
+      currentURL().includes("activation=not_activated"),
+      "stores the activation filter in the URL"
+    );
+
+    await visit(
+      "/admin/users/list/new?username=sam&activation=not_activated&order=username"
+    );
+    await click(".d-filter-controls__reset");
+
+    assert.dom(".users-list .user").exists({ count: 2 }, "reloads all users");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/list/new?order=username",
+      "clears both legacy search and activation while preserving sorting"
+    );
+  });
+});
+
+acceptance("Admin - Users List - email permissions", function (needs) {
+  needs.user({ admin: false, moderator: true });
+  needs.settings({ moderators_view_emails: false });
+
+  test("shows the email action only when moderators can view emails", async function (assert) {
+    await visit("/admin/users/list/active");
+
+    assert
+      .dom(".admin-users__subheader-show-emails")
+      .doesNotExist("hides the unauthorized action");
+
+    this.siteSettings.moderators_view_emails = true;
+    await visit("/admin/users/list/new");
+
+    assert
+      .dom(".admin-users__subheader-show-emails")
+      .exists("shows the permitted action");
+  });
+});
+
+acceptance("Admin - Users List - pagination", function (needs) {
+  needs.user();
+
+  let lastRequest;
+  let requestCount;
+  let users;
+
+  needs.pretender((server, helper) => {
+    requestCount = 0;
+    users = [{ id: 2, username: "sam" }];
+    server.get("/admin/users/list/active.json", (request) => {
+      requestCount++;
+      lastRequest = request.queryParams;
+      return helper.response(users);
+    });
+  });
+
+  test("loads more users only after a full page", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
+    const scrollToBottom = () =>
+      observations
+        .findLast(({ element }) =>
+          element.matches(".users-list-container > .load-more-sentinel")
+        )
+        .trigger();
+
+    try {
+      await visit("/admin/users/list/active");
+      await scrollToBottom();
+
+      assert.strictEqual(requestCount, 1, "fetches the complete list once");
+
+      const pageSize = 100;
+      users = Array.from({ length: pageSize }, (_, index) => ({
+        id: index + 1,
+        username: `user${index + 1}`,
+      }));
+      await click(
+        ".users-list .directory-table__column-header--username.sortable"
+      );
+
+      users = [{ id: pageSize + 1, username: "lastuser" }];
+      await scrollToBottom();
+
+      assert.strictEqual(
+        lastRequest.page,
+        "2",
+        "loads the next page after a full page"
+      );
+      assert
+        .dom(".users-list .user")
+        .exists({ count: pageSize + 1 }, "appends the remaining user");
+
+      await scrollToBottom();
+
+      assert.strictEqual(requestCount, 3, "stops after the final short page");
+    } finally {
+      disableLoadMoreObserver();
+    }
+  });
+});
+
+acceptance("Admin - Users List - staff account types", function (needs) {
+  needs.user();
+
+  let lastRequest;
+  let requestCount;
+
+  needs.pretender((server, helper) => {
+    requestCount = 0;
+    server.get("/admin/users/list/staff.json", (request) => {
+      requestCount++;
+      lastRequest = request.queryParams;
+      return helper.response(
+        lastRequest.account_type === "bot" && !lastRequest.filter
+          ? []
+          : [{ id: 2, username: "sam" }]
+      );
+    });
+  });
+
+  test("selects account types and resets to human accounts", async function (assert) {
+    await visit("/admin/users/list/staff");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("human", "defaults to humans");
+    assert.strictEqual(
+      lastRequest.account_type,
+      "human",
+      "requests human accounts"
+    );
+
+    await fillIn(".d-filter-controls__dropdown", "bot");
+
+    assert.strictEqual(
+      lastRequest.account_type,
+      "bot",
+      "requests bot accounts"
+    );
+    assert.true(
+      currentURL().includes("account_type=bot"),
+      "stores the selection in the URL"
+    );
+    assert
+      .dom(".admin-users-list__no-results")
+      .doesNotExist("does not duplicate the filtered empty state");
+    assert
+      .dom(".d-filter-controls__no-results p")
+      .hasText(i18n("search.no_results"), "shows the standard empty message");
+
+    await fillIn(".d-filter-controls__dropdown", "all");
+
+    assert.strictEqual(
+      lastRequest.account_type,
+      "all",
+      "requests all accounts"
+    );
+
+    await visit(
+      "/admin/users/list/staff?username=sam&filter=sam&account_type=all&order=username"
+    );
+    await click(".d-filter-controls__reset");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("human", "restores the default selection");
+    assert.strictEqual(
+      lastRequest.account_type,
+      "human",
+      "reloads human accounts"
+    );
+    assert.strictEqual(
+      currentURL(),
+      "/admin/users/list/staff?order=username",
+      "clears all filter parameters while preserving sorting"
+    );
+
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
+    );
+
+    assert.strictEqual(
+      lastRequest.account_type,
+      "human",
+      "sorting keeps the default account type"
+    );
+    assert.strictEqual(
+      lastRequest.filter,
+      "",
+      "sorting does not restore the cleared search"
+    );
+  });
+
+  test("restores URL filters, keeps them when sorting, and clears them between tabs", async function (assert) {
+    await visit("/admin/users/list/staff?account_type=bot&filter=sam");
+
+    assert.strictEqual(requestCount, 1, "loads once when entering the route");
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("bot", "restores the account type");
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("sam", "restores the search");
+
+    for (let clickCount = 1; clickCount <= 4; clickCount++) {
+      await click(
+        ".users-list .directory-table__column-header--username.sortable"
+      );
+
+      assert.strictEqual(
+        requestCount,
+        clickCount + 1,
+        "loads once per sort change"
+      );
+      assert.strictEqual(
+        lastRequest.order,
+        "username",
+        "requests the selected sort"
+      );
+      assert.strictEqual(
+        lastRequest.account_type,
+        "bot",
+        "preserves the account type"
+      );
+      assert.strictEqual(lastRequest.filter, "sam", "preserves the search");
+      assert
+        .dom(".d-filter-controls__input")
+        .hasValue("sam", "keeps the search visible");
+      assert.true(
+        currentURL().includes("filter=sam"),
+        "keeps the search in the URL"
+      );
+    }
+
+    await fillIn(".d-filter-controls__dropdown", "all");
+
+    assert.strictEqual(
+      lastRequest.filter,
+      "sam",
+      "keeps the search when changing account type"
+    );
+
+    await click(".admin-users-tabs__new a");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("all", "shows the activation filter");
+
+    await click(".admin-users-tabs__staff a");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .hasValue("human", "returns to human accounts");
+    assert.dom(".d-filter-controls__input").hasValue("", "clears the search");
   });
 });
 
@@ -233,6 +493,25 @@ acceptance("Admin - Users List - bulk search", function (needs) {
     assert
       .dom(".d-filter-controls__input")
       .isFocused("keeps focus while the URL updates");
+
+    for (let clickCount = 0; clickCount < 2; clickCount++) {
+      await click(
+        ".users-list .directory-table__column-header--username.sortable"
+      );
+
+      assert.strictEqual(
+        lastFilter,
+        "sam,bob",
+        "sorting preserves the typed search"
+      );
+      assert
+        .dom(".d-filter-controls__input")
+        .hasValue("sam,bob", "keeps the typed search visible");
+      assert.true(
+        decodeURIComponent(currentURL()).includes("filter=sam,bob"),
+        "sorting preserves the search URL"
+      );
+    }
 
     await fillIn(".d-filter-controls__input", "");
 

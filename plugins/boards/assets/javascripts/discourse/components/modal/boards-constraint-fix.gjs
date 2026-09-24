@@ -2,51 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import Category from "discourse/models/category";
-import { eq, not } from "discourse/truth-helpers";
+import { eq, includes, not } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-
-function includes(arr, item) {
-  return arr.includes(item);
-}
+import { loadCategories } from "../../lib/boards-categories";
 
 export default class BoardsConstraintFix extends Component {
   @tracked selectedCategoryId = null;
   @tracked selectedTagNames = [];
-
-  constructor() {
-    super(...arguments);
-    const { mismatches, topic } = this.args.model;
-
-    if (mismatches.needsCategory && mismatches.boardCategoryIds.length === 1) {
-      this.selectedCategoryId = mismatches.boardCategoryIds[0];
-    }
-
-    if (!mismatches.needsCategory) {
-      this.selectedCategoryId = topic.category_id;
-    }
-  }
-
-  get categoryOptions() {
-    const { mismatches } = this.args.model;
-    if (!mismatches.needsCategory) {
-      return [];
-    }
-    return mismatches.boardCategoryIds.map((id) => {
-      const cat = Category.findById(id);
-      return { id, name: cat?.name || `Category ${id}` };
-    });
-  }
-
-  get tagOptions() {
-    const { mismatches } = this.args.model;
-    if (!mismatches.needsTags) {
-      return [];
-    }
-    return mismatches.boardTagNames;
-  }
 
   get canSave() {
     const { mismatches } = this.args.model;
@@ -57,6 +22,16 @@ export default class BoardsConstraintFix extends Component {
       return false;
     }
     return true;
+  }
+
+  @action
+  async loadCategoryOptions(ids) {
+    const categories = await loadCategories(ids);
+    if (!this.isDestroying && ids.length === 1) {
+      this.selectedCategoryId = categories[0]?.id ?? null;
+    }
+
+    return categories;
   }
 
   @action
@@ -77,6 +52,10 @@ export default class BoardsConstraintFix extends Component {
 
   @action
   confirm() {
+    if (!this.canSave) {
+      return;
+    }
+
     const result = {};
     const { mismatches } = this.args.model;
 
@@ -112,18 +91,25 @@ export default class BoardsConstraintFix extends Component {
           <div class="discourse-boards-constraint-fix__field">
             <label>{{i18n "boards.board.constraint_fix_category"}}</label>
             <div class="discourse-boards-constraint-fix__options">
-              {{#each this.categoryOptions as |cat|}}
-                <DButton
-                  class={{if
-                    (eq this.selectedCategoryId cat.id)
-                    "btn-primary discourse-boards-constraint-fix__option--selected"
-                    "btn-default"
-                  }}
-                  data-category-id={{cat.id}}
-                  @action={{fn this.selectCategory cat.id}}
-                  @translatedLabel={{cat.name}}
-                />
-              {{/each}}
+              <DAsyncContent
+                @asyncData={{this.loadCategoryOptions}}
+                @context={{@model.mismatches.boardCategoryIds}}
+              >
+                <:content as |categories|>
+                  {{#each categories as |cat|}}
+                    <DButton
+                      class={{if
+                        (eq this.selectedCategoryId cat.id)
+                        "btn-primary discourse-boards-constraint-fix__option--selected"
+                        "btn-default"
+                      }}
+                      data-category-id={{cat.id}}
+                      @action={{fn this.selectCategory cat.id}}
+                      @translatedLabel={{cat.name}}
+                    />
+                  {{/each}}
+                </:content>
+              </DAsyncContent>
             </div>
           </div>
         {{/if}}
@@ -132,7 +118,7 @@ export default class BoardsConstraintFix extends Component {
           <div class="discourse-boards-constraint-fix__field">
             <label>{{i18n "boards.board.constraint_fix_tags"}}</label>
             <div class="discourse-boards-constraint-fix__options">
-              {{#each this.tagOptions as |tagName|}}
+              {{#each @model.mismatches.boardTagNames as |tagName|}}
                 <DButton
                   class={{if
                     (includes this.selectedTagNames tagName)

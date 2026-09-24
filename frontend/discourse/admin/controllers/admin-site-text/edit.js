@@ -31,6 +31,25 @@ export default class AdminSiteTextEdit extends Controller {
     return this.siteText.value === this.get("buffered.value"); // TODO (devxp) we need a buffered proxy that works with tracked properties
   }
 
+  @computed("siteText.{new_default,value,overridden,can_revert}")
+  get defaultText() {
+    if (
+      this.siteText.new_default !== null &&
+      this.siteText.new_default !== undefined
+    ) {
+      return this.siteText.new_default;
+    }
+    if (!this.siteText.overridden && !this.siteText.can_revert) {
+      return this.siteText.value;
+    }
+    return null;
+  }
+
+  @computed("siteText.status")
+  get isInvalid() {
+    return this.siteText?.status === "invalid_interpolation_keys";
+  }
+
   @computed("siteText.status")
   get isOutdated() {
     return this.siteText?.status === "outdated";

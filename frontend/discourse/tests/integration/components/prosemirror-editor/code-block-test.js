@@ -1,4 +1,4 @@
-import { triggerKeyEvent } from "@ember/test-helpers";
+import { settled, triggerKeyEvent } from "@ember/test-helpers";
 import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -56,6 +56,29 @@ module(
           multiToggle: true,
         });
       });
+    });
+
+    test("pasting code with line wrappers keeps a single code block", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "");
+
+      editor.view.pasteHTML(
+        '<pre class="language-bash"><code><div><span>first</span><br></div><div><br></div><div>  last<br></div></code></pre>'
+      );
+      await settled();
+
+      assert
+        .dom(".ProseMirror pre")
+        .exists({ count: 1 }, "keeps one code block");
+      assert.strictEqual(
+        editor.view.state.doc.firstChild.textContent,
+        "first\n\n  last",
+        "preserves line breaks and indentation in the pasted code"
+      );
+      assert.strictEqual(
+        editor.view.state.doc.firstChild.attrs.params,
+        "bash",
+        "preserves the code language"
+      );
     });
 
     test("language selector options are alphabetically sorted", async function (assert) {

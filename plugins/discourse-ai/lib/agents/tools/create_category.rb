@@ -8,7 +8,7 @@ module DiscourseAi
           {
             name: name,
             description:
-              "Creates a new category. Create parent categories before their subcategories, and use list_categories to find parent category IDs.",
+              "Creates a new category and returns its ID and full URL to link to it. Copy the returned URL unchanged; it already includes the category ID, so never append an ID or number. Create parent categories before their subcategories, and use list_categories to find parent category IDs.",
             parameters: [
               {
                 name: "name",
@@ -138,7 +138,7 @@ module DiscourseAi
             {
               status: "success",
               category_id: category.id,
-              url: category.url,
+              url: "#{Discourse.base_url_no_prefix}#{category.url}",
               message: I18n.t("discourse_ai.ai_bot.create_category.success", name: category.name),
             }
           else

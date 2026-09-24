@@ -22,6 +22,28 @@ module PageObjects
           page.has_no_css?(".d-table__overview-name", text: name)
         end
 
+        def has_row_count_column?
+          headers =
+            %w[name columns rows size].map do |column|
+              I18n.t("js.discourse_workflows.data_tables.#{column}")
+            end
+
+          page.has_css?(
+            ".d-table__header",
+            text: headers.join(" "),
+            exact_text: true,
+            normalize_ws: true,
+          )
+        end
+
+        def has_data_table_row_count?(data_table, count)
+          page.has_css?(
+            ".d-table__row[data-item-id='#{data_table.id}'] .d-table__cell:nth-child(3)",
+            text: count.to_s,
+            exact_text: true,
+          )
+        end
+
         def click_add_data_table
           if page.has_css?(".workflows-empty-state", wait: 5)
             find(".workflows-empty-state .btn-primary").click

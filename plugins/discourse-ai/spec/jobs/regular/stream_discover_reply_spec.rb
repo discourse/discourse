@@ -213,6 +213,7 @@ describe Jobs::StreamDiscoverReply do
   end
 
   it "uses the configured rewrite agent's queries for retrieval" do
+    query_rewrite_agent.update!(enabled: false)
     allow(query_rewriter).to receive(:call).with(query).and_return(
       DiscourseAi::Discoveries::QueryRewriter::Result.new(
         keyword_query: "create plugin",

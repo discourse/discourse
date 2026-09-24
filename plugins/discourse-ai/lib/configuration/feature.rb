@@ -216,6 +216,7 @@ module DiscourseAi
           [
             SiteSetting.ai_ask_ai_agent,
             SiteSetting.ai_ask_ai_query_rewriter_agent,
+            SiteSetting.ai_ask_ai_report_agent,
             SiteSetting.ai_ask_ai_follow_up_agent,
           ].map(&:to_i).reject(&:zero?).uniq
         end

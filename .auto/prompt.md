@@ -7,13 +7,17 @@ Preserve the complete test matrix, test selection, assertions, retries, and
 failure reporting. Keep the existing job count and test groups; do not split
 tests into additional jobs. A skipped test suite is not a successful optimization.
 
-Use this draft PR as the measurement environment. Controlled measurements used
-base revision 0708de39bcebe79c8469dfd88cd568c8e71b42c7 and a temporary PR-head
-checkout. Subsequent measurements use normal PR merge checkout, including current
-main. Record the actual tested revision and distinguish source changes from
-optimization effects. Record external plugin/theme revisions and cache behavior
-when assessing noisy results. Detailed profilers have been removed; retain job
-memory and CPU totals for the resource comparison.
+Use this draft PR for final measurements. Pin proxy experiments to main revision
+7ae654854083fceda0dac33348ba0a427a985c9c. Run exploratory benchmarks with act on
+an isolated 16-vCPU host, recording the image digest, source revision, runtime
+cache, seed, CPU totals, and peak container memory. Proxy timings do not establish
+the GitHub Actions target. Keep diagnostic scripts and raw profiles private.
+
+Historical controlled measurements used base revision
+0708de39bcebe79c8469dfd88cd568c8e71b42c7 and a temporary PR-head checkout.
+GitHub measurements use normal PR merge checkout. Record the actual tested
+revision and distinguish source changes from optimization effects. Record
+external plugin/theme revisions and cache behavior when assessing noisy results.
 
 ## Procedure
 
