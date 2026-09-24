@@ -63,24 +63,18 @@ export default class PluginsReport extends Component {
         @view={{@view}}
       />
 
-      <section>
-        <div class="ba-hint">
-          Each plugin is built separately, so these sizes stand apart from
-          core's.
-        </div>
-        <div>
-          {{#each this.visible as |p|}}
-            <PluginCard
-              @analysis={{this.analysis}}
-              @filter={{this.filter}}
-              @loaded={{this.loaded}}
-              @plugin={{p}}
-            />
-          {{else}}
-            <div class="ba-empty">No matches.</div>
-          {{/each}}
-        </div>
-      </section>
+      <div>
+        {{#each this.visible as |p|}}
+          <PluginCard
+            @analysis={{this.analysis}}
+            @filter={{this.filter}}
+            @loaded={{this.loaded}}
+            @plugin={{p}}
+          />
+        {{else}}
+          <div class="ba-empty">No matches.</div>
+        {{/each}}
+      </div>
     </div>
   </template>
 }

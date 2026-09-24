@@ -42,9 +42,6 @@
 .bundle-analyzer code {
   color: var(--ba-good);
 }
-.bundle-analyzer section {
-  margin-bottom: 28px;
-}
 .bundle-analyzer .ba-header {
   margin-bottom: 16px;
 }

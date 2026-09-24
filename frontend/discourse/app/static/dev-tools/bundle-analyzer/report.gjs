@@ -95,26 +95,20 @@ export default class Report extends Component {
         @view={{@view}}
       />
 
-      <section>
-        <div class="ba-hint">
-          <code>discourse</code>
-          is the baseline. Every other row counts only what it adds on top.
-        </div>
-        <div>
-          {{#each this.visible as |f|}}
-            <EntrypointCard
-              @analysis={{this.analysis}}
-              @baseline={{eq f this.baselineFile}}
-              @baselineClosure={{this.baselineClosure}}
-              @file={{f}}
-              @filter={{this.filter}}
-              @loaded={{this.loaded}}
-            />
-          {{else}}
-            <div class="ba-empty">No matches.</div>
-          {{/each}}
-        </div>
-      </section>
+      <div>
+        {{#each this.visible as |f|}}
+          <EntrypointCard
+            @analysis={{this.analysis}}
+            @baseline={{eq f this.baselineFile}}
+            @baselineClosure={{this.baselineClosure}}
+            @file={{f}}
+            @filter={{this.filter}}
+            @loaded={{this.loaded}}
+          />
+        {{else}}
+          <div class="ba-empty">No matches.</div>
+        {{/each}}
+      </div>
     </div>
   </template>
 }
