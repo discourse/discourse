@@ -17,6 +17,38 @@ RSpec.describe "Persistent system browser" do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
+  it "times out a screenshot when fonts never finish loading" do
+    visit("/latest")
+
+    Dir.mktmpdir do |directory|
+      screenshot_path = File.join(directory, "page.png")
+      page.save_screenshot(screenshot_path)
+      expect(File.binread(screenshot_path, 8)).to eq("\x89PNG\r\n\x1a\n".b)
+
+      page.driver.with_playwright_page do |browser_page|
+        requests = Queue.new
+        browser_page.route(
+          "**/pending-screenshot-font.woff2",
+          ->(route, _request) { requests << route },
+        )
+        page.execute_script <<~JS
+          const font = new FontFace("PendingScreenshotFont", "url('/pending-screenshot-font.woff2')");
+          document.fonts.add(font);
+          font.load().catch(() => {});
+        JS
+        request = Timeout.timeout(5) { requests.pop }
+
+        begin
+          expect { page.save_screenshot(screenshot_path, timeout: 250) }.to raise_error(
+            Playwright::TimeoutError,
+          )
+        ensure
+          request.abort
+        end
+      end
+    end
+  end
+
   it "lets a visitor start a fresh page with cleared authentication and browser storage" do
     sign_in(user)
     visit("/latest")

@@ -151,6 +151,13 @@ end
 module CapybaraPlaywrightBrowserPatch
   include CapybaraPlaywrightBasePatch
 
+  def save_screenshot(path, **options)
+    timeout_ms = options.fetch(:timeout, 5_000)
+    Timeout.timeout(timeout_ms / 1_000.0 + 1) do
+      assert_page_alive { @playwright_page.screenshot(path: path, timeout: timeout_ms) }
+    end
+  end
+
   METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
 
   METHODS_TO_PATCH.each do |method_name|
