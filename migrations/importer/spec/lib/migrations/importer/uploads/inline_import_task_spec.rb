@@ -100,4 +100,17 @@ RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
     expect(task.write(task.process(row, nil))).to eq(:error)
     expect(reporter).to have_received(:notice).with(/record upload a: disk full/)
   end
+
+  it "rolls back the mapping when inserting its markdown fails" do
+    service_returns(status: enums::UploadResultStatus::OK, upload_id: 71, markdown: "![](new)")
+    db.insert(
+      Migrations::Importer::Uploads::InlineImportTask::INSERT_MARKDOWN_SQL,
+      [row[:id], "![](stale)"],
+    )
+    db.commit_transaction
+
+    expect(import_row).to eq(:error)
+    expect(mapped_ids).to be_empty
+    expect(upload_markdown).to contain_exactly({ original_id: "a", markdown: "![](stale)" })
+  end
 end
