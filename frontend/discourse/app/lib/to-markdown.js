@@ -31,17 +31,6 @@ export function clearTextDecorateCallbacks() {
   deprecationWarning("clearTextDecorateCallbacks");
 }
 
-/**
- * Converts HTML to markdown.
- *
- * The conversion itself lives under `static/`, which the build leaves out of
- * the app bundle, so everything it needs is imported there rather than through
- * an `import()` of its own. One split point, fetched on the first conversion.
- *
- * @param {string} html
- * @returns {Promise<string>} the markdown, or an empty string if it could not
- *   be converted
- */
 export default async function toMarkdown(html) {
   try {
     const { default: convert } = await waitForPromise(
