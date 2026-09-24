@@ -159,8 +159,8 @@ export default function bundleAnalyzerPlugin({
       // A watching build leaves its output directory in place, so yesterday's
       // reports pile up beside today's. Each is the size of the bundle it
       // describes.
-      if (pruneStale) {
-        const dir = "./dist/assets/js";
+      const dir = "./dist/assets/js";
+      if (pruneStale && fs.existsSync(dir)) {
         for (const entry of fs.readdirSync(dir)) {
           const path = `assets/js/${entry}`;
           if (BUNDLE_ANALYSIS_RE.test(path) && path !== fileName) {
