@@ -28,6 +28,46 @@ module PageObjects
         locale_selector.collapse
       end
 
+      def select_theme(theme)
+        expand_filters
+        selector = PageObjects::Components::SelectKit.new(".theme-search")
+        selector.expand
+        selector.select_row_by_value(theme.id)
+        selector.collapse
+      end
+
+      def has_no_theme_filter?
+        has_no_css?(".theme-search")
+      end
+
+      def has_selected_theme?(theme)
+        has_css?(".d-filter-controls__dropdowns .theme-search .select-kit-header", text: theme.name)
+      end
+
+      def has_all_site_texts_selected?
+        has_css?(
+          ".theme-search .select-kit-header",
+          text: I18n.t("admin_js.admin.site_text.all_themes"),
+        )
+      end
+
+      def back_to_results
+        find(".go-back").click
+        self
+      end
+
+      def revert_translation
+        find(".revert-site-text").click
+        PageObjects::Components::Dialog.new.click_yes
+        self
+      end
+
+      def reset_filters
+        expand_filters
+        find(".site-texts__reset-filters").click
+        self
+      end
+
       def toggle_only_show_overridden
         expand_filters
         find("#toggle-overridden").click
@@ -43,12 +83,10 @@ module PageObjects
         find("#toggle-only-locale").click
       end
 
-      def edit_translation(key)
+      def edit_translation(key, locale: I18n.locale, theme_id: nil)
         find(".site-text[data-site-text-id='#{key}']").find(".site-text-edit").click
-        has_current_path?(
-          "/admin/customize/site_texts/#{key}?locale=#{I18n.locale}",
-          ignore_query: false,
-        )
+        query = { locale:, theme_id: }.compact.to_query
+        has_current_path?("/admin/customize/site_texts/#{key}?#{query}", ignore_query: false)
       end
 
       def override_translation(value)

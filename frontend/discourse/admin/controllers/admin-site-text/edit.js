@@ -12,8 +12,9 @@ export default class AdminSiteTextEdit extends Controller {
   @service dialog;
 
   @tracked siteText;
+  @tracked themeId = null;
   saved = false;
-  queryParams = ["locale"];
+  queryParams = ["locale", { themeId: "theme_id" }];
 
   #activeTextarea = null;
   #lastCursorPos = null;

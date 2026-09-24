@@ -28,18 +28,43 @@ class Admin::SiteTextsController < Admin::AdminController
     outdated = params[:outdated] == "true"
     untranslated = params[:untranslated] == "true"
     only_selected_locale = params[:only_selected_locale] == "true"
-    extras = {}
+    extras = { themes: Theme.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } } }
+    theme = Theme.find(params[:theme_id]) if params[:theme_id].present?
 
     query = params[:q] || ""
 
     locale = fetch_locale(params[:locale])
 
-    if query.blank? && !overridden && !outdated && !untranslated
+    if query.blank? && !overridden && !outdated && !untranslated && !theme
       extras[:recommended] = true
       results = PREFERRED_KEYS.map { |key| record_for(key:, locale:) }
     else
       results =
-        find_translations(query, overridden, outdated, locale, untranslated, only_selected_locale)
+        (
+          if theme
+            []
+          else
+            find_translations(
+              query,
+              overridden,
+              outdated,
+              locale,
+              untranslated,
+              only_selected_locale,
+            )
+          end
+        )
+      results.concat(
+        ThemeTranslationManager.search_site_texts(
+          query,
+          locale:,
+          theme:,
+          overridden:,
+          outdated:,
+          untranslated:,
+          only_selected_locale:,
+        ),
+      )
 
       results.reject! { |r| RESTRICTED_KEYS.include?(r[:id]) }
 
@@ -72,24 +97,31 @@ class Admin::SiteTextsController < Admin::AdminController
     end
 
     overridden = overridden_keys(locale)
-    render_serialized(
-      results[first..last - 1],
-      SiteTextSerializer,
-      root: "site_texts",
-      rest_serializer: true,
-      extras:,
-      overridden_keys: overridden,
-    )
+    records =
+      (results[first..last - 1] || []).map do |record|
+        if ThemeTranslationManager::SITE_TEXT_ID_PATTERN.match?(record[:id])
+          record
+        else
+          serialize_data(record, SiteTextSerializer, root: false, overridden_keys: overridden)
+        end
+      end
+    render_json_dump({ site_texts: records }, rest_serializer: true, extras:)
   end
 
   def show
     locale = fetch_locale(params[:locale])
+    if theme_site_text?
+      text = ThemeTranslationManager.find_site_text(params[:id], locale:)
+      raise Discourse::NotFound unless text
+      return render_json_dump({ site_text: text.site_text }, rest_serializer: true)
+    end
     site_text = find_site_text(locale)
     render_serialized(site_text, SiteTextSerializer, root: "site_text", rest_serializer: true)
   end
 
   def update
     locale = fetch_locale(params.dig(:site_text, :locale))
+    return update_theme_text(locale) if theme_site_text?
 
     site_text = find_site_text(locale)
     value = site_text[:value] = params.dig(:site_text, :value)
@@ -119,6 +151,7 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def revert
     locale = fetch_locale(params[:locale])
+    return update_theme_text(locale, revert: true) if theme_site_text?
 
     site_text = find_site_text(locale)
     id = site_text[:id]
@@ -174,6 +207,30 @@ class Admin::SiteTextsController < Admin::AdminController
   end
 
   protected
+
+  def theme_site_text?
+    ThemeTranslationManager::SITE_TEXT_ID_PATTERN.match?(params[:id])
+  end
+
+  def update_theme_text(locale, revert: false)
+    text = ThemeTranslationManager.find_site_text(params[:id], locale:)
+    raise Discourse::NotFound unless text
+
+    old_value = text.value
+    if revert
+      text.revert!
+    else
+      value = params.require(:site_text)[:value]
+      raise Discourse::InvalidParameters.new(:value) unless value.is_a?(String)
+      text.theme.with_lock do
+        text.theme.theme_translation_overrides.reload
+        text.value = value
+      end
+    end
+    record = text.site_text
+    StaffActionLogger.new(current_user).log_site_text_change(record[:id], record[:value], old_value)
+    render_json_dump({ site_text: record }, rest_serializer: true)
+  end
 
   def is_badge_title?(id = "")
     badge_parts = id.split(".")
