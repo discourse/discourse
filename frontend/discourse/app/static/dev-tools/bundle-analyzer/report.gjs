@@ -43,13 +43,6 @@ export default class Report extends Component {
     return (this.#visible(base) ? [base] : []).concat(others);
   }
 
-  @cached
-  get loadedTotals() {
-    return this.analysis.totals(
-      [...this.loaded.files].filter((f) => this.analysis.chunks[f])
-    );
-  }
-
   @action
   updateFilter(event) {
     this.filter = event.target.value.trim().toLowerCase();
@@ -81,9 +74,9 @@ export default class Report extends Component {
           {{this.analysis.chunkCount}}
           chunks ·
           <span class="ba-loaded-dot">●</span>
-          {{this.loadedTotals.files}}
+          {{this.analysis.loadedTotals.files}}
           loaded,
-          {{brotliLabel this.loadedTotals}}
+          {{brotliLabel this.analysis.loadedTotals}}
           br
         </span>
       </div>

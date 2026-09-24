@@ -13,6 +13,12 @@
   width: min(1200px, 92vw);
   max-width: 92vw;
 }
+/* The tab strip sits outside `.bundle-analyzer`, so it cannot use its palette. */
+.bundle-analyzer-modal .ba-tab-size {
+  margin-left: 6px;
+  font-weight: normal;
+  color: var(--primary-medium);
+}
 .bundle-analyzer-modal .d-modal__body {
   padding: 0;
   overflow-y: auto;

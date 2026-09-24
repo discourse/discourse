@@ -7,7 +7,7 @@ import "./styles.css";
 import DModal from "discourse/ui-kit/d-modal";
 import DTabs from "discourse/ui-kit/d-tabs";
 import { i18n } from "discourse-i18n";
-import Analysis from "./analysis";
+import Analysis, { brotliLabel } from "./analysis";
 import LoadedChunks from "./loaded-chunks";
 import PluginsAnalysis from "./plugins-analysis";
 import PluginsReport from "./plugins-report";
@@ -106,39 +106,53 @@ export default class BundleAnalyzerModal extends Component {
               @onActivate={{this.setTab}}
               as |tabs|
             >
-              <tabs.Tab
-                @key="core"
-                @label={{i18n "dev_tools.bundle_analyzer.core"}}
-              >
-                {{#if this.error}}
-                  <div class="ba-empty">
-                    {{i18n
-                      "dev_tools.bundle_analyzer.load_failed"
-                      error=this.error
-                    }}
-                  </div>
-                {{else if this.analysis}}
-                  <Report @analysis={{this.analysis}} @view={{this.view}} />
-                {{/if}}
+              <tabs.Tab @key="core">
+                <:label>
+                  {{i18n "dev_tools.bundle_analyzer.core"}}
+                  {{#if this.analysis}}
+                    <span class="ba-tab-size">{{brotliLabel
+                        this.analysis.loadedTotals
+                      }}</span>
+                  {{/if}}
+                </:label>
+                <:default>
+                  {{#if this.error}}
+                    <div class="ba-empty">
+                      {{i18n
+                        "dev_tools.bundle_analyzer.load_failed"
+                        error=this.error
+                      }}
+                    </div>
+                  {{else if this.analysis}}
+                    <Report @analysis={{this.analysis}} @view={{this.view}} />
+                  {{/if}}
+                </:default>
               </tabs.Tab>
 
-              <tabs.Tab
-                @key="plugins"
-                @label={{i18n "dev_tools.bundle_analyzer.plugins"}}
-              >
-                {{#if this.pluginError}}
-                  <div class="ba-empty">
-                    {{i18n
-                      "dev_tools.bundle_analyzer.load_failed"
-                      error=this.pluginError
-                    }}
-                  </div>
-                {{else if this.plugins}}
-                  <PluginsReport
-                    @analysis={{this.plugins}}
-                    @view={{this.view}}
-                  />
-                {{/if}}
+              <tabs.Tab @key="plugins">
+                <:label>
+                  {{i18n "dev_tools.bundle_analyzer.plugins"}}
+                  {{#if this.plugins}}
+                    <span class="ba-tab-size">{{brotliLabel
+                        this.plugins.loadedTotals
+                      }}</span>
+                  {{/if}}
+                </:label>
+                <:default>
+                  {{#if this.pluginError}}
+                    <div class="ba-empty">
+                      {{i18n
+                        "dev_tools.bundle_analyzer.load_failed"
+                        error=this.pluginError
+                      }}
+                    </div>
+                  {{else if this.plugins}}
+                    <PluginsReport
+                      @analysis={{this.plugins}}
+                      @view={{this.view}}
+                    />
+                  {{/if}}
+                </:default>
               </tabs.Tab>
             </DTabs>
           </div>

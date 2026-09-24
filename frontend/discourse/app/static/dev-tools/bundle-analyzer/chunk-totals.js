@@ -20,6 +20,14 @@ export default class ChunkTotals {
     return Object.keys(this.chunks).filter((f) => this.includes(f));
   }
 
+  // What the browser fetched of these chunks. Independent of the view: it
+  // answers "how much did this page cost", whatever the reader narrowed to.
+  get loadedTotals() {
+    return this.totals(
+      Object.keys(this.chunks).filter((f) => this.loaded?.has(f))
+    );
+  }
+
   includes(file) {
     return !this.view?.onlyLoaded || !!this.loaded?.has(file);
   }
