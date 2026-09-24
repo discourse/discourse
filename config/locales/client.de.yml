@@ -6356,8 +6356,6 @@ de:
             status: "Status"
             actions: "Aktionen"
           activity:
-            errors: "Fehler"
-            rate_limits: "Ratenbegrenzungen"
             outcome: "Ergebnis"
             time: "Zeit"
             user: "Nutzer"
@@ -9277,13 +9275,14 @@ de:
           multiselect: "Mehrfachauswahl"
       site_text:
         description: "Du kannst jeden Text in deinem Forum individuell anpassen."
-        search: "Suche nach dem Text, den du bearbeiten möchtest"
+        search_label: "Suche"
+        theme_disabled: "Deaktiviert"
+        filters: "Filter"
+        status:
+          invalid: "Ungültig"
         title: "Website-Texte"
         edit: "Bearbeiten"
-        revert: "Änderungen verwerfen"
         revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
-        go_back: "Zurück zur Suche"
-        recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
         show_outdated: "Nur veraltete/ungültige Elemente anzeigen"
         show_untranslated: "Nur unübersetzte anzeigen"

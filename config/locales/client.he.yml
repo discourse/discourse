@@ -6074,7 +6074,6 @@ he:
             status: "מצב"
             actions: "פעולות"
           activity:
-            rate_limits: "מגבלות קצב"
             outcome: "תוצאה"
             time: "מועד"
             user: "משתמש"
@@ -8716,13 +8715,14 @@ he:
           multiselect: "מגוון בחירות"
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
-        search: "חיפוש הטקסט שמיועד לעריכה"
+        search_label: "חיפוש"
+        theme_disabled: "כבוי"
+        filters: "מסננים"
+        status:
+          invalid: "שגוי"
         title: "טקסטים של האתר"
         edit: "עריכה"
-        revert: "ביטול שינויים"
         revert_confirm: "לבטל את השינויים שלך?"
-        go_back: "חזרה לחיפוש"
-        recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         show_outdated: "להציג רק מיושן/שגוי"
         show_untranslated: "להציג רק לא מתורגמות"

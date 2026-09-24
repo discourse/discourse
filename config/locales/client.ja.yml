@@ -5347,7 +5347,6 @@ ja:
             status: "ステータス"
             actions: "アクション"
           activity:
-            rate_limits: "レート制限"
             outcome: "結果"
             time: "時刻"
             user: "ユーザー"
@@ -7921,13 +7920,14 @@ ja:
           multiselect: "複数選択"
       site_text:
         description: "フォーラム内のテキストをカスタマイズできます。"
-        search: "編集するテキストを検索"
+        search_label: "検索"
+        theme_disabled: "無効"
+        filters: "フィルター"
+        status:
+          invalid: "無効です"
         title: "サイトのテキスト"
         edit: "編集"
-        revert: "変更を戻す"
         revert_confirm: "変更を戻してよろしいですか？"
-        go_back: "検索に戻る"
-        recommended: "ニーズに合わせて次のテキストをカスタマイズすることをお勧めします。"
         show_overriden: "上書き部分のみ表示"
         show_outdated: "古い/無効なもののみを表示する"
         show_untranslated: "未翻訳のみを表示"

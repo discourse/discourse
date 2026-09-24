@@ -28,7 +28,6 @@ ar:
         title: "إنشاء استعلام مستكشف البيانات"
         description: "اكتب استعلام SQL مخصصًا لعرض أي شيء خاص بمجتمعك."
     explorer:
-      default_query: "افتراضي"
       default_query_notice: "هذا استعلام افتراضي، ولا يمكن تعديل SQL. لتعديل SQL، أنشئ استعلامًا جديدًا."
       view_query: "اعرض"
       queries: "الاستعلامات"
@@ -133,6 +132,7 @@ ar:
         other: "جارٍ عرض أبرز %{count} نتيجة."
       query_name: "استعلام"
       query_groups: "المجموعات"
+      query_tags: "الوسوم"
       link: "رابط لـ"
       report_name: "تقرير"
       query_description: "الوصف"

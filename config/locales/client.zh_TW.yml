@@ -6184,8 +6184,6 @@ zh_TW:
             actions: "動作"
           activity:
             tool_calls: "工具呼叫"
-            errors: "錯誤"
-            rate_limits: "速率限制"
             outcome: "結果"
             time: "時間"
             user: "使用者"
@@ -9236,13 +9234,14 @@ zh_TW:
           multiselect: "多選"
       site_text:
         description: "您可以自訂論壇上的任何文字。"
-        search: "搜尋你想要編輯的文本"
+        search_label: "搜索"
+        theme_disabled: "已停用"
+        filters: "過濾器"
+        status:
+          invalid: "無效"
         title: "網站文字"
         edit: "編輯"
-        revert: "恢復變更"
         revert_confirm: "你確定要撤回這個改動?"
-        go_back: "回到搜尋"
-        recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: "只顯示修改過的項目"
         show_outdated: "僅顯示過時/無效"
         show_untranslated: "僅顯示未翻譯內容"

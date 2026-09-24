@@ -5739,12 +5739,11 @@ nb_NO:
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
-        search: "Søk etter tekst du ønsker å endre"
+        search_label: "Søk"
+        theme_disabled: "Deaktivert"
+        filters: "Filter"
         edit: "Endre"
-        revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
-        go_back: "Tilbake til søk"
-        recommended: "Skreddersøm av følgende tekst for å kle dine behov anbefales:"
         show_overriden: "Bare vis overstyrte"
         outdated:
           dismiss: "Avslå"

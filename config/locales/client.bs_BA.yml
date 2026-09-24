@@ -4559,12 +4559,10 @@ bs_BA:
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
-        search: "Potražite tekst koji želite urediti"
+        search_label: "Pretraži"
+        theme_disabled: "Neomogućen"
         edit: "Edit"
-        revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
-        go_back: "Nazad na pretragu"
-        recommended: "Preporučujemo da prilagodite sledeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Only show overridden"
         more_than_50_results: "Postoji više od 50 rezultata. Pročistite pretraživanje."
         outdated:
