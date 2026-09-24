@@ -66,6 +66,7 @@ For each run, record:
 - Connect multiple event triggers to the same downstream node to handle several events. Existing `trigger:topic_status_changed` and `trigger:reviewable_status_changed` nodes remain editable and executable, but are hidden from the picker and AI discovery. Fixed-event nodes have no status selector and ignore any supplied `statuses` configuration.
 - `trigger:user_trust_level_changed` exposes old and new levels, including demotions. `trigger:user_first_logged_in` follows the first-login event, whose first-visit check uses `last_seen_at`.
 - `trigger:user_moderation_changed` exposes `change`, the affected `user`, optional `actor` and `reason`, and `expires_at`. Automatic suspension expiry is announced for suspensions scheduled after this functionality is deployed; existing suspensions are not backfilled.
+- `trigger:solution_changed` is available with Solved and reports acceptance or removal of an individual answer. Removing one answer can leave other accepted solutions; replacing an answer emits acceptance for its replacement.
 - Topic-only triggers that need author/post fields should use `action:topic` get before filtering or messaging.
 - Generic prompts like "when someone posts" should use `trigger:post_created` for all regular posts; do not ask whether to include replies unless the prompt explicitly narrows the scope.
 - Actions that replace item JSON require downstream nodes to use the action output schema, not the original trigger schema.

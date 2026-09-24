@@ -87,6 +87,21 @@ en:
                 slower: "%{duration} slower"
                 tooltip: "The average response time trend."
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_solved: "Requires the Solved plugin to be enabled"
+      nodes:
+        "trigger:solution_changed": "Solution changed"
+      node_descriptions:
+        "trigger:solution_changed": "Fires when an answer is accepted as a solution or its acceptance is removed"
+      solution_changed:
+        changes: "Changes"
+        changes_description: "Leave empty to match any change."
+        changes_accepted: "Accepted"
+        changes_removed: "Removed"
+        changes_placeholder: "Any change"
+        tag_names: "Tags"
+        tag_names_description: "Only trigger for topics that have at least one of these tags"
     notifications:
       alt:
         solved:
