@@ -29,7 +29,6 @@ uk:
         description: "Напишіть власний SQL-запит, щоб знайти щось специфічне для вашої спільноти."
     explorer:
       resize_editor: "Змінити розмір редактора запитів"
-      default_query: "Стандартна"
       default_query_notice: "Це запит за замовчуванням, SQL-код не можна редагувати. Щоб редагувати SQL-код, створіть новий запит."
       view_query: "Вигляд"
       queries: "Запити"
@@ -132,6 +131,7 @@ uk:
         other: "Показано %{count} найкращих результатів"
       query_name: "Запит"
       query_groups: "Групи"
+      query_tags: "Теґи"
       link: "Посилання для"
       report_name: "Звіт"
       query_description: "Опис"

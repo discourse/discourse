@@ -4524,12 +4524,11 @@ ca:
           confirm: "Confirmació"
           dropdown: "Desplega"
       site_text:
-        search: "Cerca el text que t'agradaria editar"
+        search_label: "Cerca"
+        theme_disabled: "Desactivat"
+        filters: "Filtres"
         edit: "Edita"
-        revert: "Reverteix els canvis"
         revert_confirm: "Esteu segur que voleu revertir els canvis?"
-        go_back: "Torna a la cerca"
-        recommended: "Recomanem personalitzar el text següent segons us convingui:"
         show_overriden: "Mostra sols texts editats"
         more_than_50_results: "Hi ha més de 50 resultats. Restringiu la cerca."
         outdated:

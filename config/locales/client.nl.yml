@@ -5943,7 +5943,6 @@ nl:
             status: "Status"
             actions: "Acties"
           activity:
-            rate_limits: "Frequentielimieten"
             outcome: "Resultaat"
             time: "Tijd"
             user: "Gebruiker"
@@ -8587,13 +8586,14 @@ nl:
           multiselect: "Meervoudige selectie"
       site_text:
         description: "Je kunt elke tekst op je forum aanpassen."
-        search: "Zoek de tekst die je wilt bewerken"
+        search_label: "Zoeken"
+        theme_disabled: "Uitgeschakeld"
+        filters: "Filters"
+        status:
+          invalid: "Ongeldig"
         title: "Siteteksten"
         edit: "Bewerken"
-        revert: "Wijzigingen ongedaan maken"
         revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
-        go_back: "Terug naar Zoeken"
-        recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste weergeven"
         show_outdated: "Alleen verouderd/ongeldig weergeven"
         show_untranslated: "Alleen onvertaalde weergeven"

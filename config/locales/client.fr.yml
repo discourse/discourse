@@ -6355,8 +6355,6 @@ fr:
             status: "Statut"
             actions: "Actions"
           activity:
-            errors: "Erreurs"
-            rate_limits: "Limites d'utilisation"
             outcome: "Résultat"
             time: "Heure"
             user: "Utilisateur"
@@ -9275,13 +9273,14 @@ fr:
           multiselect: "Sélection multiple"
       site_text:
         description: "Vous pouvez personnaliser n'importe quel texte de votre forum."
-        search: "Recherchez le texte que vous souhaitez modifier"
+        search_label: "Recherche"
+        theme_disabled: "Désactivées"
+        filters: "Filtres"
+        status:
+          invalid: "Invalide"
         title: "Textes du site"
         edit: "Modifier"
-        revert: "Annuler les modifications"
         revert_confirm: "Voulez-vous vraiment annuler vos modifications ?"
-        go_back: "Retour à la recherche"
-        recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Afficher uniquement les textes modifiés"
         show_outdated: "Afficher uniquement les données périmées/invalides"
         show_untranslated: "Afficher uniquement les versions non traduites"

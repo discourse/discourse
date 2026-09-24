@@ -18,7 +18,6 @@ sk:
       admin_dashboard_card:
         no_results: "Žiadne výsledky"
     explorer:
-      default_query: "Predvolené"
       or: "alebo"
       admins_only: "Prieskumník údajov je dostupný iba administrátorom."
       allow_groups: "Povolenie prístupu skupín k tomuto dotazu"
@@ -67,6 +66,7 @@ sk:
         other: "Zobrazujú sa prvé %{count} výsledky."
       query_name: "Dopyt"
       query_groups: "Skupiny"
+      query_tags: "Značky"
       link: "Odkaz na"
       report_name: "Hlásenie"
       query_description: "Popis"

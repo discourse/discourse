@@ -7,7 +7,6 @@
 lt:
   js:
     explorer:
-      default_query: "Numatytasis"
       or: "arba"
       create: "Sukurti"
       ai:
@@ -34,6 +33,7 @@ lt:
         many: "%{count} rezultatai."
         other: "%{count} rezultatai."
       query_groups: "Grupės"
+      query_tags: "Žymos"
       query_description: "Aprašymas"
       query_user: "Sukurta"
       reset_params: "Atstatyti"

@@ -7548,8 +7548,6 @@ ar:
             status: "الحالة"
             actions: "الإجراءات"
           activity:
-            errors: "الأخطاء"
-            rate_limits: "حدود المعدل"
             outcome: "النتيجة"
             time: "الوقت"
             user: "المستخدم"
@@ -10667,13 +10665,14 @@ ar:
           multiselect: "حقل اختيارات متعددة"
       site_text:
         description: "يمكنك تخصيص أي نص في المنتدى الخاص بك."
-        search: "البحث عن النص الذي تريد تعديله"
+        search_label: "البحث"
+        theme_disabled: "متوقفة"
+        filters: "المرشحات"
+        status:
+          invalid: "غير صالح"
         title: "نصوص الموقع"
         edit: "تعديل"
-        revert: "التراجع عن التغييرات"
         revert_confirm: "هل تريد بالتأكيد التراجع عن التغييرات؟"
-        go_back: "العودة إلى البحث"
-        recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         show_outdated: "عرض القديمة/غير الصالحة فقط"
         show_untranslated: "إظهار غير المترجمة فقط"
