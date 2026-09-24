@@ -91,6 +91,10 @@ Inventory of what is left in core and bundled plugins:
 grep -rlE '^import Component from "@ember/component"' frontend/discourse plugins --include='*.js' --include='*.gjs' | grep -vE 'node_modules|/dist/|/tests?/'
 ```
 
+To pick what to convert next, `scripts/rank-targets.py` ranks that inventory by risk and
+leaves out components already in open PRs; [PLAN.md](PLAN.md) covers how to read it and
+how to batch.
+
 Subclasses in core or plugins of the component you convert are in scope too; subclasses
 in external checkouts are flagged.
 
@@ -372,9 +376,9 @@ gh pr create --draft --base main --title "<subject>" --body-file /tmp/pr-body.md
 gh pr edit <number> --add-label glimmer-conversion
 ```
 
-Then update `~/Downloads/glimmer.md`, the running log (create it with a
-`# Glimmer conversion PRs` heading if it does not exist). It is a two-level list: the PR on
-the first level, its components on the second.
+Then update [PROGRESS.md](PROGRESS.md), the running log of conversion PRs, and commit it with
+the skill (not with the conversion). It is a two-level list: the PR on the first level, its
+components on the second. [PLAN.md](PLAN.md) covers picking the next targets.
 
 ```markdown
 - [#43521](https://github.com/discourse/discourse/pull/43521) ✅
