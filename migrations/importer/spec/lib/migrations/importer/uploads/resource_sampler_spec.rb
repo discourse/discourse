@@ -122,6 +122,20 @@ RSpec.describe Migrations::Importer::Uploads::ResourceSampler do
       expect(reading.memory_fraction).to be_within(0.001).of(0.25)
     end
 
+    it "evaluates the host and cgroup constraints independently" do
+      meminfo = -> { "MemTotal:       268435456 kB\nMemAvailable:    1572864 kB\n" }
+      sampler =
+        build(
+          meminfo:,
+          cgroup_max: -> { (2 * 1024**3).to_s },
+          cgroup_current: -> { (1 * 1024**3).to_s },
+        )
+
+      reading = sampler.sample
+
+      expect(reading.memory_below?(0.25, 2 * 1024**3)).to be(true)
+    end
+
     it "does not count reclaimable page cache as used cgroup memory" do
       memory_stat = <<~STAT
         anon 600000000

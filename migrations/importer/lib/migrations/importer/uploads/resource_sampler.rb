@@ -26,9 +26,30 @@ module Migrations
         # One reading. `memory_fraction`/`memory_bytes` are nil when memory is
         # unavailable; {#memory_known?} says whether the controller may act on it.
         Reading =
-          Data.define(:cpu_busy, :memory_fraction, :memory_bytes) do
+          Data.define(:cpu_busy, :memory_fraction, :memory_bytes, :memory_headrooms) do
+            def initialize(
+              cpu_busy:,
+              memory_fraction: nil,
+              memory_bytes: nil,
+              memory_headrooms: nil
+            )
+              memory_headrooms ||= [[memory_fraction, memory_bytes]] if memory_fraction
+              super(
+                memory_headrooms: memory_headrooms || [],
+                cpu_busy:,
+                memory_fraction:,
+                memory_bytes:,
+              )
+            end
+
             def memory_known?
-              !memory_fraction.nil?
+              memory_headrooms.any?
+            end
+
+            def memory_below?(fraction, bytes)
+              memory_headrooms.any? do |candidate_fraction, candidate_bytes|
+                candidate_fraction < fraction && candidate_bytes < bytes
+              end
             end
           end
 
@@ -63,8 +84,15 @@ module Migrations
         end
 
         def sample
-          fraction, bytes = memory_headroom
-          Reading.new(cpu_busy:, memory_fraction: fraction, memory_bytes: bytes)
+          headrooms = memory_headrooms
+          fraction, bytes =
+            headrooms.min_by { |(_candidate_fraction, candidate_bytes)| candidate_bytes }
+          Reading.new(
+            cpu_busy:,
+            memory_fraction: fraction,
+            memory_bytes: bytes,
+            memory_headrooms: headrooms,
+          )
         end
 
         private
@@ -139,12 +167,12 @@ module Migrations
           { source: :process_times, busy: cpu_seconds, total: @clock.call * @usable_cpus }
         end
 
-        # `[fraction, bytes]` for the tightest constraint, or nil when nothing is
-        # readable. cgroup v1 is deliberately not supported: its hierarchy layout
+        # `[fraction, bytes]` for every readable constraint. cgroup v1 is
+        # deliberately not supported: its hierarchy layout
         # varies too much to probe reliably, and the migration tooling only ever
         # runs on cgroup v2 hosts (modern Docker/k8s) or bare metal where the
         # host `/proc/meminfo` reading already covers it.
-        def memory_headroom
+        def memory_headrooms
           candidates = []
 
           if (meminfo = parse_meminfo) && meminfo[:total] > 0
@@ -155,9 +183,7 @@ module Migrations
             candidates << [cgroup[:available].to_f / cgroup[:limit], cgroup[:available]]
           end
 
-          return nil, nil if candidates.empty?
-
-          candidates.min_by { |(_fraction, bytes)| bytes }
+          candidates
         end
 
         def parse_meminfo
