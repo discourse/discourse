@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 fi:
+  markdown_endpoints:
+    latest: "Tuoreimmat"
+    categories: "Kategoriat"
+    tags: "Tunnisteet"
+    previous_page: "Edellinen sivu"
+    next_page: "Seuraava sivu"
+    replies: "Vastaukset"
+    last_updated: "Viimeksi päivitetty"
   mcp:
     errors:
       draft_too_long: "Luonnos on liian pitkä"

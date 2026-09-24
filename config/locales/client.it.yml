@@ -5314,7 +5314,6 @@ it:
             status: "Stato"
             actions: "Azioni"
           activity:
-            rate_limits: "Limiti di frequenza"
             outcome: "Esito"
             time: "Ora"
             user: "Utente"
@@ -5838,6 +5837,7 @@ it:
           series:
             anonymous: "Anonimo"
             crawlers: "Crawler"
+          crawler_learn_more: "Scopri di più"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"
@@ -7799,13 +7799,14 @@ it:
           multiselect: "Selezione multipla"
       site_text:
         description: "Puoi personalizzare qualsiasi testo sul tuo forum."
-        search: "Trova il testo che vorresti modificare"
+        search_label: "Cerca"
+        theme_disabled: "Disabilitati"
+        filters: "Filtri"
+        status:
+          invalid: "Non valido"
         title: "Testi del sito"
         edit: "Modifica"
-        revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
-        go_back: "Torna alla Ricerca"
-        recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         show_outdated: "Mostra solo obsoleti/non validi"
         show_untranslated: "Mostra solo non tradotti"

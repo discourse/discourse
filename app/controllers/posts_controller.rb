@@ -240,6 +240,7 @@ class PostsController < ApplicationController
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
 
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
+        guardian.ensure_can_edit_topic!(post.topic)
         category = Category.find_by(id: changes[:category_id])
         if category || (changes[:category_id].to_i == 0)
           guardian.ensure_can_move_topic_to_category!(category)
@@ -712,6 +713,14 @@ class PostsController < ApplicationController
 
     if post.is_first_post? && post_type == Post.types[:whisper]
       raise Discourse::InvalidParameters.new(:post_type)
+    end
+
+    if post_type == Post.types[:whisper] && !guardian.can_create_whisper?
+      raise Discourse::InvalidAccess.new(
+              "invalid_whisper_access",
+              nil,
+              custom_message: "invalid_whisper_access",
+            )
     end
 
     post.revise(current_user, post_type: post_type)

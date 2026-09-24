@@ -2365,6 +2365,7 @@ be:
           series:
             anonymous: "ананімны"
             crawlers: "Краўлеры пошукавых сістэм"
+          crawler_learn_more: "Даведацца больш"
         reports:
           today: "сёння"
           yesterday: "учора"
@@ -2979,10 +2980,10 @@ be:
           confirm: "пацвярджэнне"
           dropdown: "Выпадаючы спіс"
       site_text:
+        search_label: "Пошук"
+        theme_disabled: "Адключаныя"
         edit: "рэдагаваць"
-        revert: "Вярнуць змяненні"
         revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
-        go_back: "Вярнуцца да пошуку"
         show_overriden: "Паказваць толькі перавызначаны"
       settings:
         show_overriden: "Паказваць толькі перавызначаны"

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 hy:
+  markdown_endpoints:
+    latest: "Վերջինը"
+    categories: "Կատեգորիաներ"
+    tags: "Պիտակներ"
+    previous_page: "Նախորդ էջ"
+    next_page: "Հաջորդ էջ"
+    replies: "Պատասխաններ"
   mcp:
     errors:
       topic_not_found: "Թեման չի գտնվել"

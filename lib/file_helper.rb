@@ -4,6 +4,7 @@ require "final_destination"
 require "image_processing/instrumentation"
 require "mini_mime"
 require "open-uri"
+require "tempfile"
 
 class FileHelper
   def self.log(log_level, message)
@@ -134,49 +135,76 @@ class FileHelper
 
   def self.optimize_image!(filename, allow_pngquant: false)
     ImageProcessing::Instrumentation.instrument(operation: :image_optim) do
-      image_optim(
-        allow_pngquant: allow_pngquant,
-        strip_image_metadata: SiteSetting.strip_image_metadata,
-      ).optimize_image!(filename)
+      commands =
+        case FastImage.type(filename)
+        when :png
+          oxipng = %w[oxipng --opt 3 --interlace 0 --quiet --stdout]
+          oxipng.concat(%w[--strip all]) if SiteSetting.strip_image_metadata
+          [oxipng].tap do |pipeline|
+            if allow_pngquant
+              pipeline << %w[
+                pngquant
+                --quality=0-100
+                --speed=3
+                --output=-
+                --skip-if-larger
+                --force
+                256
+              ]
+            end
+          end
+        when :jpeg
+          jpegoptim = %w[jpegoptim --quiet --stdout --force]
+          jpegoptim << (SiteSetting.strip_image_metadata ? "--strip-all" : "--strip-none")
+          [jpegoptim]
+        else
+          next
+        end
+
+      result = nil
+      input = File.expand_path(filename)
+      commands.each do |command|
+        Tempfile.create(
+          ["image-optimization-", File.extname(filename)],
+          File.dirname(input),
+        ) do |temporary|
+          begin
+            Discourse::SafeExec.capture(
+              "sh",
+              "-c",
+              'exec "$@" > "$0"',
+              temporary.path,
+              "nice",
+              "-n",
+              "10",
+              *command,
+              "--",
+              input,
+              env: {
+                **ENV.slice("PATH"),
+                "MALLOC_ARENA_MAX" => "2",
+              },
+              unsetenv_others: true,
+              read: [*Discourse::SafeExec.default_read_paths, input],
+              write: [temporary.path],
+              execute: Discourse::SafeExec.default_execute_paths,
+              timeout: 15,
+              rlimits: ImageMagick::RLIMITS,
+              seccomp_deny_network: true,
+              seccomp_deny_child_processes: true,
+            )
+          rescue Discourse::Utils::CommandError, Errno::ENOENT
+            next
+          end
+          next if temporary.size.zero? || temporary.size >= File.size(input)
+
+          temporary.chmod(File.stat(input).mode)
+          File.rename(temporary.path, input)
+          result = filename
+        end
+      end
+      result
     end
-  end
-
-  def self.image_optim(allow_pngquant: false, strip_image_metadata: true)
-    # memoization is critical, initializing an ImageOptim object is very expensive
-    # sometimes up to 200ms searching for binaries and looking at versions
-    memoize("image_optim", allow_pngquant, strip_image_metadata) do
-      pngquant_options = false
-      pngquant_options = { allow_lossy: true } if allow_pngquant
-
-      ImageOptim.new(
-        # GLOBAL
-        timeout: 15,
-        skip_missing_workers: true,
-        # PNG
-        oxipng: {
-          level: 3,
-          strip: strip_image_metadata,
-        },
-        optipng: false,
-        advpng: false,
-        pngcrush: false,
-        pngout: false,
-        pngquant: pngquant_options,
-        # JPG
-        jpegoptim: {
-          strip: strip_image_metadata ? "all" : "none",
-        },
-        jpegtran: false,
-        jpegrecompress: false,
-        # Skip looking for gifsicle, svgo binaries
-        gifsicle: false,
-        svgo: false,
-      )
-    end
-  end
-
-  def self.memoize(*args)
-    (@memoized ||= {})[args] ||= yield
   end
 
   def self.supported_gravatar_extensions

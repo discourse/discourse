@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 de:
+  markdown_endpoints:
+    latest: "Aktuelle"
+    categories: "Kategorien"
+    tags: "Schlagwörter"
+    previous_page: "Vorherige Seite"
+    next_page: "Nächste Seite"
+    replies: "Antworten"
+    last_updated: "Zuletzt aktualisiert"
   mcp:
     errors:
       draft_too_long: "Der Entwurf ist zu lang"
@@ -1203,6 +1211,7 @@ de:
   uploads:
     marked_insecure_from_theme_component_reason: "in Theme-Komponente verwendeter Upload"
   unsubscribe:
+    title: "%{email} abmelden"
     unsubscribe: "Abbestellen"
     stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
     mute_topic: "Alle Benachrichtigungen für dieses Thema stummschalten, %{link}"

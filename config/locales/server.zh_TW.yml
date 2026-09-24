@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  markdown_endpoints:
+    latest: "最新版本"
+    categories: "分類"
+    tags: "標簽"
+    previous_page: "上一頁"
+    next_page: "下一頁"
+    replies: "回覆"
   mcp:
     errors:
       topic_not_found: "未找到話題"

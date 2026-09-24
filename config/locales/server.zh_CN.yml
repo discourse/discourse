@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  markdown_endpoints:
+    latest: "最新"
+    categories: "类别"
+    tags: "标签"
+    parent: "父级： %{parent}"
+    previous_page: "上一页"
+    next_page: "下一页"
+    empty: "没有要显示的条目。"
+    replies: "回复"
+    post_author: "作者： %{author}"
+    post_date: "发布日期： %{timestamp}"
+    last_updated: "最近更新："
   mcp:
     errors:
       draft_sequence_conflict: "草稿序号冲突"

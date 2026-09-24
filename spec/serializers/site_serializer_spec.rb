@@ -16,6 +16,29 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "post_action_types" do
+    it "marks flags as system when they come from registered flag settings" do
+      # Plugins can replace flag settings, which makes the payload serialize
+      # PostActionType records instead of Flag records. The admin UI keys
+      # editability off `system`, so it has to be present on both paths.
+      settings = FlagSettings.new
+      settings.add(4, :inappropriate)
+      settings.add(99, :custom_plugin_flag, name: "Custom plugin flag")
+      PostActionType.replace_flag_settings(settings)
+      # Expire the cached payload without resetting the settings we just registered.
+      PostActionType.new.expire_cache
+      Site.clear_cache
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:post_action_types]).to be_present
+      expect(serialized[:post_action_types].map { |type| type[:system] }.uniq).to eq([true])
+    ensure
+      PostActionType.replace_flag_settings(nil)
+      Flag.reset_flag_settings!
+    end
+  end
+
   describe "#homepage_choices" do
     around do |example|
       registrations = DiscoursePluginRegistry._raw_homepage_options.dup

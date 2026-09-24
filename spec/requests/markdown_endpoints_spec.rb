@@ -10,14 +10,32 @@ RSpec.describe "Markdown endpoints" do
   end
   fab!(:post) { Fabricate(:post, topic: topic, user: user, raw: "Visible body") }
 
-  before { SiteSetting.experimental_markdown_endpoints = true }
   after { category.clear_url_cache }
+
+  it "respects the upcoming change promotion policy and explicit opt-in" do
+    SiteSetting.promote_upcoming_changes_on_status = "stable"
+
+    get "/latest.md"
+    expect(response).to have_http_status(:not_found)
+
+    get "/latest", headers: { "ACCEPT" => "text/html" }
+    expect(response.headers["Link"]).to be_blank
+
+    SiteSetting.enable_markdown_endpoints = true
+
+    get "/latest.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq("text/markdown")
+
+    get "/latest", headers: { "ACCEPT" => "text/html" }
+    expect(response.headers["Link"]).to include("/latest.md")
+  end
 
   it "keeps HTML tag-intersection redirects out of Markdown routes" do
     tag = Fabricate(:tag)
 
     [false, true].each do |enabled|
-      SiteSetting.experimental_markdown_endpoints = enabled
+      SiteSetting.enable_markdown_endpoints = enabled
       get "/tags/intersection/#{tag.name}/#{tag.name}", headers: { "ACCEPT" => "text/html" }
       expect(response).to redirect_to("/tag/#{tag.name}")
       follow_redirect!
@@ -848,7 +866,7 @@ RSpec.describe "Markdown endpoints" do
   end
 
   it "keeps Markdown routes and discovery absent while disabled" do
-    SiteSetting.experimental_markdown_endpoints = false
+    SiteSetting.enable_markdown_endpoints = false
 
     sign_in(user)
     %w[/new /unread].each do |path|

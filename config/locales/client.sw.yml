@@ -2745,6 +2745,7 @@ sw:
         site_traffic:
           series:
             anonymous: "Asiyejulikana"
+          crawler_learn_more: "Jifunze zaidi"
         period:
           custom: "Binafsi"
         reports:
@@ -3593,12 +3594,11 @@ sw:
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:
-        search: "tafuta maneno ambayo ungependa kuhariri"
+        search_label: "Tafuta"
+        theme_disabled: "Imezuiwa"
+        filters: "Inachujwa"
         edit: "Hariri"
-        revert: "Ondoa Mabadiliko"
         revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
-        go_back: "Rudi kwenye Utafiti"
-        recommended: "Tunakushauri ugeuze maneno yafuatayo yaweze kufaa mahitaji yako:"
         show_overriden: "Onyesha vilivyobatilishwa pekee"
         outdated:
           dismiss: "Ondosha..."

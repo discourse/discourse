@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 cs:
+  markdown_endpoints:
+    latest: "Nejnovější"
+    categories: "Kategorie"
+    tags: "Tagy"
+    previous_page: "Předchozí strana"
+    next_page: "Další strana"
+    replies: "Odpovědi"
+    last_updated: "Poslední aktualizace"
   mcp:
     errors:
       draft_too_long: "Koncept je příliš dlouhý"

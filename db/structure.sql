@@ -3962,6 +3962,68 @@ ALTER SEQUENCE public.data_explorer_query_stats_id_seq OWNED BY public.data_expl
 
 
 --
+-- Name: data_explorer_query_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_query_tags (
+    id bigint NOT NULL,
+    query_id bigint NOT NULL,
+    query_tag_id bigint NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_query_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_query_tags_id_seq OWNED BY public.data_explorer_query_tags.id;
+
+
+--
+-- Name: data_explorer_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_tags (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_tags.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -11026,6 +11088,37 @@ ALTER SEQUENCE public.topic_custom_fields_id_seq OWNED BY public.topic_custom_fi
 
 
 --
+-- Name: topic_embed_aliases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.topic_embed_aliases (
+    id bigint NOT NULL,
+    topic_embed_id bigint NOT NULL,
+    url_key text NOT NULL,
+    url_hash character varying(64) NOT NULL
+);
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.topic_embed_aliases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_embed_aliases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.topic_embed_aliases_id_seq OWNED BY public.topic_embed_aliases.id;
+
+
+--
 -- Name: topic_embeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14324,6 +14417,20 @@ ALTER TABLE ONLY public.data_explorer_query_stats ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: data_explorer_query_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_query_tags_id_seq'::regclass);
+
+
+--
+-- Name: data_explorer_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_tags_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15661,6 +15768,13 @@ ALTER TABLE ONLY public.topic_custom_fields ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: topic_embed_aliases id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases ALTER COLUMN id SET DEFAULT nextval('public.topic_embed_aliases_id_seq'::regclass);
+
+
+--
 -- Name: topic_embeds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16895,6 +17009,22 @@ ALTER TABLE ONLY public.data_explorer_query_groups
 
 ALTER TABLE ONLY public.data_explorer_query_stats
     ADD CONSTRAINT data_explorer_query_stats_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_explorer_query_tags data_explorer_query_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags
+    ADD CONSTRAINT data_explorer_query_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_explorer_tags data_explorer_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags
+    ADD CONSTRAINT data_explorer_tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -18458,6 +18588,14 @@ ALTER TABLE ONLY public.topic_custom_fields
 
 
 --
+-- Name: topic_embed_aliases topic_embed_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.topic_embed_aliases
+    ADD CONSTRAINT topic_embed_aliases_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: topic_embeds topic_embeds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19208,13 +19346,6 @@ CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browse
 
 
 --
--- Name: idx_bpe_beacon_created_at_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (source = 2);
-
-
---
 -- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19257,10 +19388,10 @@ CREATE INDEX idx_bpe_created_at_session_id ON public.browser_pageview_events USI
 
 
 --
--- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_ip_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING btree (ip_address, user_agent, created_at);
+CREATE INDEX idx_bpe_ip_created_at ON public.browser_pageview_events USING btree (ip_address, created_at);
 
 
 --
@@ -19268,13 +19399,6 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 --
 
 CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)));
-
-
---
--- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
 
 
 --
@@ -19387,6 +19511,27 @@ CREATE INDEX idx_chat_messages_thread_id_id_user_id_not_deleted ON public.chat_m
 --
 
 CREATE INDEX idx_chat_pinned_messages_channel_created ON public.chat_pinned_messages USING btree (chat_channel_id, created_at DESC);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_query_tag; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_query_tag ON public.data_explorer_query_tags USING btree (query_id, query_tag_id);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_tag_query; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_tag_query ON public.data_explorer_query_tags USING btree (query_tag_id, query_id);
+
+
+--
+-- Name: idx_data_explorer_tags_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_tags_on_name ON public.data_explorer_tags USING btree (name);
 
 
 --
@@ -23737,6 +23882,20 @@ CREATE UNIQUE INDEX index_topic_custom_fields_on_topic_id_and_slack_thread_id ON
 
 
 --
+-- Name: index_topic_embed_aliases_on_topic_embed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embed_aliases_on_topic_embed_id ON public.topic_embed_aliases USING btree (topic_embed_id);
+
+
+--
+-- Name: index_topic_embed_aliases_on_url_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_topic_embed_aliases_on_url_hash ON public.topic_embed_aliases USING btree (url_hash);
+
+
+--
 -- Name: index_topic_embeds_on_embed_url; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25405,10 +25564,16 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260923141924'),
+('20260923080644'),
+('20260923080642'),
+('20260922233816'),
+('20260921120000'),
 ('20260921081150'),
 ('20260921074918'),
 ('20260921015711'),
 ('20260918061735'),
+('20260917145657'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),

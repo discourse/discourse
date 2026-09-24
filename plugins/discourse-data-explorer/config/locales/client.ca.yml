@@ -15,7 +15,6 @@ ca:
         no_semicolons: "Elimina els punts i coma de la consulta."
         dirty: "Cal desar la consulta abans d'executar-la"
     explorer:
-      default_query: "Per defecte"
       or: "o"
       admins_only: "L'explorador de dades sols és disponible per a administradors."
       title: "Explorador de dades"
@@ -50,6 +49,7 @@ ca:
         other: "%{count} resultats."
       query_name: "Consulta"
       query_groups: "Grups"
+      query_tags: "Etiquetes"
       link: "Enllaç de"
       report_name: "Report"
       query_description: "Descripció"

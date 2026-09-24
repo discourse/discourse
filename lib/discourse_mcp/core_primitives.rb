@@ -67,6 +67,7 @@ module DiscourseMcp
       register_write_tools(registry)
       register_moderation_tools(registry)
       register_site_setting_tools(registry)
+      register_theme_tools(registry)
       register_resources(registry)
       register_prompts(registry)
     end
@@ -1487,6 +1488,159 @@ module DiscourseMcp
           idempotentHint: true,
           openWorldHint: true,
         },
+        risk: :administration,
+      )
+    end
+
+    def register_theme_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_theme",
+        title: "Get theme",
+        description:
+          "Reads a theme or theme component and its fields. Requires administrator access.",
+        implementation: Tools::GetTheme,
+        input_schema: object_schema({ theme_id: { type: "integer" } }, required: %w[theme_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+
+      theme_field_schema = {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 255,
+          },
+          target: {
+            type: "string",
+            enum: Tools::ThemeSupport::TARGETS,
+          },
+          value: {
+            type: "string",
+            maxLength: 1_000_000,
+          },
+          type: {
+            type: "string",
+            enum: Tools::ThemeSupport::FIELD_TYPES,
+          },
+          type_id: {
+            type: "integer",
+            minimum: 0,
+          },
+          upload_id: {
+            type: "integer",
+            minimum: 1,
+          },
+        },
+        required: %w[name target],
+        additionalProperties: false,
+      }
+      register_tool(
+        registry,
+        "discourse_create_theme",
+        title: "Create theme",
+        description:
+          "Creates a theme or theme component with optional HTML, SCSS, and settings fields.",
+        implementation: Tools::CreateTheme,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              user_selectable: {
+                type: "boolean",
+                default: false,
+              },
+              color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              component: {
+                type: "boolean",
+                default: false,
+              },
+              default: {
+                type: "boolean",
+                default: false,
+              },
+              theme_fields: {
+                type: "array",
+                items: theme_field_schema,
+                maxItems: 100,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme",
+        title: "Update theme",
+        description:
+          "Updates attributes and fields on a theme when the authenticated user may edit it.",
+        implementation: Tools::UpdateTheme,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              dark_color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              user_selectable: {
+                type: "boolean",
+              },
+              enabled: {
+                type: "boolean",
+              },
+              auto_update: {
+                type: "boolean",
+              },
+              default: {
+                type: "boolean",
+              },
+              theme_fields: {
+                type: "array",
+                items: theme_field_schema,
+                maxItems: 100,
+              },
+              child_theme_ids: {
+                type: "array",
+                items: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                maxItems: 50,
+              },
+              parent_theme_ids: {
+                type: "array",
+                items: {
+                  type: "integer",
+                },
+                maxItems: 50,
+              },
+            },
+            required: %w[theme_id],
+          ),
+        annotations: WRITE,
         risk: :administration,
       )
     end

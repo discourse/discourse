@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 bg:
+  markdown_endpoints:
+    latest: "Последни"
+    categories: "Категории"
+    tags: "Етикети"
+    previous_page: "Предишна страница"
+    next_page: "Следваща страница"
+    replies: "Отговори"
+    last_updated: "Последна актуализация"
   mcp:
     errors:
       topic_not_found: "Темата не е намерена"

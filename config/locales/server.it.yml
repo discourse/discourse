@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 it:
+  markdown_endpoints:
+    latest: "Più recenti"
+    categories: "Categorie"
+    tags: "Etichette"
+    previous_page: "Pagina precedente"
+    next_page: "Pagina seguente"
+    replies: "Risposte"
+    last_updated: "Ultimo aggiornamento"
   mcp:
     errors:
       draft_too_long: "La bozza è troppo lunga"

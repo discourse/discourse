@@ -4781,10 +4781,16 @@ dashboard:
     client: true
 
 experimental:
-  experimental_markdown_endpoints:
+  enable_markdown_endpoints:
     default: false
     hidden: true
-    area: "experimental"
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413006"
+      allow_enabled_for:
+        - everyone
   enable_generated_llms_txt:
     default: false
     hidden: true
@@ -5006,3 +5012,11 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  sidebar_user_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413150"

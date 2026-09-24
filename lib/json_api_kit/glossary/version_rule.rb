@@ -3,21 +3,27 @@
 module JsonApiKit
   class Glossary
     class VersionRule
-      def initialize(version)
-        @changes = VersionChange.after(version)
+      def initialize(changes)
+        @changes = changes
       end
 
       def declared_attributes(attributes)
-        changes.reduce(attributes) { |result, change| change.current_attributes(result) }
+        changes
+          .each_with_index
+          .reduce(attributes) do |result, (change, index)|
+            change.current_attributes(result)
+          rescue VersionChange::Converter::Failure => failure
+            raise failure.convert_names { previous_names(it, changes: changes.take(index)) }
+          end
       end
 
-      def declared_name(name)
-        current_name(name).tap { raise Correction.new(it) if member_names(it).exclude?(name) }
+      def declared_names(name)
+        current_names(name).tap do |names|
+          names.each { raise Correction.new(it) if previous_names(it).exclude?(name) }
+        end
       end
 
-      def member_name(name)
-        changes.reverse_each.reduce(name) { |result, change| change.previous(result) }
-      end
+      def member_name(name) = previous_names(name).first
 
       def member_attributes(attributes)
         changes
@@ -29,12 +35,14 @@ module JsonApiKit
 
       attr_reader :changes
 
-      def current_name(name) = changes.reduce(name) { |result, change| change.current(result) }
+      def current_names(name)
+        changes.reduce([name]) { |names, change| names.flat_map { change.current_names(it) }.uniq }
+      end
 
-      def member_names(name)
+      def previous_names(name, changes: self.changes)
         changes
           .reverse_each
-          .reduce([name]) { |names, change| names.flat_map { change.previous_names(it) } }
+          .reduce([name]) { |names, change| names.flat_map { change.previous_names(it) }.uniq }
       end
     end
   end

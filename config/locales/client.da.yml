@@ -4826,6 +4826,7 @@ da:
           series:
             anonymous: "Anonym"
             crawlers: "Crawlere"
+          crawler_learn_more: "Lær mere"
         period:
           last_7_days: "Seneste 7 dage"
           last_30_days: "Seneste 30 dage"
@@ -6304,12 +6305,10 @@ da:
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
       site_text:
-        search: "Søg efter teksten du gerne vil rette"
+        search_label: "Søg"
+        theme_disabled: "Deaktiveret"
         edit: "Rediger"
-        revert: "Rul ændringer tilbage"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
-        go_back: "Tilbage til søgning"
-        recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."

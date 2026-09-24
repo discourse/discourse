@@ -8,8 +8,10 @@ class Admin::McpActivityController < Admin::AdminController
              McpActivityReport.new(
                limit: limit,
                cursor: cursor,
+               end_date: params[:end_date],
                filter: params[:filter],
                outcome: params[:outcome],
+               start_date: params[:start_date],
              ).call
   end
 end

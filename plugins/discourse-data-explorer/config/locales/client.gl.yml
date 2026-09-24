@@ -7,7 +7,6 @@
 gl:
   js:
     explorer:
-      default_query: "Predeterminado"
       or: "ou"
       create: "Crear"
       ai:
@@ -29,6 +28,7 @@ gl:
           label: "Tipo de gráfica"
           bar: "Barra"
       query_groups: "Grupos"
+      query_tags: "Etiquetas"
       query_description: "Descrición"
       query_user: "Creado por"
       reset_params: "Restabelecer"

@@ -70,6 +70,7 @@ class TopicConverter
 
       raise ActiveRecord::Rollback if !revised || !@topic.valid?
 
+      PublishedPage.unpublish!(@user, @topic) if @topic.published_page
       add_allowed_users
       update_post_uploads_secure_status
       add_small_action("private_topic") unless @silent

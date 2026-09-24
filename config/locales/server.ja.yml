@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 ja:
+  markdown_endpoints:
+    latest: "最新"
+    categories: "カテゴリ"
+    tags: "タグ"
+    previous_page: "前のページ"
+    next_page: "次のページ"
+    replies: "返信"
+    last_updated: "最終更新"
   mcp:
     errors:
       topic_not_found: "トピックが見つかりませんでした"

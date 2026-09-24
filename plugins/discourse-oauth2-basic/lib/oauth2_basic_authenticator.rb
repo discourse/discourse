@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "oauth2_faraday_formatter"
+
 class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
   def name
     "oauth2_basic"
@@ -10,7 +12,7 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
   end
 
   def required_settings
-    %i[oauth2_client_id oauth2_client_secret oauth2_authorize_url oauth2_token_url]
+    %i[oauth2_client_id oauth2_authorize_url oauth2_token_url]
   end
 
   def can_revoke?
@@ -200,6 +202,7 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
 
   def fetch_user_details(token, id)
     user_json_url = SiteSetting.oauth2_user_json_url.sub(":token", token.to_s).sub(":id", id.to_s)
+    user_json_log_url = OAuth2LogRedactor.url(user_json_url, sensitive_values: [token, id])
     user_json_method = SiteSetting.oauth2_user_json_url_method.downcase.to_sym
 
     bearer_token = "Bearer #{token}"
@@ -210,9 +213,9 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     headers = { "Authorization" => bearer_token, "Accept" => "application/json" }
 
     log <<-LOG
-      user_json request: #{user_json_method} #{user_json_url}
+      user_json request: #{user_json_method} #{user_json_log_url}
 
-      request headers: #{headers}
+      request headers: #{OAuth2LogRedactor.headers(headers)}
     LOG
 
     begin
@@ -221,7 +224,7 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
       failure_detail =
         e.is_a?(Faraday::TimeoutError) ? "timed out after #{request_timeout_seconds}s" : "failed"
       Rails.logger.warn(
-        "OAuth2 Basic: user_json request to #{user_json_url} #{failure_detail}: #{e.class} #{e.message}",
+        "OAuth2 Basic: user_json request to #{user_json_log_url} #{failure_detail}: #{e.class}",
       )
       return nil
     end
@@ -230,13 +233,13 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
       user_json response: #{user_json_response.status}
 
       response body:
-      #{user_json_response.body}
+      #{OAuth2LogRedactor::OMITTED}
     LOG
 
     if user_json_response.status == 200
       user_json = JSON.parse(user_json_response.body)
 
-      log("user_json:\n#{user_json.to_yaml}")
+      log("user_json parsed successfully")
 
       result = {}
       if user_json.present?
@@ -276,16 +279,13 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     log <<-LOG
       after_authenticate response:
 
-      creds:
-      #{auth["credentials"].to_hash.to_yaml}
+      credentials: #{OAuth2LogRedactor::FILTERED}
 
-      uid: #{auth["uid"]}
+      uid: #{OAuth2LogRedactor::FILTERED}
 
-      info:
-      #{auth["info"].to_hash.to_yaml}
+      info: #{OAuth2LogRedactor::FILTERED}
 
-      extra:
-      #{auth["extra"].to_hash.to_yaml}
+      extra: #{OAuth2LogRedactor::FILTERED}
     LOG
 
     if SiteSetting.oauth2_fetch_user_details? && SiteSetting.oauth2_user_json_url.present?

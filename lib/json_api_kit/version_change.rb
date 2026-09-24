@@ -2,23 +2,7 @@
 
 module JsonApiKit
   class VersionChange
-    CHANGES_DIRECTORY = Rails.root.join("config/api_changes")
-    DATE_PREFIX = /\A\d{4}-\d{2}-\d{2}_/
-    PASS_THROUGH = ->(_index, name) { PassThrough.new(name) }
-
     class << self
-      def all = @all ||= read(CHANGES_DIRECTORY)
-
-      def after(version) = all.select { it.version > version }
-
-      def read(directory)
-        Dir
-          .glob(directory.join("*.rb"))
-          .map { change_in(it) }
-          .each(&:verify!)
-          .sort_by { [it.version, it.source] }
-      end
-
       def version(raw = nil)
         @version = ApiVersion.parse(raw) if raw
         @version
@@ -32,29 +16,46 @@ module JsonApiKit
       end
 
       def resource(type, &declarations)
-        transformations.concat(Declarations.new(type).tap { it.instance_eval(&declarations) }.to_a)
+        Declarations
+          .new(type)
+          .tap { it.instance_eval(&declarations) }
+          .then do
+            transformations.concat(it.transformations)
+            default_sorts.concat(it.default_sorts)
+            removed_filters.concat(it.removed_filters)
+            removed_sorts.concat(it.removed_sorts)
+          end
       end
 
       def transformations = @transformations ||= []
 
-      private
-
-      def change_in(source)
-        constant = File.basename(source, ".rb").sub(DATE_PREFIX, "").camelize
-        Object.send(:remove_const, constant) if Object.const_defined?(constant, false)
-        load source
-        constant.constantize.new(source)
+      def renamed_type(from:, to:)
+        type_renames << TypeRename.new(
+          from: Name::Type.new(value: from.to_s),
+          to: Name::Type.new(value: to.to_s),
+        )
       end
+
+      def type_renames = @type_renames ||= []
+
+      def default_sorts = @default_sorts ||= []
+
+      def removed_filters = @removed_filters ||= []
+
+      def removed_sorts = @removed_sorts ||= []
     end
 
-    delegate :version, :description, :transformations, to: :class
+    delegate :version, :description, to: :class
 
     attr_reader :source
 
     def initialize(source)
       @source = source
-      @upward = index_by(&:previous_names)
-      @downward = index_by { [it.current] }
+      @transformations = Transformations.new(self.class.transformations)
+      @type_renames = TypeRenames.new(self.class.type_renames)
+      @default_sorts = DefaultSorts.new(self.class.default_sorts)
+      @removed_filters = RemovedFilters.new(self.class.removed_filters)
+      @removed_sorts = RemovedSorts.new(self.class.removed_sorts)
     end
 
     def verify!
@@ -64,41 +65,49 @@ module JsonApiKit
         raise ArgumentError, "#{source} is dated on or before the first release."
       end
       raise ArgumentError, "#{source} has no description." if description.blank?
-      duplicate_name(&:previous_names).try { raise ArgumentError, "#{source} changes #{it} twice." }
-      duplicate_name { [it.current] }.try do
-        raise ArgumentError, "#{source} changes two names into #{it}."
-      end
+      [transformations, type_renames, default_sorts].each(&:verify!)
       return if File.basename(source).start_with?(version.to_s)
       raise ArgumentError, "The file name must start with the version #{version}: #{source}."
+    rescue NameChanges::Conflict, DefaultSorts::Conflict => conflict
+      raise ArgumentError, "#{source} #{conflict.message}"
     end
 
-    def current(name) = upward[name].current
+    def current_resource_type(type) = type_renames.current(type)
+
+    def previous_resource_type(type) = type_renames.previous(type)
+
+    def current_names(name) = transformations.current_names(current_type(name))
 
     def current_attributes(attributes)
-      attributes.keys.map { upward[it] }.uniq.flat_map { it.current_pairs(attributes) }.to_h
+      transformations.current_values(attributes.transform_keys { current_type(it) })
+    rescue Converter::Failure => failure
+      raise failure.convert_names { previous_type(it) }
     end
 
-    def previous(name) = downward[name].previous_names.first
-
-    def previous_names(name) = downward[name].previous_names
+    def previous_names(name) = transformations.previous_names(name).map { previous_type(it) }
 
     def previous_attributes(attributes)
-      attributes.flat_map { |name, value| downward[name].previous_pairs(value) }.to_h
+      transformations.previous_values(attributes).transform_keys { previous_type(it) }
+    end
+
+    def current_default_sort(default) = default.convert_names { current_names(it).sole }
+
+    def each_removed_filter(type, &) = removed_filters.each_for(type, &)
+
+    def each_removed_sort(type, &) = removed_sorts.each_for(type, &)
+
+    def each_current_default_sort(type)
+      default_sorts.each_for(type) do |default|
+        yield default.convert_names { transformations.current_names(it).sole }
+      end
     end
 
     private
 
-    attr_reader :upward, :downward
+    attr_reader :transformations, :type_renames, :default_sorts, :removed_filters, :removed_sorts
 
-    def index_by(&names)
-      transformations
-        .flat_map { |transformation| names.call(transformation).map { [it, transformation] } }
-        .to_h
-        .tap { it.default_proc = PASS_THROUGH }
-    end
+    def current_type(name) = name.convert_type { current_resource_type(it) }
 
-    def duplicate_name(&)
-      transformations.flat_map(&).tally.detect { |_name, count| count > 1 }&.first
-    end
+    def previous_type(name) = name.convert_type { previous_resource_type(it) }
   end
 end

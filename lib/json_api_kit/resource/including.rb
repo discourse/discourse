@@ -27,6 +27,8 @@ module JsonApiKit
           Declarations::IncludePaths.new(declared_include_paths, relationships:)
         end
       end
+
+      delegate :allow, :paths_include?, to: :class
     end
   end
 end

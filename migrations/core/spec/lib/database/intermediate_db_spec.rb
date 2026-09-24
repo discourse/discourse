@@ -59,7 +59,7 @@ RSpec.describe Migrations::Database::IntermediateDB do
 
   describe ".conflict_strategy_for" do
     it "returns `:ignore` for a table whose model declares it" do
-      expect(described_class.conflict_strategy_for("uploads")).to eq(:ignore)
+      expect(described_class.conflict_strategy_for("upload_sources")).to eq(:ignore)
     end
 
     it "returns `:raise` for a table whose model does not declare a strategy" do

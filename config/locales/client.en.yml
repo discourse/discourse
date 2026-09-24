@@ -6644,6 +6644,7 @@ en:
         forum:
           label: Forum
       back_to_forum: "Back to Forum"
+      back_to_admin: "Back to Admin"
       filter_links: "Filter links..."
       clear_filter: "Clear filter"
       no_results:
@@ -7158,11 +7159,12 @@ en:
             empty: "No MCP authorizations match this filter."
           activity:
             title: "Activity and diagnostics"
-            description: "Review privacy-minimized protocol activity and aggregate diagnostics."
+            description: "Review MCP activity."
             tool_calls: "Tool calls"
-            errors: "Errors"
-            rate_limits: "Rate limits"
+            failed_tool_calls: "Failed tool calls"
+            rate_limits: "Rate-limited requests"
             p95_latency: "95th percentile latency"
+            no_latency: "—"
             search_placeholder: "Search by user, client, tool, or exact request ID"
             outcome: "Outcome"
             time: "Time"
@@ -8223,6 +8225,7 @@ en:
             embedded: "Embedded pageviews"
             crawlers: "Crawlers"
           see_details: "See details"
+          crawler_learn_more: "Learn more"
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"
@@ -9998,6 +10001,10 @@ en:
           all: "All users"
           activated: "Activated"
           not_activated: "Not activated"
+        account_type_filter:
+          human: "Human accounts"
+          bot: "Bot accounts"
+          all: "All accounts"
         approved: "Approved?"
         titles:
           active: "Active users"
@@ -10399,13 +10406,30 @@ en:
 
       site_text:
         description: "You can customize any of the text on your forum."
-        search: "Search for the text you'd like to edit"
+        search: "Search text or translation keys"
+        search_label: "Search"
+        theme: "Theme or component"
+        all_themes: "All site texts"
+        theme_disabled: "Disabled"
+        filters: "Filters"
+        filters_active:
+          one: "Filters (%{count})"
+          other: "Filters (%{count})"
+        edit_title: "Edit site text"
+        default_text: "Default text"
+        value_label: "Your text · %{language}"
+        invalid_title: "Invalid interpolation placeholders"
+        invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
+        status:
+          customized: "Customized"
+          outdated: "Outdated"
+          invalid: "Invalid"
         title: "Site texts"
         edit: "Edit"
-        revert: "Revert Changes"
+        revert: "Revert to default"
         revert_confirm: "Are you sure you want to revert your changes?"
-        go_back: "Back to Search"
-        recommended: "We recommend customizing the following text to suit your needs:"
+        go_back: "Back to results"
+        recommended: "Suggested texts to customize"
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
         show_untranslated: "Only show untranslated"

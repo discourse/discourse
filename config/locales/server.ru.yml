@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 ru:
+  markdown_endpoints:
+    latest: "Последние"
+    categories: "Категории"
+    tags: "Теги"
+    previous_page: "Предыдущая страница"
+    next_page: "Следующая страница"
+    replies: "Ответы"
+    last_updated: "Последнее обновление"
   mcp:
     errors:
       draft_too_long: "Черновик слишком длинный"

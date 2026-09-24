@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import ReseedModal from "discourse/admin/components/modal/reseed";
 import discourseDebounce from "discourse/lib/debounce";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { i18n } from "discourse-i18n";
 
 let lastSearch;
 
@@ -16,6 +17,7 @@ export default class AdminSiteTextIndexController extends Controller {
   @service modal;
   @service store;
 
+  @tracked themeId = null;
   @tracked locale;
   @tracked q;
   @tracked overridden;
@@ -30,6 +32,7 @@ export default class AdminSiteTextIndexController extends Controller {
   @tracked canLoadMore = true;
 
   queryParams = [
+    { themeId: "theme_id" },
     "q",
     "overridden",
     "outdated",
@@ -40,6 +43,32 @@ export default class AdminSiteTextIndexController extends Controller {
 
   #page = 0;
   #results = trackedArray();
+
+  get activeFilterCount() {
+    return [
+      this.themeId,
+      this.resolvedOverridden,
+      this.resolvedOutdated,
+      this.resolvedOnlySelectedLocale,
+      this.resolvedUntranslated,
+    ].filter(Boolean).length;
+  }
+
+  get hasActiveFilters() {
+    return this.activeFilterCount > 0;
+  }
+
+  get filterLabel() {
+    return this.hasActiveFilters
+      ? i18n("admin.site_text.filters_active", {
+          count: this.activeFilterCount,
+        })
+      : i18n("admin.site_text.filters");
+  }
+
+  get availableThemes() {
+    return this.extras.themes ?? [];
+  }
 
   get siteTexts() {
     return this.#results.flat();
@@ -101,6 +130,7 @@ export default class AdminSiteTextIndexController extends Controller {
     this.router.transitionTo("adminSiteText.edit", siteText.get("id"), {
       queryParams: {
         locale: this.resolvedLocale,
+        theme_id: this.themeId,
       },
     });
   }
@@ -130,12 +160,34 @@ export default class AdminSiteTextIndexController extends Controller {
   }
 
   @action
+  resetFilters() {
+    this.themeId = null;
+    this.overridden = null;
+    this.outdated = null;
+    this.untranslated = null;
+    this.onlySelectedLocale = null;
+    this.resetSearch();
+  }
+
+  @action
+  updateSearch(event) {
+    this.q = event.target.value;
+    this.search();
+  }
+
+  @action
   search() {
     const q = this.q;
     if (q !== lastSearch) {
       lastSearch = q;
       discourseDebounce(this, this.resetSearch, 400);
     }
+  }
+
+  @action
+  updateTheme(value) {
+    this.themeId = value;
+    this.resetSearch();
   }
 
   @action
@@ -163,6 +215,7 @@ export default class AdminSiteTextIndexController extends Controller {
     try {
       this.model = await this.store.find("site-text", {
         q: this.q,
+        theme_id: this.themeId,
         overridden: this.resolvedOverridden,
         outdated: this.resolvedOutdated,
         locale: this.resolvedLocale,

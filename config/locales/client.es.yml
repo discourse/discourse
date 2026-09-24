@@ -5882,7 +5882,6 @@ es:
             status: "Estado"
             actions: "Acciones"
           activity:
-            rate_limits: "Límites de velocidad"
             outcome: "Resultado"
             time: "Hora"
             user: "Usuario"
@@ -6469,6 +6468,7 @@ es:
           series:
             anonymous: "Anónimas"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Más información"
         period:
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"
@@ -8513,13 +8513,14 @@ es:
           multiselect: "Selección múltiple"
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro."
-        search: "Busca el texto que te gustaría editar"
+        search_label: "Buscar"
+        theme_disabled: "Desactivado"
+        filters: "Filtros"
+        status:
+          invalid: "No válido"
         title: "Textos del sitio"
         edit: "Editar"
-        revert: "Revertir los cambios"
         revert_confirm: "¿Seguro que quieres revertir los cambios?"
-        go_back: "Volver a la búsqueda"
-        recommended: "Te recomendamos que ajustes los siguientes textos a tu comunidad:"
         show_overriden: "Mostrar solo los sobrescritos"
         show_outdated: "Mostrar solo obsoletos/no válidos"
         show_untranslated: "Mostrar solo sin traducir"

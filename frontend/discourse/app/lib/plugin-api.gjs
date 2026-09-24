@@ -124,6 +124,7 @@ import {
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import { addUserNavPreferencesLink } from "discourse/lib/sidebar/user-nav-sidebar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   _addTransformerName,
@@ -2990,6 +2991,35 @@ class _PluginApi {
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a link to the preferences section of the user nav sidebar panel.
+   *
+   * The `user-preferences-nav` plugin outlet renders markup the panel cannot
+   * read, so a plugin with a preferences tab registers it here as well to stay
+   * reachable once the horizontal nav is hidden.
+   *
+   * ```javascript
+   * api.addUserNavPreferencesLink({
+   *   name: "preferences-chat",
+   *   route: "preferences.chat",
+   *   label: "chat.title_capitalized",
+   *   icon: "d-chat",
+   *   displayed: ({ siteSettings }) => siteSettings.chat_enabled,
+   * });
+   * ```
+   *
+   * @param {Object} link - A link object representing a preferences link.
+   * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} link.route - The Ember route name the link points at.
+   * @param {string} link.label - The i18n key for the link's text.
+   * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+   * @param {Function} [link.displayed] - Predicate deciding whether to show the link.
+   */
+  addUserNavPreferencesLink(link) {
+    addUserNavPreferencesLink(link);
   }
 
   /**

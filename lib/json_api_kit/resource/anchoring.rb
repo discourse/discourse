@@ -24,7 +24,7 @@ module JsonApiKit
           declared_anchor(anchoring.name).try { it.accepts?(anchoring) } || false
         end
 
-        def anchored_by?(anchor_name:, ordering: {})
+        def anchored_by?(anchor_name:, ordering:)
           declared_anchor(anchor_name).then { it.nil? || it.locatable_in?(order(ordering)) }
         end
 
@@ -33,6 +33,12 @@ module JsonApiKit
         private
 
         def declared_anchor(name) = declared_anchors.detect { it.name == name.to_s }
+      end
+
+      delegate :anchor_names, :anchor_accepts?, :anchors, to: :class
+
+      def anchored_by?(anchor_name:, ordering:)
+        anchors(guardian).fetch(anchor_name.to_s) { return true }.locatable_in?(order(ordering))
       end
     end
   end

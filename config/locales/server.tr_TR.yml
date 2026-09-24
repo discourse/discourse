@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  markdown_endpoints:
+    latest: "En son"
+    categories: "Kategoriler"
+    tags: "Etiketler"
+    previous_page: "Önceki sayfa"
+    next_page: "Sonraki sayfa"
+    replies: "Yanıtlar"
+    last_updated: "Son güncelleme"
   mcp:
     errors:
       draft_too_long: "Taslak fazla uzun"

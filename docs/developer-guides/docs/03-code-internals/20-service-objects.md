@@ -336,6 +336,12 @@ This matcher expects the service to succeed.
 
 This step declares the use of a contract to validate input parameters. Parameters provided to the service will be passed to the contract if their name matches the attributes defined in the contract.
 
+With `default_values_from`, nested hashes are merged recursively. Supplied values override model values, including `nil`, `false`, and `0`. An empty hash keeps the defaults at that level. A supplied array replaces the whole model array; an empty array clears it.
+
+For example, model values `{ dimensions: { width: 640, height: 480 }, tags: ["draft"] }` combined with params `{ dimensions: { width: 800 }, tags: [] }` produce `{ dimensions: { width: 800, height: 480 }, tags: [] }` before contract validation.
+
+String and symbol keys are treated alike at every level. Combining defaults and inputs does not modify their hashes or arrays. Coercion and validation still run on the resulting values.
+
 Under the hood, a class for the contract will be automatically created, allowing easy testing. The default contract will result in `Contract`, otherwise it will prepend the name used for the contract (for `params(:user_avatar)`, this will give `UserAvatarContract`).
 
 If the contract is invalid, it will stop the execution of the service. Its result object can be inspected by accessing the `result.contract.<name>` key of the main result object. The contract result object exposes two keys:

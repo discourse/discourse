@@ -31,7 +31,11 @@ pl_PL:
       error_agent_not_configured: "Agent AI nie jest skonfigurowany. Sprawdź ustawienia funkcji AI."
       error_no_sql_returned: "Sztuczna inteligencja nie zwróciła prawidłowego zapytania SQL. Spróbuj ponownie lub wpisz zapytanie ręcznie."
     errors:
+      default_tag_reserved: "Domyślny znacznik jest zarezerwowany dla zapytań systemowych."
+      tag_contains_comma: "Tagi nie mogą zawierać przecinków."
+      tag_too_long: "Tag może mieć maksymalnie %{max} znaków."
       tool_not_allowed: "Nie masz uprawnień do korzystania z tego narzędzia"
+      too_many_tags: "Zapytanie może mieć maksymalnie %{max} tagów."
     discourse_workflows:
       sql_action:
         no_query_selected: "Nie wybrano zapytania."

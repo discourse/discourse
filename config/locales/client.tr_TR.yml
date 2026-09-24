@@ -5969,7 +5969,6 @@ tr_TR:
             status: "Durum"
             actions: "Eylemler"
           activity:
-            rate_limits: "Oran limitleri"
             outcome: "Sonuç"
             time: "Saat"
             user: "Kullanıcı"
@@ -6565,6 +6564,7 @@ tr_TR:
           series:
             anonymous: "Anonim"
             crawlers: "Gezginler"
+          crawler_learn_more: "Daha fazla bilgi edin"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"
@@ -8612,13 +8612,14 @@ tr_TR:
           multiselect: "Çoklu seçim"
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
-        search: "Düzenlemek istediğiniz metni arayın"
+        search_label: "Ara"
+        theme_disabled: "Devre Dışı"
+        filters: "Filtreler"
+        status:
+          invalid: "Geçersiz"
         title: "Site metinleri"
         edit: "Düzenle"
-        revert: "Değişiklikleri Geri Al"
         revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
-        go_back: "Aramaya geri dön"
-        recommended: "Aşağıdaki metni ihtiyaçlarınıza göre özelleştirmenizi öneririz:"
         show_overriden: "Yalnızca geçersiz kılınanları göster"
         show_outdated: "Yalnızca eski/geçersiz olanları göster"
         show_untranslated: "Yalnızca çevrilmemişleri göster"

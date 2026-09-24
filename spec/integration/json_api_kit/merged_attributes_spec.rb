@@ -38,6 +38,7 @@ RSpec.describe "JSON:API merged attributes", type: :request do
   let(:first_version) { JsonApiKit::Timeline::FIRST_RELEASE }
   let(:merge) { JsonApiKitSpec::MergeTopicsPostedDateAndTimeIntoPostedAt.new(__FILE__) }
   let(:rename) { JsonApiKitSpec::RenameMergedTopicsPostedAtToCreatedAt.new(__FILE__) }
+  let(:version_changes) { JsonApiKit::VersionChanges.new([merge, rename]) }
   let(:version) { first_version.to_s }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:error) { parsed_body["errors"].sole }
@@ -46,7 +47,7 @@ RSpec.describe "JSON:API merged attributes", type: :request do
 
   before do
     freeze_time(rename.version.date + 1.day)
-    allow(JsonApiKit::VersionChange).to receive(:all).and_return([merge, rename])
+    allow(JsonApiKit::VersionChanges).to receive(:core).and_return(version_changes)
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
       get "/api/merged-topics" => "json_api_kit_spec/merged_topics#index"

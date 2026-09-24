@@ -28,7 +28,6 @@ de:
         title: "Erstelle eine Daten-Explorer-Abfrage"
         description: "Schreibe eine benutzerdefinierte SQL-Abfrage, um etwas Spezifisches für deine Community zu finden."
     explorer:
-      default_query: "Standard"
       default_query_notice: "Dies ist eine Standardabfrage, deren SQL-Code nicht bearbeitet werden kann. Erstelle eine neue Abfrage, um den SQL-Code zu bearbeiten."
       view_query: "Ansehen"
       queries: "Anfragen"
@@ -125,6 +124,7 @@ de:
         other: "Zeige die Top-%{count} Ergebnisse."
       query_name: "Anfrage"
       query_groups: "Gruppen"
+      query_tags: "Schlagwörter"
       link: "Link für"
       report_name: "Bericht"
       query_description: "Beschreibung"

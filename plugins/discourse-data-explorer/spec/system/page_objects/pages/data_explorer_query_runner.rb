@@ -115,9 +115,9 @@ module PageObjects
       end
 
       def has_query_groups?(*group_names)
-        PageObjects::Components::SelectKit.new(
-          ".query-edit .groups .select-kit",
-        ).has_selected_names?(*group_names)
+        PageObjects::Components::SelectKit.new(".query-edit .group-chooser").has_selected_names?(
+          *group_names,
+        )
       end
 
       def submit_new_query

@@ -2925,6 +2925,7 @@ th:
         site_traffic:
           series:
             anonymous: "ไม่ระบุชื่อ"
+          crawler_learn_more: "เรียนรู้เพิ่มเติม"
         period:
           last_7_days: "7 วันที่ผ่านมา"
           last_30_days: "30 วันที่ผ่านมา"
@@ -3567,12 +3568,10 @@ th:
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
-        search: "ค้นหาข้อความที่คุณต้องการแก้ไข"
+        search_label: "ค้นหา"
+        theme_disabled: "ปิดใช้งานแล้ว"
         edit: "แก้ไข"
-        revert: "ย้อนกลับการแก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
-        go_back: "กลับไปค้นหา"
-        recommended: "เราแนะนำให้คุณแก้ไขข้อความให้ตรงกับความต้องการของคุณ:"
         outdated:
           dismiss: "ซ่อน"
       settings:

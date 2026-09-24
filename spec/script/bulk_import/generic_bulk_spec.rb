@@ -1587,6 +1587,26 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#update_category_read_restricted" do
+      it "reconciles uploads when imported permissions restrict an existing category" do
+        category = Fabricate(:category)
+        CategoryGroup.create!(
+          category: category,
+          group: Group[:admins],
+          permission_type: CategoryGroup.permission_types[:full],
+        )
+
+        expect_enqueued_with(
+          job: :update_category_upload_security,
+          args: {
+            category_id: category.id,
+          },
+        ) { described_class.allocate.update_category_read_restricted }
+
+        expect(category.reload.read_restricted).to eq(true)
+      end
+    end
+
     describe "#import_user_associated_groups" do
       fab!(:employee, :user)
       fab!(:customer, :user)

@@ -527,6 +527,7 @@ class DiscourseVipsWorker
           unsetenv_others: true,
           rlimits: operation.sandbox_rlimits(defaults: RLIMITS),
           seccomp_deny_network: LINUX_PLATFORM,
+          seccomp_deny_child_processes: LINUX_PLATFORM,
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
           apply_nice(request)

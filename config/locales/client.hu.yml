@@ -5756,7 +5756,6 @@ hu:
             status: "Állapot"
             actions: "Műveletek"
           activity:
-            rate_limits: "Korlátozások"
             outcome: "Eredmény"
             time: "Idő"
             user: "Felhasználó"
@@ -6339,6 +6338,7 @@ hu:
           series:
             anonymous: "Névtelen"
             crawlers: "Keresőrobotok"
+          crawler_learn_more: "Tudjon meg többet"
         period:
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"
@@ -8379,13 +8379,14 @@ hu:
           multiselect: "Többszörös kiválasztás"
       site_text:
         description: "Bármelyik szöveget személyre szabhatja a fórumon."
-        search: "A szerkesztendő szöveg keresése"
+        search_label: "Keresés"
+        theme_disabled: "Kikapcsolva"
+        filters: "Szűrők"
+        status:
+          invalid: "Érvénytelen"
         title: "Oldal szövegei"
         edit: "Szerkesztés"
-        revert: "Változtatások visszavonása"
         revert_confirm: "Biztos, hogy visszavonja a változtatásait?"
-        go_back: "Vissza a kereséshez"
-        recommended: "Azt tanácsoljuk, hogy módosítsd a következő szöveget az igényeidnek megfelelően:"
         show_overriden: "Csak a felülírtak megjelenítése"
         show_outdated: "Csak az elavult/érvénytelent jelenítse meg"
         show_untranslated: "Csak a lefordítatlanok megjelenítése"
