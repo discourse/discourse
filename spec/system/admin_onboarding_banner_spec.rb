@@ -2,6 +2,8 @@
 
 describe "Admin Onboarding Banner" do
   fab!(:admin)
+  fab!(:staff_category) { Fabricate(:private_category, name: "Staff", group: Group[:staff]) }
+  fab!(:general_category) { Fabricate(:category, name: "General") }
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
@@ -11,6 +13,8 @@ describe "Admin Onboarding Banner" do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
+    SiteSetting.staff_category_id = staff_category.id
+    SiteSetting.general_category_id = general_category.id
     SiteSetting.enable_invite_modal_with_roles = false
     SiteSetting.enable_site_owner_onboarding = true
     SiteSetting.default_theme_id = Theme.foundation_theme.id
@@ -26,6 +30,7 @@ describe "Admin Onboarding Banner" do
 
     it "shows all three onboarding steps" do
       visit("/")
+      expect(banner.step_names).to eq(%w[select_theme start_posting invite_collaborators])
       expect(banner.step("select_theme")).to be_present
       expect(banner.step("invite_collaborators")).to be_present
       expect(banner.step("start_posting")).to be_present
@@ -61,7 +66,10 @@ describe "Admin Onboarding Banner" do
       predefined_topics_modal.select_topic(0)
 
       expect(composer).to be_opened
-      expect(composer.composer_input.value).not_to be_empty
+      expect(composer.composer_input.value).to eq(
+        I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_categories.body"),
+      )
+      expect(composer.category_chooser).to have_selected_name(staff_category.name)
 
       composer.composer_input.set("Testing topic selection")
       composer.create
@@ -69,6 +77,119 @@ describe "Admin Onboarding Banner" do
 
       visit("/")
       expect(banner.step_completed?("start_posting")).to eq(true)
+
+      log =
+        UserHistory.find_by!(
+          action: UserHistory.actions[:admin_onboarding_step_completed],
+          acting_user_id: admin.id,
+          subject: "start_posting",
+        )
+      expect(log.new_value).to eq("plan_categories")
+      expect(Topic.last.category_id).to eq(staff_category.id)
+
+      logs = PageObjects::Pages::AdminStaffActionLogs.new
+      logs.visit
+      logs.show_details(log)
+      expect(page).to have_css(
+        ".log-details-modal",
+        text: "Selected option: What categories should we start with?",
+      )
+      expect(page).to have_css(".log-details-modal", text: "Option ID: plan_categories")
+    end
+
+    %w[plan_invites introduce_yourself write_your_own].each do |option|
+      it "publishes the #{option} choice in its category and records the original option" do
+        category = option == "plan_invites" ? staff_category : general_category
+        visit("/")
+        banner.click_step_action("start_posting")
+        predefined_topics_modal.select_option(option)
+
+        expect(composer).to be_opened
+        expect(composer.category_chooser).to have_selected_name(category.name)
+        if option == "write_your_own"
+          expect(composer).to have_input_title("")
+          expect(composer).to have_value("")
+        else
+          expect(composer).to have_input_title(
+            I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.title"),
+          )
+          expect(composer).to have_value(
+            I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.body"),
+          )
+        end
+
+        composer.fill_title("A conversation for our community")
+        composer.fill_content("A new conversation tailored to our community.")
+        composer.create
+        expect(page).to have_content("A new conversation tailored to our community.")
+
+        try_until_success do
+          log = UserHistory.find_by(acting_user_id: admin.id, subject: "start_posting")
+          expect(log&.new_value).to eq(option)
+        end
+        expect(Topic.last.category_id).to eq(category.id)
+      end
+    end
+
+    it "does not attribute an unrelated topic to a discarded suggestion" do
+      visit("/")
+      banner.click_step_action("start_posting")
+      predefined_topics_modal.select_option("plan_categories")
+      composer.discard
+      PageObjects::Modals::DiscardDraft.new.click_discard
+      expect(composer).to be_closed
+      expect(banner.step_not_completed?("start_posting")).to eq(true)
+      expect(UserHistory.exists?(acting_user_id: admin.id, subject: "start_posting")).to eq(false)
+
+      visit("/new-topic")
+      composer.fill_title("An unrelated community conversation")
+      composer.fill_content("This topic was not started from an onboarding suggestion.")
+      composer.switch_category(general_category.name)
+      composer.create
+      expect(page).to have_content("This topic was not started from an onboarding suggestion.")
+
+      try_until_success do
+        log = UserHistory.find_by(acting_user_id: admin.id, subject: "start_posting")
+        expect(log).to be_present
+        expect(log.new_value).to be_nil
+        expect(log.details).to be_nil
+      end
+    end
+
+    it "retains attribution when a saved draft is resumed after a reload" do
+      visit("/")
+      banner.click_step_action("start_posting")
+      predefined_topics_modal.select_option("plan_invites")
+      composer.close
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+
+      visit("/")
+      drafts_menu = PageObjects::Components::DraftsMenu.new
+      drafts_menu.open
+      drafts_menu.resume_draft
+      expect(composer).to have_input_title(
+        I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.title"),
+      )
+      composer.create
+      expect(page).to have_content(
+        I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.body"),
+      )
+
+      try_until_success do
+        log = UserHistory.find_by(acting_user_id: admin.id, subject: "start_posting")
+        expect(log&.new_value).to eq("plan_invites")
+      end
+    end
+
+    it "disables Staff suggestions when the configured category is unavailable" do
+      SiteSetting.staff_category_id = -1
+      visit("/")
+      banner.click_step_action("start_posting")
+      expect(predefined_topics_modal).to have_disabled_option("plan_categories")
+      expect(predefined_topics_modal).to have_disabled_option("plan_invites")
+      predefined_topics_modal.select_option("write_your_own")
+      expect(composer).to be_opened
+      expect(composer.category_chooser).to have_selected_name(general_category.name)
     end
 
     it "can cancel topic selection without completing step" do

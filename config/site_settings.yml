@@ -4059,6 +4059,7 @@ uncategorized:
   staff_category_id:
     default: -1
     hidden: true
+    client: true
     area: "categories"
   uncategorized_category_id:
     default: -1

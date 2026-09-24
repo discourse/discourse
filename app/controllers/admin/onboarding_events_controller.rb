@@ -10,7 +10,15 @@ class Admin::OnboardingEventsController < Admin::AdminController
     when "step_completed"
       step = params.require(:step)
       raise Discourse::InvalidParameters.new(:step) if !STEPS.include?(step)
-      logger.log_admin_onboarding_step_completed(step)
+      topic_option = params[:topic_option]
+      if topic_option.present? &&
+           (
+             step != "start_posting" ||
+               !UserHistory::ADMIN_ONBOARDING_TOPIC_OPTIONS.include?(topic_option)
+           )
+        raise Discourse::InvalidParameters.new(:topic_option)
+      end
+      logger.log_admin_onboarding_step_completed(step, topic_option: topic_option.presence)
     when "completed"
       logger.log_admin_onboarding_completed
     when "dismissed"

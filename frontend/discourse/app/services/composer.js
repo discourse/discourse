@@ -1662,7 +1662,14 @@ export default class ComposerService extends Service {
   }
 
   @action
-  async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
+  async openNewTopic({
+    title,
+    body,
+    category,
+    tags,
+    formTemplate,
+    adminOnboardingTopicOption,
+  } = {}) {
     const sharedDraftsCategoryId = this.site.shared_drafts_category_id;
     const isSharedDraftCategory =
       !!sharedDraftsCategoryId && category?.id === sharedDraftsCategoryId;
@@ -1678,6 +1685,7 @@ export default class ComposerService extends Service {
       prioritizedCategoryId: categoryId,
       topicCategoryId: categoryId,
       formTemplateId: formTemplate?.id,
+      adminOnboardingTopicOption,
       topicTitle: title,
       topicBody: body,
       topicTags: tags,

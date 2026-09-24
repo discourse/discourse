@@ -25,6 +25,14 @@ module PageObjects
         topic_cards[index].click
       end
 
+      def select_option(option)
+        find("#{MODAL_SELECTOR} [data-topic-option='#{option}']").click
+      end
+
+      def has_disabled_option?(option)
+        has_css?("#{MODAL_SELECTOR} [data-topic-option='#{option}'][disabled]")
+      end
+
       def cancel
         close
       end
