@@ -96,6 +96,9 @@ jobs:
           system_test_workers=$((system_test_cores / 2 + 2))
           if [ "$system_test_cores" -eq 16 ] && { [ "${{ matrix.target }}" = "core" ] || [ "${{ matrix.target }}" = "core-plugins" ]; }; then
             system_test_workers=20
+            if [ "${{ matrix.target }}" = "core" ]; then
+              system_test_workers=24
+            fi
           fi
           echo "PARALLEL_TEST_PROCESSORS=$system_test_workers" >> $GITHUB_ENV
 
