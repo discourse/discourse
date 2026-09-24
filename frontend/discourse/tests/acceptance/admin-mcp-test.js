@@ -23,6 +23,8 @@ acceptance("Admin - MCP", function (needs) {
   let emergencyBlockRequests;
   let refreshClientRequests;
   let setupComplete;
+  let activityMetrics;
+  let activityRecords;
   let activityRequests;
   let authorizationRequests;
   let clientRequests;
@@ -34,6 +36,24 @@ acceptance("Admin - MCP", function (needs) {
     emergencyBlockRequests = [];
     refreshClientRequests = [];
     setupComplete = true;
+    activityMetrics = {
+      tool_calls: 2,
+      failed_tool_calls: 1,
+      rate_limits: 0,
+      p95_latency_ms: 25,
+    };
+    activityRecords = [
+      {
+        id: 3,
+        created_at: "2026-09-22T10:00:00Z",
+        method: "tools/call",
+        tool: "discourse_topic_list",
+        username: "sam",
+        outcome: "success",
+        duration_ms: 25,
+        request_id: "request-current",
+      },
+    ];
     activityRequests = [];
     authorizationRequests = [];
     clientRequests = [];
@@ -292,14 +312,12 @@ acceptance("Admin - MCP", function (needs) {
     server.get("/admin/mcp/activity.json", (request) => {
       activityRequests.push(request.queryParams);
 
-      const metrics = {
-        tool_calls: 2,
-        errors: 1,
-        rate_limits: 0,
-        p95_latency_ms: 25,
-      };
       if (request.queryParams.filter !== "search") {
-        return helper.response({ activity: [], metrics, meta: {} });
+        return helper.response({
+          activity: activityRecords,
+          metrics: activityMetrics,
+          meta: {},
+        });
       }
 
       if (request.queryParams.cursor) {
@@ -333,7 +351,7 @@ acceptance("Admin - MCP", function (needs) {
             request_id: "request-newer",
           },
         ],
-        metrics,
+        metrics: activityMetrics,
         meta: { next_cursor: 2 },
       });
     });
@@ -834,16 +852,63 @@ acceptance("Admin - MCP", function (needs) {
     await visit("/admin/config/mcp/activity");
 
     assert
-      .dom(".admin-mcp__activity-filters select option:first-child")
+      .dom(".admin-mcp__activity-outcome select option:first-child")
       .hasText(
         i18n("admin.config.mcp.values.activity_outcome.all"),
         "the unfiltered option names the outcome filter"
+      );
+    assert
+      .dom(".db-date-range__trigger")
+      .hasText(
+        i18n("date_range_picker.presets.last_7_days"),
+        "the default range is the last seven days"
       );
     assert
       .dom(".admin-mcp__activity-metrics")
       .includesText(
         i18n("admin.config.mcp.activity.tool_calls"),
         "the metric describes the audited method"
+      );
+    assert
+      .dom(".admin-mcp__activity-metrics")
+      .includesText(
+        i18n("admin.config.mcp.activity.failed_tool_calls"),
+        "failed tool calls have a specific label"
+      );
+    assert
+      .dom(".admin-mcp__activity-failed-tool-calls")
+      .hasText(
+        activityMetrics.failed_tool_calls.toString(),
+        "the failed tool call metric is shown"
+      );
+  });
+
+  test("shows an empty latency value when there are no samples", async function (assert) {
+    activityMetrics.p95_latency_ms = null;
+
+    await visit("/admin/config/mcp/activity");
+
+    assert
+      .dom(".admin-mcp__activity-p95-latency")
+      .hasText(
+        i18n("admin.config.mcp.activity.no_latency"),
+        "the page does not describe missing latency as zero"
+      );
+  });
+
+  test("hides metrics when there is no activity", async function (assert) {
+    activityRecords = [];
+
+    await visit("/admin/config/mcp/activity");
+
+    assert
+      .dom(".admin-mcp__activity-metrics")
+      .doesNotExist("the metrics are hidden when the activity list is empty");
+    assert
+      .dom(".admin-mcp__activity-table")
+      .includesText(
+        i18n("admin.config.mcp.activity.empty"),
+        "the empty state is shown"
       );
   });
 
@@ -857,11 +922,34 @@ acceptance("Admin - MCP", function (needs) {
       await waitUntil(() =>
         activityRequests.some((request) => request.filter === "search")
       );
-      await select(".admin-mcp__activity-filters select", "error");
+      await select(".admin-mcp__activity-outcome select", "error");
       await waitUntil(() =>
         activityRequests.some(
           (request) =>
             request.filter === "search" && request.outcome === "error"
+        )
+      );
+      await click(".db-date-range__trigger");
+      await click(
+        findAll(".d-date-range-picker__preset").find(
+          (element) =>
+            element.textContent.trim() ===
+            i18n("date_range_picker.presets.last_30_days")
+        )
+      );
+
+      const startDate = moment()
+        .startOf("day")
+        .subtract(29, "days")
+        .format("YYYY-MM-DD");
+      const endDate = moment().format("YYYY-MM-DD");
+      await waitUntil(() =>
+        activityRequests.some(
+          (request) =>
+            request.filter === "search" &&
+            request.outcome === "error" &&
+            request.start_date === startDate &&
+            request.end_date === endDate
         )
       );
 
@@ -885,7 +973,13 @@ acceptance("Admin - MCP", function (needs) {
 
       assert.deepEqual(
         activityRequests.at(-1),
-        { cursor: "2", filter: "search", outcome: "error" },
+        {
+          cursor: "2",
+          filter: "search",
+          outcome: "error",
+          start_date: startDate,
+          end_date: endDate,
+        },
         "the cursor request preserves every active filter"
       );
       assert
@@ -900,6 +994,34 @@ acceptance("Admin - MCP", function (needs) {
     } finally {
       disableLoadMoreObserver();
     }
+  });
+
+  test("filters activity with a custom date range", async function (assert) {
+    await visit("/admin/config/mcp/activity");
+    await click(".db-date-range__trigger");
+    await fillIn(
+      `.d-date-range-picker__input[aria-label='${i18n("date_range_picker.start_date")}']`,
+      "2026/09/01"
+    );
+    await fillIn(
+      `.d-date-range-picker__input[aria-label='${i18n("date_range_picker.end_date")}']`,
+      "2026/09/10"
+    );
+    await click(".d-date-range-picker__apply");
+    await waitUntil(() =>
+      activityRequests.some(
+        (request) =>
+          request.start_date === "2026-09-01" &&
+          request.end_date === "2026-09-10"
+      )
+    );
+
+    assert
+      .dom(".db-date-range__trigger")
+      .includesText(
+        moment("2026-09-01").format("ll"),
+        "the trigger shows the custom date range"
+      );
   });
 
   test("blocks and unblocks a primitive immediately", async function (assert) {
