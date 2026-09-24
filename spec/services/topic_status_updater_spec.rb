@@ -7,6 +7,27 @@ RSpec.describe TopicStatusUpdater do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
 
+  it "retries a status change when an event listener fails" do
+    topic = create_topic
+    handler = proc { raise "Listener unavailable" }
+    DiscourseEvent.on(:topic_status_updated, &handler)
+
+    expect do described_class.new(topic, admin).update!("closed", true) end.to raise_error(
+      "Listener unavailable",
+    )
+    expect(topic.reload).not_to be_closed
+
+    DiscourseEvent.off(:topic_status_updated, &handler)
+    events =
+      DiscourseEvent.track_events(:topic_status_updated) do
+        described_class.new(topic, admin).update!("closed", true)
+      end
+
+    expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+  ensure
+    DiscourseEvent.off(:topic_status_updated, &handler) if handler
+  end
+
   it "does not advance read state when a topic is automatically closed" do
     post =
       PostCreator.create(
