@@ -618,13 +618,24 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
   end
 
   describe "statement timeout" do
-    it "raises StatementTimeout when a query exceeds the limit" do
-      stub_const(DiscourseWorkflows::DataTables::Facade, :STATEMENT_TIMEOUT_MS, 100) do
-        expect {
-          facade.send(:with_statement_timeout) do
-            ActiveRecord::Base.connection.execute("SELECT pg_sleep(1)")
-          end
-        }.to raise_error(described_class::StatementTimeout)
+    it "preserves the connection timeout after successful batch statistics" do
+      DB.exec("SET LOCAL statement_timeout = '2s'")
+
+      described_class.batch_stats([data_table.id])
+
+      expect(DB.query_single("SHOW statement_timeout").first).to eq("2s")
+    end
+
+    it "cancels slow counts and restores the connection timeout" do
+      table_name = DiscourseWorkflows::DataTables::Storage.quoted_table(data_table.id)
+      DB.exec("CREATE TEMP VIEW #{table_name} AS SELECT 1 AS id FROM pg_sleep(1)")
+      original_timeout = DB.query_single("SHOW statement_timeout").first
+
+      stub_const(described_class, :STATEMENT_TIMEOUT_MS, 50) do
+        [-> { described_class.batch_stats([data_table.id]) }, -> { facade.count }].each do |query|
+          expect { query.call }.to raise_error(described_class::StatementTimeout)
+          expect(DB.query_single("SHOW statement_timeout").first).to eq(original_timeout)
+        end
       end
     end
   end

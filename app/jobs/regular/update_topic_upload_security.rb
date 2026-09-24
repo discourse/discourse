@@ -3,7 +3,7 @@
 module Jobs
   class UpdateTopicUploadSecurity < ::Jobs::Base
     def execute(args)
-      topic = Topic.find_by(id: args[:topic_id])
+      topic = Topic.with_deleted.find_by(id: args[:topic_id])
       if topic.blank?
         Rails.logger.info(
           "Could not find topic #{args[:topic_id]} for topic upload security updater.",

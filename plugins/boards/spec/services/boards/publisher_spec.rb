@@ -25,6 +25,7 @@ RSpec.describe Boards::Publisher do
     board
   end
   fab!(:column) { board.columns.create!(title: "To Do", position: 0) }
+  fab!(:old_column) { board.columns.create!(title: "Backlog", position: 1) }
   fab!(:card) do
     board.cards.create!(
       card_type: :floater,
@@ -117,15 +118,50 @@ RSpec.describe Boards::Publisher do
   end
 
   describe ".publish_card_moved!" do
-    it "publishes a card_moved message" do
+    it "publishes a card_moved message and workflow event with the acting user" do
+      events = nil
       messages =
         MessageBus.track_publish(channel) do
-          described_class.publish_card_moved!(board, card_data, client_id: test_client_id)
+          events =
+            DiscourseEvent.track_events(:boards_card_moved) do
+              described_class.publish_card_moved!(
+                board,
+                card_data,
+                old_column.id,
+                acting_user: admin,
+                client_id: test_client_id,
+              )
+            end
         end
 
       expect(messages.size).to eq(1)
       expect(messages.first.data[:type]).to eq("card_moved")
       expect(messages.first.data[:card]).to eq(card_data)
+      expect(events).to contain_exactly(
+        event_name: :boards_card_moved,
+        params: [board, card_data.merge(old_column_id: old_column.id), admin],
+      )
+    end
+
+    it "keeps the card_moved message but skips the workflow event when reordering" do
+      events = nil
+      messages =
+        MessageBus.track_publish(channel) do
+          events =
+            DiscourseEvent.track_events(:boards_card_moved) do
+              described_class.publish_card_moved!(
+                board,
+                card_data,
+                acting_user: admin,
+                client_id: test_client_id,
+              )
+            end
+        end
+
+      expect(messages).to contain_exactly(
+        have_attributes(data: include(type: "card_moved", card: card_data)),
+      )
+      expect(events).to be_empty
     end
   end
 
@@ -175,6 +211,31 @@ RSpec.describe Boards::Publisher do
 
       expect(messages.size).to eq(1)
       expect(messages.first.group_ids).to be_nil
+    end
+  end
+
+  describe "publishing to an archived board" do
+    subject(:result) do
+      described_class.publish_card_created!(board, card_data, client_id: test_client_id)
+      described_class.publish_card_updated!(board, card_data, client_id: test_client_id)
+      described_class.publish_card_moved!(
+        board,
+        card_data,
+        acting_user: admin,
+        client_id: test_client_id,
+      )
+      described_class.publish_card_deleted!(board, card.id, client_id: test_client_id)
+      described_class.publish_column_cleared!(board, column.id, client_id: test_client_id)
+      described_class.publish_columns_reordered!(board, [column.id], client_id: test_client_id)
+      described_class.publish_board_updated!(board, client_id: test_client_id)
+    end
+
+    let(:messages) { MessageBus.track_publish(channel) { result } }
+
+    it "suppresses every board event even when the caller has a stale board instance" do
+      Boards::Board.find(board.id).update!(archived: true)
+
+      expect(messages).to be_empty
     end
   end
 end

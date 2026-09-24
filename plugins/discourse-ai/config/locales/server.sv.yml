@@ -16,6 +16,21 @@ sv:
         image_generation_custom:
           name: "Anpassad"
     ai_bot:
+      navigation:
+        users:
+          title: "Användare"
+        groups:
+          title: "Grupper"
+        review:
+          title: "Granskningskö"
+        categories:
+          title: "Kategorier"
+        tags:
+          title: "Taggar"
+        themes:
+          title: "Teman"
+        backups:
+          title: "Säkerhetskopior"
       read_post:
         unknown_post: "inlägg"
       tool_summary:

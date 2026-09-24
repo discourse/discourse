@@ -2590,7 +2590,7 @@ class _PluginApi {
   }
 
   /**
-   * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
+   * Add an event to an ICS-compatible app, Google Calendar, Microsoft Outlook, or Apple Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
    * ```javascript
    * api.downloadCalendar("title of the event",

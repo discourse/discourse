@@ -15,17 +15,10 @@ da:
         reading_time:
           title: Læsetid
         chat_usage:
-          messages: beskeder
           author: Dig
           author_others: "%{username}"
           status_online: "● online"
         invites:
-          title: Invitationer
-          invitee_posts: Oprettede indlæg
-          invitee_likes: Likes givet
           label_invitations_sent: "Invitationer sendt:"
-        new_user_interactions:
-          likes_given: Likes givet
-          mentions: Omtaler
         writing_analysis:
           menu_other: Andre

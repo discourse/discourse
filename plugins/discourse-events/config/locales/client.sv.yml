@@ -24,6 +24,11 @@ sv:
             topic_id:
               label: Ämnes-ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifikation"
+            none: "Ingen"
       on_holiday: "På semester"
       disable_holiday: "Inaktivera"
       enable_holiday: "Aktivera"

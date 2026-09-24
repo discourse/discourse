@@ -39,8 +39,7 @@ module Voice
     def destroy
       room = Voice::Room.find(params[:id])
       room.destroy!
-      Voice::Livekit::RoomServiceClient.delete_room(room)
-      Voice::ParticipantTracker.clear_transport_pin(room.id)
+      Voice::AgentManager.evict_agents_in_room!(room)
       head :no_content
     end
 
@@ -53,8 +52,7 @@ module Voice
       room = Voice::Room.find(params[:id])
       participant_ids = Voice::ParticipantTracker.user_ids(room.id)
 
-      Voice::Livekit::RoomServiceClient.delete_room(room)
-      Voice::ParticipantTracker.clear_transport_pin(room.id)
+      Voice::AgentManager.evict_agents_in_room!(room)
       participant_ids.each { |user_id| Voice::RoomBroadcaster.publish_kick(room, user_id) }
 
       head :no_content

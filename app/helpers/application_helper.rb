@@ -95,10 +95,6 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
-  def is_gzip_req?
-    request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
-  end
-
   def generate_import_map(plugin_assets)
     imports =
       plugin_assets
@@ -150,11 +146,7 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      if is_brotli_req?
-        path = path.sub("/assets/js/", "/assets/br/")
-      elsif is_gzip_req?
-        path = path.sub("/assets/js/", "/assets/gz/")
-      end
+      path = path.sub("/assets/js/", "/assets/br/") if is_brotli_req?
     end
 
     path
@@ -427,9 +419,6 @@ module ApplicationHelper
   end
 
   def discourse_pageview_tracking_meta_tags
-    if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
-      return ""
-    end
     return "" if Rails.env.development? && ENV["TRACK_REQUESTS"].blank?
 
     tags = +""
@@ -437,13 +426,6 @@ module ApplicationHelper
       name: "discourse-track-view-session-id",
       content: track_view_session_id_placeholder,
     )
-    if UpcomingChanges.enabled?(:dashboard_improvements)
-      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
-    end
-
-    if SiteSetting.persist_browser_pageview_events
-      tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
-    end
     tags.html_safe
   end
 

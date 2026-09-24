@@ -174,11 +174,7 @@ export default class LivekitCoordinator {
 
     for (const participant of participants) {
       const participantId = Number(participant?.id);
-      if (
-        !participantId ||
-        participantId <= 0 ||
-        participantId === currentUserId
-      ) {
+      if (!participantId || participantId === currentUserId) {
         continue;
       }
 
@@ -203,6 +199,19 @@ export default class LivekitCoordinator {
     this.#rosterIds.set(roomId, next);
 
     const session = this.#sessions.get(roomId);
+    session?.syncAgentIdentities(participants);
+    for (const participant of participants) {
+      const userId = Number(participant.id);
+      if (userId >= 0) {
+        continue;
+      }
+      if (participant.role !== "speaker") {
+        session?.dropParticipant(userId);
+        this.#removeRemoteStream(roomId, userId);
+      } else if (!this.#getRemoteUserIds(roomId).includes(userId)) {
+        session?.restoreParticipant(userId);
+      }
+    }
     for (const entryUserId of this.#getRemoteUserIds(roomId)) {
       if (
         entryUserId &&

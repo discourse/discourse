@@ -64,6 +64,11 @@ en:
         title: Tag topics using AI
         description: "Automatically tag topics using AI"
   site_settings:
+    ai_ask_ai_report_weekly_enabled: "Automatically generate an Ask AI report each week for the previous seven complete days. Reports appear on the dashboard. If groups are selected in {{setting:ai_ask_ai_report_recipient_groups}}, they also receive a PM. Requires Ask AI to be enabled and a configured report language model. Manual reports remain available."
+    ai_ask_ai_report_agent: "Agent used to group users’ questions into Ask AI dashboard reports."
+    ai_ask_ai_report_exclude_groups: "Exclude questions asked by members of these groups from new Ask AI reports. Leave empty to include everyone."
+    ai_ask_ai_report_max_asks: "Maximum number of asks analysed per report. Uses all asks in the selected period or the latest asks up to this limit, whichever is fewer. Larger reports need more model context and may cost more."
+    ai_ask_ai_report_recipient_groups: "Groups that receive automatic weekly report PMs and can be included in manual report PMs. Reports include users’ questions. Leave empty to keep automatic reports on the dashboard only."
     discourse_ai_enabled: "Enable the discourse AI plugin."
     enable_ai_bot_starred_conversations: "Allow users to star AI bot conversations and show them in a Starred sidebar section."
     ai_default_llm_model: "The default LLM model to use for all AI features"
@@ -151,7 +156,7 @@ en:
     ai_bot_enabled: "Enable the AI Bot module."
     ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overridden by editing the translation string: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
+    ai_bot_allowed_groups: "Members of these groups can have conversations with AI bots. Agents that allow personal messages use their own allowed groups instead. Anonymous users can't use the bot; when added to this setting, they can only preview the AI bot conversations page and are prompted to log in to ask a question."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
     ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
     ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
@@ -291,6 +296,17 @@ en:
       description: "Posts classified with the emotion surprise via AI, using the model 'SamLowe/roberta-base-go_emotions'."
 
   discourse_ai:
+    ask_ai_reports:
+      no_model: "Configure a default AI language model before generating reports."
+      no_asks: "There are no questions matching the report settings in this period."
+      title: "What users are asking: %{start} – %{end}"
+      coverage: "Analysed the latest %{count} of %{total} asks in this period. Questions can appear in multiple subjects."
+      ungrouped_name: "Ungrouped questions"
+      ungrouped_description: "The report did not assign these questions to a subject."
+      no_insights: "These questions did not provide enough evidence for a specific follow-up recommendation."
+      suggested_action: "Suggested follow-up: %{action}"
+      view_dashboard: "Explore all subjects and questions on the dashboard"
+      disclaimer: "AI-generated observations describe the questions asked, not the quality or helpfulness of their answers. Suggested follow-ups are possibilities to investigate, not confirmed gaps. Questions can appear in multiple subjects."
     ai_artifact:
       errors:
         max_keys_exceeded:
@@ -311,6 +327,14 @@ en:
           locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+          uploads_not_sent: "Agent '%{agent}' did not receive every upload"
+          upload_not_found: "Upload %{upload_id} was not found"
+          upload_not_visible: "%{username} cannot see upload %{upload_id}"
+          agent_cannot_see_images: "Upload %{upload_id} is an image and agent '%{agent}' has vision disabled"
+          llm_cannot_see_images: "Upload %{upload_id} is an image and LLM '%{llm}' has vision disabled"
+          llm_cannot_read_documents: "Upload %{upload_id} is a document and LLM '%{llm}' accepts no attachments"
+          unsupported_image_format: "Upload %{upload_id} is not a supported image format (%{formats})"
+          upload_skipped: "Upload %{upload_id} (%{filename}) was not sent: %{message}"
 
     tools:
       custom_name: "%{name} (custom)"
@@ -448,14 +472,49 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      search_discourse_navigation:
+        not_allowed: "You are not allowed to search administration destinations."
+        invalid_query: "Enter a search query between 1 and %{max} characters."
+      navigation:
+        settings:
+          title: "Site settings"
+          description: "Search and change all site configuration settings."
+        users:
+          title: "Users"
+          description: "Find and manage member accounts and user permissions."
+        groups:
+          title: "Groups"
+          description: "Manage groups and group membership."
+        review:
+          title: "Review queue"
+          description: "Moderate flagged posts and approve pending users and content."
+        invites:
+          title: "Create an invite"
+          description: "Invite people to join this community."
+        categories:
+          title: "Categories"
+          description: "Browse, create, and manage discussion categories."
+        tags:
+          title: "Tags"
+          description: "Browse and manage topic tags."
+        themes:
+          title: "Themes"
+          description: "Install and customize themes to change the site's appearance and design."
+        authentication:
+          title: "Login and authentication"
+          description: "Configure login, signup, authentication, and single sign-on."
+        backups:
+          title: "Backups"
+          description: "Create, download, and restore site backups."
       ai_users: "AI users"
+      ai_users_bio: "Automatic group of AI bot accounts"
       errors:
         invalid_agent_id: "The specified AI agent does not exist or you do not have access to it"
         cannot_send_pm_to_agent: "You cannot send personal messages to this AI agent"
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
-      tool_pending_approval: "This action requires moderator approval before it can be executed."
+      tool_pending_approval: "This action requires approval:"
       spawn_agent:
         description: "Delegate a self-contained prompt to one of the allowed agents and return its response"
         prompt_description: "The complete self-contained prompt sent to the selected agent and shown in the thinking block"
@@ -609,6 +668,9 @@ en:
         discover:
           name: "Discover"
           description: "Default agent used in the discoveries feature (complimentary search)"
+        ask_ai_reporter:
+          name: "Ask AI reporter"
+          description: "Groups users’ questions into subjects for Ask AI dashboard reports."
         ask_ai_synthesis:
           name: "Ask AI Synthesis"
           description: "Selects sources and prepares the answer shown by Ask AI"
@@ -760,6 +822,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        search_discourse_navigation: "Searching site navigation"
         read_site_setting: "Read site setting"
         change_site_setting: "Change site setting"
         dall_e: "Generate image"
@@ -821,6 +884,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        search_discourse_navigation: "Find verified links to available pages on this site"
         read_site_setting: "Read the current value of a site setting"
         change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
@@ -903,6 +967,9 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        search_discourse_navigation:
+          one: "Found %{count} destination"
+          other: "Found %{count} destinations"
         read_site_setting: "Reading site setting %{setting_name}"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:

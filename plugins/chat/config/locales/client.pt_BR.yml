@@ -571,6 +571,7 @@ pt_BR:
       direct_messages:
         title: "MDs"
         aria_label: "Mudar para mensagens diretas"
+        new_group: "Novo chat em grupo"
         create: "Ir"
         leave: "Sair do canal"
         close: "Fechar canal"

@@ -21,6 +21,8 @@ fi:
             title: "Kysy tekoälyltä"
         ask_ai:
           title: "Kysy tekoälyltä"
+          reports:
+            retry_questions: "Yritä uudelleen"
           date: "Päivämäärä"
           outcomes:
             failed: "Epäonnistui"

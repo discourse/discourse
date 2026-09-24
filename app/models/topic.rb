@@ -1409,6 +1409,7 @@ class Topic < ActiveRecord::Base
         self,
         moved_by,
         post_ids,
+        guardian: opts.fetch(:guardian) { moved_by.guardian },
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
         options: {
           freeze_original: opts[:freeze_original],
@@ -2181,8 +2182,8 @@ class Topic < ActiveRecord::Base
       data: {
         topic_title: title,
         display_username: invited_by.username,
-        original_user_id: user.id,
-        original_username: user.username,
+        original_user_id: invited_by.id,
+        original_username: invited_by.username,
       }.to_json,
     )
   end

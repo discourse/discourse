@@ -32,6 +32,10 @@ module Boards
       object.topic? && object.topic.present? && topic_visible?
     end
 
+    def unicode_title
+      object.unicode_title if !object.topic? || topic_visible?
+    end
+
     def include_created_at?
       !object.topic?
     end

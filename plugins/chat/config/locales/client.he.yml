@@ -545,6 +545,7 @@ he:
       direct_messages:
         title: "הודעות ישירות"
         aria_label: "מעבר להודעות ישירות"
+        new_group: "צ׳אט קבוצתי חדש"
         create: "קדימה"
         cannot_create: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
       channel_list:

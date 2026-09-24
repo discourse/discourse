@@ -174,6 +174,33 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
       )
     end
 
+    it "clears one-occurrence invitees when a recurring event advances" do
+      going_once_user = Fabricate(:user)
+      going_recurring_user = Fabricate(:user)
+      invitee_klass = DiscourseEvents::Events::Invitee
+
+      past_event.update!(recurrence: "every_week")
+      invitee_klass.create_attendance!(going_once_user.id, past_event.id, :going)
+      invitee_klass.create_attendance!(
+        going_recurring_user.id,
+        past_event.id,
+        :going,
+        recurring: true,
+      )
+
+      freeze_time 8.days.after
+      job.execute({})
+
+      going_once_invitee = past_event.invitees.find_by(user_id: going_once_user.id)
+      going_recurring_invitee = past_event.invitees.find_by(user_id: going_recurring_user.id)
+
+      expect(going_once_invitee).to have_attributes(status: nil, notified: false, recurring: false)
+      expect(going_recurring_invitee).to have_attributes(
+        status: invitee_klass.statuses[:going],
+        recurring: true,
+      )
+    end
+
     it "does not process closed events" do
       past_event.update!(recurrence: "every_week", closed: true)
       initial_event_date = past_event.event_dates.first

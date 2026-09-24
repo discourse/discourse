@@ -22,6 +22,8 @@ pt_BR:
             title: "Perguntar à IA"
         ask_ai:
           title: "Perguntar à IA"
+          reports:
+            retry_questions: "Tentar novamente"
           date: "Data"
           outcomes:
             failed: "Falha"

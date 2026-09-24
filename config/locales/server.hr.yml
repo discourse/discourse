@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 hr:
+  markdown_endpoints:
+    latest: "Posljednje"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Prethodna stranica"
+    next_page: "Slijedeća stranica"
+    replies: "Odgovori"
+    last_updated: "Posljednje ažuriranje"
   mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
     oauth:
       deny: "Odbiti"
       approve: "Odobriti"
@@ -839,7 +849,7 @@ hr:
     topic_description: "Za ponovno pretplatu na %{link}, upotrijebite kontrolu obavijesti pri dnu ili desno od teme."
     private_topic_description: "Da biste se ponovno pretplatili, koristite kontrolu obavijesti pri dnu ili desno od teme."
   unsubscribe:
-    title: "Odjava"
+    unsubscribe: "Odjava"
     stop_watching_topic: "Prestanite pratiti ovu temu, %{link}"
     mute_topic: "Prigušite sve obavijesti za ovu temu, %{link}"
     unwatch_category: "Prestani pratiti sve teme u %{category}"
@@ -1678,6 +1688,7 @@ hr:
     errors: "%{errors}"
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
     omniauth_confirm_button: "Nastavi"
+    missing_username: "Unesite korisničko ime"
     second_factor_title: "Dvofaktorska autentifikacija"
     second_factor_backup_description: "Unesite jedan od vaših rezervnih kodova:"
     second_factor_toggle:
@@ -2416,7 +2427,7 @@ hr:
         Član osoblja odobrio je vaš korisnički račun na %{site_name}.
 
         Sada možete pristupiti svom novom korisničkom računu tako da se prijavite na:
-        %{base_url}
+        %{login_url}
 
         Ako gornju poveznicu ne možete kliknuti, pokušajte je kopirati i zalijepiti u adresnu traku vaš web preglednik.
 

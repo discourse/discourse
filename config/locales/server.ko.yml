@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 ko:
+  markdown_endpoints:
+    latest: "최신"
+    categories: "카테고리"
+    tags: "태그"
+    previous_page: "이전 페이지"
+    next_page: "다음 페이지"
+    replies: "댓글"
+    last_updated: "마지막 업데이트"
   mcp:
+    errors:
+      topic_not_found: "글을 찾을 수 없음"
     oauth:
       deny: "거부"
       approve: "인증하기"
@@ -820,7 +830,7 @@ ko:
   uploads:
     marked_insecure_from_theme_component_reason: "테마 구성 요소에 사용된 업로드"
   unsubscribe:
-    title: "구독 해제"
+    unsubscribe: "구독해지"
     stop_watching_topic: "이 주제 구독 중지, %{link}"
     mute_topic: "이 주제에 대한 모든 알림 뮤트, %{link}"
     unwatch_category: "%{category} 카테고리의 모든 주제 구독 중지"
@@ -1282,11 +1292,6 @@ ko:
       host_names: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
       queue_size: "큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요."
       ram: "서버가 총 메모리 1 GB 미만으로 구동 중입니다. 최소 1 GB의 메모리를 권장합니다."
-      google_oauth2_config: '서버가 Google OAuth2 (enable_google_oauth2_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 클라이언트 ID 및 클라이언트 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
-      facebook_config: '서버는 페이스북(enable_facebook_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 앱 ID 및 앱 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
-      twitter_config: '서버가 트위터(enable_twitter_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 키 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">자세한 내용은 이 안내서를 참조하십시오</a>.'
-      github_config: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
-      s3_upload_config: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
       s3_cdn: '서버가 S3에 파일을 업로드하도록 구성되어 있지만 S3 CDN이 구성되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 성능이 저하 될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 "Using Object Storage for Uploads"을 참조하십시오</a>.'
       image_magick: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
       failing_emails: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
@@ -1971,6 +1976,7 @@ ko:
     email_too_long: "제공한 이메일이 너무 깁니다. 메일함 이름은 254자 이하여야 하며 도메인 이름은 253자 이하여야 합니다."
     wrong_invite_code: "입력한 초대 코드가 잘못되었습니다."
     reserved_username: "이 아이디는 허용되지 않습니다."
+    missing_username: "사용자명을 입력 해주세요"
     auth_complete: "인증이 완료되었습니다."
     click_to_continue: "계속하려면 여기를 클릭하세요."
     already_logged_in: "이 초대는 기존 계정이 없는 신규 사용자를 위한 것입니다."
@@ -3104,18 +3110,18 @@ ko:
       text_body_template: |
         %{site_name}에 오신 것을 환영합니다!
 
-        운영진이 %{site_name} 계정을 승인했습니다.
+        %{site_name}에서 사용자님의 계정이 승인되었습니다.
 
-        아래 링크에서 새 계정에 액세스할 수 있습니다.
-        %{base_url}
+        아래 링크를 클릭하면 새 계정에 로그인 할 수 있습니다.
+        %{login_url}
 
-        위 링크를 클릭할 수 없으면 웹 브라우저의 주소 표시줄에 복사하여 붙여 넣으세요.
+        위 링크를 클릭 할 수 없으면 웹 브라우저의 주소 표시 줄에 복사하여 붙여 넣으십시오.
 
         %{new_user_tips}
 
-        [성숙한 커뮤니티 활동](%{base_url}/guidelines)을 해 주시리라 믿습니다.
+        사이트 이용은 [커뮤니티의 가이드라인](%{base_url}/guidelines)을 참고해 주시기 바랍니다.
 
-        즐거운 시간 보내세요!
+        즐거운 시간 되세요!
     signup_after_reject:
       title: "가입 거부"
       subject_template: "%{site_name}에서 가입이 거부되었습니다."
@@ -3664,6 +3670,8 @@ ko:
         complete: "게시물 삭제됨."
       delete_and_agree_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
+      disagree_and_keep_deleted:
+        title: "게시물 삭제 유지"
       disagree_bundle:
         title: "아니오"
       ignore:

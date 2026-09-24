@@ -418,6 +418,7 @@ ru:
     notifications_tracking:
       tooltip: "Уровень уведомлений: %{level}"
     back_button: "Назад"
+    confirm_button: "Подтвердить"
     welcome_banner:
       header:
         new_members: "Добро пожаловать в %{preferred_display_name}!"
@@ -4996,6 +4997,7 @@ ru:
       list: "Вывод списка категорий"
       no_description: "Добавьте описание для этой категории."
       change_in_category_topic: "Изменить описание"
+      latest_topics: "Последние темы"
       description_updated: "Описание обновлено"
       description_expand: "Развернуть"
       description_collapse: "Свернуть"
@@ -5300,6 +5302,7 @@ ru:
       with_category: "%{category} — %{filter} темы"
       filter:
         title: "Отфильтрованные результаты по «%{filter}»"
+        reset: "Сброс"
         button:
           label: "Фильтр"
       latest:
@@ -5544,16 +5547,18 @@ ru:
       favorite_max_not_reached: "Добавить эту награду в избранное"
       favorite_count: "Награды (%{count} из %{max}) добавлены в избранное"
     download_calendar:
-      title: "Скачать календарь"
+      title: "Добавить в календарь"
+      calendar: "Календарь"
       save_ics: "Скачать .ics-файл"
       save_google: "Добавить в календарь Google"
       remember: "Больше не спрашивать"
-      remember_explanation: "(Вы можете изменить это значение в настройках пользователя)"
       download: "Скачать"
       default_calendar: "Стандартный календарь"
       default_calendar_instruction: "Определите календарь, используемый при сохранении дат"
       add_to_calendar: "Добавить в календарь"
       google: "Календарь Google"
+      outlook: "Microsoft Outlook"
+      apple: "Календарь Apple"
       ics: "ICS"
       default_title: "Запланированное мероприятие"
     tagging:
@@ -6917,6 +6922,7 @@ ru:
             anonymous: "Анонимные просмотры"
             embedded: "Встроенные просмотры страниц"
             crawlers: "Поисковые роботы"
+          crawler_learn_more: "Подробнее"
         period:
           last_7_days: "За последние 7 дней"
           last_30_days: "За последние 30 дней"

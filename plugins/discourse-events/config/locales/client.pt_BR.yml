@@ -27,6 +27,11 @@ pt_BR:
               label: ID do tópico
     discourse_events:
       title: "Eventos"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificação"
+            none: "Nenhum"
       on_holiday: "No feriado"
       disable_holiday: "Desativar"
       enable_holiday: "Ativar"

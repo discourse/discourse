@@ -24,6 +24,8 @@ tr_TR:
             title: "YZ'ye sor"
         ask_ai:
           title: "YZ'ye sor"
+          reports:
+            retry_questions: "Tekrar Dene"
           date: "Tarih"
           outcomes:
             failed: "Başarısız"

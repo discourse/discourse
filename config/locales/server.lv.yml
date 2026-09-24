@@ -5,7 +5,17 @@
 # https://translate.discourse.org/
 
 lv:
+  markdown_endpoints:
+    latest: "Pēdējais"
+    categories: "Sadaļas"
+    tags: "Birkas"
+    previous_page: "Iepriekšējo lapu"
+    next_page: "Nākošo lapu"
+    replies: "Atbildes"
+    last_updated: "Pēdējoreiz atjaunots"
   mcp:
+    errors:
+      topic_not_found: "Tēma nav atrasta "
     oauth:
       deny: "Atteikt"
   llms_txt:
@@ -513,6 +523,7 @@ lv:
     admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
     not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
     omniauth_confirm_button: "Turpināt"
+    missing_username: "Lūdzu, ievadiet lietotājvārdu"
     second_factor_title: "Divu faktoru autentifikācija"
     second_factor_backup_description: "Lūdzu, ievadiet vienu no saviem rezerves kodiem:"
     second_factor_toggle:

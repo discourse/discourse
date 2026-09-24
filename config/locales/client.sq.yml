@@ -214,6 +214,7 @@ sq:
       message: "Ne e kemi përditësuar këtë faqe, <span>ju lutemi rifreskoni</span> për të mos patur probleme në funksionim."
       dismiss: "Hiqe"
     back_button: "Kthehu mbrapa"
+    confirm_button: "Konfirmoni"
     welcome_banner:
       header:
         anonymous_members: "Mirë se vini tek %{site_name}!"
@@ -3563,6 +3564,7 @@ sq:
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
+      latest_topics: "Temat e fundit"
       description_expand: "Shfaq më shumë"
       description_collapse: "Shfaq më pak"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"
@@ -3700,6 +3702,7 @@ sq:
       with_topics: "Temat nga %{filter}"
       with_category: "Temat nga: %{filter}, %{category}"
       filter:
+        reset: "rivendosni"
         button:
           label: "Filtro"
       latest:
@@ -4301,6 +4304,7 @@ sq:
         site_traffic:
           series:
             anonymous: "Anonim"
+          crawler_learn_more: "Mësoni më shumë"
         period:
           custom: "Grupet e krijuara"
         reports:

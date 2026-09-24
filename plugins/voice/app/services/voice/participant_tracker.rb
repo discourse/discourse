@@ -5,6 +5,7 @@ module Voice
     KEY_NAMESPACE = "voice:room"
     RECENTLY_ACTIVE_ROOMS_KEY = "voice:recently_active_rooms"
     SAFETY_TTL = 30.minutes.to_i
+    AGENT_PRESENCE_TTL = 3.minutes.to_i
     RoomState =
       Data.define(:participant_ids, :participant_metadata, :pinned_transport, :recording_info)
     # Must outlive one client heartbeat interval (10s) plus request latency,
@@ -30,7 +31,11 @@ module Voice
         return 1
       end
 
-      if redis.call('ZCARD', KEYS[1]) >= capacity then
+      local humans = 0
+      for _, member in ipairs(redis.call('ZRANGE', KEYS[1], 0, -1)) do
+        if tonumber(member) > 0 then humans = humans + 1 end
+      end
+      if humans >= capacity then
         return -1
       end
 
@@ -39,11 +44,61 @@ module Voice
       return 2
     LUA
 
-    class << self
-      def add(room_id, user_id, migrated: false)
-        return if user_id.to_i <= 0
+    COMMIT_AGENT = DiscourseRedis::EvalHelper.new <<~LUA
+      if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
+      redis.call('EXPIRE', KEYS[1], ARGV[2])
+      redis.call('ZADD', KEYS[2], ARGV[3], ARGV[4])
+      redis.call('HSET', KEYS[3], ARGV[4], ARGV[5])
+      redis.call('HSET', KEYS[4], ARGV[4], ARGV[6])
+      for index = 2, 4 do redis.call('EXPIRE', KEYS[index], ARGV[7]) end
+      return 1
+    LUA
 
-        redis.zadd(key(room_id), Time.now.to_f, user_id)
+    REVOKE_AGENT = DiscourseRedis::EvalHelper.new <<~LUA
+      redis.call('DEL', KEYS[1])
+      redis.call('ZREM', KEYS[2], ARGV[1])
+      redis.call('HDEL', KEYS[3], ARGV[1])
+      redis.call('HDEL', KEYS[4], ARGV[1])
+      return 1
+    LUA
+
+    class << self
+      # Admission and invalidation share an atomic boundary so a stale provider
+      # snapshot cannot restore presence after a moderator has revoked it.
+      def commit_agent(room_id, user_id, session_key:, proof:, ttl:, metadata:, sid:)
+        score =
+          Time.now.to_f + [AGENT_PRESENCE_TTL - SiteSetting.voice_participant_ttl_seconds, 0].max
+        keys = [session_key, key(room_id), metadata_key(room_id), livekit_sid_key(room_id)]
+        committed =
+          COMMIT_AGENT.eval(
+            redis.without_namespace,
+            keys.map { |name| redis.namespace_key(name) },
+            [proof, ttl, score, user_id, metadata.to_json, sid.to_s, SAFETY_TTL],
+          ) == 1
+        touch_recently_active(room_id) if committed
+        committed
+      end
+
+      def revoke_agent(room_id, user_id, session_key:)
+        keys = [session_key, key(room_id), metadata_key(room_id), livekit_sid_key(room_id)]
+        REVOKE_AGENT.eval(
+          redis.without_namespace,
+          keys.map { |name| redis.namespace_key(name) },
+          [user_id],
+        )
+        touch_recently_active(room_id)
+      end
+
+      def add(room_id, user_id, migrated: false)
+        return if user_id.to_i.zero?
+
+        score = Time.now.to_f
+        # Agents are verified by the minute sweep, not browser heartbeats.
+        score += [
+          AGENT_PRESENCE_TTL - SiteSetting.voice_participant_ttl_seconds,
+          0,
+        ].max if user_id.to_i.negative?
+        redis.zadd(key(room_id), score, user_id)
         redis.expire(key(room_id), SAFETY_TTL)
         redis.expire(metadata_key(room_id), SAFETY_TTL)
         touch_recently_active(room_id)
@@ -173,7 +228,7 @@ module Voice
         # small (bounded by max_participants).
         score = redis.zrange(key(room_id), 0, -1, withscores: true).to_h[user_id.to_s]
         return false if score.nil?
-        return false if gone_at && score > gone_at.to_f
+        return false if user_id.to_i.positive? && gone_at && score > gone_at.to_f
 
         expired_score = Time.now.to_f - SiteSetting.voice_participant_ttl_seconds - 1
         redis.zadd(key(room_id), [score, expired_score].min, user_id, xx: true)
@@ -216,7 +271,7 @@ module Voice
           [
             room_id,
             RoomState.new(
-              participant_ids: participant_futures[room_id].value.map(&:to_i).select(&:positive?),
+              participant_ids: participant_futures[room_id].value.map(&:to_i).reject(&:zero?),
               participant_metadata: deserialize_all_metadata(metadata_futures[room_id].value),
               pinned_transport: transport,
               recording_info: deserialize_recording(raw_recording),
@@ -231,11 +286,19 @@ module Voice
 
       def user_ids(room_id, migrated: false)
         cutoff = Time.now.to_f - SiteSetting.voice_participant_ttl_seconds
-        redis.zrangebyscore(key(room_id), cutoff, "+inf").map(&:to_i).select(&:positive?)
+        redis.zrangebyscore(key(room_id), cutoff, "+inf").map(&:to_i).reject(&:zero?)
       rescue Redis::CommandError => e
         raise if e.message.exclude?("WRONGTYPE") || migrated
         redis.del(key(room_id))
         user_ids(room_id, migrated: true)
+      end
+
+      def human_user_ids(room_id)
+        user_ids(room_id).select(&:positive?)
+      end
+
+      def agent_user_ids(room_id)
+        user_ids(room_id).select(&:negative?)
       end
 
       def last_heartbeat_at(room_id, user_id)

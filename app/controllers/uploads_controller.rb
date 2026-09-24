@@ -18,7 +18,8 @@ class UploadsController < ApplicationController
   before_action :is_asset_path,
                 :apply_cdn_headers,
                 only: %i[show show_short _show_secure_deprecated show_secure]
-  before_action :external_store_check, only: %i[_show_secure_deprecated show_secure]
+  # A symbol callback would overwrite the external upload actions' store check.
+  before_action(only: %i[_show_secure_deprecated show_secure]) { external_store_check }
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
@@ -82,7 +83,11 @@ class UploadsController < ApplicationController
           retain_hours:,
         )
     rescue => e
-      render json: failed_json.merge(message: e.message&.split("\n")&.first),
+      Rails.logger.error(
+        "Failed to create upload: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}",
+      )
+
+      render json: failed_json.merge(message: I18n.t("upload.failed")),
              status: :unprocessable_entity
     else
       render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422

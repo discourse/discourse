@@ -236,7 +236,11 @@ export default class WhosPosting extends Component {
             @categories={{this.selectedCategories}}
             @onChange={{this.onCategoriesChange}}
             @onClose={{this.onCategoriesClose}}
-            @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
+            @options={{hash
+              maximum=MAX_CATEGORIES
+              none="category.all"
+              showAncestorsInSelectedChoice=true
+            }}
           />
         </div>
       </div>
