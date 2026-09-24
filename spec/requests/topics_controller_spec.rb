@@ -6845,6 +6845,19 @@ RSpec.describe TopicsController do
         expect(topic.reload.public_topic_timer.user).to eq(user)
       end
 
+      it "prevents scheduling a timer that clears slow mode" do
+        topic.update!(slow_mode_seconds: 3600)
+
+        post "/t/#{topic.id}/timer.json", params: { time: "1", status_type: "clear_slow_mode" }
+
+        expect(response.status).to eq(400)
+        expect(response.body).to include("status_type")
+        expect(topic.reload.slow_mode_seconds).to eq(3600)
+        expect(
+          TopicTimer.find_by(topic:, status_type: TopicTimer.types[:clear_slow_mode]),
+        ).to be_nil
+      end
+
       it "requires delete permissions for destructive timers" do
         post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: "delete" }
 
