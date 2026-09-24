@@ -115,7 +115,6 @@ export default class PluginCard extends ExpandableRow {
       </button>
       {{#if this.expanded}}
         <div class="ba-body">
-          <div class="ba-hint">Loaded up front.</div>
           <div class="ba-sub-list">
             {{#each this.entrypoints as |f|}}
               <EntrypointCard

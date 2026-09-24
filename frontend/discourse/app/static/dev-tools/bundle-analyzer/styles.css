@@ -49,6 +49,11 @@
   margin: -4px 0 12px;
 }
 
+/* The select fills its container by default, which in a flex toolbar means all
+   of it. */
+.bundle-analyzer .ba-toolbar .d-native-select {
+  width: auto;
+}
 .bundle-analyzer .ba-toolbar {
   display: flex;
   gap: 12px;
