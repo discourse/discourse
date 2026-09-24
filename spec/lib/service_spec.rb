@@ -173,18 +173,214 @@ RSpec.describe Service do
     end
 
     describe "Using values from a model" do
+      let(:args) { super().merge(params:, stored_model:) }
+      let(:params) { {} }
+      let(:stored_model) { defaults }
+      let(:defaults) { { id: 1, name: "John" } }
+
       before do
         service_class.class_eval do
-          model :user
+          model
 
-          params(default_values_from: :user) do
+          params(default_values_from: :model) do
             attribute :id, :integer
             attribute :name, :string
             attribute :groups, :array, default: -> { [] }
           end
 
-          def fetch_user
-            { id: 1, name: "John" }
+          def fetch_model(stored_model:)
+            stored_model
+          end
+        end
+      end
+
+      context "when the model has nested attributes" do
+        let(:params) { super().merge(dimensions: { width: 800, crop: { x: 10 } }) }
+        let(:defaults) do
+          super().merge(
+            caption: "Original",
+            enabled: true,
+            dimensions: {
+              "width" => 640,
+              "height" => 480,
+              "crop" => {
+                "x" => 20,
+                "y" => 30,
+              },
+            },
+            layers: [{ "width" => 100, "height" => 200 }],
+          )
+        end
+
+        before do
+          service_class::Contract.class_eval do
+            attribute :caption, :string
+            attribute :enabled, :boolean
+
+            attribute :dimensions, :hash do
+              attribute :width, :integer
+              attribute :height, :integer
+
+              attribute :crop, :hash do
+                attribute :x, :integer
+                attribute :y, :integer
+              end
+
+              validates :width, :height, presence: true
+            end
+
+            attribute :layers, :array do
+              attribute :width, :integer
+              attribute :height, :integer
+            end
+
+            validates :dimensions, presence: true
+          end
+        end
+
+        context "when nested values are omitted" do
+          it "fills omitted keys at each level" do
+            expect(result.params.dimensions.to_hash).to eq(
+              width: 800,
+              height: 480,
+              crop: {
+                x: 10,
+                y: 30,
+              },
+            )
+          end
+
+          it "validates the completed input" do
+            expect(result).to run_successfully
+          end
+
+          it "preserves an omitted array" do
+            expect(result.params.to_hash[:layers]).to eq([{ width: 100, height: 200 }])
+          end
+
+          it "leaves the model defaults unchanged" do
+            expect { result }.not_to change { defaults.deep_dup }
+          end
+        end
+
+        context "when the input has string keys" do
+          let(:params) { { "dimensions" => { "width" => 800, "crop" => { "x" => 10 } } } }
+
+          it "leaves the supplied input unchanged" do
+            expect { result }.not_to change { params.deep_dup }
+          end
+
+          it "combines string and symbol keys" do
+            expect(result.params.dimensions.to_hash).to eq(
+              width: 800,
+              height: 480,
+              crop: {
+                x: 10,
+                y: 30,
+              },
+            )
+          end
+        end
+
+        context "when the model exposes its attributes" do
+          let(:stored_model) { Struct.new(:attributes).new(defaults) }
+
+          it "fills omitted keys from model attributes" do
+            expect(result.params.dimensions.to_hash).to eq(
+              width: 800,
+              height: 480,
+              crop: {
+                x: 10,
+                y: 30,
+              },
+            )
+          end
+        end
+
+        context "when an empty hash is supplied" do
+          let(:params) { { dimensions: {} } }
+
+          it "preserves the nested defaults" do
+            expect(result.params.dimensions.to_hash).to eq(
+              width: 640,
+              height: 480,
+              crop: {
+                x: 20,
+                y: 30,
+              },
+            )
+          end
+        end
+
+        context "when explicit nil and falsy values are supplied" do
+          let(:params) { { caption: nil, enabled: false, dimensions: { width: 0 } } }
+
+          it "uses the supplied values" do
+            expect(result.params.to_hash).to include(
+              caption: nil,
+              enabled: false,
+              dimensions: {
+                width: 0,
+                height: 480,
+                crop: {
+                  x: 20,
+                  y: 30,
+                },
+              },
+            )
+          end
+        end
+
+        context "when a nested hash is explicitly cleared" do
+          let(:params) { { dimensions: nil } }
+
+          it "keeps the supplied nil" do
+            expect(result.params.dimensions).to be_nil
+          end
+
+          it "validates the supplied nil" do
+            expect(result).to fail_a_contract
+          end
+        end
+
+        context "when a nested hash has an invalid shape" do
+          let(:params) { { dimensions: "invalid" } }
+
+          it "rejects the input" do
+            expect(result).to fail_a_contract
+          end
+        end
+
+        context "when an array is supplied" do
+          let(:params) { { layers: [{ width: 300 }] } }
+
+          it "replaces the array without inheriting elements or their fields" do
+            expect(result.params.to_hash[:layers]).to eq([{ width: 300, height: nil }])
+          end
+        end
+
+        context "when an empty array is supplied" do
+          let(:params) { { layers: [] } }
+
+          it "clears the array" do
+            expect(result.params.layers).to be_empty
+          end
+        end
+
+        context "when a named contract follows the default contract" do
+          before do
+            service_class.class_eval do
+              params(:resize) do
+                attribute :dimensions, :hash do
+                  attribute :width, :integer
+                  attribute :height, :integer
+                end
+              end
+            end
+          end
+
+          it "passes the completed parameters to the named contract" do
+            expect(result.resize_contract.dimensions.to_hash).to eq(width: 800, height: 480)
           end
         end
       end

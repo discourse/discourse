@@ -4,7 +4,7 @@ boards:
     client: true
     hidden: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       allow_enabled_for:
         - "everyone"

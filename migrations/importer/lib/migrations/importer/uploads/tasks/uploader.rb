@@ -4,136 +4,65 @@ module Migrations
   module Importer
     module Uploads
       module Tasks
+        # Turns `upload_sources` rows into real Discourse uploads. The heavy
+        # lifting (UploadCreator, downloads) runs on the pipeline's worker threads;
+        # only {#write} touches the files DB, on the single writer thread.
         class Uploader < Base
-          MAX_FILE_SIZE = 1.gigabyte
+          # Post-store check retries: create succeeded but the file isn't in the
+          # store yet. Try once more, then give up.
+          POST_STORE_RETRIES = 1
+
+          Status = Database::FilesDB::Enums::UploadResultStatus
+          SkipReason = Database::FilesDB::Enums::UploadSkipReason
+          UploadFileType = Database::FilesDB::Enums::UploadFileType
+
+          UPLOAD_COLUMNS =
+            Database::FilesDB::Upload.method(:create).parameters.map { |_type, name| name }.freeze
 
           UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
 
-          def run!
-            puts "", "Uploading uploads..."
-
-            process_existing_uploads
-
-            status_thread = start_status_thread
-            consumer_threads = start_consumer_threads
-            producer_thread = start_producer_thread
-
-            producer_thread.join
-            work_queue.close
-            consumer_threads.each(&:join)
-            status_queue.close
-            status_thread.join
+          def title
+            "Uploading files"
           end
 
-          private
+          def max_count
+            @max_count
+          end
 
-          def process_existing_uploads
-            delete_missing_uploads if settings[:delete_missing_uploads]
-            initialize_existing_ids_tracking_sets
+          def before_run
+            delete_reprocessable_uploads if settings[:delete_missing_uploads]
+            load_tracking_sets
             handle_surplus_uploads if surplus_upload_ids.any?
+
+            @seen_upload_ids = load_existing_ids(files_db, "SELECT id FROM uploads")
+            @downloader =
+              Downloader.new(
+                cache_path: settings[:download_cache_path],
+                downloads: reusable_downloads,
+              )
 
             @max_count = (@source_existing_ids - @output_existing_ids).size
             @source_existing_ids = nil
 
-            puts "Found #{@output_existing_ids.size} existing uploads. #{@max_count} are missing."
+            reporter.notice(
+              I18n.t(
+                "importer.uploads.existing_summary",
+                existing: @output_existing_ids.size,
+                missing: @max_count,
+              ),
+            )
           end
 
-          def initialize_existing_ids_tracking_sets
-            @output_existing_ids = load_existing_ids(uploads_db.db, Set.new)
-            @source_existing_ids = load_existing_ids(intermediate_db.db, Set.new)
-          end
-
-          def load_existing_ids(db, set)
-            db.query("SELECT id FROM uploads") { |row| set << row[:id] }
-
-            set
-          end
-
-          def handle_surplus_uploads
-            if settings[:delete_surplus_uploads]
-              puts "Deleting #{surplus_upload_ids.size} uploads from output database..."
-
-              surplus_upload_ids.each_slice(TRANSACTION_SIZE) do |ids|
-                placeholders = (["?"] * ids.size).join(",")
-                uploads_db.db.execute(<<~SQL, ids)
-                  DELETE FROM uploads
-                  WHERE id IN (#{placeholders})
-                SQL
-              end
-
-              @output_existing_ids -= surplus_upload_ids
-            else
-              puts "Found #{surplus_upload_ids.size} surplus uploads in output database. " \
-                     "Run with `delete_surplus_uploads: true` to delete them."
-            end
-
-            @surplus_upload_ids = nil
-          end
-
-          def surplus_upload_ids
-            @surplus_upload_ids ||= @output_existing_ids - @source_existing_ids
-          end
-
-          def handle_status_update(params)
-            @current_count += 1
-
-            begin
-              if params.delete(:skipped) == true
-                @skipped_count += 1
-              elsif (error_message = params.delete(:error)) || params[:upload].nil?
-                @error_count += 1
-                puts "", "Failed to create upload: #{params[:id]} (#{error_message})", ""
-              end
-
-              uploads_db.insert(<<~SQL, params)
-                INSERT INTO uploads (id, upload, markdown, skip_reason)
-                VALUES (:id, :upload, :markdown, :skip_reason)
-              SQL
-            rescue StandardError => e
-              puts "", "Failed to insert upload: #{params[:id]} (#{e.message}))", ""
-              @error_count += 1
+          def produce(emit_work:, emit_result:)
+            intermediate_db.query("SELECT * FROM upload_sources ORDER BY id") do |row|
+              emit_work.call(row) if @output_existing_ids.exclude?(row[:id])
             end
           end
 
-          def enqueue_jobs
-            intermediate_db
-              .db
-              .query("SELECT * FROM uploads ORDER BY id") do |row|
-                work_queue << row if @output_existing_ids.exclude?(row[:id])
-              end
-          end
-
-          def find_file_in_paths(row)
-            relative_path = row[:relative_path] || ""
-
-            settings[:root_paths].each do |root_path|
-              path = File.join(root_path, relative_path, row[:filename])
-
-              return path if File.exist?(path)
-
-              settings[:path_replacements].each do |from, to|
-                path = File.join(root_path, relative_path.sub(from, to), row[:filename])
-
-                return path if File.exist?(path)
-              end
-            end
-
-            nil
-          end
-
-          def handle_missing_file(row)
-            status_queue << {
-              id: row[:id],
-              upload: nil,
-              skipped: true,
-              skip_reason: "file not found",
-            }
-          end
-
-          def process_upload(row, _)
+          def process(row, _resource)
             metadata = build_metadata(row)
             data_file = nil
-            path = nil
+            download_record = nil
 
             if row[:data].present?
               data_file = Tempfile.new("discourse-upload", binmode: true)
@@ -141,76 +70,131 @@ module Migrations
               data_file.rewind
               path = data_file.path
             elsif row[:url].present?
-              path, metadata.original_filename = download_file(url: row[:url], id: row[:id])
+              path, filename, download_record = @downloader.download(url: row[:url], id: row[:id])
+              return nil if path.nil? # nothing to download; not an error, drop the row
+
+              metadata.original_filename = filename
               metadata.origin_url = row[:url]
-              return if !path
             else
               path = find_file_in_paths(row)
-              return handle_missing_file(row) if path.nil?
+              return missing_result(row) if path.nil?
             end
 
-            error_message = nil
-            result =
-              with_retries do
-                upload =
-                  copy_to_tempfile(path) do |file|
-                    UploadCreator.new(
-                      file,
-                      metadata.original_filename,
-                      type: row[:type],
-                      origin: metadata.origin_url,
-                    ).create_for(Discourse::SYSTEM_USER_ID)
-                  rescue StandardError => e
-                    error_message = e.message
-                    nil
-                  end
-
-                if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)
-                  upload_path = add_multisite_prefix(discourse_store.get_path_for_upload(upload))
-
-                  unless file_exists?(upload_path)
-                    upload.destroy
-                    upload = nil
-                    upload_okay = false
-                  end
-                end
-
-                if upload_okay
-                  {
-                    id: row[:id],
-                    upload: upload.attributes.to_json,
-                    markdown:
-                      UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
-                    skip_reason: nil,
-                  }
-                else
-                  error_message =
-                    upload&.errors&.full_messages&.join(", ") || error_message || "unknown error"
-                  nil
-                end
-              end
-
-            if result.nil?
-              status_queue << {
-                id: row[:id],
-                upload: nil,
-                markdown: nil,
-                error: "too many retries: #{error_message}",
-                skip_reason: "too many retries",
-              }
-            else
-              status_queue << result
-            end
+            create_upload_result(row, path, metadata, download_record)
+          rescue Downloader::UploadSizeExceededError => e
+            error_result(
+              row,
+              skip_reason: SkipReason::UPLOAD_SIZE_EXCEEDED,
+              skip_details: e.message,
+              download: download_record,
+            )
+          rescue Downloader::DownloadFailedError => e
+            error_result(
+              row,
+              skip_reason: SkipReason::DOWNLOAD_ERROR,
+              skip_details: e.message,
+              download: download_record,
+            )
           rescue StandardError => e
-            status_queue << {
-              id: row[:id],
-              upload: nil,
-              markdown: nil,
-              error: e.message,
-              skip_reason: "error",
-            }
+            skip_reason =
+              retry_policy.transient?(e) ? SkipReason::TOO_MANY_RETRIES : SkipReason::ERROR
+            error_result(row, skip_reason:, skip_details: e.message, download: download_record)
           ensure
             data_file&.close!
+          end
+
+          def write(result)
+            record_download(result[:download]) if result[:download]
+
+            if result[:status] == Status::ERROR
+              reporter.notice(
+                I18n.t(
+                  "importer.uploads.upload_failed",
+                  id: result[:id],
+                  error: result[:skip_details],
+                ),
+              )
+            end
+
+            upload_id = write_upload(result[:upload])
+            Database::FilesDB::UploadResult.create(
+              id: result[:id],
+              status: result[:status],
+              skip_reason: result[:skip_reason],
+              skip_details: result[:skip_details],
+              markdown: result[:markdown],
+              file_type: result[:file_type],
+              upload_id:,
+            )
+
+            outcome_for(result[:status])
+          rescue StandardError => e
+            reporter.notice(
+              I18n.t("importer.uploads.insert_failed", id: result[:id], error: e.message),
+            )
+            :error
+          end
+
+          private
+
+          def load_tracking_sets
+            @output_existing_ids = load_existing_ids(files_db, "SELECT id FROM upload_results")
+            @source_existing_ids =
+              load_existing_ids(intermediate_db, "SELECT id FROM upload_sources")
+          end
+
+          def surplus_upload_ids
+            @surplus_upload_ids ||= @output_existing_ids - @source_existing_ids
+          end
+
+          def handle_surplus_uploads
+            if settings[:delete_surplus_uploads]
+              reporter.notice(
+                I18n.t("importer.uploads.deleting_surplus", count: surplus_upload_ids.size),
+              )
+
+              surplus_upload_ids.each_slice(Database::Connection::TRANSACTION_BATCH_SIZE) do |ids|
+                placeholders = (["?"] * ids.size).join(",")
+                files_db.execute(<<~SQL, ids)
+                  DELETE FROM upload_results
+                  WHERE id IN (#{placeholders})
+                SQL
+              end
+
+              delete_orphaned_files
+
+              @output_existing_ids -= surplus_upload_ids
+            else
+              reporter.notice(
+                I18n.t("importer.uploads.surplus_found", count: surplus_upload_ids.size),
+              )
+            end
+
+            @surplus_upload_ids = nil
+          end
+
+          # Drops the results that never produced an upload so they get another try
+          # on the next run.
+          def delete_reprocessable_uploads
+            files_db.execute("DELETE FROM upload_results WHERE upload_id IS NULL")
+            delete_orphaned_files
+          end
+
+          # Removes `uploads` and `optimized_images` rows that no `upload_results`
+          # row points at anymore, so deleting results cascades to the real files.
+          def delete_orphaned_files
+            files_db.execute(<<~SQL)
+              DELETE FROM uploads
+              WHERE NOT EXISTS (
+                SELECT 1 FROM upload_results WHERE upload_results.upload_id = uploads.id
+              )
+            SQL
+            files_db.execute(<<~SQL)
+              DELETE FROM optimized_images
+              WHERE NOT EXISTS (
+                SELECT 1 FROM uploads WHERE uploads.id = optimized_images.upload_id
+              )
+            SQL
           end
 
           def build_metadata(row)
@@ -220,100 +204,207 @@ module Migrations
             )
           end
 
-          def delete_missing_uploads
-            puts "Deleting missing uploads from uploads database..."
+          def find_file_in_paths(row)
+            relative_path = row[:relative_path] || ""
 
-            uploads_db.db.execute(<<~SQL)
-              DELETE FROM uploads
-              WHERE upload IS NULL
-            SQL
-          end
+            settings[:root_paths].each do |root_path|
+              path = File.join(root_path, relative_path, row[:filename])
+              return path if File.exist?(path)
 
-          def download_file(url:, id:, retry_count: 0)
-            path = download_cache_path(id)
-            original_filename = nil
-
-            if File.exist?(path) && (original_filename = get_original_filename(id))
-              return path, original_filename
-            end
-
-            fd = FinalDestination.new(url)
-            file = nil
-
-            fd.get do |response, chunk, uri|
-              if file.nil?
-                check_response!(response, uri)
-                original_filename = extract_filename_from_response(response, uri)
-                file = File.open(path, "wb")
+              settings[:path_replacements].each do |from, to|
+                path = File.join(root_path, relative_path.sub(from, to), row[:filename])
+                return path if File.exist?(path)
               end
-
-              file.write(chunk)
-
-              if file.size > MAX_FILE_SIZE
-                file.close
-                file.unlink
-                file = nil
-                throw :done
-              end
-            end
-
-            if file
-              file.close
-              uploads_db.insert(
-                "INSERT INTO downloads (id, original_filename) VALUES (?, ?)",
-                [id, original_filename],
-              )
-              return path, original_filename
             end
 
             nil
           end
 
-          def download_cache_path(id)
-            id = id.gsub("/", "_").gsub("=", "-")
-            File.join(settings[:download_cache_path], id)
+          # Creates the upload, retrying only what is worth retrying (see
+          # {RetryPolicy}). A create that succeeds but whose file isn't in the
+          # store yet gets one more try; validation errors and corrupt images are
+          # recorded on the spot.
+          def create_upload_result(row, path, metadata, download_record)
+            attempt = 0
+
+            loop do
+              upload = build_upload(row, path, metadata)
+
+              unless upload_valid?(upload)
+                return(
+                  error_result(
+                    row,
+                    skip_reason: SkipReason::ERROR,
+                    skip_details: upload_error_message(upload),
+                    download: download_record,
+                  )
+                )
+              end
+
+              if store_has_upload?(upload)
+                return success_result(row, upload, metadata, download_record)
+              end
+
+              # Created but not in the store — drop it and try once more.
+              upload.destroy
+              attempt += 1
+              if attempt > POST_STORE_RETRIES
+                return(
+                  error_result(
+                    row,
+                    skip_reason: SkipReason::TOO_MANY_RETRIES,
+                    skip_details: "file missing from store after upload",
+                    download: download_record,
+                  )
+                )
+              end
+
+              sleep(retry_policy.backoff(attempt - 1))
+            end
           end
 
-          def get_original_filename(id)
-            uploads_db.db.query_single_splat(
-              "SELECT original_filename FROM downloads WHERE id = ?",
-              id,
+          def build_upload(row, path, metadata)
+            recover = {
+              # Another worker inserted the same sha1 first. Use its row instead of
+              # re-running the whole upload.
+              ActiveRecord::RecordNotUnique => ->(_error) do
+                Upload.find_by(sha1: Upload.generate_digest(path))
+              end,
+            }
+
+            retry_policy.run(recover:) do
+              copy_to_tempfile(path) do |file|
+                UploadCreator.new(
+                  file,
+                  metadata.original_filename,
+                  type: row[:type],
+                  origin: metadata.origin_url,
+                ).create_for(Discourse::SYSTEM_USER_ID)
+              end
+            end
+          end
+
+          def upload_valid?(upload)
+            upload.present? && upload.persisted? && upload.errors.blank?
+          end
+
+          def upload_error_message(upload)
+            upload&.errors&.full_messages&.join(", ").presence || "unknown error"
+          end
+
+          def store_has_upload?(upload)
+            file_exists?(add_multisite_prefix(discourse_store.get_path_for_upload(upload)))
+          end
+
+          def success_result(row, upload, metadata, download_record)
+            {
+              id: row[:id],
+              status: Status::OK,
+              skip_reason: nil,
+              skip_details: nil,
+              markdown: UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
+              file_type: upload_file_type(upload.original_filename),
+              upload: upload_attributes(upload),
+              download: download_record,
+            }
+          end
+
+          def missing_result(row)
+            {
+              id: row[:id],
+              status: Status::SKIPPED,
+              skip_reason: SkipReason::FILE_NOT_FOUND,
+              skip_details: nil,
+              markdown: nil,
+              file_type: nil,
+              upload: nil,
+              download: nil,
+            }
+          end
+
+          def error_result(row, skip_reason:, skip_details:, download:)
+            {
+              id: row[:id],
+              status: Status::ERROR,
+              skip_reason:,
+              skip_details:,
+              markdown: nil,
+              file_type: nil,
+              upload: nil,
+              download:,
+            }
+          end
+
+          def upload_attributes(upload)
+            upload.attributes.symbolize_keys.slice(*UPLOAD_COLUMNS)
+          end
+
+          def upload_file_type(filename)
+            if FileHelper.is_supported_image?(filename)
+              UploadFileType::IMAGE
+            elsif FileHelper.is_supported_audio?(filename)
+              UploadFileType::AUDIO
+            elsif FileHelper.is_supported_video?(filename)
+              UploadFileType::VIDEO
+            else
+              UploadFileType::ATTACHMENT
+            end
+          end
+
+          def outcome_for(status)
+            case status
+            when Status::OK
+              :ok
+            when Status::SKIPPED
+              :skip
+            else
+              :error
+            end
+          end
+
+          # Several source rows can dedup onto one Discourse upload (same sha1), so
+          # the `uploads` row is written once and later results just reference its
+          # id. Only the writer thread mutates the set, so `add?` is race-free.
+          def write_upload(attributes)
+            return nil if attributes.nil?
+
+            upload_id = attributes[:id]
+            Database::FilesDB::Upload.create(**attributes) if @seen_upload_ids.add?(upload_id)
+            upload_id
+          end
+
+          def record_download(record)
+            Database::FilesDB::Download.create(
+              id: record[:id],
+              original_filename: record[:original_filename],
             )
           end
 
-          def check_response!(response, uri)
-            if uri.blank?
-              code = response.code.to_i
-
-              if code >= 400
-                raise "#{code} Error"
-              else
-                throw :done
-              end
-            end
+          def retry_policy
+            @retry_policy ||= RetryPolicy.new(transient_errors: transient_error_classes)
           end
 
-          def extract_filename_from_response(response, uri)
-            filename =
-              if (header = response.header["Content-Disposition"].presence)
-                disposition_filename =
-                  header[/filename\*=UTF-8''(\S+)\b/i, 1] ||
-                    header[/filename=(?:"(.+)"|[^\s;]+)/i, 1]
-                if disposition_filename.present?
-                  URI.decode_www_form_component(disposition_filename)
-                else
-                  nil
-                end
-              end
+          def transient_error_classes
+            classes = [
+              Net::OpenTimeout,
+              Net::ReadTimeout,
+              Errno::ECONNRESET,
+              ActiveRecord::Deadlocked,
+              ActiveRecord::RecordNotUnique,
+            ]
+            classes << Aws::S3::Errors::ServiceError if defined?(Aws::S3::Errors::ServiceError)
+            classes
+          end
 
-            filename = File.basename(uri.path).presence || "file" if filename.blank?
-
-            if File.extname(filename).blank? && response.content_type.present?
-              ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
-              filename = "#{filename}.#{ext}" if ext.present?
-            end
-
-            filename
+          def reusable_downloads
+            hash = {}
+            files_db.query(<<~SQL) { |row| hash[row[:id]] = row[:original_filename] }
+              SELECT downloads.id, downloads.original_filename
+              FROM downloads
+              LEFT JOIN upload_results ON upload_results.id = downloads.id
+              WHERE upload_results.id IS NULL
+            SQL
+            hash
           end
 
           def copy_to_tempfile(source_path)
@@ -326,12 +417,6 @@ module Migrations
               tmpfile.rewind
               yield(tmpfile)
             end
-          end
-
-          def log_status
-            error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
-            print "\r%7d / %7d (%s, %s skipped)" %
-                    [current_count, @max_count, error_count_text, skipped_count]
           end
         end
       end

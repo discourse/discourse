@@ -15,6 +15,7 @@ describe DiscourseDataExplorer::QueryController do
         sql: sql,
         hidden: opts[:hidden] || false,
       )
+    DiscourseDataExplorer::QueryTag.sync!(query:, names: opts[:tags]) if opts[:tags]
     group_ids.each { |group_id| query.query_groups.create!(group_id: group_id) }
     query
   end
@@ -126,6 +127,71 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
+
+      it "filters by tag and applies text search within the active tag" do
+        DiscourseDataExplorer::Query.destroy_all
+        make_query("SELECT 1", name: "Monthly staff report", tags: ["Staff"])
+        make_query("SELECT 2", name: "Daily staff report", tags: %w[Staff Daily])
+        make_query("SELECT 3", name: "Monthly member report", tags: ["Members"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json",
+            params: {
+              tag: "Staff",
+              filter: "monthly",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["name"] }).to eq(
+          ["Monthly staff report"],
+        )
+        expect(response_json["extras"]["tags"]).to eq(%w[daily default members staff])
+      end
+
+      it "matches every selected tag" do
+        DiscourseDataExplorer::Query.destroy_all
+        make_query("SELECT 1", name: "Shared report", tags: %w[Staff Daily])
+        make_query("SELECT 2", name: "Staff report", tags: ["Staff"])
+        make_query("SELECT 3", name: "Daily report", tags: ["Daily"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tags: "staff,daily" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["name"] }).to eq(["Shared report"])
+      end
+
+      it "matches a persisted default query by its virtual and additional tags" do
+        DiscourseDataExplorer::Query.destroy_all
+        query = DiscourseDataExplorer::Query.find(-1)
+        query.save!
+        DiscourseDataExplorer::QueryTag.sync!(query:, names: ["Staff"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tags: "default,staff" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |result| result["id"] }).to eq([query.id])
+      end
+
+      it "returns the default tag for bundled queries" do
+        DiscourseDataExplorer::Query.destroy_all
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tag: "default" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"]).to be_present
+        expect(response_json["queries"].flat_map { |query| query["tags"] }.uniq).to eq(["default"])
+      end
+    end
+
+    describe "#tags" do
+      it "returns tags from visible queries and bundled defaults" do
+        make_query("SELECT 1", tags: %w[Staff Monthly])
+        make_query("SELECT 2", tags: ["Hidden"], hidden: true)
+
+        get "/admin/plugins/discourse-data-explorer/queries/tags.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json).to eq(%w[default monthly staff])
+      end
     end
 
     describe "#create" do
@@ -139,11 +205,13 @@ describe DiscourseDataExplorer::QueryController do
                  description: "A description",
                  sql: "SELECT 1",
                  group_ids: [group.id],
+                 tags: %w[Staff Monthly],
                },
              }
 
         expect(response.status).to eq(200)
         expect(response_json["query"]["group_ids"]).to eq([group.id])
+        expect(response_json["query"]["tags"]).to eq(%w[monthly staff])
       end
 
       it "creates a query without groups when none are given" do
@@ -157,6 +225,20 @@ describe DiscourseDataExplorer::QueryController do
 
         expect(response.status).to eq(200)
         expect(response_json["query"]["group_ids"]).to eq([])
+      end
+
+      it "rejects the default tag on user-created queries" do
+        expect {
+          post "/admin/plugins/discourse-data-explorer/queries.json",
+               params: {
+                 query: {
+                   name: "My query",
+                   tags: ["Default"],
+                 },
+               }
+        }.not_to change { DiscourseDataExplorer::Query.user_queries.count }
+
+        expect(response.status).to eq(422)
       end
     end
 
@@ -195,6 +277,80 @@ describe DiscourseDataExplorer::QueryController do
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to eq(["Name can't be blank"])
+      end
+
+      it "updates query tags while preserving group access when groups are omitted" do
+        query = make_query("SELECT 1", { tags: ["Staff"] }, [group2.id])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags: %w[Staff Monthly],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(query.reload.tag_names).to eq(%w[monthly staff])
+        expect(query.groups.pluck(:id)).to eq([group2.id])
+      end
+
+      it "removes the last tag when the empty selection is submitted" do
+        query = make_query("SELECT 1", { tags: ["Staff"] }, [group2.id])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags_present: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["tags"]).to eq([])
+        expect(query.reload.tag_names).to eq([])
+        expect(query.groups.pluck(:id)).to eq([group2.id])
+      end
+
+      it "clears group access when an empty group selection is submitted" do
+        query = make_query("SELECT 1", {}, [group2.id])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                group_ids_present: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([])
+        expect(query.reload.groups).to be_empty
+      end
+
+      it "updates additional tags on default queries without removing the default tag" do
+        query = DiscourseDataExplorer::Query.find(-4)
+        query.save!
+        DiscourseDataExplorer::QueryTag.sync!(query:, names: %w[Default Staff Monthly])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags: ["Staff"],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["tags"]).to eq(%w[default staff])
+        expect(DiscourseDataExplorer::Query.find(-4).tag_names).to eq(%w[default staff])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags_present: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["tags"]).to eq(["default"])
+        expect(DiscourseDataExplorer::Query.find(-4).tag_names).to eq(["default"])
       end
     end
 

@@ -19,7 +19,7 @@ module Boards
     end
 
     def ensure_board_read!
-      unless guardian.can_read_boards_board?(@board)
+      unless guardian.can_read_board?(@board)
         raise Discourse::InvalidAccess.new(I18n.t("boards.errors.board_read_forbidden"))
       end
     end

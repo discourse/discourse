@@ -288,7 +288,7 @@ he:
       pt:
         name: פורטוגלית
       pt_BR:
-        name: פורטוגלית
+        name: פורטוגלית ברזילאית
       ro:
         name: רומנית
       ru:
@@ -383,10 +383,11 @@ he:
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
       message: "עדכנו את האתר, <span>נא לרענן</span> כדי שהדברים פה יחזרו לרוץ בצורה חלקה."
-      dismiss: "התעלמות"
+      dismiss: "סילוק"
     notifications_tracking:
       tooltip: "רמת התראה: %{level}"
     back_button: "חזרה"
+    confirm_button: "אישור"
     welcome_banner:
       header:
         new_members: "ברוך בואך, %{preferred_display_name}!"
@@ -542,7 +543,7 @@ he:
       back: "חזרה"
       next: "הבא"
       sections:
-        theme: "תמה"
+        theme: "ערכת עיצוב"
         fonts: "גופנים"
         homepage: "דף הבית"
         welcome_banner: "כרזת קבלת פנים"
@@ -561,7 +562,7 @@ he:
         styles:
           boxes: "תיבות"
     about:
-      edit: "עריכת עמוד זה"
+      edit: "עריכת העמוד הזה"
       simple_title: "על אודות"
       title: "על %{title}"
       stats: "סטטיסטיקת אתר"
@@ -2986,6 +2987,7 @@ he:
       enter: "Enter"
       option: "אפשרות"
       period: "פרק זמן"
+      tab: "Tab"
       delete: "מחיקה"
       home: "בית"
     conditional_loading_section:
@@ -4491,7 +4493,7 @@ he:
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       cancel_composer:
-        confirm: "להתעלם מהפוסט שלך?"
+        confirm: "לסלק את הפוסט שלך?"
         confirm_edit: "להתעלם מהשינויים שלך?"
         discard: "להשליך"
         discard_edit: "התעלמות מהשינויים"
@@ -4774,6 +4776,7 @@ he:
       list: "הצגת קטגוריות"
       no_description: "אנא הוסיפו תיאור לקטגוריה זו."
       change_in_category_topic: "עריכת תיאור"
+      latest_topics: "נושאים אחרונים"
       description_expand: "להציג יותר"
       description_collapse: "להציג פחות"
       already_used: "הצבע הזה בשימוש על ידי קטגוריה אחרת"
@@ -5066,6 +5069,7 @@ he:
       with_category: "%{filter} %{category} נושאים"
       filter:
         title: "תוצאות מסוננות עבור %{filter}"
+        reset: "אתחול"
         button:
           label: "סינון"
       latest:
@@ -5304,16 +5308,18 @@ he:
       favorite_max_not_reached: "סימון העיטור הזה כמועדף"
       favorite_count: "%{count}/%{max} עיטורים סומנו כמועדפים"
     download_calendar:
-      title: "הורדת לוח שנה"
+      title: "הוספה ללוח השנה"
+      calendar: "לוח שנה"
       save_ics: "הורדת קובץ ‎.ics"
       save_google: "הוספה ללוח השנה של Google"
       remember: "לא לשאול אותי שוב"
-      remember_explanation: "(ניתן לשנות העדפה זו בהעדפות המשתמש שלך)"
       download: "הורדה"
       default_calendar: "לוח שנה כברירת מחדל"
       default_calendar_instruction: "הגדרה באיזה לוח שנה יש להשתמש כשנשמרים תאריכים"
       add_to_calendar: "הוספה ללוח השנה"
       google: "לוח שנה של Google"
+      outlook: "Microsoft Outlook"
+      apple: "לוח השנה של Apple"
       ics: "ICS"
       default_title: "אירוע מתוכנן"
     tagging:
@@ -5391,7 +5397,7 @@ he:
       manage_groups: "ניהול קבוצות תגיות"
       manage_groups_description: "הגדרת קבוצות לארגון תגיות"
       upload: "העלאת תגיות"
-      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות בבת אחת"
+      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות במרוכז"
       upload_instructions: "אחת בשורה, אפשר עם קבוצת תגיות בתצורה ‚שם_תגית,קבוצת_תגיות’."
       upload_successful: "התגיות הועלו בהצלחה"
       bulk_create_inline_placeholder: "יצירת תגיות (מופרדות בפסיקים)"
@@ -6546,7 +6552,7 @@ he:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
         discourse_last_updated: "עדכון Discourse:"
-        version: "גירסה"
+        version: "גרסה"
         up_to_date: "הכול עדכני!"
         updates_available: "עדכונים מוכנים."
         please_update: "נא לעדכן!"
@@ -6665,6 +6671,7 @@ he:
           series:
             anonymous: "אלמוני"
             crawlers: "סורקי אינטרנט"
+          crawler_learn_more: "מידע נוסף"
         period:
           last_7_days: "7 הימים האחרונים"
           last_30_days: "30 הימים האחרונים"

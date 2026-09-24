@@ -253,6 +253,7 @@ class User < ActiveRecord::Base
 
   # Skip validating email, for example from a particular auth provider plugin
   attr_accessor :skip_email_validation
+  attr_accessor :enforce_username_restrictions
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
@@ -283,6 +284,8 @@ class User < ActiveRecord::Base
             email,
           )
         end
+
+  scope :bot_users, -> { where("users.id <= 0") }
 
   scope :human_users,
         ->(allowed_bot_user_ids: nil) do
@@ -2156,6 +2159,14 @@ class User < ActiveRecord::Base
     username_format_validator ||
       begin
         if will_save_change_to_username?
+          if enforce_username_restrictions &&
+               (
+                 User.reserved_username?(username) ||
+                   UsernameValidator.clashing_with_existing_route?(username)
+               )
+            errors.add(:username, I18n.t("login.reserved_username"))
+          end
+
           existing =
             DB.query(USERNAME_EXISTS_SQL, username: self.class.normalize_username(username))
 

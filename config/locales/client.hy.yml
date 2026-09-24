@@ -211,6 +211,7 @@ hy:
       message: "Մենք թարմացրել ենք այս կայքը, <span>խնդրում ենք թարմացնել էջը</span>, որպեսզի ամեն ինչ սահուն աշխատի:"
       dismiss: "Չեղարկել"
     back_button: "Ետ"
+    confirm_button: "Հաստատել"
     welcome_banner:
       header:
         anonymous_members: "Բարի գալուստ %{site_name}!"
@@ -3244,6 +3245,7 @@ hy:
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
       no_description: "Խնդրում ենք այս կատեգորիայի համար ավելացնել նկարագրություն:"
+      latest_topics: "Վերջին թեմաները"
       description_expand: "Ցույց տալ ավելին"
       description_collapse: "Ցույց տալ ավելի քիչ"
       already_used: "Այս գույնը օգտագործվել է մեկ այլ կատեգորիայի կողմից"
@@ -3437,6 +3439,7 @@ hy:
       with_topics: "%{filter} թեմա"
       with_category: "%{filter} %{category} թեմա"
       filter:
+        reset: "վերահաստատել"
         button:
           label: "Ֆիլտր"
       latest:
@@ -4178,6 +4181,7 @@ hy:
           series:
             anonymous: "Անանուն"
             crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
+          crawler_learn_more: "Իմանալ ավելին"
         period:
           custom: "Մասնավոր"
         reports:

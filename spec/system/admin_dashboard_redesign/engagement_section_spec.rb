@@ -7,6 +7,10 @@ describe "Admin Dashboard Redesign | Engagement section" do
   fab!(:category_alpha) { Fabricate(:category, name: "Category Alpha") }
   fab!(:category_bravo) { Fabricate(:category, name: "Category Bravo") }
   fab!(:category_dormant) { Fabricate(:category, name: "Category Dormant") }
+  fab!(:category_delta) { Fabricate(:category, name: "Category Delta") }
+  fab!(:category_charlie) do
+    Fabricate(:category, name: "Category Charlie", parent_category: category_delta)
+  end
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
   let(:engagement) { dashboard.engagement }
@@ -25,6 +29,7 @@ describe "Admin Dashboard Redesign | Engagement section" do
     )
     Fabricate(:topic, category: category_alpha, created_at: "2026-06-12")
     Fabricate(:topic, category: category_bravo, created_at: "2026-06-12")
+    Fabricate(:topic, category: category_charlie, created_at: "2026-06-12")
     Jobs::MaintainCategoryActivityDailyRollups.new.execute
     sign_in(current_user)
   end
@@ -83,6 +88,22 @@ describe "Admin Dashboard Redesign | Engagement section" do
 
     expect(engagement).to have_selected_activity_category(category_alpha)
     expect(engagement).to have_selected_activity_category(category_dormant)
+  end
+
+  it "shows the parent category next to a sub-category in the Activity by category table and the category filters",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    dashboard.visit
+    expect(dashboard).to have_section("engagement")
+
+    expect(engagement).to have_activity_row_with_parent(category_charlie)
+
+    engagement.expand_activity_category_filter
+
+    expect(engagement).to have_selected_activity_category_with_parent(category_charlie)
+
+    engagement.select_whos_posting_category(category_charlie)
+
+    expect(engagement).to have_selected_whos_posting_category_with_parent(category_charlie)
   end
 
   it "saves an admin's 'Who's posting' selection when the picker closes, and persists it across a refresh",

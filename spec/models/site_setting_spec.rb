@@ -156,6 +156,26 @@ RSpec.describe SiteSetting do
         expect(SiteSetting.anonymous_homepage).to eq("categories")
       end
 
+      it "falls back when a registered plugin homepage's enabled condition fails" do
+        plugin = Plugin::Instance.new
+        plugin.stubs(:enabled?).returns(true)
+        plugin.register_homepage(
+          "directory",
+          name: "discourse_directory.navigation.title",
+          path: "/directory",
+          route: "discourse_directory/directory#index",
+          anonymous: true,
+          enabled: -> { SiteSetting.enable_user_directory },
+        )
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "directory"
+
+        SiteSetting.enable_user_directory = false
+
+        expect(SiteSetting.homepage).to eq("categories")
+        expect(SiteSetting.anonymous_homepage).to eq("categories")
+      end
+
       it "does not use a private plugin homepage for anonymous visitors" do
         plugin = Plugin::Instance.new
         plugin.stubs(:enabled?).returns(true)

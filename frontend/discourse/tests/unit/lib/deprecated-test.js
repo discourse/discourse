@@ -51,7 +51,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
     assert.deepEqual(
       this.counterStub.args[0],
-      ["discourse.(unknown)"],
+      ["discourse.(unknown)", false],
       "incrementCount is called with the correct arguments"
     );
   });
@@ -77,7 +77,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
     assert.deepEqual(
       this.counterStub.args[0],
-      ["discourse.my_deprecation_id"],
+      ["discourse.my_deprecation_id", false],
       "incrementCount is called with the correct arguments"
     );
   });
@@ -107,7 +107,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
     assert.deepEqual(
       this.counterStub.args[0],
-      ["discourse.my_deprecation_id"],
+      ["discourse.my_deprecation_id", false],
       "incrementCount is called with the correct arguments"
     );
   });
@@ -128,7 +128,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
     assert.deepEqual(
       this.counterStub.args[0],
-      ["discourse.my_deprecation_id"],
+      ["discourse.my_deprecation_id", false],
       "incrementCount is called with the correct arguments"
     );
   });

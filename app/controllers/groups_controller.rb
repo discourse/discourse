@@ -330,9 +330,10 @@ class GroupsController < ApplicationController
 
     include_custom_fields = params[:include_custom_fields] == "true"
 
-    allowed_fields =
-      User.allowed_user_custom_fields(guardian) +
-        UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    allowed_fields = User.allowed_user_custom_fields(guardian)
+    if guardian.is_staff?
+      allowed_fields += UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    end
 
     if params[:order] && %w[last_posted_at last_seen_at].include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
@@ -344,7 +345,7 @@ class GroupsController < ApplicationController
         "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = #{ActiveRecord::Base.connection.quote(params[:order_field])}) #{dir} NULLS LAST"
     end
 
-    users = group.users.human_users
+    users = group.listed_users
     total = users.count
 
     if (filter = params[:filter]).present?

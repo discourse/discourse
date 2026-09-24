@@ -107,7 +107,10 @@ export default <template>
   <div class="clearfix"></div>
 
   <StaffActions>
-    <DLoadMore @action={{@controller.loadMore}}>
+    <DLoadMore
+      @action={{@controller.loadMore}}
+      @isLoading={{@controller.initialModelLoading}}
+    >
       {{#if @controller.model.content}}
         <table class="table staff-logs grid">
           <thead>

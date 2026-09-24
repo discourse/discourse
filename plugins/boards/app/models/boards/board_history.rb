@@ -25,6 +25,8 @@ module Boards
            column_renamed: 9,
            column_edited: 10,
            column_deleted: 11,
+           board_archived: 12,
+           board_unarchived: 13,
          }
   end
 end

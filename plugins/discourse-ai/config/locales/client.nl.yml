@@ -24,6 +24,8 @@ nl:
             title: "AI vragen"
         ask_ai:
           title: "AI vragen"
+          reports:
+            retry_questions: "Opnieuw proberen"
           date: "Datum"
           outcomes:
             failed: "Mislukt"

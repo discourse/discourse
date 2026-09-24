@@ -13,6 +13,11 @@ sq:
             topic_id:
               label: ID e temës
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Njoftim"
+            none: "Asnjë"
       disable_holiday: "Çaktivizoni"
       enable_holiday: "Aktivizo"
       region:

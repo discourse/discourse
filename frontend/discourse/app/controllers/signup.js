@@ -37,7 +37,10 @@ export default class SignupPageController extends Controller {
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
   @tracked codeSignupStep = "email";
+  @tracked signupContext;
   @autoTrackedArray rejectedEmails = [];
+
+  queryParams = [{ signupContext: "signup_context" }];
 
   accountChallenge = 0;
   accountHoneypot = 0;
@@ -125,10 +128,17 @@ export default class SignupPageController extends Controller {
     );
   }
 
-  @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
+  @computed(
+    "hasAuthOptions",
+    "canCreateLocal",
+    "siteSettings.enable_local_logins_via_code",
+    "siteSettings.enable_local_logins_via_email",
+    "skipConfirmation"
+  )
   get showCodeSignupForm() {
     return (
       this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
       this.canCreateLocal &&
       !this.hasAuthOptions &&
       !this.skipConfirmation

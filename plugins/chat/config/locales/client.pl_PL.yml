@@ -347,6 +347,8 @@ pl_PL:
       message_too_long: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znaków."
       retry_staged_message:
         title: "Błąd sieci"
+        rate_limited_title: "Zbyt wiele wiadomości"
+        rate_limited_waiting: "Za dużo wiadomości, zaczekaj chwilę"
         action: "Wyślij ponownie?"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
@@ -669,7 +671,8 @@ pl_PL:
       direct_messages:
         title: "PW"
         aria_label: "Przełącz na wiadomości bezpośrednie"
-        new: "Nowa wiadomość bezpośrednia lub czat grupowy..."
+        new: "Nowa wiadomość bezpośrednia"
+        new_group: "Nowy czat grupowy"
         create: "Utwórz"
         leave: "Opuść kanał"
         close: "Zamknij kanał"

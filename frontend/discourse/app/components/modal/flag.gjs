@@ -186,8 +186,7 @@ export default class Flag extends Component {
       // eslint-disable-next-line no-console
       console.error(`No handler for ${actionable.client_action} found`);
     } else {
-      this.args.model.setHidden();
-      this.createFlag({ takeAction: true });
+      await this.#createFlagAndHide({ takeAction: true });
     }
   }
 
@@ -196,28 +195,34 @@ export default class Flag extends Component {
     if (this.selected.require_message) {
       opts.message = this.message;
     }
-    this.args.model.flagTarget.create(this, opts);
+    const created = this.args.model.flagTarget.create(this, opts);
     this.appEvents.trigger("flag:created", {
       message: opts.message,
       postId: this.args.model.flagModel.id,
     });
+    return created;
   }
 
   @action
   createFlagAsWarning() {
-    this.createFlag({ isWarning: true });
-    this.args.model.setHidden();
+    return this.#createFlagAndHide({ isWarning: true });
   }
 
   @action
   flagForReview() {
-    this.createFlag({ queue_for_review: true });
-    this.args.model.setHidden();
+    return this.#createFlagAndHide({ queue_for_review: true });
   }
 
   @action
   changePostActionType(actionType) {
     this.selected = actionType;
+  }
+
+  async #createFlagAndHide(opts) {
+    // Only an explicit `false` means the flag failed: custom flag targets may resolve nothing.
+    if ((await this.createFlag(opts)) !== false) {
+      this.args.model.setHidden();
+    }
   }
 
   <template>

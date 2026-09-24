@@ -331,6 +331,11 @@ module Discourse
   class ReadOnly < StandardError
   end
 
+  # Raised when the site is archived (site_archived setting) and a write is
+  # attempted from an action not declared with `allow_when_archived`.
+  class SiteArchived < StandardError
+  end
+
   # Cross site request forgery
   class CSRF < StandardError
   end

@@ -15,7 +15,8 @@ module Jobs
     def execute(args)
       return unless ::Voice.enabled?
 
-      room_ids = ::Voice::ParticipantTracker.recently_active_room_ids
+      provider_room_ids = ::Voice::AgentManager.provider_room_ids
+      room_ids = ::Voice::ParticipantTracker.recently_active_room_ids | provider_room_ids
 
       # Auto voice statuses have no ends_at, so a lapsed heartbeat must drop
       # the status the same way it drops the roster entry. Live-anywhere is
@@ -26,20 +27,27 @@ module Jobs
 
       return if room_ids.empty?
 
+      remaining_provider_room_ids = provider_room_ids.to_set
       ::Voice::Room
         .where(id: room_ids)
         .find_each do |room|
+          remaining_provider_room_ids.delete(room.id)
           # Backstop for the pin-clear on last leave: a room that emptied
           # without one (crashed clients, missed leave) must not hold its
           # transport for the next call.
-          if ::Voice::ParticipantTracker.user_ids(room.id).empty?
-            # No-op once the pin is gone, so an emptied room is deleted from
-            # the SFU at most once, on the sweep that clears its pin.
-            ::Voice::Livekit::RoomServiceClient.delete_room(room)
-            ::Voice::ParticipantTracker.clear_transport_pin(room.id)
+          if ::Voice::ParticipantTracker.human_user_ids(room.id).empty?
+            # Agent cleanup survives expired pins and retries provider failures.
+            ::Voice::AgentManager.evict_agents_in_room!(room)
+          else
+            ::Voice::AgentManager.reconcile(room)
           end
           ::Voice::RoomBroadcaster.publish_participants(room)
         end
+
+      # Provider cleanup must outlive the database row when deletion fails remotely.
+      remaining_provider_room_ids.each do |room_id|
+        ::Voice::AgentManager.evict_agents_in_room!(::Voice::Room.new(id: room_id))
+      end
     end
   end
 end

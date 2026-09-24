@@ -349,6 +349,7 @@ hr:
       message: "Ažurirali smo ovu stranicu, <span>molimo osvježite</span> kako bi sve nesmetano funkcioniralo."
       dismiss: "Odbaciti"
     back_button: "Natrag"
+    confirm_button: "Potvrdi"
     welcome_banner:
       header:
         logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
@@ -4410,6 +4411,7 @@ hr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      latest_topics: "Posljednje teme"
       description_expand: "Prikaži više"
       description_collapse: "Prikaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
@@ -4677,6 +4679,7 @@ hr:
       with_category: "%{filter} %{category} teme"
       filter:
         title: "Filtrirani rezultati za %{filter}"
+        reset: "resetiraj"
         button:
           label: "Filter"
       latest:
@@ -4892,11 +4895,10 @@ hr:
       favorite_max_not_reached: "Označi ovu značku kao omiljenu"
       favorite_count: "%{count}/%{max} značke označene kao omiljene"
     download_calendar:
-      title: "Preuzmite kalendar"
+      title: "Dodaj u kalendar"
       save_ics: "Preuzmite .ics datoteku"
       save_google: "Dodaj u Google kalendar"
       remember: "Ne pitaj me više"
-      remember_explanation: "(možete promijeniti ovu postavku u svojim korisničkim postavkama)"
       download: "Preuzmi"
       default_calendar: "Zadani kalendar"
       default_calendar_instruction: "Odredite koji kalendar treba koristiti kada se datumi spremaju"
@@ -6012,6 +6014,7 @@ hr:
         site_traffic:
           series:
             anonymous: "Anonimno"
+          crawler_learn_more: "Saznajte više"
         period:
           last_7_days: "Zadnjih 7 dana"
           last_30_days: "Zadnjih 30 dana"

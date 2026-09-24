@@ -125,10 +125,9 @@ export default class LocalLoginForm extends Component {
   }
 
   @action
-  loginOnEnter(event) {
-    if (event.key === "Enter") {
-      this.args.login();
-    }
+  submit(event) {
+    event.preventDefault();
+    this.args.login();
   }
 
   @action
@@ -182,7 +181,7 @@ export default class LocalLoginForm extends Component {
   }
 
   <template>
-    <form id="login-form" method="post">
+    <form id="login-form" method="post" novalidate {{on "submit" this.submit}}>
       <div class={{this.credentialsClass}} id="credentials">
         <div class="input-group" {{didInsert this.passkeyConditionalLogin}}>
           <Input
@@ -193,12 +192,12 @@ export default class LocalLoginForm extends Component {
             class={{valueEntered @loginName}}
             disabled={{@showSecondFactor}}
             id="login-account-name"
+            inputmode="email"
             tabindex="1"
-            @type="email"
+            @type="text"
             @value={{@loginName}}
             {{on "focusin" this.scrollInputIntoView}}
             {{on "input" @loginNameChanged}}
-            {{on "keydown" this.loginOnEnter}}
           />
           <label class="alt-placeholder" for="login-account-name">
             {{i18n "login.email_placeholder"}}
@@ -238,7 +237,6 @@ export default class LocalLoginForm extends Component {
             value={{@loginPassword}}
             @capsLockOn={{this.capsLockOn}}
             {{on "focusin" this.scrollInputIntoView}}
-            {{on "keydown" this.loginOnEnter}}
             {{on "input" @loginPasswordChanged}}
           />
           <label class="alt-placeholder" for="login-account-password">
@@ -291,7 +289,6 @@ export default class LocalLoginForm extends Component {
               @onChange={{fn (mut @secondFactorToken)}}
               @onFill={{this.filledSecondFactorToken}}
               @secondFactorMethod={{@secondFactorMethod}}
-              {{on "keydown" this.loginOnEnter}}
               {{on "focusin" this.scrollInputIntoView}}
             />
           {{/if}}

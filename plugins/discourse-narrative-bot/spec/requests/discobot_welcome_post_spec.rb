@@ -30,6 +30,10 @@ RSpec.describe "Discobot welcome post" do
         Fabricate(:invite, invited_by: Fabricate(:admin), email: "testing@gmail.com")
       end
 
+      # Redeeming through the legacy form, which the email code flow replaces
+      # when enable_local_logins_via_code is on.
+      before { SiteSetting.enable_local_logins_via_code = false }
+
       it "delays the welcome post until the user logs in" do
         expect do
           put "/invites/show/#{invite.invite_key}.json",
