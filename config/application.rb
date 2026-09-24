@@ -12,6 +12,7 @@ require_relative "../lib/discourse_event"
 require_relative "../lib/discourse_plugin_registry"
 
 require_relative "../lib/plugin_gem"
+require_relative "../lib/vendored_assets"
 
 # Global config
 require_relative "../app/models/global_setting"

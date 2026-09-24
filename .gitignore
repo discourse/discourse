@@ -85,6 +85,7 @@
 /spec/fixtures/plugins/my_plugin/auto_generated
 
 /vendor/bundle
+/vendor/runtime_node_modules
 /vendor/data/GeoLite2-City.mmdb
 /vendor/data/GeoLite2-ASN.mmdb
 
