@@ -33,6 +33,15 @@ RSpec.describe ServerSession do
       expect(session[:my_hash]).to eq(hash)
     end
 
+    context "when the value is HTML-safe text" do
+      let(:hash) { "<strong>hello</strong>".html_safe }
+
+      it "preserves the text and its HTML safety", :aggregate_failures do
+        expect(session[:my_hash]).to eq(hash)
+        expect(session[:my_hash]).to be_html_safe
+      end
+    end
+
     context "when key is a string" do
       it "returns the proper value" do
         expect(session["my_hash"]).to eq(hash)

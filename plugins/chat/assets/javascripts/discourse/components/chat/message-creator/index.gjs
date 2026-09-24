@@ -8,7 +8,7 @@ import NewGroup from "./new-group";
 import Search from "./search";
 
 export default class ChatMessageCreator extends Component {
-  @tracked mode = MODES.search;
+  @tracked mode = this.args.initialMode ?? MODES.search;
   @autoTrackedArray members = [];
 
   get componentForMode() {

@@ -79,6 +79,8 @@ module Boards
               Publisher.publish_card_moved!(
                 board,
                 publish_response,
+                original_column_id,
+                acting_user: guardian.user,
                 client_id: message_bus_client_id,
               )
             else

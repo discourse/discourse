@@ -67,6 +67,27 @@ describe "Composer - ProseMirror - Pasting content" do
     expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
   end
 
+  it "lets the user paste bold text as plain text inside backtick and tilde code fences" do
+    open_composer
+    composer.toggle_rich_editor
+    html = "<strong>bold</strong>"
+    plain_text = "bold"
+
+    composer.fill_content("```\nprefix \n```")
+    composer.move_cursor_after("prefix ")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("```\nprefix bold\n```")
+
+    composer.fill_content("~~~console\nprefix \n~~~")
+    composer.move_cursor_after("prefix ")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("~~~console\nprefix bold\n~~~")
+
+    composer.fill_content("```\n~~~\n```\n")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("```\n~~~\n```\n**bold**")
+  end
+
   it "removes newlines from alt/title in pasted image" do
     cdp.allow_clipboard
     open_composer

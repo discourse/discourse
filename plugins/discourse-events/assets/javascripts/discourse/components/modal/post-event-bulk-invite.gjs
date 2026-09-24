@@ -135,6 +135,7 @@ export default class PostEventBulkInvite extends Component {
             }}</h3>
 
           <Form
+            class="bulk-invites-form"
             @data={{this.data}}
             @onRegisterApi={{this.registerApi}}
             @onSubmit={{this.sendBulkInvites}}
@@ -217,14 +218,15 @@ export default class PostEventBulkInvite extends Component {
             </form.Collection>
 
             <form.Actions class="bulk-invite-actions">
-              <form.Submit
-                class="send-bulk-invites"
-                @label="discourse_post_event.bulk_invite_modal.send_bulk_invites"
-              />
               <form.Button
                 class="add-bulk-invite"
                 @action={{fn this.addInvite form.addItemToCollection}}
                 @icon="plus"
+                @label="discourse_post_event.bulk_invite_modal.add_attendee"
+              />
+              <form.Submit
+                class="send-bulk-invites"
+                @label="discourse_post_event.bulk_invite_modal.send_bulk_invites"
               />
             </form.Actions>
           </Form>

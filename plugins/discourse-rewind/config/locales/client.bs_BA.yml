@@ -13,15 +13,7 @@ bs_BA:
           public: "Javno"
       reports:
         chat_usage:
-          messages: poruke
           author: Vi
           author_others: "%{username}"
-        invites:
-          title: Pozivnice
-          invitee_posts: Posts Created
-          invitee_likes: Likes Given
-        new_user_interactions:
-          likes_given: Likes Given
-          mentions: Spomenuto
         writing_analysis:
           menu_other: Other

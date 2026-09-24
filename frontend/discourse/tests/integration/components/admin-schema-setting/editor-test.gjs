@@ -1,4 +1,11 @@
-import { click, fillIn, findAll, render, waitFor } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  findAll,
+  focus,
+  render,
+  waitFor,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdminSchemaSettingEditor from "discourse/admin/components/schema-setting/editor";
 import SiteSetting from "discourse/admin/models/site-setting";
@@ -1018,6 +1025,14 @@ module(
           name: "category",
           identifier: "category",
           properties: {
+            children: {
+              type: "objects",
+              schema: {
+                name: "child",
+                identifier: "category",
+                properties: { category: { type: "categories" } },
+              },
+            },
             category: {
               type: "categories",
               required: true,
@@ -1039,6 +1054,7 @@ module(
         value: [
           {
             category: [6, 7],
+            children: [{ category: [7] }],
           },
         ],
       });
@@ -1057,6 +1073,19 @@ module(
       const tree = new TreeFromDOM();
 
       assert.dom(tree.nodes[0].textElement).hasText("support, something");
+
+      assert
+        .dom(tree.nodes[0].children[0].textElement)
+        .hasText("something", "the child uses its own category identifier");
+      await click(tree.nodes[0].children[0].element);
+      assert.dom(".--back-btn").hasText(
+        i18n("admin.customize.schema.back_button", {
+          name: "support, something",
+        }),
+        "the back button uses the parent's category identifier"
+      );
+      await click(".--back-btn");
+      tree.refresh();
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -1400,6 +1429,13 @@ module(
       tree.refresh();
 
       assert.dom(tree.nodes[1].children[0].textElement).hasText("link 1");
+
+      await click(tree.nodes[0].element);
+      await click(REMOVE_ITEM_BTN);
+      tree.refresh();
+      assert
+        .dom(tree.nodes[0].textElement)
+        .hasText("section 1", "the remaining item is renumbered");
     });
 
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
@@ -1419,14 +1455,24 @@ module(
       const inputFields = new InputFieldsFromDOM();
       const tree = new TreeFromDOM();
 
+      await focus(inputFields.fields.name.inputElement);
       await fillIn(
         inputFields.fields.name.inputElement,
         "nice section is really nice"
       );
 
       assert
+        .dom(inputFields.fields.name.inputElement)
+        .isFocused("editing preserves the input and its focus");
+      assert
         .dom(tree.nodes[0].textElement)
         .hasText("nice section is really nice");
+
+      assert.strictEqual(
+        setting.value[0].name,
+        "nice section",
+        "unsaved edits do not mutate the setting"
+      );
 
       await click(tree.nodes[0].children[0].element);
 
@@ -1550,7 +1596,7 @@ module(
       assert.dom(inputFields.fields.name.labelElement).hasText("name");
     });
 
-    test("adding an object to the root list of objects", async function (assert) {
+    test("adding a parent and multiple nested objects", async function (assert) {
       const setting = schemaAndData(1);
 
       await render(
@@ -1577,6 +1623,20 @@ module(
       assert.true(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
+
+      await click(tree.nodes[2].addButtons[0]);
+      await click(TOP_LEVEL_ADD_BTN);
+      tree.refresh();
+
+      assert.strictEqual(
+        tree.nodes.length,
+        3,
+        "both children and the add button are visible"
+      );
+      assert
+        .dom(tree.nodes[1].textElement)
+        .hasText("level2 2", "the second child appears without reopening");
+      assert.true(tree.nodes[1].active, "the second child is selected");
     });
 
     test("adding an object to a child list of objects when an object has multiple objects properties", async function (assert) {
@@ -1708,7 +1768,7 @@ module(
       assert.dom(tree.nodes[3].textElement).hasText("level2 4");
     });
 
-    test("navigating 1 level deep and adding an object to a grandchild list of objects", async function (assert) {
+    test("adding multiple grandchildren to a newly added child", async function (assert) {
       const setting = schemaAndData(1);
 
       await render(
@@ -1724,17 +1784,30 @@ module(
 
       const tree = new TreeFromDOM();
 
-      await click(tree.nodes[0].children[0].element);
-      tree.refresh();
-
-      assert.dom(tree.nodes[0].addButtons[0]).hasText("level3");
-      assert.strictEqual(tree.nodes[0].children.length, 2);
-
       await click(tree.nodes[0].addButtons[0]);
+      tree.refresh();
+
+      assert.dom(tree.nodes[2].addButtons[0]).hasText("level3");
+      assert.strictEqual(tree.nodes[2].children.length, 0);
+
+      await click(tree.nodes[2].addButtons[0]);
+      await click(TOP_LEVEL_ADD_BTN);
 
       tree.refresh();
 
-      assert.dom(tree.nodes[2].textElement).hasText("level3 3");
+      assert.strictEqual(
+        tree.nodes.length,
+        3,
+        "both grandchildren and the add button are visible"
+      );
+      const inputFields = new InputFieldsFromDOM();
+      await fillIn(inputFields.fields.name.inputElement, "Second grandchild");
+      assert
+        .dom(tree.nodes[1].textElement)
+        .hasText(
+          "Second grandchild",
+          "the new grandchild is editable and updates its title"
+        );
     });
 
     test("removing an object from the root list of objects", async function (assert) {

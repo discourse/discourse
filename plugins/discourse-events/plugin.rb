@@ -18,6 +18,7 @@ require_relative "lib/discourse_events/configuration/upcoming_events_default_vie
 enabled_site_setting :discourse_events_enabled
 
 register_svg_icon "calendar-days"
+register_asset "stylesheets/common/event-calendar-prompt.scss"
 register_asset "stylesheets/common/full-calendar-ext.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"
@@ -232,6 +233,10 @@ Dir
   .each { |f| require(f) }
 
 after_initialize do
+  UserOption.prepend DiscourseEvents::UserOptionExtension
+  UserUpdater::OPTION_ATTR.push(:event_reminder_preference)
+  add_to_serializer(:user_option, :event_reminder_preference) { object.event_reminder_preference }
+
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
       [
@@ -287,7 +292,7 @@ after_initialize do
 
   # DISCOURSE POST EVENT
 
-  require_relative "jobs/regular/discourse_post_event/bulk_invite"
+  require_relative "app/jobs/regular/discourse_post_event_bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
@@ -365,7 +370,7 @@ after_initialize do
     if SiteSetting.discourse_post_event_enabled
       topic_view.instance_variable_set(
         :@posts,
-        topic_view.posts.includes(event: [:image_upload, { event_hosts: :user }]),
+        topic_view.posts.includes(event: [:image_upload, :event_dates, { event_hosts: :user }]),
       )
     end
   end
@@ -432,19 +437,26 @@ after_initialize do
       end
   end
 
-  on(:post_created) do |post|
-    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id })
+  sync_event_from_post = ->(post) do
+    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id }) do |result|
+      on_failure do
+        Rails.logger.error("Failed to sync event from post #{post.id}: #{result.inspect_steps}")
+      end
+    end
     post.association(:event).reload
-    if SiteSetting.discourse_post_event_enabled && post.event
-      WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+  end
+
+  on(:post_created) do |post|
+    sync_event_from_post.call(post)
+    if SiteSetting.discourse_post_event_enabled
+      DiscourseEvents::Events::Event.handle_post_event_webhooks(post, nil)
     end
   end
 
   on(:post_edited) do |post|
     event_before = post.event
     had_image_before = event_before&.image_upload_id.present?
-    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id })
-    post.association(:event).reload
+    sync_event_from_post.call(post)
 
     if SiteSetting.discourse_post_event_enabled
       if post.event&.image_upload_id
@@ -472,6 +484,7 @@ after_initialize do
   end
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
 
   add_to_serializer(
     :topic_view,
@@ -494,15 +507,18 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_starts_at,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_starts_at
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT) &&
+        object.event_starts_at
     end,
   ) { object.event_starts_at }
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
 
   add_to_serializer(
     :topic_view,
@@ -523,15 +539,18 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_ends_at,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_ends_at
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT) &&
+        object.event_ends_at
     end,
   ) { object.event_ends_at }
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY
 
   add_to_serializer(
     :topic_view,
@@ -552,11 +571,13 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_all_day,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_all_day
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY) &&
+        object.event_all_day
     end,
   ) { object.event_all_day }
 
@@ -1081,7 +1102,8 @@ after_initialize do
       },
       additionalProperties: false,
     },
-    required_scopes: %w[discourse-calendar:read],
+    output_schema: DiscourseEvents::McpTools::ListEvents::OUTPUT_SCHEMA,
+    required_scopes: DiscourseEvents::McpTools::ListEvents::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,

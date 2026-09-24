@@ -188,6 +188,8 @@ ro:
         sort:
           relevance: "Relevanță"
           latest: "Ultimele"
+      direct_messages:
+        new_group: "Grup nou de discuție"
       channel_list:
         options:
           filter: "Filtru"

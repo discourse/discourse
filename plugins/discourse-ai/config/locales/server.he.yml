@@ -90,7 +90,6 @@ he:
     ai_pm_summarization_allowed_groups: "קבוצות שמורשות ליצור ולצפות בתקצירים בהודעות פרטיות."
     ai_summary_gists_enabled: "יצירת תקצירים של התגובות האחרונות בנושאים אוטומטית"
     ai_bot_enabled: "הפעלת מודול בוט הבינה המלאכותית."
-    ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
     ai_bot_public_sharing_allowed_groups: "לאפשר לקבוצות האלה לשתף הודעות אישיות של בינה למאכותית עם הציבור באמצעות קישור ייחודי גלוי לציבור. הערה: אם האתר שלך דורש כניסה, גם שיתופים ידרשו כניסה."
     ai_bot_add_to_header: "הצגת כפתור בכותרת כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
@@ -270,6 +269,25 @@ he:
       configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
+      navigation:
+        settings:
+          title: "הגדרות האתר"
+        users:
+          title: "משתמשים"
+        groups:
+          title: "קבוצות"
+        review:
+          title: "תור סקירה"
+        categories:
+          title: "קטגוריות"
+        tags:
+          title: "תגיות"
+        themes:
+          title: "תמות"
+        authentication:
+          title: "כניסה ואימות"
+        backups:
+          title: "גיבויים"
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
       read_post:

@@ -2,6 +2,7 @@
 
 class BrowserPageviewSessionEngagement < ActiveRecord::Base
   MAX_SESSION_ID_LENGTH = 32
+  MAX_COLUMN_VALUE = 2**31 - 1
   BEACON_SETTLE_PERIOD = 30.minutes
 
   INTERACTION_COLUMNS = %i[
@@ -37,20 +38,21 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
 
     session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH)
 
+    time_to_first_interaction_ms = nil if time_to_first_interaction_ms.to_i > MAX_COLUMN_VALUE
+
+    counters =
+      {
+        mouse_move_events:,
+        click_events:,
+        key_events:,
+        scroll_events:,
+        touch_events:,
+        back_forward_events:,
+        engaged_seconds:,
+      }.transform_values { |value| value.clamp(0, MAX_COLUMN_VALUE) }
+
     upsert_all(
-      [
-        {
-          session_id:,
-          mouse_move_events:,
-          click_events:,
-          key_events:,
-          scroll_events:,
-          touch_events:,
-          back_forward_events:,
-          engaged_seconds:,
-          time_to_first_interaction_ms:,
-        },
-      ],
+      [{ session_id:, **counters, time_to_first_interaction_ms: }],
       unique_by: :session_id,
       on_duplicate: greatest_on_duplicate_clause,
       record_timestamps: true,

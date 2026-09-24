@@ -6,6 +6,11 @@
 
 en_GB:
   js:
+    discourse_workflows:
+      create_board_column:
+        color: "Colour"
+      create_board:
+        category_ids: "Categories"
     boards:
       manage:
         constraint_categories: "Categories"

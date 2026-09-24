@@ -658,6 +658,48 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       # will be brittle, but open to changing this
     end
 
+    it "excludes hidden posts the triggering user cannot see from topic context" do
+      topic = Fabricate(:topic, title: "Public topic with hidden reply")
+      visible_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: other_user,
+          post_number: 1,
+          raw: "Visible context for the prompt",
+        )
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: other_user,
+          post_number: 2,
+          raw: "Hidden context that must not reach the prompt",
+          hidden: true,
+        )
+      trigger_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          post_number: 3,
+          raw: "Please answer using the visible context",
+        )
+      expect(Guardian.new(user).can_see?(hidden_post)).to eq(false)
+
+      context =
+        described_class.messages_from_post(
+          trigger_post,
+          max_posts: 10,
+          bot_usernames: [bot_user.username],
+          include_uploads: false,
+        )
+
+      content = context.flat_map { |message| Array(message[:content]) }.join
+      expect(content).to include(visible_post.raw, trigger_post.raw)
+      expect(content).not_to include(hidden_post.raw)
+    end
+
     it "includes document post uploads independently from image uploads" do
       UploadReference.create!(target: third_post, upload: image_upload1)
       UploadReference.create!(target: third_post, upload: document_upload)

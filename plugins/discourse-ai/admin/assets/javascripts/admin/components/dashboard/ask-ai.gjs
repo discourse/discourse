@@ -6,6 +6,7 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import getURL from "discourse/lib/get-url";
 import { or } from "discourse/truth-helpers";
 import I18n, { i18n } from "discourse-i18n";
+import AskAiReports from "./ask-ai-reports";
 
 const copy = (key) => i18n(`admin.dashboard.ask_ai.${key}`);
 const count = (value) => I18n.toNumber(value, { precision: 0 });
@@ -200,6 +201,14 @@ export default class AskAiDashboard extends Component {
                 </dl>
               </section>
             </div>
+          {{/if}}
+          {{#if @data.start_date}}
+            <AskAiReports
+              @dashboardLoading={{@loading}}
+              @endDate={{@data.end_date}}
+              @questions={{@data.questions}}
+              @startDate={{@data.start_date}}
+            />
           {{/if}}
         {{/if}}
       </DashboardSection>

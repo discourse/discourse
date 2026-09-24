@@ -265,6 +265,7 @@ fa_IR:
       message: "ما این سایت را به روز کرده ایم، <span>لطفاً آن را بازخوانی کنید</span> تا همه چیز به خوبی کار کند."
       dismiss: "رد کردن"
     back_button: "بازگشت"
+    confirm_button: "تایید"
     welcome_banner:
       header:
         new_members: "خوش آمدید، %{preferred_display_name}!"
@@ -3937,6 +3938,7 @@ fa_IR:
       list: "فهرست دسته‌بندی‌ها"
       no_description: "لطفا برای این دسته بندی توضیحاتی اضافه نمایید."
       change_in_category_topic: "ویرایش توضیحات"
+      latest_topics: "آخرین موضوعات"
       description_expand: "نمایش بیشتر"
       description_collapse: "نمایش کمتر"
       already_used: "این رنگ توسط یک دسته بندی دیگر گزیده شده است"
@@ -4197,6 +4199,7 @@ fa_IR:
       with_category: "%{filter} %{category} موضوعات"
       filter:
         title: "نتایج فیلتر شده برای %{filter}"
+        reset: "بازنشانی"
         button:
           label: "فیلتر"
       latest:
@@ -4390,11 +4393,11 @@ fa_IR:
       favorite_max_not_reached: "این نشان را به عنوان مورد علاقه علامت گذاری کنید"
       favorite_count: "%{count}/%{max} نشان به عنوان مورد علاقه مشخص شده اند"
     download_calendar:
-      title: "دانلود تقویم"
+      title: "افزودن به تقویم"
+      calendar: "تقویم"
       save_ics: "دانلود فایل ics"
       save_google: "اضافه کردن به تقویم گوگل"
       remember: "دوباره از من نپرس"
-      remember_explanation: "(شما می توانید این تنظیم را در تنظیمات کاربری خود تغییر دهید)"
       download: "دانلود"
       default_calendar: "تقویم پیش فرض"
       default_calendar_instruction: "تعیین کنید که هنگام ذخیره تاریخ باید از کدام تقویم استفاده شود"
@@ -5330,6 +5333,7 @@ fa_IR:
           series:
             anonymous: "ناشناس"
             crawlers: "خزنده‌ها"
+          crawler_learn_more: "بیشتر بدانید"
         period:
           last_7_days: "۷ روز گذشته"
           last_30_days: "۳۰ روز گذشته"

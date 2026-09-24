@@ -3,6 +3,7 @@
 Voice::Engine.routes.draw do
   resources :rooms do
     member do
+      post :invite_agent
       post :join
       post :heartbeat
       delete :leave
@@ -30,6 +31,8 @@ Voice::Engine.routes.draw do
   end
 
   resources :calls, only: %i[create]
+
+  get "agents" => "agents#index"
 
   # LiveKit server webhooks — machine-to-machine, authenticated by the
   # signature on the request body, not by a user session.

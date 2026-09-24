@@ -482,7 +482,26 @@ export default class ChatThread extends Component {
   }
 
   @action
-  resendStagedMessage() {}
+  resendStagedMessage(stagedMessage) {
+    this.chatThreadPane.sending = true;
+
+    stagedMessage.error = null;
+
+    this.chatApi
+      .sendMessage(this.args.thread.channel.id, {
+        cooked: stagedMessage.cooked,
+        message: stagedMessage.message,
+        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
+        staged_id: stagedMessage.id,
+        thread_id: this.args.thread.id,
+      })
+      .catch((error) => {
+        stagedMessage.setSendError(error);
+      })
+      .finally(() => {
+        this.chatThreadPane.sending = false;
+      });
+  }
 
   async #sendNewMessage(message) {
     if (this.chatThreadPane.sending) {
@@ -560,13 +579,7 @@ export default class ChatThread extends Component {
   #onSendError(stagedId, error) {
     const stagedMessage =
       this.args.thread.messagesManager.findStagedMessage(stagedId);
-    if (stagedMessage) {
-      if (error.jqXHR?.responseJSON?.errors?.length) {
-        stagedMessage.error = error.jqXHR.responseJSON.errors[0];
-      } else {
-        stagedMessage.error = "network_error";
-      }
-    }
+    stagedMessage?.setSendError(error);
 
     this.resetComposerMessage();
   }

@@ -5,7 +5,18 @@
 # https://translate.discourse.org/
 
 sv:
+  markdown_endpoints:
+    latest: "Senaste"
+    categories: "Kategorier"
+    tags: "Taggar"
+    previous_page: "Föregående sida"
+    next_page: "Nästa sida"
+    replies: "Svar"
+    last_updated: "Senast uppdaterat"
   mcp:
+    errors:
+      draft_too_long: "Utkastet är för långt"
+      topic_not_found: "Ämnet hittades inte"
     oauth:
       deny: "Neka"
       approve: "Godkänn"
@@ -966,7 +977,7 @@ sv:
   uploads:
     marked_insecure_from_theme_component_reason: "uppladdning används för temakomponent"
   unsubscribe:
-    title: "Avprenumerera"
+    unsubscribe: "Avprenumerera"
     stop_watching_topic: "Sluta bevaka det här ämnet, %{link}"
     mute_topic: "Tysta alla aviseringar för det här ämnet, %{link}"
     unwatch_category: "Sluta bevaka alla ämnen i %{category}"
@@ -1437,12 +1448,6 @@ sv:
       host_names: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
       queue_size: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq-processen/-processerna, eller så kanske du behöver lägga till fler Sidekiq-arbetare."
       ram: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
-      google_oauth2_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med Google OAuth2 (enable_google_oauth2_logins), men klient-id och klienthemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-      facebook_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med Facebook (enable_facebook_logins), men app-id och appens hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-      twitter_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med Twitter (enable_twitter_logins), men nyckel och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-      github_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (enable_github_logins), men klient-id och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-      s3_upload_config: 'Servern är konfigurerad till att ladda upp filer till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
-      s3_backup_config: 'Servern är konfigurerad till att ladda upp reservfiler till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
       s3_cdn: 'Servern är konfigurerad att ladda upp filer till S3, men det finns ingen konfigurerad S3 CDN. Detta kan leda till dyra S3-kostnader och långsammare prestanda. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Läs mer i "Använda objektlagring för uppladdningar"</a>.'
       image_magick: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
       failing_emails: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
@@ -2242,6 +2247,7 @@ sv:
     email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn 253 tecken."
     wrong_invite_code: "Inbjudningskoden som du har angett var felaktig."
     reserved_username: "Användarnamnet är inte tillåtet."
+    missing_username: "Ange ett användarnamn"
     auth_complete: "Autentisering är färdig."
     click_to_continue: "Klicka här för att fortsätta."
     already_logged_in: "Tyvärr är denna inbjudan avsedd för nya användare, som inte redan har ett befintligt konto."
@@ -3321,7 +3327,7 @@ sv:
     signup_after_approval:
       title: "Ny medlem efter godkännande"
       subject_template: "Du har blivit godkänd på %{site_name}!"
-      text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto hos %{site_name}.\n\nDu har nu tillgång till ditt nya konto genom att logga in från:\n%{base_url}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n"
+      text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto hos %{site_name}.\n\nDu har nu tillgång till ditt nya konto genom att logga in från:\n%{login_url}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n"
     signup_after_reject:
       title: "Registrering efter avslag"
       subject_template: "Du har avvisats på %{site_name}"
@@ -3927,6 +3933,8 @@ sv:
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
         title: "Återställ inlägg"
+      disagree_and_keep_deleted:
+        title: "Behåll inlägg raderat"
       disagree_bundle:
         title: "Nej"
       disagree:

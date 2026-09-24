@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::Collection do
-  subject(:document) { described_class.new(listing, urls:) }
+  subject(:document) { described_class.new(listing, client:, fieldsets:) }
 
   fab!(:first_topic) do
     Fabricate(:topic, title: "Segments of a listing", created_at: Time.utc(2026, 8, 1))
@@ -9,7 +9,9 @@ RSpec.describe JsonApiKit::Document::Collection do
   fab!(:second_topic) do
     Fabricate(:topic, title: "Cursors and their values", created_at: Time.utc(2026, 8, 2))
   end
-
+  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
       model Topic
@@ -41,13 +43,15 @@ RSpec.describe JsonApiKit::Document::Collection do
 
       expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
         first_record,
-        urls:,
+        client:,
+        fieldsets:,
         meta: {
         },
       )
       expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
         second_record,
-        urls:,
+        client:,
+        fieldsets:,
         meta: {
         },
       )
@@ -61,7 +65,8 @@ RSpec.describe JsonApiKit::Document::Collection do
 
         expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
           first_record,
-          urls:,
+          client:,
+          fieldsets:,
           meta: {
             page: {
               cursor: first_record.cursor.to_s,
@@ -70,7 +75,8 @@ RSpec.describe JsonApiKit::Document::Collection do
         )
         expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
           second_record,
-          urls:,
+          client:,
+          fieldsets:,
           meta: {
             page: {
               cursor: second_record.cursor.to_s,
@@ -80,7 +86,7 @@ RSpec.describe JsonApiKit::Document::Collection do
       end
     end
 
-    context "when the listing reads no row" do
+    context "when the listing has no row" do
       let(:listing) { resource.all({}, guardian:, scoped_to: Topic.where(id: -1)) }
 
       it "renders an empty document" do
@@ -110,8 +116,8 @@ RSpec.describe JsonApiKit::Document::Collection do
       it "renders a link to the page at each end" do
         expect(document.to_h[:links]).to eq(
           self: self_link,
-          prev: "https://example.com/api/topics?page%5Bbefore%5D=#{page_cursor}",
-          next: "https://example.com/api/topics?page%5Bafter%5D=#{page_cursor}",
+          prev: "https://example.com/api/topics?page[before]=#{page_cursor}",
+          next: "https://example.com/api/topics?page[after]=#{page_cursor}",
         )
       end
     end

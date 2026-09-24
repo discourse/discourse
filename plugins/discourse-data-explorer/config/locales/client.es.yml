@@ -22,6 +22,7 @@ es:
     explorer:
       default_query: "Por defecto"
       default_query_notice: "Esta es una consulta por defecto, el SQL no se puede editar. Para editar el SQL, crea una nueva consulta."
+      view_query: "Ver"
       queries: "Consultas"
       query_created: "¡Consulta creada!"
       mode:

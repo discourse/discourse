@@ -13,6 +13,7 @@ class CategoryList
   self.preloaded_topic_custom_fields = Set.new
 
   attr_accessor :categories, :uncategorized
+  attr_reader :next_page
 
   def self.register_included_association(association)
     @included_associations ||= []
@@ -166,6 +167,10 @@ class CategoryList
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
     @categories = query.to_a
+
+    if paginate && @options[:include_pagination] && query.offset(page * CATEGORIES_PER_PAGE).exists?
+      @next_page = page + 1
+    end
 
     if paginate && @options[:parent_category_id].blank?
       categories_with_rownum =

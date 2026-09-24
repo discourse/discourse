@@ -320,6 +320,7 @@ pt:
       message: "Nós atualizámos este site, <span>por favor, recarregue-o</span> para manter as coisas a funcionar sem problemas."
       dismiss: "Ignorar"
     back_button: "Anterior"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "Bem-vindo(a), %{preferred_display_name}!"
@@ -3988,6 +3989,7 @@ pt:
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
       no_description: "Por favor adicione uma descrição para esta categoria."
+      latest_topics: "Tópicos recentes"
       description_expand: "Mostrar mais"
       description_collapse: "Mostrar menos"
       already_used: "Esta cor já foi usada para outra categoria"
@@ -4170,6 +4172,7 @@ pt:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       filter:
+        reset: "repor"
         button:
           label: "Filtrar"
       latest:
@@ -4343,11 +4346,10 @@ pt:
       favorite_max_not_reached: "Marque este emblema como favorito"
       favorite_count: "%{count}/%{max} emblemas marcado como favorito"
     download_calendar:
-      title: "Transferir calendário"
+      title: "Adicionar ao calendário"
       save_ics: "Transferir ficheiro .ics"
       save_google: "Adicionar ao calendário Google"
       remember: "Não voltar a perguntar"
-      remember_explanation: "(pode alterar esta preferência nas suas preferências de utilizador)"
       download: "Transferir"
       default_calendar: "Calendário predefinido"
       default_calendar_instruction: "Determinar qual o calendário que deverá ser utilizado quando as datas são guardadas"
@@ -4995,6 +4997,7 @@ pt:
         site_traffic:
           series:
             anonymous: "Anónimo"
+          crawler_learn_more: "Saiba mais"
         period:
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"

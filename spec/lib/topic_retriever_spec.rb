@@ -59,6 +59,16 @@ RSpec.describe TopicRetriever do
       end
     end
 
+    it "does not fetch an already imported URL alias" do
+      url = "https://example.com/articles/entry?view=full"
+      Fabricate(:embeddable_host, host: "example.com")
+      topic_embed = Fabricate(:topic_embed, embed_url: "https://example.com/articles/entry")
+      topic_embed.topic_embed_aliases.create!(TopicEmbedAlias.key_attributes(url))
+
+      expect { TopicRetriever.new(url, no_throttle: true).retrieve }.not_to change { Topic.count }
+      expect(WebMock).not_to have_requested(:get, url)
+    end
+
     it "works with URLs with whitespaces" do
       expect { TopicRetriever.new(" https://example.com ").retrieve }.not_to raise_error
     end

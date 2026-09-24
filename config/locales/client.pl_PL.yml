@@ -439,6 +439,7 @@ pl_PL:
     notifications_tracking:
       tooltip: "Poziom powiadomienia: %{level}"
     back_button: "Poprzednia"
+    confirm_button: "Potwierdź"
     welcome_banner:
       header:
         new_members: "Witaj, %{preferred_display_name}!"
@@ -533,6 +534,11 @@ pl_PL:
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
     multiple_errors: "Wystąpiło wiele błędów: %{errors}"
+    too_many_requests:
+      one: "Wykonano tę czynność zbyt wiele razy. Odczekaj %{count} sekundę przed ponowną próbą."
+      few: "Wykonano tę czynność zbyt wiele razy. Odczekaj %{count} sekundy przed ponowną próbą."
+      many: "Wykonano tę czynność zbyt wiele razy. Odczekaj %{count} sekund przed ponowną próbą."
+      other: "Wykonano tę czynność zbyt wiele razy. Odczekaj %{count} sekund przed ponowną próbą."
     sign_up: "Rejestracja"
     log_in: "Logowanie"
     age: "Wiek"
@@ -1986,6 +1992,9 @@ pl_PL:
       external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
+      composer_toolbar:
+        title: "Pasek narzędzi kompozytora"
+        instructions: "Wybierz, które przyciski będą wyświetlane na pasku narzędzi kompozytora. Skróty klawiaturowe nadal działają dla ukrytych przycisków."
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
       automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
       content_languages:
@@ -3019,6 +3028,10 @@ pl_PL:
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
       signup_disabled: "Rejestracja jest wyłączona, gdy witryna działa w trybie tylko do odczytu."
+    site_archived:
+      enabled: "Ta strona jest w trybie archiwizacji. Proszę kontynuować przeglądanie, ale odpowiadanie, polubienia i inne czynności są wyłączone."
+      enabled_anonymous: "Ta strona jest w trybie archiwizacji. Kontynuuj przeglądanie lub zaloguj się, ale odpowiadanie, polubienia i inne czynności są wyłączone."
+      signup_disabled: "Rejestracja jest wyłączona, gdy witryna znajduje się w trybie archiwizacji."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
       enabled_anonymous: "Ta witryna jest dostępna tylko dla personelu. Proszę kontynuować przeglądanie, ale rejestracja jest niedostępna i tylko pracownicy mogą się zalogować."
@@ -3166,6 +3179,7 @@ pl_PL:
         approve: "Zatwierdź"
         login: "Zaloguj się"
     forgot_password:
+      code_instructions: "Jeśli istnieje pasujące konto, wysłaliśmy kod weryfikacyjny na jego adres e-mail. Wprowadź kod, aby zresetować hasło."
       title: "Reset hasła"
       action: "Nie pamiętam hasła"
       invite: "Wpisz swoją nazwę użytkownika lub adres e-mail. Wyślemy do ciebie e-mail z linkiem do zresetowania hasła."
@@ -3210,9 +3224,14 @@ pl_PL:
       signup_instructions: "Podaj swój adres e-mail, aby dołączyć do tej społeczności. Wyślemy Ci kod potwierdzający i gotowe!"
       user_fields_title: "Prawie gotowe"
       user_fields_instructions: "Jeszcze tylko kilka szczegółów, aby zakończyć tworzenie konta."
-      account_ready_title: "Twoje konto jest gotowe! 🎉"
-      account_ready_edit: "Wybierz swoją nazwę użytkownika i awatar"
+      signup_details_title: "Wybierz swoją nazwę użytkownika i awatar"
       account_ready_continue: "Kontynuuj"
+      account_details_title: "Zakończ tworzenie konta"
+      account_details_instructions: "Zanim prześlesz swoje konto do zatwierdzenia, wybierz sposób, w jaki będziesz widoczny dla społeczności."
+      create_password_optional: "Utwórz hasło (opcjonalnie)"
+      submit_for_approval: "Prześlij do zatwierdzenia"
+      pending_approval_title: "Twoje konto oczekuje na zatwierdzenie."
+      pending_approval_instructions: "Zanim będziesz mógł się zalogować, Twoje konto musi zostać zatwierdzone przez członka personelu. Powiadomimy Cię e-mailem po zatwierdzeniu."
       username_label: "Nazwa użytkownika"
       username_placeholder: "Wybierz nazwę użytkownika"
       regenerate_username: "Zaproponuj losową nazwę użytkownika"
@@ -4180,6 +4199,11 @@ pl_PL:
       full_page_title: "Wyszukaj"
       results: "wyniki"
       no_results: "Brak wyników wyszukiwania"
+      results_announcement:
+        one: "Znaleziono %{count} wynik."
+        few: "Znaleziono %{count} wyniki."
+        many: "Znaleziono %{count} wyników."
+        other: "Znaleziono %{count} wyników."
       no_more_results: "Nie znaleziono więcej wyników."
       post_format: "#%{post_number} za %{username}"
       results_page: "Wyniki wyszukiwania dla '%{term}'"
@@ -5751,6 +5775,8 @@ pl_PL:
       list: "Wymień kategorie"
       no_description: "Proszę dodaj opis do tej kategorii."
       change_in_category_topic: "Edytuj opis"
+      latest_topics: "Ostatnie tematy"
+      view_all_topics: "Wyświetl wszystkie tematy (%{number})"
       description_updated: "Opis zaktualizowano"
       description_expand: "Pokaż więcej"
       description_collapse: "Pokaż mniej"
@@ -6066,6 +6092,8 @@ pl_PL:
       with_category: "%{filter} tematy w %{category} "
       filter:
         title: "Filtrowane wyniki dla %{filter}"
+        results_for: "Wyniki dla: %{query}"
+        reset: "przywróć"
         button:
           label: "Filtr"
       latest:
@@ -6358,16 +6386,21 @@ pl_PL:
       favorite_max_not_reached: "Oznacz tę odznakę jako ulubioną"
       favorite_count: "%{count}/%{max} odznaki oznaczone jako ulubione"
     download_calendar:
-      title: "Pobierz kalendarz"
+      title: "Dodaj do kalendarza"
+      calendar: "Kalendarz"
       save_ics: "Pobierz plik .ics"
       save_google: "Dodaj do kalendarza Google"
+      save_outlook: "Dodaj do Microsoft Outlook"
+      save_apple: "Dodaj do Kalendarza Apple"
       remember: "Nie pytaj ponownie"
-      remember_explanation: "(możesz zmienić tę preferencję w swoich ustawieniach użytkownika)"
+      remember_explanation: "Możesz zmienić tę preferencję później w ustawieniach profilu."
       download: "Pobierz"
       default_calendar: "Domyślny kalendarz"
       default_calendar_instruction: "Określ, który kalendarz powinien być używany podczas zapisywania dat"
       add_to_calendar: "Dodaj do kalendarza"
       google: "Kalendarz Google"
+      outlook: "Microsoft Outlook"
+      apple: "Kalendarz Apple"
       ics: "ICS"
       default_title: "Zaplanowane wydarzenie"
     tagging:
@@ -6465,6 +6498,8 @@ pl_PL:
         synonyms_hint: "W przypadku użycia powyższych tagów zostaną one zastąpione przez %{baseTagName}."
         add_synonyms_confirm: "Każde miejsce, w którym obecnie używany jest kod %{synonymNames} , zostanie zmienione na kod %{tagName} . Czy na pewno chcesz wprowadzić tę zmianę?"
       localization:
+        language: "Język tagów"
+        language_description: "Podstawowy język nazwy i opisu tego tagu."
         hint: "Dodaj lokalizacje, aby wyświetlać różne nazwy tagów użytkownikom w różnych językach."
         locale: "Ustawienia regionalne"
         name: "Nazwa"
@@ -8455,6 +8490,7 @@ pl_PL:
             embedded: "Osadzone wyświetlenia stron"
             crawlers: "Boty indeksujące"
           see_details: "Zobacz szczegóły"
+          crawler_learn_more: "Dowiedz się więcej"
         period:
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"
@@ -9218,6 +9254,14 @@ pl_PL:
           disable:
             title: "Wyłącz tryb tylko do odczytu"
             label: "Wyłącz tylko do odczytu"
+        site_archived:
+          enable:
+            title: "Włącz tryb archiwizacji"
+            label: "Włącz tryb archiwizacji"
+            confirm: "Czy na pewno chcesz włączyć tryb archiwizacji? Użytkownicy nadal będą mogli się logować i przeglądać, ale wszystkie akcje zapisu zostaną wyłączone. Powody operacyjne przeznaczone tylko do odczytu (przełączenie awaryjne, konserwacja) nadal mają pierwszeństwo, gdy są aktywne."
+          disable:
+            title: "Wyłącz tryb archiwizacji"
+            label: "Wyłącz tryb archiwizacji"
         logs:
           none: "Nie ma jeszcze logów…"
         columns:
@@ -10249,6 +10293,10 @@ pl_PL:
           all: "Wszyscy użytkownicy"
           activated: "Aktywowane"
           not_activated: "Nie aktywowano"
+        account_type_filter:
+          human: "Konta ludzkie"
+          bot: "Konta botów"
+          all: "Wszystkie konta"
         approved: "Zatwierdzony?"
         titles:
           active: "Aktywni użytkownicy"

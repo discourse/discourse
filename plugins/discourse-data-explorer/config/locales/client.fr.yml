@@ -30,6 +30,7 @@ fr:
     explorer:
       default_query: "Par défaut"
       default_query_notice: "Il s'agit d'une requête par défaut dont le code SQL ne peut pas être modifié. Pour modifier le code SQL, créez une nouvelle requête."
+      view_query: "Afficher"
       queries: "Requêtes"
       query_created: "Requête créée !"
       mode:

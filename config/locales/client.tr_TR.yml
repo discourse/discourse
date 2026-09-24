@@ -353,6 +353,7 @@ tr_TR:
     notifications_tracking:
       tooltip: "Bildirim seviyesi: %{level}"
     back_button: "Geri"
+    confirm_button: "Onayla"
     welcome_banner:
       header:
         new_members: "Hoş geldiniz, %{preferred_display_name}!"
@@ -4693,6 +4694,7 @@ tr_TR:
       list: "Kategorileri listele"
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
+      latest_topics: "En son konular"
       description_updated: "Açıklama güncellendi"
       description_expand: "Daha fazla göster"
       description_collapse: "Daha az göster"
@@ -4988,6 +4990,7 @@ tr_TR:
       with_category: "%{filter} %{category} konular"
       filter:
         title: "%{filter} için filtrelenmiş sonuçlar"
+        reset: "sıfırla"
         button:
           label: "Filtrele"
       latest:
@@ -5200,16 +5203,18 @@ tr_TR:
       favorite_max_not_reached: "Bu rozeti favori olarak işaretle"
       favorite_count: "%{count}/%{max} rozet favori olarak işaretlendi"
     download_calendar:
-      title: "Takvimi indir"
+      title: "Takvime ekle"
+      calendar: "Takvim"
       save_ics: ".ics dosyasını indir"
       save_google: "Google takvime ekle"
       remember: "Bir daha sorma"
-      remember_explanation: "(bu tercihi kullanıcı tercihlerinizden değiştirebilirsiniz)"
       download: "İndir"
       default_calendar: "Varsayılan takvim"
       default_calendar_instruction: "Tarihler kaydedildiğinde hangi takvimin kullanılması gerektiğini belirleyin"
       add_to_calendar: "Takvime ekle"
       google: "Google Takvim"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Takvimi"
       ics: "ICS"
       default_title: "Planlanmış Etkinlik"
     tagging:
@@ -6560,6 +6565,7 @@ tr_TR:
           series:
             anonymous: "Anonim"
             crawlers: "Gezginler"
+          crawler_learn_more: "Daha fazla bilgi edin"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"

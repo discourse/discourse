@@ -12,7 +12,17 @@ module Boards
       publish_card_event!(board, "card_updated", card_payload, client_id:)
     end
 
-    def self.publish_card_moved!(board, card_payload, client_id:)
+    def self.publish_card_moved!(board, card_payload, old_column_id = nil, acting_user:, client_id:)
+      new_column_id = card_payload.with_indifferent_access[:column_id]
+      old_column_id ||= new_column_id
+      if old_column_id.to_i != new_column_id.to_i
+        DiscourseEvent.trigger(
+          :boards_card_moved,
+          board,
+          card_payload.merge(old_column_id:),
+          acting_user,
+        )
+      end
       publish_card_event!(board, "card_moved", card_payload, client_id:)
     end
 
@@ -35,6 +45,14 @@ module Boards
       )
     end
 
+    def self.publish_board_archived!(board, client_id:)
+      publish!(board, { type: "board_archived", client_id: client_id })
+    end
+
+    def self.publish_board_unarchived!(board, client_id:)
+      publish!(board, { type: "board_unarchived", client_id: client_id })
+    end
+
     def self.publish_topic_memberships_changed!(topic, client_id:, refresh_stream: false)
       data = { reload_topic: true, client_id: }
       data[:refresh_stream] = true if refresh_stream
@@ -53,6 +71,11 @@ module Boards
     private_class_method :publish_card_event!
 
     def self.publish!(board, data)
+      if data[:type] != "board_archived" &&
+           (board.archived? || Boards::Board.where(id: board.id, archived: true).exists?)
+        return
+      end
+
       group_ids = board.permission_acl.group_ids_with_any_permission(%w[view edit manage])
       opts = {}
       # Anonymous viewers belong to no group, so a board readable by anonymous

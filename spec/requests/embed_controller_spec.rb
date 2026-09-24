@@ -321,6 +321,10 @@ RSpec.describe EmbedController do
     describe "full_app redirect" do
       fab!(:embeddable_host)
 
+      let(:original_url) { "https://example.com/articles/entry?view=full" }
+      let(:canonical_url) { "https://example.com/articles/entry" }
+      let(:generic_embeddable_host) { Fabricate(:embeddable_host, host: "example.com") }
+
       before { SiteSetting.embed_full_app = true }
 
       it "redirects to topic URL with embed_mode when full_app is present" do
@@ -336,6 +340,125 @@ RSpec.describe EmbedController do
             }
 
         expect(response).to redirect_to("#{topic_embed.topic.url}?embed_mode=true")
+      end
+
+      it "renders loading before redirecting a canonical URL alias" do
+        generic_embeddable_host
+        Jobs.run_immediately!
+        stub_request(:get, original_url).to_return(
+          body: %(<html><head><link rel="canonical" href="#{canonical_url}"></head></html>),
+        )
+        stub_request(:head, canonical_url).to_return(status: 200)
+        stub_request(:get, canonical_url).to_return(
+          body: "<html><title>Embedded article</title><body><p>Article content</p></body></html>",
+        )
+
+        get "/embed/comments",
+            params: {
+              embed_url: original_url,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => original_url,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("data-embed-state='loading'")
+
+        topic_embed = TopicEmbed.find_by(embed_url: canonical_url)
+
+        get "/embed/comments",
+            params: {
+              embed_url: original_url,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => original_url,
+            }
+
+        expect(response).to redirect_to("#{topic_embed.topic.url}?embed_mode=true")
+      end
+
+      it "renders an imported canonical URL alias in classic mode" do
+        generic_embeddable_host
+        Jobs.run_immediately!
+        stub_request(:get, original_url).to_return(
+          body: %(<html><head><link rel="canonical" href="#{canonical_url}"></head></html>),
+        )
+        stub_request(:head, canonical_url).to_return(status: 200)
+        stub_request(:get, canonical_url).to_return(
+          body: "<html><title>Embedded article</title><body><p>Article content</p></body></html>",
+        )
+
+        get "/embed/comments",
+            params: {
+              embed_url: original_url,
+            },
+            headers: {
+              "REFERER" => original_url,
+            }
+
+        expect(response.body).to include("data-embed-state='loading'")
+
+        get "/embed/comments",
+            params: {
+              embed_url: original_url,
+            },
+            headers: {
+              "REFERER" => original_url,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).not_to include("data-embed-state='loading'")
+      end
+
+      it "returns not found for a canonical URL alias in a private category" do
+        generic_embeddable_host
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        restricted_topic = Fabricate(:topic, category: restricted_category)
+        restricted_post = Fabricate(:post, topic: restricted_topic)
+        topic_embed =
+          Fabricate(
+            :topic_embed,
+            topic: restricted_topic,
+            post: restricted_post,
+            embed_url: canonical_url,
+          )
+        topic_embed.topic_embed_aliases.create!(TopicEmbedAlias.key_attributes(original_url))
+
+        get "/embed/comments",
+            params: {
+              embed_url: original_url,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => original_url,
+            }
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "rejects a canonical URL alias after its original path is no longer allowed" do
+        embeddable_host =
+          Fabricate(
+            :embeddable_host,
+            host: "example.com",
+            allowed_paths: %r{\A/articles/entry(?:\?.*)?\z}.source,
+          )
+        topic_embed = Fabricate(:topic_embed, embed_url: canonical_url)
+        topic_embed.topic_embed_aliases.create!(TopicEmbedAlias.key_attributes(original_url))
+        embeddable_host.update!(allowed_paths: %r{\A/other/}.source)
+
+        get "/embed/comments",
+            params: {
+              embed_url: original_url,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => original_url,
+            }
+
+        expect(response).to have_http_status(:bad_request)
       end
 
       it "redirects to topic URL with embed_mode when using topic_id" do

@@ -16,6 +16,7 @@ describe DiscourseDataExplorer::Queries do
           "start_date" => 30.days.ago.to_date.iso8601,
           "end_date" => Date.current.iso8601,
           "group_name" => group.name,
+          "report_id" => "1",
           "poll_name" => "poll",
           "post_id" => post.id.to_s,
           "topic_id" => post.topic_id.to_s,

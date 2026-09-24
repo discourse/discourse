@@ -3,6 +3,13 @@
 module DiscourseReactions
   module McpTools
     class SetReaction
+      REQUIRED_SCOPES = %w[discourse-reactions:write].freeze
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          post_id: DiscourseMcp::OutputSchema::INTEGER,
+          reaction: DiscourseMcp::OutputSchema::STRING,
+        )
+
       def self.call(arguments:, request_context:)
         post = Post.find_by(id: arguments.fetch("post_id"))
         if post.blank? || !request_context.guardian.can_see?(post)

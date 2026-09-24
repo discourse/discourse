@@ -376,6 +376,7 @@ de:
     notifications_tracking:
       tooltip: "Benachrichtigungsstufe: %{level}"
     back_button: "Zurück"
+    confirm_button: "Bestätigen"
     welcome_banner:
       header:
         new_members: "Willkommen, %{preferred_display_name}!"
@@ -2823,8 +2824,6 @@ de:
       signup_instructions: "Gib deine E-Mail-Adresse ein, um dieser Community beizutreten. Wir schicken dir einen Bestätigungscode, und dann kann es losgehen!"
       user_fields_title: "Fast geschafft"
       user_fields_instructions: "Nur noch ein paar Details, um die Einrichtung deines Kontos abzuschließen."
-      account_ready_title: "Dein Konto ist startklar! 🎉"
-      account_ready_edit: "Wähle deinen Benutzernamen und Avatar"
       account_ready_continue: "Weiter"
       username_label: "Benutzername"
       username_placeholder: "Wähle einen Benutzernamen"
@@ -5004,6 +5003,7 @@ de:
       list: "Kategorien auflisten"
       no_description: "Bitte füge eine Beschreibung für diese Kategorie hinzu."
       change_in_category_topic: "Beschreibung bearbeiten"
+      latest_topics: "Aktuelle Themen"
       description_updated: "Beschreibung aktualisiert"
       description_expand: "Mehr anzeigen"
       description_collapse: "Weniger anzeigen"
@@ -5301,6 +5301,7 @@ de:
       with_category: "%{filter} in %{category}"
       filter:
         title: "Gefilterte Ergebnisse für %{filter}"
+        reset: "zurücksetzen"
         button:
           label: "Filter"
       latest:
@@ -5569,16 +5570,18 @@ de:
       favorite_max_not_reached: "Markiere dieses Abzeichen als Favorit"
       favorite_count: "%{count}/%{max} Abzeichen als Favorit markiert"
     download_calendar:
-      title: "Kalender herunterladen"
+      title: "Zum Kalender hinzufügen"
+      calendar: "Kalender"
       save_ics: ".ics-Datei herunterladen"
       save_google: "Zum Google-Kalender hinzufügen"
       remember: "Nicht mehr fragen"
-      remember_explanation: "(Du kannst diese Einstellung in deinen Benutzereinstellungen ändern)"
       download: "Herunterladen"
       default_calendar: "Standard-Kalender"
       default_calendar_instruction: "Lege fest, welcher Kalender verwendet werden soll, wenn Daten gespeichert werden"
       add_to_calendar: "Zum Kalender hinzufügen"
       google: "Google Kalender"
+      outlook: "Microsoft Outlook"
+      apple: "Apple-Kalender"
       ics: "ICS"
       default_title: "Geplantes Ereignis"
     tagging:
@@ -7168,6 +7171,7 @@ de:
             embedded: "Eingebettete Seitenaufrufe"
             crawlers: "Crawler"
           see_details: "Details anzeigen"
+          crawler_learn_more: "Mehr erfahren"
         period:
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"

@@ -2437,6 +2437,7 @@ lv:
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
       no_description: "Lūdzu, pievieno aprakstu šai sadaļai."
+      latest_topics: "Jaunākās tēmas"
       already_used: "Šī krāsa ir izmantota citai sadaļai"
       security: "Drošība"
       permissions:
@@ -2598,6 +2599,7 @@ lv:
       with_topics: "%{filter} tēmas"
       with_category: "%{filter} Sadaļas %{category} tēmas"
       filter:
+        reset: "atiestatīt"
         button:
           label: "Filtrs"
       latest:
@@ -3205,6 +3207,7 @@ lv:
         site_traffic:
           series:
             anonymous: "Anonīmi"
+          crawler_learn_more: "Uzzināt vairāk"
         period:
           last_7_days: "Pēdējās 7 dienas"
           last_30_days: "Pēdējās 30 dienas"
