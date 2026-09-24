@@ -45,7 +45,6 @@ module SystemDrivers
   def self.register!(example)
     base_options = {
       browser_type: :chromium,
-      channel: :chromium,
       headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
