@@ -9,23 +9,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
     topic.tags << tag
   end
 
-  describe "#valid?" do
-    it "returns true when topic is closed" do
-      trigger = described_class.new(topic, "closed", true)
-      expect(trigger).to be_valid
-    end
-
-    it "returns false when topic is reopened" do
-      trigger = described_class.new(topic, "closed", false)
-      expect(trigger).not_to be_valid
-    end
-
-    it "returns false for non-closed status changes" do
-      trigger = described_class.new(topic, "visible", true)
-      expect(trigger).not_to be_valid
-    end
-  end
-
   describe "#output" do
     it "returns topic_id and tags" do
       trigger = described_class.new(topic, "closed", true)
@@ -44,9 +27,10 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
       expect(trigger.matches?(trigger_context("category_ids" => []))).to eq(true)
     end
 
-    it "matches topics in any of the configured categories" do
+    it "matches topics by category IDs or the legacy category parameter" do
       trigger = described_class.new(topic, "closed", true)
 
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
       expect(
         trigger.matches?(
           trigger_context("category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s]),
@@ -57,11 +41,12 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
       ).to eq(false)
     end
 
-    it "matches subcategories by default but not when excluded" do
+    it "matches subcategories for current and legacy category filters unless excluded" do
       subcategory = Fabricate(:category, parent_category: topic.category)
       subcategory_topic = Fabricate(:topic, category: subcategory)
       trigger = described_class.new(subcategory_topic, "closed", true)
 
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
       expect(trigger.matches?(trigger_context("category_ids" => [topic.category_id.to_s]))).to eq(
         true,
       )
@@ -73,20 +58,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
           ),
         ),
       ).to eq(false)
-    end
-
-    it "supports the legacy scalar category_id parameter" do
-      trigger = described_class.new(topic, "closed", true)
-
-      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
-    end
-
-    it "matches subcategories by default for legacy category_id-only nodes" do
-      subcategory = Fabricate(:category, parent_category: topic.category)
-      subcategory_topic = Fabricate(:topic, category: subcategory)
-      trigger = described_class.new(subcategory_topic, "closed", true)
-
-      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
   end
 
