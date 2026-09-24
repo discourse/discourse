@@ -4,11 +4,16 @@ module JsonApiKit
   class Document
     class Collection < Document
       class << self
-        def contract_class = Request::Contract::Collection
+        def input_class = Request::Input::Collection
 
         def for(parameters, resource:, client:, scoped_to: nil)
           build(parameters, resource:, client:) do
-            resource.all(it, guardian: client.guardian, scoped_to:)
+            resource.all(
+              it,
+              guardian: client.guardian,
+              scoped_to:,
+              default_sorts: client.default_sorts,
+            )
           end
         end
       end

@@ -6,6 +6,7 @@ module JsonApiKit
       class Sort
         class Keys
           Key = Data.define(:name, :direction, :path)
+          Invalid = Data.define(:value) { def declare = value }
 
           class << self
             def parse(value, path)
@@ -17,6 +18,8 @@ module JsonApiKit
                 )
               when String, Symbol
                 new(value.to_s.split(LIST, -1).map { key(it, path) }, path)
+              else
+                Invalid.new(value)
               end
             end
 
@@ -37,6 +40,7 @@ module JsonApiKit
             keys
               .group_by { yield(it) }
               .to_h { |declared, same_name| [declared, shared_direction(same_name)] }
+              .presence
           end
 
           private

@@ -24,7 +24,7 @@ module JsonApiKit
           declared_anchor(anchoring.name).try { it.accepts?(anchoring) } || false
         end
 
-        def anchored_by?(anchor_name:, ordering: {})
+        def anchored_by?(anchor_name:, ordering:)
           declared_anchor(anchor_name).then { it.nil? || it.locatable_in?(order(ordering)) }
         end
 

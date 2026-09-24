@@ -21,12 +21,24 @@ RSpec.describe JsonApiKit::Query::Collection do
       default_sort created_at: :asc
     end
   end
-  let(:request) { JsonApiKit::Request::Collection.new(params, guardian:) }
+  let(:request) do
+    JsonApiKit::Request::Collection.new(
+      JsonApiKit::Request::Input.with_defaults(params, resource:, default_sorts:),
+      guardian:,
+      default_sorts:,
+    )
+  end
+  let(:default_sorts) { JsonApiKit::Edition.current.default_sorts }
   let(:params) { {} }
   let(:guardian) { Guardian.new }
   let(:scoped_to) { nil }
 
-  def request_for(params) = JsonApiKit::Request::Collection.new(params, guardian: Guardian.new)
+  def request_for(params) =
+    JsonApiKit::Request::Collection.new(
+      JsonApiKit::Request::Input.with_defaults(params, resource:, default_sorts:),
+      guardian: Guardian.new,
+      default_sorts:,
+    )
 
   describe ".new" do
     let(:params) { { sort: { secrets: :asc } } }

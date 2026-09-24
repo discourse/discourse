@@ -7,8 +7,8 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
   fab!(:topic)
 
   let(:guardian) { Guardian.new }
-  let(:glossary) { JsonApiKit::Glossary.kit }
-  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end
@@ -49,7 +49,7 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
   describe "#to_h" do
     context "when the current relationship name has several words" do
       let(:name) { "ordered_posts" }
-      let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:edition) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE) }
       let(:version_change) do
         Class
           .new(JsonApiKit::VersionChange) do
@@ -73,7 +73,7 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
     end
 
     context "when the type has a historical name" do
-      let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:edition) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE) }
       let(:version_change) do
         Class
           .new(JsonApiKit::VersionChange) { renamed_type from: :topic_authors, to: :users }

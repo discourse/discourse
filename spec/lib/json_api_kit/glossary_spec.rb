@@ -72,27 +72,6 @@ RSpec.describe JsonApiKit::Glossary do
     end
   end
 
-  describe ".resource" do
-    subject(:resource) { described_class.resource(version) }
-
-    before do
-      allow(described_class).to receive(:new).and_call_original
-      allow(described_class::VersionRule).to receive(:new).and_call_original
-    end
-
-    it "builds a glossary with the wire format rules and the version rule" do
-      resource
-      expect(described_class).to have_received(:new).with(
-        [described_class::CasingRule, an_instance_of(described_class::VersionRule)],
-      )
-    end
-
-    it "builds the version rule for the version" do
-      resource
-      expect(described_class::VersionRule).to have_received(:new).with(version)
-    end
-  end
-
   describe "#declared_attributes" do
     subject(:declared_attributes) { glossary.declared_attributes(attributes) }
 
@@ -111,7 +90,7 @@ RSpec.describe JsonApiKit::Glossary do
     end
 
     context "with a version rule" do
-      subject(:glossary) { described_class.resource(version) }
+      subject(:glossary) { JsonApiKit::Edition.for(version).glossary }
 
       let(:attributes) { { name => %w[Anchors and pages] } }
       let(:value) { "words" }
@@ -200,7 +179,7 @@ RSpec.describe JsonApiKit::Glossary do
     subject(:declared_name) { glossary.declared_name(name) }
 
     context "when a casing correction precedes a type change" do
-      let(:glossary) { described_class.resource(version) }
+      let(:glossary) { JsonApiKit::Edition.for(version).glossary }
       let(:name) { JsonApiKit::Name::Field.new(value:, type: "discussions") }
       let(:value) { "created_at" }
       let(:version_change) do
@@ -278,7 +257,7 @@ RSpec.describe JsonApiKit::Glossary do
     end
 
     context "with a version rule" do
-      subject(:glossary) { described_class.resource(version) }
+      subject(:glossary) { JsonApiKit::Edition.for(version).glossary }
 
       let(:value) { "postedAt" }
 
@@ -343,7 +322,7 @@ RSpec.describe JsonApiKit::Glossary do
     end
 
     context "when the type has a historical name" do
-      let(:glossary) { described_class.resource(version) }
+      let(:glossary) { JsonApiKit::Edition.for(version).glossary }
       let(:version_change) do
         Class
           .new(JsonApiKit::VersionChange) do
@@ -372,7 +351,7 @@ RSpec.describe JsonApiKit::Glossary do
     end
 
     context "with a version rule" do
-      subject(:glossary) { described_class.resource(version) }
+      subject(:glossary) { JsonApiKit::Edition.for(version).glossary }
 
       before do
         allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
@@ -421,7 +400,7 @@ RSpec.describe JsonApiKit::Glossary do
     end
 
     context "with a version rule" do
-      subject(:glossary) { described_class.resource(version) }
+      subject(:glossary) { JsonApiKit::Edition.for(version).glossary }
 
       before do
         allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(

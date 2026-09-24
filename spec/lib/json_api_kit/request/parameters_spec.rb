@@ -107,7 +107,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
 
     context "when both relationships have historical names" do
       let(:parameters) { { "include" => "olderPosts.author,olderPosts" } }
-      let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
       let(:version_change) do
         Class
           .new(JsonApiKit::VersionChange) do
@@ -207,7 +207,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
   end
 
   context "with a version change" do
-    let(:glossary) { JsonApiKit::Glossary.resource(version) }
+    let(:glossary) { JsonApiKit::Edition.for(version).glossary }
     let(:version) { JsonApiKit::Timeline::FIRST_RELEASE }
     let(:version_change) { JsonApiKitSpec::ParametersChange.new(__FILE__) }
 
@@ -365,7 +365,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
   end
 
   context "when a type changes after a field name" do
-    let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+    let(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
     let(:field_change) do
       Class
         .new(JsonApiKit::VersionChange) do

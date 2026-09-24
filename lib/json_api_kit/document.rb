@@ -6,15 +6,9 @@ module JsonApiKit
       private
 
       def build(raw, resource:, client:)
-        parameters =
-          Request::Parameters.new(
-            raw.to_hash.deep_stringify_keys,
-            resource:,
-            glossary: client.glossary,
-          )
-        contract = contract_class.for(parameters.to_h, resource:, glossary: client.glossary)
-        return Errors.new(*contract.refusals) if contract.invalid?
-        assemble(new(yield(contract.to_hash), client:, fieldsets: parameters.fieldsets))
+        input = input_class.new(raw, resource:, edition: client.edition)
+        return Errors.new(*input.refusals) if input.invalid?
+        assemble(new(yield(input.to_h), client:, fieldsets: input.fieldsets))
       rescue Error => error
         Errors.new(error)
       end

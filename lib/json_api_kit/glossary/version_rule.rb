@@ -3,8 +3,8 @@
 module JsonApiKit
   class Glossary
     class VersionRule
-      def initialize(version)
-        @changes = VersionChanges.core.after(version)
+      def initialize(changes)
+        @changes = changes
       end
 
       def declared_attributes(attributes)

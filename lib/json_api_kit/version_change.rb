@@ -16,7 +16,13 @@ module JsonApiKit
       end
 
       def resource(type, &declarations)
-        transformations.concat(Declarations.new(type).tap { it.instance_eval(&declarations) }.to_a)
+        Declarations
+          .new(type)
+          .tap { it.instance_eval(&declarations) }
+          .then do
+            transformations.concat(it.transformations)
+            default_sorts.concat(it.default_sorts)
+          end
       end
 
       def transformations = @transformations ||= []
@@ -29,6 +35,8 @@ module JsonApiKit
       end
 
       def type_renames = @type_renames ||= []
+
+      def default_sorts = @default_sorts ||= []
     end
 
     delegate :version, :description, to: :class
@@ -39,6 +47,7 @@ module JsonApiKit
       @source = source
       @transformations = Transformations.new(self.class.transformations)
       @type_renames = TypeRenames.new(self.class.type_renames)
+      @default_sorts = DefaultSorts.new(self.class.default_sorts)
     end
 
     def verify!
@@ -48,11 +57,10 @@ module JsonApiKit
         raise ArgumentError, "#{source} is dated on or before the first release."
       end
       raise ArgumentError, "#{source} has no description." if description.blank?
-      transformations.verify!
-      type_renames.verify!
+      [transformations, type_renames, default_sorts].each(&:verify!)
       return if File.basename(source).start_with?(version.to_s)
       raise ArgumentError, "The file name must start with the version #{version}: #{source}."
-    rescue NameChanges::Conflict => conflict
+    rescue NameChanges::Conflict, DefaultSorts::Conflict => conflict
       raise ArgumentError, "#{source} #{conflict.message}"
     end
 
@@ -70,9 +78,13 @@ module JsonApiKit
       transformations.previous_values(attributes).transform_keys { previous_type(it) }
     end
 
+    def current_default_sorts
+      default_sorts.convert_names { transformations.current_names(it).sole }
+    end
+
     private
 
-    attr_reader :transformations, :type_renames
+    attr_reader :transformations, :type_renames, :default_sorts
 
     def current_type(name) = name.convert_type { type_renames.current(it) }
 
