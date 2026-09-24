@@ -73,6 +73,7 @@ reviewed:
     - net-smtp # Ruby (bundled gem)
     - nio4r # MIT + BSD
     - oauth # MIT
+    - oauth2 # MIT
     - oauth-tty # MIT
     - omniauth # MIT
     - pg # Ruby
@@ -80,6 +81,7 @@ reviewed:
     - r2 # Apache-2.0 (Twitter)
     - raindrops # LGPL-2.1+
     - rbs # BSD-2-Clause or Ruby
+    - reverse_markdown # wtfpl accepted for this dependency
     - rubyzip # Ruby
     - securerandom # Ruby
     - sidekiq # LGPL (Sidekiq)

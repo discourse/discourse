@@ -13,15 +13,7 @@ lv:
           public: "Publisks"
       reports:
         chat_usage:
-          messages: ziņās
           author: Tu
           author_others: "%{username}"
-        invites:
-          title: Ielūgumi
-          invitee_posts: Ieraksti
-          invitee_likes: Dotās atzinības
-        new_user_interactions:
-          likes_given: Dotās atzinības
-          mentions: Pieminēšanas
         writing_analysis:
           menu_other: Citi

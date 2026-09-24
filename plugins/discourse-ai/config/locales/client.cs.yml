@@ -13,6 +13,8 @@ cs:
             title: "Zeptejte se AI"
         ask_ai:
           title: "Zeptejte se AI"
+          reports:
+            retry_questions: "Zkuste znovu"
           date: "Datum"
           outcomes:
             failed: "Neúspěšný"

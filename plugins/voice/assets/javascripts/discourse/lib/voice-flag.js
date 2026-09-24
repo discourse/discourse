@@ -56,8 +56,10 @@ export default class VoiceFlag {
           message: opts.message,
         },
       });
+      return true;
     } catch (error) {
       popupAjaxError(error);
+      return false;
     }
   }
 }

@@ -43,9 +43,12 @@ class Auth::DiscourseIdAuthenticator < Auth::ManagedAuthenticator
     site
   end
 
-  def enabled?
-    SiteSetting.enable_discourse_id && SiteSetting.discourse_id_client_id.present? &&
-      SiteSetting.discourse_id_client_secret.present?
+  def enable_setting
+    :enable_discourse_id
+  end
+
+  def required_settings
+    %i[discourse_id_client_id discourse_id_client_secret]
   end
 
   def site

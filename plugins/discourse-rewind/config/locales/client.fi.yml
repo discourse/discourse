@@ -17,17 +17,10 @@ fi:
         assignments:
           total_assigned_others: "Osoitettu ryhmälle %{username}"
         chat_usage:
-          messages: viestit
           author: Sinä
           author_others: "%{username}"
           status_online: "● online-tilassa"
         invites:
-          title: Kutsut
-          invitee_posts: Kirjoitettuja viestejä
-          invitee_likes: Annettuja tykkäyksiä
           label_invitations_sent: "Kutsut lähetettiin:"
-        new_user_interactions:
-          likes_given: Annettuja tykkäyksiä
-          mentions: Maininnat
         writing_analysis:
           menu_other: Muut

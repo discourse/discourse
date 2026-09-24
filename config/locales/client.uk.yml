@@ -439,6 +439,7 @@ uk:
     notifications_tracking:
       tooltip: "Рівень сповіщень: %{level}"
     back_button: "Назад"
+    confirm_button: "Підтвердити"
     welcome_banner:
       header:
         new_members: "Ласкаво просимо, %{preferred_display_name}!"
@@ -3215,8 +3216,6 @@ uk:
       signup_instructions: "Введіть свою адресу електронної пошти, щоб приєднатися до цієї спільноти. Ми надішлемо вам код для підтвердження, і ви зможете продовжити!"
       user_fields_title: "Майже готово"
       user_fields_instructions: "Ще трохи деталей, щоб закінчити створення вашого облікового запису."
-      account_ready_title: "Ваш обліковий запис готовий! 🎉"
-      account_ready_edit: "Оберіть ваше ім'я користувача та аватар"
       account_ready_continue: "Продовжити"
       username_label: "Імʼя користувача"
       username_placeholder: "Виберіть ім'я користувача"
@@ -5700,6 +5699,7 @@ uk:
       list: "Список категорій"
       no_description: "Будь ласка, додайте опис для цього розділу."
       change_in_category_topic: "Редагувати опис"
+      latest_topics: "Останні теми"
       description_updated: "Опис оновлено"
       description_expand: "Показати більше"
       description_collapse: "Показати менше"
@@ -6017,6 +6017,7 @@ uk:
       with_category: "%{filter}%{category} теми"
       filter:
         title: "Відфільтровані результати для %{filter}"
+        reset: "скинути"
         button:
           label: "Filter"
       latest:
@@ -6309,16 +6310,18 @@ uk:
       favorite_max_not_reached: "Позначити цей значок як обраний"
       favorite_count: "%{count}/%{max} значків позначено як обрані"
     download_calendar:
-      title: "Завантажити календар"
+      title: "Додати до календаря"
+      calendar: "Календар"
       save_ics: "Завантажити .ics файл"
       save_google: "Додати до календаря Google"
       remember: "Не запитувати мене знову"
-      remember_explanation: "(ви можете змінити цей параметр у налаштуваннях користувача)"
       download: "Завантажити"
       default_calendar: "Календар за замовчуванням"
       default_calendar_instruction: "Визначте, який календар слід використовувати при збереженні дат"
       add_to_calendar: "Додати до календаря"
       google: "Календар Google"
+      outlook: "Microsoft Outlook"
+      apple: "Календар Apple"
       ics: "ICS"
       default_title: "Запланована подія"
     tagging:
@@ -8406,6 +8409,7 @@ uk:
             embedded: "Вбудовані перегляди сторінок"
             crawlers: "Сканери"
           see_details: "Див. деталі"
+          crawler_learn_more: "Дізнатися більше"
         period:
           last_7_days: "Останні 7 днів"
           last_30_days: "Останні 30 днів"

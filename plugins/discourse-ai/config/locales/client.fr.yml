@@ -24,6 +24,8 @@ fr:
             title: "Demander à l'IA"
         ask_ai:
           title: "Demander à l'IA"
+          reports:
+            retry_questions: "Réessayer"
           date: "Date"
           outcomes:
             failed: "Échec"
@@ -267,7 +269,6 @@ fr:
           runner_username: "Exécuter en tant que"
           runner_username_tooltip: "Utilisateur dont les autorisations sont utilisées pour déterminer la visibilité des fichiers téléversés et l'accès aux outils de l'agent d'IA. Utilisez l'utilisateur système pour les automatisations appartenant au flux de travail."
           upload_ids: "ID téléversés"
-          upload_ids_tooltip: "ID facultatifs de fichiers téléversés à joindre à l'instruction. Les images téléversées sont incluses lorsque la fonction de vision de l'agent est activée. Les documents téléversés sont inclus lorsque le LLM sélectionné prend en charge leur type de fichier."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Sélectionner un agent..."
       bot_chats:

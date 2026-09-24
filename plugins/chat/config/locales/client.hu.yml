@@ -487,6 +487,7 @@ hu:
       direct_messages:
         title: "PÜ-k"
         aria_label: "Váltás privát üzenetekre"
+        new_group: "Új csoportos csevegés"
         create: "Ugrás"
         leave: "Csatorna elhagyása"
         close: "Csatorna bezárása"

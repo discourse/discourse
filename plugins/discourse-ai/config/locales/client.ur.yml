@@ -17,6 +17,8 @@ ur:
           discourse_ai: "Discourse AI"
       dashboard:
         ask_ai:
+          reports:
+            retry_questions: "دوبارہ کوشش"
           date: "تاریخ"
           outcomes:
             failed: "ناکامی"

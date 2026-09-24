@@ -15,10 +15,19 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
     }
   }
 
-  async model() {
+  async model(_params, transition) {
+    const filterParams = this.controllerFor(
+      "adminPlugins.show.explorer.index"
+    ).fetchParams;
+    const tags = transition.to.queryParams.tags;
+    if (tags) {
+      filterParams.tags = tags;
+    } else {
+      delete filterParams.tags;
+    }
     const [groups, model] = await Promise.all([
       ajax("/admin/plugins/discourse-data-explorer/groups.json"),
-      this.store.findAll("query"),
+      this.store.findAll("query", filterParams),
     ]);
 
     const groupNames = {};
@@ -31,7 +40,7 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
         (query.group_ids || []).map((id) => groupNames[id])
       );
     });
-    return { model, groups };
+    return { model, groups, queryTags: model.extras?.tags ?? [] };
   }
 
   setupController(controller, model) {

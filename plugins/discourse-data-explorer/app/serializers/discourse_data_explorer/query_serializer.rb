@@ -2,7 +2,15 @@
 
 module DiscourseDataExplorer
   class QuerySerializer < ActiveModel::Serializer
-    attributes :id, :name, :description, :username, :group_ids, :last_run_at, :user_id, :is_default
+    attributes :id,
+               :name,
+               :description,
+               :username,
+               :group_ids,
+               :last_run_at,
+               :user_id,
+               :is_default,
+               :tags
 
     def username
       object&.user&.username
@@ -14,6 +22,10 @@ module DiscourseDataExplorer
 
     def is_default
       object.id < 0
+    end
+
+    def tags
+      object.tag_names
     end
   end
 end

@@ -13,6 +13,11 @@ lv:
             topic_id:
               label: Tēmas ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Paziņojumi"
+            none: "Nav"
       disable_holiday: "Atslēgt"
       enable_holiday: "Ieslēgt"
       date: "Datums"

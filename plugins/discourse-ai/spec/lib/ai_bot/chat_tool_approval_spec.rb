@@ -136,6 +136,18 @@ RSpec.describe DiscourseAi::AiBot::ChatToolApproval do
       expect(message.reload.blocks).to be_present
     end
 
+    it "rejects an approval attached to a human message" do
+      reviewable = create_reviewable
+      message = message_for(reviewable)
+      message.update!(user: admin)
+
+      described_class.handle_interaction(interaction_for(reviewable, user: admin, message: message))
+
+      expect(reviewable.reload).to be_pending
+      expect(target_user.reload.suspended?).to eq(false)
+      expect(reviewable.payload["continuation"]).to be_nil
+    end
+
     it "ignores foreign action ids" do
       reviewable = create_reviewable
       message = message_for(reviewable)
@@ -202,6 +214,10 @@ RSpec.describe DiscourseAi::AiBot::ChatToolApproval do
       expect(target_user.reload.suspended?).to eq(true)
       expect(reviewable.reload).not_to be_pending
       expect(message.reload.blocks).to be_blank
+      expect(reviewable.payload["continuation"]).to include("chat_message_id" => message.id)
+      expect(Jobs::ResumeAiToolApproval.jobs.last["args"].first).to include(
+        "reviewable_id" => reviewable.id,
+      )
     end
   end
 end

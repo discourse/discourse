@@ -357,6 +357,7 @@ pt_BR:
     notifications_tracking:
       tooltip: "Nível de notificação: %{level}"
     back_button: "Voltar"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "Bem-vindo(a), %{preferred_display_name}"
@@ -4579,6 +4580,7 @@ pt_BR:
       list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
+      latest_topics: "Últimos tópicos"
       description_updated: "Descrição atualizada"
       description_expand: "Exibir mais"
       description_collapse: "Exibir menos"
@@ -4866,6 +4868,7 @@ pt_BR:
       with_category: "%{filter} %{category} tópicos"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "redefinir"
         button:
           label: "Filtro"
       latest:
@@ -5078,16 +5081,18 @@ pt_BR:
       favorite_max_not_reached: "Marcar este emblema com o favorito"
       favorite_count: "%{count}/%{max} emblemas marcados como favoritos"
     download_calendar:
-      title: "Baixar calendário"
+      title: "Adicionar ao calendário"
+      calendar: "Calendário"
       save_ics: "Baixar arquivo .ics"
       save_google: "Adicionar ao Google calendar"
       remember: "Não perguntar novamente"
-      remember_explanation: "(você pode alterar esta preferência nas suas preferências de usuário(a))"
       download: "Download"
       default_calendar: "Calendário padrão"
       default_calendar_instruction: "Determine qual calendário deve ser usado ao salvar datas"
       add_to_calendar: "Adicionar ao calendário"
       google: "Google Calendar"
+      outlook: "Microsoft Outlook"
+      apple: "Calendário da Apple"
       ics: "ICS"
       default_title: "Evento agendado"
     tagging:
@@ -6428,6 +6433,7 @@ pt_BR:
           series:
             anonymous: "Anônimo(a)"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Saiba mais"
         period:
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"

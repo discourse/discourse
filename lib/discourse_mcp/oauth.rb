@@ -160,14 +160,25 @@ module DiscourseMcp
           metadata["client_id"] == client_id && metadata["client_name"].is_a?(String) &&
             metadata["client_name"].bytesize <= 255 && redirect_uris.is_a?(Array) &&
             redirect_uris.present? && redirect_uris.length <= 20 &&
-            metadata.fetch("token_endpoint_auth_method", "none") == "none" &&
-            !metadata.key?("client_secret") && !metadata.key?("client_secret_expires_at") &&
+            supports_public_client_authentication?(metadata) && !metadata.key?("client_secret") &&
+            !metadata.key?("client_secret_expires_at") &&
             redirect_uris.all? do |value|
               value.is_a?(String) && McpOauthClient.valid_redirect_uri?(value)
             end
         raise Discourse::InvalidAccess if !valid
       end
       private_class_method :validate_metadata!
+
+      def self.supports_public_client_authentication?(metadata)
+        preferred_method = metadata.fetch("token_endpoint_auth_method", "none")
+        supported_methods = metadata["token_endpoint_auth_methods_supported"]
+        return preferred_method == "none" if supported_methods.nil?
+
+        supported_methods.is_a?(Array) &&
+          supported_methods.all? { |method| method.is_a?(String) } &&
+          supported_methods.include?(preferred_method) && supported_methods.include?("none")
+      end
+      private_class_method :supports_public_client_authentication?
 
       def self.canonicalize(value)
         case value

@@ -349,6 +349,7 @@ es:
     notifications_tracking:
       tooltip: "Nivel de notificación: %{level}"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "¡Hola, %{preferred_display_name}!"
@@ -4611,6 +4612,7 @@ es:
       list: "Lista de categorías"
       no_description: "Añade una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
+      latest_topics: "Temas recientes"
       description_updated: "Descripción actualizada"
       description_expand: "Mostrar más"
       description_collapse: "Mostrar menos"
@@ -4902,6 +4904,7 @@ es:
       with_category: "%{filter} Foro de %{category}"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "restablecer"
         button:
           label: "Filtrar"
       latest:
@@ -5114,16 +5117,18 @@ es:
       favorite_max_not_reached: "Marcar esta medalla como favorita"
       favorite_count: "%{count}/%{max} medallas marcadas como favoritas"
     download_calendar:
-      title: "Descargar calendario"
+      title: "Añadir al calendario"
+      calendar: "Calendario"
       save_ics: "Descargar archivo.ics"
       save_google: "Añadir a calendario de Google"
       remember: "No volver a preguntar"
-      remember_explanation: "(puedes cambiar esto en tus preferencias)"
       download: "Descargar"
       default_calendar: "Calendario por defecto"
       default_calendar_instruction: "Elige qué calendarios usar al guardar las fechas"
       add_to_calendar: "Añadir al calendario"
       google: "Calendario de Google"
+      outlook: "Microsoft Outlook"
+      apple: "Calendario de Apple"
       ics: "ICS"
       default_title: "Evento programado"
     tagging:
@@ -6464,6 +6469,7 @@ es:
           series:
             anonymous: "Anónimas"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Más información"
         period:
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"

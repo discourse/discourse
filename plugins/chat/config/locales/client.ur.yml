@@ -445,6 +445,7 @@ ur:
         aria_label: "میری دھاگوں کی فہرست پر جائیں"
       direct_messages:
         title: "ذاتی پیغامات"
+        new_group: "نئے گروپ کی گفتگو"
         leave: "چینل چھوڑیں"
         close: "چینل بند"
       channel_list:

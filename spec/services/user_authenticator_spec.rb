@@ -17,7 +17,7 @@ RSpec.describe UserAuthenticator do
     }
   end
 
-  before { SiteSetting.enable_github_logins = true }
+  before { enable_auth_provider(:github) }
 
   describe "#start" do
     describe "without authentication session" do

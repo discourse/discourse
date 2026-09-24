@@ -21,12 +21,6 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   }
 }
 
-.livestream-rsvp__going-button {
-  @container (width < 40rem) {
-    width: 100%;
-  }
-}
-
 .discourse-calendar-livestream-zoom-entry {
   display: flex;
   flex-direction: column;

@@ -155,7 +155,7 @@ RSpec.describe ApplicationController do
 
     it "redirects to the sole authenticator when local logins are disabled" do
       # Local logins and google enabled, show login UI
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
@@ -166,7 +166,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/auth/google_oauth2")
 
       # Google and GitHub enabled, direct to login UI
-      SiteSetting.enable_github_logins = true
+      enable_auth_provider(:github)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
@@ -185,7 +185,7 @@ RSpec.describe ApplicationController do
 
     it "does not redirect to the authenticator when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       SiteSetting.enable_local_logins = false
 
       get "/"
@@ -215,7 +215,7 @@ RSpec.describe ApplicationController do
 
       it "does not redirect to the authenticator during registration" do
         SiteSetting.enable_local_logins = false
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
 
         get "/"
         expect(response).to redirect_to("/auth/google_oauth2")
@@ -1240,8 +1240,6 @@ RSpec.describe ApplicationController do
       Middleware::AnonymousCache.enable_anon_cache
       Middleware::AnonymousCache.clear_all_cache!
 
-      SiteSetting.trigger_browser_pageview_events = true
-
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("store")
@@ -1966,7 +1964,7 @@ RSpec.describe ApplicationController do
     it "is not included by default" do
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Link"]).to eq(nil)
+      expect(response.headers["Link"].to_s).not_to include("rel=preconnect", 'rel="preload"')
     end
 
     context "when in preconnect mode" do
@@ -1986,7 +1984,7 @@ RSpec.describe ApplicationController do
         expect(response.headers["X-Discourse-Early-Hint"]).to include(
           "<https://cdn.example.com>; rel=preconnect",
         )
-        expect(response.headers["Link"]).to eq(nil)
+        expect(response.headers["Link"].to_s).not_to include("rel=preconnect", 'rel="preload"')
       end
 
       it "is skipped for non-app URLs" do
