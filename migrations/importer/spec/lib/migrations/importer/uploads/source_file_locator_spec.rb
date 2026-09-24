@@ -33,6 +33,13 @@ RSpec.describe Migrations::Importer::Uploads::SourceFileLocator do
       expect(find(filename: "photo.png", path: "/original/1X/abc.png")).to eq(expected)
     end
 
+    it "finds an absolute recorded path when the filesystem root is configured" do
+      expected = touch("uploads/a.png")
+      locator = described_class.new(root_paths: [File::SEPARATOR])
+
+      expect(locator.find_file_in_paths(filename: "a.png", path: expected)).to eq(expected)
+    end
+
     it "tries each root in order and returns the first hit" do
       expected = touch("second/a.png")
 
