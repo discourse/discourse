@@ -78,16 +78,11 @@ export default class Report extends Component {
     <div class="bundle-analyzer">
       <div class="ba-header">
         <span class="ba-sub">
-          {{this.analysis.data.emberEnv}}
-          ·
           {{this.analysis.chunkCount}}
           chunks ·
-        </span>
-        <span class="ba-sub">
           <span class="ba-loaded-dot">●</span>
-          loaded in this browser:
           {{this.loadedTotals.files}}
-          chunks ·
+          loaded,
           {{brotliLabel this.loadedTotals}}
           br
         </span>
@@ -96,16 +91,14 @@ export default class Report extends Component {
       <AnalyzerToolbar
         @filter={{this.filter}}
         @onFilter={{this.updateFilter}}
-        @placeholder="Filter files / modules…"
+        @placeholder="Filter chunks or modules…"
         @view={{@view}}
       />
 
       <section>
         <div class="ba-hint">
-          Everything the build can load on its own.
           <code>discourse</code>
-          is the baseline; every other card counts only the bytes it adds on top
-          of it. The badge says how a card is reached.
+          is the baseline. Every other row counts only what it adds on top.
         </div>
         <div>
           {{#each this.visible as |f|}}

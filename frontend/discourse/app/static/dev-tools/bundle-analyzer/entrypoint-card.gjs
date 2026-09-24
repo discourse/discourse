@@ -173,27 +173,17 @@ export default class EntrypointCard extends ExpandableRow {
               </div>
             {{/each}}
           </div>
-          {{#if @baseline}}
-            <div class="ba-pill" style="margin-bottom:6px">
-              Initial load:
+          <div class="ba-pill" style="margin-bottom:6px">
+            {{#if @baseline}}
               <b>{{this.loadSet.size}}</b>
-              files ({{this.shownBrotli}}
-              br /
-              {{fmt this.shownTotals.raw}}
-              raw).
-            </div>
-          {{else}}
-            <div class="ba-pill" style="margin-bottom:6px">
-              Adds
+              files
+            {{else}}
               <b>{{this.added.length}}</b>
-              new files ({{this.shownBrotli}}
-              br /
-              {{fmt this.shownTotals.raw}}
-              raw); full subtree is
+              new files,
               {{this.loadSet.size}}
-              files.
-            </div>
-          {{/if}}
+              in its subtree
+            {{/if}}
+          </div>
           <div class="ba-sub-list">
             {{#if this.rootVisible}}
               <ChunkRow

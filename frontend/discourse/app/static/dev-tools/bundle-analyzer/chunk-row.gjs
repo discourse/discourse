@@ -109,12 +109,11 @@ export default class ChunkRow extends ExpandableRow {
             <code>{{this.fileName}}</code>
           </div>
           <div class="ba-pill" style="margin:2px 0 6px">
-            Used by entrypoints:
+            Used by
             {{this.usedByLabel}}
           </div>
           <div class="ba-pill" style="margin-bottom:4px">
-            Module sizes are source bytes as rendered into the chunk, before it
-            is minified — they explain proportions, not transfer size.
+            Source bytes, before minifying.
           </div>
           {{#each this.visibleModules as |m|}}
             <div class="ba-mod" title={{m.id}}>

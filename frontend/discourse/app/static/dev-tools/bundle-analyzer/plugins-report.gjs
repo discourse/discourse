@@ -52,22 +52,21 @@ export default class PluginsReport extends Component {
           {{brotliLabel this.totals}}
           br /
           {{fmt this.totals.raw}}
-          raw ·
+          raw
         </span>
       </div>
 
       <AnalyzerToolbar
         @filter={{this.filter}}
         @onFilter={{this.updateFilter}}
-        @placeholder="Filter plugins / chunks / modules / routes…"
+        @placeholder="Filter plugins, chunks or routes…"
         @view={{@view}}
       />
 
       <section>
         <div class="ba-hint">
-          Each plugin is built on its own, so these sizes are separate from
-          core's and from each other. A route bundle counts only what it adds on
-          top of the entrypoint that loads it.
+          Each plugin is built separately, so these sizes stand apart from
+          core's.
         </div>
         <div>
           {{#each this.visible as |p|}}

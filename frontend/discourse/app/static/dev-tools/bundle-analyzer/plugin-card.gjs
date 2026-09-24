@@ -115,7 +115,7 @@ export default class PluginCard extends ExpandableRow {
       </button>
       {{#if this.expanded}}
         <div class="ba-body">
-          <div class="ba-hint">Loaded up front when the plugin is active.</div>
+          <div class="ba-hint">Loaded up front.</div>
           <div class="ba-sub-list">
             {{#each this.entrypoints as |f|}}
               <EntrypointCard
@@ -131,8 +131,7 @@ export default class PluginCard extends ExpandableRow {
 
           {{#if this.routeBundles}}
             <div class="ba-hint" style="margin-top:10px">
-              Loaded on demand when a url matches. Each counts only what it adds
-              on top of the entrypoint that loads it.
+              Loaded on demand, when a url matches.
             </div>
             <div class="ba-sub-list">
               {{#each this.routeBundles as |b|}}
