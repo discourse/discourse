@@ -41,6 +41,75 @@ RSpec.describe JsonApiKit::Document do
       expect(document.status).to eq("200")
     end
 
+    context "when the resource supplies request context" do
+      let(:instance) { resource.new(guardian:, edition:) }
+
+      before do
+        allow(resource).to receive(:new).and_return(instance)
+        allow(JsonApiKit::Request::Input::Collection).to receive(:new).and_call_original
+        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        document
+      end
+
+      it "uses the instance for input validation" do
+        expect(JsonApiKit::Request::Input::Collection).to have_received(:new).with(
+          parameters,
+          resource: instance,
+          edition:,
+        )
+      end
+
+      it "uses the same instance for execution" do
+        expect(JsonApiKit::Query::Collection).to have_received(:new).with(
+          instance,
+          an_instance_of(JsonApiKit::Request::Collection),
+          scoped_to:,
+        )
+      end
+
+      it "creates one instance for the request" do
+        expect(resource).to have_received(:new).once
+      end
+    end
+
+    context "when the request includes related records" do
+      let(:parameters) { { include: "user" } }
+      let(:users_resource) do
+        Class.new(JsonApiKit::Resource) do
+          model User
+          type :users
+          attribute :username
+        end
+      end
+      let(:resource) { Class.new(super()).tap { it.has_one(:user, resource: users_resource) } }
+      let(:users) { users_resource.new(guardian:, edition:) }
+
+      before do
+        allow(users_resource).to receive(:new).and_return(users)
+        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        document
+      end
+
+      it "creates one resource instance for the related listing" do
+        expect(users_resource).to have_received(:new).with(guardian:, edition:).once
+      end
+
+      it "queries the related records through that instance" do
+        expect(JsonApiKit::Query::Collection).to have_received(:new).with(
+          users,
+          an_instance_of(JsonApiKit::Request::Collection),
+          scoped_to: an_instance_of(JsonApiKit::Scoping::PerOwner),
+        )
+      end
+
+      it "renders all related records" do
+        expect(document.to_h[:included].map { it[:id] }).to contain_exactly(
+          topic.user_id.to_s,
+          other_topic.user_id.to_s,
+        )
+      end
+    end
+
     context "when a caller narrows the listing with a scope" do
       let(:scoped_to) { Topic.where(id: topic.id) }
 
@@ -67,6 +136,36 @@ RSpec.describe JsonApiKit::Document do
 
     it "renders the record as a document" do
       expect(document.to_h[:data][:id]).to eq(topic.id.to_s)
+    end
+
+    context "when the resource supplies request context" do
+      let(:instance) { resource.new(guardian:, edition:) }
+
+      before do
+        allow(resource).to receive(:new).and_return(instance)
+        allow(JsonApiKit::Request::Input::Individual).to receive(:new).and_call_original
+        allow(JsonApiKit::Query::Individual).to receive(:new).and_call_original
+        document
+      end
+
+      it "uses the instance for input validation" do
+        expect(JsonApiKit::Request::Input::Individual).to have_received(:new).with(
+          parameters,
+          resource: instance,
+          edition:,
+        )
+      end
+
+      it "uses the same instance for execution" do
+        expect(JsonApiKit::Query::Individual).to have_received(:new).with(
+          instance,
+          an_instance_of(JsonApiKit::Request::Individual),
+        )
+      end
+
+      it "creates one instance for the request" do
+        expect(resource).to have_received(:new).once
+      end
     end
 
     context "when no row holds that id" do

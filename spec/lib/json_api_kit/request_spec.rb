@@ -2,11 +2,7 @@
 
 RSpec.describe JsonApiKit::Request do
   subject(:request) do
-    described_class::Collection.new(
-      params,
-      guardian:,
-      default_sorts: JsonApiKit::Edition.current.default_sorts,
-    )
+    described_class::Collection.new(params, guardian:, edition: JsonApiKit::Edition.current)
   end
 
   let(:params) { {} }
@@ -23,11 +19,7 @@ RSpec.describe JsonApiKit::Request do
 
     context "when a caller asks for one record" do
       subject(:request) do
-        described_class::Individual.new(
-          params,
-          guardian:,
-          default_sorts: JsonApiKit::Edition.current.default_sorts,
-        )
+        described_class::Individual.new(params, guardian:, edition: JsonApiKit::Edition.current)
       end
 
       let(:params) { { id: topic.id } }
@@ -73,11 +65,7 @@ RSpec.describe JsonApiKit::Request do
 
     context "when a caller asks for one record" do
       subject(:request) do
-        described_class::Individual.new(
-          params,
-          guardian:,
-          default_sorts: JsonApiKit::Edition.current.default_sorts,
-        )
+        described_class::Individual.new(params, guardian:, edition: JsonApiKit::Edition.current)
       end
 
       let(:params) { { id: 12, fields: { users: %w[username] } } }

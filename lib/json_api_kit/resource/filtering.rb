@@ -18,14 +18,16 @@ module JsonApiKit
           self.declared_filters = declared_filters + [Declarations::Filter.new(name, &condition)]
         end
 
-        def apply_filters(rows, filtering = {}) = filters.apply(rows, filtering)
-
         def filter_names = declared_filters.map(&:name)
-
-        private
 
         def filters = Declarations::Filters.new(declared_filters)
       end
+
+      delegate :names, to: :filters, prefix: :filter
+
+      def apply_filters(rows, filtering = {}) = filters.apply(rows, filtering)
+
+      def filters = @filters ||= self.class.filters.with(edition.removed_filters.for(type))
     end
   end
 end

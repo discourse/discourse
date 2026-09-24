@@ -25,7 +25,7 @@ module JsonApiKit
         relationship.listing(
           request.for_sideload(paths),
           guardian: request.guardian,
-          default_sorts: request.default_sorts,
+          edition: request.edition,
           scoped_to: relationship.scoping(association),
         )
     end
