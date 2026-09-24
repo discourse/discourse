@@ -1,16 +1,13 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import "./styles.css";
 import DModal from "discourse/ui-kit/d-modal";
-import DTabs from "discourse/ui-kit/d-tabs";
 import { i18n } from "discourse-i18n";
-import Analysis, { brotliLabel } from "./analysis";
+import Analysis from "./analysis";
 import LoadedChunks from "./loaded-chunks";
 import PluginsAnalysis from "./plugins-analysis";
-import PluginsReport from "./plugins-report";
 import Report from "./report";
 import ViewFilter from "./view-filter";
 
@@ -19,7 +16,6 @@ export default class BundleAnalyzerModal extends Component {
   @tracked plugins;
   @tracked error;
   @tracked pluginError;
-  @tracked tab = "core";
 
   // One filter behind both tabs, handed to each analysis as it is built.
   view = new ViewFilter();
@@ -53,16 +49,15 @@ export default class BundleAnalyzerModal extends Component {
     this.#observers.forEach((o) => o.teardown());
   }
 
+  get ready() {
+    return !!(this.analysis || this.plugins);
+  }
+
   // Read here rather than in the template: the template compiler lists its
   // scope as object shorthand, and the macro that swaps `DEBUG` for a literal
   // would rewrite the key as well as the value.
   get developmentBuild() {
     return DEBUG;
-  }
-
-  @action
-  setTab(key) {
-    this.tab = key;
   }
 
   // The graph answers every size question, so the graph is what holds the
@@ -100,61 +95,29 @@ export default class BundleAnalyzerModal extends Component {
           </div>
         {{else}}
           <div {{didInsert this.load}}>
-            <DTabs
-              @active={{this.tab}}
-              @label={{i18n "dev_tools.bundle_analyzer.title"}}
-              @onActivate={{this.setTab}}
-              as |tabs|
-            >
-              <tabs.Tab @key="core">
-                <:label>
-                  {{i18n "dev_tools.bundle_analyzer.core"}}
-                  {{#if this.analysis}}
-                    <span class="ba-tab-size">{{brotliLabel
-                        this.analysis.loadedTotals
-                      }}</span>
-                  {{/if}}
-                </:label>
-                <:default>
-                  {{#if this.error}}
-                    <div class="ba-empty">
-                      {{i18n
-                        "dev_tools.bundle_analyzer.load_failed"
-                        error=this.error
-                      }}
-                    </div>
-                  {{else if this.analysis}}
-                    <Report @analysis={{this.analysis}} @view={{this.view}} />
-                  {{/if}}
-                </:default>
-              </tabs.Tab>
-
-              <tabs.Tab @key="plugins">
-                <:label>
-                  {{i18n "dev_tools.bundle_analyzer.plugins"}}
-                  {{#if this.plugins}}
-                    <span class="ba-tab-size">{{brotliLabel
-                        this.plugins.loadedTotals
-                      }}</span>
-                  {{/if}}
-                </:label>
-                <:default>
-                  {{#if this.pluginError}}
-                    <div class="ba-empty">
-                      {{i18n
-                        "dev_tools.bundle_analyzer.load_failed"
-                        error=this.pluginError
-                      }}
-                    </div>
-                  {{else if this.plugins}}
-                    <PluginsReport
-                      @analysis={{this.plugins}}
-                      @view={{this.view}}
-                    />
-                  {{/if}}
-                </:default>
-              </tabs.Tab>
-            </DTabs>
+            {{#if this.error}}
+              <div class="ba-empty">
+                {{i18n
+                  "dev_tools.bundle_analyzer.load_failed"
+                  error=this.error
+                }}
+              </div>
+            {{/if}}
+            {{#if this.pluginError}}
+              <div class="ba-empty">
+                {{i18n
+                  "dev_tools.bundle_analyzer.load_failed"
+                  error=this.pluginError
+                }}
+              </div>
+            {{/if}}
+            {{#if this.ready}}
+              <Report
+                @core={{this.analysis}}
+                @plugins={{this.plugins}}
+                @view={{this.view}}
+              />
+            {{/if}}
           </div>
         {{/if}}
       </:body>

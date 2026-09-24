@@ -478,8 +478,9 @@ en:
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
       bundle_analyzer:
         title: "Bundle analysis"
-        core: "Core"
-        plugins: "Plugins"
+        scope_all: "Core and plugins"
+        scope_core: "Core only"
+        scope_plugins: "Plugins only"
         only_loaded: "Only show loaded chunks"
         production_only: "Only available for production builds"
         load_failed: "Failed to load bundle-analysis.json: %{error}"

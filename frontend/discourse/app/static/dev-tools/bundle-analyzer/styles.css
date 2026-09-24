@@ -13,18 +13,6 @@
   width: min(1200px, 92vw);
   max-width: 92vw;
 }
-/* A chip on the tab. Tinted from the tab's own colour so it reads the same
-   whether the tab is selected or not — the strip sits outside
-   `.bundle-analyzer` and cannot use its palette. */
-.bundle-analyzer-modal .ba-tab-size {
-  margin-left: 0.5em;
-  padding: 0.2em 0.45em;
-  border-radius: var(--d-border-radius);
-  background: color-mix(in srgb, currentcolor 12%, transparent);
-  font-size: var(--font-down-2);
-  font-weight: normal;
-  font-variant-numeric: tabular-nums;
-}
 .bundle-analyzer {
   --ba-bg: var(--secondary);
   --ba-panel: var(--primary-very-low);
