@@ -2,12 +2,20 @@
    scoped under `.bundle-analyzer` and use Discourse's semantic color variables
    so it follows the active (light/dark) color scheme. */
 
+/* Pinned to the height it is allowed anyway, so switching tabs or expanding a
+   card scrolls the body instead of resizing the modal. `--modal-min-height` is
+   the documented utility for this; 80vh is what `--modal-max-height` defaults
+   to. */
+.bundle-analyzer-modal {
+  --modal-min-height: 80vh;
+}
 .bundle-analyzer-modal .d-modal__container {
   width: min(1200px, 92vw);
   max-width: 92vw;
 }
 .bundle-analyzer-modal .d-modal__body {
   padding: 0;
+  overflow-y: auto;
 }
 
 .bundle-analyzer {
