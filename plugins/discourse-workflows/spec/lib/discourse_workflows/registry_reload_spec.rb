@@ -59,8 +59,8 @@ RSpec.describe DiscourseWorkflows::Registry do
       plugin,
     )
     described_class.reset_indexes!
-    allow(DiscourseWorkflows::EventListener).to receive(:handle) do |klass, *args|
-      handled << [klass, args]
+    allow(DiscourseWorkflows::EventListener).to receive(:handle) do |klass, *args, event_name:|
+      handled << [klass, args, event_name]
     end
   end
 
@@ -111,7 +111,7 @@ RSpec.describe DiscourseWorkflows::Registry do
       expect(serialized[:metadata]).to eq("channels" => [{ id: 1, name: color }])
 
       DiscourseEvent.trigger(:workflow_reload_test, color)
-      expect(handled.last).to eq([current, [color]])
+      expect(handled.last).to eq([current, [color], :workflow_reload_test])
       previous = current
     end
 

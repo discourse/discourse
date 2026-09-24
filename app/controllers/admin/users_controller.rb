@@ -172,13 +172,7 @@ class Admin::UsersController < Admin::StaffController
   def unsuspend
     guardian.ensure_can_unsuspend!(@user)
 
-    @user.suspended_till = nil
-    @user.suspended_at = nil
-    @user.save!
-
-    StaffActionLogger.new(current_user).log_user_unsuspend(@user)
-
-    DiscourseEvent.trigger(:user_unsuspended, user: @user)
+    UserSuspender.unsuspend(@user, by_user: current_user)
 
     render_json_dump(suspension: { suspended_till: nil, suspended_at: nil })
   end

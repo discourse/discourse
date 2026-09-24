@@ -246,8 +246,12 @@ module DiscourseWorkflows
     end
     private_class_method :unknown_contract?
 
-    def self.event_name
-      description[:event]&.to_sym
+    def self.event_names
+      Array.wrap(description[:event]).map(&:to_sym)
+    end
+
+    def self.from_event(_event_name, *args)
+      new(*args)
     end
 
     def self.manually_triggerable?

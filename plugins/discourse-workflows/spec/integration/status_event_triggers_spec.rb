@@ -2,6 +2,7 @@
 
 RSpec.describe "Workflow status event triggers" do
   fab!(:admin)
+  fab!(:user)
   fab!(:topic, :topic_with_op)
 
   before { DiscourseWorkflows::WorkflowDependency.clear_cache! }
@@ -70,6 +71,44 @@ RSpec.describe "Workflow status event triggers" do
         DiscourseWorkflows::Nodes::ReviewableStatusChanged::V1,
       )
     end
+  end
+
+  it "dispatches promotions with both trust levels and the execution user" do
+    user.update!(trust_level: TrustLevel.levels[:basic])
+    create_workflow(
+      "promoted",
+      "trigger:user_trust_level_changed",
+      "old_trust_levels" => [TrustLevel.levels[:basic].to_s],
+      "new_trust_levels" => [TrustLevel.levels[:member].to_s],
+    )
+
+    Promotion.new(user).change_trust_level!(TrustLevel.levels[:member])
+
+    expect(enqueued_jobs.size).to eq(1)
+    expect(enqueued_jobs.first["user_id"]).to eq(user.id)
+    expect(enqueued_jobs.first["trigger_data"]).to include(
+      "old_trust_level" => TrustLevel.levels[:basic],
+      "new_trust_level" => TrustLevel.levels[:member],
+    )
+    expect(enqueued_jobs.first["trigger_data"]).to match_node_output_schema(
+      DiscourseWorkflows::Nodes::UserTrustLevelChanged::V1,
+    )
+  end
+
+  it "dispatches first login without dispatching later logins" do
+    user.update!(last_seen_at: nil)
+    create_workflow("first-login", "trigger:user_first_logged_in")
+
+    user.logged_in
+    user.update!(last_seen_at: Time.current)
+    user.logged_in
+
+    expect(enqueued_jobs.size).to eq(1)
+    expect(enqueued_jobs.first["user_id"]).to eq(user.id)
+    expect(enqueued_jobs.first.dig("trigger_data", "user", "id")).to eq(user.id)
+    expect(enqueued_jobs.first["trigger_data"]).to match_node_output_schema(
+      DiscourseWorkflows::Nodes::UserFirstLoggedIn::V1,
+    )
   end
 
   def create_workflow(trigger_id, trigger_type, configuration = {})
