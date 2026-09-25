@@ -78,7 +78,7 @@ module MarkdownEndpoint
       if post.user
         avatar_url = UrlHelper.absolute(post.user.avatar_template.gsub("{size}", "32"))
         avatar_url = "#{Discourse.base_protocol}:#{avatar_url}" if avatar_url.start_with?("//")
-        avatar_url = URI::DEFAULT_PARSER.escape(avatar_url, /[\s<>"()\\]/)
+        avatar_url = URI::DEFAULT_PARSER.escape(avatar_url, /[^\x21-\x7E]|[<>"()\\]/)
         author = escape_text(post.user.username)
         author_link = "![#{author}](#{avatar_url}) [@#{author}](#{post.user.full_url})"
         lines << "### #{I18n.t("markdown_endpoints.post_author", author: author_link)}"

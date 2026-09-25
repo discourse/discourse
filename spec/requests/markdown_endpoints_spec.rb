@@ -356,6 +356,21 @@ RSpec.describe "Markdown endpoints" do
     end
   end
 
+  it "renders Unicode post authors with percent-encoded avatar URLs" do
+    SiteSetting.unicode_usernames = true
+    SiteSetting.min_username_length = 2
+    SiteSetting.external_system_avatars_url = ""
+    user.update!(username: "依云")
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include(
+      "### Author: ![依云](#{Discourse.base_url}/letter_avatar/%E4%BE%9D%E4%BA%91/32/#{LetterAvatar.version}.png) [@依云](#{user.full_url})",
+      post.raw,
+    )
+  end
+
   it "uses absolute, Markdown-safe URLs for custom post avatars" do
     SiteSetting.default_avatars = "//cdn.example.com/avatar(1).png"
 
