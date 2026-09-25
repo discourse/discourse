@@ -78,6 +78,89 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
       expect(markdown).to include("> _Poll ([view on site](#{post_url}))_")
     end
 
+    it "renders event details and formatted descriptions with a link to the post" do
+      html = <<~HTML
+        <p>Before</p>
+        <div class="discourse-post-event" data-name="Community [meetup]"
+          data-start="2026-10-15 18:00" data-end="2026-10-15 20:00"
+          data-timezone="America/Toronto" data-location="Hall &amp;amp; garden"
+          data-url="https://example.com/meetup">
+          <p>Join us for <strong>project updates</strong> and a <a href="/faq">Q&amp;A</a>.</p>
+        </div>
+        <p>After</p>
+      HTML
+      post_url = "#{Discourse.base_url}/t/community-meetup/123"
+
+      markdown = described_class.to_markdown(html, post_url:)
+
+      expect(markdown).to eq(<<~MARKDOWN.strip)
+        Before
+
+        > **Community \\[meetup\\]**
+        >
+        > **Starts:** October 15, 2026 at 6:00 PM (America/Toronto)
+        > **Ends:** October 15, 2026 at 8:00 PM (America/Toronto)
+        > **Location:** Hall & garden
+        > **Link:** <https://example.com/meetup>
+        >
+        > Join us for **project updates** and a [Q&A](#{Discourse.base_url}/faq).
+        >
+        > [View event and RSVP](#{post_url})
+
+        After
+      MARKDOWN
+    end
+
+    it "renders all-day events inside details and omits missing fields" do
+      html = <<~HTML
+        <details><summary>Schedule</summary>
+          <div class="discourse-post-event" data-start="2026-10-15"
+            data-end="2026-10-16" data-all-day="true" data-timezone="America/Toronto"></div>
+        </details>
+      HTML
+
+      expect(described_class.to_markdown(html)).to eq(<<~MARKDOWN.strip)
+        > **Schedule**
+        >
+        > > **Event**
+        > >
+        > > **Starts:** October 15, 2026
+        > > **Ends:** October 16, 2026
+      MARKDOWN
+    end
+
+    it "keeps malformed event dates readable and defaults the timezone to UTC" do
+      html = <<~HTML
+        <div class="discourse-post-event" data-start="not-a-date"></div>
+        <div class="discourse-post-event" data-start="2026-10-15 18:00"></div>
+      HTML
+
+      expect(described_class.to_markdown(html)).to include(
+        "> **Starts:** not-a-date (UTC)",
+        "> **Starts:** October 15, 2026 at 6:00 PM (UTC)",
+      )
+    end
+
+    it "normalizes event links and omits unsafe schemes" do
+      html = <<~HTML
+        <div class="discourse-post-event" data-url="example.com/meet(up)"></div>
+        <div class="discourse-post-event" data-url="/events"></div>
+        <div class="discourse-post-event" data-url="javascript:alert(1)"></div>
+      HTML
+
+      expect(described_class.to_markdown(html)).to eq(<<~MARKDOWN.strip)
+        > **Event**
+        >
+        > **Link:** <https://example.com/meet%28up%29>
+
+        > **Event**
+        >
+        > **Link:** <#{Discourse.base_url}/events>
+
+        > **Event**
+      MARKDOWN
+    end
+
     it "preserves quotes, oneboxes, lightboxes, and nested formatting" do
       html = <<~HTML
         <aside class="quote" data-username="alice">
