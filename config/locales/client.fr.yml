@@ -537,18 +537,9 @@ fr:
         use_predefined: "Parcourir les modèles"
         back: "Retour"
         icebreakers:
-          fun_facts:
-            title: "Avez-vous des faits amusants à partager à votre sujet ?"
-            body: "Bonjour tout le monde ! C'est un plaisir de créer cette nouvelle communauté. Pour commencer, partageons une anecdote amusante à propos de nous. Je vais commencer : j'adore faire de la randonnée et explorer de nouveaux sentiers ! Et vous, quelle est votre particularité ?"
-          coolest_thing_you_have_seen_today:
-            title: "Quelle est la chose la plus cool que vous ayez vue aujourd'hui ?"
-            body: "Quelle est la chose la plus incroyable que vous ayez vue ou vécue aujourd'hui ? Ça peut être n'importe quoi, d'un magnifique coucher de soleil à un geste de gentillesse spontané. Je commence : j'ai vu un chien aider une personne âgée à traverser la rue !"
           introduce_yourself:
             title: "Présentez-vous"
             body: "Bienvenue dans la communauté ! Faisons connaissance. Présentez-vous et parlez-nous un peu de vos centres d'intérêt. Je commence : j'ai une passion pour la technologie et j'adore partager mes connaissances !"
-          what_is_your_favorite_food:
-            title: "Quel est votre plat préféré ?"
-            body: "Partagez vos plats préférés avec la communauté ! Je commence : j'adore la pizza, surtout avec un supplément de fromage et de pepperoni."
     design_wizard:
       title: "Personnalisez votre site"
       back: "Retour"

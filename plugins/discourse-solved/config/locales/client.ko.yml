@@ -23,6 +23,10 @@ ko:
                 lt_1h: "< 1시간"
                 gt_24h: "> 24시간"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "제거됨"
+        tag_names: "태그"
     notifications:
       alt:
         solved:

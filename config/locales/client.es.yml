@@ -493,18 +493,9 @@ es:
         use_predefined: "Explorar plantillas"
         back: "Atrás"
         icebreakers:
-          fun_facts:
-            title: "¿Cuáles son algunos datos curiosos sobre ti?"
-            body: "¡Hola a todos! Me entusiasma empezar esta nueva comunidad. Para empezar, compartamos algo curioso sobre nosotros. Empiezo yo: ¡me encanta el senderismo y explorar nuevos senderos! ¿Qué hay de interesante sobre vosotros?"
-          coolest_thing_you_have_seen_today:
-            title: "¿Qué es lo más guay que habéis visto hoy?"
-            body: "¿Qué es lo más guay que habéis visto o que os ha pasado hoy? Puede ser cualquier cosa, desde una preciosa puesta de sol hasta un acto de bondad aleatorio. Empiezo yo: ¡he visto a un perro ayudando a una persona mayor a cruzar la calle!"
           introduce_yourself:
             title: "Preséntate"
             body: "¡Os doy la bienvenida a la comunidad! Vamos a conocernos. Presentaos y hablad un poco de vuestros intereses. Empiezo yo: ¡me apasiona la tecnología y me encanta enseñar a los demás!"
-          what_is_your_favorite_food:
-            title: "¿Cuál es vuestra comida favorita?"
-            body: "¡Compartid vuestra comida favorita con la comunidad! Empiezo yo: me encanta la pizza, sobre todo con extra de queso y pepperoni."
     design_wizard:
       back: "Atrás"
       next: "Siguiente"

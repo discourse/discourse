@@ -23,6 +23,9 @@ ro:
                 lt_1h: "< o oră"
                 gt_24h: "> 24 ore"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Etichete"
     notifications:
       alt:
         solved:

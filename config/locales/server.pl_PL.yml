@@ -2401,8 +2401,8 @@ pl_PL:
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
     enable_local_logins_via_code: "Pozwól członkom rejestrować się, akceptować zaproszenia i logować się za pomocą jednorazowych kodów e-mail (OTP) bez konieczności podawania hasła."
     enable_random_usernames: 'Generuje losowe nazwy użytkowników dla kont utworzonych za pomocą jednorazowego kodu e-mail w formacie „przymiotnik + rzeczownik + dwie losowe liczby” (przykład: QuietFalcon34). Nowi użytkownicy mogą zmienić swoją nazwę użytkownika podczas rejestracji.'
-    random_username_adjectives: 'Słowa używane jako pierwsza połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone.'
-    random_username_nouns: 'Słowa używane jako druga połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone.'
+    random_username_adjectives: "Słowa używane jako pierwsza połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone."
+    random_username_nouns: "Słowa używane jako druga połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone."
     allow_passkeys_for_2fa: "Zezwól użytkownikom na użycie klucza dostępu w celu spełnienia wymogów uwierzytelniania dwuskładnikowego podczas potwierdzania poufnej czynności."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
@@ -3071,6 +3071,7 @@ pl_PL:
     improved_crawler_detection: "Umożliwia ulepszone śledzenie robotów indeksujących, co pozwala na lepsze wykrywanie prawdopodobnych robotów i zapewnia dokładniejsze raportowanie ruchu sieciowego."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
     update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
+    sidebar_user_navigation: "Przenosi nawigację po stronach użytkownika — profilu, aktywności, powiadomień, wiadomości, zaproszeń i preferencji — z poziomych pasków kart do dedykowanego panelu bocznego, podobnie jak w przypadku panelu administracyjnego. Na urządzeniach mobilnych panel jest dostępny z menu hamburgerowego."
     enable_generated_llms_txt: "Generuje zwięzły plik /llms.txt, gdy nie przesłano pliku niestandardowego. Dokument opisuje publiczne ścieżki odnajdywania, preferowany interfejs Discourse MCP oraz odpowiedzialny dostęp agenta. Aby dostroić automatyczny dostęp, skonfiguruj {{setting:slow_down_crawler_user_agents}} i {{setting:slow_down_crawler_rate}}."
     enable_markdown_endpoints: "Obsługiwane tematy i listy tematów są obsługiwane w formacie Markdown za pośrednictwem adresów URL .md i żądań z nagłówkiem Accept: text/markdown. Zawsze obowiązują standardowe zasady widoczności i prywatności profilu."
     errors:
@@ -6085,6 +6086,7 @@ pl_PL:
       confirm_body: "Powodzenie! Powiadomienia zostały włączone."
       custom: "Powiadomienie od %{username} na %{site_title}"
   staff_action_logs:
+    admin_onboarding_topic_option: "Wybrana opcja: %{option}\nIdentyfikator opcji: %{option_id}"
     redacted: "[treść niewidoczna]"
     json_too_long: "Wartości nie są rejestrowane, ponieważ przekraczają limity długości kolumn"
     not_found: "nie znaleziono"

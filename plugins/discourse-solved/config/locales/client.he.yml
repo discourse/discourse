@@ -27,6 +27,11 @@ he:
                 lt_1h: "< שעה"
                 gt_24h: "> 24 שעות"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "שינויים"
+        changes_removed: "הוסרה"
+        tag_names: "תגיות"
     notifications:
       alt:
         solved:

@@ -19,6 +19,9 @@ sw:
               member: "Wanachama"
               basic: "Kawaida"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Lebo"
     notifications:
       alt:
         solved:

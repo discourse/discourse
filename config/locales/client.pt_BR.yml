@@ -505,18 +505,9 @@ pt_BR:
         use_predefined: "Navegar pelos modelos"
         back: "Voltar"
         icebreakers:
-          fun_facts:
-            title: "Quais são algumas curiosidades interessantes sobre você?"
-            body: "Olá a todos! Estou animada para começar esta nova comunidade. Para começar, que tal cada um de nós compartilhar uma curiosidade sobre si? Eu começo: adoro caminhar na natureza e descobrir novas trilhas! E você? Conte algo interessante sobre você!"
-          coolest_thing_you_have_seen_today:
-            title: "Qual foi a coisa mais legal que você viu hoje?"
-            body: "Qual foi a coisa mais legal que você viu ou vivenciou hoje? Pode ser qualquer coisa, desde um lindo pôr do sol até um ato aleatório de bondade. Eu começo: vi um cachorro ajudando uma pessoa idosa a atravessar a rua!"
           introduce_yourself:
             title: "Apresente-se"
             body: "Bem-vindo(a) à comunidade! Vamos nos conhecer. Por favor, apresente-se e compartilhe um pouco sobre seus interesses. Eu começo: sou apaixonado(a) por tecnologia e adoro ensinar!"
-          what_is_your_favorite_food:
-            title: "Qual é a sua comida favorita?"
-            body: "Compartilhe sua comida favorita com a comunidade! Eu começo: adoro pizza, principalmente com bastante queijo e pepperoni."
     design_wizard:
       back: "Voltar"
       next: "Próximo"

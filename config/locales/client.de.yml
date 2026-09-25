@@ -537,18 +537,9 @@ de:
         use_predefined: "Vorlagen ansehen"
         back: "Zurück"
         icebreakers:
-          fun_facts:
-            title: "Was sind ein paar interessante Fakten über dich?"
-            body: "Hallo zusammen! Ich freue mich, diese neue Community hier zu starten. Zum Auftakt lasst uns doch eine interessante Kleinigkeit über uns teilen. Ich mache den Anfang: Ich liebe es, zu wandern und neue Wege zu erkunden! Was ist eine interessante Kleinigkeit über dich?"
-          coolest_thing_you_have_seen_today:
-            title: "Was ist das Coolste, das du heute gesehen hast?"
-            body: "Was war das Coolste, das du heute gesehen oder erlebt hast? Das kann alles sein, von einem wunderschönen Sonnenuntergang bis hin zu einer netten Geste. Ich fange mal an: Ich habe einen Hund gesehen, der einer älteren Person beim Überqueren der Straße geholfen hat!"
           introduce_yourself:
             title: "Stell dich vor"
             body: "Willkommen in der Community! Lasst uns einander kennenlernen. Bitte stelle dich vor und erzähle ein wenig über deine Interessen. Ich fange an: Ich habe eine Leidenschaft für Technik und liebe es, mein Wissen weiterzugeben!"
-          what_is_your_favorite_food:
-            title: "Was ist dein Lieblingsessen?"
-            body: "Teile dein Lieblingsessen mit der Community! Ich fange an: Ich liebe Pizza, besonders mit extra viel Käse und Peperoni."
     design_wizard:
       title: "Passe deine Website an"
       back: "Zurück"

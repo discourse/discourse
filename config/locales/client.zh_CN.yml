@@ -527,18 +527,9 @@ zh_CN:
         use_predefined: "浏览模板"
         back: "返回"
         icebreakers:
-          fun_facts:
-            title: "关于你，有哪些有趣的小事？"
-            body: "大家好！很高兴能加入这个新社区。首先，让我们分享一下自己的趣事。我先来：我喜欢徒步旅行和探索新的路径！你有什么有趣的事情？"
-          coolest_thing_you_have_seen_today:
-            title: "你今天看到的最酷的东西是什么？"
-            body: "你今天看到或经历的最酷的事情是什么？可以是美丽的日落，也可以是偶然的善举。我先说：我看到一只狗在帮助一位老人过马路！"
           introduce_yourself:
             title: "自我介绍"
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
-          what_is_your_favorite_food:
-            title: "你最喜欢吃什么？"
-            body: "与社区分享你最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
     design_wizard:
       title: "自定义您的网站"
       subtitle: "选择颜色、字体以及网站的布局。"
