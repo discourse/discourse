@@ -6,7 +6,7 @@ RSpec.describe JsonApiKit::Glossary::CasingRule do
   let(:value) { "createdAt" }
 
   describe "#declared_attributes" do
-    subject(:declared_attributes) { rule.declared_attributes(name => "2026-08-01") }
+    subject(:declared_attributes) { rule.declared_attributes({ name => "2026-08-01" }) }
 
     it "returns the attributes with their names in snake case" do
       expect(declared_attributes).to eq(name.with(value: "created_at") => "2026-08-01")
