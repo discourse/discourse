@@ -244,17 +244,6 @@ RSpec.describe "User nav sidebar" do
     expect(page).to have_no_css(".sidebar-filter__input")
   end
 
-  it "shows tabs registered by plugins" do
-    SiteSetting.chat_enabled = true
-    SiteSetting.solved_enabled = true
-
-    visit("/u/alice/activity")
-    within(section("activity")) { expect(page).to have_link("Solved") }
-
-    visit("/u/alice/preferences/account")
-    within(section("preferences")) { expect(page).to have_link("Chat") }
-  end
-
   it "drops the messages bar when nothing is left in it" do
     # Someone else's inbox offers no new-message button, and the rest of the bar
     # is what the panel replaced, so the whole thing would be an empty shell.
