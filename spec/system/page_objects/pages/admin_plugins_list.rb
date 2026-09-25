@@ -19,6 +19,24 @@ module PageObjects
       def click_plugin_name(plugin)
         find_plugin(plugin).find(".admin-plugins-list__name").click
       end
+
+      def toggle_plugin(plugin)
+        find(
+          "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled label.d-toggle-switch__label",
+        ).click
+      end
+
+      def has_plugin_enabled?(plugin)
+        has_css?(
+          "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled button[aria-checked='true']",
+        )
+      end
+
+      def has_plugin_disabled?(plugin)
+        has_css?(
+          "#{plugin_row_selector(plugin)} .admin-plugins-list__enabled button[aria-checked='false']",
+        )
+      end
     end
   end
 end
