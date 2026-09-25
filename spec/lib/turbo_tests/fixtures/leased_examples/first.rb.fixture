@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+RSpec.describe "first leased root" do
+  before(:context) { record_scheduler_event("before-first") }
+  after(:context) { record_scheduler_event("after-first") }
+
+  it("runs the first example", :selected) { expect(true).to eq(true) }
+  it_behaves_like "a leased shared example"
+  it("runs an unselected example") { expect(true).to eq(true) }
+end
+
+RSpec.describe "another root in the first file" do
+  before(:context) { record_scheduler_event("before-other") }
+  after(:context) { record_scheduler_event("after-other") }
+
+  it("runs another root", :selected) { expect(true).to eq(true) }
+end

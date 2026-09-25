@@ -1,0 +1,7 @@
+The clock implementation (playwright-clock.js), keyboard-layout.json, and Chromium launch defaults derive from Microsoft Playwright 1.62.1.
+Copyright (c) Microsoft Corporation.
+Licensed under the Apache License, Version 2.0; see playwright-LICENSE.
+
+The clock bundle includes a CommonJS export wrapper for the Ruby driver. The keyboard layout is serialized as JSON. Chromium launch defaults omit the executable and temporary profile paths; the test harness supplies those at runtime.
+
+Upstream source: https://github.com/microsoft/playwright/tree/v1.62.1/packages/playwright-core/src

@@ -39,6 +39,7 @@ RSpec.describe "Locale choice" do
   context "with test locales" do
     before do
       JsLocaleHelper.clear_cache!
+      ExtraLocalesController.clear_cache!(all_sites: true)
 
       JsLocaleHelper.set_translations(
         "en",
@@ -65,7 +66,10 @@ RSpec.describe "Locale choice" do
       )
     end
 
-    after { JsLocaleHelper.clear_cache! }
+    after do
+      JsLocaleHelper.clear_cache!
+      ExtraLocalesController.clear_cache!(all_sites: true)
+    end
 
     it "handles fallback correctly" do
       expected = {
