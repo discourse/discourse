@@ -42,15 +42,18 @@ A request worker can contain state that the initial mold did not:
   records can temporarily count toward the long-poll connection limit and
   cause reconnects to use polling.
 - Retiring request workers finish their deferred work before exiting and
-  refresh their heartbeat while waiting. This also protects a busy worker
-  when a different worker promotes. A permanently blocked deferred action
+  refresh their heartbeat while waiting during generation retirement. Request
+  timeouts retain their normal deadline and replacement behavior. This also
+  protects a busy worker when a different worker promotes. A permanently blocked deferred action
   stalls that retirement; Pitchfork's maximum-unavailable limit bounds the
   number of replacements in progress. Existing deferred-job warnings and
   worker exit/readiness logs expose this condition. Explicit server shutdown
   and process kills retain the existing timeout and non-durable queue semantics.
 - Retiring workers complete their remaining long-poll responses before exiting.
-  Service descendants restore the base database configuration, so web-only
-  database overrides do not propagate into supervised background processes.
+  New molds restore automatic major GC before creating descendants; request
+  workers reapply out-of-band GC when configured. Service descendants restore
+  the base database configuration, so web-only database overrides do not
+  propagate into supervised background processes.
 
 The promotion guard applies to both automatic promotion and `USR2` sent to the
 Pitchfork monitor. The launcher also handles `USR2`, but uses it for a full

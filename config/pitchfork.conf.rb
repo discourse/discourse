@@ -3,6 +3,7 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
+oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
 
 require_relative "../lib/pitchfork_reforking"
 Pitchfork::HttpServer.prepend(PitchforkReforking::PromotionGuard)
@@ -70,6 +71,8 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
+  GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
+
   if ENV.key?("APP_SERVER_REFORK_AFTER") && !GlobalSetting.mini_racer_single_threaded
     raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
   end
@@ -99,8 +102,6 @@ after_mold_fork do |server, mold|
   Discourse.before_fork
 end
 
-oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
-
 after_worker_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
@@ -112,8 +113,9 @@ end
 
 before_worker_exit do |server, worker|
   server.logger.info("#{worker.to_log} finishing deferred work before exit")
-  worker.update_deadline(server.timeout)
-  Scheduler::Defer.stop!(finish_work: true) { worker.update_deadline(server.timeout) }
+  retiring = worker.outdated? && Thread.current == Thread.main
+  worker.update_deadline(server.timeout) if retiring
+  Scheduler::Defer.stop!(finish_work: true) { worker.update_deadline(server.timeout) if retiring }
   ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
 end
 
