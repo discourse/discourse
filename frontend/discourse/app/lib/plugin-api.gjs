@@ -4,28 +4,15 @@ import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
-import { addAboutPageActivity } from "discourse/lib/plugin-registries/about-page-activities";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
-import {
-  addApiImageWrapperButtonClickEvent,
-  addComposerUploadHandler,
-  addComposerUploadMarkdownResolver,
-  addComposerUploadPreProcessor,
-} from "discourse/lib/plugin-registries/composer-uploads";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
-import { registeredTabs } from "discourse/lib/plugin-registries/more-topics-tabs";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
-import {
-  addPluginReviewableParam,
-  registerReviewableActionModal,
-} from "discourse/lib/plugin-registries/reviewable-item";
-import { addAdvancedSearchOptions } from "discourse/lib/plugin-registries/advanced-search-options";
 import { addSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
 import {
@@ -39,10 +26,6 @@ import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
-import { registerFullPageSearchType } from "discourse/lib/plugin-registries/full-page-search-types";
-import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/lib/plugin-registries/post-message-callbacks";
-import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/lib/plugin-registries/notifications";
-import { registerCustomUserNavMessagesDropdownRow } from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
@@ -56,13 +39,13 @@ import {
 } from "discourse/lib/blocks/-internals/registry/block";
 import { _registerConditionType } from "discourse/lib/blocks/-internals/registry/condition";
 import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet";
-import { CoreApi } from "discourse/lib/core-api";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import { CoreApi } from "discourse/lib/core-api";
 import {
   _INTERNAL_SOURCE_KEY,
   CORE_SOURCE,
@@ -100,6 +83,30 @@ import {
   extraConnectorClass,
   extraConnectorComponent,
 } from "discourse/lib/plugin-connectors";
+import { addAboutPageActivity } from "discourse/lib/plugin-registries/about-page-activities";
+import { addAdvancedSearchOptions } from "discourse/lib/plugin-registries/advanced-search-options";
+import { preventCloaking } from "discourse/lib/plugin-registries/cloaking";
+import {
+  addApiImageWrapperButtonClickEvent,
+  addComposerUploadHandler,
+  addComposerUploadMarkdownResolver,
+  addComposerUploadPreProcessor,
+} from "discourse/lib/plugin-registries/composer-uploads";
+import { addToolbarCallback } from "discourse/lib/plugin-registries/editor-toolbar";
+import { registerFullPageSearchType } from "discourse/lib/plugin-registries/full-page-search-types";
+import { registeredTabs } from "discourse/lib/plugin-registries/more-topics-tabs";
+import {
+  addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback,
+  setNotificationsLimit,
+} from "discourse/lib/plugin-registries/notifications";
+import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/lib/plugin-registries/post-message-callbacks";
+import {
+  addPluginReviewableParam,
+  registerReviewableActionModal,
+} from "discourse/lib/plugin-registries/reviewable-item";
+import { addCustomUserFieldValidationCallback } from "discourse/lib/plugin-registries/user-field-validation-callbacks";
+import { registerCustomUserNavMessagesDropdownRow } from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/lib/plugin-registries/user-search-options";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
@@ -130,7 +137,6 @@ import {
   _registerTransformer,
   transformerTypes,
 } from "discourse/lib/transformer";
-import { addCustomUserFieldValidationCallback } from "discourse/lib/plugin-registries/user-field-validation-callbacks";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { _addCategoryPropertyForSave } from "discourse/models/category";
@@ -147,9 +153,6 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
-import { preventCloaking } from "discourse/lib/plugin-registries/cloaking";
-import { setNotificationsLimit } from "discourse/lib/plugin-registries/notifications";
-import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/lib/plugin-registries/user-search-options";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
@@ -158,7 +161,6 @@ import {
   registerHtmlDecorator,
   STREAM_HTML_DECORATOR,
 } from "discourse/ui-kit/d-decorated-html";
-import { addToolbarCallback } from "discourse/lib/plugin-registries/editor-toolbar";
 import {
   addExtraIconRenderer,
   replaceCategoryLinkRenderer,

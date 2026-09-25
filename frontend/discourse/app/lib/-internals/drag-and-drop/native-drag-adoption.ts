@@ -1,10 +1,13 @@
 import { cancel, next } from "@ember/runloop";
-import { draggable } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import {
   decorateExternalSource,
   type ExternalDragPayload,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import {
+  type DragAndDropLibrary,
+  registerWhenLoaded,
+} from "discourse/lib/-internals/drag-and-drop/library";
 import {
   ADOPTED_AS,
   ADOPTED_DRAG_TYPE,
@@ -163,7 +166,10 @@ function offeredAdoptions() {
  * `dragstart` bubbles. A capture-phase listener on `window` registers in time
  * for that drag, so adopted content shares the registered sources' dispatch.
  */
-function adoptNativeDrag(event: DragEvent) {
+function adoptNativeDrag(
+  event: DragEvent,
+  draggable: DragAndDropLibrary["draggable"]
+) {
   const target = event.target;
   if (!(target instanceof HTMLElement) || !event.dataTransfer) {
     return;
@@ -273,13 +279,12 @@ export function watchForAdoptableDrags(
   getArgsRef: () => AdoptionCandidateArgs
 ) {
   adoptionCandidates.add(getArgsRef);
-  if (!stopListeningForAdoption) {
-    window.addEventListener("dragstart", adoptNativeDrag, { capture: true });
-    stopListeningForAdoption = () =>
-      window.removeEventListener("dragstart", adoptNativeDrag, {
-        capture: true,
-      });
-  }
+  stopListeningForAdoption ??= registerWhenLoaded(({ draggable }) => {
+    const listener = (event: DragEvent) => adoptNativeDrag(event, draggable);
+    window.addEventListener("dragstart", listener, { capture: true });
+    return () =>
+      window.removeEventListener("dragstart", listener, { capture: true });
+  });
 
   return () => {
     adoptionCandidates.delete(getArgsRef);

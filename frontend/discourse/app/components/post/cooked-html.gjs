@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { STREAM_HTML_DECORATOR } from "discourse/ui-kit/d-decorated-html";
 import { getOwner } from "@ember/owner";
 import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
@@ -19,6 +18,7 @@ import decorateStatefulHtmlElements from "discourse/lib/post-cooked-html-decorat
 import DDecoratedHtml, {
   applyHtmlDecorators,
   NON_STREAM_HTML_DECORATOR,
+  STREAM_HTML_DECORATOR,
 } from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 

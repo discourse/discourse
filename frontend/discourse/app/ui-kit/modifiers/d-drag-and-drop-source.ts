@@ -1,16 +1,13 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { cancel, next } from "@ember/runloop";
-import { draggable } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
-import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/utils/pointer-outside-of-preview";
-import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/utils/prevent-unhandled";
-import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/utils/set-custom-native-drag-preview";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
 import type {
   DragInput,
   DragLocation,
 } from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
+import { registerWhenLoaded } from "discourse/lib/-internals/drag-and-drop/library";
 import {
   DRAG_BODY,
   normalizeOwnedDragSource,
@@ -357,129 +354,135 @@ export function registerDragAndDropSource(
 
   const stopDeclaringEffect = declareEffectFor(registered, getArgsRef, token);
 
-  const cleanup = draggable({
-    element: registered,
-    canDrag: ({ input }) => {
-      const args = getArgsRef();
-      if (!args.canDrag) {
-        return true;
-      }
-      return consumerMayThrow(
-        () =>
-          args.canDrag!({
-            source: { type: args.type, data: args.data, element },
-            input,
-          }) !== false,
-        false
-      );
-    },
-    onGenerateDragPreview: ({ nativeSetDragImage, location }) => {
-      const args = getArgsRef();
-      // Latched here rather than in `onDragStart`, which the library defers by
-      // a frame: a detach landing in that frame must still see the drag.
-      dragging = true;
-
-      // Claims the drag over dead space, so a release there ends it in place.
-      // Never stopped: the utility unbinds itself on drop, dragend and broken drags.
-      preventUnhandled.start();
-
-      if (!nativeSetDragImage) {
-        return;
-      }
-      if (typeof args.dragPreview === "function") {
-        setCustomNativeDragPreview({
-          nativeSetDragImage,
-          getOffset: args.dragPreviewOffset
-            ? pointerOutsideOfPreview(args.dragPreviewOffset)
-            : undefined,
-          render: ({ container }) => {
-            const dispose = consumerMayThrow(() =>
-              (args.dragPreview as DragPreviewRenderer)({ container, element })
-            );
-            return typeof dispose === "function"
-              ? () => consumerMayThrow(dispose)
-              : undefined;
-          },
-        });
-        return;
-      }
-      // With a handle the browser's default preview would be the grip alone, so
-      // the body stands in.
-      const preview =
-        args.dragPreview ?? (registered === element ? null : element);
-      if (preview) {
-        if (preview === element) {
-          const { clientX, clientY } = location.current.input;
-          const { left, top, width, height } = element.getBoundingClientRect();
-          nativeSetDragImage(
-            preview,
-            Math.max(0, Math.min(clientX - left, width)),
-            Math.max(0, Math.min(clientY - top, height))
-          );
-        } else {
-          nativeSetDragImage(preview, 0, 0);
+  const cleanup = registerWhenLoaded((library) =>
+    library.draggable({
+      element: registered,
+      canDrag: ({ input }) => {
+        const args = getArgsRef();
+        if (!args.canDrag) {
+          return true;
         }
-      }
-    },
-    getInitialData: () => {
-      const args = getArgsRef();
-      const resolved = consumerMayThrow(
-        () => args.getInitialData?.() ?? args.data ?? {},
-        {}
-      );
-      // Spread first so the payload's own `type` cannot win. `DRAG_BODY` lets a
-      // target resolve the body behind a handle; the vocabulary strips it.
-      return { ...resolved, type: args.type, [DRAG_BODY]: element };
-    },
-    onDragStart: (event) => {
-      const args = getArgsRef();
-      element.classList.add("--dragging");
-      const sourcePayload = normalizeOwnedDragSource(event.source);
-      consumerMayThrow(() =>
-        args.onDragStart?.({
-          source: sourcePayload,
-          input: event.location.current.input,
-        })
-      );
-    },
-    onDrop: (event) => {
-      const args = getArgsRef();
-      dragging = false;
-      element.classList.remove("--dragging");
+        return consumerMayThrow(
+          () =>
+            args.canDrag!({
+              source: { type: args.type, data: args.data, element },
+              input,
+            }) !== false,
+          false
+        );
+      },
+      onGenerateDragPreview: ({ nativeSetDragImage, location }) => {
+        const args = getArgsRef();
+        // Latched here rather than in `onDragStart`, which the library defers by
+        // a frame: a detach landing in that frame must still see the drag.
+        dragging = true;
 
-      // Snapshot before deferring: when the task runs, `getArgsRef()` may
-      // belong to a later render or a new drag.
-      const consumerOnDragEnd = args.onDragEnd;
-      const consumerOnDrop = args.onDrop;
-      const sourcePayload = normalizeOwnedDragSource(event.source);
-      const location = event.location;
-      const landed = location.current.dropTargets.length > 0;
+        // Claims the drag over dead space, so a release there ends it in place.
+        // Never stopped: the utility unbinds itself on drop, dragend and broken drags.
+        library.preventUnhandled.start();
 
-      // One task for both callbacks, so `pendingConsumers` cancels the whole
-      // dispatch and their order is fixed.
-      pendingConsumers = next(() => {
-        pendingConsumers = null;
-        try {
-          // Guarded one at a time so an `onDragEnd` that throws does not cost
-          // the drag its `onDrop`.
-          consumerMayThrow(() =>
-            consumerOnDragEnd?.({ source: sourcePayload, location })
-          );
-          if (landed) {
-            consumerMayThrow(() =>
-              consumerOnDrop?.({ source: sourcePayload, location })
+        if (!nativeSetDragImage) {
+          return;
+        }
+        if (typeof args.dragPreview === "function") {
+          library.setCustomNativeDragPreview({
+            nativeSetDragImage,
+            getOffset: args.dragPreviewOffset
+              ? library.pointerOutsideOfPreview(args.dragPreviewOffset)
+              : undefined,
+            render: ({ container }) => {
+              const dispose = consumerMayThrow(() =>
+                (args.dragPreview as DragPreviewRenderer)({
+                  container,
+                  element,
+                })
+              );
+              return typeof dispose === "function"
+                ? () => consumerMayThrow(dispose)
+                : undefined;
+            },
+          });
+          return;
+        }
+        // With a handle the browser's default preview would be the grip alone, so
+        // the body stands in.
+        const preview =
+          args.dragPreview ?? (registered === element ? null : element);
+        if (preview) {
+          if (preview === element) {
+            const { clientX, clientY } = location.current.input;
+            const { left, top, width, height } =
+              element.getBoundingClientRect();
+            nativeSetDragImage(
+              preview,
+              Math.max(0, Math.min(clientX - left, width)),
+              Math.max(0, Math.min(clientY - top, height))
             );
+          } else {
+            nativeSetDragImage(preview, 0, 0);
           }
-        } finally {
-          // The teardown held back for this drag runs after both callbacks, so
-          // the consumer hears its drag end before the registration goes.
-          const deferred = teardownWhenIdle;
-          teardownWhenIdle = null;
-          deferred?.();
         }
-      });
-    },
-  });
+      },
+      getInitialData: () => {
+        const args = getArgsRef();
+        const resolved = consumerMayThrow(
+          () => args.getInitialData?.() ?? args.data ?? {},
+          {}
+        );
+        // Spread first so the payload's own `type` cannot win. `DRAG_BODY` lets a
+        // target resolve the body behind a handle; the vocabulary strips it.
+        return { ...resolved, type: args.type, [DRAG_BODY]: element };
+      },
+      onDragStart: (event) => {
+        const args = getArgsRef();
+        element.classList.add("--dragging");
+        const sourcePayload = normalizeOwnedDragSource(event.source);
+        consumerMayThrow(() =>
+          args.onDragStart?.({
+            source: sourcePayload,
+            input: event.location.current.input,
+          })
+        );
+      },
+      onDrop: (event) => {
+        const args = getArgsRef();
+        dragging = false;
+        element.classList.remove("--dragging");
+
+        // Snapshot before deferring: when the task runs, `getArgsRef()` may
+        // belong to a later render or a new drag.
+        const consumerOnDragEnd = args.onDragEnd;
+        const consumerOnDrop = args.onDrop;
+        const sourcePayload = normalizeOwnedDragSource(event.source);
+        const location = event.location;
+        const landed = location.current.dropTargets.length > 0;
+
+        // One task for both callbacks, so `pendingConsumers` cancels the whole
+        // dispatch and their order is fixed.
+        pendingConsumers = next(() => {
+          pendingConsumers = null;
+          try {
+            // Guarded one at a time so an `onDragEnd` that throws does not cost
+            // the drag its `onDrop`.
+            consumerMayThrow(() =>
+              consumerOnDragEnd?.({ source: sourcePayload, location })
+            );
+            if (landed) {
+              consumerMayThrow(() =>
+                consumerOnDrop?.({ source: sourcePayload, location })
+              );
+            }
+          } finally {
+            // The teardown held back for this drag runs after both callbacks, so
+            // the consumer hears its drag end before the registration goes.
+            const deferred = teardownWhenIdle;
+            teardownWhenIdle = null;
+            deferred?.();
+          }
+        });
+      },
+    })
+  );
 
   const teardown = () => {
     cleanup();

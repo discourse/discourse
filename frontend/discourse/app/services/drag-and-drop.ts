@@ -1,14 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
-import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
-import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter/monitor-for-external";
 import {
   decorateExternalSource,
   type ExternalDragKind,
   type ExternalDragPayload,
   matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import { registerWhenLoaded } from "discourse/lib/-internals/drag-and-drop/library";
 import {
   dragTypeOf,
   normalizeDragSource,
@@ -51,51 +50,56 @@ export default class DragAndDropService extends Service {
     super(...args);
     // A monitor only subscribes to the drag stream; the element listener is
     // bound when a draggable registers, so this costs nothing without one.
-    const cleanupElements = monitorForElements({
-      canMonitor: ({ source }) =>
-        !isDestroying(this) && dragTypeOf(source.data) != null,
-      onDragStart: ({ source }) => {
-        if (isDestroying(this)) {
-          return;
-        }
-        const normalized = normalizeDragSource(source);
-        this.setCurrentDrag({
-          // `canMonitor` above only admits sources whose `type` is set, so the
-          // `null` a typeless drag would normalize to cannot reach here.
-          type: normalized.type as string,
-          data: normalized.data,
-          element: normalized.element,
-          ...(normalized.native ? { native: normalized.native } : {}),
+    const cleanupMonitors = registerWhenLoaded(
+      ({ monitorForElements, monitorForExternal }) => {
+        const cleanupElements = monitorForElements({
+          canMonitor: ({ source }) =>
+            !isDestroying(this) && dragTypeOf(source.data) != null,
+          onDragStart: ({ source }) => {
+            if (isDestroying(this)) {
+              return;
+            }
+            const normalized = normalizeDragSource(source);
+            this.setCurrentDrag({
+              // `canMonitor` above only admits sources whose `type` is set, so
+              // the `null` a typeless drag would normalize to cannot reach here.
+              type: normalized.type as string,
+              data: normalized.data,
+              element: normalized.element,
+              ...(normalized.native ? { native: normalized.native } : {}),
+            });
+          },
+          onDrop: () => {
+            if (isDestroying(this)) {
+              return;
+            }
+            this.clearCurrentDrag();
+          },
         });
-      },
-      onDrop: () => {
-        if (isDestroying(this)) {
-          return;
-        }
-        this.clearCurrentDrag();
-      },
-    });
-    const cleanupExternal = monitorForExternal({
-      canMonitor: () => !isDestroying(this),
-      onDragStart: ({ source }) => {
-        if (isDestroying(this)) {
-          return;
-        }
-        this.currentExternalDrag = decorateExternalSource(source);
-      },
-      onDrop: () => {
-        if (isDestroying(this)) {
-          return;
-        }
-        this.currentExternalDrag = null;
-      },
-    });
+        const cleanupExternal = monitorForExternal({
+          canMonitor: () => !isDestroying(this),
+          onDragStart: ({ source }) => {
+            if (isDestroying(this)) {
+              return;
+            }
+            this.currentExternalDrag = decorateExternalSource(source);
+          },
+          onDrop: () => {
+            if (isDestroying(this)) {
+              return;
+            }
+            this.currentExternalDrag = null;
+          },
+        });
+        return () => {
+          cleanupElements();
+          cleanupExternal();
+        };
+      }
+    );
     // This runs deferred, so a monitor callback can still fire after
     // destruction begins. The `isDestroying` guards above cover that gap.
-    registerDestructor(this, () => {
-      cleanupElements();
-      cleanupExternal();
-    });
+    registerDestructor(this, cleanupMonitors);
   }
 
   /** Whether an element or external drag is in flight. */

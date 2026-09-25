@@ -1,5 +1,5 @@
-import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import { withPluginApi } from "discourse/lib/core-api";
+import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 
 export default {
   after: "hashtag-css-generator",

@@ -53,14 +53,6 @@ export class CoreApi {
     return this.#source;
   }
 
-  _lookupContainer(path) {
-    if (!this.container || this.container.isDestroying) {
-      return;
-    }
-
-    return this.container.lookup(path);
-  }
-
   getCurrentUser() {
     return this._lookupContainer("service:current-user");
   }
@@ -128,6 +120,14 @@ export class CoreApi {
 
   registerBlockConditionType(ConditionClass) {
     _registerConditionType(ConditionClass, this.source);
+  }
+
+  _lookupContainer(path) {
+    if (!this.container || this.container.isDestroying) {
+      return;
+    }
+
+    return this.container.lookup(path);
   }
 }
 

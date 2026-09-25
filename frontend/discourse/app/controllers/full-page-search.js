@@ -13,6 +13,7 @@ import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { bind } from "discourse/lib/decorators";
 import { setTransient } from "discourse/lib/page-tracker";
+import { customSearchTypes } from "discourse/lib/plugin-registries/full-page-search-types";
 import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import { scrollTop } from "discourse/lib/scroll-top";
 import {
@@ -33,7 +34,6 @@ import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import { customSearchTypes } from "discourse/lib/plugin-registries/full-page-search-types";
 import { i18n } from "discourse-i18n";
 
 export const SEARCH_TYPE_DEFAULT = "topics_posts";

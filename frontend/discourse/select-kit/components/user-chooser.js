@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/lib/plugin-registries/user-search-options";
 import userSearch, {
   eagerCompleteSearch,
   skipSearch,
@@ -12,8 +13,6 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import UserRow from "./user-chooser/user-row";
-
-import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/lib/plugin-registries/user-search-options";
 
 export { CUSTOM_USER_SEARCH_OPTIONS };
 

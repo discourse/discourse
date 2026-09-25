@@ -37,6 +37,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
 import { deepMerge } from "discourse/lib/object";
 import { consumeOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
+import { customPostMessageCallback } from "discourse/lib/plugin-registries/post-message-callbacks";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
@@ -57,7 +58,6 @@ import Topic from "discourse/models/topic";
 import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
 import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
-import { customPostMessageCallback } from "discourse/lib/plugin-registries/post-message-callbacks";
 import { i18n } from "discourse-i18n";
 
 const RETRIES_ON_RATE_LIMIT = 4;

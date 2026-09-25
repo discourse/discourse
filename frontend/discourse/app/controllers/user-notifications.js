@@ -8,9 +8,9 @@ import curryComponent from "ember-curry-component";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
+import { beforeLoadMoreCallbacks } from "discourse/lib/plugin-registries/notifications";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
-import { beforeLoadMoreCallbacks } from "discourse/lib/plugin-registries/notifications";
 import { i18n } from "discourse-i18n";
 
 export { addBeforeLoadMoreCallback } from "discourse/lib/plugin-registries/notifications";

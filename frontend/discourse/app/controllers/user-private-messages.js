@@ -3,8 +3,8 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DiscourseURL from "discourse/lib/url";
 import { customUserNavMessagesDropdownRows } from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export {

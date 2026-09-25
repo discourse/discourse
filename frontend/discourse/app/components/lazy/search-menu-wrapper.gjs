@@ -13,9 +13,9 @@ export default class LazySearchMenuWrapper extends Component {
       <:loading></:loading>
       <:content as |module|>
         <module.default
+          ...attributes
           @closeSearchMenu={{@closeSearchMenu}}
           @searchInputId={{@searchInputId}}
-          ...attributes
         />
       </:content>
     </DAsyncContent>

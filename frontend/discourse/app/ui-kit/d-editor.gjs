@@ -30,6 +30,10 @@ import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
+import {
+  addToolbarCallback,
+  toolbarCallbacks,
+} from "discourse/lib/plugin-registries/editor-toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch, { validateSearchResult } from "discourse/lib/user-search";
@@ -50,10 +54,6 @@ import {
   EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
   SKIP,
 } from "discourse/ui-kit/modifiers/d-autocomplete";
-import {
-  addToolbarCallback,
-  toolbarCallbacks,
-} from "discourse/lib/plugin-registries/editor-toolbar";
 import { i18n } from "discourse-i18n";
 
 export {

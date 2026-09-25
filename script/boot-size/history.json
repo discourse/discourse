@@ -198,5 +198,25 @@
       "raw": 3298790,
       "chunks": 23
     }
+  },
+  {
+    "commit": "6e620f76b19",
+    "label": "Drag-and-drop library loads on first interaction; more-topics tabs and lightbox deferred",
+    "date": "2026-09-25T22:03:35.322Z",
+    "boot": {
+      "brotli": 458884,
+      "raw": 1993793,
+      "chunks": 2
+    },
+    "discovery": {
+      "brotli": 572513,
+      "raw": 2532302,
+      "chunks": 7
+    },
+    "topic": {
+      "brotli": 693011,
+      "raw": 3102227,
+      "chunks": 25
+    }
   }
 ]

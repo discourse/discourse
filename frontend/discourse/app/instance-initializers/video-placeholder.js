@@ -1,6 +1,6 @@
+import { withPluginApi } from "discourse/lib/core-api";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
-import { withPluginApi } from "discourse/lib/core-api";
 import { sanitize } from "discourse/lib/text";
 import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";

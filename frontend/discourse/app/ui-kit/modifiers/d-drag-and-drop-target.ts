@@ -1,7 +1,4 @@
-import {
-  dropTargetForElements,
-  type ElementDragPayload,
-} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
 import {
   type DropTargetKernelArgs,
@@ -9,6 +6,7 @@ import {
   type DropTargetKernelFeedback,
   registerDropTargetKernel,
 } from "discourse/lib/-internals/drag-and-drop/drop-target-kernel";
+import { registerWhenLoaded } from "discourse/lib/-internals/drag-and-drop/library";
 import {
   isAdoptedDrag,
   type NativeDragAdoption,
@@ -112,7 +110,10 @@ export function registerDragAndDropTarget(
   return registerDropTargetKernel({
     element,
     attribute: "data-drop-target",
-    register: dropTargetForElements,
+    register: (registration) =>
+      registerWhenLoaded(({ dropTargetForElements }) =>
+        dropTargetForElements(registration)
+      ),
     decorateSource: (source: ElementDragPayload) => normalizeDragSource(source),
     accepts: (source) => {
       const args = getArgsRef();

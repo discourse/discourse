@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { matchesExternalKind } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import { loadDragAndDropLibrary } from "discourse/lib/-internals/drag-and-drop/library";
 import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 import {
   fileTransfer,
@@ -61,7 +62,9 @@ module("Unit | Lib | drag-and-drop vocabulary", function (hooks) {
     });
   });
 
-  module("matchesExternalKind", function () {
+  module("matchesExternalKind", function (nestedHooks) {
+    nestedHooks.beforeEach(() => loadDragAndDropLibrary());
+
     const files = () => externalPayload(fileTransfer());
     const text = () => externalPayload(textTransfer());
     const html = () =>

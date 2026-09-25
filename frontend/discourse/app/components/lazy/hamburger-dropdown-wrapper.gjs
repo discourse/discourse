@@ -14,9 +14,9 @@ export default class LazyHamburgerDropdownWrapper extends Component {
       <:loading></:loading>
       <:content as |module|>
         <module.default
+          ...attributes
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleNavigationMenu={{@toggleNavigationMenu}}
-          ...attributes
         />
       </:content>
     </DAsyncContent>

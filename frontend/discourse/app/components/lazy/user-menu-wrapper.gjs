@@ -12,7 +12,7 @@ export default class LazyUserMenuWrapper extends Component {
     <DAsyncContent @asyncData={{this.component}}>
       <:loading></:loading>
       <:content as |module|>
-        <module.default @toggleUserMenu={{@toggleUserMenu}} ...attributes />
+        <module.default ...attributes @toggleUserMenu={{@toggleUserMenu}} />
       </:content>
     </DAsyncContent>
   </template>

@@ -1,4 +1,3 @@
-import { dropTargetForExternal } from "@atlaskit/pragmatic-drag-and-drop/adapter/drop-target-for-external";
 import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
 import { modifier } from "ember-modifier";
 import {
@@ -14,6 +13,7 @@ import {
   type ExternalDragPayload,
   matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import { registerWhenLoaded } from "discourse/lib/-internals/drag-and-drop/library";
 import type { Axis } from "discourse/lib/geometry";
 
 /** What a synchronous gate (`canDrop`, a `dropEffect` function) is asked about. */
@@ -73,7 +73,10 @@ export function registerDragAndDropExternalTarget(
   return registerDropTargetKernel({
     element,
     attribute: "data-drop-target-external",
-    register: dropTargetForExternal,
+    register: (registration) =>
+      registerWhenLoaded(({ dropTargetForExternal }) =>
+        dropTargetForExternal(registration)
+      ),
     decorateSource: (source: NativeExternalDragPayload) =>
       decorateExternalSource(source),
     accepts: (source) => matchesExternalKind(getArgsRef().accepts, source),

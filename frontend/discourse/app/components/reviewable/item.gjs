@@ -28,6 +28,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
+import {
+  pluginActionModalClassMap,
+  pluginReviewableParams,
+  reviewableTypeLabels,
+} from "discourse/lib/plugin-registries/reviewable-item";
 import { showAlert } from "discourse/lib/post-action-feedback";
 import { survivingPenalty } from "discourse/lib/reviewable-penalty";
 import { resolveReviewableComponent } from "discourse/lib/reviewable-registry";
@@ -46,11 +51,6 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import {
-  pluginActionModalClassMap,
-  pluginReviewableParams,
-  reviewableTypeLabels,
-} from "discourse/lib/plugin-registries/reviewable-item";
 import { i18n } from "discourse-i18n";
 
 const PENALTY_TOAST_KEY = "reviewable-author-penalty";

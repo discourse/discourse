@@ -1,18 +1,11 @@
 import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
-import {
-  autoScrollForElements,
-  autoScrollWindowForElements,
-} from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
-import {
-  autoScrollForExternal,
-  autoScrollWindowForExternal,
-} from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/external";
 import { modifier } from "ember-modifier";
 import {
   type ExternalDragKind,
   matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import { registerWhenLoaded } from "discourse/lib/-internals/drag-and-drop/library";
 import { matchesDragType } from "discourse/lib/-internals/drag-and-drop/vocabulary";
 import type { Axis } from "discourse/lib/geometry";
 import { makeArray } from "discourse/lib/helpers";
@@ -88,34 +81,41 @@ export function registerDragAndDropAutoScroll(
   const args = getArgsRef();
   const scrollsWindow = args.target === "window";
 
-  const cleanups = [
-    scrollsWindow
-      ? autoScrollWindowForElements({ canScroll: matchesType, getAllowedAxis })
-      : autoScrollForElements({
-          element: args.element,
-          canScroll: matchesType,
-          getAllowedAxis,
-        }),
-  ];
-
   // An absent `externalKinds` would match every external drag, so the external
   // registration is made only when the consumer named at least one kind.
-  if (makeArray(args.externalKinds).length > 0) {
-    cleanups.push(
-      scrollsWindow
-        ? autoScrollWindowForExternal({
-            canScroll: matchesKind,
-            getAllowedAxis,
-          })
-        : autoScrollForExternal({
-            element: args.element,
-            canScroll: matchesKind,
-            getAllowedAxis,
-          })
-    );
-  }
+  const scrollsForExternal = makeArray(args.externalKinds).length > 0;
 
-  return () => cleanups.forEach((cleanup) => cleanup());
+  return registerWhenLoaded((library) => {
+    const cleanups = [
+      scrollsWindow
+        ? library.autoScrollWindowForElements({
+            canScroll: matchesType,
+            getAllowedAxis,
+          })
+        : library.autoScrollForElements({
+            element: args.element,
+            canScroll: matchesType,
+            getAllowedAxis,
+          }),
+    ];
+
+    if (scrollsForExternal) {
+      cleanups.push(
+        scrollsWindow
+          ? library.autoScrollWindowForExternal({
+              canScroll: matchesKind,
+              getAllowedAxis,
+            })
+          : library.autoScrollForExternal({
+              element: args.element,
+              canScroll: matchesKind,
+              getAllowedAxis,
+            })
+      );
+    }
+
+    return () => cleanups.forEach((cleanup) => cleanup());
+  });
 }
 
 /**

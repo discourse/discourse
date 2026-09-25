@@ -9,8 +9,8 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { pluginActivitiesFuncs } from "discourse/lib/plugin-registries/about-page-activities";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 export {

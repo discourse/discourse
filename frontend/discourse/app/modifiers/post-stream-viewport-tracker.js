@@ -1,10 +1,10 @@
-import { cloakingPrevented } from "discourse/lib/plugin-registries/cloaking";
 import { cancel, schedule } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
+import { cloakingPrevented } from "discourse/lib/plugin-registries/cloaking";
 import DiscourseURL from "discourse/lib/url";
 
 /**

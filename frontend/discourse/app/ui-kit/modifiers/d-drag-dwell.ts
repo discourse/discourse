@@ -2,8 +2,6 @@ import { destroy } from "@ember/destroyable";
 import { cancel } from "@ember/runloop";
 import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
-import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
 import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/types";
 import { modifier } from "ember-modifier";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
@@ -21,6 +19,7 @@ import {
   type ExternalDragPayload,
   matchesExternalKind,
 } from "discourse/lib/-internals/drag-and-drop/external-vocabulary";
+import { registerWhenLoaded } from "discourse/lib/-internals/drag-and-drop/library";
 import {
   matchesDragType,
   type NormalizedDragSource,
@@ -447,29 +446,39 @@ export function registerDragDwell(
     );
   };
 
-  const cleanupElements = monitorForElements({
-    onDragStart: ({ source, location }) =>
-      reportElementCandidate(source, location),
-    onDrag: ({ source, location }) => reportElementCandidate(source, location),
-    onDropTargetChange: ({ source, location }) =>
-      reportElementCandidate(source, location),
-    onDrop: ({ location }) => reportDragEnded(location),
-  });
+  const cleanupMonitors = registerWhenLoaded(
+    ({ monitorForElements, monitorForExternal }) => {
+      const cleanupElements = monitorForElements({
+        onDragStart: ({ source, location }) =>
+          reportElementCandidate(source, location),
+        onDrag: ({ source, location }) =>
+          reportElementCandidate(source, location),
+        onDropTargetChange: ({ source, location }) =>
+          reportElementCandidate(source, location),
+        onDrop: ({ location }) => reportDragEnded(location),
+      });
 
-  const cleanupExternal = monitorForExternal({
-    onDragStart: ({ source, location }) =>
-      reportExternalCandidate(source, location),
-    onDrag: ({ source, location }) => reportExternalCandidate(source, location),
-    onDropTargetChange: ({ source, location }) =>
-      reportExternalCandidate(source, location),
-    onDrop: ({ location }) => reportDragEnded(location),
-  });
+      const cleanupExternal = monitorForExternal({
+        onDragStart: ({ source, location }) =>
+          reportExternalCandidate(source, location),
+        onDrag: ({ source, location }) =>
+          reportExternalCandidate(source, location),
+        onDropTargetChange: ({ source, location }) =>
+          reportExternalCandidate(source, location),
+        onDrop: ({ location }) => reportDragEnded(location),
+      });
+
+      return () => {
+        cleanupElements();
+        cleanupExternal();
+      };
+    }
+  );
 
   return () => {
     isDestroying = true;
     cancelPendingLeave();
-    cleanupElements();
-    cleanupExternal();
+    cleanupMonitors();
     destroy(lifetime);
     hovering = false;
     fired = false;

@@ -2,14 +2,7 @@ import type {
   ExternalDragPayload as NativeExternalDragPayload,
   NativeMediaType,
 } from "@atlaskit/pragmatic-drag-and-drop/adapter/external-adapter-types";
-import { containsFiles } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-files";
-import { containsHTML } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-html";
-import { containsText } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-text";
-import { containsURLs } from "@atlaskit/pragmatic-drag-and-drop/utils/contains-ur-ls";
-import { getFiles } from "@atlaskit/pragmatic-drag-and-drop/utils/get-files";
-import { getHTML } from "@atlaskit/pragmatic-drag-and-drop/utils/get-html";
-import { getText } from "@atlaskit/pragmatic-drag-and-drop/utils/get-text";
-import { getURLs } from "@atlaskit/pragmatic-drag-and-drop/utils/get-ur-ls";
+import { loadedDragAndDropLibrary } from "discourse/lib/-internals/drag-and-drop/library";
 import { makeArray } from "discourse/lib/helpers";
 
 /**
@@ -50,17 +43,19 @@ export interface ExternalDragPayload {
  * payload predicate.
  */
 const EXTERNAL_KIND_PREDICATES = Object.freeze({
-  files: containsFiles,
-  html: containsHTML,
-  text: containsText,
-  urls: containsURLs,
-});
+  files: "containsFiles",
+  html: "containsHTML",
+  text: "containsText",
+  urls: "containsURLs",
+} as const);
 
 /** A kind of external payload, as named by `accepts` / `acceptsExternal()`. */
 export type ExternalDragKind = keyof typeof EXTERNAL_KIND_PREDICATES;
 
 /**
- * Binds the read helpers to the library's raw external payload.
+ * Binds the read helpers to the library's raw external payload. A payload
+ * only exists once the library has dispatched a drag, so the library has
+ * loaded by the time any helper runs.
  *
  * @param source - The raw payload the library reports.
  */
@@ -71,14 +66,14 @@ export function decorateExternalSource(
     types: source.types,
     items: source.items,
     getStringData: (mediaType) => source.getStringData(mediaType),
-    containsFiles: () => containsFiles({ source }),
-    getFiles: () => getFiles({ source }),
-    containsHTML: () => containsHTML({ source }),
-    getHTML: () => getHTML({ source }),
-    containsText: () => containsText({ source }),
-    getText: () => getText({ source }),
-    containsURLs: () => containsURLs({ source }),
-    getURLs: () => getURLs({ source }),
+    containsFiles: () => loadedDragAndDropLibrary().containsFiles({ source }),
+    getFiles: () => loadedDragAndDropLibrary().getFiles({ source }),
+    containsHTML: () => loadedDragAndDropLibrary().containsHTML({ source }),
+    getHTML: () => loadedDragAndDropLibrary().getHTML({ source }),
+    containsText: () => loadedDragAndDropLibrary().containsText({ source }),
+    getText: () => loadedDragAndDropLibrary().getText({ source }),
+    containsURLs: () => loadedDragAndDropLibrary().containsURLs({ source }),
+    getURLs: () => loadedDragAndDropLibrary().getURLs({ source }),
   };
 }
 
@@ -101,6 +96,8 @@ export function matchesExternalKind(
   return list.some((kind) => {
     const predicate = EXTERNAL_KIND_PREDICATES[kind];
     // Untyped callers can pass an unknown kind; it matches nothing.
-    return predicate ? predicate({ source }) : false;
+    return predicate
+      ? loadedDragAndDropLibrary()[predicate]({ source })
+      : false;
   });
 }

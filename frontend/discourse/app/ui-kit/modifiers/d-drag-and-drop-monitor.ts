@@ -1,9 +1,7 @@
-import {
-  type ElementEventBasePayload,
-  monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
+import type { ElementEventBasePayload } from "@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter";
 import { modifier } from "ember-modifier";
 import { consumerMayThrow } from "discourse/lib/-internals/drag-and-drop/consumer-may-throw";
+import { registerWhenLoaded } from "discourse/lib/-internals/drag-and-drop/library";
 import {
   matchesDragType,
   type NormalizedDragSource,
@@ -67,15 +65,17 @@ export function registerDragAndDropMonitor(
     ...event,
     source: normalizeDragSource(event.source),
   });
-  return monitorForElements({
-    canMonitor: ({ source }) => matchesDragType(getArgsRef().types, source),
-    onDragStart: (event) =>
-      consumerMayThrow(() => getArgsRef().onDragStart?.(normalized(event))),
-    onDrag: (event) =>
-      consumerMayThrow(() => getArgsRef().onDrag?.(normalized(event))),
-    onDrop: (event) =>
-      consumerMayThrow(() => getArgsRef().onDrop?.(normalized(event))),
-  });
+  return registerWhenLoaded(({ monitorForElements }) =>
+    monitorForElements({
+      canMonitor: ({ source }) => matchesDragType(getArgsRef().types, source),
+      onDragStart: (event) =>
+        consumerMayThrow(() => getArgsRef().onDragStart?.(normalized(event))),
+      onDrag: (event) =>
+        consumerMayThrow(() => getArgsRef().onDrag?.(normalized(event))),
+      onDrop: (event) =>
+        consumerMayThrow(() => getArgsRef().onDrop?.(normalized(event))),
+    })
+  );
 }
 
 /**

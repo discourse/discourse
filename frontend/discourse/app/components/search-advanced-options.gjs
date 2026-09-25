@@ -9,6 +9,7 @@ import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
+import { extraAdvancedSearchOptions } from "discourse/lib/plugin-registries/advanced-search-options";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -20,7 +21,6 @@ import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { extraAdvancedSearchOptions } from "discourse/lib/plugin-registries/advanced-search-options";
 import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -49,7 +49,11 @@ function buildFilterOptions(keys, extraOptionsKey) {
       name: i18n(`search.advanced.filters.${key}`),
       value: key === "private" ? "messages" : key,
     }))
-    .concat(...extraAdvancedSearchOptions.map((eo) => eo[extraOptionsKey]).filter(Boolean));
+    .concat(
+      ...extraAdvancedSearchOptions
+        .map((eo) => eo[extraOptionsKey])
+        .filter(Boolean)
+    );
 }
 
 function inOptionsForUsers() {
@@ -103,14 +107,20 @@ function statusOptions() {
       name: i18n("search.advanced.statuses.single_user"),
       value: "single_user",
     },
-  ].concat(...extraAdvancedSearchOptions.map((eo) => eo.statusOptions).filter(Boolean));
+  ].concat(
+    ...extraAdvancedSearchOptions.map((eo) => eo.statusOptions).filter(Boolean)
+  );
 }
 
 function postTimeOptions() {
   return [
     { name: i18n("search.advanced.post.time.before"), value: "before" },
     { name: i18n("search.advanced.post.time.after"), value: "after" },
-  ].concat(...extraAdvancedSearchOptions.map((eo) => eo.postTimeOptions).filter(Boolean));
+  ].concat(
+    ...extraAdvancedSearchOptions
+      .map((eo) => eo.postTimeOptions)
+      .filter(Boolean)
+  );
 }
 
 export { addAdvancedSearchOptions } from "discourse/lib/plugin-registries/advanced-search-options";

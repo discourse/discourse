@@ -1,5 +1,5 @@
-import getURL from "discourse/lib/get-url";
 import { withPluginApi } from "discourse/lib/core-api";
+import getURL from "discourse/lib/get-url";
 
 export default {
   before: "hashtag-css-generator",

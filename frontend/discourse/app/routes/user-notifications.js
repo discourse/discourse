@@ -1,5 +1,5 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import { notificationsLimit } from "discourse/lib/plugin-registries/notifications";
+import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export { setNotificationsLimit } from "discourse/lib/plugin-registries/notifications";

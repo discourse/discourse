@@ -31,6 +31,12 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import {
+  apiImageWrapperBtnEvents,
+  uploadHandlers,
+  uploadMarkdownResolvers,
+  uploadPreProcessors,
+} from "discourse/lib/plugin-registries/composer-uploads";
 import { generateCookFunction } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import {
@@ -45,12 +51,6 @@ import { gt } from "discourse/truth-helpers";
 import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import DEditor from "discourse/ui-kit/d-editor";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
-import {
-  apiImageWrapperBtnEvents,
-  uploadHandlers,
-  uploadMarkdownResolvers,
-  uploadPreProcessors,
-} from "discourse/lib/plugin-registries/composer-uploads";
 import { i18n } from "discourse-i18n";
 
 export {
