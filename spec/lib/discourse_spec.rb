@@ -67,6 +67,22 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".before_fork" do
+    it "accepts disposed contexts while preparing live contexts for a fork" do
+      disposed = MiniRacer::Context.new
+      disposed.eval("1")
+      disposed.dispose
+      live = MiniRacer::Context.new
+      live.eval("var value = 42")
+
+      Discourse.before_fork
+
+      expect(live.eval("value")).to eq(42)
+    ensure
+      live&.dispose
+    end
+  end
+
   describe ".apply_worker_db_variables_overrides and .reset_worker_db_variables_overrides" do
     around do |example|
       original_env = ENV.to_hash

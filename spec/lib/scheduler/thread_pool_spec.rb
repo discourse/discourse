@@ -41,6 +41,22 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
   end
 
   describe "#post" do
+    it "starts replacement threads when used in a child process" do
+      ready = Queue.new
+      pool.post { ready << true }
+      expect(ready.pop(timeout: 5)).to eq(true)
+
+      child =
+        fork do
+          completed = Queue.new
+          pool.post { completed << true }
+          exit!(completed.pop(timeout: 5) ? 0 : 1)
+        end
+      _, status = Process.wait2(child)
+
+      expect(status).to be_success
+    end
+
     it "executes submitted tasks" do
       completion_queue = Queue.new
 
@@ -143,6 +159,26 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
 
       expect(results2.size).to eq(3)
       expect(results2.sort).to eq([0, 1, 2])
+    end
+  end
+
+  describe "#idle?" do
+    it "includes executing work when checking whether the pool has drained" do
+      started = Queue.new
+      release = Queue.new
+      pool.post do
+        started << true
+        release.pop
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+
+      expect(pool.idle?).to eq(false)
+      release << true
+      wait_for { pool.idle? }
+
+      expect(pool.idle?).to eq(true)
+    ensure
+      release << true
     end
   end
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "monitor"
+
 module Scheduler
   # ThreadPool manages a pool of worker threads that process tasks from a queue.
   # It maintains a minimum number of threads and can scale up to a maximum number
@@ -14,6 +16,13 @@ module Scheduler
   #  pool.wait_for_termination(timeout: 1) (optional timeout)
 
   class ThreadPool
+    FORK_LOCK = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Monitor.new
+    private_constant :FORK_LOCK
+
+    def self.idle?
+      ObjectSpace.each_object(self).all?(&:idle?)
+    end
+
     class ShutdownError < StandardError
     end
 
@@ -41,21 +50,27 @@ module Scheduler
       @shutdown = false
 
       # Initialize minimum number of threads
-      @min_threads.times { spawn_thread }
+      FORK_LOCK.synchronize do
+        @min_threads.times { spawn_thread }
+        @pid = Process.pid
+      end
     end
 
     def post(&block)
-      raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if shutdown?
+      FORK_LOCK.synchronize do
+        reset_after_fork if @pid != Process.pid
+        raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if shutdown?
 
-      db = RailsMultisite::ConnectionManagement.current_db
-      locale = I18n.locale
-      wrapped_block = wrap_block(block, db, locale)
+        db = RailsMultisite::ConnectionManagement.current_db
+        locale = I18n.locale
+        wrapped_block = wrap_block(block, db, locale)
 
-      @mutex.synchronize do
-        @queue << wrapped_block
-        spawn_thread if @threads.length == 0
+        @mutex.synchronize do
+          @queue << wrapped_block
+          spawn_thread if @threads.length == 0
 
-        @new_work.signal
+          @new_work.signal
+        end
       end
     end
 
@@ -98,6 +113,14 @@ module Scheduler
       @mutex.synchronize { @shutdown }
     end
 
+    def idle?
+      return true unless @mutex
+
+      @mutex.synchronize do
+        (@queue.empty? && @busy_threads.empty?) || (@shutdown && @threads.none?(&:alive?))
+      end
+    end
+
     def stats
       @mutex.synchronize do
         {
@@ -112,6 +135,16 @@ module Scheduler
     end
 
     private
+
+    def reset_after_fork
+      @pid = Process.pid
+      @threads = Set.new
+      @busy_threads = Set.new
+      @queue = Queue.new
+      @mutex = Mutex.new
+      @new_work = ConditionVariable.new
+      @min_threads.times { spawn_thread } unless @shutdown
+    end
 
     def wrap_block(block, db, locale)
       proc do

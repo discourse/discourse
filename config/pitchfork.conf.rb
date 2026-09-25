@@ -7,6 +7,7 @@ oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSI
 
 require_relative "../lib/pitchfork_reforking"
 Pitchfork::HttpServer.prepend(PitchforkReforking::PromotionGuard)
+Pitchfork::Service.prepend(PitchforkReforking::PersistentService)
 
 if ENV.key?("APP_SERVER_REFORK_AFTER")
   unless Pitchfork::REFORKING_AVAILABLE
