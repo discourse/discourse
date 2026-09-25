@@ -2425,7 +2425,7 @@ end
 #  index_topics_on_pinned_globally                  (pinned_globally) WHERE pinned_globally
 #  index_topics_on_pinned_until                     (pinned_until) WHERE (pinned_until IS NOT NULL)
 #  index_topics_on_timestamps_private               (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
-#  index_topics_on_updated_at_for_locale_detection  (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
-#  index_topics_on_updated_at_for_localization      (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
+#  index_topics_on_updated_at_for_locale_detection  (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_topics_on_updated_at_for_localization      (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_topics_on_updated_at_public                (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #
