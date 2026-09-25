@@ -144,14 +144,14 @@ RSpec.describe OneboxController do
     end
 
     it "does not onebox when you have no permission on category" do
-      post = create_post
+      post = create_post(category: Fabricate(:category))
       url = Discourse.base_url + post.url
 
       get "/onebox.json", params: { url: url, category_id: post.topic.category_id }
       expect(response.body).to include("blockquote")
 
       post.topic.category.set_permissions(staff: :full)
-      post.topic.category.save
+      post.topic.category.save!
 
       get "/onebox.json", params: { url: url, category_id: post.topic.category_id }
       expect(response.body).not_to include("blockquote")
