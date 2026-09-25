@@ -2,6 +2,8 @@
 
 #mixin for all guardian methods dealing with group permissions
 module GroupGuardian
+  GROUP_USER_NOT_PRELOADED = Object.new.freeze
+
   # Creating Method
   def can_create_group?
     is_admin? || (SiteSetting.moderators_manage_groups && is_moderator?)
@@ -10,9 +12,12 @@ module GroupGuardian
   # Edit authority for groups means membership changes only.
   # Automatic groups are not represented in the GROUP_USERS
   # table and thus do not allow membership changes.
-  def can_edit_group?(group)
-    !group.automatic &&
-      (can_admin_group?(group) || group.users.where("group_users.owner").include?(user))
+  def can_edit_group?(group, group_user: GROUP_USER_NOT_PRELOADED)
+    return false if group.automatic
+    return true if can_admin_group?(group)
+
+    group_user = group.group_users.find_by(user:) if group_user.equal?(GROUP_USER_NOT_PRELOADED)
+    group_user&.owner? || false
   end
 
   def can_admin_group?(group)

@@ -16,6 +16,7 @@ en:
       draft_sequence_conflict: "Draft sequence conflict"
       draft_too_long: "Draft is too long"
       group_not_found: "Group not found"
+      group_post_single_cursor: "Provide either before_post_id or before, not both"
       invalid_date: "Invalid date"
       invalid_directory_period: "Invalid directory period"
       invalid_reply_mode: "Invalid reply mode"

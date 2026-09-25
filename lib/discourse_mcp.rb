@@ -16,6 +16,7 @@ module DiscourseMcp
     SITE_SETTINGS_WRITE = "mcp:site-settings:write"
     THEMES_READ = "mcp:themes:read"
     THEMES_WRITE = "mcp:themes:write"
+    GROUPS_READ = "mcp:groups:read"
   end
 
   PROTOCOL_VERSION = "2026-07-28"

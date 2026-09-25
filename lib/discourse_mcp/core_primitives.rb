@@ -68,6 +68,7 @@ module DiscourseMcp
       register_moderation_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
+      register_group_tools(registry)
       register_resources(registry)
       register_prompts(registry)
     end
@@ -1642,6 +1643,153 @@ module DiscourseMcp
           ),
         annotations: WRITE,
         risk: :administration,
+      )
+    end
+
+    def register_group_tools(registry)
+      group_name = { type: "string", minLength: 1, maxLength: 100 }
+      pagination = {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+        offset: {
+          type: "integer",
+          minimum: 0,
+        },
+      }
+      register_tool(
+        registry,
+        "discourse_list_groups",
+        title: "List groups",
+        description: "Lists groups visible to the authenticated user.",
+        implementation: Tools::ListGroups,
+        input_schema:
+          object_schema(
+            {
+              page: {
+                type: "integer",
+                minimum: 0,
+              },
+              limit: pagination[:limit],
+              order: {
+                type: "string",
+                enum: %w[name user_count],
+              },
+              ascending: {
+                type: "boolean",
+              },
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              type: {
+                type: "string",
+                enum: %w[my owner public close automatic non_automatic],
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_get_group",
+        title: "Get group",
+        description: "Gets safe details and caller capabilities for one visible group.",
+        implementation: Tools::GetGroup,
+        input_schema: object_schema({ id: { type: "integer", minimum: 1 }, name: group_name }),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_members",
+        title: "List group members",
+        description: "Lists members and owners when the authenticated user may see them.",
+        implementation: Tools::ListGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              **pagination,
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              order: {
+                type: "string",
+                enum: %w[username last_posted_at last_seen_at added_at],
+              },
+              ascending: {
+                type: "boolean",
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_membership_requests",
+        title: "List group membership requests",
+        description: "Lists pending requests for a group the authenticated user may manage.",
+        implementation: Tools::ListGroupMembershipRequests,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              **pagination,
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              ascending: {
+                type: "boolean",
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_posts",
+        title: "List group posts",
+        description: "Lists visible public-topic posts authored by members of a visible group.",
+        implementation: Tools::ListGroupPosts,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              before_post_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              before: {
+                type: "string",
+                format: "date-time",
+              },
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 20,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
       )
     end
 
