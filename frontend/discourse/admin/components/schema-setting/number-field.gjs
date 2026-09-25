@@ -44,6 +44,11 @@ export default class SchemaSettingNumberField extends Component {
   @action
   onInput(event) {
     this.touched = true;
+
+    if (event.currentTarget.validity.badInput) {
+      return;
+    }
+
     let inputValue = event.currentTarget.value;
 
     if (isNaN(inputValue)) {

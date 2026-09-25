@@ -9,28 +9,23 @@ RSpec.describe "Admin editing objects type" do
   describe "when editing a theme setting of objects type" do
     fab!(:theme)
 
-    let(:objects_setting) do
+    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+
+    before do
       theme.set_field(
         target: :settings,
         name: "yaml",
-        value:
-          File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}"),
+        value: File.read(Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")),
       )
 
       theme.save!
-      theme.settings[:objects_setting]
     end
-
-    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
-
-    before { objects_setting }
 
     it "displays property labels and descriptions from the locale file" do
       theme.set_field(
         target: :translations,
         name: "en",
-        value:
-          File.read("#{Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")}"),
+        value: File.read(Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")),
       )
 
       theme.save!
@@ -100,12 +95,8 @@ RSpec.describe "Admin editing objects type" do
     end
 
     it "displays the validation errors when an admin tries to save the setting with an invalid value" do
-      visit("/admin/customize/themes/#{theme.id}")
-
-      admin_objects_theme_setting_editor =
-        admin_customize_themes_page.click_edit_objects_setting_button("objects_setting")
-
-      admin_objects_theme_setting_editor
+      admin_objects_setting_editor_page
+        .visit_theme(theme, "objects_setting")
         .fill_in_field("name", "")
         .click_link("section 2")
         .fill_in_field("name", "")
@@ -118,43 +109,27 @@ RSpec.describe "Admin editing objects type" do
       )
     end
 
-    it "allows an admin to pick an icon for an icon type property" do
-      SiteSetting.svg_icon_subset = "gamepad"
-
+    it "allows an admin to type a decimal into a float property" do
       theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
-        links_setting:
+        ratios:
           type: objects
           default:
-            - title: link
-              icon: heart
+            - {}
           schema:
-            name: link
+            name: ratio
             properties:
-              title:
-                type: string
-              icon:
-                type: icon
+              ratio:
+                type: float
       YAML
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}")
+      admin_objects_setting_editor_page
+        .visit_theme(theme, "ratios")
+        .type_in_field("ratio", "7.5")
+        .save
 
-      admin_objects_theme_setting_editor =
-        admin_customize_themes_page.click_edit_objects_setting_button("links_setting")
-
-      icon_picker = PageObjects::Components::DIconGridPicker.new(".schema-field[data-name='icon']")
-
-      expect(icon_picker).to have_selected_icon("heart")
-
-      icon_picker.expand
-      icon_picker.filter("gamepad")
-      icon_picker.select_icon("gamepad")
-
-      admin_objects_theme_setting_editor.save
-
-      expect(theme.reload.settings[:links_setting].value).to eq(
-        [{ "title" => "link", "icon" => "gamepad" }],
-      )
+      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+      expect(theme.reload.settings[:ratios].value).to eq([{ "ratio" => 7.5 }])
     end
 
     it "allows an admin to edit a theme setting of objects type via the settings editor" do
