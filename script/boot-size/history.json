@@ -1,0 +1,42 @@
+[
+  {
+    "commit": "e378806e48d",
+    "label": "Baseline (no core route splitting)",
+    "date": "2026-09-25T21:05:00.000Z",
+    "boot": {
+      "brotli": 1138919,
+      "raw": 5791272,
+      "chunks": 23
+    },
+    "discovery": {
+      "brotli": 1138919,
+      "raw": 5791272,
+      "chunks": 23
+    },
+    "topic": {
+      "brotli": 1138919,
+      "raw": 5791272,
+      "chunks": 23
+    }
+  },
+  {
+    "commit": "541440c1e9c",
+    "label": "Route splitting: discovery, topic, wizard, other; import-only components",
+    "date": "2026-09-25T21:20:52.890Z",
+    "boot": {
+      "brotli": 906524,
+      "raw": 4048627,
+      "chunks": 32
+    },
+    "discovery": {
+      "brotli": 934836,
+      "raw": 4196087,
+      "chunks": 38
+    },
+    "topic": {
+      "brotli": 979410,
+      "raw": 4479305,
+      "chunks": 37
+    }
+  }
+]

@@ -8,9 +8,20 @@ import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 class BareRouter extends EmbroiderRouter {
   location = isTesting() ? "none" : "history";
 
+  // A route belongs to the nearest ancestor's bundle, so routes built in loops need no listing.
   lazyRoute(routeName) {
-    routeName = dasherize(routeName);
-    return super.lazyRoute(routeName);
+    let name = dasherize(routeName);
+
+    while (name) {
+      const bundle = super.lazyRoute(name);
+
+      if (bundle) {
+        return bundle;
+      }
+
+      const dot = name.lastIndexOf(".");
+      name = dot === -1 ? "" : name.slice(0, dot);
+    }
   }
 
   setupRouter() {

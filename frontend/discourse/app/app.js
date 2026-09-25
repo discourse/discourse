@@ -7,7 +7,7 @@ import "./ui-kit-shims";
 import "./module-shims";
 import "./discourse-common-loader-shims";
 import "@warp-drive/ember/install";
-import embroiderCompatModules from "@embroider/virtual/compat-modules";
+import coreModules, { routes as coreRouteBundles } from "virtual:core-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { registerSettings } from "discourse/lib/theme-settings-store";
 import { defineModules } from "./lib/loader-shim";
@@ -31,7 +31,9 @@ import { buildResolver } from "discourse/resolver";
 
 populatePreloadStore();
 
-defineModules(null, embroiderCompatModules);
+defineModules(null, coreModules);
+
+window._embroiderRouteBundles_ = [...coreRouteBundles];
 
 import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
 

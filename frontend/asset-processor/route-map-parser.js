@@ -270,7 +270,7 @@ function globFor(url) {
 // Nothing a plugin declares is eager, so a route naming no bundle still falls into one.
 const DEFAULT_BUNDLE_NAME = "default";
 
-export function deriveRoutes(root) {
+export function deriveRoutes(root, { coreDefaultBundle = null } = {}) {
   const derived = [];
 
   function walk(nodes, parent) {
@@ -285,7 +285,7 @@ export function deriveRoutes(root) {
       const bundleName =
         options.bundleName ??
         parent.bundleName ??
-        (node.core ? null : DEFAULT_BUNDLE_NAME);
+        (node.core ? coreDefaultBundle : DEFAULT_BUNDLE_NAME);
 
       derived.push({
         name: dasherize(name),

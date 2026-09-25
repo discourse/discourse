@@ -10,6 +10,13 @@ function embroiderRouteName(facadeModuleId) {
   }
 }
 
+function coreRouteName(facadeModuleId) {
+  const match = facadeModuleId.match(/^\0virtual:core-route:(.+)$/);
+  if (match) {
+    return `route-${match[1].replaceAll(/\W/g, "-")}`;
+  }
+}
+
 function emberInspectorName(facadeModuleId) {
   if (facadeModuleId.includes("@embroider/legacy-inspector-support")) {
     return `ember-inspector-support`;
@@ -65,6 +72,7 @@ export default function discourseChunkNamesPlugin() {
 
           const name =
             chunkNamesFromComments.get(chunk.facadeModuleId) ||
+            coreRouteName(chunk.facadeModuleId) ||
             embroiderRouteName(chunk.facadeModuleId) ||
             emberInspectorName(chunk.facadeModuleId);
 

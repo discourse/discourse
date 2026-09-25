@@ -13,14 +13,18 @@ export default function () {
   this.route("posts");
 
   // Topic routes
-  this.route("topic", { path: "/t/:slug/:id" }, function () {
-    this.route("fromParams", { path: "/" });
-    this.route("fromParamsNear", { path: "/:nearPost" });
-  });
+  this.route(
+    "topic",
+    { path: "/t/:slug/:id", bundleName: "topic" },
+    function () {
+      this.route("fromParams", { path: "/" });
+      this.route("fromParamsNear", { path: "/:nearPost" });
+    }
+  );
 
   this.route("topicBySlugOrId", { path: "/t/:slug_or_id" });
 
-  this.route("discovery", { path: "/" }, function () {
+  this.route("discovery", { path: "/", bundleName: "discovery" }, function () {
     // top by periods - legacy route
     Site.currentProp("periods").forEach((period) => {
       const top = "top" + capitalize(period);
@@ -309,7 +313,7 @@ export default function () {
     this.route("show", { path: "/:token" });
   });
 
-  this.route("wizard", function () {
+  this.route("wizard", { bundleName: "wizard" }, function () {
     this.route("step", { path: "/steps/:step_id" });
   });
 }
