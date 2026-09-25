@@ -129,7 +129,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
           stub_vector_mapping(text, expected_embedding_1)
           # A 429 would pause the provider and skip requests that haven't started yet.
-          stub_vector_mapping(text2, expected_embedding_2, result_status: 500)
+          stub_vector_mapping(text2, expected_embedding_2, result_status: 400)
 
           vector.gen_bulk_reprensentations(Topic.where(id: [topic.id, topic_2.id]))
 
