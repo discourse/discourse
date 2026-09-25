@@ -1,0 +1,71 @@
+name: Sync Font Awesome sprites on Dependabot PRs
+
+on:
+  push:
+    branches:
+      - "dependabot/npm_and_yarn/fortawesome/**"
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Sync sprites
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        shell: bash
+
+    env:
+      RAILS_ENV: test
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      # The push token is only handed to git in the final step
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "team@discourse.org"
+          git config --global user.name "discoursebot"
+
+      - name: Symlink vendor/bundle from image
+        run: ln -s /var/www/discourse/vendor/bundle vendor/bundle
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs $(($(nproc) - 1))
+
+      # Only the package's sprite files are read, so no dependency code needs to run
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Sync sprites and push
+        env:
+          PUSH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+        run: |
+          git remote set-url origin "https://x-access-token:${PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          # The pnpm dedupe workflow may push to this branch at the same time, so retry on a rejected push
+          for _ in 1 2 3; do
+            bin/rake svgicons:sync
+            git add vendor/assets/svg-icons
+            git diff --cached --quiet && exit 0
+            git commit -m "Sync Font Awesome sprites [dependabot skip]"
+            git push origin "HEAD:$GITHUB_REF_NAME" && exit 0
+            git fetch --depth=1 origin "$GITHUB_REF_NAME"
+            git reset --hard FETCH_HEAD
+          done
+          exit 1
