@@ -4,7 +4,6 @@ import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./module-shims";
-import "@warp-drive/ember/install";
 import coreModules, { routes as coreRouteBundles } from "virtual:core-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { registerSettings } from "discourse/lib/theme-settings-store";

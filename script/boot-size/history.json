@@ -58,5 +58,25 @@
       "raw": 3849641,
       "chunks": 55
     }
+  },
+  {
+    "commit": "cc0c720571c",
+    "label": "WarpDrive store loaded with topic/other bundles",
+    "date": "2026-09-25T21:30:43.551Z",
+    "boot": {
+      "brotli": 708989,
+      "raw": 3028097,
+      "chunks": 48
+    },
+    "discovery": {
+      "brotli": 745284,
+      "raw": 3203479,
+      "chunks": 59
+    },
+    "topic": {
+      "brotli": 868748,
+      "raw": 3853786,
+      "chunks": 60
+    }
   }
 ]

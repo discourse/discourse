@@ -36,6 +36,12 @@ const DEFAULT_BUNDLE = "other";
 // Looked up by name from a route's code, so they travel with that route.
 const EXTRA_ROUTE_BUNDLES = { nested: "topic" };
 
+// Loaded alongside a bundle, for code that its routes use synchronously.
+const BUNDLE_PRELOADS = {
+  topic: ["discourse/data/warp-store-impl"],
+  other: ["discourse/data/warp-store-impl"],
+};
+
 const ROUTE_FILE_REGEX = /^(routes|controllers|templates)\/(.+)$/;
 const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
 
@@ -193,6 +199,8 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
         names: [...bundle.names].sort(),
       })),
       urlTable: urlTableFor(derived),
+      preloads: BUNDLE_PRELOADS,
+      appDir,
     };
 
     Object.assign(tables, plan);
@@ -220,11 +228,17 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
           return [
             ...renderModuleMap("compatModules", plan.eager, appDir),
             "export const routes = [",
-            ...plan.bundles.map(
-              (bundle) =>
+            ...plan.bundles.map((bundle) => {
+              const imports = [
+                `${ROUTE_PREFIX}${bundle.bundleName}`,
+                ...(BUNDLE_PRELOADS[bundle.bundleName] ?? []),
+              ].map((specifier) => `import(${JSON.stringify(specifier)})`);
+
+              return (
                 `  { names: ${JSON.stringify(bundle.names)},` +
-                ` load: () => import(${JSON.stringify(`${ROUTE_PREFIX}${bundle.bundleName}`)}) },`
-            ),
+                ` load: () => Promise.all([${imports.join(", ")}]).then(([m]) => m) },`
+              );
+            }),
             "];",
             "export default compatModules;",
             "",
@@ -251,14 +265,21 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
 // Route bundles by url glob, most specific first, for the html to preload.
 export function routeBundlesFor(bundle, tables) {
   const fileByBundle = {};
+  const fileBySpecifier = {};
 
   for (const [fileName, chunk] of Object.entries(bundle)) {
-    if (
-      chunk.type === "chunk" &&
-      chunk.facadeModuleId?.startsWith(RESOLVED_ROUTE_PREFIX)
-    ) {
+    if (chunk.type !== "chunk" || !chunk.facadeModuleId) {
+      continue;
+    }
+
+    if (chunk.facadeModuleId.startsWith(RESOLVED_ROUTE_PREFIX)) {
       fileByBundle[chunk.facadeModuleId.slice(RESOLVED_ROUTE_PREFIX.length)] =
         fileName;
+    } else if (chunk.facadeModuleId.startsWith(`${tables.appDir}/`)) {
+      const specifier = `discourse/${stripExtension(
+        path.relative(tables.appDir, chunk.facadeModuleId)
+      )}`;
+      fileBySpecifier[specifier] = fileName;
     }
   }
 
@@ -268,5 +289,8 @@ export function routeBundlesFor(bundle, tables) {
       bundleName,
       url,
       fileName: fileByBundle[bundleName],
+      preloads: (tables.preloads?.[bundleName] ?? [])
+        .map((specifier) => fileBySpecifier[specifier])
+        .filter(Boolean),
     }));
 }

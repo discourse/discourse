@@ -1,13 +1,54 @@
-import { JSONAPICache } from "@warp-drive/json-api";
-import { useLegacyStore } from "@warp-drive/legacy";
-import discourseRestHandler from "discourse/data/handlers/discourse-rest";
-import { schemas } from "discourse/data/schemas";
+import { getOwner } from "@ember/owner";
+import Service from "@ember/service";
 
-// `linksMode: true` skips the LegacyNetworkHandler so our handler is the
-// sole network layer (routes through Discourse's `ajax()` helper).
-export default class WarpStore extends useLegacyStore({
-  cache: JSONAPICache,
-  schemas,
-  handlers: [discourseRestHandler],
-  linksMode: true,
-}) {}
+let Impl;
+let loading;
+
+// Called by the store implementation module when it evaluates.
+export function registerWarpStoreClass(klass) {
+  Impl = klass;
+}
+
+// A route bundle whose code pushes into the store synchronously loads the
+// implementation alongside its modules, so `push` and `peekRecord` never wait.
+export default class WarpStore extends Service {
+  #store;
+
+  get loaded() {
+    return Boolean(Impl);
+  }
+
+  async load() {
+    if (!Impl) {
+      loading ??= import("discourse/data/warp-store-impl");
+      await loading;
+    }
+    return this.#impl;
+  }
+
+  get #impl() {
+    if (!this.#store) {
+      if (!Impl) {
+        throw new Error(
+          "The WarpDrive store is used synchronously before its bundle loaded"
+        );
+      }
+      const owner = getOwner(this);
+      owner.register("service:warp-store-impl", Impl);
+      this.#store = owner.lookup("service:warp-store-impl");
+    }
+    return this.#store;
+  }
+
+  peekRecord(...args) {
+    return this.#impl.peekRecord(...args);
+  }
+
+  push(...args) {
+    return this.#impl.push(...args);
+  }
+
+  async request(...args) {
+    return (await this.load()).request(...args);
+  }
+}

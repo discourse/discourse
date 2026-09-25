@@ -58,19 +58,19 @@ function sizes(files) {
   return { brotli, raw, chunks: files.size };
 }
 
-function routeChunk(bundleName) {
+function routeChunks(bundleName) {
   const entry = manifest.routeBundles.find((b) => b.bundleName === bundleName);
   if (!entry) {
     throw new Error(`No route bundle named ${bundleName}`);
   }
-  return entry.fileName;
+  return [entry.fileName, ...(entry.preloads ?? [])];
 }
 
 const boot = manifest.entrypoints.discourse;
 const pages = {
   boot: closure([boot]),
-  discovery: closure([boot, routeChunk("discovery")]),
-  topic: closure([boot, routeChunk("topic")]),
+  discovery: closure([boot, ...routeChunks("discovery")]),
+  topic: closure([boot, ...routeChunks("topic")]),
 };
 
 const result = {
