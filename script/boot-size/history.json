@@ -118,5 +118,25 @@
       "raw": 3512415,
       "chunks": 112
     }
+  },
+  {
+    "commit": "368de17dbff",
+    "label": "Header menus lazy; composer upload registries extracted",
+    "date": "2026-09-25T21:38:56.438Z",
+    "boot": {
+      "brotli": 650992,
+      "raw": 2629528,
+      "chunks": 95
+    },
+    "discovery": {
+      "brotli": 689026,
+      "raw": 2808514,
+      "chunks": 109
+    },
+    "topic": {
+      "brotli": 815322,
+      "raw": 3403427,
+      "chunks": 124
+    }
   }
 ]

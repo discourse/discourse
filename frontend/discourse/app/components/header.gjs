@@ -13,10 +13,10 @@ import { and, eq, not, or } from "discourse/truth-helpers";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
-import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
+import HamburgerDropdownWrapper from "discourse/components/lazy/hamburger-dropdown-wrapper";
 import Icons from "./header/icons";
-import SearchMenuWrapper from "./header/search-menu-wrapper";
-import UserMenuWrapper from "./header/user-menu-wrapper";
+import SearchMenuWrapper from "discourse/components/lazy/search-menu-wrapper";
+import UserMenuWrapper from "discourse/components/lazy/user-menu-wrapper";
 
 export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";

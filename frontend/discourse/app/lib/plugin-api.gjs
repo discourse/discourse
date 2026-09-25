@@ -12,7 +12,7 @@ import {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
-} from "discourse/components/composer-editor";
+} from "discourse/lib/plugin-registries/composer-uploads";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";

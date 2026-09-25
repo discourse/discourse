@@ -10,7 +10,6 @@ import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
-import { BasePlugin } from "@uppy/core";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
@@ -46,55 +45,23 @@ import { gt } from "discourse/truth-helpers";
 import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import DEditor from "discourse/ui-kit/d-editor";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import {
+  apiImageWrapperBtnEvents,
+  uploadHandlers,
+  uploadMarkdownResolvers,
+  uploadPreProcessors,
+} from "discourse/lib/plugin-registries/composer-uploads";
 import { i18n } from "discourse-i18n";
 
-let uploadHandlers = [];
-export function addComposerUploadHandler(extensions, method) {
-  uploadHandlers.push({
-    extensions,
-    method,
-  });
-}
-export function cleanUpComposerUploadHandler() {
-  // we cannot set this to uploadHandlers = [] because that messes with
-  // the references to the original array that the component has. this only
-  // really affects tests, but without doing this you could addComposerUploadHandler
-  // in a beforeEach function in a test but then it's not adding to the
-  // existing reference that the component has, because an earlier test ran
-  // cleanUpComposerUploadHandler and lost it. setting the length to 0 empties
-  // the array but keeps the reference
-  uploadHandlers.length = 0;
-}
-
-let uploadPreProcessors = [];
-export function addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
-  if (!(pluginClass.prototype instanceof BasePlugin)) {
-    throw new Error(
-      "Composer upload preprocessors must inherit from the Uppy BasePlugin class."
-    );
-  }
-
-  uploadPreProcessors.push({
-    pluginClass,
-    optionsResolverFn,
-  });
-}
-export function cleanUpComposerUploadPreProcessor() {
-  uploadPreProcessors = [];
-}
-
-let uploadMarkdownResolvers = [];
-export function addComposerUploadMarkdownResolver(resolver) {
-  uploadMarkdownResolvers.push(resolver);
-}
-export function cleanUpComposerUploadMarkdownResolver() {
-  uploadMarkdownResolvers = [];
-}
-
-let apiImageWrapperBtnEvents = [];
-export function addApiImageWrapperButtonClickEvent(fn) {
-  apiImageWrapperBtnEvents.push(fn);
-}
+export {
+  addApiImageWrapperButtonClickEvent,
+  addComposerUploadHandler,
+  addComposerUploadMarkdownResolver,
+  addComposerUploadPreProcessor,
+  cleanUpComposerUploadHandler,
+  cleanUpComposerUploadMarkdownResolver,
+  cleanUpComposerUploadPreProcessor,
+} from "discourse/lib/plugin-registries/composer-uploads";
 
 const DEBOUNCE_FETCH_MS = 450;
 const DEBOUNCE_JIT_MS = 2000;

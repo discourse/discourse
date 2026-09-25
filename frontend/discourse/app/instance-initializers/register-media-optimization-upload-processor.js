@@ -1,5 +1,5 @@
 import { Promise } from "rsvp";
-import { addComposerUploadPreProcessor } from "discourse/components/composer-editor";
+import { addComposerUploadPreProcessor } from "discourse/lib/plugin-registries/composer-uploads";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 
 // Devices stuck on EOL iOS versions are older hardware where WebKit's memory
