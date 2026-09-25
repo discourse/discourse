@@ -11,7 +11,7 @@ module BackupRestore
 
     def initialize(logger, filename, tmp_directory)
       @logger = logger
-      @current_version = BackupRestore.current_version
+      @current_database_version = BackupRestore.current_database_version
       @filename = filename
       @tmp_directory = tmp_directory
     end
@@ -24,13 +24,26 @@ module BackupRestore
       end
 
       log "Validating metadata..."
-      log "  Current version: #{@current_version}"
-      log "  Restored version: #{metadata[:version]}"
+      log "  Current database version: #{@current_database_version}"
+      log "  Backup from database version: #{metadata[:version]}"
+      log "  Current Discourse version: #{Discourse::VERSION::STRING}"
+      log "  Backup from Discourse version: #{metadata[:discourse_version] || "(unknown)"}"
 
-      if metadata[:version] > @current_version
+      if metadata[:discourse_version] &&
+           Gem::Version.new(metadata[:discourse_version]) >
+             Gem::Version.new(Discourse::VERSION::STRING)
         raise MigrationRequiredError.new(
-                "You're trying to restore a more recent version of the schema. " \
-                  "You should migrate first!",
+                "This backup was created with Discourse #{metadata[:discourse_version]}, " \
+                  "but this site is running Discourse #{Discourse::VERSION::STRING}. " \
+                  "Upgrade this site before restoring the backup",
+              )
+      end
+
+      if metadata[:version] > @current_database_version
+        raise MigrationRequiredError.new(
+                "This backup uses schema version #{metadata[:version]}, " \
+                  "but this site is on schema version #{@current_database_version}. " \
+                  "Upgrade this site before restoring the backup",
               )
       end
 
@@ -46,12 +59,29 @@ module BackupRestore
 
       if metadata_path.present? && File.exist?(metadata_path)
         metadata = load_metadata_file(metadata_path)
-      elsif @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
-        metadata = { version: Regexp.last_match[1].to_i }
       else
-        raise MetaDataError.new("Migration version is missing from the filename.")
+        metadata = extract_filename_metadata
       end
 
+      metadata
+    end
+
+    def extract_filename_metadata
+      version_regexp = /\d{4}-\d{1,2}-\d+(?:-latest(?:-\d+)?)?/
+      match =
+        @filename.match(
+          /-#{BackupRestore::VERSION_PREFIX}(?:(?<discourse_version>#{version_regexp})-)?(?<database_version>\d{14})/,
+        )
+
+      if !match
+        raise MetaDataError.new("Version information is missing or invalid in the filename.")
+      end
+
+      metadata = { version: match[:database_version].to_i }
+      discourse_version = match[:discourse_version]
+      if discourse_version
+        metadata[:discourse_version] = discourse_version.tr("-", ".").sub(".latest", "-latest")
+      end
       metadata
     end
 

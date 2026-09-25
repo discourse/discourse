@@ -92,7 +92,7 @@ module BackupRestore
       @archive_basename =
         File.join(
           @archive_directory,
-          "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}",
+          "#{filename}-#{BackupRestore::VERSION_PREFIX}#{Discourse::VERSION::STRING.tr(".", "-")}-#{BackupRestore.current_database_version}",
         )
 
       @backup_filename =
