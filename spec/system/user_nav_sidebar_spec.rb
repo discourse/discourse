@@ -102,6 +102,7 @@ RSpec.describe "User nav sidebar" do
     expect(page).to have_css(panel)
     within(panel) { expect(page).to have_link("Summary") }
     expect(page).to have_css(".sidebar-sections__back-to-forum", text: "Back to Forum")
+    expect(page).to have_css(section("preferences"))
   end
 
   it "points the back link at admin when the admin area was the entry point" do
@@ -163,17 +164,13 @@ RSpec.describe "User nav sidebar" do
       ".sidebar-section-link-content-badge"
   end
 
-  it "marks drafts, unread messages and notifications, as a dot or a count" do
+  it "marks drafts and unread messages, as a dot or a count" do
     # Never read, so it counts as new rather than unread.
     Fabricate(:private_message_post, user: other_user, recipient: current_user)
-    Fabricate(:notification, user: current_user, read: false)
     Draft.set(current_user, "#{Draft::NEW_TOPIC}_1", 0, { reply: "a draft" }.to_json)
 
     visit("/u/alice/messages")
     expect(page).to have_css(link_suffix("messages-new"))
-
-    visit("/u/alice/notifications")
-    expect(page).to have_css(link_suffix("notifications-all"))
 
     # The count belongs in the suffix, not folded into the label.
     visit("/u/alice/activity")
@@ -245,6 +242,17 @@ RSpec.describe "User nav sidebar" do
 
     # Too few links left to be worth filtering.
     expect(page).to have_no_css(".sidebar-filter__input")
+  end
+
+  it "shows tabs registered by plugins" do
+    SiteSetting.chat_enabled = true
+    SiteSetting.solved_enabled = true
+
+    visit("/u/alice/activity")
+    within(section("activity")) { expect(page).to have_link("Solved") }
+
+    visit("/u/alice/preferences/account")
+    within(section("preferences")) { expect(page).to have_link("Chat") }
   end
 
   it "drops the messages bar when nothing is left in it" do

@@ -32,7 +32,7 @@ class ChatSetupInit {
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     withPluginApi((api) => {
-      api.addUserNavPreferencesLink({
+      api.addUserNavSidebarLink("preferences", {
         name: "preferences-chat",
         route: "preferences.chat",
         label: "chat.title_capitalized",

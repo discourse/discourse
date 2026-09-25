@@ -40,6 +40,10 @@ body.user-nav-panel-active {
     }
   }
 
+  .new-user-wrapper .user-navigation {
+    border: none;
+  }
+
   @include viewport.until(sm) {
     .user-content tbody {
       border-top: none;
