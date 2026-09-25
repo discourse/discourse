@@ -1,23 +1,51 @@
 # frozen_string_literal: true
 
 RSpec.describe PitchforkReforking do
+  describe ".dispose_v8_contexts" do
+    it "disposes contexts and rebuilds the rendering and compiler contexts on demand" do
+      rendering = PrettyText.v8
+      compiler = AssetProcessor.v8
+      temporary = MiniRacer::Context.new
+      temporary.eval("1 + 1")
+
+      described_class.dispose_v8_contexts
+
+      [rendering, compiler, temporary].each do |context|
+        expect { context.eval("1 + 1") }.to raise_error(MiniRacer::ContextDisposedError)
+      end
+      expect(PrettyText.cook("**rebuilt**")).to include("<strong>rebuilt</strong>")
+      expect(AssetProcessor.v8.eval("1 + 1")).to eq(2)
+    end
+  end
+
   describe PitchforkReforking::PromotionGuard do
     let(:fork_lock) { Monitor.new }
     let(:worker) { Struct.new(:to_log).new("worker=0") }
     let(:defer) { Class.new { include Scheduler::Deferrable }.new }
+    let(:spawn_timeout) { 5 }
     let(:server) do
       Class
         .new do
+          def initialize(spawn_timeout:)
+            @spawn_timeout = spawn_timeout
+          end
+
           def logger
             Logger.new(StringIO.new)
           end
 
-          def spawn_mold(_worker)
+          def spawn_mold(_worker, &block)
+            fork_sibling("spawn_mold", &block)
+          end
+
+          private
+
+          def fork_sibling(_role)
             yield
           end
         end
         .prepend(PitchforkReforking::PromotionGuard)
-        .new
+        .new(spawn_timeout: spawn_timeout)
     end
 
     around do |example|
@@ -32,7 +60,7 @@ RSpec.describe PitchforkReforking do
     end
 
     describe "#spawn_mold" do
-      it "skips active native work and promotes after it finishes" do
+      it "waits for native work before promoting" do
         entered = Queue.new
         release = Queue.new
         native_work =
@@ -43,30 +71,63 @@ RSpec.describe PitchforkReforking do
             end
           end
         expect(entered.pop(timeout: 5)).to eq(true)
+        promotion = Thread.new { server.spawn_mold(worker) { :promoted } }
+        wait_for { promotion.status == "sleep" }
 
-        expect(server.spawn_mold(worker) { raise "forked during native work" }).to eq(false)
         release << true
-        native_work.join
-        child = server.spawn_mold(worker) { fork { exit!(0) } }
-        _, status = Process.wait2(child)
 
-        expect(status).to be_success
+        expect(promotion.join(5)).to eq(promotion)
+        expect(promotion.value).to eq(:promoted)
       ensure
         release << true
         native_work&.join(5)
+        promotion&.join(5)
       end
 
-      it "preserves pending deferred work when promotion is skipped" do
+      it "drains existing deferred work before promoting" do
         defer.async = true
-        defer.pause
-        completed = []
-        defer.later { completed << :original }
+        started = Queue.new
+        release = Queue.new
+        completed = Queue.new
+        defer.later do
+          started << true
+          release.pop
+          completed << :original
+        end
+        expect(started.pop(timeout: 5)).to eq(true)
+        promotion = Thread.new { server.spawn_mold(worker) { :promoted } }
+        wait_for { promotion.status == "sleep" }
 
-        expect(server.spawn_mold(worker) { raise "forked with pending work" }).to eq(false)
-        defer.do_all_work
+        release << true
 
-        expect(completed).to eq([:original])
+        expect(promotion.join(5)).to eq(promotion)
+        expect(promotion.value).to eq(:promoted)
+        expect(completed.pop(timeout: 5)).to eq(:original)
+      ensure
+        release << true
+        promotion&.join(5)
+      end
+
+      it "abandons promotion after the drain timeout without losing deferred work" do
+        defer.async = true
+        started = Queue.new
+        release = Queue.new
+        completed = Queue.new
+        defer.later do
+          started << true
+          release.pop
+          completed << :finished
+        end
+        expect(started.pop(timeout: 5)).to eq(true)
+        short_timeout_server = server.class.new(spawn_timeout: 0.05)
+
+        expect(short_timeout_server.spawn_mold(worker) { raise "forked before drain" }).to eq(false)
+        release << true
+
+        expect(completed.pop(timeout: 5)).to eq(:finished)
         expect(server.spawn_mold(worker) { :promoted }).to eq(:promoted)
+      ensure
+        release << true
       end
 
       it "releases both barriers after a failed promotion" do

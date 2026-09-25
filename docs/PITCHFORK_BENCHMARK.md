@@ -1,5 +1,9 @@
 # Pitchfork reforking benchmark — 2026-09-25
 
+> These measurements describe the earlier implementation, which retained V8
+> contexts and replaced service processes. They do not measure the current
+> drain-and-dispose implementation. Updated paired trials are pending.
+
 Across three paired trials at each worker count, reforking reduced steady PSS by a median of 198 MiB (18.4%) with four workers and 375 MiB (24.7%) with eight. Summed RSS did not show a consistent reduction. All 72,000 requests returned successful JSON responses.
 
 Changes below are medians of the three within-pair changes, not differences between independently aggregated medians. Positive RSS changes mean an increase.

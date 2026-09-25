@@ -29,13 +29,18 @@ the environment variable and restarting disables automatic reforking.
 
 A request worker can contain state that the initial mold did not:
 
-- Deferred work belongs to its original process. Promotion skips when work
-  is queued or executing, and holds the scheduler's admission barrier across
-  the fork. A skipped attempt remains eligible after Pitchfork's normal
-  retry backoff; it does not consume a generation's schedule entry.
-- Rendering and asset compilation share Pitchfork's reentrant fork barrier.
-  Promotion skips while another thread holds it instead of waiting for native
-  JavaScript execution at the fork boundary.
+- The selected candidate stops accepting requests while it drains deferred
+  actions and managed thread pools. Other request workers continue serving.
+  Promotion does not depend on an idle gap in incoming traffic. If draining
+  exceeds the bounded spawn window, the candidate resumes serving and retries
+  through Pitchfork's normal backoff.
+- Rendering, compilation and thread-pool submissions coordinate with the fork
+  barrier. Once work has drained, the candidate disposes V8 contexts and clears
+  cached rendering and compiler references before forking. Request workers
+  rebuild contexts on demand. Managed thread pools recreate their threads when
+  first used in a child process.
+- Service processes remain running across request-worker generations. A service
+  that crashes can still be replaced from the current mold.
 - A new mold detaches inherited MessageBus client sockets without writing a
   response or shutting down the original worker's connection. Existing
   cleanup timers remove the detached client records. Until cleanup, those
