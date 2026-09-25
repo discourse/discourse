@@ -972,6 +972,37 @@ RSpec.describe CategoriesController do
         expect(response).to be_forbidden
       end
 
+      it "returns 422 when changing the permissions of a special category" do
+        category.set_permissions(staff: :full)
+        category.save!
+        SiteSetting.staff_category_id = category.id
+
+        put "/categories/#{category.id}.json", params: { permissions: { "everyone" => 1 } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("category.errors.special_category_permissions"),
+        )
+        expect(category.reload.read_restricted).to eq(true)
+      end
+
+      it "updates a special category when its current permissions are resubmitted" do
+        category.set_permissions(staff: :full)
+        category.save!
+        SiteSetting.staff_category_id = category.id
+
+        put "/categories/#{category.id}.json",
+            params: {
+              name: "Renamed staff",
+              permissions: {
+                "staff" => 1,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(category.reload.name).to eq("Renamed staff")
+      end
+
       it "returns errors on a duplicate category name" do
         other_category = Fabricate(:category, name: "Other", user: admin)
         put "/categories/#{category.id}.json",
