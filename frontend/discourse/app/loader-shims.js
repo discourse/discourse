@@ -4,9 +4,6 @@ import loaderShim from "discourse/lib/loader-shim";
 // AMD shims for the app bundle, see the comment in loader-shim.js
 // These effectively become public APIs for plugins, so add/remove them carefully
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
-loaderShim("@ember-compat/tracked-built-ins", () =>
-  importSync("tracked-built-ins")
-);
 loaderShim("@ember/-internals/metal", () =>
   importSync("@ember/-internals/metal")
 );
@@ -78,9 +75,7 @@ loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
 loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
-loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("jquery", () => importSync("jquery"));
-loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
 loaderShim("discourse/truth-helpers", () =>
@@ -134,22 +129,14 @@ loaderShim("pretty-text/emoji/data", () =>
 loaderShim("pretty-text/emoji/version", () =>
   importSync("pretty-text/emoji/version")
 );
-loaderShim("pretty-text/guid", () => importSync("pretty-text/guid"));
 loaderShim("pretty-text/inline-oneboxer", () =>
   importSync("pretty-text/inline-oneboxer")
 );
-loaderShim("pretty-text/mentions", () => importSync("pretty-text/mentions"));
 loaderShim("pretty-text/oneboxer", () => importSync("pretty-text/oneboxer"));
 loaderShim("pretty-text/oneboxer-cache", () =>
   importSync("pretty-text/oneboxer-cache")
 );
-loaderShim("pretty-text/pretty-text", () =>
-  importSync("pretty-text/pretty-text")
-);
 loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
-loaderShim("pretty-text/text-replace", () =>
-  importSync("pretty-text/text-replace")
-);
 loaderShim("pretty-text/upload-short-url", () =>
   importSync("pretty-text/upload-short-url")
 );

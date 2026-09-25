@@ -33,6 +33,7 @@ import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import { customSearchTypes } from "discourse/lib/plugin-registries/full-page-search-types";
 import { i18n } from "discourse-i18n";
 
 export const SEARCH_TYPE_DEFAULT = "topics_posts";
@@ -41,33 +42,7 @@ export const SEARCH_TYPE_USERS = "users";
 
 const PAGE_LIMIT = 10;
 
-const customSearchTypes = [];
-
-export function registerFullPageSearchType(
-  translationKey,
-  searchTypeId,
-  searchFunc,
-  options = {}
-) {
-  const searchType = {
-    translationKey,
-    searchTypeId,
-    searchFunc,
-    after: options.after,
-  };
-  // Keyed by id rather than appended: this registry outlives any one
-  // application, so registering again — a second boot, a reload — must replace
-  // what is there instead of listing the type twice.
-  const existing = customSearchTypes.findIndex(
-    (type) => type.searchTypeId === searchTypeId
-  );
-
-  if (existing === -1) {
-    customSearchTypes.push(searchType);
-  } else {
-    customSearchTypes[existing] = searchType;
-  }
-}
+export { registerFullPageSearchType } from "discourse/lib/plugin-registries/full-page-search-types";
 
 export default class FullPageSearchController extends Controller {
   @service composer;

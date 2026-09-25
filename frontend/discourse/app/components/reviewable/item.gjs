@@ -47,6 +47,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import {
+  pluginActionModalClassMap,
+  pluginReviewableParams,
+  reviewableTypeLabels,
+} from "discourse/lib/plugin-registries/reviewable-item";
 import { i18n } from "discourse-i18n";
 
 const PENALTY_TOAST_KEY = "reviewable-author-penalty";
@@ -59,45 +64,16 @@ const fieldComponents = {
   textarea: ReviewableFieldTextarea,
 };
 
-export const pluginReviewableParams = {};
-const reviewableTypeLabels = {};
+export {
+  addPluginReviewableParam,
+  registerReviewableActionModal,
+  registerReviewableTypeLabel,
+} from "discourse/lib/plugin-registries/reviewable-item";
 
-// The mappings defined here are default core mappings, and cannot be overridden
-// by plugins.
+// Core mappings cannot be overridden by plugins.
 const defaultActionModalClassMap = {
   revise_and_reject_post: ReviseAndRejectPostReviewable,
 };
-export const actionModalClassMap = { ...defaultActionModalClassMap };
-
-export function addPluginReviewableParam(reviewableType, param) {
-  pluginReviewableParams[reviewableType]
-    ? pluginReviewableParams[reviewableType].push(param)
-    : (pluginReviewableParams[reviewableType] = [param]);
-}
-
-export function registerReviewableActionModal(actionName, modalClass) {
-  if (Object.keys(defaultActionModalClassMap).includes(actionName)) {
-    throw new Error(
-      `Cannot override default action modal class for ${actionName} (mapped to ${defaultActionModalClassMap[actionName].name})!`
-    );
-  }
-  actionModalClassMap[actionName] = modalClass;
-}
-
-/**
- * Registers a custom label translation key for a reviewable type.
- * Plugins can use this to provide specific labels for their reviewable types.
- *
- * @param {string} reviewableType - The reviewable type class name (e.g., "ReviewableAiPost")
- * @param {string} labelKey - The i18n translation key (e.g., "discourse_ai.review.ai_post_flagged_as")
- *
- * @example
- * import { registerReviewableTypeLabel } from "discourse/components/reviewable/item";
- * registerReviewableTypeLabel("ReviewableAiPost", "discourse_ai.review.ai_post_flagged_as");
- */
-export function registerReviewableTypeLabel(reviewableType, labelKey) {
-  reviewableTypeLabels[reviewableType] = labelKey;
-}
 
 export default class ReviewableItem extends Component {
   @service dialog;
@@ -409,7 +385,8 @@ export default class ReviewableItem extends Component {
     const requireRejectReason = performableAction.get("require_reject_reason");
     const actionModalClass = requireRejectReason
       ? RejectReasonReviewableModal
-      : actionModalClassMap[performableAction.server_action];
+      : (defaultActionModalClassMap[performableAction.server_action] ??
+        pluginActionModalClassMap[performableAction.server_action]);
 
     if (message) {
       if (await this.#claimReviewable()) {

@@ -63,9 +63,8 @@ import Topic from "discourse/models/topic";
 import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
 import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
+import { customPostMessageCallback } from "discourse/lib/plugin-registries/post-message-callbacks";
 import { i18n } from "discourse-i18n";
-
-let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
 const MIN_BOTTOM_MAP_WORD_COUNT = 200;
@@ -81,17 +80,10 @@ const TOPIC_PAGE_QUERY_PARAM_PROPERTIES = TOPIC_QUERY_PARAMS.map((param) =>
   typeof param === "string" ? param : Object.keys(param)[0]
 );
 
-export function resetCustomPostMessageCallbacks() {
-  customPostMessageCallbacks = {};
-}
-
-export function registerCustomPostMessageCallback(type, callback) {
-  if (customPostMessageCallbacks[type]) {
-    throw new Error(`Error ${type} is an already registered post message!`);
-  }
-
-  customPostMessageCallbacks[type] = callback;
-}
+export {
+  registerCustomPostMessageCallback,
+  resetCustomPostMessageCallbacks,
+} from "discourse/lib/plugin-registries/post-message-callbacks";
 
 export default class TopicController extends Controller {
   @service appEvents;
@@ -1797,7 +1789,7 @@ export default class TopicController extends Controller {
         break;
       }
       default: {
-        let callback = customPostMessageCallbacks[data.type];
+        let callback = customPostMessageCallback(data.type);
         if (callback) {
           callback(this, data);
         } else {
@@ -1887,7 +1879,7 @@ export default class TopicController extends Controller {
         this.router.transitionTo("userPrivateMessages", this.currentUser);
         break;
       default: {
-        let callback = customPostMessageCallbacks[data.type];
+        let callback = customPostMessageCallback(data.type);
         if (callback) {
           callback(this, data);
         } else {

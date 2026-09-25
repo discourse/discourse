@@ -33,6 +33,9 @@ const EAGER_DIRECTORIES = [
 // Routes have no bundle of their own unless the map names one.
 const DEFAULT_BUNDLE = "other";
 
+// Looked up by name from a route's code, so they travel with that route.
+const EXTRA_ROUTE_BUNDLES = { nested: "topic" };
+
 const ROUTE_FILE_REGEX = /^(routes|controllers|templates)\/(.+)$/;
 const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
 
@@ -139,7 +142,10 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
     });
     const { root } = buildRouteTree([{ ...parsed, core: true }]);
     const derived = deriveRoutes(root, { coreDefaultBundle: DEFAULT_BUNDLE });
-    const bundleByRoute = bundleByRouteFor(derived);
+    const bundleByRoute = {
+      ...EXTRA_ROUTE_BUNDLES,
+      ...bundleByRouteFor(derived),
+    };
 
     const eager = [];
     const bundles = new Map();

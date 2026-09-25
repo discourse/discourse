@@ -10,7 +10,8 @@ import DashboardReportEmptyState from "discourse/admin/components/dashboard/repo
 import DashboardReportErrorState from "discourse/admin/components/dashboard/report-error-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
-import { lookupAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import CoreReportCard from "discourse/admin/components/dashboard/report-cards/core-report";
+import { lookupAdminDashboardReportRenderer as lookupRegisteredRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { loadDashboardReports } from "discourse/admin/lib/dashboard-reports-loader";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -120,6 +121,12 @@ class FollowPointer extends Modifier {
     element.style.width = `${rect.width}px`;
     element.style.height = `${rect.height}px`;
   }
+}
+
+function lookupAdminDashboardReportRenderer(source) {
+  return source === "core_report"
+    ? CoreReportCard
+    : lookupRegisteredRenderer(source);
 }
 
 export default class DashboardReports extends Component {

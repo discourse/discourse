@@ -2,13 +2,13 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import BlockOutlet from "discourse/blocks/block-outlet";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
-import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
-import CardContainer from "discourse/components/card-container";
-import ComposerContainer from "discourse/components/composer-container";
+import LazyAdminOnboardingBanner from "discourse/components/lazy/admin-onboarding-banner";
+import LazyCardContainer from "discourse/components/lazy/card-container";
+import LazyComposerContainer from "discourse/components/lazy/composer-container";
 import DDocument from "discourse/components/d-document";
 import DStyles from "discourse/components/d-styles";
 import DVirtualHeight from "discourse/components/d-virtual-height";
-import DesignWizardPanel from "discourse/components/design-wizard-panel";
+import LazyDesignWizardPanel from "discourse/components/lazy/design-wizard-panel";
 import DiscourseRoot from "discourse/components/discourse-root";
 import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
@@ -103,9 +103,7 @@ export default <template>
             <BlockOutlet @name="main-outlet-blocks" />
           {{/unless}}
 
-          {{#if @controller.siteSettings.enable_site_owner_onboarding}}
-            <AdminOnboardingBanner />
-          {{/if}}
+          <LazyAdminOnboardingBanner />
 
           <WelcomeBanner @location="above_topic_content" />
 
@@ -134,7 +132,7 @@ export default <template>
             @outletArgs={{lazyHash showFooter=@controller.showFooter}}
           />
         {{/unless}}
-        <CardContainer />
+        <LazyCardContainer />
       </div>
 
       <PluginOutlet @name="after-main-outlet" />
@@ -163,9 +161,9 @@ export default <template>
     />
 
     <ModalContainer />
-    <DesignWizardPanel />
+    <LazyDesignWizardPanel />
     <DialogHolder />
-    <ComposerContainer />
+    <LazyComposerContainer />
     <RenderGlimmerContainer />
 
     {{#if @controller.showFooterNav}}

@@ -1,13 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedArray } from "@ember/reactive/collections";
 import { compare, isEmpty } from "@ember/utils";
+import { customUserFieldValidationCallbacks } from "discourse/lib/plugin-registries/user-field-validation-callbacks";
 import { i18n } from "discourse-i18n";
 
-const addCustomUserFieldValidationCallbacks = [];
-
-export function addCustomUserFieldValidationCallback(callback) {
-  addCustomUserFieldValidationCallbacks.push(callback);
-}
+export { addCustomUserFieldValidationCallback } from "discourse/lib/plugin-registries/user-field-validation-callbacks";
 
 function failedResult(attrs) {
   return {
@@ -64,7 +61,7 @@ class TrackedUserField {
       });
     }
 
-    addCustomUserFieldValidationCallbacks.forEach((callback) => {
+    customUserFieldValidationCallbacks.forEach((callback) => {
       const customUserFieldValidationObject = callback(this);
       if (customUserFieldValidationObject) {
         validation = customUserFieldValidationObject;

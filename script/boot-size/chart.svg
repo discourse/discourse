@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
 <rect width="960" height="520" fill="#fcfcfb"/>
 <text x="72" y="24" font-size="16" font-weight="600" fill="#0b0b0b">JavaScript loaded on initial boot (Brotli KiB, production build)</text>
-<text x="72" y="42" font-size="12" fill="#52514e">Discovery −18% · Topic −14% since baseline. Hover points for details.</text>
+<text x="72" y="42" font-size="12" fill="#52514e">Discovery −30% · Topic −24% since baseline. Hover points for details.</text>
 <g transform="translate(72,36)"><rect width="12" height="12" rx="2" fill="#2a78d6"/><text x="18" y="10" font-size="12" fill="#0b0b0b">Discovery page</text></g>
 <g transform="translate(302,36)"><rect width="12" height="12" rx="2" fill="#eb6834"/><text x="18" y="10" font-size="12" fill="#0b0b0b">Topic page</text></g>
 <g transform="translate(532,36)"><rect width="12" height="12" rx="2" fill="#1baf7a"/><text x="18" y="10" font-size="12" fill="#0b0b0b">Boot only (no route bundle)</text></g>
@@ -20,15 +20,19 @@
 <line x1="72" x2="740" y1="64" y2="64" stroke="#e6e5e1" stroke-width="1"/>
 <text x="62" y="68" text-anchor="end" font-size="12" fill="#52514e">1200</text>
 <line x1="72" x2="740" y1="380" y2="380" stroke="#c3c2b7"/>
-<polyline fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" points="72.0,87.1 740.0,139.6"/><circle cx="72.0" cy="87.1" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>e378806e48d Baseline (no core route splitting)
-Discovery page: 1112.2 KiB br (5656 KiB raw, 23 chunks)</title></circle><circle cx="740.0" cy="139.6" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>541440c1e9c Route splitting: discovery, topic, wizard, other; import-only components
-Discovery page: 912.9 KiB br (4098 KiB raw, 38 chunks)</title></circle><text x="750" y="143.59621093750002" font-size="12" fill="#0b0b0b">Discovery page · 913 KiB</text>
-<polyline fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" points="72.0,87.1 740.0,128.1"/><circle cx="72.0" cy="87.1" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>e378806e48d Baseline (no core route splitting)
-Topic page: 1112.2 KiB br (5656 KiB raw, 23 chunks)</title></circle><circle cx="740.0" cy="128.1" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>541440c1e9c Route splitting: discovery, topic, wizard, other; import-only components
-Topic page: 956.5 KiB br (4374 KiB raw, 37 chunks)</title></circle><text x="750" y="132.13349609375" font-size="12" fill="#0b0b0b">Topic page · 956 KiB</text>
-<polyline fill="none" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" points="72.0,87.1 740.0,146.9"/><circle cx="72.0" cy="87.1" r="4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>e378806e48d Baseline (no core route splitting)
-Boot only (no route bundle): 1112.2 KiB br (5656 KiB raw, 23 chunks)</title></circle><circle cx="740.0" cy="146.9" r="4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>541440c1e9c Route splitting: discovery, topic, wizard, other; import-only components
-Boot only (no route bundle): 885.3 KiB br (3954 KiB raw, 32 chunks)</title></circle><text x="750" y="150.87696614583336" font-size="12" fill="#0b0b0b">Boot only (no route bundle) · 885 KiB</text>
+<polyline fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" points="72.0,87.1 406.0,139.6 740.0,175.8"/><circle cx="72.0" cy="87.1" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>e378806e48d Baseline (no core route splitting)
+Discovery page: 1112.2 KiB br (5656 KiB raw, 23 chunks)</title></circle><circle cx="406.0" cy="139.6" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>541440c1e9c Route splitting: discovery, topic, wizard, other; import-only components
+Discovery page: 912.9 KiB br (4098 KiB raw, 38 chunks)</title></circle><circle cx="740.0" cy="175.8" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>b450fec70f5 Plugin registries extracted; lazy composer, cards, wizard, onboarding; fewer shims
+Discovery page: 775.5 KiB br (3343 KiB raw, 56 chunks)</title></circle><text x="750" y="179.78165690104166" font-size="12" fill="#0b0b0b">Discovery page · 776 KiB</text>
+<polyline fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" points="72.0,87.1 406.0,128.1 740.0,157.6"/><circle cx="72.0" cy="87.1" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>e378806e48d Baseline (no core route splitting)
+Topic page: 1112.2 KiB br (5656 KiB raw, 23 chunks)</title></circle><circle cx="406.0" cy="128.1" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>541440c1e9c Route splitting: discovery, topic, wizard, other; import-only components
+Topic page: 956.5 KiB br (4374 KiB raw, 37 chunks)</title></circle><circle cx="740.0" cy="157.6" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"><title>b450fec70f5 Plugin registries extracted; lazy composer, cards, wizard, onboarding; fewer shims
+Topic page: 844.4 KiB br (3759 KiB raw, 55 chunks)</title></circle><text x="750" y="161.63531575520832" font-size="12" fill="#0b0b0b">Topic page · 844 KiB</text>
+<polyline fill="none" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" points="72.0,87.1 406.0,146.9 740.0,185.1"/><circle cx="72.0" cy="87.1" r="4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>e378806e48d Baseline (no core route splitting)
+Boot only (no route bundle): 1112.2 KiB br (5656 KiB raw, 23 chunks)</title></circle><circle cx="406.0" cy="146.9" r="4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>541440c1e9c Route splitting: discovery, topic, wizard, other; import-only components
+Boot only (no route bundle): 885.3 KiB br (3954 KiB raw, 32 chunks)</title></circle><circle cx="740.0" cy="185.1" r="4" fill="#1baf7a" stroke="#fcfcfb" stroke-width="2"><title>b450fec70f5 Plugin registries extracted; lazy composer, cards, wizard, onboarding; fewer shims
+Boot only (no route bundle): 740.2 KiB br (3172 KiB raw, 45 chunks)</title></circle><text x="750" y="189.08138671875" font-size="12" fill="#0b0b0b">Boot only (no route bundle) · 740 KiB</text>
 <text transform="translate(72,394) rotate(35)" font-size="11" fill="#52514e"><title>Baseline (no core route splitting)</title>e378806e48d Baseline (no core route spl…</text>
-<text transform="translate(740,394) rotate(35)" font-size="11" fill="#52514e"><title>Route splitting: discovery, topic, wizard, other; import-only components</title>541440c1e9c Route splitting: discovery,…</text>
+<text transform="translate(406,394) rotate(35)" font-size="11" fill="#52514e"><title>Route splitting: discovery, topic, wizard, other; import-only components</title>541440c1e9c Route splitting: discovery,…</text>
+<text transform="translate(740,394) rotate(35)" font-size="11" fill="#52514e"><title>Plugin registries extracted; lazy composer, cards, wizard, onboarding; fewer shims</title>b450fec70f5 Plugin registries extracted…</text>
 </svg>

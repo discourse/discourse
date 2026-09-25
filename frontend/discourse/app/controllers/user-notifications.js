@@ -11,12 +11,10 @@ import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
+import { beforeLoadMoreCallbacks } from "discourse/lib/plugin-registries/notifications";
 import { i18n } from "discourse-i18n";
 
-const _beforeLoadMoreCallbacks = [];
-export function addBeforeLoadMoreCallback(fn) {
-  _beforeLoadMoreCallbacks.push(fn);
-}
+export { addBeforeLoadMoreCallback } from "discourse/lib/plugin-registries/notifications";
 
 export default class UserNotificationsController extends Controller {
   @service modal;
@@ -110,8 +108,8 @@ export default class UserNotificationsController extends Controller {
   @action
   loadMore() {
     if (
-      _beforeLoadMoreCallbacks.length &&
-      !_beforeLoadMoreCallbacks.some((fn) => fn(this))
+      beforeLoadMoreCallbacks.length &&
+      !beforeLoadMoreCallbacks.some((fn) => fn(this))
     ) {
       // Return early if any callbacks return false, short-circuiting the default loading more logic
       return;

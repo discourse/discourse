@@ -10,17 +10,13 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { pluginActivitiesFuncs } from "discourse/lib/plugin-registries/about-page-activities";
 import I18n, { i18n } from "discourse-i18n";
 
-const pluginActivitiesFuncs = [];
-
-export function addAboutPageActivity(name, func) {
-  pluginActivitiesFuncs.push({ name, func });
-}
-
-export function clearAboutPageActivities() {
-  pluginActivitiesFuncs.length = 0;
-}
+export {
+  addAboutPageActivity,
+  clearAboutPageActivities,
+} from "discourse/lib/plugin-registries/about-page-activities";
 
 export default class AboutPage extends Component {
   @service siteSettings;

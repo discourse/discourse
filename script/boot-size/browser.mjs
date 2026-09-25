@@ -67,6 +67,21 @@ for (const url of pages) {
     errors.push("main outlet never rendered a topic list, post, or container");
   }
 
+  if (process.env.INTERACT && url.startsWith("/t/")) {
+    const link = await page.$("[data-user-card]");
+    if (link) {
+      await link.click();
+      const card = await page
+        .waitForSelector("#user-card.show", { timeout: 15000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!card) {
+        errors.push("user card did not open after clicking a user link");
+      }
+      await page.waitForTimeout(1000);
+    }
+  }
+
   let brotli = 0;
   let raw = 0;
   const unknown = [];

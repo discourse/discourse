@@ -1,4 +1,4 @@
-const rawModules = import.meta.glob("./**/*.{gjs,js,ts,gts}", { eager: true });
+const rawModules = import.meta.glob("./services/**/*.{gjs,js,ts,gts}", { eager: true });
 
 const compatModules = {};
 for (let [key, mod] of Object.entries(rawModules)) {

@@ -4,7 +4,7 @@ import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
-import { addAboutPageActivity } from "discourse/components/about-page";
+import { addAboutPageActivity } from "discourse/lib/plugin-registries/about-page-activities";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -25,8 +25,8 @@ import { addGroupPostSmallActionCode } from "discourse/components/post/small-act
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
-} from "discourse/components/reviewable/item";
-import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+} from "discourse/lib/plugin-registries/reviewable-item";
+import { addAdvancedSearchOptions } from "discourse/lib/plugin-registries/advanced-search-options";
 import { addSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
 import {
@@ -40,10 +40,10 @@ import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
-import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
-import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
-import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
-import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
+import { registerFullPageSearchType } from "discourse/lib/plugin-registries/full-page-search-types";
+import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/lib/plugin-registries/post-message-callbacks";
+import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/lib/plugin-registries/notifications";
+import { registerCustomUserNavMessagesDropdownRow } from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
@@ -73,7 +73,6 @@ import {
 } from "discourse/lib/deferred-class-modifications";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
-import { downloadCalendar } from "discourse/lib/download-calendar";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { isDevelopment, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -131,7 +130,7 @@ import {
   _registerTransformer,
   transformerTypes,
 } from "discourse/lib/transformer";
-import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
+import { addCustomUserFieldValidationCallback } from "discourse/lib/plugin-registries/user-field-validation-callbacks";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { _addCategoryPropertyForSave } from "discourse/models/category";
@@ -148,8 +147,8 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
-import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setNotificationsLimit } from "discourse/routes/user-notifications";
+import { preventCloaking } from "discourse/lib/plugin-registries/cloaking";
+import { setNotificationsLimit } from "discourse/lib/plugin-registries/notifications";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -2605,7 +2604,9 @@ class _PluginApi {
    * );
    * ```
    */
-  downloadCalendar(title, dates, options = {}) {
+  async downloadCalendar(title, dates, options = {}) {
+    const { downloadCalendar } =
+      await import("discourse/lib/download-calendar");
     downloadCalendar(title, dates, options);
   }
 

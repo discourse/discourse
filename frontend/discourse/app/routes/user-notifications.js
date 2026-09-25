@@ -1,12 +1,8 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { notificationsLimit } from "discourse/lib/plugin-registries/notifications";
 import { i18n } from "discourse-i18n";
 
-const DEFAULT_LIMIT = 60;
-let limit = DEFAULT_LIMIT;
-
-export function setNotificationsLimit(newLimit) {
-  limit = newLimit;
-}
+export { setNotificationsLimit } from "discourse/lib/plugin-registries/notifications";
 
 export default class UserNotifications extends DiscourseRoute {
   controllerName = "user-notifications";
@@ -22,7 +18,7 @@ export default class UserNotifications extends DiscourseRoute {
       return this.store.find("notification", {
         username,
         filter: params.filter,
-        limit,
+        limit: notificationsLimit(),
       });
     }
   }

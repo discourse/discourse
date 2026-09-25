@@ -38,5 +38,25 @@
       "raw": 4479305,
       "chunks": 37
     }
+  },
+  {
+    "commit": "b450fec70f5",
+    "label": "Plugin registries extracted; lazy composer, cards, wizard, onboarding; fewer shims",
+    "date": "2026-09-25T21:26:58.765Z",
+    "boot": {
+      "brotli": 757962,
+      "raw": 3247927,
+      "chunks": 45
+    },
+    "discovery": {
+      "brotli": 794125,
+      "raw": 3422954,
+      "chunks": 56
+    },
+    "topic": {
+      "brotli": 864689,
+      "raw": 3849641,
+      "chunks": 55
+    }
   }
 ]

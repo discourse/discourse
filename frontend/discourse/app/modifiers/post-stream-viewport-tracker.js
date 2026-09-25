@@ -1,3 +1,4 @@
+import { cloakingPrevented } from "discourse/lib/plugin-registries/cloaking";
 import { cancel, schedule } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -68,29 +69,7 @@ export function disableCloaking() {
   cloakingEnabled = false;
 }
 
-// Dictionary containing the set of post IDs that should never be cloaked.
-// The topicId is used to clear the set when the topic changes.
-const cloakingPrevented = { topicId: null, posts: new Set() };
-
-/**
- * Prevents a specific post from being cloaked
- * Useful for posts that need to remain visible regardless of scroll position because removing
- * the DOM nodes can cause side effects, e.g., a video playing
- *
- * @param {number} postId - The ID of the post to prevent from cloaking
- * @param {boolean} [prevent=true] - Whether to prevent cloaking (true) or allow it (false)
- * @returns {void}
- * @example
- * preventCloaking(123, true); // Prevents post 123 from being cloaked
- * preventCloaking(123, false); // Allows post 123 to be cloaked again
- */
-export function preventCloaking(postId, prevent = true) {
-  if (prevent) {
-    cloakingPrevented.posts.add(postId);
-  } else {
-    cloakingPrevented.posts.delete(postId);
-  }
-}
+export { preventCloaking } from "discourse/lib/plugin-registries/cloaking";
 
 /**
  * A WeakMap storing post models for DOM elements.

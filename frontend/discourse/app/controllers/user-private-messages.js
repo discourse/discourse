@@ -4,25 +4,13 @@ import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
+import { customUserNavMessagesDropdownRows } from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
 import { i18n } from "discourse-i18n";
 
-const customUserNavMessagesDropdownRows = [];
-
-export function registerCustomUserNavMessagesDropdownRow(
-  routeName,
-  name,
-  icon
-) {
-  customUserNavMessagesDropdownRows.push({
-    routeName,
-    name,
-    icon,
-  });
-}
-
-export function resetCustomUserNavMessagesDropdownRows() {
-  customUserNavMessagesDropdownRows.length = 0;
-}
+export {
+  registerCustomUserNavMessagesDropdownRow,
+  resetCustomUserNavMessagesDropdownRows,
+} from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
 
 export default class extends Controller {
   @service currentUser;

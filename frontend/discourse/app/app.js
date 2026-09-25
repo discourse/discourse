@@ -3,9 +3,7 @@ import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
-import "./ui-kit-shims";
 import "./module-shims";
-import "./discourse-common-loader-shims";
 import "@warp-drive/ember/install";
 import coreModules, { routes as coreRouteBundles } from "virtual:core-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
@@ -47,9 +45,6 @@ import selectKitCompatModules from "discourse/select-kit/compat-modules";
 
 defineModules("discourse/select-kit", selectKitCompatModules);
 
-import truthHelpersCompatModules from "discourse/truth-helpers/compat-modules";
-
-defineModules("discourse/truth-helpers", truthHelpersCompatModules);
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
