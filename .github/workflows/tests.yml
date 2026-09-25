@@ -192,10 +192,15 @@ jobs:
 
       - parallel:
           - name: Migrate database
-            run: bin/rake db:migrate
+            run: |
+              bin/rake db:migrate
+              if [ "${{ matrix.build_type }}" = "system" ] && { [ "${{ matrix.target }}" = "core" ] || [ "${{ matrix.target }}" = "core-plugins" ]; }; then
+                seq 1 "$PARALLEL_TEST_PROCESSORS" | xargs -P 4 -I {} \
+                  createdb --maintenance-db=postgres --template=discourse_test "discourse_test_{}"
+              fi
 
           - name: Create and migrate parallel databases
-            if: env.USES_PARALLEL_DATABASES == 'true'
+            if: env.USES_PARALLEL_DATABASES == 'true' && !(matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins'))
             run: bin/rake parallel:create parallel:migrate
 
           - name: Check Annotations
