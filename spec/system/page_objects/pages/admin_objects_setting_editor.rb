@@ -3,6 +3,18 @@
 module PageObjects
   module Pages
     class AdminObjectsSettingEditor < PageObjects::Pages::Base
+      def has_translation_key?(key)
+        has_css?(".schema-setting-editor__translation-keys code", text: key)
+      end
+
+      def has_validation_error?
+        has_css?(".schema-setting-editor__errors")
+      end
+
+      def manage_translations
+        page.click_link(I18n.t("admin_js.admin.site_text.manage_translations"))
+      end
+
       def visit_theme(theme, setting_name)
         page.visit "/admin/customize/themes/#{theme.id}/schema/#{setting_name}"
         self

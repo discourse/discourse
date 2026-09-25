@@ -775,6 +775,34 @@ RSpec.describe Admin::ThemesController do
         expect(response.status).to eq(400)
       end
 
+      it "updates object settings alongside theme attributes" do
+        theme.set_field(
+          target: :settings,
+          name: "yaml",
+          value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+        )
+        theme.save!
+        objects = theme.settings[:resource_sections].value
+        objects[0]["title"] = "Updated resources"
+
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                name: "Renamed",
+                settings: {
+                  resource_sections: objects.to_json,
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(theme.reload.name).to eq("Renamed")
+        expect(theme.settings[:resource_sections].value[0]["title"]).to eq("Updated resources")
+        expect(
+          theme.object_translation_defaults.dig("resource_sections.getting_started.title", :text),
+        ).to eq("Updated resources")
+      end
+
       it "can change default theme" do
         SiteSetting.default_theme_id = -1
 

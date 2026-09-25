@@ -274,6 +274,11 @@ en:
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
       optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
+      translatable_requires_translation_key: "The '%{schema}' schema has translatable fields and must declare a 'translation_key' property with type string and required: true."
+      translatable_requires_string: "The translatable property '%{property}' must have type string."
+      invalid_translation_keys: "Translatable objects require unique identifiers of at most 80 characters, beginning with a lowercase letter and containing only lowercase letters, numbers, and underscores."
+      nested_translation_key_conflict: "The translation key %{key} is used by both a text field and a nested object. Choose a different key for the nested object before saving."
+      object_translation_key_conflict: "The object setting %{setting} reserves %{key} for its text. Rename the setting or move locale-file translations out of this namespace before saving."
       invalid_yaml: "Provided YAML is invalid."
       data_type_inclusion: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list`, `enum` and `upload`"
       name_too_long: "There is a setting with a too long name. Maximum length is 255"

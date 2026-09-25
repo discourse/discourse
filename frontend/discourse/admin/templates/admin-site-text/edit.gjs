@@ -63,7 +63,7 @@ export default <template>
     {{#unless @controller.isOutdated}}
       {{#if @controller.defaultText}}
         <div class="edit-site-text__default">
-          <h2>{{i18n "admin.site_text.default_text"}}</h2>
+          <h2>{{@controller.defaultTextLabel}}</h2>
           <p>{{@controller.defaultText}}</p>
         </div>
       {{/if}}

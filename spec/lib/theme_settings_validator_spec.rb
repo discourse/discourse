@@ -2,6 +2,109 @@
 
 RSpec.describe ThemeSettingsValidator do
   describe ".validate_value" do
+    it "requires a required string identifier for translatable fields even with no default objects" do
+      [nil, { type: "integer", required: true }, { type: "string" }].each do |identifier|
+        properties = { title: { type: "string", translatable: true } }
+        properties[:translation_key] = identifier if identifier
+        errors =
+          described_class.validate_value(
+            [],
+            ThemeSetting.types[:objects],
+            schema: {
+              name: "card",
+              properties: properties,
+            },
+          )
+        expect(errors).to include(
+          I18n.t("themes.settings_errors.translatable_requires_translation_key", schema: "card"),
+        )
+      end
+    end
+
+    it "validates nested translatable schemas even when their collections are empty" do
+      schema = {
+        name: "section",
+        properties: {
+          translation_key: {
+            type: "string",
+            required: true,
+          },
+          cards: {
+            type: "objects",
+            schema: {
+              name: "card",
+              properties: {
+                title: {
+                  type: "string",
+                  translatable: true,
+                },
+              },
+            },
+          },
+        },
+      }
+      expect(
+        described_class.validate_value([], ThemeSetting.types[:objects], schema: schema),
+      ).to include(
+        I18n.t("themes.settings_errors.translatable_requires_translation_key", schema: "card"),
+      )
+    end
+
+    it "requires identifiers on ancestors of translatable objects" do
+      schema = {
+        name: "section",
+        properties: {
+          cards: {
+            type: "objects",
+            schema: {
+              name: "card",
+              properties: {
+                translation_key: {
+                  type: "string",
+                  required: true,
+                },
+                title: {
+                  type: "string",
+                  translatable: true,
+                },
+              },
+            },
+          },
+        },
+      }
+      expect(
+        described_class.validate_value([], ThemeSetting.types[:objects], schema: schema),
+      ).to include(
+        I18n.t("themes.settings_errors.translatable_requires_translation_key", schema: "section"),
+      )
+    end
+
+    it "accepts translatable string fields with an identifier and no translations block" do
+      schema = {
+        name: "card",
+        properties: {
+          translation_key: {
+            type: "string",
+            required: true,
+          },
+          title: {
+            type: "string",
+            translatable: true,
+          },
+        },
+      }
+      expect(
+        described_class.validate_value([], ThemeSetting.types[:objects], schema: schema),
+      ).to eq([])
+    end
+
+    it "does not require an identifier for untranslated objects" do
+      schema = { name: "card", properties: { title: { type: "string", translatable: false } } }
+      expect(
+        described_class.validate_value([], ThemeSetting.types[:objects], schema: schema),
+      ).to eq([])
+    end
+
     it "does not throw an error when an integer value is given with type `string`" do
       errors = described_class.validate_value(1, ThemeSetting.types[:string], {})
 
