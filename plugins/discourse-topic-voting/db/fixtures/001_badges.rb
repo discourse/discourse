@@ -6,7 +6,7 @@
   ["Innovator", BadgeType::Silver, 15, true],
   ["Visionary", BadgeType::Gold, 25, true],
 ].each do |name, level, count, allow_title|
-  Badge.seed_system_badge(name) do |badge|
+  Badge.seed_unless_site_has(name) do |badge|
     badge.default_icon = "vote-up-filled"
     badge.badge_type_id = level
     badge.default_badge_grouping_id = BadgeGrouping::Community
@@ -19,6 +19,5 @@
     badge.trigger = Badge::Trigger::None
     badge.auto_revoke = true
     badge.show_posts = true
-    badge.system = true
   end
 end

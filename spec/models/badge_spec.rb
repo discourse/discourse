@@ -181,19 +181,18 @@ RSpec.describe Badge do
     end
   end
 
-  describe ".seed_system_badge" do
+  describe ".seed_unless_site_has" do
     def seed(name)
-      Badge.seed_system_badge(name) do |badge|
+      Badge.seed_unless_site_has(name) do |badge|
         badge.badge_type_id = BadgeType::Bronze
         badge.query = "SELECT 1"
-        badge.system = true
       end
     end
 
-    it "seeds the badge when the site has no badge under that name" do
+    it "seeds the badge as a system badge when the site has no badge by that name" do
       seed("Shipped Badge")
 
-      expect(Badge.find_by(name: "Shipped Badge")).to be_present
+      expect(Badge.find_by(name: "Shipped Badge")).to have_attributes(system: true)
     end
 
     it "leaves a badge the site created alone, whatever its casing" do

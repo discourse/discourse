@@ -53,7 +53,7 @@ loyalty_query = lambda { |min_days| <<~SQL }
 
 # -- Welcome (instant) --
 
-Badge.seed_system_badge("Mic Check") do |b|
+Badge.seed_unless_site_has("Mic Check") do |b|
   b.default_icon = "microphone"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -63,7 +63,6 @@ Badge.seed_system_badge("Mic Check") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
 # -- Airtime (scheduled) --
@@ -73,7 +72,7 @@ end
   "Chatterbox" => [BadgeType::Silver, 10.hours.to_i],
   "Silver Tongue" => [BadgeType::Gold, 100.hours.to_i],
 }.each do |name, (type, threshold)|
-  Badge.seed_system_badge(name) do |b|
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "clock"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -90,13 +89,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Networker (instant: Icebreaker, scheduled: Social Butterfly, Life of the Party) --
 
-Badge.seed_system_badge("Icebreaker") do |b|
+Badge.seed_unless_site_has("Icebreaker") do |b|
   b.default_icon = "handshake"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -106,14 +104,13 @@ Badge.seed_system_badge("Icebreaker") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
 {
   "Social Butterfly" => [BadgeType::Silver, 10],
   "Life of the Party" => [BadgeType::Gold, 50],
 }.each do |name, (type, count)|
-  Badge.seed_system_badge(name) do |b|
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "users"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -125,7 +122,6 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
@@ -136,7 +132,7 @@ end
   "Inner Circle" => [BadgeType::Silver, 10.hours.to_i],
   "Partners in Crime" => [BadgeType::Gold, 50.hours.to_i],
 }.each do |name, (type, threshold)|
-  Badge.seed_system_badge(name) do |b|
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "user-group"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -148,7 +144,6 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
@@ -159,7 +154,7 @@ end
   "Nomad" => [BadgeType::Silver, 20],
   "Omnipresent" => [BadgeType::Gold, 50],
 }.each do |name, (type, count)|
-  Badge.seed_system_badge(name) do |b|
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "compass"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -177,7 +172,6 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
@@ -188,7 +182,7 @@ end
   "Barfly" => [BadgeType::Silver, 30],
   "The Mayor" => [BadgeType::Gold, 100],
 }.each do |name, (type, days)|
-  Badge.seed_system_badge(name) do |b|
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = "calendar"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -200,13 +194,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Hosting (instant: Host, scheduled: Crowd Puller, Master of Ceremonies) --
 
-Badge.seed_system_badge("Host") do |b|
+Badge.seed_unless_site_has("Host") do |b|
   b.default_icon = "house"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -216,14 +209,13 @@ Badge.seed_system_badge("Host") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
 {
   "Crowd Puller" => [BadgeType::Silver, 50, "bullhorn"],
   "Master of Ceremonies" => [BadgeType::Gold, 500, "star"],
 }.each do |name, (type, count, icon)|
-  Badge.seed_system_badge(name) do |b|
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = icon
     b.badge_type_id = type
     b.multiple_grant = false
@@ -242,13 +234,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Inviting (instant: Plus One, scheduled: Connector, People Magnet) --
 
-Badge.seed_system_badge("Plus One") do |b|
+Badge.seed_unless_site_has("Plus One") do |b|
   b.default_icon = "user-plus"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -258,14 +249,13 @@ Badge.seed_system_badge("Plus One") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
 {
   "Connector" => [BadgeType::Silver, 10, "circle-nodes"],
   "People Magnet" => [BadgeType::Gold, 50, "magnet"],
 }.each do |name, (type, count, icon)|
-  Badge.seed_system_badge(name) do |b|
+  Badge.seed_unless_site_has(name) do |b|
     b.default_icon = icon
     b.badge_type_id = type
     b.multiple_grant = false
@@ -283,13 +273,12 @@ end
     b.trigger = Badge::Trigger::None
     b.default_enabled = voice_badges_enabled
     b.default_allow_title = type == BadgeType::Gold
-    b.system = true
   end
 end
 
 # -- Standalone --
 
-Badge.seed_system_badge("Night Owl") do |b|
+Badge.seed_unless_site_has("Night Owl") do |b|
   b.default_icon = "moon"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -299,10 +288,9 @@ Badge.seed_system_badge("Night Owl") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
-Badge.seed_system_badge("Early Bird") do |b|
+Badge.seed_unless_site_has("Early Bird") do |b|
   b.default_icon = "sun"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -312,10 +300,9 @@ Badge.seed_system_badge("Early Bird") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
-Badge.seed_system_badge("Packed House") do |b|
+Badge.seed_unless_site_has("Packed House") do |b|
   b.default_icon = "people-group"
   b.badge_type_id = BadgeType::Silver
   b.multiple_grant = false
@@ -325,10 +312,9 @@ Badge.seed_system_badge("Packed House") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
-Badge.seed_system_badge("Weekend Warrior") do |b|
+Badge.seed_unless_site_has("Weekend Warrior") do |b|
   b.default_icon = "calendar-week"
   b.badge_type_id = BadgeType::Silver
   b.multiple_grant = false
@@ -345,10 +331,9 @@ Badge.seed_system_badge("Weekend Warrior") do |b|
   b.default_badge_grouping_id = voice_grouping.id
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
-  b.system = true
 end
 
-Badge.seed_system_badge("Marathoner") do |b|
+Badge.seed_unless_site_has("Marathoner") do |b|
   b.default_icon = "trophy"
   b.badge_type_id = BadgeType::Gold
   b.multiple_grant = false
@@ -359,7 +344,6 @@ Badge.seed_system_badge("Marathoner") do |b|
   b.trigger = Badge::Trigger::None
   b.default_enabled = voice_badges_enabled
   b.default_allow_title = true
-  b.system = true
 end
 
 Voice::BadgeGranterHooks.disable_all! unless voice_badges_enabled

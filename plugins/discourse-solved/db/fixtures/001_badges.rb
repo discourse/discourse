@@ -15,7 +15,7 @@ first_solution_query = <<~SQL
   WHERE row_number = 1
 SQL
 
-Badge.seed_system_badge("Solved 1") do |badge|
+Badge.seed_unless_site_has("Solved 1") do |badge|
   badge.default_icon = "square-check"
   badge.badge_type_id = BadgeType::Bronze
   badge.default_badge_grouping_id = BadgeGrouping::Community
@@ -26,7 +26,6 @@ Badge.seed_system_badge("Solved 1") do |badge|
   badge.trigger = Badge::Trigger::PostRevision
   badge.auto_revoke = true
   badge.show_posts = true
-  badge.system = true
 end
 
 def solved_query_with_count(min_count)
@@ -48,7 +47,7 @@ end
   ["Solved 3", BadgeType::Gold, 50],
   ["Solved 4", BadgeType::Gold, 150],
 ].each do |name, level, count|
-  Badge.seed_system_badge(name) do |badge|
+  Badge.seed_unless_site_has(name) do |badge|
     badge.default_icon = "square-check"
     badge.badge_type_id = level
     badge.default_badge_grouping_id = BadgeGrouping::Community
@@ -60,6 +59,5 @@ end
     badge.trigger = Badge::Trigger::PostRevision
     badge.auto_revoke = true
     badge.show_posts = false
-    badge.system = true
   end
 end

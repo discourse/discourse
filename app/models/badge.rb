@@ -136,7 +136,10 @@ class Badge < ActiveRecord::Base
     UserBadge.ensure_consistency! if saved_change_to_enabled?
   end
 
-  def self.seed_system_badge(name, &block)
+  # Seeds a badge shipped with the site as a system badge. Seeding matches on
+  # name, so a name the site already gave a badge of its own would be taken over
+  # and rewritten; leave that badge alone instead.
+  def self.seed_unless_site_has(name, &block)
     if where(system: false).where("LOWER(name) = ?", name.downcase).exists?
       Rails.logger.warn("Skipped seeding the #{name.inspect} badge, this site has its own")
       return
@@ -144,6 +147,7 @@ class Badge < ActiveRecord::Base
 
     seed(:name) do |badge|
       badge.name = name
+      badge.system = true
       block.call(badge)
     end
   end
