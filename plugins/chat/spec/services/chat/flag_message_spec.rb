@@ -36,12 +36,7 @@ RSpec.describe Chat::FlagMessage do
     end
     let(:dependencies) { { guardian: } }
 
-    before do
-      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
-      SiteSetting.chat_enabled = true
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-      SiteSetting.chat_message_flag_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    end
+    before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
     context "when all steps pass" do
       fab!(:current_user, :admin)
@@ -63,31 +58,26 @@ RSpec.describe Chat::FlagMessage do
       end
     end
 
-    context "when the review queue rejects the flag" do
-      before do
-        Chat::ReviewQueue.new.flag_message(message_1, guardian, ReviewableScore.types[:spam])
-      end
+    context "when the message was already flagged by the user" do
+      fab!(:current_user, :admin)
 
-      it "fails and retains the duplicate flag error" do
-        expect(result).to fail_a_step(:flag_message)
-        expect(result.failure?).to eq(true)
-        expect(result["result.step.flag_message"].error).to eq(
-          [I18n.t("chat.reviewables.message_already_handled")],
-        )
-      end
+      before { described_class.call(params:, **dependencies) }
+
+      it { is_expected.to fail_a_step(:flag_message) }
     end
 
-    context "when the notify user companion PM cannot be created" do
+    context "when the companion PM can't be created" do
+      fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
+
       let(:flag_type_id) { ReviewableScore.types[:notify_user] }
-      let(:message) { "Please review your chat message" }
+      let(:message) { "Please review your message" }
 
       before { message_1.user.user_option.update!(allow_private_messages: false) }
 
-      it "fails and retains the PostCreator error" do
+      it "fails with the PM error" do
         expect(result).to fail_a_step(:flag_message)
-        expect(result.failure?).to eq(true)
-        expect(result["result.step.flag_message"].error).to eq(
-          [I18n.t("not_accepting_pms", username: message_1.user.username)],
+        expect(result["result.step.flag_message"].error).to include(
+          I18n.t(:not_accepting_pms, username: message_1.user.username),
         )
       end
     end

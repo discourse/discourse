@@ -72,7 +72,7 @@ module Chat
           params.flag_type_id,
           **params.slice(:message, :is_warning, :take_action, :queue_for_review),
         )
-      fail!(result[:errors]) unless result[:success]
+      fail!(result[:errors]) if !result[:success]
     end
   end
 end
