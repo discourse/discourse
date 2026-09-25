@@ -425,7 +425,9 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless meets_tl?
 
     otp_payload = one_time_password(parsed_public_key, current_user.username)
-    redirect_path = "#{params[:auth_redirect]}?oneTimePassword=#{CGI.escape(otp_payload)}"
+    uri = URI.parse(params[:auth_redirect])
+    uri.query = [uri.query, "oneTimePassword=#{CGI.escape(otp_payload)}"].compact.join("&")
+    redirect_path = uri.to_s
 
     respond_to do |format|
       format.html { redirect_to(redirect_path, allow_other_host: true) }
