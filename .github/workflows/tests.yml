@@ -192,11 +192,11 @@ jobs:
 
       - parallel:
           - name: Migrate database
-            run: bin/rake db:migrate
-
-          - name: Create and migrate parallel databases
-            if: env.USES_PARALLEL_DATABASES == 'true'
-            run: bin/rake parallel:create parallel:migrate
+            run: |
+              bin/rake db:migrate
+              if [ "$USES_PARALLEL_DATABASES" = "true" ]; then
+                bin/rake parallel:clone
+              fi
 
           - name: Check Annotations
             if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
