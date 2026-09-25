@@ -8,8 +8,8 @@ en:
     next_page: "Next page"
     empty: "No entries to display."
     replies: "Replies"
-    post_author: "Author: %{author}"
-    post_date: "Post date: %{timestamp}"
+    post_author: "**Author:** %{author}"
+    post_date: "**Post date:** %{timestamp}"
     last_updated: "Last updated"
     event:
       name: "Event"

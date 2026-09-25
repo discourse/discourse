@@ -4,7 +4,7 @@ module MarkdownEndpoint
   class CookedProcessor
     BLOCK_TAG = "discourse-markdown-block"
     INLINE_TAG = "discourse-markdown-inline"
-    VERSION = 7
+    VERSION = 5
 
     class PreservedBlockConverter < ReverseMarkdown::Converters::Base
       def convert(node, _state = {})

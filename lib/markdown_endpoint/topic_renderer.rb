@@ -75,15 +75,20 @@ module MarkdownEndpoint
       serializer.topic_view = @topic_view
       cooked = serializer.cooked.to_s
       lines = ['<div class="post-metadata">', ""]
+      metadata = []
       if post.user
         avatar_url = UrlHelper.absolute(post.user.avatar_template.gsub("{size}", "32"))
         avatar_url = "#{Discourse.base_protocol}:#{avatar_url}" if avatar_url.start_with?("//")
         avatar_url = URI::DEFAULT_PARSER.escape(avatar_url, /[^\x21-\x7E]|[<>"()\\]/)
         author = escape_text(post.user.username)
         author_link = "![#{author}](#{avatar_url}) [@#{author}](#{post.user.full_url})"
-        lines << "### #{I18n.t("markdown_endpoints.post_author", author: author_link)}"
+        metadata << I18n.t("markdown_endpoints.post_author", author: author_link)
       end
-      lines << "#### #{I18n.t("markdown_endpoints.post_date", timestamp: @timestamp.render(post.created_at, url: post.full_url))}"
+      metadata << I18n.t(
+        "markdown_endpoints.post_date",
+        timestamp: @timestamp.render(post.created_at, url: post.full_url),
+      )
+      lines << metadata.join("\\\n")
       lines.concat(["", "</div>", ""])
       lines << cached_body(cooked, post_url: post.full_url)
       lines.join("\n")
