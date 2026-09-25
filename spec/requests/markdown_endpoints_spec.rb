@@ -271,6 +271,9 @@ RSpec.describe "Markdown endpoints" do
       )
       expect(rows[0...-1]).to all(end_with("\\"))
       expect(rows.last).to eq(path.end_with?("/1.md") ? "**Showing post:** 1" : "**Page:** 1")
+      expect(rows.first).to eq("**URL:** <#{topic.url}>\\")
+      rendered_metadata = Nokogiri::HTML5.fragment(PrettyText.cook(metadata))
+      expect(rendered_metadata.at_css("a")["href"]).to eq(topic.url)
     end
   end
 
