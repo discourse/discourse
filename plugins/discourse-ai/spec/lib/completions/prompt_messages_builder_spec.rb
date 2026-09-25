@@ -2,6 +2,7 @@
 
 describe DiscourseAi::Completions::PromptMessagesBuilder do
   let(:builder) { DiscourseAi::Completions::PromptMessagesBuilder.new }
+
   fab!(:user)
   fab!(:admin)
   fab!(:bot_user, :user)
@@ -35,14 +36,14 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(content[3]).to eq({ upload_id: 2 })
   end
 
-  it "should allow merging user messages" do
+  it "allows merging user messages" do
     builder.push(type: :user, content: "Hello", id: "Alice")
     builder.push(type: :user, content: "World", id: "Bob")
 
     expect(builder.to_a).to eq([{ type: :user, content: "Alice: Hello\nBob: World" }])
   end
 
-  it "should allow adding uploads" do
+  it "allows adding uploads" do
     builder.push(type: :user, content: "Hello", name: "Alice", upload_ids: [1, 2])
 
     expect(builder.to_a).to eq(
@@ -50,7 +51,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     )
   end
 
-  it "should support function calls" do
+  it "supports function calls" do
     builder.push(type: :user, content: "Echo 123 please", name: "Alice")
     builder.push(type: :tool_call, content: "echo(123)", name: "echo", id: 1)
     builder.push(type: :tool, content: "123", name: "echo", id: 1)
@@ -64,7 +65,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(builder.to_a).to eq(expected)
   end
 
-  it "should drop a tool call if it is not followed by tool" do
+  it "drops a tool call if it is not followed by tool" do
     builder.push(type: :user, content: "Echo 123 please", id: "Alice")
     builder.push(type: :tool_call, content: "echo(123)", name: "echo", id: 1)
     builder.push(type: :user, content: "OK", id: "James")
@@ -73,7 +74,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(builder.to_a).to eq(expected)
   end
 
-  it "should format messages for topic style" do
+  it "formats messages for topic style" do
     # Create a topic with tags
     topic = Fabricate(:topic, title: "This is an Example Topic")
 
@@ -437,6 +438,76 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
       # I am mixed on asserting everything cause the test
       # will be brittle, but open to changing this
+    end
+
+    it "excludes hidden posts the triggering user cannot see from topic context" do
+      topic = Fabricate(:topic, title: "Public topic with hidden reply")
+      visible_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: other_user,
+          post_number: 1,
+          raw: "Visible context for the prompt",
+        )
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: other_user,
+          post_number: 2,
+          raw: "Hidden context that must not reach the prompt",
+          hidden: true,
+        )
+      trigger_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          post_number: 3,
+          raw: "Please answer using the visible context",
+        )
+      expect(user.guardian.can_see?(hidden_post)).to eq(false)
+
+      context =
+        described_class.messages_from_post(
+          trigger_post,
+          max_posts: 10,
+          bot_usernames: [bot_user.username],
+          include_uploads: false,
+        )
+
+      content = context.flat_map { |message| Array(message[:content]) }.join
+      expect(content).to include(visible_post.raw, trigger_post.raw)
+      expect(content).not_to include(hidden_post.raw)
+    end
+
+    it "excludes persisted secure uploads the triggering user cannot see" do
+      source_owner = Fabricate(:user)
+      source_topic = Fabricate(:private_message_topic, user: source_owner, recipient: user)
+      source_post = Fabricate(:post, topic: source_topic, user: source_owner)
+      secure_upload = Fabricate(:image_upload, user: source_owner)
+      secure_upload.update!(secure: true, access_control_post: source_post)
+      PostCustomPrompt.create!(
+        post: second_post,
+        custom_prompt: [
+          [["Look at this image", { upload_id: secure_upload.id }], user.username, "user"],
+        ],
+      )
+      source_topic.topic_allowed_users.where(user: user).destroy_all
+
+      context =
+        described_class.messages_from_post(
+          third_post,
+          max_posts: 10,
+          bot_usernames: [bot_user.username],
+          include_uploads: true,
+        )
+
+      expect(user.guardian.can_see?(source_post)).to eq(false)
+      expect(context.flat_map { |message| Array(message[:content]) }).not_to include(
+        { upload_id: secure_upload.id },
+      )
     end
 
     it "handles uploads correctly in topic style messages (and times)" do
