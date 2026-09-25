@@ -193,11 +193,7 @@ jobs:
 
       - parallel:
           - name: Migrate database
-            run: |
-              bin/rake db:migrate
-              if [ "$USES_PARALLEL_DATABASES" = "true" ]; then
-                bin/rake parallel:clone
-              fi
+            run: bin/rake db:migrate
 
           - name: Ember Build
             if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
@@ -235,6 +231,10 @@ jobs:
             env:
               TEMPORARY_DB_PORT: "11001"
             run: bin/rake db:check_structure_dump
+
+      - name: Clone databases for parallel tests
+        if: env.USES_PARALLEL_DATABASES == 'true'
+        run: bin/rake parallel:clone
 
       - name: Fetch turbo_rspec_runtime.log cache
         uses: actions/cache@v6
