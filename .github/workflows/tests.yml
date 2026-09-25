@@ -139,16 +139,17 @@ jobs:
         run: |
           ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
-      - name: Setup gems
-        run: |
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle install --jobs $(($(nproc) - 1))
-          bundle clean
+      - parallel:
+          - name: Setup gems
+            run: |
+              bundle config --local path vendor/bundle
+              bundle config --local deployment true
+              bundle config --local without development
+              bundle install --jobs $(($(nproc) - 1))
+              bundle clean
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
+          - name: pnpm install
+            run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'official-plugins' || matrix.target == 'plugins'
@@ -197,6 +198,10 @@ jobs:
               if [ "$USES_PARALLEL_DATABASES" = "true" ]; then
                 bin/rake parallel:clone
               fi
+
+          - name: Ember Build
+            if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
+            run: script/assemble_ember_build.rb
 
           - name: Check Annotations
             if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
@@ -269,10 +274,6 @@ jobs:
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
-
-      - name: Ember Build
-        if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        run: script/assemble_ember_build.rb
 
       - name: Prepare Chrome environment for QUnit
         if: matrix.build_type == 'frontend'
