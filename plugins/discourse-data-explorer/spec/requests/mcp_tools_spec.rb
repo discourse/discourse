@@ -109,5 +109,14 @@ describe "Data Explorer MCP tools" do
 
     call_run_query
     expect(response.status).to eq(429)
+    expect(response.headers["Retry-After"]).to eq("10")
+    expect(response.parsed_body).to eq(
+      "jsonrpc" => "2.0",
+      "id" => nil,
+      "error" => {
+        "code" => -32_000,
+        "message" => "Rate limit exceeded",
+      },
+    )
   end
 end
