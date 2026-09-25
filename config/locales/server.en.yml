@@ -8,9 +8,16 @@ en:
     next_page: "Next page"
     empty: "No entries to display."
     replies: "Replies"
-    post_author: "Author: %{author}"
-    post_date: "Post date: %{timestamp}"
+    post_author: "**Author:** %{author}"
+    post_date: "**Post date:** %{timestamp}"
     last_updated: "Last updated"
+    event:
+      name: "Event"
+      start: "Starts"
+      end: "Ends"
+      location: "Location"
+      link: "Link"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_sequence_conflict: "Draft sequence conflict"
