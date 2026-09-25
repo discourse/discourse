@@ -59,7 +59,7 @@ module MarkdownEndpoint
 
     def header(visible_post_count)
       title = ContentLocalization.translated_topic_title(@topic, @guardian) || @topic.title
-      lines = ["# #{escape_text(EmojiConverter.convert(title))}", "", "**URL:** #{@topic.url}"]
+      lines = ["**URL:** #{@topic.url}"]
       lines << "**Category:** #{escape_text(@topic.category.name)}" if @topic.category
       tags = @topic_view.visible_tags.map(&:name)
       lines << "**Tags:** #{tags.map { |tag| escape_text(tag) }.join(", ")}" if tags.present?
@@ -67,7 +67,7 @@ module MarkdownEndpoint
       lines << "**Posts on this page:** #{visible_post_count}"
       lines << "**Page:** #{@topic_view.page}" unless single_post?
       lines << "**Showing post:** #{@post_number}" if single_post?
-      lines.join("\n")
+      "# #{escape_text(EmojiConverter.convert(title))}\n\n#{lines.join("\\\n")}"
     end
 
     def render_post(post)

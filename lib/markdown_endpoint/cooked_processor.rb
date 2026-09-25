@@ -4,7 +4,7 @@ module MarkdownEndpoint
   class CookedProcessor
     BLOCK_TAG = "discourse-markdown-block"
     INLINE_TAG = "discourse-markdown-inline"
-    VERSION = 6
+    VERSION = 7
 
     class PreservedBlockConverter < ReverseMarkdown::Converters::Base
       def convert(node, _state = {})
@@ -217,7 +217,7 @@ module MarkdownEndpoint
               fields << "**#{I18n.t("markdown_endpoints.event.link")}:** <#{url}>"
             end
           end
-          sections << fields.join("\n") if fields.present?
+          sections << fields.join("\\\n") if fields.present?
           body = convert_html(event.inner_html)
           sections << body if body.present?
           content = sections.join("\n\n").lines.map { |line| "> #{line.chomp}".rstrip }.join("\n")

@@ -98,9 +98,9 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
 
         > **Community \\[meetup\\]**
         >
-        > **Starts:** October 15, 2026, 6:00pm (America/Toronto)
-        > **Ends:** October 15, 2026, 8:00pm (America/Toronto)
-        > **Location:** Hall & garden
+        > **Starts:** October 15, 2026, 6:00pm (America/Toronto)\\
+        > **Ends:** October 15, 2026, 8:00pm (America/Toronto)\\
+        > **Location:** Hall & garden\\
         > **Link:** <https://example.com/meetup>
         >
         > Join us for **project updates** and a [Q&A](#{Discourse.base_url}/faq).
@@ -122,7 +122,7 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
         >
         > > **Event**
         > >
-        > > **Starts:** October 15, 2026
+        > > **Starts:** October 15, 2026\\
         > > **Ends:** October 16, 2026
       MARKDOWN
     end

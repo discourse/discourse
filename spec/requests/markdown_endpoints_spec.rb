@@ -248,6 +248,32 @@ RSpec.describe "Markdown endpoints" do
     expect(response).to have_http_status(:not_found)
   end
 
+  it "separates topic metadata rows with hard line breaks" do
+    SiteSetting.tagging_enabled = true
+    topic.tags << Fabricate(:tag)
+
+    ["/t/#{topic.slug}/#{topic.id}.md", "/t/#{topic.slug}/#{topic.id}/1.md"].each do |path|
+      get path
+
+      expect(response).to have_http_status(:ok)
+      heading, metadata = response.body.split("\n\n", 3)
+      expect(heading).to eq("# #{topic.title}")
+      rows = metadata.lines.map(&:chomp)
+      expect(rows.map { |row| row[/\A\*\*(.+):\*\*/, 1] }).to eq(
+        [
+          "URL",
+          "Category",
+          "Tags",
+          "Created",
+          "Posts on this page",
+          path.end_with?("/1.md") ? "Showing post" : "Page",
+        ],
+      )
+      expect(rows[0...-1]).to all(end_with("\\"))
+      expect(rows.last).to eq(path.end_with?("/1.md") ? "**Showing post:** 1" : "**Page:** 1")
+    end
+  end
+
   it "paginates rendered posts with translated Markdown navigation links" do
     TranslationOverride.upsert!("en", "markdown_endpoints.previous_page", "Earlier posts")
     TranslationOverride.upsert!("en", "markdown_endpoints.next_page", "Later posts")
