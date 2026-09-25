@@ -15,6 +15,27 @@ replaceIcon("notification.reaction", "bell");
 function initializeDiscourseReactions(api) {
   customizePostMenu(api);
 
+  for (const [section, link] of [
+    [
+      "activity",
+      { name: "activity-reactions", route: "userActivity.reactions" },
+    ],
+    [
+      "notifications",
+      {
+        name: "notifications-reactions",
+        route: "userNotifications.reactionsReceived",
+      },
+    ],
+  ]) {
+    api.addUserNavSidebarLink(section, {
+      ...link,
+      label: "discourse_reactions.reactions_title",
+      icon: "far-face-smile",
+      displayed: ({ siteSettings }) => siteSettings.discourse_reactions_enabled,
+    });
+  }
+
   api.addKeyboardShortcut(
     "l",
     () => {

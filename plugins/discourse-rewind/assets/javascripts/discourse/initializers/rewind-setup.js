@@ -18,7 +18,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addUserNavPreferencesLink({
+      api.addUserNavSidebarLink("preferences", {
         name: "preferences-rewind",
         route: "preferences.rewind",
         label: "discourse_rewind.title",
@@ -32,6 +32,13 @@ export default {
       });
 
       if (this.rewind.enabled) {
+        api.addUserNavSidebarLink("activity", {
+          name: "activity-rewind",
+          route: "userActivity.rewind",
+          label: "discourse_rewind.title",
+          icon: "repeat",
+        });
+
         api.addQuickAccessProfileItem({
           icon: "repeat",
           href: "/my/activity/rewind",
