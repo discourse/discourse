@@ -19,8 +19,8 @@ class AssetProcessor
       Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.mjs")
     end
 
-  @mutex = Mutex.new
-  @ctx_init = Mutex.new
+  @mutex = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
+  @ctx_init = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
 
   class TranspileError < StandardError
   end
@@ -110,8 +110,10 @@ class AssetProcessor
   end
 
   def self.reset_context
-    @ctx&.dispose
-    @ctx = nil
+    @ctx_init.synchronize do
+      @ctx&.dispose
+      @ctx = nil
+    end
   end
 
   def self.v8

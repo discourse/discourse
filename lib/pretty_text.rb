@@ -24,8 +24,8 @@ module PrettyText
   VIMEO_PLAYER_PATH = %r{\A/video/(?<id>\d+)/?\z}
   VIMEO_UNLISTED_HASH = /\A[a-zA-Z0-9]+\z/
 
-  @mutex = Mutex.new
-  @ctx_init = Mutex.new
+  @mutex = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
+  @ctx_init = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
 
   def self.app_root
     Rails.root

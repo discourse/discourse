@@ -1089,6 +1089,12 @@ module Discourse
     end
   end
 
+  def self.reset_worker_db_variables_overrides
+    ActiveRecord::Base.configurations = Rails.application.config.database_configuration
+    ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+    ActiveRecord::Base.establish_connection
+  end
+
   # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state

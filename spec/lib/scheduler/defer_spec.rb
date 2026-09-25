@@ -116,6 +116,81 @@ RSpec.describe Scheduler::Defer do
     expect(s).to eq("good")
   end
 
+  describe "#with_idle" do
+    it "skips running and queued work without dropping either job" do
+      started = Queue.new
+      release = Queue.new
+      completed = Queue.new
+      @defer.later do
+        started << true
+        release.pop
+        completed << :first
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+      @defer.later { completed << :second }
+
+      expect(@defer.with_idle { raise "forked with pending work" }).to eq(false)
+      release << true
+      @defer.stop!(finish_work: true)
+
+      expect(2.times.map { completed.pop(timeout: 5) }).to eq(%i[first second])
+      expect(@defer.with_idle { :idle }).to eq(:idle)
+    ensure
+      release << true
+    end
+
+    it "releases the admission barrier when the operation fails" do
+      expect { @defer.with_idle { raise "fork failed" } }.to raise_error("fork failed")
+
+      completed = Queue.new
+      @defer.later { completed << true }
+
+      expect(completed.pop(timeout: 5)).to eq(true)
+    end
+
+    it "holds new work until the idle operation finishes" do
+      entered = Queue.new
+      release = Queue.new
+      completed = Queue.new
+      operation =
+        Thread.new do
+          @defer.with_idle do
+            entered << true
+            release.pop
+          end
+        end
+      expect(entered.pop(timeout: 5)).to eq(true)
+      enqueue = Thread.new { @defer.later { completed << true } }
+
+      expect(completed.pop(timeout: 0.05)).to eq(nil)
+      release << true
+
+      expect(completed.pop(timeout: 5)).to eq(true)
+    ensure
+      release << true
+      operation&.join(5)
+      enqueue&.join(5)
+    end
+  end
+
+  describe "#stop!" do
+    it "reports progress while waiting for work to finish and can restart" do
+      release = Queue.new
+      completed = Queue.new
+      @defer.later do
+        release.pop
+        completed << :drained
+      end
+
+      @defer.stop!(finish_work: true) { release << true }
+      @defer.later { completed << :restarted }
+
+      expect(2.times.map { completed.pop(timeout: 5) }).to eq(%i[drained restarted])
+    ensure
+      release << true
+    end
+  end
+
   describe "#later" do
     let!(:ivar) { Concurrent::IVar.new }
     let!(:responses) { Thread::Queue.new }
