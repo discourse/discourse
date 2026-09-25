@@ -1237,17 +1237,18 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
 
     await this.subject.join(this.room);
     this.subject.setWatching(1, true);
-    await waitUntil(() =>
-      this.stateRequests.some(({ video }) => video === "true")
-    );
 
+    // The camera state is broadcast before the track is published, so wait
+    // on the publication itself.
     const lkRoom = this.FakeLivekitRoom.instances[0];
-    const publication = lkRoom.localParticipant.published.find(
-      ({ track }) => track.mediaStreamTrack === this.cameraTrack
-    );
+    const cameraPublication = () =>
+      lkRoom.localParticipant.published.find(
+        ({ track }) => track.mediaStreamTrack === this.cameraTrack
+      );
+    await waitUntil(cameraPublication);
 
     assert.notStrictEqual(
-      publication,
+      cameraPublication(),
       undefined,
       "publishes the remembered camera track"
     );
