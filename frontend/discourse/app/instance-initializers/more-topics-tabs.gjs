@@ -1,5 +1,3 @@
-import RelatedMessages from "discourse/components/related-messages";
-import SuggestedTopics from "discourse/components/suggested-topics";
 import { withPluginApi } from "discourse/lib/core-api";
 import { i18n } from "discourse-i18n";
 
@@ -9,7 +7,7 @@ export default {
       api.registerMoreTopicsTab({
         id: "related-messages",
         name: i18n("related_messages.pill"),
-        component: RelatedMessages,
+        component: () => import("discourse/components/related-messages"),
         condition: ({ context, topic }) =>
           context === "pm" && topic.relatedMessages?.length > 0,
       });
@@ -17,7 +15,7 @@ export default {
       api.registerMoreTopicsTab({
         id: "suggested-topics",
         name: i18n("suggested_topics.pill"),
-        component: SuggestedTopics,
+        component: () => import("discourse/components/suggested-topics"),
         condition: ({ topic }) => topic.suggestedTopics?.length > 0,
       });
     });

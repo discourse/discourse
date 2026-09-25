@@ -2,12 +2,11 @@ import { schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
+import { withPluginApi } from "discourse/lib/core-api";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { iconElement, iconHTML } from "discourse/lib/icon-library";
 import setupImageGridCarousel from "discourse/lib/image-grid-carousel";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
-import lightbox from "discourse/lib/lightbox";
-import { withPluginApi } from "discourse/lib/core-api";
 import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
@@ -47,12 +46,16 @@ export default {
 
         if (needsLightboxAfterRender) {
           schedule("afterRender", () => {
-            lightbox(elem, { post: helper.model });
+            import("discourse/lib/lightbox").then(({ default: lightbox }) =>
+              lightbox(elem, { post: helper.model })
+            );
           });
           return;
         }
 
-        return lightbox(elem, { post: helper.model });
+        return import("discourse/lib/lightbox").then(({ default: lightbox }) =>
+          lightbox(elem, { post: helper.model })
+        );
       });
 
       if (siteSettings.support_mixed_text_direction) {

@@ -3,7 +3,6 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
-import AdminSidebarPanel from "./admin-sidebar";
 import UserNavSidebarPanel from "./user-nav-sidebar";
 
 class MainSidebarPanel extends BaseCustomSidebarPanel {
@@ -64,10 +63,13 @@ export function resetPanelSections(
 }
 
 export function resetSidebarPanels() {
-  customPanels = [
-    new MainSidebarPanel(),
-    new AdminSidebarPanel(),
-    new UserNavSidebarPanel(),
-  ];
+  customPanels = [new MainSidebarPanel(), new UserNavSidebarPanel()];
   currentPanelKey = MAIN_PANEL;
+}
+
+// The admin panel arrives with the admin bundle, which only staff load.
+export function addSidebarPanelInstance(panel) {
+  if (!customPanels.some((existing) => existing.key === panel.key)) {
+    customPanels.push(panel);
+  }
 }

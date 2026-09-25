@@ -6,6 +6,7 @@ import "./loader-shims";
 import "./module-shims";
 import coreModules, { routes as coreRouteBundles } from "virtual:core-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { addSidebarPanelInstance } from "discourse/lib/sidebar/custom-sections";
 import { registerSettings } from "discourse/lib/theme-settings-store";
 import { defineModules } from "./lib/loader-shim";
 
@@ -156,14 +157,14 @@ export async function loadThemesAndPlugins() {
 }
 
 export async function loadAdmin() {
-  defineModules(
-    "discourse/admin",
-    (
-      await import(
-        /* dynamicChunkName: "admin" */ "discourse/admin/compat-modules"
-      )
-    ).default
-  );
+  const [{ default: adminModules }, { default: AdminSidebarPanel }] =
+    await Promise.all([
+      import(/* dynamicChunkName: "admin" */ "discourse/admin/compat-modules"),
+      import("discourse/lib/sidebar/admin-sidebar"),
+    ]);
+
+  defineModules("discourse/admin", adminModules);
+  addSidebarPanelInstance(new AdminSidebarPanel());
 }
 
 class Discourse extends Application {

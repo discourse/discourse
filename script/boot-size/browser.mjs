@@ -31,8 +31,23 @@ const browser = await chromium.launch({
 });
 let failed = false;
 
-for (const url of pages) {
+// LOGIN=user:password signs in first, then exercises the user menu and composer.
+let storageState;
+if (process.env.LOGIN) {
+  const [username, password] = process.env.LOGIN.split(":");
   const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(`${base}/login?safe_mode=no_themes`, { waitUntil: "load", timeout: 90000 });
+  await page.fill("#login-account-name", username);
+  await page.fill("#login-account-password", password);
+  await page.click("#login-button");
+  await page.waitForSelector("#current-user", { timeout: 30000 });
+  storageState = await context.storageState();
+  await context.close();
+}
+
+for (const url of pages) {
+  const context = await browser.newContext({ storageState });
   const page = await context.newPage();
   const scripts = new Set();
   const errors = [];
@@ -67,6 +82,30 @@ for (const url of pages) {
   await page.waitForTimeout(3000);
   if (!rendered) {
     errors.push("main outlet never rendered a topic list, post, or container");
+  }
+
+  if (process.env.INTERACT && storageState) {
+    await page.click("#current-user button, #current-user a").catch(() => {});
+    const menu = await page
+      .waitForSelector(".user-menu.revamped, .user-menu", { timeout: 15000 })
+      .then(() => true)
+      .catch(() => false);
+    if (!menu) {
+      errors.push("user menu did not open");
+    }
+    await page.keyboard.press("Escape");
+
+    if (url.startsWith("/t/")) {
+      await page.click("#topic-footer-buttons .create, .topic-footer-main-buttons .create").catch(() => {});
+      const composer = await page
+        .waitForSelector("#reply-control.open .d-editor-input", { timeout: 20000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!composer) {
+        errors.push("composer did not open");
+      }
+      await page.waitForTimeout(1000);
+    }
   }
 
   if (process.env.INTERACT && url.startsWith("/t/")) {

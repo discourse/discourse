@@ -18,15 +18,27 @@ export default class WarpStore extends Service {
     return Boolean(Impl);
   }
 
+  peekRecord(...args) {
+    return this.#impl().peekRecord(...args);
+  }
+
+  push(...args) {
+    return this.#impl().push(...args);
+  }
+
+  async request(...args) {
+    return (await this.load()).request(...args);
+  }
+
   async load() {
     if (!Impl) {
       loading ??= import("discourse/data/warp-store-impl");
       await loading;
     }
-    return this.#impl;
+    return this.#impl();
   }
 
-  get #impl() {
+  #impl() {
     if (!this.#store) {
       if (!Impl) {
         throw new Error(
@@ -38,17 +50,5 @@ export default class WarpStore extends Service {
       this.#store = owner.lookup("service:warp-store-impl");
     }
     return this.#store;
-  }
-
-  peekRecord(...args) {
-    return this.#impl.peekRecord(...args);
-  }
-
-  push(...args) {
-    return this.#impl.push(...args);
-  }
-
-  async request(...args) {
-    return (await this.load()).request(...args);
   }
 }

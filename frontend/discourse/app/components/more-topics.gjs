@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import BrowseMore from "discourse/components/more-topics/browse-more";
 import { eq } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export {
@@ -18,6 +19,17 @@ export default class MoreTopics extends Component {
     return () => this.moreTopicsTabs.teardown();
   });
 
+  // A tab registered with an import thunk loads its component on first show.
+  get tabComponent() {
+    const component = this.moreTopicsTabs.selectedTab?.component;
+
+    if (typeof component === "function" && !component.prototype) {
+      return component().then((module) => module.default);
+    }
+
+    return component;
+  }
+
   <template>
     <div class="more-topics__container" {{this.syncTopic @topic}}>
       {{#if this.moreTopicsTabs.selectedTab}}
@@ -27,7 +39,10 @@ export default class MoreTopics extends Component {
             (if (eq this.moreTopicsTabs.tabs.length 1) "single-list")
           }}
         >
-          <this.moreTopicsTabs.selectedTab.component @topic={{@topic}} />
+          <DAsyncContent @asyncData={{this.tabComponent}}>
+            <:loading></:loading>
+            <:content as |Tab|><Tab @topic={{@topic}} /></:content>
+          </DAsyncContent>
         </div>
 
         {{#if @topic.suggestedTopics.length}}

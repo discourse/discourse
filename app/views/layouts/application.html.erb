@@ -67,6 +67,7 @@
     <%= preload_script 'js/browser-detect' %>
 
     <%= module_preloads_for "discourse", (staff? ? "admin/compat-modules" : nil) %>
+    <%= core_route_bundle_preloads %>
 
     <%- unless customization_disabled? %>
       <%- theme_js_assets.each do |asset| %>

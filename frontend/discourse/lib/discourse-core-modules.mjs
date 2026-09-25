@@ -37,6 +37,21 @@ const DEFAULT_BUNDLE = "other";
 // Looked up by name from a route's code, so they travel with that route.
 const EXTRA_ROUTE_BUNDLES = { nested: "topic", "user-topics-list": "other" };
 
+// Routes the map builds in loops from site data, which the parser cannot see.
+const EXTRA_ROUTE_URLS = {
+  discovery: [
+    "latest",
+    "top",
+    "new",
+    "unread",
+    "unseen",
+    "hot",
+    "read",
+    "posted",
+    "bookmarks",
+  ],
+};
+
 // Loaded alongside a bundle, for code that its routes use synchronously.
 const BUNDLE_PRELOADS = {
   topic: ["discourse/data/warp-store-impl"],
@@ -44,7 +59,6 @@ const BUNDLE_PRELOADS = {
 };
 
 const ROUTE_FILE_REGEX = /^(routes|controllers|templates)\/(.+)$/;
-const IMPLICIT_ROUTE_SUFFIXES = ["index", "loading", "error"];
 
 function walk(dir, base = dir) {
   const files = [];
@@ -202,7 +216,12 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
         ...bundle,
         names: [...bundle.names].sort(),
       })),
-      urlTable: urlTableFor(derived),
+      urlTable: urlTableFor([
+        ...derived,
+        ...Object.entries(EXTRA_ROUTE_URLS).flatMap(([bundleName, urls]) =>
+          urls.map((url) => ({ name: `${bundleName}.${url}`, url, bundleName }))
+        ),
+      ]),
       preloads: BUNDLE_PRELOADS,
       appDir,
     };
@@ -277,7 +296,6 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
       }
       for (const [id, set] of owners) {
         const routes = [...set].filter((owner) => owner.startsWith("route-"));
-        const onDemand = set.size - routes.length;
         let name;
 
         if (routes.length > 1) {

@@ -17,9 +17,9 @@ const SERIES = [
   { key: "boot", name: "Boot only (no route bundle)", color: "#1baf7a" },
 ];
 
-const W = 960;
-const H = 520;
-const M = { top: 64, right: 220, bottom: 140, left: 72 };
+const W = 1000;
+const H = 600;
+const M = { top: 96, right: 250, bottom: 190, left: 72 };
 const plotW = W - M.left - M.right;
 const plotH = H - M.top - M.bottom;
 
@@ -47,8 +47,8 @@ for (let v = 0; v <= maxY; v += 200) {
 
 const xLabels = history.map((row, i) => {
   const label =
-    row.label.length > 28 ? row.label.slice(0, 27) + "…" : row.label;
-  return `<text transform="translate(${x(i)},${M.top + plotH + 14}) rotate(35)" font-size="11" fill="#52514e"><title>${esc(row.label)}</title>${esc(row.commit)} ${esc(label)}</text>`;
+    row.label.length > 34 ? row.label.slice(0, 33) + "…" : row.label;
+  return `<text transform="translate(${x(i)},${M.top + plotH + 14}) rotate(30)" font-size="11" fill="#52514e"><title>${esc(row.label)}</title>${i + 1}. ${esc(label)}</text>`;
 });
 
 const lines = SERIES.map((s) => {
@@ -70,7 +70,7 @@ const lines = SERIES.map((s) => {
 
 const legend = SERIES.map(
   (s, i) =>
-    `<g transform="translate(${M.left + i * 230},${M.top - 28})"><rect width="12" height="12" rx="2" fill="${s.color}"/><text x="18" y="10" font-size="12" fill="#0b0b0b">${esc(s.name)}</text></g>`
+    `<g transform="translate(${M.left + i * 230},${M.top - 30})"><rect width="12" height="12" rx="2" fill="${s.color}"/><text x="18" y="10" font-size="12" fill="#0b0b0b">${esc(s.name)}</text></g>`
 );
 
 const first = history[0];
@@ -80,7 +80,7 @@ const delta = (k) => (100 * (1 - kib(last, k) / kib(first, k))).toFixed(0);
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
 <rect width="${W}" height="${H}" fill="#fcfcfb"/>
 <text x="${M.left}" y="24" font-size="16" font-weight="600" fill="#0b0b0b">JavaScript loaded on initial boot (Brotli KiB, production build)</text>
-<text x="${M.left}" y="42" font-size="12" fill="#52514e">Discovery −${delta("discovery")}% · Topic −${delta("topic")}% since baseline. Hover points for details.</text>
+<text x="${M.left}" y="44" font-size="12" fill="#52514e">Discovery −${delta("discovery")}% · Topic −${delta("topic")}% since baseline. Hover a point for the commit and sizes.</text>
 ${legend.join("\n")}
 ${gridLines.join("\n")}
 <line x1="${M.left}" x2="${M.left + plotW}" y1="${y(0)}" y2="${y(0)}" stroke="#c3c2b7"/>

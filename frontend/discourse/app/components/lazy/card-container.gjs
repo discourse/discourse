@@ -22,7 +22,7 @@ export default class LazyCardContainer extends Component {
 
   @action
   onClick(event) {
-    if (this.module) {
+    if (this.module || this.#loading) {
       return;
     }
 
@@ -35,7 +35,7 @@ export default class LazyCardContainer extends Component {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    this.#loading ??= import("discourse/components/card-container").then(
+    this.#loading = import("discourse/components/card-container").then(
       (module) => {
         this.module = module;
         requestAnimationFrame(() =>

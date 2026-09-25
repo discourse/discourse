@@ -44,6 +44,49 @@ class EmberAssets < ActiveSupport::CurrentAttributes
     cache[:script_chunks] = entrypoints
   end
 
+  # The core route bundle covering a request path, with everything it loads, as
+  # logical script names. The build lists bundles most specific first.
+  def self.route_bundle_scripts_for_path(path)
+    return [] if path.nil?
+
+    manifest = read_manifest!(exception: false)
+    return [] if manifest.nil?
+
+    bundle = manifest["routeBundles"].to_a.find { |b| path.match?(route_url_pattern(b["url"])) }
+    return [] if bundle.nil?
+
+    [bundle["fileName"], *bundle["preloads"]].flat_map do
+        deep_imports_for(chunk_filename: it, chunks: manifest["chunks"])
+      end
+      .uniq
+      .map { it.delete_prefix("assets/").delete_suffix(".js") }
+  end
+
+  # A url ends in `/*`, so a bundle covers its route and everything beneath it.
+  # `*` is one segment and `**` is one or more.
+  def self.route_url_pattern(glob)
+    @route_url_patterns ||= {}
+    @route_url_patterns[glob] ||= begin
+      pattern =
+        glob
+          .delete_suffix("/*")
+          .split("/")
+          .map do |segment|
+            case segment
+            when "**"
+              "[^/]+(?:/[^/]+)*"
+            when "*"
+              "[^/]+"
+            else
+              Regexp.escape(segment)
+            end
+          end
+          .join("/")
+
+      %r{\A#{pattern}(?:/.*)?\z}
+    end
+  end
+
   def self.deep_imports_for(chunk_filename:, chunks:, seen: Set.new)
     return [] unless seen.add?(chunk_filename)
     [

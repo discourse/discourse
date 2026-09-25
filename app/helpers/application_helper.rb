@@ -168,6 +168,13 @@ module ApplicationHelper
     preload_script_url(path, entrypoint: script, type_module:, attrs:).html_safe
   end
 
+  def core_route_bundle_preloads
+    path = request.path.delete_prefix(Discourse.base_path).delete_prefix("/")
+    EmberAssets.route_bundle_scripts_for_path(path).map { |script| <<~HTML }.join("\n").html_safe
+        <link rel="modulepreload" href="#{script_asset_path script}" nonce="#{csp_nonce_placeholder}">
+      HTML
+  end
+
   def module_preloads_for(*scripts)
     resolved_preload_scripts =
       scripts.compact.flat_map { |script| EmberAssets.script_chunks[script] }.compact.uniq
