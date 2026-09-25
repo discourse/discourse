@@ -33,6 +33,76 @@ end
 require_relative "lib/discourse_data_explorer/engine"
 
 after_initialize do
+  require_relative "lib/discourse_data_explorer/mcp_tools"
+
+  register_mcp_tool(
+    "discourse_get_query",
+    title: "Get Data Explorer query",
+    description:
+      "Returns the definition of a saved Data Explorer query. Requires an admin account.",
+    implementation: DiscourseDataExplorer::McpTools::GetQuery,
+    input_schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "integer",
+          minimum: 1,
+        },
+      },
+      required: ["id"],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseDataExplorer::McpTools::GetQuery::OUTPUT_SCHEMA,
+    required_scopes: DiscourseDataExplorer::McpTools::GetQuery::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+    risk: :administration,
+    availability: -> { SiteSetting.data_explorer_enabled },
+  )
+
+  register_mcp_tool(
+    "discourse_run_query",
+    title: "Run Data Explorer query",
+    description: "Runs a saved Data Explorer query that the authenticated user can access.",
+    implementation: DiscourseDataExplorer::McpTools::RunQuery,
+    input_schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "integer",
+        },
+        params: {
+          type: "object",
+        },
+        limit: {
+          anyOf: [
+            { type: "integer", minimum: 1, maximum: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT },
+            { const: "ALL" },
+          ],
+        },
+        explain: {
+          type: "boolean",
+          default: false,
+        },
+      },
+      required: ["id"],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseDataExplorer::McpTools::RunQuery::OUTPUT_SCHEMA,
+    required_scopes: DiscourseDataExplorer::McpTools::RunQuery::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+    availability: -> { SiteSetting.data_explorer_enabled },
+  )
+
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:
