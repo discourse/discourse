@@ -53,8 +53,7 @@ loyalty_query = lambda { |min_days| <<~SQL }
 
 # -- Welcome (instant) --
 
-Badge.seed(:name) do |b|
-  b.name = "Mic Check"
+Badge.seed_system_badge("Mic Check") do |b|
   b.default_icon = "microphone"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -74,8 +73,7 @@ end
   "Chatterbox" => [BadgeType::Silver, 10.hours.to_i],
   "Silver Tongue" => [BadgeType::Gold, 100.hours.to_i],
 }.each do |name, (type, threshold)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_system_badge(name) do |b|
     b.default_icon = "clock"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -98,8 +96,7 @@ end
 
 # -- Networker (instant: Icebreaker, scheduled: Social Butterfly, Life of the Party) --
 
-Badge.seed(:name) do |b|
-  b.name = "Icebreaker"
+Badge.seed_system_badge("Icebreaker") do |b|
   b.default_icon = "handshake"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -116,8 +113,7 @@ end
   "Social Butterfly" => [BadgeType::Silver, 10],
   "Life of the Party" => [BadgeType::Gold, 50],
 }.each do |name, (type, count)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_system_badge(name) do |b|
     b.default_icon = "users"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -140,8 +136,7 @@ end
   "Inner Circle" => [BadgeType::Silver, 10.hours.to_i],
   "Partners in Crime" => [BadgeType::Gold, 50.hours.to_i],
 }.each do |name, (type, threshold)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_system_badge(name) do |b|
     b.default_icon = "user-group"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -164,8 +159,7 @@ end
   "Nomad" => [BadgeType::Silver, 20],
   "Omnipresent" => [BadgeType::Gold, 50],
 }.each do |name, (type, count)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_system_badge(name) do |b|
     b.default_icon = "compass"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -190,12 +184,11 @@ end
 # -- Loyalty (scheduled) --
 
 {
-  "Patron" => [BadgeType::Bronze, 10],
+  "Frequenter" => [BadgeType::Bronze, 10],
   "Barfly" => [BadgeType::Silver, 30],
   "The Mayor" => [BadgeType::Gold, 100],
 }.each do |name, (type, days)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_system_badge(name) do |b|
     b.default_icon = "calendar"
     b.badge_type_id = type
     b.multiple_grant = false
@@ -213,8 +206,7 @@ end
 
 # -- Hosting (instant: Host, scheduled: Crowd Puller, Master of Ceremonies) --
 
-Badge.seed(:name) do |b|
-  b.name = "Host"
+Badge.seed_system_badge("Host") do |b|
   b.default_icon = "house"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -231,8 +223,7 @@ end
   "Crowd Puller" => [BadgeType::Silver, 50, "bullhorn"],
   "Master of Ceremonies" => [BadgeType::Gold, 500, "star"],
 }.each do |name, (type, count, icon)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_system_badge(name) do |b|
     b.default_icon = icon
     b.badge_type_id = type
     b.multiple_grant = false
@@ -257,8 +248,7 @@ end
 
 # -- Inviting (instant: Plus One, scheduled: Connector, People Magnet) --
 
-Badge.seed(:name) do |b|
-  b.name = "Plus One"
+Badge.seed_system_badge("Plus One") do |b|
   b.default_icon = "user-plus"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -275,8 +265,7 @@ end
   "Connector" => [BadgeType::Silver, 10, "circle-nodes"],
   "People Magnet" => [BadgeType::Gold, 50, "magnet"],
 }.each do |name, (type, count, icon)|
-  Badge.seed(:name) do |b|
-    b.name = name
+  Badge.seed_system_badge(name) do |b|
     b.default_icon = icon
     b.badge_type_id = type
     b.multiple_grant = false
@@ -300,8 +289,7 @@ end
 
 # -- Standalone --
 
-Badge.seed(:name) do |b|
-  b.name = "Night Owl"
+Badge.seed_system_badge("Night Owl") do |b|
   b.default_icon = "moon"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -314,8 +302,7 @@ Badge.seed(:name) do |b|
   b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Early Bird"
+Badge.seed_system_badge("Early Bird") do |b|
   b.default_icon = "sun"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -328,8 +315,7 @@ Badge.seed(:name) do |b|
   b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Packed House"
+Badge.seed_system_badge("Packed House") do |b|
   b.default_icon = "people-group"
   b.badge_type_id = BadgeType::Silver
   b.multiple_grant = false
@@ -342,8 +328,7 @@ Badge.seed(:name) do |b|
   b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Weekend Warrior"
+Badge.seed_system_badge("Weekend Warrior") do |b|
   b.default_icon = "calendar-week"
   b.badge_type_id = BadgeType::Silver
   b.multiple_grant = false
@@ -363,8 +348,7 @@ Badge.seed(:name) do |b|
   b.system = true
 end
 
-Badge.seed(:name) do |b|
-  b.name = "Marathoner"
+Badge.seed_system_badge("Marathoner") do |b|
   b.default_icon = "trophy"
   b.badge_type_id = BadgeType::Gold
   b.multiple_grant = false

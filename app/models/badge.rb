@@ -136,6 +136,18 @@ class Badge < ActiveRecord::Base
     UserBadge.ensure_consistency! if saved_change_to_enabled?
   end
 
+  def self.seed_system_badge(name, &block)
+    if where(system: false).where("LOWER(name) = ?", name.downcase).exists?
+      Rails.logger.warn("Skipped seeding the #{name.inspect} badge, this site has its own")
+      return
+    end
+
+    seed(:name) do |badge|
+      badge.name = name
+      block.call(badge)
+    end
+  end
+
   # fields that can not be edited on system badges
   def self.protected_system_fields
     %i[name badge_type_id multiple_grant target_posts show_posts query trigger auto_revoke listable]
@@ -271,7 +283,11 @@ class Badge < ActiveRecord::Base
     self.badge_grouping_id = val if !badge_grouping_id || badge_grouping_id <= BadgeGrouping::Other
   end
 
+  # Only badges shipped with the site are translated. A badge created on the
+  # site owns its text outright, so a name matching a translation key must not
+  # pull that translation in over it.
   def display_name
+    return name if !system?
     self.class.display_name(name)
   end
 
@@ -280,6 +296,8 @@ class Badge < ActiveRecord::Base
   end
 
   def long_description
+    return self[:long_description] || "" if !system?
+
     key = "badges.#{i18n_name}.long_description"
     I18n.t(
       key,
@@ -294,6 +312,8 @@ class Badge < ActiveRecord::Base
   end
 
   def description
+    return self[:description] || "" if !system?
+
     key = "badges.#{i18n_name}.description"
     I18n.t(
       key,

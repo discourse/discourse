@@ -23,6 +23,39 @@ RSpec.describe Badge do
     I18n.with_locale(:fr) { expect(badge.display_name).not_to eq(name_english) }
   end
 
+  it "leaves a site's own badge untranslated when its name matches a translation key" do
+    I18n.backend.store_translations(
+      :en,
+      badges: {
+        gatekeeper: {
+          name: "Doorkeeper",
+          description: "Shipped description",
+          long_description: "Shipped long description",
+        },
+      },
+    )
+    badge =
+      Fabricate(
+        :badge,
+        name: "Gatekeeper",
+        system: false,
+        description: "Runs the door",
+        long_description: "Granted by hand to whoever runs the door",
+      )
+
+    expect(badge.display_name).to eq("Gatekeeper")
+    expect(badge.description).to eq("Runs the door")
+    expect(badge.long_description).to eq("Granted by hand to whoever runs the door")
+
+    badge.update!(system: true)
+
+    expect(badge.display_name).to eq("Doorkeeper")
+    expect(badge.description).to eq("Shipped description")
+    expect(badge.long_description).to eq("Shipped long description")
+  ensure
+    I18n.reload!
+  end
+
   it "handles changes on badge description and long description correctly for system badges" do
     badge = Badge.find_by_name("Basic User")
     badge.description = badge.description.dup
@@ -145,6 +178,31 @@ RSpec.describe Badge do
 
     it "fallbacks to argument value when translation does not exist" do
       expect(Badge.display_name("Not In Translations")).to eq("Not In Translations")
+    end
+  end
+
+  describe ".seed_system_badge" do
+    def seed(name)
+      Badge.seed_system_badge(name) do |badge|
+        badge.badge_type_id = BadgeType::Bronze
+        badge.query = "SELECT 1"
+        badge.system = true
+      end
+    end
+
+    it "seeds the badge when the site has no badge under that name" do
+      seed("Shipped Badge")
+
+      expect(Badge.find_by(name: "Shipped Badge")).to be_present
+    end
+
+    it "leaves a badge the site created alone, whatever its casing" do
+      existing = Fabricate(:badge, name: "shipped badge", system: false, query: "SELECT 2")
+
+      seed("Shipped Badge")
+
+      expect(existing.reload.query).to eq("SELECT 2")
+      expect(Badge.where(name: "Shipped Badge")).to be_empty
     end
   end
 
