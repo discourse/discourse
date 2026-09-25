@@ -1942,10 +1942,12 @@ if generic_import_dependencies_available
         def import_usernames(importer, rows)
           importer.reserve_valid_usernames(rows)
           rows.map do |row|
+            external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
             importer.process_user(
               imported_id: row["id"],
               username: row["username"],
               email: row["email"],
+              external_id: external_id,
             )
           end
         end
@@ -2033,6 +2035,77 @@ if generic_import_dependencies_available
 
           expect(users.map { |user| user[:username] }).to eq(%w[Bob Bob Carol Carol])
           expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, true])
+        end
+
+        it "keeps an email available when an external ID maps an earlier row to an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@external_ids, { "existing-id" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Existing",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "existing-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Existing Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([true, nil, nil])
+        end
+
+        it "keeps an email available when an external ID duplicates an earlier source row" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "First",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                {
+                  "id" => 2,
+                  "username" => "Duplicate",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                { "id" => 3, "username" => "Bob_" },
+                { "id" => 4, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[First Duplicate Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, nil])
+        end
+
+        it "reserves usernames for users without SSO records after a user with one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Alice",
+                  "sso_record" => { external_id: "alice-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alice Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, nil, nil])
         end
 
         it "does not let a reservation displace an existing site user" do
