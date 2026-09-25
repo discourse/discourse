@@ -65,12 +65,14 @@ module Chat
     end
 
     def flag_message(message:, params:, guardian:)
-      Chat::ReviewQueue.new.flag_message(
-        message,
-        guardian,
-        params.flag_type_id,
-        **params.slice(:message, :is_warning, :take_action, :queue_for_review),
-      )
+      result =
+        Chat::ReviewQueue.new.flag_message(
+          message,
+          guardian,
+          params.flag_type_id,
+          **params.slice(:message, :is_warning, :take_action, :queue_for_review),
+        )
+      fail!(result[:errors]) unless result[:success]
     end
   end
 end

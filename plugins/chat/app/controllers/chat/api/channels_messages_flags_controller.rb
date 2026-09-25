@@ -6,6 +6,9 @@ class Chat::Api::ChannelsMessagesFlagsController < Chat::ApiController
 
     Chat::FlagMessage.call(service_params) do
       on_success { render(json: success_json) }
+      on_failed_step(:flag_message) do |step|
+        render json: failed_json.merge(errors: step.error), status: :unprocessable_entity
+      end
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_failed_policy(:can_flag_message_in_channel) { raise Discourse::NotFound }

@@ -40,6 +40,50 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
              params: params
 
         expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => "OK")
+      end
+
+      it "returns the domain error when the message has already been flagged" do
+        post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+             params: params
+
+        expect(response.status).to eq(200)
+
+        expect {
+          post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+               params: params.merge(flag_type_id: ReviewableScore.types[:spam])
+        }.not_to change(ReviewableScore, :count)
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("chat.reviewables.message_already_handled")],
+        )
+      end
+    end
+
+    context "when the notify user companion PM cannot be created" do
+      let(:params) do
+        {
+          flag_type_id: ReviewableScore.types[:notify_user],
+          message: "Please review your chat message",
+        }
+      end
+
+      before { message_1.user.user_option.update!(allow_private_messages: false) }
+
+      it "returns the PostCreator error without creating a PM or reviewable" do
+        pm_count = Topic.where(archetype: Archetype.private_message).count
+        reviewable_count = Reviewable.count
+
+        post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+             params: params
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("not_accepting_pms", username: message_1.user.username)],
+        )
+        expect(Topic.where(archetype: Archetype.private_message).count).to eq(pm_count)
+        expect(Reviewable.count).to eq(reviewable_count)
       end
     end
 

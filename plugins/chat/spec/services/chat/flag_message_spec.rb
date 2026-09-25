@@ -36,7 +36,12 @@ RSpec.describe Chat::FlagMessage do
     end
     let(:dependencies) { { guardian: } }
 
-    before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+    before do
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.chat_enabled = true
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.chat_message_flag_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    end
 
     context "when all steps pass" do
       fab!(:current_user, :admin)
@@ -54,6 +59,35 @@ RSpec.describe Chat::FlagMessage do
           payload: {
             "message_cooked" => message_1.cooked,
           },
+        )
+      end
+    end
+
+    context "when the review queue rejects the flag" do
+      before do
+        Chat::ReviewQueue.new.flag_message(message_1, guardian, ReviewableScore.types[:spam])
+      end
+
+      it "fails and retains the duplicate flag error" do
+        expect(result).to fail_a_step(:flag_message)
+        expect(result.failure?).to eq(true)
+        expect(result["result.step.flag_message"].error).to eq(
+          [I18n.t("chat.reviewables.message_already_handled")],
+        )
+      end
+    end
+
+    context "when the notify user companion PM cannot be created" do
+      let(:flag_type_id) { ReviewableScore.types[:notify_user] }
+      let(:message) { "Please review your chat message" }
+
+      before { message_1.user.user_option.update!(allow_private_messages: false) }
+
+      it "fails and retains the PostCreator error" do
+        expect(result).to fail_a_step(:flag_message)
+        expect(result.failure?).to eq(true)
+        expect(result["result.step.flag_message"].error).to eq(
+          [I18n.t("not_accepting_pms", username: message_1.user.username)],
         )
       end
     end
