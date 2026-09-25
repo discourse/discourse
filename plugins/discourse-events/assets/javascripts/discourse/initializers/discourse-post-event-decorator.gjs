@@ -198,8 +198,19 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
-    if (siteSettings.discourse_post_event_enabled) {
-      withPluginApi(initializeDiscoursePostEventDecorator);
-    }
+
+    withPluginApi((api) => {
+      api.addTrackedTopicProperties(
+        "event_starts_at",
+        "event_ends_at",
+        "event_all_day",
+        "event_timezone",
+        "event_show_local_time"
+      );
+
+      if (siteSettings.discourse_post_event_enabled) {
+        initializeDiscoursePostEventDecorator(api);
+      }
+    });
   },
 };
