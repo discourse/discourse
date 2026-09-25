@@ -43,6 +43,29 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
       end
     end
 
+    context "when the message was already flagged by the user" do
+      before do
+        Chat::FlagMessage.call(
+          guardian: current_user.guardian,
+          params: {
+            channel_id: message_1.chat_channel_id,
+            message_id: message_1.id,
+            **params,
+          },
+        )
+      end
+
+      it "returns a 422 with the error" do
+        post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+             params: params
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("chat.reviewables.message_already_handled")],
+        )
+      end
+    end
+
     context "when user can't flag message" do
       before { UserSilencer.new(current_user).silence }
 
