@@ -149,7 +149,7 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/lib/plugin-registries/cloaking";
 import { setNotificationsLimit } from "discourse/lib/plugin-registries/notifications";
-import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/lib/plugin-registries/user-search-options";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";

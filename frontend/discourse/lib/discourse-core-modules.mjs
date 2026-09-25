@@ -34,7 +34,7 @@ const EAGER_DIRECTORIES = [
 const DEFAULT_BUNDLE = "other";
 
 // Looked up by name from a route's code, so they travel with that route.
-const EXTRA_ROUTE_BUNDLES = { nested: "topic" };
+const EXTRA_ROUTE_BUNDLES = { nested: "topic", "user-topics-list": "other" };
 
 // Loaded alongside a bundle, for code that its routes use synchronously.
 const BUNDLE_PRELOADS = {

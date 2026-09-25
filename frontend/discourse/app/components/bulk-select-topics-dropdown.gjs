@@ -2,9 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import BulkTopicActions, {
-  addBulkDropdownAction,
-} from "discourse/components/modal/bulk-topic-actions";
+import { addBulkDropdownAction } from "discourse/components/modal/bulk-topic-actions";
 import DMenu from "discourse/float-kit/components/d-menu";
 import Topic from "discourse/models/topic";
 import DButton from "discourse/ui-kit/d-button";
@@ -246,20 +244,23 @@ export default class BulkSelectTopicsDropdown extends Component {
       confirmButtonTranslationKey = opts.confirmButtonTranslationKey;
     }
 
-    this.modal.show(BulkTopicActions, {
-      model: {
-        action: actionName,
-        title,
-        description,
-        confirmButtonTranslationKey,
-        bulkSelectHelper: this.args.bulkSelectHelper,
-        refreshClosure: () => this.args.afterBulkActionComplete(),
-        allowSilent,
-        initialAction,
-        initialActionLabel,
-        showFooter: opts.showFooter !== false,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/bulk-topic-actions"),
+      {
+        model: {
+          action: actionName,
+          title,
+          description,
+          confirmButtonTranslationKey,
+          bulkSelectHelper: this.args.bulkSelectHelper,
+          refreshClosure: () => this.args.afterBulkActionComplete(),
+          allowSilent,
+          initialAction,
+          initialActionLabel,
+          showFooter: opts.showFooter !== false,
+        },
+      }
+    );
   }
 
   @action

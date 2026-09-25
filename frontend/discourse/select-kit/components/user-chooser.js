@@ -13,7 +13,9 @@ import {
 } from "discourse/select-kit/components/select-kit";
 import UserRow from "./user-chooser/user-row";
 
-export const CUSTOM_USER_SEARCH_OPTIONS = [];
+import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/lib/plugin-registries/user-search-options";
+
+export { CUSTOM_USER_SEARCH_OPTIONS };
 
 @classNames("user-chooser")
 @selectKitOptions({

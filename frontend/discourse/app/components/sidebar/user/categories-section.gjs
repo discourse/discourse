@@ -9,7 +9,6 @@ import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AllCategoriesSectionLink from "../common/all-categories-section-link";
 import CommonCategoriesSection from "../common/categories-section";
-import EditNavigationMenuCategoriesModal from "../edit-navigation-menu/categories-modal";
 import Section from "../section";
 import SectionLink from "../section-link";
 
@@ -83,7 +82,10 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
 
     actions.push({
       id: "edit-categories",
-      action: () => this.modal.show(EditNavigationMenuCategoriesModal),
+      action: () =>
+        this.modal.show(
+          () => import("../edit-navigation-menu/categories-modal")
+        ),
       title: i18n(
         `sidebar.sections.categories.header_action_edit_${this.navigationMenu.displayMode}`
       ),

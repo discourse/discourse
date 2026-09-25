@@ -138,5 +138,25 @@
       "raw": 3403427,
       "chunks": 124
     }
+  },
+  {
+    "commit": "50781aa3adc",
+    "label": "Emoji picker, block validation, more modals deferred; resolver shims dropped",
+    "date": "2026-09-25T21:42:17.809Z",
+    "boot": {
+      "brotli": 647096,
+      "raw": 2560821,
+      "chunks": 103
+    },
+    "discovery": {
+      "brotli": 688927,
+      "raw": 2754384,
+      "chunks": 121
+    },
+    "topic": {
+      "brotli": 813537,
+      "raw": 3342403,
+      "chunks": 134
+    }
   }
 ]

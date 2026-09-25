@@ -8,7 +8,6 @@ import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
-import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -1009,32 +1008,35 @@ export default class ComposerService extends Service {
       ? toolbarEvent.state.wrapAttributes || ""
       : "";
 
-    this.modal.show(WrapAttributesModal, {
-      model: {
-        initialAttributes,
-        onApply: (attributesString) => {
-          if (toolbarEvent.state?.inWrap) {
-            toolbarEvent.commands?.updateWrap(attributesString);
-          } else if (toolbarEvent.commands?.insertWrap) {
-            toolbarEvent.commands.insertWrap(
-              parseAttributesString(attributesString)
-            );
-          } else {
-            const wrapTag = attributesString.trim()
-              ? `[wrap${attributesString}]`
-              : "[wrap]";
-            toolbarEvent.applySurround(
-              `${wrapTag}\n`,
-              "\n[/wrap]",
-              "wrap_text"
-            );
-          }
+    this.modal.show(
+      () => import("discourse/components/wrap-attributes-modal"),
+      {
+        model: {
+          initialAttributes,
+          onApply: (attributesString) => {
+            if (toolbarEvent.state?.inWrap) {
+              toolbarEvent.commands?.updateWrap(attributesString);
+            } else if (toolbarEvent.commands?.insertWrap) {
+              toolbarEvent.commands.insertWrap(
+                parseAttributesString(attributesString)
+              );
+            } else {
+              const wrapTag = attributesString.trim()
+                ? `[wrap${attributesString}]`
+                : "[wrap]";
+              toolbarEvent.applySurround(
+                `${wrapTag}\n`,
+                "\n[/wrap]",
+                "wrap_text"
+              );
+            }
+          },
+          onRemove: toolbarEvent.state?.inWrap
+            ? () => toolbarEvent.commands?.removeWrap()
+            : undefined,
         },
-        onRemove: toolbarEvent.state?.inWrap
-          ? () => toolbarEvent.commands?.removeWrap()
-          : undefined,
-      },
-    });
+      }
+    );
   }
 
   @action

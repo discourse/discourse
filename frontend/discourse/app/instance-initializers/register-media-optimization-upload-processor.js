@@ -1,6 +1,5 @@
 import { Promise } from "rsvp";
 import { addComposerUploadPreProcessor } from "discourse/lib/plugin-registries/composer-uploads";
-import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 
 // Devices stuck on EOL iOS versions are older hardware where WebKit's memory
 // watchdog kills (and reloads) the page during WASM image processing instead
@@ -23,22 +22,26 @@ export default {
         return;
       }
 
-      addComposerUploadPreProcessor(
-        UppyMediaOptimization,
-        ({ isMobileDevice }) => {
-          return {
-            optimizeFn: (data, opts) => {
-              if (owner.isDestroying) {
-                return Promise.resolve();
-              }
+      // The composer loads on demand too, so the plugin is registered well before it is used.
+      import("discourse/lib/uppy-media-optimization-plugin").then(
+        ({ default: UppyMediaOptimization }) =>
+          addComposerUploadPreProcessor(
+            UppyMediaOptimization,
+            ({ isMobileDevice }) => {
+              return {
+                optimizeFn: (data, opts) => {
+                  if (owner.isDestroying) {
+                    return Promise.resolve();
+                  }
 
-              return owner
-                .lookup("service:media-optimization-worker")
-                .optimizeImage(data, opts);
-            },
-            runParallel: !isMobileDevice,
-          };
-        }
+                  return owner
+                    .lookup("service:media-optimization-worker")
+                    .optimizeImage(data, opts);
+                },
+                runParallel: !isMobileDevice,
+              };
+            }
+          )
       );
     }
   },

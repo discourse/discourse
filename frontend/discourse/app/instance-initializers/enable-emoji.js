@@ -1,5 +1,3 @@
-import { registerEmoji } from "pretty-text/emoji";
-import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { withPluginApi } from "discourse/lib/core-api";
 import PreloadStore from "discourse/lib/preload-store";
 
@@ -17,8 +15,10 @@ export default {
           id: "emoji",
           group: "extras",
           icon: "far-face-smile",
-          sendAction: () => {
+          sendAction: async () => {
             const menu = api.container.lookup("service:menu");
+            const { default: EmojiPickerDetached } =
+              await import("discourse/components/emoji-picker/detached");
             menu.show(document.querySelector(".insert-composer-emoji"), {
               identifier: "emoji-picker",
               groupIdentifier: "emoji-picker",
@@ -37,8 +37,14 @@ export default {
       });
     });
 
-    (PreloadStore.get("customEmoji") || []).forEach((emoji) =>
-      registerEmoji(emoji.name, emoji.url, emoji.group)
-    );
+    const customEmoji = PreloadStore.get("customEmoji") || [];
+
+    if (customEmoji.length) {
+      import("pretty-text/emoji").then(({ registerEmoji }) =>
+        customEmoji.forEach((emoji) =>
+          registerEmoji(emoji.name, emoji.url, emoji.group)
+        )
+      );
+    }
   },
 };

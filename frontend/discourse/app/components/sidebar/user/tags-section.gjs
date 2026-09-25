@@ -3,7 +3,6 @@ import { cached } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import SidebarEditNavigationMenuTagsModal from "discourse/components/sidebar/edit-navigation-menu/tags-modal";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
@@ -87,7 +86,10 @@ export default class SidebarUserTagsSection extends Component {
 
   @action
   showModal() {
-    this.modal.show(SidebarEditNavigationMenuTagsModal);
+    this.modal.show(
+      () =>
+        import("discourse/components/sidebar/edit-navigation-menu/tags-modal")
+    );
   }
 
   <template>

@@ -43,7 +43,6 @@ import type {
   ChildBlockResult,
 } from "discourse/lib/blocks/-internals/types";
 import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
-import { validateLayout } from "discourse/lib/blocks/-internals/validation/layout";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
@@ -342,13 +341,18 @@ export function _renderBlocks(
   assignStableKeys(trackedLayout);
 
   // Validate layout asynchronously
-  const validatedLayout = validateLayout(
-    layout,
-    outletName,
-    blocksService,
-    "", // parentPath - empty so paths start with array index like [0]
-    callSiteError // Error object for source-mapped call site
-  ).then(() => trackedLayout);
+  const validatedLayout =
+    import("discourse/lib/blocks/-internals/validation/layout")
+      .then(({ validateLayout }) =>
+        validateLayout(
+          layout,
+          outletName,
+          blocksService,
+          "", // parentPath - empty so paths start with array index like [0]
+          callSiteError // Error object for source-mapped call site
+        )
+      )
+      .then(() => trackedLayout);
 
   // Store layout with validation promise for potential future use
   outletLayouts.set(outletName, { validatedLayout });
