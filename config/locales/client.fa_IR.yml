@@ -4978,6 +4978,8 @@ fa_IR:
             status: "وضعیت"
             actions: "عملیات"
           activity:
+            failed_tool_calls: "فراخوانی‌های ناموفق ابزار"
+            no_latency: "-"
             time: "زمان"
             user: "کاربر"
             duration: "مدت زمان"
@@ -7086,7 +7088,8 @@ fa_IR:
       site_text:
         description: "شما می توانید هر یک از متن های موجود در انجمن خود را سفارشی کنید."
         search_label: "جستجو"
-        theme_disabled: "غیرفعال"
+        all_themes: "تمام متن‌های وبگاه"
+        theme_disabled: "ازکاراندازی"
         filters: "فیلترها"
         title: "متن‌های سایت"
         edit: "ویرایش"

@@ -93,6 +93,21 @@ pl_PL:
                 slower: "%{duration} wolniej"
                 tooltip: "Trend średniego czasu reakcji."
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_solved: "Wymaga włączenia wtyczki Solved"
+      nodes:
+        "trigger:solution_changed": "Rozwiązanie zmienione"
+      node_descriptions:
+        "trigger:solution_changed": "Wyzwala się, gdy odpowiedź zostanie zaakceptowana jako rozwiązanie lub jej akceptacja zostanie usunięta"
+      solution_changed:
+        changes: "Zmiany"
+        changes_description: "Pozostaw puste, aby wprowadzić zmiany."
+        changes_accepted: "Zaakceptowano"
+        changes_removed: "Usunięto"
+        changes_placeholder: "Każda zmiana"
+        tag_names: "Tagi"
+        tag_names_description: "Wyzwalaj tylko dla tematów, które mają co najmniej jeden z tych tagów"
     notifications:
       alt:
         solved:

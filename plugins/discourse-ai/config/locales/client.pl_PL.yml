@@ -673,6 +673,9 @@ pl_PL:
           translate:
             label: "Przetłumacz"
             title: "Przetłumacz na wszystkie obsługiwane języki, używając wybranego języka jako języka źródłowego"
+            confirm: "Przetłumacz z %{language} na:"
+            override_existing: "Zastąp także istniejące tłumaczenia"
+            no_targets: "Nie skonfigurowano żadnych innych języków docelowych. Dodaj języki do ustawień obsługiwanych lokalizacji treści."
             queued: "Tłumaczenie w kolejce"
             failed: "Nie udało się dodać tłumaczenia do kolejki"
         translations_menu:

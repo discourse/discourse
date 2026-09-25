@@ -493,18 +493,9 @@ nl:
         use_predefined: "Sjablonen bekijken"
         back: "Terug"
         icebreakers:
-          fun_facts:
-            title: "Wat zijn leuke weetjes over jou?"
-            body: "Hoi allemaal! Ik heb veel zin om deze nieuwe community te starten. Laten we om te beginnen een leuk weetje over onszelf delen. Ik begin: ik ben dol op wandelen en nieuwe paden ontdekken! Wat is iets interessants over jou?"
-          coolest_thing_you_have_seen_today:
-            title: "Wat is het gaafste dat je vandaag hebt gezien?"
-            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een en spontaan gebaar van vriendelijkheid. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
           introduce_yourself:
             title: "Stel jezelf voor"
             body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
-          what_is_your_favorite_food:
-            title: "Wat is je favoriete eten?"
-            body: "Deel je favoriete eten met de community! Ik begin: ik hou van pizza, vooral met extra kaas en pepperoni."
     design_wizard:
       back: "Terug"
       next: "Volgende"

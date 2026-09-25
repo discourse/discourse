@@ -19,6 +19,10 @@ bg:
                 lt_1h: "< 1 час"
                 gt_24h: "> 24 часа"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Премахнато"
+        tag_names: "Етикети"
     notifications:
       alt:
         solved:

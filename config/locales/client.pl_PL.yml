@@ -628,19 +628,20 @@ pl_PL:
         predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
         use_predefined: "Przeglądaj szablony"
         back: "Wstecz"
+        category_unavailable: "Ta kategoria nie jest dostępna do publikowania."
         icebreakers:
-          fun_facts:
-            title: "Jakie są ciekawostki na Twój temat?"
-            body: "Cześć wszystkim! Cieszę się, że mogę założyć tę nową społeczność. Na początek podzielmy się ciekawostką o nas. Zacznę od siebie: uwielbiam wędrować i odkrywać nowe szlaki! Co w Tobie jest ciekawego?"
-          coolest_thing_you_have_seen_today:
-            title: "Co najfajniejszego dziś widziałeś?"
-            body: "Co najfajniejszego dziś widziałeś lub doświadczyłeś? Może to być cokolwiek, od pięknego zachodu słońca po przypadkowy akt dobroci. Zacznę: widziałem psa pomagającego starszej osobie przejść przez ulicę!"
+          plan_categories:
+            title: "Od jakich kategorii powinniśmy zacząć?"
+            body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
+          plan_invites:
+            title: "Których członków powinniśmy zaprosić przed startem?"
+            body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
           introduce_yourself:
             title: "Przedstaw się"
             body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
-          what_is_your_favorite_food:
-            title: "Jakie jest twoje ulubione jedzenie?"
-            body: "Podziel się swoim ulubionym jedzeniem ze społecznością! Zacznę: uwielbiam pizzę, szczególnie z dodatkowym serem i pepperoni."
+          write_your_own:
+            title: "Napisz swój własny"
+            body: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
       subtitle: "Wybierz kolory, czcionki i układ swojej witryny."
@@ -6874,6 +6875,7 @@ pl_PL:
         forum:
           label: Forum
       back_to_forum: "Powrót do forum"
+      back_to_admin: "Powrót do panelu administracyjnego"
       filter_links: "Filtruj linki..."
       clear_filter: "Wyczyść filtr"
       no_results:
