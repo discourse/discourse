@@ -647,7 +647,11 @@ class Category < ActiveRecord::Base
   end
 
   def trash_category_definition
-    topic&.trash!
+    return if topic.blank?
+
+    topic.first_post&.trash!
+    topic.trash!
+    Topic.reset_highest(topic.id)
   end
 
   def clear_related_site_settings
