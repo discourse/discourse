@@ -1474,6 +1474,8 @@ class BulkImport::Generic < BulkImport::Base
       update_delta_users
     end
 
+    query("SELECT * FROM users ORDER BY id") { |rows| reserve_valid_usernames(rows) }
+
     users = query(<<~SQL)
       SELECT *
       FROM users
@@ -1533,6 +1535,34 @@ class BulkImport::Generic < BulkImport::Base
 
     users.close
     finish_delta_entity(:users, :users)
+  end
+
+  # Lets each source username that is already valid claim its name before an
+  # earlier row's sanitized username can take it, so only the sanitized one
+  # receives a dedup suffix. Rows that process_user will map onto an existing
+  # user by email or external ID reserve nothing.
+  def reserve_valid_usernames(rows)
+    @reserved_usernames = {}
+    emails = Set.new
+    external_ids = Set.new
+
+    rows.each do |row|
+      next if user_id_from_imported_id(row["id"]).present? || row["anonymized"] == 1
+
+      if (email = row["email"].presence&.downcase)
+        next if @emails.key?(email) || !emails.add?(email)
+      end
+
+      external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
+      if external_id.present?
+        next if @external_ids.key?(external_id) || !external_ids.add?(external_id)
+      end
+
+      username = row["username"]
+      next if username.blank? || fix_name(username) != username
+
+      @reserved_usernames[User.normalize_username(username)] ||= row["id"].to_i
+    end
   end
 
   def update_delta_users

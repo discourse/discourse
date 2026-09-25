@@ -1884,8 +1884,8 @@ if generic_import_dependencies_available
     end
 
     describe "#process_user" do
-      def build_user_importer
-        importer = described_class.allocate
+      def build_user_importer(importer_class = described_class)
+        importer = importer_class.allocate
         importer.instance_variable_set(:@usernames_lower, Set.new)
         importer.instance_variable_set(:@last_user_id, 0)
         importer.instance_variable_set(
@@ -1936,6 +1936,113 @@ if generic_import_dependencies_available
         user = importer.process_user(imported_id: 1, username: long_name)
 
         expect(user[:username]).to eq("#{"风" * 58}_1")
+      end
+
+      describe "reserving valid usernames" do
+        def import_usernames(importer, rows)
+          importer.reserve_valid_usernames(rows)
+          rows.map do |row|
+            importer.process_user(
+              imported_id: row["id"],
+              username: row["username"],
+              email: row["email"],
+            )
+          end
+        end
+
+        it "suffixes a sanitized username instead of a later valid one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "a_a_" }, { "id" => 2, "username" => "A_A" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[a_a_1 A_A])
+        end
+
+        it "skips suffixes that later valid usernames reserve" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Alex_R_" },
+                { "id" => 2, "username" => "Alex_R" },
+                { "id" => 3, "username" => "Alex_R_1" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alex_R_2 Alex_R Alex_R_1])
+        end
+
+        it "reserves unicode usernames that are valid under the unicode setting" do
+          SiteSetting.unicode_usernames = true
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michał_1 Michał])
+        end
+
+        it "does not reserve unicode usernames that the ASCII setting transliterates" do
+          SiteSetting.unicode_usernames = false
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michal Michal_1])
+        end
+
+        it "keeps the lowest source ID for valid usernames that differ only in case" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "manuel" }, { "id" => 2, "username" => "Manuel" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[manuel Manuel_1])
+        end
+
+        it "reserves nothing for rows that map onto an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@emails, { "existing@example.com" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Bob_" },
+                { "id" => 2, "username" => "Bob", "email" => "existing@example.com" },
+                { "id" => 3, "username" => "Carol_", "email" => "shared@example.com" },
+                { "id" => 4, "username" => "Carol", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Bob Bob Carol Carol])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, true])
+        end
+
+        it "does not let a reservation displace an existing site user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_get(:@usernames_lower) << "dana"
+
+          users = import_usernames(importer, [{ "id" => 1, "username" => "Dana" }])
+
+          expect(users.first[:username]).to eq("Dana_1")
+        end
       end
     end
 

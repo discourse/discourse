@@ -1451,7 +1451,7 @@ class BulkImport::Base
     end
 
     # unique username_lower
-    if user_exist?(user[:username])
+    if username_taken?(user[:username], user[:imported_id])
       i = 0
       candidate = nil
       begin
@@ -1459,7 +1459,7 @@ class BulkImport::Base
         suffix = "_#{i}"
         candidate =
           truncate_name(user[:username], UsernameValidator::MAX_CHARS - suffix.length) + suffix
-      end while user_exist?(candidate)
+      end while username_taken?(candidate, user[:imported_id])
       user[:username] = candidate
     end
 
@@ -1494,6 +1494,14 @@ class BulkImport::Base
   def user_exist?(username)
     username_lowercase = User.normalize_username(username)
     @usernames_lower.add?(username_lowercase).nil?
+  end
+
+  # Like user_exist?, but also treats a username reserved for another source
+  # user as taken.
+  def username_taken?(username, imported_id)
+    reserved_by = @reserved_usernames&.dig(User.normalize_username(username))
+    return true if reserved_by && reserved_by != imported_id.to_i
+    user_exist?(username)
   end
 
   def process_user_email(user_email)
