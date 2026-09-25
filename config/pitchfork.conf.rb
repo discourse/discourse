@@ -3,6 +3,18 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
+oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
+
+require_relative "../lib/pitchfork_reforking"
+Pitchfork::HttpServer.prepend(PitchforkReforking::PromotionGuard)
+Pitchfork::Service.prepend(PitchforkReforking::PersistentService)
+
+if ENV.key?("APP_SERVER_REFORK_AFTER")
+  unless Pitchfork::REFORKING_AVAILABLE
+    raise "APP_SERVER_REFORK_AFTER requires Linux refork support"
+  end
+  refork_after PitchforkReforking.parse_schedule(ENV.fetch("APP_SERVER_REFORK_AFTER"))
+end
 
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
@@ -60,6 +72,12 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
+  GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
+
+  if ENV.key?("APP_SERVER_REFORK_AFTER") && !GlobalSetting.mini_racer_single_threaded
+    raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
+  end
+
   if mold.generation.zero?
     Discourse.preload_rails!
 
@@ -76,14 +94,14 @@ after_mold_fork do |server, mold|
         end
       end
     end
+  else
+    PitchforkReforking.detach_message_bus_clients
   end
 
   Discourse.redis.close
   DiscourseVips::Client.use_shared_worker
   Discourse.before_fork
 end
-
-oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
 
 after_worker_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
@@ -94,6 +112,14 @@ after_worker_fork do |server, worker|
   GC.config(rgengc_allow_full_mark: false) if oob_gc_enabled
 end
 
+before_worker_exit do |server, worker|
+  server.logger.info("#{worker.to_log} finishing deferred work before exit")
+  retiring = worker.outdated? && Thread.current == Thread.main
+  worker.update_deadline(server.timeout) if retiring
+  Scheduler::Defer.stop!(finish_work: true) { worker.update_deadline(server.timeout) if retiring }
+  ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
+end
+
 if oob_gc_enabled
   after_request_complete do |_server, _worker, _rack_env|
     GC.start if GC.latest_gc_info(:need_major_by)
@@ -101,6 +127,7 @@ if oob_gc_enabled
 end
 
 before_service_worker_ready do |server, service_worker|
+  Discourse.reset_worker_db_variables_overrides if service_worker.generation.nonzero?
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"

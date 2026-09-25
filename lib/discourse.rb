@@ -1055,7 +1055,10 @@ module Discourse
     DiscourseVips.before_fork
 
     if GlobalSetting.mini_racer_single_threaded
-      ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
+      ObjectSpace.each_object(MiniRacer::Context) do |context|
+        context.low_memory_notification
+      rescue MiniRacer::ContextDisposedError
+      end
     else
       # V8 does not support forking, make sure all contexts are disposed
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
@@ -1087,6 +1090,12 @@ module Discourse
       ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
       ActiveRecord::Base.establish_connection
     end
+  end
+
+  def self.reset_worker_db_variables_overrides
+    ActiveRecord::Base.configurations = Rails.application.config.database_configuration
+    ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+    ActiveRecord::Base.establish_connection
   end
 
   # all forking servers must call this

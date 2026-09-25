@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "weakref"
+require "monitor"
 
 module Scheduler
   module Deferrable
@@ -17,7 +18,8 @@ module Scheduler
           end,
         )
 
-      @mutex = Mutex.new
+      @mutex = Monitor.new
+      @pending_jobs = 0
       @stats_mutex = Mutex.new
       @paused = false
       @thread = nil
@@ -66,10 +68,24 @@ module Scheduler
       end
 
       if @async
-        start_thread if !@thread&.alive? && !@paused
-        @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+        @mutex.synchronize do
+          start_thread if !@thread&.alive? && !@paused
+          @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+          @pending_jobs += 1
+        end
       else
         blk.call
+      end
+    end
+
+    def with_idle
+      return false unless @mutex.try_enter
+
+      begin
+        return false if @pending_jobs > 0
+        yield
+      ensure
+        @mutex.exit
       end
     end
 
@@ -77,7 +93,11 @@ module Scheduler
       if finish_work
         @finish = true
         @queue.push({ finish: true }, force: true)
-        @thread&.join
+        if block_given?
+          yield while @thread && !@thread.join(1)
+        else
+          @thread&.join
+        end
       end
       @thread.kill if @thread&.alive?
       @thread = nil
@@ -109,6 +129,7 @@ module Scheduler
 
     def start_thread
       @mutex.synchronize do
+        @finish = false
         @reactor = MessageBus::TimerThread.new if !@reactor
         @thread =
           Thread.new do
@@ -145,17 +166,21 @@ module Scheduler
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
-      if ActiveRecord::Base.connection&.verify!
-        ActiveRecord::Base.connection_handler.clear_active_connections!
-      end
-      if start
-        @stats_mutex.synchronize do
-          stats = @stats[desc]
-          if stats
-            stats[:finished] += 1
-            stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+      begin
+        if ActiveRecord::Base.connection&.verify!
+          ActiveRecord::Base.connection_handler.clear_active_connections!
+        end
+        if start
+          @stats_mutex.synchronize do
+            stats = @stats[desc]
+            if stats
+              stats[:finished] += 1
+              stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+            end
           end
         end
+      ensure
+        @mutex.synchronize { @pending_jobs -= 1 } if job
       end
     end
   end
