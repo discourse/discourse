@@ -71,6 +71,8 @@ class PrivateMessageTopicTrackingState
         TopicTrackingState.new_filter_sql
       end
 
+    filter_sql = topics_filter_sql
+
     +<<~SQL
       SELECT
         DISTINCT topics.id AS topic_id,
@@ -93,13 +95,30 @@ class PrivateMessageTopicTrackingState
         ((#{unread}) OR (#{new})) AND
         topics.deleted_at IS NULL
         #{user.staff? ? "" : "AND topics.visible"}
+        #{filter_sql ? "AND #{filter_sql}" : ""}
     SQL
   end
+
+  # Lets plugins exclude topics from PM tracking entirely, e.g. topics the
+  # personal inbox lists no longer show, so they don't leave stray counts.
+  def self.topics_filter_sql
+    conditions =
+      DiscoursePluginRegistry.apply_modifier(:private_message_topic_tracking_state_filters, [])
+    conditions.map { |condition| "(#{condition})" }.join(" AND ").presence
+  end
+
+  def self.tracked_topic?(topic)
+    sql = topics_filter_sql
+    sql.nil? || Topic.where(id: topic.id).where(sql).exists?
+  end
+
+  private_class_method :topics_filter_sql, :tracked_topic?
 
   def self.publish_unread(post)
     topic = post.topic
     return unless topic.private_message?
     return if post.small_action?
+    return unless tracked_topic?(topic)
 
     scope = TopicUser.tracking(post.topic_id).includes(user: %i[user_stat user_option])
 
@@ -147,6 +166,7 @@ class PrivateMessageTopicTrackingState
 
   def self.publish_new(topic)
     return unless topic.private_message?
+    return unless tracked_topic?(topic)
 
     message = {
       message_type: NEW_MESSAGE_TYPE,
