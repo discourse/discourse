@@ -289,9 +289,14 @@ class Badge < ActiveRecord::Base
 
   # Only badges shipped with the site are translated. A badge created on the
   # site owns its text outright, so a name matching a translation key must not
-  # pull that translation in over it.
+  # pull that translation in over it. A record loaded without the column cannot
+  # say either way, so it keeps its own text rather than raising.
+  def translatable?
+    has_attribute?(:system) && system?
+  end
+
   def display_name
-    return name if !system?
+    return name if !translatable?
     self.class.display_name(name)
   end
 
@@ -300,7 +305,7 @@ class Badge < ActiveRecord::Base
   end
 
   def long_description
-    return self[:long_description] || "" if !system?
+    return self[:long_description] || "" if !translatable?
 
     key = "badges.#{i18n_name}.long_description"
     I18n.t(
@@ -316,7 +321,7 @@ class Badge < ActiveRecord::Base
   end
 
   def description
-    return self[:description] || "" if !system?
+    return self[:description] || "" if !translatable?
 
     key = "badges.#{i18n_name}.description"
     I18n.t(

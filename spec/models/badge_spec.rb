@@ -56,6 +56,14 @@ RSpec.describe Badge do
     I18n.reload!
   end
 
+  it "keeps its own text when loaded without the system column" do
+    Fabricate(:badge, name: "Partial Select", description: "Ours", system: false)
+    badge = Badge.select(:id, :name, :description).find_by(name: "Partial Select")
+
+    expect(badge.display_name).to eq("Partial Select")
+    expect(badge.description).to eq("Ours")
+  end
+
   it "handles changes on badge description and long description correctly for system badges" do
     badge = Badge.find_by_name("Basic User")
     badge.description = badge.description.dup
