@@ -45,6 +45,8 @@ export default class PluginsExplorerController extends Controller {
   @tracked aiGenerating = false;
   @tracked lastGeneratedPrompt = null;
   @tracked dashboardBusy = false;
+  @tracked dashboardMounted = false;
+  @tracked dashboardMountable = false;
 
   queryParams = ["params"];
   order = null;
@@ -150,15 +152,6 @@ export default class PluginsExplorerController extends Controller {
 
   get showDashboardToggle() {
     return this.siteSettings.dashboard_improvements && !this.model.destroyed;
-  }
-
-  // Read through `get` so `model.set` invalidates these getters.
-  get dashboardMounted() {
-    return this.model.get("dashboard_mounted");
-  }
-
-  get dashboardMountable() {
-    return this.model.get("dashboard_mountable");
   }
 
   get dashboardToggleLabel() {
@@ -422,7 +415,7 @@ export default class PluginsExplorerController extends Controller {
           identifier: String(this.model.id),
         },
       });
-      this.model.set("dashboard_mounted", !mounted);
+      this.dashboardMounted = !mounted;
       this.toasts.success({
         data: {
           message: i18n(
