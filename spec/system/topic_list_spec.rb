@@ -134,7 +134,8 @@ describe "Topic list" do
       topic =
         Fabricate(
           :topic,
-          title: Faker::Lorem.sentence(word_count: rand(6..12)).chomp("."),
+          title:
+            "Community discussion: #{Faker::Lorem.sentence(word_count: rand(6..12)).chomp(".")}",
           category: categories.sample,
         )
       Fabricate(:post, topic: topic)
