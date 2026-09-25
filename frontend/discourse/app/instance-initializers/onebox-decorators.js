@@ -1,4 +1,4 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/core-api";
 
 const REDDIT_EMBED_ORIGINS = [
   "https://embed.reddit.com",

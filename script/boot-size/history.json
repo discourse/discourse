@@ -98,5 +98,25 @@
       "raw": 3539201,
       "chunks": 115
     }
+  },
+  {
+    "commit": "3febb700828",
+    "label": "Core API split out of the plugin API",
+    "date": "2026-09-25T21:37:20.428Z",
+    "boot": {
+      "brotli": 668317,
+      "raw": 2747817,
+      "chunks": 87
+    },
+    "discovery": {
+      "brotli": 706334,
+      "raw": 2926685,
+      "chunks": 101
+    },
+    "topic": {
+      "brotli": 828823,
+      "raw": 3512415,
+      "chunks": 112
+    }
   }
 ]

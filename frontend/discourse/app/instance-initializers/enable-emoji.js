@@ -1,6 +1,6 @@
 import { registerEmoji } from "pretty-text/emoji";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/core-api";
 import PreloadStore from "discourse/lib/preload-store";
 
 export default {

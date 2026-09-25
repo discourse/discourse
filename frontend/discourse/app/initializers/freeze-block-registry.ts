@@ -7,7 +7,7 @@ import {
   _registerConditionType,
 } from "discourse/lib/blocks/-internals/registry/condition";
 import { _freezeOutletRegistry } from "discourse/lib/blocks/-internals/registry/outlet";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/core-api";
 
 /**
  * Narrows a value exported from `discourse/blocks/conditions` to a concrete

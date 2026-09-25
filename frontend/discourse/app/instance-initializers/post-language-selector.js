@@ -1,4 +1,4 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/core-api";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { CREATE_TOPIC, EDIT, REPLY } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";

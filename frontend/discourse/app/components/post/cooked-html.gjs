@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { STREAM_HTML_DECORATOR } from "discourse/ui-kit/d-decorated-html";
 import { getOwner } from "@ember/owner";
 import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
@@ -32,7 +33,7 @@ const POST_COOKED_DECORATORS = [
   decorateMentions,
 ];
 
-export const STREAM_HTML_DECORATOR = Symbol("stream-html-decorator");
+export { STREAM_HTML_DECORATOR };
 
 export default class PostCookedHtml extends Component {
   @service currentUser;

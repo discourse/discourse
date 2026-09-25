@@ -50,16 +50,16 @@ import {
   EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
   SKIP,
 } from "discourse/ui-kit/modifiers/d-autocomplete";
+import {
+  addToolbarCallback,
+  toolbarCallbacks,
+} from "discourse/lib/plugin-registries/editor-toolbar";
 import { i18n } from "discourse-i18n";
 
-let _createCallbacks = [];
-
-export function addToolbarCallback(func) {
-  _createCallbacks.push(func);
-}
-export function clearToolbarCallbacks() {
-  _createCallbacks = [];
-}
+export {
+  addToolbarCallback,
+  clearToolbarCallbacks,
+} from "discourse/lib/plugin-registries/editor-toolbar";
 
 export function onToolbarCreate(func) {
   deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
@@ -198,7 +198,7 @@ export default class DEditor extends Component {
     });
     this.toolbar.context = this;
 
-    _createCallbacks.forEach((cb) => cb(this.toolbar));
+    toolbarCallbacks.forEach((cb) => cb(this.toolbar));
 
     if (this.extraButtons) {
       this.extraButtons(this.toolbar);

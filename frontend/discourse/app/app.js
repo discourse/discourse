@@ -19,7 +19,6 @@ import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.1
 import { importSync } from "@embroider/macros";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   populatePreloadStore,
   readPreloadedData,
@@ -43,7 +42,6 @@ defineModules("discourse/float-kit", floatKitCompatModules);
 import selectKitCompatModules from "discourse/select-kit/compat-modules";
 
 defineModules("discourse/select-kit", selectKitCompatModules);
-
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -311,7 +309,10 @@ function loadInitializers(app) {
     app.instanceInitializer({
       name: `_discourse_plugin_${i}`,
       after: "inject-objects",
-      initialize: () => withPluginApi(callback.version, callback.code),
+      initialize: () =>
+        import("discourse/lib/plugin-api").then(({ withPluginApi }) =>
+          withPluginApi(callback.version, callback.code)
+        ),
     });
   }
 }

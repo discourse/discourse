@@ -46,7 +46,9 @@ for (const url of pages) {
   page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
   page.on("console", (message) => {
     if (message.type() === "error") {
-      errors.push(`console: ${message.text()}`);
+      errors.push(
+        `console: ${message.text().split("\n").slice(0, 3).join("\n")}`
+      );
     }
   });
 

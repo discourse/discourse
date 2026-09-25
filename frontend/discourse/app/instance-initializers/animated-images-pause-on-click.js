@@ -1,5 +1,5 @@
 import { iconHTML } from "discourse/lib/icon-library";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/core-api";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 const eventedImageElements = new WeakSet();

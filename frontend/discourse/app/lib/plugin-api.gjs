@@ -18,9 +18,8 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
-import { registeredTabs } from "discourse/components/more-topics";
+import { registeredTabs } from "discourse/lib/plugin-registries/more-topics-tabs";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { STREAM_HTML_DECORATOR } from "discourse/components/post/cooked-html";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
@@ -57,6 +56,7 @@ import {
 } from "discourse/lib/blocks/-internals/registry/block";
 import { _registerConditionType } from "discourse/lib/blocks/-internals/registry/condition";
 import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet";
+import { CoreApi } from "discourse/lib/core-api";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -156,8 +156,9 @@ import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-sho
 import {
   NON_STREAM_HTML_DECORATOR,
   registerHtmlDecorator,
+  STREAM_HTML_DECORATOR,
 } from "discourse/ui-kit/d-decorated-html";
-import { addToolbarCallback } from "discourse/ui-kit/d-editor";
+import { addToolbarCallback } from "discourse/lib/plugin-registries/editor-toolbar";
 import {
   addExtraIconRenderer,
   replaceCategoryLinkRenderer,
@@ -213,18 +214,12 @@ function wrapWithErrorHandler(func, messageKey) {
 /**
  * @typedef {_PluginApi} PluginApi
  */
-class _PluginApi {
-  #source;
-
+class _PluginApi extends CoreApi {
   constructor(container, source = CORE_SOURCE) {
-    this.container = container;
-    this.#source = source;
+    super(container, source);
   }
 
   /** The plugin, theme, or core code this api was handed to. */
-  get source() {
-    return this.#source;
-  }
 
   /**
    * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.

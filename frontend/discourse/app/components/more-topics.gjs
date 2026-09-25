@@ -5,11 +5,10 @@ import BrowseMore from "discourse/components/more-topics/browse-more";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-export let registeredTabs = [];
-
-export function clearRegisteredTabs() {
-  registeredTabs.length = 0;
-}
+export {
+  clearRegisteredTabs,
+  registeredTabs,
+} from "discourse/lib/plugin-registries/more-topics-tabs";
 
 export default class MoreTopics extends Component {
   @service moreTopicsTabs;

@@ -1,4 +1,4 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/core-api";
 
 // Browsers automatically calculate an aspect ratio based on the width/height attributes of an `<img`.
 // HOWEVER that aspect ratio only applies while the image is loading. Once loaded, it'll use the

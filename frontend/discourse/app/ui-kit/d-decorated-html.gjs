@@ -16,6 +16,7 @@ const detachedDocument = document.implementation.createHTMLDocument("detached");
 
 /** @type {Symbol} Default decorator type used when no specific type is provided */
 export const NON_STREAM_HTML_DECORATOR = Symbol("non-stream");
+export const STREAM_HTML_DECORATOR = Symbol("stream-html-decorator");
 
 /** Helper object for contexts without a post/model. Use with `applyHtmlDecorators`. */
 export const NULL_HELPER = Object.freeze({

@@ -1,6 +1,6 @@
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import EmbedMode from "discourse/lib/embed-mode";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/core-api";
 
 export default {
   after: "inject-objects",
