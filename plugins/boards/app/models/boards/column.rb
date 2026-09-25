@@ -38,7 +38,7 @@ end
 #
 #  id                  :bigint           not null, primary key
 #  color               :string
-#  default_sort        :integer          default("priority"), not null
+#  default_sort        :integer          default(0), not null
 #  icon                :string
 #  move_to_assigned    :string
 #  move_to_status      :string
