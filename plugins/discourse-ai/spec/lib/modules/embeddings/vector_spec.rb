@@ -128,12 +128,32 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
           text2 = vdef.prepare_target_text(topic_2)
 
           stub_vector_mapping(text, expected_embedding_1)
-          stub_vector_mapping(text2, expected_embedding_2, result_status: 429)
+          # A 429 would pause the provider and skip requests that haven't started yet.
+          stub_vector_mapping(text2, expected_embedding_2, result_status: 500)
 
           vector.gen_bulk_reprensentations(Topic.where(id: [topic.id, topic_2.id]))
 
           expect(topics_schema.find_by_embedding(expected_embedding_1).topic_id).to eq(topic.id)
           expect(topics_schema.find_by_target(topic_2)).to be_nil
+        end
+      end
+
+      context "when the provider rate limits the batch" do
+        it "pauses the provider and skips the remaining embeddings" do
+          stub_vector_mapping(
+            vdef.prepare_target_text(topic),
+            expected_embedding_1,
+            result_status: 429,
+          )
+          topic_2_request =
+            stub_vector_mapping(vdef.prepare_target_text(topic_2), expected_embedding_2)
+
+          stub_const(described_class, :MAX_CONCURRENT_EMBEDDINGS, 1) do
+            vector.gen_bulk_reprensentations([topic, topic_2])
+          end
+
+          expect(DiscourseAi::Embeddings::ProviderHealth).to be_paused(vdef)
+          expect(topic_2_request).not_to have_been_requested
         end
       end
     end
