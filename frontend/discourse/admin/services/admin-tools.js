@@ -2,8 +2,6 @@ import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { Promise } from "rsvp";
-import DeleteUserPostsProgressModal from "discourse/admin/components/modal/delete-user-posts-progress";
-import PenalizeUserModal from "discourse/admin/components/modal/penalize-user";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import I18n, { i18n } from "discourse-i18n";
@@ -110,25 +108,28 @@ export default class AdminToolsService extends Service {
       ? user
       : await AdminUser.find(user.get("id"));
     const originalSuccessCallback = opts.successCallback;
-    return this.modal.show(PenalizeUserModal, {
-      model: {
-        penaltyType: type,
-        postId: opts.postId,
-        postEdit: opts.postEdit,
-        reviewableId: opts.reviewableId,
-        user: loadedUser,
-        before: opts.before,
-        successCallback: async (result) => {
-          if (originalSuccessCallback) {
-            await originalSuccessCallback(result);
-          }
+    return this.modal.show(
+      () => import("discourse/admin/components/modal/penalize-user"),
+      {
+        model: {
+          penaltyType: type,
+          postId: opts.postId,
+          postEdit: opts.postEdit,
+          reviewableId: opts.reviewableId,
+          user: loadedUser,
+          before: opts.before,
+          successCallback: async (result) => {
+            if (originalSuccessCallback) {
+              await originalSuccessCallback(result);
+            }
 
-          if (result?.shouldDeleteAllPosts) {
-            return this.deletePostsDecider(loadedUser);
-          }
+            if (result?.shouldDeleteAllPosts) {
+              return this.deletePostsDecider(loadedUser);
+            }
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   showSilenceModal(user, opts) {
@@ -157,14 +158,18 @@ export default class AdminToolsService extends Service {
       return;
     }
 
-    this.modal.show(DeleteUserPostsProgressModal, {
-      model: {
-        user,
-        updateUserPostCount(count) {
-          user.set("post_count", count);
+    this.modal.show(
+      () =>
+        import("discourse/admin/components/modal/delete-user-posts-progress"),
+      {
+        model: {
+          user,
+          updateUserPostCount(count) {
+            user.set("post_count", count);
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   _deleteSpammer(adminUser) {

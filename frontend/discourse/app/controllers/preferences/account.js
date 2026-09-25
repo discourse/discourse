@@ -2,7 +2,6 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
@@ -206,7 +205,7 @@ export default class AccountController extends Controller {
 
   @action
   showUserStatusModal(status) {
-    this.modal.show(UserStatusModal, {
+    this.modal.show(() => import("discourse/components/modal/user-status"), {
       model: {
         status,
         hidePauseNotifications: true,

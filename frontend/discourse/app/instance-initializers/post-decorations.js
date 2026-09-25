@@ -1,6 +1,4 @@
 import { schedule } from "@ember/runloop";
-import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
-import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
@@ -151,13 +149,16 @@ export default {
           return;
         }
 
-        modal.show(FullscreenTableModal, {
-          model: {
-            table,
-            postId,
-            displayFootnotesInline: siteSettings.display_footnotes_inline,
-          },
-        });
+        modal.show(
+          () => import("discourse/components/modal/fullscreen-table"),
+          {
+            model: {
+              table,
+              postId,
+              displayFootnotesInline: siteSettings.display_footnotes_inline,
+            },
+          }
+        );
       }
 
       async function generateSpreadsheetModal() {
@@ -169,13 +170,16 @@ export default {
           const allTables = tokenRange(tokens, "table_open", "table_close");
           const tableTokens = allTables[tableIndex];
 
-          modal.show(SpreadsheetEditor, {
-            model: {
-              post,
-              tableIndex,
-              tableTokens,
-            },
-          });
+          modal.show(
+            () => import("discourse/components/modal/spreadsheet-editor"),
+            {
+              model: {
+                post,
+                tableIndex,
+                tableTokens,
+              },
+            }
+          );
         } catch (error) {
           popupAjaxError(error);
         }

@@ -10,7 +10,6 @@ import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import IgnoredUserListItem from "./ignored-user-list-item";
-import IgnoreDurationModal from "./modal/ignore-duration-with-username";
 
 export default class IgnoredUserList extends Component {
   @service modal;
@@ -32,7 +31,7 @@ export default class IgnoredUserList extends Component {
 
   @action
   newIgnoredUser() {
-    this.modal.show(IgnoreDurationModal, {
+    this.modal.show(() => import("./modal/ignore-duration-with-username"), {
       model: {
         actingUser: this.args.model,
         ignoredUsername: null,

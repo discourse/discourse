@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import FastEditModal from "discourse/components/modal/fast-edit";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -116,7 +115,7 @@ export default class PostTextSelection extends Component {
     }
 
     if (supportsFastEdit) {
-      this.modal.show(FastEditModal, {
+      this.modal.show(() => import("discourse/components/modal/fast-edit"), {
         model: {
           initialValue: markdown,
           post,

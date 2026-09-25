@@ -7,10 +7,6 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
-import ChangeReplyTo from "discourse/components/modal/change-reply-to";
-import DiscardDraftModal from "discourse/components/modal/discard-draft";
-import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
-import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
 import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
@@ -747,25 +743,28 @@ export default class ComposerService extends Service {
       return;
     }
 
-    this.modal.show(ChangeReplyTo, {
-      model: {
-        topic: model.topic,
-        editingPostNumber: model.post?.post_number,
-        currentPostNumber: model.reply_to_post_number,
-        onSelect: (post) => {
-          if (!post) {
-            model.setReplyTo(null, null);
-            return;
-          }
-          model.setReplyTo(post.post_number, {
-            id: post.user_id,
-            username: post.username,
-            name: post.name,
-            avatar_template: post.avatar_template,
-          });
+    this.modal.show(
+      () => import("discourse/components/modal/change-reply-to"),
+      {
+        model: {
+          topic: model.topic,
+          editingPostNumber: model.post?.post_number,
+          currentPostNumber: model.reply_to_post_number,
+          onSelect: (post) => {
+            if (!post) {
+              model.setReplyTo(null, null);
+              return;
+            }
+            model.setReplyTo(post.post_number, {
+              id: post.user_id,
+              username: post.username,
+              name: post.name,
+              avatar_template: post.avatar_template,
+            });
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   /**
@@ -993,12 +992,15 @@ export default class ComposerService extends Service {
 
   @action
   toggleSpreadsheet() {
-    this.modal.show(SpreadsheetEditor, {
-      model: {
-        toolbarEvent: this.toolbarEvent,
-        tableTokens: null,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/spreadsheet-editor"),
+      {
+        model: {
+          toolbarEvent: this.toolbarEvent,
+          tableTokens: null,
+        },
+      }
+    );
   }
 
   @action
@@ -1509,7 +1511,9 @@ export default class ComposerService extends Service {
 
   @action
   postWasEnqueued(details) {
-    this.modal.show(PostEnqueuedModal, { model: details });
+    this.modal.show(() => import("discourse/components/modal/post-enqueued"), {
+      model: details,
+    });
   }
 
   // Notify the composer messages controller that a reply has been typed. Some
@@ -1746,28 +1750,31 @@ export default class ComposerService extends Service {
 
     return new Promise((resolve) => {
       if (this.get("model.anyDirty")) {
-        this.modal.show(DiscardDraftModal, {
-          model: {
-            confirmMessageKey: this.get("model.editingPost")
-              ? "post.cancel_composer.confirm_edit"
-              : "post.cancel_composer.confirm",
-            discardButtonKey: this.get("model.editingPost")
-              ? "post.cancel_composer.discard_edit"
-              : "post.cancel_composer.discard",
-            onDestroyDraft: () => {
-              return this.destroyDraft()
-                .then(() => {
-                  this.model.clearState();
-                  this.close();
-                })
-                .finally(() => {
-                  this.appEvents.trigger("composer:cancelled");
-                  resolve(true);
-                });
+        this.modal.show(
+          () => import("discourse/components/modal/discard-draft"),
+          {
+            model: {
+              confirmMessageKey: this.get("model.editingPost")
+                ? "post.cancel_composer.confirm_edit"
+                : "post.cancel_composer.confirm",
+              discardButtonKey: this.get("model.editingPost")
+                ? "post.cancel_composer.discard_edit"
+                : "post.cancel_composer.discard",
+              onDestroyDraft: () => {
+                return this.destroyDraft()
+                  .then(() => {
+                    this.model.clearState();
+                    this.close();
+                  })
+                  .finally(() => {
+                    this.appEvents.trigger("composer:cancelled");
+                    resolve(true);
+                  });
+              },
+              onCancelDiscard: () => resolve(false),
             },
-            onCancelDiscard: () => resolve(false),
-          },
-        });
+          }
+        );
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()

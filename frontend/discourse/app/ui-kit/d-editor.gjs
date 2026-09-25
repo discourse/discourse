@@ -19,7 +19,6 @@ import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import Toolbar from "discourse/lib/composer/toolbar";
@@ -303,12 +302,15 @@ export default class DEditor extends Component {
     const hasSelection =
       !!this._lastSel && this._lastSel.start !== this._lastSel.end;
 
-    this.modal.show(UpsertHyperlink, {
-      model: {
-        hasSelection,
-        toolbarEvent,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/upsert-hyperlink"),
+      {
+        model: {
+          hasSelection,
+          toolbarEvent,
+        },
+      }
+    );
   }
 
   @action

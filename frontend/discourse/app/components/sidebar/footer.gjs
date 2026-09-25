@@ -2,8 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
-import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
-import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DButton from "discourse/ui-kit/d-button";
@@ -21,12 +19,16 @@ export default class SidebarFooter extends Component {
 
   @action
   manageSections() {
-    this.modal.show(SidebarSectionForm);
+    this.modal.show(
+      () => import("discourse/components/modal/sidebar-section-form")
+    );
   }
 
   @action
   showKeyboardShortcuts() {
-    this.modal.show(KeyboardShortcutsHelp);
+    this.modal.show(
+      () => import("discourse/components/modal/keyboard-shortcuts-help")
+    );
   }
 
   <template>

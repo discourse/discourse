@@ -2,7 +2,6 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import ChangeThemeSourceModal from "discourse/admin/components/modal/change-theme-source";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -416,14 +415,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
 
   @action
   changeSource() {
-    this.modal.show(ChangeThemeSourceModal, {
-      model: {
-        theme: this.model,
-        onSuccess: () => {
-          this.send("routeRefreshModel");
+    this.modal.show(
+      () => import("discourse/admin/components/modal/change-theme-source"),
+      {
+        model: {
+          theme: this.model,
+          onSuccess: () => {
+            this.send("routeRefreshModel");
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   @action

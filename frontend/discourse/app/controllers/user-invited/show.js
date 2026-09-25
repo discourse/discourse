@@ -5,7 +5,6 @@ import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
-import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { debounce } from "discourse/lib/decorators";
@@ -114,7 +113,9 @@ export default class UserInvitedShowController extends Controller {
 
   @action
   createInviteCsv() {
-    this.modal.show(CreateInviteBulk);
+    this.modal.show(
+      () => import("discourse/components/modal/create-invite-bulk")
+    );
   }
 
   @action

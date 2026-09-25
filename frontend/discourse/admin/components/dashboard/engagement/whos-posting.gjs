@@ -6,7 +6,6 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import CompareGroups from "discourse/admin/components/modal/compare-groups";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
@@ -131,19 +130,22 @@ export default class WhosPosting extends Component {
 
   @action
   openCompareGroups() {
-    this.modal.show(CompareGroups, {
-      model: {
-        currentTokens: this.selectedGroups,
-        footerNote: i18n(
-          "admin.dashboard.sections.engagement.whos_posting.modal.footer_note"
-        ),
-        onApply: (tokens) => {
-          this.selectedGroups = tokens;
-          this.refetch();
-          this.#persist();
+    this.modal.show(
+      () => import("discourse/admin/components/modal/compare-groups"),
+      {
+        model: {
+          currentTokens: this.selectedGroups,
+          footerNote: i18n(
+            "admin.dashboard.sections.engagement.whos_posting.modal.footer_note"
+          ),
+          onApply: (tokens) => {
+            this.selectedGroups = tokens;
+            this.refetch();
+            this.#persist();
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   @action

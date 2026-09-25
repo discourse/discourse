@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ShareTopicModal from "discourse/components/modal/share-topic";
 import { relativeAge } from "discourse/lib/formatter";
 import { and } from "discourse/truth-helpers";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
@@ -29,7 +28,7 @@ export default class PostMetaDataDate extends Component {
     const post = this.args.post;
     const topic = post.topic;
 
-    this.modal.show(ShareTopicModal, {
+    this.modal.show(() => import("discourse/components/modal/share-topic"), {
       model: { category: topic.category, topic, post },
     });
   }

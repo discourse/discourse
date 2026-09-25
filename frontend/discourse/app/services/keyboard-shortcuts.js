@@ -2,7 +2,6 @@ import { getOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
-import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import { ajax } from "discourse/lib/ajax";
 import domUtils from "discourse/lib/dom-utils";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -614,7 +613,9 @@ export default class KeyboardShortcutLib extends Service {
 
   showHelpModal(event) {
     event.preventDefault();
-    this.modal.show(KeyboardShortcutsHelp);
+    this.modal.show(
+      () => import("discourse/components/modal/keyboard-shortcuts-help")
+    );
   }
 
   setTrackingToMuted() {

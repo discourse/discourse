@@ -10,7 +10,6 @@ import {
   MORE_FONTS,
 } from "discourse/admin/lib/constants";
 import Form from "discourse/components/form";
-import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
@@ -65,12 +64,15 @@ export default class AdminFontsForm extends Component {
 
     const count = result.user_count;
     if (count > 0) {
-      await this.modal.show(UpdateDefaultTextSize, {
-        model: {
-          setUpdateExistingUsers: this.setUpdateExistingUsers,
-          count,
-        },
-      });
+      await this.modal.show(
+        () => import("discourse/components/modal/update-default-text-size"),
+        {
+          model: {
+            setUpdateExistingUsers: this.setUpdateExistingUsers,
+            count,
+          },
+        }
+      );
       await this.#save(data);
     } else {
       await this.#save(data);

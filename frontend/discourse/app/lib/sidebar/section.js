@@ -1,7 +1,6 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -102,13 +101,16 @@ export default class Section {
       });
     }
 
-    return this.modal.show(SidebarSectionForm, {
-      model: {
-        focusLinkIndex,
-        hideSectionHeader: this.hideSectionHeader,
-        section,
-      },
-    });
+    return this.modal.show(
+      () => import("discourse/components/modal/sidebar-section-form"),
+      {
+        model: {
+          focusLinkIndex,
+          hideSectionHeader: this.hideSectionHeader,
+          section,
+        },
+      }
+    );
   }
 
   @bind

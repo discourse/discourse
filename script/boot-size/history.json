@@ -78,5 +78,25 @@
       "raw": 3853786,
       "chunks": 60
     }
+  },
+  {
+    "commit": "165b6641eac",
+    "label": "Modals load on first use; non-Ember loader shims dropped",
+    "date": "2026-09-25T21:33:47.285Z",
+    "boot": {
+      "brotli": 691904,
+      "raw": 2844307,
+      "chunks": 97
+    },
+    "discovery": {
+      "brotli": 727741,
+      "raw": 3016596,
+      "chunks": 109
+    },
+    "topic": {
+      "brotli": 833837,
+      "raw": 3539201,
+      "chunks": 115
+    }
   }
 ]

@@ -1,4 +1,3 @@
-import GifsModal from "discourse/components/modal/gifs";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
@@ -22,7 +21,7 @@ export default {
           title: "gifs.composer_title",
           sendAction: () => {
             const modal = api.container.lookup("service:modal");
-            modal.show(GifsModal);
+            modal.show(() => import("discourse/components/modal/gifs"));
           },
         });
       });

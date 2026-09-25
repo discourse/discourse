@@ -3,7 +3,6 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import ReseedModal from "discourse/admin/components/modal/reseed";
 import discourseDebounce from "discourse/lib/debounce";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { i18n } from "discourse-i18n";
@@ -208,7 +207,7 @@ export default class AdminSiteTextIndexController extends Controller {
 
   @action
   showReseedModal() {
-    this.modal.show(ReseedModal);
+    this.modal.show(() => import("discourse/admin/components/modal/reseed"));
   }
 
   async _performSearch() {

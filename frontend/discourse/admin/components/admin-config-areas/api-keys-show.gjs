@@ -7,7 +7,6 @@ import { action, get } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminFormRow from "discourse/admin/components/admin-form-row";
-import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import BackButton from "discourse/components/back-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -53,9 +52,12 @@ export default class AdminConfigAreasApiKeysShow extends Component {
 
   @action
   async showURLs(urls) {
-    await this.modal.show(ApiKeyUrlsModal, {
-      model: { urls },
-    });
+    await this.modal.show(
+      () => import("discourse/admin/components/modal/api-key-urls"),
+      {
+        model: { urls },
+      }
+    );
   }
 
   @action

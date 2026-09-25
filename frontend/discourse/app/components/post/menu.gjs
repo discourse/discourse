@@ -7,7 +7,6 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import AdminPostMenu from "discourse/components/admin-post-menu";
-import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserTip from "discourse/components/user-tip";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -519,7 +518,9 @@ export default class PostMenu extends Component {
 
   @action
   showDeleteTopicModal() {
-    this.modal.show(DeleteTopicDisallowedModal);
+    this.modal.show(
+      () => import("discourse/components/modal/delete-topic-disallowed")
+    );
   }
 
   @action

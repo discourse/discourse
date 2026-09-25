@@ -1,6 +1,5 @@
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
-import StartBackupModal from "discourse/admin/components/modal/start-backup";
 import Backup from "discourse/admin/models/backup";
 import BackupStatus from "discourse/admin/models/backup-status";
 import { ajax } from "discourse/lib/ajax";
@@ -80,9 +79,12 @@ export default class AdminBackupsRoute extends DiscourseRoute {
 
   @action
   showStartBackupModal() {
-    this.modal.show(StartBackupModal, {
-      model: { startBackup: this.startBackup },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/start-backup"),
+      {
+        model: { startBackup: this.startBackup },
+      }
+    );
   }
 
   @action

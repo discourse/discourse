@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import EditBadgeGroupingsModal from "discourse/admin/components/modal/edit-badge-groupings";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -17,14 +16,17 @@ export default class AdminBadges extends Component {
 
   @action
   editGroupings() {
-    this.modal.show(EditBadgeGroupingsModal, {
-      model: {
-        badgeGroupings: this.adminBadges.badgeGroupings,
-        updateGroupings: (groupings) => {
-          this.adminBadges.badgeGroupings = groupings;
+    this.modal.show(
+      () => import("discourse/admin/components/modal/edit-badge-groupings"),
+      {
+        model: {
+          badgeGroupings: this.adminBadges.badgeGroupings,
+          updateGroupings: (groupings) => {
+            this.adminBadges.badgeGroupings = groupings;
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   <template>

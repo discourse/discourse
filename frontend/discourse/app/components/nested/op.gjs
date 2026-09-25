@@ -3,7 +3,6 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -76,7 +75,7 @@ export default class NestedOp extends Component {
         url: getAbsoluteURL(this.nestedShareUrl),
       });
     } catch {
-      this.modal.show(ShareTopicModal, {
+      this.modal.show(() => import("discourse/components/modal/share-topic"), {
         model: { category: topic.category, topic, post },
       });
     }

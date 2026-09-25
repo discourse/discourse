@@ -1,5 +1,4 @@
 import { service } from "@ember/service";
-import ShareTargetModal from "discourse/components/modal/share-target";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
 
@@ -25,7 +24,10 @@ export default class extends DiscourseRoute {
       // now would be lost. Wait for the first rendered page instead;
       // `page:changed` fires after a route has rendered.
       this.appEvents.one("page:changed", () => {
-        this.modal.show(ShareTargetModal, { model: shared });
+        this.modal.show(
+          () => import("discourse/components/modal/share-target"),
+          { model: shared }
+        );
       });
     }
 

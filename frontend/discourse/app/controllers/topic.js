@@ -15,12 +15,6 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import BookmarkModal from "discourse/components/modal/bookmark";
-import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
-import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
-import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
-import JumpToPost from "discourse/components/modal/jump-to-post";
-import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -1049,15 +1043,20 @@ export default class TopicController extends Controller {
       ? i18n("post.controls.permanently_delete_topic_confirmation")
       : i18n("post.controls.permanently_delete_post_confirmation");
 
-    return this.modal.show(PermanentlyDeleteConfirmModal, {
-      model: {
-        message,
-        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
-        didConfirm: () => {
-          this.send("deletePost", post, { force_destroy: true });
+    return this.modal.show(
+      () => import("discourse/components/modal/permanently-delete-confirm"),
+      {
+        model: {
+          message,
+          confirmPhrase: i18n(
+            "post.controls.permanently_delete_confirm_phrase"
+          ),
+          didConfirm: () => {
+            this.send("deletePost", post, { force_destroy: true });
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   @action
@@ -1144,7 +1143,7 @@ export default class TopicController extends Controller {
 
   @action
   jumpToPostPrompt() {
-    this.modal.show(JumpToPost, {
+    this.modal.show(() => import("discourse/components/modal/jump-to-post"), {
       model: {
         topic: this.model,
         jumpToIndex: (index) => this.send("jumpToIndex", index),
@@ -1288,7 +1287,10 @@ export default class TopicController extends Controller {
 
   @action
   async changeNotice(post) {
-    await this.modal.show(ChangePostNoticeModal, { model: { post } });
+    await this.modal.show(
+      () => import("discourse/components/modal/change-post-notice"),
+      { model: { post } }
+    );
   }
 
   @action
@@ -1507,9 +1509,12 @@ export default class TopicController extends Controller {
 
   @action
   convertToPublicTopic() {
-    this.modal.show(ConvertToPublicTopicModal, {
-      model: { topic: this.model },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/convert-to-public-topic"),
+      {
+        model: { topic: this.model },
+      }
+    );
   }
 
   @action
@@ -1588,7 +1593,10 @@ export default class TopicController extends Controller {
   }
 
   deleteTopicModal() {
-    this.modal.show(DeleteTopicConfirmModal, { model: { topic: this.model } });
+    this.modal.show(
+      () => import("discourse/components/modal/delete-topic-confirm"),
+      { model: { topic: this.model } }
+    );
   }
 
   retryOnRateLimit(times, promise, topicId) {
@@ -2178,7 +2186,7 @@ export default class TopicController extends Controller {
   }
 
   _modifyTopicBookmark(bookmark) {
-    this.modal.show(BookmarkModal, {
+    this.modal.show(() => import("discourse/components/modal/bookmark"), {
       model: {
         bookmark: new BookmarkFormData(bookmark),
         afterSave: (bookmarkFormData) => {
@@ -2200,7 +2208,7 @@ export default class TopicController extends Controller {
   }
 
   _modifyPostBookmark(bookmark, post) {
-    this.modal.show(BookmarkModal, {
+    this.modal.show(() => import("discourse/components/modal/bookmark"), {
       model: {
         bookmark: new BookmarkFormData(bookmark),
         afterSave: (savedData) => {

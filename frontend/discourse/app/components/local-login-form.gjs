@@ -8,7 +8,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import ForgotPassword from "discourse/components/modal/forgot-password";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecurityKeyForm from "discourse/components/security-key-form";
 import valueEntered from "discourse/helpers/value-entered";
@@ -157,11 +156,14 @@ export default class LocalLoginForm extends Component {
       filledLoginName = null;
     }
 
-    this.modal.show(ForgotPassword, {
-      model: {
-        emailOrUsername: filledLoginName,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/forgot-password"),
+      {
+        model: {
+          emailOrUsername: filledLoginName,
+        },
+      }
+    );
   }
 
   @action

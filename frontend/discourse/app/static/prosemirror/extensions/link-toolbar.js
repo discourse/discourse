@@ -1,7 +1,6 @@
 import { trackedObject } from "@ember/reactive/collections";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
-import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import { updatePosition } from "discourse/float-kit/lib/update-position";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
@@ -215,17 +214,20 @@ class LinkToolbarPluginView {
       )
     );
 
-    this.#getContext().modal.show(UpsertHyperlink, {
-      model: {
-        editing: true,
-        linkText: currentLinkText,
-        linkUrl: this.#linkState.href,
-        toolbarEvent: {
-          addText: (text) => this.#replaceText(text),
-          selected: { value: this.#linkState.href },
+    this.#getContext().modal.show(
+      () => import("discourse/components/modal/upsert-hyperlink"),
+      {
+        model: {
+          editing: true,
+          linkText: currentLinkText,
+          linkUrl: this.#linkState.href,
+          toolbarEvent: {
+            addText: (text) => this.#replaceText(text),
+            selected: { value: this.#linkState.href },
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   #replaceText(text) {

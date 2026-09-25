@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ForgotPassword from "discourse/components/modal/forgot-password";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -99,13 +98,16 @@ export default class ConfirmSession extends Component {
 
       if (result.email_code) {
         this.dialog.cancel();
-        this.modal.show(ForgotPassword, {
-          model: {
-            codeSent: true,
-            emailOrUsername:
-              this.currentUser.email || this.currentUser.username,
-          },
-        });
+        this.modal.show(
+          () => import("discourse/components/modal/forgot-password"),
+          {
+            model: {
+              codeSent: true,
+              emailOrUsername:
+                this.currentUser.email || this.currentUser.username,
+            },
+          }
+        );
         return;
       }
 

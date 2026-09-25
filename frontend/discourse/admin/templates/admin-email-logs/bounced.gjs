@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
-import IncomingEmailModal from "discourse/admin/components/modal/incoming-email";
 import IncomingEmail from "discourse/admin/models/incoming-email";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -44,7 +43,10 @@ export default class AdminEmailLogsBounced extends Component {
   @action
   async showIncomingEmail(id) {
     const model = await this.loadFromBounced(id);
-    this.modal.show(IncomingEmailModal, { model });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/incoming-email"),
+      { model }
+    );
   }
 
   @bind

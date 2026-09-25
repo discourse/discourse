@@ -7,7 +7,6 @@ import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
-import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -282,11 +281,14 @@ export default class ReviewableItem extends Component {
 
   @action
   clientScrub() {
-    this.modal.show(ScrubRejectedUserModal, {
-      model: {
-        confirmScrub: this.scrubRejectedUser,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/scrub-rejected-user"),
+      {
+        model: {
+          confirmScrub: this.scrubRejectedUser,
+        },
+      }
+    );
   }
 
   @bind

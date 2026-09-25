@@ -7,7 +7,6 @@ import AddCategoryTagClasses from "discourse/components/add-category-tag-classes
 import CategoryLogo from "discourse/components/category-logo";
 import DNavigation from "discourse/components/d-navigation";
 import AccessibleDiscoveryHeading from "discourse/components/discovery/accessible-discovery-heading";
-import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
@@ -95,7 +94,9 @@ export default class DiscoveryNavigation extends Component {
 
   @action
   reorderCategories() {
-    this.modal.show(ReorderCategories);
+    this.modal.show(
+      () => import("discourse/components/modal/reorder-categories")
+    );
   }
 
   <template>

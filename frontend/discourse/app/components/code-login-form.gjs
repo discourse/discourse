@@ -7,7 +7,6 @@ import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
-import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecurityKeyForm from "discourse/components/security-key-form";
@@ -710,16 +709,19 @@ export default class CodeLoginForm extends Component {
 
   @action
   changeAvatar() {
-    this.modal.show(AvatarSelectorModal, {
-      model: {
-        deferSave: true,
-        avatarTemplate: this.avatarTemplate,
-        canUploadAvatar: this.canUploadAvatar,
-        trustLevel: this._signupTrustLevel,
-        selection: this.pendingAvatar,
-        onSelect: this.selectPendingAvatar,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/avatar-selector"),
+      {
+        model: {
+          deferSave: true,
+          avatarTemplate: this.avatarTemplate,
+          canUploadAvatar: this.canUploadAvatar,
+          trustLevel: this._signupTrustLevel,
+          selection: this.pendingAvatar,
+          onSelect: this.selectPendingAvatar,
+        },
+      }
+    );
   }
 
   @action

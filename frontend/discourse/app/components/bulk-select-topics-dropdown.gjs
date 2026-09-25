@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
-import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DMenu from "discourse/float-kit/components/d-menu";
 import Topic from "discourse/models/topic";
 import DButton from "discourse/ui-kit/d-button";
@@ -269,13 +268,16 @@ export default class BulkSelectTopicsDropdown extends Component {
 
     switch (actionId) {
       case "dismiss-unread":
-        this.modal.show(DismissReadModal, {
-          model: {
-            title: "topics.bulk.dismiss_read_with_selected",
-            count: this.args.bulkSelectHelper.selected.length,
-            dismissRead: (dismissTopics) => this.dismissRead(dismissTopics),
-          },
-        });
+        this.modal.show(
+          () => import("discourse/components/modal/dismiss-read"),
+          {
+            model: {
+              title: "topics.bulk.dismiss_read_with_selected",
+              count: this.args.bulkSelectHelper.selected.length,
+              dismissRead: (dismissTopics) => this.dismissRead(dismissTopics),
+            },
+          }
+        );
         break;
       case "dismiss-new":
         this.args.bulkSelectHelper.onResetNew?.();

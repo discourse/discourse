@@ -6,7 +6,6 @@ import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import RequestGroupMembershipForm from "./modal/request-group-membership-form";
 
 @tagName("")
 export default class GroupMembershipButton extends Component {
@@ -89,7 +88,7 @@ export default class GroupMembershipButton extends Component {
       return this.showLogin();
     }
 
-    this.modal.show(RequestGroupMembershipForm, {
+    this.modal.show(() => import("./modal/request-group-membership-form"), {
       model: {
         group: this.model,
       },

@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import BlockOutlet from "discourse/blocks/block-outlet";
-import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
@@ -144,9 +143,12 @@ export default class SidebarUserSections extends Component {
     // No focused link: the link arrived filled in, and the title is the one
     // field the new section still needs, so the form's default focus lands
     // there.
-    this.modal.show(SidebarSectionForm, {
-      model: { link },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/sidebar-section-form"),
+      {
+        model: { link },
+      }
+    );
   }
 
   /**
@@ -160,16 +162,19 @@ export default class SidebarUserSections extends Component {
       return;
     }
 
-    const result = await this.modal.show(SidebarSectionForm, {
-      model: {
-        link: {
-          icon: dragData.icon || "link",
-          name: dragData.name,
-          value: dragData.value,
-          segment: "primary",
+    const result = await this.modal.show(
+      () => import("discourse/components/modal/sidebar-section-form"),
+      {
+        model: {
+          link: {
+            icon: dragData.icon || "link",
+            name: dragData.name,
+            value: dragData.value,
+            segment: "primary",
+          },
         },
-      },
-    });
+      }
+    );
 
     if (result?.createdSection) {
       await this.#removeLinkFromOrigin(dragData);

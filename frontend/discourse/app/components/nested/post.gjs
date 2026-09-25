@@ -7,7 +7,6 @@ import { getOwner } from "@ember/owner";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import ShareTopicModal from "discourse/components/modal/share-topic";
 import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
@@ -517,7 +516,7 @@ export default class NestedPost extends Component {
       });
     } catch {
       const topic = this.args.topic;
-      this.modal.show(ShareTopicModal, {
+      this.modal.show(() => import("discourse/components/modal/share-topic"), {
         model: { category: topic.category, topic, post },
       });
     }

@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ColorSchemeSelectBaseModal from "discourse/admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "discourse/admin/lib/color-scheme-manager";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { currentThemeId } from "discourse/lib/theme-selector";
@@ -207,12 +206,15 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
       return true;
     });
 
-    this.modal.show(ColorSchemeSelectBaseModal, {
-      model: {
-        colorSchemes: deduplicatedColorPalettes,
-        newColorSchemeWithBase: this.newColorSchemeWithBase,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/color-scheme-select-base"),
+      {
+        model: {
+          colorSchemes: deduplicatedColorPalettes,
+          newColorSchemeWithBase: this.newColorSchemeWithBase,
+        },
+      }
+    );
   }
 
   @action

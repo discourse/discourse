@@ -1,7 +1,6 @@
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import UserMenuNotificationsListEmptyState from "discourse/components/user-menu/notifications-list-empty-state";
 import { ajax } from "discourse/lib/ajax";
@@ -222,12 +221,16 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   dismissWarningModal() {
-    this.modal.show(DismissNotificationConfirmationModal, {
-      model: {
-        confirmationMessage: this.dismissConfirmationText,
-        dismissNotifications: () => this.performDismiss(),
-      },
-    });
+    this.modal.show(
+      () =>
+        import("discourse/components/modal/dismiss-notification-confirmation"),
+      {
+        model: {
+          confirmationMessage: this.dismissConfirmationText,
+          dismissNotifications: () => this.performDismiss(),
+        },
+      }
+    );
   }
 
   @action

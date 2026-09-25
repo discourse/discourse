@@ -8,7 +8,6 @@ import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
-import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActivityCell from "discourse/components/topic-list/item/activity-cell";
 import TopicStatus from "discourse/components/topic-status";
@@ -101,7 +100,7 @@ export default class BookmarkList extends Component {
 
   @action
   editBookmark(bookmark) {
-    this.modal.show(BookmarkModal, {
+    this.modal.show(() => import("discourse/components/modal/bookmark"), {
       model: {
         bookmark: new BookmarkFormData(bookmark),
         afterSave: (savedData) => {

@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import InstallThemeModal from "discourse/admin/components/modal/install-theme";
 import ThemesGrid from "discourse/admin/components/themes-grid";
 import { THEMES } from "discourse/admin/models/theme";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -26,24 +25,30 @@ export default class AdminConfigAreasThemes extends Component {
 
     if (isPresent(this.args.repoName) && isPresent(this.args.repoUrl)) {
       next(() => {
-        this.modal.show(InstallThemeModal, {
-          model: {
-            uploadUrl: this.args.repoUrl,
-            uploadName: this.args.repoName,
-            selection: "directRepoInstall",
-            clearParams: this.clearParams,
-            ...this.installThemeOptions(),
-          },
-        });
+        this.modal.show(
+          () => import("discourse/admin/components/modal/install-theme"),
+          {
+            model: {
+              uploadUrl: this.args.repoUrl,
+              uploadName: this.args.repoName,
+              selection: "directRepoInstall",
+              clearParams: this.clearParams,
+              ...this.installThemeOptions(),
+            },
+          }
+        );
       });
     }
   }
 
   @action
   installModal() {
-    this.modal.show(InstallThemeModal, {
-      model: { ...this.installThemeOptions() },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/install-theme"),
+      {
+        model: { ...this.installThemeOptions() },
+      }
+    );
   }
 
   // TODO (martin) These install methods may not belong here and they

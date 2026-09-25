@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -550,9 +549,12 @@ export default class NestedController extends Controller {
 
   @action
   showActivityLog() {
-    this.modal.show(NestedActivityLog, {
-      model: { topic: this.topic, editPost: this.editPost },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/nested-activity-log"),
+      {
+        model: { topic: this.topic, editPost: this.editPost },
+      }
+    );
   }
 
   // editingTopic is @tracked locally because the topic controller's

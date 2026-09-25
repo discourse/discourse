@@ -3,11 +3,6 @@ import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
-import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
-import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
-import SecondFactorBackupEdit from "discourse/components/modal/second-factor-backup-edit";
-import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
-import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -80,14 +75,17 @@ export default class SecondFactorController extends Controller {
 
   async createToTpModal() {
     try {
-      await this.modal.show(SecondFactorAddTotp, {
-        model: {
-          secondFactor: this.model,
-          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
-          markDirty: () => this.markDirty(),
-          onError: (e) => this.handleError(e),
-        },
-      });
+      await this.modal.show(
+        () => import("discourse/components/modal/second-factor-add-totp"),
+        {
+          model: {
+            secondFactor: this.model,
+            enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
+            markDirty: () => this.markDirty(),
+            onError: (e) => this.handleError(e),
+          },
+        }
+      );
       this.loadSecondFactors();
     } catch (error) {
       popupAjaxError(error);
@@ -96,14 +94,18 @@ export default class SecondFactorController extends Controller {
 
   async createSecurityKeyModal() {
     try {
-      await this.modal.show(SecondFactorAddSecurityKey, {
-        model: {
-          secondFactor: this.model,
-          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
-          markDirty: this.markDirty,
-          onError: this.handleError,
-        },
-      });
+      await this.modal.show(
+        () =>
+          import("discourse/components/modal/second-factor-add-security-key"),
+        {
+          model: {
+            secondFactor: this.model,
+            enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
+            markDirty: this.markDirty,
+            onError: this.handleError,
+          },
+        }
+      );
       this.loadSecondFactors();
     } catch (error) {
       popupAjaxError(error);
@@ -344,40 +346,50 @@ export default class SecondFactorController extends Controller {
 
   @action
   async editSecurityKey(security_key) {
-    await this.modal.show(SecondFactorEditSecurityKey, {
-      model: {
-        securityKey: security_key,
-        user: this.model,
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      },
-    });
+    await this.modal.show(
+      () =>
+        import("discourse/components/modal/second-factor-edit-security-key"),
+      {
+        model: {
+          securityKey: security_key,
+          user: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
+      }
+    );
     this.loadSecondFactors();
   }
 
   @action
   async editSecondFactor(second_factor) {
-    await this.modal.show(SecondFactorEdit, {
-      model: {
-        secondFactor: second_factor,
-        user: this.model,
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      },
-    });
+    await this.modal.show(
+      () => import("discourse/components/modal/second-factor-edit"),
+      {
+        model: {
+          secondFactor: second_factor,
+          user: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
+      }
+    );
     this.loadSecondFactors();
   }
 
   @action
   async editSecondFactorBackup() {
-    await this.modal.show(SecondFactorBackupEdit, {
-      model: {
-        secondFactor: this.model,
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-        setBackupEnabled: (e) => this.setBackupEnabled(e),
-        setCodesRemaining: (e) => this.setCodesRemaining(e),
-      },
-    });
+    await this.modal.show(
+      () => import("discourse/components/modal/second-factor-backup-edit"),
+      {
+        model: {
+          secondFactor: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+          setBackupEnabled: (e) => this.setBackupEnabled(e),
+          setCodesRemaining: (e) => this.setCodesRemaining(e),
+        },
+      }
+    );
   }
 }

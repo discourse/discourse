@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import FormTemplateValidationOptionsModal from "discourse/admin/components/modal/form-template-validation-options";
 import { templateFormFields } from "discourse/admin/lib/template-form-fields";
 import FormTemplate from "discourse/admin/models/form-template";
 import AceEditor from "discourse/components/ace-editor";
@@ -129,7 +128,10 @@ export default class FormTemplateForm extends Component {
 
   @action
   showValidationOptionsModal() {
-    return this.modal.show(FormTemplateValidationOptionsModal);
+    return this.modal.show(
+      () =>
+        import("discourse/admin/components/modal/form-template-validation-options")
+    );
   }
 
   @action

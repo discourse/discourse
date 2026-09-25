@@ -4,7 +4,6 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
-import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_VISIBILITY_LEVELS } from "discourse/lib/constants";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
@@ -92,7 +91,7 @@ export default class GroupManageSaveButton extends Component {
   @action
   async editGroupNotifications(count) {
     const updateExistingUsers = await this.modal.show(
-      GroupDefaultNotificationsModal,
+      () => import("discourse/components/modal/group-default-notifications"),
       { model: { count } }
     );
     this.save(updateExistingUsers);

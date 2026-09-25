@@ -1,6 +1,5 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import CompareGroups from "discourse/admin/components/modal/compare-groups";
 import FilterComponent from "discourse/admin/components/report-filters/filter";
 import DButton from "discourse/ui-kit/d-button";
 
@@ -9,12 +8,16 @@ export default class Groups extends FilterComponent {
 
   @action
   openCompareGroups() {
-    this.modal.show(CompareGroups, {
-      model: {
-        currentTokens: this.filter?.default ?? [],
-        onApply: (tokens) => this.applyFilter(this.filter.id, tokens.join(",")),
-      },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/compare-groups"),
+      {
+        model: {
+          currentTokens: this.filter?.default ?? [],
+          onApply: (tokens) =>
+            this.applyFilter(this.filter.id, tokens.join(",")),
+        },
+      }
+    );
   }
 
   <template>

@@ -1,6 +1,5 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
 import UserBadge from "discourse/models/user-badge";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { i18n } from "discourse-i18n";
@@ -40,8 +39,11 @@ export default class PreferencesAccount extends RestrictedUserRoute {
 
   @action
   showAvatarSelector(user) {
-    this.modal.show(AvatarSelectorModal, {
-      model: { user },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/avatar-selector"),
+      {
+        model: { user },
+      }
+    );
   }
 }

@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import PostTranslationsModal from "discourse/components/modal/post-translations";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -39,7 +38,10 @@ export default class PostMenuAddTranslationButton extends Component {
   @action
   async viewTranslations() {
     await this.dMenu.close();
-    this.modal.show(PostTranslationsModal, { model: { post: this.args.post } });
+    this.modal.show(
+      () => import("discourse/components/modal/post-translations"),
+      { model: { post: this.args.post } }
+    );
   }
 
   @action

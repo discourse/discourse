@@ -4,7 +4,6 @@ import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import WatchedWordTestingModal from "discourse/admin/components/modal/watched-word-testing";
 import { ajax } from "discourse/lib/ajax";
 import downloadBlob from "discourse/lib/download-blob";
 import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
@@ -139,9 +138,12 @@ export default class AdminWatchedWordsActionController extends Controller {
   @action
   async test() {
     await this.adminWatchedWords.updateAllWords();
-    this.modal.show(WatchedWordTestingModal, {
-      model: { watchedWord: this.currentAction },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/watched-word-testing"),
+      {
+        model: { watchedWord: this.currentAction },
+      }
+    );
   }
 
   @action

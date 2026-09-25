@@ -8,7 +8,6 @@ import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
-import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostA11yHeading from "discourse/components/post/a11y-heading";
 import PostActionsSummary from "discourse/components/post/actions-summary";
@@ -270,7 +269,7 @@ export default class Post extends Component {
     } catch {
       // if a native share dialog is not available, fallback to our share modal
       const topic = post.topic;
-      this.modal.show(ShareTopicModal, {
+      this.modal.show(() => import("discourse/components/modal/share-topic"), {
         model: { category: topic.category, topic, post },
       });
     }

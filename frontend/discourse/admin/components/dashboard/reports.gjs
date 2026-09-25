@@ -9,7 +9,6 @@ import Modifier from "ember-modifier";
 import DashboardReportEmptyState from "discourse/admin/components/dashboard/report-empty-state";
 import DashboardReportErrorState from "discourse/admin/components/dashboard/report-error-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
-import ManageReports from "discourse/admin/components/modal/manage-reports";
 import CoreReportCard from "discourse/admin/components/dashboard/report-cards/core-report";
 import { lookupAdminDashboardReportRenderer as lookupRegisteredRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { loadDashboardReports } from "discourse/admin/lib/dashboard-reports-loader";
@@ -260,9 +259,12 @@ export default class DashboardReports extends Component {
 
   @action
   openReportsConfig() {
-    this.modal.show(ManageReports, {
-      model: { onApplied: this.onLayoutChanged },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/manage-reports"),
+      {
+        model: { onApplied: this.onLayoutChanged },
+      }
+    );
   }
 
   freeFollowRect(

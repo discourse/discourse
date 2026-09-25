@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ContentLanguagePreferencesModal from "discourse/components/modal/content-language-preferences";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class TopicContentLanguagePreferences extends Component {
@@ -9,7 +8,9 @@ export default class TopicContentLanguagePreferences extends Component {
 
   @action
   openPreferences() {
-    this.modal.show(ContentLanguagePreferencesModal);
+    this.modal.show(
+      () => import("discourse/components/modal/content-language-preferences")
+    );
   }
 
   <template>

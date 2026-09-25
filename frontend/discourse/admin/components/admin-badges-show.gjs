@@ -6,7 +6,6 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminBadgesList from "discourse/admin/components/admin-badges-list";
-import BadgePreviewModal from "discourse/admin/components/modal/badge-preview";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -150,7 +149,10 @@ export default class AdminBadgesShow extends Component {
         },
       });
 
-      this.modal.show(BadgePreviewModal, { model: { badge: model } });
+      this.modal.show(
+        () => import("discourse/admin/components/modal/badge-preview"),
+        { model: { badge: model } }
+      );
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

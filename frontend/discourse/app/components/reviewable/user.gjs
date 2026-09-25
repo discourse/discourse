@@ -4,7 +4,6 @@ import { concat } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import ReviewableField from "discourse/components/reviewable-field";
 import rawDate from "discourse/helpers/raw-date";
 import { ajax } from "discourse/lib/ajax";
@@ -51,11 +50,14 @@ export default class ReviewableUser extends Component {
 
   @action
   showScrubRejectedUserModal() {
-    this.modal.show(ScrubRejectedUserModal, {
-      model: {
-        confirmScrub: this.scrubRejectedUser,
-      },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/scrub-rejected-user"),
+      {
+        model: {
+          confirmScrub: this.scrubRejectedUser,
+        },
+      }
+    );
   }
 
   @bind

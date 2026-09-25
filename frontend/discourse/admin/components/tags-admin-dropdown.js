@@ -1,7 +1,6 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
-import TagUpload from "discourse/admin/components/modal/tag-upload";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
@@ -24,7 +23,10 @@ export default class TagsAdminDropdown extends DropdownSelectBoxComponent {
 
   actionsMapping = {
     manageGroups: () => this.router.transitionTo("tagGroups"),
-    uploadTags: () => this.modal.show(TagUpload),
+    uploadTags: () =>
+      this.modal.show(
+        () => import("discourse/admin/components/modal/tag-upload")
+      ),
     deleteUnusedTags: () => this.send("deleteUnused"),
   };
 

@@ -7,7 +7,6 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import InstallComponentModal from "discourse/admin/components/modal/install-theme";
 import { COMPONENTS } from "discourse/admin/models/theme";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -100,9 +99,12 @@ export default class AdminConfigAreasComponents extends Component {
 
   @action
   installModal() {
-    this.modal.show(InstallComponentModal, {
-      model: { ...this.installOptions() },
-    });
+    this.modal.show(
+      () => import("discourse/admin/components/modal/install-theme"),
+      {
+        model: { ...this.installOptions() },
+      }
+    );
   }
 
   // TODO (martin) These install methods may not belong here and they

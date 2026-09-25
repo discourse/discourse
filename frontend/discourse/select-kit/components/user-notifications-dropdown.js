@@ -1,7 +1,6 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
-import IgnoreDurationModal from "discourse/components/modal/ignore-duration-with-username";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
@@ -62,13 +61,16 @@ export default class UserNotificationsDropdown extends DropdownSelectBox {
   }
 
   changeToIgnored() {
-    this.modal.show(IgnoreDurationModal, {
-      model: {
-        ignoredUsername: this.user.username,
-        enableSelection: false,
-        onUserIgnored: (username) => this.onUserIgnored?.(username),
-      },
-    });
+    this.modal.show(
+      () => import("discourse/components/modal/ignore-duration-with-username"),
+      {
+        model: {
+          ignoredUsername: this.user.username,
+          enableSelection: false,
+          onUserIgnored: (username) => this.onUserIgnored?.(username),
+        },
+      }
+    );
   }
 
   @action

@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import BookmarkModal from "discourse/components/modal/bookmark";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -246,17 +245,20 @@ export default class BookmarkMenu extends Component {
     await this.dMenu.close();
 
     try {
-      const closeData = await this.modal.show(BookmarkModal, {
-        model: {
-          bookmark: this.existingBookmark,
-          afterSave: (savedData) => {
-            return this.bookmarkManager.afterSave(savedData);
+      const closeData = await this.modal.show(
+        () => import("discourse/components/modal/bookmark"),
+        {
+          model: {
+            bookmark: this.existingBookmark,
+            afterSave: (savedData) => {
+              return this.bookmarkManager.afterSave(savedData);
+            },
+            afterDelete: (response, bookmarkId) => {
+              this.bookmarkManager.afterDelete(response, bookmarkId);
+            },
           },
-          afterDelete: (response, bookmarkId) => {
-            this.bookmarkManager.afterDelete(response, bookmarkId);
-          },
-        },
-      });
+        }
+      );
       this.bookmarkManager.afterModalClose(closeData);
     } catch (error) {
       popupAjaxError(error);

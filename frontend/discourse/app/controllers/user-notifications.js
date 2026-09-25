@@ -5,7 +5,6 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
-import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -89,17 +88,21 @@ export default class UserNotificationsController extends Controller {
   @action
   async resetNew() {
     if (this.currentUser.unread_high_priority_notifications > 0) {
-      this.modal.show(DismissNotificationConfirmationModal, {
-        model: {
-          confirmationMessage: i18n(
-            "notifications.dismiss_confirmation.body.default",
-            {
-              count: this.currentUser.unread_high_priority_notifications,
-            }
-          ),
-          dismissNotifications: () => this.markRead(),
-        },
-      });
+      this.modal.show(
+        () =>
+          import("discourse/components/modal/dismiss-notification-confirmation"),
+        {
+          model: {
+            confirmationMessage: i18n(
+              "notifications.dismiss_confirmation.body.default",
+              {
+                count: this.currentUser.unread_high_priority_notifications,
+              }
+            ),
+            dismissNotifications: () => this.markRead(),
+          },
+        }
+      );
     } else {
       this.markRead();
     }

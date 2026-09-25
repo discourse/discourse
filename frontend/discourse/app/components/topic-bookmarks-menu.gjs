@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import BookmarkMenu from "discourse/components/bookmark-menu";
-import BookmarkModal from "discourse/components/modal/bookmark";
 import TopicBookmarkPostSubmenu from "discourse/components/topic-bookmark-post-submenu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -190,24 +189,27 @@ export default class TopicBookmarksMenu extends Component {
     const bookmark = this.topicBookmark;
     const formData = new BookmarkFormData(bookmark);
     try {
-      await this.modal.show(BookmarkModal, {
-        model: {
-          bookmark: formData,
-          afterSave: (savedData) => {
-            this.#syncBookmark(savedData.saveData);
-            this.topic.set("bookmarked", true);
-            this.topic.incrementProperty("bookmarksWereChanged");
-            this.topic.appEvents?.trigger(
-              "bookmarks:changed",
-              savedData.saveData,
-              { target: "topic", targetId: bookmark.bookmarkable_id }
-            );
+      await this.modal.show(
+        () => import("discourse/components/modal/bookmark"),
+        {
+          model: {
+            bookmark: formData,
+            afterSave: (savedData) => {
+              this.#syncBookmark(savedData.saveData);
+              this.topic.set("bookmarked", true);
+              this.topic.incrementProperty("bookmarksWereChanged");
+              this.topic.appEvents?.trigger(
+                "bookmarks:changed",
+                savedData.saveData,
+                { target: "topic", targetId: bookmark.bookmarkable_id }
+              );
+            },
+            afterDelete: (response, bookmarkId) => {
+              this.topic.removeBookmark(bookmarkId);
+            },
           },
-          afterDelete: (response, bookmarkId) => {
-            this.topic.removeBookmark(bookmarkId);
-          },
-        },
-      });
+        }
+      );
     } catch (error) {
       popupAjaxError(error);
     }
@@ -219,26 +221,29 @@ export default class TopicBookmarksMenu extends Component {
 
     const formData = new BookmarkFormData(bookmark);
     try {
-      await this.modal.show(BookmarkModal, {
-        model: {
-          bookmark: formData,
-          afterSave: (savedData) => {
-            this.#syncBookmark(savedData.saveData);
-            this.topic.set("bookmarked", true);
-            this.topic.incrementProperty("bookmarksWereChanged");
+      await this.modal.show(
+        () => import("discourse/components/modal/bookmark"),
+        {
+          model: {
+            bookmark: formData,
+            afterSave: (savedData) => {
+              this.#syncBookmark(savedData.saveData);
+              this.topic.set("bookmarked", true);
+              this.topic.incrementProperty("bookmarksWereChanged");
 
-            const post = this.topic.postStream?.findLoadedPost(
-              bookmark.bookmarkable_id
-            );
-            if (post) {
-              post.createBookmark(savedData.saveData);
-            }
+              const post = this.topic.postStream?.findLoadedPost(
+                bookmark.bookmarkable_id
+              );
+              if (post) {
+                post.createBookmark(savedData.saveData);
+              }
+            },
+            afterDelete: (response, bookmarkId) => {
+              this.#removeBookmark(bookmark, bookmarkId, response);
+            },
           },
-          afterDelete: (response, bookmarkId) => {
-            this.#removeBookmark(bookmark, bookmarkId, response);
-          },
-        },
-      });
+        }
+      );
     } catch (error) {
       popupAjaxError(error);
     }

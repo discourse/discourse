@@ -4,7 +4,6 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
 import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -225,7 +224,9 @@ export default class LoginPageController extends Controller {
 
   @action
   showNotActivated(props) {
-    this.modal.show(NotActivatedModal, { model: props });
+    this.modal.show(() => import("discourse/components/modal/not-activated"), {
+      model: props,
+    });
   }
 
   @action

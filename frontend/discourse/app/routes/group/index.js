@@ -1,6 +1,5 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import GroupAddMembersModal from "discourse/components/modal/group-add-members";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -29,7 +28,10 @@ export default class GroupIndex extends DiscourseRoute {
 
   @action
   showAddMembersModal() {
-    this.modal.show(GroupAddMembersModal, { model: this.modelFor("group") });
+    this.modal.show(
+      () => import("discourse/components/modal/group-add-members"),
+      { model: this.modelFor("group") }
+    );
   }
 
   @action

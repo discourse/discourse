@@ -3,7 +3,6 @@ import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import { API_KEY_SCOPE_MODES } from "discourse/admin/lib/constants";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
@@ -145,9 +144,12 @@ export default class AdminConfigAreasApiKeysNew extends Component {
 
   @action
   async showURLs(urls) {
-    await this.modal.show(ApiKeyUrlsModal, {
-      model: { urls },
-    });
+    await this.modal.show(
+      () => import("discourse/admin/components/modal/api-key-urls"),
+      {
+        model: { urls },
+      }
+    );
   }
 
   @action

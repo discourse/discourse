@@ -2,8 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
-import UserStatusModal from "discourse/components/modal/user-status";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
@@ -85,7 +83,9 @@ export default class UserMenuProfileTabContent extends Component {
     } else {
       this.saving = false;
       this.args.closeUserMenu();
-      this.modal.show(DoNotDisturbModal);
+      this.modal.show(
+        () => import("discourse/components/modal/do-not-disturb")
+      );
     }
   }
 
@@ -99,7 +99,7 @@ export default class UserMenuProfileTabContent extends Component {
   setUserStatusClick() {
     this.args.closeUserMenu();
 
-    this.modal.show(UserStatusModal, {
+    this.modal.show(() => import("discourse/components/modal/user-status"), {
       model: {
         status: this.currentUser.status,
         pauseNotifications: this.currentUser.isInDoNotDisturb(),

@@ -1,4 +1,3 @@
-import ShareTopicModal from "discourse/components/modal/share-topic";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 const SHARE_PRIORITY = 1000;
@@ -20,16 +19,18 @@ export default {
       },
       title: "topic.share.help",
       action() {
-        owner.lookup("service:modal").show(ShareTopicModal, {
-          model: {
-            category: this.topic.category,
-            topic: this.topic,
-            allowInvites:
-              this.currentUser.can_invite_to_forum &&
-              this.canInviteTo &&
-              !this.inviteDisabled,
-          },
-        });
+        owner
+          .lookup("service:modal")
+          .show(() => import("discourse/components/modal/share-topic"), {
+            model: {
+              category: this.topic.category,
+              topic: this.topic,
+              allowInvites:
+                this.currentUser.can_invite_to_forum &&
+                this.canInviteTo &&
+                !this.inviteDisabled,
+            },
+          });
       },
       classNames: ["share-and-invite"],
       dependentKeys: [

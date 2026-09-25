@@ -2,7 +2,6 @@ import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { compare, isEmpty } from "@ember/utils";
-import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -106,12 +105,15 @@ export default class ProfileController extends Controller {
 
   @action
   async showFeaturedTopicModal() {
-    await this.modal.show(FeatureTopicOnProfileModal, {
-      model: {
-        user: this.model,
-        setFeaturedTopic: (v) => this.set("model.featured_topic", v),
-      },
-    });
+    await this.modal.show(
+      () => import("discourse/components/modal/feature-topic-on-profile"),
+      {
+        model: {
+          user: this.model,
+          setFeaturedTopic: (v) => this.set("model.featured_topic", v),
+        },
+      }
+    );
     document.querySelector(".feature-topic-on-profile-btn")?.focus();
   }
 

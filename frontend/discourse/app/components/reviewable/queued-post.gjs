@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import RawEmailModal from "discourse/components/modal/raw-email";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
@@ -24,7 +23,7 @@ export default class ReviewableQueuedPost extends Component {
   @action
   showRawEmail(event) {
     event?.preventDefault();
-    this.modal.show(RawEmailModal, {
+    this.modal.show(() => import("discourse/components/modal/raw-email"), {
       model: {
         rawEmail: this.args.reviewable.payload.raw_email,
       },

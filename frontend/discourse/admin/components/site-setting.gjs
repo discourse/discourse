@@ -51,7 +51,6 @@ import SiteSetting, {
 } from "discourse/admin/models/site-setting";
 import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 import Form from "discourse/components/form";
-import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -374,16 +373,19 @@ export default class SiteSettingComponent extends Component {
     if (setting.json_schema) {
       return {
         action: () => {
-          this.modal.show(JsonSchemaEditorModal, {
-            model: {
-              updateValue: (value) => {
-                this.buffered.set("value", value);
+          this.modal.show(
+            () => import("discourse/components/modal/json-schema-editor"),
+            {
+              model: {
+                updateValue: (value) => {
+                  this.buffered.set("value", value);
+                },
+                value: this.buffered.get("value"),
+                settingName: setting.setting,
+                jsonSchema: setting.json_schema,
               },
-              value: this.buffered.get("value"),
-              settingName: setting.setting,
-              jsonSchema: setting.json_schema,
-            },
-          });
+            }
+          );
         },
         label: "admin.site_settings.json_schema.edit",
         icon: "pencil",

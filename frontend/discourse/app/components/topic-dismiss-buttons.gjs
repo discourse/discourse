@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -101,7 +100,7 @@ export default class TopicDismissButtons extends Component {
 
   @action
   dismissReadPosts() {
-    this.modal.show(DismissReadModal, {
+    this.modal.show(() => import("discourse/components/modal/dismiss-read"), {
       model: {
         title: this.args.selectedTopics.length
           ? "topics.bulk.dismiss_read_with_selected"

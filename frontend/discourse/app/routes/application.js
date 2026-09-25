@@ -1,7 +1,6 @@
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -195,7 +194,9 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   showNotActivated(props) {
-    this.modal.show(NotActivatedModal, { model: props });
+    this.modal.show(() => import("discourse/components/modal/not-activated"), {
+      model: props,
+    });
   }
 
   @action
