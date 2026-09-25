@@ -78,7 +78,7 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
       expect(markdown).to include("> _Poll ([view on site](#{post_url}))_")
     end
 
-    it "renders event details and formatted descriptions with a link to the post" do
+    it "renders event details and formatted descriptions without repeating the post link" do
       html = <<~HTML
         <p>Before</p>
         <div class="discourse-post-event" data-name="Community [meetup]"
@@ -98,14 +98,12 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
 
         > **Community \\[meetup\\]**
         >
-        > **Starts:** October 15, 2026 at 6:00 PM (America/Toronto)
-        > **Ends:** October 15, 2026 at 8:00 PM (America/Toronto)
+        > **Starts:** October 15, 2026, 6:00pm (America/Toronto)
+        > **Ends:** October 15, 2026, 8:00pm (America/Toronto)
         > **Location:** Hall & garden
         > **Link:** <https://example.com/meetup>
         >
         > Join us for **project updates** and a [Q&A](#{Discourse.base_url}/faq).
-        >
-        > [View event and RSVP](#{post_url})
 
         After
       MARKDOWN
@@ -137,7 +135,7 @@ RSpec.describe MarkdownEndpoint::CookedProcessor do
 
       expect(described_class.to_markdown(html)).to include(
         "> **Starts:** not-a-date (UTC)",
-        "> **Starts:** October 15, 2026 at 6:00 PM (UTC)",
+        "> **Starts:** October 15, 2026, 6:00pm (UTC)",
       )
     end
 

@@ -4,7 +4,7 @@ module MarkdownEndpoint
   class CookedProcessor
     BLOCK_TAG = "discourse-markdown-block"
     INLINE_TAG = "discourse-markdown-inline"
-    VERSION = 5
+    VERSION = 6
 
     class PreservedBlockConverter < ReverseMarkdown::Converters::Base
       def convert(node, _state = {})
@@ -220,9 +220,6 @@ module MarkdownEndpoint
           sections << fields.join("\n") if fields.present?
           body = convert_html(event.inner_html)
           sections << body if body.present?
-          if @post_url.present?
-            sections << "[#{I18n.t("markdown_endpoints.event.view")}](#{absolute_url(@post_url)})"
-          end
           content = sections.join("\n\n").lines.map { |line| "> #{line.chomp}".rstrip }.join("\n")
           event.replace(preserved_block(content))
         end
@@ -230,7 +227,7 @@ module MarkdownEndpoint
 
     def event_date(value, event)
       all_day = event["data-all-day"] == "true"
-      format = I18n.t("markdown_endpoints.event.#{all_day ? "date_format" : "datetime_format"}")
+      format = all_day ? :date_only : :long
       formatted =
         begin
           I18n.l(DateTime.parse(value), format:)

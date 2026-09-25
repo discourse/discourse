@@ -17,9 +17,6 @@ en:
       end: "Ends"
       location: "Location"
       link: "Link"
-      view: "View event and RSVP"
-      date_format: "%B %-d, %Y"
-      datetime_format: "%B %-d, %Y at %-I:%M %p"
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
