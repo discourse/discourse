@@ -102,7 +102,8 @@ export function buildConfig({ devMode } = {}) {
       chunkFileNames: "assets/js/[name]-[hash].digested.js", // See also: discourseChunkNamesPlugin
       entryFileNames: "assets/js/[name]-[hash].digested.js",
       codeSplitting: {
-        groups: coreChunkGroups(["discovery", "topic", "wizard", "other"]),
+        includeDependenciesRecursively: false,
+        groups: coreChunkGroups(),
       },
     },
     watch: {

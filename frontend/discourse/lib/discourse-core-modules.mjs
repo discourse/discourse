@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import {
@@ -135,7 +136,7 @@ function renderModuleMap(name, records, appDir) {
 }
 
 // Filled in at the end of the build, once the module graph is complete.
-const chunkGroups = { boot: new Set(), shared: new Set(), byBundle: new Map() };
+const chunkGroups = { nameById: new Map() };
 
 export default function discourseCoreModules({ appDir, routeMap, tables }) {
   appDir = path.resolve(appDir);
@@ -217,9 +218,10 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
       buildPlan((source) => this.parse(source));
     },
 
-    // Everything the entrypoint reaches statically is one chunk, and each route
-    // bundle's own closure is one chunk. Modules shared by several route bundles
-    // go in a chunk of their own, so no route page loads another route's code.
+    // Everything the entrypoint reaches statically is one chunk. Beyond that,
+    // each route bundle and each dynamically imported module owns the modules
+    // only it reaches; modules reached by several owners share one chunk, so
+    // no page loads another route's code.
     buildEnd() {
       const closure = (start) => {
         const seen = new Set();
@@ -230,35 +232,69 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
             continue;
           }
           seen.add(id);
-          const info = this.getModuleInfo(id);
-          for (const dep of info?.importedIds ?? []) {
+          for (const dep of this.getModuleInfo(id)?.importedIds ?? []) {
             stack.push(dep);
           }
         }
         return seen;
       };
 
-      const entry = [...this.getModuleIds()].find(
+      const ids = [...this.getModuleIds()];
+      const entry = ids.find(
         (id) => this.getModuleInfo(id)?.isEntry && id.endsWith("/discourse.js")
       );
-      chunkGroups.boot = closure(entry);
+      const boot = closure(entry);
 
-      const count = new Map();
-      chunkGroups.byBundle = new Map();
-      for (const bundle of plan.bundles) {
-        const ids = [`${RESOLVED_ROUTE_PREFIX}${bundle.bundleName}`];
-        const own = new Set();
-        for (const id of ids.flatMap((start) => [...closure(start)])) {
-          if (!chunkGroups.boot.has(id)) {
-            own.add(id);
-            count.set(id, (count.get(id) ?? 0) + 1);
+      const owners = new Map();
+      const claim = (owner, start) => {
+        for (const id of closure(start)) {
+          if (!boot.has(id)) {
+            (owners.get(id) ?? owners.set(id, new Set()).get(id)).add(owner);
           }
         }
-        chunkGroups.byBundle.set(bundle.bundleName, own);
+      };
+
+      for (const bundle of plan.bundles) {
+        claim(
+          `route-${bundle.bundleName}`,
+          `${RESOLVED_ROUTE_PREFIX}${bundle.bundleName}`
+        );
       }
-      chunkGroups.shared = new Set(
-        [...count].filter(([, n]) => n > 1).map(([id]) => id)
-      );
+
+      for (const id of ids) {
+        if (
+          !boot.has(id) &&
+          !id.startsWith(RESOLVED_ROUTE_PREFIX) &&
+          this.getModuleInfo(id)?.dynamicImporters.length
+        ) {
+          claim(`on-demand-${path.basename(id).replace(/\.[^.]+$/, "")}`, id);
+        }
+      }
+
+      chunkGroups.nameById = new Map();
+      for (const id of boot) {
+        chunkGroups.nameById.set(id, "discourse-boot");
+      }
+      for (const [id, set] of owners) {
+        const routes = [...set].filter((owner) => owner.startsWith("route-"));
+        const onDemand = set.size - routes.length;
+        let name;
+
+        if (routes.length > 1) {
+          name = "route-shared";
+        } else if (set.size === 1) {
+          name = [...set][0];
+        } else {
+          // One chunk per combination of owners, so a page loads only what it
+          // reaches and an on-demand import never drags a whole route along.
+          name = `shared-${createHash("md5")
+            .update([...set].sort().join("+"))
+            .digest("hex")
+            .slice(0, 8)}`;
+        }
+
+        chunkGroups.nameById.set(id, name);
+      }
     },
 
     resolveId: {
@@ -369,22 +405,6 @@ export function routeBundlesFor(bundle, tables) {
     }));
 }
 
-export function coreChunkGroups(bundleNames) {
-  return [
-    {
-      name: "discourse-boot",
-      priority: 30,
-      test: (id) => chunkGroups.boot.has(id),
-    },
-    {
-      name: "route-shared",
-      priority: 20,
-      test: (id) => chunkGroups.shared.has(id),
-    },
-    ...bundleNames.map((bundleName) => ({
-      name: `route-${bundleName}`,
-      priority: 10,
-      test: (id) => chunkGroups.byBundle.get(bundleName)?.has(id) ?? false,
-    })),
-  ];
+export function coreChunkGroups() {
+  return [{ name: (id) => chunkGroups.nameById.get(id) ?? null }];
 }

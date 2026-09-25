@@ -67,7 +67,9 @@ export default function discourseChunkNamesPlugin() {
           // one shared chunk of hundreds of unrelated modules ends up named
           // after whichever happened to come first.
           if (!chunk.facadeModuleId) {
-            const grouped = /^(discourse-boot|route-)/.test(chunk.name ?? "");
+            const grouped = /^(discourse-boot|route-|on-demand-|shared-)/.test(
+              chunk.name ?? ""
+            );
             return original.replaceAll(
               "[name]",
               grouped ? chunk.name : "chunk"

@@ -178,5 +178,25 @@
       "raw": 3292229,
       "chunks": 6
     }
+  },
+  {
+    "commit": "1551ed86287",
+    "label": "On-demand code chunked by owner",
+    "date": "2026-09-25T21:51:41.625Z",
+    "boot": {
+      "brotli": 560544,
+      "raw": 2510519,
+      "chunks": 2
+    },
+    "discovery": {
+      "brotli": 606725,
+      "raw": 2732150,
+      "chunks": 7
+    },
+    "topic": {
+      "brotli": 725979,
+      "raw": 3298790,
+      "chunks": 23
+    }
   }
 ]
