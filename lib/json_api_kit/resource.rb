@@ -2,6 +2,8 @@
 
 module JsonApiKit
   class Resource
+    UnreadableAttribute = Class.new(StandardError)
+
     include Naming
     include Sorting
     include Filtering

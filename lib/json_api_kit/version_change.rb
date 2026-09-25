@@ -78,8 +78,12 @@ module JsonApiKit
 
     def current_names(name) = transformations.current_names(current_type(name))
 
-    def current_attributes(attributes)
-      transformations.current_values(attributes.transform_keys { current_type(it) })
+    def affects?(name)
+      type_renames.affects?(Name::Type.new(value: name.type)) || transformations.affects?(name)
+    end
+
+    def current_attributes(attributes, existing: ExistingValues::None)
+      transformations.current_values(attributes.transform_keys { current_type(it) }, existing:)
     rescue Converter::Failure => failure
       raise failure.convert_names { previous_type(it) }
     end

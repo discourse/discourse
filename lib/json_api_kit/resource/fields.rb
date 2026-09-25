@@ -62,6 +62,18 @@ module JsonApiKit
       end
 
       delegate :attribute_names, :relationships, :fields, :resolves?, to: :class
+
+      def attribute_value(name, record:)
+        unless name.type == type && attribute_names.include?(name.value)
+          raise KeyError, "#{name} is not an attribute of #{type}."
+        end
+        fields([name.value], guardian:)
+          .attributes
+          .values_for(record)
+          .fetch(name) do
+            raise UnreadableAttribute, "The existing value of #{name} is not readable."
+          end
+      end
     end
   end
 end
