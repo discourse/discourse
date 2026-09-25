@@ -1474,7 +1474,9 @@ class BulkImport::Generic < BulkImport::Base
       update_delta_users
     end
 
-    query("SELECT * FROM users ORDER BY id") { |rows| reserve_valid_usernames(rows) }
+    query("SELECT id, username, email, sso_record, anonymized FROM users ORDER BY id") do |rows|
+      reserve_valid_usernames(rows)
+    end
 
     users = query(<<~SQL)
       SELECT *
@@ -1550,13 +1552,16 @@ class BulkImport::Generic < BulkImport::Base
       next if user_id_from_imported_id(row["id"]).present? || row["anonymized"] == 1
 
       if (email = row["email"].presence&.downcase)
-        next if @emails.key?(email) || !emails.add?(email)
+        next if @emails.key?(email) || emails.include?(email)
       end
 
       external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
       if external_id.present?
-        next if @external_ids.key?(external_id) || !external_ids.add?(external_id)
+        next if @external_ids.key?(external_id) || external_ids.include?(external_id)
       end
+
+      emails.add(email) if email
+      external_ids.add(external_id) if external_id.present?
 
       username = row["username"]
       next if username.blank? || fix_name(username) != username
