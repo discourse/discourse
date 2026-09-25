@@ -7,6 +7,7 @@ import bundleAnalyzerPlugin, {
 } from "./lib/bundle-analyzer-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseCoreModules, {
+  coreChunkGroups,
   routeBundlesFor,
 } from "./lib/discourse-core-modules.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
@@ -100,6 +101,9 @@ export function buildConfig({ devMode } = {}) {
       assetFileNames: "assets/js/[name]-[hash].digested[extname]",
       chunkFileNames: "assets/js/[name]-[hash].digested.js", // See also: discourseChunkNamesPlugin
       entryFileNames: "assets/js/[name]-[hash].digested.js",
+      codeSplitting: {
+        groups: coreChunkGroups(["discovery", "topic", "wizard", "other"]),
+      },
     },
     watch: {
       clearScreen: false,

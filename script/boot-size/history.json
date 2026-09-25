@@ -158,5 +158,25 @@
       "raw": 3342403,
       "chunks": 134
     }
+  },
+  {
+    "commit": "e787bc70d4a",
+    "label": "Boot and route closures as single chunks",
+    "date": "2026-09-25T21:44:35.020Z",
+    "boot": {
+      "brotli": 560580,
+      "raw": 2509449,
+      "chunks": 2
+    },
+    "discovery": {
+      "brotli": 605116,
+      "raw": 2730211,
+      "chunks": 4
+    },
+    "topic": {
+      "brotli": 716772,
+      "raw": 3292229,
+      "chunks": 6
+    }
   }
 ]

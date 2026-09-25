@@ -134,6 +134,9 @@ function renderModuleMap(name, records, appDir) {
   ];
 }
 
+// Filled in at the end of the build, once the module graph is complete.
+const chunkGroups = { boot: new Set(), shared: new Set(), byBundle: new Map() };
+
 export default function discourseCoreModules({ appDir, routeMap, tables }) {
   appDir = path.resolve(appDir);
   let plan;
@@ -214,6 +217,50 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
       buildPlan((source) => this.parse(source));
     },
 
+    // Everything the entrypoint reaches statically is one chunk, and each route
+    // bundle's own closure is one chunk. Modules shared by several route bundles
+    // go in a chunk of their own, so no route page loads another route's code.
+    buildEnd() {
+      const closure = (start) => {
+        const seen = new Set();
+        const stack = [start];
+        while (stack.length) {
+          const id = stack.pop();
+          if (seen.has(id)) {
+            continue;
+          }
+          seen.add(id);
+          const info = this.getModuleInfo(id);
+          for (const dep of info?.importedIds ?? []) {
+            stack.push(dep);
+          }
+        }
+        return seen;
+      };
+
+      const entry = [...this.getModuleIds()].find(
+        (id) => this.getModuleInfo(id)?.isEntry && id.endsWith("/discourse.js")
+      );
+      chunkGroups.boot = closure(entry);
+
+      const count = new Map();
+      chunkGroups.byBundle = new Map();
+      for (const bundle of plan.bundles) {
+        const ids = [`${RESOLVED_ROUTE_PREFIX}${bundle.bundleName}`];
+        const own = new Set();
+        for (const id of ids.flatMap((start) => [...closure(start)])) {
+          if (!chunkGroups.boot.has(id)) {
+            own.add(id);
+            count.set(id, (count.get(id) ?? 0) + 1);
+          }
+        }
+        chunkGroups.byBundle.set(bundle.bundleName, own);
+      }
+      chunkGroups.shared = new Set(
+        [...count].filter(([, n]) => n > 1).map(([id]) => id)
+      );
+    },
+
     resolveId: {
       filter: { id: [/^virtual:core-modules$/, /^virtual:core-route:/] },
       handler(source) {
@@ -267,21 +314,48 @@ export function routeBundlesFor(bundle, tables) {
   const fileByBundle = {};
   const fileBySpecifier = {};
 
+  const specifierFor = (id) => {
+    if (id.startsWith(RESOLVED_ROUTE_PREFIX)) {
+      return { bundleName: id.slice(RESOLVED_ROUTE_PREFIX.length) };
+    }
+    if (id.startsWith(`${tables.appDir}/`)) {
+      return {
+        specifier: `discourse/${stripExtension(
+          path.relative(tables.appDir, id)
+        )}`,
+      };
+    }
+    return {};
+  };
+
+  const record = ({ bundleName, specifier }, fileName, table) => {
+    if (bundleName && !(bundleName in table.bundles)) {
+      table.bundles[bundleName] = fileName;
+    }
+    if (specifier && !(specifier in table.specifiers)) {
+      table.specifiers[specifier] = fileName;
+    }
+  };
+
+  // A facade chunk is what an import resolves to, so it wins over the chunk
+  // that merely contains the module.
+  const facades = { bundles: {}, specifiers: {} };
+  const containers = { bundles: {}, specifiers: {} };
+
   for (const [fileName, chunk] of Object.entries(bundle)) {
-    if (chunk.type !== "chunk" || !chunk.facadeModuleId) {
+    if (chunk.type !== "chunk") {
       continue;
     }
-
-    if (chunk.facadeModuleId.startsWith(RESOLVED_ROUTE_PREFIX)) {
-      fileByBundle[chunk.facadeModuleId.slice(RESOLVED_ROUTE_PREFIX.length)] =
-        fileName;
-    } else if (chunk.facadeModuleId.startsWith(`${tables.appDir}/`)) {
-      const specifier = `discourse/${stripExtension(
-        path.relative(tables.appDir, chunk.facadeModuleId)
-      )}`;
-      fileBySpecifier[specifier] = fileName;
+    if (chunk.facadeModuleId) {
+      record(specifierFor(chunk.facadeModuleId), fileName, facades);
+    }
+    for (const id of Object.keys(chunk.modules)) {
+      record(specifierFor(id), fileName, containers);
     }
   }
+
+  Object.assign(fileByBundle, containers.bundles, facades.bundles);
+  Object.assign(fileBySpecifier, containers.specifiers, facades.specifiers);
 
   return (tables.urlTable ?? [])
     .filter(({ bundleName }) => fileByBundle[bundleName])
@@ -293,4 +367,24 @@ export function routeBundlesFor(bundle, tables) {
         .map((specifier) => fileBySpecifier[specifier])
         .filter(Boolean),
     }));
+}
+
+export function coreChunkGroups(bundleNames) {
+  return [
+    {
+      name: "discourse-boot",
+      priority: 30,
+      test: (id) => chunkGroups.boot.has(id),
+    },
+    {
+      name: "route-shared",
+      priority: 20,
+      test: (id) => chunkGroups.shared.has(id),
+    },
+    ...bundleNames.map((bundleName) => ({
+      name: `route-${bundleName}`,
+      priority: 10,
+      test: (id) => chunkGroups.byBundle.get(bundleName)?.has(id) ?? false,
+    })),
+  ];
 }
