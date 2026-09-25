@@ -291,7 +291,7 @@ class NativeSystemDriver < Capybara::Driver::Base
     if error = response["error"]
       message = "#{method}: #{error.to_json}"
       if message.match?(
-           /NativeStaleElement|Cannot find context|Could not find object|Cannot find object|Execution context was destroyed/,
+           /NativeStaleElement|Node is detached from document|Cannot find context|Could not find object|Cannot find object|Execution context was destroyed/,
          )
         raise StaleElement, message
       end
@@ -595,7 +595,15 @@ class NativeSystemDriver < Capybara::Driver::Base
     end
     @owned_contexts.clear
     if ENV["NATIVE_CDP_REUSE_TAB"] == "1"
-      visit("about:blank")
+      @reset_navigation_session = @page.session
+      begin
+        visit("about:blank")
+      ensure
+        @reset_navigation_session = nil
+        dialog_thread = @reset_dialog_thread
+        @reset_dialog_thread = nil
+        dialog_thread&.value
+      end
       command("Page.resetNavigationHistory")
     else
       close_window(@page.target)
@@ -770,6 +778,12 @@ class NativeSystemDriver < Capybara::Driver::Base
     return unless state
     params = event["params"] || {}
     case event["method"]
+    when "Page.javascriptDialogOpening"
+      if params["type"] == "beforeunload" && event["sessionId"] == @reset_navigation_session
+        session = event.fetch("sessionId")
+        @reset_dialog_thread =
+          Thread.new { command("Page.handleJavaScriptDialog", { accept: true }, session: session) }
+      end
     when "Network.requestWillBeSent"
       request = Request.new(params.fetch("request").fetch("url"))
       state.callbacks["request"].each { |callback| callback.call(request) }

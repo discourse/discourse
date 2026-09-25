@@ -372,7 +372,7 @@ jobs:
           printf 'CI_SYSTEM_CPU_START {"usage_usec":%s}\n' "${system_test_cpu_start:-null}"
           system_test_started_seconds=$SECONDS
           trap report_system_test_cpu EXIT
-          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system .github/ci/native-driver/spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
