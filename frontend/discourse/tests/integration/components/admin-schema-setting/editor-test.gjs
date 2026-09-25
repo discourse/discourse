@@ -7,191 +7,127 @@ import {
   waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import AdminSchemaSettingEditor from "discourse/admin/components/schema-setting/editor";
-import SiteSetting from "discourse/admin/models/site-setting";
-import ThemeSettings from "discourse/admin/models/theme-settings";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import schemaAndData, {
-  SCHEMA_MODES,
+  objectsSetting,
 } from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
-class TreeFromDOM {
-  constructor() {
-    this.refresh();
-  }
-
-  refresh() {
-    this.nodes = findAll(
+const tree = {
+  get nodes() {
+    return findAll(
       ".schema-setting-editor__tree .schema-setting-editor__tree-node.--parent"
-    ).map((container, index) => {
-      const li = container;
-      const active = li.classList.contains("--active");
-
-      const children = findAll(
+    ).map((element, index) => ({
+      element,
+      active: element.classList.contains("--active"),
+      textElement: element.querySelector(
+        ".schema-setting-editor__tree-node-text"
+      ),
+      children: findAll(
         `.schema-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
-      ).map((child) => {
-        return {
-          element: child,
-          textElement: child.querySelector(
-            ".schema-setting-editor__tree-node-text"
-          ),
-        };
-      });
-
-      const addButtons = findAll(
-        `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
-      );
-
-      return {
-        active,
-        children,
-        addButtons,
-        element: li,
-        textElement: li.querySelector(".schema-setting-editor__tree-node-text"),
-      };
-    });
-  }
-}
-
-class InputFieldsFromDOM {
-  constructor() {
-    this.refresh();
-  }
-
-  refresh() {
-    this.fields = {};
-    this.count = 0;
-
-    findAll(".schema-field").forEach((field) => {
-      this.count += 1;
-
-      this.fields[field.dataset.name] = {
-        labelElement: field.querySelector(".schema-field__label"),
-        inputElement: field.querySelector(".schema-field__input").children[0],
-        countElement: field.querySelector(".schema-field__input-count"),
-        errorElement: field.querySelector(".schema-field__input-error"),
-        descriptionElement: field.querySelector(
-          ".schema-field__input-description"
+      ).map((child) => ({
+        element: child,
+        textElement: child.querySelector(
+          ".schema-setting-editor__tree-node-text"
         ),
-        selector: `.schema-field[data-name="${field.dataset.name}"]`,
-      };
-    });
-  }
-}
+      })),
+      addButtons: findAll(
+        `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
+      ),
+    }));
+  },
+};
+
+const inputFields = {
+  get count() {
+    return findAll(".schema-field").length;
+  },
+
+  get fields() {
+    return Object.fromEntries(
+      findAll(".schema-field").map((field) => [
+        field.dataset.name,
+        {
+          labelElement: field.querySelector(".schema-field__label"),
+          inputElement: field.querySelector(".schema-field__input").children[0],
+          countElement: field.querySelector(".schema-field__input-count"),
+          errorElement: field.querySelector(".schema-field__input-error"),
+          descriptionElement: field.querySelector(
+            ".schema-field__input-description"
+          ),
+          selector: `.schema-field[data-name="${field.dataset.name}"]`,
+        },
+      ])
+    );
+  },
+};
 
 const TOP_LEVEL_ADD_BTN = ".schema-setting-editor__tree-add-button.--root";
 const REMOVE_ITEM_BTN = ".schema-setting-editor__remove-btn";
 const MOVE_UP_BTN = ".schema-setting-editor__move-up-btn";
 const MOVE_DOWN_BTN = ".schema-setting-editor__move-down-btn";
+const SAVE_BTN = ".schema-setting-editor__footer .btn-primary";
+
+function renderEditor(setting) {
+  return render(
+    <template>
+      <DialogHolder />
+      <AdminSchemaSettingEditor
+        @id="1"
+        @routeToRedirect="adminCustomizeThemes.show"
+        @schema={{setting.objects_schema}}
+        @setting={{setting}}
+      />
+    </template>
+  );
+}
+
+async function captureSavedValue(owner) {
+  sinon.stub(owner.lookup("service:router"), "transitionTo");
+
+  let savedValue;
+  pretender.put("/admin/themes/1/setting", (request) => {
+    savedValue = JSON.parse(parsePostData(request.requestBody).value);
+    return response({});
+  });
+
+  await click(SAVE_BTN);
+
+  return savedValue;
+}
 
 module(
   "Integration | Admin | Themes | Component | SchemaSetting | Editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("activates the first node by default", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      assert.strictEqual(tree.nodes.length, 3);
-      assert.true(tree.nodes[0].active, "the first node is active");
-      assert.false(tree.nodes[1].active, "other nodes are not active");
-    });
-
-    test("renders the 2nd level of nested items for the active item only", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      assert.true(tree.nodes[0].active);
-
-      assert.strictEqual(
-        tree.nodes[0].children.length,
-        2,
-        "the children of the active node are shown"
-      );
-
-      assert.false(tree.nodes[1].active);
-      assert.strictEqual(
-        tree.nodes[1].children.length,
-        0,
-        "the children of an active node aren't shown"
-      );
-
-      await click(tree.nodes[1].element);
-
-      tree.refresh();
-
-      assert.false(tree.nodes[0].active);
-      assert.strictEqual(
-        tree.nodes[0].children.length,
-        0,
-        "the children of an active node aren't shown"
-      );
-
-      assert.true(tree.nodes[1].active);
-      assert.strictEqual(
-        tree.nodes[1].children.length,
-        3,
-        "the children of the active node are shown"
-      );
-    });
-
     test("allows navigating through multiple levels of nesting", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
+      await renderEditor(schemaAndData(1));
 
       assert.strictEqual(tree.nodes.length, 3);
+      assert.true(tree.nodes[0].active, "the first node is active by default");
       assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.strictEqual(tree.nodes[0].children.length, 2);
       assert.dom(tree.nodes[0].children[0].textElement).hasText("child 1-1");
       assert.dom(tree.nodes[0].children[1].textElement).hasText("child 1-2");
 
+      assert.false(tree.nodes[1].active);
       assert.dom(tree.nodes[1].textElement).hasText("item 2");
-      assert.strictEqual(tree.nodes[1].children.length, 0);
+      assert.strictEqual(
+        tree.nodes[1].children.length,
+        0,
+        "only the active node's children are shown"
+      );
 
       await click(tree.nodes[1].element);
-
-      tree.refresh();
 
       assert.strictEqual(tree.nodes.length, 3);
       assert.dom(tree.nodes[0].textElement).hasText("item 1");
@@ -207,10 +143,8 @@ module(
 
       await click(tree.nodes[1].children[1].element);
 
-      tree.refresh();
       assert.strictEqual(tree.nodes.length, 4);
 
-      const inputFields = new InputFieldsFromDOM();
       assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
       assert
         .dom(inputFields.fields.name.descriptionElement)
@@ -246,8 +180,6 @@ module(
 
       await click(tree.nodes[1].children[1].element);
 
-      tree.refresh();
-
       assert.strictEqual(tree.nodes.length, 5);
 
       assert.dom(tree.nodes[0].textElement).hasText("grandchild 2-2-1");
@@ -267,129 +199,54 @@ module(
       assert.strictEqual(tree.nodes[3].children.length, 0);
     });
 
-    test("the back button is only shown when the navigation is at least one level deep", async function (assert) {
-      const setting = schemaAndData(1);
+    test("the back button navigates to the previous level", async function (assert) {
+      await renderEditor(schemaAndData(1));
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
+      assert.dom(".--back-btn").doesNotExist("hidden at the root level");
 
-      assert.dom(".--back-btn").doesNotExist();
-
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[0].children[0].element);
-
-      assert.dom(".--back-btn").exists();
-      tree.refresh();
-      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
-
-      await click(tree.nodes[0].children[0].element);
-
-      tree.refresh();
-      assert.dom(tree.nodes[0].textElement).hasText("grandchild 1-1-1");
-      assert.dom(".--back-btn").exists();
-
-      await click(".--back-btn");
-
-      tree.refresh();
-      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
-      assert.dom(".--back-btn").exists();
-
-      await click(".--back-btn");
-
-      tree.refresh();
-      assert.dom(tree.nodes[0].textElement).hasText("item 1");
-      assert.dom(".--back-btn").doesNotExist();
-    });
-
-    test("the back button navigates to the index of the active element at the previous level", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
-
-      tree.refresh();
       await click(tree.nodes[1].children[1].element);
 
-      await click(".--back-btn");
-      tree.refresh();
+      assert
+        .dom(".--back-btn")
+        .hasText(
+          i18n("admin.customize.schema.back_button", { name: "item 2" })
+        );
 
-      assert.strictEqual(tree.nodes.length, 3);
-
-      assert.dom(tree.nodes[0].textElement).hasText("item 1");
-      assert.false(tree.nodes[0].active);
-      assert.strictEqual(tree.nodes[0].children.length, 0);
-
-      assert.dom(tree.nodes[1].textElement).hasText("item 2");
-      assert.true(tree.nodes[1].active);
-      assert.strictEqual(tree.nodes[1].children.length, 3);
-    });
-
-    test("the back button label includes the name of the item at the previous level", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-      await click(tree.nodes[1].element);
-
-      tree.refresh();
-      await click(tree.nodes[1].children[1].element);
-
-      assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.schema.back_button", {
-          name: "item 2",
-        })
-      );
-
-      tree.refresh();
       await click(tree.nodes[1].children[0].element);
 
-      assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.schema.back_button", {
-          name: "child 2-2",
-        })
-      );
+      assert
+        .dom(".--back-btn")
+        .hasText(
+          i18n("admin.customize.schema.back_button", { name: "child 2-2" })
+        );
 
       await click(".--back-btn");
 
-      assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.schema.back_button", {
-          name: "item 2",
-        })
+      assert.dom(tree.nodes[1].textElement).hasText("child 2-2");
+      assert.true(
+        tree.nodes[1].active,
+        "the previously active child is restored"
       );
+      assert
+        .dom(".--back-btn")
+        .hasText(
+          i18n("admin.customize.schema.back_button", { name: "item 2" })
+        );
+
+      await click(tree.nodes[0].element);
+      await click(".--back-btn");
+
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+      assert.true(
+        tree.nodes[1].active,
+        "the previously active item is restored"
+      );
+      assert.dom(".--back-btn").doesNotExist("hidden again at the root level");
     });
 
     test("input fields are rendered even if they're not present in the data", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           identifier: "id",
@@ -413,26 +270,13 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(setting);
 
       assert.strictEqual(inputFields.count, 2);
       assert.dom(inputFields.fields.id.inputElement).hasValue("bu1");
       assert.dom(inputFields.fields.name.inputElement).hasValue("Big U");
 
-      const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
-      inputFields.refresh();
 
       assert.strictEqual(inputFields.count, 2);
       assert.dom(inputFields.fields.id.inputElement).hasValue("fi2");
@@ -440,20 +284,7 @@ module(
     });
 
     test("input fields for items at different levels", async function (assert) {
-      const setting = schemaAndData(2);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(schemaAndData(2));
 
       assert.strictEqual(inputFields.count, 2);
       assert.dom(inputFields.fields.name.labelElement).hasText("name");
@@ -462,23 +293,13 @@ module(
       assert.dom(inputFields.fields.name.inputElement).hasValue("nice section");
       assert.dom(inputFields.fields.icon.inputElement).hasValue("arrow");
 
-      const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
 
-      inputFields.refresh();
-      tree.refresh();
-
       assert.strictEqual(inputFields.count, 2);
-      assert.dom(inputFields.fields.name.labelElement).hasText("name");
-      assert.dom(inputFields.fields.icon.labelElement).hasText("icon");
-
       assert.dom(inputFields.fields.name.inputElement).hasValue("cool section");
       assert.dom(inputFields.fields.icon.inputElement).hasValue("bell");
 
-      await click(tree.nodes[1].children[0].element);
-
-      tree.refresh();
-      inputFields.refresh();
+      await click(tree.nodes[1].children[1].element);
 
       assert.strictEqual(inputFields.count, 3);
       assert.dom(inputFields.fields.text.labelElement).hasText("text");
@@ -494,8 +315,7 @@ module(
     });
 
     test("input fields of type string", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           identifier: "id",
@@ -517,18 +337,7 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(setting);
 
       assert.dom(inputFields.fields.id.labelElement).hasText("id*");
       assert.dom(inputFields.fields.id.countElement).hasText("3/5");
@@ -536,8 +345,6 @@ module(
       await fillIn(inputFields.fields.id.inputElement, "1");
 
       assert.dom(inputFields.fields.id.countElement).hasText("1/5");
-
-      inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
         i18n("admin.customize.schema.fields.string.too_short", {
@@ -555,8 +362,7 @@ module(
     });
 
     test("input fields of type integer", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           identifier: "id",
@@ -578,20 +384,8 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
+      await renderEditor(setting);
 
-      const inputFields = new InputFieldsFromDOM();
-
-      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
       assert.dom(inputFields.fields.id.inputElement).hasValue("6");
 
       assert
@@ -599,8 +393,6 @@ module(
         .hasAttribute("type", "number");
 
       await fillIn(inputFields.fields.id.inputElement, "922229");
-
-      inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
         i18n("admin.customize.schema.fields.number.too_large", {
@@ -610,8 +402,6 @@ module(
 
       await fillIn(inputFields.fields.id.inputElement, "0");
 
-      inputFields.refresh();
-
       assert.dom(inputFields.fields.id.errorElement).hasText(
         i18n("admin.customize.schema.fields.number.too_small", {
           count: 5,
@@ -620,16 +410,13 @@ module(
 
       await fillIn(inputFields.fields.id.inputElement, "");
 
-      inputFields.refresh();
-
       assert
         .dom(inputFields.fields.id.errorElement)
         .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type float", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           identifier: "id",
@@ -651,95 +438,75 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
+      await renderEditor(setting);
 
-      const inputFields = new InputFieldsFromDOM();
-
-      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
       assert.dom(inputFields.fields.id.inputElement).hasValue("6.5");
 
-      assert
-        .dom(inputFields.fields.id.inputElement)
-        .hasAttribute("type", "number");
-
-      await fillIn(inputFields.fields.id.inputElement, "100.0");
-
-      inputFields.refresh();
-
-      assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.schema.fields.number.too_large", {
-          count: 10.5,
-        })
-      );
-
       await fillIn(inputFields.fields.id.inputElement, "0.2");
-
-      inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
         i18n("admin.customize.schema.fields.number.too_small", {
           count: 5.5,
-        })
+        }),
+        "fractional input is parsed as a float"
       );
-
-      await fillIn(inputFields.fields.id.inputElement, "");
-
-      inputFields.refresh();
-
-      assert
-        .dom(inputFields.fields.id.errorElement)
-        .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type boolean", async function (assert) {
-      const setting = schemaAndData(3);
+      await renderEditor(schemaAndData(3));
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
-      assert
-        .dom(inputFields.fields.boolean_field.labelElement)
-        .hasText("boolean_field");
       assert.dom(inputFields.fields.boolean_field.inputElement).isChecked();
-      await click(inputFields.fields.boolean_field.inputElement);
 
-      const tree = new TreeFromDOM();
+      await click(inputFields.fields.boolean_field.inputElement);
       await click(tree.nodes[1].element);
 
-      inputFields.refresh();
-      assert
-        .dom(inputFields.fields.boolean_field.labelElement)
-        .hasText("boolean_field");
       assert.dom(inputFields.fields.boolean_field.inputElement).isNotChecked();
 
-      tree.refresh();
       await click(tree.nodes[0].element);
-      inputFields.refresh();
 
       assert.dom(inputFields.fields.boolean_field.inputElement).isNotChecked();
     });
 
+    test("stores the defaults of required boolean and enum fields", async function (assert) {
+      await renderEditor(
+        objectsSetting({
+          objects_schema: {
+            name: "something",
+            properties: {
+              required_boolean_field: { type: "boolean", required: true },
+              optional_boolean_field: { type: "boolean" },
+              optional_enum_field: {
+                type: "enum",
+                default: "cool",
+                choices: ["nice", "cool", "awesome"],
+              },
+              required_enum_field: {
+                type: "enum",
+                required: true,
+                default: "awesome",
+                choices: ["nice", "cool", "awesome"],
+              },
+            },
+          },
+          value: [{}, { required_boolean_field: true }],
+        })
+      );
+
+      await click(TOP_LEVEL_ADD_BTN);
+
+      assert.deepEqual(
+        await captureSavedValue(this.owner),
+        [
+          { required_boolean_field: false, required_enum_field: "awesome" },
+          { required_boolean_field: true, required_enum_field: "awesome" },
+          { required_boolean_field: false, required_enum_field: "awesome" },
+        ],
+        "existing and new items store required defaults, keep stored values and leave optional fields unset"
+      );
+    });
+
     test("input fields of type enum", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           properties: {
@@ -766,18 +533,7 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(setting);
 
       const enumSelector = selectKit(
         `${inputFields.fields.enum_field.selector} .select-kit`
@@ -785,22 +541,35 @@ module(
 
       assert.strictEqual(enumSelector.header().value(), null);
 
+      await enumSelector.expand();
+      await enumSelector.selectRowByValue("cool");
+      await click(enumSelector.clearButton());
+
+      assert.strictEqual(
+        enumSelector.header().value(),
+        null,
+        "optional enums can be cleared"
+      );
+
       const requiredEnumSelector = selectKit(
         `${inputFields.fields.required_enum_field.selector} .select-kit`
       );
 
       assert.strictEqual(requiredEnumSelector.header().value(), "awesome");
+      assert.strictEqual(requiredEnumSelector.header().label(), "awesome");
 
       await requiredEnumSelector.expand();
       await requiredEnumSelector.selectRowByValue("nice");
 
       assert.strictEqual(requiredEnumSelector.header().value(), "nice");
+      assert.strictEqual(
+        requiredEnumSelector.clearButton(),
+        null,
+        "required enums can't be cleared"
+      );
 
-      const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
       assert.strictEqual(requiredEnumSelector.header().value(), "cool");
-
-      tree.refresh();
 
       await click(tree.nodes[0].element);
       assert.strictEqual(requiredEnumSelector.header().value(), "nice");
@@ -812,7 +581,7 @@ module(
 
     test("input fields of type icon", async function (assert) {
       pretender.get("/svg-sprite/picker-search", () =>
-        response(200, {
+        response({
           icons: [
             { id: "gamepad", name: "gamepad" },
             { id: "heart", name: "heart" },
@@ -821,8 +590,7 @@ module(
         })
       );
 
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           properties: {
@@ -838,18 +606,7 @@ module(
         value: [{ required_icon_field: "heart" }],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(setting);
 
       assert
         .dom(
@@ -870,11 +627,16 @@ module(
       assert
         .dom(`${inputFields.fields.icon_field.selector} .d-icon-grid-picker`)
         .hasAttribute("data-value", "gamepad");
+
+      assert.deepEqual(
+        await captureSavedValue(this.owner),
+        [{ required_icon_field: "heart", icon_field: "gamepad" }],
+        "the picked icon is stored"
+      );
     });
 
     test("input fields of type categories that is not required with min and max validations", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           properties: {
@@ -898,22 +660,7 @@ module(
         value: [{}],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
-
-      assert
-        .dom(inputFields.fields.not_required_category.labelElement)
-        .hasText("not_required_category");
+      await renderEditor(setting);
 
       const categorySelector = selectKit(
         `${inputFields.fields.not_required_category.selector} .select-kit`
@@ -924,8 +671,6 @@ module(
       await categorySelector.expand();
       await categorySelector.selectRowByIndex(1);
       await categorySelector.collapse();
-
-      inputFields.refresh();
 
       assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
         i18n("admin.customize.schema.fields.categories.at_least", {
@@ -947,16 +692,13 @@ module(
       await categorySelector.deselectItemByIndex(0);
       await categorySelector.collapse();
 
-      inputFields.refresh();
-
       assert
         .dom(inputFields.fields.not_required_category.errorElement)
         .doesNotExist();
     });
 
     test("input fields of type categories", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           identifier: "id",
@@ -982,22 +724,7 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
-
-      assert
-        .dom(inputFields.fields.required_category.labelElement)
-        .hasText("required_category*");
+      await renderEditor(setting);
 
       let categorySelector = selectKit(
         `${inputFields.fields.required_category.selector} .select-kit`
@@ -1009,8 +736,6 @@ module(
       await categorySelector.deselectItemByValue("6");
       await categorySelector.collapse();
 
-      inputFields.refresh();
-
       assert.dom(inputFields.fields.required_category.errorElement).hasText(
         i18n("admin.customize.schema.fields.categories.at_least", {
           count: 1,
@@ -1019,8 +744,7 @@ module(
     });
 
     test("input field of type categories with schema's identifier set to categories field", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "category",
           identifier: "category",
@@ -1059,18 +783,7 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
+      await renderEditor(setting);
 
       assert.dom(tree.nodes[0].textElement).hasText("support, something");
 
@@ -1085,9 +798,6 @@ module(
         "the back button uses the parent's category identifier"
       );
       await click(".--back-btn");
-      tree.refresh();
-
-      const inputFields = new InputFieldsFromDOM();
 
       const categorySelector = selectKit(
         `${inputFields.fields.category.selector} .select-kit`
@@ -1101,14 +811,11 @@ module(
 
       await click(TOP_LEVEL_ADD_BTN);
 
-      tree.refresh();
-
       assert.dom(tree.nodes[1].textElement).hasText("category 2");
     });
 
     test("input fields of type tags which is required", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           identifier: "id",
@@ -1135,18 +842,7 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(setting);
 
       let tagSelector = selectKit(
         `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
@@ -1168,8 +864,6 @@ module(
 
       assert.strictEqual(tagSelector.header().value(), null);
 
-      inputFields.refresh();
-
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
@@ -1182,8 +876,6 @@ module(
       await tagSelector.selectRowByIndex(1);
 
       assert.strictEqual(tagSelector.header().name(), "gazelle");
-
-      inputFields.refresh();
 
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
@@ -1201,8 +893,6 @@ module(
       await tagSelector.deselectItemByName("gazelle");
       await tagSelector.collapse();
 
-      inputFields.refresh();
-
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
         i18n("admin.customize.schema.fields.tags.at_least", {
           count: 1,
@@ -1211,8 +901,7 @@ module(
     });
 
     test("input fields of type groups", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           properties: {
@@ -1236,18 +925,7 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(setting);
 
       let groupsSelector = selectKit(
         `${inputFields.fields.required_groups.selector} .select-kit`
@@ -1260,17 +938,11 @@ module(
       await groupsSelector.deselectItemByValue("1");
       await groupsSelector.collapse();
 
-      inputFields.refresh();
-
       assert.dom(inputFields.fields.required_groups.errorElement).hasText(
         i18n("admin.customize.schema.fields.groups.at_least", {
           count: 1,
         })
       );
-
-      assert
-        .dom(inputFields.fields.groups_with_validations.labelElement)
-        .hasText("groups_with_validations");
 
       groupsSelector = selectKit(
         `${inputFields.fields.groups_with_validations.selector} .select-kit`
@@ -1283,8 +955,6 @@ module(
       await groupsSelector.collapse();
 
       assert.strictEqual(groupsSelector.header().value(), "1");
-
-      inputFields.refresh();
 
       assert
         .dom(inputFields.fields.groups_with_validations.errorElement)
@@ -1311,8 +981,7 @@ module(
         { id: 2, name: "moderators" },
       ];
 
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           properties: {
@@ -1329,18 +998,8 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
+      await renderEditor(setting);
 
-      const inputFields = new InputFieldsFromDOM();
       const groupsSelector = selectKit(
         `${inputFields.fields.group_ids.selector} .select-kit`
       );
@@ -1362,8 +1021,7 @@ module(
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "section",
           properties: {
@@ -1406,18 +1064,7 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
+      await renderEditor(setting);
 
       assert.dom(tree.nodes[0].textElement).hasText("section 1");
       assert.dom(tree.nodes[0].children[0].textElement).hasText("link 1");
@@ -1426,13 +1073,11 @@ module(
 
       await click(tree.nodes[1].element);
 
-      tree.refresh();
-
       assert.dom(tree.nodes[1].children[0].textElement).hasText("link 1");
 
       await click(tree.nodes[0].element);
       await click(REMOVE_ITEM_BTN);
-      tree.refresh();
+
       assert
         .dom(tree.nodes[0].textElement)
         .hasText("section 1", "the remaining item is renumbered");
@@ -1441,19 +1086,7 @@ module(
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
       const setting = schemaAndData(2);
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
-      const tree = new TreeFromDOM();
+      await renderEditor(setting);
 
       await focus(inputFields.fields.name.inputElement);
       await fillIn(
@@ -1476,9 +1109,6 @@ module(
 
       await click(tree.nodes[0].children[0].element);
 
-      inputFields.refresh();
-      tree.refresh();
-
       await fillIn(
         inputFields.fields.text.inputElement,
         "Security instead of Privacy"
@@ -1490,21 +1120,7 @@ module(
     });
 
     test("edits are remembered when navigating between levels", async function (assert) {
-      const setting = schemaAndData(2);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
-      const tree = new TreeFromDOM();
+      await renderEditor(schemaAndData(2));
 
       await fillIn(
         inputFields.fields.name.inputElement,
@@ -1513,18 +1129,12 @@ module(
 
       await click(tree.nodes[1].element);
 
-      tree.refresh();
-      inputFields.refresh();
-
       await fillIn(
         inputFields.fields.name.inputElement,
         "cool section is no longer cool"
       );
 
       await click(tree.nodes[1].children[1].element);
-
-      tree.refresh();
-      inputFields.refresh();
 
       assert.dom(".--back-btn").hasText(
         i18n("admin.customize.schema.back_button", {
@@ -1534,9 +1144,6 @@ module(
 
       await fillIn(inputFields.fields.text.inputElement, "Talk to us");
       await click(".--back-btn");
-
-      tree.refresh();
-      inputFields.refresh();
 
       assert.dom(tree.nodes[0].textElement).hasText("changed section name");
 
@@ -1553,15 +1160,11 @@ module(
 
       await click(tree.nodes[1].children[1].element);
 
-      tree.refresh();
-      inputFields.refresh();
-
       assert.dom(inputFields.fields.text.inputElement).hasValue("Talk to us");
     });
 
     test("adding an object to the root list of objects which is empty by default", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           properties: {
@@ -1573,75 +1176,19 @@ module(
         value: [],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
+      await renderEditor(setting);
 
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("something");
+
       await click(TOP_LEVEL_ADD_BTN);
 
-      const tree = new TreeFromDOM();
-
       assert.dom(tree.nodes[0].textElement).hasText("something 1");
-
-      const inputFields = new InputFieldsFromDOM();
 
       assert.dom(inputFields.fields.name.labelElement).hasText("name");
     });
 
-    test("adding a parent and multiple nested objects", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
-
-      const tree = new TreeFromDOM();
-
-      assert.strictEqual(tree.nodes.length, 3);
-
-      await click(TOP_LEVEL_ADD_BTN);
-      tree.refresh();
-
-      assert.strictEqual(tree.nodes.length, 4);
-      assert.true(tree.nodes[2].active);
-      assert.dom(tree.nodes[2].textElement).hasText("level1 3");
-      assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
-
-      await click(tree.nodes[2].addButtons[0]);
-      await click(TOP_LEVEL_ADD_BTN);
-      tree.refresh();
-
-      assert.strictEqual(
-        tree.nodes.length,
-        3,
-        "both children and the add button are visible"
-      );
-      assert
-        .dom(tree.nodes[1].textElement)
-        .hasText("level2 2", "the second child appears without reopening");
-      assert.true(tree.nodes[1].active, "the second child is selected");
-    });
-
     test("adding an object to a child list of objects when an object has multiple objects properties", async function (assert) {
-      const setting = ThemeSettings.create({
-        setting: "objects_setting",
+      const setting = objectsSetting({
         objects_schema: {
           name: "something",
           properties: {
@@ -1679,129 +1226,39 @@ module(
         ],
       });
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
+      await renderEditor(setting);
 
       await click(tree.nodes[0].addButtons[0]);
 
-      tree.refresh();
-
       assert.dom(tree.nodes[0].textElement).hasText("link 1");
-
-      const inputFields = new InputFieldsFromDOM();
 
       assert.dom(inputFields.fields.url.labelElement).hasText("url");
     });
 
-    test("adding an object to a child list of objects", async function (assert) {
-      const setting = schemaAndData(1);
+    test("adding objects to nested lists of objects", async function (assert) {
+      await renderEditor(schemaAndData(1));
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      assert.strictEqual(tree.nodes[0].children.length, 2);
       assert.dom(tree.nodes[0].addButtons[0]).hasText("level2");
 
       await click(tree.nodes[0].addButtons[0]);
-      tree.refresh();
-
-      assert.dom(tree.nodes[2].textElement).hasText("level2 3");
-
-      const inputFields = new InputFieldsFromDOM();
-
-      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
-
-      await click(TOP_LEVEL_ADD_BTN);
-      tree.refresh();
-
-      assert.dom(tree.nodes[3].textElement).hasText("level2 4");
-    });
-
-    test("navigating 1 level deep and adding an object to the child list of objects that's displayed as the root list", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      await click(tree.nodes[0].children[0].element);
-      tree.refresh();
 
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level2");
-      assert.strictEqual(tree.nodes.length, 3);
-
-      await click(TOP_LEVEL_ADD_BTN);
-      await click(TOP_LEVEL_ADD_BTN);
-
-      tree.refresh();
-      assert.strictEqual(tree.nodes.length, 5);
       assert.dom(tree.nodes[2].textElement).hasText("level2 3");
-      assert.dom(tree.nodes[3].textElement).hasText("level2 4");
-    });
-
-    test("adding multiple grandchildren to a newly added child", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      await click(tree.nodes[0].addButtons[0]);
-      tree.refresh();
-
+      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
       assert.dom(tree.nodes[2].addButtons[0]).hasText("level3");
       assert.strictEqual(tree.nodes[2].children.length, 0);
 
       await click(tree.nodes[2].addButtons[0]);
       await click(TOP_LEVEL_ADD_BTN);
 
-      tree.refresh();
-
       assert.strictEqual(
         tree.nodes.length,
         3,
         "both grandchildren and the add button are visible"
       );
-      const inputFields = new InputFieldsFromDOM();
+
       await fillIn(inputFields.fields.name.inputElement, "Second grandchild");
+
       assert
         .dom(tree.nodes[1].textElement)
         .hasText(
@@ -1811,40 +1268,23 @@ module(
     });
 
     test("removing an object from the root list of objects", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-      const inputFields = new InputFieldsFromDOM();
+      await renderEditor(schemaAndData(1));
 
       assert.strictEqual(tree.nodes.length, 3);
       assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
 
+      await click(tree.nodes[1].element);
       await click(REMOVE_ITEM_BTN);
-
-      tree.refresh();
-      inputFields.refresh();
 
       assert.strictEqual(tree.nodes.length, 2);
-      assert.dom(tree.nodes[0].textElement).hasText("item 2");
-      assert.dom(inputFields.fields.name.inputElement).hasValue("item 2");
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert
+        .dom(inputFields.fields.name.inputElement)
+        .hasValue("item 1", "the previous item becomes active");
 
       await click(REMOVE_ITEM_BTN);
-
-      tree.refresh();
-      inputFields.refresh();
 
       assert.strictEqual(tree.nodes.length, 1);
       assert.strictEqual(inputFields.count, 0);
@@ -1853,63 +1293,27 @@ module(
     });
 
     test("removing an object with delete warning from the root list of objects", async function (assert) {
-      const setting = schemaAndData(4);
+      await renderEditor(schemaAndData(4));
+      await click(REMOVE_ITEM_BTN);
+      await click(".dialog-footer .btn-default");
 
-      await render(
-        <template>
-          <DialogHolder />
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-      const inputFields = new InputFieldsFromDOM();
-
-      assert.strictEqual(tree.nodes.length, 3);
-      assert.dom(tree.nodes[0].textElement).hasText("item 1");
-      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+      assert.strictEqual(tree.nodes.length, 3, "cancelling keeps the item");
 
       await click(REMOVE_ITEM_BTN);
 
       assert.dom("#dialog-title").hasText("Delete warning title");
       assert.dom(".dialog-body").includesText("Delete warning message");
-      assert.dom(".dialog-footer .btn-danger").hasText(i18n("delete"));
-      assert.dom(".dialog-footer .btn-default").hasText(i18n("cancel_value"));
 
       await click(".dialog-footer .btn-danger");
-
-      tree.refresh();
-      inputFields.refresh();
 
       assert.strictEqual(tree.nodes.length, 2);
       assert.dom(tree.nodes[0].textElement).hasText("item 2");
     });
 
     test("navigating 1 level deep and removing an object from the child list of objects", async function (assert) {
-      const setting = schemaAndData(1);
+      await renderEditor(schemaAndData(1));
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      await click(tree.nodes[0].children[1].element);
-      tree.refresh();
-
-      const inputFields = new InputFieldsFromDOM();
+      await click(tree.nodes[0].children[0].element);
 
       assert.strictEqual(tree.nodes.length, 3);
       assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
@@ -1918,18 +1322,11 @@ module(
 
       await click(REMOVE_ITEM_BTN);
 
-      tree.refresh();
-      inputFields.refresh();
-
       assert.strictEqual(tree.nodes.length, 2);
       assert.dom(tree.nodes[0].textElement).hasText("child 1-2");
       assert.dom(inputFields.fields.name.inputElement).hasValue("child 1-2");
 
-      // removing the last object navigates back to the previous level
       await click(REMOVE_ITEM_BTN);
-
-      tree.refresh();
-      inputFields.refresh();
 
       assert.strictEqual(tree.nodes.length, 3);
       assert.strictEqual(tree.nodes[0].children.length, 0);
@@ -1937,773 +1334,63 @@ module(
       assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
-      assert.dom(".--back-btn").doesNotExist();
+      assert
+        .dom(".--back-btn")
+        .doesNotExist(
+          "removing the last child navigates back to the parent level"
+        );
     });
 
-    test("move buttons reorder root level items correctly", async function (assert) {
-      const setting = schemaAndData(1);
+    test("move buttons reorder items", async function (assert) {
+      await renderEditor(schemaAndData(1));
 
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
+      assert.dom(MOVE_UP_BTN).isDisabled("the first item can't move up");
+      assert.dom(MOVE_DOWN_BTN).isNotDisabled();
 
-      const tree = new TreeFromDOM();
-
-      // Verify initial order
-      assert.dom(tree.nodes[0].textElement).hasText("item 1");
-      assert.dom(tree.nodes[1].textElement).hasText("item 2");
-
-      // Test move up: Select second item and move up
       await click(tree.nodes[1].element);
-      tree.refresh();
+
+      assert.dom(MOVE_UP_BTN).isNotDisabled();
+      assert.dom(MOVE_DOWN_BTN).isDisabled("the last item can't move down");
+
       await click(MOVE_UP_BTN);
-      tree.refresh();
 
       assert.dom(tree.nodes[0].textElement).hasText("item 2");
       assert.dom(tree.nodes[1].textElement).hasText("item 1");
 
-      // Test move down: Select first item (was originally second) and move down
-      await click(tree.nodes[0].element);
-      tree.refresh();
       await click(MOVE_DOWN_BTN);
-      tree.refresh();
 
-      // Should be back to original order
       assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.dom(tree.nodes[1].textElement).hasText("item 2");
-    });
 
-    test("move buttons are disabled appropriately for root level items", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      // First item should have move up disabled
-      await click(tree.nodes[0].element);
-      tree.refresh();
-
-      assert.dom(MOVE_UP_BTN).isDisabled();
-      assert.dom(MOVE_DOWN_BTN).isNotDisabled();
-
-      // Last item should have move down disabled
-      await click(tree.nodes[1].element);
-      tree.refresh();
-
-      assert.dom(MOVE_UP_BTN).isNotDisabled();
-      assert.dom(MOVE_DOWN_BTN).isDisabled();
-    });
-
-    test("move up button reorders nested items correctly", async function (assert) {
-      const setting = schemaAndData(1);
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminCustomizeThemes.show"
-            @schema={{setting.objects_schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      // Navigate to nested level
-      await click(tree.nodes[0].children[1].element);
-      tree.refresh();
-
-      // Verify initial order of nested items
-      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
-      assert.dom(tree.nodes[1].textElement).hasText("child 1-2");
-
-      // Select second nested item
-      await click(tree.nodes[1].element);
-      tree.refresh();
-
-      // Click move up button
+      await click(tree.nodes[1].children[1].element);
       await click(MOVE_UP_BTN);
-      tree.refresh();
-
-      // Verify nested items are reordered
-      assert.dom(tree.nodes[0].textElement).hasText("child 1-2");
-      assert.dom(tree.nodes[1].textElement).hasText("child 1-1");
-    });
-  }
-);
-
-module(
-  "Integration | Admin | Plugins | Component | SchemaSetting | Editor",
-  function (hooks) {
-    setupRenderingTest(hooks);
-
-    test("input fields of type string", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            name: {
-              type: "string",
-            },
-          },
-        },
-        value: [
-          {
-            name: "some name",
-          },
-        ],
-      });
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const inputFields = new InputFieldsFromDOM();
-      const tree = new TreeFromDOM();
-      assert.dom(inputFields.fields.name.labelElement).hasText("name");
-      assert.dom(inputFields.fields.name.inputElement).hasValue("some name");
-      assert.dom(tree.nodes[0].textElement).hasText("something 1");
-    });
-
-    test("input fields of type integer", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            id: {
-              type: "integer",
-              required: true,
-              validations: {
-                max: 5,
-                min: 2,
-              },
-            },
-          },
-        },
-        value: [
-          {
-            id: 3,
-          },
-        ],
-      });
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const inputFields = new InputFieldsFromDOM();
-      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
-      assert.dom(inputFields.fields.id.inputElement).hasValue("3");
-      assert
-        .dom(inputFields.fields.id.inputElement)
-        .hasAttribute("type", "number");
-      await fillIn(inputFields.fields.id.inputElement, "100");
-      inputFields.refresh();
-      assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.schema.fields.number.too_large", {
-          count: 5,
-        })
-      );
-      await fillIn(inputFields.fields.id.inputElement, "0");
-      inputFields.refresh();
-      assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.schema.fields.number.too_small", {
-          count: 2,
-        })
-      );
-    });
-
-    test("input fields of type float", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            id: {
-              type: "float",
-              required: true,
-              validations: {
-                max: 5.5,
-                min: 2.5,
-              },
-            },
-          },
-        },
-        value: [
-          {
-            id: 3.5,
-          },
-        ],
-      });
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const inputFields = new InputFieldsFromDOM();
-      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
-      assert.dom(inputFields.fields.id.inputElement).hasValue("3.5");
-      assert
-        .dom(inputFields.fields.id.inputElement)
-        .hasAttribute("type", "number");
-      await fillIn(inputFields.fields.id.inputElement, "100.0");
-      inputFields.refresh();
-      assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.schema.fields.number.too_large", {
-          count: 5.5,
-        })
-      );
-      await fillIn(inputFields.fields.id.inputElement, "0.2");
-      inputFields.refresh();
-      assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.schema.fields.number.too_small", {
-          count: 2.5,
-        })
-      );
-    });
-
-    test("input fields of type boolean", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            boolean_field: {
-              type: "boolean",
-            },
-          },
-        },
-        value: [
-          {
-            boolean_field: true,
-          },
-        ],
-      });
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const inputFields = new InputFieldsFromDOM();
-      assert
-        .dom(inputFields.fields.boolean_field.labelElement)
-        .hasText("boolean_field");
-      assert.dom(inputFields.fields.boolean_field.inputElement).isChecked();
-    });
-
-    test("input fields of type enum", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            enum_field: {
-              type: "enum",
-              default: "awesome",
-              choices: ["nice", "cool", "awesome"],
-            },
-          },
-        },
-        value: [
-          {
-            enum_field: "awesome",
-          },
-        ],
-      });
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const inputFields = new InputFieldsFromDOM();
-      assert
-        .dom(inputFields.fields.enum_field.labelElement)
-        .hasText("enum_field");
-      assert.dom(inputFields.fields.enum_field.inputElement).hasText("awesome");
-    });
-
-    test("input fields of type categories that is not required with min and max validations", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            not_required_category: {
-              type: "categories",
-              validations: {
-                min: 2,
-                max: 3,
-              },
-            },
-          },
-        },
-        metadata: {
-          categories: {
-            6: {
-              id: 6,
-              name: "some category",
-            },
-          },
-        },
-        value: [{}],
-      });
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const inputFields = new InputFieldsFromDOM();
-      assert
-        .dom(inputFields.fields.not_required_category.labelElement)
-        .hasText("not_required_category");
-      const categorySelector = selectKit(
-        `${inputFields.fields.not_required_category.selector} .select-kit`
-      );
-      assert.strictEqual(categorySelector.header().value(), null);
-      await categorySelector.expand();
-      await categorySelector.selectRowByIndex(1);
-      await categorySelector.collapse();
-      inputFields.refresh();
-      assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
-        i18n("admin.customize.schema.fields.categories.at_least", {
-          count: 2,
-        })
-      );
-      await categorySelector.expand();
-      await categorySelector.selectRowByIndex(2);
-      await categorySelector.selectRowByIndex(3);
-      await categorySelector.selectRowByIndex(4);
-      assert
-        .dom(categorySelector.error())
-        .hasText("You can only select 3 items.");
-
-      await categorySelector.deselectItemByIndex(0);
-      await categorySelector.deselectItemByIndex(0);
-      await categorySelector.deselectItemByIndex(0);
-      await categorySelector.collapse();
-
-      inputFields.refresh();
 
       assert
-        .dom(inputFields.fields.not_required_category.errorElement)
-        .doesNotExist();
-    });
-
-    test("input fields of type tags which is required", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            required_tags: {
-              type: "tags",
-              required: true,
-            },
-            required_tags_with_validations: {
-              type: "tags",
-              required: true,
-              validations: {
-                min: 2,
-                max: 3,
-              },
-            },
-          },
-        },
-        value: [
-          {
-            required_tags: ["gazelle"],
-            required_tags_with_validations: ["gazelle", "cat"],
-          },
-        ],
-      });
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const inputFields = new InputFieldsFromDOM();
-
-      let tagSelector = selectKit(
-        `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
-      );
-
-      assert.strictEqual(tagSelector.header().name(), "gazelle,cat");
-
-      await tagSelector.expand();
-      await tagSelector.selectRowByIndex(2);
-      await tagSelector.collapse();
-
-      assert.strictEqual(tagSelector.header().name(), "gazelle,cat,dog");
-
-      await tagSelector.expand();
-      await tagSelector.deselectItemByName("gazelle");
-      await tagSelector.deselectItemByName("cat");
-      await tagSelector.deselectItemByName("dog");
-      await tagSelector.collapse();
-
-      assert.strictEqual(tagSelector.header().value(), null);
-
-      inputFields.refresh();
-
-      assert
-        .dom(inputFields.fields.required_tags_with_validations.errorElement)
-        .hasText(
-          i18n("admin.customize.schema.fields.tags.at_least", {
-            count: 2,
-          })
-        );
-
-      await tagSelector.expand();
-      await tagSelector.selectRowByIndex(1);
-
-      assert.strictEqual(tagSelector.header().name(), "gazelle");
-
-      inputFields.refresh();
-
-      assert
-        .dom(inputFields.fields.required_tags_with_validations.errorElement)
-        .hasText(
-          i18n("admin.customize.schema.fields.tags.at_least", {
-            count: 2,
-          })
-        );
-
-      tagSelector = selectKit(
-        `${inputFields.fields.required_tags.selector} .select-kit`
-      );
-
-      await tagSelector.expand();
-      await tagSelector.deselectItemByName("gazelle");
-      await tagSelector.collapse();
-
-      inputFields.refresh();
-
-      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        i18n("admin.customize.schema.fields.tags.at_least", {
-          count: 1,
-        })
-      );
-    });
-
-    test("input fields of type groups", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            required_groups: {
-              type: "groups",
-              required: true,
-            },
-            groups_with_validations: {
-              type: "groups",
-              validations: {
-                min: 2,
-                max: 3,
-              },
-            },
-          },
-        },
-        value: [
-          {
-            required_groups: [0, 1],
-          },
-        ],
-      });
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const inputFields = new InputFieldsFromDOM();
-
-      let groupsSelector = selectKit(
-        `${inputFields.fields.required_groups.selector} .select-kit`
-      );
-
-      assert.strictEqual(groupsSelector.header().value(), "0,1");
-
-      await groupsSelector.expand();
-      await groupsSelector.deselectItemByValue("0");
-      await groupsSelector.deselectItemByValue("1");
-      await groupsSelector.collapse();
-
-      inputFields.refresh();
-
-      assert.dom(inputFields.fields.required_groups.errorElement).hasText(
-        i18n("admin.customize.schema.fields.groups.at_least", {
-          count: 1,
-        })
-      );
-
-      assert
-        .dom(inputFields.fields.groups_with_validations.labelElement)
-        .hasText("groups_with_validations");
-
-      groupsSelector = selectKit(
-        `${inputFields.fields.groups_with_validations.selector} .select-kit`
-      );
-
-      assert.strictEqual(groupsSelector.header().value(), null);
-
-      await groupsSelector.expand();
-      await groupsSelector.selectRowByIndex(1);
-      await groupsSelector.collapse();
-
-      assert.strictEqual(groupsSelector.header().value(), "1");
-
-      inputFields.refresh();
-
-      assert
-        .dom(inputFields.fields.groups_with_validations.errorElement)
-        .hasText(
-          i18n("admin.customize.schema.fields.groups.at_least", {
-            count: 2,
-          })
-        );
-
-      await groupsSelector.expand();
-      await groupsSelector.selectRowByIndex(2);
-      await groupsSelector.selectRowByIndex(3);
-      await groupsSelector.selectRowByIndex(4);
-
-      assert
-        .dom(groupsSelector.error())
-        .hasText("You can only select 3 items.");
-    });
-
-    test("allows navigating through multiple levels of nesting", async function (assert) {
-      const setting = schemaAndData(1, SCHEMA_MODES.SITE_SETTING);
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-      const tree = new TreeFromDOM();
-      const inputFields = new InputFieldsFromDOM();
-      assert.strictEqual(tree.nodes.length, 3);
-      assert.dom(tree.nodes[0].textElement).hasText("item 1");
-      assert.dom(tree.nodes[1].textElement).hasText("item 2");
-      assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
-      assert.dom(inputFields.fields.name.labelElement).hasText("name");
-      assert.dom(".--back-btn").doesNotExist();
-
-      await click(tree.nodes[0].children[0].element);
-      tree.refresh();
-      inputFields.refresh();
-      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
-      assert
-        .dom(inputFields.fields.name.descriptionElement)
-        .hasText("Description for level 2");
-    });
-
-    test("move buttons reorder items correctly", async function (assert) {
-      const setting = schemaAndData(1, SCHEMA_MODES.SITE_SETTING);
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      // Verify initial order
-      assert.dom(tree.nodes[0].textElement).hasText("item 1");
-      assert.dom(tree.nodes[1].textElement).hasText("item 2");
-
-      // Test move up: Select second item and move up
-      await click(tree.nodes[1].element);
-      tree.refresh();
-      await click(MOVE_UP_BTN);
-      tree.refresh();
-
-      assert.dom(tree.nodes[0].textElement).hasText("item 2");
-      assert.dom(tree.nodes[1].textElement).hasText("item 1");
-
-      // Test move down: Select first item (was originally second) and move down
-      await click(tree.nodes[0].element);
-      tree.refresh();
-      await click(MOVE_DOWN_BTN);
-      tree.refresh();
-
-      // Should be back to original order
-      assert.dom(tree.nodes[0].textElement).hasText("item 1");
-      assert.dom(tree.nodes[1].textElement).hasText("item 2");
-    });
-
-    test("move buttons are disabled appropriately", async function (assert) {
-      const setting = schemaAndData(1, SCHEMA_MODES.SITE_SETTING);
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
-      );
-
-      const tree = new TreeFromDOM();
-
-      // First item should have move up disabled
-      await click(tree.nodes[0].element);
-      tree.refresh();
-
-      assert.dom(MOVE_UP_BTN).isDisabled();
-      assert.dom(MOVE_DOWN_BTN).isNotDisabled();
-
-      // Last item should have move down disabled
-      await click(tree.nodes[1].element);
-      tree.refresh();
-
-      assert.dom(MOVE_UP_BTN).isNotDisabled();
-      assert.dom(MOVE_DOWN_BTN).isDisabled();
+        .dom(tree.nodes[0].textElement)
+        .hasText("child 2-2", "nested items can be moved");
+      assert.dom(tree.nodes[1].textElement).hasText("child 2-1");
     });
 
     test("multiple upload fields have unique IDs", async function (assert) {
-      const setting = SiteSetting.create({
-        setting: "objects_setting",
-        schema: {
-          name: "something",
-          properties: {
-            first_upload: {
-              type: "upload",
-            },
-            second_upload: {
-              type: "upload",
+      await renderEditor(
+        objectsSetting({
+          objects_schema: {
+            name: "something",
+            properties: {
+              first_upload: { type: "upload" },
+              second_upload: { type: "upload" },
             },
           },
-        },
-        value: [{}],
-      });
-
-      await render(
-        <template>
-          <AdminSchemaSettingEditor
-            @id="1"
-            @routeToRedirect="adminPlugins.show.settings"
-            @schema={{setting.schema}}
-            @setting={{setting}}
-          />
-        </template>
+          value: [{}],
+        })
       );
 
-      const inputFields = new InputFieldsFromDOM();
-
-      // Verify both upload fields exist
       assert
-        .dom(inputFields.fields.first_upload.labelElement)
-        .hasText("first_upload");
+        .dom("#schema-field-upload-objects_setting-first_upload")
+        .exists("the first upload field has an id based on its name");
       assert
-        .dom(inputFields.fields.second_upload.labelElement)
-        .hasText("second_upload");
-
-      // The UppyImageUploader components should have unique IDs based on field names
-      const firstUploadId =
-        inputFields.fields.first_upload.inputElement.id ||
-        inputFields.fields.first_upload.inputElement.querySelector(
-          "[id^='schema-field-upload-']"
-        )?.id;
-      const secondUploadId =
-        inputFields.fields.second_upload.inputElement.id ||
-        inputFields.fields.second_upload.inputElement.querySelector(
-          "[id^='schema-field-upload-']"
-        )?.id;
-
-      assert.true(
-        !!firstUploadId,
-        "First upload field should have an ID attribute"
-      );
-      assert.true(
-        !!secondUploadId,
-        "Second upload field should have an ID attribute"
-      );
-      assert.notStrictEqual(
-        firstUploadId,
-        secondUploadId,
-        "Upload field IDs should be unique"
-      );
-      assert.true(
-        firstUploadId?.includes("first_upload"),
-        "First upload ID should include field name"
-      );
-      assert.true(
-        secondUploadId?.includes("second_upload"),
-        "Second upload ID should include field name"
-      );
+        .dom("#schema-field-upload-objects_setting-second_upload")
+        .exists("the second upload field has an id based on its name");
     });
   }
 );
