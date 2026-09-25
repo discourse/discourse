@@ -84,3 +84,6 @@ memory: a lower steady-state PSS does not rule out a higher transient peak.
 
 Memory savings depend on the workload, worker count and schedule. A result
 from a synthetic forum is not a forecast for every production installation.
+
+See the [September 2026 benchmark](PITCHFORK_BENCHMARK.md) for measured PSS,
+RSS, latency and transient peaks at four and eight workers.
