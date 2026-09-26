@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "tmpdir"
+
+ENV["TMPDIR"] = File.realpath(Dir.tmpdir)
+
 # Point ImageMagick at Discourse's security policy (config/imagemagick/policy.xml).
 # Child processes inherit this env var, so it covers every identify/magick/convert
 # call. Refuse to boot if it points somewhere else, since overriding it would
