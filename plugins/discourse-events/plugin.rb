@@ -301,6 +301,7 @@ after_initialize do
   require_relative "lib/discourse_events/events/excerpt"
   require_relative "lib/discourse_events/events/finder"
   require_relative "lib/discourse_events/events/onebox_data"
+  require_relative "lib/discourse_events/events/topic_onebox"
   require_relative "lib/discourse_events/events/parser"
   require_relative "lib/discourse_events/events/validator"
   require_relative "lib/discourse_events/events/export_csv_controller_extension"
@@ -402,6 +403,10 @@ after_initialize do
       SiteSetting.discourse_post_event_enabled && !object.nil? && !object.deleted_at.present?
     end,
   ) { DiscourseEvents::Events::EventSerializer.new(object.event, scope: scope, root: false) }
+
+  register_modifier(:local_topic_onebox_args) do |args, post, opts|
+    DiscourseEvents::Events::TopicOnebox.args(args, post, opts)
+  end
 
   TopicView.on_preload do |topic_view|
     if SiteSetting.discourse_post_event_enabled

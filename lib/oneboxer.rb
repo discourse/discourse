@@ -423,6 +423,8 @@ module Oneboxer
         quote: PrettyText.unescape_emoji(excerpt),
       }
 
+      args = DiscoursePluginRegistry.apply_modifier(:local_topic_onebox_args, args, post, opts)
+
       template = template("discourse_topic_onebox")
       Mustache.render(template, args)
     end
