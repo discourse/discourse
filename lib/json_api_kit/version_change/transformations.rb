@@ -3,8 +3,8 @@
 module JsonApiKit
   class VersionChange
     class Transformations < NameChanges
-      def current_values(attributes)
-        current_changes(attributes.keys).flat_map { it.current_pairs(attributes) }.to_h
+      def current_values(attributes, existing: ExistingValues::None)
+        current_changes(attributes.keys).flat_map { it.current_pairs(attributes, existing:) }.to_h
       end
 
       def previous_values(attributes)
