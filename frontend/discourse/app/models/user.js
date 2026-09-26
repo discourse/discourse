@@ -1271,10 +1271,14 @@ export default class User extends RestModel.extend(Evented) {
     );
   }
 
-  pickAvatar(upload_id, type) {
+  pickAvatar(upload_id, type, associated_account_id) {
     return ajax(userPath(`${this.username_lower}/preferences/avatar/pick`), {
       type: "PUT",
-      data: { upload_id, type },
+      data: {
+        upload_id,
+        type,
+        ...(associated_account_id && { associated_account_id }),
+      },
     });
   }
 

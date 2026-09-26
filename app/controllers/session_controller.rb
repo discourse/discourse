@@ -1330,6 +1330,9 @@ class SessionController < ApplicationController
              avatar_template: username && User.default_template(username),
              can_upload_avatar:
                group_ids.intersect?(SiteSetting.uploaded_avatars_allowed_groups_map),
+             can_edit_avatar:
+               !SiteSetting.auth_overrides_avatar &&
+                 !SiteSetting.discourse_connect_overrides_avatar,
            }
   end
 
