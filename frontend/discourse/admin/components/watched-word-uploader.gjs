@@ -1,15 +1,11 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed, set } from "@ember/object";
+import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class WatchedWordUploader extends Component {
   @service dialog;
 
@@ -21,12 +17,20 @@ export default class WatchedWordUploader extends Component {
     validateUploadedFilesOptions: {
       skipValidation: true,
     },
-    perFileData: () => ({ action_key: this.actionKey }),
+    perFileData: () => ({ action_key: this.args.actionKey }),
     uploadDone: () => {
       this.dialog.alert(i18n("admin.watched_words.form.upload_successful"));
-      this.done();
+      this.args.done();
     },
   });
+
+  get addDisabled() {
+    return this.uppyUpload?.uploading;
+  }
+
+  set addDisabled(value) {
+    this.uppyUpload.uploading = value;
+  }
 
   <template>
     <div class="watched-words-uploader" ...attributes>
@@ -42,13 +46,4 @@ export default class WatchedWordUploader extends Component {
       </label>
     </div>
   </template>
-
-  @computed("uppyUpload.uploading")
-  get addDisabled() {
-    return this.uppyUpload?.uploading;
-  }
-
-  set addDisabled(value) {
-    set(this, "uppyUpload.uploading", value);
-  }
 }
