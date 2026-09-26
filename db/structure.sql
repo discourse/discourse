@@ -25536,6 +25536,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260925155026'),
 ('20260925054715'),
 ('20260923141924'),
 ('20260923080644'),
