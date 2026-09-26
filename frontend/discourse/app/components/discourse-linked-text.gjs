@@ -1,26 +1,30 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 
-@tagName("span")
 export default class DiscourseLinkedText extends Component {
-  @computed("text", "textParams")
   get translatedText() {
-    if (this.text) {
-      return i18n(this.text);
+    if (this.args.text) {
+      return i18n(this.args.text, this.args.textParams);
     }
   }
 
+  @action
   click(event) {
     if (event.target.tagName.toUpperCase() === "A") {
-      this.action(this.actionParam);
+      this.args.action(this.args.actionParam);
     }
 
-    return false;
+    event.preventDefault();
+    event.stopPropagation();
   }
 
-  <template>{{trustHTML this.translatedText}}</template>
+  <template>
+    {{! eslint-disable ember/template-no-invalid-interactive }}
+    <span ...attributes {{on "click" this.click}}>{{trustHTML
+        this.translatedText
+      }}</span>
+  </template>
 }
