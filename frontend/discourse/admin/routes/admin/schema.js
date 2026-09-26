@@ -1,9 +1,10 @@
 import Route from "@ember/routing/route";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import SiteSetting from "discourse/admin/models/site-setting";
+import RouteHistoryService from "discourse/services/route-history";
 
 export default class AdminSchemaRoute extends Route {
-  @service routeHistory;
+  @service(() => RouteHistoryService) routeHistory;
 
   async model(params) {
     const setting = await SiteSetting.findByName(params.setting_name);

@@ -4,7 +4,7 @@ import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuTab from "discourse/components/user-menu/menu-tab";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -23,6 +23,10 @@ import UserMenuOtherNotificationsList from "./other-notifications-list";
 import UserMenuProfileTabContent from "./profile-tab-content";
 import UserMenuRepliesNotificationsList from "./replies-notifications-list";
 import UserMenuReviewablesList from "./reviewables-list";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = UserMenuNotificationsList;
@@ -194,11 +198,11 @@ function resolvePanelComponent(owner, panelComponent) {
 }
 
 export default class UserMenu extends Component {
-  @service appEvents;
-  @service currentUser;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;

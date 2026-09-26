@@ -2,19 +2,22 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import discourseDebounce from "discourse/lib/debounce";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import ModalService from "discourse/services/modal";
+import StoreService from "discourse/services/store";
 
 let lastSearch;
 
 @disableImplicitInjections
 export default class AdminSiteTextIndexController extends Controller {
   @service router;
-  @service siteSettings;
-  @service modal;
-  @service store;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ModalService) modal;
+  @service(() => StoreService) store;
 
   @tracked themeId = null;
   @tracked locale;

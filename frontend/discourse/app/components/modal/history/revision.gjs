@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -11,10 +11,12 @@ import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-templa
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class Revision extends Component {
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   <template>
     <div id="revision">

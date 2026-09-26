@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import {
   isRateLimitError,
   MAX_RATE_LIMIT_RETRY_SECONDS,
@@ -8,6 +9,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { humanizeList } from "discourse/lib/text";
 import { capabilities } from "discourse/services/capabilities";
 import I18n, { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 const RATE_LIMIT_RETRIES = 1;
 
@@ -34,7 +36,7 @@ export const IMAGE_MARKDOWN_REGEX =
 // This wrapper simplifies unit testing the dialog service
 export const dialog = {
   alert(msg) {
-    const dg = getOwnerWithFallback(this).lookup("service:dialog");
+    const dg = lookup(getOwnerWithFallback(this), DialogService);
     dg.alert(msg);
   },
 };

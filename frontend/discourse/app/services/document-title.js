@@ -1,14 +1,18 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import getURL from "discourse/lib/get-url";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import updateTabCount from "discourse/lib/update-tab-count";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SessionService from "discourse/services/session";
+import SiteSettingsService from "discourse/services/site-settings";
 
 @disableImplicitInjections
 export default class DocumentElement extends Service {
-  @service appEvents;
-  @service currentUser;
-  @service session;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SessionService) session;
+  @service(() => SiteSettingsService) siteSettings;
 
   contextCount = 0;
   notificationCount = 0;

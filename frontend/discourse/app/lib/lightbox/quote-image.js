@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import { getOwner } from "@ember/owner";
 import { helperContext } from "discourse/lib/helpers";
 import {
@@ -7,6 +8,8 @@ import {
 import { buildQuote } from "discourse/lib/quote";
 import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import ComposerService from "discourse/services/composer";
+import AppEventsService from "discourse/services/app-events";
 
 function buildImageMarkdown(slideElement, slideData) {
   const img = slideElement?.querySelector("img");
@@ -72,7 +75,7 @@ export default async function quoteImage(slideElement, slideData) {
       return false;
     }
 
-    const composer = owner.lookup("service:composer");
+    const composer = lookup(owner, ComposerService);
     if (!composer) {
       return false;
     }
@@ -85,7 +88,7 @@ export default async function quoteImage(slideElement, slideData) {
     }
 
     if (composer.model?.viewOpen) {
-      const appEvents = owner.lookup("service:app-events");
+      const appEvents = lookup(owner, AppEventsService);
       appEvents?.trigger("composer:insert-block", quote);
       return true;
     }

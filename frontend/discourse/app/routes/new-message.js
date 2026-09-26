@@ -1,13 +1,15 @@
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class extends DiscourseRoute {
-  @service composer;
-  @service dialog;
+  @service(() => ComposerService) composer;
+  @service(() => DialogService) dialog;
   @service router;
 
   beforeModel(transition) {

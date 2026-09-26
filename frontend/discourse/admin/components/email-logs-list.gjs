@@ -4,7 +4,7 @@ import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import EmailLog from "discourse/admin/models/email-log";
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";

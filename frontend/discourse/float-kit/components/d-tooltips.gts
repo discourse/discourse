@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DHeadlessTooltip from "discourse/float-kit/components/d-headless-tooltip";
 import type TooltipService from "discourse/float-kit/services/tooltip";
+import TooltipServiceInjected from "discourse/float-kit/services/tooltip";
 
 /**
  * The app-root host for service-driven tooltips, mounted once. It provides the
@@ -11,7 +12,7 @@ import type TooltipService from "discourse/float-kit/services/tooltip";
  * `DTooltip`).
  */
 export default class DTooltips extends Component {
-  @service declare tooltip: TooltipService;
+  @service(() => TooltipServiceInjected) declare tooltip: TooltipService;
 
   <template>
     <div id="d-tooltip-portals"></div>

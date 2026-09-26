@@ -1,12 +1,13 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminCustomizeThemesShowController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @service router;
 
   @computed("model.remote_theme.remote_url")

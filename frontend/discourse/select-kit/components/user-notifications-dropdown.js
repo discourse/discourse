@@ -1,10 +1,11 @@
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 @classNames("user-notifications", "user-notifications-dropdown")
 @selectKitOptions({
@@ -12,7 +13,7 @@ import { i18n } from "discourse-i18n";
   showCaret: true,
 })
 export default class UserNotificationsDropdown extends DropdownSelectBox {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @computed("mainCollection.[]", "value")
   get userNotificationIcon() {

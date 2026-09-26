@@ -1,8 +1,11 @@
+import { lookup } from "discourse/lib/service";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
 
 const AuthErrors = [
   "admin_not_allowed_from_ip_address",
@@ -43,7 +46,7 @@ export default {
               .lookup("controller:invites.show")
               .authenticationComplete(options);
           } else {
-            const siteSettings = owner.lookup("service:site-settings");
+            const siteSettings = lookup(owner, SiteSettingsService);
 
             const loginError = (flash, properties, callback) => {
               const props = {
@@ -110,7 +113,7 @@ export default {
                 return;
               }
 
-              const site = owner.lookup("service:site");
+              const site = lookup(owner, SiteService);
               const hasRequiredName =
                 !site.full_name_required_for_signup ||
                 options.name_from_provider;

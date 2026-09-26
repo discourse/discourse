@@ -1,23 +1,27 @@
+import { lookup } from "discourse/lib/service";
 import { withPluginApi } from "discourse/lib/core-api";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { CREATE_TOPIC, EDIT, REPLY } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
+import ComposerService from "discourse/services/composer";
 
 const ALLOWED_ACTIONS = [CREATE_TOPIC, EDIT, REPLY];
 
 export default {
   initialize(owner) {
-    const siteSettings = owner.lookup("service:site-settings");
+    const siteSettings = lookup(owner, SiteSettingsService);
 
     if (!siteSettings.content_localization_enabled) {
       return;
     }
 
-    const languageNameLookup = owner.lookup("service:language-name-lookup");
+    const languageNameLookup = lookup(owner, LanguageNameLookupService);
 
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
-        const composerService = api.container.lookup("service:composer");
+        const composerService = lookup(api.container, ComposerService);
         const priority = applyValueTransformer(
           "post-language-selector-priority",
           "first",

@@ -3,14 +3,15 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import GifsResult from "discourse/components/gifs/result";
 import loadMiniMasonry from "discourse/lib/load-minimasonry";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
+import SiteService from "discourse/services/site";
 
 export default class GifsResultList extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   masonry;
 

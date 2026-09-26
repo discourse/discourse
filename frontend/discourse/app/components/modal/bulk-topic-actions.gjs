@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import ManageTagsForm from "discourse/components/modal/bulk-topic-actions/manage-tags-form";
 import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
@@ -23,11 +23,12 @@ import DRadioButton from "discourse/ui-kit/d-radio-button";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export { addBulkDropdownAction } from "discourse/lib/plugin-registries/bulk-dropdown-actions";
 
 export default class BulkTopicActions extends Component {
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   @tracked activeComponent = null;
   @tracked activeComponentProps = null;

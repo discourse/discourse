@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -14,11 +14,14 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class LanguageSwitcher extends Component {
-  @service siteSettings;
-  @service languageNameLookup;
-  @service currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => LanguageNameLookupService) languageNameLookup;
+  @service(() => CurrentUserService) currentUser;
 
   get currentLocale() {
     return I18n.locale;

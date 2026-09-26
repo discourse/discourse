@@ -1,15 +1,16 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 @tagName("")
 export default class SharedDraftControls extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   publishing = false;
 

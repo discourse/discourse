@@ -1,13 +1,17 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import SharedContentService from "discourse/services/shared-content";
 
 export default class extends DiscourseRoute {
-  @service appEvents;
-  @service currentUser;
-  @service modal;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
   @service router;
-  @service("shared-content") sharedContent;
+  @service(() => SharedContentService) sharedContent;
 
   async beforeModel(transition) {
     if (!this.currentUser) {

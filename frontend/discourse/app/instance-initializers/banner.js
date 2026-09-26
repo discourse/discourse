@@ -1,12 +1,14 @@
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import PreloadStore from "discourse/lib/preload-store";
+import SiteService from "discourse/services/site";
+import MessageBusService from "discourse/services/message-bus";
 
 class BannerInit {
-  @service site;
-  @service messageBus;
+  @service(() => SiteService) site;
+  @service(() => MessageBusService) messageBus;
 
   constructor(owner) {
     setOwner(this, owner);

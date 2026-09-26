@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
@@ -15,11 +15,14 @@ import MoreSectionLinks from "../more-section-links";
 import SectionComponent from "../section";
 import SectionLink from "../section-link";
 import SectionLinkButton from "../section-link-button";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import NavigationMenuService from "discourse/services/navigation-menu";
 
 export default class SidebarCustomSection extends Component {
-  @service capabilities;
-  @service currentUser;
-  @service navigationMenu;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => NavigationMenuService) navigationMenu;
   @service router;
 
   section = this.initialSection;

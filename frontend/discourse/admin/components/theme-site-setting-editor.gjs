@@ -1,9 +1,10 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
 import SiteSettingComponent from "./site-setting";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class ThemeSiteSettingEditor extends SiteSettingComponent {
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   trackChanges = false;
 

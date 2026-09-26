@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -10,14 +10,19 @@ import { homepageNavigationDestination } from "discourse/lib/homepage-router-ove
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
+import GroupAutomaticMembersDialogService from "discourse/services/group-automatic-members-dialog";
 
 @tagName("")
 export default class GroupManageSaveButton extends Component {
-  @service currentUser;
-  @service dialog;
-  @service modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
   @service router;
-  @service groupAutomaticMembersDialog;
+  @service(() => GroupAutomaticMembersDialogService)
+  groupAutomaticMembersDialog;
 
   saving = null;
   disabled = false;

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 import { and, eq } from "discourse/truth-helpers";
@@ -8,11 +8,13 @@ import { i18n } from "discourse-i18n";
 import AllTagsSectionLink from "../common/all-tags-section-link";
 import Section from "../section";
 import SectionLink from "../section-link";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import SiteService from "discourse/services/site";
 
 export default class SidebarAnonymousTagsSection extends Component {
   @service router;
-  @service topicTrackingState;
-  @service site;
+  @service(() => TopicTrackingStateService) topicTrackingState;
+  @service(() => SiteService) site;
 
   @cached
   get activeLink() {

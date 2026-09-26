@@ -1,11 +1,12 @@
 import Controller from "@ember/controller";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export const DEFAULT_PERIOD = "yearly";
 
 export default class AdminSearchLogsIndexController extends Controller {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   loading = false;
   period = DEFAULT_PERIOD;

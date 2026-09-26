@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -22,6 +22,15 @@ import { registerPostInTopicPostStream } from "discourse/lib/process-node";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import DiscourseRoute from "discourse/routes/discourse";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import HeaderService from "discourse/services/header";
+import HistoryStoreService from "discourse/services/history-store";
+import NestedViewCacheService from "discourse/services/nested-view-cache";
+import ScreenTrackService from "discourse/services/screen-track";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
 
 export function nestedQueryString(params) {
   const query = new URLSearchParams();
@@ -37,16 +46,16 @@ export function nestedQueryString(params) {
 
 // This route is used for retrieving a topic based on params
 export default class TopicFromParams extends DiscourseRoute {
-  @service appEvents;
-  @service composer;
-  @service header;
-  @service historyStore;
-  @service nestedViewCache;
+  @service(() => AppEventsService) appEvents;
+  @service(() => ComposerService) composer;
+  @service(() => HeaderService) header;
+  @service(() => HistoryStoreService) historyStore;
+  @service(() => NestedViewCacheService) nestedViewCache;
   @service router;
-  @service screenTrack;
-  @service site;
-  @service siteSettings;
-  @service store;
+  @service(() => ScreenTrackService) screenTrack;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
 
   buildRouteInfoMetadata() {
     return {

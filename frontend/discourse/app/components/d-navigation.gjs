@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
@@ -26,13 +26,16 @@ import CategoriesAdminDropdown from "discourse/select-kit/components/categories-
 import TagCategoryAdminDropdown from "discourse/select-kit/components/tag-category-admin-dropdown";
 import { and, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
 
 @tagName("")
 export default class DNavigation extends Component {
   @service router;
-  @service site;
-  @service siteSettings;
-  @service currentUser;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
 
   @computed("siteSettings.fixed_category_positions")
   get fixedCategoryPositions() {

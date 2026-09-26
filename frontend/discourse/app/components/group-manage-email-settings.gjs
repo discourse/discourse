@@ -2,7 +2,7 @@
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
@@ -10,10 +10,11 @@ import GroupManageSaveButton from "discourse/components/group-manage-save-button
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 @tagName("")
 export default class GroupManageEmailSettings extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   smtpSettingsValid = false;
 

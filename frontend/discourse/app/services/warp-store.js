@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 
 let Impl;
 let loading;

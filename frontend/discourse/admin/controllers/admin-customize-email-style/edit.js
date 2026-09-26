@@ -1,10 +1,11 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminCustomizeEmailStyleEditController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   @computed("model.isSaving")
   get saveButtonText() {

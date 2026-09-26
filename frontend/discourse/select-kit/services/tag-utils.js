@@ -1,13 +1,15 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
 
 export default class TagUtils extends Service {
-  @service siteSettings;
-  @service site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteService) site;
 
   searchTags(url, data, callback) {
     return ajax(url, { data })

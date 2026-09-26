@@ -6,9 +6,24 @@ import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
 import Service from "@ember/service";
 import RestAdapter from "discourse/adapters/rest";
+import {
+  disableImplicitInjections,
+  disableImplicitInjectionsKey,
+} from "discourse/lib/disable-implicit-injections";
+import { lookup } from "discourse/lib/service";
 import RestModel from "discourse/models/rest";
-
-const disableImplicitInjectionsKey = Symbol("DISABLE_IMPLICIT_INJECTIONS");
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import MessageBusService from "discourse/services/message-bus";
+import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
+import SearchService from "discourse/services/search";
+import SessionService from "discourse/services/session";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 /**
  * Based on the Ember's standard injection helper, plus extra logic to make it behave more
@@ -16,7 +31,8 @@ const disableImplicitInjectionsKey = Symbol("DISABLE_IMPLICIT_INJECTIONS");
  * https://github.com/emberjs/ember.js/blob/22b318a381/packages/%40ember/-internals/metal/lib/injected_property.ts#L37
  *
  */
-function implicitInjectionShim(lookupName, key) {
+// Thunks, since the service modules import this one for the disabling decorator.
+function implicitInjectionShim(factory, key) {
   let overrideKey = `__OVERRIDE_${key}`;
 
   return computed(key, {
@@ -32,7 +48,7 @@ function implicitInjectionShim(lookupName, key) {
       if (!owner) {
         return undefined;
       }
-      return owner.lookup(lookupName);
+      return lookup(owner, factory());
     },
 
     set(_, value) {
@@ -43,8 +59,8 @@ function implicitInjectionShim(lookupName, key) {
 
 function setInjections(target, injections) {
   const extension = {};
-  for (const [key, lookupName] of Object.entries(injections)) {
-    extension[key] = implicitInjectionShim(lookupName, key);
+  for (const [key, factory] of Object.entries(injections)) {
+    extension[key] = implicitInjectionShim(factory, key);
   }
   EmberObject.reopen.call(target, extension);
   target.proto();
@@ -69,33 +85,33 @@ export function registerDiscourseImplicitInjections() {
     return;
   }
   const commonInjections = {
-    appEvents: "service:app-events",
-    pmTopicTrackingState: "service:pm-topic-tracking-state",
-    store: "service:store",
-    site: "service:site",
-    searchService: "service:search",
-    session: "service:session",
-    messageBus: "service:message-bus",
-    siteSettings: "service:site-settings",
-    topicTrackingState: "service:topic-tracking-state",
-    keyValueStore: "service:key-value-store",
+    appEvents: () => AppEventsService,
+    pmTopicTrackingState: () => PmTopicTrackingStateService,
+    store: () => StoreService,
+    site: () => SiteService,
+    searchService: () => SearchService,
+    session: () => SessionService,
+    messageBus: () => MessageBusService,
+    siteSettings: () => SiteSettingsService,
+    topicTrackingState: () => TopicTrackingStateService,
+    keyValueStore: () => KeyValueStoreService,
   };
 
   setInjections(Controller, {
     ...commonInjections,
-    capabilities: "service:capabilities",
-    currentUser: "service:current-user",
+    capabilities: () => CapabilitiesService,
+    currentUser: () => CurrentUserService,
   });
 
   setInjections(Component, {
-    capabilities: "service:capabilities",
-    currentUser: "service:current-user",
+    capabilities: () => CapabilitiesService,
+    currentUser: () => CurrentUserService,
     ...commonInjections,
   });
 
   setInjections(Route, {
     ...commonInjections,
-    currentUser: "service:current-user",
+    currentUser: () => CurrentUserService,
   });
 
   setInjections(RestModel, {
@@ -107,21 +123,15 @@ export function registerDiscourseImplicitInjections() {
   });
 
   setInjections(Service, {
-    session: "service:session",
-    messageBus: "service:message-bus",
-    siteSettings: "service:site-settings",
-    topicTrackingState: "service:topic-tracking-state",
-    keyValueStore: "service:key-value-store",
-    currentUser: "service:current-user",
+    session: () => SessionService,
+    messageBus: () => MessageBusService,
+    siteSettings: () => SiteSettingsService,
+    topicTrackingState: () => TopicTrackingStateService,
+    keyValueStore: () => KeyValueStoreService,
+    currentUser: () => CurrentUserService,
   });
 
   alreadyRegistered = true;
 }
 
-/**
- * A class decorator which disables implicit injections for instances of this class.
- * Essentially opts-in to the modern Ember 4+ behaviour.
- */
-export function disableImplicitInjections(target) {
-  target.prototype[disableImplicitInjectionsKey] = true;
-}
+export { disableImplicitInjections };

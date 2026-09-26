@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import EmojiStoreService from "discourse/services/emoji-store";
 
 export const FITZPATRICK_MODIFIERS = [
   { scale: null, modifier: "" },
@@ -18,7 +19,7 @@ export const FITZPATRICK_MODIFIERS = [
 ];
 
 export default class EmojiPicker extends Component {
-  @service emojiStore;
+  @service(() => EmojiStoreService) emojiStore;
 
   fitzpatrickModifiers = FITZPATRICK_MODIFIERS;
 

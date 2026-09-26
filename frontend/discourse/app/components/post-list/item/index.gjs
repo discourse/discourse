@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
@@ -13,10 +13,12 @@ import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import SiteService from "discourse/services/site";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class PostListItem extends Component {
-  @service site;
-  @service currentUser;
+  @service(() => SiteService) site;
+  @service(() => CurrentUserService) currentUser;
 
   get moderatorActionClass() {
     return this.args.post.post_type === this.site.post_types.moderator_action

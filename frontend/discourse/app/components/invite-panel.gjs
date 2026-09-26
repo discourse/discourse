@@ -2,7 +2,7 @@
 import Component, { Textarea } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -15,11 +15,13 @@ import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 @tagName("")
 export default class InvitePanel extends Component {
-  @service site;
-  @service toasts;
+  @service(() => SiteService) site;
+  @service(() => ToastsService) toasts;
 
   // eg: visible only to specific group members
 

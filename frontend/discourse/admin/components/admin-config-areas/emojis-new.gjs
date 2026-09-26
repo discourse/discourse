@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import EmberObject, { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import EmojiUploader from "discourse/admin/components/emoji-uploader";
 import BackButton from "discourse/components/back-button";
+import CurrentUserService from "discourse/services/current-user";
+import AdminEmojisService from "discourse/admin/services/admin-emojis";
 
 export default class AdminConfigAreasEmojisNew extends Component {
   @service router;
-  @service currentUser;
-  @service adminEmojis;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => AdminEmojisService) adminEmojis;
 
   get emojiGroups() {
     return this.adminEmojis.emojiGroups;

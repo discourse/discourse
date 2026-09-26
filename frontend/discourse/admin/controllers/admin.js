@@ -1,11 +1,12 @@
 import Controller from "@ember/controller";
 import { computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class AdminController extends Controller {
   @service router;
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @computed("siteSettings.enable_group_directory")
   get showGroups() {

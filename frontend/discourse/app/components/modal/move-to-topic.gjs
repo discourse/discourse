@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ChooseMessage from "discourse/components/choose-message";
@@ -22,10 +22,12 @@ import DModal from "discourse/ui-kit/d-modal";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
 
 export default class MoveToTopic extends Component {
-  @service currentUser;
-  @service site;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
 
   @tracked topicName;
   @tracked saving = false;

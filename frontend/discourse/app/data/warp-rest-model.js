@@ -1,12 +1,14 @@
+import { lookup } from "discourse/lib/service";
 import { dependentKeyCompat } from "@ember/object/compat";
 import {
   exposeExtraAttributes,
   extraAttributesFor,
 } from "discourse/data/extra-attributes";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import WarpStoreService from "discourse/services/warp-store";
 
 export function warpStore() {
-  return getOwnerWithFallback().lookup("service:warp-store");
+  return lookup(getOwnerWithFallback(), WarpStoreService);
 }
 
 // Pure WarpDrive base. Ember/RestModel-API shims live in `rest-compat.js`.

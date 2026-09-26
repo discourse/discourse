@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import GifsResultList from "discourse/components/gifs/result-list";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
@@ -13,16 +13,20 @@ import { or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import InterfaceColorService from "discourse/services/interface-color";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const GIFS_SEARCH_URL = "/gifs/search.json";
 const GIFS_CATEGORIES_URL = "/gifs/categories.json";
 const MIN_QUERY_LENGTH = 3;
 
 export default class GifsModal extends Component {
-  @service appEvents;
-  @service dialog;
-  @service interfaceColor;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => DialogService) dialog;
+  @service(() => InterfaceColorService) interfaceColor;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked categories = [];
   @tracked loading = false;

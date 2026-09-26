@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { next } from "@ember/runloop";
-import Service from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 
 @disableImplicitInjections
 export default class ScrollStateService extends Service {

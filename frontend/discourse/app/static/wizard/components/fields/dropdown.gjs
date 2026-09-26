@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action, set } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ColorPalettes from "discourse/select-kit/components/color-palettes";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FontSelector from "discourse/select-kit/components/font-selector";
 import HomepageStyleSelector from "discourse/select-kit/components/homepage-style-selector";
 import { Choice } from "discourse/static/wizard/models/wizard";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class Dropdown extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   constructor() {
     super(...arguments);

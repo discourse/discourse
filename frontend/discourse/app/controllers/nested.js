@@ -3,7 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -21,19 +21,29 @@ import { i18n } from "discourse-i18n";
 import processNode, {
   registerPostInTopicPostStream,
 } from "../lib/process-node";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import StoreService from "discourse/services/store";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
+import MessageBusService from "discourse/services/message-bus";
+import ModalService from "discourse/services/modal";
+import NestedViewCacheService from "discourse/services/nested-view-cache";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class NestedController extends Controller {
-  @service appEvents;
-  @service composer;
-  @service store;
-  @service dialog;
-  @service currentUser;
-  @service messageBus;
-  @service modal;
-  @service nestedViewCache;
+  @service(() => AppEventsService) appEvents;
+  @service(() => ComposerService) composer;
+  @service(() => StoreService) store;
+  @service(() => DialogService) dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => MessageBusService) messageBus;
+  @service(() => ModalService) modal;
+  @service(() => NestedViewCacheService) nestedViewCache;
   @service router;
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked topic;
   @tracked opPost;

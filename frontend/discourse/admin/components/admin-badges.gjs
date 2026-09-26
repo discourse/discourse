@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
+import AdminBadgesService from "discourse/admin/services/admin-badges";
+import ModalService from "discourse/services/modal";
 
 export default class AdminBadges extends Component {
-  @service adminBadges;
-  @service modal;
+  @service(() => AdminBadgesService) adminBadges;
+  @service(() => ModalService) modal;
 
   get badges() {
     return this.adminBadges.badges;

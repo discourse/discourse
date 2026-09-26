@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export function smallUserAttrs(user) {
   const defaultAttrs = {
@@ -22,7 +23,7 @@ export function smallUserAttrs(user) {
 }
 
 export default class DSmallUserList extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get users() {
     let users = this.args.users;

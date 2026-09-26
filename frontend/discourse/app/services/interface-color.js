@@ -1,6 +1,10 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import cookie from "discourse/lib/cookie";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import SessionService from "discourse/services/session";
 
 const COOKIE_NAME = "forced_color_mode";
 const DARK_VALUE_FOR_COOKIE = "dark";
@@ -8,10 +12,10 @@ const LIGHT_VALUE_FOR_COOKIE = "light";
 const AUTO_VALUE_FOR_COOKIE = "auto";
 
 export default class InterfaceColor extends Service {
-  @service appEvents;
-  @service currentUser;
-  @service siteSettings;
-  @service session;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SessionService) session;
 
   @tracked colorMode;
 

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Category from "discourse/components/search-menu/results/type/category";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
@@ -11,6 +11,8 @@ import { and, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SearchService from "discourse/services/search";
+import SiteService from "discourse/services/site";
 
 const _itemSelectCallbacks = [];
 export function addItemSelectCallback(fn) {
@@ -22,8 +24,8 @@ export function resetItemSelectCallbacks() {
 }
 
 export default class AssistantItem extends Component {
-  @service search;
-  @service site;
+  @service(() => SearchService) search;
+  @service(() => SiteService) site;
 
   icon = this.args.icon || "magnifying-glass";
 

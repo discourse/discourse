@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
 import PostList from "discourse/components/post-list";
@@ -18,10 +18,12 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ComposerService from "discourse/services/composer";
 
 export default class UserStreamComponent extends Component {
-  @service dialog;
-  @service composer;
+  @service(() => DialogService) dialog;
+  @service(() => ComposerService) composer;
   @service router;
 
   bulkSelectHelper = new PostBulkSelectHelper(this);

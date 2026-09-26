@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
 import { ajax } from "discourse/lib/ajax";
@@ -18,6 +18,12 @@ import {
   setCaretPosition,
 } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import MenuService from "discourse/float-kit/services/menu";
+import ModalService from "discourse/services/modal";
 
 export function fixQuotes(str) {
   // u+201c, u+201d = “ ”
@@ -47,12 +53,12 @@ const CSS_TO_DISABLE_FAST_EDIT = [
 ].join(",");
 
 export default class PostTextSelection extends Component {
-  @service appEvents;
-  @service capabilities;
-  @service currentUser;
-  @service siteSettings;
-  @service menu;
-  @service modal;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => MenuService) menu;
+  @service(() => ModalService) modal;
 
   setup = modifier(() => {
     document.addEventListener("selectionchange", this.selectionChange);

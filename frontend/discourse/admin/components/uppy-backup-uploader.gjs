@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class UppyBackupUploader extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "uppy-backup-uploader",

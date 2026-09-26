@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -13,6 +13,8 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import Topic from "./topic";
+import SessionService from "discourse/services/session";
+import StoreService from "discourse/services/store";
 
 function extractByKey(collection, klass) {
   const retval = {};
@@ -119,7 +121,7 @@ export default class TopicList extends RestModel {
       }
     );
 
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = lookup(getOwnerWithFallback(this), StoreService);
     return store.findFiltered("topicList", { filter, params });
   }
 
@@ -128,7 +130,7 @@ export default class TopicList extends RestModel {
     list.set("hideCategory", !displayCategoryInList(list.site, category));
   }
 
-  @service session;
+  @service(() => SessionService) session;
 
   @tracked loadingBefore = false;
   @autoTrackedArray topics;

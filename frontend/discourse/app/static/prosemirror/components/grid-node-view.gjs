@@ -3,11 +3,12 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import MenuService from "discourse/float-kit/services/menu";
 
 const MENU_PADDING = 8;
 const MODE_MENU_IDENTIFIER = "composer-image-grid-mode";
@@ -67,7 +68,7 @@ const RemoveGridButton = <template>
 </template>;
 
 export default class GridNodeView extends Component {
-  @service menu;
+  @service(() => MenuService) menu;
 
   #modeMenuInstance;
   #removeMenuInstance;

@@ -1,8 +1,9 @@
 import Helper from "@ember/component/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import ElementClassesService from "discourse/services/element-classes";
 
 export default class ElementClass extends Helper {
-  @service elementClasses;
+  @service(() => ElementClassesService) elementClasses;
 
   compute([...classes], { target }) {
     if (!target) {

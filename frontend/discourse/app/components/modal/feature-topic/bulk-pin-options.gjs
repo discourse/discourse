@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PinOptionSection, {
   MAX_GLOBALLY_PINNED_TOPICS,
 } from "discourse/components/modal/feature-topic/pin-option-section";
 import { ajax } from "discourse/lib/ajax";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class BulkPinOptions extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked loading = true;
   @tracked pinnedInCategoryCount = 0;

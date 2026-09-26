@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UsersPopup from "discourse/components/user/users-popup";
 import lazyHash from "discourse/helpers/lazy-hash";

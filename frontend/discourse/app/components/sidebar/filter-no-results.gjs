@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class FilterNoResults extends Component {
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   get shouldDisplay() {
     return (

@@ -1,7 +1,9 @@
+import { lookup } from "discourse/lib/service";
 import deprecated from "discourse/lib/deprecated";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default {
   after: "sniff-capabilities",
@@ -21,7 +23,7 @@ export default {
             id: "discourse.global.site-settings",
           }
         );
-        return owner.lookup("service:site-settings");
+        return lookup(owner, SiteSettingsService);
       },
     });
     Object.defineProperty(owner, "User", {

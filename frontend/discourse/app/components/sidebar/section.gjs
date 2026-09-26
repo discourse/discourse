@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -30,11 +30,13 @@ import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-targe
 import dDragDwell from "discourse/ui-kit/modifiers/d-drag-dwell";
 import { i18n } from "discourse-i18n";
 import SectionHeader from "./section-header";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class SidebarSection extends Component {
-  @service keyValueStore;
+  @service(() => KeyValueStoreService) keyValueStore;
   @service router;
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   @tracked linkDropActive = false;
   @tracked linkDropIndex;

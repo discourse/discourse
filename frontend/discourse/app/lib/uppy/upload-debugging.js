@@ -1,9 +1,10 @@
 import { warn } from "@ember/debug";
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class UppyUploadDebugging {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   constructor(owner) {
     setOwner(this, owner);

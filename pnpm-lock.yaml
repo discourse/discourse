@@ -340,6 +340,9 @@ importers:
       ember-curry-component:
         specifier: ^0.5.0
         version: 0.5.0(@babel/core@7.29.7)(@glint/template@1.9.0)
+      ember-polaris-service:
+        specifier: 0.5.0
+        version: 0.5.0
       ember-resolver:
         specifier: ^13.2.0
         version: 13.2.0
@@ -4296,6 +4299,9 @@ packages:
 
   ember-modifier@4.3.0:
     resolution: {integrity: sha512-O0rirSLQbGg0VJ/NqoQ4uN1bh2iAekZC/Ykma+FkjCM2ofrO38u+d8n3+AK6uVWeMJmogGX2KL+Is5fofoInJg==}
+
+  ember-polaris-service@0.5.0:
+    resolution: {integrity: sha512-dugyu/H+h1dBjKpPQvQ/Mtml32lWnP7sDvMLKbqNnS2M8NGVQ/j7dov8FR0gAKwjWhCn+osUekGiG4PhEZ3wqg==}
 
   ember-qunit@9.1.0:
     resolution: {integrity: sha512-dE32lSODyv4em0ACBS8PDzrAIPKR75hhSpn/au0qFBlzbdmNA/VVsgv2aoFAVRdlQ0zYJ8EiNPFqsBFciIeXVA==}
@@ -12252,6 +12258,12 @@ snapshots:
       decorator-transforms: 2.4.0(@babel/core@7.29.7)
     transitivePeerDependencies:
       - '@babel/core'
+      - supports-color
+
+  ember-polaris-service@0.5.0:
+    dependencies:
+      '@embroider/addon-shim': 1.10.3
+    transitivePeerDependencies:
       - supports-color
 
   ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0):

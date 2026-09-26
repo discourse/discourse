@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import MessageBusService from "discourse/services/message-bus";
 
 export default class MergeUsersProgress extends Component {
-  @service messageBus;
+  @service(() => MessageBusService) messageBus;
 
   @tracked message = i18n("admin.user.merging_user");
 

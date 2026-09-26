@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
+import KeyValueStoreService from "discourse/services/key-value-store";
 
 // For use in plugins
 export default class TopicNavigationPopup extends Component {
-  @service keyValueStore;
+  @service(() => KeyValueStoreService) keyValueStore;
 
   @tracked hidden = false;
 

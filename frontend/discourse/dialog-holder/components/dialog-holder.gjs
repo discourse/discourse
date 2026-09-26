@@ -1,15 +1,16 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import A11yDialog from "a11y-dialog";
 import { modifier } from "ember-modifier";
 import { notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class DialogHolder extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   setupDialog = modifier((element) => {
     const dialogInstance = new A11yDialog(element);

@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
@@ -16,9 +16,10 @@ import DDecoratedHtml, {
 } from "discourse/ui-kit/d-decorated-html";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 class DecoratedPreviewCookText extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked cooked = null;
 

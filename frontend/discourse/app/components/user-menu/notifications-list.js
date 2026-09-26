@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import UserMenuNotificationsListEmptyState from "discourse/components/user-menu/notifications-list-empty-state";
 import { ajax } from "discourse/lib/ajax";
@@ -15,6 +15,11 @@ import {
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
+import ModalService from "discourse/services/modal";
 
 const MAX_LIMIT = MAX_NOTIFICATIONS_LIMIT_PARAMS;
 const DEFAULT_LIMIT = 30;
@@ -33,11 +38,11 @@ export function setNotificationsLimit(newLimit) {
 }
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
-  @service appEvents;
-  @service currentUser;
-  @service siteSettings;
-  @service site;
-  @service modal;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteService) site;
+  @service(() => ModalService) modal;
 
   constructor() {
     super(...arguments);

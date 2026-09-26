@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { trackedArray, trackedMap } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -10,6 +10,9 @@ import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
+import CurrentUserService from "discourse/services/current-user";
+import MessageBusService from "discourse/services/message-bus";
+import SiteSettingsService from "discourse/services/site-settings";
 
 function isNew(topic) {
   return (
@@ -53,9 +56,9 @@ function hasMutedTags(topicTagIds, mutedTags, siteSettings) {
 }
 
 export default class TopicTrackingState extends EmberObject {
-  @service currentUser;
-  @service messageBus;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => MessageBusService) messageBus;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked messageCount = 0;
   @tracked incomingCount = 0;

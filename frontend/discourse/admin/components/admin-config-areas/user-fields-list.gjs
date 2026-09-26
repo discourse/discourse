@@ -1,17 +1,20 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminUserFieldItem from "discourse/admin/components/admin-user-field-item";
 import UserField from "discourse/admin/models/user-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ToastsService from "discourse/float-kit/services/toasts";
+import AdminUserFieldsService from "discourse/admin/services/admin-user-fields";
 
 export default class AdminConfigAreasUserFieldsList extends Component {
-  @service dialog;
-  @service toasts;
-  @service adminUserFields;
+  @service(() => DialogService) dialog;
+  @service(() => ToastsService) toasts;
+  @service(() => AdminUserFieldsService) adminUserFields;
 
   /** @type {any} */
   fieldTypes = UserField.fieldTypes();

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
@@ -15,12 +15,14 @@ import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import ComposerService from "discourse/services/composer";
 
 const DRAFTS_LIMIT = 4;
 
 export default class TopicDraftsDropdown extends Component {
-  @service currentUser;
-  @service composer;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ComposerService) composer;
 
   @tracked drafts = [];
   @tracked loading = false;

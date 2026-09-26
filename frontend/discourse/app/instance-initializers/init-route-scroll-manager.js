@@ -1,5 +1,7 @@
+import { lookup } from "discourse/lib/service";
+import RouteScrollManagerService from "discourse/services/route-scroll-manager";
 export default {
   initialize(owner) {
-    owner.lookup("service:route-scroll-manager");
+    lookup(owner, RouteScrollManagerService);
   },
 };

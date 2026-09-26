@@ -1,12 +1,13 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class InvitesShow extends DiscourseRoute {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   titleToken() {
     return i18n("invites.accept_title");

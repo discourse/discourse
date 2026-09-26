@@ -1,8 +1,11 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
+import ComposerService from "discourse/services/composer";
 
 class Tab extends EmberObject {
   init() {
@@ -16,10 +19,10 @@ class Tab extends EmberObject {
 }
 
 export default class GroupController extends Controller {
-  @service dialog;
-  @service currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service composer;
+  @service(() => ComposerService) composer;
   @controller application;
 
   counts = null;

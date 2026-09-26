@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import WebhookItem from "discourse/admin/components/webhook-item";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -8,9 +8,10 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminConfigAreasWebhooksList extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   @action
   destroyWebhook(webhook) {

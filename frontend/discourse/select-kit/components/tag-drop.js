@@ -1,5 +1,5 @@
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
@@ -14,6 +14,7 @@ import {
 import { i18n } from "discourse-i18n";
 import TagDropHeader from "./tag-drop/tag-drop-header";
 import TagRow from "./tag-row";
+import TagUtilsService from "discourse/select-kit/services/tag-utils";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";
@@ -35,7 +36,7 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 })
 @pluginApiIdentifiers("tag-drop")
 export default class TagDrop extends ComboBoxComponent {
-  @service tagUtils;
+  @service(() => TagUtilsService) tagUtils;
 
   init() {
     super.init(...arguments);

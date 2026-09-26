@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import Owner, { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import {
   type FloatCloseOptions,
   type FloatKitTrigger,
@@ -14,6 +14,7 @@ import {
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import { animateClosing } from "discourse/lib/animation-utils";
+import MenuServiceInjected from "discourse/float-kit/services/menu";
 
 /**
  * The concrete float instance backing a menu. It holds the menu's options,
@@ -22,7 +23,7 @@ import { animateClosing } from "discourse/lib/animation-utils";
  * it closes.
  */
 export default class DMenuInstance extends FloatKitInstance {
-  @service declare menu: MenuService;
+  @service(() => MenuServiceInjected) declare menu: MenuService;
 
   /** Whether the menu is currently open. */
   @tracked expanded = false;

@@ -1,5 +1,5 @@
 import Evented from "@ember/object/evented";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 
 // `Service.extend(Evented)` mixes the Evented methods (`on`, `off`, `one`, `trigger`, `has`)
 // in at runtime, but Ember's `.extend` typing does not surface them. Merging an interface of

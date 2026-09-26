@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
@@ -13,10 +13,11 @@ import {
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
 import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
+import SiteService from "discourse/services/site";
 
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
-  @service site;
+  @service(() => SiteService) site;
 
   @tracked model;
   @tracked listContext = "user-activity";

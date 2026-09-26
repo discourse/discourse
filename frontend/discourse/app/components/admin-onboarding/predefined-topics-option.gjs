@@ -1,10 +1,10 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
+import { service } from "discourse/lib/service";
+import ModalService from "discourse/services/modal";
 
 export default class PredefinedTopicsOption extends StartPostingOption {
-  @service modal;
+  @service(() => ModalService) modal;
 
   name = "predefined-option";
   title = "admin_onboarding_banner.start_posting.predefined_topics";
@@ -12,6 +12,9 @@ export default class PredefinedTopicsOption extends StartPostingOption {
 
   @action
   onSelect() {
-    this.modal.show(PredefinedTopicsOptionsModal);
+    this.modal.show(
+      () =>
+        import("discourse/components/admin-onboarding/modal/predefined-topics-options")
+    );
   }
 }

@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
@@ -15,15 +15,19 @@ import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import ThemeUploadAddModal from "../../../components/theme-upload-add";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteSettingsService from "discourse/services/site-settings";
+import ModalService from "discourse/services/modal";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const THEME_UPLOAD_VAR = 2;
 
 export default class AdminCustomizeThemesShowIndexController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @service router;
-  @service siteSettings;
-  @service modal;
-  @service toasts;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ModalService) modal;
+  @service(() => ToastsService) toasts;
 
   editRouteName = "adminCustomizeThemes.edit";
 

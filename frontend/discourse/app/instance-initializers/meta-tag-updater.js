@@ -1,5 +1,7 @@
+import { lookup } from "discourse/lib/service";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { getCanonicalUrl } from "discourse/lib/url";
+import AppEventsService from "discourse/services/app-events";
 
 export default {
   initialize(owner) {
@@ -13,7 +15,7 @@ export default {
     // workaround for mobile Chrome, which uses the canonical url when sharing
     const canonicalUrl = document.querySelector("link[rel='canonical']");
 
-    const appEvents = owner.lookup("service:app-events");
+    const appEvents = lookup(owner, AppEventsService);
     appEvents.on("page:changed", ({ title, url }) => {
       const absoluteUrl = getAbsoluteURL(url);
 

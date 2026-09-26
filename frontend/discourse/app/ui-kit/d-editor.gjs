@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, schedule, scheduleOnce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isNone, isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
@@ -55,6 +55,9 @@ import {
   SKIP,
 } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
+import EmojiStoreService from "discourse/services/emoji-store";
+import ModalService from "discourse/services/modal";
+import MenuService from "discourse/float-kit/services/menu";
 
 export {
   addToolbarCallback,
@@ -70,9 +73,9 @@ export function onToolbarCreate(func) {
 
 @classNames("d-editor")
 export default class DEditor extends Component {
-  @service emojiStore;
-  @service modal;
-  @service menu;
+  @service(() => EmojiStoreService) emojiStore;
+  @service(() => ModalService) modal;
+  @service(() => MenuService) menu;
 
   @tracked editorComponent;
 

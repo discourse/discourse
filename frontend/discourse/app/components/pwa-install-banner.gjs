@@ -2,18 +2,22 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier as modifierFn } from "ember-modifier";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import DButton from "discourse/ui-kit/d-button";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
 export default class PwaInstallBanner extends Component {
-  @service capabilities;
-  @service currentUser;
-  @service keyValueStore;
-  @service siteSettings;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked
   bannerDismissed =

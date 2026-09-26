@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
@@ -12,6 +12,7 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
 
 const WAITER = buildWaiter("ace-editor");
 const COLOR_VARS_REGEX =
@@ -59,7 +60,7 @@ function overridePlaceholder(ace) {
 // @submit
 // @setWarning
 export default class AceEditor extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @tracked isLoading = true;
 

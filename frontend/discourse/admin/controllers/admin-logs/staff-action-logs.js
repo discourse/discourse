@@ -1,16 +1,18 @@
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { i18n } from "discourse-i18n";
 import AdminStaffActionLogComponent from "../../components/modal/staff-action-log-change";
 import StaffActionLogDetailsModal from "../../components/modal/staff-action-log-details";
+import ModalService from "discourse/services/modal";
+import StoreService from "discourse/services/store";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
-  @service modal;
-  @service store;
+  @service(() => ModalService) modal;
+  @service(() => StoreService) store;
 
   queryParams = ["filters", "startDate", "endDate"];
   model = null;

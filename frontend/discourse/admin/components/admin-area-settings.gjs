@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminFilteredSiteSettings from "discourse/admin/components/admin-filtered-site-settings";
 import AdminSiteSettingsChangesBanner from "discourse/admin/components/admin-site-settings-changes-banner";
@@ -12,9 +12,10 @@ import { bind } from "discourse/lib/decorators";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
+import AdminSiteSettingStoreService from "discourse/admin/services/admin-site-setting-store";
 
 export default class AdminAreaSettings extends Component {
-  @service adminSiteSettingStore;
+  @service(() => AdminSiteSettingStoreService) adminSiteSettingStore;
 
   @tracked settings = [];
   @tracked loading = false;

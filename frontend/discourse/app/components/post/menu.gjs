@@ -4,7 +4,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -38,6 +38,12 @@ import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import MenuService from "discourse/float-kit/services/menu";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
 
 const VIBRATE_DURATION = 5;
 
@@ -79,12 +85,12 @@ const defaultDagOptions = {
 };
 
 export default class PostMenu extends Component {
-  @service capabilities;
-  @service currentUser;
-  @service modal;
-  @service menu;
-  @service siteSettings;
-  @service store;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
+  @service(() => MenuService) menu;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
 
   @tracked collapsed = applyValueTransformer(
     "post-menu-collapsed",

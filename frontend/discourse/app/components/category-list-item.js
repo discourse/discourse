@@ -1,12 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import categoryListSubcategories, {
   hasGrandchildren,
 } from "discourse/helpers/category-list-subcategories";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DiscoveryService from "discourse/services/discovery";
 
 const LIST_TYPE = {
   NORMAL: "normal",
@@ -15,7 +16,7 @@ const LIST_TYPE = {
 
 @tagName("")
 export default class CategoryListItem extends Component {
-  @service discovery;
+  @service(() => DiscoveryService) discovery;
 
   category = null;
   listType = LIST_TYPE.NORMAL;

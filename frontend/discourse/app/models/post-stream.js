@@ -3,7 +3,7 @@ import { get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedObject } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -20,6 +20,8 @@ import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { loadTopicView } from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import StoreService from "discourse/services/store";
 
 let _lastEditNotificationClick = null;
 
@@ -65,8 +67,8 @@ export function resetLastEditNotificationClick() {
 export default class PostStream extends RestModel {
   static PLACEHOLDER = new Placeholder("post-placeholder");
 
-  @service currentUser;
-  @service store;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => StoreService) store;
 
   @tracked appendingPlaceholders = 0;
   @tracked filter;

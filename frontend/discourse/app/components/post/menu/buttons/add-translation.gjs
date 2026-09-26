@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -10,10 +10,12 @@ import Composer from "discourse/models/composer";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import ModalService from "discourse/services/modal";
 
 export default class PostMenuAddTranslationButton extends Component {
-  @service composer;
-  @service modal;
+  @service(() => ComposerService) composer;
+  @service(() => ModalService) modal;
 
   get showTranslationButton() {
     return this.args.post.can_localize_post;

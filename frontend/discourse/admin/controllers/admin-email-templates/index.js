@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { arraySortedByProperties } from "discourse/lib/array-tools";
 import DiscourseURL, { applyQueryParams } from "discourse/lib/url";
 

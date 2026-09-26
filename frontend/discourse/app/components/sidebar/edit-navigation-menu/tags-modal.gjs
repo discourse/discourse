@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -14,11 +14,14 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import EditNavigationMenuModal from "./modal";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
 
 export default class SidebarEditNavigationMenuTagsModal extends Component {
-  @service currentUser;
-  @service siteSettings;
-  @service store;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
 
   @tracked disableFiltering = false;
   @tracked saving = false;

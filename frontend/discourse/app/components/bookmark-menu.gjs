@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -18,11 +18,14 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import CurrentUserService from "discourse/services/current-user";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class BookmarkMenu extends Component {
-  @service modal;
-  @service currentUser;
-  @service toasts;
+  @service(() => ModalService) modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ToastsService) toasts;
 
   @tracked quicksaved = false;
   @tracked reminderAtOptions = [];

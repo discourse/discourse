@@ -1,5 +1,11 @@
+import { lookup } from "discourse/lib/service";
 import EmbedMode from "discourse/lib/embed-mode";
 import Session from "discourse/models/session";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import ScreenTrackService from "discourse/services/screen-track";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const ANON_TOPIC_IDS = 2;
 const ANON_PROMPT_READ_TIME = 2 * 60 * 1000;
@@ -8,14 +14,15 @@ const PROMPT_HIDE_DURATION = ONE_DAY;
 
 export default {
   initialize(owner) {
-    const appEvents = owner.lookup("service:app-events");
+    const appEvents = lookup(owner, AppEventsService);
     const applicationController = owner.lookup("controller:application");
-    const currentUser = owner.lookup("service:current-user");
-    const keyValueStore = owner.lookup("service:key-value-store");
-    const screenTrack = owner.lookup("service:screen-track");
+    const currentUser = lookup(owner, CurrentUserService);
+    const keyValueStore = lookup(owner, KeyValueStoreService);
+    const screenTrack = lookup(owner, ScreenTrackService);
     const session = Session.current();
-    const { enable_signup_cta, login_required } = owner.lookup(
-      "service:site-settings"
+    const { enable_signup_cta, login_required } = lookup(
+      owner,
+      SiteSettingsService
     );
 
     if (currentUser) {

@@ -1,16 +1,18 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DesignWizardControls from "discourse/components/design-wizard/controls";
 import { isTesting } from "discourse/lib/environment";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DesignWizardService from "discourse/services/design-wizard";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class DesignWizardPanel extends Component {
-  @service designWizard;
-  @service dialog;
+  @service(() => DesignWizardService) designWizard;
+  @service(() => DialogService) dialog;
 
   element;
 

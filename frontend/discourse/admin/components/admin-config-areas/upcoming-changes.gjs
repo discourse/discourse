@@ -3,15 +3,16 @@ import { cached } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @cached
   get upcomingChanges() {

@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Invite from "discourse/models/invite";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";

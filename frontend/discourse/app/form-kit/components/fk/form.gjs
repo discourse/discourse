@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import curryComponent from "ember-curry-component";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FKAlert from "discourse/form-kit/components/fk/alert";
@@ -28,9 +28,10 @@ import FKFormData from "discourse/form-kit/lib/fk-form-data";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 class FKForm extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @service router;
 
   @tracked isValidating = false;

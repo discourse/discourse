@@ -1,14 +1,16 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class Users extends DiscourseRoute {
   @service router;
-  @service siteSettings;
-  @service currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
 
   queryParams = {
     period: { refreshModel: true },

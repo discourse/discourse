@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import { schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -11,15 +12,20 @@ import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import SessionService from "discourse/services/session";
+import SiteService from "discourse/services/site";
+import CapabilitiesService from "discourse/services/capabilities";
+import ModalService from "discourse/services/modal";
 
 export default {
   initialize(owner) {
     withPluginApi((api) => {
-      const siteSettings = owner.lookup("service:site-settings");
-      const session = owner.lookup("service:session");
-      const site = owner.lookup("service:site");
-      const capabilities = owner.lookup("service:capabilities");
-      const modal = owner.lookup("service:modal");
+      const siteSettings = lookup(owner, SiteSettingsService);
+      const session = lookup(owner, SessionService);
+      const site = lookup(owner, SiteService);
+      const capabilities = lookup(owner, CapabilitiesService);
+      const modal = lookup(owner, ModalService);
 
       api.decorateCookedElement((elem) => {
         return highlightSyntax(elem, siteSettings, session);

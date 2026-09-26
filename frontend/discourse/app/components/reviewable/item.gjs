@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classify, dasherize } from "@ember/string";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
@@ -52,6 +52,14 @@ import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
+import ComposerService from "discourse/services/composer";
+import StoreService from "discourse/services/store";
+import ToastsService from "discourse/float-kit/services/toasts";
+import MessageBusService from "discourse/services/message-bus";
 
 const PENALTY_TOAST_KEY = "reviewable-author-penalty";
 
@@ -75,14 +83,14 @@ const defaultActionModalClassMap = {
 };
 
 export default class ReviewableItem extends Component {
-  @service dialog;
-  @service modal;
-  @service siteSettings;
-  @service currentUser;
-  @service composer;
-  @service store;
-  @service toasts;
-  @service messageBus;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ComposerService) composer;
+  @service(() => StoreService) store;
+  @service(() => ToastsService) toasts;
+  @service(() => MessageBusService) messageBus;
   @optionalService adminTools;
 
   @tracked disabled = false;

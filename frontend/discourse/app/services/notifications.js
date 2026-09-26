@@ -1,10 +1,11 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { service } from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import CurrentUserService from "discourse/services/current-user";
 
 @disableImplicitInjections
 export default class NotificationsService extends Service {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked isInDoNotDisturb;
 

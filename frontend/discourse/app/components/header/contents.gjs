@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -10,13 +10,17 @@ import HeaderSearch from "./header-search";
 import HomeLogo from "./home-logo";
 import SidebarToggle from "./sidebar-toggle";
 import TopicInfo from "./topic/info";
+import SiteService from "discourse/services/site";
+import HeaderService from "discourse/services/header";
+import NavigationMenuService from "discourse/services/navigation-menu";
+import SearchService from "discourse/services/search";
 
 export default class Contents extends Component {
-  @service site;
-  @service header;
+  @service(() => SiteService) site;
+  @service(() => HeaderService) header;
   @service router;
-  @service navigationMenu;
-  @service search;
+  @service(() => NavigationMenuService) navigationMenu;
+  @service(() => SearchService) search;
 
   get sidebarIcon() {
     if (this.navigationMenu.isDesktopDropdownMode) {

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import DashboardEngagement from "discourse/admin/components/dashboard/engagement";
@@ -19,11 +19,12 @@ import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 const sectionComponentFor = (id) => lookupAdminDashboardSection(id);
 
 export default class RedesignedAdminDashboard extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get configurationSections() {
     return this.args.loadedSections?.configuration?.sections ?? [];

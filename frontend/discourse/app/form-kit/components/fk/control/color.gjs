@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
@@ -15,6 +15,7 @@ import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 function isColorUsed(usedColors, color) {
   const normalizedColor = color.toUpperCase();
@@ -63,7 +64,7 @@ function colorLuminanceClass(color) {
 export default class FKControlColor extends FKBaseControl {
   static controlType = "color";
 
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get showPrefix() {
     return this.args.prefixHex || !this.args.allowNamedColors;

@@ -1,18 +1,23 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
+import AppEventsService from "discourse/services/app-events";
+import SearchService from "discourse/services/search";
 
 export default class HeaderSearch extends Component {
-  @service site;
-  @service siteSettings;
-  @service currentUser;
-  @service appEvents;
-  @service search;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => AppEventsService) appEvents;
+  @service(() => SearchService) search;
 
   advancedSearchButtonHref = "/search?expanded=true";
 

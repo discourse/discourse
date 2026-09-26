@@ -1,4 +1,4 @@
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 
 export default class Breadcrumbs extends Service {

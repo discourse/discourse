@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -13,6 +13,12 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL, { getEditCategoryUrl } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const SIMPLIFIED_FIELD_LIST = [
   "name",
@@ -70,13 +76,13 @@ const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 const DISCUSSION_TYPE_ID = "discussion";
 
 export default class EditCategoryTabsController extends Controller {
-  @service currentUser;
-  @service dialog;
-  @service site;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
   @service router;
-  @service keyValueStore;
-  @service toasts;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => ToastsService) toasts;
 
   @tracked breadcrumbCategories = this.site.categoriesList;
   @tracked

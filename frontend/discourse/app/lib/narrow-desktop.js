@@ -1,3 +1,6 @@
+import { lookup } from "discourse/lib/service";
+import SiteService from "discourse/services/site";
+import HeaderService from "discourse/services/header";
 let narrowDesktopForced = false;
 
 const NarrowDesktop = {
@@ -9,7 +12,7 @@ const NarrowDesktop = {
   },
 
   update(owner, isNarrow) {
-    const site = owner.lookup("service:site");
+    const site = lookup(owner, SiteService);
     if (site.narrowDesktopView === isNarrow) {
       return;
     }
@@ -22,7 +25,7 @@ const NarrowDesktop = {
       applicationController.calculateShowSidebar()
     );
     applicationController.appEvents.trigger("site-header:force-refresh");
-    owner.lookup("service:header").hamburgerVisible = false;
+    lookup(owner, HeaderService).hamburgerVisible = false;
   },
 };
 

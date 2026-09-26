@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class Blurb extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   <template>
     <span class="blurb">

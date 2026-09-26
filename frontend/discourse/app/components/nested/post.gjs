@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, scheduleOnce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -31,15 +31,22 @@ import { i18n } from "discourse-i18n";
 import nestedPostUrl from "../../lib/nested-post-url";
 import processNode from "../../lib/process-node";
 import NestedPostChildren from "./post-children";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
 
 export default class NestedPost extends Component {
-  @service appEvents;
-  @service capabilities;
-  @service currentUser;
-  @service modal;
-  @service site;
-  @service siteSettings;
-  @service store;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
 
   @tracked expanded;
   @tracked lineHighlighted = false;

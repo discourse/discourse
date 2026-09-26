@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
@@ -11,10 +11,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class AdminFlagsForm extends Component {
   @service router;
-  @service site;
+  @service(() => SiteService) site;
 
   get isUpdate() {
     return this.args.flag;

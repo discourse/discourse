@@ -1,15 +1,16 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
 import componentForRow from "discourse/helpers/component-for-row";
 import { getLockState, lock, unlock } from "discourse/lib/body-scroll-lock";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
+import SiteService from "discourse/services/site";
 
 @tagName("")
 export default class SelectKitCollection extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   bodyScrollLock = modifier((element) => {
     if (this.site.desktopView) {

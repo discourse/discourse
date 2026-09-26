@@ -1,5 +1,6 @@
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
+import { serviceFactory } from "discourse/lib/service";
 import { trackedObjectWithComputedSupport } from "discourse/lib/tracked-tools";
 import i18n from "discourse-i18n";
 
@@ -82,7 +83,7 @@ export function createSiteSettingsFromPreloaded(
 export default class SiteSettingsService {
   static isServiceFactory = true;
 
-  static create() {
+  static build() {
     return createSiteSettingsFromPreloaded(
       PreloadStore.get("siteSettings"),
       PreloadStore.get("themeSiteSettingOverrides"),
@@ -91,3 +92,5 @@ export default class SiteSettingsService {
     );
   }
 }
+
+serviceFactory(SiteSettingsService);

@@ -1,9 +1,10 @@
 import Controller from "@ember/controller";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
+import AdminPluginNavManagerService from "discourse/admin/services/admin-plugin-nav-manager";
 
 export default class AdminPluginsController extends Controller {
-  @service adminPluginNavManager;
+  @service(() => AdminPluginNavManagerService) adminPluginNavManager;
   @service router;
 
   get brokenAdminRoutes() {

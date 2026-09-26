@@ -1,5 +1,5 @@
 import EmberObject, { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {

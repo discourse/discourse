@@ -2,7 +2,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
@@ -15,13 +15,16 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteService from "discourse/services/site";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;
 
 export default class IpLookup extends Component {
-  @service dialog;
-  @service site;
-  @service toasts;
+  @service(() => DialogService) dialog;
+  @service(() => SiteService) site;
+  @service(() => ToastsService) toasts;
 
   @tracked location;
   @tracked otherAccounts;

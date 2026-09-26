@@ -1,13 +1,15 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import SiteSettingFilter from "discourse/admin/lib/site-setting-filter";
 import SiteSetting from "discourse/admin/models/site-setting";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import AdminSiteSettingStoreService from "discourse/admin/services/admin-site-setting-store";
+import SiteSettingChangeTrackerService from "discourse/admin/services/site-setting-change-tracker";
 
 export default class AdminSiteSettingsRoute extends DiscourseRoute {
-  @service adminSiteSettingStore;
-  @service siteSettingChangeTracker;
+  @service(() => AdminSiteSettingStoreService) adminSiteSettingStore;
+  @service(() => SiteSettingChangeTrackerService) siteSettingChangeTracker;
 
   queryParams = {
     filter: {

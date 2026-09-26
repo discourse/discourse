@@ -1,8 +1,10 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class RestrictedRouting extends Service {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   get isRestricted() {
     return this._needsRequiredFields || this._needs2fa;

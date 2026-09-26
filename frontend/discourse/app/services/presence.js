@@ -2,13 +2,13 @@ import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import Evented from "@ember/object/evented";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import discourseLater from "discourse/lib/later";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import userPresent, {
@@ -16,6 +16,10 @@ import userPresent, {
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
 import User from "discourse/models/user";
+import CurrentUserService from "discourse/services/current-user";
+import MessageBusService from "discourse/services/message-bus";
+import SessionService from "discourse/services/session";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const PRESENCE_INTERVAL_S = 30;
 const DEFAULT_PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
@@ -263,10 +267,10 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
 @disableImplicitInjections
 export default class PresenceService extends Service {
-  @service currentUser;
-  @service messageBus;
-  @service session;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => MessageBusService) messageBus;
+  @service(() => SessionService) session;
+  @service(() => SiteSettingsService) siteSettings;
 
   _presenceDebounceMs = DEFAULT_PRESENCE_DEBOUNCE_MS;
 

@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import { Promise } from "rsvp";
 import MenuPanel from "discourse/components/menu-panel";
@@ -35,6 +35,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
+import SearchService from "discourse/services/search";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import AppEventsService from "discourse/services/app-events";
+import A11yService from "discourse/services/a11y";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -43,11 +48,11 @@ export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 export default class SearchMenu extends Component {
-  @service search;
-  @service currentUser;
-  @service siteSettings;
-  @service appEvents;
-  @service a11y;
+  @service(() => SearchService) search;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => A11yService) a11y;
 
   @tracked loading = false;
   @tracked isPMInboxCleared = false;

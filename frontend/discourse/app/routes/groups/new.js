@@ -1,4 +1,4 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";

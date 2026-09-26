@@ -10,7 +10,7 @@ import EmberObject, {
 import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -59,6 +59,18 @@ import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
 import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import DocumentTitleService from "discourse/services/document-title";
+import HeaderService from "discourse/services/header";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
+import ModalService from "discourse/services/modal";
+import ScreenTrackService from "discourse/services/screen-track";
+import ScrollStateService from "discourse/services/scroll-state";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const RETRIES_ON_RATE_LIMIT = 4;
 const MIN_BOTTOM_MAP_WORD_COUNT = 200;
@@ -80,20 +92,20 @@ export {
 } from "discourse/lib/plugin-registries/post-message-callbacks";
 
 export default class TopicController extends Controller {
-  @service appEvents;
-  @service composer;
-  @service currentUser;
-  @service dialog;
-  @service documentTitle;
+  @service(() => AppEventsService) appEvents;
+  @service(() => ComposerService) composer;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => DocumentTitleService) documentTitle;
 
-  @service header; // used in the template
-  @service languageNameLookup;
-  @service modal;
+  @service(() => HeaderService) header; // used in the template
+  @service(() => LanguageNameLookupService) languageNameLookup;
+  @service(() => ModalService) modal;
   @service router;
-  @service screenTrack;
-  @service scrollState;
-  @service site;
-  @service siteSettings;
+  @service(() => ScreenTrackService) screenTrack;
+  @service(() => ScrollStateService) scrollState;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked model;
 

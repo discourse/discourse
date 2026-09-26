@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { compare } from "@ember/utils";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
@@ -13,6 +13,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 class Entry {
   @tracked position;
@@ -26,7 +27,7 @@ class Entry {
 }
 
 export default class ReorderCategories extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @tracked changed = false;
   @tracked entries = this.reorder();

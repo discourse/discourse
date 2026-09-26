@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,6 +11,7 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DModal from "discourse/ui-kit/d-modal";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
 
 const States = {
   initializing: "initializing",
@@ -25,7 +26,7 @@ const States = {
 };
 
 export default class PublishPageModal extends Component {
-  @service store;
+  @service(() => StoreService) store;
 
   @tracked state = States.initializing;
   @tracked reason = null;

@@ -1,11 +1,13 @@
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
+import MessageBusService from "discourse/services/message-bus";
+import SiteService from "discourse/services/site";
 
 // Subscribe to "read-only" status change events via the Message Bus
 class ReadOnlyInit {
-  @service messageBus;
-  @service site;
+  @service(() => MessageBusService) messageBus;
+  @service(() => SiteService) site;
 
   constructor(owner) {
     setOwner(this, owner);

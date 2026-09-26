@@ -2,12 +2,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import IpLookupAccountsTable from "discourse/admin/components/ip-lookup-accounts-table";
 import AdminUser from "discourse/admin/models/admin-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { service } from "discourse/lib/service";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
@@ -16,9 +19,9 @@ import { i18n } from "discourse-i18n";
 const MAX_ACCOUNTS_TO_DELETE = 50;
 
 export default class ReviewableIpLookup extends Component {
-  @service currentUser;
-  @service modal;
-  @service dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
+  @service(() => DialogService) dialog;
 
   @tracked location;
   @tracked otherAccounts;

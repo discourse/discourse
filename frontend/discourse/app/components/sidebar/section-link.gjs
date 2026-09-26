@@ -7,13 +7,16 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { eq, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SectionLinkPrefix from "./section-link-prefix";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 /**
  * Checks if a given string is a valid color hex code.
@@ -40,10 +43,10 @@ export function isHex(input) {
  * @param {Object} @suffixArgs - Arguments to pass to the suffix component
  */
 export default class SectionLink extends Component {
-  @service capabilities;
-  @service currentUser;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   @tracked hovering = false;
   @tracked hoverActionActive = false;

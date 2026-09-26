@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
@@ -11,6 +11,8 @@ import getURL from "discourse/lib/get-url";
 import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const PERIOD_COPY_KEYS = {
   last_7_days: {
@@ -31,8 +33,8 @@ const PERIOD_COPY_KEYS = {
 };
 
 export default class DashboardTraffic extends Component {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   hiddenLabels = ["page_view_crawler"];
 

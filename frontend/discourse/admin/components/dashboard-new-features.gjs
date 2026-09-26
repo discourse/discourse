@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DashboardNewFeatureItem from "discourse/admin/components/dashboard-new-feature-item";
@@ -12,9 +12,10 @@ import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class DashboardNewFeatures extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked newFeatures = {};
   @tracked isLoading = true;

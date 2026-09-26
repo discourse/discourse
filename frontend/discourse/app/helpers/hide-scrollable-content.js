@@ -1,10 +1,11 @@
 import Helper from "@ember/component/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import ScrollStateService from "discourse/services/scroll-state";
 
 const VALID_DIRECTIONS = ["above", "below"];
 
 export default class HideScrollableContent extends Helper {
-  @service scrollState;
+  @service(() => ScrollStateService) scrollState;
 
   #registered = false;
 

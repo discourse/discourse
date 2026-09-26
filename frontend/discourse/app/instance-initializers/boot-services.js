@@ -1,6 +1,9 @@
+import { lookup } from "discourse/lib/service";
+import ClientErrorHandlerService from "discourse/services/client-error-handler";
+import DeprecationWarningHandlerService from "discourse/services/deprecation-warning-handler";
 export default {
   initialize(owner) {
-    owner.lookup("service:client-error-handler");
-    owner.lookup("service:deprecation-warning-handler");
+    lookup(owner, ClientErrorHandlerService);
+    lookup(owner, DeprecationWarningHandlerService);
   },
 };

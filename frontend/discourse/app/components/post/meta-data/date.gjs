@@ -1,16 +1,18 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { relativeAge } from "discourse/lib/formatter";
 import { and } from "discourse/truth-helpers";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
+import ModalService from "discourse/services/modal";
 
 export default class PostMetaDataDate extends Component {
-  @service a11y;
-  @service modal;
+  @service(() => A11yService) a11y;
+  @service(() => ModalService) modal;
 
   get srDate() {
     if (this.a11y.autoUpdatingRelativeDateRef && this.args.post.displayDate) {

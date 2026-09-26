@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
 

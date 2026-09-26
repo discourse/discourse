@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import { getURLWithCDN } from "discourse/lib/get-url";
@@ -15,6 +15,8 @@ import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const BACKGROUND_SIZE_COVER_SETTINGS = ["welcome_banner_image"];
 
@@ -71,8 +73,8 @@ const FilePreview = <template>
 </template>;
 
 export default class SiteSettingUpload extends Component {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked uploadedFile = null;
 

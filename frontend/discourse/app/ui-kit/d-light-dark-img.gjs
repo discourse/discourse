@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import DCdnImg from "discourse/ui-kit/d-cdn-img";
+import SessionService from "discourse/services/session";
+import InterfaceColorService from "discourse/services/interface-color";
 
 export default class DLightDarkImg extends Component {
-  @service session;
-  @service interfaceColor;
+  @service(() => SessionService) session;
+  @service(() => InterfaceColorService) interfaceColor;
 
   get isDarkImageAvailable() {
     return (

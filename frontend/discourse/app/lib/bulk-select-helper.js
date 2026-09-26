@@ -1,17 +1,20 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
+import ModalService from "discourse/services/modal";
+import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 export default class BulkSelectHelper {
   @service router;
-  @service modal;
-  @service pmTopicTrackingState;
-  @service topicTrackingState;
+  @service(() => ModalService) modal;
+  @service(() => PmTopicTrackingStateService) pmTopicTrackingState;
+  @service(() => TopicTrackingStateService) topicTrackingState;
 
   @tracked bulkSelectEnabled = false;
   @tracked autoAddTopicsToBulkSelect = false;

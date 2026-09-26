@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, next, scheduleOnce } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { lookup, service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -24,7 +24,7 @@ import prepareFormTemplateData, {
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
@@ -50,6 +50,19 @@ import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
+import ComposerActionStateService from "discourse/services/composer-action-state";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import MessageBusService from "discourse/services/message-bus";
+import ModalService from "discourse/services/modal";
+import SessionService from "discourse/services/session";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -101,20 +114,20 @@ export function addComposerSaveErrorCallback(callback) {
 
 @disableImplicitInjections
 export default class ComposerService extends Service {
-  @service appEvents;
-  @service capabilities;
-  @service composerActionState;
-  @service currentUser;
-  @service dialog;
-  @service keyValueStore;
-  @service messageBus;
-  @service modal;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => ComposerActionStateService) composerActionState;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => MessageBusService) messageBus;
+  @service(() => ModalService) modal;
   @service router;
-  @service session;
-  @service site;
-  @service siteSettings;
-  @service store;
-  @service toasts;
+  @service(() => SessionService) session;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
+  @service(() => ToastsService) toasts;
 
   @tracked selectedTranslationLocale = null;
   messageCount = null;

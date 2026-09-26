@@ -1,7 +1,7 @@
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings, classNames } from "@ember-decorators/component";
@@ -24,6 +24,8 @@ import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import StoreService from "discourse/services/store";
 
 const CATEGORY_HASHTAG_SELECTOR =
   'a.hashtag-cooked[data-type="category"][data-id]';
@@ -51,8 +53,8 @@ const CategoryNameLink = <template>
 @classNames("category-card")
 @classNameBindings("visible:show")
 export default class CategoryCardContents extends CardContentsBase {
-  @service composer;
-  @service store;
+  @service(() => ComposerService) composer;
+  @service(() => StoreService) store;
 
   ancestorCategories = [];
   avatarDataAttrKey = "id";

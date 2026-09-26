@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
@@ -11,6 +11,13 @@ import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
 import Dropdown from "./dropdown";
 import UserDropdown from "./user-dropdown";
+import SiteService from "discourse/services/site";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import NavigationMenuService from "discourse/services/navigation-menu";
+import HeaderService from "discourse/services/header";
+import SearchService from "discourse/services/search";
+import InterfaceColorService from "discourse/services/interface-color";
 
 let headerIcons;
 resetHeaderIcons();
@@ -36,13 +43,13 @@ export function clearExtraHeaderIcons() {
 }
 
 export default class Icons extends Component {
-  @service site;
-  @service currentUser;
-  @service siteSettings;
-  @service navigationMenu;
-  @service header;
-  @service search;
-  @service interfaceColor;
+  @service(() => SiteService) site;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => NavigationMenuService) navigationMenu;
+  @service(() => HeaderService) header;
+  @service(() => SearchService) search;
+  @service(() => InterfaceColorService) interfaceColor;
   @service router;
 
   get showHamburger() {

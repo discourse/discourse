@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class EmbeddableHost extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   @tracked category = null;
   @tracked tags = null;

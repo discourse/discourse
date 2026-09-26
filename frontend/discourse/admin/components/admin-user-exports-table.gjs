@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import UserExport from "discourse/admin/models/user-export";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -10,13 +10,16 @@ import { exportEntity } from "discourse/lib/export-csv";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import MessageBusService from "discourse/services/message-bus";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const EXPORT_PROGRESS_CHANNEL = "/user-export-progress";
 
 export default class extends Component {
-  @service dialog;
-  @service messageBus;
-  @service toasts;
+  @service(() => DialogService) dialog;
+  @service(() => MessageBusService) messageBus;
+  @service(() => ToastsService) toasts;
 
   @tracked userExport = null;
   @tracked userExportReloading = false;

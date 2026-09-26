@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -11,9 +11,10 @@ import { resettableTracked } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class DiscoveryFilterNavigation extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @resettableTracked filterQueryString = this.args.queryString;
 

@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DesktopNotificationsService from "discourse/services/desktop-notifications";
 
 export default class DesktopNotificationsConfig extends Component {
-  @service desktopNotifications;
+  @service(() => DesktopNotificationsService) desktopNotifications;
 
   <template>
     <div class="controls">

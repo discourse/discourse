@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import AdminSiteSettingsFilterControls from "discourse/admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "discourse/admin/components/site-setting";
@@ -11,9 +11,10 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseDebounce from "discourse/lib/debounce";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
+import AdminSiteSettingStoreService from "discourse/admin/services/admin-site-setting-store";
 
 export default class AdminFilteredSiteSettings extends Component {
-  @service adminSiteSettingStore;
+  @service(() => AdminSiteSettingStoreService) adminSiteSettingStore;
 
   @tracked matchedSettings;
   @tracked activeFilter = "";

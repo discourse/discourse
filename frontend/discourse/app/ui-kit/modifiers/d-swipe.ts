@@ -1,11 +1,12 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { bind } from "discourse/lib/decorators";
 import SwipeEvents from "discourse/lib/swipe-events";
 import type Site from "discourse/models/site";
+import SiteService from "discourse/services/site";
 
 /**
  * The gesture state reported by the `swipe-events` custom events and handed to the
@@ -118,7 +119,7 @@ interface DSwipeSignature {
  *   reports a discrete directional flick, not a continuous transform.
  */
 export default class DSwipeModifier extends Modifier<DSwipeSignature> {
-  @service declare site: Site;
+  @service(() => SiteService) declare site: Site;
 
   #enabled = false;
   #lockBody = false;

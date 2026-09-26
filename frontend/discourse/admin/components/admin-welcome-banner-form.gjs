@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
@@ -12,11 +12,14 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import I18n, { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteSettingChangeTrackerService from "discourse/admin/services/site-setting-change-tracker";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class AdminWelcomeBannerForm extends Component {
-  @service siteSettings;
-  @service siteSettingChangeTracker;
-  @service toasts;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteSettingChangeTrackerService) siteSettingChangeTracker;
+  @service(() => ToastsService) toasts;
 
   @tracked formData = {};
   @tracked isLoading = true;

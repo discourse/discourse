@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import noop from "discourse/helpers/noop";
@@ -15,6 +15,7 @@ import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 // This picker is intended to be used with UppyUploadMixin or with
 // ComposerUploadUppy, which is why there are no change events registered
@@ -26,7 +27,7 @@ import { i18n } from "discourse-i18n";
 // the file, such as directly using JSON or CSV data from a file in JS.
 @classNames("pick-files-button")
 export default class DPickFilesButton extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   fileInputId = null;
   fileInputClass = null;

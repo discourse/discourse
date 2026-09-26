@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import UserTip from "discourse/components/user-tip";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class SuggestedTopics extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get suggestedTitle() {
     const href = this.currentUser?.pmPath(this.args.topic);

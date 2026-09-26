@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DesignWizardService from "discourse/services/design-wizard";
 
 let load;
 
 export default class LazyDesignWizardPanel extends Component {
-  @service designWizard;
+  @service(() => DesignWizardService) designWizard;
 
   get component() {
     return (load ??= import("discourse/components/design-wizard-panel"));

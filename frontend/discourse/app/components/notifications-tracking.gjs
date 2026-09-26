@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -12,6 +12,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 function constructKey(prefix, level, suffix, key) {
   let string = prefix + "." + level;
@@ -24,7 +25,7 @@ function constructKey(prefix, level, suffix, key) {
 }
 
 class NotificationsTrackingTrigger extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get showFullTitle() {
     return this.args.showFullTitle ?? true;

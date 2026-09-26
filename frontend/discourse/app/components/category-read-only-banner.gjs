@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { sanitize } from "discourse/lib/text";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class CategoryReadOnlyBanner extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get shouldShow() {
     return (

@@ -1,5 +1,11 @@
+import { lookup } from "discourse/lib/service";
 import EmbedMode from "discourse/lib/embed-mode";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import EmbedAuthFlowService from "discourse/services/embed-auth-flow";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default {
   after: "inject-objects",
@@ -12,13 +18,13 @@ export default {
     // The embed-auth-flow service handles storage access (and sign-in) when
     // embed_full_app_signin_flow is enabled. Eagerly look it up so its
     // post-reload state machine runs, then skip the legacy on-load prompt.
-    const siteSettings = owner.lookup("service:site-settings");
+    const siteSettings = lookup(owner, SiteSettingsService);
     if (siteSettings.embed_full_app_signin_flow) {
-      owner.lookup("service:embed-auth-flow");
+      lookup(owner, EmbedAuthFlowService);
       return;
     }
 
-    const capabilities = owner.lookup("service:capabilities");
+    const capabilities = lookup(owner, CapabilitiesService);
 
     // Storage Access API is needed for Safari's ITP (Intelligent Tracking Prevention)
     // which blocks third-party cookies in iframes. Other browsers don't need this.
@@ -30,7 +36,7 @@ export default {
       return;
     }
 
-    const currentUser = owner.lookup("service:current-user");
+    const currentUser = lookup(owner, CurrentUserService);
 
     // If user is already logged in, storage access is working
     if (currentUser) {
@@ -50,8 +56,8 @@ export default {
   },
 
   async showStorageAccessPrompt(owner) {
-    const dialog = owner.lookup("service:dialog");
-    const siteSettings = owner.lookup("service:site-settings");
+    const dialog = lookup(owner, DialogService);
+    const siteSettings = lookup(owner, SiteSettingsService);
     const siteName = siteSettings.title || "this forum";
 
     const confirmed = await dialog.confirm({

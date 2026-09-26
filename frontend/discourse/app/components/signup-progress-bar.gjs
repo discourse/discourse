@@ -2,11 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class SignupProgressBar extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked steps = [];
 

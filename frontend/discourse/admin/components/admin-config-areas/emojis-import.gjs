@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BackButton from "discourse/components/back-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -11,6 +11,7 @@ import getURL from "discourse/lib/get-url";
 import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import AdminEmojisService from "discourse/admin/services/admin-emojis";
 
 const CONFLICT_CATEGORIES = [
   "conflict_both",
@@ -151,7 +152,7 @@ const ImportSection = <template>
 
 export default class AdminConfigAreasEmojisImport extends Component {
   @service router;
-  @service adminEmojis;
+  @service(() => AdminEmojisService) adminEmojis;
 
   @tracked previewToken = null;
   @tracked previewRows = null;

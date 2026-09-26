@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -12,12 +12,16 @@ import {
 import DButton from "discourse/ui-kit/d-button";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class ConfirmSession extends Component {
-  @service dialog;
-  @service currentUser;
-  @service modal;
-  @service siteSettings;
+  @service(() => DialogService) dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked errorMessage;
   @tracked resetEmailSent = null;

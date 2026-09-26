@@ -1,10 +1,11 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import IncomingEmail from "discourse/admin/models/incoming-email";
 import DiscourseRoute from "discourse/routes/discourse";
+import ModalService from "discourse/services/modal";
 
 export default class AdminEmailLogsRoute extends DiscourseRoute {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @action
   async showIncomingEmail(id) {

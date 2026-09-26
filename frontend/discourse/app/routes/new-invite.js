@@ -1,14 +1,16 @@
 import { trackedArray } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class extends DiscourseRoute {
-  @service currentUser;
-  @service dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
   @service router;
 
   async beforeModel(transition) {

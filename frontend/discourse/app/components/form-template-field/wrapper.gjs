@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { waitForPromise } from "@ember/test-waiters";
 import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
@@ -14,6 +14,8 @@ import MultiSelectField from "./multi-select";
 import TagChooserField from "./tag-chooser";
 import TextareaField from "./textarea";
 import UploadField from "./upload";
+import ComposerService from "discourse/services/composer";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const FormTemplateField = <template>
   <@component
@@ -28,8 +30,8 @@ const FormTemplateField = <template>
 </template>;
 
 export default class FormTemplateFieldWrapper extends Component {
-  @service composer;
-  @service siteSettings;
+  @service(() => ComposerService) composer;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked error = null;
   @tracked parsedTemplate = null;

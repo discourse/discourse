@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import NestedActivityLogItem from "discourse/components/modal/nested-activity-log/item";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,13 +9,18 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import StoreService from "discourse/services/store";
 
 export default class NestedActivityLog extends Component {
-  @service a11y;
-  @service appEvents;
-  @service currentUser;
-  @service dialog;
-  @service store;
+  @service(() => A11yService) a11y;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => StoreService) store;
 
   @tracked loading = true;
   @tracked loadingMore = false;

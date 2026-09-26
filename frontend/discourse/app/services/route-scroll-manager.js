@@ -1,8 +1,9 @@
 import { schedule } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import HistoryStoreService from "discourse/services/history-store";
 
 const STORE_KEY = Symbol("scroll-location");
 
@@ -18,7 +19,7 @@ const STORE_KEY = Symbol("scroll-location");
 @disableImplicitInjections
 export default class RouteScrollManager extends Service {
   @service router;
-  @service historyStore;
+  @service(() => HistoryStoreService) historyStore;
 
   scrollElement = isTesting()
     ? document.getElementById("ember-testing-container")

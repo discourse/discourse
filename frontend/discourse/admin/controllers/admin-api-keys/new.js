@@ -2,17 +2,18 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "../../components/modal/api-key-urls";
+import ModalService from "discourse/services/modal";
 
 export default class AdminApiKeysNewController extends Controller {
   @service router;
 
-  @service modal;
+  @service(() => ModalService) modal;
 
   @tracked userMode;
 

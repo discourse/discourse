@@ -1,9 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { service } from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/ui-kit/d-modal";
+import SiteService from "discourse/services/site";
+import CapabilitiesService from "discourse/services/capabilities";
 
 const LEGACY_OPTS = new Set([
   "admin",
@@ -17,8 +19,8 @@ const LEGACY_OPTS = new Set([
 
 @disableImplicitInjections
 export default class ModalService extends Service {
-  @service site;
-  @service capabilities;
+  @service(() => SiteService) site;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked activeModal;
   @tracked opts = {};

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { notEq } from "discourse/truth-helpers";

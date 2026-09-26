@@ -1,8 +1,10 @@
+import { lookup } from "discourse/lib/service";
+import InterfaceColorService from "discourse/services/interface-color";
 export default {
   after: "inject-objects",
 
   initialize(owner) {
-    const interfaceColor = owner.lookup("service:interface-color");
+    const interfaceColor = lookup(owner, InterfaceColorService);
     interfaceColor.ensureCorrectMode();
   },
 };

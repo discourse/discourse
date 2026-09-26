@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -9,10 +9,12 @@ import TopicNotificationsButton from "discourse/select-kit/components/topic-noti
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class NestedFloatingActions extends Component {
-  @service composer;
-  @service currentUser;
+  @service(() => ComposerService) composer;
+  @service(() => CurrentUserService) currentUser;
 
   topicController = getOwner(this).lookup("controller:topic");
   topicRoute = getOwner(this).lookup("route:topic");

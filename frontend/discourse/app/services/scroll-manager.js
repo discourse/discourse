@@ -1,6 +1,7 @@
 import { scheduleOnce, throttle } from "@ember/runloop";
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { service } from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import ScrollManagerService from "discourse/services/scroll-manager";
 
 /**
  * Service for managing scroll event handling across the application
@@ -29,7 +30,7 @@ export default class ScrollManager extends Service {
    * @example
    * ```javascript
    * // In a component:
-   * @service scrollManager;
+   * @service(() => ScrollManagerService) scrollManager;
    *
    * didInsertElement() {
    *   super.didInsertElement(...arguments);

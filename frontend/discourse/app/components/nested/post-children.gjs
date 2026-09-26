@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,11 +11,14 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import processNode from "../../lib/process-node";
 import NestedPost from "./post";
+import AppEventsService from "discourse/services/app-events";
+import StoreService from "discourse/services/store";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class NestedPostChildren extends Component {
-  @service appEvents;
-  @service store;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => StoreService) store;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked childNodes = [];
   @tracked loading = false;

@@ -1,13 +1,15 @@
 import { action } from "@ember/object";
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { service } from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { findAll } from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 @disableImplicitInjections
 export default class LoginService extends Service {
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   get isOnlyOneExternalLoginMethod() {
     return (

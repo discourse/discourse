@@ -1,5 +1,5 @@
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isPresent } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -10,11 +10,14 @@ import SectionLink from "discourse/lib/sidebar/section-link";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { unicodeSlugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 export default class Section {
-  @service currentUser;
-  @service dialog;
-  @service modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
   @service router;
 
   @autoTrackedArray links;

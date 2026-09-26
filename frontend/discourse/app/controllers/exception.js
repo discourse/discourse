@@ -2,9 +2,10 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import ExceptionService from "discourse/services/exception";
 
 /**
  * You can throw an instance of this error during a route's beforeModel/model/afterModel hooks.
@@ -24,7 +25,7 @@ export class RouteException {
 
 // The controller for the nice error page
 export default class ExceptionController extends Controller {
-  @service exception;
+  @service(() => ExceptionService) exception;
 
   // Handling for the detailed_404 setting (which actually creates 403s)
 

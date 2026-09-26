@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
+import InterfaceColorService from "discourse/services/interface-color";
 
 export default class InterfaceColorSelector extends Component {
-  @service interfaceColor;
+  @service(() => InterfaceColorService) interfaceColor;
 
   get selectorIcon() {
     if (this.interfaceColor.lightModeForced) {

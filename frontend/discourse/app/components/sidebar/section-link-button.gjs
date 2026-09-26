@@ -1,15 +1,18 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import MenuService from "discourse/float-kit/services/menu";
+import HeaderService from "discourse/services/header";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const MORE_MENU = "sidebar-more-section";
 
 export default class SidebarSectionLinkButton extends Component {
-  @service menu;
-  @service header;
-  @service siteSettings;
+  @service(() => MenuService) menu;
+  @service(() => HeaderService) header;
+  @service(() => SiteSettingsService) siteSettings;
 
   @action
   handleClick() {

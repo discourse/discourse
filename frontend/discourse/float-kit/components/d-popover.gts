@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import type TooltipService from "discourse/float-kit/services/tooltip";
 import deprecated from "discourse/lib/deprecated";
+import TooltipServiceInjected from "discourse/float-kit/services/tooltip";
 
 interface DPopoverSignature {
   Blocks: {
@@ -19,7 +20,7 @@ interface DPopoverSignature {
  * @deprecated Use `<DTooltip />` or the `tooltip` service instead.
  */
 export default class DPopover extends Component<DPopoverSignature> {
-  @service declare tooltip: TooltipService;
+  @service(() => TooltipServiceInjected) declare tooltip: TooltipService;
 
   registerDTooltip = modifier((element: HTMLElement) => {
     deprecated(

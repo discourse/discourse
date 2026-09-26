@@ -1,6 +1,6 @@
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { RouteException } from "discourse/controllers/exception";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -13,21 +13,33 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import ClientErrorHandlerService from "discourse/services/client-error-handler";
+import ComposerService from "discourse/services/composer";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ExceptionService from "discourse/services/exception";
+import DocumentTitleService from "discourse/services/document-title";
+import EmbedAuthFlowService from "discourse/services/embed-auth-flow";
+import HistoryStoreService from "discourse/services/history-store";
+import LoadingSliderService from "discourse/services/loading-slider";
+import ModalService from "discourse/services/modal";
+import SiteService from "discourse/services/site";
+import RestrictedRoutingService from "discourse/services/restricted-routing";
 
 export default class ApplicationRoute extends DiscourseRoute {
-  @service clientErrorHandler;
-  @service composer;
-  @service currentUser;
-  @service dialog;
-  @service exception;
-  @service documentTitle;
-  @service embedAuthFlow;
-  @service historyStore;
-  @service loadingSlider;
-  @service modal;
+  @service(() => ClientErrorHandlerService) clientErrorHandler;
+  @service(() => ComposerService) composer;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => ExceptionService) exception;
+  @service(() => DocumentTitleService) documentTitle;
+  @service(() => EmbedAuthFlowService) embedAuthFlow;
+  @service(() => HistoryStoreService) historyStore;
+  @service(() => LoadingSliderService) loadingSlider;
+  @service(() => ModalService) modal;
   @service router;
-  @service site;
-  @service restrictedRouting;
+  @service(() => SiteService) site;
+  @service(() => RestrictedRoutingService) restrictedRouting;
 
   @computed("siteSettings.title")
   get siteTitle() {

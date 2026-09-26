@@ -2,13 +2,17 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 function authorizationStatus(status) {
   return i18n(`user.mcp_authorizations.statuses.${status}`);
@@ -116,10 +120,10 @@ class UserMcpAuthorizationRow extends Component {
 }
 
 export default class UserMcpAuthorizations extends Component {
-  @service a11y;
-  @service currentUser;
-  @service dialog;
-  @service toasts;
+  @service(() => A11yService) a11y;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => ToastsService) toasts;
 
   @tracked authorizations = [];
   @tracked loading = true;

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { compare } from "@ember/utils";
 import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
@@ -10,9 +10,10 @@ import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class DashboardSiteAdvice extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked refreshing = false;
   @tracked ignoringId = null;

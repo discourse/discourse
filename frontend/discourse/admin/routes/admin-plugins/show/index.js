@@ -1,9 +1,10 @@
 import Route from "@ember/routing/route";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import AdminPluginNavManagerService from "discourse/admin/services/admin-plugin-nav-manager";
 
 export default class AdminPluginsShowIndexRoute extends Route {
   @service router;
-  @service adminPluginNavManager;
+  @service(() => AdminPluginNavManagerService) adminPluginNavManager;
 
   model() {
     return this.modelFor("adminPlugins.show");

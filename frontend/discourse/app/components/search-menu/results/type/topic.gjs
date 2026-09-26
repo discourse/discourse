@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
@@ -9,6 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const MaybeAnchor = <template>
   {{#if @href}}
@@ -19,7 +20,7 @@ const MaybeAnchor = <template>
 </template>;
 
 export default class Results extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get shouldShowPrivateMessageIcon() {
     // Only show PM icon if this is a PM AND we're not in a PM-only search

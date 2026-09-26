@@ -1,11 +1,12 @@
 import { setOwner } from "@ember/owner";
 import { debounce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AwsS3 from "@uppy/aws-s3";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { isRateLimitError } from "discourse/lib/ajax-error";
 import { withRateLimitRetry } from "discourse/lib/uploads";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const RETRY_DELAYS = [0, 1000, 3000, 5000];
 const MB = 1024 * 1024;
@@ -13,7 +14,7 @@ const MB = 1024 * 1024;
 const s3MultipartMeta = new WeakMap(); // file -> { attempts: { partNumber -> attempts }, signingErrorRaised: boolean, batchSigner: BatchSigner }
 
 export default class UppyS3Multipart {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   constructor(owner, { uploadRootPath, errorHandler, uppyWrapper }) {
     setOwner(this, owner);

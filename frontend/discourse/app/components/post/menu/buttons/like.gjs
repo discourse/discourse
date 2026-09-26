@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import LikedUsersList from "../liked-users-list";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
@@ -16,7 +17,7 @@ export default class PostMenuLikeButton extends Component {
     });
   }
 
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked isAnimated = false;
 

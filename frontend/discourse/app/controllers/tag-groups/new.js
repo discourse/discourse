@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 
 export default class TagGroupsNewController extends Controller {
   @service router;

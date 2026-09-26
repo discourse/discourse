@@ -2,7 +2,8 @@
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import LogsNoticeService from "discourse/services/logs-notice";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -12,6 +13,7 @@ import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import KeyValueStoreService from "discourse/services/key-value-store";
 
 const _pluginNotices = new DeferredTrackedSet();
 
@@ -55,8 +57,8 @@ class Notice extends EmberObject {
 
 @tagName("")
 export default class GlobalNotice extends Component {
-  @service keyValueStore;
-  @service("logsNotice") logsNoticeService;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => LogsNoticeService) logsNoticeService;
   @service router;
 
   logNotice = null;

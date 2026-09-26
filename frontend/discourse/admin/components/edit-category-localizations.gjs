@@ -1,17 +1,19 @@
 import { fn, hash } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames } from "@ember-decorators/component";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
 
 @classNames("form-kit__section")
 export default class EditCategoryLocalizations extends buildCategoryPanel(
   "localizations"
 ) {
-  @service siteSettings;
-  @service languageNameLookup;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => LanguageNameLookupService) languageNameLookup;
 
   get selectableLocales() {
     const supported =

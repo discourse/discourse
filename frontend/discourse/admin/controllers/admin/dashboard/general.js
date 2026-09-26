@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import Report from "discourse/admin/models/report";
@@ -7,6 +7,8 @@ import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import AdminDashboardTabController from "../../admin-dashboard-tab";
+import SiteSettingsService from "discourse/services/site-settings";
+import ExceptionService from "discourse/services/exception";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {
@@ -15,8 +17,8 @@ function staticReport(reportType) {
 }
 
 export default class AdminDashboardGeneralController extends AdminDashboardTabController {
-  @service siteSettings;
-  @service exception;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ExceptionService) exception;
 
   isLoading = false;
   dashboardFetchedAt = null;

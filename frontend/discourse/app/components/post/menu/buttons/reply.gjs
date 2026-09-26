@@ -1,15 +1,16 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class PostMenuReplyButton extends Component {
   static shouldRender(args) {
     return args.state.canCreatePost;
   }
 
-  @service site;
+  @service(() => SiteService) site;
 
   get showLabel() {
     return (

@@ -1,10 +1,11 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { Promise } from "rsvp";
 import { AUTO_GROUPS, SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import CategoryTypeChooserService from "discourse/services/category-type-chooser";
 
 function getNewCategoryDefaultColors() {
   return applyValueTransformer("category-default-colors", {
@@ -14,7 +15,7 @@ function getNewCategoryDefaultColors() {
 }
 
 export default class NewCategory extends DiscourseRoute {
-  @service categoryTypeChooser;
+  @service(() => CategoryTypeChooserService) categoryTypeChooser;
   @service router;
 
   deactivate() {

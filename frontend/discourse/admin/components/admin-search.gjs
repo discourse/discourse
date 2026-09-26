@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -13,9 +13,10 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import AdminSearchDataSourceService from "discourse/admin/services/admin-search-data-source";
 
 export default class AdminSearch extends Component {
-  @service adminSearchDataSource;
+  @service(() => AdminSearchDataSourceService) adminSearchDataSource;
   @service router;
 
   @tracked filter = this.args.initialFilter ?? "";

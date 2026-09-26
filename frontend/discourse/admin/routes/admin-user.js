@@ -1,11 +1,13 @@
 import { get } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminUser from "discourse/admin/models/admin-user";
 import DiscourseRoute from "discourse/routes/discourse";
+import AdminSidebarStateManagerService from "discourse/admin/services/admin-sidebar-state-manager";
+import UserNavSidebarStateManagerService from "discourse/services/user-nav-sidebar-state-manager";
 
 export default class AdminUserRoute extends DiscourseRoute {
-  @service adminSidebarStateManager;
-  @service userNavSidebarStateManager;
+  @service(() => AdminSidebarStateManagerService) adminSidebarStateManager;
+  @service(() => UserNavSidebarStateManagerService) userNavSidebarStateManager;
 
   serialize(model) {
     return {

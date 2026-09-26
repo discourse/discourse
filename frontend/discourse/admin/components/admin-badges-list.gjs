@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DBadgeButton from "discourse/ui-kit/d-badge-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";

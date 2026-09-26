@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { addBulkDropdownAction } from "discourse/lib/plugin-registries/bulk-dropdown-actions";
 import Topic from "discourse/models/topic";
@@ -10,6 +10,11 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const _customButtons = [];
 const _customOnSelection = {};
@@ -41,11 +46,11 @@ export function addBulkDropdownButton(opts) {
 
 export default class BulkSelectTopicsDropdown extends Component {
   @service router;
-  @service modal;
-  @service currentUser;
-  @service site;
-  @service siteSettings;
-  @service toasts;
+  @service(() => ModalService) modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ToastsService) toasts;
 
   get buttons() {
     let options = [

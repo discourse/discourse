@@ -2,13 +2,14 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { longDate } from "discourse/lib/formatter";
 import Group from "discourse/models/group";
+import ModalService from "discourse/services/modal";
 
 export default class UsersController extends Controller {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @tracked period = "weekly";
 

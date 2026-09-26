@@ -1,17 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import SiteService from "discourse/services/site";
 
 export default class DiscourseBanner extends Component {
-  @service currentUser;
-  @service keyValueStore;
-  @service site;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => SiteService) site;
 
   @tracked hide = false;
 

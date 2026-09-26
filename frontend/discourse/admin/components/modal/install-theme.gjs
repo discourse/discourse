@@ -5,7 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import InstallThemeItem from "discourse/admin/components/install-theme-item";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -22,6 +22,7 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
 
 const MIN_NAME_LENGTH = 4;
 const CREATE_TYPES = [
@@ -30,7 +31,7 @@ const CREATE_TYPES = [
 ];
 
 export default class InstallThemeModal extends Component {
-  @service store;
+  @service(() => StoreService) store;
 
   @tracked selection = this.args.model.selection || "popular";
   @tracked uploadUrl = this.args.model.uploadUrl;

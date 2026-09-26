@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import {
   bufferToBase64,
@@ -15,9 +15,10 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class SecondFactorAddSecurityKey extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked loading = false;
   @tracked errorMessage = null;

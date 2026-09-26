@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ManageableRowListItem from "discourse/admin/components/manageable-row-list-item";
 import ToggleableOrderedList from "discourse/admin/lib/toggleable-ordered-list";
 import DButton from "discourse/ui-kit/d-button";
@@ -10,6 +10,7 @@ import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export const VISIBLE_CAP = 10;
 export const SYNTHETIC_KEYS = ["new_members", "returning", "staff"];
@@ -23,7 +24,7 @@ export function groupToken(groupId) {
 }
 
 export default class CompareGroups extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @tracked search = "";
   @tracked applying = false;

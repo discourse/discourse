@@ -1,9 +1,10 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { siteDir } from "discourse/lib/text-direction";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const SUPPORTED_TYPES = [
   "color",
@@ -26,7 +27,7 @@ const SUPPORTED_TYPES = [
 export default class FKControlInput extends FKBaseControl {
   static controlType = "input";
 
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   constructor(owner, args) {
     super(owner, args);

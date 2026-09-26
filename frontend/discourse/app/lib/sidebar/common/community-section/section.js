@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AboutSectionLink from "discourse/lib/sidebar/common/community-section/about-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
@@ -18,6 +18,7 @@ import InviteSectionLink from "discourse/lib/sidebar/user/community-section/invi
 import MyMessagesSectionLink from "discourse/lib/sidebar/user/community-section/my-messages-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
@@ -36,7 +37,7 @@ const SPECIAL_LINKS_MAP = {
 
 export default class CommunitySection {
   @service router;
-  @service topicTrackingState;
+  @service(() => TopicTrackingStateService) topicTrackingState;
 
   @tracked links;
   @tracked moreLinks;

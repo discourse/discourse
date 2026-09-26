@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { inject as controller } from "@ember/controller";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
@@ -12,10 +12,11 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
 
 export default class AdminEmbeddingHostForm extends Component {
   @service router;
-  @service store;
+  @service(() => StoreService) store;
   @controller adminEmbedding;
 
   get isEditing() {

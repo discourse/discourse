@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 
 export default class AdminReportsController extends Controller {
   @service router;

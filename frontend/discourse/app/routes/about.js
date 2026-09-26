@@ -1,11 +1,12 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class About extends DiscourseRoute {
-  @service site;
+  @service(() => SiteService) site;
 
   async model() {
     const result = await ajax("/about.json");

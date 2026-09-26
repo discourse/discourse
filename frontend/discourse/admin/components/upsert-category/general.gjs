@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import EmojiPicker from "discourse/components/emoji-picker";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -41,17 +41,24 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import ToastsService from "discourse/float-kit/services/toasts";
+import ComposerService from "discourse/services/composer";
+import StoreService from "discourse/services/store";
+import CategoryTypeChooserService from "discourse/services/category-type-chooser";
 
 const DISCUSSION_TYPE_ID = "discussion";
 
 export default class UpsertCategoryGeneral extends Component {
-  @service appEvents;
-  @service site;
-  @service siteSettings;
-  @service toasts;
-  @service composer;
-  @service store;
-  @service categoryTypeChooser;
+  @service(() => AppEventsService) appEvents;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ToastsService) toasts;
+  @service(() => ComposerService) composer;
+  @service(() => StoreService) store;
+  @service(() => CategoryTypeChooserService) categoryTypeChooser;
 
   @tracked loadingDescription = false;
   @tracked descriptionHtml = null;

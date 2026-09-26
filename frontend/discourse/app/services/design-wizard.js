@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import {
   applyColorScheme,
   captureColorSchemeLinks,
@@ -19,6 +19,8 @@ import { homepagePreviewDestination } from "discourse/lib/homepage-router-overri
 import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 import DiscourseURL from "discourse/lib/url";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const STATE_KEY = "design_wizard_panel_state";
 // site settings the wizard mutates locally to preview a selection, and which
@@ -47,9 +49,9 @@ const STEP_COMPLETED_KEY = `onboarding_step_${SELECT_THEME_STEP}`;
  * preview reloads required by a different asset build.
  */
 export default class DesignWizardService extends Service {
-  @service keyValueStore;
+  @service(() => KeyValueStoreService) keyValueStore;
   @service router;
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked active = false;
   @tracked data;

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
@@ -18,11 +18,14 @@ import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import UserStatusService from "discourse/services/user-status";
 
 export default class PostMetaDataPosterName extends Component {
-  @service site;
-  @service siteSettings;
-  @service userStatus;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => UserStatusService) userStatus;
 
   showNameAndGroup = true;
   showGlyph = true;

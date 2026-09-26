@@ -1,5 +1,5 @@
 import EmberObject, { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Backup from "discourse/admin/models/backup";
 import BackupStatus from "discourse/admin/models/backup-status";
 import { ajax } from "discourse/lib/ajax";
@@ -10,15 +10,19 @@ import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import MessageBusService from "discourse/services/message-bus";
+import ModalService from "discourse/services/modal";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
 export default class AdminBackupsRoute extends DiscourseRoute {
-  @service currentUser;
-  @service dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
   @service router;
-  @service messageBus;
-  @service modal;
+  @service(() => MessageBusService) messageBus;
+  @service(() => ModalService) modal;
 
   titleToken() {
     return i18n("admin.backups.title");

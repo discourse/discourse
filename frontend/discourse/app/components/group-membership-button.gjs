@@ -1,18 +1,22 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 @tagName("")
 export default class GroupMembershipButton extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service dialog;
-  @service modal;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
 
   @computed("model.public_admission", "userIsGroupUser")
   get canJoinGroup() {

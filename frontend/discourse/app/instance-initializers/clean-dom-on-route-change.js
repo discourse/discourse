@@ -1,4 +1,7 @@
+import { lookup } from "discourse/lib/service";
 import { scheduleOnce } from "@ember/runloop";
+import AppEventsService from "discourse/services/app-events";
+import DocumentTitleService from "discourse/services/document-title";
 
 function _clean(transition) {
   if (window.MiniProfiler && transition.from) {
@@ -25,8 +28,8 @@ function _clean(transition) {
 
   this.lookup("route:application").send("closeModal");
 
-  this.lookup("service:app-events").trigger("dom:clean");
-  this.lookup("service:document-title").updateContextCount(0);
+  lookup(this, AppEventsService).trigger("dom:clean");
+  lookup(this, DocumentTitleService).updateContextCount(0);
 }
 
 export default {

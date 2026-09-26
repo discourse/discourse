@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -12,12 +12,14 @@ import {
 import { i18n } from "discourse-i18n";
 import UserTip from "../../user-tip";
 import UserStatusBubble from "./user-status-bubble";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const DEFAULT_AVATAR_SIZE = "medium";
 
 export default class Notifications extends Component {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   get avatar() {
     const avatarAttrs = addExtraUserClasses(this.currentUser, {});

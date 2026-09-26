@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import SortableColumn from "./sortable-column";
+import MoreTopicsTabsService from "discourse/services/more-topics-tabs";
 
 export default class TopicCell extends Component {
-  @service moreTopicsTabs;
+  @service(() => MoreTopicsTabsService) moreTopicsTabs;
 
   get showTabs() {
     return this.moreTopicsTabs.tabs.length > 1;

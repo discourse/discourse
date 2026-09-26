@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ChangesBanner from "discourse/admin/components/changes-banner";
 import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import SiteSettingChangeTrackerService from "discourse/admin/services/site-setting-change-tracker";
 
 export default class AdminSiteSettingsChangesBanner extends Component {
-  @service siteSettingChangeTracker;
+  @service(() => SiteSettingChangeTrackerService) siteSettingChangeTracker;
 
   get dirtyCount() {
     return this.siteSettingChangeTracker.count;

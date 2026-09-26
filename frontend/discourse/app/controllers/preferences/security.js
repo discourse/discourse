@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,15 +9,18 @@ import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
 export default class SecurityController extends Controller {
-  @service modal;
-  @service dialog;
+  @service(() => ModalService) modal;
+  @service(() => DialogService) dialog;
   @service router;
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");

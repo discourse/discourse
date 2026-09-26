@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import CustomSection from "./custom-section";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
 
 export default class SidebarCustomSections extends Component {
-  @service currentUser;
-  @service site;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
 
   anonymous = false;
 

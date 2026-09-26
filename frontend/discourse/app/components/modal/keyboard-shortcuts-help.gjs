@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import { capabilities } from "discourse/services/capabilities";
@@ -13,6 +13,7 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import DModal from "discourse/ui-kit/d-modal";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 const KEY = "keyboard_shortcuts_help";
 
@@ -87,7 +88,7 @@ function buildShortcut(
 }
 
 export default class KeyboardShortcutsHelp extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked searchTerm = "";
 

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Permalink from "discourse/admin/models/permalink";
@@ -12,6 +12,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
 
 const TYPE_TO_FIELD_MAP = {
   topic: "topicId",
@@ -24,7 +25,7 @@ const TYPE_TO_FIELD_MAP = {
 
 export default class AdminFlagsForm extends Component {
   @service router;
-  @service store;
+  @service(() => StoreService) store;
   @controller adminPermalinks;
 
   get isUpdate() {

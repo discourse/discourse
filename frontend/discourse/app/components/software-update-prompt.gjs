@@ -2,17 +2,19 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import MessageBusService from "discourse/services/message-bus";
+import SessionService from "discourse/services/session";
 
 export default class SoftwareUpdatePrompt extends Component {
-  @service messageBus;
-  @service session;
+  @service(() => MessageBusService) messageBus;
+  @service(() => SessionService) session;
 
   @tracked showPrompt = false;
   @tracked animatePrompt = false;

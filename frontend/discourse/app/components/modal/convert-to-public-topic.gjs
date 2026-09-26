@@ -2,15 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { extractError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
 
 export default class ConvertToPublicTopic extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @tracked publicCategoryId;
   @tracked saving = false;

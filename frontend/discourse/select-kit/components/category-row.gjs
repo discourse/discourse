@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
 import Category from "discourse/models/category";
@@ -11,10 +11,12 @@ import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class CategoryRow extends Component {
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   readOnlyDesc = i18n("category_row.read_only_description");
 

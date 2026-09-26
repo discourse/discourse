@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { NodeSelection } from "prosemirror-state";
@@ -14,6 +14,9 @@ import { eq } from "discourse/truth-helpers";
 import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input";
+import AppEventsService from "discourse/services/app-events";
+import MenuService from "discourse/float-kit/services/menu";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
 
@@ -90,9 +93,9 @@ class ImageToolbar extends ToolbarBase {
 }
 
 export default class ImageNodeView extends Component {
-  @service("app-events") appEvents;
-  @service menu;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => MenuService) menu;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked imageToolbar;
   @tracked menuInstance;

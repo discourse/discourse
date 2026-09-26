@@ -6,7 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import ComposerActionTitle from "discourse/components/composer-action-title";
@@ -43,6 +43,12 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import AppEventsService from "discourse/services/app-events";
+import KeyValueStoreService from "discourse/services/key-value-store";
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
   if (!enabled) {
@@ -93,12 +99,12 @@ const PmUserSelector = <template>
 </template>;
 
 export default class ComposerContainer extends Component {
-  @service composer;
-  @service languageNameLookup;
-  @service site;
-  @service siteSettings;
-  @service appEvents;
-  @service keyValueStore;
+  @service(() => ComposerService) composer;
+  @service(() => LanguageNameLookupService) languageNameLookup;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => KeyValueStoreService) keyValueStore;
 
   @tracked toolbarPortalTarget;
 

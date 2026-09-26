@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BlockOutlet from "discourse/blocks/block-outlet";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -28,6 +28,10 @@ import ApiSections from "../api-sections";
 import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";
 import TagsSection from "./tags-section";
+import SidebarStateService from "discourse/services/sidebar-state";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 /**
  * How long the revealed drop zone stays inert. Revealing shifts everything
@@ -37,10 +41,10 @@ import TagsSection from "./tags-section";
 const ZONE_ARM_DELAY = 250;
 
 export default class SidebarUserSections extends Component {
-  @service sidebarState;
-  @service currentUser;
-  @service dialog;
-  @service modal;
+  @service(() => SidebarStateService) sidebarState;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
 
   /** Whether the new-section drop zone is on screen. */
   @tracked zoneRevealed = false;

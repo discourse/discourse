@@ -1,9 +1,11 @@
+import { lookup } from "discourse/lib/service";
 import { withPluginApi } from "discourse/lib/core-api";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import { sanitize } from "discourse/lib/text";
 import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default {
   initialize(owner) {
@@ -53,7 +55,7 @@ export default {
 
         const video = parentDiv.querySelector("video");
 
-        const caps = owner.lookup("service:capabilities");
+        const caps = lookup(owner, CapabilitiesService);
         if (caps.isSafari || caps.isIOS) {
           const source = video.querySelector("source");
           if (source) {

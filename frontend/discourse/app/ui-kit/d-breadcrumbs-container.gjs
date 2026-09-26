@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import BreadcrumbsService from "discourse/services/breadcrumbs";
 
 export default class DBreadcrumbsContainer extends Component {
-  @service breadcrumbs;
+  @service(() => BreadcrumbsService) breadcrumbs;
 
   registerContainer = modifier((element) => {
     const container = { element };

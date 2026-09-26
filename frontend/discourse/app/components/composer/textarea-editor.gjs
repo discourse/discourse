@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ItsATrap from "@discourse/itsatrap";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
@@ -9,9 +9,10 @@ import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-e
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class TextareaEditor extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   textarea;
 

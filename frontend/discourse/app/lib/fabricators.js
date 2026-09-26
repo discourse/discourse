@@ -7,9 +7,10 @@ in a placeholder component. It should not be used for any other case.
 
 import ApplicationInstance from "@ember/application/instance";
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { getLoadedFaker } from "discourse/lib/load-faker";
 import { excerpt } from "./text";
+import StoreService from "discourse/services/store";
 
 let sequence = 1;
 
@@ -18,7 +19,7 @@ export function incrementSequence() {
 }
 
 export default class CoreFabricators {
-  @service store;
+  @service(() => StoreService) store;
 
   constructor(owner) {
     if (owner && !(owner instanceof ApplicationInstance)) {

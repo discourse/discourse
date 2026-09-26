@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
 import { extractError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
@@ -13,6 +13,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 const SLOW_MODE_OPTIONS = [
   {
@@ -62,7 +63,7 @@ const SLOW_MODE_OPTIONS = [
 ];
 
 export default class EditSlowMode extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked selectedSlowMode;
   @tracked hours;

@@ -6,7 +6,7 @@ import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -33,6 +33,10 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
+import EmojiStoreService from "discourse/services/emoji-store";
+import CapabilitiesService from "discourse/services/capabilities";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const DEFAULT_LAST_SECTION = "favorites";
 
@@ -53,10 +57,10 @@ const tonableEmojiUrl = (emoji, scale) => {
 };
 
 export default class EmojiPicker extends Component {
-  @service emojiStore;
-  @service capabilities;
-  @service site;
-  @service siteSettings;
+  @service(() => EmojiStoreService) emojiStore;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked isFiltering = false;
   @tracked filteredEmojis = null;

@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ApiSections from "./api-sections";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class SidebarApiPanels extends Component {
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   get panelCssClass() {
     return `${this.sidebarState.currentPanel.key}-panel`;

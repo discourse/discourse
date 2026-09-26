@@ -1,3 +1,5 @@
+import { lookup } from "discourse/lib/service";
+import CurrentUserService from "discourse/services/current-user";
 const SESSION_KEY_PENDING = "discourse:embed:popup-callback";
 
 export default {
@@ -22,7 +24,7 @@ export default {
       return;
     }
 
-    const currentUser = owner.lookup("service:current-user");
+    const currentUser = lookup(owner, CurrentUserService);
     if (!currentUser) {
       return;
     }

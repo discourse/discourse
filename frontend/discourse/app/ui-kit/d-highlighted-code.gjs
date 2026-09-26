@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import highlightSyntax from "discourse/lib/highlight-syntax";
+import SessionService from "discourse/services/session";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class DHighlightedCode extends Component {
-  @service session;
-  @service siteSettings;
+  @service(() => SessionService) session;
+  @service(() => SiteSettingsService) siteSettings;
 
   highlight = modifier(async (element) => {
     const code = document.createElement("code");

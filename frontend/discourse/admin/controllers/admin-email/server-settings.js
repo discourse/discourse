@@ -1,16 +1,17 @@
 /* eslint-disable ember/no-observers */
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminEmailIndexController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   /**
     Is the "send test email" button disabled?

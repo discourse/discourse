@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -22,11 +22,14 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
 
 export default class ContentLanguagePreferencesModal extends Component {
-  @service currentUser;
-  @service siteSettings;
-  @service languageNameLookup;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => LanguageNameLookupService) languageNameLookup;
 
   @tracked formApi;
   @tracked saving = false;

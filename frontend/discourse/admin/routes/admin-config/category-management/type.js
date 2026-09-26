@@ -1,9 +1,10 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class AdminConfigCategoryManagementTypeRoute extends DiscourseRoute {
-  @service site;
+  @service(() => SiteService) site;
 
   model(params) {
     if (params.category_type_id === "all") {

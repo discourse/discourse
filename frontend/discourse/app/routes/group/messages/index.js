@@ -1,5 +1,5 @@
 import Route from "@ember/routing/route";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 
 export default class GroupMessagesIndex extends Route {
   @service router;

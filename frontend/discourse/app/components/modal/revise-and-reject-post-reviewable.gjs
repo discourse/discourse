@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import ReviewableQueuedPost from "discourse/components/reviewable/queued-post";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -12,11 +12,12 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const OTHER_REASON = "other_reason";
 
 export default class ReviseAndRejectPostReviewable extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked reason = OTHER_REASON;
   @tracked customReason;

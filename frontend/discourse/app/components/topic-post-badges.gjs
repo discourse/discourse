@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class TopicPostBadges extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get displayUnreadPosts() {
     return this.args.newPosts || this.args.unreadPosts;

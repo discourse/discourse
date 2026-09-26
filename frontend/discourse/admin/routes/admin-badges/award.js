@@ -1,8 +1,9 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Route from "discourse/routes/discourse";
+import AdminBadgesService from "discourse/admin/services/admin-badges";
 
 export default class AdminBadgesAwardRoute extends Route {
-  @service adminBadges;
+  @service(() => AdminBadgesService) adminBadges;
 
   async model(params) {
     await this.adminBadges.fetchBadges();

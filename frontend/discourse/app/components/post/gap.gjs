@@ -2,11 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
 
 export default class PostGap extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @tracked loading = false;
 

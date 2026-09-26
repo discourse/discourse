@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import { extractError } from "discourse/lib/ajax-error";
@@ -22,12 +22,17 @@ import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class CreateInvite extends Component {
-  @service currentUser;
-  @service siteSettings;
-  @service site;
-  @service appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteService) site;
+  @service(() => AppEventsService) appEvents;
 
   @tracked saving = false;
   @tracked displayAdvancedOptions = false;
@@ -588,7 +593,7 @@ const InviteModalAlert = <template>
 </template>;
 
 class ShareOrCopyInviteLink extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   @action
   async nativeShare() {

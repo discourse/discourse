@@ -2,15 +2,16 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BufferedProxy from "discourse/lib/buffered-proxy";
 import { isObject } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminEmailTemplatesEditController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @controller adminEmailTemplates;
 
   @tracked emailTemplate = null;

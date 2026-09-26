@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import valueEntered from "discourse/helpers/value-entered";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class FullnameInput extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get showFullnameInstructions() {
     return (

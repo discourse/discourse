@@ -4,7 +4,7 @@ import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { bind, cancel, next, throttle } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty, isNone, isPresent } from "@ember/utils";
 import {
   classNameBindings,
@@ -41,6 +41,7 @@ import SelectKitFilter from "./select-kit/select-kit-filter";
 import SelectKitRow from "./select-kit/select-kit-row";
 import SelectedChoice from "./selected-choice";
 import SelectedName from "./selected-name";
+import AppEventsService from "discourse/services/app-events";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -172,7 +173,7 @@ function protoProp(prototype, key, descriptor) {
 @pluginApiIdentifiers(["select-kit"])
 @selectKitPropUtils
 export default class SelectKit extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   singleSelect = false;
   multiSelect = false;

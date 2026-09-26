@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -8,6 +9,12 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import CurrentUserService from "discourse/services/current-user";
+import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import UserNavSidebarStateManagerService from "discourse/services/user-nav-sidebar-state-manager";
 
 /**
  * Preferences tabs registered by plugins. They reach the horizontal nav through
@@ -462,7 +469,7 @@ const NAV_SECTIONS = [
             {
               id: "new-message",
               title: i18n("user.new_private_message"),
-              action: () => owner.lookup("service:composer").openNewMessage({}),
+              action: () => lookup(owner, ComposerService).openNewMessage({}),
             },
           ]
         : [],
@@ -542,11 +549,11 @@ function navContext(owner) {
     owner,
     controller,
     user: controller?.model,
-    currentUser: owner.lookup("service:current-user"),
-    pmTopicTrackingState: owner.lookup("service:pm-topic-tracking-state"),
+    currentUser: lookup(owner, CurrentUserService),
+    pmTopicTrackingState: lookup(owner, PmTopicTrackingStateService),
     router: owner.lookup("service:router"),
-    site: owner.lookup("service:site"),
-    siteSettings: owner.lookup("service:site-settings"),
+    site: lookup(owner, SiteService),
+    siteSettings: lookup(owner, SiteSettingsService),
   };
 }
 
@@ -749,8 +756,9 @@ export default class UserNavSidebarPanel extends BaseCustomSidebarPanel {
   // admin area as well as from a profile. Sending someone who arrived from
   // admin back to the forum would drop them somewhere they never were.
   get backLink() {
-    const state = getOwnerWithFallback(this).lookup(
-      "service:user-nav-sidebar-state-manager"
+    const state = lookup(
+      getOwnerWithFallback(this),
+      UserNavSidebarStateManagerService
     );
 
     return state.enteredFromAdmin

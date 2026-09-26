@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
@@ -13,9 +13,10 @@ import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class ThemeSiteSettings extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @tracked themesWithSiteSettingOverrides = null;
   @tracked themeableSiteSettings = null;

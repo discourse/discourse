@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
@@ -11,9 +11,10 @@ import CategoryList from "discourse/models/category-list";
 import TopicList from "discourse/models/topic-list";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import SessionService from "discourse/services/session";
 
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
-  @service session;
+  @service(() => SessionService) session;
 
   templateName = "discovery/categories";
   controllerName = "discovery/categories";

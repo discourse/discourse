@@ -4,16 +4,19 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import DEditor from "discourse/ui-kit/d-editor";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import AppEventsService from "discourse/services/app-events";
+import A11yService from "discourse/services/a11y";
 
 export default class FormTemplateFieldComposer extends Component {
-  @service composer;
-  @service appEvents;
-  @service a11y;
+  @service(() => ComposerService) composer;
+  @service(() => AppEventsService) appEvents;
+  @service(() => A11yService) a11y;
 
   @tracked composerValue = this.args.value || "";
 

@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -20,16 +20,22 @@ import PostPlaceholder from "./post/placeholder";
 import PostSmallAction from "./post/small-action";
 import PostTimeGap from "./post/time-gap";
 import PostVisitedLine from "./post/visited-line";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
+import HeaderService from "discourse/services/header";
+import ScreenTrackService from "discourse/services/screen-track";
+import SearchService from "discourse/services/search";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
 export default class PostStream extends Component {
-  @service appEvents;
-  @service capabilities;
-  @service header;
-  @service screenTrack;
-  @service search;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => HeaderService) header;
+  @service(() => ScreenTrackService) screenTrack;
+  @service(() => SearchService) search;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked cloakAbove;
   @tracked cloakBelow;

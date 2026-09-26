@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
@@ -20,12 +20,16 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import DocumentTitleService from "discourse/services/document-title";
+import CurrentUserService from "discourse/services/current-user";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import SiteService from "discourse/services/site";
 
 export default class DiscoveryTopics extends Component {
-  @service documentTitle;
-  @service currentUser;
-  @service topicTrackingState;
-  @service site;
+  @service(() => DocumentTitleService) documentTitle;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => TopicTrackingStateService) topicTrackingState;
+  @service(() => SiteService) site;
 
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;

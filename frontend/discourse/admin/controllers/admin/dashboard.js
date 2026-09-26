@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
@@ -13,13 +13,16 @@ import VersionCheck from "discourse/admin/models/version-check";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import SiteSettingsService from "discourse/services/site-settings";
+import ExceptionService from "discourse/services/exception";
+import LoadingSliderService from "discourse/services/loading-slider";
 
 const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
-  @service siteSettings;
-  @service exception;
-  @service loadingSlider;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ExceptionService) exception;
+  @service(() => LoadingSliderService) loadingSlider;
 
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;

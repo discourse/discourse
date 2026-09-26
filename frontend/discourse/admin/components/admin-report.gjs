@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isPresent } from "@ember/utils";
 import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
@@ -36,6 +36,7 @@ import { makeArray } from "discourse/lib/helpers";
 import ReportLoader from "discourse/lib/reports-loader";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -59,7 +60,7 @@ export function updateReportFilters(filters, id, value) {
 }
 
 export default class AdminReport extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked isLoading = false;
   @tracked rateLimitationString = null;

@@ -1,5 +1,8 @@
+import { lookup } from "discourse/lib/service";
 import DiscourseURL from "discourse/lib/url";
 import { initializeDefaultHomepage } from "discourse/lib/utilities";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default {
   after: "inject-objects",
@@ -10,8 +13,8 @@ export default {
     DiscourseURL.rewrite(/^\/groups$/, "/g");
     DiscourseURL.rewrite(/^\/groups\//, "/g/");
 
-    const currentUser = owner.lookup("service:current-user");
-    let siteSettings = owner.lookup("service:site-settings");
+    const currentUser = lookup(owner, CurrentUserService);
+    let siteSettings = lookup(owner, SiteSettingsService);
 
     // Setup `/my` redirects
     if (currentUser) {

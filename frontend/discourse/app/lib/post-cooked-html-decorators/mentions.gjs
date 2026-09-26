@@ -1,6 +1,8 @@
+import { lookup } from "discourse/lib/service";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import UserStatusService from "discourse/services/user-status";
 
 const CookedUserStatusMessage = <template>
   {{#in-element @data.wrapper}}
@@ -12,7 +14,7 @@ export default function (element, context) {
   const { post, owner, helper } = context;
 
   const extractedMentions = extractMentions(element, post);
-  const userStatusService = owner.lookup("service:user-status");
+  const userStatusService = lookup(owner, UserStatusService);
 
   const updateUserStatus = (updatedUser) => {
     extractedMentions

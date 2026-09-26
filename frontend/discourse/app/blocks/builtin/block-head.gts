@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { block } from "discourse/blocks";
 import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
 import type Blocks from "discourse/services/blocks";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import BlocksService from "discourse/services/blocks";
 
 interface HeadBlockSignature {
   Args: {
@@ -66,7 +67,7 @@ interface HeadBlockSignature {
   description: "Renders only the first child whose conditions pass",
 })
 export default class HeadBlock extends Component<HeadBlockSignature> {
-  @service declare blocks: Blocks;
+  @service(() => BlocksService) declare blocks: Blocks;
 
   /**
    * Children that passed their conditions and could be rendered.

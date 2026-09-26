@@ -1,4 +1,4 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseURL, { rewritePath } from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";

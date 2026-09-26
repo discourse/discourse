@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -11,12 +11,16 @@ import { clipboardCopyAsync, postUrl } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class PostTextSelectionToolbar extends Component {
-  @service currentUser;
-  @service site;
-  @service siteSettings;
-  @service toasts;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ToastsService) toasts;
 
   get topic() {
     return this.args.data.topic;

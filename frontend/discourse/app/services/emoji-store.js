@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedArray, trackedObject } from "@ember/reactive/collections";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { isSkinTonableEmoji } from "pretty-text/emoji";
 import KeyValueStore from "discourse/lib/key-value-store";
 

@@ -1,5 +1,9 @@
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import CurrentUserService from "discourse/services/current-user";
+import AppEventsService from "discourse/services/app-events";
+import SiteSettingsService from "discourse/services/site-settings";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 /**
  * Base class representing a sidebar community section link interface.
@@ -7,15 +11,15 @@ import { service } from "@ember/service";
 export default class BaseCommunitySectionLink {
   // TODO: All those are used by subclasses
   // eslint-disable-next-line discourse/no-unused-services
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
   // eslint-disable-next-line discourse/no-unused-services
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
   // eslint-disable-next-line discourse/no-unused-services
   @service router;
   // eslint-disable-next-line discourse/no-unused-services
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
   // eslint-disable-next-line discourse/no-unused-services
-  @service topicTrackingState;
+  @service(() => TopicTrackingStateService) topicTrackingState;
 
   constructor(owner, { inMoreDrawer, overriddenName, overriddenIcon } = {}) {
     setOwner(this, owner);

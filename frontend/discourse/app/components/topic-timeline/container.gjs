@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
@@ -27,6 +27,11 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 import Scroller from "./scroller";
+import AppEventsService from "discourse/services/app-events";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
+import ComposerService from "discourse/services/composer";
 
 export const SCROLLER_HEIGHT = 50;
 const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
@@ -55,11 +60,11 @@ export function timelineDate(date) {
 }
 
 export default class TopicTimelineScrollArea extends Component {
-  @service appEvents;
-  @service site;
-  @service siteSettings;
-  @service currentUser;
-  @service composer;
+  @service(() => AppEventsService) appEvents;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ComposerService) composer;
 
   @tracked showButton = false;
   @tracked current;

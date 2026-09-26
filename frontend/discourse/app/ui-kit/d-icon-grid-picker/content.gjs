@@ -5,7 +5,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -21,6 +21,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
+import TooltipService from "discourse/float-kit/services/tooltip";
 
 const ICON_TOOLTIP = "d-icon-grid-picker-icon";
 
@@ -85,7 +86,7 @@ class IconButton extends Component {
 export default class DIconGridPickerContent extends Component {
   /** @type {import("discourse/float-kit/services/tooltip").default} */
   // @ts-ignore (incorrect no-initialization error)
-  @service tooltip;
+  @service(() => TooltipService) tooltip;
 
   @tracked filter = "";
 

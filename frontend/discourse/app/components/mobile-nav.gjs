@@ -3,15 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
+import SiteService from "discourse/services/site";
 
 export default class MobileNav extends Component {
   @service router;
-  @service site;
+  @service(() => SiteService) site;
 
   @tracked selectedHtml = null;
   @tracked expanded = false;

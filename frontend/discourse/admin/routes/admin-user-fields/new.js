@@ -1,6 +1,7 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
 
 const DEFAULT_VALUES = {
   field_type: "text",
@@ -9,7 +10,7 @@ const DEFAULT_VALUES = {
 };
 
 export default class AdminUserFieldsNewRoute extends DiscourseRoute {
-  @service store;
+  @service(() => StoreService) store;
 
   async model() {
     return this.store.createRecord("user-field", { ...DEFAULT_VALUES });

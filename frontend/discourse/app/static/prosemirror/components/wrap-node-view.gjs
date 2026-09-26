@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { NodeSelection } from "prosemirror-state";
-import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
+import { service } from "discourse/lib/service";
 import {
   parseAttributesString,
   serializeAttributes,
 } from "discourse/lib/wrap-utils";
+import ModalService from "discourse/services/modal";
 
 export default class WrapNodeView extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   constructor() {
     super(...arguments);
@@ -43,13 +43,16 @@ export default class WrapNodeView extends Component {
   editAttributes() {
     const attrsString = serializeAttributes(this.wrapAttributes);
 
-    this.modal.show(WrapAttributesModal, {
-      model: {
-        initialAttributes: attrsString,
-        onApply: this.#updateAttributes.bind(this),
-        onRemove: this.removeWrap.bind(this),
-      },
-    });
+    this.modal.show(
+      () => import("discourse/components/wrap-attributes-modal"),
+      {
+        model: {
+          initialAttributes: attrsString,
+          onApply: this.#updateAttributes.bind(this),
+          onRemove: this.removeWrap.bind(this),
+        },
+      }
+    );
   }
 
   @action

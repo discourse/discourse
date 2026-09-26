@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
 import { concat, get } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import SearchService from "discourse/services/search";
 
 const suggestionShortcuts = [
   "in:title",
@@ -28,9 +31,9 @@ const SUGGESTION_KEYWORD_MAP = {
 
 export default class Assistant extends Component {
   @service router;
-  @service currentUser;
-  @service siteSettings;
-  @service search;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SearchService) search;
 
   constructor() {
     super(...arguments);

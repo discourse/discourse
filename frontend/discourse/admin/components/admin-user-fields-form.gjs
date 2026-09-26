@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ValueList from "discourse/admin/components/value-list";
 import UserField from "discourse/admin/models/user-field";
 import Form from "discourse/components/form";
@@ -12,13 +12,17 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import AdminUserFieldsService from "discourse/admin/services/admin-user-fields";
+import AdminCustomUserFieldsService from "discourse/services/admin-custom-user-fields";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class AdminUserFieldsForm extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @service router;
-  @service adminUserFields;
-  @service adminCustomUserFields;
-  @service toasts;
+  @service(() => AdminUserFieldsService) adminUserFields;
+  @service(() => AdminCustomUserFieldsService) adminCustomUserFields;
+  @service(() => ToastsService) toasts;
 
   @tracked
   editableDisabled = this.args.userField.requirement === "for_all_users";

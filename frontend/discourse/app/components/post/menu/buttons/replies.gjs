@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class PostMenuRepliesButton extends Component {
   static extraControls = true;
@@ -26,7 +27,7 @@ export default class PostMenuRepliesButton extends Component {
     );
   }
 
-  @service site;
+  @service(() => SiteService) site;
 
   get disabled() {
     return !!this.args.post.deleted || this.args.state?.repliesButtonDisabled;

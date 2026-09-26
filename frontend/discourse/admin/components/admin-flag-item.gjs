@@ -5,7 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -17,9 +17,10 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminFlagItem extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @service router;
 
   @tracked enabled = this.args.flag.enabled;

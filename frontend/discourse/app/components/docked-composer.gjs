@@ -9,7 +9,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import bodyClass from "discourse/helpers/body-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
@@ -21,6 +21,11 @@ import DEditor from "discourse/ui-kit/d-editor";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import MediaOptimizationWorkerService from "discourse/services/media-optimization-worker";
+import SiteSettingsService from "discourse/services/site-settings";
 
 // Reusable chat-style "docked" composer. There is deliberately no
 // markdown-preview toggle — users who want to see rendered output
@@ -32,11 +37,11 @@ import { i18n } from "discourse-i18n";
 // styleguide entry (/styleguide → Organisms → Docked Composer) for
 // the live API surface.
 export default class DockedComposer extends Component {
-  @service capabilities;
-  @service currentUser;
-  @service keyValueStore;
-  @service mediaOptimizationWorker;
-  @service siteSettings;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => MediaOptimizationWorkerService) mediaOptimizationWorker;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked dragOffset = 0;
   @tracked reply = "";

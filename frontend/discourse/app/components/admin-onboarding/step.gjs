@@ -3,20 +3,22 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import AppEventsService from "discourse/services/app-events";
 
 export default class OnboardingStep extends Component {
   static name() {
     throw new Error("Name is required for OnboardingStep");
   }
 
-  @service keyValueStore;
-  @service appEvents;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => AppEventsService) appEvents;
 
   @tracked
   completed = this.keyValueStore.get(`onboarding_step_${this.name}`) || false;

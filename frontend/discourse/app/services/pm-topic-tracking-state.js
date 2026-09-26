@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedArray, trackedMap } from "@ember/reactive/collections";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -13,13 +13,15 @@ import {
   NEW_FILTER,
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
+import CurrentUserService from "discourse/services/current-user";
+import MessageBusService from "discourse/services/message-bus";
 
 const CHANNEL_PREFIX = "/private-message-topic-tracking-state";
 
 // See private_message_topic_tracking_state.rb for documentation
 class PrivateMessageTopicTrackingState extends Service {
-  @service currentUser;
-  @service messageBus;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => MessageBusService) messageBus;
 
   @tracked isTracking = false;
   @tracked isTrackingIncoming = false;

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
@@ -9,11 +9,12 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export const MAX_GLOBALLY_PINNED_TOPICS = 4;
 
 export default class PinOptionSection extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   @cached
   get formData() {

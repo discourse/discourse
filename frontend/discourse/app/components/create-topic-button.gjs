@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

@@ -1,17 +1,19 @@
 import Controller from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
 import { compare, isEmpty } from "@ember/utils";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import getURL from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import CurrentUserService from "discourse/services/current-user";
+import UserNavSidebarStateManagerService from "discourse/services/user-nav-sidebar-state-manager";
 
 export default class UserController extends Controller {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service userNavSidebarStateManager;
+  @service(() => UserNavSidebarStateManagerService) userNavSidebarStateManager;
   @optionalService adminTools;
 
   @computed("currentUser.ignored_ids", "model.ignored", "model.muted")

@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import type { TrustedHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier as modifierFn } from "ember-modifier";
@@ -30,6 +30,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dSwipe, { type SwipeState } from "discourse/ui-kit/modifiers/d-swipe";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
+import AppEventsServiceInjected from "discourse/services/app-events";
+import CapabilitiesServiceInjected from "discourse/services/capabilities";
+import ModalServiceInjected from "discourse/services/modal";
+import SiteService from "discourse/services/site";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -183,10 +187,11 @@ interface DModalSignature {
 }
 
 export default class DModal extends Component<DModalSignature> {
-  @service declare appEvents: AppEventsService;
-  @service declare capabilities: CapabilitiesService;
-  @service declare modal: ModalService;
-  @service declare site: Site;
+  @service(() => AppEventsServiceInjected) declare appEvents: AppEventsService;
+  @service(() => CapabilitiesServiceInjected)
+  declare capabilities: CapabilitiesService;
+  @service(() => ModalServiceInjected) declare modal: ModalService;
+  @service(() => SiteService) declare site: Site;
 
   @tracked animating = false;
   registerModalContainer = modifierFn((el: HTMLElement) => {

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isPresent } from "@ember/utils";
 import ThemesGrid from "discourse/admin/components/themes-grid";
 import { THEMES } from "discourse/admin/models/theme";
@@ -12,13 +12,17 @@ import DiscourseURL from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DesignWizardService from "discourse/services/design-wizard";
+import ModalService from "discourse/services/modal";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class AdminConfigAreasThemes extends Component {
-  @service currentUser;
-  @service designWizard;
-  @service modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DesignWizardService) designWizard;
+  @service(() => ModalService) modal;
   @service router;
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   constructor() {
     super(...arguments);

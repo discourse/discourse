@@ -3,7 +3,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-post-action";
@@ -15,10 +15,12 @@ import DButton from "discourse/ui-kit/d-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import I18n, { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class PenalizeUser extends Component {
-  @service dialog;
-  @service siteSettings;
+  @service(() => DialogService) dialog;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked penalizeUntil = this.args.model.user.next_penalty;
   @tracked penalizing = false;

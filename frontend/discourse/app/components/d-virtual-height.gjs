@@ -1,16 +1,19 @@
 import Component from "@glimmer/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import isZoomed from "discourse/lib/zoom-check";
+import SiteService from "discourse/services/site";
+import CapabilitiesService from "discourse/services/capabilities";
+import AppEventsService from "discourse/services/app-events";
 
 const KEYBOARD_DETECT_THRESHOLD = 150;
 
 export default class DVirtualHeight extends Component {
-  @service site;
-  @service capabilities;
-  @service appEvents;
+  @service(() => SiteService) site;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => AppEventsService) appEvents;
 
   constructor() {
     super(...arguments);

@@ -1,10 +1,12 @@
 import { action } from "@ember/object";
 import Owner, { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { TOAST, type ToastOptions } from "discourse/float-kit/lib/constants";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import type Site from "discourse/models/site";
 import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
+import SiteService from "discourse/services/site";
+import ToastsServiceInjected from "discourse/float-kit/services/toasts";
 
 /**
  * The instance backing a single toast: its merged options and a stable id used
@@ -13,8 +15,8 @@ import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
  * `FloatKitInstance`.
  */
 export default class DToastInstance {
-  @service declare site: Site;
-  @service declare toasts: ToastsService;
+  @service(() => SiteService) declare site: Site;
+  @service(() => ToastsServiceInjected) declare toasts: ToastsService;
 
   options: ToastOptions;
   id = dUniqueId();

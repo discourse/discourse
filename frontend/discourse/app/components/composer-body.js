@@ -2,13 +2,15 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseLater from "discourse/lib/later";
 import Composer from "discourse/models/composer";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
 
 @classNameBindings(
   "composer.creatingPrivateMessage:private-message",
@@ -24,8 +26,8 @@ import Composer from "discourse/models/composer";
   "currentUserPrimaryGroupClass"
 )
 export default class ComposerBody extends Component {
-  @service appEvents;
-  @service capabilities;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CapabilitiesService) capabilities;
 
   elementId = "reply-control";
 

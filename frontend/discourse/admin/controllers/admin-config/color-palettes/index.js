@@ -1,19 +1,24 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { setDefaultColorScheme } from "discourse/admin/lib/color-scheme-manager";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ToastsService from "discourse/float-kit/services/toasts";
+import SessionService from "discourse/services/session";
+import InterfaceColorService from "discourse/services/interface-color";
 
 export default class AdminConfigColorPalettesIndexController extends Controller {
   @service router;
-  @service modal;
-  @service dialog;
-  @service toasts;
-  @service session;
-  @service interfaceColor;
+  @service(() => ModalService) modal;
+  @service(() => DialogService) dialog;
+  @service(() => ToastsService) toasts;
+  @service(() => SessionService) session;
+  @service(() => InterfaceColorService) interfaceColor;
 
   @tracked defaultTheme = null;
 

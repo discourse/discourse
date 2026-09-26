@@ -2,13 +2,14 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { bind } from "discourse/lib/decorators";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 /**
  * Toggle button for the upcoming changes debug mode in the dev-tools toolbar.
@@ -17,7 +18,7 @@ import { i18n } from "discourse-i18n";
  * changes on.
  */
 export default class UpcomingChangesDebugButton extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get upcomingChanges() {
     return this.siteSettings.currentUserUpcomingChanges;

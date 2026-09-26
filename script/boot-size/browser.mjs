@@ -37,7 +37,10 @@ if (process.env.LOGIN) {
   const [username, password] = process.env.LOGIN.split(":");
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.goto(`${base}/login?safe_mode=no_themes`, { waitUntil: "load", timeout: 90000 });
+  await page.goto(`${base}/login?safe_mode=no_themes`, {
+    waitUntil: "load",
+    timeout: 90000,
+  });
   await page.fill("#login-account-name", username);
   await page.fill("#login-account-password", password);
   await page.click("#login-button");
@@ -49,6 +52,9 @@ if (process.env.LOGIN) {
 for (const url of pages) {
   const context = await browser.newContext({ storageState });
   const page = await context.newPage();
+  await page.addInitScript(() => {
+    Error.stackTraceLimit = 200;
+  });
   const scripts = new Set();
   const errors = [];
 
@@ -58,7 +64,11 @@ for (const url of pages) {
       scripts.add(u.pathname.slice(u.pathname.indexOf("assets/js/")));
     }
   });
-  page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
+  page.on("pageerror", (error) =>
+    errors.push(
+      `pageerror: ${error.message}\n${(error.stack ?? "").split("\n").slice(1, 3).join("\n")}`
+    )
+  );
   page.on("console", (message) => {
     if (message.type() === "error") {
       errors.push(
@@ -96,9 +106,15 @@ for (const url of pages) {
     await page.keyboard.press("Escape");
 
     if (url.startsWith("/t/")) {
-      await page.click("#topic-footer-buttons .create, .topic-footer-main-buttons .create").catch(() => {});
+      await page
+        .click(
+          "#topic-footer-buttons .create, .topic-footer-main-buttons .create"
+        )
+        .catch(() => {});
       const composer = await page
-        .waitForSelector("#reply-control.open .d-editor-input", { timeout: 20000 })
+        .waitForSelector("#reply-control.open .d-editor-input", {
+          timeout: 20000,
+        })
         .then(() => true)
         .catch(() => false);
       if (!composer) {

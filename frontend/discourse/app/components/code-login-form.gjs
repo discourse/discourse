@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -41,16 +41,21 @@ import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import LoginService from "discourse/services/login";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import ModalService from "discourse/services/modal";
+import SessionStoreService from "discourse/services/session-store";
 
 const RESEND_COOLDOWN_SECONDS = 30;
 const SIGNUP_CONTINUATION_KEY = "email-code-signup-continuation";
 
 export default class CodeLoginForm extends Component {
-  @service login;
-  @service site;
-  @service siteSettings;
-  @service modal;
-  @service sessionStore;
+  @service(() => LoginService) login;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ModalService) modal;
+  @service(() => SessionStoreService) sessionStore;
 
   @tracked email = this.args.initialEmail ?? "";
   @tracked verifying = false;

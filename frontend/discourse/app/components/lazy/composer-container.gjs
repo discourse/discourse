@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+import ComposerService from "discourse/services/composer";
 
 let load;
 
 export default class LazyComposerContainer extends Component {
-  @service composer;
+  @service(() => ComposerService) composer;
 
   get component() {
     return (load ??= import("discourse/components/composer-container"));

@@ -1,7 +1,11 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import scrollLock from "discourse/lib/scroll-lock";
 import { MAIN_PANEL, USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
+import HeaderService from "discourse/services/header";
+import RouteHistoryService from "discourse/services/route-history";
+import SidebarStateService from "discourse/services/sidebar-state";
+import SiteSettingsService from "discourse/services/site-settings";
 
 /**
  * Hands the sidebar over to the user nav panel while the user routes are
@@ -9,10 +13,10 @@ import { MAIN_PANEL, USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
  * `AdminSidebarStateManager` makes for the admin area.
  */
 export default class UserNavSidebarStateManager extends Service {
-  @service header;
-  @service routeHistory;
-  @service sidebarState;
-  @service siteSettings;
+  @service(() => HeaderService) header;
+  @service(() => RouteHistoryService) routeHistory;
+  @service(() => SidebarStateService) sidebarState;
+  @service(() => SiteSettingsService) siteSettings;
 
   /**
    * Where the viewer was before they opened a user's admin page. Captured on

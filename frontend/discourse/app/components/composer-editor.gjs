@@ -7,7 +7,7 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule, throttle } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
@@ -52,6 +52,9 @@ import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import DEditor from "discourse/ui-kit/d-editor";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
 
 export {
   addApiImageWrapperButtonClickEvent,
@@ -68,9 +71,9 @@ const DEBOUNCE_JIT_MS = 2000;
 
 @classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
-  @service composer;
-  @service siteSettings;
-  @service currentUser;
+  @service(() => ComposerService) composer;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked preview;
 

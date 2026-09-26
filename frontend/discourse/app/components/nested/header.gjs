@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicCategory from "discourse/components/topic-category";
@@ -12,9 +12,10 @@ import TopicTitleEditor from "discourse/components/topic-title-editor";
 import lazyHash from "discourse/helpers/lazy-hash";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
+import HeaderService from "discourse/services/header";
 
 export default class NestedHeader extends Component {
-  @service header;
+  @service(() => HeaderService) header;
 
   @action
   handleIntersectionChange(event) {

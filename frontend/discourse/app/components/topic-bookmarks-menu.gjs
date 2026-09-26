@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BookmarkMenu from "discourse/components/bookmark-menu";
 import TopicBookmarkPostSubmenu from "discourse/components/topic-bookmark-post-submenu";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -18,14 +18,20 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import MenuService from "discourse/float-kit/services/menu";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import BookmarkApiService from "discourse/services/bookmark-api";
+import ToastsService from "discourse/float-kit/services/toasts";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class TopicBookmarksMenu extends Component {
-  @service modal;
-  @service menu;
-  @service dialog;
-  @service bookmarkApi;
-  @service toasts;
-  @service currentUser;
+  @service(() => ModalService) modal;
+  @service(() => MenuService) menu;
+  @service(() => DialogService) dialog;
+  @service(() => BookmarkApiService) bookmarkApi;
+  @service(() => ToastsService) toasts;
+  @service(() => CurrentUserService) currentUser;
 
   get topic() {
     return this.args.topic;

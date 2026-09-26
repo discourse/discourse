@@ -1,7 +1,7 @@
 import { untrack } from "@glimmer/validator";
 import { warn } from "@ember/debug";
 import { set } from "@ember/object";
-import Service from "@ember/service";
+import Service, { lookup } from "discourse/lib/service";
 import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";

@@ -1,4 +1,4 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default class PreferencesSecondFactor extends RestrictedUserRoute {

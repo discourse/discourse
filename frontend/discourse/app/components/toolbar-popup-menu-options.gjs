@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { formatShortcut } from "discourse/lib/shortcut-format";
@@ -11,9 +11,10 @@ import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class ToolbarPopupMenuOptions extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   trackScrollability = modifier((element) => {
     const innerContent = element.closest(".fk-d-menu__inner-content");

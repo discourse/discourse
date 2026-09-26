@@ -1,6 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { lookup, service } from "discourse/lib/service";
 import ItsATrap from "@discourse/itsatrap";
 import { ajax } from "discourse/lib/ajax";
 import domUtils from "discourse/lib/dom-utils";
@@ -14,6 +14,11 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import ModalService from "discourse/services/modal";
 
 let disabledBindings = [];
 
@@ -177,12 +182,12 @@ function preventKeyboardEvent(event) {
 }
 
 export default class KeyboardShortcutLib extends Service {
-  @service appEvents;
-  @service composer;
-  @service currentUser;
+  @service(() => AppEventsService) appEvents;
+  @service(() => ComposerService) composer;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service siteSettings;
-  @service modal;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ModalService) modal;
 
   constructor() {
     super(...arguments);

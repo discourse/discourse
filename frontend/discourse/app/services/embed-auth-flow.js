@@ -1,14 +1,16 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const SESSION_POLL_INTERVAL_MS = 3000;
 const SESSION_POLL_MAX_MS = 5 * 60 * 1000;
 
 export default class EmbedAuthFlow extends Service {
-  @service modal;
-  @service siteSettings;
+  @service(() => ModalService) modal;
+  @service(() => SiteSettingsService) siteSettings;
 
   _popup = null;
   _pollTimer = null;

@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 
 export default class TagGroupsEditController extends Controller {

@@ -1,15 +1,17 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DTextField from "discourse/ui-kit/d-text-field";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class TopicTitleEditor extends Component {
-  @service languageNameLookup;
-  @service siteSettings;
+  @service(() => LanguageNameLookupService) languageNameLookup;
+  @service(() => SiteSettingsService) siteSettings;
 
   get translationLocaleName() {
     return this.languageNameLookup.getLanguageName(this.args.translationLocale);

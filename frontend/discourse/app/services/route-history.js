@@ -1,5 +1,6 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
+import SessionStoreService from "discourse/services/session-store";
 
 const HISTORY_THRESHOLD = 1000;
 
@@ -7,7 +8,7 @@ const HISTORY_THRESHOLD = 1000;
 // mainly used by the `BackButton` component
 export default class RouteHistory extends Service {
   @service router;
-  @service sessionStore;
+  @service(() => SessionStoreService) sessionStore;
 
   init() {
     super.init(...arguments);

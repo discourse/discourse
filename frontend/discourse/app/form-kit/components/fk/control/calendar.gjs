@@ -1,14 +1,15 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import withEventValue from "discourse/helpers/with-event-value";
 import DDatePicker from "discourse/ui-kit/d-date-picker";
+import SiteService from "discourse/services/site";
 
 export default class FKControlCalendar extends FKBaseControl {
   static controlType = "calendar";
 
-  @service site;
+  @service(() => SiteService) site;
 
   get containerId() {
     return `${this.args.field.name}-container`;

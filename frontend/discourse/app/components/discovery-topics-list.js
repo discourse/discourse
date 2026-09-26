@@ -1,12 +1,13 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import DocumentTitleService from "discourse/services/document-title";
 
 @classNames("contents")
 export default class DiscoveryTopicsList extends Component {
-  @service documentTitle;
+  @service(() => DocumentTitleService) documentTitle;
 
   @on("didInsertElement")
   _monitorTrackingState() {

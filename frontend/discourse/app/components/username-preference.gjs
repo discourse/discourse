@@ -4,7 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -14,10 +14,12 @@ import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class UsernamePreference extends Component {
-  @service siteSettings;
-  @service dialog;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => DialogService) dialog;
 
   @tracked editing = false;
   @tracked newUsername = this.args.user.username;

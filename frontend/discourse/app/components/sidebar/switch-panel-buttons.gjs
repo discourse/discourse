@@ -2,12 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class SwitchPanelButtons extends Component {
   @service router;
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   @tracked isSwitching = false;
 

@@ -1,7 +1,9 @@
+import { lookup } from "discourse/lib/service";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 export function downloadCalendar(title, dates, options = {}) {
   const currentUser = User.current();
@@ -503,7 +505,7 @@ export function generateIcsData(title, dates, options = {}) {
 }
 
 function _displayModal(title, dates, options = {}) {
-  const modal = getOwnerWithFallback(this).lookup("service:modal");
+  const modal = lookup(getOwnerWithFallback(this), ModalService);
   modal.show(() => import("discourse/components/modal/download-calendar"), {
     model: {
       calendar: {

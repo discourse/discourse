@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { trackedMap } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import { autoUpdatingRelativeAge, relativeAge } from "discourse/lib/formatter";
@@ -16,6 +16,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostA11yHeading from "./a11y-heading";
+import A11yService from "discourse/services/a11y";
 
 export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
 export const customGroupActionCodes = [];
@@ -57,7 +58,7 @@ export function resetGroupPostSmallActionCodes() {
 }
 
 export default class PostSmallAction extends Component {
-  @service a11y;
+  @service(() => A11yService) a11y;
 
   decoratorState = trackedMap();
 

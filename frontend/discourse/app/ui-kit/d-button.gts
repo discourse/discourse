@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { or } from "discourse/truth-helpers";
@@ -10,6 +10,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 type DButtonActionCallback = (...args: unknown[]) => void;
 
@@ -79,7 +80,7 @@ export interface DButtonSignature {
 
 export default class DButton extends Component<DButtonSignature> {
   @service router;
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   @computed("args.icon")
   get btnIcon() {

@@ -1,5 +1,7 @@
+import { lookup } from "discourse/lib/service";
 import discourseLater from "discourse/lib/later";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
+import CapabilitiesService from "discourse/services/capabilities";
 
 // Send bg color to webview so iOS status bar matches site theme
 export default {
@@ -10,7 +12,7 @@ export default {
 
   initialize(owner) {
     if (this.isAppWebview === undefined) {
-      const caps = owner.lookup("service:capabilities");
+      const caps = lookup(owner, CapabilitiesService);
       this.isAppWebview = caps.isAppWebview;
     }
 

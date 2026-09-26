@@ -1,14 +1,16 @@
 import { trackedSet } from "@ember/reactive/collections";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { compare } from "@ember/utils";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import SiteService from "discourse/services/site";
+import CurrentUserService from "discourse/services/current-user";
 
 @disableImplicitInjections
 export default class UserTips extends Service {
-  @service site;
-  @service currentUser;
+  @service(() => SiteService) site;
+  @service(() => CurrentUserService) currentUser;
 
   #availableTips = new Set();
   #renderedId;

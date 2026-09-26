@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class ActivationControls extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get canEditEmail() {
     return (

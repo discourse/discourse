@@ -1,8 +1,9 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
+import SiteService from "discourse/services/site";
 
 export default class AdminUserIndexRoute extends DiscourseRoute {
-  @service site;
+  @service(() => SiteService) site;
 
   model() {
     return this.modelFor("adminUser");

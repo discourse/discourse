@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminFlagItem from "discourse/admin/components/admin-flag-item";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -8,9 +8,10 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class AdminConfigAreasFlags extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @autoTrackedArray flags = this.site.flagTypes;
 

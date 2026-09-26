@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -12,9 +12,10 @@ import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import DButton from "discourse/ui-kit/d-button";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class FastEdit extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked isSaving = false;
   @tracked value = this.args.newValue || this.args.initialValue;

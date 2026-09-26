@@ -1,3 +1,5 @@
+import { lookup } from "discourse/lib/service";
+import SiteSettingsService from "discourse/services/site-settings";
 function isLoaded(img) {
   // In Safari, img.complete sometimes returns true even when the image is not loaded.
   // naturalHeight seems to be a more reliable check
@@ -14,7 +16,7 @@ export function nativeLazyLoading(api) {
   });
 
   api.decorateCookedElement((post) => {
-    const siteSettings = api.container.lookup("service:site-settings");
+    const siteSettings = lookup(api.container, SiteSettingsService);
 
     post.querySelectorAll("img").forEach((img) => {
       // Support for smallUpload should be maintained until Post::BAKED_VERSION is bumped higher than 2

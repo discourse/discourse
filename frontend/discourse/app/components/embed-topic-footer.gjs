@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -9,12 +9,16 @@ import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import EmbedAuthFlowService from "discourse/services/embed-auth-flow";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class EmbedTopicFooter extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service embedAuthFlow;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => EmbedAuthFlowService) embedAuthFlow;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked footerButtonsVisible = false;
 

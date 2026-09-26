@@ -2,7 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { observes } from "@ember-decorators/object";
 import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -12,9 +12,10 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminLogsScreenedIpAddressesController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   @tracked filter = null;
   @tracked loading = false;

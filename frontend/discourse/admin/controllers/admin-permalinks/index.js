@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Permalink from "discourse/admin/models/permalink";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
@@ -9,10 +9,12 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class AdminPermalinksIndexController extends Controller {
-  @service dialog;
-  @service toasts;
+  @service(() => DialogService) dialog;
+  @service(() => ToastsService) toasts;
 
   @tracked loading = false;
   @tracked filter = null;

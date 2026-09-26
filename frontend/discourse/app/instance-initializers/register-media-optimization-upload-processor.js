@@ -1,5 +1,8 @@
+import { lookup } from "discourse/lib/service";
 import { Promise } from "rsvp";
 import { addComposerUploadPreProcessor } from "discourse/lib/plugin-registries/composer-uploads";
+import SiteSettingsService from "discourse/services/site-settings";
+import CapabilitiesService from "discourse/services/capabilities";
 
 // Devices stuck on EOL iOS versions are older hardware where WebKit's memory
 // watchdog kills (and reloads) the page during WASM image processing instead
@@ -9,8 +12,8 @@ export const MAX_EOL_IOS_MAJOR_VERSION = 18;
 
 export default {
   initialize(owner) {
-    const siteSettings = owner.lookup("service:site-settings");
-    const capabilities = owner.lookup("service:capabilities");
+    const siteSettings = lookup(owner, SiteSettingsService);
+    const capabilities = lookup(owner, CapabilitiesService);
 
     if (siteSettings.composer_media_optimization_image_enabled) {
       if (

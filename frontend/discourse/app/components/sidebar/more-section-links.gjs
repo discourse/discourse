@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import curryComponent from "ember-curry-component";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";

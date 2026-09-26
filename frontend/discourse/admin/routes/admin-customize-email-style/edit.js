@@ -1,10 +1,11 @@
 import { action } from "@ember/object";
 import Route from "@ember/routing/route";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminCustomizeEmailStyleEditRoute extends Route {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   model(params) {
     return {

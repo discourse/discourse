@@ -3,13 +3,14 @@ import { Textarea } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import AppEventsService from "discourse/services/app-events";
 
 export default class FormTemplateFieldTextarea extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @resettableTracked value = this.args.value || "";
 

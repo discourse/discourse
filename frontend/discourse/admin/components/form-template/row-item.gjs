@@ -1,18 +1,20 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import CustomizeFormTemplateView from "discourse/components/modal/customize-form-template-view";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteService from "discourse/services/site";
 
 export default class FormTemplateRowItem extends Component {
   @service router;
-  @service dialog;
-  @service site;
+  @service(() => DialogService) dialog;
+  @service(() => SiteService) site;
 
   get activeCategories() {
     return this.site.categories?.filter((c) =>

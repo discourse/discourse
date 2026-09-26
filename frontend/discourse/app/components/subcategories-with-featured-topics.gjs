@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
@@ -9,10 +9,11 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryListSubcategories from "discourse/helpers/category-list-subcategories";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
+import DiscoveryService from "discourse/services/discovery";
 
 @tagName("")
 export default class SubcategoriesWithFeaturedTopics extends Component {
-  @service discovery;
+  @service(() => DiscoveryService) discovery;
 
   <template>
     <div ...attributes>

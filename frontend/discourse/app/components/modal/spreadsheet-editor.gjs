@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { waitForPromise } from "@ember/test-waiters";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
@@ -18,10 +18,12 @@ import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import KeyboardShortcutsService from "discourse/services/keyboard-shortcuts";
 
 export default class SpreadsheetEditor extends Component {
-  @service dialog;
-  @service keyboardShortcuts;
+  @service(() => DialogService) dialog;
+  @service(() => KeyboardShortcutsService) keyboardShortcuts;
 
   @tracked showEditReason = false;
   @tracked loading = true;

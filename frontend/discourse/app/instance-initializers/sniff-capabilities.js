@@ -1,6 +1,8 @@
+import { lookup } from "discourse/lib/service";
+import CapabilitiesService from "discourse/services/capabilities";
 export default {
   initialize(owner) {
-    const caps = owner.lookup("service:capabilities");
+    const caps = lookup(owner, CapabilitiesService);
     const html = document.documentElement;
 
     if (caps.touch) {

@@ -1,5 +1,5 @@
 import { run } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import {
   isRateLimitError,
@@ -7,12 +7,17 @@ import {
 } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import {
   getHighestReadCache,
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import SessionService from "discourse/services/session";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -24,11 +29,11 @@ const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
 @disableImplicitInjections
 export default class ScreenTrack extends Service {
-  @service appEvents;
-  @service currentUser;
-  @service keyValueStore;
-  @service session;
-  @service topicTrackingState;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => SessionService) session;
+  @service(() => TopicTrackingStateService) topicTrackingState;
 
   _ajaxFailures = 0;
   _consolidatedTimings = [];

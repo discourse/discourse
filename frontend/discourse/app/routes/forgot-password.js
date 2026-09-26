@@ -1,10 +1,11 @@
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
+import ModalService from "discourse/services/modal";
 
 export default class ForgotPasswordRoute extends DiscourseRoute {
-  @service modal;
+  @service(() => ModalService) modal;
   @service router;
 
   async beforeModel() {

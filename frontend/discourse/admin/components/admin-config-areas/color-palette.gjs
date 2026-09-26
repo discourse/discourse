@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import ColorPaletteEditor from "discourse/admin/components/color-palette-editor";
 import Form from "discourse/components/form";
@@ -13,12 +13,15 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ToastsService from "discourse/float-kit/services/toasts";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteService from "discourse/services/site";
 
 export default class AdminConfigAreasColorPalette extends Component {
-  @service toasts;
+  @service(() => ToastsService) toasts;
   @service router;
-  @service dialog;
-  @service site;
+  @service(() => DialogService) dialog;
+  @service(() => SiteService) site;
 
   @tracked editingName = false;
   @tracked saving = false;

@@ -32,18 +32,6 @@ defineModules(null, coreModules);
 
 window._embroiderRouteBundles_ = [...coreRouteBundles];
 
-import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
-
-defineModules("discourse/dialog-holder", dialogHolderCompatModules);
-
-import floatKitCompatModules from "discourse/float-kit/compat-modules";
-
-defineModules("discourse/float-kit", floatKitCompatModules);
-
-import selectKitCompatModules from "discourse/select-kit/compat-modules";
-
-defineModules("discourse/select-kit", selectKitCompatModules);
-
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 

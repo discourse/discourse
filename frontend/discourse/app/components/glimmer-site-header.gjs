@@ -3,7 +3,7 @@ import { DEBUG } from "@glimmer/env";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import discourseDebounce from "discourse/lib/debounce";
@@ -20,16 +20,20 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import Header from "./header";
 import ImpersonationNotice from "./impersonation-notice";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import HeaderService from "discourse/services/header";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
 const DEBOUNCE_HEADER_DELAY = 10;
 
 export default class GlimmerSiteHeader extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service site;
-  @service header;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => HeaderService) header;
 
   pxClosed;
   headerElement;

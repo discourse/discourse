@@ -1,10 +1,11 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import CategoryTypeChooserService from "discourse/services/category-type-chooser";
 
 export default class NewCategorySetup extends DiscourseRoute {
-  @service categoryTypeChooser;
+  @service(() => CategoryTypeChooserService) categoryTypeChooser;
   @service router;
 
   async model() {

@@ -1,5 +1,5 @@
 import { getOwner, setOwner } from "@ember/owner";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { _hasLayout } from "discourse/blocks/block-outlet";
 import type { BlockCondition } from "discourse/blocks/conditions";
 import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";

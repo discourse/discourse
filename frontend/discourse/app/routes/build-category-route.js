@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import Category from "discourse/models/category";
@@ -13,16 +13,22 @@ import {
 } from "discourse/routes/build-topic-route";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import SiteService from "discourse/services/site";
+import StoreService from "discourse/services/store";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import SearchService from "discourse/services/search";
+import HistoryStoreService from "discourse/services/history-store";
 
 @disableImplicitInjections
 class AbstractCategoryRoute extends DiscourseRoute {
-  @service composer;
+  @service(() => ComposerService) composer;
   @service router;
-  @service site;
-  @service store;
-  @service topicTrackingState;
-  @service("search") searchService;
-  @service historyStore;
+  @service(() => SiteService) site;
+  @service(() => StoreService) store;
+  @service(() => TopicTrackingStateService) topicTrackingState;
+  @service(() => SearchService) searchService;
+  @service(() => HistoryStoreService) historyStore;
 
   queryParams = queryParams;
 

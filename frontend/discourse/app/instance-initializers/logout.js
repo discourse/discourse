@@ -1,16 +1,19 @@
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
 import { i18n } from "discourse-i18n";
+import MessageBusService from "discourse/services/message-bus";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
 
 let _showingLogout = false;
 
 // Subscribe to "logout" change events via the Message Bus
 class LogoutInit {
-  @service messageBus;
-  @service dialog;
-  @service currentUser;
+  @service(() => MessageBusService) messageBus;
+  @service(() => DialogService) dialog;
+  @service(() => CurrentUserService) currentUser;
 
   constructor(owner) {
     setOwner(this, owner);

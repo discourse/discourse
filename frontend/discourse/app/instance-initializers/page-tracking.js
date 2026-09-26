@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import { getOwner } from "@ember/owner";
 import {
   resetAjax,
@@ -11,6 +12,8 @@ import {
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
+import AppEventsService from "discourse/services/app-events";
+import DocumentTitleService from "discourse/services/document-title";
 
 let _preNavigationUrl = null;
 
@@ -30,8 +33,8 @@ export default {
       router.on("routeDidChange", this.handleRouteDidChange);
     }
 
-    let appEvents = owner.lookup("service:app-events");
-    let documentTitle = owner.lookup("service:document-title");
+    let appEvents = lookup(owner, AppEventsService);
+    let documentTitle = lookup(owner, DocumentTitleService);
 
     startPageTracking(router, appEvents, documentTitle);
 

@@ -1,5 +1,5 @@
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames } from "@ember-decorators/component";
 import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";

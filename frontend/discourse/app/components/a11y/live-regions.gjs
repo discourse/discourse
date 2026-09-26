@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import A11yService from "discourse/services/a11y";
 
 /**
  * What the regions hold when there is nothing to say.
@@ -22,7 +23,7 @@ import { service } from "@ember/service";
 export const IDLE_ANNOUNCEMENT = "\u00a0"; // non-breaking space
 
 export default class A11yLiveRegions extends Component {
-  @service a11y;
+  @service(() => A11yService) a11y;
 
   get assertiveMessage() {
     return this.a11y.assertiveMessage || IDLE_ANNOUNCEMENT;

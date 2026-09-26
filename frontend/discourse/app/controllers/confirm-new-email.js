@@ -1,14 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class ConfirmNewEmailController extends Controller {
-  @service currentUser;
-  @service dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
   @service router;
 
   @tracked loading;

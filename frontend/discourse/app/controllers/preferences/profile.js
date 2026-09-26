@@ -1,16 +1,18 @@
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { compare, isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 export default class ProfileController extends Controller {
-  @service dialog;
-  @service modal;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
 
   subpageTitle = i18n("user.preferences_nav.profile");
 

@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import getURL from "discourse/lib/get-url";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import BreadcrumbsService from "discourse/services/breadcrumbs";
 
 export default class DBreadcrumbsItem extends Component {
-  @service breadcrumbs;
+  @service(() => BreadcrumbsService) breadcrumbs;
 
   constructor() {
     super(...arguments);

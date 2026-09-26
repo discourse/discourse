@@ -1,12 +1,14 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import NavigationMenuService from "discourse/services/navigation-menu";
 
 export default class extends CommonCommunitySection {
-  @service modal;
-  @service navigationMenu;
+  @service(() => ModalService) modal;
+  @service(() => NavigationMenuService) navigationMenu;
 
   get moreSectionButtonText() {
     return i18n(

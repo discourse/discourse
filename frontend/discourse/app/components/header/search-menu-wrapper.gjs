@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import MenuPanel from "discourse/components/menu-panel";
 import SearchMenu from "discourse/components/search-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import SiteService from "discourse/services/site";
 
 export default class SearchMenuWrapper extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get animationClass() {
     return this.site.mobileView || this.site.narrowDesktopView

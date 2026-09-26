@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { API_KEY_SCOPE_MODES } from "discourse/admin/lib/constants";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
@@ -16,11 +16,14 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import StoreService from "discourse/services/store";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class AdminConfigAreasApiKeysNew extends Component {
-  @service modal;
-  @service store;
-  @service toasts;
+  @service(() => ModalService) modal;
+  @service(() => StoreService) store;
+  @service(() => ToastsService) toasts;
 
   @tracked username;
   @tracked loadingScopes = false;

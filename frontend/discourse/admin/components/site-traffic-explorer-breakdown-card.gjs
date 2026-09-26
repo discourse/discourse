@@ -4,18 +4,19 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import SiteTrafficExplorerBreakdownModal from "discourse/admin/components/site-traffic-explorer-breakdown-modal";
 import SiteTrafficExplorerBreakdownRow from "discourse/admin/components/site-traffic-explorer-breakdown-row";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 const CARD_ROW_LIMIT = 8;
 
 export default class SiteTrafficExplorerBreakdownCard extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @tracked activeTabIndex = 0;
 

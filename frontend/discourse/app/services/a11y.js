@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedMap } from "@ember/reactive/collections";
 import { cancel, next } from "@ember/runloop";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 

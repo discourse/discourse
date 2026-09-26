@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -12,13 +12,18 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import Invite from "discourse/models/invite";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
+import ToastsService from "discourse/float-kit/services/toasts";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class UserInvitedShowController extends Controller {
-  @service dialog;
-  @service modal;
-  @service toasts;
-  @service currentUser;
-  @service siteSettings;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
+  @service(() => ToastsService) toasts;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked canLoadMore = true;
   @tracked hasLoadedInitialInvites = false;

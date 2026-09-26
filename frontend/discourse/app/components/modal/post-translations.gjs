@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
@@ -16,13 +16,18 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
+import SiteSettingsService from "discourse/services/site-settings";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class PostTranslationsModal extends Component {
-  @service composer;
-  @service dialog;
-  @service languageNameLookup;
-  @service siteSettings;
-  @service toasts;
+  @service(() => ComposerService) composer;
+  @service(() => DialogService) dialog;
+  @service(() => LanguageNameLookupService) languageNameLookup;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ToastsService) toasts;
 
   @tracked postLocalizations = null;
   @tracked loading = false;

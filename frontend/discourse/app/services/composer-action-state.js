@@ -1,4 +1,4 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -8,10 +8,12 @@ import {
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class ComposerActionStateService extends Service {
-  @service composer;
-  @service dialog;
+  @service(() => ComposerService) composer;
+  @service(() => DialogService) dialog;
 
   topicSnapshot = null;
   postSnapshot = null;

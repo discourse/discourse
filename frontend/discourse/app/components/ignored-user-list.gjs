@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
@@ -10,9 +10,10 @@ import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import IgnoredUserListItem from "./ignored-user-list-item";
+import ModalService from "discourse/services/modal";
 
 export default class IgnoredUserList extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @action
   async removeIgnoredUser(item) {

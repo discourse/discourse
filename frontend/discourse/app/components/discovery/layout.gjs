@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BlockOutlet from "discourse/blocks/block-outlet";
 import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import BlocksService from "discourse/services/blocks";
 
 /* Renders its content inside a <div> with the given class when @when is true,
    or renders the content directly when false. */
@@ -18,7 +19,7 @@ const ConditionalWrap = <template>
 </template>;
 
 export default class Layout extends Component {
-  @service blocks;
+  @service(() => BlocksService) blocks;
 
   get hasSidebarLayout() {
     return this.blocks.hasLayout("sidebar-discovery");

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
 import {
@@ -27,10 +27,12 @@ import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import KeyboardShortcutsService from "discourse/services/keyboard-shortcuts";
 
 export default class EditTopicTimerForm extends Component {
-  @service currentUser;
-  @service keyboardShortcuts;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyboardShortcutsService) keyboardShortcuts;
 
   @tracked timerType;
 

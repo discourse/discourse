@@ -1,11 +1,13 @@
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class UserIndex extends DiscourseRoute {
   @service router;
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   get viewingOtherUserDefaultRoute() {
     let viewUserRoute = this.siteSettings.view_user_route;

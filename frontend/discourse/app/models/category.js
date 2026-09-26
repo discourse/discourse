@@ -3,7 +3,7 @@ import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedObject } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -26,6 +26,8 @@ import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "./topic";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
@@ -69,9 +71,7 @@ export default class Category extends RestModel {
   }
 
   static slugEncoded() {
-    let siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+    let siteSettings = lookup(getOwnerWithFallback(this), SiteSettingsService);
     return siteSettings.slug_generation_method === "encoded";
   }
 
@@ -478,7 +478,7 @@ export default class Category extends RestModel {
     }
   }
 
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked color;
   @tracked emoji;

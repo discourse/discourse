@@ -1,10 +1,11 @@
 /* eslint-disable ember/no-side-effects */
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { cloneJSON } from "discourse/lib/object";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class AdminNavManager extends Service {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   #adminNavMap;
   #filteredNavMap;

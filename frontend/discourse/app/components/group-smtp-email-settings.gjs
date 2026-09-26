@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -13,9 +13,10 @@ import emailProviderDefaultSettings from "discourse/lib/email-provider-default-s
 import { or } from "discourse/truth-helpers";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class GroupSmtpEmailSettings extends Component {
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   @tracked smtpSettingsValid = false;
   @tracked testingSettings = false;

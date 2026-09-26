@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import SiteService from "discourse/services/site";
 
 export default class DUserAvatarFlair extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get flair() {
     const user = this.args.user;

@@ -1,6 +1,6 @@
 import { action, get } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
@@ -11,15 +11,20 @@ import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
+import ComposerService from "discourse/services/composer";
+import ScreenTrackService from "discourse/services/screen-track";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
 
 const SCROLL_DELAY = 500;
 
 export default class TopicRoute extends DiscourseRoute {
-  @service a11y;
-  @service composer;
-  @service screenTrack;
-  @service currentUser;
-  @service modal;
+  @service(() => A11yService) a11y;
+  @service(() => ComposerService) composer;
+  @service(() => ScreenTrackService) screenTrack;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
   @service router;
 
   scheduledReplace = null;

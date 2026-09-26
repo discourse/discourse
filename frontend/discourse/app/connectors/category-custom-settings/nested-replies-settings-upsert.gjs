@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 const CONVERSION_COMPLETED_CUSTOM_FIELD = "nested_replies_conversion_completed";
 
@@ -14,8 +16,8 @@ export default class NestedRepliesSettingsUpsert extends Component {
     return context.siteSettings.nested_replies_enabled;
   }
 
-  @service a11y;
-  @service dialog;
+  @service(() => A11yService) a11y;
+  @service(() => DialogService) dialog;
 
   @tracked completed = false;
   @tracked converting = false;

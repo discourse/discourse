@@ -4,7 +4,7 @@ import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -19,6 +19,7 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 const PAGE_SIZE = 50;
 const DESCRIPTION_MAX_LENGTH = 500;
@@ -40,7 +41,7 @@ const VISIBILITY_FILTER_OPTIONS = [
 ];
 
 export default class AdminCategoryManagementList extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked categories = [];
   @tracked loading = true;

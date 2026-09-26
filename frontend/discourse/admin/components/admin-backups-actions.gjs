@@ -1,16 +1,20 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminBackupsActions extends Component {
-  @service currentUser;
-  @service site;
-  @service siteSettings;
-  @service dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => DialogService) dialog;
 
   get rollbackDisabled() {
     return !this.rollbackEnabled;

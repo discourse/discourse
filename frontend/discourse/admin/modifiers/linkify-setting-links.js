@@ -1,5 +1,6 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Modifier from "ember-modifier";
+import AdminSearchDataSourceService from "discourse/admin/services/admin-search-data-source";
 
 // Rewrites the href of server-rendered `{{setting:foo}}` links so they point at
 // the setting's actual config page instead of the generic all-settings page.
@@ -7,7 +8,7 @@ import Modifier from "ember-modifier";
 // mapping lives in the client nav map; the metadata it knows is passed through
 // data attributes on the anchor.
 export default class LinkifySettingLinks extends Modifier {
-  @service adminSearchDataSource;
+  @service(() => AdminSearchDataSourceService) adminSearchDataSource;
 
   modify(element, [description]) {
     if (!description) {

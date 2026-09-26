@@ -1,7 +1,8 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
+import CapabilitiesServiceInjected from "discourse/services/capabilities";
 
 /** A viewport breakpoint name, matching the breakpoints defined in
  *  `capabilities.viewport`. */
@@ -102,7 +103,8 @@ const BREAKPOINTS: readonly Breakpoint[] = Object.freeze([
   },
 })
 export default class BlockViewportCondition extends BlockCondition {
-  @service declare capabilities: CapabilitiesService;
+  @service(() => CapabilitiesServiceInjected)
+  declare capabilities: CapabilitiesService;
 
   /**
    * Evaluates whether the viewport condition passes.

@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set, setProperties } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
@@ -11,9 +11,10 @@ import { emojiUrlFor } from "discourse/lib/text";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import MenuService from "discourse/float-kit/services/menu";
 
 export default class EmojiValueList extends Component {
-  @service menu;
+  @service(() => MenuService) menu;
 
   @cached
   get collection() {

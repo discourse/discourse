@@ -1,4 +1,4 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
@@ -8,14 +8,19 @@ import {
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
+import CapabilitiesService from "discourse/services/capabilities";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import LoginService from "discourse/services/login";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class extends DiscourseRoute {
-  @service capabilities;
-  @service dialog;
-  @service login;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => DialogService) dialog;
+  @service(() => LoginService) login;
   @service router;
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   beforeModel(transition) {
     const { from, wantsTo } = transition;

@@ -1,18 +1,20 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import {
   homepageDestination,
   homepageRewriteParam,
   serverSideHomepage,
 } from "discourse/lib/homepage-router-overrides";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import DiscourseURL from "discourse/lib/url";
 import DiscourseRoute from "../discourse";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 @disableImplicitInjections
 export default class DiscoveryIndex extends DiscourseRoute {
   @service router;
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   beforeModel(transition) {
     if (serverSideHomepage()) {

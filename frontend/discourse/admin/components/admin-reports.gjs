@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import { ajax } from "discourse/lib/ajax";
@@ -8,6 +8,7 @@ import { bind } from "discourse/lib/decorators";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const REPORT_GROUPS = {
   engagement: [
@@ -67,7 +68,7 @@ const REPORT_GROUPS = {
 };
 
 export default class AdminReports extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @bind
   async loadReports() {

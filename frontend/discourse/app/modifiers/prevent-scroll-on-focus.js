@@ -1,7 +1,8 @@
 import { registerDestructor } from "@ember/destroyable";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export function focusOffScreen(target) {
   target.style.transform = "translateY(-99999px)";
@@ -22,7 +23,7 @@ export function focusOffScreen(target) {
  * On non-iOS platforms, this modifier does nothing.
  */
 export default class PreventScrollOnFocus extends Modifier {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   constructor(owner, args) {
     super(owner, args);

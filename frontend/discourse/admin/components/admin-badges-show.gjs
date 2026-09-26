@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
 import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import Form from "discourse/components/form";
@@ -16,6 +16,11 @@ import { sanitize } from "discourse/lib/text";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import { i18n } from "discourse-i18n";
+import AdminBadgesService from "discourse/admin/services/admin-badges";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const FORM_FIELDS = [
   "allow_title",
@@ -39,12 +44,12 @@ const FORM_FIELDS = [
 ];
 
 export default class AdminBadgesShow extends Component {
-  @service adminBadges;
-  @service dialog;
-  @service modal;
+  @service(() => AdminBadgesService) adminBadges;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
   @service router;
-  @service siteSettings;
-  @service toasts;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ToastsService) toasts;
 
   @tracked previewLoading = false;
 

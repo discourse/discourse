@@ -1,21 +1,20 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import ActivationControls from "discourse/components/activation-controls";
+import { service } from "discourse/lib/service";
 import { resendActivationEmail } from "discourse/lib/user-activation";
+import ModalService from "discourse/services/modal";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import ActivationEdit from "./activation-edit";
-import ActivationResent from "./activation-resent";
 
 export default class NotActivated extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @action
   sendActivationEmail() {
     resendActivationEmail(this.args.model.currentEmail).then(() => {
-      this.modal.show(ActivationResent, {
+      this.modal.show(() => import("./activation-resent"), {
         model: { currentEmail: this.args.model.currentEmail },
       });
     });
@@ -23,7 +22,7 @@ export default class NotActivated extends Component {
 
   @action
   editActivationEmail() {
-    this.modal.show(ActivationEdit, {
+    this.modal.show(() => import("./activation-edit"), {
       model: {
         currentEmail: this.args.model.currentEmail,
         newEmail: this.args.model.currentEmail,

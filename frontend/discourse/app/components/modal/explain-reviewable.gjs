@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ScoreValue from "discourse/components/score-value";
 import float from "discourse/helpers/float";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
 
 export default class ExplainReviewable extends Component {
-  @service store;
+  @service(() => StoreService) store;
 
   @tracked loading = true;
   @tracked reviewableExplanation = null;

@@ -1,5 +1,7 @@
+import { lookup } from "discourse/lib/service";
+import KeyboardShortcutsService from "discourse/services/keyboard-shortcuts";
 export default {
   initialize(owner) {
-    owner.lookup("service:keyboard-shortcuts");
+    lookup(owner, KeyboardShortcutsService);
   },
 };

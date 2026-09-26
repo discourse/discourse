@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
 
 class A11ySkipLinksContainer extends Component {
-  @service a11y;
+  @service(() => A11yService) a11y;
 
   <template>
     {{#if this.a11y.showSkipLinks}}
@@ -26,7 +27,7 @@ class A11ySkipLinksContainer extends Component {
 export default class A11ySkipLinks extends Component {
   static Container = A11ySkipLinksContainer;
 
-  @service a11y;
+  @service(() => A11yService) a11y;
 
   wrapperElement = document.querySelector("#skip-links__container > div");
 

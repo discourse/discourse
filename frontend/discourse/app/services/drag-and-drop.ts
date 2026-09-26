@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import {
   decorateExternalSource,
   type ExternalDragKind,

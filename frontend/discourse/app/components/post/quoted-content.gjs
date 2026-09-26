@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier as modifierFn } from "ember-modifier";
 import elementClass from "discourse/helpers/element-class";
 import { ajax } from "discourse/lib/ajax";
@@ -17,9 +17,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import PostCookedHtml from "./cooked-html";
+import StoreService from "discourse/services/store";
 
 export default class PostQuotedContent extends Component {
-  @service store;
+  @service(() => StoreService) store;
 
   @tracked
   expanded =

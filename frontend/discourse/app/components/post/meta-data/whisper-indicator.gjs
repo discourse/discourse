@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class PostMetaDataWhisperIndicator extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get groups() {
     return this.site.whispers_allowed_groups_names;

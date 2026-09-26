@@ -5,7 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import SecondFactorForm from "discourse/components/second-factor-form";
@@ -20,11 +20,14 @@ import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import LoginService from "discourse/services/login";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class LocalLoginForm extends Component {
-  @service login;
-  @service modal;
-  @service siteSettings;
+  @service(() => LoginService) login;
+  @service(() => ModalService) modal;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked maskPassword = true;
   @tracked processingEmailLink = false;

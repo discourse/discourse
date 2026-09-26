@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable/note-form";
@@ -23,6 +23,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 /**
  * Timeline component for reviewable items that displays chronological events
@@ -31,7 +32,7 @@ import { i18n } from "discourse-i18n";
  * @component ReviewableTimeline
  */
 export default class ReviewableTimeline extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   /**
    * Combines all timeline events from reviewable scores, histories, and the reviewable itself

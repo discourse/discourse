@@ -1,4 +1,4 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { bind } from "discourse/lib/decorators";
@@ -10,12 +10,14 @@ import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
 import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const REPLACEMENT_URLS = {};
 
 export default class DeprecationWarningHandler extends Service {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   #adminWarned = new Set();
 

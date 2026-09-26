@@ -2,7 +2,7 @@
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,11 +15,13 @@ import DButton from "discourse/ui-kit/d-button";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteService from "discourse/services/site";
 
 @tagName("")
 export default class TagGroupsForm extends Component {
-  @service dialog;
-  @service site;
+  @service(() => DialogService) dialog;
+  @service(() => SiteService) site;
 
   // All but the "everyone" group
   allGroups = this.site.groups.filter(

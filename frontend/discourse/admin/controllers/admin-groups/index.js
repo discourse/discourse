@@ -1,11 +1,12 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import StoreService from "discourse/services/store";
 
 export default class AdminGroupsIndexController extends Controller {
-  @service store;
+  @service(() => StoreService) store;
 
   queryParams = ["order", "asc", "filter", "type"];
   order = null;

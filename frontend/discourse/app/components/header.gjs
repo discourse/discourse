@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier as modifierFn } from "ember-modifier";
 import HamburgerDropdownWrapper from "discourse/components/lazy/hamburger-dropdown-wrapper";
 import SearchMenuWrapper from "discourse/components/lazy/search-menu-wrapper";
@@ -17,6 +17,12 @@ import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-ou
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
 import Icons from "./header/icons";
+import SearchService from "discourse/services/search";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
+import AppEventsService from "discourse/services/app-events";
+import HeaderService from "discourse/services/header";
 
 export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";
@@ -41,12 +47,12 @@ export function clearExtraHeaderButtons() {
 
 export default class GlimmerHeader extends Component {
   @service router;
-  @service search;
-  @service currentUser;
-  @service siteSettings;
-  @service site;
-  @service appEvents;
-  @service header;
+  @service(() => SearchService) search;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteService) site;
+  @service(() => AppEventsService) appEvents;
+  @service(() => HeaderService) header;
 
   appEventsListeners = modifierFn(() => {
     this.appEvents.on(

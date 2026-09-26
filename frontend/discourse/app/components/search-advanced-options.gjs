@@ -4,7 +4,7 @@ import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -22,6 +22,7 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -127,7 +128,7 @@ export { addAdvancedSearchOptions } from "discourse/lib/plugin-registries/advanc
 
 @tagName("")
 export default class SearchAdvancedOptions extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @tracked isExpanded = false;
   @tracked submittedFilterCount = 0;

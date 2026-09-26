@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
@@ -17,16 +17,22 @@ import {
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import CapabilitiesService from "discourse/services/capabilities";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteService from "discourse/services/site";
+import LoginService from "discourse/services/login";
+import ModalService from "discourse/services/modal";
 
 export default class LoginPageController extends Controller {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
-  @service capabilities;
-  @service dialog;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => DialogService) dialog;
   // eslint-disable-next-line discourse/no-unused-services
-  @service site; // used in the route template
-  @service login;
-  @service modal;
+  @service(() => SiteService) site; // used in the route template
+  @service(() => LoginService) login;
+  @service(() => ModalService) modal;
   @controller application;
 
   @tracked loggingIn = false;

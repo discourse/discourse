@@ -1,15 +1,16 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import GroupDropdown from "discourse/select-kit/components/group-dropdown";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class GroupNavigation extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   <template>
     {{#if this.site.desktopView}}

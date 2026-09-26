@@ -1,11 +1,14 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { Promise } from "rsvp";
 import workerUrl from "virtual:dynamic-chunk-url:discourse/workers/media-optimization/entrypoint";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const CONVERT_FORMAT_REGEX = /(\.|\/)(jxl|hei[cf])$/i;
 const ANIMATED_GIF_REGEX = /(\.|\/)(gif)$/i;
@@ -27,9 +30,9 @@ const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
  */
 @disableImplicitInjections
 export default class MediaOptimizationWorkerService extends Service {
-  @service appEvents;
-  @service currentUser;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   worker = null;
   currentComposerUploadData = null;

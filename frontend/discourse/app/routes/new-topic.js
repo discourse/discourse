@@ -1,14 +1,17 @@
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
+import ComposerService from "discourse/services/composer";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
 
 export default class extends DiscourseRoute {
-  @service composer;
-  @service currentUser;
+  @service(() => ComposerService) composer;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service site;
+  @service(() => SiteService) site;
 
   async beforeModel(transition) {
     if (!this.currentUser) {

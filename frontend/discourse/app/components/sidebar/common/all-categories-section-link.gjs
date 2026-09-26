@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isActiveLink } from "discourse/lib/sidebar/active-link";
 import { i18n } from "discourse-i18n";
 import SectionLink from "../section-link";

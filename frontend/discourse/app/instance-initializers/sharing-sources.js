@@ -1,9 +1,11 @@
+import { lookup } from "discourse/lib/service";
 import Sharing from "discourse/lib/sharing";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default {
   initialize(owner) {
-    const siteSettings = owner.lookup("service:site-settings");
+    const siteSettings = lookup(owner, SiteSettingsService);
 
     Sharing.addSource({
       id: "twitter",

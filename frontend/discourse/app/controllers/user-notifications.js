@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import { ajax } from "discourse/lib/ajax";
@@ -12,15 +12,20 @@ import { beforeLoadMoreCallbacks } from "discourse/lib/plugin-registries/notific
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export { addBeforeLoadMoreCallback } from "discourse/lib/plugin-registries/notifications";
 
 export default class UserNotificationsController extends Controller {
-  @service modal;
-  @service appEvents;
-  @service currentUser;
-  @service site;
-  @service siteSettings;
+  @service(() => ModalService) modal;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked filter = "all";
 

@@ -7,7 +7,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel, next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -27,6 +27,12 @@ import NestedOp from "./nested/op";
 import NestedPost from "./nested/post";
 import NestedSortSelector from "./nested/sort-selector";
 import NestedTopicActions from "./nested/topic-actions";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import HeaderService from "discourse/services/header";
+import ScreenTrackService from "discourse/services/screen-track";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const postExcerpt = helper(([post]) => {
   const element = document.createElement("div");
@@ -43,13 +49,13 @@ const STORED_SCROLL_ANCHORS = Object.create(null);
 export const SCROLL_RESTORE_WINDOW_MS = 1250;
 
 export default class Nested extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service header;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => HeaderService) header;
   @service router;
-  @service screenTrack;
-  @service site;
-  @service siteSettings;
+  @service(() => ScreenTrackService) screenTrack;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked cloakAbove = 0;
   @tracked cloakBelow = 0;

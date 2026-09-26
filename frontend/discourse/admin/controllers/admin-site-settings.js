@@ -1,13 +1,14 @@
 import Controller from "@ember/controller";
 import { action, computed, set } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminSiteSettingsCategoryNav from "discourse/admin/components/admin-site-settings-category-nav";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import MenuService from "discourse/float-kit/services/menu";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;
-  @service menu;
+  @service(() => MenuService) menu;
 
   @computed("model.filteredSettings")
   get visibleSiteSettings() {

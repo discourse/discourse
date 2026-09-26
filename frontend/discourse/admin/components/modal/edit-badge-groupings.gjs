@@ -2,17 +2,19 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import StoreService from "discourse/services/store";
 
 export default class EditBadgeGroupings extends Component {
-  @service dialog;
-  @service store;
+  @service(() => DialogService) dialog;
+  @service(() => StoreService) store;
 
   @autoTrackedArray workingCopy = this.args.model.badgeGroupings.map((o) =>
     this.store.createRecord("badge-grouping", o)

@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 function withStoredValue(options, storedValue) {
   if (!storedValue || options.some((o) => o.value === storedValue)) {
@@ -18,7 +19,7 @@ function withStoredValue(options, storedValue) {
 }
 
 export default class UpsertCategoryAppearance extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get isDefaultSortOrder() {
     return !this.args.transientData?.sort_order;

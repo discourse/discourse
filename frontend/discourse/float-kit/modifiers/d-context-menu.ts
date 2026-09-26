@@ -1,13 +1,14 @@
 import { registerDestructor } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import type { MenuOptions } from "discourse/float-kit/lib/constants";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import isContextMenuExemptTarget from "discourse/lib/is-context-menu-exempt-target";
 import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
+import MenuServiceInjected from "discourse/float-kit/services/menu";
 
 interface FloatKitContextMenuSignature {
   Element: HTMLElement;
@@ -29,7 +30,7 @@ interface FloatKitContextMenuSignature {
 
 /** Opens a menu at the right-click's viewport point and owns its lifetime. */
 export default class FloatKitContextMenu extends Modifier<FloatKitContextMenuSignature> {
-  @service declare menu: MenuService;
+  @service(() => MenuServiceInjected) declare menu: MenuService;
 
   #identifier = `context-menu-${guidFor(this)}`;
   #disposed = false;

@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import {
   calculatePresetStartDate,
   DEFAULT_PERIOD,
@@ -9,6 +9,7 @@ import {
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import LoadingSliderService from "discourse/services/loading-slider";
 
 const FILTER_KEYS = [
   "traffic_type",
@@ -23,7 +24,7 @@ const FILTER_KEYS = [
 ];
 
 export default class AdminSiteTrafficRoute extends DiscourseRoute {
-  @service loadingSlider;
+  @service(() => LoadingSliderService) loadingSlider;
 
   queryParams = {
     range: { refreshModel: true },

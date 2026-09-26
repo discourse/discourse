@@ -2,13 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const IMAGE_TYPES = [
   "gif",
@@ -31,7 +32,7 @@ const AUDIO_TYPES_STRING = AUDIO_TYPES.join(", ");
 const DOCUMENT_TYPES_STRING = DOCUMENT_TYPES.join(", ");
 
 export default class FileTypesList extends Component {
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   @tracked createdChoices = null;
 

@@ -1,10 +1,11 @@
 import Controller from "@ember/controller";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class AdminSearchIndexController extends Controller {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   queryParams = ["filter"];
 

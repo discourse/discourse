@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 
 export default class RenderGlimmerContainer extends Component {
   @service renderGlimmer;

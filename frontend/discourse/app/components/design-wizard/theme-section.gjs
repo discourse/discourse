@@ -3,10 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { and } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import InterfaceColorService from "discourse/services/interface-color";
+import SessionService from "discourse/services/session";
 
 // matches ThemeScreenshotThumbnails, so the card reserves the right box
 // before the image arrives
@@ -14,8 +16,8 @@ const SCREENSHOT_WIDTH = 800;
 const SCREENSHOT_HEIGHT = 450;
 
 class ThemeCard extends Component {
-  @service interfaceColor;
-  @service session;
+  @service(() => InterfaceColorService) interfaceColor;
+  @service(() => SessionService) session;
 
   @tracked screenshotLoaded = false;
 

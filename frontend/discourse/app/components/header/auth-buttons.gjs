@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
+import HeaderService from "discourse/services/header";
 
 export default class AuthButtons extends Component {
-  @service header;
+  @service(() => HeaderService) header;
 
   get showSignupButton() {
     return (

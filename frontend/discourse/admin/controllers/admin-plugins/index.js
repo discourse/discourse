@@ -1,12 +1,13 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import SessionService from "discourse/services/session";
 
 export default class AdminPluginsIndexController extends Controller {
-  @service session;
+  @service(() => SessionService) session;
 
   get searchableProps() {
     return ["nameTitleized", "author", "about"];

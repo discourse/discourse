@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import DockedComposer from "discourse/components/docked-composer";
 import { ajax } from "discourse/lib/ajax";
@@ -10,13 +10,18 @@ import EmbedMode from "discourse/lib/embed-mode";
 import DButton from "discourse/ui-kit/d-button";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import EmbedAuthFlowService from "discourse/services/embed-auth-flow";
+import SiteService from "discourse/services/site";
+import StoreService from "discourse/services/store";
 
 export default class EmbedModeComposer extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service embedAuthFlow;
-  @service site;
-  @service store;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => EmbedAuthFlowService) embedAuthFlow;
+  @service(() => SiteService) site;
+  @service(() => StoreService) store;
 
   @tracked replyingToPost = null;
   @tracked editingPost = null;

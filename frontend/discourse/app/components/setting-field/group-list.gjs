@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import {
   mapEveryoneToLoggedInUsersIds,
@@ -7,12 +7,14 @@ import {
 } from "discourse/lib/group-list-setting-aliasing";
 import { splitString } from "discourse/lib/utilities";
 import ListSetting from "discourse/select-kit/components/list-setting";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const TOKEN_SEPARATOR = "|";
 
 export default class SettingFieldGroupList extends Component {
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   get granularPermissionsEnabled() {
     return this.siteSettings

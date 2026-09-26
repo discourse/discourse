@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import type {
   FloatKitTrigger,
   MenuOptions,
@@ -10,6 +10,7 @@ import type {
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type Site from "discourse/models/site";
+import SiteService from "discourse/services/site";
 
 /**
  * The service that shows menus imperatively, outside the `<DMenu />` component.
@@ -19,7 +20,7 @@ import type Site from "discourse/models/site";
  * and content directly.
  */
 export default class Menu extends Service {
-  @service declare site: Site;
+  @service(() => SiteService) declare site: Site;
 
   registeredMenus = trackedSet<DMenuInstance>();
 

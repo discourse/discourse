@@ -1,11 +1,12 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminPlugin from "discourse/admin/models/admin-plugin";
 import { ajax } from "discourse/lib/ajax";
 import { sanitize } from "discourse/lib/text";
 import DiscourseRoute from "discourse/routes/discourse";
+import AdminPluginNavManagerService from "discourse/admin/services/admin-plugin-nav-manager";
 
 export default class AdminPluginsShowRoute extends DiscourseRoute {
-  @service adminPluginNavManager;
+  @service(() => AdminPluginNavManagerService) adminPluginNavManager;
 
   async model(params) {
     const pluginId = sanitize(params.plugin_id).substring(0, 100);

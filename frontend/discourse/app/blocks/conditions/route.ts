@@ -1,5 +1,5 @@
 import type RouterService from "@ember/routing/router-service";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import {
   getCurrentPageType,
   getPageContext,
@@ -21,6 +21,7 @@ import { isValidGlobPattern } from "discourse/lib/glob-utils";
 import type DiscoveryService from "discourse/services/discovery";
 import { BlockCondition, type ConditionContext } from "./condition";
 import { blockCondition } from "./decorator";
+import DiscoveryServiceInjected from "discourse/services/discovery";
 
 /**
  * The `any`/`not` combinator keys of a `params`/`queryParams` spec. Specs are
@@ -188,7 +189,7 @@ interface RouteConditionArgs {
 })
 export default class BlockRouteCondition extends BlockCondition {
   @service declare router: RouterService;
-  @service declare discovery: DiscoveryService;
+  @service(() => DiscoveryServiceInjected) declare discovery: DiscoveryService;
 
   /**
    * Returns the current URL path, normalized for matching.

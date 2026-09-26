@@ -1,4 +1,4 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { findClosestMatch } from "discourse/lib/string-similarity";
 import {
   BlockCondition,
@@ -6,6 +6,7 @@ import {
   type ConditionResolvedValue,
 } from "./condition";
 import { blockCondition } from "./decorator";
+import SiteSettingsService from "discourse/services/site-settings";
 
 /** Args accepted by the `setting` condition. */
 interface SettingConditionArgs {
@@ -116,7 +117,10 @@ export default class BlockSettingCondition extends BlockCondition {
   // The injected value is the dynamic, per-request settings object built by
   // the `site-settings` service factory (see `discourse/services/site-settings`),
   // not an instance of that module's exported class shim.
-  @service declare siteSettings: Record<string, unknown>;
+  @service(() => SiteSettingsService) declare siteSettings: Record<
+    string,
+    unknown
+  >;
 
   /**
    * Returns the siteSettings service as the default source.

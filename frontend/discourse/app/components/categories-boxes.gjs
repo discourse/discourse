@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -20,10 +20,11 @@ import dCategoryLink, {
 } from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
+import DiscoveryService from "discourse/services/discovery";
 
 @tagName("")
 export default class CategoriesBoxes extends Component {
-  @service discovery;
+  @service(() => DiscoveryService) discovery;
 
   get anyLogos() {
     return this.categories.some((c) => !isEmpty(c.get("uploaded_logo.url")));

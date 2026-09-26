@@ -1,11 +1,12 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class GroupAutomaticMembersDialog extends Service {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   async showConfirm(group_id, email_domains) {
     if (isEmpty(email_domains)) {

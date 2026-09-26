@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import {
   outletClassName,
   outletContainerClassName,
@@ -25,6 +25,7 @@ import type {
 } from "discourse/lib/blocks/-internals/types";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
 import type Blocks from "discourse/services/blocks";
+import BlocksService from "discourse/services/blocks";
 
 interface BlockOutletRootContainerSignature {
   Args: {
@@ -56,7 +57,7 @@ interface BlockOutletRootContainerSignature {
  * Internal — not part of the block authoring API.
  */
 export default class BlockOutletRootContainer extends Component<BlockOutletRootContainerSignature> {
-  @service declare blocks: Blocks;
+  @service(() => BlocksService) declare blocks: Blocks;
 
   /**
    * Cache for curried components, keyed by their stable block key.

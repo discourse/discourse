@@ -218,5 +218,25 @@
       "raw": 3102227,
       "chunks": 25
     }
+  },
+  {
+    "commit": "324d2060e80",
+    "label": "Services injected by import (ember-polaris-service)",
+    "date": "2026-09-26T08:42:57.442Z",
+    "boot": {
+      "brotli": 452540,
+      "raw": 1962034,
+      "chunks": 2
+    },
+    "discovery": {
+      "brotli": 568163,
+      "raw": 2509808,
+      "chunks": 7
+    },
+    "topic": {
+      "brotli": 691013,
+      "raw": 3089319,
+      "chunks": 26
+    }
   }
 ]

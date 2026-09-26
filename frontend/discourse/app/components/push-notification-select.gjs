@@ -1,15 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DesktopNotificationsService from "discourse/services/desktop-notifications";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class PushNotificationSelect extends Component {
-  @service desktopNotifications;
-  @service siteSettings;
+  @service(() => DesktopNotificationsService) desktopNotifications;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked level;
 

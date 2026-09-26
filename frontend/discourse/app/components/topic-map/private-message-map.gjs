@@ -1,15 +1,16 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { groupPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import SiteService from "discourse/services/site";
 
 export default class PrivateMessageMap extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get participantsClasses() {
     return this.site.mobileView &&

@@ -1,12 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { dependentKeyCompat } from "@ember/object/compat";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { arraySortedByProperties } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import StoreService from "discourse/services/store";
 
 export default class AdminUserFields extends Service {
-  @service store;
+  @service(() => StoreService) store;
 
   @tracked fieldSortOrder = ["position"];
 

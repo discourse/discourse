@@ -1,6 +1,6 @@
 import { registerDestructor } from "@ember/destroyable";
-import Service from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 
 @disableImplicitInjections
 export default class ElementClassesService extends Service {

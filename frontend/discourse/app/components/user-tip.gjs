@@ -1,17 +1,19 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import helperFn from "discourse/helpers/helper-fn";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
+import UserTipsService from "discourse/services/user-tips";
+import TooltipService from "discourse/float-kit/services/tooltip";
 
 export default class UserTip extends Component {
-  @service userTips;
-  @service tooltip;
+  @service(() => UserTipsService) userTips;
+  @service(() => TooltipService) tooltip;
 
   registerTip = helperFn((_, on) => {
     const tip = {

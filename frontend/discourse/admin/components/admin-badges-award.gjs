@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -11,10 +11,12 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import { i18n } from "discourse-i18n";
+import AdminBadgesService from "discourse/admin/services/admin-badges";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminBadgesAward extends Component {
-  @service adminBadges;
-  @service dialog;
+  @service(() => AdminBadgesService) adminBadges;
+  @service(() => DialogService) dialog;
 
   @tracked saving = false;
   @tracked replaceBadgeOwners = false;

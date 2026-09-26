@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import ApiSection from "./api-section";
 import PanelHeader from "./panel-header";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class SidebarApiSections extends Component {
   @service router;
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   get sections() {
     let sectionConfigs;

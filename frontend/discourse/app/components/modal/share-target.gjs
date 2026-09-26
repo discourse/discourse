@@ -1,16 +1,20 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { sharedBody } from "discourse/lib/share-target";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import SharedContentService from "discourse/services/shared-content";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class ShareTargetModal extends Component {
-  @service appEvents;
-  @service composer;
-  @service("shared-content") sharedContent;
-  @service toasts;
+  @service(() => AppEventsService) appEvents;
+  @service(() => ComposerService) composer;
+  @service(() => SharedContentService) sharedContent;
+  @service(() => ToastsService) toasts;
 
   previews;
 

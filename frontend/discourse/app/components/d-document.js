@@ -1,12 +1,14 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import { setLogoffCallback } from "discourse/lib/ajax";
 import { clearBodyLocks } from "discourse/lib/body-scroll-lock";
 import { bind } from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
 import { i18n } from "discourse-i18n";
+import DocumentTitleService from "discourse/services/document-title";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 let pluginCounterFunctions = [];
 export function addPluginDocumentTitleCounter(counterFunction) {
@@ -19,8 +21,8 @@ export function clearPluginDocumentTitleCounters() {
 
 @tagName("")
 export default class DDocument extends Component {
-  @service documentTitle;
-  @service dialog;
+  @service(() => DocumentTitleService) documentTitle;
+  @service(() => DialogService) dialog;
 
   _showingLogout = false;
 

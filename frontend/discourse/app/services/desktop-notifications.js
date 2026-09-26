@@ -1,11 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import {
   confirmNotification,
   context,
 } from "discourse/lib/desktop-notifications";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
   isPushNotificationsSupported,
@@ -15,6 +15,10 @@ import {
   userSubscriptionKey as pushNotificationUserSubscriptionKey,
 } from "discourse/lib/push-notifications";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const keyValueStore = new KeyValueStore(context);
 const DISABLED = "disabled";
@@ -23,10 +27,10 @@ const SUBSCRIBED = "subscribed";
 
 @disableImplicitInjections
 export default class DesktopNotificationsService extends Service {
-  @service currentUser;
-  @service site;
-  @service siteSettings;
-  @service toasts;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ToastsService) toasts;
 
   @tracked isEnabledBrowser = false;
   @tracked isEnabledPush = false;

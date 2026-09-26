@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BackToForum from "discourse/components/sidebar/back-to-forum";
 import Search from "discourse/components/sidebar/search";
 import Filter from "./filter";
 import FilterNoResults from "./filter-no-results";
 import ToggleAllSections from "./toggle-all-sections";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class PanelHeader extends Component {
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   get shouldDisplay() {
     return this.sidebarState.currentPanel.displayHeader;

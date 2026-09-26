@@ -1,17 +1,22 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DButton from "discourse/ui-kit/d-button";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import SiteService from "discourse/services/site";
+import SidebarStateService from "discourse/services/sidebar-state";
+import InterfaceColorService from "discourse/services/interface-color";
 
 export default class SidebarFooter extends Component {
-  @service currentUser;
-  @service modal;
-  @service site;
-  @service sidebarState;
-  @service interfaceColor;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
+  @service(() => SiteService) site;
+  @service(() => SidebarStateService) sidebarState;
+  @service(() => InterfaceColorService) interfaceColor;
 
   get showManageSectionsButton() {
     return this.currentUser && this.sidebarState.isCurrentPanel(MAIN_PANEL);

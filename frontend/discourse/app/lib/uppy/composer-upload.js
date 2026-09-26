@@ -2,7 +2,7 @@ import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
@@ -24,17 +24,26 @@ import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SessionService from "discourse/services/session";
+import SiteSettingsService from "discourse/services/site-settings";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import CapabilitiesService from "discourse/services/capabilities";
+import MessageBusService from "discourse/services/message-bus";
+import ComposerService from "discourse/services/composer";
 
 export default class UppyComposerUpload {
-  @service dialog;
-  @service session;
-  @service siteSettings;
-  @service appEvents;
-  @service currentUser;
-  @service site;
-  @service capabilities;
-  @service messageBus;
-  @service composer;
+  @service(() => DialogService) dialog;
+  @service(() => SessionService) session;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => MessageBusService) messageBus;
+  @service(() => ComposerService) composer;
 
   uppyWrapper;
 

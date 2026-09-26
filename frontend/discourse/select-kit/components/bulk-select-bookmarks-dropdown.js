@@ -1,11 +1,13 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Bookmark from "discourse/models/bookmark";
 import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
 import { selectKitOptions } from "./select-kit";
+import ToastsService from "discourse/float-kit/services/toasts";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 const _customButtons = [];
 const _customActions = {};
@@ -22,8 +24,8 @@ export function addBulkDropdownAction(name, customAction) {
 })
 export default class BulkSelectBookmarksDropdown extends DropdownSelectBoxComponent {
   @service router;
-  @service toasts;
-  @service dialog;
+  @service(() => ToastsService) toasts;
+  @service(() => DialogService) dialog;
 
   headerIcon = null;
 

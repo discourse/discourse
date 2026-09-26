@@ -1,10 +1,11 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Bookmark from "discourse/models/bookmark";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class BookmarkApi extends Service {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   buildNewBookmark(bookmarkableType, bookmarkableId) {
     return Bookmark.createFor(

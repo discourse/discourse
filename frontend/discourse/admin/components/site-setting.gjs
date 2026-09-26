@@ -9,7 +9,7 @@ import { getOwner } from "@ember/owner";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { scheduleOnce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty, isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
@@ -65,6 +65,11 @@ import DButton from "discourse/ui-kit/d-button";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import AdminSiteSettingStoreService from "discourse/admin/services/admin-site-setting-store";
+import SiteSettingChangeTrackerService from "discourse/admin/services/site-setting-change-tracker";
+import MessageBusService from "discourse/services/message-bus";
+import SiteService from "discourse/services/site";
 
 const TYPE_COMPONENTS = {
   bool: SettingBool,
@@ -100,12 +105,12 @@ const TYPE_COMPONENTS = {
 };
 
 export default class SiteSettingComponent extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
   @service router;
-  @service adminSiteSettingStore;
-  @service siteSettingChangeTracker;
-  @service messageBus;
-  @service site;
+  @service(() => AdminSiteSettingStoreService) adminSiteSettingStore;
+  @service(() => SiteSettingChangeTrackerService) siteSettingChangeTracker;
+  @service(() => MessageBusService) messageBus;
+  @service(() => SiteService) site;
 
   @tracked isSecret = null;
   @tracked status = null;

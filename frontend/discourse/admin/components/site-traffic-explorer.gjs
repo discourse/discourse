@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import SiteTrafficExplorerBreakdownCard from "discourse/admin/components/site-traffic-explorer-breakdown-card";
@@ -13,6 +13,8 @@ import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import I18n, { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const SKELETON_METRICS = Array.from({ length: 4 });
 const SKELETON_BREAKDOWNS = Array.from({ length: 3 });
@@ -24,8 +26,8 @@ const TRAFFIC_TYPE_BY_SERIES = {
 };
 
 export default class SiteTrafficExplorer extends Component {
-  @service a11y;
-  @service siteSettings;
+  @service(() => A11yService) a11y;
+  @service(() => SiteSettingsService) siteSettings;
 
   get summary() {
     return this.args.traffic?.summary ?? {};

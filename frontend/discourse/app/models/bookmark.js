@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import { capitalize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -21,6 +22,7 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 import Category from "./category";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -133,9 +135,7 @@ export default class Bookmark extends RestCompatModel {
   // Read per row on the bookmark list — cache the service lookup.
   get visibleListTags() {
     const tags = this.tags;
-    this.#siteSettings ??= getOwnerWithFallback().lookup(
-      "service:site-settings"
-    );
+    this.#siteSettings ??= lookup(getOwnerWithFallback(), SiteSettingsService);
     if (!tags || !this.#siteSettings.suppress_overlapping_tags_in_list) {
       return tags;
     }

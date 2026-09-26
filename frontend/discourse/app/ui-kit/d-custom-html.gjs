@@ -2,11 +2,12 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { getCustomHTML } from "discourse/helpers/custom-html";
+import AppEventsService from "discourse/services/app-events";
 
 export default class DCustomHtml extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   get html() {
     return getCustomHTML(this.args.name);

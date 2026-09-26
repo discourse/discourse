@@ -1,4 +1,4 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 
 export default class CategoryTypeChooser extends Service {
   @service router;

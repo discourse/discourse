@@ -1,23 +1,28 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse/lib/debounce";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
+import FooterService from "discourse/services/footer";
+import ScrollStateService from "discourse/services/scroll-state";
+import SidebarStateService from "discourse/services/sidebar-state";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
-  @service footer;
+  @service(() => FooterService) footer;
   @service router;
-  @service scrollState;
-  @service sidebarState;
-  @service site;
-  @service siteSettings;
+  @service(() => ScrollStateService) scrollState;
+  @service(() => SidebarStateService) sidebarState;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;

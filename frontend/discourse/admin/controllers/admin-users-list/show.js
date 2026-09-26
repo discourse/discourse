@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BulkUserDeleteConfirmation from "discourse/admin/components/bulk-user-delete-confirmation";
 import BulkUserSuspendConfirmation from "discourse/admin/components/bulk-user-suspend-confirmation";
 import { USER_ACCOUNT_TYPES } from "discourse/admin/lib/user-account-types";
@@ -13,14 +13,16 @@ import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import DiscourseURL, { applyQueryParams } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const MAX_BULK_SELECT_LIMIT = 100;
 const USERS_PER_PAGE = 100;
 
 export default class AdminUsersListShowController extends Controller {
-  @service modal;
+  @service(() => ModalService) modal;
   @service router;
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   @tracked bulkSelect = false;
   @tracked displayBulkActions = false;

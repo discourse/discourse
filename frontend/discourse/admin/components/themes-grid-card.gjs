@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import ThemeCardPreview from "discourse/components/theme-card-preview";
@@ -15,6 +15,8 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
+import ToastsService from "discourse/float-kit/services/toasts";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 // NOTE (martin): We will need to revisit and improve this component
 // over time.
@@ -23,8 +25,8 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 // and technical debt, so anything copied from there to here is subject
 // to change as we improve this incrementally.
 export default class ThemeCard extends Component {
-  @service toasts;
-  @service dialog;
+  @service(() => ToastsService) toasts;
+  @service(() => DialogService) dialog;
   @service router;
 
   @tracked isUpdating = false;

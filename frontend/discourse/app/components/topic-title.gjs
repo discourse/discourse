@@ -2,14 +2,16 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
+import HeaderService from "discourse/services/header";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class TopicTitle extends Component {
-  @service header;
-  @service capabilities;
+  @service(() => HeaderService) header;
+  @service(() => CapabilitiesService) capabilities;
 
   @action
   keyDown(e) {

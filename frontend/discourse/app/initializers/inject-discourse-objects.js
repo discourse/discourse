@@ -1,15 +1,18 @@
+import { lookup } from "discourse/lib/service";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import TopicTrackingState, {
   startTracking,
 } from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
+import MessageBusService from "discourse/services/message-bus";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default {
   after: "discourse-bootstrap",
 
   initialize(app) {
-    const siteSettings = app.__container__.lookup("service:site-settings");
+    const siteSettings = lookup(app.__container__, SiteSettingsService);
 
     const currentUser = User.current();
 
@@ -18,7 +21,7 @@ export default {
     app.register("service:current-user", currentUser, { instantiate: false });
 
     this.topicTrackingState = TopicTrackingState.create({
-      messageBus: app.__container__.lookup("service:message-bus"),
+      messageBus: lookup(app.__container__, MessageBusService),
       siteSettings,
       currentUser,
     });

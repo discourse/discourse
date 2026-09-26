@@ -1,3 +1,5 @@
+import { lookup } from "discourse/lib/service";
+import CapabilitiesService from "discourse/services/capabilities";
 let done = false;
 
 export default {
@@ -7,7 +9,7 @@ export default {
     }
     done = true;
 
-    const caps = container.lookup("service:capabilities");
+    const caps = lookup(container, CapabilitiesService);
     const viewport = document.querySelector("meta[name=viewport]");
     if (!viewport) {
       return;

@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-observers */
 import { computed } from "@ember/object";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -8,14 +8,18 @@ import { bind } from "discourse/lib/decorators";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import I18n from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import MessageBusService from "discourse/services/message-bus";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
 export default class LogsNoticeService extends Service {
-  @service siteSettings;
-  @service currentUser;
-  @service keyValueStore;
-  @service messageBus;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyValueStoreService) keyValueStore;
+  @service(() => MessageBusService) messageBus;
 
   text = "";
 

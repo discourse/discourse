@@ -2,7 +2,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedArray } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import {
@@ -22,11 +22,14 @@ import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
+import SiteSettingsService from "discourse/services/site-settings";
+import CapabilitiesService from "discourse/services/capabilities";
+import StoreService from "discourse/services/store";
 
 @singleton
 export default class Site extends RestModel {
   static createCurrent() {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = lookup(getOwnerWithFallback(this), StoreService);
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
     siteAttributes["isStaffWritesOnly"] = PreloadStore.get("isStaffWritesOnly");
@@ -85,8 +88,8 @@ export default class Site extends RestModel {
     return result;
   }
 
-  @service siteSettings;
-  @service capabilities;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked topicCountDesc = ["topic_count:desc"];
   @autoTrackedArray categories = [];

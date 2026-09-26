@@ -1,16 +1,17 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import { historyHeat } from "discourse/components/post/meta-data/edits-indicator";
 import { longDate } from "discourse/lib/formatter";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 @tagName("")
 export default class ReviewablePostEdits extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @computed("reviewable.post_version")
   get hasEdits() {

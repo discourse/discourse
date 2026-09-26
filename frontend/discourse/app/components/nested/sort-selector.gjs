@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const SORT_OPTIONS = [
   { value: "top", labelKey: "nested_replies.sort.top" },
@@ -17,7 +18,7 @@ const SORT_OPTIONS = [
 ];
 
 export default class NestedSortSelector extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get sortOptions() {
     return SORT_OPTIONS.filter(

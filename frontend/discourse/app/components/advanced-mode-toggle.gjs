@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class AdvancedModeToggle extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   get label() {
     return this.args.active

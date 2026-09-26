@@ -5,7 +5,7 @@ import { array, concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import { COMPONENTS } from "discourse/admin/models/theme";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -29,6 +29,9 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import ToastsService from "discourse/float-kit/services/toasts";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 const STATUS_FILTER_OPTIONS = [
   {
@@ -58,8 +61,8 @@ const STATUS_FILTER_OPTIONS = [
 ];
 
 export default class AdminConfigAreasComponents extends Component {
-  @service modal;
-  @service toasts;
+  @service(() => ModalService) modal;
+  @service(() => ToastsService) toasts;
   @service router;
 
   @tracked loading = true;
@@ -337,8 +340,8 @@ export default class AdminConfigAreasComponents extends Component {
 }
 
 class ComponentRow extends Component {
-  @service toasts;
-  @service dialog;
+  @service(() => ToastsService) toasts;
+  @service(() => DialogService) dialog;
 
   @tracked enabled = this.args.component.enabled;
   @tracked hasUpdates = this.args.component.remote_theme?.commits_behind > 0;

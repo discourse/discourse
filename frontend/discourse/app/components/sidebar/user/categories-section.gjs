@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { debounce } from "discourse/lib/decorators";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
@@ -11,18 +11,24 @@ import AllCategoriesSectionLink from "../common/all-categories-section-link";
 import CommonCategoriesSection from "../common/categories-section";
 import Section from "../section";
 import SectionLink from "../section-link";
+import AppEventsService from "discourse/services/app-events";
+import CategoryTypeChooserService from "discourse/services/category-type-chooser";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import NavigationMenuService from "discourse/services/navigation-menu";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export const REFRESH_COUNTS_APP_EVENT_NAME =
   "sidebar:refresh-categories-section-counts";
 
 export default class SidebarUserCategoriesSection extends CommonCategoriesSection {
-  @service appEvents;
-  @service categoryTypeChooser;
-  @service currentUser;
-  @service modal;
-  @service navigationMenu;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CategoryTypeChooserService) categoryTypeChooser;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
+  @service(() => NavigationMenuService) navigationMenu;
   @service router;
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   constructor() {
     super(...arguments);

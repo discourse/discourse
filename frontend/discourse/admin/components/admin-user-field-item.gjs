@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { USER_FIELD_FLAGS } from "discourse/admin/lib/constants";
 import UserField from "discourse/admin/models/user-field";
@@ -9,9 +9,10 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
+import AdminUserFieldsService from "discourse/admin/services/admin-user-fields";
 
 export default class AdminUserFieldItem extends Component {
-  @service adminUserFields;
+  @service(() => AdminUserFieldsService) adminUserFields;
   @service router;
 
   get fieldName() {

@@ -1,6 +1,6 @@
 // Subscribes to user events on the message bus
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import {
   alertChannel,
@@ -17,17 +17,25 @@ import {
 } from "discourse/lib/push-notifications";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import Notification from "discourse/models/notification";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import MessageBusService from "discourse/services/message-bus";
+import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
 
 class SubscribeUserNotificationsInit {
-  @service appEvents;
-  @service capabilities;
-  @service currentUser;
-  @service messageBus;
-  @service pmTopicTrackingState;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => MessageBusService) messageBus;
+  @service(() => PmTopicTrackingStateService) pmTopicTrackingState;
   @service router;
-  @service site;
-  @service siteSettings;
-  @service store;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
 
   constructor(owner) {
     setOwner(this, owner);

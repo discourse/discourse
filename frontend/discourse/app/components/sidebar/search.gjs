@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import { i18n } from "discourse-i18n";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class Search extends Component {
-  @service sidebarState;
+  @service(() => SidebarStateService) sidebarState;
 
   get shouldDisplay() {
     return this.sidebarState.currentPanel.searchable;

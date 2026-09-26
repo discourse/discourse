@@ -1,11 +1,13 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class TagEditRoute extends DiscourseRoute {
   @service router;
-  @service store;
-  @service currentUser;
+  @service(() => StoreService) store;
+  @service(() => CurrentUserService) currentUser;
 
   beforeModel() {
     if (!this.currentUser?.canEditTags) {

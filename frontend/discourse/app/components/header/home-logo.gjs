@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
@@ -10,11 +10,14 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import HomeLogoContents from "./home-logo-contents";
+import SessionService from "discourse/services/session";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class HomeLogo extends Component {
-  @service session;
-  @service site;
-  @service siteSettings;
+  @service(() => SessionService) session;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   darkModeAvailable = this.session.darkModeAvailable;
 

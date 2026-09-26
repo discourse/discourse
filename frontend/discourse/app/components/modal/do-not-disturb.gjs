@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { extractError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DTapTile from "discourse/ui-kit/d-tap-tile";
 import DTapTileGrid from "discourse/ui-kit/d-tap-tile-grid";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class DoNotDisturb extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
   @service router;
 
   @tracked flash;

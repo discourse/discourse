@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
@@ -16,11 +16,14 @@ import {
 import DButton from "discourse/ui-kit/d-button";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class UserPasskeys extends Component {
-  @service dialog;
-  @service currentUser;
-  @service capabilities;
+  @service(() => DialogService) dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => CapabilitiesService) capabilities;
   @service router;
 
   get showActions() {

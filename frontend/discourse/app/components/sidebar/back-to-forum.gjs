@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import getURL from "discourse/lib/get-url";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import RouteHistoryService from "discourse/services/route-history";
 
 export default class BackToForum extends Component {
-  @service routeHistory;
+  @service(() => RouteHistoryService) routeHistory;
 
   get href() {
     if (this.args.href) {

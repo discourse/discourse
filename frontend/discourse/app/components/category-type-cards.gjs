@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import {
@@ -14,10 +14,12 @@ import {
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import icon from "discourse/ui-kit/helpers/d-icon";
+import CategoryTypeChooserService from "discourse/services/category-type-chooser";
+import ComposerService from "discourse/services/composer";
 
 export default class CategoryTypeCards extends Component {
-  @service categoryTypeChooser;
-  @service composer;
+  @service(() => CategoryTypeChooserService) categoryTypeChooser;
+  @service(() => ComposerService) composer;
   @service router;
 
   @action

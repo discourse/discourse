@@ -6,7 +6,7 @@ import ClassicComponent from "@ember/component";
 import { concat } from "@ember/helper";
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import curryComponent from "ember-curry-component";
 import PluginConnector from "discourse/components/plugin-connector";
 import { bind } from "discourse/lib/decorators";
@@ -18,6 +18,7 @@ import {
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
 import { or } from "discourse/truth-helpers";
+import ClientErrorHandlerService from "discourse/services/client-error-handler";
 
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
@@ -344,7 +345,7 @@ export function normalizeAlias(alias) {
 
 /** @extends {Component<PluginOutletSignature>} */
 export default class PluginOutlet extends Component {
-  @service clientErrorHandler;
+  @service(() => ClientErrorHandlerService) clientErrorHandler;
 
   context = {
     ...helperContext(),

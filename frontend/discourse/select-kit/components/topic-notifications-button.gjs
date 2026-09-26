@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
 import getURL from "discourse/lib/get-url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 const ParagraphWrapper = <template>
   <p class="reason">{{yield}}</p>
@@ -17,7 +18,7 @@ const EmptyWrapper = <template>
 </template>;
 
 export default class TopicNotificationsButton extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked isLoading = false;
 

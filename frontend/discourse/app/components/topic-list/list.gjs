@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
@@ -29,12 +29,15 @@ import ItemPostersCell from "./item/posters-cell";
 import ItemRepliesCell from "./item/replies-cell";
 import ItemTopicCell from "./item/topic-cell";
 import ItemViewsCell from "./item/views-cell";
+import CurrentUserService from "discourse/services/current-user";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import MoreTopicsTabsService from "discourse/services/more-topics-tabs";
 
 export default class TopicList extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
-  @service topicTrackingState; // accessed via `self` variable
-  @service moreTopicsTabs;
+  @service(() => TopicTrackingStateService) topicTrackingState; // accessed via `self` variable
+  @service(() => MoreTopicsTabsService) moreTopicsTabs;
 
   get #transformerContext() {
     return {

@@ -1,16 +1,19 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import DiscourseRoute from "discourse/routes/discourse";
+import CurrentUserService from "discourse/services/current-user";
+import SessionService from "discourse/services/session";
+import SiteService from "discourse/services/site";
 
 /**
   The parent route for all discovery routes.
 **/
 export default class DiscoveryRoute extends DiscourseRoute {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service session;
-  @service site;
+  @service(() => SessionService) session;
+  @service(() => SiteService) site;
 
   queryParams = {
     filter: { refreshModel: true },

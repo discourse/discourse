@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
@@ -12,6 +12,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import UserStatusService from "discourse/services/user-status";
+import ModalService from "discourse/services/modal";
 
 const _extraItems = [];
 
@@ -24,10 +28,10 @@ export function resetUserMenuProfileTabItems() {
 }
 
 export default class UserMenuProfileTabContent extends Component {
-  @service currentUser;
-  @service siteSettings;
-  @service userStatus;
-  @service modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => UserStatusService) userStatus;
+  @service(() => ModalService) modal;
 
   saving = false;
 

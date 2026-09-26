@@ -1,11 +1,12 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, not } from "discourse/truth-helpers";
+import SiteService from "discourse/services/site";
 
 export default class SchemaSettingTypeGroups extends SchemaSettingTypeModels {
-  @service site;
+  @service(() => SiteService) site;
 
   type = "groups";
 

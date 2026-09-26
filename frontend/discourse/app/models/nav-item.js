@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -15,6 +15,10 @@ import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import CurrentUserService from "discourse/services/current-user";
+import StoreService from "discourse/services/store";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class NavItem extends EmberObject {
   static extraArgsCallbacks = [];
@@ -106,7 +110,7 @@ export default class NavItem extends EmberObject {
       deepMerge(args, cb.call(this, filterType, opts))
     );
 
-    let store = getOwnerWithFallback(this).lookup("service:store");
+    let store = lookup(getOwnerWithFallback(this), StoreService);
     return store.createRecord("nav-item", args);
   }
 
@@ -122,13 +126,14 @@ export default class NavItem extends EmberObject {
         since: "2.6.0",
         id: "discourse.nav-item.built-list-site-settings",
       });
-      args.siteSettings = getOwnerWithFallback(this).lookup(
-        "service:site-settings"
+      args.siteSettings = lookup(
+        getOwnerWithFallback(this),
+        SiteSettingsService
       );
     }
     let items = args.siteSettings.top_menu.split("|");
 
-    const user = getOwnerWithFallback(this).lookup("service:current-user");
+    const user = lookup(getOwnerWithFallback(this), CurrentUserService);
     if (user?.unified_new_enabled) {
       items = items.filter((item) => item !== "unread");
     }
@@ -217,8 +222,8 @@ export default class NavItem extends EmberObject {
     return items;
   }
 
-  @service topicTrackingState;
-  @service currentUser;
+  @service(() => TopicTrackingStateService) topicTrackingState;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked name;
   @tracked tag;

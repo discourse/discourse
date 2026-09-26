@@ -1,11 +1,12 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import UserBadge from "discourse/models/user-badge";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 export default class PreferencesAccount extends RestrictedUserRoute {
-  @service modal;
+  @service(() => ModalService) modal;
 
   model() {
     const user = this.modelFor("user");

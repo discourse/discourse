@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import jQuery from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -9,6 +10,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export function isValidLink(link) {
   if (link instanceof jQuery) {
@@ -112,7 +114,7 @@ export default {
           ?.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
-        const dialog = getOwnerWithFallback(this).lookup("service:dialog");
+        const dialog = lookup(getOwnerWithFallback(this), DialogService);
         dialog.alert(i18n("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e, link)) {
         const newWindow = window.open(href, "_blank");

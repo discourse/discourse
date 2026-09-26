@@ -1,11 +1,13 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
 
 export default class extends DiscourseRoute {
-  @service currentUser;
-  @service modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
   @service router;
 
   beforeModel(transition) {

@@ -1,11 +1,12 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseURL from "discourse/lib/url";
 import StaticPage from "discourse/models/static-page";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class TosRoute extends DiscourseRoute {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   activate() {
     super.activate(...arguments);

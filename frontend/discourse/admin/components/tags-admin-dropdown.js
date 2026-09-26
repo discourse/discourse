@@ -1,5 +1,5 @@
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,6 +9,8 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 @classNames("tags-admin-dropdown")
 @selectKitOptions({
@@ -18,8 +20,8 @@ import { i18n } from "discourse-i18n";
 @pluginApiIdentifiers("tags-admin-dropdown")
 export default class TagsAdminDropdown extends DropdownSelectBoxComponent {
   @service router;
-  @service modal;
-  @service dialog;
+  @service(() => ModalService) modal;
+  @service(() => DialogService) dialog;
 
   actionsMapping = {
     manageGroups: () => this.router.transitionTo("tagGroups"),

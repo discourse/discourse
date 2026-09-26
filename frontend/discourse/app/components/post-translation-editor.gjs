@@ -2,17 +2,19 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import PostLocalization from "discourse/models/post-localization";
 import DEditor from "discourse/ui-kit/d-editor";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class PostTranslationEditor extends Component {
-  @service composer;
-  @service siteSettings;
+  @service(() => ComposerService) composer;
+  @service(() => SiteSettingsService) siteSettings;
 
   constructor() {
     super(...arguments);

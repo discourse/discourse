@@ -1,10 +1,11 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
 import type { CapabilitiesService } from "discourse/services/capabilities";
+import CapabilitiesServiceInjected from "discourse/services/capabilities";
 
 const FOCUSABLE_ELEMENTS =
   "details:not(.is-disabled) summary, [autofocus], a, input, select, textarea, summary";
@@ -63,7 +64,8 @@ interface DTrapTabSignature {
 }
 
 export default class DTrapTabModifier extends Modifier<DTrapTabSignature> {
-  @service declare capabilities: CapabilitiesService;
+  @service(() => CapabilitiesServiceInjected)
+  declare capabilities: CapabilitiesService;
 
   #element: HTMLElement | null = null;
   #originalElement?: HTMLElement;

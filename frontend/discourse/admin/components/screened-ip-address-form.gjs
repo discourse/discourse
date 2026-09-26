@@ -3,13 +3,14 @@ import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames, tagName } from "@ember-decorators/component";
 import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 /**
   A form to create an IP address that will be blocked or allowed.
@@ -25,7 +26,7 @@ import { i18n } from "discourse-i18n";
 @tagName("form")
 @classNames("screened-ip-address-form", "inline-form")
 export default class ScreenedIpAddressForm extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   formSubmitted = false;
   actionName = "block";

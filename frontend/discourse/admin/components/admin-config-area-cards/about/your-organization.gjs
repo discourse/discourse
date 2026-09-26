@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class AdminConfigAreasAboutYourOrganization extends Component {
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   @cached
   get data() {

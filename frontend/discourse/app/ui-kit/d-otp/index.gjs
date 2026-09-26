@@ -5,11 +5,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isBlank } from "@ember/utils";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import Slot from "./slot";
+import CapabilitiesServiceInjected from "discourse/services/capabilities";
 
 const DEFAULT_SLOTS = 6;
 
@@ -36,7 +37,7 @@ export default class DOTP extends Component {
    * @type {import("discourse/services/capabilities").CapabilitiesService}
    */
   // @ts-ignore (incorrect no-initialization error)
-  @service capabilities;
+  @service(() => CapabilitiesServiceInjected) capabilities;
 
   @tracked isFocused = false;
   @tracked isAllSelected = false;

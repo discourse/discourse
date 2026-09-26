@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class RepliesCell extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get ratio() {
     const likes = parseFloat(this.args.topic.like_count);

@@ -1,7 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
@@ -37,6 +37,8 @@ import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
 import Category from "./category";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export function _addTrackedTopicProperty(propertyKey) {
   stampModelClass(Topic, "topic");
@@ -332,8 +334,8 @@ export default class Topic extends RestModel {
     await applyModelTransformations("topic", topics);
   }
 
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked chunk_size;
   @tracked deleted_at;

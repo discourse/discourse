@@ -1,5 +1,5 @@
 import { cached } from "@glimmer/tracking";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import Category from "discourse/models/category";

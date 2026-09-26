@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
@@ -15,9 +15,10 @@ import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-templa
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
 
 export default class DPostAccordionItem extends Component {
-  @service a11y;
+  @service(() => A11yService) a11y;
 
   @tracked measured = false;
   @tracked isOverflowing = false;

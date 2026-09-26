@@ -6,7 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { capitalize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -28,10 +28,12 @@ import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class UpcomingChangeItem extends Component {
-  @service site;
-  @service toasts;
+  @service(() => SiteService) site;
+  @service(() => ToastsService) toasts;
 
   @tracked bufferedGroups = this.args.change.groups;
   @tracked bufferedEnabledFor = this.args.change.upcoming_change.enabled_for;

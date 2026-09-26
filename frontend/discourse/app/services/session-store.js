@@ -1,6 +1,6 @@
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { isTesting } from "discourse/lib/environment";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 
 const TEST_KEY_PREFIX = "__test_";
 const DISCOURSE_PREFIX = "discourse_";

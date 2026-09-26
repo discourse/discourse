@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
+import ModalService from "discourse/services/modal";
 
 export default class TopicContentLanguagePreferences extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @action
   openPreferences() {

@@ -1,9 +1,10 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
+import SiteSettingChangeTrackerService from "discourse/admin/services/site-setting-change-tracker";
 
 export default class AdminConfigWithSettingsRoute extends DiscourseRoute {
-  @service siteSettingChangeTracker;
+  @service(() => SiteSettingChangeTrackerService) siteSettingChangeTracker;
 
   resetController(controller, isExiting) {
     // Have to do this because this is the parent route. We don't want to have

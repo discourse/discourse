@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -17,6 +17,7 @@ import DAccessControlGranteeChooser, {
   granteeValue,
   groupGranteeResult,
 } from "./d-access-control-grantee-chooser";
+import SiteService from "discourse/services/site";
 
 const EDIT_PERMISSION = "edit";
 const READ_ONLY_PERMISSION = "view";
@@ -63,7 +64,7 @@ function rowTypeSortOrder(type) {
 }
 
 export default class DAccessControl extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   constructor() {
     super(...arguments);

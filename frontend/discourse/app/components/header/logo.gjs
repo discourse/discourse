@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import getURL from "discourse/lib/get-url";
 import { and, eq, notEq } from "discourse/truth-helpers";
+import InterfaceColorService from "discourse/services/interface-color";
 
 export default class Logo extends Component {
-  @service interfaceColor;
+  @service(() => InterfaceColorService) interfaceColor;
 
   get darkMediaQuery() {
     if (this.interfaceColor.darkModeForced) {

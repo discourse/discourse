@@ -22,6 +22,23 @@ Routes with no name in the map, or in any ancestor, go in the `other` bundle. Ro
 
 A bundle can name modules to load with it in `BUNDLE_PRELOADS`, for code its routes use synchronously. The WarpDrive store implementation loads this way with the `topic` and `other` bundles, while `request()` from any other page loads it on demand.
 
+## Services
+
+Services are injected by import, through `ember-polaris-service`, so a service's code lands in the chunk of whatever uses it and nothing registers services by name at boot:
+
+```js
+import { service } from "discourse/lib/service";
+import ComposerService from "discourse/services/composer";
+
+class Example {
+  @service(() => ComposerService) composer;
+}
+```
+
+The thunk keeps import cycles between a service and its consumers safe: the class is read on first access, not when the consumer's class is defined. Outside a class, `lookup(owner, ComposerService)` from the same module replaces `owner.lookup("service:composer")`. Both accept a container as well as an application instance.
+
+Services extend `Service` from `discourse/lib/service`, a classic Ember service with a Polaris service manager, so a string lookup from the container and an injection reach the same instance. The four objects registered by the object-injection initializer, such as the current user, have token modules under `app/services` that read from the container. `@service router` and other framework services still use their names.
+
 ## Chunking
 
 Rolldown's code splitting groups are driven by the same plugin. After the module graph is complete it assigns every module an owner:

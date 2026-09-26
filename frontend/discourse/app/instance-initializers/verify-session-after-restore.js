@@ -1,5 +1,8 @@
+import { lookup } from "discourse/lib/service";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
 
 export async function restoredSessionMatches(bootedUserId) {
   try {
@@ -28,12 +31,12 @@ export default {
       return;
     }
 
-    const siteSettings = owner.lookup("service:site-settings");
+    const siteSettings = lookup(owner, SiteSettingsService);
     if (!siteSettings.cache_control_bfcache_compatibility) {
       return;
     }
 
-    const bootedUserId = owner.lookup("service:current-user")?.id ?? null;
+    const bootedUserId = lookup(owner, CurrentUserService)?.id ?? null;
 
     this.handler = async (event) => {
       if (event.persisted && !(await restoredSessionMatches(bootedUserId))) {

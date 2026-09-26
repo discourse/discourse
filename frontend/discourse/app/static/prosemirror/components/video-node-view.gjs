@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { waitForPromise } from "@ember/test-waiters";
 import {
   lookupCachedUploadUrl,
@@ -17,6 +17,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
 
 const UNRESOLVED_MEDIA_PATHS = ["/404", "/images/transparent.png"];
 
@@ -33,7 +34,7 @@ function videoThumbnailShortUrl(url) {
 }
 
 export default class VideoNodeView extends Component {
-  @service a11y;
+  @service(() => A11yService) a11y;
 
   @tracked error;
   @tracked isActivated = false;

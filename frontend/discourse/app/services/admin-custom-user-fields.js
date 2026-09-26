@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 
 export default class AdminCustomUserFields extends Service {
   @tracked additionalProperties = [];

@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -12,11 +12,12 @@ import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Session from "discourse/models/session";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 const DEFAULT_GROUP = "default";
 
 export default class AdminEmojis extends Service {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   @tracked sorting = ["group", "name"];
   @tracked selectedEmojis = new Set();

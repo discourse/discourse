@@ -1,9 +1,9 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { ajax } from "discourse/lib/ajax";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -15,6 +15,11 @@ import {
 } from "discourse/routes/build-topic-route";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import StoreService from "discourse/services/store";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import SearchService from "discourse/services/search";
+import HistoryStoreService from "discourse/services/history-store";
 
 const NONE = "none";
 const ALL = "all";
@@ -22,11 +27,11 @@ const ALL = "all";
 @disableImplicitInjections
 export default class TagShowRoute extends DiscourseRoute {
   @service router;
-  @service currentUser;
-  @service store;
-  @service topicTrackingState;
-  @service("search") searchService;
-  @service historyStore;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => StoreService) store;
+  @service(() => TopicTrackingStateService) topicTrackingState;
+  @service(() => SearchService) searchService;
+  @service(() => HistoryStoreService) historyStore;
 
   queryParams = queryParams;
   templateName = "discovery/list";

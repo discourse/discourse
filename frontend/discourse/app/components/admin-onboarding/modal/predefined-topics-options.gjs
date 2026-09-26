@@ -2,12 +2,13 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
 
 export default class PredefinedTopicOptions extends Component {
-  @service composer;
+  @service(() => ComposerService) composer;
 
   icebreakerTopics = [
     "fun_facts",

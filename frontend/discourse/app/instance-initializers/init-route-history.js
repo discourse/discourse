@@ -1,5 +1,7 @@
+import { lookup } from "discourse/lib/service";
+import RouteHistoryService from "discourse/services/route-history";
 export default {
   initialize(owner) {
-    owner.lookup("service:route-history");
+    lookup(owner, RouteHistoryService);
   },
 };

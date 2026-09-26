@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class SecondFactorConfirmPhrase extends Component {
-  @service dialog;
-  @service currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => CurrentUserService) currentUser;
 
   disabledString = i18n("user.second_factor.disable");
 

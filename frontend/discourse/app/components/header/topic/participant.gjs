@@ -2,14 +2,15 @@ import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import getURL from "discourse/lib/get-url";
 import { eq, or } from "discourse/truth-helpers";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import AppEventsService from "discourse/services/app-events";
 
 export default class Participant extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   get url() {
     return this.args.type === "user"

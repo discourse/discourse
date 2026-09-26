@@ -3,12 +3,13 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
+import SiteService from "discourse/services/site";
 
 @tagName("")
 export default class UserSummaryCategorySearch extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @computed("user", "category")
   get searchParams() {

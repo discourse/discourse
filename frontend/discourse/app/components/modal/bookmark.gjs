@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
@@ -31,6 +31,12 @@ import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import CurrentUserService from "discourse/services/current-user";
+import CapabilitiesService from "discourse/services/capabilities";
+import BookmarkApiService from "discourse/services/bookmark-api";
+import SiteService from "discourse/services/site";
+import KeyboardShortcutsService from "discourse/services/keyboard-shortcuts";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -38,12 +44,12 @@ const BOOKMARK_BINDINGS = {
 };
 
 export default class BookmarkModal extends Component {
-  @service dialog;
-  @service currentUser;
-  @service capabilities;
-  @service bookmarkApi;
-  @service site;
-  @service keyboardShortcuts;
+  @service(() => DialogService) dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => BookmarkApiService) bookmarkApi;
+  @service(() => SiteService) site;
+  @service(() => KeyboardShortcutsService) keyboardShortcuts;
 
   @tracked postDetectedLocalDate = null;
   @tracked postDetectedLocalTime = null;

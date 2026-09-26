@@ -1,8 +1,9 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
+import CategoryTypeChooserService from "discourse/services/category-type-chooser";
 
 export default class NewCategoryTabs extends DiscourseRoute {
-  @service categoryTypeChooser;
+  @service(() => CategoryTypeChooserService) categoryTypeChooser;
   @service router;
 
   controllerName = "edit-category.tabs";

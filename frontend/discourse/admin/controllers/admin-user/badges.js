@@ -3,7 +3,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { compare, isEmpty } from "@ember/utils";
 import AdminUser from "discourse/admin/models/admin-user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -18,9 +18,10 @@ import {
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminUserBadgesController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @controller adminUser;
 
   @tracked loading;

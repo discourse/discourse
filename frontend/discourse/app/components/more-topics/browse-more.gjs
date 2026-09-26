@@ -1,17 +1,22 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
+import SiteService from "discourse/services/site";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class BrowseMore extends Component {
-  @service currentUser;
-  @service pmTopicTrackingState;
-  @service site;
-  @service topicTrackingState;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => PmTopicTrackingStateService) pmTopicTrackingState;
+  @service(() => SiteService) site;
+  @service(() => TopicTrackingStateService) topicTrackingState;
+  @service(() => SiteSettingsService) siteSettings;
 
   get privateMessageBrowseMoreMessage() {
     const suggestedGroupName = this.args.topic.get("suggested_group_name");

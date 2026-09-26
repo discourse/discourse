@@ -1,4 +1,4 @@
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 
 const MAX_ENTRIES = 15;
 const TTL_MS = 10 * 60 * 1000; // 10 minutes

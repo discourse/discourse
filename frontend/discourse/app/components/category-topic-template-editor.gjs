@@ -3,16 +3,18 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import DEditor from "discourse/ui-kit/d-editor";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class CategoryTopicTemplateEditor extends Component {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked _showFormTemplateOverride;
   @tracked _localTopicTemplate;

@@ -4,16 +4,18 @@ import { action, set } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { not } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class TagChooserField extends Component {
-  @service composer;
-  @service dialog;
+  @service(() => ComposerService) composer;
+  @service(() => DialogService) dialog;
 
   get formattedChoices() {
     if (!this.args.choices) {

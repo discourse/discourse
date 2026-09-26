@@ -1,4 +1,4 @@
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 
 export default class DialogService extends Service {

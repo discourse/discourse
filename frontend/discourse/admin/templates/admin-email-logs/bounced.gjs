@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
 import IncomingEmail from "discourse/admin/models/incoming-email";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -12,6 +12,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 const BOUNCED_HEADERS = [
   { key: "admin.email.user" },
@@ -38,7 +39,7 @@ const BOUNCED_FILTERS = [
 ];
 
 export default class AdminEmailLogsBounced extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @action
   async showIncomingEmail(id) {

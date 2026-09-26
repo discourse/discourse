@@ -2,7 +2,7 @@
   Handles when you click the Site Settings tab in admin, but haven't
   chosen a category. It will redirect to the first category.
 **/
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminSiteSettingsIndexRoute extends DiscourseRoute {

@@ -6,7 +6,7 @@ import Evented from "@ember/object/evented";
 import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { camelize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -53,6 +53,10 @@ import UserDraftsStream from "discourse/models/user-drafts-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import StoreService from "discourse/services/store";
+import NotificationsService from "discourse/services/notifications";
+import CurrentUserService from "discourse/services/current-user";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -226,7 +230,7 @@ export default class User extends RestModel.extend(Evented) {
         this._saveTimezone(userJson);
       }
 
-      const store = getOwnerWithFallback(this).lookup("service:store");
+      const store = lookup(getOwnerWithFallback(this), StoreService);
       const currentUser = store.createRecord("user", userJson);
       currentUser.statusManager.trackStatus();
       return currentUser;
@@ -235,7 +239,7 @@ export default class User extends RestModel.extend(Evented) {
     return null;
   }
 
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @tracked do_not_disturb_until;
   @tracked status;
@@ -1366,7 +1370,7 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   summary() {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = lookup(getOwnerWithFallback(this), StoreService);
 
     return ajax(userPath(`${this.username_lower}/summary.json`)).then(
       (json) => {
@@ -1479,7 +1483,7 @@ export default class User extends RestModel.extend(Evented) {
   updateDoNotDisturbStatus(ends_at) {
     this.set("do_not_disturb_until", ends_at);
     this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
-    getOwner(this).lookup("service:notifications")._checkDoNotDisturb();
+    lookup(getOwner(this), NotificationsService)._checkDoNotDisturb();
   }
 
   updateDraftProperties(properties) {
@@ -1493,11 +1497,11 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   isInDoNotDisturb() {
-    if (this !== getOwner(this).lookup("service:current-user")) {
+    if (this !== lookup(getOwner(this), CurrentUserService)) {
       throw "isInDoNotDisturb is only supported for currentUser";
     }
 
-    return getOwner(this).lookup("service:notifications").isInDoNotDisturb;
+    return lookup(getOwner(this), NotificationsService).isInDoNotDisturb;
   }
 }
 
@@ -1624,7 +1628,7 @@ User.reopenClass({
 
 // user status tracking
 class UserStatusManager {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   user;
   _subscribersCount = 0;

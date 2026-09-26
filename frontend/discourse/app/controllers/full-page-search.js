@@ -4,7 +4,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -35,6 +35,11 @@ import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import AppEventsService from "discourse/services/app-events";
+import SiteSettingsService from "discourse/services/site-settings";
+import SearchPreferencesManagerService from "discourse/services/search-preferences-manager";
+import CurrentUserService from "discourse/services/current-user";
 
 export const SEARCH_TYPE_DEFAULT = "topics_posts";
 export const SEARCH_TYPE_CATS_TAGS = "categories_tags";
@@ -45,15 +50,15 @@ const PAGE_LIMIT = 10;
 export { registerFullPageSearchType } from "discourse/lib/plugin-registries/full-page-search-types";
 
 export default class FullPageSearchController extends Controller {
-  @service composer;
+  @service(() => ComposerService) composer;
 
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
-  @service searchPreferencesManager;
+  @service(() => SearchPreferencesManagerService) searchPreferencesManager;
 
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @controller application;
 

@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
@@ -16,6 +17,14 @@ import {
   stripDiscoursePrefix,
 } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
+import StoreService from "discourse/services/store";
+import SessionService from "discourse/services/session";
+import DesignWizardService from "discourse/services/design-wizard";
+import AdminSidebarStateManagerService from "discourse/admin/services/admin-sidebar-state-manager";
+import AdminNavManagerService from "discourse/admin/services/admin-nav-manager";
 
 let additionalAdminSidebarSectionLinks = {};
 
@@ -382,26 +391,28 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
   @cached
   get sections() {
-    const currentUser = getOwnerWithFallback(this).lookup(
-      "service:current-user"
+    const currentUser = lookup(getOwnerWithFallback(this), CurrentUserService);
+    const siteSettings = lookup(
+      getOwnerWithFallback(this),
+      SiteSettingsService
     );
-    const siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
-    const site = getOwnerWithFallback(this).lookup("service:site");
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const site = lookup(getOwnerWithFallback(this), SiteService);
+    const store = lookup(getOwnerWithFallback(this), StoreService);
     const router = getOwnerWithFallback(this).lookup("service:router");
-    const session = getOwnerWithFallback(this).lookup("service:session");
-    const designWizard = getOwnerWithFallback(this).lookup(
-      "service:design-wizard"
+    const session = lookup(getOwnerWithFallback(this), SessionService);
+    const designWizard = lookup(
+      getOwnerWithFallback(this),
+      DesignWizardService
     );
 
-    this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
-      "service:admin-sidebar-state-manager"
+    this.adminSidebarStateManager = lookup(
+      getOwnerWithFallback(this),
+      AdminSidebarStateManagerService
     );
 
-    this.adminNavManager = getOwnerWithFallback(this).lookup(
-      "service:admin-nav-manager"
+    this.adminNavManager = lookup(
+      getOwnerWithFallback(this),
+      AdminNavManagerService
     );
 
     this.adminNavManager.resetNavMap();
@@ -515,16 +526,12 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   }
 
   get searchable() {
-    const currentUser = getOwnerWithFallback(this).lookup(
-      "service:current-user"
-    );
+    const currentUser = lookup(getOwnerWithFallback(this), CurrentUserService);
     return currentUser.admin;
   }
 
   get filterable() {
-    const currentUser = getOwnerWithFallback(this).lookup(
-      "service:current-user"
-    );
+    const currentUser = lookup(getOwnerWithFallback(this), CurrentUserService);
     return !currentUser.admin && currentUser.moderator;
   }
 

@@ -1,10 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { getOwner, setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import CapabilitiesService from "discourse/services/capabilities";
 
 // Ideally, this would be refactored into an uppy postprocessor and support
 // for that would be added to the ExtendableUploader.
@@ -13,8 +15,8 @@ import { i18n } from "discourse-i18n";
 //
 // https://github.com/discourse/discourse/blob/110a3025dbf5c7205cec498c7d83dc258d994cfe/app/models/post.rb#L1013-L1035
 export default class ComposerVideoThumbnailUppy {
-  @service siteSettings;
-  @service capabilities;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked _uppyUpload;
 

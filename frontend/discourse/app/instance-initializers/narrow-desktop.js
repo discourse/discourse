@@ -1,11 +1,13 @@
+import { lookup } from "discourse/lib/service";
 import { registerDestructor } from "@ember/destroyable";
 import NarrowDesktop from "discourse/lib/narrow-desktop";
+import SiteService from "discourse/services/site";
 
 export default {
   initialize(owner) {
     NarrowDesktop.init();
 
-    const site = owner.lookup("service:site");
+    const site = lookup(owner, SiteService);
     site.set("narrowDesktopView", NarrowDesktop.narrowDesktopView);
 
     // Use matchMedia with the same rem-based breakpoint as CSS (48rem = md)

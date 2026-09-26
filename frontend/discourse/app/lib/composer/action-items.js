@@ -1,5 +1,5 @@
 import { getOwner, setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isNone } from "@ember/utils";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import {
@@ -10,12 +10,16 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import ComposerActionStateService from "discourse/services/composer-action-state";
+import ComposerService from "discourse/services/composer";
 
 export class ComposerActionItemBuilder {
-  @service currentUser;
-  @service site;
-  @service composerActionState;
-  @service composer;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => ComposerActionStateService) composerActionState;
+  @service(() => ComposerService) composer;
 
   constructor(context, action, topic, post, replyOptions, composerModel) {
     setOwner(this, getOwner(context));

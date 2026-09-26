@@ -1,12 +1,13 @@
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { until } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import TooltipService from "discourse/float-kit/services/tooltip";
 
 export class UserStatusMessage {
-  @service tooltip;
+  @service(() => TooltipService) tooltip;
 
   html = null;
   content = null;

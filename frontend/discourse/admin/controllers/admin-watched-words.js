@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import AdminWatchedWordsActionNav from "discourse/admin/components/admin-watched-words-action-nav";
@@ -13,13 +13,16 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import CapabilitiesService from "discourse/services/capabilities";
+import MessageBusService from "discourse/services/message-bus";
+import MenuService from "discourse/float-kit/services/menu";
 
 const MESSAGE_BUS_UPLOAD_PATH = "/watched_words/upload";
 
 export default class AdminWatchedWordsController extends Controller {
-  @service capabilities;
-  @service messageBus;
-  @service menu;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => MessageBusService) messageBus;
+  @service(() => MenuService) menu;
 
   @tracked filter = null;
   menuTrigger = null;

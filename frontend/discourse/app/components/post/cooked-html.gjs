@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { trackedMap } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -21,6 +21,7 @@ import DDecoratedHtml, {
   STREAM_HTML_DECORATOR,
 } from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
@@ -36,7 +37,7 @@ const POST_COOKED_DECORATORS = [
 export { STREAM_HTML_DECORATOR };
 
 export default class PostCookedHtml extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   #pendingDecoratorCleanup = [];
   #decoratorState = this.args.decoratorState || trackedMap();

@@ -1,12 +1,14 @@
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 @disableImplicitInjections
 export default class UserStatusService extends Service {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   get isEnabled() {
     return this.siteSettings.enable_user_status;

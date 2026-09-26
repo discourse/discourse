@@ -7,7 +7,7 @@ import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
@@ -19,6 +19,8 @@ import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import MenuService from "discourse/float-kit/services/menu";
+import SiteService from "discourse/services/site";
 
 const FilterNavigationMenuList = <template>
   {{#if @data.suggestions.length}}
@@ -61,8 +63,8 @@ const FilterNavigationMenuList = <template>
  * The actual suggestion generation is delegated to FilterSuggestions
  */
 export default class FilterNavigationMenu extends Component {
-  @service menu;
-  @service site;
+  @service(() => MenuService) menu;
+  @service(() => SiteService) site;
 
   @tracked currentInputValue = this.args.initialInputValue || "";
   @tracked suggestions = [];

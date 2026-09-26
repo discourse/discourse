@@ -2,18 +2,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import ActivationEmailForm from "discourse/components/activation-email-form";
 import { extractError } from "discourse/lib/ajax-error";
+import { service } from "discourse/lib/service";
 import { changeEmail } from "discourse/lib/user-activation";
+import LoginService from "discourse/services/login";
+import ModalService from "discourse/services/modal";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import ActivationResent from "./activation-resent";
 
 export default class ActivationEdit extends Component {
-  @service login;
-  @service modal;
+  @service(() => LoginService) login;
+  @service(() => ModalService) modal;
 
   @tracked newEmail = this.args.model.newEmail;
   @tracked flash;
@@ -31,7 +32,7 @@ export default class ActivationEdit extends Component {
         email: this.newEmail,
       });
 
-      this.modal.show(ActivationResent, {
+      this.modal.show(() => import("./activation-resent"), {
         model: { currentEmail: this.newEmail },
       });
     } catch (e) {

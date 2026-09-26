@@ -4,7 +4,7 @@ import { array, concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
@@ -35,6 +35,10 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
+import A11yService from "discourse/services/a11y";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteService from "discourse/services/site";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const CLIENT_PRESETS = {
   codex: {
@@ -86,11 +90,11 @@ function mcpValue(group, value) {
 }
 
 export default class AdminMcp extends Component {
-  @service a11y;
-  @service dialog;
+  @service(() => A11yService) a11y;
+  @service(() => DialogService) dialog;
   @service router;
-  @service site;
-  @service toasts;
+  @service(() => SiteService) site;
+  @service(() => ToastsService) toasts;
 
   @tracked primitiveFilter = "";
   @tracked primitiveGroupBy = "scope";

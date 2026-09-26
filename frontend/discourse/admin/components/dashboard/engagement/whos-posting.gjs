@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -12,6 +12,9 @@ import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import ToastsService from "discourse/float-kit/services/toasts";
+import ModalService from "discourse/services/modal";
 
 const MAX_CATEGORIES = 10;
 const DEFAULT_GROUPS = ["new_members", "returning", "staff"];
@@ -29,9 +32,9 @@ function sameGroups(a, b) {
 }
 
 export default class WhosPosting extends Component {
-  @service currentUser;
-  @service toasts;
-  @service modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ToastsService) toasts;
+  @service(() => ModalService) modal;
 
   @tracked selectedCategories = [];
   @tracked selectedGroups = [];

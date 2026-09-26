@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
 import SimpleList from "discourse/admin/components/simple-list";
 import Form from "discourse/components/form";
@@ -12,11 +12,14 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteSettingChangeTrackerService from "discourse/admin/services/site-setting-change-tracker";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class AdminLogoForm extends Component {
-  @service siteSettings;
-  @service siteSettingChangeTracker;
-  @service toasts;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteSettingChangeTrackerService) siteSettingChangeTracker;
+  @service(() => ToastsService) toasts;
 
   @tracked loading = false;
   placeholders = trackedObject();

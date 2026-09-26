@@ -2,7 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import {
   attributeBindings,
@@ -10,12 +10,13 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import ComposerService from "discourse/services/composer";
 
 @tagName("a")
 @classNameBindings(":popup-tip", "good", "bad", "lastShownAt::hide")
 @attributeBindings("role", "ariaLabel", "tabindex")
 export default class DPopupInputTip extends Component {
-  @service composer;
+  @service(() => ComposerService) composer;
 
   tipReason = null;
   tabindex = "0";

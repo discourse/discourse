@@ -2,14 +2,16 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import NavigationMenuService from "discourse/services/navigation-menu";
 
 export default class SidebarToggle extends Component {
-  @service site;
-  @service navigationMenu;
+  @service(() => SiteService) site;
+  @service(() => NavigationMenuService) navigationMenu;
 
   @action
   toggle() {

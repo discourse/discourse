@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
@@ -12,6 +12,8 @@ import { number } from "discourse/lib/formatter";
 import { pluginActivitiesFuncs } from "discourse/lib/plugin-registries/about-page-activities";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
 
 export {
   addAboutPageActivity,
@@ -19,8 +21,8 @@ export {
 } from "discourse/lib/plugin-registries/about-page-activities";
 
 export default class AboutPage extends Component {
-  @service siteSettings;
-  @service currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
 
   get moderatorsCount() {
     return this.args.model.moderators.length;

@@ -1,11 +1,13 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed, set } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { customUserNavMessagesDropdownRows } from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
 
 export {
   registerCustomUserNavMessagesDropdownRow,
@@ -13,8 +15,8 @@ export {
 } from "discourse/lib/plugin-registries/user-nav-messages-dropdown-rows";
 
 export default class extends Controller {
-  @service currentUser;
-  @service pmTopicTrackingState;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => PmTopicTrackingStateService) pmTopicTrackingState;
   @service router;
   @controller user;
   @controller userTopicsList;

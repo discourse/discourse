@@ -1,5 +1,7 @@
+import { lookup } from "discourse/lib/service";
 import { isTesting } from "discourse/lib/environment";
 import { updateRelativeAge } from "discourse/lib/formatter";
+import A11yService from "discourse/services/a11y";
 
 // Updates the relative ages of dates on the screen.
 export default {
@@ -8,7 +10,7 @@ export default {
       return;
     }
 
-    const a11y = owner.lookup("service:a11y");
+    const a11y = lookup(owner, A11yService);
 
     this._interval = setInterval(() => {
       updateRelativeAge(document.querySelectorAll(".relative-date"));

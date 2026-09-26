@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
+import UserTipsService from "discourse/services/user-tips";
 
 export default class UserTipContainer extends Component {
-  @service userTips;
+  @service(() => UserTipsService) userTips;
 
   get safeHtmlContent() {
     return trustHTML(this.args.data.contentHtml);

@@ -3,15 +3,16 @@ import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 @tagName("")
 export default class WatchedWordUploader extends Component {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "watched-word-uploader",

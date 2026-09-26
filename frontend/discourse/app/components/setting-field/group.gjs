@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { splitString } from "discourse/lib/utilities";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import SiteService from "discourse/services/site";
 
 export default class SettingFieldGroup extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get groupChoices() {
     const disallowed = splitString(this.args.definition.disallowed_groups, "|");

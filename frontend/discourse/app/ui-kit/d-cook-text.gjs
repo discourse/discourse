@@ -2,15 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { cook } from "discourse/lib/text";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class DCookText extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked cooked = null;
 

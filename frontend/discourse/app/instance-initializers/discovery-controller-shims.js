@@ -1,7 +1,8 @@
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import deprecated from "discourse/lib/deprecated";
+import DiscoveryService from "discourse/services/discovery";
 
 let reopenedClasses = [];
 
@@ -22,7 +23,7 @@ function ControllerShim(resolverName, deprecationId) {
       return super.reopen(...arguments);
     }
 
-    @service discovery;
+    @service(() => DiscoveryService) discovery;
 
     constructor() {
       super(...arguments);

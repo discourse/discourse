@@ -2,17 +2,19 @@ import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedMap } from "@ember/reactive/collections";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import deprecated from "discourse/lib/deprecated";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { SCROLLED_DOWN, SCROLLED_UP } from "./scroll-direction";
+import ScrollDirectionService from "discourse/services/scroll-direction";
+import SiteService from "discourse/services/site";
 
 const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
 @disableImplicitInjections
 export default class Header extends Service {
-  @service scrollDirection;
-  @service site;
+  @service(() => ScrollDirectionService) scrollDirection;
+  @service(() => SiteService) site;
 
   @tracked headerOffset = 0;
   @tracked mainOutletOffset = 0;

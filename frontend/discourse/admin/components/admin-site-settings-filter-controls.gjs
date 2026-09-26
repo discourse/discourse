@@ -5,13 +5,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class AdminSiteSettingsFilterControls extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;

@@ -1,7 +1,9 @@
 import { registerDestructor } from "@ember/destroyable";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import AppEventsService from "discourse/services/app-events";
+import CapabilitiesService from "discourse/services/capabilities";
 
 /**
  * Various touch events or events can cause the scrolling element to
@@ -9,8 +11,8 @@ import { bind } from "discourse/lib/decorators";
  * This helper, forces the position each time the keyboard is opened.
  */
 export default class forceScrollingElementPosition extends Modifier {
-  @service appEvents;
-  @service capabilities;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CapabilitiesService) capabilities;
 
   constructor(owner, args) {
     super(owner, args);

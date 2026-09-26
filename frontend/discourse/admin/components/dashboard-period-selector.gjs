@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
+import ModalService from "discourse/services/modal";
 
 export default class DashboardPeriodSelector extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   availablePeriods = ["yearly", "quarterly", "monthly", "weekly"];
 

@@ -3,7 +3,7 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isHTMLSafe, trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -32,11 +32,14 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
+import HistoryStoreService from "discourse/services/history-store";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class Item extends Component {
-  @service historyStore;
-  @service site;
-  @service siteSettings;
+  @service(() => HistoryStoreService) historyStore;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   highlightIfNeeded = modifier((element) => {
     if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {

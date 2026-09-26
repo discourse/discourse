@@ -2,10 +2,11 @@ import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import ModalService from "discourse/services/modal";
 
 export default class ModalContainer extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @action
   closeModal(data) {

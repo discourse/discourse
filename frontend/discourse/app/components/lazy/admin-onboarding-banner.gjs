@@ -1,12 +1,14 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 let load;
 
 export default class LazyAdminOnboardingBanner extends Component {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   get component() {
     return (load ??= import("discourse/components/admin-onboarding/banner"));

@@ -1,8 +1,9 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import NotificationTypeBase from "discourse/lib/notification-types/base";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class extends NotificationTypeBase {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get label() {
     let name;

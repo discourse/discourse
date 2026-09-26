@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { handleLogoff } from "discourse/lib/ajax";
@@ -5,6 +6,9 @@ import { isProduction, isTesting } from "discourse/lib/environment";
 // Initialize the message bus to receive messages.
 import getURL from "discourse/lib/get-url";
 import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
+import MessageBusService from "discourse/services/message-bus";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
@@ -40,9 +44,9 @@ export default {
       return;
     }
 
-    const messageBus = owner.lookup("service:message-bus"),
-      user = owner.lookup("service:current-user"),
-      siteSettings = owner.lookup("service:site-settings");
+    const messageBus = lookup(owner, MessageBusService),
+      user = lookup(owner, CurrentUserService),
+      siteSettings = lookup(owner, SiteSettingsService);
 
     messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>

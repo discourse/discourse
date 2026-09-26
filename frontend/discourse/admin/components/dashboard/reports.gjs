@@ -4,7 +4,7 @@ import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Modifier from "ember-modifier";
 import CoreReportCard from "discourse/admin/components/dashboard/report-cards/core-report";
 import DashboardReportEmptyState from "discourse/admin/components/dashboard/report-empty-state";
@@ -25,6 +25,8 @@ import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
 
 const VISIBLE_CAP = 10;
 const MAX_ROWS = 4;
@@ -129,8 +131,8 @@ function lookupAdminDashboardReportRenderer(source) {
 }
 
 export default class DashboardReports extends Component {
-  @service currentUser;
-  @service modal;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
 
   @tracked cards = [];
   @tracked loading = false;

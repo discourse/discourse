@@ -1,11 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import ComposerService from "discourse/services/composer";
 
 export default class CategoriesController extends Controller {
   @service router;
-  @service composer;
+  @service(() => ComposerService) composer;
 
   @tracked _canEditOverride;
 

@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 /* eslint-disable ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
@@ -14,6 +15,8 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
+import ComposerService from "discourse/services/composer";
+import AppEventsService from "discourse/services/app-events";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
@@ -98,7 +101,7 @@ class DiscourseURL extends EmberObject {
   }
 
   get isComposerOpen() {
-    return this.container.lookup("service:composer")?.visible;
+    return lookup(this.container, ComposerService)?.visible;
   }
 
   get router() {
@@ -110,7 +113,7 @@ class DiscourseURL extends EmberObject {
   }
 
   get appEvents() {
-    return this.container.lookup("service:app-events");
+    return lookup(this.container, AppEventsService);
   }
 
   isJumpScheduled() {

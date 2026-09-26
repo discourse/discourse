@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { classNames } from "@ember-decorators/component";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -10,6 +10,7 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import TagChooserRow from "./tag-chooser-row";
+import TagUtilsService from "discourse/select-kit/services/tag-utils";
 
 @classNames("tag-group-chooser", "tag-chooser")
 @selectKitOptions({
@@ -20,7 +21,7 @@ import TagChooserRow from "./tag-chooser-row";
 })
 @pluginApiIdentifiers("tag-group-chooser")
 export default class TagGroupChooser extends MultiSelectComponent {
-  @service tagUtils;
+  @service(() => TagUtilsService) tagUtils;
 
   @computed("tagGroups.[]")
   get value() {

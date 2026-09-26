@@ -1,19 +1,24 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import CapabilitiesService from "discourse/services/capabilities";
+import ScrollDirectionService from "discourse/services/scroll-direction";
+import ComposerService from "discourse/services/composer";
+import ModalService from "discourse/services/modal";
+import HistoryStoreService from "discourse/services/history-store";
 
 export default class FooterNav extends Component {
-  @service capabilities;
-  @service scrollDirection;
-  @service composer;
-  @service modal;
-  @service historyStore;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => ScrollDirectionService) scrollDirection;
+  @service(() => ComposerService) composer;
+  @service(() => ModalService) modal;
+  @service(() => HistoryStoreService) historyStore;
   @service router;
 
   EXCLUDE_IN_ROUTES = [

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Form from "discourse/components/form";
 import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synonyms-confirmation";
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
@@ -19,14 +19,19 @@ import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ToastsService from "discourse/float-kit/services/toasts";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
+import AppEventsService from "discourse/services/app-events";
 
 export default class TagSettings extends Component {
   @service router;
-  @service dialog;
-  @service toasts;
-  @service siteSettings;
-  @service store;
-  @service appEvents;
+  @service(() => DialogService) dialog;
+  @service(() => ToastsService) toasts;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
+  @service(() => AppEventsService) appEvents;
 
   @tracked form = null;
   @tracked tags = [];

@@ -1,13 +1,16 @@
 import { tracked } from "@glimmer/tracking";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
+import AdminSidebarStateManagerService from "discourse/admin/services/admin-sidebar-state-manager";
+import ModalService from "discourse/services/modal";
+import KeyboardShortcutsService from "discourse/services/keyboard-shortcuts";
 
 export default class AdminRoute extends DiscourseRoute {
-  @service adminSidebarStateManager;
-  @service modal;
-  @service keyboardShortcuts;
+  @service(() => AdminSidebarStateManagerService) adminSidebarStateManager;
+  @service(() => ModalService) modal;
+  @service(() => KeyboardShortcutsService) keyboardShortcuts;
 
   @tracked initialSidebarState;
 

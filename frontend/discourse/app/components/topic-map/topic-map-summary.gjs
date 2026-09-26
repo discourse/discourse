@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMapLink from "discourse/components/topic-map/topic-map-link";
@@ -21,6 +21,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import MapCacheService from "discourse/services/map-cache";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 const TRUNCATED_LINKS_LIMIT = 5;
 const LINKS_THRESHOLD = 50;
@@ -33,10 +37,10 @@ const MIN_USERS_COUNT_FOR_AVATARS = 2;
 export const MIN_POSTS_COUNT = 3;
 
 export default class TopicMapSummary extends Component {
-  @service site;
-  @service siteSettings;
-  @service mapCache;
-  @service dialog;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => MapCacheService) mapCache;
+  @service(() => DialogService) dialog;
 
   @tracked allLinksShown = false;
   @tracked top3LikedPosts = [];

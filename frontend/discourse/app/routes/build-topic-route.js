@@ -1,8 +1,8 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { deepEqual } from "discourse/lib/object";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -10,6 +10,11 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import ScreenTrackService from "discourse/services/screen-track";
+import StoreService from "discourse/services/store";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
+import CurrentUserService from "discourse/services/current-user";
+import HistoryStoreService from "discourse/services/history-store";
 
 // A helper to build a topic route for a filter
 export function filterQueryParams(params, defaultParams) {
@@ -85,11 +90,11 @@ export async function findTopicList(
 
 @disableImplicitInjections
 class AbstractTopicRoute extends DiscourseRoute {
-  @service screenTrack;
-  @service store;
-  @service topicTrackingState;
-  @service currentUser;
-  @service historyStore;
+  @service(() => ScreenTrackService) screenTrack;
+  @service(() => StoreService) store;
+  @service(() => TopicTrackingStateService) topicTrackingState;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => HistoryStoreService) historyStore;
 
   queryParams = queryParams;
   templateName = "discovery/list";

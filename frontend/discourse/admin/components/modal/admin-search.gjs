@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminSearch from "discourse/admin/components/admin-search";
 import DModal from "discourse/ui-kit/d-modal";
 

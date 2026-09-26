@@ -1,17 +1,18 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import {
   mapEveryoneToLoggedInUsersIds,
   mapLoggedInUsersToEveryoneForStorage,
 } from "discourse/lib/group-list-setting-aliasing";
 import ListSetting from "discourse/select-kit/components/list-setting";
+import SiteSettingsService from "discourse/services/site-settings";
 
 @tagName("")
 export default class GroupList extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   tokenSeparator = "|";
   nameProperty = "name";

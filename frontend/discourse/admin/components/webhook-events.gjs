@@ -6,7 +6,7 @@ import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import WebhookEvent from "discourse/admin/components/webhook-event";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -19,11 +19,14 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
+import MessageBusService from "discourse/services/message-bus";
+import StoreService from "discourse/services/store";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class WebhookEvents extends Component {
-  @service messageBus;
-  @service store;
-  @service dialog;
+  @service(() => MessageBusService) messageBus;
+  @service(() => StoreService) store;
+  @service(() => DialogService) dialog;
 
   @tracked events = [];
   @tracked pingEnabled = true;

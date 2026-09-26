@@ -1,10 +1,12 @@
 import Route from "@ember/routing/route";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Wizard from "discourse/static/wizard/models/wizard";
+import A11yService from "discourse/services/a11y";
+import KeyboardShortcutsService from "discourse/services/keyboard-shortcuts";
 
 export default class WizardRoute extends Route {
-  @service a11y;
-  @service keyboardShortcuts;
+  @service(() => A11yService) a11y;
+  @service(() => KeyboardShortcutsService) keyboardShortcuts;
 
   model() {
     return Wizard.load();

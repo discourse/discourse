@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import FontsSection from "discourse/components/design-wizard/fonts-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
@@ -14,11 +14,12 @@ import WelcomeBannerSection from "discourse/components/design-wizard/welcome-ban
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DesignWizardService from "discourse/services/design-wizard";
 
 const STEPS = ["theme", "colors", "homepage"];
 
 export default class DesignWizardControls extends Component {
-  @service designWizard;
+  @service(() => DesignWizardService) designWizard;
 
   get currentStep() {
     return STEPS[this.designWizard.stepIndex] ?? STEPS[0];

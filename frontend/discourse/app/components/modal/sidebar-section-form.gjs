@@ -4,7 +4,7 @@ import Component, { Input } from "@ember/component";
 import { fn, uniqueId } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
@@ -27,6 +27,9 @@ import DModal from "discourse/ui-kit/d-modal";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
+import SiteSettingsService from "discourse/services/site-settings";
 
 class Section {
   @tracked title;
@@ -346,10 +349,10 @@ const TranslationRow = <template>
 
 @tagName("")
 export default class SidebarSectionForm extends Component {
-  @service dialog;
-  @service languageNameLookup;
+  @service(() => DialogService) dialog;
+  @service(() => LanguageNameLookupService) languageNameLookup;
   @service router;
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked flash;
   @tracked flashType;

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
@@ -11,10 +11,12 @@ import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class ReviewableQueuedPost extends Component {
-  @service modal;
-  @service currentUser;
+  @service(() => ModalService) modal;
+  @service(() => CurrentUserService) currentUser;
 
   get canViewRawEmail() {
     return this.currentUser?.can_view_raw_email;

@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import ReviewableField from "discourse/components/reviewable-field";
 import rawDate from "discourse/helpers/raw-date";
@@ -12,11 +12,13 @@ import { bind } from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
+import StoreService from "discourse/services/store";
 
 @tagName("")
 export default class ReviewableUser extends Component {
-  @service modal;
-  @service store;
+  @service(() => ModalService) modal;
+  @service(() => StoreService) store;
 
   @computed("reviewable.user_fields")
   get userFields() {

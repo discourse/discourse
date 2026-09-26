@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -30,6 +30,8 @@ import {
 } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
+import InterfaceColorService from "discourse/services/interface-color";
+import SessionService from "discourse/services/session";
 
 // same as UserOption::HOMEPAGES
 const USER_HOMES = {
@@ -47,8 +49,8 @@ const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default class InterfaceController extends Controller {
-  @service interfaceColor;
-  @service session;
+  @service(() => InterfaceColorService) interfaceColor;
+  @service(() => SessionService) session;
   @controller("preferences") preferencesController;
 
   @tracked selectedInterfaceColorModeId = null;

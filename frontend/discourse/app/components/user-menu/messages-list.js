@@ -1,4 +1,4 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import UserMenuMessagesListEmptyState from "discourse/components/user-menu/messages-list-empty-state";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
@@ -8,9 +8,10 @@ import { mergeSortedLists } from "discourse/lib/utilities";
 import Notification from "discourse/models/notification";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
+import StoreService from "discourse/services/store";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
-  @service store;
+  @service(() => StoreService) store;
 
   get dismissTypes() {
     return this.filterByTypes;

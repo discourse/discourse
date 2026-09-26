@@ -1,12 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import Bookmark from "discourse/models/bookmark";
+import BookmarkApiService from "discourse/services/bookmark-api";
 
 export default class PostBookmarkManager {
-  @service bookmarkApi;
+  @service(() => BookmarkApiService) bookmarkApi;
   @controller("topic") topicController;
 
   @tracked trackedBookmark;

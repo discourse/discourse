@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import WebhookEventChooser from "discourse/admin/components/webhook-event-chooser";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
@@ -15,11 +15,13 @@ import CategorySelector from "discourse/select-kit/components/category-selector"
 import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import StoreService from "discourse/services/store";
 
 export default class AdminConfigAreasWebhookForm extends Component {
   @service router;
-  @service siteSettings;
-  @service store;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => StoreService) store;
 
   @tracked loadingExtras = true;
   @tracked defaultEventTypes = {};

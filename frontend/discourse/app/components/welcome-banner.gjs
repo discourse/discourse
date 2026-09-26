@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { registerDestructor } from "@ember/destroyable";
 import { next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -18,6 +18,11 @@ import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
+import AppEventsService from "discourse/services/app-events";
+import SearchService from "discourse/services/search";
 
 const claimedLocations = new Map();
 const reportedLocations = new Set();
@@ -36,11 +41,11 @@ export const ALL_PAGES_EXCLUDED_ROUTES = [
 
 export default class WelcomeBanner extends Component {
   @service router;
-  @service site;
-  @service siteSettings;
-  @service currentUser;
-  @service appEvents;
-  @service search;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => AppEventsService) appEvents;
+  @service(() => SearchService) search;
 
   checkViewport = modifier((element) => {
     if (!this.site.can_search) {

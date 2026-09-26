@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import { i18n } from "discourse-i18n";
+import AdminBadgesService from "discourse/admin/services/admin-badges";
 
 export default class AdminBadgesIndex extends Component {
-  @service adminBadges;
+  @service(() => AdminBadgesService) adminBadges;
 
   get badges() {
     return this.adminBadges.badges;

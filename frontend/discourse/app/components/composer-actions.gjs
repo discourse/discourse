@@ -4,7 +4,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ComposerActionItemBuilder } from "discourse/lib/composer/action-items";
 import { registeredComposerActions } from "discourse/lib/composer/actions-registry";
@@ -31,16 +31,19 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
+import ComposerActionStateService from "discourse/services/composer-action-state";
+import SiteService from "discourse/services/site";
 
 // Tracks registered composer actions whose `condition` has already thrown, so
 // we only log the error once per action instead of on every render.
 const warnedConditionIds = new Set();
 
 export default class ComposerActions extends Component {
-  @service composer;
-  @service composerActionState;
+  @service(() => ComposerService) composer;
+  @service(() => ComposerActionStateService) composerActionState;
   @service router;
-  @service site;
+  @service(() => SiteService) site;
 
   @tracked replyTargetInViewport = false;
   #observer = null;

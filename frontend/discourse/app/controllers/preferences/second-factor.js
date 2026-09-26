@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action, computed, set } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,11 +9,14 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class SecondFactorController extends Controller {
-  @service dialog;
-  @service modal;
-  @service siteSettings;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
+  @service(() => SiteSettingsService) siteSettings;
 
   loading = false;
   dirty = false;

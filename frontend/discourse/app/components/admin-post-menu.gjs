@@ -2,16 +2,19 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { lookup, service } from "discourse/lib/service";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import AdminPostMenuButtonsService from "discourse/services/admin-post-menu-buttons";
 
 export default class AdminPostMenu extends Component {
-  @service currentUser;
-  @service siteSettings;
-  @service adminPostMenuButtons;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => AdminPostMenuButtonsService) adminPostMenuButtons;
 
   get reviewUrl() {
     return `/review?topic_id=${this.args.data.post.id}&status=all`;

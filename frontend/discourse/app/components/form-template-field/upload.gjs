@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { bind } from "discourse/lib/decorators";
@@ -14,9 +14,10 @@ import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import AppEventsService from "discourse/services/app-events";
 
 export default class FormTemplateFieldUpload extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @resettableTracked uploadValue = this.args.value || "";
   @autoTrackedArray uploadedFiles = [];

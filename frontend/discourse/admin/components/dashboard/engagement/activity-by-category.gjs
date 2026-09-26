@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
@@ -17,12 +17,14 @@ import { eq } from "discourse/truth-helpers";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 const MAX_CATEGORIES = 10;
 
 export default class ActivityByCategory extends Component {
-  @service currentUser;
-  @service toasts;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ToastsService) toasts;
 
   @tracked selectedCategories = [];
   @tracked overrideActivity = null;

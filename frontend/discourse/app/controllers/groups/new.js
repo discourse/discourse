@@ -1,12 +1,15 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import SiteService from "discourse/services/site";
+import GroupAutomaticMembersDialogService from "discourse/services/group-automatic-members-dialog";
 
 export default class GroupsNewController extends Controller {
   @service router;
-  @service site;
-  @service groupAutomaticMembersDialog;
+  @service(() => SiteService) site;
+  @service(() => GroupAutomaticMembersDialogService)
+  groupAutomaticMembersDialog;
 
   saving = null;
 

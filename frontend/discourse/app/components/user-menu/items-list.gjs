@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserMenuItemsListEmptyState from "discourse/components/user-menu/items-list-empty-state";
 import MenuItem from "discourse/components/user-menu/menu-item";
@@ -12,9 +12,10 @@ import deprecated from "discourse/lib/deprecated";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SessionService from "discourse/services/session";
 
 export default class UserMenuItemsList extends Component {
-  @service session;
+  @service(() => SessionService) session;
 
   @tracked loading = false;
   @tracked items = [];

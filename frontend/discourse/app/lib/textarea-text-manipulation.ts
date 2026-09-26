@@ -2,7 +2,7 @@ import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { caretCoordinates } from "discourse/lib/caret-position";
 import type {
@@ -38,6 +38,10 @@ import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ComposerService from "discourse/services/composer";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
+import AppEventsServiceInjected from "discourse/services/app-events";
+import SiteSettingsService from "discourse/services/site-settings";
+import CapabilitiesServiceInjected from "discourse/services/capabilities";
+import ComposerServiceInjected from "discourse/services/composer";
 
 type SiteSettings = {
   enable_rich_text_paste: boolean;
@@ -107,13 +111,14 @@ function getHead(
 }
 
 export default class TextareaTextManipulation implements TextManipulation {
-  @service declare appEvents: AppEventsService;
+  @service(() => AppEventsServiceInjected) declare appEvents: AppEventsService;
 
   // TODO(devxp-typescript-pending): use the canonical typed site-settings
   // registry once dynamic client settings are represented in core.
-  @service declare siteSettings: SiteSettings;
+  @service(() => SiteSettingsService) declare siteSettings: SiteSettings;
 
-  @service declare capabilities: CapabilitiesService;
+  @service(() => CapabilitiesServiceInjected)
+  declare capabilities: CapabilitiesService;
 
   autocompletes: object[] = [];
 
@@ -1289,7 +1294,8 @@ export class TextareaAutocompleteHandler implements AutocompleteHandler {
 class TextareaPlaceholderHandler implements PlaceholderHandler {
   // TODO(devxp-typescript-pending): remove the local model refinement once the
   // composer service exposes its current model type.
-  @service declare composer: ComposerServiceWithModel;
+  @service(() => ComposerServiceInjected)
+  declare composer: ComposerServiceWithModel;
 
   textManipulation: TextareaTextManipulation;
 

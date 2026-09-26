@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { formatDeltaPercent } from "discourse/admin/lib/dashboard-format";
@@ -10,6 +10,7 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 function formatCount(value) {
   return I18n.toNumber(value, { precision: 0 });
@@ -26,7 +27,7 @@ function badgeTooltip(status) {
 }
 
 export default class DashboardSearch extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get loggingDisabled() {
     return this.args.search?.logging_enabled === false;

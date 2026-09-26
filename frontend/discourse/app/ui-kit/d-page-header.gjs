@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { bind } from "discourse/lib/decorators";
@@ -19,11 +19,12 @@ import {
   WrappedButton,
 } from "discourse/ui-kit/d-page-action-button";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 const HEADLESS_ACTIONS = ["new", "edit"];
 
 export default class DPageHeader extends Component {
-  @service site;
+  @service(() => SiteService) site;
   @service router;
 
   @tracked shouldDisplay = true;

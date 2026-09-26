@@ -26,7 +26,6 @@ const EAGER_DIRECTORIES = [
   "initializers",
   "instance-initializers",
   "models",
-  "services",
   "templates/components",
   "templates/connectors",
 ];

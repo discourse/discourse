@@ -1,7 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
@@ -27,6 +27,8 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
 
 /**
  * @internal
@@ -135,8 +137,8 @@ export default class Post extends RestModel {
     return ajax(`/posts/${postId}/raw-email.json`);
   }
 
-  @service currentUser;
-  @service site;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
 
   @tracked action_code;
   @tracked action_code_path;

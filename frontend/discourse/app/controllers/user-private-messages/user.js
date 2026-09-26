@@ -1,10 +1,12 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
 
 export default class extends Controller {
-  @service currentUser;
-  @service pmTopicTrackingState;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => PmTopicTrackingStateService) pmTopicTrackingState;
   @service router;
   @controller user;
 

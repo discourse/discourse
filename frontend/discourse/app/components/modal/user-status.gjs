@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ItsATrap from "@discourse/itsatrap";
 import UserStatusPicker from "discourse/components/user-status-picker";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,10 +15,12 @@ import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class UserStatusModal extends Component {
-  @service currentUser;
-  @service dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
 
   status = trackedObject({ ...this.args.model.status });
   timeShortcuts = this.#buildTimeShortcuts();

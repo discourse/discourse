@@ -1,7 +1,10 @@
+import { lookup } from "discourse/lib/service";
 import {
   DESIGN_WIZARD_PARAM,
   SOURCE_ADMIN,
 } from "discourse/services/design-wizard";
+import CurrentUserService from "discourse/services/current-user";
+import DesignWizardService from "discourse/services/design-wizard";
 
 // The wizard sheet outlives the page it was opened from: picking a theme is a
 // different asset build, so previewing one reloads the whole page. Resuming has
@@ -9,12 +12,12 @@ import {
 // only the onboarding banner could ever survive that reload.
 export default {
   initialize(owner) {
-    const currentUser = owner.lookup("service:current-user");
+    const currentUser = lookup(owner, CurrentUserService);
     if (!currentUser?.admin) {
       return;
     }
 
-    const designWizard = owner.lookup("service:design-wizard");
+    const designWizard = lookup(owner, DesignWizardService);
     const params = new URLSearchParams(window.location.search);
 
     if (params.get(DESIGN_WIZARD_PARAM)) {

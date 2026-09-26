@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 import { guidFor } from "@ember/object/internals";
 import { cancel } from "@ember/runloop";
 import { bind } from "discourse/lib/decorators";
@@ -6,6 +7,7 @@ import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 // Use to attach copy/fullscreen buttons to a block of code, either
 // within the post stream or for a regular element that contains
@@ -187,7 +189,7 @@ export default class CodeblockButtons {
           this._copyComplete(button);
         }
       } else if (action === "fullscreen") {
-        const modal = getOwnerWithFallback(this).lookup("service:modal");
+        const modal = lookup(getOwnerWithFallback(this), ModalService);
         modal.show(() => import("discourse/components/modal/fullscreen-code"), {
           model: {
             code: text,

@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
+import SearchService from "discourse/services/search";
 
 const DEFAULT_QUICK_TIPS = [
   {
@@ -56,8 +58,8 @@ export function removeDefaultQuickSearchRandomTips() {
 resetQuickSearchRandomTips();
 
 export default class RandomQuickTip extends Component {
-  @service capabilities;
-  @service search;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => SearchService) search;
 
   constructor() {
     super(...arguments);

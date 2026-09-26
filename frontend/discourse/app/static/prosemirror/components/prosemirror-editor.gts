@@ -6,7 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import "../extensions/register-default";
 import type { ComponentLike } from "@glint/template";
 import * as ProsemirrorCommands from "prosemirror-commands";
@@ -67,6 +67,17 @@ import TextManipulation, {
   type CustomState,
   type EditorCommands,
 } from "../lib/text-manipulation";
+import SessionService from "discourse/services/session";
+import DialogServiceInjected from "discourse/dialog-holder/services/dialog";
+import MenuServiceInjected from "discourse/float-kit/services/menu";
+import CapabilitiesServiceInjected from "discourse/services/capabilities";
+import ModalServiceInjected from "discourse/services/modal";
+import ToastsServiceInjected from "discourse/float-kit/services/toasts";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import AppEventsServiceInjected from "discourse/services/app-events";
+import A11yServiceInjected from "discourse/services/a11y";
+import CurrentUserService from "discourse/services/current-user";
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
@@ -136,21 +147,22 @@ type RenderableGlimmerNodeView = Omit<
 };
 
 export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignature> {
-  @service declare session: Session;
-  @service declare dialog: DialogService;
-  @service declare menu: MenuService;
-  @service declare capabilities: CapabilitiesService;
-  @service declare modal: ModalService;
-  @service declare toasts: ToastsService;
-  @service declare site: Site;
+  @service(() => SessionService) declare session: Session;
+  @service(() => DialogServiceInjected) declare dialog: DialogService;
+  @service(() => MenuServiceInjected) declare menu: MenuService;
+  @service(() => CapabilitiesServiceInjected)
+  declare capabilities: CapabilitiesService;
+  @service(() => ModalServiceInjected) declare modal: ModalService;
+  @service(() => ToastsServiceInjected) declare toasts: ToastsService;
+  @service(() => SiteService) declare site: Site;
 
   // TODO(devxp-typescript-pending): use the canonical typed site-settings
   // registry once dynamic client settings are represented in core.
-  @service declare siteSettings: SiteSettings;
+  @service(() => SiteSettingsService) declare siteSettings: SiteSettings;
 
-  @service declare appEvents: AppEventsService;
-  @service declare a11y: A11yService;
-  @service declare currentUser: User;
+  @service(() => AppEventsServiceInjected) declare appEvents: AppEventsService;
+  @service(() => A11yServiceInjected) declare a11y: A11yService;
+  @service(() => CurrentUserService) declare currentUser: User;
 
   schema: Schema = createSchema(this.extensions, this.args.includeDefault);
   view: EditorView;

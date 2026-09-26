@@ -1,14 +1,15 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminBackupsIndexController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
   @controller("admin.backups") adminBackups;
 
   @computed("adminBackups.model")

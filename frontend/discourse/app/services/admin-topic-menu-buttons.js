@@ -1,4 +1,4 @@
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 
 export default class AdminTopicMenuButtons extends Service {
   callbacks = [];

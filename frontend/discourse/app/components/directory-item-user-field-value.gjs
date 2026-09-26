@@ -3,7 +3,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 
 export default class DirectoryItemUserFieldValueComponent extends Component {
   @service router;

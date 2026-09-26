@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
@@ -36,11 +36,13 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dTopicLink from "discourse/ui-kit/helpers/d-topic-link";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 @classNames("bookmark-list-wrapper")
 export default class BookmarkList extends Component {
-  @service dialog;
-  @service modal;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
 
   get canDoBulkActions() {
     return this.bulkSelectHelper?.selected.length;

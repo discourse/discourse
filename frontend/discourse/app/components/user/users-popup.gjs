@@ -3,13 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
 
 const PAGE_SIZE = 30;
 const FALLBACK_SKELETON_ROWS = 3;
@@ -28,8 +30,8 @@ const SkeletonRow = <template>
 </template>;
 
 export default class UsersPopup extends Component {
-  @service siteSettings;
-  @service site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteService) site;
 
   @tracked users = [];
   @tracked loading = false;

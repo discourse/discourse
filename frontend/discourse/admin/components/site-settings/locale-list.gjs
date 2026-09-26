@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import ListSetting from "discourse/select-kit/components/list-setting";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class LocaleList extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   tokenSeparator = "|";
 

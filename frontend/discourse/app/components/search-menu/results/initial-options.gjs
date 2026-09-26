@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
@@ -10,6 +10,9 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import Assistant from "./assistant";
+import SearchService from "discourse/services/search";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,
@@ -29,9 +32,9 @@ const DISPLAY_INITIAL_OPTIONS_FOR_CONTEXT_TYPES = [
 ];
 
 export default class InitialOptions extends Component {
-  @service search;
-  @service siteSettings;
-  @service currentUser;
+  @service(() => SearchService) search;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
 
   constructor() {
     super(...arguments);

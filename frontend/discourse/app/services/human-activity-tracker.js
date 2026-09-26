@@ -1,5 +1,5 @@
 import { cancel } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { isAutomationDetected } from "discourse/lib/automation-detection";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
@@ -8,6 +8,7 @@ import {
   onBrowserAttentionChange,
   removeOnBrowserAttentionChange,
 } from "discourse/lib/user-presence";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const ENGAGEMENT_PATH = "/srv/se";
 
@@ -27,7 +28,7 @@ const THROTTLE_MS = 3000;
 const ENGAGEMENT_THRESHOLD_SECONDS = 10;
 
 export default class HumanActivityTracker extends Service {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   now = () => performance.now();
 

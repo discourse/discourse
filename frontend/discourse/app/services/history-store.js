@@ -1,10 +1,10 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import { trackedMap } from "@ember/reactive/collections";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 
 const HISTORY_SIZE = 100;
 const HISTORIC_KEY = Symbol("historic");

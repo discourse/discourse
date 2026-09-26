@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { makeArray } from "discourse/lib/helpers";
 
 export default class DNavigationItem extends Component {

@@ -1,8 +1,9 @@
 import Helper from "@ember/component/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
+import FooterService from "discourse/services/footer";
 
 export default class HideApplicationFooter extends Helper {
-  @service footer;
+  @service(() => FooterService) footer;
 
   constructor() {
     super(...arguments);

@@ -1,12 +1,13 @@
 import Controller from "@ember/controller";
 import { action, computed, get } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import EmailPreview from "discourse/admin/models/email-preview";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class AdminEmailPreviewDigestController extends Controller {
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   username = null;
   lastSeen = null;

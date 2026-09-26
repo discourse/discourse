@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class RelatedMessages extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @cached
   get targetUser() {

@@ -3,6 +3,7 @@ import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
+import { serviceFactory } from "discourse/lib/service";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 
 const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
@@ -239,7 +240,9 @@ export const capabilities = new _Capabilities();
 export default class CapabilitiesServiceShim {
   static isServiceFactory = true;
 
-  static create() {
+  static build() {
     return capabilities;
   }
 }
+
+serviceFactory(CapabilitiesServiceShim);

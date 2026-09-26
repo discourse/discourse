@@ -2,15 +2,19 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
-import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
+import DialogService from "discourse/dialog-holder/services/dialog";
 import { iconHTML } from "discourse/lib/icon-library";
+import { service } from "discourse/lib/service";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
@@ -28,11 +32,11 @@ function customTagArray(val) {
 }
 
 export default class History extends Component {
-  @service dialog;
-  @service modal;
-  @service site;
-  @service currentUser;
-  @service siteSettings;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
+  @service(() => SiteService) site;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked loading;
   @tracked postRevision;
@@ -368,15 +372,20 @@ export default class History extends Component {
     const postId = this.postRevision?.post_id;
     this.args.closeModal();
 
-    this.modal.show(PermanentlyDeleteConfirmModal, {
-      model: {
-        message: i18n("post.revisions.controls.destroy_confirm"),
-        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
-        didConfirm: () => {
-          Post.permanentlyDeleteRevisions(postId);
+    this.modal.show(
+      () => import("discourse/components/modal/permanently-delete-confirm"),
+      {
+        model: {
+          message: i18n("post.revisions.controls.destroy_confirm"),
+          confirmPhrase: i18n(
+            "post.controls.permanently_delete_confirm_phrase"
+          ),
+          didConfirm: () => {
+            Post.permanentlyDeleteRevisions(postId);
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   @action

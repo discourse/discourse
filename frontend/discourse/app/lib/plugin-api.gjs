@@ -1,3 +1,4 @@
+import { lookup } from "discourse/lib/service";
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
@@ -167,6 +168,8 @@ import {
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
+import CurrentUserService from "discourse/services/current-user";
+import DiscoveryService from "discourse/services/discovery";
 
 const blockedModifications = ["component:topic-list"];
 
@@ -2204,7 +2207,7 @@ class _PluginApi extends CoreApi {
    * Example: return a URL based on the route
    * ```
    * api.registerHomeLogoHrefCallback(() => {
-   *   if (api.container.lookup("service:discovery").onDiscoveryRoute) {
+   *   if (lookup(api.container, DiscoveryService).onDiscoveryRoute) {
    *     return "https://forum.example.com/categories";
    *   }
    *
@@ -3903,7 +3906,7 @@ class _PluginApi extends CoreApi {
    *   },
    * })
    * class BlockFeatureFlagCondition extends BlockCondition {
-   *   @service currentUser;
+   *   @service(() => CurrentUserService) currentUser;
    *
    *   evaluate(args) {
    *     return this.currentUser?.feature_flags?.[args.flag] === true;
@@ -3960,7 +3963,7 @@ class _PluginApi extends CoreApi {
     if (
       this.container.cache[normalized] ||
       (normalized === "model:user" &&
-        this.container.lookup("service:current-user"))
+        lookup(this.container, CurrentUserService))
     ) {
       // eslint-disable-next-line no-console
       console.error(

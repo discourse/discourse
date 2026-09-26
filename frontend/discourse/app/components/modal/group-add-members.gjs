@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
@@ -13,9 +13,10 @@ import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class GroupAddMembers extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
   @service router;
 
   @tracked loading = false;

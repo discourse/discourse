@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import NavigationItem from "discourse/components/navigation-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -11,9 +11,10 @@ import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import SiteService from "discourse/services/site";
 
 export default class NavigationBarComponent extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get filterType() {
     return filterTypeForMode(this.args.filterMode);

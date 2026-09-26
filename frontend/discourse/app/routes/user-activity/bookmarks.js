@@ -1,15 +1,16 @@
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
 import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import HistoryStoreService from "discourse/services/history-store";
 
 export default class UserActivityBookmarks extends DiscourseRoute {
-  @service historyStore;
+  @service(() => HistoryStoreService) historyStore;
 
   templateName = "user/bookmarks";
 

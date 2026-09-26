@@ -1,9 +1,10 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class FAQSectionLink extends BaseSectionLink {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get renameToGuidelines() {
     return this.siteSettings.rename_faq_to_guidelines && !this.href;

@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
 import BrowseMore from "discourse/components/more-topics/browse-more";
 import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import MoreTopicsTabsService from "discourse/services/more-topics-tabs";
 
 export {
   clearRegisteredTabs,
@@ -12,7 +13,7 @@ export {
 } from "discourse/lib/plugin-registries/more-topics-tabs";
 
 export default class MoreTopics extends Component {
-  @service moreTopicsTabs;
+  @service(() => MoreTopicsTabsService) moreTopicsTabs;
 
   syncTopic = modifier((_, [topic]) => {
     this.moreTopicsTabs.setup(topic);

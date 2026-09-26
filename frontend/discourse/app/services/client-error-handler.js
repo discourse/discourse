@@ -1,20 +1,21 @@
 import { getOwner } from "@ember/owner";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";
 import { bind } from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import identifySource, {
   consolePrefix,
   getThemeInfo,
 } from "discourse/lib/source-identifier";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 const showingErrors = new Set();
 
 @disableImplicitInjections
 export default class ClientErrorHandlerService extends Service {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   constructor() {
     super(...arguments);

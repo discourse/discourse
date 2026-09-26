@@ -1,16 +1,17 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import {
   clearSharedContent,
   readSharedContent,
 } from "discourse/lib/share-target";
+import AppEventsService from "discourse/services/app-events";
 
 // Holds content shared into Discourse via the Web Share Target when the user
 // chose "Add to a reply". The app boots fresh from the OS share sheet with no
 // topic open, so we keep the payload here and inject it into the next reply
 // composer that opens (see instance-initializers/share-target.js).
 export default class SharedContent extends Service {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @tracked pending = null;
 

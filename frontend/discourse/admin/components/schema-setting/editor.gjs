@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedArray, trackedObject } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import Tree from "discourse/admin/components/schema-setting/editor/tree";
 import FieldInput from "discourse/admin/components/schema-setting/field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -13,10 +13,11 @@ import Category from "discourse/models/category";
 import { gt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class SchemaSettingNewEditor extends Component {
   @service router;
-  @service dialog;
+  @service(() => DialogService) dialog;
 
   @tracked activeIndex = 0;
   @tracked saveButtonDisabled = false;

@@ -1,11 +1,12 @@
 import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { seenUser } from "discourse/lib/user-presence";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class DiscourseRoute extends Route {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   willTransition() {
     seenUser();

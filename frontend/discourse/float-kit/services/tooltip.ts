@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import type {
   FloatKitTrigger,
   TooltipOptions,

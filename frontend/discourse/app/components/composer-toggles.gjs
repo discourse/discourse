@@ -1,15 +1,18 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import ComposerService from "discourse/services/composer";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class ComposerToggles extends Component {
-  @service composer;
-  @service site;
-  @service siteSettings;
+  @service(() => ComposerService) composer;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   get additionalClasses() {
     return applyValueTransformer("composer-toggles-class", "");

@@ -1,5 +1,5 @@
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { service } from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 
 /**
  * The discovery service acts as a 'public API' for our discovery

@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
@@ -17,13 +17,17 @@ import DeletePostsConfirmationModal from "../../components/modal/delete-posts-co
 import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
 import MergeUsersProgressModal from "../../components/modal/merge-users-progress";
 import MergeUsersPromptModal from "../../components/modal/merge-users-prompt";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import AdminToolsService from "discourse/admin/services/admin-tools";
+import SiteSettingsService from "discourse/services/site-settings";
+import ModalService from "discourse/services/modal";
 
 export default class AdminUserIndexController extends Controller {
   @service router;
-  @service dialog;
-  @service adminTools;
-  @service siteSettings;
-  @service modal;
+  @service(() => DialogService) dialog;
+  @service(() => AdminToolsService) adminTools;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ModalService) modal;
 
   @tracked customGroupIdsBuffer = null;
   originalPrimaryGroupId = null;

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -10,12 +10,16 @@ import { or } from "discourse/truth-helpers";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class SidebarHamburgerDropdown extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service site;
-  @service sidebarState;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => SidebarStateService) sidebarState;
 
   get collapsableSections() {
     if (this.site.mobileView || this.site.narrowDesktopView) {

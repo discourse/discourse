@@ -5,7 +5,7 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminFormRow from "discourse/admin/components/admin-form-row";
 import BackButton from "discourse/components/back-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -14,9 +14,10 @@ import DButton from "discourse/ui-kit/d-button";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
+import ModalService from "discourse/services/modal";
 
 export default class AdminConfigAreasApiKeysShow extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
   @service router;
 
   @tracked editingDescription = false;

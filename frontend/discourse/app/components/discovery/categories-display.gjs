@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import CategoriesAndLatestTopics from "discourse/components/categories-and-latest-topics";
 import CategoriesAndTopTopics from "discourse/components/categories-and-top-topics";
 import CategoriesBoxes from "discourse/components/categories-boxes";
@@ -12,6 +12,8 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteService from "discourse/services/site";
 
 const subcategoryComponents = {
   boxes_with_featured_topics: CategoriesBoxesWithTopics,
@@ -33,8 +35,8 @@ const globalComponents = {
 
 export default class CategoriesDisplay extends Component {
   @service router;
-  @service siteSettings;
-  @service site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteService) site;
 
   get #componentForSubcategories() {
     const parentCategory = this.args.parentCategory;

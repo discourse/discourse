@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ComposerActions from "discourse/components/composer-actions";
@@ -9,10 +9,11 @@ import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import { EDIT } from "discourse/models/composer";
 import DButton from "discourse/ui-kit/d-button";
+import ComposerService from "discourse/services/composer";
 
 @tagName("")
 export default class ComposerActionTitle extends Component {
-  @service composer;
+  @service(() => ComposerService) composer;
 
   @computed("model.replyOptions")
   get options() {

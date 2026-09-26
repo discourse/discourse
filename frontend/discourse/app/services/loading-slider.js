@@ -1,9 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
 import { cancel, later, schedule } from "@ember/runloop";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const STORE_LOADING_TIMES = 5;
 const DEFAULT_LOADING_TIME = 0.3;
@@ -61,7 +62,7 @@ class Timer {
 
 @disableImplicitInjections
 export default class LoadingSlider extends Service.extend(Evented) {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked loading = false;
   @tracked stillLoading = false;

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -21,11 +21,14 @@ import { emailValid } from "discourse/lib/utilities";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import LoginService from "discourse/services/login";
 
 export default class SignupPageController extends Controller {
-  @service site;
-  @service siteSettings;
-  @service login;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => LoginService) login;
 
   @tracked accountName;
   @tracked accountPassword;

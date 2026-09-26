@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { headerActionComponentForPlugin } from "discourse/lib/admin-plugin-header-actions";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
+import AdminPluginNavManagerService from "discourse/admin/services/admin-plugin-nav-manager";
 
 export default class AdminPluginConfigPage extends Component {
-  @service adminPluginNavManager;
+  @service(() => AdminPluginNavManagerService) adminPluginNavManager;
 
   get actionsOutletName() {
     return `admin-plugin-config-page-actions-${this.args.plugin.dasherizedName}`;

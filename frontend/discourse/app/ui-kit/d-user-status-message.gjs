@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { until } from "discourse/lib/formatter";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class DUserStatusMessage extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get until() {
     if (!this.args.status.ends_at) {

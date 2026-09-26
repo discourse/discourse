@@ -1,11 +1,12 @@
 import { computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { escapeExpression, postUrl } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import UserActionGroup from "discourse/models/user-action-group";
 import Category from "./category";
+import CurrentUserService from "discourse/services/current-user";
 
 const UserActionTypes = {
   likes_given: 1,
@@ -82,7 +83,7 @@ export default class UserAction extends RestModel {
     return collapsed;
   }
 
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @computed("name", "username")
   get presentName() {

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { decamelize, underscore } from "@ember/string";
 import AdminFontChooser from "discourse/admin/components/admin-font-chooser";
 import {
@@ -16,14 +16,18 @@ import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
+import SiteSettingChangeTrackerService from "discourse/admin/services/site-setting-change-tracker";
+import ToastsService from "discourse/float-kit/services/toasts";
+import ModalService from "discourse/services/modal";
 
 const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
 
 export default class AdminFontsForm extends Component {
-  @service siteSettings;
-  @service siteSettingChangeTracker;
-  @service toasts;
-  @service modal;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => SiteSettingChangeTrackerService) siteSettingChangeTracker;
+  @service(() => ToastsService) toasts;
+  @service(() => ModalService) modal;
 
   updateExistingUsers = null;
 

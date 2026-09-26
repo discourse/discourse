@@ -1,5 +1,13 @@
+import { lookup } from "discourse/lib/service";
 import { setOwner } from "@ember/owner";
 import { createHelperContext, registerHelpers } from "discourse/lib/helpers";
+import SiteSettingsService from "discourse/services/site-settings";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import CapabilitiesService from "discourse/services/capabilities";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SessionService from "discourse/services/session";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 function isThemeOrPluginHelper(path) {
   return (
@@ -22,13 +30,13 @@ export function autoLoadModules(owner, registry) {
   });
 
   let context = {
-    siteSettings: owner.lookup("service:site-settings"),
-    keyValueStore: owner.lookup("service:key-value-store"),
-    capabilities: owner.lookup("service:capabilities"),
-    currentUser: owner.lookup("service:current-user"),
-    site: owner.lookup("service:site"),
-    session: owner.lookup("service:session"),
-    topicTrackingState: owner.lookup("service:topic-tracking-state"),
+    siteSettings: lookup(owner, SiteSettingsService),
+    keyValueStore: lookup(owner, KeyValueStoreService),
+    capabilities: lookup(owner, CapabilitiesService),
+    currentUser: lookup(owner, CurrentUserService),
+    site: lookup(owner, SiteService),
+    session: lookup(owner, SessionService),
+    topicTrackingState: lookup(owner, TopicTrackingStateService),
     registry,
   };
   setOwner(context, owner);

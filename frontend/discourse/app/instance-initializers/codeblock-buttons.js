@@ -1,11 +1,14 @@
+import { lookup } from "discourse/lib/service";
 import { schedule } from "@ember/runloop";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import { withPluginApi } from "discourse/lib/core-api";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default {
   initialize(owner) {
-    const site = owner.lookup("service:site");
-    const siteSettings = owner.lookup("service:site-settings");
+    const site = lookup(owner, SiteService);
+    const siteSettings = lookup(owner, SiteSettingsService);
 
     withPluginApi((api) => {
       function _attachCommands(postElement, helper) {

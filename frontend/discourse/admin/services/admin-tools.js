@@ -1,17 +1,19 @@
 import { action } from "@ember/object";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { Promise } from "rsvp";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import I18n, { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 // A service that can act as a bridge between the front end Discourse application
 // and the admin application. Use this if you need front end code to access admin
 // modules. Inject it optionally, and if it exists go to town!
 export default class AdminToolsService extends Service {
-  @service dialog;
-  @service modal;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
   @service router;
 
   get deleteUserOptions() {

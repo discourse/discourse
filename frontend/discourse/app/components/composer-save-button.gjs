@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class ComposerSaveButton extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   shortcut = formatShortcut("mod+enter");
 

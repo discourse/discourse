@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { templateFormFields } from "discourse/admin/lib/template-form-fields";
 import FormTemplate from "discourse/admin/models/form-template";
 import AceEditor from "discourse/components/ace-editor";
@@ -11,11 +11,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 export default class FormTemplateForm extends Component {
   @service router;
-  @service dialog;
-  @service modal;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
 
   @tracked formSubmitted = false;
   @tracked templateContent = this.args.model?.template || "";

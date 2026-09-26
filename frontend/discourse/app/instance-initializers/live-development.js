@@ -1,13 +1,15 @@
 import { setOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import { isProduction } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import MessageBusService from "discourse/services/message-bus";
+import SessionService from "discourse/services/session";
 
 // Use the message bus for live reloading of components for faster development.
 class LiveDevelopmentInit {
-  @service messageBus;
-  @service session;
+  @service(() => MessageBusService) messageBus;
+  @service(() => SessionService) session;
 
   constructor(owner) {
     setOwner(this, owner);

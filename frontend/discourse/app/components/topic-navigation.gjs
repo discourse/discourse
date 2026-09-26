@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import { array } from "@ember/helper";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -16,6 +16,10 @@ import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import ModalService from "discourse/services/modal";
+import SiteService from "discourse/services/site";
 
 const MIN_WIDTH_TIMELINE = 925;
 const MIN_HEIGHT_TIMELINE = 325;
@@ -45,10 +49,10 @@ class TopicNavigationInfo {
 }
 
 export default class TopicNavigation extends Component {
-  @service appEvents;
-  @service composer;
-  @service modal;
-  @service site;
+  @service(() => AppEventsService) appEvents;
+  @service(() => ComposerService) composer;
+  @service(() => ModalService) modal;
+  @service(() => SiteService) site;
 
   @tracked composerHeight = 0;
 

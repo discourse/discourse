@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { dasherize } from "@ember/string";
 import { penaltyEffectDescription } from "discourse/lib/reviewable-penalty";
 import { isRTL } from "discourse/lib/text-direction";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import SiteService from "discourse/services/site";
 
 export default class ReviewableBundledAction extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get multiple() {
     return this.args.bundle.actions.length > 1;

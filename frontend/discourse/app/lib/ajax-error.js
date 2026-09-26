@@ -1,6 +1,8 @@
+import { lookup } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export const TOO_MANY_REQUESTS = 429;
 const DEFAULT_RATE_LIMIT_WAIT_SECONDS = 15;
@@ -146,7 +148,7 @@ export function flashAjaxError(modal, defaultMessage) {
 }
 
 export function popupAjaxError(error) {
-  const dialog = getOwnerWithFallback(this).lookup("service:dialog");
+  const dialog = lookup(getOwnerWithFallback(this), DialogService);
   const errorInfo = extractErrorInfo(error);
 
   if (errorInfo.html) {

@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import Owner, { setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import {
   type FloatKitTrigger,
   TOOLTIP,
@@ -11,6 +11,7 @@ import {
 } from "discourse/float-kit/lib/constants";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type TooltipService from "discourse/float-kit/services/tooltip";
+import TooltipServiceInjected from "discourse/float-kit/services/tooltip";
 
 /**
  * The concrete float instance backing a tooltip. It holds the tooltip's options,
@@ -18,7 +19,7 @@ import type TooltipService from "discourse/float-kit/services/tooltip";
  * hooks that `FloatKitInstance` orchestrates.
  */
 export default class DTooltipInstance extends FloatKitInstance {
-  @service declare tooltip: TooltipService;
+  @service(() => TooltipServiceInjected) declare tooltip: TooltipService;
 
   /** Whether the tooltip is currently open. */
   @tracked expanded = false;

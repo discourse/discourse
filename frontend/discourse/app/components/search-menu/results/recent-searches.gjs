@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action, get } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import { MAX_RECENT_SEARCHES } from "discourse/lib/search";
 import {
@@ -9,10 +9,12 @@ import {
 } from "discourse/lib/transformer";
 import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class RecentSearches extends Component {
-  @service currentUser;
-  @service siteSettings;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
 
   constructor() {
     super(...arguments);

@@ -1,12 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { service } from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import AppEventsService from "discourse/services/app-events";
+import SiteSettingsService from "discourse/services/site-settings";
 
 @disableImplicitInjections
 export default class Search extends Service {
-  @service appEvents;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked activeGlobalSearchTerm = "";
   @tracked highlightTerm;

@@ -1,19 +1,24 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedSet } from "@ember/reactive/collections";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { DEFAULT_TEXT_SIZES } from "discourse/admin/lib/constants";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
+import SessionService from "discourse/services/session";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class SiteSettingChangeTracker extends Service {
-  @service dialog;
-  @service modal;
-  @service session;
-  @service site;
-  @service siteSettings;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
+  @service(() => SessionService) session;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked dirtySiteSettings = trackedSet();
 

@@ -1,9 +1,10 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class BadgesSectionLink extends BaseSectionLink {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get name() {
     return "badges";

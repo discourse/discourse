@@ -2,15 +2,17 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
 
 export default class BadgeTitle extends Component {
-  @service currentUser;
-  @service dialog;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
 
   @tracked _selectedUserBadgeId;
   @tracked _isSaved = false;

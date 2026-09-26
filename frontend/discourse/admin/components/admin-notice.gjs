@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class AdminNotice extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get canDismiss() {
     return this.currentUser.admin;

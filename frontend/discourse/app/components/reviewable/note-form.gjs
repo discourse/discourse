@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -10,6 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
 
 /**
  * A form component for adding notes to Reviewable items.
@@ -20,7 +21,7 @@ import { i18n } from "discourse-i18n";
  * @param {Function} [onNoteCreated] - Callback function called when a note is successfully created.
  */
 export default class ReviewableNoteForm extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   /**
    * Registers the Form API reference.

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AdminConfigAreasAboutContactInformation from "discourse/admin/components/admin-config-area-cards/about/contact-information";
 import AdminConfigAreasAboutExtraGroups from "discourse/admin/components/admin-config-area-cards/about/extra-groups";
@@ -16,9 +16,10 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class AdminConfigAreasAbout extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked saving = false;
   @tracked loadingLocalizations = false;

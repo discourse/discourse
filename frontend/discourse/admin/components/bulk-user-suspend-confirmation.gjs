@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { modifier as modifierFn } from "ember-modifier";
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
@@ -14,11 +14,12 @@ import DButton from "discourse/ui-kit/d-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import MessageBusService from "discourse/services/message-bus";
 
 const BULK_SUSPEND_CHANNEL = "/bulk-user-suspend";
 
 export default class BulkUserSuspendConfirmation extends Component {
-  @service messageBus;
+  @service(() => MessageBusService) messageBus;
 
   @tracked suspendUntil;
   @tracked reason;

@@ -3,13 +3,14 @@ import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isBlank } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import ClickTrack from "discourse/lib/click-track";
 import { bind } from "discourse/lib/decorators";
 import { highlightPost } from "discourse/lib/utilities";
+import ScrollManagerService from "discourse/services/scroll-manager";
 
 @classNameBindings(
   "multiSelect",
@@ -19,7 +20,7 @@ import { highlightPost } from "discourse/lib/utilities";
   "topic.deleted:deleted-topic"
 )
 export default class DiscourseTopic extends Component {
-  @service scrollManager;
+  @service(() => ScrollManagerService) scrollManager;
 
   menuVisible = true;
   SHORT_POST = 1200;

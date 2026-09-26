@@ -1,16 +1,19 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
 import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import Category from "discourse/models/category";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 export const TOP_SITE_CATEGORIES_TO_SHOW = 5;
 
 export default class SidebarCommonCategoriesSection extends Component {
-  @service site;
-  @service siteSettings;
-  @service topicTrackingState;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => TopicTrackingStateService) topicTrackingState;
 
   shouldSortCategoriesByDefault = true;
 

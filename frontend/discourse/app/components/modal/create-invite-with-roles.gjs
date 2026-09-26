@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import DSegmentedControl from "discourse/components/d-segmented-control";
@@ -31,16 +31,21 @@ import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
+import CapabilitiesService from "discourse/services/capabilities";
 
 const FORM = "form";
 const SUMMARY = "summary";
 const EMAIL_SENT = "email-sent";
 
 export default class CreateInviteWithRoles extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service site;
-  @service siteSettings;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   @tracked saving = false;
   @tracked showAdvanced = false;
@@ -1059,7 +1064,7 @@ const ExpiryField = <template>
 </template>;
 
 class ShareOrCopyInviteLink extends Component {
-  @service capabilities;
+  @service(() => CapabilitiesService) capabilities;
 
   @action
   async nativeShare() {

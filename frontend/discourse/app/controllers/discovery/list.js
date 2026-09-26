@@ -1,13 +1,19 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
+import StoreService from "discourse/services/store";
+import TopicTrackingStateService from "discourse/services/topic-tracking-state";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -47,13 +53,13 @@ export function addDiscoveryQueryParam(p, opts) {
 
 @disableImplicitInjections
 export default class DiscoveryListController extends Controller {
-  @service appEvents;
-  @service composer;
-  @service siteSettings;
-  @service currentUser;
+  @service(() => AppEventsService) appEvents;
+  @service(() => ComposerService) composer;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
   @service router;
-  @service store;
-  @service topicTrackingState;
+  @service(() => StoreService) store;
+  @service(() => TopicTrackingStateService) topicTrackingState;
 
   @tracked model;
   @tracked showTagInfo = false;

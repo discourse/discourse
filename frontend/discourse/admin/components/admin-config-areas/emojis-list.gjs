@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
+import AdminEmojisService from "discourse/admin/services/admin-emojis";
 
 const ALL_GROUPS = "all";
 
 export default class AdminConfigAreasEmojisList extends Component {
-  @service adminEmojis;
+  @service(() => AdminEmojisService) adminEmojis;
 
   isEmojiSelected = (name) => {
     return this.adminEmojis.selectedEmojis.has(name);

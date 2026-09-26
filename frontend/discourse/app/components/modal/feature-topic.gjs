@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import PinOptionSection, {
   MAX_GLOBALLY_PINNED_TOPICS,
@@ -13,9 +13,10 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DModal from "discourse/ui-kit/d-modal";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class FeatureTopic extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked loading = true;
   @tracked pinnedInCategoryCount = 0;

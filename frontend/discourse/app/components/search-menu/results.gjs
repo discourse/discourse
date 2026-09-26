@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
@@ -16,6 +16,7 @@ import PostViewComponent from "./results/type/post";
 import TagViewComponent from "./results/type/tag";
 import TopicViewComponent from "./results/type/topic";
 import UserViewComponent from "./results/type/user";
+import SearchService from "discourse/services/search";
 
 const SEARCH_RESULTS_COMPONENT_TYPE = {
   "search-result-category": CategoryViewComponent,
@@ -27,7 +28,7 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 };
 
 export default class Results extends Component {
-  @service search;
+  @service(() => SearchService) search;
 
   get renderInitialOptions() {
     return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;

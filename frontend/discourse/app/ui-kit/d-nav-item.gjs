@@ -1,7 +1,7 @@
 /* You might be looking for navigation-item. */
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import getURL from "discourse/lib/get-url";
@@ -9,10 +9,11 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import SessionService from "discourse/services/session";
 
 export default class DNavItem extends Component {
   @service router;
-  @service session;
+  @service(() => SessionService) session;
 
   get contents() {
     const text = this.args.i18nLabel || i18n(this.args.label);

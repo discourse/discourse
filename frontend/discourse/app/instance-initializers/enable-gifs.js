@@ -1,8 +1,11 @@
+import { lookup } from "discourse/lib/service";
 import { withPluginApi } from "discourse/lib/core-api";
+import SiteSettingsService from "discourse/services/site-settings";
+import ModalService from "discourse/services/modal";
 
 export default {
   initialize(owner) {
-    const siteSettings = owner.lookup("service:site-settings");
+    const siteSettings = lookup(owner, SiteSettingsService);
 
     if (!siteSettings.enable_gifs) {
       return;
@@ -20,7 +23,7 @@ export default {
           icon: "gif",
           title: "gifs.composer_title",
           sendAction: () => {
-            const modal = api.container.lookup("service:modal");
+            const modal = lookup(api.container, ModalService);
             modal.show(() => import("discourse/components/modal/gifs"));
           },
         });

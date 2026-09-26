@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
@@ -11,12 +11,13 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
+import NavigationMenuService from "discourse/services/navigation-menu";
 
 const CLOSE_ON_CLICK_SELECTORS =
   "a[href], .sidebar-section-header-button, .sidebar-section-link:not(.--link-button)";
 
 export default class HamburgerDropdownWrapper extends Component {
-  @service navigationMenu;
+  @service(() => NavigationMenuService) navigationMenu;
 
   get forceMainSidebarPanel() {
     // NOTE: In this scenario, we are forcing the sidebar to be shown

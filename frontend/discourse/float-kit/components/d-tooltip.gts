@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { type ComponentLike } from "@glint/template";
 import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
@@ -15,6 +15,7 @@ import type TooltipService from "discourse/float-kit/services/tooltip";
 import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import TooltipServiceInjected from "discourse/float-kit/services/tooltip";
 
 /** The object yielded to each of the tooltip's blocks. */
 export interface DTooltipComponentArgs<Data = unknown> {
@@ -83,7 +84,7 @@ interface DTooltipSignature<Data = unknown> {
 export default class DTooltip<Data = unknown> extends Component<
   DTooltipSignature<Data>
 > {
-  @service declare tooltip: TooltipService;
+  @service(() => TooltipServiceInjected) declare tooltip: TooltipService;
 
   tooltipInstance = new DTooltipInstance(getOwner(this)!, {
     ...this.allowedProperties,

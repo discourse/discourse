@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { longDate } from "discourse/lib/formatter";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class PostMetaDataEditsIndicator extends Component {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get icon() {
     return this.args.post.wiki ? "far-pen-to-square" : "pencil";

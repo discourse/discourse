@@ -1,14 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { service } from "@ember/service";
+import Service, { service } from "discourse/lib/service";
 import { registeredTabs } from "discourse/components/more-topics";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import CurrentUserService from "discourse/services/current-user";
+import KeyValueStoreService from "discourse/services/key-value-store";
 
 @disableImplicitInjections
 export default class MoreTopicsTabsService extends Service {
-  @service currentUser;
-  @service keyValueStore;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyValueStoreService) keyValueStore;
 
   @tracked topic = null;
   @tracked preferredTab = null;

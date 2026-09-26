@@ -3,7 +3,7 @@ import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -13,11 +13,14 @@ import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PluginCommitHash from "./plugin-commit-hash";
+import SessionService from "discourse/services/session";
+import CurrentUserService from "discourse/services/current-user";
+import SidebarStateService from "discourse/services/sidebar-state";
 
 export default class AdminPluginsListItem extends Component {
-  @service session;
-  @service currentUser;
-  @service sidebarState;
+  @service(() => SessionService) session;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SidebarStateService) sidebarState;
   @service router;
 
   get isAdminSearchFiltered() {

@@ -1,3 +1,6 @@
+import { lookup } from "discourse/lib/service";
+import CurrentUserService from "discourse/services/current-user";
+import AppEventsService from "discourse/services/app-events";
 // Updates the PWA badging if available
 export default {
   after: "message-bus",
@@ -7,12 +10,12 @@ export default {
       return;
     } // must have the Badging API
 
-    const user = owner.lookup("service:current-user");
+    const user = lookup(owner, CurrentUserService);
     if (!user) {
       return;
     } // must be logged in
 
-    const appEvents = owner.lookup("service:app-events");
+    const appEvents = lookup(owner, AppEventsService);
     appEvents.on("notifications:changed", () => {
       let notifications;
       notifications = user.all_unread_notifications_count;

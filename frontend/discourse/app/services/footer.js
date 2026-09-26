@@ -1,9 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { trackedSet } from "@ember/reactive/collections";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import EmbedMode from "discourse/lib/embed-mode";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 
 @disableImplicitInjections
 export default class FooterService extends Service {

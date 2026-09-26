@@ -3,15 +3,17 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import downloadBlob from "discourse/lib/download-blob";
 import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ModalService from "discourse/services/modal";
 
 export default class AdminWatchedWordsActionController extends Controller {
-  @service dialog;
-  @service modal;
+  @service(() => DialogService) dialog;
+  @service(() => ModalService) modal;
   @controller adminWatchedWords;
 
   @tracked actionNameKey = null;

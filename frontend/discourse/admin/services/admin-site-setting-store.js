@@ -1,5 +1,5 @@
 import { trackedMap, trackedSet } from "@ember/reactive/collections";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { isSettingValueTrue } from "discourse/admin/models/site-setting";
 
 function normalize(value) {

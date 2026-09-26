@@ -3,16 +3,22 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedArray, trackedSet } from "@ember/reactive/collections";
-import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
-import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
-import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
+import ToastsService from "discourse/float-kit/services/toasts";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
+import { service } from "discourse/lib/service";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
+import AppEventsService from "discourse/services/app-events";
+import ComposerService from "discourse/services/composer";
+import CurrentUserService from "discourse/services/current-user";
+import DesignWizardService from "discourse/services/design-wizard";
+import KeyValueStoreService from "discourse/services/key-value-store";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -21,7 +27,7 @@ const STEPS = [
   class SelectTheme extends OnboardingStep {
     static name = "select_theme";
 
-    @service designWizard;
+    @service(() => DesignWizardService) designWizard;
 
     icon = "paintbrush";
 
@@ -53,7 +59,7 @@ const STEPS = [
   class InviteCollaborators extends OnboardingStep {
     static name = "invite_collaborators";
 
-    @service appEvents;
+    @service(() => AppEventsService) appEvents;
 
     icon = "paper-plane";
 
@@ -77,10 +83,10 @@ const STEPS = [
   class StartPosting extends OnboardingStep {
     static name = "start_posting";
 
-    @service composer;
-    @service appEvents;
-    @service modal;
-    @service siteSettings;
+    @service(() => ComposerService) composer;
+    @service(() => AppEventsService) appEvents;
+    @service(() => ModalService) modal;
+    @service(() => SiteSettingsService) siteSettings;
 
     icon = "comments";
 
@@ -118,15 +124,22 @@ const STEPS = [
 
       if (options.length === 1) {
         // show predefined topics directly if it's the only option available
-        return this.modal.show(PredefinedTopicsOptionsModal);
+        return this.modal.show(
+          () =>
+            import("discourse/components/admin-onboarding/modal/predefined-topics-options")
+        );
       }
 
-      this.modal.show(StartPostingOptions, {
-        model: {
-          options,
-          isStepComplete: this.completed,
-        },
-      });
+      this.modal.show(
+        () =>
+          import("discourse/components/admin-onboarding/modal/start-posting-options"),
+        {
+          model: {
+            options,
+            isStepComplete: this.completed,
+          },
+        }
+      );
     }
 
     openTopic(topicKey) {
@@ -148,11 +161,11 @@ const STEPS = [
 ];
 
 export default class AdminOnboardingBanner extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service keyValueStore;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => KeyValueStoreService) keyValueStore;
   @service router;
-  @service toasts;
+  @service(() => ToastsService) toasts;
 
   @tracked dismissed = false;
   @tracked minimized = false;

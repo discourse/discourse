@@ -2,13 +2,18 @@
 import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { next, throttle } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { bind } from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import MenuService from "discourse/float-kit/services/menu";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 const DEFAULT_SELECTORS = [
   "#main-outlet",
@@ -29,12 +34,12 @@ export function resetCardClickListenerSelector() {
 }
 
 export default class CardContentsBase extends Component {
-  @service appEvents;
-  @service currentUser;
-  @service menu;
+  @service(() => AppEventsService) appEvents;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => MenuService) menu;
   @service router;
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   canShowWhenUserProfilesHidden = false;
   elementId = null; //click detection added for data-{elementId}

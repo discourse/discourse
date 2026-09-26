@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import LinksRedirect from "discourse/components/links-redirect";
@@ -14,6 +14,7 @@ import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-templa
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import LanguageNameLookupService from "discourse/services/language-name-lookup";
 
 function tagClasses(tagChanges, state, className) {
   return (tagChanges || []).reduce((classMap, tagChange) => {
@@ -26,7 +27,7 @@ function tagClasses(tagChanges, state, className) {
 
 @tagName("")
 export default class Revisions extends Component {
-  @service languageNameLookup;
+  @service(() => LanguageNameLookupService) languageNameLookup;
 
   get fakePreviousTagsTopic() {
     // discourseTags expects a topic structure

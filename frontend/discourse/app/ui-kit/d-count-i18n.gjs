@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
 
 export default class DCountI18n extends Component {
-  @service currentUser;
+  @service(() => CurrentUserService) currentUser;
 
   get fullKey() {
     let key = this.args.key;

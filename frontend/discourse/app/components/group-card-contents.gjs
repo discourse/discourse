@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 import { action, computed, set } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
@@ -13,6 +13,7 @@ import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 import { i18n } from "discourse-i18n";
+import ComposerService from "discourse/services/composer";
 
 const maxMembersToDisplay = 10;
 
@@ -25,7 +26,7 @@ const maxMembersToDisplay = 10;
   "groupClass"
 )
 export default class GroupCardContents extends CardContentsBase {
-  @service composer;
+  @service(() => ComposerService) composer;
 
   elementId = "group-card";
   avatarSelector = "[data-group-card]";

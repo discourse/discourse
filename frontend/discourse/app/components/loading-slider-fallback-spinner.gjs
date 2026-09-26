@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import LoadingSliderService from "discourse/services/loading-slider";
 
 export default class LoadingSliderFallbackSpinner extends Component {
-  @service loadingSlider;
+  @service(() => LoadingSliderService) loadingSlider;
 
   get shouldDisplay() {
     const { mode, loading, stillLoading } = this.loadingSlider;

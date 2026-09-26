@@ -1,19 +1,23 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { REVIEWABLE_UNKNOWN_TYPE_SOURCE } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
+import CurrentUserService from "discourse/services/current-user";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteSettingsService from "discourse/services/site-settings";
+import ToastsService from "discourse/float-kit/services/toasts";
 
 export default class ReviewIndexController extends Controller {
-  @service currentUser;
-  @service dialog;
-  @service siteSettings;
-  @service toasts;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => ToastsService) toasts;
 
   queryParams = [
     "priority",

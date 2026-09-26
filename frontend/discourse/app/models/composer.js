@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { next, throttle } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isHTMLSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { on } from "@ember-decorators/object";
@@ -25,6 +25,9 @@ import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import SiteSettingsService from "discourse/services/site-settings";
+import CurrentUserService from "discourse/services/current-user";
 
 let _customizations = [];
 
@@ -210,9 +213,9 @@ export default class Composer extends RestModel {
     return isEdit(draft?.action) && !!draft.postId;
   }
 
-  @service dialog;
-  @service siteSettings;
-  @service currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked topic;
   @tracked post;

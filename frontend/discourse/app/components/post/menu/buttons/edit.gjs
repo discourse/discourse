@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import SiteService from "discourse/services/site";
 
 export default class PostMenuEditButton extends Component {
   static hidden(args) {
@@ -17,7 +18,7 @@ export default class PostMenuEditButton extends Component {
     return args.post.can_edit;
   }
 
-  @service site;
+  @service(() => SiteService) site;
 
   get showLabel() {
     return (

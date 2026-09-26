@@ -2,17 +2,19 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import withEventValue from "discourse/helpers/with-event-value";
 import { POSTING_REVIEW_GROUP_BASED_MODES } from "discourse/lib/constants";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class UpsertCategoryModeration extends Component {
-  @service site;
-  @service siteSettings;
+  @service(() => SiteService) site;
+  @service(() => SiteSettingsService) siteSettings;
 
   get hiddenRelativeIntervals() {
     return ["mins"];

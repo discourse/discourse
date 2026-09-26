@@ -4,7 +4,7 @@ import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import AwsS3 from "@uppy/aws-s3";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
@@ -25,6 +25,13 @@ import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
 import { i18n } from "discourse-i18n";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import MessageBusService from "discourse/services/message-bus";
+import AppEventsService from "discourse/services/app-events";
+import SiteSettingsService from "discourse/services/site-settings";
+import CapabilitiesService from "discourse/services/capabilities";
+import SessionService from "discourse/services/session";
+import CurrentUserService from "discourse/services/current-user";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
@@ -85,13 +92,13 @@ function validateConfig(config) {
 }
 
 export default class UppyUpload {
-  @service dialog;
-  @service messageBus;
-  @service appEvents;
-  @service siteSettings;
-  @service capabilities;
-  @service session;
-  @service currentUser;
+  @service(() => DialogService) dialog;
+  @service(() => MessageBusService) messageBus;
+  @service(() => AppEventsService) appEvents;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => CapabilitiesService) capabilities;
+  @service(() => SessionService) session;
+  @service(() => CurrentUserService) currentUser;
 
   @tracked uploading = false;
   @tracked processing = false;

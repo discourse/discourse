@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import Service from "@ember/service";
+import Service, { lookup } from "discourse/lib/service";
 
 export default class Exception extends Service {
   @tracked thrown = null;

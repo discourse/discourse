@@ -4,7 +4,7 @@ import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import type {
   FloatCloseOptions,
   FloatKitTrigger,
@@ -14,6 +14,7 @@ import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import discourseLater from "discourse/lib/later";
 import type Site from "discourse/models/site";
+import SiteService from "discourse/services/site";
 
 const TOUCH_OPTIONS = { passive: true, capture: true } as const;
 
@@ -40,7 +41,7 @@ export default abstract class FloatKitInstance {
     return site.mobileView && !!modalForMobile;
   }
 
-  @service declare site: Site;
+  @service(() => SiteService) declare site: Site;
 
   @tracked id: string | null = null;
 

@@ -1,9 +1,10 @@
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { service } from "discourse/lib/service";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
+import SiteSettingsService from "discourse/services/site-settings";
 
 @disableImplicitInjections
 export default class LanguageNameLookup extends Service {
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   getLanguageName(locale) {
     const name = this.siteSettings.available_locales.find(

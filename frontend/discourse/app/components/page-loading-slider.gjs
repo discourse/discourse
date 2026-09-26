@@ -3,15 +3,17 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { run } from "@ember/runloop";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import LoadingSliderService from "discourse/services/loading-slider";
+import CapabilitiesService from "discourse/services/capabilities";
 
 export default class PageLoadingSlider extends Component {
-  @service loadingSlider;
-  @service capabilities;
+  @service(() => LoadingSliderService) loadingSlider;
+  @service(() => CapabilitiesService) capabilities;
 
   @tracked state = "ready";
 

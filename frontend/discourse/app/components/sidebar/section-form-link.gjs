@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
@@ -13,9 +13,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 export default class SectionFormLink extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   @tracked dragCssClass;
   dragCount = 0;

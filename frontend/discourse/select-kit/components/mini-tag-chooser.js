@@ -1,5 +1,5 @@
 import { action, computed } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import {
   attributeBindings,
@@ -15,6 +15,7 @@ import {
 import { i18n } from "discourse-i18n";
 import SelectKitRow from "./select-kit/select-kit-row";
 import TagRow from "./tag-row";
+import TagUtilsService from "discourse/select-kit/services/tag-utils";
 
 @attributeBindings("selectKit.options.categoryId:category-id")
 @classNames("mini-tag-chooser")
@@ -38,7 +39,7 @@ import TagRow from "./tag-row";
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
 export default class MiniTagChooser extends MultiSelectComponent {
-  @service tagUtils;
+  @service(() => TagUtilsService) tagUtils;
 
   valueProperty = "id";
   nameProperty = "name";

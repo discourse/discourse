@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import CategoryLogo from "discourse/components/category-logo";
@@ -18,13 +18,17 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import CategoryTypeChooserService from "discourse/services/category-type-chooser";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import SiteSettingsService from "discourse/services/site-settings";
 
 export default class DiscoveryNavigation extends Component {
-  @service categoryTypeChooser;
-  @service currentUser;
-  @service modal;
+  @service(() => CategoryTypeChooserService) categoryTypeChooser;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => ModalService) modal;
   @service router;
-  @service siteSettings;
+  @service(() => SiteSettingsService) siteSettings;
 
   get filterMode() {
     return calculateFilterMode({

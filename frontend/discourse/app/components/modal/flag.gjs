@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { trustHTML } from "@ember/template";
 import FlagActionType from "discourse/components/flag-action-type";
 import FlagSelection from "discourse/components/flag-selection";
@@ -16,14 +16,19 @@ import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import AdminToolsService from "discourse/admin/services/admin-tools";
+import CurrentUserService from "discourse/services/current-user";
+import SiteSettingsService from "discourse/services/site-settings";
+import AppEventsService from "discourse/services/app-events";
+import SiteService from "discourse/services/site";
 
 export default class Flag extends Component {
-  @service adminTools;
-  @service currentUser;
-  @service siteSettings;
-  @service appEvents;
+  @service(() => AdminToolsService) adminTools;
+  @service(() => CurrentUserService) currentUser;
+  @service(() => SiteSettingsService) siteSettings;
+  @service(() => AppEventsService) appEvents;
   // eslint-disable-next-line discourse/no-unused-services
-  @service site; // FIXME: used by flag-target objects
+  @service(() => SiteService) site; // FIXME: used by flag-target objects
 
   @tracked selected;
   @tracked message;

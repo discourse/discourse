@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import NetworkConnectivityService from "discourse/services/network-connectivity";
 
 export default class OfflineIndicator extends Component {
-  @service networkConnectivity;
+  @service(() => NetworkConnectivityService) networkConnectivity;
 
   get showing() {
     return !this.networkConnectivity.connected;

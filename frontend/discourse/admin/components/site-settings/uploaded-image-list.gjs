@@ -2,13 +2,14 @@
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/ui-kit/d-button";
+import ModalService from "discourse/services/modal";
 
 @tagName("")
 export default class UploadedImageList extends Component {
-  @service modal;
+  @service(() => ModalService) modal;
 
   @action
   showUploadModal({ value, setting }) {

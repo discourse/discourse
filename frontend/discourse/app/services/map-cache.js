@@ -1,4 +1,4 @@
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 
 export default class MapCache extends Service {
   cache = {};

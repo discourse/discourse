@@ -1,20 +1,21 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SiteService from "discourse/services/site";
 
 const UNPINNED = "unpinned";
 const PINNED = "pinned";
 const GLOBALLY = "_globally";
 
 class PinnedOptionsTrigger extends Component {
-  @service site;
+  @service(() => SiteService) site;
 
   get showFullTitle() {
     return this.args.showFullTitle ?? true;

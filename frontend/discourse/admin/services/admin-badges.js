@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import Service from "discourse/lib/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Badge from "discourse/models/badge";

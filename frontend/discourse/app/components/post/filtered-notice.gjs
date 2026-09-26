@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import PostMetaDataPosterName from "discourse/components/post/meta-data/poster-name";
 import DiscourseURL from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import { i18n } from "discourse-i18n";
+import AppEventsService from "discourse/services/app-events";
 
 export default class PostFilteredNotice extends Component {
   get isViewingPostsByUsername() {
@@ -111,7 +112,7 @@ export default class PostFilteredNotice extends Component {
 }
 
 class FilterShowAllBtn extends Component {
-  @service appEvents;
+  @service(() => AppEventsService) appEvents;
 
   @action
   showAll() {

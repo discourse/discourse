@@ -1,7 +1,8 @@
-import { service } from "@ember/service";
+import { service } from "discourse/lib/service";
 import type User from "discourse/models/user";
 import { BlockCondition, type ConditionContext } from "./condition";
 import { blockCondition } from "./decorator";
+import CurrentUserService from "discourse/services/current-user";
 
 /** Args accepted by the `user` condition. */
 interface UserConditionArgs {
@@ -184,7 +185,7 @@ interface UserLike {
   },
 })
 export default class BlockUserCondition extends BlockCondition {
-  @service declare currentUser: User | null;
+  @service(() => CurrentUserService) declare currentUser: User | null;
 
   /**
    * Returns the currentUser service as the default source.
