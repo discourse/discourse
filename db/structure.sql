@@ -12111,7 +12111,8 @@ CREATE TABLE public.user_associated_accounts (
     credentials jsonb DEFAULT '{}'::jsonb NOT NULL,
     extra jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    avatar_upload_id integer
 );
 
 
@@ -12256,7 +12257,8 @@ CREATE TABLE public.user_avatars (
     gravatar_upload_id integer,
     last_gravatar_download_attempt timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    selected_user_associated_account_id bigint
 );
 
 
@@ -24421,6 +24423,13 @@ CREATE UNIQUE INDEX index_user_archived_messages_on_user_id_and_topic_id ON publ
 
 
 --
+-- Name: index_user_associated_accounts_on_avatar_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_associated_accounts_on_avatar_upload_id ON public.user_associated_accounts USING btree (avatar_upload_id) WHERE (avatar_upload_id IS NOT NULL);
+
+
+--
 -- Name: index_user_associated_groups; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24488,6 +24497,13 @@ CREATE INDEX index_user_avatars_on_custom_upload_id ON public.user_avatars USING
 --
 
 CREATE INDEX index_user_avatars_on_gravatar_upload_id ON public.user_avatars USING btree (gravatar_upload_id);
+
+
+--
+-- Name: index_user_avatars_on_selected_user_associated_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_avatars_on_selected_user_associated_account_id ON public.user_avatars USING btree (selected_user_associated_account_id) WHERE (selected_user_associated_account_id IS NOT NULL);
 
 
 --
@@ -25545,6 +25561,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260921081150'),
 ('20260921074918'),
 ('20260921015711'),
+('20260918062827'),
+('20260918062145'),
 ('20260918061735'),
 ('20260917145657'),
 ('20260915204557'),

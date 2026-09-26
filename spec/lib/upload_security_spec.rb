@@ -325,6 +325,14 @@ RSpec.describe UploadSecurity do
           expect(security.should_be_secure?).to eq(false)
         end
       end
+
+      describe "when the upload is first used for a UserAssociatedAccount avatar" do
+        it "returns false" do
+          Fabricate(:user_associated_account, avatar_upload: upload)
+          create_secure_post_reference
+          expect(security.should_be_secure?).to eq(false)
+        end
+      end
     end
   end
 

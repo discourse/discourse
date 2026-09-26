@@ -2,76 +2,65 @@
 
 RSpec.describe UserAvatar do
   fab!(:user)
-  let(:avatar) { user.create_user_avatar! }
+  let(:avatar) { user.user_avatar }
 
   describe "#update_gravatar!" do
-    let(:temp) { Tempfile.new("test") }
-
     fab!(:upload) { Fabricate(:upload, user: user) }
 
     describe "when working" do
       before do
-        temp.binmode
-        # tiny valid png
-        temp.write(
-          Base64.decode64(
-            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
-          ),
+        stub_request(:get, %r{https://www.gravatar.com/avatar/}).to_return(
+          body: File.binread(file_from_fixtures("logo.png")),
         )
-        temp.rewind
-        FileHelper.expects(:download).returns(temp)
       end
 
-      after { temp.unlink }
-
-      it "can update gravatars" do
+      it "downloads and retains Gravatar when uploads are disabled" do
+        SiteSetting.authorized_extensions = ""
         freeze_time
 
         expect { avatar.update_gravatar! }.to change { Upload.count }.by(1)
         expect(avatar.gravatar_upload).to eq(Upload.last)
-        expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
+        expect(avatar.reload.last_gravatar_download_attempt).to eq_time(Time.now)
         expect(user.reload.uploaded_avatar).to eq(nil)
 
         expect do avatar.destroy end.to_not change { Upload.count }
       end
 
-      it "updates gravatars even if uploads have been disabled" do
-        SiteSetting.authorized_extensions = ""
+      it "preserves the selected provider when its picture also matches Gravatar" do
+        account = Fabricate(:user_associated_account, user: user, avatar_upload_id: upload.id)
+        user.update!(uploaded_avatar: upload)
+        avatar.update!(gravatar_upload: upload, selected_user_associated_account_id: account.id)
 
-        expect { avatar.update_gravatar! }.to change { Upload.count }.by(1)
+        avatar.update_gravatar!
+
+        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+        expect(avatar.reload.gravatar_upload).to eq(Upload.last)
+      end
+
+      it "preserves the user's custom upload" do
+        user.update!(uploaded_avatar: upload)
+
+        avatar.update!(custom_upload: upload, gravatar_upload: Fabricate(:upload, user: user))
+
+        avatar.update_gravatar!
+
+        expect(user.reload.uploaded_avatar).to eq(upload)
+        expect(avatar.reload.custom_upload).to eq(upload)
         expect(avatar.gravatar_upload).to eq(Upload.last)
       end
 
-      describe "when user has an existing custom upload" do
-        it "does not change the user's uploaded avatar" do
-          user.update!(uploaded_avatar: upload)
+      it "updates the user's selected Gravatar" do
+        user.update!(uploaded_avatar: upload)
+        avatar.update!(gravatar_upload: upload)
 
-          avatar.update!(custom_upload: upload, gravatar_upload: Fabricate(:upload, user: user))
+        avatar.update_gravatar!
 
-          avatar.update_gravatar!
+        expect(Upload.find_by(id: upload.id)).not_to eq(nil)
 
-          expect(upload.reload).to eq(upload)
-          expect(user.reload.uploaded_avatar).to eq(upload)
-          expect(avatar.reload.custom_upload).to eq(upload)
-          expect(avatar.gravatar_upload).to eq(Upload.last)
-        end
-      end
+        new_upload = Upload.last
 
-      describe "when user has an existing gravatar" do
-        it "updates the user's uploaded avatar" do
-          user.update!(uploaded_avatar: upload)
-          avatar.update!(gravatar_upload: upload)
-
-          avatar.update_gravatar!
-
-          # old upload to be cleaned up via clean_up_uploads
-          expect(Upload.find_by(id: upload.id)).not_to eq(nil)
-
-          new_upload = Upload.last
-
-          expect(user.reload.uploaded_avatar).to eq(new_upload)
-          expect(avatar.reload.gravatar_upload).to eq(new_upload)
-        end
+        expect(user.reload.uploaded_avatar).to eq(new_upload)
+        expect(avatar.reload.gravatar_upload).to eq(new_upload)
       end
     end
 
@@ -85,7 +74,7 @@ RSpec.describe UserAvatar do
           Upload.count
         }
 
-        expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
+        expect(avatar.reload.last_gravatar_download_attempt).to eq_time(Time.now)
       end
     end
 
@@ -101,7 +90,7 @@ RSpec.describe UserAvatar do
 
         expect do avatar.update_gravatar! end.to_not change { Upload.count }
 
-        expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
+        expect(avatar.reload.last_gravatar_download_attempt).to eq_time(Time.now)
       end
     end
 
@@ -115,6 +104,67 @@ RSpec.describe UserAvatar do
   end
 
   describe ".import_url_for_user" do
+    it "clears provider selection when a forced import reuses a cached upload" do
+      url = "https://example.com/avatar.png"
+      stub_request(:get, url).to_return(body: File.binread(file_from_fixtures("logo.png")))
+      described_class.import_url_for_user(url, user)
+
+      account =
+        Fabricate(:user_associated_account, user: user, avatar_upload_id: user.uploaded_avatar_id)
+      avatar.update!(selected_user_associated_account_id: account.id)
+
+      described_class.import_url_for_user(url, user, override_gravatar: false)
+
+      expect(avatar.reload.selected_user_associated_account_id).to eq(account.id)
+
+      described_class.import_url_for_user(url, user, override_gravatar: true)
+
+      expect(avatar.reload.selected_user_associated_account_id).to be_nil
+      expect(user.reload.uploaded_avatar_id).to eq(account.avatar_upload_id)
+      expect(avatar.custom_upload_id).to eq(account.avatar_upload_id)
+
+      custom_upload = Fabricate(:upload, user: user)
+      avatar.update!(
+        custom_upload: custom_upload,
+        gravatar_upload_id: account.avatar_upload_id,
+        selected_user_associated_account_id: account.id,
+      )
+
+      described_class.import_url_for_user(url, user, override_gravatar: true)
+
+      expect(avatar.reload.selected_user_associated_account_id).to be_nil
+      expect(avatar.custom_upload_id).to eq(custom_upload.id)
+      expect(user.reload.uploaded_avatar_id).to eq(account.avatar_upload_id)
+    end
+
+    it "ignores a download when the account moves to another user before it completes" do
+      new_user = Fabricate(:user)
+      provider_upload = Fabricate(:upload, user: user)
+      url = "https://example.com/avatar.png"
+      account =
+        Fabricate(
+          :user_associated_account,
+          user: user,
+          avatar_upload: provider_upload,
+          info: {
+            image: url,
+          },
+        )
+      user.update!(uploaded_avatar_id: provider_upload.id)
+      avatar.update!(selected_user_associated_account_id: account.id)
+      stub_request(:get, url).to_return do
+        account.update!(user: new_user)
+        { body: File.binread(file_from_fixtures("cropped.png")) }
+      end
+
+      described_class.import_url_for_user(url, user, associated_account_id: account.id)
+
+      expect(user.reload.uploaded_avatar_id).to eq(provider_upload.id)
+      expect(user.user_avatar.selected_user_associated_account_id).to eq(nil)
+      expect(new_user.reload.uploaded_avatar_id).to eq(nil)
+      expect(account.reload.avatar_upload_id).to eq(provider_upload.id)
+    end
+
     it "creates user_avatar record if missing" do
       user = Fabricate(:user)
       user.user_avatar.destroy

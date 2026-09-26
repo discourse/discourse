@@ -2004,13 +2004,21 @@ RSpec.describe User do
 
     it "drops the stored uploads so the image cannot be re-selected" do
       user = Fabricate(:user, uploaded_avatar_id: avatar.id)
-      user.user_avatar.update!(custom_upload_id: avatar.id, gravatar_upload_id: gravatar.id)
+      account = Fabricate(:user_associated_account, user: user, avatar_upload: avatar)
+      user.user_avatar.update!(
+        custom_upload_id: avatar.id,
+        gravatar_upload_id: gravatar.id,
+        selected_user_associated_account_id: account.id,
+      )
 
       user.remove_avatar!(actor)
 
       expect(user.reload.uploaded_avatar_id).to be_nil
       expect(user.user_avatar.reload.custom_upload_id).to be_nil
       expect(user.user_avatar.gravatar_upload_id).to be_nil
+      expect(user.user_avatar.selected_user_associated_account_id).to be_nil
+      expect(account.reload.avatar_upload_id).to be_nil
+      expect(UploadReference.where(target: account)).not_to exist
       expect(
         UserHistory.exists?(action: UserHistory.actions[:removed_avatar], target_user_id: user.id),
       ).to eq(true)
@@ -2150,7 +2158,7 @@ RSpec.describe User do
   end
 
   describe "refresh_avatar" do
-    it "enqueues the update_gravatar job when automatically downloading gravatars" do
+    it "enqueues automatic Gravatar downloads only when the user has an email" do
       SiteSetting.automatically_download_gravatars = true
 
       user = Fabricate(:user)
@@ -2158,6 +2166,11 @@ RSpec.describe User do
       expect_enqueued_with(job: :update_gravatar, args: { user_id: user.id }) do
         user.refresh_avatar
       end
+
+      user.primary_email.destroy!
+      user.reload
+
+      expect { user.refresh_avatar }.not_to change { Jobs::UpdateGravatar.jobs.count }
     end
 
     it "enqueues rebake job instead of blocking when avatar is updated" do
@@ -3159,9 +3172,10 @@ RSpec.describe User do
       SiteSetting.selectable_avatars_mode = "no_one"
 
       user = Fabricate(:user)
-      expect(user.uploaded_avatar_id).not_to be(nil)
+
       expect([avatar1.id, avatar2.id]).to include(user.uploaded_avatar_id)
-      expect(user.user_avatar.custom_upload_id).to eq(user.uploaded_avatar_id)
+      expect(user.user_avatar.custom_upload_id).to be_nil
+      expect(UploadReference.where(target: user, upload_id: user.uploaded_avatar_id)).to exist
     end
 
     it "does not set a random avatar when selectable avatar assignment on signup is disabled" do
