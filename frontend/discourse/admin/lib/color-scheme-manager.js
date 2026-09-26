@@ -2,6 +2,7 @@ import ColorScheme from "discourse/admin/models/color-scheme";
 import { ajax } from "discourse/lib/ajax";
 
 const MODES = ["light", "dark"];
+const SNAPSHOT_ATTRIBUTES = ["href", "media", "data-scheme-id"];
 
 function schemeLink(mode) {
   return document.querySelector(`link.${mode}-scheme`);
@@ -9,8 +10,8 @@ function schemeLink(mode) {
 
 /**
  * @typedef {Object} ColorSchemeLinkState
- * @property {?{href: ?string, media: ?string}} light
- * @property {?{href: ?string, media: ?string}} dark
+ * @property {?Object<string, ?string>} light
+ * @property {?Object<string, ?string>} dark
  */
 
 /**
@@ -26,10 +27,12 @@ export function captureColorSchemeLinks() {
       return [
         mode,
         link
-          ? {
-              href: link.getAttribute("href"),
-              media: link.getAttribute("media"),
-            }
+          ? Object.fromEntries(
+              SNAPSHOT_ATTRIBUTES.map((attribute) => [
+                attribute,
+                link.getAttribute(attribute),
+              ])
+            )
           : null,
       ];
     })
@@ -54,7 +57,7 @@ export function restoreColorSchemeLinks(original) {
       continue;
     }
 
-    for (const attribute of ["href", "media"]) {
+    for (const attribute of SNAPSHOT_ATTRIBUTES) {
       if (originalLink[attribute] === null) {
         link.removeAttribute(attribute);
       } else {
@@ -62,7 +65,7 @@ export function restoreColorSchemeLinks(original) {
       }
     }
 
-    link.removeAttribute("data-scheme-id");
+    link.removeAttribute("data-scheme-preview");
   }
 }
 
@@ -110,6 +113,8 @@ export function showColorMode(mode) {
  * @param {number} options.themeId - compile against this theme's color
  *   definitions instead of the default theme's (default: none)
  * @param {"light" | "dark"} options.mode - stylesheet to replace
+ * @param {boolean} options.preview - mark the tag as a revertable preview
+ *   (default: false)
  * @returns {Promise}
  */
 
@@ -119,6 +124,7 @@ export async function applyColorScheme(scheme, options = {}) {
     save = false,
     themeId = null,
     mode = "light",
+    preview = false,
   } = options;
 
   try {
@@ -189,6 +195,10 @@ export async function applyColorScheme(scheme, options = {}) {
 
       if (replace) {
         targetTag.setAttribute("data-scheme-id", id);
+      }
+
+      if (preview) {
+        targetTag.setAttribute("data-scheme-preview", id);
       }
     }
 
