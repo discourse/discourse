@@ -3,30 +3,33 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, next, scheduleOnce } from "@ember/runloop";
-import Service, { lookup, service } from "discourse/lib/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
+import DialogService from "discourse/dialog-holder/services/dialog";
+import ToastsService from "discourse/float-kit/services/toasts";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import { composerState } from "discourse/lib/composer/state";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { isRailsTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
-import { disableImplicitInjections } from "discourse/lib/disable-implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
+import Service, { service } from "discourse/lib/service";
 import { emojiUnescape } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import {
@@ -49,12 +52,10 @@ import Composer, {
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
-import { i18n } from "discourse-i18n";
 import AppEventsService from "discourse/services/app-events";
 import CapabilitiesService from "discourse/services/capabilities";
 import ComposerActionStateService from "discourse/services/composer-action-state";
 import CurrentUserService from "discourse/services/current-user";
-import DialogService from "discourse/dialog-holder/services/dialog";
 import KeyValueStoreService from "discourse/services/key-value-store";
 import MessageBusService from "discourse/services/message-bus";
 import ModalService from "discourse/services/modal";
@@ -62,7 +63,7 @@ import SessionService from "discourse/services/session";
 import SiteService from "discourse/services/site";
 import SiteSettingsService from "discourse/services/site-settings";
 import StoreService from "discourse/services/store";
-import ToastsService from "discourse/float-kit/services/toasts";
+import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -150,6 +151,14 @@ export default class ComposerService extends Service {
 
   init() {
     super.init(...arguments);
+    composerState.service = this;
+
+    // The model is only reached through the service, so register it here for
+    // lookups by name.
+    const owner = getOwner(this);
+    if (!owner.hasRegistration("model:composer")) {
+      owner.register("model:composer", Composer);
+    }
     window.addEventListener("beforeunload", this._beaconSaveDraft);
   }
 

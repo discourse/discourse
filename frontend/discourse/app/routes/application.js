@@ -1,34 +1,31 @@
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { lookup, service } from "discourse/lib/service";
 import { RouteException } from "discourse/controllers/exception";
+import DialogService from "discourse/dialog-holder/services/dialog";
 import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import { getCurrentPushSubscription } from "discourse/lib/push-notifications";
+import { lazyLookup, service } from "discourse/lib/service";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
-import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
-import { i18n } from "discourse-i18n";
 import ClientErrorHandlerService from "discourse/services/client-error-handler";
-import ComposerService from "discourse/services/composer";
 import CurrentUserService from "discourse/services/current-user";
-import DialogService from "discourse/dialog-holder/services/dialog";
-import ExceptionService from "discourse/services/exception";
 import DocumentTitleService from "discourse/services/document-title";
 import EmbedAuthFlowService from "discourse/services/embed-auth-flow";
+import ExceptionService from "discourse/services/exception";
 import HistoryStoreService from "discourse/services/history-store";
 import LoadingSliderService from "discourse/services/loading-slider";
 import ModalService from "discourse/services/modal";
-import SiteService from "discourse/services/site";
 import RestrictedRoutingService from "discourse/services/restricted-routing";
+import SiteService from "discourse/services/site";
+import { i18n } from "discourse-i18n";
 
 export default class ApplicationRoute extends DiscourseRoute {
   @service(() => ClientErrorHandlerService) clientErrorHandler;
-  @service(() => ComposerService) composer;
   @service(() => CurrentUserService) currentUser;
   @service(() => DialogService) dialog;
   @service(() => ExceptionService) exception;
@@ -103,7 +100,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  composePrivateMessage(user, post) {
+  async composePrivateMessage(user, post) {
     const recipients = user ? user.get("username") : "";
     const reply = post
       ? `${window.location.protocol}//${window.location.host}${post.url}`
@@ -114,12 +111,13 @@ export default class ApplicationRoute extends DiscourseRoute {
         })
       : null;
 
-    // used only once, one less dependency
-    return this.composer.open({
-      action: Composer.PRIVATE_MESSAGE,
+    const composer = await this.#composer();
+
+    return composer.open({
+      action: "privateMessage",
       recipients,
       archetypeId: "private_message",
-      draftKey: this.composer.privateMessageDraftKey,
+      draftKey: composer.privateMessageDraftKey,
       draftSequence: 0,
       reply,
       title,
@@ -238,12 +236,14 @@ export default class ApplicationRoute extends DiscourseRoute {
       "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
       { id: "discourse.createNewTopicViaParams" }
     );
-    this.composer.openNewTopic({
-      title,
-      body,
-      categoryId,
-      tags,
-    });
+    this.#composer().then((composer) =>
+      composer.openNewTopic({
+        title,
+        body,
+        categoryId,
+        tags,
+      })
+    );
   }
 
   @action
@@ -257,12 +257,21 @@ export default class ApplicationRoute extends DiscourseRoute {
       "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
       { id: "discourse.createNewMessageViaParams" }
     );
-    this.composer.openNewMessage({
-      recipients,
-      title: topicTitle,
-      body: topicBody,
-      hasGroups,
-    });
+    this.#composer().then((composer) =>
+      composer.openNewMessage({
+        recipients,
+        title: topicTitle,
+        body: topicBody,
+        hasGroups,
+      })
+    );
+  }
+
+  #composer() {
+    return lazyLookup(
+      getOwner(this),
+      () => import("discourse/services/composer")
+    );
   }
 
   @action

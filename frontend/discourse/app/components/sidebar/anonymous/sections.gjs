@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
+import BlockOutlet from "discourse/components/lazy/block-outlet";
 import { service } from "discourse/lib/service";
-import BlockOutlet from "discourse/blocks/block-outlet";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import SidebarStateService from "discourse/services/sidebar-state";
+import SiteSettingsService from "discourse/services/site-settings";
 import ApiSections from "../api-sections";
 import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";
 import TagsSection from "./tags-section";
-import SidebarStateService from "discourse/services/sidebar-state";
-import SiteSettingsService from "discourse/services/site-settings";
 
 export default class SidebarAnonymousSections extends Component {
   @service(() => SidebarStateService) sidebarState;

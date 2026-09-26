@@ -15,6 +15,7 @@ import { cached } from "@glimmer/tracking";
 import type Owner from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
+import bootBlocks from "discourse/lib/blocks/-internals/boot";
 import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
 import BlockOutletInlineError from "discourse/lib/blocks/-internals/components/block-outlet-inline-error";
 import BlockOutletRootContainer from "discourse/lib/blocks/-internals/components/block-outlet-root-container";
@@ -35,6 +36,7 @@ import {
   captureCallSite,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
+import { outletLayouts } from "discourse/lib/blocks/-internals/outlet-layouts";
 import { isBlockRegistryFrozen } from "discourse/lib/blocks/-internals/registry/block";
 import type {
   BlockClass,
@@ -54,15 +56,6 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
  * Each outlet can have exactly one layout registered.
  *
  * DO NOT EXPORT THIS MAP to prevent layouts bypassing the validation steps
- */
-const outletLayouts = new Map<
-  string,
-  { validatedLayout: Promise<BlockEntry[]> }
->();
-
-/**
- * Counter for generating stable entry keys.
- * Incremented for each block entry when a layout is registered via `_renderBlocks()`.
  */
 let nextEntryKey = 0;
 
@@ -106,14 +99,10 @@ export function _resetOutletLayoutsForTesting(): void {
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function _getOutletLayouts(): Map<
-  string,
-  { validatedLayout: Promise<BlockEntry[]> }
-> {
+export function _getOutletLayouts() {
   if (DEBUG) {
-    return outletLayouts;
+    return outletLayouts.layouts;
   }
-  return new Map();
 }
 
 /**
@@ -308,12 +297,14 @@ export function _renderBlocks(
   owner?: Owner,
   callSiteError: Error | null = null
 ): Promise<BlockEntry[]> {
+  bootBlocks();
+
   if (!callSiteError) {
     callSiteError = captureCallSite(_renderBlocks);
   }
 
   // Check for duplicate registration
-  if (outletLayouts.has(outletName)) {
+  if (outletLayouts.layouts.has(outletName)) {
     raiseBlockError(
       `Block outlet "${outletName}" already has a layout registered.`
     );
@@ -366,7 +357,7 @@ export function _renderBlocks(
  * @internal This is an internal API. Use the `blocks` service's `hasLayout()` method instead.
  */
 export function _hasLayout(outletName: string): boolean {
-  return outletLayouts.has(outletName);
+  return outletLayouts.names.has(outletName);
 }
 
 interface BlockOutletSignature {
@@ -446,7 +437,7 @@ export default class BlockOutlet extends Component<BlockOutletSignature> {
   }
 
   get validatedLayout(): Promise<BlockEntry[]> | undefined {
-    return outletLayouts.get(this.#name)?.validatedLayout;
+    return outletLayouts.layouts.get(this.#name)?.validatedLayout;
   }
 
   /**

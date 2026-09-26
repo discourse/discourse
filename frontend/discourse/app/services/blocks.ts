@@ -1,6 +1,4 @@
 import { getOwner, setOwner } from "@ember/owner";
-import Service from "discourse/lib/service";
-import { _hasLayout } from "discourse/blocks/block-outlet";
 import type { BlockCondition } from "discourse/blocks/conditions";
 import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
@@ -9,6 +7,7 @@ import {
   type ConditionEvaluationContext,
   evaluateConditions,
 } from "discourse/lib/blocks/-internals/matching/condition-evaluator";
+import { _hasLayout } from "discourse/lib/blocks/-internals/outlet-layouts";
 import {
   getAllBlockEntries,
   getBlockEntry,
@@ -23,6 +22,7 @@ import type {
   BlockRegistryEntry,
 } from "discourse/lib/blocks/-internals/types";
 import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
+import Service from "discourse/lib/service";
 
 /**
  * A registered block paired with its `@block` decorator metadata, as

@@ -1,21 +1,21 @@
-import { lookup } from "discourse/lib/service";
 /* eslint-disable ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import { composerState } from "discourse/lib/composer/state";
 import domUtils from "discourse/lib/dom-utils";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
+import { lookup } from "discourse/lib/service";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import ComposerService from "discourse/services/composer";
 import AppEventsService from "discourse/services/app-events";
 
 const rewrites = [];
@@ -101,7 +101,7 @@ class DiscourseURL extends EmberObject {
   }
 
   get isComposerOpen() {
-    return lookup(this.container, ComposerService)?.visible;
+    return composerState.visible;
   }
 
   get router() {

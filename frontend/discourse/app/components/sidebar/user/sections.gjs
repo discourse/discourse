@@ -3,11 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { service } from "discourse/lib/service";
-import BlockOutlet from "discourse/blocks/block-outlet";
+import BlockOutlet from "discourse/components/lazy/block-outlet";
+import DialogService from "discourse/dialog-holder/services/dialog";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
+import { service } from "discourse/lib/service";
 import { replaceUserSidebarSections } from "discourse/lib/sidebar/helpers";
 import {
   extractDroppedWebLink,
@@ -17,6 +18,9 @@ import {
   webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import CurrentUserService from "discourse/services/current-user";
+import ModalService from "discourse/services/modal";
+import SidebarStateService from "discourse/services/sidebar-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
@@ -28,10 +32,6 @@ import ApiSections from "../api-sections";
 import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";
 import TagsSection from "./tags-section";
-import SidebarStateService from "discourse/services/sidebar-state";
-import CurrentUserService from "discourse/services/current-user";
-import DialogService from "discourse/dialog-holder/services/dialog";
-import ModalService from "discourse/services/modal";
 
 /**
  * How long the revealed drop zone stays inert. Revealing shifts everything

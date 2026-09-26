@@ -1,12 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { service } from "discourse/lib/service";
-import ComposerService from "discourse/services/composer";
+import { getOwner } from "@ember/owner";
+import { lazyLookup, service } from "discourse/lib/service";
 
 export default class CategoriesController extends Controller {
   @service router;
-  @service(() => ComposerService) composer;
 
   @tracked _canEditOverride;
 
@@ -38,7 +37,10 @@ export default class CategoriesController extends Controller {
 
   @action
   createTopic() {
-    this.composer.openNewTopic();
+    lazyLookup(
+      getOwner(this),
+      () => import("discourse/services/composer")
+    ).then((composer) => composer.openNewTopic());
   }
 
   @action

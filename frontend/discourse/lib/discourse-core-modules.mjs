@@ -34,7 +34,60 @@ const EAGER_DIRECTORIES = [
 const DEFAULT_BUNDLE = "other";
 
 // Looked up by name from a route's code, so they travel with that route.
-const EXTRA_ROUTE_BUNDLES = { nested: "topic", "user-topics-list": "other" };
+const EXTRA_ROUTE_BUNDLES = {
+  nested: "topic",
+  "user-topics-list": "other",
+  composer: "other",
+  "build-category-route": "discovery",
+  "build-topic-route": "discovery",
+  "build-private-messages-route": "other",
+  "build-private-messages-group-route": "other",
+  "build-group-messages-route": "other",
+  "restricted-user": "other",
+  "user-activity-stream": "other",
+  "user-topic-list": "other",
+};
+
+// Models that only these route bundles create. A model in several bundles is
+// registered by each; an empty list means it is only ever imported.
+const MODEL_BUNDLES = {
+  composer: [],
+  posts: ["other"],
+  post: ["topic"],
+  "post-stream": ["topic"],
+  "topic-details": ["topic"],
+  "topic-timer": ["topic"],
+  "post-localization": ["topic"],
+  "topic-localization": ["topic"],
+  "action-summary": ["topic"],
+  bookmark: ["topic", "other"],
+  group: ["topic", "other"],
+  "group-history": ["other"],
+  "associated-group": ["other"],
+  reviewable: ["other"],
+  "reviewable-history": ["other"],
+  "user-action": ["other"],
+  "user-action-group": ["other"],
+  "user-action-stat": ["other"],
+  "user-stream": ["other"],
+  "user-posts-stream": ["other"],
+  "user-drafts-stream": ["other"],
+  "user-draft": ["other"],
+  "user-badge": ["other"],
+  badge: ["other"],
+  "badge-grouping": ["other"],
+  "badge-type": ["other"],
+  invite: ["other"],
+  "login-method": ["other"],
+  "pending-post": ["other"],
+  "static-page": ["other"],
+  "published-page": ["other"],
+  "tag-group": ["other"],
+  "tag-info": ["other"],
+  "tag-notification": ["other"],
+  "tag-settings": ["other"],
+  "live-post-counts": ["other"],
+};
 
 // Routes the map builds in loops from site data, which the parser cannot see.
 const EXTRA_ROUTE_URLS = {
@@ -176,6 +229,24 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
     for (const file of walk(appDir)) {
       const moduleName = stripExtension(file);
       const record = { file, moduleName };
+
+      const modelBundles = moduleName.startsWith("models/")
+        ? MODEL_BUNDLES[moduleName.slice("models/".length)]
+        : null;
+
+      if (modelBundles) {
+        for (const bundleName of modelBundles) {
+          let bundle = bundles.get(bundleName);
+
+          if (!bundle) {
+            bundle = { bundleName, names: new Set(), records: [] };
+            bundles.set(bundleName, bundle);
+          }
+
+          bundle.records.push(record);
+        }
+        continue;
+      }
 
       if (isEager(moduleName)) {
         eager.push(record);
@@ -326,6 +397,14 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
       handler(id) {
         if (id === RESOLVED_MODULES_ID) {
           return [
+            'import { getOwnerWithFallback } from "discourse/lib/get-owner";',
+            'import { scopeFor } from "discourse/lib/service";',
+            "// A bundle's `-setup` module registers what its routes build at runtime.",
+            "function ready(bundleName, module) {",
+            "  const setup = module.default[`discourse/routes/${bundleName}/-setup`];",
+            "  setup?.default(scopeFor(getOwnerWithFallback()));",
+            "  return module;",
+            "}",
             ...renderModuleMap("compatModules", plan.eager, appDir),
             "export const routes = [",
             ...plan.bundles.map((bundle) => {
@@ -336,7 +415,7 @@ export default function discourseCoreModules({ appDir, routeMap, tables }) {
 
               return (
                 `  { names: ${JSON.stringify(bundle.names)},` +
-                ` load: () => Promise.all([${imports.join(", ")}]).then(([m]) => m) },`
+                ` load: () => Promise.all([${imports.join(", ")}]).then(([m]) => ready(${JSON.stringify(bundle.bundleName)}, m)) },`
               );
             }),
             "];",

@@ -1,3 +1,6 @@
+import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/-internals/name-pattern";
+
+export { VALID_BLOCK_NAME_PATTERN };
 /**
  * Pattern constants for block name validation.
  */
@@ -88,7 +91,6 @@ export function isOptionalMissing(
  *
  * Used for both block names and outlet names since they follow the same format.
  */
-export const VALID_BLOCK_NAME_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
  * Valid block ID pattern for the `id` entry property.

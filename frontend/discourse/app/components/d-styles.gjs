@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { service } from "discourse/lib/service";
 import htmlClass from "discourse/helpers/html-class";
 import { outletContainerRule } from "discourse/lib/blocks/-internals/css";
+import { customOutletNames } from "discourse/lib/blocks/-internals/outlet-layouts";
 import { getURLWithCDN } from "discourse/lib/get-url";
-import BlocksService from "discourse/services/blocks";
+import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
+import { service } from "discourse/lib/service";
+import InterfaceColorService from "discourse/services/interface-color";
 import SessionService from "discourse/services/session";
 import SiteService from "discourse/services/site";
-import InterfaceColorService from "discourse/services/interface-color";
 
 export default class DStyles extends Component {
-  @service(() => BlocksService) blocks;
   @service(() => SessionService) session;
   @service(() => SiteService) site;
   @service(() => InterfaceColorService) interfaceColor;
@@ -98,7 +98,9 @@ export default class DStyles extends Component {
    */
   @cached
   get blockOutletStyles() {
-    return this.blocks.listOutlets().map(outletContainerRule).join("\n");
+    return [...BLOCK_OUTLETS, ...customOutletNames.names]
+      .map(outletContainerRule)
+      .join("\n");
   }
 
   <template>

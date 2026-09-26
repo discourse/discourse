@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
-import { service } from "discourse/lib/service";
 import { modifier } from "ember-modifier";
-import SearchMenu from "discourse/components/search-menu";
+import SearchMenu from "discourse/components/lazy/search-menu";
 import bodyClass from "discourse/helpers/body-class";
+import { service } from "discourse/lib/service";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import DButton from "discourse/ui-kit/d-button";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import AppEventsService from "discourse/services/app-events";
+import CurrentUserService from "discourse/services/current-user";
+import SearchService from "discourse/services/search";
 import SiteService from "discourse/services/site";
 import SiteSettingsService from "discourse/services/site-settings";
-import CurrentUserService from "discourse/services/current-user";
-import AppEventsService from "discourse/services/app-events";
-import SearchService from "discourse/services/search";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class HeaderSearch extends Component {
   @service(() => SiteService) site;

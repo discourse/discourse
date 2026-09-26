@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "discourse/lib/service";
 import {
   applyColorScheme,
   captureColorSchemeLinks,
@@ -14,9 +13,11 @@ import {
   applyPreviewFonts,
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
+import { designWizardState } from "discourse/lib/design-wizard-state";
 import { isTesting } from "discourse/lib/environment";
 import { homepagePreviewDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
+import Service, { service } from "discourse/lib/service";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 import DiscourseURL from "discourse/lib/url";
 import KeyValueStoreService from "discourse/services/key-value-store";
@@ -53,8 +54,8 @@ export default class DesignWizardService extends Service {
   @service router;
   @service(() => SiteSettingsService) siteSettings;
 
-  @tracked active = false;
   @tracked data;
+
   @tracked themeId;
   @tracked colorMode = "light";
   @tracked palettesUserSelectable = false;
@@ -78,14 +79,22 @@ export default class DesignWizardService extends Service {
   // whether a step has been saved, i.e. whether the live site has changed yet
   @tracked progressSaved = false;
   @tracked showIntro = false;
-
   #onComplete;
   #snapshot;
+
   #starting = false;
   #startFailed = false;
   #originalSiteSettings;
   #originalColorSchemeLinks;
   #prefetched = false;
+
+  get active() {
+    return designWizardState.active;
+  }
+
+  set active(value) {
+    designWizardState.active = value;
+  }
 
   get selectedTheme() {
     return this.data?.themes.find((theme) => theme.id === this.themeId);

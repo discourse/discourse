@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
+import { customOutletNames } from "discourse/lib/blocks/-internals/outlet-layouts";
 import type { CustomizationSource } from "discourse/lib/customization-source";
 import { isTesting } from "discourse/lib/environment";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
@@ -154,6 +155,7 @@ export function _registerOutlet(
     name: outletName,
     description: options.description,
   });
+  customOutletNames.add(outletName);
 }
 
 /*
@@ -168,6 +170,7 @@ export function _registerOutlet(
  * @internal Called by `resetBlockRegistryForTesting`, not meant for direct use.
  */
 export function _resetOutletRegistryState(): void {
+  customOutletNames.reset();
   // allows tree-shaking in production builds
   if (!DEBUG) {
     return;

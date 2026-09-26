@@ -1,9 +1,4 @@
-import {
-  _registerBlock,
-  _registerBlockFactory,
-} from "discourse/lib/blocks/-internals/registry/block";
-import { _registerConditionType } from "discourse/lib/blocks/-internals/registry/condition";
-import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet";
+import { enqueueRegistration } from "discourse/lib/blocks/-internals/pending";
 import {
   _INTERNAL_SOURCE_KEY,
   CORE_SOURCE,
@@ -108,18 +103,34 @@ export class CoreApi {
           `registerBlock("${blockOrName}", ...) requires a factory function as second argument.`
         );
       }
-      _registerBlockFactory(blockOrName, factory, this.source);
+      enqueueRegistration({
+        kind: "block-factory",
+        args: [blockOrName, factory],
+        source: this.source,
+      });
     } else {
-      _registerBlock(blockOrName, this.source);
+      enqueueRegistration({
+        kind: "block",
+        args: [blockOrName],
+        source: this.source,
+      });
     }
   }
 
   registerBlockOutlet(outletName, options) {
-    _registerOutlet(outletName, options, this.source);
+    enqueueRegistration({
+      kind: "outlet",
+      args: [outletName, options],
+      source: this.source,
+    });
   }
 
   registerBlockConditionType(ConditionClass) {
-    _registerConditionType(ConditionClass, this.source);
+    enqueueRegistration({
+      kind: "condition-type",
+      args: [ConditionClass],
+      source: this.source,
+    });
   }
 
   _lookupContainer(path) {

@@ -19,6 +19,12 @@ export function lookup(ownerLike, factory) {
   return polarisLookup(scopeFor(ownerLike), factory);
 }
 
+// Resolves a service whose module loads on demand; `load` returns `import()`.
+export async function lazyLookup(ownerLike, load) {
+  const module = await load();
+  return lookup(ownerLike, module.default);
+}
+
 const classicManager = (scope) => ({
   createService(Klass) {
     const props = {};

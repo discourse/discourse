@@ -27,6 +27,14 @@ const { values, positionals } = parseArgs({
 });
 
 const graph = JSON.parse(readFileSync(GRAPH, "utf8"));
+
+// --from may name a module by substring, since virtual ids contain a null byte.
+if (!graph[values.from]) {
+  const match = Object.keys(graph).find((id) => id.includes(values.from));
+  if (match) {
+    values.from = match;
+  }
+}
 const [needle] = positionals;
 
 const targets = needle

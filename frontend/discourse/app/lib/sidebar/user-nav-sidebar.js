@@ -1,20 +1,19 @@
-import { lookup } from "discourse/lib/service";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
+import { lazyLookup, lookup } from "discourse/lib/service";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
-import { i18n } from "discourse-i18n";
-import ComposerService from "discourse/services/composer";
 import CurrentUserService from "discourse/services/current-user";
 import PmTopicTrackingStateService from "discourse/services/pm-topic-tracking-state";
 import SiteService from "discourse/services/site";
 import SiteSettingsService from "discourse/services/site-settings";
 import UserNavSidebarStateManagerService from "discourse/services/user-nav-sidebar-state-manager";
+import { i18n } from "discourse-i18n";
 
 /**
  * Preferences tabs registered by plugins. They reach the horizontal nav through
@@ -469,7 +468,11 @@ const NAV_SECTIONS = [
             {
               id: "new-message",
               title: i18n("user.new_private_message"),
-              action: () => lookup(owner, ComposerService).openNewMessage({}),
+              action: () =>
+                lazyLookup(
+                  owner,
+                  () => import("discourse/services/composer")
+                ).then((composer) => composer.openNewMessage({})),
             },
           ]
         : [],

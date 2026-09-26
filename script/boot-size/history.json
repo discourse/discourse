@@ -238,5 +238,25 @@
       "raw": 3089319,
       "chunks": 26
     }
+  },
+  {
+    "commit": "29071438bec",
+    "label": "Composer, shortcuts, blocks, search and dynamic routes deferred",
+    "date": "2026-09-26T09:11:53.948Z",
+    "boot": {
+      "brotli": 389003,
+      "raw": 1663601,
+      "chunks": 2
+    },
+    "discovery": {
+      "brotli": 528936,
+      "raw": 2319254,
+      "chunks": 7
+    },
+    "topic": {
+      "brotli": 651579,
+      "raw": 2896252,
+      "chunks": 27
+    }
   }
 ]

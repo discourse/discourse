@@ -1,11 +1,11 @@
-import { lookup } from "discourse/lib/service";
+import { composerState } from "discourse/lib/composer/state";
 import { withPluginApi } from "discourse/lib/core-api";
+import { lookup } from "discourse/lib/service";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { CREATE_TOPIC, EDIT, REPLY } from "discourse/models/composer";
-import { i18n } from "discourse-i18n";
-import SiteSettingsService from "discourse/services/site-settings";
 import LanguageNameLookupService from "discourse/services/language-name-lookup";
-import ComposerService from "discourse/services/composer";
+import SiteSettingsService from "discourse/services/site-settings";
+import { i18n } from "discourse-i18n";
 
 const ALLOWED_ACTIONS = [CREATE_TOPIC, EDIT, REPLY];
 
@@ -21,7 +21,8 @@ export default {
 
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
-        const composerService = lookup(api.container, ComposerService);
+        // The composer service exists whenever a composer toolbar does.
+        const composerService = composerState.service;
         const priority = applyValueTransformer(
           "post-language-selector-priority",
           "first",
