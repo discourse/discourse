@@ -6,13 +6,17 @@ module DiscourseEvents
       include Service::Base
 
       MAX_INVITEES = 200
+      RECURRENCE_SCOPES = %w[this_event first_event_only this_and_following].freeze
 
       params do
         attribute :post_id, :integer
         attribute :filter, :string
+        attribute :occurrence_starts_at, :datetime
+        attribute :recurrence_scope, :string, default: "this_event"
         attribute :type, :symbol
 
         validates :post_id, presence: true
+        validates :recurrence_scope, inclusion: { in: RECURRENCE_SCOPES }
         validates :type, inclusion: { in: Invitee.statuses.keys }, allow_blank: true
       end
 
@@ -34,6 +38,23 @@ module DiscourseEvents
       def fetch_invitees(event:, params:)
         invitees = event.invitees
         invitees = invitees.with_status(params.type) if params.type.present?
+        if event.recurring? && params.type == :going
+          invitees =
+            case params.recurrence_scope
+            when "first_event_only"
+              invitees.where(recurring: false)
+            when "this_and_following"
+              invitees.where(recurring: true)
+            else
+              occurrence_starts_at = params.occurrence_starts_at
+              if occurrence_starts_at && event.starts_at&.to_i != occurrence_starts_at.to_i
+                invitees.where(recurring: true)
+              else
+                invitees
+              end
+            end
+        end
+
         invitees = invitees.matching_username(params.filter) if params.filter.present?
         invitees.order(%i[status username_lower]).limit(MAX_INVITEES)
       end

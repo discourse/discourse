@@ -10,6 +10,8 @@ module DiscourseEvents
           post_id: params[:post_id],
           filter: params[:filter],
           type: params[:type],
+          occurrence_starts_at: params[:occurrence_starts_at],
+          recurrence_scope: params[:recurrence_scope] || "this_event",
         },
         guardian:,
       ) do
