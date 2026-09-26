@@ -39,6 +39,15 @@ The thunk keeps import cycles between a service and its consumers safe: the clas
 
 Services extend `Service` from `discourse/lib/service`, a classic Ember service with a Polaris service manager, so a string lookup from the container and an injection reach the same instance. The four objects registered by the object-injection initializer, such as the current user, have token modules under `app/services` that read from the container. `@service router` and other framework services still use their names.
 
+A service that boot code injects still ships in the boot chunk, so boot code avoids injecting heavy services:
+
+- `lazyLookup(owner, () => import("discourse/services/composer"))` resolves a service whose module loads on demand, for code that only calls it on an action.
+- `lib/composer/state` exposes the composer's presence and visibility, so the URL helper, footer nav and the lazy composer container never load the service.
+- Keyboard shortcuts load on the first key event, which is replayed. The design wizard loads only for admins and publishes `active` through `lib/design-wizard-state`.
+- The block system boots when the first layout is registered. `lib/blocks/-internals/outlet-layouts` answers whether an outlet has a layout, and core API registrations queue in `lib/blocks/-internals/pending` until then.
+
+A route bundle can carry a `-setup` module, such as `app/routes/discovery/-setup.js`, which runs with the owner when the bundle loads. The dynamic discovery routes are registered there. Models that only certain routes create are listed in `MODEL_BUNDLES` in the build plugin and register with those bundles.
+
 ## Chunking
 
 Rolldown's code splitting groups are driven by the same plugin. After the module graph is complete it assigns every module an owner:
