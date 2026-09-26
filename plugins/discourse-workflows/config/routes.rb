@@ -71,6 +71,7 @@ DiscourseWorkflows::Engine.routes.draw do
       delete "/variables/:id" => "variables#destroy"
       get "/credentials" => "credentials#index"
       post "/credentials" => "credentials#create"
+      post "/credentials/:credential_id/connect" => "credential_connections#create"
       put "/credentials/:id" => "credentials#update"
       delete "/credentials/:id" => "credentials#destroy"
       get "/data-tables" => "data_tables#index"

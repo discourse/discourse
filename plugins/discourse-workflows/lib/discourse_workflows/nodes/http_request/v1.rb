@@ -173,17 +173,26 @@ module DiscourseWorkflows
           credentials: [
             {
               name: "auth",
-              credential_types: %w[basic_auth bearer_token header_auth],
+              credential_types: %w[basic_auth bearer_token header_auth oauth2_client_credentials],
               required: false,
               display_options: {
                 show: {
-                  authentication: %w[basic_auth bearer_token header_auth],
+                  authentication: %w[basic_auth bearer_token header_auth oauth2_client_credentials],
                 },
               },
               label_key: "discourse_workflows.http_request.credential",
             },
           ],
         )
+
+        def self.property_schema
+          schema = super.deep_dup
+          schema[:authentication][:options] << {
+            value: "oauth2_client_credentials",
+            label: CredentialTypes::Oauth2ClientCredentials.display_name,
+          }
+          schema
+        end
 
         def execute(exec_ctx)
           items =

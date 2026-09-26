@@ -64,7 +64,12 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_nodes)
 DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential_types)
 
 after_initialize do
-  Rails.application.config.filter_parameters += %i[signature]
+  Rails.application.config.filter_parameters += %i[
+    signature
+    client_secret
+    access_token
+    refresh_token
+  ]
 
   add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
 
@@ -87,6 +92,10 @@ after_initialize do
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
     "DiscourseWorkflows::CredentialTypes::BearerToken",
+    self,
+  )
+  DiscoursePluginRegistry.register_discourse_workflows_credential_type(
+    "DiscourseWorkflows::CredentialTypes::Oauth2ClientCredentials",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
