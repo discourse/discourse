@@ -1,6 +1,10 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import brotliAssetsPlugin from "./lib/brotli-assets-plugin.mjs";
+import bundleAnalyzerPlugin, {
+  BUNDLE_ANALYSIS_RE,
+} from "./lib/bundle-analyzer-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
 import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
@@ -51,6 +55,7 @@ const aliases = [
 
 export function buildConfig({ devMode } = {}) {
   const isProduction = process.env.EMBER_ENV === "production";
+  const brotliSizes = new Map();
 
   if (!isProduction) {
     process.env.NODE_ENV = "development";
@@ -179,6 +184,8 @@ export function buildConfig({ devMode } = {}) {
           }
         },
       },
+      brotliAssetsPlugin({ enabled: isProduction, sizes: brotliSizes }),
+      bundleAnalyzerPlugin({ brotliSizes, pruneStale: devMode }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {
@@ -186,10 +193,14 @@ export function buildConfig({ devMode } = {}) {
             entrypoints: {},
             dynamicEntrypoints: {},
             chunks: {},
+            bundleAnalysis: null,
           };
 
           for (const [fileName, chunk] of Object.entries(bundle)) {
             if (chunk.type !== "chunk") {
+              if (BUNDLE_ANALYSIS_RE.test(fileName)) {
+                manifest.bundleAnalysis = fileName;
+              }
               continue;
             }
 

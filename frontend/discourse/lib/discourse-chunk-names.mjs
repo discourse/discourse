@@ -55,12 +55,12 @@ export default function discourseChunkNamesPlugin() {
       return {
         ...options,
         chunkFileNames: (chunk) => {
-          if (!chunk.isDynamicEntry) {
-            return original.replaceAll("[name]", "chunk");
-          }
-
+          // A chunk with no facade has no module to be named after, and the
+          // name it would otherwise take is seeded from an arbitrary member —
+          // one shared chunk of hundreds of unrelated modules ends up named
+          // after whichever happened to come first.
           if (!chunk.facadeModuleId) {
-            return original;
+            return original.replaceAll("[name]", "chunk");
           }
 
           const name =
