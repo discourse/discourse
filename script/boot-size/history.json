@@ -258,5 +258,25 @@
       "raw": 2896252,
       "chunks": 27
     }
+  },
+  {
+    "commit": "5b5ecc41b31",
+    "label": "Composer container reads shared state",
+    "date": "2026-09-26T09:15:22.845Z",
+    "boot": {
+      "brotli": 378260,
+      "raw": 1615489,
+      "chunks": 2
+    },
+    "discovery": {
+      "brotli": 528682,
+      "raw": 2319202,
+      "chunks": 7
+    },
+    "topic": {
+      "brotli": 651285,
+      "raw": 2896213,
+      "chunks": 27
+    }
   }
 ]
