@@ -42,6 +42,51 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "content cache restoration" do
+      it "restores translations in the post-import phase" do
+        begin
+          require "migrations-core"
+          require "migrations-importer"
+        rescue LoadError
+          skip "Enable the migrations bundle group to exercise content cache integration"
+        end
+
+        post = Fabricate(:post, raw: "An imported paragraph.")
+        PostCustomField.create!(post:, name: "import_id", value: "123")
+        PostLocalization.create!(
+          post:,
+          locale: "fr",
+          raw: "Un paragraphe importe.",
+          cooked: "<p>Un paragraphe importe.</p>",
+          post_version: post.version,
+          localizer_user_id: Discourse::SYSTEM_USER_ID,
+        )
+
+        Dir.mktmpdir do |directory|
+          path = File.join(directory, "cache.db")
+          Migrations::Importer::ContentCache.new.export(path)
+          post.localizations.destroy_all
+          source = SQLite3::Database.new(":memory:", results_as_hash: true)
+          source.execute(
+            "CREATE TABLE categories (id INTEGER, about_topic_title TEXT, existing_id INTEGER)",
+          )
+          importer = described_class.allocate
+          importer.instance_variable_set(:@source_db, source)
+          importer.instance_variable_set(:@content_cache_path, path)
+          importer.instance_variable_set(:@content_cache, Migrations::Importer::ContentCache.new)
+
+          importer.execute_after
+
+          expect(post.localizations.reload.pluck(:locale, :raw)).to eq(
+            [["fr", "Un paragraphe importe."]],
+          )
+          expect(source).to be_closed
+        ensure
+          source&.close unless source&.closed?
+        end
+      end
+    end
+
     describe "permalink topic URL placeholders" do
       fab!(:topic)
 
