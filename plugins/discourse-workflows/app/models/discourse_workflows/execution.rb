@@ -108,9 +108,8 @@ module DiscourseWorkflows
       end
     end
 
-    def self.claim_for_resume(execution, resume_token: nil)
-      scope = where(id: execution.id, status: :waiting)
-      scope = scope.where(resume_token: resume_token) if resume_token
+    def self.claim_for_resume(execution, resume_token: execution.resume_token)
+      scope = where(id: execution.id, status: :waiting, resume_token: resume_token)
 
       now = Time.current
       affected = scope.update_all(status: statuses[:running], updated_at: now)
@@ -170,7 +169,13 @@ module DiscourseWorkflows
         affected =
           self
             .class
-            .where(id: id, status: :waiting)
+            .where(
+              id: id,
+              status: :waiting,
+              resume_token: resume_token,
+              waiting_until: waiting_until,
+              timeout_action: timeout_action,
+            )
             .update_all(
               status: self.class.statuses[:error],
               error: message,

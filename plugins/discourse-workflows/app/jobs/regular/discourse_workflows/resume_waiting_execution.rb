@@ -5,10 +5,15 @@ module Jobs
     class ResumeWaitingExecution < ::Jobs::Base
       def execute(args)
         return unless SiteSetting.enable_discourse_workflows
+        return if args[:resume_token].blank?
 
-        execution = ::DiscourseWorkflows::Execution.find_by(id: args[:execution_id])
+        execution =
+          ::DiscourseWorkflows::Execution.find_by(
+            id: args[:execution_id],
+            resume_token: args[:resume_token],
+          )
         return if execution.nil? || !execution.waiting?
-        return if execution.waiting_until.present? && execution.waiting_until > Time.current
+        return if execution.waiting_until.nil? || execution.waiting_until > Time.current
 
         if execution.timeout_action == "fail"
           execution.fail_with_timeout!

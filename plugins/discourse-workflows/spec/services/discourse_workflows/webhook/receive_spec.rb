@@ -112,7 +112,10 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         it "enqueues a ResumeWebhookWaiting job" do
           result
           job = Jobs::DiscourseWorkflows::ResumeWebhookWaiting.jobs.last
-          expect(job["args"].first).to include("execution_id" => waiting_execution.id)
+          expect(job["args"].first).to include(
+            "execution_id" => waiting_execution.id,
+            "resume_token" => waiting_execution.resume_token,
+          )
           expect(job["args"].first["response_items"].first["json"]).to include(
             "body" => {
               "foo" => "bar",
