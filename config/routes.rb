@@ -389,6 +389,10 @@ Discourse::Application.routes.draw do
           :constraints => AdminConstraint.new
       put "dashboard/reports/layout" => "dashboard#update_reports_section",
           :constraints => AdminConstraint.new
+      post "dashboard/reports/mount" => "dashboard#mount_report",
+           :constraints => AdminConstraint.new
+      delete "dashboard/reports/mount" => "dashboard#unmount_report",
+             :constraints => AdminConstraint.new
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"

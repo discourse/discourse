@@ -22,6 +22,7 @@ import Query from "discourse/plugins/discourse-data-explorer/discourse/models/qu
 
 const DEFAULT_QUERY_TAG = "default";
 const HIDE_SCHEMA_KEY = "hide_schema";
+const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
@@ -43,6 +44,9 @@ export default class PluginsExplorerController extends Controller {
   @tracked aiPrompt = "";
   @tracked aiGenerating = false;
   @tracked lastGeneratedPrompt = null;
+  @tracked dashboardBusy = false;
+  @tracked dashboardMounted = false;
+  @tracked dashboardMountable = false;
 
   queryParams = ["params"];
   order = null;
@@ -144,6 +148,31 @@ export default class PluginsExplorerController extends Controller {
     return (
       this.aiGenerating || !trimmed || trimmed === this.lastGeneratedPrompt
     );
+  }
+
+  get showDashboardToggle() {
+    return this.siteSettings.dashboard_improvements && !this.model.destroyed;
+  }
+
+  get dashboardToggleLabel() {
+    return this.dashboardMounted
+      ? "explorer.dashboard.remove"
+      : "explorer.dashboard.add";
+  }
+
+  get dashboardToggleDisabled() {
+    return (
+      this.actionsBusy ||
+      this.dashboardBusy ||
+      (!this.dashboardMounted && !this.dashboardMountable)
+    );
+  }
+
+  get dashboardToggleTitle() {
+    if (this.dashboardMounted || this.dashboardMountable) {
+      return null;
+    }
+    return i18n("explorer.dashboard.unmountable");
   }
 
   get viewItems() {
@@ -371,6 +400,33 @@ export default class PluginsExplorerController extends Controller {
       throw error;
     } finally {
       this.loading = false;
+    }
+  }
+
+  @action
+  async toggleDashboard() {
+    const mounted = this.dashboardMounted;
+    this.dashboardBusy = true;
+    try {
+      await ajax("/admin/dashboard/reports/mount", {
+        type: mounted ? "DELETE" : "POST",
+        data: {
+          source: DASHBOARD_REPORT_SOURCE,
+          identifier: String(this.model.id),
+        },
+      });
+      this.dashboardMounted = !mounted;
+      this.toasts.success({
+        data: {
+          message: i18n(
+            mounted ? "explorer.dashboard.removed" : "explorer.dashboard.added"
+          ),
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.dashboardBusy = false;
     }
   }
 

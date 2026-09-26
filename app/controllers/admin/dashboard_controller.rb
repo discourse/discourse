@@ -6,7 +6,9 @@ class Admin::DashboardController < Admin::StaffController
   before_action :ensure_admin,
                 only: %i[
                   available_reports
+                  mount_report
                   traffic
+                  unmount_report
                   update_reports_section
                   update_configuration
                   update_section_settings
@@ -126,6 +128,29 @@ class Admin::DashboardController < Admin::StaffController
     AdminDashboard::Reports::LayoutUpdater.call(
       items: parse_reports_items_payload,
       guardian: guardian,
+    )
+    head :no_content
+  end
+
+  def mount_report
+    report =
+      AdminDashboard::Reports::Mounter.mount(
+        source: params.require(:source),
+        identifier: params.require(:identifier),
+        guardian: guardian,
+      )
+    render json: report.slice(:source, :identifier, :position, :rows, :cols), status: :created
+  rescue AdminDashboard::Reports::Mounter::CapReached
+    render_json_error(
+      I18n.t("dashboard.reports.cap_reached", max: AdminDashboardReport::VISIBLE_CAP),
+      status: 422,
+    )
+  end
+
+  def unmount_report
+    AdminDashboard::Reports::Mounter.unmount(
+      source: params.require(:source),
+      identifier: params.require(:identifier),
     )
     head :no_content
   end

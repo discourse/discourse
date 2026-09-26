@@ -2513,4 +2513,167 @@ RSpec.describe Admin::DashboardController do
       end
     end
   end
+
+  describe "#mount_report and #unmount_report" do
+    before { AdminDashboardReport.delete_all }
+
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "fake_source"
+        def self.label = "Fake"
+
+        def self.accessible_ids(identifiers, guardian:)
+          identifiers.map(&:to_s).reject { |id| id == "forbidden" }.to_set
+        end
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    before { DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin) }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "a",
+             }
+        expect(response.status).to eq(404)
+
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "a",
+               }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "denies access" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "a",
+             }
+        expect(response.status).to eq(404)
+
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "a",
+               }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "appends the report after the existing layout" do
+        AdminDashboardReport.create!(source: "fake_source", identifier: "old", position: 4)
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "new",
+             }
+
+        expect(response.status).to eq(201)
+        expect(response.parsed_body).to include("source" => "fake_source", "identifier" => "new")
+        expect(AdminDashboardReport.order(:position).pluck(:identifier)).to eq(%w[old new])
+      end
+
+      it "is a no-op when the report is already mounted" do
+        AdminDashboardReport.create!(source: "fake_source", identifier: "a", position: 0)
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "a",
+             }
+
+        expect(response.status).to eq(201)
+        expect(AdminDashboardReport.count).to eq(1)
+      end
+
+      it "rejects a report the guardian cannot access" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "forbidden",
+             }
+
+        expect(response.status).to eq(403)
+        expect(AdminDashboardReport.count).to eq(0)
+      end
+
+      it "rejects a source with no registered provider" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "totally_unregistered",
+               identifier: "a",
+             }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects a missing identifier" do
+        post "/admin/dashboard/reports/mount.json", params: { source: "fake_source" }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "refuses to exceed VISIBLE_CAP" do
+        AdminDashboardReport::VISIBLE_CAP.times do |i|
+          AdminDashboardReport.create!(source: "fake_source", identifier: "id#{i}", position: i)
+        end
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "one_too_many",
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("dashboard.reports.cap_reached", max: AdminDashboardReport::VISIBLE_CAP),
+        )
+        expect(AdminDashboardReport.count).to eq(AdminDashboardReport::VISIBLE_CAP)
+      end
+
+      it "removes only the named report" do
+        AdminDashboardReport.create!(source: "fake_source", identifier: "a", position: 0)
+        AdminDashboardReport.create!(source: "fake_source", identifier: "b", position: 1)
+
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "a",
+               }
+
+        expect(response.status).to eq(204)
+        expect(AdminDashboardReport.pluck(:identifier)).to eq(["b"])
+      end
+
+      it "succeeds when the report is not mounted" do
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "missing",
+               }
+
+        expect(response.status).to eq(204)
+      end
+    end
+  end
 end
