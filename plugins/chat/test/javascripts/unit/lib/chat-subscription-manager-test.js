@@ -117,6 +117,71 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     );
   });
 
+  test("channel manager moves a confirmed message to its server position", function (assert) {
+    const channel = this.fabricators.channel({ id: 15 });
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+    manager.currentUser = { id: 1 };
+
+    const stagedMessage = this.fabricators.message({
+      id: "staged-3",
+      channel,
+      staged: true,
+      user: { id: 1, username: "current_user" },
+    });
+    const laterMessage = this.fabricators.message({
+      id: 101,
+      channel,
+      created_at: "2024-01-01T00:00:01.000Z",
+      user: { id: 2, username: "other_user" },
+    });
+    channel.messagesManager.addMessages([stagedMessage, laterMessage]);
+
+    manager.handleSentMessage({
+      type: "sent",
+      staged_id: "staged-3",
+      chat_message: buildChatMessagePayload({ id: 100, uploads: [] }),
+    });
+
+    assert.deepEqual(
+      channel.messagesManager.messages.map((message) => message.id),
+      [100, 101],
+      "the confirmed message moves above the message created after it"
+    );
+  });
+
+  test("thread manager moves a confirmed message to its server position", function (assert) {
+    const channel = this.fabricators.channel({ id: 16 });
+    const thread = this.fabricators.thread({ id: 224, channel });
+    const manager = new ChatChannelThreadSubscriptionManager(this, thread);
+    manager.currentUser = { id: 1 };
+
+    const stagedMessage = this.fabricators.message({
+      id: "staged-4",
+      channel,
+      staged: true,
+      user: { id: 1, username: "current_user" },
+    });
+    const laterMessage = this.fabricators.message({
+      id: 111,
+      channel,
+      created_at: "2024-01-01T00:00:01.000Z",
+      user: { id: 2, username: "other_user" },
+    });
+    thread.messagesManager.addMessages([stagedMessage, laterMessage]);
+
+    manager.handleSentMessage({
+      type: "sent",
+      staged_id: "staged-4",
+      chat_message: buildChatMessagePayload({ id: 110, uploads: [] }),
+    });
+
+    assert.deepEqual(
+      thread.messagesManager.messages.map((message) => message.id),
+      [110, 111],
+      "the confirmed message moves above the message created after it"
+    );
+  });
+
   test("channel manager keeps deleted messages visible for category moderators", function (assert) {
     const channel = this.fabricators.channel({
       id: 13,
