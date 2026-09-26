@@ -276,6 +276,19 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
 
       expect(store.execution.reload.timeout_action).to be_nil
     end
+
+    it "keeps the execution running when its waiting checkpoint cannot be saved",
+       :aggregate_failures do
+      interrupt_checkpoint = -> { raise Sidekiq::Shutdown }
+      DiscourseWorkflows::ExecutionData.set_callback(:save, :before, interrupt_checkpoint)
+
+      expect { store.pause_waiting_execution!(node: node) }.to raise_error(Sidekiq::Shutdown)
+
+      expect(store.execution.reload).to have_attributes(status: "running", waiting_node_id: nil)
+      expect(store.execution.execution_data).to be_nil
+    ensure
+      DiscourseWorkflows::ExecutionData.skip_callback(:save, :before, interrupt_checkpoint)
+    end
   end
 
   describe "wait-state cleanup" do
