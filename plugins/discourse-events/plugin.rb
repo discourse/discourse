@@ -242,6 +242,7 @@ after_initialize do
       [
         DiscourseWorkflows::Nodes::EventEnded::V1,
         DiscourseWorkflows::Nodes::EventParticipationChanged::V1,
+        DiscourseWorkflows::Nodes::Event::V1,
       ]
     end
   end
