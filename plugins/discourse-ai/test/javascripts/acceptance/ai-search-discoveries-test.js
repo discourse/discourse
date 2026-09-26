@@ -6,6 +6,7 @@ import {
   find,
   findAll,
   focus,
+  getSettledState,
   settled,
   triggerKeyEvent,
   visit,
@@ -1012,6 +1013,48 @@ acceptance("AI Discoveries - header search", function (needs) {
       "/search?q=dev&search_type=ai_discoveries",
       "the full page opens on the type that produced what was showing"
     );
+  });
+
+  [
+    ["on the first search", null],
+    ["after an empty search", ""],
+    ["after a previous search", "previous"],
+  ].forEach(([scenario, previousTerm]) => {
+    test(`opening advanced search preserves a pending answer ${scenario}`, async function (assert) {
+      if (previousTerm !== null) {
+        await visit(`/search?q=${encodeURIComponent(previousTerm)}`);
+      }
+      await visit("/");
+      await click("#search-button");
+      await fillIn("#icon-search-input", "my term");
+      find(".ai-discoveries-search-options__option.--ask").dispatchEvent(
+        new MouseEvent("click", { bubbles: true })
+      );
+      await waitUntil(() => submittedRequestId);
+      find(".ai-discoveries-search-options__option.--advanced").dispatchEvent(
+        new MouseEvent("click", { bubbles: true })
+      );
+      await waitFor(".full-page-search");
+      // The pending answer keeps a timeout scheduled while the route settles.
+      await waitUntil(() => {
+        const state = getSettledState();
+        return (
+          !state.hasRunLoop &&
+          !state.hasPendingRequests &&
+          !state.hasPendingTransitions &&
+          !state.isRenderPending
+        );
+      });
+
+      assert
+        .dom(".full-page-search")
+        .hasValue("my term", "preserves the query while the answer is loading");
+      assert.strictEqual(
+        new URL(currentURL(), "https://discourse.test").searchParams.get("q"),
+        "my term",
+        "preserves the query in the URL"
+      );
+    });
   });
 
   test("an indexed search carries through to the full page unchanged", async function (assert) {
