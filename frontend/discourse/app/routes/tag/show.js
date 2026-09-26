@@ -157,7 +157,8 @@ export default class TagShowRoute extends DiscourseRoute {
     if (
       this.noSubcategories === undefined &&
       category?.default_list_filter === "none" &&
-      topicFilter === "latest"
+      topicFilter === "latest" &&
+      slug !== NONE
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");

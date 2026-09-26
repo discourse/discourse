@@ -295,6 +295,8 @@ module("Unit | Utility | url", function (hooks) {
     assert.strictEqual(getCategoryAndTagUrl(cat, false), "/c/foo/1/none");
     assert.strictEqual(getCategoryAndTagUrl(noneCat, true), "/c/foo/1/all");
     assert.strictEqual(getCategoryAndTagUrl(noneCat, false), "/c/foo/1/none");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat), "/c/foo/1");
+    assert.strictEqual(getCategoryAndTagUrl(cat), "/c/foo/1");
 
     // category + tag
     assert.strictEqual(
