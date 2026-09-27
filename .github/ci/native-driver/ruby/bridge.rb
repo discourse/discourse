@@ -40,6 +40,13 @@ class RubyCDPBridge
     }
     begin
       @chrome_pid = Process.spawn(*arguments, "--remote-debugging-pipe", options)
+      @chrome_spawn_fd_links = [3, 4].map { |fd| process_fd_link(@chrome_pid, fd) }
+      @chrome_spawn_executable_matches =
+        begin
+          File.realpath("/proc/#{@chrome_pid}/exe") == File.realpath(arguments.first)
+        rescue StandardError
+          nil
+        end
     ensure
       child_input.close
       child_output.close
@@ -174,13 +181,7 @@ class RubyCDPBridge
   end
 
   def chrome_pipe_state
-    links = [3, 4].map do |fd|
-      File.readlink("/proc/#{@chrome_pid}/fd/#{fd}")
-    rescue Errno::ENOENT
-      nil
-    rescue StandardError
-      "unavailable"
-    end
+    links = [3, 4].map { |fd| process_fd_link(@chrome_pid, fd) }
     browser_link =
       begin
         File.readlink("/proc/self/fd/#{@browser_reader.fileno}")
@@ -199,11 +200,30 @@ class RubyCDPBridge
         "other"
       end
     end
-    same_endpoint = links[0] && links[0] == links[1]
-    "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} same_endpoint=#{same_endpoint} " \
+    initial_kinds = @chrome_spawn_fd_links.map { |link| descriptor_kind(link) }
+    "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} " \
+      "spawn_fd3=#{initial_kinds[0]} spawn_fd4=#{initial_kinds[1]} " \
+      "spawn_matches_input=#{@chrome_spawn_fd_links[0] && @chrome_spawn_fd_links[0] == @chrome_input_endpoint} " \
+      "spawn_matches_output=#{@chrome_spawn_fd_links[1] && @chrome_spawn_fd_links[1] == @chrome_output_endpoint} " \
+      "spawn_executable_matches=#{@chrome_spawn_executable_matches} " \
       "matches_input=#{links[0] && links[0] == @chrome_input_endpoint} " \
       "matches_output=#{links[1] && links[1] == @chrome_output_endpoint} " \
       "browser_reader=#{browser_link && browser_link.start_with?("pipe:") ? "pipe" : "other"}"
+  end
+
+  def process_fd_link(pid, fd)
+    File.readlink("/proc/#{pid}/fd/#{fd}")
+  rescue StandardError
+    nil
+  end
+
+  def descriptor_kind(link)
+    case link
+    when nil then "closed"
+    when /\Apipe:/ then "pipe"
+    when /\Asocket:/ then "socket"
+    else "other"
+    end
   end
 
   def call(method, params = {}, session = nil)
