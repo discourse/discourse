@@ -171,9 +171,19 @@ command response. The next focused run isolates the native stale-element
 example and emits only the output-reader exception class and a source
 file/line if that reader fails.
 
+Run [36327409327](https://github.com/discourse/discourse/actions/runs/36327409327)
+isolated that native stale-element example. Rust passed one example in 3.24s;
+Ruby failed one in 2.10s. The Ruby failure stack reached the bridge's EPIPE
+rescue at `ruby/bridge.rb:205`, while Chrome was still alive; the parent
+output-reader error marker was absent. The CI extraction did not retain the
+failed CDP method or pipe-state booleans, so the failed command remains unknown.
+The next run maps one Ruby socket descriptor to both Chrome pipe fds, matching
+the Rust launch setup more closely, and emits the method, write stage, and
+sanitized descriptor state in one flushed marker.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
-uses only one threaded probe. Until Ruby passes the same focused examples,
-there is no Ruby performance measurement and Rust remains the only measured
-direct-CDP bridge. Firefox remains a functional compatibility check; Safari
-will not be tested.
+uses only one threaded probe. Until Ruby passes the same focused system-test
+sample, there is no Ruby performance measurement and Rust remains the only
+measured direct-CDP bridge. Firefox remains a functional compatibility check;
+Safari will not be tested.

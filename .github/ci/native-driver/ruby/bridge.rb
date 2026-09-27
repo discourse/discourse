@@ -27,14 +27,12 @@ class RubyCDPBridge
       rescue StandardError
         nil
       end
-    child_input = chrome_socket.dup
-    child_output = chrome_socket.dup
     options = {
       in: File::NULL,
       out: File::NULL,
       err: STDERR,
-      3 => child_input.fileno,
-      4 => child_output.fileno,
+      3 => chrome_socket.fileno,
+      4 => chrome_socket.fileno,
       close_others: true,
       pgroup: true,
     }
@@ -49,8 +47,6 @@ class RubyCDPBridge
           nil
         end
     ensure
-      child_input.close
-      child_output.close
       chrome_socket.close
     end
     @browser_reader = browser_reader
@@ -192,9 +188,6 @@ class RubyCDPBridge
     id
   rescue Errno::EPIPE
     @pending_mutex.synchronize { @pending.delete(id) } if id
-    STDERR.puts(
-      "NATIVE_CDP_RUBY_BRIDGE_PIPE_WRITE_FAILURE method=#{request.fetch("method")} stage=#{write_stage}",
-    )
     status = Process.waitpid2(@chrome_pid, Process::WNOHANG)&.last
     state =
       if status
@@ -202,9 +195,15 @@ class RubyCDPBridge
       else
         "Chrome is still running"
       end
+    pipe_state = chrome_pipe_state
+    STDERR.puts(
+      "NATIVE_CDP_RUBY_BRIDGE_PIPE_WRITE_FAILURE method=#{request.fetch("method")} " \
+        "stage=#{write_stage} chrome_alive=#{status.nil?} #{pipe_state}",
+    )
+    STDERR.flush
     raise IOError,
           "Chromium closed CDP input while sending #{request.fetch("method")} id=#{id} " \
-            "recipient=#{external_id ? "external" : "internal"}; #{state}; #{chrome_pipe_state}"
+            "recipient=#{external_id ? "external" : "internal"}; #{state}; #{pipe_state}"
   rescue StandardError
     @pending_mutex.synchronize { @pending.delete(id) } if id
     raise
