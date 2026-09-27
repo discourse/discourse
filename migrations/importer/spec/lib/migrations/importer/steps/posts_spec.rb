@@ -62,6 +62,15 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
     )
   end
 
+  def create_destination_post(post_number)
+    DB.exec(<<~SQL, topic_id:, user_id:, post_number:)
+      INSERT INTO posts (topic_id, user_id, post_number, sort_order, raw, cooked,
+                         post_type, created_at, updated_at, last_version_at)
+      VALUES (:topic_id, :user_id, :post_number, :post_number, 'existing', '', 1,
+              '2023-01-01', '2023-01-01', '2023-01-01')
+    SQL
+  end
+
   def destination_posts
     DB.query("SELECT * FROM posts WHERE topic_id >= #{base_id} ORDER BY post_number")
   end
@@ -98,6 +107,17 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
     expect(posts.map(&:word_count)).to eq([2, 2])
     expect(posts.map(&:cooked)).to eq(["", ""])
     expect(posts.map(&:last_version_at)).to eq(posts.map(&:created_at))
+  end
+
+  it "adds posts after numbers already used by the destination topic" do
+    create_destination_post(1)
+    create_source_post(1, post_number: 1)
+    create_source_post(2)
+
+    execute_step
+
+    expect(destination_posts.map(&:post_number)).to eq([1, 2, 3])
+    expect(destination_posts.map(&:raw)).to eq(["existing", "post 1", "post 2"])
   end
 
   it "maps the ids of the copied posts" do

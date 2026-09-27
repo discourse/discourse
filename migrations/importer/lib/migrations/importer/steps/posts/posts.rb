@@ -96,7 +96,7 @@ module Migrations
         end
 
         def before(total_rows:)
-          PostNumbering.new(@intermediate_db).assign
+          PostNumbering.new(@intermediate_db, @discourse_db).assign
 
           @maps = PlaceholderMaps.new(@intermediate_db, @discourse_db)
           @unresolved_embeds = UnresolvedEmbedReport.new(@intermediate_db)

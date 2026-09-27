@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::PostNumbering do
-  subject(:numbering) { described_class.new(intermediate_db) }
+  subject(:numbering) { described_class.new(intermediate_db, discourse_db) }
 
   include_context "with importer databases"
+
+  let(:discourse_db) { instance_double(Migrations::Importer::DiscourseDB) }
 
   def create_post(original_id, topic_id:, post_number: nil, created_at: nil)
     Migrations::Database::IntermediateDB::Post.create(
@@ -61,6 +63,17 @@ RSpec.describe Migrations::Importer::PostNumbering do
     numbering.assign
 
     expect(post_numbers).to eq({ 1 => 9, 2 => 10, 3 => 1 })
+  end
+
+  it "numbers posts after posts already in a mapped destination topic" do
+    add_mapping(10, mapping_type::TOPICS, 100)
+    create_post(1, topic_id: 10, post_number: 1, created_at: 100)
+    create_post(2, topic_id: 10, post_number: 7, created_at: 200)
+    allow(discourse_db).to receive(:query_array).and_return([[100, 5]])
+
+    numbering.assign
+
+    expect(post_numbers).to eq({ 1 => 8, 2 => 7 })
   end
 
   it "stores the topic a number belongs to" do
