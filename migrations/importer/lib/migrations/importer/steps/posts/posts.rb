@@ -93,7 +93,7 @@ module Migrations
         private
 
         def setup
-          @resolved_raw = {}
+          @resolved_raw_by_id = {}
         end
 
         def before(total_rows:)
@@ -120,7 +120,7 @@ module Migrations
           @maps.preload_posts_for_batch(original_ids)
 
           items = rows.map { |row| { id: row[:original_id], raw: row[:raw] } }
-          @resolved_raw = @resolver.resolve_all(items)
+          @resolved_raw_by_id = @resolver.resolve_all(items)
 
           report_orphan_placeholders
         end
@@ -151,7 +151,7 @@ module Migrations
           row[:deleted_by_id] = row[:discourse_deleted_by_id]
           row[:locked_by_id] = row[:discourse_locked_by_id]
 
-          row[:raw] = clean_raw(@resolved_raw[row[:original_id]] || row[:raw])
+          row[:raw] = clean_raw(@resolved_raw_by_id[row[:original_id]] || row[:raw])
           row[:word_count] = row[:raw].scan(WORD_COUNT_PATTERN).size
 
           # A rebake after the import fills this in. Cooking here would need the
