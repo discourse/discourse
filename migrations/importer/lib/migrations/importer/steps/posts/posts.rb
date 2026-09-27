@@ -8,8 +8,8 @@ module Migrations
         DEFAULT_POST_TYPE = Post.types[:regular]
         HIDDEN_REASONS = Post.hidden_reasons.values.to_set.freeze
         SUPPORTED_LOCALES = LocaleSiteSetting.supported_locales.to_set.freeze
-        WORD_PATTERN = /[[:word:]]+/
-        NULL_BYTE = "\u0000"
+        WORD_COUNT_PATTERN = /[[:word:]]+/
+        NUL_CHARACTER = "\u0000"
 
         depends_on :topics, :users, :uploads, :categories, :tags, :groups, :badges
         store_mapped_ids true
@@ -154,7 +154,7 @@ module Migrations
           row[:locked_by_id] = row[:discourse_locked_by_id]
 
           row[:raw] = clean_raw(@resolved_raw[row[:original_id]] || row[:raw])
-          row[:word_count] = row[:raw].scan(WORD_PATTERN).size
+          row[:word_count] = row[:raw].scan(WORD_COUNT_PATTERN).size
 
           # A rebake after the import fills this in. Cooking here would need the
           # markdown pipeline for every post and still be wrong for the posts
@@ -229,7 +229,7 @@ module Migrations
           raw = raw.to_s.scrub
           # PostgreSQL rejects a NUL byte in a text column, and the rest of the
           # body is worth more than that byte.
-          raw = raw.delete(NULL_BYTE) if raw.include?(NULL_BYTE)
+          raw = raw.delete(NUL_CHARACTER) if raw.include?(NUL_CHARACTER)
           # No strip: leading whitespace can be an indented code block.
           raw.presence || I18n.t("importer.posts.empty_raw")
         end
