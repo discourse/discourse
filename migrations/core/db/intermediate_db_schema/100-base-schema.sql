@@ -451,6 +451,7 @@ CREATE TABLE topics
     created_at           DATETIME,
     deleted_at           DATETIME,
     deleted_by_id        NUMERIC,
+    existing_id          NUMERIC,
     external_id          NUMERIC,
     featured_link        TEXT,
     locale               TEXT,

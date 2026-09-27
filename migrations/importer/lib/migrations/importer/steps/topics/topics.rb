@@ -16,6 +16,7 @@ module Migrations
         depends_on :categories, :users, :uploads
         store_mapped_ids true
 
+        requires_set :existing_ids, "SELECT id FROM topics"
         requires_set :existing_external_ids, "SELECT LOWER(external_id) FROM topics"
 
         column_names %i[
@@ -73,6 +74,12 @@ module Migrations
         private
 
         def transform_row(row)
+          if (existing_id = Integer(row[:existing_id], exception: false)) &&
+               @existing_ids.include?(existing_id)
+            row[:id] = existing_id
+            return nil
+          end
+
           if row[:archetype] != Archetype.private_message && row[:discourse_category_id].nil?
             return nil
           end

@@ -8,8 +8,9 @@ module Migrations
     # to be known up front.
     #
     # Posts are ordered by their source number and ID, matching the legacy bulk
-    # importer, then assigned contiguous numbers after any posts already in the
-    # destination topic. Missing source numbers sort last.
+    # importer, then assigned contiguous numbers. Topics that explicitly name
+    # an existing destination topic continue after its highest post number; new
+    # topics start at one. Missing source numbers sort last.
     class PostNumbering
       TOPIC_BATCH_SIZE = 1_000
       private_constant :TOPIC_BATCH_SIZE
@@ -80,10 +81,13 @@ module Migrations
         @intermediate_db.execute("DELETE FROM existing_topic_post_numbers")
 
         topic_mappings = @intermediate_db.query(<<~SQL, MappingType::TOPICS)
-              SELECT DISTINCT mapped_topic.original_id, mapped_topic.discourse_id
-              FROM mapped.ids mapped_topic
-                   JOIN posts ON posts.topic_id = mapped_topic.original_id
-              WHERE mapped_topic.type = ?
+              SELECT DISTINCT topics.original_id, mapped_topic.discourse_id
+              FROM topics
+                   JOIN mapped.ids mapped_topic
+                     ON mapped_topic.original_id = topics.original_id
+                        AND mapped_topic.type = ?
+                   JOIN posts ON posts.topic_id = topics.original_id
+              WHERE topics.existing_id IS NOT NULL
             SQL
         original_ids_by_discourse_id = topic_mappings.group_by { |row| row[:discourse_id] }
 

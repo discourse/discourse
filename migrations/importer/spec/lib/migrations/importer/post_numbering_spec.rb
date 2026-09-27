@@ -17,6 +17,14 @@ RSpec.describe Migrations::Importer::PostNumbering do
     )
   end
 
+  def create_topic(original_id, existing_id: nil)
+    Migrations::Database::IntermediateDB::Topic.create(
+      original_id:,
+      existing_id:,
+      title: "topic #{original_id}",
+    )
+  end
+
   it "assigns contiguous numbers in source post number order" do
     create_post(1, topic_id: 10, post_number: 7)
     create_post(2, topic_id: 10, post_number: 1)
@@ -55,7 +63,8 @@ RSpec.describe Migrations::Importer::PostNumbering do
     expect(post_numbers).to eq({ 1 => 1, 2 => 2, 3 => 1 })
   end
 
-  it "numbers posts after posts already in a mapped destination topic" do
+  it "numbers posts after posts in an explicitly existing destination topic" do
+    create_topic(10, existing_id: 100)
     add_mapping(10, mapping_type::TOPICS, 100)
     create_post(1, topic_id: 10, post_number: 1, created_at: 100)
     create_post(2, topic_id: 10, post_number: 7, created_at: 200)
@@ -64,6 +73,16 @@ RSpec.describe Migrations::Importer::PostNumbering do
     numbering.assign
 
     expect(post_numbers).to eq({ 1 => 6, 2 => 7 })
+  end
+
+  it "starts at one for a newly created destination topic" do
+    create_topic(10)
+    add_mapping(10, mapping_type::TOPICS, 100)
+    create_post(1, topic_id: 10, post_number: 7)
+
+    numbering.assign
+
+    expect(post_numbers).to eq({ 1 => 1 })
   end
 
   it "stores the topic a number belongs to" do

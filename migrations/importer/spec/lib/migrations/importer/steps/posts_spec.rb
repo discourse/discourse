@@ -62,6 +62,14 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
     )
   end
 
+  def mark_source_topic_existing
+    intermediate_db.execute(
+      "UPDATE topics SET existing_id = ? WHERE original_id = ?",
+      topic_id,
+      source_topic_id,
+    )
+  end
+
   def create_destination_post(post_number)
     DB.exec(<<~SQL, topic_id:, user_id:, post_number:)
       INSERT INTO posts (topic_id, user_id, post_number, sort_order, raw, cooked,
@@ -89,6 +97,10 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
   before do
     create_destination_user(user_id, "alice")
     create_destination_topic(topic_id, user_id)
+    Migrations::Database::IntermediateDB::Topic.create(
+      original_id: source_topic_id,
+      title: "A source topic",
+    )
     add_mapping(source_topic_id, mapping_type::TOPICS, topic_id)
     add_mapping(1, mapping_type::USERS, user_id)
   end
@@ -110,6 +122,7 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
   end
 
   it "adds posts after numbers already used by the destination topic" do
+    mark_source_topic_existing
     create_destination_post(1)
     create_source_post(1, post_number: 1)
     create_source_post(2)
