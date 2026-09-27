@@ -199,9 +199,21 @@ browser pipe. The later `Page.captureScreenshot` no-page error and reader EOF at
 `bridge.rb:146` followed the first RSpec failure, so they are cleanup symptoms.
 At the later EPIPE, Chrome remained alive and its fd 3/4 socket endpoints still
 matched the launch endpoints. The original pipe closure remains unexplained
-because the fd trace was only attached to bridge-process exit, not this first
-command failure. The next run attaches the existing fd-only trace summary at
-the first pipe error.
+because the previous run's fd trace was only attached to bridge-process exit,
+not this first command failure. The next run attaches the existing fd-only
+trace summary at the first pipe error.
+
+Run [36330866576](https://github.com/discourse/discourse/actions/runs/36330866576)
+at head `6bf28650107` captured that summary. Rust passed the one-example
+sample in 3.39s (4.09s RSpec load); Ruby failed in 2.25s (2.96s load). The
+closed-pipe error reported the JSON write stage, but the extracted failure did
+not retain a CDP method name and Chrome stderr had no diagnostic. Chrome was
+still alive, and its fd 3/4 sockets had shutdown calls in the descriptor trace;
+the Ruby reader EOF was recorded before the later write failure. This narrows
+the failure to the debug-pipe lifecycle but does not identify its initiating
+command. The screenshot/no-page errors followed the first RSpec failure. The
+next attempt emits a separate sanitized method/stage marker at the first
+EPIPE, without protocol payloads or request identifiers.
 
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now

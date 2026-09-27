@@ -194,9 +194,15 @@ class RubyCDPBridge
     @pending_mutex.synchronize { @pending.delete(id) } if id
     status = Process.waitpid2(@chrome_pid, Process::WNOHANG)&.last
     pipe_state = chrome_pipe_state
+    method = request.fetch("method").to_s
+    method = "other" unless method.match?(/\A[A-Za-z][A-Za-z0-9_.]*\z/)
+    diagnostic =
+      "NATIVE_CDP_RUBY_PIPE_WRITE_FAILURE method=#{method} stage=#{write_stage} " \
+        "chrome_alive=#{status.nil?}"
+    STDERR.puts(diagnostic) if ENV["NATIVE_CDP_RUBY_FD_TRACE"] == "1"
     raise IOError,
-          "Chromium closed CDP input while sending #{request.fetch("method")} " \
-            "stage=#{write_stage} chrome_alive=#{status.nil?}; #{pipe_state}"
+          "Chromium closed CDP input while sending #{method} " \
+            "stage=#{write_stage} chrome_alive=#{status.nil?}; #{diagnostic}; #{pipe_state}"
   rescue StandardError
     @pending_mutex.synchronize { @pending.delete(id) } if id
     raise
