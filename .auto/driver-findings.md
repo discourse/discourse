@@ -751,8 +751,30 @@ shows the About-page example slower in Ruby in both Ruby runs. The Core step
 used about 47.68 CPU-seconds over 50 elapsed seconds and peaked at 5,779.23
 MiB for the job/container; these are aggregate resources, not per bridge.
 
-The next run adds a safe parent-driver command profile around only the About
-page example. It records counts and elapsed time by command method, without
-capturing parameters or page data. This should identify whether `Driver.find`,
-`Driver.click`, or another command family accounts for the gap before we
-instrument the bridge's internal CDP calls.
+Run [36357519258](https://github.com/discourse/discourse/actions/runs/36357519258/job/108728079936)
+at head `ff28163e8b3` passed both examples in all four Ruby/Rust/Rust/Ruby
+invocations; [Linting passed](https://github.com/discourse/discourse/actions/runs/36357519271/job/108728079778).
+The About-page example took 10.61s and 8.10s in Ruby, compared with 3.97s and
+3.76s in Rust. The 500-call `Runtime.evaluate` medians were 100.329ms and
+106.172ms for Ruby, versus 135.886ms and 162.091ms for Rust. Ruby's medians
+averaged 103.251ms, 30.7% below Rust's 148.989ms, so simple CDP round trips do
+not explain Rust's faster About-page flow.
+
+The safe parent-driver profile recorded the same locator work in every run:
+79 `Driver.find` and 275 `Runtime.callFunctionOn` calls. Ruby's per-method totals
+varied substantially between runs (104–396ms for `Driver.find` and 162–645ms
+for `Runtime.callFunctionOn`), while Rust stayed near 122–134ms and 159–192ms.
+The profile includes system-test setup and teardown. In particular, reset's
+`Storage.clearDataForOrigin` call took 3.009s and 3.011s in Ruby, versus 86ms
+and 16ms in Rust. `Target.getTargets` took 377–410ms in Ruby and under 1ms in
+Rust. Ruby's first `Page.navigate` was a 3.316s outlier; the other three
+measurements were 1.446–1.461s. This suggests the gap is concentrated in
+browser-level commands and reset/setup behavior rather than locator count.
+Core consumed about 47.44 CPU-seconds over 51 elapsed seconds and peaked at
+6,021.19 MiB for the whole job/container; these are aggregate resources, not
+per-bridge measurements.
+
+The next run keeps the About-page flow and replaces the simple-call benchmark
+with three timed repeats each of `Storage.clearDataForOrigin` and
+`Target.getTargets`. This checks whether the two large command timings reproduce
+in isolation before tracing the Ruby and Rust transport readers further.

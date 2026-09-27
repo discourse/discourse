@@ -73,6 +73,42 @@ RSpec.describe NativeSystemDriver, type: :system do
   end
 end
 
+RSpec.describe NativeSystemDriver, type: :system do
+  it "round-trips repeated browser reset commands" do
+    visit "data:text/html;charset=utf-8,<title>storage-clear-benchmark</title>"
+    driver = page.driver
+
+    sample_count = 3
+    storage_clear_samples =
+      Array.new(sample_count) do
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        result = driver.command("Storage.clearDataForOrigin", { origin: "*", storageTypes: "all" })
+        elapsed_milliseconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000
+        expect(result).to eq({})
+        elapsed_milliseconds
+      end
+    target_listing_samples =
+      Array.new(sample_count) do
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        result = driver.command("Target.getTargets", {}, browser: true)
+        elapsed_milliseconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000
+        expect(result.fetch("targetInfos")).to be_an(Array)
+        elapsed_milliseconds
+      end
+
+    bridge = { "ruby" => "ruby", "rust" => "rust" }.fetch(ENV["NATIVE_CDP_BRIDGE_LABEL"], "unknown")
+    {
+      "Storage.clearDataForOrigin" => storage_clear_samples,
+      "Target.getTargets" => target_listing_samples,
+    }.each do |method, samples|
+      warn(
+        "NATIVE_CDP_RESET_COMMAND bridge=#{bridge} method=#{method} sample_count=#{sample_count} " \
+          "samples_ms=#{samples.map { |sample| format("%.3f", sample) }.join(",")}",
+      )
+    end
+  end
+end
+
 module NativeSystemDriverCommandProfiler
   PROFILE_THREAD_KEY = :native_system_driver_command_profile
 
