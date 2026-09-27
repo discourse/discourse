@@ -17,6 +17,7 @@ class RubyCDPBridge
     browser_socket, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
     child_input = chrome_socket.dup
     child_output = chrome_socket.dup
+    @child_endpoint_fds = [child_input.fileno, child_output.fileno]
     options = {
       in: File::NULL,
       out: File::NULL,
@@ -138,7 +139,14 @@ class RubyCDPBridge
     id
   rescue Errno::EPIPE
     @pending_mutex.synchronize { @pending.delete(id) } if id
-    raise IOError, "Chromium closed CDP input while sending #{request.fetch("method")}"
+    status = Process.waitpid2(@chrome_pid, Process::WNOHANG)&.last
+    state =
+      if status
+        "Chrome exited with status #{status.exitstatus || "signal #{status.termsig}"}"
+      else
+        "Chrome is still running"
+      end
+    raise IOError, "Chromium closed CDP input while sending #{request.fetch("method")}; #{state}; child endpoint fds #{@child_endpoint_fds.join(",")}"
   rescue StandardError
     @pending_mutex.synchronize { @pending.delete(id) } if id
     raise
