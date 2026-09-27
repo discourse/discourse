@@ -600,3 +600,18 @@ read returned an error, and its two shutdown calls preceded Ruby's later
 resolve the Ruby startup failure. The next probe retains only an allowlisted
 errno category and whether the first Chrome read error preceded or followed
 the first response. Raw syscall traces and timestamps remain unreported.
+
+Run [36351817677](https://github.com/discourse/discourse/actions/runs/36351817677)
+at head `e6e17336f8b` passed the Rust sample in 3.55s and failed the Ruby probe,
+so Ruby still has no valid performance timing. The new safe trace category is
+`EAGAIN`, with the first Chrome fd3 read error timestamped before Ruby received
+response one. Chromium retries `EINTR`, but treats other non-positive reads as
+a disconnected DevTools pipe and shuts both ends down ([pipe handler source](https://chromium.googlesource.com/chromium/src/+/main/content/browser/devtools/devtools_pipe_handler.cc)).
+A local Ruby 3.3 check found `O_NONBLOCK` set on newly created `IO.pipe`,
+`Socket.pair`, and `UNIXSocket.pair` endpoints; a spawned child inherits the
+flag, and clearing it on the child endpoint makes the inherited descriptor
+blocking. The Rust bridge creates a `UnixStream` pair without enabling
+nonblocking mode. This explains why both Ruby transports failed after one
+command while the Rust transport remained connected. The next focused run
+clears nonblocking mode only on the descriptors passed to Chrome and checks
+whether Ruby can complete the two-command probe.

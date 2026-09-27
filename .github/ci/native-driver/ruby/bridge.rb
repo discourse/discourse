@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
+require "io/nonblock"
 require "socket"
 require "thread"
 require "timeout"
@@ -34,6 +35,9 @@ class RubyCDPBridge
       chrome_output_endpoint = chrome_input_endpoint
       chrome_input_fd = chrome_socket.fileno
       chrome_output_fd = chrome_socket.fileno
+    end
+    [chrome_input_reader, chrome_output_writer, chrome_socket].compact.uniq.each do |endpoint|
+      endpoint.nonblock = false
     end
     @chrome_input_endpoint = chrome_input_endpoint
     @chrome_output_endpoint = chrome_output_endpoint
