@@ -96,10 +96,6 @@ module Migrations
         end
 
         def before(total_rows:)
-          # Everything the run adds gets an id above this one, which is how the
-          # `after` hook finds the topics it has to update.
-          @first_new_post_id = @discourse_db.last_id_of("posts") + 1
-
           PostNumbering.new(@intermediate_db).assign
 
           @maps = PlaceholderMaps.new(@intermediate_db, @discourse_db)
@@ -234,60 +230,7 @@ module Migrations
         def after(total_rows:)
           return if total_rows == 0
 
-          update_topic_statistics
           report_unresolved_embeds
-        end
-
-        # Only the topic columns a new post changes. User stats, post timings
-        # and post replies need the whole destination, so they stay with
-        # `rake import:ensure_consistency`.
-        def update_topic_statistics
-          DB.exec(<<~SQL, first_post_id: @first_new_post_id)
-            WITH touched AS (
-              SELECT DISTINCT topic_id
-              FROM posts
-              WHERE id >= :first_post_id
-            ),
-            public_posts AS (
-              SELECT posts.topic_id,
-                     MAX(posts.post_number) AS highest_post_number,
-                     COUNT(*) AS posts_count,
-                     MAX(posts.created_at) AS last_posted_at
-              FROM posts
-                   JOIN touched ON touched.topic_id = posts.topic_id
-              WHERE posts.deleted_at IS NULL AND #{Topic.public_post_types_sql}
-              GROUP BY posts.topic_id
-            ),
-            staff_posts AS (
-              SELECT posts.topic_id,
-                     MAX(posts.post_number) AS highest_staff_post_number
-              FROM posts
-                   JOIN touched ON touched.topic_id = posts.topic_id
-              WHERE posts.deleted_at IS NULL AND #{Topic.staff_post_types_sql}
-              GROUP BY posts.topic_id
-            ),
-            last_posters AS (
-              SELECT DISTINCT ON (posts.topic_id) posts.topic_id, posts.user_id
-              FROM posts
-                   JOIN touched ON touched.topic_id = posts.topic_id
-              WHERE posts.deleted_at IS NULL
-                AND NOT posts.hidden
-                AND #{Topic.public_post_types_sql}
-              ORDER BY posts.topic_id, posts.post_number DESC
-            )
-            UPDATE topics
-            SET highest_post_number = public_posts.highest_post_number,
-                highest_staff_post_number =
-                  COALESCE(staff_posts.highest_staff_post_number, public_posts.highest_post_number),
-                posts_count = public_posts.posts_count,
-                last_posted_at = public_posts.last_posted_at,
-                bumped_at = COALESCE(public_posts.last_posted_at, topics.bumped_at),
-                last_post_user_id = COALESCE(last_posters.user_id, topics.last_post_user_id)
-            FROM public_posts
-                 LEFT JOIN staff_posts ON staff_posts.topic_id = public_posts.topic_id
-                 LEFT JOIN last_posters ON last_posters.topic_id = public_posts.topic_id
-            WHERE topics.id = public_posts.topic_id
-          SQL
         end
 
         def report_unresolved_embeds

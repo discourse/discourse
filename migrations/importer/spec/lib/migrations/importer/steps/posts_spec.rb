@@ -220,22 +220,6 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
     expect(notices).not_to include(a_string_including("poll"))
   end
 
-  it "updates the counters of the topics it touched" do
-    create_source_post(1)
-    create_source_post(2)
-
-    execute_step
-
-    topic = destination_topic
-    last_post = destination_posts.last
-    expect(topic.posts_count).to eq(2)
-    expect(topic.highest_post_number).to eq(2)
-    expect(topic.highest_staff_post_number).to eq(2)
-    expect(topic.last_posted_at).to eq_time(last_post.created_at)
-    expect(topic.bumped_at).to eq_time(last_post.created_at)
-    expect(topic.last_post_user_id).to eq(user_id)
-  end
-
   it "copies nothing a second time" do
     create_source_post(1)
     execute_step
