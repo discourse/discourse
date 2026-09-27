@@ -150,11 +150,18 @@ class RubyCDPBridge
   rescue StandardError => error
     error_code = error.message.match(/code[=: ]+(-?\d+)/)&.captures&.first
     code = " code=#{error_code}" if error_code
+    chrome_state =
+      begin
+        Process.waitpid2(@chrome_pid, Process::WNOHANG) ? "exited" : "alive"
+      rescue Errno::ECHILD
+        "reaped"
+      end
     STDERR.puts(
       "NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=error " \
         "method=#{method} type=#{error.class} attempt=#{attempt} " \
         "stage=#{write_stage} json_written=#{json_bytes_written} " \
-        "delimiter_written=#{delimiter_bytes_written}#{code}",
+        "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state} " \
+        "at=#{Time.now.to_f}#{code}",
     )
   end
 

@@ -373,3 +373,14 @@ next commit moves their initialization to method scope and reruns the same
 transport experiment without changing its wire behavior. Linting still reports
 `syntax_tree` failures for the two modified Ruby files, but CI exposes only the
 paths and not the expected formatting.
+
+Run [36340441736](https://github.com/discourse/discourse/actions/runs/36340441736)
+at head `b5662d4114b` reran the probe with the rescue variables in method scope.
+Rust passed the focused example in 3.36s; Ruby failed in 2.14s. Its safe
+diagnostic was `Errno::EPIPE` on attempt 2 at the JSON write, with zero JSON
+bytes and zero delimiter bytes written. Thus the peer had closed its read end
+before Ruby began the second request; aligning Ruby's original/cloned socket
+roles with Rust did not prevent it. Ruby syntax and Linting passed. The next
+run records whether Chrome had exited and compares Chrome's pipe-shutdown
+timestamp with Ruby's failed-write time, distinguishing browser-side closure
+from shutdown during test cleanup.

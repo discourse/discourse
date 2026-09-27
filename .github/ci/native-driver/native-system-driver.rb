@@ -759,13 +759,13 @@ class NativeSystemDriver < Capybara::Driver::Base
             end
             sync_pipe_probe_state =
               sync_pipe_probe&.scan(
-                /(result|type|attempt|stage|json_written|delimiter_written|code)=([\w:.-]+)/,
+                /(result|type|attempt|stage|json_written|delimiter_written|chrome_state|at|code)=([\w:.-]+)/,
               )&.to_h
             sync_pipe_probe_result = "not_run"
             if sync_pipe_probe_state
               sync_pipe_probe_result =
                 sync_pipe_probe_state.values_at("result", "type").compact.join(":")
-              %w[attempt stage json_written delimiter_written code].each do |key|
+              %w[attempt stage json_written delimiter_written chrome_state at code].each do |key|
                 value = sync_pipe_probe_state[key]
                 sync_pipe_probe_result += ":#{key}=#{value}" if value
               end
@@ -859,6 +859,11 @@ class NativeSystemDriver < Capybara::Driver::Base
 
     ruby_pid, chrome_pid, reader_fd, writer_fd = match.captures.map(&:to_i)
     processes = { "ruby" => [ruby_pid, [reader_fd, writer_fd]], "chrome" => [chrome_pid, [3, 4]] }
+    sync_pipe_probe = @errors.find do |line|
+      line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ")
+    end
+    probe_error_at = sync_pipe_probe&.match(/result=error .* at=([0-9.]+)/)&.captures&.first&.to_f
+    chrome_shutdown_at = nil
     trace_prefix = File.join(@fd_trace_directory, "trace")
     summaries = processes.map do |name, (pid, descriptors)|
       trace_file = "#{trace_prefix}.#{pid}"
@@ -866,6 +871,13 @@ class NativeSystemDriver < Capybara::Driver::Base
 
       operations = Hash.new(0)
       File.foreach(trace_file) do |line|
+        if name == "chrome"
+          shutdown = line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+-?\d+/)
+          if shutdown && descriptors.include?(shutdown[2].split(",").first.to_i)
+            timestamp = shutdown[1].to_f
+            chrome_shutdown_at = [chrome_shutdown_at, timestamp].compact.min
+          end
+        end
         operation =
           line.match(/\b(close_range|shutdown|dup2|dup3|dup|fcntl|close)\(([^)]*)\)\s+=\s+(-?\d+)/)
         next unless operation
@@ -903,7 +915,13 @@ class NativeSystemDriver < Capybara::Driver::Base
       "#{name}[fds=#{descriptors.join(",")}]{#{detail_summary}}"
     end
 
-    summaries.join(";")
+    chrome_shutdown_order =
+      if chrome_shutdown_at && probe_error_at
+        chrome_shutdown_at <= probe_error_at ? "before_probe_error" : "after_probe_error"
+      else
+        "unknown"
+      end
+    "#{summaries.join(";")};chrome_shutdown_#{chrome_shutdown_order}"
   rescue StandardError
     "unavailable"
   end
