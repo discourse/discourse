@@ -24,6 +24,7 @@ class RubyCDPBridge
       err: STDERR,
       3 => child_input.fileno,
       4 => child_output.fileno,
+      close_others: true,
       pgroup: true,
     }
     begin
