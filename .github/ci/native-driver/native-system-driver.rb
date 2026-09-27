@@ -707,7 +707,9 @@ class NativeSystemDriver < Capybara::Driver::Base
           "-ttt",
           "-qq",
           "-e",
-          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl",
+          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl,write,writev,sendto,sendmsg",
+          "-e",
+          "raw=write,writev,sendto,sendmsg",
           "-o",
           File.join(@fd_trace_directory, "trace"),
           "--",
@@ -759,13 +761,13 @@ class NativeSystemDriver < Capybara::Driver::Base
             end
             sync_pipe_probe_state =
               sync_pipe_probe&.scan(
-                /(result|type|attempt|stage|json_written|delimiter_written|chrome_state|at|code)=([\w:.-]+)/,
+                /(result|type|attempt|stage|json_written|delimiter_written|chrome_state|code)=([\w:.-]+)/,
               )&.to_h
             sync_pipe_probe_result = "not_run"
             if sync_pipe_probe_state
               sync_pipe_probe_result =
                 sync_pipe_probe_state.values_at("result", "type").compact.join(":")
-              %w[attempt stage json_written delimiter_written chrome_state at code].each do |key|
+              %w[attempt stage json_written delimiter_written chrome_state code].each do |key|
                 value = sync_pipe_probe_state[key]
                 sync_pipe_probe_result += ":#{key}=#{value}" if value
               end
@@ -859,10 +861,7 @@ class NativeSystemDriver < Capybara::Driver::Base
 
     ruby_pid, chrome_pid, reader_fd, writer_fd = match.captures.map(&:to_i)
     processes = { "ruby" => [ruby_pid, [reader_fd, writer_fd]], "chrome" => [chrome_pid, [3, 4]] }
-    sync_pipe_probe = @errors.find do |line|
-      line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ")
-    end
-    probe_error_at = sync_pipe_probe&.match(/result=error .* at=([0-9.]+)/)&.captures&.first&.to_f
+    ruby_write_epipe_at = nil
     chrome_shutdown_at = nil
     trace_prefix = File.join(@fd_trace_directory, "trace")
     summaries = processes.map do |name, (pid, descriptors)|
@@ -871,6 +870,16 @@ class NativeSystemDriver < Capybara::Driver::Base
 
       operations = Hash.new(0)
       File.foreach(trace_file) do |line|
+        if name == "ruby"
+          write_error =
+            line.match(
+              /\A\s*([0-9.]+)\s+(?:write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+-1\s+EPIPE\b/,
+            )
+          if write_error && Integer(write_error[2].split(",").first.strip, 0) == writer_fd
+            timestamp = write_error[1].to_f
+            ruby_write_epipe_at = [ruby_write_epipe_at, timestamp].compact.min
+          end
+        end
         if name == "chrome"
           shutdown = line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+-?\d+/)
           if shutdown && descriptors.include?(shutdown[2].split(",").first.to_i)
@@ -916,8 +925,8 @@ class NativeSystemDriver < Capybara::Driver::Base
     end
 
     chrome_shutdown_order =
-      if chrome_shutdown_at && probe_error_at
-        chrome_shutdown_at <= probe_error_at ? "before_probe_error" : "after_probe_error"
+      if chrome_shutdown_at && ruby_write_epipe_at
+        chrome_shutdown_at <= ruby_write_epipe_at ? "before_ruby_epipe" : "after_ruby_epipe"
       else
         "unknown"
       end

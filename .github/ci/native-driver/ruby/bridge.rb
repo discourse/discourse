@@ -160,8 +160,7 @@ class RubyCDPBridge
       "NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=error " \
         "method=#{method} type=#{error.class} attempt=#{attempt} " \
         "stage=#{write_stage} json_written=#{json_bytes_written} " \
-        "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state} " \
-        "at=#{Time.now.to_f}#{code}",
+        "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state}#{code}",
     )
   end
 

@@ -384,3 +384,13 @@ roles with Rust did not prevent it. Ruby syntax and Linting passed. The next
 run records whether Chrome had exited and compares Chrome's pipe-shutdown
 timestamp with Ruby's failed-write time, distinguishing browser-side closure
 from shutdown during test cleanup.
+
+Run [36341041478](https://github.com/discourse/discourse/actions/runs/36341041478)
+at head `95dd9d0180a` found Chrome still alive when Ruby caught the second-write
+`EPIPE`; Chrome had shut down its pipe before the diagnostic marker was
+written. That ordering is suggestive but not conclusive because the marker is
+emitted after the failed syscall. The next run traces only outgoing write
+syscalls in raw-argument mode, so the local trace does not record protocol
+contents; the reducer compares the exact `EPIPE` syscall time with Chrome's
+shutdown time and publishes only which came first. Linting again failed at
+`syntax_tree` without line-level formatting output.
