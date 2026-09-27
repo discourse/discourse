@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
+require "socket"
 require "thread"
 
 class RubyCDPBridge
@@ -13,10 +14,9 @@ class RubyCDPBridge
     @requests = Queue.new
     @drags = Queue.new
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
-    chrome_to_driver_read, chrome_to_driver_write = IO.pipe
-    driver_to_chrome_read, driver_to_chrome_write = IO.pipe
-    child_input = driver_to_chrome_read.dup
-    child_output = chrome_to_driver_write.dup
+    browser_socket, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
+    child_input = chrome_socket.dup
+    child_output = chrome_socket.dup
     options = {
       in: File::NULL,
       out: File::NULL,
@@ -30,11 +30,9 @@ class RubyCDPBridge
     ensure
       child_input.close
       child_output.close
-      driver_to_chrome_read.close
-      chrome_to_driver_write.close
+      chrome_socket.close
     end
-    @browser_input = driver_to_chrome_write
-    @browser_output = chrome_to_driver_read
+    @browser_socket = browser_socket
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
   end
@@ -51,8 +49,7 @@ class RubyCDPBridge
   ensure
     @requests.close
     @worker&.join
-    @browser_input&.close
-    @browser_output&.close
+    @browser_socket&.close
     begin
       Process.kill("TERM", -@chrome_pid)
     rescue Errno::ESRCH
@@ -82,7 +79,7 @@ class RubyCDPBridge
   end
 
   def read_browser
-    while message = @browser_output.gets("\0")
+    while message = @browser_socket.gets("\0")
       response = JSON.parse(message.delete_suffix("\0"))
       if response.key?("id")
         pending = @pending_mutex.synchronize { @pending.delete(response.fetch("id")) }
@@ -134,9 +131,9 @@ class RubyCDPBridge
       end
     request = request.merge("id" => id)
     @write_mutex.synchronize do
-      @browser_input.write(JSON.generate(request))
-      @browser_input.write("\0")
-      @browser_input.flush
+      @browser_socket.write(JSON.generate(request))
+      @browser_socket.write("\0")
+      @browser_socket.flush
     end
     id
   rescue Errno::EPIPE
