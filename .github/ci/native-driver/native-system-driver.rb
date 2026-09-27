@@ -758,11 +758,18 @@ class NativeSystemDriver < Capybara::Driver::Base
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ")
             end
             sync_pipe_probe_state =
-              sync_pipe_probe&.match(
-                /result=(pass|error)(?: method=[A-Za-z0-9_.]+)?(?: type=(\w+))?(?: code=(-?\d+))?\b/,
-              )
-            sync_pipe_probe_result =
-              sync_pipe_probe_state&.captures&.compact&.join(":") || "not_run"
+              sync_pipe_probe&.scan(
+                /(result|type|attempt|stage|json_written|delimiter_written|code)=([\w:.-]+)/,
+              )&.to_h
+            sync_pipe_probe_result = "not_run"
+            if sync_pipe_probe_state
+              sync_pipe_probe_result =
+                sync_pipe_probe_state.values_at("result", "type").compact.join(":")
+              %w[attempt stage json_written delimiter_written code].each do |key|
+                value = sync_pipe_probe_state[key]
+                sync_pipe_probe_result += ":#{key}=#{value}" if value
+              end
+            end
             reader_exit = @errors.find do |line|
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
             end

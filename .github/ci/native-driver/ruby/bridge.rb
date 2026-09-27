@@ -54,8 +54,8 @@ class RubyCDPBridge
     ensure
       chrome_socket.close
     end
-    @browser_reader = browser_reader
-    @browser_writer = @browser_reader.dup
+    @browser_writer = browser_reader
+    @browser_reader = @browser_writer.dup
     @browser_writer_endpoint =
       begin
         File.readlink("/proc/self/fd/#{@browser_writer.fileno}")
@@ -103,14 +103,27 @@ class RubyCDPBridge
 
   def probe_synchronous_browser_pipe
     method = "Target.getTargets"
+    attempt = 0
     2.times do
+      attempt += 1
+      write_stage = "json"
+      json_bytes_written = 0
+      delimiter_bytes_written = 0
       @sequence += 1
       id = @sequence
       request = { "id" => id, "method" => method, "params" => {} }
+      payload = JSON.generate(request)
       record_protocol_event("send-internal", method)
-      @browser_writer.write(JSON.generate(request))
-      @browser_writer.write("\0")
+      json_bytes_written = @browser_writer.write(payload)
+      write_stage = "delimiter"
+      delimiter_bytes_written = @browser_writer.write("\0")
       @browser_writer.flush
+      STDERR.puts(
+        "NATIVE_CDP_RUBY_SYNC_PIPE_WRITE attempt=#{attempt} " \
+          "payload_bytes=#{payload.bytesize} json_written=#{json_bytes_written} " \
+          "delimiter_written=#{delimiter_bytes_written}",
+      )
+      write_stage = "read"
       response = nil
       Timeout.timeout(10) do
         while message = @browser_reader.gets("\0")
@@ -136,7 +149,9 @@ class RubyCDPBridge
     code = " code=#{error_code}" if error_code
     STDERR.puts(
       "NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=error " \
-        "method=#{method} type=#{error.class}#{code}",
+        "method=#{method} type=#{error.class} attempt=#{attempt} " \
+        "stage=#{write_stage} json_written=#{json_bytes_written} " \
+        "delimiter_written=#{delimiter_bytes_written}#{code}",
     )
   end
 

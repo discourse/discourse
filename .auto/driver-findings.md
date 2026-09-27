@@ -346,3 +346,17 @@ two synchronous Ruby request/response cycles before starting the reader and
 worker threads. If that succeeds, it isolates the failure to the threaded Ruby
 transport path; if it fails, the problem remains in the Ruby wire or browser
 launch path.
+
+Run [36338911261](https://github.com/discourse/discourse/actions/runs/36338911261)
+at head `6317959c7c8` ran those two synchronous Ruby calls before starting any
+threads. Ruby syntax passed; Rust passed the focused example in 3.47s, while
+Ruby failed in 2.27s. The Ruby sequence was internal `Target.getTargets`
+send/response, a second internal send with no response, then a forwarded send
+with no response. This rules out the Ruby reader thread and response queue as
+the trigger, and the repeated method rules out a method-specific issue. The
+reported synchronous probe error was an `Errno` failure, but its stage and
+fully qualified error class were not retained, so this run cannot yet tell
+whether the second JSON write, delimiter write, or response read failed. The
+next run aligns Ruby's original/duplicated socket roles with Rust's original
+writer and cloned reader, and records only write byte counts, attempt number,
+stage, and exception class.
