@@ -178,8 +178,19 @@ rescue at `ruby/bridge.rb:205`, while Chrome was still alive; the parent
 output-reader error marker was absent. The CI extraction did not retain the
 failed CDP method or pipe-state booleans, so the failed command remains unknown.
 The next run maps one Ruby socket descriptor to both Chrome pipe fds, matching
-the Rust launch setup more closely, and emits the method, write stage, and
-sanitized descriptor state in one flushed marker.
+the Rust launch setup more closely, and attempts to emit the method, write
+stage, and sanitized descriptor state in a dedicated marker.
+
+Run [36328236106](https://github.com/discourse/discourse/actions/runs/36328236106)
+used that fd mapping and isolated the same one-example sample. Rust passed in
+3.34s; Ruby failed in 2.10s at the bridge's EPIPE rescue while Chrome's pipe
+reader thread was already stopped. The CI summary identified the first write
+stage as JSON, but did not retain the dedicated pipe-write or reader-exit
+markers or the Chrome fd booleans. This still gives no Ruby performance result
+and does not explain why Chrome closed its endpoint. The next change puts the
+safe method, write stage, Chrome-alive flag, and reader-exit class/frame into
+the generic bridge failure record, which CI did capture, and omits the request
+ID from that diagnostic.
 
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now

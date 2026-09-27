@@ -742,6 +742,10 @@ class NativeSystemDriver < Capybara::Driver::Base
               @errors.index do |line|
                 line.start_with?("NATIVE_CDP_RUBY_BRIDGE_PIPE_WRITE_FAILURE ")
               end
+            write_failure_index ||= @errors.index do |line|
+              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_FAILURE ") &&
+                line.include?("Chromium closed CDP input while sending ")
+            end
             write_failure =
               write_failure_index && @errors.fetch(write_failure_index)
             write_stage =
@@ -756,7 +760,10 @@ class NativeSystemDriver < Capybara::Driver::Base
             reader_exit = @errors.find do |line|
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
             end
-            reader_exit_type = reader_exit&.match(/type=(\w+)/)&.captures&.first || "not_observed"
+            reader_exit_type =
+              reader_exit&.match(/type=(\w+)/)&.captures&.first ||
+                write_failure&.match(/ruby_reader_exit=([^ ]+)/)&.captures&.first ||
+                "not_observed"
             reader_exit_index = @errors.index do |line|
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
             end

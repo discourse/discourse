@@ -9,6 +9,8 @@ class RubyCDPBridge
     @output_mutex = Mutex.new
     @pending_mutex = Mutex.new
     @write_mutex = Mutex.new
+    @reader_exit_mutex = Mutex.new
+    @reader_exit = nil
     @sequence = 0
     @pending = {}
     @requests = Queue.new
@@ -143,7 +145,9 @@ class RubyCDPBridge
     end
     raise IOError, "Chromium CDP pipe closed"
   rescue StandardError => error
-    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT type=#{error.class}")
+    frame = error.backtrace&.first&.match(%r{([^/]+\.rb:\d+)})&.captures&.first || "unknown"
+    @reader_exit_mutex.synchronize { @reader_exit = "#{error.class}:#{frame}" }
+    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT type=#{error.class} frame=#{frame}")
     pending = @pending_mutex.synchronize do
       items = @pending.values
       @pending.clear
@@ -189,21 +193,10 @@ class RubyCDPBridge
   rescue Errno::EPIPE
     @pending_mutex.synchronize { @pending.delete(id) } if id
     status = Process.waitpid2(@chrome_pid, Process::WNOHANG)&.last
-    state =
-      if status
-        "Chrome exited with status #{status.exitstatus || "signal #{status.termsig}"}"
-      else
-        "Chrome is still running"
-      end
     pipe_state = chrome_pipe_state
-    STDERR.puts(
-      "NATIVE_CDP_RUBY_BRIDGE_PIPE_WRITE_FAILURE method=#{request.fetch("method")} " \
-        "stage=#{write_stage} chrome_alive=#{status.nil?} #{pipe_state}",
-    )
-    STDERR.flush
     raise IOError,
-          "Chromium closed CDP input while sending #{request.fetch("method")} id=#{id} " \
-            "recipient=#{external_id ? "external" : "internal"}; #{state}; #{pipe_state}"
+          "Chromium closed CDP input while sending #{request.fetch("method")} " \
+            "stage=#{write_stage} chrome_alive=#{status.nil?}; #{pipe_state}"
   rescue StandardError
     @pending_mutex.synchronize { @pending.delete(id) } if id
     raise
@@ -211,6 +204,7 @@ class RubyCDPBridge
 
   def chrome_pipe_state
     links = [3, 4].map { |fd| process_fd_link(@chrome_pid, fd) }
+    reader_exit = @reader_exit_mutex.synchronize { @reader_exit || "not_observed" }
     browser_link =
       begin
         File.readlink("/proc/self/fd/#{@browser_reader.fileno}")
@@ -240,6 +234,7 @@ class RubyCDPBridge
       "matches_output=#{links[1] && links[1] == @chrome_output_endpoint} " \
       "browser_writer_open=#{!@browser_writer.closed?} " \
       "ruby_reader_alive=#{@reader&.alive?} " \
+      "ruby_reader_exit=#{reader_exit} " \
       "browser_writer_access=#{process_fd_access(Process.pid, @browser_writer.fileno)} " \
       "browser_writer_matches_endpoint=#{process_fd_link(Process.pid, @browser_writer.fileno) == @browser_writer_endpoint} " \
       "browser_reader=#{browser_link && browser_link.start_with?("socket:") ? "socket" : "other"}"
@@ -1132,7 +1127,10 @@ begin
   RubyCDPBridge.new(arguments).run
 rescue StandardError => error
   STDERR.sync = true
-  detail = error.message if error.is_a?(IOError) && error.message.start_with?("Chromium closed CDP input while sending ")
+  detail =
+    if error.is_a?(IOError) && error.message.start_with?("Chromium closed CDP input while sending ")
+      error.message
+    end
   STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_FAILURE #{error.class} #{detail} at #{error.backtrace&.first}")
   exit 1
 end
