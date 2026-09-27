@@ -33,9 +33,6 @@ class NativeSystemDriver < Capybara::Driver::Base
     @owned_contexts = []
     @sequence = 0
     @command_mutex = Mutex.new
-    @start_mutex = Mutex.new
-    @started = false
-    @starting_thread = nil
     @cdp_sessions = []
     at_exit { quit }
   end
@@ -271,7 +268,7 @@ class NativeSystemDriver < Capybara::Driver::Base
   end
 
   def command(method, params = {}, browser: false, session: nil)
-    start unless @started || @starting_thread == Thread.current
+    start unless @input
     raise NoSuchWindowError, "No active page for #{method}" unless browser || session || @page
     responses = Queue.new
     id =
@@ -675,7 +672,6 @@ class NativeSystemDriver < Capybara::Driver::Base
     @error_reader.join
     @output_reader.join
     @input = nil
-    @started = false
     FileUtils.remove_entry(@profile)
   ensure
     if @fd_trace_directory && File.directory?(@fd_trace_directory)
@@ -684,28 +680,7 @@ class NativeSystemDriver < Capybara::Driver::Base
   end
 
   def start
-    return if @started || @starting_thread == Thread.current
-    unless @start_mutex.try_lock
-      warn("NATIVE_CDP_RUBY_START_WAITED_FOR_INITIALIZATION=1") if
-        ENV["NATIVE_CDP_RUBY_START_OVERLAP"] == "1"
-      @start_mutex.synchronize {}
-      return if @started
-      return start
-    end
-    @starting_thread = Thread.current
-    begin
-      raise @transport_error if @input && @transport_error
-      raise "Native browser startup did not complete" if @input
-      start_browser
-      @started = true
-    ensure
-      @starting_thread = nil
-      @start_mutex.unlock
-    end
-  end
-
-  def start_browser
-    return if @started
+    return if @input
     @pages_by_target.clear
     @pages_by_session.clear
     @owned_contexts.clear
@@ -783,7 +758,9 @@ class NativeSystemDriver < Capybara::Driver::Base
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE ")
             end
             threaded_pipe_probe_state =
-              threaded_pipe_probe&.match(/result=(pass|error)(?: type=(\w+))?(?: code=(-?\d+))?\b/)
+              threaded_pipe_probe&.match(
+                /result=(pass|error)(?: method=[A-Za-z0-9_.]+)?(?: type=(\w+))?(?: code=(-?\d+))?\b/,
+              )
             threaded_pipe_probe_result =
               threaded_pipe_probe_state&.captures&.compact&.join(":") || "not_run"
             reader_exit = @errors.find do |line|

@@ -267,16 +267,26 @@ Run [36334148081](https://github.com/discourse/discourse/actions/runs/3633414808
 at head `b542a46989b` tested that atomic submit. Ruby syntax passed. Rust
 passed the sample in 3.29s (4.20s RSpec load); Ruby failed in 1.25s (2.99s
 load). Ruby still emitted two forwarded `Target.getTargets` sends without a
-response before EPIPE, so atomic submit did not resolve the failure. This is
-consistent with a second browser command arriving before startup completes:
-`command` currently skips `start` as soon as `Open3.popen3` assigns `@input`,
-though page initialization continues afterward. The next run gates commands
-until initialization finishes and emits a safe marker if another thread waits
-on startup.
+response before EPIPE, so atomic submit did not resolve the failure. The next
+run added an initialization wait gate and marker to check whether another
+browser command was arriving before startup finished.
 
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
-receiving only one response. They have been removed so the focused sample now
-uses only one threaded probe. Until Ruby passes the same focused system-test
+receiving only one response. Until Ruby passes the same focused system-test
 sample, there is no Ruby performance measurement and Rust remains the only
 measured direct-CDP bridge. Firefox remains a functional compatibility check;
 Safari will not be tested.
+
+Run [36334731221](https://github.com/discourse/discourse/actions/runs/36334731221)
+at head `6764eab6ef6` tested the startup wait gate. Ruby syntax passed; Rust
+passed the one-example sample in 3.31s (3.95s RSpec load), while Ruby failed in
+1.35s (2.93s load). The wait marker was absent, so the sample did not exercise
+the gate, and the same internal `Target.getTargetInfo` write still failed
+after a forwarded `Target.getTargets` response. The Ruby reader saw EOF before
+the failed write even though its writer remained open; Chrome fd3/fd4 were
+read-write sockets matching the spawned endpoints. This disproves startup
+overlap as the cause for this failure. The next run removes the gate and adds
+matched two-command `Target.getTargets` → `Target.getTargetInfo` probes to the
+Rust and Ruby bridges. That distinguishes Ruby's consecutive internal calls
+from the Capybara-forwarded startup sequence. No Ruby performance measurement
+is available yet.

@@ -37,21 +37,36 @@ fn main() -> io::Result<()> {
     let output = Arc::new(Mutex::new(io::stdout()));
     let mut protocol = protocol::Protocol::new(connection, output.clone())?;
     if std::env::var_os("NATIVE_CDP_RUST_BRIDGE_SELF_PROBE").is_some() {
-        let probe_result = protocol.call("Target.getTargets", json!({}), None).and_then(|result| {
-            if result["targetInfos"].is_array() {
-                Ok(())
-            } else {
-                Err(io::Error::other("Invalid Rust CDP pipe probe response"))
+        let mut page_target_present = false;
+        let mut probe_method = "Target.getTargets";
+        let probe_result = (|| -> io::Result<()> {
+            let result = protocol.call("Target.getTargets", json!({}), None)?;
+            let target_id = result["targetInfos"]
+                .as_array()
+                .and_then(|targets| targets.iter().find(|target| target["type"] == "page"))
+                .and_then(|target| target["targetId"].as_str());
+            if let Some(target_id) = target_id {
+                probe_method = "Target.getTargetInfo";
+                protocol.call(probe_method, json!({"targetId": target_id}), None)?;
+                page_target_present = true;
             }
-        });
-        if let Err(error) = probe_result {
+            Ok(())
+        })();
+        if probe_result.is_err() {
+            eprintln!("NATIVE_CDP_RUST_BRIDGE_SELF_PROBE result=error method={probe_method}");
             unsafe {
                 libc::kill(-(browser.id() as i32), libc::SIGTERM);
             }
             let _ = browser.wait();
-            return Err(error);
+            return Err(io::Error::other(format!(
+                "Rust CDP self probe failed at {probe_method}"
+            )));
         }
-        eprintln!("NATIVE_CDP_RUST_BRIDGE_SELF_PROBE result=pass");
+        eprintln!(
+            "NATIVE_CDP_RUST_BRIDGE_SELF_PROBE result=pass commands={} page_target={}",
+            if page_target_present { 2 } else { 1 },
+            if page_target_present { "present" } else { "absent" }
+        );
     }
     let transport = protocol.transport();
     let (sender, requests) = std::sync::mpsc::channel::<Value>();

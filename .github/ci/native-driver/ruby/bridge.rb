@@ -101,16 +101,26 @@ class RubyCDPBridge
   private
 
   def probe_threaded_browser_pipe
+    probe_method = "Target.getTargets"
     result = call("Target.getTargets")
     unless result["targetInfos"].is_a?(Array)
       raise IOError, "Invalid threaded Chromium pipe probe response"
     end
-    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=pass")
+    target = result["targetInfos"].find { |info| info["type"] == "page" }
+    if target
+      probe_method = "Target.getTargetInfo"
+      call(probe_method, { "targetId" => target.fetch("targetId") })
+    end
+    STDERR.puts(
+      "NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=pass " \
+        "commands=#{target ? 2 : 1} page_target=#{target ? "present" : "absent"}",
+    )
   rescue StandardError => error
     error_code = error.message.match(/"code":\s*(-?\d+)/)&.captures&.first
     code = " code=#{error_code}" if error_code
     STDERR.puts(
-      "NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=error type=#{error.class}#{code}",
+      "NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=error " \
+        "method=#{probe_method} type=#{error.class}#{code}",
     )
   end
 
