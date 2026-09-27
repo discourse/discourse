@@ -714,14 +714,31 @@ class NativeSystemDriver < Capybara::Driver::Base
           @error_reader.join(0.1)
           diagnostic = @errors.find { |line| line.start_with?("NATIVE_CDP_RUBY_BRIDGE_FAILURE ") }
           if diagnostic
-            chrome_closed_pipe_reader =
-              @errors.any? { |line| line.include?("Connection terminated while reading from pipe") }
-            chrome_pipe_write_failed =
-              @errors.any? { |line| line.include?("Could not write into pipe") }
-            @transport_error ||=
-              RuntimeError.new(
-                "#{diagnostic.strip}; chrome_pipe_reader_eof=#{chrome_closed_pipe_reader} chrome_pipe_write_failed=#{chrome_pipe_write_failed}",
-              )
+            write_failure_index =
+              @errors.index do |line|
+                line.start_with?("NATIVE_CDP_RUBY_BRIDGE_PIPE_WRITE_FAILURE ")
+              end
+            chrome_reader_eof_index =
+              @errors.index { |line| line.include?("Connection terminated while reading from pipe") }
+            chrome_pipe_writer_error_index =
+              @errors.index { |line| line.include?("Could not write into pipe") }
+            chrome_reader_eof_before_write_failure =
+              if write_failure_index && chrome_reader_eof_index
+                chrome_reader_eof_index < write_failure_index
+              else
+                "unknown"
+              end
+            chrome_writer_error_before_write_failure =
+              if write_failure_index && chrome_pipe_writer_error_index
+                chrome_pipe_writer_error_index < write_failure_index
+              else
+                "unknown"
+              end
+            diagnostic_message =
+              "#{diagnostic.strip}; " \
+                "chrome_pipe_reader_eof_before_ruby_write=#{chrome_reader_eof_before_write_failure} " \
+                "chrome_pipe_writer_error_before_ruby_write=#{chrome_writer_error_before_write_failure}"
+            @transport_error ||= RuntimeError.new(diagnostic_message)
           end
         end
         @command_mutex.synchronize do

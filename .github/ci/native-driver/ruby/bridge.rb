@@ -133,14 +133,19 @@ class RubyCDPBridge
         @sequence
       end
     request = request.merge("id" => id)
+    write_stage = "json"
     @write_mutex.synchronize do
       @browser_writer.write(JSON.generate(request))
+      write_stage = "delimiter"
       @browser_writer.write("\0")
       @browser_writer.flush
     end
     id
   rescue Errno::EPIPE
     @pending_mutex.synchronize { @pending.delete(id) } if id
+    STDERR.puts(
+      "NATIVE_CDP_RUBY_BRIDGE_PIPE_WRITE_FAILURE method=#{request.fetch("method")} stage=#{write_stage}",
+    )
     status = Process.waitpid2(@chrome_pid, Process::WNOHANG)&.last
     state =
       if status
