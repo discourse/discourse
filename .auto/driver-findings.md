@@ -192,6 +192,17 @@ safe method, write stage, Chrome-alive flag, and reader-exit class/frame into
 the generic bridge failure record, which CI did capture, and omits the request
 ID from that diagnostic.
 
+Run [36329344348](https://github.com/discourse/discourse/actions/runs/36329344348)
+captured those fields. Rust passed the one-example sample in 3.36s; Ruby failed
+in 2.24s when `target.click` surfaced a `RuntimeError` categorized as a closed
+browser pipe. The later `Page.captureScreenshot` no-page error and reader EOF at
+`bridge.rb:146` followed the first RSpec failure, so they are cleanup symptoms.
+At the later EPIPE, Chrome remained alive and its fd 3/4 socket endpoints still
+matched the launch endpoints. The original pipe closure remains unexplained
+because the fd trace was only attached to bridge-process exit, not this first
+command failure. The next run attaches the existing fd-only trace summary at
+the first pipe error.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
 uses only one threaded probe. Until Ruby passes the same focused system-test

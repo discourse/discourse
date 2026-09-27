@@ -291,6 +291,10 @@ class NativeSystemDriver < Capybara::Driver::Base
     raise "Native response ID mismatch" unless response["id"] == id
     if error = response["error"]
       message = "#{method}: #{error.to_json}"
+      if @fd_trace_directory &&
+           error["message"]&.start_with?("Chromium closed CDP input while sending ")
+        message = "#{message}; ruby_fd_trace=#{ruby_fd_trace_summary}"
+      end
       if message.match?(
            /NativeStaleElement|Node is detached from document|Cannot find context|Could not find object|Cannot find object|Execution context was destroyed/,
          )
