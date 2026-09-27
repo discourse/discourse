@@ -721,14 +721,26 @@ class NativeSystemDriver < Capybara::Driver::Base
           @pending_commands.clear
         end
       end
-    command("Target.getTargets", {}, browser: true)
-      .fetch("targetInfos")
-      .each do |target|
-        if target["type"] == "page"
-          command("Target.closeTarget", { targetId: target.fetch("targetId") }, browser: true)
-        end
+    targets =
+      command("Target.getTargets", {}, browser: true)
+        .fetch("targetInfos")
+        .select { |target| target["type"] == "page" }
+    target = targets.shift
+    if target
+      page =
+        command(
+          "Driver.attachPage",
+          { targetId: target.fetch("targetId") },
+          browser: true,
+        )
+      initialize_page(page)
+      @primary_target = @page.target
+      targets.each do |other_target|
+        command("Target.closeTarget", { targetId: other_target.fetch("targetId") }, browser: true)
       end
-    create_page
+    else
+      create_page
+    end
   end
 
   def create_page(context_id: nil)
