@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Migrations::Tooling::Schema.table :topics do
-  add_column :existing_id, :numeric
+  add_column :existing_id, :integer
 
   index :archetype
   index :slug

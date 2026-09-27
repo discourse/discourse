@@ -53,7 +53,7 @@ module Migrations
         # @param created_at             [Time, nil]
         # @param deleted_at             [Time, nil]
         # @param deleted_by_id          [Integer, String, nil]
-        # @param existing_id            [Integer, String, nil]
+        # @param existing_id            [Integer, nil]
         # @param external_id            [Integer, String, nil]
         # @param featured_link          [String, nil]
         # @param locale                 [String, nil]
