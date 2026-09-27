@@ -64,6 +64,7 @@ class RubyCDPBridge
     probe_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
+    probe_threaded_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
   end
 
   def run
@@ -132,6 +133,14 @@ class RubyCDPBridge
       )
       raise
     end
+  end
+
+  def probe_threaded_browser_pipe
+    result = call("Target.getTargets")
+    raise IOError, "Invalid threaded Chromium pipe probe response" unless result["targetInfos"].is_a?(Array)
+    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=pass")
+  rescue StandardError => error
+    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=error type=#{error.class}")
   end
 
   def process_requests
