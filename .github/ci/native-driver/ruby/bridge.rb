@@ -17,7 +17,6 @@ class RubyCDPBridge
     browser_socket, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
     child_input = chrome_socket.dup
     child_output = chrome_socket.dup
-    @child_endpoint_fds = [child_input.fileno, child_output.fileno]
     options = {
       in: File::NULL,
       out: File::NULL,
@@ -149,10 +148,34 @@ class RubyCDPBridge
       else
         "Chrome is still running"
       end
-    raise IOError, "Chromium closed CDP input while sending #{request.fetch("method")}; #{state}; child endpoint fds #{@child_endpoint_fds.join(",")}"
+    raise IOError,
+          "Chromium closed CDP input while sending #{request.fetch("method")}; #{state}; #{chrome_pipe_state}"
   rescue StandardError
     @pending_mutex.synchronize { @pending.delete(id) } if id
     raise
+  end
+
+  def chrome_pipe_state
+    links = [3, 4].map do |fd|
+      File.readlink("/proc/#{@chrome_pid}/fd/#{fd}")
+    rescue Errno::ENOENT
+      nil
+    rescue StandardError
+      "unavailable"
+    end
+    kinds = links.map do |link|
+      case link
+      when nil
+        "closed"
+      when /\Asocket:/
+        "socket"
+      when /\Apipe:/
+        "pipe"
+      else
+        "other"
+      end
+    end
+    "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} same_endpoint=#{links[0] && links[0] == links[1]}"
   end
 
   def call(method, params = {}, session = nil)
