@@ -258,10 +258,21 @@ load). The Ruby marker moved back to a forwarded `Target.getTargets` JSON
 write, with Chrome alive. Its recent sequence was two `send:Target.getTargets`
 events and no response between them. The failure point therefore changes with
 tracing, but Ruby still fails without it. The duplicate sends suggest
-concurrent submissions; Ruby currently protects request bookkeeping and wire
-writes with separate mutexes, while Rust makes ID allocation, pending
-registration, and the write one atomic operation. The next run aligns Ruby's
-submit locking with Rust and labels the origin on each safe sequence event.
+concurrent submissions; Ruby then protected request bookkeeping and wire
+writes with separate mutexes, while Rust made ID allocation, pending
+registration, and the write one atomic operation. The next run aligned Ruby's
+submit locking with Rust and labeled the origin on each safe sequence event.
+
+Run [36334148081](https://github.com/discourse/discourse/actions/runs/36334148081)
+at head `b542a46989b` tested that atomic submit. Ruby syntax passed. Rust
+passed the sample in 3.29s (4.20s RSpec load); Ruby failed in 1.25s (2.99s
+load). Ruby still emitted two forwarded `Target.getTargets` sends without a
+response before EPIPE, so atomic submit did not resolve the failure. This is
+consistent with a second browser command arriving before startup completes:
+`command` currently skips `start` as soon as `Open3.popen3` assigns `@input`,
+though page initialization continues afterward. The next run gates commands
+until initialization finishes and emits a safe marker if another thread waits
+on startup.
 
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
