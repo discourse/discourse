@@ -8,7 +8,6 @@ module Migrations
         DEFAULT_POST_TYPE = Post.types[:regular]
         HIDDEN_REASONS = Post.hidden_reasons.values.to_set.freeze
         SUPPORTED_LOCALES = LocaleSiteSetting.supported_locales.to_set.freeze
-        WORD_COUNT_PATTERN = /[[:word:]]+/
         NUL_CHARACTER = "\u0000"
 
         depends_on :topics, :users, :uploads, :categories, :tags, :groups, :badges
@@ -152,7 +151,7 @@ module Migrations
           row[:locked_by_id] = row[:discourse_locked_by_id]
 
           row[:raw] = clean_raw(@resolved_raw_by_id[row[:original_id]] || row[:raw])
-          row[:word_count] = row[:raw].scan(WORD_COUNT_PATTERN).size
+          row[:word_count] = Post.count_words(row[:raw])
 
           # A rebake after the import fills this in. Cooking here would need the
           # markdown pipeline for every post and still be wrong for the posts
