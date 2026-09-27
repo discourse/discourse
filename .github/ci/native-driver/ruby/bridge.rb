@@ -105,6 +105,9 @@ class RubyCDPBridge
         stage = "delimiter"
         @browser_writer.write("\0")
         @browser_writer.flush
+      end
+      2.times do |index|
+        probe_id = index + 1
         stage = "response"
         unless IO.select([@browser_reader], nil, nil, 20)
           raise IOError, "Timed out waiting for Chromium pipe probe"
@@ -117,7 +120,7 @@ class RubyCDPBridge
         end
       end
       @sequence = probe_id
-      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=pass count=#{probe_id}")
+      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=pass count=2")
     rescue Errno::EPIPE
       STDERR.puts(
         "NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=write_error id=#{probe_id} stage=#{stage}",
