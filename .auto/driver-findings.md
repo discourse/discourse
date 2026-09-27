@@ -638,3 +638,24 @@ flows, but browser/test setup dominates this short sample. The next run uses
 one CI-only example with 500 sequential `page.evaluate_script` calls and records
 only operation count and elapsed milliseconds to isolate repeated CDP
 round-trip cost.
+
+The transport failure was caused by nonblocking descriptors inherited by
+Chrome. Ruby 3.3 creates the pipe and socket-pair endpoints used by the bridge
+with `O_NONBLOCK`; Rust's `UnixStream::pair` leaves its endpoints blocking. The
+Chrome-side Ruby descriptors now have nonblocking mode cleared before launch,
+matching the Rust transport behavior. This allows the Ruby bridge to complete
+the same focused system examples. The details are confirmed by Chromium's
+DevTools pipe handler, which treats a non-positive read other than `EINTR` as a
+disconnect, and by a local Ruby 3.3 descriptor check.
+
+Run [36353533895](https://github.com/discourse/discourse/actions/runs/36353533895)
+at head `4e717bd2a8b` passed the single 500-evaluation example for both
+bridges, along with the Core System Tests job; the separate Linting job passed
+([job](https://github.com/discourse/discourse/actions/runs/36353533928/job/108716663221)).
+Rust completed the RSpec example in 3.56s and Ruby in 3.51s. The inner loop
+reported 174.133ms for the first bridge and 137.000ms for the second, an
+apparent 21.3% Ruby advantage. The workflow ran Rust first and Ruby second,
+and the benchmark line did not yet include the bridge name, so this is only
+an order-sensitive preliminary result. Whole-second bridge command times were
+8s for Rust and 7s for Ruby. The next run labels each inner measurement and
+reverses the order, with tracing disabled, to check for warm-cache bias.

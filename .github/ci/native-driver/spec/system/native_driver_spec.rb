@@ -53,8 +53,10 @@ RSpec.describe NativeSystemDriver, type: :system do
 
     expect(results).to eq(Array.new(operation_count, 2))
 
+    bridge = { "ruby" => "ruby", "rust" => "rust" }.fetch(ENV["NATIVE_CDP_BRIDGE_LABEL"], "unknown")
+
     warn(
-      "NATIVE_CDP_EVALUATE_ROUND_TRIPS operations=#{operation_count} " \
+      "NATIVE_CDP_EVALUATE_ROUND_TRIPS bridge=#{bridge} operations=#{operation_count} " \
         "elapsed_ms=#{format("%.3f", elapsed_milliseconds)}",
     )
   end

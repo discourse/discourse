@@ -365,11 +365,11 @@ jobs:
               .github/ci/native-driver/spec/system/native_driver_spec.rb:46
             )
             bridge_started_seconds=$SECONDS
-            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=1 NATIVE_CDP_RUBY_BRIDGE=0 bundle exec rspec --format documentation "${sample_specs[@]}"
-            printf 'CI_CDP_BRIDGE_TIME {"bridge":"rust","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
-            bridge_started_seconds=$SECONDS
-            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_PIPE_TRANSPORT=0 NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE=1 NATIVE_CDP_RUBY_FD_TRACE=0 NATIVE_CDP_RUBY_BRIDGE=1 bundle exec rspec --format documentation "${sample_specs[@]}"
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=ruby NATIVE_CDP_RUBY_PIPE_TRANSPORT=0 NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE=1 NATIVE_CDP_RUBY_FD_TRACE=0 NATIVE_CDP_RUBY_BRIDGE=1 NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=0 bundle exec rspec --format documentation "${sample_specs[@]}"
             printf 'CI_CDP_BRIDGE_TIME {"bridge":"ruby","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
+            bridge_started_seconds=$SECONDS
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=rust NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=1 NATIVE_CDP_RUBY_BRIDGE=0 bundle exec rspec --format documentation "${sample_specs[@]}"
+            printf 'CI_CDP_BRIDGE_TIME {"bridge":"rust","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
           else
             system_test_paths=(spec/system)
             LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
