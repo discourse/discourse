@@ -290,3 +290,17 @@ matched two-command `Target.getTargets` → `Target.getTargetInfo` probes to the
 Rust and Ruby bridges. That distinguishes Ruby's consecutive internal calls
 from the Capybara-forwarded startup sequence. No Ruby performance measurement
 is available yet.
+
+Run [36335885721](https://github.com/discourse/discourse/actions/runs/36335885721)
+at head `046ce4b0ef9` added the matched two-command probe. Ruby syntax passed.
+The Rust one-example sample passed in 4.17s (4.07s load). The Ruby probe
+reported an `IOError`; its safe sequence was internal `Target.getTargets`
+send/response, then internal `Target.getTargetInfo` send with no response,
+followed by the Capybara startup request failing on the closed pipe. The
+reader saw Chrome's pipe EOF before that write failure. This isolates the
+failure to the Ruby bridge's second browser command, before Capybara can
+attach the page. The Rust probe marker was not retained in the extracted log,
+though its sample passed. This diagnostic run is not a performance result.
+The next run adds safe close-on-exec state and traces only descriptor
+close/shutdown operations during the Ruby probe to identify who closes the
+pipe.

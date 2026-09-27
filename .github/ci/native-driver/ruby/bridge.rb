@@ -267,6 +267,8 @@ class RubyCDPBridge
     "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} " \
       "spawn_fd3=#{initial_kinds[0]} spawn_fd4=#{initial_kinds[1]} " \
       "spawn_fd3_access=#{@chrome_spawn_fd_access[0]} spawn_fd4_access=#{@chrome_spawn_fd_access[1]} " \
+      "chrome_fd3_cloexec=#{process_fd_cloexec(@chrome_pid, 3)} " \
+      "chrome_fd4_cloexec=#{process_fd_cloexec(@chrome_pid, 4)} " \
       "spawn_matches_input=#{@chrome_spawn_fd_links[0] && @chrome_spawn_fd_links[0] == @chrome_input_endpoint} " \
       "spawn_matches_output=#{@chrome_spawn_fd_links[1] && @chrome_spawn_fd_links[1] == @chrome_output_endpoint} " \
       "spawn_executable_matches=#{@chrome_spawn_executable_matches} " \
@@ -290,6 +292,14 @@ class RubyCDPBridge
     flags = File.read("/proc/#{pid}/fdinfo/#{fd}")[/^flags:\s+([0-7]+)/, 1]
     return "unknown" unless flags
     { 0 => "read", 1 => "write", 2 => "read_write" }.fetch(flags.to_i(8) & 3, "unknown")
+  rescue StandardError
+    "unknown"
+  end
+
+  def process_fd_cloexec(pid, fd)
+    flags = File.read("/proc/#{pid}/fdinfo/#{fd}")[/^flags:\s+([0-7]+)/, 1]
+    return "unknown" unless flags
+    (flags.to_i(8) & 0o2000000) != 0 ? "yes" : "no"
   rescue StandardError
     "unknown"
   end
