@@ -111,6 +111,10 @@ end
 
 module NativeSystemDriverCommandProfiler
   PROFILE_THREAD_KEY = :native_system_driver_command_profile
+  PROFILED_ABOUT_PAGE_EXAMPLES = {
+    "displays only the 6 most recently seen admins when there are more than 6 admins" => "warmup",
+    "allows expanding and collapsing the list of admins" => "measure",
+  }.freeze
 
   def command(method, params = {}, browser: false, session: nil)
     profile = Thread.current.thread_variable_get(PROFILE_THREAD_KEY)
@@ -160,12 +164,15 @@ NativeSystemDriver.prepend(NativeSystemDriverCommandProfiler)
 
 RSpec.configure do |config|
   config.around(:example) do |example|
-    about_page_example =
-      ENV["NATIVE_CDP_COMMAND_PROFILE"] == "1" &&
-        example.metadata[:file_path].to_s.end_with?("spec/system/about_page_spec.rb") &&
-        example.metadata[:description] == "allows expanding and collapsing the list of admins"
+    profiled_example =
+      if ENV["NATIVE_CDP_COMMAND_PROFILE"] == "1" &&
+           example.metadata[:file_path].to_s.end_with?("spec/system/about_page_spec.rb")
+        NativeSystemDriverCommandProfiler::PROFILED_ABOUT_PAGE_EXAMPLES[
+          example.metadata[:description]
+        ]
+      end
 
-    unless about_page_example
+    unless profiled_example
       example.run
       next
     end
@@ -216,7 +223,10 @@ RSpec.configure do |config|
             end,
           ]
         end
-      warn("NATIVE_CDP_COMMAND_PROFILE bridge=#{bridge} #{JSON.generate(command_profile)}")
+      warn(
+        "NATIVE_CDP_COMMAND_PROFILE bridge=#{bridge} example=#{profiled_example} " \
+          "#{JSON.generate(command_profile)}",
+      )
     end
   end
 end

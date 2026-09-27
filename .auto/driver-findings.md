@@ -810,3 +810,35 @@ profiles split into driver startup, user navigation, reset navigation,
 remaining reset work, and the example body, with median and 95th-percentile
 latency per CDP method. This will test whether a driver-specific gap remains
 after matching browser state and example order.
+
+Run [36359399711](https://github.com/discourse/discourse/actions/runs/36359399711/job/108733428015)
+at head `29d98fb8751` passed the two selected examples in each Ruby/Rust/Rust/Ruby
+invocation; [Linting passed](https://github.com/discourse/discourse/actions/runs/36359399720/job/108733428110).
+RSpec confirmed the About-page flow ran before the reset probe in every
+invocation, so the earlier random-order confound is removed. About-page times
+were 10.87s, 8.04s, 7.99s, and 8.20s; RSpec totals were 11.14s, 8.28s, 8.23s,
+and 8.42s.
+
+The second, later-run Ruby/Rust pair was nearly tied: 8.20s versus 7.99s.
+Their `Page.navigate` calls took 1.491s and 1.482s, and the shared reset's
+`Storage.clearDataForOrigin` took 3.008s and 3.016s. Ruby's 79 `Driver.find`
+calls and 275 `Runtime.callFunctionOn` calls took 108ms and 170ms in total,
+slightly less than Rust's 127ms and 184ms. The main measured gap was the
+initial `Target.getTargets` command during driver startup: 381ms for Ruby and
+174ms for Rust, close to the 210ms difference in total About-page time.
+
+The first Ruby/Rust pair was not stable: Ruby took 10.87s versus Rust's 8.04s.
+Ruby's user navigation took 3.358s versus 1.472s, and its locator/call-function
+commands had a much longer latency tail; those timings returned to parity in
+the second pair. Therefore this run does not support a stable Rust advantage
+in the browser interaction path. It points to a small startup-command gap and
+large first-run variance. Core used about 46.02 CPU-seconds over 51 elapsed
+seconds and peaked at 5,911.20 MiB across the entire job; those aggregate
+resources cannot be attributed to one bridge.
+
+The next measurement runs two About-page examples in each RSpec process: the
+existing admin-ordering flow first to warm that process's browser and app, then
+the expansion flow as the measured target. It profiles both separately. This
+keeps the experiment at two examples per bridge and gives the measured flow a
+same-process warm-up, while still recording each bridge's initial startup on
+the first example.
