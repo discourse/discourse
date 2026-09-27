@@ -19,25 +19,30 @@ class RubyCDPBridge
     @requests = Queue.new
     @drags = Queue.new
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
-    browser_reader, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
-    @chrome_input_endpoint =
-      begin
-        File.readlink("/proc/self/fd/#{chrome_socket.fileno}")
-      rescue StandardError
-        nil
-      end
-    @chrome_output_endpoint =
-      begin
-        File.readlink("/proc/self/fd/#{chrome_socket.fileno}")
-      rescue StandardError
-        nil
-      end
+    @transport_name = ENV["NATIVE_CDP_RUBY_PIPE_TRANSPORT"] == "1" ? "pipes" : "socket"
+    if @transport_name == "pipes"
+      chrome_input_reader, browser_writer = IO.pipe
+      browser_reader, chrome_output_writer = IO.pipe
+      chrome_input_endpoint = process_fd_link(Process.pid, chrome_input_reader.fileno)
+      chrome_output_endpoint = process_fd_link(Process.pid, chrome_output_writer.fileno)
+      chrome_input_fd = chrome_input_reader.fileno
+      chrome_output_fd = chrome_output_writer.fileno
+    else
+      browser_reader, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
+      browser_writer = browser_reader
+      chrome_input_endpoint = process_fd_link(Process.pid, chrome_socket.fileno)
+      chrome_output_endpoint = chrome_input_endpoint
+      chrome_input_fd = chrome_socket.fileno
+      chrome_output_fd = chrome_socket.fileno
+    end
+    @chrome_input_endpoint = chrome_input_endpoint
+    @chrome_output_endpoint = chrome_output_endpoint
     options = {
       :in => File::NULL,
       :out => File::NULL,
       :err => STDERR,
-      3 => chrome_socket.fileno,
-      4 => chrome_socket.fileno,
+      3 => chrome_input_fd,
+      4 => chrome_output_fd,
       :close_others => true,
       :pgroup => true,
     }
@@ -52,10 +57,10 @@ class RubyCDPBridge
           nil
         end
     ensure
-      chrome_socket.close
+      [chrome_input_reader, chrome_output_writer, chrome_socket].compact.uniq.each(&:close)
     end
-    @browser_writer = browser_reader
-    @browser_reader = @browser_writer.dup
+    @browser_writer = browser_writer
+    @browser_reader = @transport_name == "pipes" ? browser_reader : @browser_writer.dup
     @browser_writer_endpoint =
       begin
         File.readlink("/proc/self/fd/#{@browser_writer.fileno}")
@@ -189,6 +194,8 @@ class RubyCDPBridge
   end
 
   def browser_peer_read_state
+    return "not_supported" unless @browser_reader.is_a?(Socket)
+
     message = @browser_reader.recv_nonblock(1, Socket::MSG_PEEK, exception: false)
     case message
     when :wait_readable
@@ -401,7 +408,8 @@ class RubyCDPBridge
       "ruby_reader_exit=#{reader_exit} " \
       "browser_writer_access=#{process_fd_access(Process.pid, @browser_writer.fileno)} " \
       "browser_writer_matches_endpoint=#{process_fd_link(Process.pid, @browser_writer.fileno) == @browser_writer_endpoint} " \
-      "browser_reader=#{browser_link && browser_link.start_with?("socket:") ? "socket" : "other"}"
+      "browser_reader=#{descriptor_kind(browser_link)} " \
+      "transport=#{@transport_name}"
   end
 
   def process_fd_link(pid, fd)
