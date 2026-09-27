@@ -104,6 +104,9 @@ class RubyCDPBridge
   def probe_synchronous_browser_pipe
     method = "Target.getTargets"
     attempt = 0
+    write_stage = "json"
+    json_bytes_written = 0
+    delimiter_bytes_written = 0
     2.times do
       attempt += 1
       write_stage = "json"

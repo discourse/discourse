@@ -360,3 +360,16 @@ whether the second JSON write, delimiter write, or response read failed. The
 next run aligns Ruby's original/duplicated socket roles with Rust's original
 writer and cloned reader, and records only write byte counts, attempt number,
 stage, and exception class.
+
+Run [36339974189](https://github.com/discourse/discourse/actions/runs/36339974189)
+at head `9329ae16be7` tested that socket-role alignment. Rust passed the
+focused example in 3.61s; Ruby failed in 2.17s, so no Ruby performance result
+is available. The socket change is inconclusive because the probe's rescue
+path raised `NameError` before it could report the failing stage. Ruby syntax
+passed. The source initializes `write_stage` and the byte counters inside the
+`2.times` block, then interpolates them in the method-level rescue; the log
+omits the NameError message, so this is the likely instrumentation fault. The
+next commit moves their initialization to method scope and reruns the same
+transport experiment without changing its wire behavior. Linting still reports
+`syntax_tree` failures for the two modified Ruby files, but CI exposes only the
+paths and not the expected formatting.
