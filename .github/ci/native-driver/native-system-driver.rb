@@ -938,7 +938,7 @@ class NativeSystemDriver < Capybara::Driver::Base
             if name == "ruby"
               ruby_read =
                 line.match(
-                  /\A\s*[0-9.]+\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                  /\A\s*[0-9.]+\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?(?:0x[0-9a-fA-F]+|\d+))(?:\s+[A-Z][A-Z0-9]+)?/,
                 )
               if ruby_read
                 descriptor = Integer(ruby_read[2].split(",").first.strip, 0)
@@ -950,7 +950,7 @@ class NativeSystemDriver < Capybara::Driver::Base
               end
               ruby_write =
                 line.match(
-                  /\A\s*[0-9.]+\s+(write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                  /\A\s*[0-9.]+\s+(write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+(-?(?:0x[0-9a-fA-F]+|\d+))(?:\s+[A-Z][A-Z0-9]+)?/,
                 )
               if ruby_write
                 descriptor = Integer(ruby_write[2].split(",").first.strip, 0)
@@ -999,7 +999,7 @@ class NativeSystemDriver < Capybara::Driver::Base
             if name == "chrome"
               read_call =
                 line.match(
-                  /\A\s*([0-9.]+)\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                  /\A\s*([0-9.]+)\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?(?:0x[0-9a-fA-F]+|\d+))(?:\s+[A-Z][A-Z0-9]+)?/,
                 )
               if read_call
                 arguments = read_call[3].split(",").map(&:strip)
@@ -1038,7 +1038,7 @@ class NativeSystemDriver < Capybara::Driver::Base
               end
               write_call =
                 line.match(
-                  /\A\s*[0-9.]+\s+(write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                  /\A\s*[0-9.]+\s+(write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+(-?(?:0x[0-9a-fA-F]+|\d+))(?:\s+[A-Z][A-Z0-9]+)?/,
                 )
               if write_call
                 descriptor = Integer(write_call[2].split(",").first.strip, 0)

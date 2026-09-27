@@ -1,10 +1,29 @@
 # System-test driver findings
 
-Updated 2026-09-27. Measurements below compare the existing Playwright-backed
+Updated 2026-09-28. Measurements below compare the existing Playwright-backed
 Capybara driver with the native direct-CDP driver on the pinned application
 source revision `bf55a44c2872738f7ae2664d6fec3d6d8779190f`. Timings are elapsed
 seconds for the system-test step unless marked otherwise. These are aggregate
 CI measurements; raw logs and profiles remain local.
+
+## Trace parsing correction (2026-09-28)
+
+The descriptor probe uses `strace -e raw=...` to avoid recording protocol
+payloads. A synthetic pipe trace showed that this mode prints syscall return
+values such as `0x31` in hexadecimal. The reducer accepted only decimal digits,
+so it read positive results as zero, misclassified successful Chrome reads as
+EOF, and reported zero byte counts. Trace-derived read EOF/error, byte-count,
+and event-order conclusions from runs starting at
+[36344186816](https://github.com/discourse/discourse/actions/runs/36344186816)
+through [36348945466](https://github.com/discourse/discourse/actions/runs/36348945466)
+are therefore not reliable. The Ruby bridge's separate diagnostics—successful
+request writes, a response received, EOF seen by Ruby, pipe identity, and
+Chrome's process exit state—are independent of that parser and remain valid.
+The reducer now parses decimal and hexadecimal results. A local synthetic pipe
+confirmed that the updated matcher reads `0x31` as 49 bytes, `0` as EOF, and
+`-1 EPIPE` as an error. Ruby syntax, formatting, and diff checks pass; a new
+focused CI run is needed before using syscall-level counts to explain the
+disconnect.
 
 ## What the current Rust CDP implementation contains
 
@@ -534,3 +553,12 @@ the simple wrong-fd mapping or early Ruby-writer-close explanations, but the
 trace still does not show whether Chrome consumed command two. The next probe
 counts command bytes read by Chrome and response bytes written by Chrome, plus
 the matching Ruby-side byte counts, without retaining payloads.
+
+Run [36348945466](https://github.com/discourse/discourse/actions/runs/36348945466)
+at head `905341794cc` passed the Rust focused example in 3.18s and failed the
+Ruby example in 2.31s, so it provides no Ruby timing. Linting passed. The
+instrumentation printed zero syscall byte counts, but that output is invalid:
+the trace reducer parsed raw hexadecimal return values as decimal. The
+independent Ruby probe still confirms its second request was written before it
+read EOF, and Chrome exited normally; the syscall-level counts and EOF
+classification require a rerun with the corrected reducer.
