@@ -729,7 +729,30 @@ example's duration separately. The Core step used about 49.37 CPU-seconds over
 51 elapsed seconds and peaked at 5,811.23 MiB for the whole job/container.
 These resource totals are not per bridge. [Linting passed](https://github.com/discourse/discourse/actions/runs/36356240588/job/108724423072).
 
-The next run keeps the same two selected examples and bridge order, adding
-RSpec's two-example profiler output. That will separate the benchmark's time
-from the About-page interaction flow so we can tell whether the apparent
-Ruby advantage survives locator and click helpers.
+Run [36356722884](https://github.com/discourse/discourse/actions/runs/36356722884/job/108725813132)
+at head `5de1e80bc2a` passed both examples for each bridge; [Linting passed](https://github.com/discourse/discourse/actions/runs/36356722910/job/108725813240).
+The focused results were:
+
+| Bridge run | 500-call median | About-page example | Benchmark example | RSpec total |
+| --- | ---: | ---: | ---: | ---: |
+| Ruby 1 | 97.003ms | 6.44s | 3.91s | 10.55s |
+| Rust 1 | 154.220ms | 4.00s | 3.96s | 8.09s |
+| Rust 2 | 159.603ms | 3.86s | 3.94s | 7.92s |
+| Ruby 2 | 108.053ms | 8.12s | 0.93s | 9.18s |
+
+The two-run means show Ruby's simple `Runtime.evaluate` batch at 102.528ms,
+34.7% below Rust's 156.912ms. The About-page flow averaged 7.28s in Ruby and
+3.93s in Rust, while total RSpec time averaged 9.87s versus 8.01s. The browser
+flow therefore reverses the simple-call result, with Rust about 46% faster in
+this example. This points to work in element lookup/click helpers or their
+command pattern, rather than raw browser round trips. The four RSpec totals
+also vary with order; the profile split is useful here because it consistently
+shows the About-page example slower in Ruby in both Ruby runs. The Core step
+used about 47.68 CPU-seconds over 50 elapsed seconds and peaked at 5,779.23
+MiB for the job/container; these are aggregate resources, not per bridge.
+
+The next run adds a safe parent-driver command profile around only the About
+page example. It records counts and elapsed time by command method, without
+capturing parameters or page data. This should identify whether `Driver.find`,
+`Driver.click`, or another command family accounts for the gap before we
+instrument the bridge's internal CDP calls.
