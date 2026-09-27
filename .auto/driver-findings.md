@@ -798,8 +798,15 @@ over 51 elapsed seconds and peaked at 5,900.37 MiB for the entire job; these
 resource totals are not per bridge.
 
 The next run starts with the About-page example before the reset-command probe,
-so the benchmark cannot prime or alter its browser session. Command profiles
-will also be split into driver startup, user navigation, reset navigation,
+but an order audit of run 36358850714 found that RSpec randomized the two
+examples: About ran first in both Ruby invocations, while the reset probe ran
+first in both Rust invocations. The reset probe's first storage-clear sample
+took about 3 seconds in Rust, so it warmed the Rust browser before the About
+flow; Ruby paid its cold storage-clear cost inside the About example. This
+confounds the apparent About-page comparison and likely explains much of the
+measured gap. The next run adds `--order defined` to both bridge commands and
+verifies the same example order, with the About-page example first. It retains
+profiles split into driver startup, user navigation, reset navigation,
 remaining reset work, and the example body, with median and 95th-percentile
-latency per CDP method. That should separate normal command cost from cold
-browser work and one-off stalls.
+latency per CDP method. This will test whether a driver-specific gap remains
+after matching browser state and example order.
