@@ -774,6 +774,16 @@ class NativeSystemDriver < Capybara::Driver::Base
                 stage
                 json_written
                 delimiter_written
+                attempt_1_messages
+                attempt_1_events
+                attempt_1_matching_responses
+                attempt_1_other_responses
+                attempt_1_error_responses
+                attempt_2_messages
+                attempt_2_events
+                attempt_2_matching_responses
+                attempt_2_other_responses
+                attempt_2_error_responses
                 chrome_state
                 first_attempt_payload_bytes
                 first_attempt_json_written

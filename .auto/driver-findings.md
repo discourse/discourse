@@ -562,3 +562,16 @@ the trace reducer parsed raw hexadecimal return values as decimal. The
 independent Ruby probe still confirms its second request was written before it
 read EOF, and Chrome exited normally; the syscall-level counts and EOF
 classification require a rerun with the corrected reducer.
+
+Run [36349742578](https://github.com/discourse/discourse/actions/runs/36349742578/job/108705968817)
+at head `343451393b9` passed the Rust focused example in 3.33s and failed the
+Ruby probe in 2.27s, so it provides no Ruby performance timing. Linting passed
+([job](https://github.com/discourse/discourse/actions/runs/36349742615/job/108705968991)).
+With the corrected parser, Ruby wrote 100 command bytes; Chrome read 50 bytes,
+then wrote 236 response bytes in two calls; Ruby read the same 236 bytes in one
+call. The probe failed at the second response read. The counters establish that
+Chrome produced output and Ruby received it, but they do not show how many
+NUL-framed messages Ruby decoded or whether a response matched request two.
+The next probe reports only per-attempt message counts and event, matching
+response, unmatched response, and error-response counts. It emits no IDs or
+protocol contents.

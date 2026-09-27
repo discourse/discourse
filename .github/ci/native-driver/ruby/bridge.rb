@@ -122,6 +122,10 @@ class RubyCDPBridge
     first_response_pipe_state = {}
     peer_read_state_after_first_response = "not_sampled"
     peer_read_state_before_second_attempt = "not_sampled"
+    message_counts =
+      Array.new(2) do
+        { messages: 0, events: 0, matching_responses: 0, other_responses: 0, error_responses: 0 }
+      end
     2.times do
       attempt += 1
       write_stage = "json"
@@ -150,8 +154,12 @@ class RubyCDPBridge
       response = nil
       Timeout.timeout(10) do
         while message = @browser_reader.gets("\0")
+          counts = message_counts.fetch(attempt - 1)
+          counts[:messages] += 1
           decoded = JSON.parse(message.delete_suffix("\0"))
           if decoded["id"] == id
+            counts[:matching_responses] += 1
+            counts[:error_responses] += 1 if decoded["error"]
             response = decoded
             if attempt == 1
               first_response_received = true
@@ -160,6 +168,11 @@ class RubyCDPBridge
               peer_read_state_after_first_response = browser_peer_read_state
             end
             break
+          elsif decoded.key?("id")
+            counts[:other_responses] += 1
+            counts[:error_responses] += 1 if decoded["error"]
+          else
+            counts[:events] += 1
           end
         end
       end
@@ -181,6 +194,13 @@ class RubyCDPBridge
       first_response_pipe_state.map { |key, value| "first_response_#{key}=#{value}" }.join(" ")
     error_pipe_fields =
       browser_pipe_probe_state.map { |key, value| "after_error_#{key}=#{value}" }.join(" ")
+    message_count_fields =
+      message_counts
+        .map
+        .with_index(1) do |counts, index|
+          counts.map { |key, value| "attempt_#{index}_#{key}=#{value}" }.join(" ")
+        end
+        .join(" ")
     STDERR.puts(
       "NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=error " \
         "method=#{method} type=#{error.class} attempt=#{attempt} " \
@@ -191,6 +211,7 @@ class RubyCDPBridge
         "first_attempt_json_written=#{first_attempt_json_written} " \
         "first_attempt_delimiter_written=#{first_attempt_delimiter_written} " \
         "first_response_received=#{first_response_received} " \
+        "#{message_count_fields} " \
         "#{first_response_pipe_fields} #{error_pipe_fields} " \
         "peer_read_state_after_first_response=#{peer_read_state_after_first_response} " \
         "peer_read_state_before_attempt_2=#{peer_read_state_before_second_attempt} " \
