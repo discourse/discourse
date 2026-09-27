@@ -237,6 +237,20 @@ eight CDP method send/response/event names and whether a failed request was
 forwarded or internal, to identify the sequence immediately before the pipe
 closes.
 
+Run [36332945179](https://github.com/discourse/discourse/actions/runs/36332945179)
+at head `a7c57f88c6c` passed Ruby syntax. Rust passed the one-example sample
+in 3.32s (4.01s RSpec load); Ruby failed in 2.13s (2.89s load). The Ruby
+marker reports `Target.getTargetInfo`, `origin=internal`, JSON-write stage,
+and Chrome alive. Its method trace is `send:Target.getTargets`,
+`response:Target.getTargets`, then `send:Target.getTargetInfo`: the browser
+answered the first request before the helper's attach request hit EPIPE. The
+descriptor trace shows `SHUT_RDWR` on Chrome fds 3 and 4 by the failure. This
+localizes the difference to early attach startup, but still does not explain
+why Chrome shuts down the Ruby bridge's pipe. There is still no Ruby
+performance measurement. The fd trace used `strace` only for the Ruby sample,
+so the next run removes that wrapper while retaining the safe method sequence;
+this tests whether tracing itself contributes to the early shutdown.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
 uses only one threaded probe. Until Ruby passes the same focused system-test
