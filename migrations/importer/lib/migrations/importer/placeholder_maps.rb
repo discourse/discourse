@@ -13,7 +13,7 @@ module Migrations
     # a map costs one entry per record and nothing else.
     #
     # Posts are the exception: a full site has far too many of them to keep, so
-    # only the posts of the current batch are held (see {#prime_posts}).
+    # only the posts of the current batch are held (see {#preload_posts_for_batch}).
     class PlaceholderMaps
       # Structs, not hashes: at full-site scale a map has millions of entries,
       # and a Struct instance is a fraction of a Hash. `[]` and `dig` work the
@@ -48,7 +48,7 @@ module Migrations
       # Replaces the held posts with the ones of the next batch. Ids the batch
       # turns out to need on top of these are fetched one by one and kept until
       # the following batch.
-      def prime_posts(original_ids)
+      def preload_posts_for_batch(original_ids)
         @posts = original_ids.to_h { |id| [id, nil] }
         @posts.merge!(load_posts(original_ids))
 

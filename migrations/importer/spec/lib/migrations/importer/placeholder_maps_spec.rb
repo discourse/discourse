@@ -107,27 +107,27 @@ RSpec.describe Migrations::Importer::PlaceholderMaps do
     end
 
     it "answers with the destination topic id and post number" do
-      maps.prime_posts([1])
+      maps.preload_posts_for_batch([1])
 
       expect(maps.post(1).dig(:topic_id)).to eq(42)
       expect(maps.post(1).dig(:post_number)).to eq(3)
     end
 
-    it "answers for a post outside the primed batch" do
-      maps.prime_posts([1])
+    it "answers for a post outside the preloaded batch" do
+      maps.preload_posts_for_batch([1])
 
       expect(maps.post(2).dig(:post_number)).to eq(4)
     end
 
     it "answers with nil when the post's topic was not imported" do
-      maps.prime_posts([3])
+      maps.preload_posts_for_batch([3])
 
       expect(maps.post(3)).to be_nil
     end
 
-    it "keeps only the posts of the last primed batch" do
-      maps.prime_posts([1])
-      maps.prime_posts([2])
+    it "keeps only the posts of the last preloaded batch" do
+      maps.preload_posts_for_batch([1])
+      maps.preload_posts_for_batch([2])
       intermediate_db.execute("DELETE FROM mapped.post_numbers WHERE original_id = 1")
 
       expect(maps.post(1)).to be_nil

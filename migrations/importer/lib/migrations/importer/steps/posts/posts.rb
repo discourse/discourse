@@ -117,7 +117,7 @@ module Migrations
 
         def before_batch(rows)
           original_ids = rows.map { |row| row[:original_id] }
-          @maps.prime_posts(original_ids)
+          @maps.preload_posts_for_batch(original_ids)
 
           items = rows.map { |row| { id: row[:original_id], raw: row[:raw] } }
           @resolved_raw = @resolver.resolve_all(items)
