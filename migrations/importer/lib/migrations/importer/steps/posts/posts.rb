@@ -14,9 +14,7 @@ module Migrations
         depends_on :topics, :users, :uploads, :categories, :tags, :groups, :badges
         store_mapped_ids true
 
-        # The placeholders of a whole copy batch are resolved with one call, so
-        # its linkage rows are read with one query per embed kind.
-        batch_size DiscourseDB::COPY_BATCH_SIZE
+        use_default_batch_size
 
         column_names %i[
                        id

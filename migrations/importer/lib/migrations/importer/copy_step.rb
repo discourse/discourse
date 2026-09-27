@@ -60,6 +60,10 @@ module Migrations
           return @batch_size if getter
           @batch_size = value
         end
+
+        def use_default_batch_size
+          @batch_size = DiscourseDB::COPY_BATCH_SIZE
+        end
       end
 
       def initialize(intermediate_db, discourse_db, shared_data, config)
