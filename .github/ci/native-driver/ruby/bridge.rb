@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "json"
-require "socket"
 require "thread"
 
 class RubyCDPBridge
@@ -14,18 +13,21 @@ class RubyCDPBridge
     @requests = Queue.new
     @drags = Queue.new
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
-    browser_socket, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
+    chrome_to_driver_read, chrome_to_driver_write = IO.pipe
+    driver_to_chrome_read, driver_to_chrome_write = IO.pipe
     options = {
       in: File::NULL,
       out: File::NULL,
       err: STDERR,
-      3 => chrome_socket.fileno,
-      4 => chrome_socket.fileno,
+      3 => driver_to_chrome_read.fileno,
+      4 => chrome_to_driver_write.fileno,
       pgroup: true,
     }
     @chrome_pid = Process.spawn(*arguments, "--remote-debugging-pipe", options)
-    chrome_socket.close
-    @browser_socket = browser_socket
+    driver_to_chrome_read.close
+    chrome_to_driver_write.close
+    @browser_input = driver_to_chrome_write
+    @browser_output = chrome_to_driver_read
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
   end
@@ -42,7 +44,8 @@ class RubyCDPBridge
   ensure
     @requests.close
     @worker&.join
-    @browser_socket&.close
+    @browser_input&.close
+    @browser_output&.close
     begin
       Process.kill("TERM", -@chrome_pid)
     rescue Errno::ESRCH
@@ -72,7 +75,7 @@ class RubyCDPBridge
   end
 
   def read_browser
-    while message = @browser_socket.gets("\0")
+    while message = @browser_output.gets("\0")
       response = JSON.parse(message.delete_suffix("\0"))
       if response.key?("id")
         pending = @pending_mutex.synchronize { @pending.delete(response.fetch("id")) }
@@ -124,10 +127,14 @@ class RubyCDPBridge
       end
     request = request.merge("id" => id)
     @write_mutex.synchronize do
-      @browser_socket.write(JSON.generate(request))
-      @browser_socket.write("\0")
+      @browser_input.write(JSON.generate(request))
+      @browser_input.write("\0")
+      @browser_input.flush
     end
     id
+  rescue Errno::EPIPE
+    @pending_mutex.synchronize { @pending.delete(id) } if id
+    raise IOError, "Chromium closed CDP input while sending #{request.fetch("method")}"
   rescue StandardError
     @pending_mutex.synchronize { @pending.delete(id) } if id
     raise
@@ -997,6 +1004,7 @@ begin
   RubyCDPBridge.new(arguments).run
 rescue StandardError => error
   STDERR.sync = true
-  STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_FAILURE #{error.class} at #{error.backtrace&.first}")
+  detail = error.message if error.is_a?(IOError) && error.message.start_with?("Chromium closed CDP input while sending ")
+  STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_FAILURE #{error.class} #{detail} at #{error.backtrace&.first}")
   exit 1
 end
