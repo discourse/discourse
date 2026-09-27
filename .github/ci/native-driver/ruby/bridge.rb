@@ -15,6 +15,12 @@ class RubyCDPBridge
     @drags = Queue.new
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
     browser_socket, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
+    @chrome_socket_endpoint =
+      begin
+        File.readlink("/proc/self/fd/#{chrome_socket.fileno}")
+      rescue StandardError
+        nil
+      end
     child_input = chrome_socket.dup
     child_output = chrome_socket.dup
     options = {
@@ -189,7 +195,8 @@ class RubyCDPBridge
     same_endpoint = links[0] && links[0] == links[1]
     opposite_browser_endpoint = links[0] && links[0] != browser_link
     "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} same_endpoint=#{same_endpoint} " \
-      "opposite_browser_endpoint=#{opposite_browser_endpoint}"
+      "opposite_browser_endpoint=#{opposite_browser_endpoint} " \
+      "matches_spawned_endpoint=#{links[0] && links[0] == @chrome_socket_endpoint}"
   end
 
   def call(method, params = {}, session = nil)
