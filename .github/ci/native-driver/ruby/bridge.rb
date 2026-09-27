@@ -54,7 +54,7 @@ class RubyCDPBridge
       chrome_socket.close
     end
     @browser_reader = browser_reader
-    @browser_writer = @browser_reader
+    @browser_writer = @browser_reader.dup
     @browser_writer_endpoint =
       begin
         File.readlink("/proc/self/fd/#{@browser_writer.fileno}")

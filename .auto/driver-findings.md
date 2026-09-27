@@ -122,10 +122,19 @@ socket endpoints. The RSpec error then surfaced in `PlaywrightLogger#initialize`
 when `NativeSystemDriver#on` tried to access `@page.callbacks` while `@page` was
 nil. `start` currently treats `@input` as proof that browser initialization is
 complete, even though `Open3.popen3` assigns it before the first page is ready.
-That makes a concurrent `start` call a plausible cause; the next run serializes
-startup and records whether a caller had to wait. This run rules out the
-duplicate request itself as the trigger, but does not yet identify why Chrome
-closed its endpoint.
+That made a concurrent `start` call a plausible cause. The duplicate request
+itself was not the trigger, but this run did not identify why Chrome closed
+its endpoint.
+
+Run [36323827643](https://github.com/discourse/discourse/actions/runs/36323827643)
+tested a startup mutex. Rust passed the same two examples in 10.38s (15s for
+the bridge command); Ruby still failed both in 2.44s. Its internal threaded
+probe passed, but the reader exited with `IOError` before the external
+`Target.getTargets` request (ID 2) hit EPIPE. CI recorded no overlapping
+`start` call, so the partial-initialization race was not observed and the lock
+did not resolve the transport failure. Rust clones its Unix socket for the
+reader thread while Ruby currently shares one `Socket` object for reads and
+writes; the next run gives those Ruby threads separate duplicated handles.
 
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now

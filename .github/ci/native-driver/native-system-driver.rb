@@ -33,8 +33,6 @@ class NativeSystemDriver < Capybara::Driver::Base
     @owned_contexts = []
     @sequence = 0
     @command_mutex = Mutex.new
-    @start_mutex = Mutex.new
-    @started = false
     @cdp_sessions = []
     at_exit { quit }
   end
@@ -674,23 +672,7 @@ class NativeSystemDriver < Capybara::Driver::Base
   end
 
   def start
-    unless @start_mutex.try_lock
-      if ENV["NATIVE_CDP_RUBY_START_OVERLAP"] == "1"
-        STDERR.puts("NATIVE_CDP_RUBY_START_WAITED_FOR_INITIALIZATION=1")
-      end
-      return @start_mutex.synchronize { start_browser }
-    end
-    begin
-      start_browser
-    ensure
-      @start_mutex.unlock
-    end
-  end
-
-  def start_browser
-    return if @started
-    raise @transport_error if @input && @transport_error
-    raise "Native browser startup did not complete" if @input
+    return if @input
     @pages_by_target.clear
     @pages_by_session.clear
     @owned_contexts.clear
@@ -813,7 +795,6 @@ class NativeSystemDriver < Capybara::Driver::Base
     else
       create_page
     end
-    @started = true
   end
 
   def create_page(context_id: nil)
