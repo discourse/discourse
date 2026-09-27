@@ -61,7 +61,7 @@ module Migrations
           @batch_size = value
         end
 
-        def use_default_batch_size
+        def batch_size_default
           @batch_size = DiscourseDB::COPY_BATCH_SIZE
         end
       end

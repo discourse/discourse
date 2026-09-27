@@ -13,7 +13,7 @@ module Migrations
         depends_on :topics, :users, :uploads, :categories, :tags, :groups, :badges
         store_mapped_ids true
 
-        use_default_batch_size
+        batch_size_default
 
         column_names %i[
                        id
