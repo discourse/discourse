@@ -69,7 +69,9 @@ class RubyCDPBridge
           "writer_fd=#{@browser_writer.fileno} endpoint_at=#{Time.now.to_f}",
       )
     end
-    probe_synchronous_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE"] == "1"
+    if ENV["NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE"] == "1"
+      trace_chrome_task_ids_during { probe_synchronous_browser_pipe }
+    end
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
   end
@@ -162,6 +164,44 @@ class RubyCDPBridge
         "stage=#{write_stage} json_written=#{json_bytes_written} " \
         "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state}#{code}",
     )
+  end
+
+  def trace_chrome_task_ids_during
+    path = ENV["NATIVE_CDP_RUBY_FD_TRACE_TASKS"]
+    return yield unless path
+
+    task_ids = [@chrome_pid]
+    task_ids_mutex = Mutex.new
+    stop_mutex = Mutex.new
+    stopped = false
+    sampler =
+      Thread.new do
+        loop do
+          break if stop_mutex.synchronize { stopped }
+          task_ids_mutex.synchronize do
+            task_ids.concat(Dir.children("/proc/#{@chrome_pid}/task").map(&:to_i))
+            task_ids.uniq!
+          end
+          sleep(0.005)
+        end
+      rescue Errno::ENOENT
+        nil
+      end
+
+    yield
+  ensure
+    if path
+      stop_mutex.synchronize { stopped = true }
+      sampler&.join
+      task_ids_mutex.synchronize do
+        begin
+          task_ids.concat(Dir.children("/proc/#{@chrome_pid}/task").map(&:to_i))
+        rescue Errno::ENOENT
+          nil
+        end
+        File.write(path, task_ids.uniq.join("\n"))
+      end
+    end
   end
 
   def process_requests

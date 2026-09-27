@@ -409,3 +409,17 @@ cause. The next run traces raw-argument `read` syscalls and compares Chrome's
 actual zero-byte read with closes of both Ruby socket handles; only event-order
 booleans are emitted. Rust passed in 3.37s and Ruby failed in 2.26s. Linting
 again failed only at `syntax_tree`.
+
+Run [36342322053](https://github.com/discourse/discourse/actions/runs/36342322053)
+at head `33d7deb8fe2` passed the Rust focused example in 3.22s; Ruby failed in
+2.20s with `Errno::EPIPE` on attempt 2, before writing any JSON bytes, while
+Chrome was still alive. The trace reducer reported the Chrome EOF and Ruby
+endpoint ordering as unknown. Luna's review confirmed the reducer only opened
+the root Ruby and Chrome trace files, even though `strace -ff` writes separate
+files for traced tasks. Since the workflow removes the temporary trace files
+and keeps no artifact, this run cannot establish whether the relevant read was
+absent or recorded under a Chrome thread. The next run captures Chrome's task
+IDs privately during the focused probe and scans those task traces, emitting
+only event-presence and ordering labels. No protocol payloads, task IDs,
+descriptor numbers, or raw trace lines are added to CI output. Linting failed
+at `syntax_tree` for both modified Ruby files.
