@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   build:
-    if: (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror') && matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
@@ -82,24 +82,8 @@ jobs:
       matrix:
         include:
           - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
             build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
           - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
             build_type: system
 
     steps:
