@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "json"
-require "socket"
 require "thread"
 
 class RubyCDPBridge
@@ -14,15 +13,22 @@ class RubyCDPBridge
     @requests = Queue.new
     @drags = Queue.new
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
-    browser_socket, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
-    @chrome_socket_endpoint =
+    chrome_input, browser_writer = IO.pipe
+    browser_reader, chrome_output = IO.pipe
+    @chrome_input_endpoint =
       begin
-        File.readlink("/proc/self/fd/#{chrome_socket.fileno}")
+        File.readlink("/proc/self/fd/#{chrome_input.fileno}")
       rescue StandardError
         nil
       end
-    child_input = chrome_socket.dup
-    child_output = chrome_socket.dup
+    @chrome_output_endpoint =
+      begin
+        File.readlink("/proc/self/fd/#{chrome_output.fileno}")
+      rescue StandardError
+        nil
+      end
+    child_input = chrome_input.dup
+    child_output = chrome_output.dup
     options = {
       in: File::NULL,
       out: File::NULL,
@@ -37,10 +43,11 @@ class RubyCDPBridge
     ensure
       child_input.close
       child_output.close
-      chrome_socket.close
+      chrome_input.close
+      chrome_output.close
     end
-    @browser_reader = browser_socket
-    @browser_writer = browser_socket.dup
+    @browser_reader = browser_reader
+    @browser_writer = browser_writer
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
   end
@@ -193,10 +200,10 @@ class RubyCDPBridge
       end
     end
     same_endpoint = links[0] && links[0] == links[1]
-    opposite_browser_endpoint = links[0] && links[0] != browser_link
     "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} same_endpoint=#{same_endpoint} " \
-      "opposite_browser_endpoint=#{opposite_browser_endpoint} " \
-      "matches_spawned_endpoint=#{links[0] && links[0] == @chrome_socket_endpoint}"
+      "matches_input=#{links[0] && links[0] == @chrome_input_endpoint} " \
+      "matches_output=#{links[1] && links[1] == @chrome_output_endpoint} " \
+      "browser_reader=#{browser_link && browser_link.start_with?("pipe:") ? "pipe" : "other"}"
   end
 
   def call(method, params = {}, session = nil)
