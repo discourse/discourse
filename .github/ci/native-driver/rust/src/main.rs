@@ -41,6 +41,7 @@ fn main() -> io::Result<()> {
         let mut probe_method = "Target.getTargets";
         let probe_result = (|| -> io::Result<()> {
             let result = protocol.call("Target.getTargets", json!({}), None)?;
+            protocol.call("Target.getTargets", json!({}), None)?;
             let target_id = result["targetInfos"]
                 .as_array()
                 .and_then(|targets| targets.iter().find(|target| target["type"] == "page"))
@@ -64,7 +65,7 @@ fn main() -> io::Result<()> {
         }
         eprintln!(
             "NATIVE_CDP_RUST_BRIDGE_SELF_PROBE result=pass commands={} page_target={}",
-            if page_target_present { 2 } else { 1 },
+            if page_target_present { 3 } else { 2 },
             if page_target_present { "present" } else { "absent" }
         );
     }

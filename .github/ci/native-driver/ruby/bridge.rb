@@ -54,7 +54,7 @@ class RubyCDPBridge
       chrome_socket.close
     end
     @browser_reader = browser_reader
-    @browser_writer = @browser_reader
+    @browser_writer = @browser_reader.dup
     @browser_writer_endpoint =
       begin
         File.readlink("/proc/self/fd/#{@browser_writer.fileno}")
@@ -106,6 +106,7 @@ class RubyCDPBridge
     unless result["targetInfos"].is_a?(Array)
       raise IOError, "Invalid threaded Chromium pipe probe response"
     end
+    call("Target.getTargets")
     target = result["targetInfos"].find { |info| info["type"] == "page" }
     if target
       probe_method = "Target.getTargetInfo"
@@ -113,7 +114,7 @@ class RubyCDPBridge
     end
     STDERR.puts(
       "NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=pass " \
-        "commands=#{target ? 2 : 1} page_target=#{target ? "present" : "absent"}",
+        "commands=#{target ? 3 : 2} page_target=#{target ? "present" : "absent"}",
     )
   rescue StandardError => error
     error_code = error.message.match(/"code":\s*(-?\d+)/)&.captures&.first

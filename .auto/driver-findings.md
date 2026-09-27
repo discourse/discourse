@@ -317,3 +317,19 @@ doesn't establish what triggered Chromium's shutdown. The next experiment
 removes Ruby's duplicate writer descriptor and uses the same socket object for
 both the reader thread and serialized writes, to isolate Ruby's duplicated-fd
 handling.
+
+Run [36337232690](https://github.com/discourse/discourse/actions/runs/36337232690)
+at head `50e9d5453e1` tested the shared Ruby socket object. Ruby syntax passed;
+Rust passed the focused example in 3.38s, and Ruby failed it in 2.19s. The
+safe Ruby sequence was internal `Target.getTargets` send/response, internal
+`Target.getTargetInfo` send with no response, then forwarded `Target.getTargets`
+send before EPIPE. The reader exited with `IOError` before that forwarded
+write; this was pipe closure, not a protocol error response or the 30-second
+timeout. There was no parent output-reader exception or surfaced Chrome
+startup error. The trace includes Chrome-side shutdown, but its summary drops
+timestamps, so it cannot establish which command caused that shutdown. Sharing
+the IO object did not change the failure and produced no Ruby performance
+measurement. The next matched probe requests `Target.getTargets` twice before
+`Target.getTargetInfo`; this distinguishes a generic second-command failure
+from a method-specific issue. Ruby's separate reader/writer handles are
+restored.
