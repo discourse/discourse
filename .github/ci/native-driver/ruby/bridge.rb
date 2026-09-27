@@ -191,7 +191,8 @@ class RubyCDPBridge
         "Chrome is still running"
       end
     raise IOError,
-          "Chromium closed CDP input while sending #{request.fetch("method")}; #{state}; #{chrome_pipe_state}"
+          "Chromium closed CDP input while sending #{request.fetch("method")} id=#{id} " \
+            "recipient=#{external_id ? "external" : "internal"}; #{state}; #{chrome_pipe_state}"
   rescue StandardError
     @pending_mutex.synchronize { @pending.delete(id) } if id
     raise
@@ -227,6 +228,7 @@ class RubyCDPBridge
       "matches_input=#{links[0] && links[0] == @chrome_input_endpoint} " \
       "matches_output=#{links[1] && links[1] == @chrome_output_endpoint} " \
       "browser_writer_open=#{!@browser_writer.closed?} " \
+      "ruby_reader_alive=#{@reader&.alive?} " \
       "browser_writer_access=#{process_fd_access(Process.pid, @browser_writer.fileno)} " \
       "browser_writer_matches_endpoint=#{process_fd_link(Process.pid, @browser_writer.fileno) == @browser_writer_endpoint} " \
       "browser_reader=#{browser_link && browser_link.start_with?("socket:") ? "socket" : "other"}"
