@@ -54,7 +54,7 @@ class RubyCDPBridge
       chrome_socket.close
     end
     @browser_reader = browser_reader
-    @browser_writer = browser_reader.dup
+    @browser_writer = @browser_reader
     @browser_writer_endpoint =
       begin
         File.readlink("/proc/self/fd/#{@browser_writer.fileno}")
@@ -79,7 +79,7 @@ class RubyCDPBridge
     @requests.close
     @worker&.join
     @browser_reader&.close
-    @browser_writer&.close
+    @browser_writer&.close unless @browser_writer.equal?(@browser_reader)
     begin
       Process.kill("TERM", -@chrome_pid)
     rescue Errno::ESRCH
