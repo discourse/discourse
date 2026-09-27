@@ -56,6 +56,7 @@ class RubyCDPBridge
     end
     @browser_reader = browser_reader
     @browser_writer = browser_writer
+    probe_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
   end
@@ -86,6 +87,35 @@ class RubyCDPBridge
   end
 
   private
+
+  def probe_browser_pipe
+    stage = "json"
+    request = { "id" => 1, "method" => "Target.getTargets", "params" => {} }
+    begin
+      @browser_writer.write(JSON.generate(request))
+      stage = "delimiter"
+      @browser_writer.write("\0")
+      @browser_writer.flush
+      stage = "response"
+      unless IO.select([@browser_reader], nil, nil, 20)
+        raise IOError, "Timed out waiting for Chromium pipe probe"
+      end
+      response_line = @browser_reader.gets("\0")
+      raise IOError, "Chromium closed during pipe probe" unless response_line
+      response = JSON.parse(response_line.delete_suffix("\0"))
+      unless response["id"] == request["id"] && response.dig("result", "targetInfos").is_a?(Array)
+        raise IOError, "Invalid Chromium pipe probe response"
+      end
+      @sequence = request.fetch("id")
+      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=pass")
+    rescue Errno::EPIPE
+      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=write_error stage=#{stage}")
+      raise
+    rescue StandardError => error
+      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=error stage=#{stage} type=#{error.class}")
+      raise
+    end
+  end
 
   def process_requests
     loop do
