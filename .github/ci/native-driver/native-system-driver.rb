@@ -694,6 +694,8 @@ class NativeSystemDriver < Capybara::Driver::Base
       Open3.popen3(*bridge, *arguments, *@args, "--user-data-dir=#{@profile}")
     @pending_commands = {}
     @transport_error = nil
+    @errors = []
+    @error_reader = Thread.new { errors.each_line { |line| @errors << line } }
     @output_reader =
       Thread.new do
         while line = @output.gets
@@ -708,14 +710,17 @@ class NativeSystemDriver < Capybara::Driver::Base
       rescue StandardError => error
         @transport_error = error
       ensure
+        if ENV["NATIVE_CDP_RUBY_BRIDGE"] == "1"
+          @error_reader.join(0.1)
+          diagnostic = @errors.find { |line| line.start_with?("NATIVE_CDP_RUBY_BRIDGE_FAILURE ") }
+          @transport_error ||= RuntimeError.new(diagnostic.strip) if diagnostic
+        end
         @command_mutex.synchronize do
           @transport_error ||= RuntimeError.new("Native CDP output closed")
           @pending_commands.each_value { |pending_response| pending_response << @transport_error }
           @pending_commands.clear
         end
       end
-    @errors = []
-    @error_reader = Thread.new { errors.each_line { |line| @errors << line } }
     command("Target.getTargets", {}, browser: true)
       .fetch("targetInfos")
       .each do |target|

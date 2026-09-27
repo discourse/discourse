@@ -15,17 +15,15 @@ class RubyCDPBridge
     @drags = Queue.new
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
     browser_socket, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
-    @chrome_pid =
-      Process.spawn(
-        *arguments,
-        "--remote-debugging-pipe",
-        in: File::NULL,
-        out: File::NULL,
-        err: STDERR,
-        3 => chrome_socket.fileno,
-        4 => chrome_socket.fileno,
-        pgroup: true,
-      )
+    options = {
+      in: File::NULL,
+      out: File::NULL,
+      err: STDERR,
+      3 => chrome_socket.fileno,
+      4 => chrome_socket.fileno,
+      pgroup: true,
+    }
+    @chrome_pid = Process.spawn(*arguments, "--remote-debugging-pipe", options)
     chrome_socket.close
     @browser_socket = browser_socket
     @reader = Thread.new { read_browser }
@@ -991,4 +989,10 @@ end
 
 arguments = ARGV
 exit 2 if arguments.empty?
-RubyCDPBridge.new(arguments).run
+begin
+  RubyCDPBridge.new(arguments).run
+rescue StandardError => error
+  STDERR.sync = true
+  STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_FAILURE #{error.class} at #{error.backtrace&.first}")
+  exit 1
+end

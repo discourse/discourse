@@ -331,6 +331,10 @@ jobs:
           echo 'NATIVE_CDP_DIRECT_EVAL=1' >> "$GITHUB_ENV"
           echo 'NATIVE_CDP_ATOMIC_FILL=1' >> "$GITHUB_ENV"
 
+      - name: Check Ruby CDP bridge syntax
+        if: env.DISCOURSE_CI_SYSTEM_DRIVER == 'native-cdp' && matrix.build_type == 'system' && matrix.target == 'core'
+        run: ruby -c .github/ci/native-driver/ruby/bridge.rb
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
