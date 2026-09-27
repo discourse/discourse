@@ -707,9 +707,9 @@ class NativeSystemDriver < Capybara::Driver::Base
           "-ttt",
           "-qq",
           "-e",
-          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl,write,writev,sendto,sendmsg",
+          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl,read,write,writev,sendto,sendmsg",
           "-e",
-          "raw=write,writev,sendto,sendmsg",
+          "raw=read,write,writev,sendto,sendmsg",
           "-o",
           File.join(@fd_trace_directory, "trace"),
           "--",
@@ -856,13 +856,21 @@ class NativeSystemDriver < Capybara::Driver::Base
     targets = @errors.find do |line|
       line.start_with?("NATIVE_CDP_RUBY_FD_TRACE_TARGETS ")
     end
-    match = targets&.match(/ruby_pid=(\d+) chrome_pid=(\d+) reader_fd=(\d+) writer_fd=(\d+)/)
+    match =
+      targets&.match(
+        /ruby_pid=(\d+) chrome_pid=(\d+) reader_fd=(\d+) writer_fd=(\d+) endpoint_at=([0-9.]+)/,
+      )
     return "targets_missing" unless match
 
-    ruby_pid, chrome_pid, reader_fd, writer_fd = match.captures.map(&:to_i)
+    ruby_pid, chrome_pid, reader_fd, writer_fd = match.captures.first(4).map(&:to_i)
+    endpoint_created_at = match.captures.last.to_f
     processes = { "ruby" => [ruby_pid, [reader_fd, writer_fd]], "chrome" => [chrome_pid, [3, 4]] }
     ruby_write_epipe_at = nil
     chrome_shutdown_at = nil
+    chrome_read_eof_at = nil
+    ruby_writer_shutdown_at = nil
+    ruby_endpoint_closed_at = nil
+    ruby_closed_fds = {}
     trace_prefix = File.join(@fd_trace_directory, "trace")
     summaries = processes.map do |name, (pid, descriptors)|
       trace_file = "#{trace_prefix}.#{pid}"
@@ -878,6 +886,43 @@ class NativeSystemDriver < Capybara::Driver::Base
           if write_error && Integer(write_error[2].split(",").first.strip, 0) == writer_fd
             timestamp = write_error[1].to_f
             ruby_write_epipe_at = [ruby_write_epipe_at, timestamp].compact.min
+          end
+          local_shutdown =
+            line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+0/)
+          if local_shutdown && local_shutdown[1].to_f >= endpoint_created_at
+            arguments = local_shutdown[2].split(",").map(&:strip)
+            descriptor = Integer(arguments.first, 0)
+            if descriptors.include?(descriptor) && %w[SHUT_WR SHUT_RDWR].include?(arguments.second)
+              timestamp = local_shutdown[1].to_f
+              ruby_writer_shutdown_at = [ruby_writer_shutdown_at, timestamp].compact.min
+            end
+          end
+          local_close = line.match(/\A\s*([0-9.]+)\s+close\(([^)]*)\)\s+=\s+0/)
+          if local_close && local_close[1].to_f >= endpoint_created_at
+            descriptor = Integer(local_close[2].split(",").first.strip, 0)
+            ruby_closed_fds[descriptor] ||= local_close[1].to_f if descriptors.include?(descriptor)
+          end
+          local_close_range =
+            line.match(/\A\s*([0-9.]+)\s+close_range\(([^)]*)\)\s+=\s+0/)
+          if local_close_range && local_close_range[1].to_f >= endpoint_created_at
+            first_fd, last_fd = local_close_range[2].split(",").first(2).map { |fd| Integer(fd.strip, 0) }
+            descriptors.each do |descriptor|
+              if first_fd <= descriptor && descriptor <= last_fd
+                ruby_closed_fds[descriptor] ||= local_close_range[1].to_f
+              end
+            end
+          end
+        end
+        if name == "chrome"
+          read_eof = line.match(/\A\s*([0-9.]+)\s+read\(([^)]*)\)\s+=\s+0(?:\s|$)/)
+          if read_eof
+            arguments = read_eof[2].split(",").map(&:strip)
+            descriptor = Integer(arguments.first, 0)
+            requested_bytes = Integer(arguments[2], 0)
+            if descriptors.include?(descriptor) && requested_bytes.positive?
+              timestamp = read_eof[1].to_f
+              chrome_read_eof_at = [chrome_read_eof_at, timestamp].compact.min
+            end
           end
         end
         if name == "chrome"
@@ -921,16 +966,33 @@ class NativeSystemDriver < Capybara::Driver::Base
         count > 1 ? "#{description}x#{count}" : description
       end
       detail_summary = details.empty? ? "none" : details.first(12).join(",")
+      if name == "ruby" && descriptors.all? { |descriptor| ruby_closed_fds.key?(descriptor) }
+        ruby_endpoint_closed_at = descriptors.map { |descriptor| ruby_closed_fds.fetch(descriptor) }.max
+      end
       "#{name}[fds=#{descriptors.join(",")}]{#{detail_summary}}"
     end
 
+    ruby_endpoint_teardown_at = [ruby_writer_shutdown_at, ruby_endpoint_closed_at].compact.min
+    local_close_order =
+      if ruby_endpoint_teardown_at && chrome_read_eof_at
+        ruby_endpoint_teardown_at <= chrome_read_eof_at ? "before_chrome_eof" : "after_chrome_eof"
+      else
+        "unknown"
+      end
+    chrome_eof_order =
+      if chrome_read_eof_at && ruby_write_epipe_at
+        chrome_read_eof_at <= ruby_write_epipe_at ? "before_ruby_epipe" : "after_ruby_epipe"
+      else
+        "unknown"
+      end
     chrome_shutdown_order =
       if chrome_shutdown_at && ruby_write_epipe_at
         chrome_shutdown_at <= ruby_write_epipe_at ? "before_ruby_epipe" : "after_ruby_epipe"
       else
         "unknown"
       end
-    "#{summaries.join(";")};chrome_shutdown_#{chrome_shutdown_order}"
+    "#{summaries.join(";")};ruby_endpoint_teardown_#{local_close_order};" \
+      "chrome_eof_#{chrome_eof_order};chrome_shutdown_#{chrome_shutdown_order}"
   rescue StandardError
     "unavailable"
   end

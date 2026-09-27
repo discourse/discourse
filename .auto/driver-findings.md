@@ -394,3 +394,18 @@ syscalls in raw-argument mode, so the local trace does not record protocol
 contents; the reducer compares the exact `EPIPE` syscall time with Chrome's
 shutdown time and publishes only which came first. Linting again failed at
 `syntax_tree` without line-level formatting output.
+
+Run [36341433194](https://github.com/discourse/discourse/actions/runs/36341433194)
+at head `fc6a7104899` found Chrome still alive at Ruby's second-write failure.
+The traced Chrome `shutdown` preceded the traced Ruby `EPIPE`, but this does
+not explain what triggered Chrome's shutdown. The available Chrome EOF marker
+is ordered before the later forwarded-write failure, not precisely against
+the earlier synchronous probe failure; no Ruby-side `shutdown` syscall appears
+on either tracked socket handle. Chromium's current
+[`DevToolsPipeHandler`](https://chromium.googlesource.com/chromium/src/+/main/content/browser/devtools/devtools_pipe_handler.cc)
+logs the pipe-reader EOF when `read()` returns no bytes and then shuts down
+both pipe ends, so that shutdown can be a response to peer EOF rather than its
+cause. The next run traces raw-argument `read` syscalls and compares Chrome's
+actual zero-byte read with closes of both Ruby socket handles; only event-order
+booleans are emitted. Rust passed in 3.37s and Ruby failed in 2.26s. Linting
+again failed only at `syntax_tree`.

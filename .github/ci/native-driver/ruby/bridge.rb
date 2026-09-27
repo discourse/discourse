@@ -66,7 +66,7 @@ class RubyCDPBridge
       STDERR.puts(
         "NATIVE_CDP_RUBY_FD_TRACE_TARGETS ruby_pid=#{Process.pid} " \
           "chrome_pid=#{@chrome_pid} reader_fd=#{@browser_reader.fileno} " \
-          "writer_fd=#{@browser_writer.fileno}",
+          "writer_fd=#{@browser_writer.fileno} endpoint_at=#{Time.now.to_f}",
       )
     end
     probe_synchronous_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE"] == "1"
