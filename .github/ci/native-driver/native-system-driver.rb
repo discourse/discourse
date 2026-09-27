@@ -835,15 +835,13 @@ class NativeSystemDriver < Capybara::Driver::Base
 
     ruby_pid, chrome_pid, reader_fd, writer_fd = match.captures.map(&:to_i)
     processes = { "ruby" => [ruby_pid, [reader_fd, writer_fd]], "chrome" => [chrome_pid, [3, 4]] }
-    events = []
-    sequence = 0
     trace_prefix = File.join(@fd_trace_directory, "trace")
-    processes.each do |name, (pid, descriptors)|
+    summaries = processes.map do |name, (pid, descriptors)|
       trace_file = "#{trace_prefix}.#{pid}"
-      next unless File.file?(trace_file)
+      next "#{name}=trace_missing" unless File.file?(trace_file)
 
+      operations = Hash.new(0)
       File.foreach(trace_file) do |line|
-        timestamp = line.match(/\A(\d+\.\d+)/)&.captures&.first&.to_f
         operation =
           line.match(/\b(close_range|shutdown|dup2|dup3|dup|fcntl|close)\(([^)]*)\)\s+=\s+(-?\d+)/)
         next unless operation
@@ -871,15 +869,17 @@ class NativeSystemDriver < Capybara::Driver::Base
           when "dup", "fcntl" then "#{call}(#{first_fd})=#{result}"
           else "#{call}(#{first_fd})=#{result}"
           end
-        sequence += 1
-        events << [timestamp, sequence, "#{name}:#{description}"]
+        operations[description] += 1
       end
+
+      details = operations.map do |description, count|
+        count > 1 ? "#{description}x#{count}" : description
+      end
+      detail_summary = details.empty? ? "none" : details.first(12).join(",")
+      "#{name}[fds=#{descriptors.join(",")}]{#{detail_summary}}"
     end
 
-    return "no_matching_operations" if events.empty?
-
-    events.sort_by! { |timestamp, order, _| [timestamp || Float::INFINITY, order] }
-    events.map(&:last).first(30).join(",")
+    summaries.join(";")
   rescue StandardError
     "unavailable"
   end

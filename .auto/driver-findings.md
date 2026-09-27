@@ -146,6 +146,17 @@ descriptor-management syscalls for the Ruby bridge and Chrome. The trace is
 reduced to process labels and fd operations before entering the failure
 message; it does not capture CDP reads or writes.
 
+Run [36325081594](https://github.com/discourse/discourse/actions/runs/36325081594)
+ran that descriptor trace. Rust passed the two examples in 10.94s (16s for the
+bridge command); Ruby failed both in 3.41s. The Ruby threaded pipe probe passed,
+but its reader then exited with `IOError`/EOF before the external
+`Target.getTargets` request (ID 2) failed with EPIPE. The trace itself was
+collected, but its first safe summary was capped across both processes and was
+filled by repeated Ruby `close(5)=0` calls, hiding Chrome's fd 3/4 events. That
+summary cannot establish which process closed the browser pipe. The next run
+keeps Ruby and Chrome events separate and compresses repeated operations; it
+still reports only process labels and selected descriptor-management calls.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
 uses only one threaded probe. Until Ruby passes the same focused examples,
