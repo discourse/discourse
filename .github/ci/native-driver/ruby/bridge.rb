@@ -118,6 +118,8 @@ class RubyCDPBridge
     first_attempt_json_written = 0
     first_attempt_delimiter_written = 0
     first_response_received = false
+    first_response_chrome_state = "not_sampled"
+    first_response_pipe_state = {}
     peer_read_state_after_first_response = "not_sampled"
     peer_read_state_before_second_attempt = "not_sampled"
     2.times do
@@ -153,6 +155,8 @@ class RubyCDPBridge
             response = decoded
             if attempt == 1
               first_response_received = true
+              first_response_chrome_state = chrome_process_state
+              first_response_pipe_state = browser_pipe_probe_state
               peer_read_state_after_first_response = browser_peer_read_state
             end
             break
@@ -172,21 +176,22 @@ class RubyCDPBridge
   rescue StandardError => error
     error_code = error.message.match(/code[=: ]+(-?\d+)/)&.captures&.first
     code = " code=#{error_code}" if error_code
-    chrome_state =
-      begin
-        Process.waitpid2(@chrome_pid, Process::WNOHANG) ? "exited" : "alive"
-      rescue Errno::ECHILD
-        "reaped"
-      end
+    chrome_state = chrome_process_state
+    first_response_pipe_fields =
+      first_response_pipe_state.map { |key, value| "first_response_#{key}=#{value}" }.join(" ")
+    error_pipe_fields =
+      browser_pipe_probe_state.map { |key, value| "after_error_#{key}=#{value}" }.join(" ")
     STDERR.puts(
       "NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=error " \
         "method=#{method} type=#{error.class} attempt=#{attempt} " \
         "stage=#{write_stage} json_written=#{json_bytes_written} " \
         "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state} " \
+        "first_response_chrome_state=#{first_response_chrome_state} " \
         "first_attempt_payload_bytes=#{first_attempt_payload_bytes} " \
         "first_attempt_json_written=#{first_attempt_json_written} " \
         "first_attempt_delimiter_written=#{first_attempt_delimiter_written} " \
         "first_response_received=#{first_response_received} " \
+        "#{first_response_pipe_fields} #{error_pipe_fields} " \
         "peer_read_state_after_first_response=#{peer_read_state_after_first_response} " \
         "peer_read_state_before_attempt_2=#{peer_read_state_before_second_attempt} " \
         "peer_read_state_after_error=#{browser_peer_read_state}#{code}",
@@ -209,6 +214,32 @@ class RubyCDPBridge
     end
   rescue StandardError
     "error"
+  end
+
+  def browser_pipe_probe_state
+    {
+      chrome_fd3_matches_input: process_fd_link(@chrome_pid, 3) == @chrome_input_endpoint,
+      chrome_fd4_matches_output: process_fd_link(@chrome_pid, 4) == @chrome_output_endpoint,
+      chrome_fd3_access: process_fd_access(@chrome_pid, 3),
+      chrome_fd4_access: process_fd_access(@chrome_pid, 4),
+      chrome_fd3_cloexec: process_fd_cloexec(@chrome_pid, 3),
+      chrome_fd4_cloexec: process_fd_cloexec(@chrome_pid, 4),
+      browser_writer_open: !@browser_writer.closed?,
+      browser_writer_matches_input:
+        process_fd_link(Process.pid, @browser_writer.fileno) == @browser_writer_endpoint,
+      browser_reader_open: !@browser_reader.closed?,
+    }
+  end
+
+  def chrome_process_state
+    status = Process.waitpid2(@chrome_pid, Process::WNOHANG)&.last
+    return "alive" unless status
+    return "exit_#{status.exitstatus}" if status.exited?
+    return "signal_#{status.termsig}" if status.signaled?
+
+    "exited"
+  rescue Errno::ECHILD
+    "reaped"
   end
 
   def trace_chrome_task_ids_during

@@ -496,3 +496,27 @@ will preserve the first request's byte counts and sample peer state immediately
 after its response to pin down the transition boundary. No Ruby performance
 timing is available. Linting still fails SyntaxTree for both modified Ruby
 files ([run](https://github.com/discourse/discourse/actions/runs/36345458624)).
+
+Run [36346335934](https://github.com/discourse/discourse/actions/runs/36346335934)
+at head `b2fd2708fb6` passed the Rust sample and failed the Ruby sample. The
+Ruby sync probe fully wrote its first 49-byte JSON command and NUL delimiter,
+received and validated a response, then saw peer EOF before attempting command
+two. The Chrome command-input trace recorded EOF; the response-output
+descriptor had no reads. Both Ruby handles closed after Chrome EOF, and no
+Ruby writer shutdown was observed. This confirms the failing second write only
+exposed an already-closed peer. It does not identify what caused the closure.
+Linting passed. There is still no Ruby timing.
+
+Run [36347597995](https://github.com/discourse/discourse/actions/runs/36347597995)
+at head `d81a124d895` changed the Ruby sample to use the two one-way pipes
+expected by `--remote-debugging-pipe`. Rust passed its focused example in
+3.51s. Ruby fully wrote two 49-byte JSON commands and their delimiters and
+received the first response, then got EOF while waiting for the second; Chrome
+was already exited. Its 2.49s sample ended in failure and is not a valid timing.
+The job log contained no known Chrome pipe diagnostic or fatal/error category,
+and exposed no exit code or signal. The trace still places Ruby endpoint closes
+after Chrome input EOF; separate-pipe transport therefore changed the failure
+from an early EPIPE to a missing second response but did not make Ruby viable.
+Linting passed. The next probe records Chrome's exit status and verifies both
+mapped Chrome pipe roles and Ruby's command writer immediately after response
+one, using only safe booleans and access labels.

@@ -779,6 +779,25 @@ class NativeSystemDriver < Capybara::Driver::Base
                 first_attempt_json_written
                 first_attempt_delimiter_written
                 first_response_received
+                first_response_chrome_state
+                first_response_chrome_fd3_matches_input
+                first_response_chrome_fd4_matches_output
+                first_response_chrome_fd3_access
+                first_response_chrome_fd4_access
+                first_response_chrome_fd3_cloexec
+                first_response_chrome_fd4_cloexec
+                first_response_browser_writer_open
+                first_response_browser_writer_matches_input
+                first_response_browser_reader_open
+                after_error_chrome_fd3_matches_input
+                after_error_chrome_fd4_matches_output
+                after_error_chrome_fd3_access
+                after_error_chrome_fd4_access
+                after_error_chrome_fd3_cloexec
+                after_error_chrome_fd4_cloexec
+                after_error_browser_writer_open
+                after_error_browser_writer_matches_input
+                after_error_browser_reader_open
                 peer_read_state_after_first_response
                 peer_read_state_before_attempt_2
                 peer_read_state_after_error
