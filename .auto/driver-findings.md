@@ -615,3 +615,14 @@ nonblocking mode. This explains why both Ruby transports failed after one
 command while the Rust transport remained connected. The next focused run
 clears nonblocking mode only on the descriptors passed to Chrome and checks
 whether Ruby can complete the two-command probe.
+
+Run [36352469718](https://github.com/discourse/discourse/actions/runs/36352469718/job/108713649027)
+at head `15998d4a5b0` passed both focused samples; Linting also passed
+([job](https://github.com/discourse/discourse/actions/runs/36352469702/job/108713648882)).
+The Rust sample took 3.42s in RSpec and 7s for its bridge command. Ruby took
+5.06s in RSpec and 9s for its bridge command. Ruby now stays connected through
+the sample after the Chrome-side descriptors are made blocking, consistent
+with the `EAGAIN` diagnosis. These timings are not a valid speed comparison
+because Ruby was still wrapped in `strace`. The next run removes syscall
+tracing and includes the same stale-element example plus one unload-confirmation
+example, retaining the two-command probe to check transport setup.
