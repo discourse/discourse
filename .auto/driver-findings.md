@@ -444,3 +444,23 @@ also uses a non-consuming socket peek to classify Chrome's output side as
 open, containing data, or EOF immediately before each request. Trace files and
 task IDs remain temporary and are removed after the check. Linting failed at
 `syntax_tree` for both modified Ruby files.
+
+Run [36344186816](https://github.com/discourse/discourse/actions/runs/36344186816)
+at head `340dc32e7cd` passed the Rust focused example in 3.41s and failed the
+Ruby example in 2.32s with `Errno::EPIPE` on its second synchronous request,
+before writing any JSON or delimiter bytes. The trace found a zero-byte Chrome
+read before the failed Ruby write, while both Ruby socket handles closed only
+later during teardown; Chrome's shutdown was also before the write failure.
+This narrows the failure to Chrome having already seen EOF or stopped using
+the command stream, not a Ruby-side close recorded on the tracked handles. The
+trace merged Chrome's command-input and response-output descriptors, however,
+so it did not yet identify which side read EOF. The peer-state probe also
+reported `unknown`; its Ruby code did not classify a `nil` result as EOF.
+Chromium documents fd 3 as the remote-debugging command input and fd 4 as the
+response output ([source](https://chromium.googlesource.com/chromium/src/+/e972c575b9a075ab5dcadddf269d60bb23d4af35)). The next run separates read
+events for those roles, handles both `nil` and empty-string EOF results, and
+records the peer state immediately before the second write. The run still
+provides no Ruby performance measurement because the bridge fails before
+completing the focused example. The Linting job failed SyntaxTree for the two
+modified Ruby files; other reported linters passed
+([run](https://github.com/discourse/discourse/actions/runs/36344186781)).

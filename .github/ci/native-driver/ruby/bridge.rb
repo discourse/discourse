@@ -109,6 +109,7 @@ class RubyCDPBridge
     write_stage = "json"
     json_bytes_written = 0
     delimiter_bytes_written = 0
+    peer_read_state_before_second_attempt = "not_sampled"
     2.times do
       attempt += 1
       write_stage = "json"
@@ -117,6 +118,7 @@ class RubyCDPBridge
       @sequence += 1
       id = @sequence
       peer_read_state = browser_peer_read_state
+      peer_read_state_before_second_attempt = peer_read_state if attempt == 2
       request = { "id" => id, "method" => method, "params" => {} }
       payload = JSON.generate(request)
       record_protocol_event("send-internal", method)
@@ -164,7 +166,8 @@ class RubyCDPBridge
         "method=#{method} type=#{error.class} attempt=#{attempt} " \
         "stage=#{write_stage} json_written=#{json_bytes_written} " \
         "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state} " \
-        "peer_read_state=#{browser_peer_read_state}#{code}",
+        "peer_read_state_before_attempt_2=#{peer_read_state_before_second_attempt} " \
+        "peer_read_state_after_error=#{browser_peer_read_state}#{code}",
     )
   end
 
@@ -172,6 +175,7 @@ class RubyCDPBridge
     message = @browser_reader.recv_nonblock(1, Socket::MSG_PEEK, exception: false)
     case message
     when :wait_readable then "open"
+    when nil then "eof"
     when String then message.empty? ? "eof" : "data"
     else "unknown"
     end
