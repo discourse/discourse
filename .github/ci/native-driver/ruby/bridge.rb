@@ -33,7 +33,8 @@ class RubyCDPBridge
       child_output.close
       chrome_socket.close
     end
-    @browser_socket = browser_socket
+    @browser_reader = browser_socket
+    @browser_writer = browser_socket.dup
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
   end
@@ -50,7 +51,8 @@ class RubyCDPBridge
   ensure
     @requests.close
     @worker&.join
-    @browser_socket&.close
+    @browser_reader&.close
+    @browser_writer&.close
     begin
       Process.kill("TERM", -@chrome_pid)
     rescue Errno::ESRCH
@@ -80,7 +82,7 @@ class RubyCDPBridge
   end
 
   def read_browser
-    while message = @browser_socket.gets("\0")
+    while message = @browser_reader.gets("\0")
       response = JSON.parse(message.delete_suffix("\0"))
       if response.key?("id")
         pending = @pending_mutex.synchronize { @pending.delete(response.fetch("id")) }
@@ -132,9 +134,9 @@ class RubyCDPBridge
       end
     request = request.merge("id" => id)
     @write_mutex.synchronize do
-      @browser_socket.write(JSON.generate(request))
-      @browser_socket.write("\0")
-      @browser_socket.flush
+      @browser_writer.write(JSON.generate(request))
+      @browser_writer.write("\0")
+      @browser_writer.flush
     end
     id
   rescue Errno::EPIPE
