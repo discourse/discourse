@@ -73,7 +73,7 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
       DISCOURSE_SYSTEM_BATCHED_READS: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
-      DISCOURSE_CI_SYSTEM_DRIVER: playwright
+      DISCOURSE_CI_SYSTEM_DRIVER: native-cdp
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
     strategy:
