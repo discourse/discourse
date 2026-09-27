@@ -363,10 +363,10 @@ jobs:
           if [[ "$DISCOURSE_CI_SYSTEM_DRIVER" == "native-cdp" ]]; then
             sample_specs=(.github/ci/native-driver/spec/system/native_driver_spec.rb:4)
             bridge_started_seconds=$SECONDS
-            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_BRIDGE=0 NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=1 bundle exec rspec --format documentation "${sample_specs[@]}"
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_BRIDGE=0 bundle exec rspec --format documentation "${sample_specs[@]}"
             printf 'CI_CDP_BRIDGE_TIME {"bridge":"rust","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
             bridge_started_seconds=$SECONDS
-            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_BRIDGE=1 NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE=1 NATIVE_CDP_RUBY_FD_TRACE=1 bundle exec rspec --format documentation "${sample_specs[@]}"
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_BRIDGE=1 NATIVE_CDP_RUBY_FD_TRACE=1 bundle exec rspec --format documentation "${sample_specs[@]}"
             printf 'CI_CDP_BRIDGE_TIME {"bridge":"ruby","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
           else
             system_test_paths=(spec/system)

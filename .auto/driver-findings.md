@@ -215,6 +215,16 @@ command. The screenshot/no-page errors followed the first RSpec failure. The
 next attempt emits a separate sanitized method/stage marker at the first
 EPIPE, without protocol payloads or request identifiers.
 
+Run [36332071572](https://github.com/discourse/discourse/actions/runs/36332071572)
+at head `b2a4a34a9c5` passed the Ruby syntax check. Rust passed the one-example
+sample in 3.86s (4.09s RSpec load); Ruby failed in 2.21s (2.96s load). The
+new marker identified `Target.getTargets`, stage `json`, with Chrome still
+alive. This is a startup command, but the Ruby sample also had a CI-only
+self-probe that uses the same method, so the failing request's source was
+ambiguous. The run did not produce a Ruby performance measurement. The next
+attempt removes that self-probe from both driver samples, leaving the ordinary
+Capybara startup command as the first browser request.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
 uses only one threaded probe. Until Ruby passes the same focused system-test
