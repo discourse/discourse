@@ -722,12 +722,6 @@ class NativeSystemDriver < Capybara::Driver::Base
               write_failure_index && @errors.fetch(write_failure_index)
             write_stage =
               write_failure&.match(/stage=(json|delimiter)\b/)&.captures&.first || "unknown"
-            pipe_probe = @errors.find do |line|
-              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE ")
-            end
-            pipe_probe_state = pipe_probe&.match(/result=(pass|write_error|error)(?: (?:count|id)=(\d+))?\b/)
-            pipe_probe_result = pipe_probe_state&.captures&.first || "not_run"
-            pipe_probe_count = pipe_probe_state&.captures&.last || "unknown"
             threaded_pipe_probe = @errors.find do |line|
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE ")
             end
@@ -753,7 +747,6 @@ class NativeSystemDriver < Capybara::Driver::Base
             diagnostic_message =
               "#{diagnostic.strip}; " \
                 "ruby_write_stage=#{write_stage} " \
-                "ruby_pipe_probe=#{pipe_probe_result}:#{pipe_probe_count} " \
                 "ruby_threaded_pipe_probe=#{threaded_pipe_probe_result} " \
                 "chrome_pipe_reader_eof_before_ruby_write=#{chrome_reader_eof_before_write_failure} " \
                 "chrome_pipe_writer_error_before_ruby_write=#{chrome_writer_error_before_write_failure}"

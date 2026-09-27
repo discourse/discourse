@@ -61,7 +61,6 @@ class RubyCDPBridge
       rescue StandardError
         nil
       end
-    probe_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
     probe_threaded_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
@@ -94,50 +93,11 @@ class RubyCDPBridge
 
   private
 
-  def probe_browser_pipe
-    probe_id = 1
-    stage = "json"
-    begin
-      2.times do |index|
-        probe_id = index + 1
-        request = { "id" => probe_id, "method" => "Target.getTargets", "params" => {} }
-        stage = "json"
-        @browser_writer.write(JSON.generate(request))
-        stage = "delimiter"
-        @browser_writer.write("\0")
-        @browser_writer.flush
-      end
-      2.times do |index|
-        probe_id = index + 1
-        stage = "response"
-        unless IO.select([@browser_reader], nil, nil, 20)
-          raise IOError, "Timed out waiting for Chromium pipe probe"
-        end
-        response_line = @browser_reader.gets("\0")
-        raise IOError, "Chromium closed during pipe probe" unless response_line
-        response = JSON.parse(response_line.delete_suffix("\0"))
-        unless response["id"] == probe_id && response.dig("result", "targetInfos").is_a?(Array)
-          raise IOError, "Invalid Chromium pipe probe response"
-        end
-      end
-      @sequence = probe_id
-      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=pass count=2")
-    rescue Errno::EPIPE
-      STDERR.puts(
-        "NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=write_error id=#{probe_id} stage=#{stage}",
-      )
-      raise
-    rescue StandardError => error
-      STDERR.puts(
-        "NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=error id=#{probe_id} stage=#{stage} type=#{error.class}",
-      )
-      raise
-    end
-  end
-
   def probe_threaded_browser_pipe
     result = call("Target.getTargets")
-    raise IOError, "Invalid threaded Chromium pipe probe response" unless result["targetInfos"].is_a?(Array)
+    unless result["targetInfos"].is_a?(Array)
+      raise IOError, "Invalid threaded Chromium pipe probe response"
+    end
     STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=pass")
   rescue StandardError => error
     STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=error type=#{error.class}")
