@@ -657,5 +657,19 @@ reported 174.133ms for the first bridge and 137.000ms for the second, an
 apparent 21.3% Ruby advantage. The workflow ran Rust first and Ruby second,
 and the benchmark line did not yet include the bridge name, so this is only
 an order-sensitive preliminary result. Whole-second bridge command times were
-8s for Rust and 7s for Ruby. The next run labels each inner measurement and
-reverses the order, with tracing disabled, to check for warm-cache bias.
+8s for Rust and 7s for Ruby. The next run reversed the order and labeled each
+measurement, with tracing disabled; its result follows.
+
+Run [36354299372](https://github.com/discourse/discourse/actions/runs/36354299372/job/108718821347)
+at head `92543b7cb02` reversed the order and passed the same one-example,
+500-evaluation sample for each bridge. Ruby ran first and measured 819.487ms;
+Rust ran second and measured 984.033ms, an apparent 16.7% Ruby advantage. The
+RSpec examples took 6.16s for Ruby and 5.70s for Rust, so total example startup
+favored Rust by 0.46s. The per-loop results keep pointing to Ruby at least
+matching Rust, but both loop measurements were about five times the prior
+run's values (137.000ms and 174.133ms). This variation and the opposite RSpec
+ordering result make a single pair too noisy for a conclusion. The separate
+[Linting job](https://github.com/discourse/discourse/actions/runs/36354299364/job/108718821102)
+was queued at the time of inspection; local targeted DV lint passed. The next
+run uses an order-balanced Ruby/Rust/Rust/Ruby sequence on the same runner to
+reduce drift and collect two inner samples per implementation.
