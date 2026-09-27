@@ -774,7 +774,32 @@ Core consumed about 47.44 CPU-seconds over 51 elapsed seconds and peaked at
 6,021.19 MiB for the whole job/container; these are aggregate resources, not
 per-bridge measurements.
 
-The next run keeps the About-page flow and replaces the simple-call benchmark
-with three timed repeats each of `Storage.clearDataForOrigin` and
-`Target.getTargets`. This checks whether the two large command timings reproduce
-in isolation before tracing the Ruby and Rust transport readers further.
+Run [36358277219](https://github.com/discourse/discourse/actions/runs/36358277219/job/108730230749)
+at head `3a968dbaf7b` passed all four invocations; [Linting passed](https://github.com/discourse/discourse/actions/runs/36358277187/job/108730230586).
+The About-page example took 6.48s and 8.23s in Ruby, and 4.17s and 4.09s in
+Rust. Three direct `Storage.clearDataForOrigin` samples exposed a large cold
+first-call cost in Ruby #1 (3.042s) and both Rust runs (3.022s and 3.019s); the
+remaining calls were 9–29ms. Ruby #2's three calls were all 9–14ms. The three
+`Target.getTargets` samples were 0.15–0.36ms in every run. These isolated
+samples do not show a stable backend-specific penalty for either command; the
+first storage-clear delay also occurs with Rust.
+
+The About-page profile still shows intermittent slow browser commands, but the
+method changes between Ruby runs: Ruby #1's two `Page.navigate` calls took
+3.378s total, while Ruby #2's `Storage.clearDataForOrigin` took 3.013s and
+`Target.getTargets` took 377ms. Rust's navigation totals were both about
+1.544s, and its corresponding reset commands were fast in this example. Locator
+counts remained identical (79 `Driver.find` and 275 `Runtime.callFunctionOn`),
+but Ruby's `Runtime.callFunctionOn` total ranged from 172ms to 719ms versus
+208–214ms in Rust. Because this profile includes setup and teardown, and the
+large Ruby delay moved between navigation and reset, the current runs do not
+isolate a repeatable Ruby-versus-Rust cause. Core used about 45.86 CPU-seconds
+over 51 elapsed seconds and peaked at 5,900.37 MiB for the entire job; these
+resource totals are not per bridge.
+
+The next run starts with the About-page example before the reset-command probe,
+so the benchmark cannot prime or alter its browser session. Command profiles
+will also be split into driver startup, user navigation, reset navigation,
+remaining reset work, and the example body, with median and 95th-percentile
+latency per CDP method. That should separate normal command cost from cold
+browser work and one-off stalls.
