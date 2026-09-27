@@ -15,17 +15,24 @@ class RubyCDPBridge
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
     chrome_to_driver_read, chrome_to_driver_write = IO.pipe
     driver_to_chrome_read, driver_to_chrome_write = IO.pipe
+    child_input = driver_to_chrome_read.dup
+    child_output = chrome_to_driver_write.dup
     options = {
       in: File::NULL,
       out: File::NULL,
       err: STDERR,
-      3 => driver_to_chrome_read.fileno,
-      4 => chrome_to_driver_write.fileno,
+      3 => child_input.fileno,
+      4 => child_output.fileno,
       pgroup: true,
     }
-    @chrome_pid = Process.spawn(*arguments, "--remote-debugging-pipe", options)
-    driver_to_chrome_read.close
-    chrome_to_driver_write.close
+    begin
+      @chrome_pid = Process.spawn(*arguments, "--remote-debugging-pipe", options)
+    ensure
+      child_input.close
+      child_output.close
+      driver_to_chrome_read.close
+      chrome_to_driver_write.close
+    end
     @browser_input = driver_to_chrome_write
     @browser_output = chrome_to_driver_read
     @reader = Thread.new { read_browser }
