@@ -55,4 +55,28 @@ RSpec.describe "Migrations::Importer::Steps::Topics", :rails do
       ["Existing topic"],
     )
   end
+
+  it "imports a topic when no existing destination topic is referenced" do
+    Migrations::Database::IntermediateDB::Topic.create(
+      original_id: 11,
+      archetype: Archetype.private_message,
+      created_at: Time.zone.now,
+      pinned_globally: false,
+      title: "New topic",
+    )
+
+    step = Migrations::Importer::Steps::Topics.new(intermediate_db, discourse_db, shared_data, {})
+    step.reporter = reporter
+    step.execute
+
+    discourse_id =
+      intermediate_db.query_value(
+        "SELECT discourse_id FROM mapped.ids WHERE original_id = ? AND type = ?",
+        11,
+        mapping_type::TOPICS,
+      )
+    expect(DB.query_single("SELECT title FROM topics WHERE id = :id", id: discourse_id)).to eq(
+      ["New topic"],
+    )
+  end
 end
