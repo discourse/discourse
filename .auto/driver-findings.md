@@ -133,8 +133,18 @@ probe passed, but the reader exited with `IOError` before the external
 `Target.getTargets` request (ID 2) hit EPIPE. CI recorded no overlapping
 `start` call, so the partial-initialization race was not observed and the lock
 did not resolve the transport failure. Rust clones its Unix socket for the
-reader thread while Ruby currently shares one `Socket` object for reads and
-writes; the next run gives those Ruby threads separate duplicated handles.
+reader thread while Ruby shared one `Socket` object for reads and writes. The
+next run tested separate duplicated handles, as described below.
+
+Run [36324429524](https://github.com/discourse/discourse/actions/runs/36324429524)
+tested separate Ruby socket handles. Rust passed both examples in 9.78s (14s
+for the bridge command); Ruby still failed both in 2.39s. The Ruby probe
+returned `RuntimeError`, and the reader again saw `IOError`/EOF before the
+external `Target.getTargets` request (ID 2) hit EPIPE. Separate Ruby IO objects
+did not match Rust's working behavior. The next run traces only
+descriptor-management syscalls for the Ruby bridge and Chrome. The trace is
+reduced to process labels and fd operations before entering the failure
+message; it does not capture CDP reads or writes.
 
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now

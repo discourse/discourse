@@ -306,6 +306,12 @@ jobs:
         if: matrix.build_type == 'system'
         run: pnpm playwright-install
 
+      - name: Install descriptor tracing tool
+        if: env.DISCOURSE_CI_SYSTEM_DRIVER == 'native-cdp' && matrix.build_type == 'system' && matrix.target == 'core'
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends strace
+
       - name: Restore native system driver
         if: env.DISCOURSE_CI_SYSTEM_DRIVER == 'native-cdp' && matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
         id: native-driver-cache
@@ -360,7 +366,7 @@ jobs:
             LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_BRIDGE=0 NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=1 bundle exec rspec --format documentation "${sample_specs[@]}"
             printf 'CI_CDP_BRIDGE_TIME {"bridge":"rust","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
             bridge_started_seconds=$SECONDS
-            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_BRIDGE=1 NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE=1 bundle exec rspec --format documentation "${sample_specs[@]}"
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_RUBY_BRIDGE=1 NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE=1 NATIVE_CDP_RUBY_FD_TRACE=1 bundle exec rspec --format documentation "${sample_specs[@]}"
             printf 'CI_CDP_BRIDGE_TIME {"bridge":"ruby","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
           else
             system_test_paths=(spec/system)

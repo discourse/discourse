@@ -669,6 +669,10 @@ class NativeSystemDriver < Capybara::Driver::Base
     @output_reader.join
     @input = nil
     FileUtils.remove_entry(@profile)
+  ensure
+    if @fd_trace_directory && File.directory?(@fd_trace_directory)
+      FileUtils.remove_entry(@fd_trace_directory)
+    end
   end
 
   def start
@@ -690,6 +694,22 @@ class NativeSystemDriver < Capybara::Driver::Base
       else
         [File.join(__dir__, "rust/target/release/discourse-cdp-bridge")]
       end
+    if ENV["NATIVE_CDP_RUBY_BRIDGE"] == "1" && ENV["NATIVE_CDP_RUBY_FD_TRACE"] == "1"
+      @fd_trace_directory = Dir.mktmpdir("native-cdp-fd-trace-")
+      bridge =
+        [
+          "strace",
+          "-ff",
+          "-ttt",
+          "-qq",
+          "-e",
+          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl",
+          "-o",
+          File.join(@fd_trace_directory, "trace"),
+          "--",
+          *bridge,
+        ]
+    end
     @input, @output, errors, @process =
       Open3.popen3(*bridge, *arguments, *@args, "--user-data-dir=#{@profile}")
     @pending_commands = {}
@@ -765,7 +785,8 @@ class NativeSystemDriver < Capybara::Driver::Base
                 "ruby_reader_exit=#{reader_exit_type} " \
                 "ruby_reader_exit_before_write_failure=#{reader_exit_before_write_failure} " \
                 "chrome_pipe_reader_eof_before_ruby_write=#{chrome_reader_eof_before_write_failure} " \
-                "chrome_pipe_writer_error_before_ruby_write=#{chrome_writer_error_before_write_failure}"
+                "chrome_pipe_writer_error_before_ruby_write=#{chrome_writer_error_before_write_failure} " \
+                "ruby_fd_trace=#{ruby_fd_trace_summary}"
             @transport_error ||= RuntimeError.new(diagnostic_message)
           end
         end
@@ -801,6 +822,66 @@ class NativeSystemDriver < Capybara::Driver::Base
     params = context_id ? { browserContextId: context_id } : {}
     initialize_page(command("Driver.newPage", params, browser: true))
     @primary_target ||= @page.target
+  end
+
+  def ruby_fd_trace_summary
+    return "disabled" unless @fd_trace_directory
+
+    targets = @errors.find do |line|
+      line.start_with?("NATIVE_CDP_RUBY_FD_TRACE_TARGETS ")
+    end
+    match = targets&.match(/ruby_pid=(\d+) chrome_pid=(\d+) reader_fd=(\d+) writer_fd=(\d+)/)
+    return "targets_missing" unless match
+
+    ruby_pid, chrome_pid, reader_fd, writer_fd = match.captures.map(&:to_i)
+    processes = { "ruby" => [ruby_pid, [reader_fd, writer_fd]], "chrome" => [chrome_pid, [3, 4]] }
+    events = []
+    sequence = 0
+    trace_prefix = File.join(@fd_trace_directory, "trace")
+    processes.each do |name, (pid, descriptors)|
+      trace_file = "#{trace_prefix}.#{pid}"
+      next unless File.file?(trace_file)
+
+      File.foreach(trace_file) do |line|
+        timestamp = line.match(/\A(\d+\.\d+)/)&.captures&.first&.to_f
+        operation =
+          line.match(/\b(close_range|shutdown|dup2|dup3|dup|fcntl|close)\(([^)]*)\)\s+=\s+(-?\d+)/)
+        next unless operation
+
+        call, raw_arguments, result = operation.captures
+        arguments = raw_arguments.split(",").map(&:strip)
+        first_fd = arguments.first.to_i
+        last_fd = arguments.second.to_i
+        relevant =
+          case call
+          when "close_range"
+            descriptors.any? { |fd| first_fd <= fd && fd <= last_fd }
+          when "dup2", "dup3"
+            descriptors.include?(first_fd) || descriptors.include?(last_fd)
+          else
+            descriptors.include?(first_fd)
+          end
+        next unless relevant
+
+        description =
+          case call
+          when "close_range" then "#{call}(#{first_fd},#{last_fd})"
+          when "dup2", "dup3" then "#{call}(#{first_fd},#{last_fd})=#{result}"
+          when "shutdown" then "#{call}(#{first_fd},#{arguments.second})=#{result}"
+          when "dup", "fcntl" then "#{call}(#{first_fd})=#{result}"
+          else "#{call}(#{first_fd})=#{result}"
+          end
+        sequence += 1
+        events << [timestamp, sequence, "#{name}:#{description}"]
+      end
+    end
+
+    return "no_matching_operations" if events.empty?
+
+    events.sort_by! { |timestamp, order, _| [timestamp || Float::INFINITY, order] }
+    events.map(&:last).first(30).join(",")
+  rescue StandardError
+    "unavailable"
   end
 
   def initialize_page(info)

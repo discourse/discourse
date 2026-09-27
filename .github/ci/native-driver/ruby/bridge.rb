@@ -61,6 +61,13 @@ class RubyCDPBridge
       rescue StandardError
         nil
       end
+    if ENV["NATIVE_CDP_RUBY_FD_TRACE"] == "1"
+      STDERR.puts(
+        "NATIVE_CDP_RUBY_FD_TRACE_TARGETS ruby_pid=#{Process.pid} " \
+          "chrome_pid=#{@chrome_pid} reader_fd=#{@browser_reader.fileno} " \
+          "writer_fd=#{@browser_writer.fileno}",
+      )
+    end
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
     probe_threaded_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
