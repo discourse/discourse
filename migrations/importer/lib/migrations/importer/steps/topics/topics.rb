@@ -83,9 +83,8 @@ module Migrations
         end
 
         def transform_row(row)
-          if (existing_id = Integer(row[:existing_id], exception: false)) &&
-               @existing_ids.include?(existing_id)
-            row[:id] = existing_id
+          if @existing_ids.include?(row[:existing_id])
+            row[:id] = row[:existing_id]
             return nil
           end
 
