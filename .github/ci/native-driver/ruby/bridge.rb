@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
+require "socket"
 require "thread"
 
 class RubyCDPBridge
@@ -13,22 +14,21 @@ class RubyCDPBridge
     @requests = Queue.new
     @drags = Queue.new
     @mouse = { x: 0.0, y: 0.0, buttons: 0, drag: nil }
-    chrome_input, browser_writer = IO.pipe
-    browser_reader, chrome_output = IO.pipe
+    browser_reader, chrome_socket = Socket.pair(:UNIX, :STREAM, 0)
     @chrome_input_endpoint =
       begin
-        File.readlink("/proc/self/fd/#{chrome_input.fileno}")
+        File.readlink("/proc/self/fd/#{chrome_socket.fileno}")
       rescue StandardError
         nil
       end
     @chrome_output_endpoint =
       begin
-        File.readlink("/proc/self/fd/#{chrome_output.fileno}")
+        File.readlink("/proc/self/fd/#{chrome_socket.fileno}")
       rescue StandardError
         nil
       end
-    child_input = chrome_input.dup
-    child_output = chrome_output.dup
+    child_input = chrome_socket.dup
+    child_output = chrome_socket.dup
     options = {
       in: File::NULL,
       out: File::NULL,
@@ -51,11 +51,16 @@ class RubyCDPBridge
     ensure
       child_input.close
       child_output.close
-      chrome_input.close
-      chrome_output.close
+      chrome_socket.close
     end
     @browser_reader = browser_reader
-    @browser_writer = browser_writer
+    @browser_writer = browser_reader.dup
+    @browser_writer_endpoint =
+      begin
+        File.readlink("/proc/self/fd/#{@browser_writer.fileno}")
+      rescue StandardError
+        nil
+      end
     probe_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
@@ -250,8 +255,9 @@ class RubyCDPBridge
       "matches_input=#{links[0] && links[0] == @chrome_input_endpoint} " \
       "matches_output=#{links[1] && links[1] == @chrome_output_endpoint} " \
       "browser_writer_open=#{!@browser_writer.closed?} " \
-      "browser_writer_matches_input=#{process_fd_link(Process.pid, @browser_writer.fileno) == @chrome_input_endpoint} " \
-      "browser_reader=#{browser_link && browser_link.start_with?("pipe:") ? "pipe" : "other"}"
+      "browser_writer_access=#{process_fd_access(Process.pid, @browser_writer.fileno)} " \
+      "browser_writer_matches_endpoint=#{process_fd_link(Process.pid, @browser_writer.fileno) == @browser_writer_endpoint} " \
+      "browser_reader=#{browser_link && browser_link.start_with?("socket:") ? "socket" : "other"}"
   end
 
   def process_fd_link(pid, fd)
