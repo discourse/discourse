@@ -36,6 +36,23 @@ fn main() -> io::Result<()> {
     drop(browser_connection);
     let output = Arc::new(Mutex::new(io::stdout()));
     let mut protocol = protocol::Protocol::new(connection, output.clone())?;
+    if std::env::var_os("NATIVE_CDP_RUST_BRIDGE_SELF_PROBE").is_some() {
+        let probe_result = protocol.call("Target.getTargets", json!({}), None).and_then(|result| {
+            if result["targetInfos"].is_array() {
+                Ok(())
+            } else {
+                Err(io::Error::other("Invalid Rust CDP pipe probe response"))
+            }
+        });
+        if let Err(error) = probe_result {
+            unsafe {
+                libc::kill(-(browser.id() as i32), libc::SIGTERM);
+            }
+            let _ = browser.wait();
+            return Err(error);
+        }
+        eprintln!("NATIVE_CDP_RUST_BRIDGE_SELF_PROBE result=pass");
+    }
     let transport = protocol.transport();
     let (sender, requests) = std::sync::mpsc::channel::<Value>();
     let worker_output = output.clone();
