@@ -155,24 +155,44 @@ RSpec.describe Migrations::Importer::PlaceholderMaps do
   end
 
   describe "#upload", :rails do
-    it "derives the short URL from the stored attributes" do
-      sha1 = "a" * 40
-      add_upload_file(
-        "u1",
-        { sha1:, extension: "png", url: "//cdn.example.com/original/1X/abc.png" },
-        markdown: "![pic](upload://abc.png)",
+    let(:sha1) { "a" * 40 }
+
+    before do
+      stub_query(
+        "SELECT id, sha1, extension, url FROM uploads",
+        [[7, sha1, "png", "//cdn.example.com/original/1X/abc.png"]],
       )
+    end
+
+    it "answers with the destination upload's spellings and the stored markdown" do
+      add_mapping("u1", mapping_type::UPLOADS, 7)
+      add_upload_result("u1", markdown: "![pic](upload://abc.png)")
 
       expect(maps.upload("u1").dig(:short_url)).to eq("upload://#{Upload.base62_sha1(sha1)}.png")
       expect(maps.upload("u1").dig(:url)).to eq("//cdn.example.com/original/1X/abc.png")
       expect(maps.upload_markdown("u1")).to eq("![pic](upload://abc.png)")
     end
 
-    it "skips an upload that was never stored" do
-      add_upload_file("u2", nil)
+    it "maps every source that was deduplicated into the same upload" do
+      add_mapping("u1", mapping_type::UPLOADS, 7)
+      add_mapping("u2", mapping_type::UPLOADS, 7)
+
+      expect(maps.upload("u2").dig(:url)).to eq("//cdn.example.com/original/1X/abc.png")
+    end
+
+    it "skips an upload that was never imported" do
+      add_upload_result("u2", markdown: "![pic](upload://abc.png)")
 
       expect(maps.upload("u2")).to be_nil
       expect(maps.upload_markdown("u2")).to be_nil
+    end
+
+    it "has no markdown without a files database" do
+      add_mapping("u1", mapping_type::UPLOADS, 7)
+      intermediate_db.execute("DETACH DATABASE files")
+
+      expect(maps.upload("u1").dig(:url)).to eq("//cdn.example.com/original/1X/abc.png")
+      expect(maps.upload_markdown("u1")).to be_nil
     end
   end
 

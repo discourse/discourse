@@ -3,7 +3,7 @@
 require "tmpdir"
 
 # The three databases an import step works on: the IntermediateDB, plus the
-# mappings and uploads databases attached to it as `mapped` and `files`. Wired
+# mappings and files databases attached to it as `mapped` and `files`. Wired
 # the same way `Migrations::Importer::Executor` wires them, so a step spec sees
 # the schema names its SQL uses.
 RSpec.shared_context "with importer databases" do
@@ -23,7 +23,7 @@ RSpec.shared_context "with importer databases" do
       Migrations::Database::IntermediateDB.setup(@intermediate_db)
 
       attach_database(dir, "mappings.db", Migrations::Database::MAPPINGS_DB_SCHEMA_PATH, "mapped")
-      attach_database(dir, "uploads.db", Migrations::Database::UPLOADS_DB_SCHEMA_PATH, "files")
+      attach_database(dir, "files.db", Migrations::Database::FILES_DB_SCHEMA_PATH, "files")
 
       example.run
     ensure
@@ -47,11 +47,11 @@ RSpec.shared_context "with importer databases" do
     )
   end
 
-  def add_upload_file(id, attributes, markdown: nil)
+  def add_upload_result(id, markdown:)
     @intermediate_db.execute(
-      "INSERT INTO files.uploads (id, upload, markdown) VALUES (?, ?, ?)",
+      "INSERT INTO files.upload_results (id, status, markdown) VALUES (?, ?, ?)",
       id,
-      attributes&.to_json,
+      Migrations::Database::FilesDB::Enums::UploadResultStatus::OK,
       markdown,
     )
   end

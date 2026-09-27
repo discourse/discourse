@@ -203,34 +203,34 @@ module Migrations
         slugs.join(":")
       end
 
-      # The uploads database holds the attributes of the destination upload, so
-      # the short URL and the URL come straight from there. An upload that was
-      # skipped because the destination already had its sha1 has no id mapping,
-      # but the same sha1 gives the same short URL, so it resolves all the same.
+      # The URL comes from the destination: an upload that matched one already
+      # on the site by sha1 was mapped to that upload, and its URL can differ
+      # from the one in the files database. The markdown was built when the file
+      # was uploaded.
       def uploads
         @uploads ||=
           begin
-            map = {}
-            sql = "SELECT id, upload, markdown FROM files.uploads WHERE upload IS NOT NULL"
+            sql = "SELECT id, sha1, extension, url FROM uploads"
+            map =
+              build_map(sql, MappingType::UPLOADS) do |_id, sha1, extension, url|
+                MappedUpload.new(short_url(sha1, extension), url, nil)
+              end
 
-            @intermediate_db.query(sql) do |row|
-              attributes = JSON.parse(row[:upload], symbolize_names: true)
-              map[row[:id]] = MappedUpload.new(
-                short_url(attributes),
-                attributes[:url],
-                row[:markdown],
-              )
+            if @intermediate_db.attached?("files")
+              sql = "SELECT id, markdown FROM files.upload_results WHERE markdown IS NOT NULL"
+              @intermediate_db.query(sql) do |row|
+                upload = map[row[:id]]
+                upload.markdown = row[:markdown] if upload
+              end
             end
 
             map
           end
       end
 
-      def short_url(attributes)
-        sha1 = attributes[:sha1]
+      def short_url(sha1, extension)
         return nil if sha1.blank?
 
-        extension = attributes[:extension]
         basename = Upload.base62_sha1(sha1)
         basename = "#{basename}.#{extension}" if extension.present?
         "upload://#{basename}"

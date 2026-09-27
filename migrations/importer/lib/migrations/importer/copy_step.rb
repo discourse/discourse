@@ -228,7 +228,7 @@ module Migrations
       # The files database is attached only when an import was run with uploads.
       # Steps that read from it check this so they can skip cleanly otherwise.
       def files_db_attached?
-        @intermediate_db.query_value("SELECT 1 FROM pragma_database_list WHERE name = 'files'") == 1
+        @intermediate_db.attached?("files")
       end
     end
   end

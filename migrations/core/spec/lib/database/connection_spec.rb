@@ -145,6 +145,18 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
+  describe "#attached?" do
+    it "tells whether a database is attached under that name" do
+      create_connection do |connection|
+        expect(connection.attached?("files")).to be false
+
+        connection.attach_database(":memory:", name: "files")
+
+        expect(connection.attached?("files")).to be true
+      end
+    end
+  end
+
   describe "#merge_database" do
     def create_schema(db)
       db.execute(<<~SQL)

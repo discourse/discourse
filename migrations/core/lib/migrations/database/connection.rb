@@ -100,6 +100,10 @@ module Migrations
         @db.execute("ATTACH DATABASE ? AS #{quote_identifier(name)}", path)
       end
 
+      def attached?(name)
+        query_value("SELECT 1 FROM pragma_database_list WHERE name = ?", name) == 1
+      end
+
       # `dedupe_tables` merge with `INSERT OR IGNORE`; the rest raise on a
       # duplicate row (see `Consolidator`).
       def merge_database(other_path, tables:, dedupe_tables: [])
