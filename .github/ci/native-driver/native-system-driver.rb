@@ -728,6 +728,19 @@ class NativeSystemDriver < Capybara::Driver::Base
             threaded_pipe_probe_state = threaded_pipe_probe&.match(/result=(pass|error)(?: type=(\w+))?\b/)
             threaded_pipe_probe_result =
               threaded_pipe_probe_state&.captures&.compact&.join(":") || "not_run"
+            reader_exit = @errors.find do |line|
+              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
+            end
+            reader_exit_type = reader_exit&.match(/type=(\w+)/)&.captures&.first || "not_observed"
+            reader_exit_index = @errors.index do |line|
+              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
+            end
+            reader_exit_before_write_failure =
+              if write_failure_index && reader_exit_index
+                reader_exit_index < write_failure_index
+              else
+                "unknown"
+              end
             chrome_reader_eof_index =
               @errors.index { |line| line.include?("Connection terminated while reading from pipe") }
             chrome_pipe_writer_error_index =
@@ -748,6 +761,8 @@ class NativeSystemDriver < Capybara::Driver::Base
               "#{diagnostic.strip}; " \
                 "ruby_write_stage=#{write_stage} " \
                 "ruby_threaded_pipe_probe=#{threaded_pipe_probe_result} " \
+                "ruby_reader_exit=#{reader_exit_type} " \
+                "ruby_reader_exit_before_write_failure=#{reader_exit_before_write_failure} " \
                 "chrome_pipe_reader_eof_before_ruby_write=#{chrome_reader_eof_before_write_failure} " \
                 "chrome_pipe_writer_error_before_ruby_write=#{chrome_writer_error_before_write_failure}"
             @transport_error ||= RuntimeError.new(diagnostic_message)

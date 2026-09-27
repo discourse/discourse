@@ -136,6 +136,7 @@ class RubyCDPBridge
     end
     raise IOError, "Chromium CDP pipe closed"
   rescue StandardError => error
+    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT type=#{error.class}")
     pending = @pending_mutex.synchronize do
       items = @pending.values
       @pending.clear
