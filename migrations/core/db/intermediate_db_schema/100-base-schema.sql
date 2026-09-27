@@ -329,6 +329,7 @@ CREATE TABLE posts
 );
 
 CREATE INDEX idx_posts_topic_id_post_number ON posts (topic_id, post_number);
+CREATE INDEX idx_posts_created_at ON posts (created_at);
 
 CREATE TABLE site_settings
 (
@@ -662,4 +663,3 @@ CREATE TABLE users
 );
 
 CREATE INDEX idx_users_uploaded_avatar_id ON users (uploaded_avatar_id) WHERE uploaded_avatar_id IS NOT NULL;
-

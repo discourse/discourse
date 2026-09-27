@@ -140,6 +140,7 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
       post_number: 1,
       created_at: shared_created_at - 1.day,
     )
+    create_source_post(4, post_number: 3, created_at: nil)
 
     execute_step
 
@@ -149,7 +150,7 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
       WHERE topic_id IN (#{topic_id}, #{second_topic_id})
       ORDER BY id
     SQL
-    expect(imported_posts.map(&:raw)).to eq(["post 3", "post 2", "post 1"])
+    expect(imported_posts.map(&:raw)).to eq(["post 3", "post 2", "post 1", "post 4"])
   end
 
   it "adds posts after numbers already used by the destination topic" do
