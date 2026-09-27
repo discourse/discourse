@@ -914,6 +914,14 @@ class NativeSystemDriver < Capybara::Driver::Base
     chrome_input_read_error_seen = false
     chrome_output_read_seen = false
     chrome_output_read_error_seen = false
+    ruby_command_write_calls = 0
+    ruby_command_write_bytes = 0
+    ruby_response_read_calls = 0
+    ruby_response_read_bytes = 0
+    chrome_command_read_calls = 0
+    chrome_command_read_bytes = 0
+    chrome_response_write_calls = 0
+    chrome_response_write_bytes = 0
     ruby_closed_fds = {}
     trace_prefix = File.join(@fd_trace_directory, "trace")
     summaries =
@@ -928,6 +936,30 @@ class NativeSystemDriver < Capybara::Driver::Base
         trace_files.each do |trace_file|
           File.foreach(trace_file) do |line|
             if name == "ruby"
+              ruby_read =
+                line.match(
+                  /\A\s*[0-9.]+\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                )
+              if ruby_read
+                descriptor = Integer(ruby_read[2].split(",").first.strip, 0)
+                bytes_read = Integer(ruby_read[3], 0)
+                if descriptor == reader_fd && bytes_read.positive?
+                  ruby_response_read_calls += 1
+                  ruby_response_read_bytes += bytes_read
+                end
+              end
+              ruby_write =
+                line.match(
+                  /\A\s*[0-9.]+\s+(write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                )
+              if ruby_write
+                descriptor = Integer(ruby_write[2].split(",").first.strip, 0)
+                bytes_written = Integer(ruby_write[3], 0)
+                if descriptor == writer_fd && bytes_written.positive?
+                  ruby_command_write_calls += 1
+                  ruby_command_write_bytes += bytes_written
+                end
+              end
               write_error =
                 line.match(
                   /\A\s*([0-9.]+)\s+(?:write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+-1\s+EPIPE\b/,
@@ -984,7 +1016,10 @@ class NativeSystemDriver < Capybara::Driver::Base
                   case descriptor
                   when 3
                     chrome_input_read_seen = true
-                    if result.zero?
+                    if result.positive?
+                      chrome_command_read_calls += 1
+                      chrome_command_read_bytes += result
+                    elsif result.zero?
                       timestamp = read_call[1].to_f
                       chrome_input_read_eof_at = [chrome_input_read_eof_at, timestamp].compact.min
                     elsif result.negative?
@@ -999,6 +1034,18 @@ class NativeSystemDriver < Capybara::Driver::Base
                       chrome_output_read_error_seen = true
                     end
                   end
+                end
+              end
+              write_call =
+                line.match(
+                  /\A\s*[0-9.]+\s+(write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                )
+              if write_call
+                descriptor = Integer(write_call[2].split(",").first.strip, 0)
+                bytes_written = Integer(write_call[3], 0)
+                if descriptor == 4 && bytes_written.positive?
+                  chrome_response_write_calls += 1
+                  chrome_response_write_bytes += bytes_written
                 end
               end
               shutdown = line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+-?\d+/)
@@ -1075,6 +1122,14 @@ class NativeSystemDriver < Capybara::Driver::Base
       "chrome_output_read_seen=#{chrome_output_read_seen};" \
       "chrome_output_read_eof=#{!chrome_output_read_eof_at.nil?};" \
       "chrome_output_read_error=#{chrome_output_read_error_seen};" \
+      "ruby_command_write_calls=#{ruby_command_write_calls};" \
+      "ruby_command_write_bytes=#{ruby_command_write_bytes};" \
+      "ruby_response_read_calls=#{ruby_response_read_calls};" \
+      "ruby_response_read_bytes=#{ruby_response_read_bytes};" \
+      "chrome_command_read_calls=#{chrome_command_read_calls};" \
+      "chrome_command_read_bytes=#{chrome_command_read_bytes};" \
+      "chrome_response_write_calls=#{chrome_response_write_calls};" \
+      "chrome_response_write_bytes=#{chrome_response_write_bytes};" \
       "ruby_writer_shutdown=#{!ruby_writer_shutdown_at.nil?};" \
       "ruby_endpoints_closed=#{ruby_closed_fds.key?(reader_fd) && ruby_closed_fds.key?(writer_fd)};" \
       "chrome_shutdown_#{chrome_shutdown_order}"

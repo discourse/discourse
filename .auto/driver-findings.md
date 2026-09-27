@@ -520,3 +520,17 @@ from an early EPIPE to a missing second response but did not make Ruby viable.
 Linting passed. The next probe records Chrome's exit status and verifies both
 mapped Chrome pipe roles and Ruby's command writer immediately after response
 one, using only safe booleans and access labels.
+
+Run [36348418411](https://github.com/discourse/discourse/actions/runs/36348418411)
+at head `223a0cac539` confirmed the pipe mapping immediately after the first
+response: Chrome fd3 matched the read end, fd4 matched the write end, both had
+the expected access and no close-on-exec flag, and Ruby's reader and writer
+were open with the writer still matching the input pipe. Ruby wrote command two
+and its delimiter, then got EOF waiting for the response. After that error the
+Ruby writer remained open and matched the input pipe; Chrome had exited
+normally (`exit_0`) and its descriptors were gone. No Ruby timing is valid;
+Rust passed in 3.39s and Ruby failed in 2.37s. Linting passed. This rules out
+the simple wrong-fd mapping or early Ruby-writer-close explanations, but the
+trace still does not show whether Chrome consumed command two. The next probe
+counts command bytes read by Chrome and response bytes written by Chrome, plus
+the matching Ruby-side byte counts, without retaining payloads.
