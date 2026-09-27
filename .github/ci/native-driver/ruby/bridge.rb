@@ -163,6 +163,12 @@ class RubyCDPBridge
     rescue StandardError
       "unavailable"
     end
+    browser_link =
+      begin
+        File.readlink("/proc/self/fd/#{@browser_reader.fileno}")
+      rescue StandardError
+        nil
+      end
     kinds = links.map do |link|
       case link
       when nil
@@ -175,7 +181,10 @@ class RubyCDPBridge
         "other"
       end
     end
-    "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} same_endpoint=#{links[0] && links[0] == links[1]}"
+    same_endpoint = links[0] && links[0] == links[1]
+    opposite_browser_endpoint = links[0] && links[0] != browser_link
+    "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} same_endpoint=#{same_endpoint} " \
+      "opposite_browser_endpoint=#{opposite_browser_endpoint}"
   end
 
   def call(method, params = {}, session = nil)

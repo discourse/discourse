@@ -713,7 +713,16 @@ class NativeSystemDriver < Capybara::Driver::Base
         if ENV["NATIVE_CDP_RUBY_BRIDGE"] == "1"
           @error_reader.join(0.1)
           diagnostic = @errors.find { |line| line.start_with?("NATIVE_CDP_RUBY_BRIDGE_FAILURE ") }
-          @transport_error ||= RuntimeError.new(diagnostic.strip) if diagnostic
+          if diagnostic
+            chrome_closed_pipe_reader =
+              @errors.any? { |line| line.include?("Connection terminated while reading from pipe") }
+            chrome_pipe_write_failed =
+              @errors.any? { |line| line.include?("Could not write into pipe") }
+            @transport_error ||=
+              RuntimeError.new(
+                "#{diagnostic.strip}; chrome_pipe_reader_eof=#{chrome_closed_pipe_reader} chrome_pipe_write_failed=#{chrome_pipe_write_failed}",
+              )
+          end
         end
         @command_mutex.synchronize do
           @transport_error ||= RuntimeError.new("Native CDP output closed")
