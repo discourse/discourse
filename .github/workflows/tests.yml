@@ -73,7 +73,7 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
       DISCOURSE_SYSTEM_BATCHED_READS: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
-      DISCOURSE_CI_SYSTEM_DRIVER: native-cdp
+      DISCOURSE_CI_SYSTEM_DRIVER: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && 'native-cdp' || 'playwright' }}
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
     strategy:
@@ -82,8 +82,24 @@ jobs:
       matrix:
         include:
           - target: core
+            build_type: backend
+          - target: core
+            build_type: frontend
+          - target: core
             build_type: system
+          - target: plugins
+            build_type: backend
+          - target: plugins
+            build_type: frontend
           - target: core-plugins
+            build_type: system
+          - target: chat
+            build_type: system
+          - target: official-plugins
+            build_type: system
+          - target: themes
+            build_type: frontend
+          - target: themes
             build_type: system
 
     steps:
