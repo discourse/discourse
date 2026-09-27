@@ -687,8 +687,30 @@ seconds; this aggregate does not separate CPU use by bridge.
 This microbenchmark keeps the Capybara-facing Ruby `NativeSystemDriver` and
 Chrome page code fixed; with `NATIVE_CDP_DIRECT_EVAL=1`, each evaluation uses
 one `Runtime.evaluate` request. Only the bridge process changes between the
-Ruby and Rust samples. The next run adds 100 untimed warm-up calls and takes
-five 500-call samples per bridge, reporting each sample and its median, while
-retaining the order-balanced Ruby/Rust/Rust/Ruby sequence. That should reduce
-startup and short-window noise before we move to a representative user-flow
-example.
+Ruby and Rust samples.
+
+Run [36355598699](https://github.com/discourse/discourse/actions/runs/36355598699/job/108722579777)
+at head `9ddcc6261f7` passed the four benchmark examples after 100 warm-up
+evaluations and five timed 500-call batches each. In Ruby/Rust/Rust/Ruby order,
+the Ruby medians were 131.332ms and 144.787ms; Rust medians were 159.428ms and
+159.694ms. The mean of each bridge's two per-run medians was 138.060ms for
+Ruby and 159.561ms for Rust, a 13.5% lower Ruby latency for this direct
+`Runtime.evaluate` workload. Rust's median was nearly identical across its two
+runs; Ruby's second median was 10% higher than its first. Individual batches
+contained occasional high outliers, so the medians are more useful than any
+single batch. The RSpec example took 4.38s and 4.35s for Ruby, versus 4.15s
+and 4.19s for Rust, meaning full example setup still favored Rust by about
+0.20s per run. The inner-loop result therefore does not establish which bridge
+would finish a full suite faster. The Core step used 40.135 CPU-seconds over
+44 elapsed seconds in the preceding ABBA run; it does not attribute CPU or
+memory to individual bridges. The current Core job used 26.860 CPU-seconds over
+33 elapsed seconds and reported 5,893.42 MiB peak container memory across both
+drivers and their Chrome sessions, also not attributable to either bridge
+alone. [Linting passed](https://github.com/discourse/discourse/actions/runs/36355598687/job/108722579752).
+
+The next run retains the warm-up and batch medians and adds one existing
+representative user flow: expanding and collapsing the About page admin list
+([spec](https://github.com/discourse/discourse/blob/bf55a44c2872738f7ae2664d6fec3d6d8779190f/spec/system/about_page_spec.rb#L215)).
+The same one-example flow will run in each of the four order-balanced bridge
+invocations. Its example duration will tell us whether Ruby's lower raw
+round-trip latency carries through Capybara's locator and interaction helpers.
