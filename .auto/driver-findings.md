@@ -623,6 +623,18 @@ The Rust sample took 3.42s in RSpec and 7s for its bridge command. Ruby took
 5.06s in RSpec and 9s for its bridge command. Ruby now stays connected through
 the sample after the Chrome-side descriptors are made blocking, consistent
 with the `EAGAIN` diagnosis. These timings are not a valid speed comparison
-because Ruby was still wrapped in `strace`. The next run removes syscall
-tracing and includes the same stale-element example plus one unload-confirmation
-example, retaining the two-command probe to check transport setup.
+because Ruby was still wrapped in `strace`. The following untraced run used the
+stale-element and unload-confirmation examples, retaining the two-command probe
+to check transport setup; its results follow.
+
+Run [36352957242](https://github.com/discourse/discourse/actions/runs/36352957242/job/108715019081)
+at head `810e6f4c441` passed both focused samples; Linting passed
+([job](https://github.com/discourse/discourse/actions/runs/36352957230/job/108715019056)).
+With tracing disabled, Rust completed the stale-element and unload-confirmation
+examples in 3.50s, while Ruby completed them in 3.49s; each sample had two
+examples and zero failures. Both bridge commands reported 7s at whole-second
+resolution. The focused Ruby/Rust difference is effectively zero for these
+flows, but browser/test setup dominates this short sample. The next run uses
+one CI-only example with 500 sequential `page.evaluate_script` calls and records
+only operation count and elapsed milliseconds to isolate repeated CDP
+round-trip cost.

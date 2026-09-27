@@ -41,3 +41,21 @@ RSpec.describe NativeSystemDriver, type: :system do
     end
   end
 end
+
+RSpec.describe NativeSystemDriver, type: :system do
+  it "round-trips repeated browser script evaluations" do
+    visit "data:text/html;charset=utf-8,<title>driver-benchmark</title>"
+
+    operation_count = 500
+    started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    results = Array.new(operation_count) { page.evaluate_script("1 + 1") }
+    elapsed_milliseconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000
+
+    expect(results).to eq(Array.new(operation_count, 2))
+
+    warn(
+      "NATIVE_CDP_EVALUATE_ROUND_TRIPS operations=#{operation_count} " \
+        "elapsed_ms=#{format("%.3f", elapsed_milliseconds)}",
+    )
+  end
+end
