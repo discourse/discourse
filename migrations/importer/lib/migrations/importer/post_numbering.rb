@@ -7,11 +7,11 @@ module Migrations
     # may name a post that the copy only reaches much later, so the numbers have
     # to be known up front.
     #
-    # A source number is kept when it is usable as it is: greater than zero and
-    # used by only one post of its topic. Every other post is numbered after the
-    # topic's highest kept number, oldest post first. That keeps the numbers a
-    # source already had - they show up in its permalinks - and still leaves each
-    # topic with unique numbers.
+    # A positive source post number is copied unchanged when no other post in
+    # that source topic has the same number. Missing, non-positive, and duplicate
+    # numbers are reassigned after the topic's highest copied number, oldest post
+    # first. Intentional gaps are preserved so existing source permalinks keep
+    # pointing to the same posts, while destination post numbers remain unique.
     class PostNumbering
       # The numbers only depend on the source rows, so a second run of the same
       # import computes the same values again. `OR IGNORE` keeps the numbers an
