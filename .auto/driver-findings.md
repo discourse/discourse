@@ -481,3 +481,18 @@ parser so the state can distinguish whether EOF was already visible before the
 write. No Ruby performance timing is available because the Ruby example still
 fails. Linting again failed SyntaxTree on both modified Ruby files
 ([run](https://github.com/discourse/discourse/actions/runs/36344928366)).
+
+Run [36345458646](https://github.com/discourse/discourse/actions/runs/36345458646)
+at head `cd403ada4e8` passed the Rust sample and failed the Ruby sample. The
+fixed summary parser now shows that Ruby already saw peer EOF before attempt 2
+and still saw EOF after the failed write. Chrome read EOF on its command-input
+stream, had no reads on its response-output descriptor, and returned exactly
+one internal response before the command stream closed. Both Ruby socket
+handles were closed only later during teardown. This places the disconnect
+after the first successful response and before Ruby's next send; it is not
+caused by attempt 2's payload. The CI output omitted the successful first-write
+byte counts because the failure summary only retained attempt 2. The next run
+will preserve the first request's byte counts and sample peer state immediately
+after its response to pin down the transition boundary. No Ruby performance
+timing is available. Linting still fails SyntaxTree for both modified Ruby
+files ([run](https://github.com/discourse/discourse/actions/runs/36345458624)).

@@ -700,26 +700,27 @@ class NativeSystemDriver < Capybara::Driver::Base
       end
     if ENV["NATIVE_CDP_RUBY_BRIDGE"] == "1" && ENV["NATIVE_CDP_RUBY_FD_TRACE"] == "1"
       @fd_trace_directory = Dir.mktmpdir("native-cdp-fd-trace-")
-      bridge =
-        [
-          "strace",
-          "-ff",
-          "-ttt",
-          "-qq",
-          "-e",
-          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl,read,readv,recvfrom,recvmsg,write,writev,sendto,sendmsg",
-          "-e",
-          "raw=read,readv,recvfrom,recvmsg,write,writev,sendto,sendmsg",
-          "-o",
-          File.join(@fd_trace_directory, "trace"),
-          "--",
-          *bridge,
-        ]
+      bridge = [
+        "strace",
+        "-ff",
+        "-ttt",
+        "-qq",
+        "-e",
+        "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl,read,readv,recvfrom,recvmsg,write,writev,sendto,sendmsg",
+        "-e",
+        "raw=read,readv,recvfrom,recvmsg,write,writev,sendto,sendmsg",
+        "-o",
+        File.join(@fd_trace_directory, "trace"),
+        "--",
+        *bridge,
+      ]
     end
     bridge_environment = {}
     if @fd_trace_directory
-      bridge_environment["NATIVE_CDP_RUBY_FD_TRACE_TASKS"] =
-        File.join(@fd_trace_directory, "chrome-task-ids")
+      bridge_environment["NATIVE_CDP_RUBY_FD_TRACE_TASKS"] = File.join(
+        @fd_trace_directory,
+        "chrome-task-ids",
+      )
     end
     @input, @output, errors, @process =
       Open3.popen3(bridge_environment, *bridge, *arguments, *@args, "--user-data-dir=#{@profile}")
@@ -753,19 +754,17 @@ class NativeSystemDriver < Capybara::Driver::Base
               @errors.index do |line|
                 line.start_with?("NATIVE_CDP_RUBY_BRIDGE_PIPE_WRITE_FAILURE ")
               end
-            write_failure_index ||= @errors.index do |line|
-              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_FAILURE ") &&
-                line.include?("Chromium closed CDP input while sending ")
-            end
-            write_failure =
-              write_failure_index && @errors.fetch(write_failure_index)
+            write_failure_index ||=
+              @errors.index do |line|
+                line.start_with?("NATIVE_CDP_RUBY_BRIDGE_FAILURE ") &&
+                  line.include?("Chromium closed CDP input while sending ")
+              end
+            write_failure = write_failure_index && @errors.fetch(write_failure_index)
             write_stage =
               write_failure&.match(/stage=(json|delimiter)\b/)&.captures&.first || "unknown"
-            sync_pipe_probe = @errors.find do |line|
-              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ")
-            end
-            sync_pipe_probe_state =
-              sync_pipe_probe&.scan(/([a-z_0-9]+)=([\w:.-]+)/)&.to_h
+            sync_pipe_probe =
+              @errors.find { |line| line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ") }
+            sync_pipe_probe_state = sync_pipe_probe&.scan(/([a-z_0-9]+)=([\w:.-]+)/)&.to_h
             sync_pipe_probe_result = "not_run"
             if sync_pipe_probe_state
               sync_pipe_probe_result =
@@ -776,6 +775,11 @@ class NativeSystemDriver < Capybara::Driver::Base
                 json_written
                 delimiter_written
                 chrome_state
+                first_attempt_payload_bytes
+                first_attempt_json_written
+                first_attempt_delimiter_written
+                first_response_received
+                peer_read_state_after_first_response
                 peer_read_state_before_attempt_2
                 peer_read_state_after_error
                 code
@@ -784,16 +788,13 @@ class NativeSystemDriver < Capybara::Driver::Base
                 sync_pipe_probe_result += ":#{key}=#{value}" if value
               end
             end
-            reader_exit = @errors.find do |line|
-              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
-            end
+            reader_exit =
+              @errors.find { |line| line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ") }
             reader_exit_type =
               reader_exit&.match(/type=(\w+)/)&.captures&.first ||
-                write_failure&.match(/ruby_reader_exit=([^ ]+)/)&.captures&.first ||
-                "not_observed"
-            reader_exit_index = @errors.index do |line|
-              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
-            end
+                write_failure&.match(/ruby_reader_exit=([^ ]+)/)&.captures&.first || "not_observed"
+            reader_exit_index =
+              @errors.index { |line| line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ") }
             reader_exit_before_write_failure =
               if write_failure_index && reader_exit_index
                 reader_exit_index < write_failure_index
@@ -801,7 +802,9 @@ class NativeSystemDriver < Capybara::Driver::Base
                 "unknown"
               end
             chrome_reader_eof_index =
-              @errors.index { |line| line.include?("Connection terminated while reading from pipe") }
+              @errors.index do |line|
+                line.include?("Connection terminated while reading from pipe")
+              end
             chrome_pipe_writer_error_index =
               @errors.index { |line| line.include?("Could not write into pipe") }
             chrome_reader_eof_before_write_failure =
@@ -840,12 +843,7 @@ class NativeSystemDriver < Capybara::Driver::Base
         .select { |target| target["type"] == "page" }
     target = targets.shift
     if target
-      page =
-        command(
-          "Driver.attachPage",
-          { targetId: target.fetch("targetId") },
-          browser: true,
-        )
+      page = command("Driver.attachPage", { targetId: target.fetch("targetId") }, browser: true)
       initialize_page(page)
       @primary_target = @page.target
       targets.each do |other_target|
@@ -865,9 +863,7 @@ class NativeSystemDriver < Capybara::Driver::Base
   def ruby_fd_trace_summary
     return "disabled" unless @fd_trace_directory
 
-    targets = @errors.find do |line|
-      line.start_with?("NATIVE_CDP_RUBY_FD_TRACE_TARGETS ")
-    end
+    targets = @errors.find { |line| line.start_with?("NATIVE_CDP_RUBY_FD_TRACE_TARGETS ") }
     match =
       targets&.match(
         /ruby_pid=(\d+) chrome_pid=(\d+) reader_fd=(\d+) writer_fd=(\d+) endpoint_at=([0-9.]+)/,
@@ -879,9 +875,9 @@ class NativeSystemDriver < Capybara::Driver::Base
     chrome_task_ids_path = File.join(@fd_trace_directory, "chrome-task-ids")
     chrome_task_ids =
       if File.file?(chrome_task_ids_path)
-        File.readlines(chrome_task_ids_path, chomp: true).filter_map do |task_id|
-          Integer(task_id, 10) if task_id.match?(/\A\d+\z/)
-        end
+        File
+          .readlines(chrome_task_ids_path, chomp: true)
+          .filter_map { |task_id| Integer(task_id, 10) if task_id.match?(/\A\d+\z/) }
       else
         []
       end
@@ -901,131 +897,142 @@ class NativeSystemDriver < Capybara::Driver::Base
     chrome_output_read_error_seen = false
     ruby_closed_fds = {}
     trace_prefix = File.join(@fd_trace_directory, "trace")
-    summaries = processes.map do |name, (task_ids, descriptors)|
-      trace_files = task_ids.map { |task_id| "#{trace_prefix}.#{task_id}" }.select do |trace_file|
-        File.file?(trace_file)
-      end
-      next "#{name}=trace_missing" if trace_files.empty?
+    summaries =
+      processes.map do |name, (task_ids, descriptors)|
+        trace_files =
+          task_ids
+            .map { |task_id| "#{trace_prefix}.#{task_id}" }
+            .select { |trace_file| File.file?(trace_file) }
+        next "#{name}=trace_missing" if trace_files.empty?
 
-      operations = Hash.new(0)
-      trace_files.each do |trace_file|
-        File.foreach(trace_file) do |line|
-          if name == "ruby"
-            write_error =
-              line.match(
-                /\A\s*([0-9.]+)\s+(?:write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+-1\s+EPIPE\b/,
-              )
-            if write_error && Integer(write_error[2].split(",").first.strip, 0) == writer_fd
-              timestamp = write_error[1].to_f
-              ruby_write_epipe_at = [ruby_write_epipe_at, timestamp].compact.min
-            end
-            local_shutdown =
-              line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+0/)
-            if local_shutdown && local_shutdown[1].to_f >= endpoint_created_at
-              arguments = local_shutdown[2].split(",").map(&:strip)
-              descriptor = Integer(arguments.first, 0)
-              if descriptors.include?(descriptor) && %w[SHUT_WR SHUT_RDWR].include?(arguments.second)
-                timestamp = local_shutdown[1].to_f
-                ruby_writer_shutdown_at = [ruby_writer_shutdown_at, timestamp].compact.min
+        operations = Hash.new(0)
+        trace_files.each do |trace_file|
+          File.foreach(trace_file) do |line|
+            if name == "ruby"
+              write_error =
+                line.match(
+                  /\A\s*([0-9.]+)\s+(?:write|writev|sendto|sendmsg)\(([^)]*)\)\s+=\s+-1\s+EPIPE\b/,
+                )
+              if write_error && Integer(write_error[2].split(",").first.strip, 0) == writer_fd
+                timestamp = write_error[1].to_f
+                ruby_write_epipe_at = [ruby_write_epipe_at, timestamp].compact.min
               end
-            end
-            local_close = line.match(/\A\s*([0-9.]+)\s+close\(([^)]*)\)\s+=\s+0/)
-            if local_close && local_close[1].to_f >= endpoint_created_at
-              descriptor = Integer(local_close[2].split(",").first.strip, 0)
-              ruby_closed_fds[descriptor] ||= local_close[1].to_f if descriptors.include?(descriptor)
-            end
-            local_close_range =
-              line.match(/\A\s*([0-9.]+)\s+close_range\(([^)]*)\)\s+=\s+0/)
-            if local_close_range && local_close_range[1].to_f >= endpoint_created_at
-              first_fd, last_fd =
-                local_close_range[2].split(",").first(2).map { |fd| Integer(fd.strip, 0) }
-              descriptors.each do |descriptor|
-                if first_fd <= descriptor && descriptor <= last_fd
-                  ruby_closed_fds[descriptor] ||= local_close_range[1].to_f
+              local_shutdown = line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+0/)
+              if local_shutdown && local_shutdown[1].to_f >= endpoint_created_at
+                arguments = local_shutdown[2].split(",").map(&:strip)
+                descriptor = Integer(arguments.first, 0)
+                if descriptors.include?(descriptor) &&
+                     %w[SHUT_WR SHUT_RDWR].include?(arguments.second)
+                  timestamp = local_shutdown[1].to_f
+                  ruby_writer_shutdown_at = [ruby_writer_shutdown_at, timestamp].compact.min
                 end
               end
-            end
-          end
-          if name == "chrome"
-            read_call =
-              line.match(
-                /\A\s*([0-9.]+)\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
-              )
-            if read_call
-              arguments = read_call[3].split(",").map(&:strip)
-              descriptor = Integer(arguments.first, 0)
-              requested_bytes =
-                case read_call[2]
-                when "read", "readv", "recvfrom" then Integer(arguments[2], 0)
-                when "recvmsg" then Integer(arguments[1], 0)
-                end
-              if descriptors.include?(descriptor) && requested_bytes&.positive?
-                result = Integer(read_call[4], 0)
-                case descriptor
-                when 3
-                  chrome_input_read_seen = true
-                  if result.zero?
-                    timestamp = read_call[1].to_f
-                    chrome_input_read_eof_at =
-                      [chrome_input_read_eof_at, timestamp].compact.min
-                  elsif result.negative?
-                    chrome_input_read_error_seen = true
-                  end
-                when 4
-                  chrome_output_read_seen = true
-                  if result.zero?
-                    timestamp = read_call[1].to_f
-                    chrome_output_read_eof_at =
-                      [chrome_output_read_eof_at, timestamp].compact.min
-                  elsif result.negative?
-                    chrome_output_read_error_seen = true
+              local_close = line.match(/\A\s*([0-9.]+)\s+close\(([^)]*)\)\s+=\s+0/)
+              if local_close && local_close[1].to_f >= endpoint_created_at
+                descriptor = Integer(local_close[2].split(",").first.strip, 0)
+                ruby_closed_fds[descriptor] ||= local_close[1].to_f if descriptors.include?(
+                  descriptor,
+                )
+              end
+              local_close_range = line.match(/\A\s*([0-9.]+)\s+close_range\(([^)]*)\)\s+=\s+0/)
+              if local_close_range && local_close_range[1].to_f >= endpoint_created_at
+                first_fd, last_fd =
+                  local_close_range[2].split(",").first(2).map { |fd| Integer(fd.strip, 0) }
+                descriptors.each do |descriptor|
+                  if first_fd <= descriptor && descriptor <= last_fd
+                    ruby_closed_fds[descriptor] ||= local_close_range[1].to_f
                   end
                 end
               end
             end
-            shutdown = line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+-?\d+/)
-            if shutdown && descriptors.include?(shutdown[2].split(",").first.to_i)
-              timestamp = shutdown[1].to_f
-              chrome_shutdown_at = [chrome_shutdown_at, timestamp].compact.min
+            if name == "chrome"
+              read_call =
+                line.match(
+                  /\A\s*([0-9.]+)\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+                )
+              if read_call
+                arguments = read_call[3].split(",").map(&:strip)
+                descriptor = Integer(arguments.first, 0)
+                requested_bytes =
+                  case read_call[2]
+                  when "read", "readv", "recvfrom"
+                    Integer(arguments[2], 0)
+                  when "recvmsg"
+                    Integer(arguments[1], 0)
+                  end
+                if descriptors.include?(descriptor) && requested_bytes&.positive?
+                  result = Integer(read_call[4], 0)
+                  case descriptor
+                  when 3
+                    chrome_input_read_seen = true
+                    if result.zero?
+                      timestamp = read_call[1].to_f
+                      chrome_input_read_eof_at = [chrome_input_read_eof_at, timestamp].compact.min
+                    elsif result.negative?
+                      chrome_input_read_error_seen = true
+                    end
+                  when 4
+                    chrome_output_read_seen = true
+                    if result.zero?
+                      timestamp = read_call[1].to_f
+                      chrome_output_read_eof_at = [chrome_output_read_eof_at, timestamp].compact.min
+                    elsif result.negative?
+                      chrome_output_read_error_seen = true
+                    end
+                  end
+                end
+              end
+              shutdown = line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+-?\d+/)
+              if shutdown && descriptors.include?(shutdown[2].split(",").first.to_i)
+                timestamp = shutdown[1].to_f
+                chrome_shutdown_at = [chrome_shutdown_at, timestamp].compact.min
+              end
             end
+            operation =
+              line.match(
+                /\b(close_range|shutdown|dup2|dup3|dup|fcntl|close)\(([^)]*)\)\s+=\s+(-?\d+)/,
+              )
+            next unless operation
+
+            call, raw_arguments, _result = operation.captures
+            arguments = raw_arguments.split(",").map(&:strip)
+            first_fd = arguments.first.to_i
+            last_fd = arguments.second.to_i
+            relevant =
+              case call
+              when "close_range"
+                descriptors.any? { |fd| first_fd <= fd && fd <= last_fd }
+              when "dup2", "dup3"
+                descriptors.include?(first_fd) || descriptors.include?(last_fd)
+              else
+                descriptors.include?(first_fd)
+              end
+            next unless relevant
+
+            operations[call] += 1
           end
-          operation =
-            line.match(/\b(close_range|shutdown|dup2|dup3|dup|fcntl|close)\(([^)]*)\)\s+=\s+(-?\d+)/)
-          next unless operation
-
-          call, raw_arguments, _result = operation.captures
-          arguments = raw_arguments.split(",").map(&:strip)
-          first_fd = arguments.first.to_i
-          last_fd = arguments.second.to_i
-          relevant =
-            case call
-            when "close_range"
-              descriptors.any? { |fd| first_fd <= fd && fd <= last_fd }
-            when "dup2", "dup3"
-              descriptors.include?(first_fd) || descriptors.include?(last_fd)
-            else
-              descriptors.include?(first_fd)
-            end
-          next unless relevant
-
-          operations[call] += 1
         end
-      end
 
-      details = operations.map do |description, count|
-        count > 1 ? "#{description}x#{count}" : description
+        details =
+          operations.map do |description, count|
+            count > 1 ? "#{description}x#{count}" : description
+          end
+        detail_summary = details.empty? ? "none" : details.first(12).join(",")
+        if name == "ruby" && descriptors.all? { |descriptor| ruby_closed_fds.key?(descriptor) }
+          ruby_endpoint_closed_at =
+            descriptors.map { |descriptor| ruby_closed_fds.fetch(descriptor) }.max
+        end
+        "#{name}{#{detail_summary}}"
       end
-      detail_summary = details.empty? ? "none" : details.first(12).join(",")
-      if name == "ruby" && descriptors.all? { |descriptor| ruby_closed_fds.key?(descriptor) }
-        ruby_endpoint_closed_at = descriptors.map { |descriptor| ruby_closed_fds.fetch(descriptor) }.max
-      end
-      "#{name}{#{detail_summary}}"
-    end
 
     ruby_endpoint_teardown_at = [ruby_writer_shutdown_at, ruby_endpoint_closed_at].compact.min
     local_close_order =
       if ruby_endpoint_teardown_at && chrome_input_read_eof_at
-        ruby_endpoint_teardown_at <= chrome_input_read_eof_at ? "before_chrome_eof" : "after_chrome_eof"
+        if ruby_endpoint_teardown_at <= chrome_input_read_eof_at
+          "before_chrome_eof"
+        else
+          "after_chrome_eof"
+        end
       else
         "unknown"
       end

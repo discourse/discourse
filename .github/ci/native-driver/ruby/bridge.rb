@@ -33,13 +33,13 @@ class RubyCDPBridge
         nil
       end
     options = {
-      in: File::NULL,
-      out: File::NULL,
-      err: STDERR,
+      :in => File::NULL,
+      :out => File::NULL,
+      :err => STDERR,
       3 => chrome_socket.fileno,
       4 => chrome_socket.fileno,
-      close_others: true,
-      pgroup: true,
+      :close_others => true,
+      :pgroup => true,
     }
     begin
       @chrome_pid = Process.spawn(*arguments, "--remote-debugging-pipe", options)
@@ -109,6 +109,11 @@ class RubyCDPBridge
     write_stage = "json"
     json_bytes_written = 0
     delimiter_bytes_written = 0
+    first_attempt_payload_bytes = 0
+    first_attempt_json_written = 0
+    first_attempt_delimiter_written = 0
+    first_response_received = false
+    peer_read_state_after_first_response = "not_sampled"
     peer_read_state_before_second_attempt = "not_sampled"
     2.times do
       attempt += 1
@@ -121,10 +126,13 @@ class RubyCDPBridge
       peer_read_state_before_second_attempt = peer_read_state if attempt == 2
       request = { "id" => id, "method" => method, "params" => {} }
       payload = JSON.generate(request)
+      first_attempt_payload_bytes = payload.bytesize if attempt == 1
       record_protocol_event("send-internal", method)
       json_bytes_written = @browser_writer.write(payload)
+      first_attempt_json_written = json_bytes_written if attempt == 1
       write_stage = "delimiter"
       delimiter_bytes_written = @browser_writer.write("\0")
+      first_attempt_delimiter_written = delimiter_bytes_written if attempt == 1
       @browser_writer.flush
       STDERR.puts(
         "NATIVE_CDP_RUBY_SYNC_PIPE_WRITE attempt=#{attempt} " \
@@ -138,6 +146,10 @@ class RubyCDPBridge
           decoded = JSON.parse(message.delete_suffix("\0"))
           if decoded["id"] == id
             response = decoded
+            if attempt == 1
+              first_response_received = true
+              peer_read_state_after_first_response = browser_peer_read_state
+            end
             break
           end
         end
@@ -166,6 +178,11 @@ class RubyCDPBridge
         "method=#{method} type=#{error.class} attempt=#{attempt} " \
         "stage=#{write_stage} json_written=#{json_bytes_written} " \
         "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state} " \
+        "first_attempt_payload_bytes=#{first_attempt_payload_bytes} " \
+        "first_attempt_json_written=#{first_attempt_json_written} " \
+        "first_attempt_delimiter_written=#{first_attempt_delimiter_written} " \
+        "first_response_received=#{first_response_received} " \
+        "peer_read_state_after_first_response=#{peer_read_state_after_first_response} " \
         "peer_read_state_before_attempt_2=#{peer_read_state_before_second_attempt} " \
         "peer_read_state_after_error=#{browser_peer_read_state}#{code}",
     )
@@ -174,10 +191,14 @@ class RubyCDPBridge
   def browser_peer_read_state
     message = @browser_reader.recv_nonblock(1, Socket::MSG_PEEK, exception: false)
     case message
-    when :wait_readable then "open"
-    when nil then "eof"
-    when String then message.empty? ? "eof" : "data"
-    else "unknown"
+    when :wait_readable
+      "open"
+    when nil
+      "eof"
+    when String
+      message.empty? ? "eof" : "data"
+    else
+      "unknown"
     end
   rescue StandardError
     "error"
@@ -226,7 +247,8 @@ class RubyCDPBridge
       request = @requests.pop
       break unless request
       begin
-        result = dispatch(request.fetch("method"), request.fetch("params", {}), request["sessionId"])
+        result =
+          dispatch(request.fetch("method"), request.fetch("params", {}), request["sessionId"])
         write_output("id" => request.fetch("id"), "result" => result)
       rescue StandardError => error
         write_output("id" => request.fetch("id"), "error" => { "message" => error.message })
@@ -259,11 +281,12 @@ class RubyCDPBridge
     frame = error.backtrace&.first&.match(%r{([^/]+\.rb:\d+)})&.captures&.first || "unknown"
     @reader_exit_mutex.synchronize { @reader_exit = "#{error.class}:#{frame}" }
     STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT type=#{error.class} frame=#{frame}")
-    pending = @pending_mutex.synchronize do
-      items = @pending.values
-      @pending.clear
-      items
-    end
+    pending =
+      @pending_mutex.synchronize do
+        items = @pending.values
+        @pending.clear
+        items
+      end
     pending.each do |item|
       if item[:queue]
         item[:queue] << { "error" => { "message" => error.message } }
@@ -301,26 +324,27 @@ class RubyCDPBridge
     method = safe_protocol_method(request.fetch("method"))
     origin = external_id.nil? ? "internal" : "forwarded"
     write_stage = "json"
-    id = @write_mutex.synchronize do
-      id =
-        @pending_mutex.synchronize do
-          @sequence += 1
-          @pending[@sequence] = {
-            queue: queue,
-            external_id: external_id,
-            method: method,
-            origin: origin,
-          }
-          @sequence
-        end
-      request = request.merge("id" => id)
-      record_protocol_event("send-#{origin}", method)
-      @browser_writer.write(JSON.generate(request))
-      write_stage = "delimiter"
-      @browser_writer.write("\0")
-      @browser_writer.flush
-      id
-    end
+    id =
+      @write_mutex.synchronize do
+        id =
+          @pending_mutex.synchronize do
+            @sequence += 1
+            @pending[@sequence] = {
+              queue: queue,
+              external_id: external_id,
+              method: method,
+              origin: origin,
+            }
+            @sequence
+          end
+        request = request.merge("id" => id)
+        record_protocol_event("send-#{origin}", method)
+        @browser_writer.write(JSON.generate(request))
+        write_stage = "delimiter"
+        @browser_writer.write("\0")
+        @browser_writer.flush
+        id
+      end
     id
   rescue Errno::EPIPE
     @pending_mutex.synchronize { @pending.delete(id) } if id
@@ -348,18 +372,19 @@ class RubyCDPBridge
       rescue StandardError
         nil
       end
-    kinds = links.map do |link|
-      case link
-      when nil
-        "closed"
-      when /\Asocket:/
-        "socket"
-      when /\Apipe:/
-        "pipe"
-      else
-        "other"
+    kinds =
+      links.map do |link|
+        case link
+        when nil
+          "closed"
+        when /\Asocket:/
+          "socket"
+        when /\Apipe:/
+          "pipe"
+        else
+          "other"
+        end
       end
-    end
     initial_kinds = @chrome_spawn_fd_links.map { |link| descriptor_kind(link) }
     "Chrome fd3=#{kinds[0]} fd4=#{kinds[1]} " \
       "spawn_fd3=#{initial_kinds[0]} spawn_fd4=#{initial_kinds[1]} " \
@@ -403,10 +428,14 @@ class RubyCDPBridge
 
   def descriptor_kind(link)
     case link
-    when nil then "closed"
-    when /\Apipe:/ then "pipe"
-    when /\Asocket:/ then "socket"
-    else "other"
+    when nil
+      "closed"
+    when /\Apipe:/
+      "pipe"
+    when /\Asocket:/
+      "socket"
+    else
+      "other"
     end
   end
 
@@ -466,7 +495,16 @@ class RubyCDPBridge
       call("Runtime.enable", {}, session)
       {}
     when "Driver.evaluate"
-      result = call("Runtime.evaluate", { "expression" => params.fetch("expression"), "returnByValue" => true, "awaitPromise" => true }, session)
+      result =
+        call(
+          "Runtime.evaluate",
+          {
+            "expression" => params.fetch("expression"),
+            "returnByValue" => true,
+            "awaitPromise" => true,
+          },
+          session,
+        )
       raise result.fetch("exceptionDetails").to_json if result["exceptionDetails"]
       result.fetch("result")
     when "Driver.clickPoint"
@@ -503,9 +541,12 @@ class RubyCDPBridge
 
   def new_page(params)
     options = { "url" => "about:blank" }
-    options["browserContextId"] = params["browserContextId"] if params["browserContextId"].is_a?(String)
+    options["browserContextId"] = params["browserContextId"] if params["browserContextId"].is_a?(
+      String,
+    )
     target = call("Target.createTarget", options)
-    attached = call("Target.attachToTarget", { "targetId" => target.fetch("targetId"), "flatten" => true })
+    attached =
+      call("Target.attachToTarget", { "targetId" => target.fetch("targetId"), "flatten" => true })
     {
       "sessionId" => attached.fetch("sessionId"),
       "targetId" => target.fetch("targetId"),
@@ -515,7 +556,8 @@ class RubyCDPBridge
 
   def attach_page(params)
     info = call("Target.getTargetInfo", { "targetId" => params.fetch("targetId") })
-    attached = call("Target.attachToTarget", { "targetId" => params.fetch("targetId"), "flatten" => true })
+    attached =
+      call("Target.attachToTarget", { "targetId" => params.fetch("targetId"), "flatten" => true })
     {
       "sessionId" => attached.fetch("sessionId"),
       "targetId" => params.fetch("targetId"),
@@ -524,13 +566,14 @@ class RubyCDPBridge
   end
 
   def find(session, params)
-    normalize = lambda do |value|
-      if value.is_a?(String) && value.lstrip.match?(/\A[>+~]/)
-        ":scope #{value}"
-      else
-        value
+    normalize =
+      lambda do |value|
+        if value.is_a?(String) && value.lstrip.match?(/\A[>+~]/)
+          ":scope #{value}"
+        else
+          value
+        end
       end
-    end
     xpath = params["xpath"] == true
     selector = xpath ? params["selector"] : normalize.call(params["selector"])
     steps = params["steps"]&.map { |step| step.is_a?(Integer) ? step : normalize.call(step) }
@@ -571,16 +614,24 @@ class RubyCDPBridge
             return Array.from({length: results.snapshotLength}, (_, index) => results.snapshotItem(index));
           }
         JS
-        [value_argument(selector), value_argument(xpath), value_argument(steps), value_argument(params["pierceShadow"] == true)],
+        [
+          value_argument(selector),
+          value_argument(xpath),
+          value_argument(steps),
+          value_argument(params["pierceShadow"] == true),
+        ],
         by_value: false,
       )
     array_id = matches["objectId"]
     raise "Query returned no array handle" unless array_id
-    properties = call("Runtime.getProperties", { "objectId" => array_id, "ownProperties" => true }, session)
+    properties =
+      call("Runtime.getProperties", { "objectId" => array_id, "ownProperties" => true }, session)
     call("Runtime.releaseObject", { "objectId" => array_id }, session)
-    properties.fetch("result").filter_map do |property|
-      property.dig("value", "objectId") if property["name"].to_s.match?(/\A(?:0|[1-9][0-9]*)\z/)
-    end
+    properties
+      .fetch("result")
+      .filter_map do |property|
+        property.dig("value", "objectId") if property["name"].to_s.match?(/\A(?:0|[1-9][0-9]*)\z/)
+      end
   end
 
   def pointer_point(session, object, require_enabled, position)
@@ -591,11 +642,7 @@ class RubyCDPBridge
       [value_argument(require_enabled)],
     )
     call("DOM.scrollIntoViewIfNeeded", { "objectId" => object }, session)
-    point =
-      call_function(
-        session,
-        object,
-        <<~JS,
+    point = call_function(session, object, <<~JS, [value_argument(position)])
           async function(position) {
             const rect = this.getBoundingClientRect();
             await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -645,14 +692,13 @@ class RubyCDPBridge
             throw new Error(inViewport ? 'NativeElementCovered' : 'NativeElementOutsideViewport');
           }
         JS
-        [value_argument(position)],
-      )
     point.fetch("value")
   end
 
   def frame_point(session, object, point, enabled)
     return point unless enabled
-    rect = call_function(session, object, "function() { return this.getBoundingClientRect().toJSON(); }")
+    rect =
+      call_function(session, object, "function() { return this.getBoundingClientRect().toJSON(); }")
     model = call("DOM.getBoxModel", { "objectId" => object }, session)
     quad = model.dig("model", "border")
     raise "Frame element has no box model" unless quad.is_a?(Array)
@@ -677,11 +723,7 @@ class RubyCDPBridge
     point = frame_point(session, object, point, params["frameCoordinates"] == true)
     clicks = params.fetch("clickCount", 1)
     raise "Unsupported click count" unless (1..2).cover?(clicks)
-    guard =
-      call_function(
-        session,
-        object,
-        <<~JS,
+    guard = call_function(session, object, <<~JS, [], by_value: false)
           function() {
             const target = this;
             const host = this.ownerDocument.defaultView;
@@ -706,9 +748,6 @@ class RubyCDPBridge
             } };
           }
         JS
-        [],
-        by_value: false,
-      )
     guard_id = guard["objectId"]
     raise "Click guard has no object handle" unless guard_id
     action_error = nil
@@ -733,7 +772,11 @@ class RubyCDPBridge
     raise(status || "Click guard returned no result")
   rescue StandardError => error
     message = error.message
-    return {} if message.match?(/Cannot find context|Cannot find object|Could not find object|Execution context was destroyed/)
+    if message.match?(
+         /Cannot find context|Cannot find object|Could not find object|Execution context was destroyed/,
+       )
+      return {}
+    end
     raise
   end
 
@@ -741,10 +784,7 @@ class RubyCDPBridge
     object = params.fetch("objectId")
     text = params.fetch("text")
     direct = params["direct"] == true
-    call_function(
-      session,
-      object,
-      <<~JS,
+    call_function(session, object, <<~JS, [value_argument(direct)])
         function(direct) {
           if (!this.isConnected) throw new Error('NativeStaleElement');
           if (this.readOnly) throw new Error('NativeElementReadonly');
@@ -758,16 +798,18 @@ class RubyCDPBridge
           }
         }
       JS
-      [value_argument(direct)],
-    )
     unless direct
       click(session, params)
       call_function(session, object, "function() { this.focus(); this.select(); }")
     end
     if text.empty?
       key = direct ? ["Delete", 46] : ["Backspace", 8]
-      ["keyDown", "keyUp"].each do |kind|
-        call("Input.dispatchKeyEvent", { "type" => kind, "key" => key[0], "code" => key[0], "windowsVirtualKeyCode" => key[1] }, session)
+      %w[keyDown keyUp].each do |kind|
+        call(
+          "Input.dispatchKeyEvent",
+          { "type" => kind, "key" => key[0], "code" => key[0], "windowsVirtualKeyCode" => key[1] },
+          session,
+        )
       end
     else
       call("Input.insertText", { "text" => text }, session)
@@ -813,11 +855,7 @@ class RubyCDPBridge
   end
 
   def scroll(session, params)
-    result =
-      call_function(
-        session,
-        params.fetch("objectId"),
-        <<~JS,
+    result = call_function(session, params.fetch("objectId"), <<~JS, [value_argument(params)])
           function(options) {
             if (!this.isConnected) throw new Error('NativeStaleElement');
             if (options.target) {
@@ -838,17 +876,11 @@ class RubyCDPBridge
             }
           }
         JS
-        [value_argument(params)],
-      )
     result["value"]
   end
 
   def select_option(session, params)
-    result =
-      call_function(
-        session,
-        params.fetch("objectId"),
-        <<~JS,
+    result = call_function(session, params.fetch("objectId"), <<~JS)
           function() {
             if (!this.isConnected) throw new Error('NativeStaleElement');
             const select = this.closest('select');
@@ -863,23 +895,17 @@ class RubyCDPBridge
             return true;
           }
         JS
-      )
     result["value"]
   end
 
   def set_checked(session, params)
-    state =
-      call_function(
-        session,
-        params.fetch("objectId"),
-        <<~JS,
+    state = call_function(session, params.fetch("objectId"), <<~JS)
           function() {
             if (!this.isConnected) throw new Error('NativeStaleElement');
             if (this.tagName !== 'INPUT' || !['checkbox', 'radio'].includes(this.type)) throw new Error('NativeUnsupportedCheckType');
             return this.checked;
           }
         JS
-      )
     return {} if state["value"] == params.fetch("checked")
     click(session, params)
     call_function(
@@ -1048,15 +1074,14 @@ class RubyCDPBridge
     world =
       call(
         "Page.createIsolatedWorld",
-        { "frameId" => frame.dig("frameTree", "frame", "id"), "worldName" => "native-input-observer" },
+        {
+          "frameId" => frame.dig("frameTree", "frame", "id"),
+          "worldName" => "native-input-observer",
+        },
         session,
       )
     context = world.fetch("executionContextId")
-    call(
-      "Runtime.evaluate",
-      {
-        "contextId" => context,
-        "expression" => <<~JS,
+    call("Runtime.evaluate", { "contextId" => context, "expression" => <<~JS }, session)
           (() => {
             let drag = null;
             let completed = Promise.resolve(false);
@@ -1075,9 +1100,7 @@ class RubyCDPBridge
             };
           })()
         JS
-      },
-      session,
-    )
+
     @drags.clear
     call("Input.setInterceptDrags", { "enabled" => true }, session)
     movement_error = nil
@@ -1091,7 +1114,12 @@ class RubyCDPBridge
       observed =
         call(
           "Runtime.evaluate",
-          { "contextId" => context, "expression" => "globalThis.finishNativeDragObservation()", "awaitPromise" => true, "returnByValue" => true },
+          {
+            "contextId" => context,
+            "expression" => "globalThis.finishNativeDragObservation()",
+            "awaitPromise" => true,
+            "returnByValue" => true,
+          },
           session,
         )
     rescue StandardError => error
@@ -1132,13 +1160,15 @@ class RubyCDPBridge
       if action["press"].is_a?(String)
         press(session, action.fetch("press"))
       elsif action["type"].is_a?(String)
-        action.fetch("type").each_char do |character|
-          if keyboard_layout.key?(character)
-            press(session, character)
-          else
-            call("Input.insertText", { "text" => character }, session)
+        action
+          .fetch("type")
+          .each_char do |character|
+            if keyboard_layout.key?(character)
+              press(session, character)
+            else
+              call("Input.insertText", { "text" => character }, session)
+            end
           end
-        end
       else
         raise "Unsupported native keyboard action"
       end
@@ -1147,42 +1177,50 @@ class RubyCDPBridge
   end
 
   def keyboard_layout
-    @keyboard_layout ||= begin
-      definitions = JSON.parse(File.read(File.join(__dir__, "../rust/src/keyboard-layout.json")))
-      keys = {}
-      definitions.each do |code, definition|
-        key = definition.fetch("key")
-        location = definition.fetch("location", 0)
-        description = {
-          "key" => key,
-          "code" => code,
-          "location" => location,
-          "windowsVirtualKeyCode" => definition.fetch("keyCodeWithoutLocation", definition["keyCode"]),
-          "text" => key.each_char.count == 1 ? key : definition.fetch("text", ""),
-        }
-        physical = JSON.parse(JSON.generate(description))
-        if shifted_key = definition["shiftKey"]
-          shifted = JSON.parse(JSON.generate(description))
-          shifted["key"] = shifted_key
-          shifted["text"] = shifted_key
-          physical["shifted"] = shifted
-          keys[shifted_key] = shifted if location.zero?
-        end
-        keys[code] = physical
-        keys[key] = description if location.zero? && key.each_char.count == 1
-        aliases =
-          case code
-          when "ShiftLeft" then ["Shift"]
-          when "ControlLeft" then ["Control"]
-          when "AltLeft" then ["Alt"]
-          when "MetaLeft" then ["Meta"]
-          when "Enter" then ["\n", "\r"]
-          else []
+    @keyboard_layout ||=
+      begin
+        definitions = JSON.parse(File.read(File.join(__dir__, "../rust/src/keyboard-layout.json")))
+        keys = {}
+        definitions.each do |code, definition|
+          key = definition.fetch("key")
+          location = definition.fetch("location", 0)
+          description = {
+            "key" => key,
+            "code" => code,
+            "location" => location,
+            "windowsVirtualKeyCode" =>
+              definition.fetch("keyCodeWithoutLocation", definition["keyCode"]),
+            "text" => key.each_char.count == 1 ? key : definition.fetch("text", ""),
+          }
+          physical = JSON.parse(JSON.generate(description))
+          if shifted_key = definition["shiftKey"]
+            shifted = JSON.parse(JSON.generate(description))
+            shifted["key"] = shifted_key
+            shifted["text"] = shifted_key
+            physical["shifted"] = shifted
+            keys[shifted_key] = shifted if location.zero?
           end
-        aliases.each { |alias_key| keys[alias_key] = description }
+          keys[code] = physical
+          keys[key] = description if location.zero? && key.each_char.count == 1
+          aliases =
+            case code
+            when "ShiftLeft"
+              ["Shift"]
+            when "ControlLeft"
+              ["Control"]
+            when "AltLeft"
+              ["Alt"]
+            when "MetaLeft"
+              ["Meta"]
+            when "Enter"
+              ["\n", "\r"]
+            else
+              []
+            end
+          aliases.each { |alias_key| keys[alias_key] = description }
+        end
+        keys
       end
-      keys
-    end
   end
 
   def modifier_flag(key)
@@ -1193,7 +1231,10 @@ class RubyCDPBridge
     key = "Control" if key == "ControlOrMeta"
     original = keyboard_layout[key]
     raise "Unknown native key: #{key}" unless original
-    description = JSON.parse(JSON.generate((modifiers & 8) != 0 ? original.fetch("shifted", original) : original))
+    description =
+      JSON.parse(
+        JSON.generate((modifiers & 8) != 0 ? original.fetch("shifted", original) : original),
+      )
     flag = modifier_flag(description.fetch("key"))
     modifiers = down ? modifiers | flag : modifiers & ~flag
     description.delete("shifted")
@@ -1278,6 +1319,8 @@ rescue StandardError => error
     if error.is_a?(IOError) && error.message.start_with?("Chromium closed CDP input while sending ")
       error.message
     end
-  STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_FAILURE #{error.class} #{detail} at #{error.backtrace&.first}")
+  STDERR.puts(
+    "NATIVE_CDP_RUBY_BRIDGE_FAILURE #{error.class} #{detail} at #{error.backtrace&.first}",
+  )
   exit 1
 end
