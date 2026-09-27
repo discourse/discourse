@@ -110,7 +110,26 @@ Ruby-to-subprocess hop and avoid the bridge's extra JSON decode/encode work;
 Ruby's protocol parsing, event dispatch, and helper execution could also cost
 more than the Rust implementation. That is a hypothesis, not a measured result.
 
-The next experiment will run the same focused Chrome system-test jobs with the
-Ruby and Rust CDP implementations against the pinned source, first validating
-one or two representative system specs. Firefox remains a functional
-compatibility check; Safari will not be tested.
+The Ruby bridge has not yet produced a comparable timing because its focused
+two-example run fails. In run
+[36322976955](https://github.com/discourse/discourse/actions/runs/36322976955),
+the Rust control made one internal `Target.getTargets` request before the
+sample and passed both examples in 15s. The Ruby bridge made the same internal
+request successfully, then its reader exited with `IOError` before the outer
+`Target.getTargets` request (browser request ID 2) hit EPIPE; Ruby failed both
+examples in 2.36s. Chrome remained alive and its descriptors still matched the
+socket endpoints. The RSpec error then surfaced in `PlaywrightLogger#initialize`
+when `NativeSystemDriver#on` tried to access `@page.callbacks` while `@page` was
+nil. `start` currently treats `@input` as proof that browser initialization is
+complete, even though `Open3.popen3` assigns it before the first page is ready.
+That makes a concurrent `start` call a plausible cause; the next run serializes
+startup and records whether a caller had to wait. This run rules out the
+duplicate request itself as the trigger, but does not yet identify why Chrome
+closed its endpoint.
+
+Earlier two-request pipelined Ruby probes were inconsistent, sometimes
+receiving only one response. They have been removed so the focused sample now
+uses only one threaded probe. Until Ruby passes the same focused examples,
+there is no Ruby performance measurement and Rust remains the only measured
+direct-CDP bridge. Firefox remains a functional compatibility check; Safari
+will not be tested.
