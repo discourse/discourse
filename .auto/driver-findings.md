@@ -714,3 +714,22 @@ representative user flow: expanding and collapsing the About page admin list
 The same one-example flow will run in each of the four order-balanced bridge
 invocations. Its example duration will tell us whether Ruby's lower raw
 round-trip latency carries through Capybara's locator and interaction helpers.
+
+Run [36356240591](https://github.com/discourse/discourse/actions/runs/36356240591/job/108724423183)
+at head `34408e245a4` passed both selected examples in each of the four
+Ruby/Rust/Rust/Ruby invocations. The five-batch medians were 102.221ms and
+132.129ms for Ruby, and 175.250ms and 157.215ms for Rust; the mean of per-run
+medians was 117.175ms for Ruby and 166.233ms for Rust, or 29.5% lower latency
+for Ruby on this repeated `Runtime.evaluate` workload. The RSpec invocation
+times for the two examples together were 11.67s, 8.13s, 9.13s, and 8.05s in
+that order. The large variation and the fact that the second invocation in
+each adjacent pair was faster suggest that shared app/browser cache or runner
+state materially affects the whole-example times; the log did not report each
+example's duration separately. The Core step used about 49.37 CPU-seconds over
+51 elapsed seconds and peaked at 5,811.23 MiB for the whole job/container.
+These resource totals are not per bridge. [Linting passed](https://github.com/discourse/discourse/actions/runs/36356240588/job/108724423072).
+
+The next run keeps the same two selected examples and bridge order, adding
+RSpec's two-example profiler output. That will separate the benchmark's time
+from the About-page interaction flow so we can tell whether the apparent
+Ruby advantage survives locator and click helpers.
