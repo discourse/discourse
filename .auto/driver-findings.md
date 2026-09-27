@@ -464,3 +464,20 @@ provides no Ruby performance measurement because the bridge fails before
 completing the focused example. The Linting job failed SyntaxTree for the two
 modified Ruby files; other reported linters passed
 ([run](https://github.com/discourse/discourse/actions/runs/36344186781)).
+
+Run [36344928380](https://github.com/discourse/discourse/actions/runs/36344928380)
+at head `0af372cd6ba` passed the Rust focused example in 3.33s and failed the
+Ruby example in 2.07s with `Errno::EPIPE` on the second synchronous request,
+before writing any bytes. Separating Chrome's pipe roles showed a zero-byte
+read on its command-input stream before Ruby's `EPIPE`; Chrome made no reads on
+the response-output descriptor. Ruby's post-error peek saw EOF, both tracked
+Ruby socket handles closed later during teardown, and Chrome shutdown preceded
+the failed write. This confirms that Chrome stopped receiving commands before
+Ruby's tracked handles were closed, but does not yet identify what made the
+command-input stream reach EOF. The peer state immediately before the second
+write was not included in the failure summary: the summary parser's key-name
+pattern excluded the digit in that field. The next run fixes that allowlist
+parser so the state can distinguish whether EOF was already visible before the
+write. No Ruby performance timing is available because the Ruby example still
+fails. Linting again failed SyntaxTree on both modified Ruby files
+([run](https://github.com/discourse/discourse/actions/runs/36344928366)).

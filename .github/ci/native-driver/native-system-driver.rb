@@ -765,7 +765,7 @@ class NativeSystemDriver < Capybara::Driver::Base
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ")
             end
             sync_pipe_probe_state =
-              sync_pipe_probe&.scan(/([a-z_]+)=([\w:.-]+)/)&.to_h
+              sync_pipe_probe&.scan(/([a-z_0-9]+)=([\w:.-]+)/)&.to_h
             sync_pipe_probe_result = "not_run"
             if sync_pipe_probe_state
               sync_pipe_probe_result =
