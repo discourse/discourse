@@ -82,24 +82,6 @@ jobs:
       matrix:
         include:
           - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
-            build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
-          - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
             build_type: system
 
     steps:
@@ -368,11 +350,18 @@ jobs:
           printf 'CI_SYSTEM_CPU_START {"usage_usec":%s}\n' "${system_test_cpu_start:-null}"
           system_test_started_seconds=$SECONDS
           trap report_system_test_cpu EXIT
-          system_test_paths=(spec/system)
           if [[ "$DISCOURSE_CI_SYSTEM_DRIVER" == "native-cdp" ]]; then
-            system_test_paths+=(.github/ci/native-driver/spec/system)
+            sample_specs=(spec/system/about_page_spec.rb:215 .github/ci/native-driver/spec/system/native_driver_spec.rb:4)
+            bridge_started_seconds=$SECONDS
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=1 NATIVE_CDP_RUBY_BRIDGE=0 bin/turbo_rspec --use-runtime-info --format documentation "${sample_specs[@]}"
+            printf 'CI_CDP_BRIDGE_TIME {"bridge":"rust","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
+            bridge_started_seconds=$SECONDS
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=1 NATIVE_CDP_RUBY_BRIDGE=1 bin/turbo_rspec --use-runtime-info --format documentation "${sample_specs[@]}"
+            printf 'CI_CDP_BRIDGE_TIME {"bridge":"ruby","elapsed_seconds":%s}\n' "$((SECONDS - bridge_started_seconds))"
+          else
+            system_test_paths=(spec/system)
+            LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
           fi
-          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'

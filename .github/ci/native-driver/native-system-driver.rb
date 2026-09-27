@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require_relative "../../../spec/rails_helper"
 require "open3"
+require "rbconfig"
 require "tmpdir"
 require "base64"
 require_relative "native-browser-clock"
@@ -683,13 +684,14 @@ class NativeSystemDriver < Capybara::Driver::Base
       raise "Native system tests require the full Chromium executable"
     end
     arguments = [executable, *JSON.parse(File.read(File.join(__dir__, "chromium-arguments.json")))]
+    bridge =
+      if ENV["NATIVE_CDP_RUBY_BRIDGE"] == "1"
+        [RbConfig.ruby, File.join(__dir__, "ruby/bridge.rb")]
+      else
+        [File.join(__dir__, "rust/target/release/discourse-cdp-bridge")]
+      end
     @input, @output, errors, @process =
-      Open3.popen3(
-        File.join(__dir__, "rust/target/release/discourse-cdp-bridge"),
-        *arguments,
-        *@args,
-        "--user-data-dir=#{@profile}",
-      )
+      Open3.popen3(*bridge, *arguments, *@args, "--user-data-dir=#{@profile}")
     @pending_commands = {}
     @transport_error = nil
     @output_reader =
