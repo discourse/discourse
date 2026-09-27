@@ -725,7 +725,8 @@ class NativeSystemDriver < Capybara::Driver::Base
             threaded_pipe_probe = @errors.find do |line|
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE ")
             end
-            threaded_pipe_probe_state = threaded_pipe_probe&.match(/result=(pass|error)(?: type=(\w+))?\b/)
+            threaded_pipe_probe_state =
+              threaded_pipe_probe&.match(/result=(pass|error)(?: type=(\w+))?(?: code=(-?\d+))?\b/)
             threaded_pipe_probe_result =
               threaded_pipe_probe_state&.captures&.compact&.join(":") || "not_run"
             reader_exit = @errors.find do |line|

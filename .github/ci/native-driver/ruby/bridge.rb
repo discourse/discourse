@@ -100,7 +100,11 @@ class RubyCDPBridge
     end
     STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=pass")
   rescue StandardError => error
-    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=error type=#{error.class}")
+    error_code = error.message.match(/"code":\s*(-?\d+)/)&.captures&.first
+    code = " code=#{error_code}" if error_code
+    STDERR.puts(
+      "NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=error type=#{error.class}#{code}",
+    )
   end
 
   def process_requests
