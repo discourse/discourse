@@ -901,6 +901,9 @@ class NativeSystemDriver < Capybara::Driver::Base
 
     ruby_pid, chrome_pid, reader_fd, writer_fd = match.captures.first(4).map(&:to_i)
     endpoint_created_at = match.captures.last.to_f
+    sync_probe = @errors.find { |line| line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ") }
+    first_response_match = sync_probe&.match(/first_response_received_at=([0-9.]+)/)
+    first_response_received_at = first_response_match&.captures&.first&.to_f
     chrome_task_ids_path = File.join(@fd_trace_directory, "chrome-task-ids")
     chrome_task_ids =
       if File.file?(chrome_task_ids_path)
@@ -917,6 +920,8 @@ class NativeSystemDriver < Capybara::Driver::Base
     ruby_write_epipe_at = nil
     chrome_shutdown_at = nil
     chrome_input_read_eof_at = nil
+    chrome_input_read_error_at = nil
+    chrome_input_read_error_category = "none"
     chrome_output_read_eof_at = nil
     ruby_writer_shutdown_at = nil
     ruby_endpoint_closed_at = nil
@@ -1009,7 +1014,7 @@ class NativeSystemDriver < Capybara::Driver::Base
             if name == "chrome"
               read_call =
                 line.match(
-                  /\A\s*([0-9.]+)\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?(?:0x[0-9a-fA-F]+|\d+))(?:\s+[A-Z][A-Z0-9]+)?/,
+                  /\A\s*([0-9.]+)\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?(?:0x[0-9a-fA-F]+|\d+))(?:\s+([A-Z][A-Z0-9]+))?/,
                 )
               if read_call
                 arguments = read_call[3].split(",").map(&:strip)
@@ -1034,6 +1039,20 @@ class NativeSystemDriver < Capybara::Driver::Base
                       chrome_input_read_eof_at = [chrome_input_read_eof_at, timestamp].compact.min
                     elsif result.negative?
                       chrome_input_read_error_seen = true
+                      timestamp = read_call[1].to_f
+                      if chrome_input_read_error_at.nil? || timestamp < chrome_input_read_error_at
+                        chrome_input_read_error_at = timestamp
+                        chrome_input_read_error_category =
+                          case read_call[5]
+                          when "EAGAIN", "EWOULDBLOCK", "EBADF", "ECONNRESET", "EINTR", "EIO",
+                               "EINVAL", "ENOTSOCK", "EPIPE"
+                            read_call[5]
+                          when nil
+                            "unknown"
+                          else
+                            "other"
+                          end
+                      end
                     end
                   when 4
                     chrome_output_read_seen = true
@@ -1124,11 +1143,23 @@ class NativeSystemDriver < Capybara::Driver::Base
       else
         "unknown"
       end
+    chrome_input_read_error_order =
+      if chrome_input_read_error_at && first_response_received_at
+        if chrome_input_read_error_at <= first_response_received_at
+          "before_first_response"
+        else
+          "after_first_response"
+        end
+      else
+        "unknown"
+      end
     "#{summaries.join(";")};ruby_endpoint_teardown_#{local_close_order};" \
       "chrome_input_eof_#{chrome_eof_order};" \
       "chrome_input_read_seen=#{chrome_input_read_seen};" \
       "chrome_input_read_eof=#{!chrome_input_read_eof_at.nil?};" \
       "chrome_input_read_error=#{chrome_input_read_error_seen};" \
+      "chrome_input_read_errno=#{chrome_input_read_error_category};" \
+      "chrome_input_read_error_#{chrome_input_read_error_order};" \
       "chrome_output_read_seen=#{chrome_output_read_seen};" \
       "chrome_output_read_eof=#{!chrome_output_read_eof_at.nil?};" \
       "chrome_output_read_error=#{chrome_output_read_error_seen};" \

@@ -118,6 +118,7 @@ class RubyCDPBridge
     first_attempt_json_written = 0
     first_attempt_delimiter_written = 0
     first_response_received = false
+    first_response_received_at = nil
     first_response_chrome_state = "not_sampled"
     first_response_pipe_state = {}
     peer_read_state_after_first_response = "not_sampled"
@@ -163,6 +164,7 @@ class RubyCDPBridge
             response = decoded
             if attempt == 1
               first_response_received = true
+              first_response_received_at = Time.now.to_f
               first_response_chrome_state = chrome_process_state
               first_response_pipe_state = browser_pipe_probe_state
               peer_read_state_after_first_response = browser_peer_read_state
@@ -211,6 +213,7 @@ class RubyCDPBridge
         "first_attempt_json_written=#{first_attempt_json_written} " \
         "first_attempt_delimiter_written=#{first_attempt_delimiter_written} " \
         "first_response_received=#{first_response_received} " \
+        "first_response_received_at=#{first_response_received_at || "unknown"} " \
         "#{message_count_fields} " \
         "#{first_response_pipe_fields} #{error_pipe_fields} " \
         "peer_read_state_after_first_response=#{peer_read_state_after_first_response} " \

@@ -588,3 +588,15 @@ This rules out a response-framing or response-ID mismatch in Ruby and points
 to the browser process exiting before consuming command two. The next focused
 run switches Ruby from two pipes to the Unix socket pair used by the Rust
 bridge, holding the test and synchronous two-command probe fixed.
+
+Run [36351012213](https://github.com/discourse/discourse/actions/runs/36351012213)
+at head `24eca91d952` passed the Rust focused example in 3.32s and failed the
+Ruby socket-pair probe in 2.19s, so there is still no valid Ruby timing. Chrome
+read Ruby's first 50-byte command and returned one 235-byte response; Ruby saw
+peer EOF after that response and before attempting command two. Chrome remained
+alive with fd3/fd4 mapped to the expected socket endpoint and open. Its fd3
+read returned an error, and its two shutdown calls preceded Ruby's later
+`EPIPE`. The socket-pair topology used by Rust therefore does not by itself
+resolve the Ruby startup failure. The next probe retains only an allowlisted
+errno category and whether the first Chrome read error preceded or followed
+the first response. Raw syscall traces and timestamps remain unreported.
