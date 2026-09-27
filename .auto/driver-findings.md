@@ -423,3 +423,24 @@ IDs privately during the focused probe and scans those task traces, emitting
 only event-presence and ordering labels. No protocol payloads, task IDs,
 descriptor numbers, or raw trace lines are added to CI output. Linting failed
 at `syntax_tree` for both modified Ruby files.
+
+Run [36343320451](https://github.com/discourse/discourse/actions/runs/36343320451)
+at head `01d144b7d43` passed the Rust focused example in 3.34s and failed the
+Ruby focused example in 2.26s with the same second-write `Errno::EPIPE`.
+Sampling Chrome's task IDs during the probe and scanning those traces still
+found no zero-byte `read` on the expected pipe descriptors. At the failed
+write, both Chrome descriptors still matched the spawned socket endpoint and
+were read-write with close-on-exec disabled; the Ruby writer remained open and
+matched its endpoint. The method sequence was first internal send/response,
+second internal send without a response, then forwarded send. No Chrome
+protocol-error or crash message was captured. Both Ruby endpoint closes were
+observed only in teardown, with no writer shutdown; because there is no Chrome
+EOF timestamp, the run cannot order the closes against Chrome's pipe shutdown.
+The reducer only recognizes `read` syscalls returning zero, so it could miss
+socket receive calls or failed reads. The next probe includes `readv`,
+`recvfrom`, and `recvmsg` without dumping buffer data, and reports only
+whether a matching read, zero-return read, or failed read was observed. It
+also uses a non-consuming socket peek to classify Chrome's output side as
+open, containing data, or EOF immediately before each request. Trace files and
+task IDs remain temporary and are removed after the check. Linting failed at
+`syntax_tree` for both modified Ruby files.

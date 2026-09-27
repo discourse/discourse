@@ -116,6 +116,7 @@ class RubyCDPBridge
       delimiter_bytes_written = 0
       @sequence += 1
       id = @sequence
+      peer_read_state = browser_peer_read_state
       request = { "id" => id, "method" => method, "params" => {} }
       payload = JSON.generate(request)
       record_protocol_event("send-internal", method)
@@ -126,7 +127,7 @@ class RubyCDPBridge
       STDERR.puts(
         "NATIVE_CDP_RUBY_SYNC_PIPE_WRITE attempt=#{attempt} " \
           "payload_bytes=#{payload.bytesize} json_written=#{json_bytes_written} " \
-          "delimiter_written=#{delimiter_bytes_written}",
+          "delimiter_written=#{delimiter_bytes_written} peer_read_state=#{peer_read_state}",
       )
       write_stage = "read"
       response = nil
@@ -162,8 +163,20 @@ class RubyCDPBridge
       "NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=error " \
         "method=#{method} type=#{error.class} attempt=#{attempt} " \
         "stage=#{write_stage} json_written=#{json_bytes_written} " \
-        "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state}#{code}",
+        "delimiter_written=#{delimiter_bytes_written} chrome_state=#{chrome_state} " \
+        "peer_read_state=#{browser_peer_read_state}#{code}",
     )
+  end
+
+  def browser_peer_read_state
+    message = @browser_reader.recv_nonblock(1, Socket::MSG_PEEK, exception: false)
+    case message
+    when :wait_readable then "open"
+    when String then message.empty? ? "eof" : "data"
+    else "unknown"
+    end
+  rescue StandardError
+    "error"
   end
 
   def trace_chrome_task_ids_during

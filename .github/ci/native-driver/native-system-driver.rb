@@ -707,9 +707,9 @@ class NativeSystemDriver < Capybara::Driver::Base
           "-ttt",
           "-qq",
           "-e",
-          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl,read,write,writev,sendto,sendmsg",
+          "trace=close,close_range,shutdown,dup,dup2,dup3,fcntl,read,readv,recvfrom,recvmsg,write,writev,sendto,sendmsg",
           "-e",
-          "raw=read,write,writev,sendto,sendmsg",
+          "raw=read,readv,recvfrom,recvmsg,write,writev,sendto,sendmsg",
           "-o",
           File.join(@fd_trace_directory, "trace"),
           "--",
@@ -766,13 +766,13 @@ class NativeSystemDriver < Capybara::Driver::Base
             end
             sync_pipe_probe_state =
               sync_pipe_probe&.scan(
-                /(result|type|attempt|stage|json_written|delimiter_written|chrome_state|code)=([\w:.-]+)/,
+                /(result|type|attempt|stage|json_written|delimiter_written|chrome_state|peer_read_state|code)=([\w:.-]+)/,
               )&.to_h
             sync_pipe_probe_result = "not_run"
             if sync_pipe_probe_state
               sync_pipe_probe_result =
                 sync_pipe_probe_state.values_at("result", "type").compact.join(":")
-              %w[attempt stage json_written delimiter_written chrome_state code].each do |key|
+              %w[attempt stage json_written delimiter_written chrome_state peer_read_state code].each do |key|
                 value = sync_pipe_probe_state[key]
                 sync_pipe_probe_result += ":#{key}=#{value}" if value
               end
@@ -887,6 +887,9 @@ class NativeSystemDriver < Capybara::Driver::Base
     chrome_read_eof_at = nil
     ruby_writer_shutdown_at = nil
     ruby_endpoint_closed_at = nil
+    chrome_pipe_read_seen = false
+    chrome_pipe_read_error_seen = false
+    chrome_pipe_read_eof_seen = false
     ruby_closed_fds = {}
     trace_prefix = File.join(@fd_trace_directory, "trace")
     summaries = processes.map do |name, (task_ids, descriptors)|
@@ -935,14 +938,28 @@ class NativeSystemDriver < Capybara::Driver::Base
             end
           end
           if name == "chrome"
-            read_eof = line.match(/\A\s*([0-9.]+)\s+read\(([^)]*)\)\s+=\s+0(?:\s|$)/)
-            if read_eof
-              arguments = read_eof[2].split(",").map(&:strip)
+            read_call =
+              line.match(
+                /\A\s*([0-9.]+)\s+(read|readv|recvfrom|recvmsg)\(([^)]*)\)\s+=\s+(-?\d+)(?:\s+[A-Z][A-Z0-9]+)?/,
+              )
+            if read_call
+              arguments = read_call[3].split(",").map(&:strip)
               descriptor = Integer(arguments.first, 0)
-              requested_bytes = Integer(arguments[2], 0)
-              if descriptors.include?(descriptor) && requested_bytes.positive?
-                timestamp = read_eof[1].to_f
-                chrome_read_eof_at = [chrome_read_eof_at, timestamp].compact.min
+              requested_bytes =
+                case read_call[2]
+                when "read", "readv", "recvfrom" then Integer(arguments[2], 0)
+                when "recvmsg" then Integer(arguments[1], 0)
+                end
+              if descriptors.include?(descriptor) && requested_bytes&.positive?
+                chrome_pipe_read_seen = true
+                result = Integer(read_call[4], 0)
+                if result.zero?
+                  chrome_pipe_read_eof_seen = true
+                  timestamp = read_call[1].to_f
+                  chrome_read_eof_at = [chrome_read_eof_at, timestamp].compact.min
+                elsif result.negative?
+                  chrome_pipe_read_error_seen = true
+                end
               end
             end
             shutdown = line.match(/\A\s*([0-9.]+)\s+shutdown\(([^)]*)\)\s+=\s+-?\d+/)
@@ -1005,6 +1022,9 @@ class NativeSystemDriver < Capybara::Driver::Base
       end
     "#{summaries.join(";")};ruby_endpoint_teardown_#{local_close_order};" \
       "chrome_eof_#{chrome_eof_order};chrome_read_eof=#{!chrome_read_eof_at.nil?};" \
+      "chrome_pipe_read_seen=#{chrome_pipe_read_seen};" \
+      "chrome_pipe_read_eof=#{chrome_pipe_read_eof_seen};" \
+      "chrome_pipe_read_error=#{chrome_pipe_read_error_seen};" \
       "ruby_writer_shutdown=#{!ruby_writer_shutdown_at.nil?};" \
       "ruby_endpoints_closed=#{ruby_closed_fds.key?(reader_fd) && ruby_closed_fds.key?(writer_fd)};" \
       "chrome_shutdown_#{chrome_shutdown_order}"
