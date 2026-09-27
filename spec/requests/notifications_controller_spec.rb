@@ -515,7 +515,10 @@ RSpec.describe NotificationsController do
             PostAlerter.post_created(post)
 
             mention_notification =
-              user.notifications.find_by!(notification_type: Notification.types[:mentioned])
+              user.notifications.find_by!(
+                notification_type: Notification.types[:mentioned],
+                topic: post.topic,
+              )
             expect(mention_notification.data_hash[:display_name]).to eq(mentioner.name)
 
             get "/notifications.json"

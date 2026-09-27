@@ -18,7 +18,6 @@ he:
       admin_dashboard_card:
         no_results: "אין תוצאות"
     explorer:
-      default_query: "ברירת מחדל"
       view_query: "תצוגה"
       or: "או"
       admins_only: "דפדפן הנתונים זמין למנהלים בלבד."
@@ -69,6 +68,7 @@ he:
         other: "%{count} התוצאות המובילות מופיעות."
       query_name: "שאילתה"
       query_groups: "קבוצות"
+      query_tags: "תגיות"
       link: "קישור אל"
       report_name: "דוח"
       query_description: "תיאור"

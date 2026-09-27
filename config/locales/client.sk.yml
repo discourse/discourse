@@ -5721,7 +5721,6 @@ sk:
             status: "Stav"
             actions: "Akcie"
           activity:
-            rate_limits: "Limity sadzieb"
             outcome: "Výsledok"
             time: "Čas"
             user: "Používateľ"
@@ -8263,13 +8262,14 @@ sk:
           multiselect: "Viacnásobný výber"
       site_text:
         description: "Môžete si prispôsobiť akýkoľvek text na fóre."
-        search: "Hľadajte text, ktorý chcete upraviť"
+        search_label: "Hľadať"
+        theme_disabled: "Vypnuté"
+        filters: "Filtre"
+        status:
+          invalid: "Neplatné"
         title: "Texty stránok"
         edit: "Upraviť"
-        revert: "Vrátiť zmeny"
         revert_confirm: "Ste si istý, že chcete vrátiť vykonané zmeny späť?"
-        go_back: "Návrat na vyhľadávanie"
-        recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
         show_outdated: "Zobraziť len neaktuálne/neplatné"
         show_untranslated: "Zobraziť len nepreložené"

@@ -636,6 +636,9 @@ en:
           translate:
             label: "Translate"
             title: "Translate to all supported languages using the selected language as the source"
+            confirm: "Translate from %{language} to:"
+            override_existing: "Also override existing translations"
+            no_targets: "No other target languages are configured. Add languages to the content localization supported locales setting."
             queued: "Translation queued"
             failed: "Failed to queue translation"
         translations_menu:

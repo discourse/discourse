@@ -4080,7 +4080,6 @@ ro:
             status: "Stare"
             actions: "Acțiuni"
           activity:
-            rate_limits: "Limite de rată"
             time: "Oră"
             user: "Utilizator"
             duration: "Durată"
@@ -5708,13 +5707,12 @@ ro:
           dropdown: "Meniu derulant"
       site_text:
         description: "Poți personaliza orice text de pe forumul tău."
-        search: "Caută textul pe care vrei să îl editezi"
+        search_label: "Caută"
+        theme_disabled: "Dezactivate"
+        filters: "Filtre"
         title: "Texte site"
         edit: "Editează"
-        revert: "Revocați schimbările"
         revert_confirm: "Ești sigur că vrei să revoci schimbările?"
-        go_back: "Înapoi la căutare"
-        recommended: "Îți recomandăm să personalizezi următorul text pentru a se adapta nevoilor tale:"
         show_overriden: "Arată doar ignorate"
         only_show_selected_locale: "Afișează rezultatele numai în limba selectată"
         outdated:

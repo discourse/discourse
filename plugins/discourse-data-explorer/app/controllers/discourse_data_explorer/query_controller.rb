@@ -301,17 +301,7 @@ module DiscourseDataExplorer
     def rate_limit_query_runs!
       return if !is_api? && !is_user_api?
 
-      RateLimiter.new(
-        nil,
-        "api-query-run-10-sec",
-        GlobalSetting.max_data_explorer_api_reqs_per_10_seconds,
-        10.seconds,
-      ).performed!
-    rescue RateLimiter::LimitExceeded => e
-      if GlobalSetting.max_data_explorer_api_req_mode.include?("warn")
-        Discourse.warn("Query run 10 second rate limit exceeded", query_id: params[:id])
-      end
-      raise e if GlobalSetting.max_data_explorer_api_req_mode.include?("block")
+      QueryRunRateLimiter.perform!(query_id: params[:id])
     end
 
     def run_download(query, explain:)
@@ -361,15 +351,7 @@ module DiscourseDataExplorer
     end
 
     def format_query_error(err)
-      err_class = err.class
-      err_msg = err.message
-      if err.is_a?(ActiveRecord::StatementInvalid)
-        err_class = err.original_exception.class
-        err_msg.gsub!("#{err_class}:", "")
-      else
-        err_msg = "#{err_class}: #{err_msg}"
-      end
-      { success: false, errors: [err_msg] }
+      { success: false, errors: [QueryErrorFormatter.message(err)] }
     end
 
     def render_invalid_json_params

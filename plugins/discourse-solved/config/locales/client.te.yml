@@ -18,6 +18,10 @@ te:
               buckets:
                 lt_1h: "< 1 గంట"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "తీసివేయబడింది"
+        tag_names: "ట్యాగులు"
     notifications:
       alt:
         solved:

@@ -19360,24 +19360,10 @@ CREATE INDEX idx_bpe_crawler_created_at_covering ON public.browser_pageview_even
 
 
 --
--- Name: idx_bpe_created_at_country_code; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_created_at_country_code ON public.browser_pageview_events USING btree (created_at, country_code);
-
-
---
 -- Name: idx_bpe_created_at_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_bpe_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC);
-
-
---
--- Name: idx_bpe_created_at_normalized_referrer; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_events USING btree (created_at, normalized_referrer);
 
 
 --
@@ -20883,20 +20869,6 @@ CREATE UNIQUE INDEX index_browser_pageview_event_scores_on_event_id ON public.br
 --
 
 CREATE INDEX index_browser_pageview_events_on_created_at ON public.browser_pageview_events USING brin (created_at);
-
-
---
--- Name: index_browser_pageview_events_on_topic_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_browser_pageview_events_on_topic_id ON public.browser_pageview_events USING btree (topic_id);
-
-
---
--- Name: index_browser_pageview_events_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_browser_pageview_events_on_user_id ON public.browser_pageview_events USING btree (user_id);
 
 
 --
@@ -25564,6 +25536,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260925054715'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),

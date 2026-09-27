@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   build:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    if: (github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror') && matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
     name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
@@ -73,6 +73,7 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
       DISCOURSE_SYSTEM_BATCHED_READS: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
+      DISCOURSE_CI_SYSTEM_DRIVER: playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
     strategy:
@@ -249,6 +250,10 @@ jobs:
               TEMPORARY_DB_PORT: "11001"
             run: bin/rake db:check_structure_dump
 
+      - name: Clone databases for parallel tests
+        if: env.USES_PARALLEL_DATABASES == 'true'
+        run: bin/rake parallel:clone
+
       - name: Fetch turbo_rspec_runtime.log cache
         uses: actions/cache@v6
         id: test-runtime-cache
@@ -329,7 +334,7 @@ jobs:
         run: pnpm playwright-install
 
       - name: Restore native system driver
-        if: matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
+        if: env.DISCOURSE_CI_SYSTEM_DRIVER == 'native-cdp' && matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
         id: native-driver-cache
         uses: actions/cache@v6
         with:
@@ -337,14 +342,14 @@ jobs:
           key: native-driver-${{ runner.os }}-${{ runner.arch }}-rust-1.85.1-${{ hashFiles('.github/ci/native-driver/rust/Cargo.toml', '.github/ci/native-driver/rust/Cargo.lock', '.github/ci/native-driver/rust/src/**') }}
 
       - name: Build native system driver
-        if: matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && steps.native-driver-cache.outputs.cache-hit != 'true'
+        if: env.DISCOURSE_CI_SYSTEM_DRIVER == 'native-cdp' && matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && steps.native-driver-cache.outputs.cache-hit != 'true'
         run: |
           apt-get update
           apt-get install -y --no-install-recommends rustc=1.85.1+dfsg1-1+deb13u1 cargo=1.85.1+dfsg1-1+deb13u1
           cargo build --locked --release --manifest-path .github/ci/native-driver/rust/Cargo.toml
 
       - name: Configure native system driver
-        if: matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
+        if: env.DISCOURSE_CI_SYSTEM_DRIVER == 'native-cdp' && matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins')
         run: |
           node -e 'console.log("DISCOURSE_SYSTEM_CHROMIUM_PATH=" + require("playwright").chromium.executablePath())' >> "$GITHUB_ENV"
           echo 'SPEC_OPTS=--require ./.github/ci/native-driver/native-lifecycle-waits.rb' >> "$GITHUB_ENV"
@@ -372,7 +377,11 @@ jobs:
           printf 'CI_SYSTEM_CPU_START {"usage_usec":%s}\n' "${system_test_cpu_start:-null}"
           system_test_started_seconds=$SECONDS
           trap report_system_test_cpu EXIT
-          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system .github/ci/native-driver/spec/system
+          system_test_paths=(spec/system)
+          if [[ "$DISCOURSE_CI_SYSTEM_DRIVER" == "native-cdp" ]]; then
+            system_test_paths+=(.github/ci/native-driver/spec/system)
+          fi
+          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'

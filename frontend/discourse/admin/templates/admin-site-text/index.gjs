@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import SiteTextSummary from "discourse/admin/components/site-text-summary";
+import SiteTextThemeSelector from "discourse/admin/components/site-text-theme-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { not } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
@@ -128,7 +129,7 @@ export default <template>
         />
         <div class="site-texts__theme">
           <label>{{i18n "admin.site_text.theme"}}</label>
-          <ComboBox
+          <SiteTextThemeSelector
             class="theme-search"
             @content={{@controller.availableThemes}}
             @onChange={{@controller.updateTheme}}

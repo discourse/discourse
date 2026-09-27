@@ -3972,12 +3972,10 @@ lv:
           confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
-        search: "Meklēt tekstu, kuru vēlies rediģēt"
+        search_label: "Meklēt"
+        theme_disabled: "Atslēgt"
         edit: "Rediģēt"
-        revert: "Atsaukt Izmaiņas"
         revert_confirm: "Vai tiešām vēlies atsaukt izmaiņas?"
-        go_back: "Atpakaļ pie meklētāja"
-        recommended: "Iesakām pielāgot šo tekstu jūsu vajadzībām:"
         show_overriden: "Rādīt tikai aizstātos"
         outdated:
           dismiss: "Nerādīt"

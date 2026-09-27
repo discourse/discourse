@@ -52,4 +52,5 @@ export const NOTIFICATION_TYPES = {
   following_created_topic: 801,
   following_replied: 802,
   circles_activity: 900,
+  voice_invitation: 1000,
 };

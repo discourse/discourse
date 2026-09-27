@@ -30,7 +30,7 @@ export default class AdminFlagItem extends Component {
   }
 
   get canEdit() {
-    return !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id);
+    return !this.args.flag.system;
   }
 
   get canDelete() {

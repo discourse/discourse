@@ -14,7 +14,7 @@ their combined effect; an individual experiment need not reach it alone. Assess
 each gain alongside CPU, memory, reliability, and its interaction with prior gains.
 
 Use this draft PR for final measurements. Pin proxy experiments to main revision
-f7be7d7b8a5d3f7b3fc6216240763da9fa3a40b6. Keep this pin fixed unless explicitly
+bf55a44c2872738f7ae2664d6fec3d6d8779190f. Keep this pin fixed unless explicitly
 asked to advance it. Run exploratory benchmarks with act on
 an isolated 16-vCPU host, recording the image digest, source revision, runtime
 cache, seed, CPU totals, and peak container memory. Proxy timings do not establish

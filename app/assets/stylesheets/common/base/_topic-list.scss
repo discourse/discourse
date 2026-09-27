@@ -663,6 +663,9 @@
     .activity {
       width: 4em;
 
+      // accommodates "MMM YYYY" without layout shift
+      min-width: 5.5em;
+
       &:lang(zh_CN) {
         width: 5.3em;
       }

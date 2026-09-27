@@ -27,6 +27,11 @@ ja:
                 lt_1h: "< １時間"
                 gt_24h: "> 24 時間"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "変更"
+        changes_removed: "削除"
+        tag_names: "タグ"
     notifications:
       alt:
         solved:

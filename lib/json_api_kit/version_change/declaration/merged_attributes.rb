@@ -10,6 +10,8 @@ module JsonApiKit
 
         private
 
+        def kinds = DERIVED_FROM_AN_ATTRIBUTE
+
         def verify!
           raise fault("Declare at least two names") unless from.many?
         end

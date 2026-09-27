@@ -35,7 +35,7 @@ task "javascript:update_constants" => :environment do
 
     export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
 
-    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
+    export const SYSTEM_FLAG_IDS = #{Flag.unscoped.where(id: 0...Flag::MAX_SYSTEM_FLAG_ID).order(:id).pluck(:name_key, :id).to_h.to_json};
 
     export const REPORT_MODES = #{Report::MODES.to_json};
 

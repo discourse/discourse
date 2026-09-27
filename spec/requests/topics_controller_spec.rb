@@ -6676,7 +6676,14 @@ RSpec.describe TopicsController do
       end
 
       context "with success" do
-        it "returns success" do
+        it "revokes a public published page when converting the topic" do
+          SiteSetting.enable_page_publishing = true
+          published_page = Fabricate(:published_page, topic: topic, public: true)
+
+          get published_page.path
+          expect(response.status).to eq(200)
+          expect(response.body).to include(post.raw)
+
           sign_in(admin)
           put "/t/#{topic.id}/convert-topic/private.json"
 
@@ -6687,6 +6694,12 @@ RSpec.describe TopicsController do
           result = response.parsed_body
           expect(result["success"]).to eq(true)
           expect(result["url"]).to be_present
+
+          sign_out
+          get published_page.path
+          expect(response.status).to eq(404)
+          expect(response.body).not_to include(post.raw)
+          expect(PublishedPage.exists?(topic: topic)).to eq(false)
         end
       end
     end

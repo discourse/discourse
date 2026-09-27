@@ -126,20 +126,30 @@ module DiscourseAi
           end,
         ) { true }
 
+        not_bot_pm_sql = <<~SQL
+          NOT EXISTS (
+            SELECT 1 FROM topic_custom_fields tcf_pm_inbox
+            WHERE tcf_pm_inbox.topic_id = topics.id
+            AND tcf_pm_inbox.name = '#{TOPIC_AI_BOT_PM_FIELD}'
+            AND tcf_pm_inbox.value = 't'
+          )
+        SQL
+
         # Hide bot PMs from the personal inbox queries (Latest, New, Unread)
         # so human conversations are not buried under bot replies. Sent and
         # Archive are intentionally untouched.
         plugin.register_modifier(:private_messages_personal_inbox_query) do |list, _user|
           next list unless SiteSetting.ai_bot_enabled
 
-          list.where(<<~SQL, field: TOPIC_AI_BOT_PM_FIELD)
-            NOT EXISTS (
-              SELECT 1 FROM topic_custom_fields tcf_pm_inbox
-              WHERE tcf_pm_inbox.topic_id = topics.id
-              AND tcf_pm_inbox.name = :field
-              AND tcf_pm_inbox.value = 't'
-            )
-          SQL
+          list.where(not_bot_pm_sql)
+        end
+
+        # Keep bot PMs out of the inbox unread/new counts too, since the
+        # lists above no longer show them.
+        plugin.register_modifier(:private_message_topic_tracking_state_filters) do |filters|
+          next filters unless SiteSetting.ai_bot_enabled
+
+          filters + [not_bot_pm_sql]
         end
 
         plugin.register_modifier(:guardian_can_send_private_message_to_target) do |allowed, params|

@@ -93,6 +93,12 @@ zh_CN:
                 slower: "慢 %{duration}"
                 tooltip: "平均回复时间趋势。"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "更改"
+        changes_removed: "已移除"
+        tag_names: "标签"
+        tag_names_description: "仅对包含以下标签之一的话题触发"
     notifications:
       alt:
         solved:

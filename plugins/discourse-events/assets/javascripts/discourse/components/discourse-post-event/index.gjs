@@ -185,10 +185,6 @@ export default class DiscoursePostEvent extends Component {
     return this.event.watchingInvitee?.status;
   }
 
-  get expiredAndRecurring() {
-    return this.event.isExpired && this.event.recurrence;
-  }
-
   get recurrenceLabel() {
     if (!this.event?.recurrence) {
       return null;
@@ -228,7 +224,6 @@ export default class DiscoursePostEvent extends Component {
       if (
         fetched.recurrence &&
         displayedStartsAt &&
-        fetched.startsAt &&
         displayedStartsAt !== fetched.startsAt
       ) {
         this.#filterForFutureOccurrence(fetched);
@@ -278,20 +273,8 @@ export default class DiscoursePostEvent extends Component {
             />
             <header class="event-header" {{this.setupMessageBus}}>
               <div class="event-date">
-                <div class="month">
-                  {{#if this.expiredAndRecurring}}
-                    -
-                  {{else}}
-                    {{this.startsAtMonth}}
-                  {{/if}}
-                </div>
-                <div class="day">
-                  {{#if this.expiredAndRecurring}}
-                    -
-                  {{else}}
-                    {{this.startsAtDay}}
-                  {{/if}}
-                </div>
+                <div class="month">{{this.startsAtMonth}}</div>
+                <div class="day">{{this.startsAtDay}}</div>
               </div>
               <div class="event-info">
                 <span class="name">
@@ -360,9 +343,7 @@ export default class DiscoursePostEvent extends Component {
                   clamp=this.clampDescription
                 )
                 Location=(component DiscoursePostEventLocation event=event)
-                Dates=(component
-                  Dates event=event expiredAndRecurring=this.expiredAndRecurring
-                )
+                Dates=(component Dates event=event)
                 Recurrence=(component
                   InfoSection icon="arrows-rotate" class="event-recurrence"
                 )
@@ -380,10 +361,7 @@ export default class DiscoursePostEvent extends Component {
                 )
               }}
             >
-              <Dates
-                @event={{event}}
-                @expiredAndRecurring={{this.expiredAndRecurring}}
-              />
+              <Dates @event={{event}} />
               {{#if event.recurrence}}
                 <InfoSection class="event-recurrence" @icon="arrows-rotate">
                   {{this.recurrenceLabel}}

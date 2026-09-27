@@ -6031,12 +6031,11 @@ pt:
           confirm: "Confirmação"
           dropdown: "Lista pendente"
       site_text:
-        search: "Pesquisar o texto que gostaria de editar"
+        search_label: "Procurar"
+        theme_disabled: "Desativado"
+        filters: "Filtros"
         edit: "Editar"
-        revert: "Reverter Alterações"
         revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
-        go_back: "De volta à Pesquisa"
-        recommended: "Recomendamos personalizar o seguinte texto para que se aplique às suas necessidades."
         show_overriden: "Apenas mostrar valores alterados"
         outdated:
           dismiss: "Marcar Visto"

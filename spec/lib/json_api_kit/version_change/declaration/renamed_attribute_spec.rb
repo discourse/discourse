@@ -3,8 +3,8 @@
 RSpec.describe JsonApiKit::VersionChange::Declaration::RenamedAttribute do
   subject(:declaration) { described_class.new("things", from: :label, to: :name, up:, down:) }
 
-  let(:up) { described_class::NO_CONVERSION }
-  let(:down) { described_class::NO_CONVERSION }
+  let(:up) { JsonApiKit::VersionChange::Declaration::NO_CONVERSION }
+  let(:down) { JsonApiKit::VersionChange::Declaration::NO_CONVERSION }
 
   describe "#transformations" do
     subject(:transformations) { declaration.transformations }

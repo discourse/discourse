@@ -20,7 +20,13 @@ RSpec.describe JsonApiKit::Sideload do
   let(:records) { [topic] }
   let(:rows) { records.map { JsonApiKit::Pagination::Row.new(record: it, segment: nil) } }
   let(:params) { {} }
-  let(:request) { JsonApiKit::Request::Collection.new(params, guardian: Guardian.new) }
+  let(:request) do
+    JsonApiKit::Request::Collection.new(
+      params,
+      guardian: Guardian.new,
+      edition: JsonApiKit::Edition.current,
+    )
+  end
   let(:schema) { JsonApiKit::Schema.new(Topic) }
 
   describe "#linkage_for" do

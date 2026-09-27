@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Declarations::Sorts do
-  subject(:sorts) { described_class.new(declarations, schema:, default: default_sort, unique_by:) }
+  subject(:sorts) { described_class.new(declarations, schema:, unique_by:) }
 
   let(:schema) { JsonApiKit::Schema.new(Topic) }
   let(:sort_class) { JsonApiKit::Declarations::Sort }
   let(:declarations) do
     [sort_class.new(:created_at), sort_class.new(:ran_at, column: :last_posted_at)]
   end
-  let(:default_sort) { {} }
   let(:unique_by) { [] }
 
   describe "#fetch" do
@@ -24,6 +23,24 @@ RSpec.describe JsonApiKit::Declarations::Sorts do
       it "refuses the request" do
         expect { sort }.to raise_error(KeyError)
       end
+    end
+  end
+
+  describe "#with" do
+    subject(:combined) { sorts.with([sort_class.new(:title)]) }
+
+    let(:unique_by) { %i[created_at id] }
+
+    it "combines current and additional declarations" do
+      expect(combined.names).to contain_exactly("created_at", "ran_at", "title")
+    end
+
+    it "preserves the unique keys" do
+      expect(combined.keyset("title" => :desc).keys.map(&:name)).to eq(%i[title created_at id])
+    end
+
+    it "preserves the original collection" do
+      expect { combined.names }.not_to change(sorts, :names)
     end
   end
 
@@ -64,16 +81,7 @@ RSpec.describe JsonApiKit::Declarations::Sorts do
       end
     end
 
-    context "when only the default sort exists" do
-      let(:ordering) { {} }
-      let(:default_sort) { { ran_at: :desc } }
-
-      it "orders by the sort the resource declares" do
-        expect(keyset.keys.map(&:name)).to eq(%i[last_posted_at id])
-      end
-    end
-
-    context "when neither the ordering nor the default sort exists" do
+    context "when the ordering is empty" do
       let(:ordering) { {} }
 
       it "orders by the key that makes each row unique, upwards" do

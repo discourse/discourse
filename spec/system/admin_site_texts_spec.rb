@@ -127,7 +127,8 @@ describe "Admin Site Texts Page" do
   end
 
   it "can filter, edit, and revert a component translation in the selected language" do
-    theme = Fabricate(:theme, component: true)
+    theme = Fabricate(:theme, component: true, enabled: false)
+    duplicate = Fabricate(:theme, component: true, name: theme.name)
     theme.set_field(
       target: :translations,
       name: "en",
@@ -143,6 +144,10 @@ describe "Admin Site Texts Page" do
 
     site_texts_page.visit
     expect(site_texts_page).to have_no_theme_filter
+    site_texts_page.open_theme_filter
+    expect(site_texts_page).to have_theme_option(theme, disabled: true)
+    expect(site_texts_page).to have_theme_option(duplicate)
+    page.send_keys(:escape)
     site_texts_page.select_theme(theme)
     site_texts_page.select_locale("it")
     site_texts_page.search("resource_intro")

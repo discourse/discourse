@@ -19,7 +19,9 @@ module JsonApiKit
 
       def requested_version = request.headers[ApiVersion::HEADER]
 
-      def glossary = @glossary ||= Glossary.resource(version)
+      def edition = @edition ||= Edition.for(version)
+
+      def glossary = edition.glossary
     end
   end
 end

@@ -2142,8 +2142,8 @@ zh_CN:
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
     enable_local_logins_via_code: "允许会员使用一次性电子邮件代码 (OTP) 注册、接受邀请和登录，而无需密码。"
     enable_random_usernames: '使用一次性电子邮件验证码创建的帐户会生成随机用户名，格式为“形容词+名词+两个随机数字”（例如：QuietFalcon34）。新会员可以在注册过程中更改用户名。'
-    random_username_adjectives: '用作随机生成用户名前半部分的单词。单词组合时，首字母大写。'
-    random_username_nouns: '用作随机生成用户名后半部分的单词。单词组合时，首字母大写。'
+    random_username_adjectives: "用作随机生成用户名前半部分的单词。单词组合时，首字母大写。"
+    random_username_nouns: "用作随机生成用户名后半部分的单词。单词组合时，首字母大写。"
     allow_passkeys_for_2fa: "允许用户在确认敏感操作时使用通行密钥进行双重身份验证。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"

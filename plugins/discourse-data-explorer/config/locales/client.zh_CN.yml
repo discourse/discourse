@@ -29,7 +29,6 @@ zh_CN:
         description: "编写自定义 SQL 查询，以查找与您的社区相关的特定内容。"
     explorer:
       resize_editor: "调整查询编辑器大小"
-      default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
       view_query: "查看"
       queries: "查询"
@@ -127,6 +126,7 @@ zh_CN:
         other: "显示前 %{count} 个结果。"
       query_name: "查询"
       query_groups: "群组"
+      query_tags: "标签"
       link: "链接"
       report_name: "报告"
       query_description: "描述"

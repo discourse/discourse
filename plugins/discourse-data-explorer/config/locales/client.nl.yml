@@ -25,7 +25,6 @@ nl:
       admin_dashboard_card:
         no_results: "Geen resultaten"
     explorer:
-      default_query: "Standaard"
       default_query_notice: "Dit is een standaardquery, de SQL kan niet worden bewerkt. Maak een nieuwe query om de SQL te bewerken."
       view_query: "Bekijken"
       queries: "Query's"
@@ -94,6 +93,7 @@ nl:
         other: "Eerste %{count} resultaten worden weergegeven."
       query_name: "Query"
       query_groups: "Groepen"
+      query_tags: "Tags"
       link: "Link voor"
       report_name: "Rapport"
       query_description: "Beschrijving"

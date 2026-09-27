@@ -9,8 +9,8 @@ RSpec.describe JsonApiKit::Document::Collection do
   fab!(:second_topic) do
     Fabricate(:topic, title: "Cursors and their values", created_at: Time.utc(2026, 8, 2))
   end
-  let(:glossary) { JsonApiKit::Glossary.kit }
-  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
