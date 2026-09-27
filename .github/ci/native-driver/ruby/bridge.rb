@@ -11,6 +11,8 @@ class RubyCDPBridge
     @write_mutex = Mutex.new
     @reader_exit_mutex = Mutex.new
     @reader_exit = nil
+    @recent_protocol_mutex = Mutex.new
+    @recent_protocol_events = []
     @sequence = 0
     @pending = {}
     @requests = Queue.new
@@ -133,12 +135,14 @@ class RubyCDPBridge
       if response.key?("id")
         pending = @pending_mutex.synchronize { @pending.delete(response.fetch("id")) }
         next unless pending
+        record_protocol_event("response", pending.fetch(:method))
         if pending[:queue]
           pending[:queue] << response
         else
           write_output(response.merge("id" => pending.fetch(:external_id)))
         end
       else
+        record_protocol_event("event", response["method"])
         @drags << response if response["method"] == "Input.dragIntercepted"
         write_output(response)
       end
@@ -170,18 +174,33 @@ class RubyCDPBridge
     end
   end
 
+  def record_protocol_event(kind, method)
+    @recent_protocol_mutex.synchronize do
+      @recent_protocol_events << "#{kind}:#{safe_protocol_method(method)}"
+      @recent_protocol_events.shift while @recent_protocol_events.length > 8
+    end
+  end
+
+  def safe_protocol_method(method)
+    method = method.to_s
+    method.match?(/\A[A-Za-z][A-Za-z0-9_.]*\z/) ? method : "other"
+  end
+
   def forward(request)
     submit(request, external_id: request.fetch("id"))
   end
 
   def submit(request, queue: nil, external_id: nil)
+    method = safe_protocol_method(request.fetch("method"))
+    origin = external_id.nil? ? "internal" : "forwarded"
     id =
       @pending_mutex.synchronize do
         @sequence += 1
-        @pending[@sequence] = { queue: queue, external_id: external_id }
+        @pending[@sequence] = { queue: queue, external_id: external_id, method: method }
         @sequence
       end
     request = request.merge("id" => id)
+    record_protocol_event("send", method)
     write_stage = "json"
     @write_mutex.synchronize do
       @browser_writer.write(JSON.generate(request))
@@ -194,11 +213,10 @@ class RubyCDPBridge
     @pending_mutex.synchronize { @pending.delete(id) } if id
     status = Process.waitpid2(@chrome_pid, Process::WNOHANG)&.last
     pipe_state = chrome_pipe_state
-    method = request.fetch("method").to_s
-    method = "other" unless method.match?(/\A[A-Za-z][A-Za-z0-9_.]*\z/)
+    recent = @recent_protocol_mutex.synchronize { @recent_protocol_events.join(",") }
     diagnostic =
       "NATIVE_CDP_RUBY_PIPE_WRITE_FAILURE method=#{method} stage=#{write_stage} " \
-        "chrome_alive=#{status.nil?}"
+        "origin=#{origin} chrome_alive=#{status.nil?} recent=#{recent}"
     STDERR.puts(diagnostic) if ENV["NATIVE_CDP_RUBY_FD_TRACE"] == "1"
     raise IOError,
           "Chromium closed CDP input while sending #{method} " \

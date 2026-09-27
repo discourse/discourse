@@ -225,6 +225,18 @@ ambiguous. The run did not produce a Ruby performance measurement. The next
 attempt removes that self-probe from both driver samples, leaving the ordinary
 Capybara startup command as the first browser request.
 
+Run [36332535124](https://github.com/discourse/discourse/actions/runs/36332535124)
+at head `b6d2833cd20` removed the self-probes. Ruby syntax passed. Rust passed
+the sample in 3.37s (4.06s RSpec load); Ruby failed in 2.45s (2.97s load).
+The first Ruby pipe failure moved to `Target.getTargetInfo` at JSON-write
+stage, with Chrome still alive. This comes from the `Driver.attachPage` helper
+after the ordinary `Target.getTargets` request has returned, so the Ruby
+transport completes at least one startup round trip before it fails. No Ruby
+performance measurement is available. The next trace records only the last
+eight CDP method send/response/event names and whether a failed request was
+forwarded or internal, to identify the sequence immediately before the pipe
+closes.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
 uses only one threaded probe. Until Ruby passes the same focused system-test
