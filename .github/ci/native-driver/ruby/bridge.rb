@@ -57,7 +57,9 @@ class RubyCDPBridge
   private
 
   def process_requests
-    @requests.each do |request|
+    loop do
+      request = @requests.pop
+      break unless request
       begin
         result = dispatch(request.fetch("method"), request.fetch("params", {}), request["sessionId"])
         write_output("id" => request.fetch("id"), "result" => result)
@@ -65,6 +67,8 @@ class RubyCDPBridge
         write_output("id" => request.fetch("id"), "error" => { "message" => error.message })
       end
     end
+  rescue ClosedQueueError
+    nil
   end
 
   def read_browser
