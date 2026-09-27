@@ -269,7 +269,7 @@ class NativeSystemDriver < Capybara::Driver::Base
 
   def command(method, params = {}, browser: false, session: nil)
     start unless @input
-    raise NoSuchWindowError unless browser || session || @page
+    raise NoSuchWindowError, "No active page for #{method}" unless browser || session || @page
     responses = Queue.new
     id =
       @command_mutex.synchronize do
@@ -729,6 +729,10 @@ class NativeSystemDriver < Capybara::Driver::Base
         end
       rescue StandardError => error
         @transport_error = error
+        if ENV["NATIVE_CDP_RUBY_BRIDGE"] == "1" && ENV["NATIVE_CDP_RUBY_FD_TRACE"] == "1"
+          frame = error.backtrace&.first&.match(%r{([^/]+\.rb:\d+)})&.captures&.first || "unknown"
+          warn("NATIVE_CDP_DRIVER_OUTPUT_ERROR type=#{error.class} frame=#{frame}")
+        end
       ensure
         if ENV["NATIVE_CDP_RUBY_BRIDGE"] == "1"
           @error_reader.join(0.1)

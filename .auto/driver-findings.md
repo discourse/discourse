@@ -157,6 +157,20 @@ summary cannot establish which process closed the browser pipe. The next run
 keeps Ruby and Chrome events separate and compresses repeated operations; it
 still reports only process labels and selected descriptor-management calls.
 
+Run [36325550883](https://github.com/discourse/discourse/actions/runs/36325550883)
+used the grouped trace. The workflow's first sample (Rust) passed in 10.22s;
+the second sample (Ruby) failed both selected examples in 3.46s. Five bridge
+traces were present. Across them Ruby had close/fcntl activity on its two
+tracked descriptors; Chrome's launch process had only the expected dup2/fcntl
+setup for descriptors 3 and 4 and no close calls. The reported socket endpoints
+still matched at failure time. Each Ruby bridge `IOError` marker came after the
+first RSpec failure marker, so the pipe EOF is consistent with teardown but is
+not established as the initiating cause. The first failure was the about-page
+admin expansion example, a `NoSuchWindowError` re-raised while waiting for a
+command response. The next focused run isolates the native stale-element
+example and emits only the output-reader exception class and a source
+file/line if that reader fails.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
 uses only one threaded probe. Until Ruby passes the same focused examples,
