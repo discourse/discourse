@@ -304,3 +304,16 @@ though its sample passed. This diagnostic run is not a performance result.
 The next run adds safe close-on-exec state and traces only descriptor
 close/shutdown operations during the Ruby probe to identify who closes the
 pipe.
+
+Run [36336471603](https://github.com/discourse/discourse/actions/runs/36336471603)
+at head `31d6809b1fc` reproduced the same failure with the descriptor trace
+enabled. Rust passed the one-example sample in 3.96s (4.50s load); Ruby failed
+in 2.36s (3.22s load), and Ruby syntax passed. The Ruby probe again got no
+`Target.getTargetInfo` response. Both Chrome descriptors were sockets with
+read-write access, matched the spawned endpoint, and had close-on-exec unset.
+The trace shows Chromium calling `shutdown(SHUT_RDWR)` on both fd3 and fd4;
+there is no evidence of a missing inherited descriptor. The trace summary
+doesn't establish what triggered Chromium's shutdown. The next experiment
+removes Ruby's duplicate writer descriptor and uses the same socket object for
+both the reader thread and serialized writes, to isolate Ruby's duplicated-fd
+handling.
