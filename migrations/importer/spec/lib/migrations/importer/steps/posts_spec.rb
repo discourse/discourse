@@ -93,16 +93,16 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
     add_mapping(1, mapping_type::USERS, user_id)
   end
 
-  it "copies the posts with the numbers of the pre-pass" do
+  it "copies posts in source post number order with contiguous numbers" do
     create_source_post(1, post_number: 4)
-    create_source_post(2)
+    create_source_post(2, post_number: 2)
 
     execute_step
 
     posts = destination_posts
-    expect(posts.map(&:post_number)).to eq([4, 5])
-    expect(posts.map(&:sort_order)).to eq([4, 5])
-    expect(posts.map(&:raw)).to eq(["post 1", "post 2"])
+    expect(posts.map(&:post_number)).to eq([1, 2])
+    expect(posts.map(&:sort_order)).to eq([1, 2])
+    expect(posts.map(&:raw)).to eq(["post 2", "post 1"])
     expect(posts.map(&:user_id)).to eq([user_id, user_id])
     expect(posts.map(&:word_count)).to eq([2, 2])
     expect(posts.map(&:cooked)).to eq(["", ""])

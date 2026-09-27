@@ -17,38 +17,28 @@ RSpec.describe Migrations::Importer::PostNumbering do
     )
   end
 
-  it "keeps a source number that is unique within its topic" do
-    create_post(1, topic_id: 10, post_number: 1)
-    create_post(2, topic_id: 10, post_number: 7)
+  it "assigns contiguous numbers in source post number order" do
+    create_post(1, topic_id: 10, post_number: 7)
+    create_post(2, topic_id: 10, post_number: 1)
+    create_post(3, topic_id: 10, post_number: 4)
 
     numbering.assign
 
-    expect(post_numbers).to eq({ 1 => 1, 2 => 7 })
+    expect(post_numbers).to eq({ 1 => 3, 2 => 1, 3 => 2 })
   end
 
-  it "numbers posts without a source number after the topic's highest kept number" do
-    create_post(1, topic_id: 10, post_number: 4)
-    create_post(2, topic_id: 10, created_at: 200)
-    create_post(3, topic_id: 10, created_at: 100)
+  it "sorts posts without a source number last" do
+    create_post(1, topic_id: 10)
+    create_post(2, topic_id: 10, post_number: 4)
 
     numbering.assign
 
-    expect(post_numbers).to eq({ 1 => 4, 2 => 6, 3 => 5 })
+    expect(post_numbers).to eq({ 1 => 2, 2 => 1 })
   end
 
-  it "reassigns every post of a duplicated source number" do
-    create_post(1, topic_id: 10, post_number: 2, created_at: 100)
-    create_post(2, topic_id: 10, post_number: 2, created_at: 200)
-    create_post(3, topic_id: 10, post_number: 5, created_at: 300)
-
-    numbering.assign
-
-    expect(post_numbers).to eq({ 3 => 5, 1 => 6, 2 => 7 })
-  end
-
-  it "ignores a source number that is zero or negative" do
-    create_post(1, topic_id: 10, post_number: 0, created_at: 100)
-    create_post(2, topic_id: 10, post_number: -3, created_at: 200)
+  it "uses the source ID to order duplicate source numbers" do
+    create_post(2, topic_id: 10, post_number: 2)
+    create_post(1, topic_id: 10, post_number: 2)
 
     numbering.assign
 
@@ -57,12 +47,12 @@ RSpec.describe Migrations::Importer::PostNumbering do
 
   it "numbers each topic on its own" do
     create_post(1, topic_id: 10, post_number: 9)
-    create_post(2, topic_id: 10, created_at: 100)
-    create_post(3, topic_id: 20, created_at: 100)
+    create_post(2, topic_id: 10)
+    create_post(3, topic_id: 20)
 
     numbering.assign
 
-    expect(post_numbers).to eq({ 1 => 9, 2 => 10, 3 => 1 })
+    expect(post_numbers).to eq({ 1 => 1, 2 => 2, 3 => 1 })
   end
 
   it "numbers posts after posts already in a mapped destination topic" do
@@ -73,7 +63,7 @@ RSpec.describe Migrations::Importer::PostNumbering do
 
     numbering.assign
 
-    expect(post_numbers).to eq({ 1 => 8, 2 => 7 })
+    expect(post_numbers).to eq({ 1 => 6, 2 => 7 })
   end
 
   it "stores the topic a number belongs to" do
@@ -82,7 +72,7 @@ RSpec.describe Migrations::Importer::PostNumbering do
     numbering.assign
 
     rows = intermediate_db.query("SELECT * FROM mapped.post_numbers")
-    expect(rows).to eq([{ original_id: 1, topic_original_id: 10, post_number: 3 }])
+    expect(rows).to eq([{ original_id: 1, topic_original_id: 10, post_number: 1 }])
   end
 
   it "keeps the numbers of an earlier run" do

@@ -7,12 +7,9 @@ module Migrations
     # may name a post that the copy only reaches much later, so the numbers have
     # to be known up front.
     #
-    # A positive source number is kept when no other post in the same topic uses
-    # it and it is above the destination topic's existing post numbers. Missing,
-    # non-positive, duplicate, and already occupied numbers are replaced with
-    # distinct numbers above that topic's highest existing or kept number, oldest
-    # post first. Keeping usable source numbers preserves source permalink
-    # coordinates without colliding when posts are added to an existing topic.
+    # Posts are ordered by their source number and ID, matching the legacy bulk
+    # importer, then assigned contiguous numbers after any posts already in the
+    # destination topic. Missing source numbers sort last.
     class PostNumbering
       TOPIC_BATCH_SIZE = 1_000
       private_constant :TOPIC_BATCH_SIZE
@@ -25,69 +22,42 @@ module Migrations
       SQL
       private_constant :CREATE_EXISTING_NUMBERS_SQL
 
-      # `OR IGNORE` keeps the numbers assigned by an earlier run, including when
-      # posts already copied by that run have raised the destination maximum.
+      # `OR IGNORE` keeps the numbers assigned by an earlier run. New source rows
+      # are appended after both those assignments and destination posts.
       ASSIGN_SQL = <<~SQL
-        WITH source_posts AS (
-          SELECT original_id,
-                 topic_id,
-                 created_at,
-                 post_number,
-                 COUNT(*) OVER (PARTITION BY topic_id, post_number) AS source_number_count
-          FROM posts
-        ),
-        mapped_highest AS (
+        WITH mapped_highest AS (
           SELECT topic_original_id,
                  MAX(post_number) AS highest_post_number
           FROM mapped.post_numbers
           GROUP BY topic_original_id
         ),
         numbered AS (
-          SELECT source_posts.original_id,
-                 source_posts.topic_id,
-                 source_posts.created_at,
+          SELECT posts.original_id,
+                 posts.topic_id,
                  MAX(
                    COALESCE(existing.highest_post_number, 0),
                    COALESCE(mapped_highest.highest_post_number, 0)
                  ) AS reserved_number,
-                 CASE
-                   WHEN source_posts.post_number >
-                          MAX(
-                            COALESCE(existing.highest_post_number, 0),
-                            COALESCE(mapped_highest.highest_post_number, 0)
-                          )
-                        AND source_posts.source_number_count = 1
-                     THEN source_posts.post_number
-                 END AS kept_number
-          FROM source_posts
+                 ROW_NUMBER() OVER (
+                   PARTITION BY posts.topic_id
+                   ORDER BY posts.post_number IS NULL,
+                            posts.post_number,
+                            posts.original_id
+                 ) AS sequence_number
+          FROM posts
                LEFT JOIN existing_topic_post_numbers existing
-                 ON existing.topic_original_id = source_posts.topic_id
+                 ON existing.topic_original_id = posts.topic_id
                LEFT JOIN mapped_highest
-                 ON mapped_highest.topic_original_id = source_posts.topic_id
+                 ON mapped_highest.topic_original_id = posts.topic_id
                LEFT JOIN mapped.post_numbers assigned
-                 ON assigned.original_id = source_posts.original_id
+                 ON assigned.original_id = posts.original_id
           WHERE assigned.original_id IS NULL
-        ),
-        highest AS (
-          SELECT topic_id,
-                 MAX(reserved_number) AS reserved_number,
-                 COALESCE(MAX(kept_number), 0) AS kept_number
-          FROM numbered
-          GROUP BY topic_id
         )
         INSERT OR IGNORE INTO mapped.post_numbers (original_id, topic_original_id, post_number)
         SELECT numbered.original_id,
                numbered.topic_id,
-               COALESCE(
-                 numbered.kept_number,
-                 MAX(highest.reserved_number, highest.kept_number) +
-                   ROW_NUMBER() OVER (
-                     PARTITION BY numbered.topic_id, numbered.kept_number IS NULL
-                     ORDER BY numbered.created_at, numbered.original_id
-                   )
-               )
+               numbered.reserved_number + numbered.sequence_number
         FROM numbered
-             JOIN highest ON highest.topic_id = numbered.topic_id
       SQL
       private_constant :ASSIGN_SQL
 
