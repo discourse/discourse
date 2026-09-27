@@ -333,3 +333,16 @@ measurement. The next matched probe requests `Target.getTargets` twice before
 `Target.getTargetInfo`; this distinguishes a generic second-command failure
 from a method-specific issue. Ruby's separate reader/writer handles are
 restored.
+
+Run [36338246326](https://github.com/discourse/discourse/actions/runs/36338246326)
+at head `bb4801b6b49` repeated `Target.getTargets` before `Target.getTargetInfo`
+in both bridges. Rust passed the focused example in 3.77s. Ruby failed in
+2.24s: its first internal `Target.getTargets` received a response, but the
+second received none; the reader then observed EOF, and the later forwarded
+`Target.getTargets` write failed. This rules out `Target.getTargetInfo` as a
+special case and confirms that reusing a single Ruby IO object was not the
+cause. No Ruby performance result is available. The next diagnostic performs
+two synchronous Ruby request/response cycles before starting the reader and
+worker threads. If that succeeds, it isolates the failure to the threaded Ruby
+transport path; if it fails, the problem remains in the Ruby wire or browser
+launch path.

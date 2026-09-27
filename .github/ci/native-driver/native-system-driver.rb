@@ -754,15 +754,15 @@ class NativeSystemDriver < Capybara::Driver::Base
               write_failure_index && @errors.fetch(write_failure_index)
             write_stage =
               write_failure&.match(/stage=(json|delimiter)\b/)&.captures&.first || "unknown"
-            threaded_pipe_probe = @errors.find do |line|
-              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE ")
+            sync_pipe_probe = @errors.find do |line|
+              line.start_with?("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE ")
             end
-            threaded_pipe_probe_state =
-              threaded_pipe_probe&.match(
+            sync_pipe_probe_state =
+              sync_pipe_probe&.match(
                 /result=(pass|error)(?: method=[A-Za-z0-9_.]+)?(?: type=(\w+))?(?: code=(-?\d+))?\b/,
               )
-            threaded_pipe_probe_result =
-              threaded_pipe_probe_state&.captures&.compact&.join(":") || "not_run"
+            sync_pipe_probe_result =
+              sync_pipe_probe_state&.captures&.compact&.join(":") || "not_run"
             reader_exit = @errors.find do |line|
               line.start_with?("NATIVE_CDP_RUBY_BRIDGE_READER_EXIT ")
             end
@@ -798,7 +798,7 @@ class NativeSystemDriver < Capybara::Driver::Base
             diagnostic_message =
               "#{diagnostic.strip}; " \
                 "ruby_write_stage=#{write_stage} " \
-                "ruby_threaded_pipe_probe=#{threaded_pipe_probe_result} " \
+                "ruby_sync_pipe_probe=#{sync_pipe_probe_result} " \
                 "ruby_reader_exit=#{reader_exit_type} " \
                 "ruby_reader_exit_before_write_failure=#{reader_exit_before_write_failure} " \
                 "chrome_pipe_reader_eof_before_ruby_write=#{chrome_reader_eof_before_write_failure} " \

@@ -3,6 +3,7 @@
 require "json"
 require "socket"
 require "thread"
+require "timeout"
 
 class RubyCDPBridge
   def initialize(arguments)
@@ -68,9 +69,9 @@ class RubyCDPBridge
           "writer_fd=#{@browser_writer.fileno}",
       )
     end
+    probe_synchronous_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE"] == "1"
     @reader = Thread.new { read_browser }
     @worker = Thread.new { process_requests }
-    probe_threaded_browser_pipe if ENV["NATIVE_CDP_RUBY_BRIDGE_SELF_PROBE"] == "1"
   end
 
   def run
@@ -100,28 +101,42 @@ class RubyCDPBridge
 
   private
 
-  def probe_threaded_browser_pipe
-    probe_method = "Target.getTargets"
-    result = call("Target.getTargets")
-    unless result["targetInfos"].is_a?(Array)
-      raise IOError, "Invalid threaded Chromium pipe probe response"
+  def probe_synchronous_browser_pipe
+    method = "Target.getTargets"
+    2.times do
+      @sequence += 1
+      id = @sequence
+      request = { "id" => id, "method" => method, "params" => {} }
+      record_protocol_event("send-internal", method)
+      @browser_writer.write(JSON.generate(request))
+      @browser_writer.write("\0")
+      @browser_writer.flush
+      response = nil
+      Timeout.timeout(10) do
+        while message = @browser_reader.gets("\0")
+          decoded = JSON.parse(message.delete_suffix("\0"))
+          if decoded["id"] == id
+            response = decoded
+            break
+          end
+        end
+      end
+      raise IOError, "Chromium CDP pipe closed during synchronous probe" unless response
+      if response["error"]
+        raise IOError, "Target.getTargets returned CDP error code=#{response.dig("error", "code")}"
+      end
+      unless response.dig("result", "targetInfos").is_a?(Array)
+        raise IOError, "Invalid synchronous Chromium pipe probe response"
+      end
+      record_protocol_event("response-internal", method)
     end
-    call("Target.getTargets")
-    target = result["targetInfos"].find { |info| info["type"] == "page" }
-    if target
-      probe_method = "Target.getTargetInfo"
-      call(probe_method, { "targetId" => target.fetch("targetId") })
-    end
-    STDERR.puts(
-      "NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=pass " \
-        "commands=#{target ? 3 : 2} page_target=#{target ? "present" : "absent"}",
-    )
+    STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=pass commands=2")
   rescue StandardError => error
-    error_code = error.message.match(/"code":\s*(-?\d+)/)&.captures&.first
+    error_code = error.message.match(/code[=: ]+(-?\d+)/)&.captures&.first
     code = " code=#{error_code}" if error_code
     STDERR.puts(
-      "NATIVE_CDP_RUBY_BRIDGE_THREADED_PIPE_PROBE result=error " \
-        "method=#{probe_method} type=#{error.class}#{code}",
+      "NATIVE_CDP_RUBY_BRIDGE_SYNC_PIPE_PROBE result=error " \
+        "method=#{method} type=#{error.class}#{code}",
     )
   end
 

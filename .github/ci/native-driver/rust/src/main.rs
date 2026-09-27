@@ -38,19 +38,13 @@ fn main() -> io::Result<()> {
     let mut protocol = protocol::Protocol::new(connection, output.clone())?;
     if std::env::var_os("NATIVE_CDP_RUST_BRIDGE_SELF_PROBE").is_some() {
         let mut page_target_present = false;
-        let mut probe_method = "Target.getTargets";
+        let probe_method = "Target.getTargets";
         let probe_result = (|| -> io::Result<()> {
             let result = protocol.call("Target.getTargets", json!({}), None)?;
             protocol.call("Target.getTargets", json!({}), None)?;
-            let target_id = result["targetInfos"]
+            page_target_present = result["targetInfos"]
                 .as_array()
-                .and_then(|targets| targets.iter().find(|target| target["type"] == "page"))
-                .and_then(|target| target["targetId"].as_str());
-            if let Some(target_id) = target_id {
-                probe_method = "Target.getTargetInfo";
-                protocol.call(probe_method, json!({"targetId": target_id}), None)?;
-                page_target_present = true;
-            }
+                .is_some_and(|targets| targets.iter().any(|target| target["type"] == "page"));
             Ok(())
         })();
         if probe_result.is_err() {
@@ -64,8 +58,7 @@ fn main() -> io::Result<()> {
             )));
         }
         eprintln!(
-            "NATIVE_CDP_RUST_BRIDGE_SELF_PROBE result=pass commands={} page_target={}",
-            if page_target_present { 3 } else { 2 },
+            "NATIVE_CDP_RUST_BRIDGE_SELF_PROBE result=pass commands=2 page_target={}",
             if page_target_present { "present" } else { "absent" }
         );
     }
