@@ -89,30 +89,39 @@ class RubyCDPBridge
   private
 
   def probe_browser_pipe
+    probe_id = 1
     stage = "json"
-    request = { "id" => 1, "method" => "Target.getTargets", "params" => {} }
     begin
-      @browser_writer.write(JSON.generate(request))
-      stage = "delimiter"
-      @browser_writer.write("\0")
-      @browser_writer.flush
-      stage = "response"
-      unless IO.select([@browser_reader], nil, nil, 20)
-        raise IOError, "Timed out waiting for Chromium pipe probe"
+      2.times do |index|
+        probe_id = index + 1
+        request = { "id" => probe_id, "method" => "Target.getTargets", "params" => {} }
+        stage = "json"
+        @browser_writer.write(JSON.generate(request))
+        stage = "delimiter"
+        @browser_writer.write("\0")
+        @browser_writer.flush
+        stage = "response"
+        unless IO.select([@browser_reader], nil, nil, 20)
+          raise IOError, "Timed out waiting for Chromium pipe probe"
+        end
+        response_line = @browser_reader.gets("\0")
+        raise IOError, "Chromium closed during pipe probe" unless response_line
+        response = JSON.parse(response_line.delete_suffix("\0"))
+        unless response["id"] == probe_id && response.dig("result", "targetInfos").is_a?(Array)
+          raise IOError, "Invalid Chromium pipe probe response"
+        end
       end
-      response_line = @browser_reader.gets("\0")
-      raise IOError, "Chromium closed during pipe probe" unless response_line
-      response = JSON.parse(response_line.delete_suffix("\0"))
-      unless response["id"] == request["id"] && response.dig("result", "targetInfos").is_a?(Array)
-        raise IOError, "Invalid Chromium pipe probe response"
-      end
-      @sequence = request.fetch("id")
-      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=pass")
+      @sequence = probe_id
+      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=pass count=#{probe_id}")
     rescue Errno::EPIPE
-      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=write_error stage=#{stage}")
+      STDERR.puts(
+        "NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=write_error id=#{probe_id} stage=#{stage}",
+      )
       raise
     rescue StandardError => error
-      STDERR.puts("NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=error stage=#{stage} type=#{error.class}")
+      STDERR.puts(
+        "NATIVE_CDP_RUBY_BRIDGE_PIPE_PROBE result=error id=#{probe_id} stage=#{stage} type=#{error.class}",
+      )
       raise
     end
   end
