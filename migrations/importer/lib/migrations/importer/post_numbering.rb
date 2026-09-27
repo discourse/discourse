@@ -7,10 +7,10 @@ module Migrations
     # may name a post that the copy only reaches much later, so the numbers have
     # to be known up front.
     #
-    # Posts are ordered by their source number and ID, matching the legacy bulk
-    # importer, then assigned contiguous numbers. Topics that explicitly name
-    # an existing destination topic continue after its highest post number; new
-    # topics start at one. Missing source numbers sort last.
+    # Posts are ordered by their source number and ID, then assigned contiguous
+    # numbers. Topics that explicitly name an existing destination topic continue
+    # after its highest post number; new topics start at one. Missing source
+    # numbers sort last.
     class PostNumbering
       TOPIC_BATCH_SIZE = 1_000
       private_constant :TOPIC_BATCH_SIZE
