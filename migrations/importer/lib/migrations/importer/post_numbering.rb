@@ -15,14 +15,6 @@ module Migrations
       TOPIC_BATCH_SIZE = 1_000
       private_constant :TOPIC_BATCH_SIZE
 
-      CREATE_EXISTING_NUMBERS_SQL = <<~SQL
-        CREATE TEMP TABLE IF NOT EXISTS existing_topic_post_numbers (
-          topic_original_id INTEGER PRIMARY KEY,
-          highest_post_number INTEGER NOT NULL
-        )
-      SQL
-      private_constant :CREATE_EXISTING_NUMBERS_SQL
-
       # `OR IGNORE` keeps the numbers assigned by an earlier run. New source rows
       # are appended after both those assignments and destination posts.
       ASSIGN_SQL = <<~SQL
@@ -77,7 +69,12 @@ module Migrations
       private
 
       def store_existing_topic_post_numbers
-        @intermediate_db.execute(CREATE_EXISTING_NUMBERS_SQL)
+        @intermediate_db.execute(<<~SQL)
+          CREATE TEMP TABLE IF NOT EXISTS existing_topic_post_numbers (
+            topic_original_id INTEGER PRIMARY KEY,
+            highest_post_number INTEGER NOT NULL
+          )
+        SQL
         @intermediate_db.execute("DELETE FROM existing_topic_post_numbers")
 
         topic_mappings = @intermediate_db.query(<<~SQL, MappingType::TOPICS)
