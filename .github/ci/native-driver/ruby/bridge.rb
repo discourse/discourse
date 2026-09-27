@@ -135,7 +135,7 @@ class RubyCDPBridge
       if response.key?("id")
         pending = @pending_mutex.synchronize { @pending.delete(response.fetch("id")) }
         next unless pending
-        record_protocol_event("response", pending.fetch(:method))
+        record_protocol_event("response-#{pending.fetch(:origin)}", pending.fetch(:method))
         if pending[:queue]
           pending[:queue] << response
         else
@@ -193,20 +193,26 @@ class RubyCDPBridge
   def submit(request, queue: nil, external_id: nil)
     method = safe_protocol_method(request.fetch("method"))
     origin = external_id.nil? ? "internal" : "forwarded"
-    id =
-      @pending_mutex.synchronize do
-        @sequence += 1
-        @pending[@sequence] = { queue: queue, external_id: external_id, method: method }
-        @sequence
-      end
-    request = request.merge("id" => id)
-    record_protocol_event("send", method)
     write_stage = "json"
-    @write_mutex.synchronize do
+    id = @write_mutex.synchronize do
+      id =
+        @pending_mutex.synchronize do
+          @sequence += 1
+          @pending[@sequence] = {
+            queue: queue,
+            external_id: external_id,
+            method: method,
+            origin: origin,
+          }
+          @sequence
+        end
+      request = request.merge("id" => id)
+      record_protocol_event("send-#{origin}", method)
       @browser_writer.write(JSON.generate(request))
       write_stage = "delimiter"
       @browser_writer.write("\0")
       @browser_writer.flush
+      id
     end
     id
   rescue Errno::EPIPE

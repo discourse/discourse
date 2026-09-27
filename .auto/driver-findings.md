@@ -251,6 +251,18 @@ performance measurement. The fd trace used `strace` only for the Ruby sample,
 so the next run removes that wrapper while retaining the safe method sequence;
 this tests whether tracing itself contributes to the early shutdown.
 
+Run [36333552920](https://github.com/discourse/discourse/actions/runs/36333552920)
+at head `64b10a6d772` removed the `strace` wrapper. Ruby syntax passed. Rust
+passed the sample in 3.54s (3.98s RSpec load); Ruby failed in 1.24s (2.83s
+load). The Ruby marker moved back to a forwarded `Target.getTargets` JSON
+write, with Chrome alive. Its recent sequence was two `send:Target.getTargets`
+events and no response between them. The failure point therefore changes with
+tracing, but Ruby still fails without it. The duplicate sends suggest
+concurrent submissions; Ruby currently protects request bookkeeping and wire
+writes with separate mutexes, while Rust makes ID allocation, pending
+registration, and the write one atomic operation. The next run aligns Ruby's
+submit locking with Rust and labels the origin on each safe sequence event.
+
 Earlier two-request pipelined Ruby probes were inconsistent, sometimes
 receiving only one response. They have been removed so the focused sample now
 uses only one threaded probe. Until Ruby passes the same focused system-test
