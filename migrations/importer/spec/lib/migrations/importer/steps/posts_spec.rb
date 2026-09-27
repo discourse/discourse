@@ -51,10 +51,10 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
     SQL
   end
 
-  def create_source_post(original_id, attributes = {})
+  def create_source_post(original_id, topic_id: source_topic_id, **attributes)
     Migrations::Database::IntermediateDB::Post.create(
       original_id:,
-      topic_id: source_topic_id,
+      topic_id:,
       user_id: 1,
       raw: "post #{original_id}",
       created_at: Time.utc(2024, 1, 1) + original_id,
@@ -119,6 +119,37 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
     expect(posts.map(&:word_count)).to eq([2, 2])
     expect(posts.map(&:cooked)).to eq(["", ""])
     expect(posts.map(&:last_version_at)).to eq(posts.map(&:created_at))
+  end
+
+  it "assigns destination ids in creation time and post number order" do
+    second_source_topic_id = source_topic_id + 1
+    second_topic_id = topic_id + 1
+    Migrations::Database::IntermediateDB::Topic.create(
+      original_id: second_source_topic_id,
+      title: "A second source topic",
+    )
+    create_destination_topic(second_topic_id, user_id)
+    add_mapping(second_source_topic_id, mapping_type::TOPICS, second_topic_id)
+
+    shared_created_at = Time.utc(2024, 1, 2)
+    create_source_post(1, post_number: 2, created_at: shared_created_at)
+    create_source_post(2, post_number: 1, created_at: shared_created_at)
+    create_source_post(
+      3,
+      topic_id: second_source_topic_id,
+      post_number: 1,
+      created_at: shared_created_at - 1.day,
+    )
+
+    execute_step
+
+    imported_posts = DB.query(<<~SQL)
+      SELECT raw
+      FROM posts
+      WHERE topic_id IN (#{topic_id}, #{second_topic_id})
+      ORDER BY id
+    SQL
+    expect(imported_posts.map(&:raw)).to eq(["post 3", "post 2", "post 1"])
   end
 
   it "adds posts after numbers already used by the destination topic" do

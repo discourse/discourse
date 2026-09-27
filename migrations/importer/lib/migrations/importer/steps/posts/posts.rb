@@ -86,7 +86,9 @@ module Migrations
                  ON posts.locked_by_id = mapped_locked_by_user.original_id
                     AND mapped_locked_by_user.type = ?3
           WHERE mapped_post.original_id IS NULL
-          ORDER BY posts.topic_id, post_numbers.post_number
+          ORDER BY posts.created_at IS NULL,
+                   posts.created_at,
+                   post_numbers.post_number
         SQL
 
         private
