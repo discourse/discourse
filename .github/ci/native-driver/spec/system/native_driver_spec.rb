@@ -46,18 +46,29 @@ RSpec.describe NativeSystemDriver, type: :system do
   it "round-trips repeated browser script evaluations" do
     visit "data:text/html;charset=utf-8,<title>driver-benchmark</title>"
 
-    operation_count = 500
-    started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    results = Array.new(operation_count) { page.evaluate_script("1 + 1") }
-    elapsed_milliseconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000
+    warmup_count = 100
+    warmup_results = Array.new(warmup_count) { page.evaluate_script("1 + 1") }
+    expect(warmup_results).to eq(Array.new(warmup_count, 2))
 
-    expect(results).to eq(Array.new(operation_count, 2))
+    operation_count = 500
+    sample_count = 5
+    samples =
+      Array.new(sample_count) do
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        results = Array.new(operation_count) { page.evaluate_script("1 + 1") }
+        elapsed_milliseconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000
+        expect(results).to eq(Array.new(operation_count, 2))
+        elapsed_milliseconds
+      end
 
     bridge = { "ruby" => "ruby", "rust" => "rust" }.fetch(ENV["NATIVE_CDP_BRIDGE_LABEL"], "unknown")
+    median_elapsed_milliseconds = samples.sort.fetch(sample_count / 2)
 
     warn(
-      "NATIVE_CDP_EVALUATE_ROUND_TRIPS bridge=#{bridge} operations=#{operation_count} " \
-        "elapsed_ms=#{format("%.3f", elapsed_milliseconds)}",
+      "NATIVE_CDP_EVALUATE_ROUND_TRIPS bridge=#{bridge} warmup_operations=#{warmup_count} " \
+        "operations_per_sample=#{operation_count} sample_count=#{sample_count} " \
+        "samples_ms=#{samples.map { |sample| format("%.3f", sample) }.join(",")}" \
+        " median_ms=#{format("%.3f", median_elapsed_milliseconds)}",
     )
   end
 end

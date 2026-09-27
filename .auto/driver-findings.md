@@ -670,6 +670,25 @@ matching Rust, but both loop measurements were about five times the prior
 run's values (137.000ms and 174.133ms). This variation and the opposite RSpec
 ordering result make a single pair too noisy for a conclusion. The separate
 [Linting job](https://github.com/discourse/discourse/actions/runs/36354299364/job/108718821102)
-was queued at the time of inspection; local targeted DV lint passed. The next
-run uses an order-balanced Ruby/Rust/Rust/Ruby sequence on the same runner to
-reduce drift and collect two inner samples per implementation.
+was queued at the time of inspection; local targeted DV lint passed.
+
+Run [36354911319](https://github.com/discourse/discourse/actions/runs/36354911319/job/108720609737)
+at head `b07b1957f60` passed all four one-example runs in the order
+Ruby/Rust/Rust/Ruby. The 500-call measurements were 465.884ms and 623.399ms
+for Ruby, and 557.389ms and 396.746ms for Rust. Their two-sample means were
+544.642ms for Ruby and 477.068ms for Rust, nominally 12.4% faster for Rust;
+however, each driver's two samples varied by over 150ms, and the apparent
+winner flipped between the first and second pair. RSpec times were 4.92s and
+5.10s for Ruby, and 4.90s and 4.39s for Rust. [Core System Tests passed](https://github.com/discourse/discourse/actions/runs/36354911319/job/108720609737)
+and [Linting passed](https://github.com/discourse/discourse/actions/runs/36354911298/job/108720610922).
+The focused Core System Tests step used 40.135 CPU-seconds over 44 elapsed
+seconds; this aggregate does not separate CPU use by bridge.
+
+This microbenchmark keeps the Capybara-facing Ruby `NativeSystemDriver` and
+Chrome page code fixed; with `NATIVE_CDP_DIRECT_EVAL=1`, each evaluation uses
+one `Runtime.evaluate` request. Only the bridge process changes between the
+Ruby and Rust samples. The next run adds 100 untimed warm-up calls and takes
+five 500-call samples per bridge, reporting each sample and its median, while
+retaining the order-balanced Ruby/Rust/Rust/Ruby sequence. That should reduce
+startup and short-window noise before we move to a representative user-flow
+example.
