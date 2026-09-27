@@ -575,3 +575,16 @@ NUL-framed messages Ruby decoded or whether a response matched request two.
 The next probe reports only per-attempt message counts and event, matching
 response, unmatched response, and error-response counts. It emits no IDs or
 protocol contents.
+
+Run [36350257744](https://github.com/discourse/discourse/actions/runs/36350257744)
+at head `49654edbdc8` passed the Rust focused example in 3.18s and failed the
+Ruby probe in 2.35s; Ruby still has no valid timing. Linting passed. The frame
+counts show one matching response to attempt one and no messages for attempt
+two. The corrected trace recorded one 50-byte Chrome input read against 100
+Ruby command bytes written, and one 236-byte response received by Ruby. Chrome
+was alive with the expected input/output endpoints after response one, then
+exited cleanly before the probe completed; Ruby's input writer remained open.
+This rules out a response-framing or response-ID mismatch in Ruby and points
+to the browser process exiting before consuming command two. The next focused
+run switches Ruby from two pipes to the Unix socket pair used by the Rust
+bridge, holding the test and synchronous two-command probe fixed.
