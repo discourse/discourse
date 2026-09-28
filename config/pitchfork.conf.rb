@@ -81,6 +81,7 @@ after_mold_fork do |server, mold|
   Discourse.redis.close
   DiscourseVips::Client.use_shared_worker
   Discourse.before_fork
+  Process.warmup
 end
 
 oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
@@ -111,8 +112,7 @@ before_service_worker_ready do |server, service_worker|
 
     require "demon/sidekiq"
     Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
-    # The mold ran Discourse.before_fork just before forking this service worker.
-    Demon::Sidekiq.start(sidekiqs, logger: server.logger, prepare_fork: false)
+    Demon::Sidekiq.start(sidekiqs, logger: server.logger)
 
     if Discourse.enable_sidekiq_logging?
       # Trap USR1, so we can re-issue to sidekiq workers

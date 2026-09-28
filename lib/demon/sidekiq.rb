@@ -135,7 +135,7 @@ class Demon::Sidekiq < ::Demon::Base
     cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
 
-    # This process inherits a heap that Discourse.before_fork already warmed up.
+    # This process inherits the heap warmed by the mold.
     # Warming it again compacts it, copying every page shared with the parent.
     cli.run(warmup: false)
   rescue => error
