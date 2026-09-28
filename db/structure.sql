@@ -21222,6 +21222,13 @@ CREATE INDEX index_chat_messages_on_chat_channel_id_and_id ON public.chat_messag
 
 
 --
+-- Name: index_chat_messages_on_in_reply_to_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chat_messages_on_in_reply_to_id ON public.chat_messages USING btree (in_reply_to_id) WHERE (in_reply_to_id IS NOT NULL);
+
+
+--
 -- Name: index_chat_messages_on_last_editor_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25536,6 +25543,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260928103925'),
 ('20260925054715'),
 ('20260923141924'),
 ('20260923080644'),
