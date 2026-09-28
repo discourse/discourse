@@ -161,7 +161,11 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
     await upload.addFiles([createFile(SIBLING_FILE)]);
     upload.cancelAllUploads();
 
-    assert.deepEqual(cancellations, ["uploads-cancelled"]);
+    assert.deepEqual(
+      cancellations,
+      ["uploads-cancelled"],
+      "explicit cancel all reports one cancellation"
+    );
 
     upload.teardown();
   });

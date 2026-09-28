@@ -105,6 +105,14 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await fillIn(".d-editor-input", "The image:\n");
     const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
+    const cancellations = [];
+
+    appEvents.on("composer:upload-cancelled", () =>
+      cancellations.push("upload-cancelled")
+    );
+    appEvents.on("composer:uploads-cancelled", () =>
+      cancellations.push("uploads-cancelled")
+    );
 
     appEvents.on("composer:all-uploads-complete", async () => {
       await settled();
@@ -113,6 +121,11 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         .hasValue(
           "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
         );
+      assert.deepEqual(
+        cancellations,
+        [],
+        "the successful upload is not reported as cancelled"
+      );
       done();
     });
 
@@ -124,40 +137,6 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
     const image = createFile("avatar.png");
     appEvents.trigger("composer:add-files", image);
-  });
-
-  test("does not report a successful upload as cancelled", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
-    await fillIn(".d-editor-input", "The image:\n");
-
-    const appEvents = getOwner(this).lookup("service:app-events");
-    const cancellations = [];
-    appEvents.on("composer:upload-cancelled", () =>
-      cancellations.push("upload-cancelled")
-    );
-    appEvents.on("composer:uploads-cancelled", () =>
-      cancellations.push("uploads-cancelled")
-    );
-    const uploadsComplete = new Promise((resolve) => {
-      appEvents.one("composer:all-uploads-complete", resolve);
-    });
-
-    appEvents.trigger("composer:add-files", createFile("avatar.png"));
-    await uploadsComplete;
-    await settled();
-
-    assert
-      .dom(".d-editor-input")
-      .hasValue(
-        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n",
-        "the uploaded image replaces the placeholder"
-      );
-    assert.deepEqual(
-      cancellations,
-      [],
-      "the successful upload is not reported as cancelled"
-    );
   });
 
   // TODO: On Firefox Evergreen this often fails, because the order of uploads
@@ -624,6 +603,7 @@ acceptance("Uppy Composer Attachment - Rich Editor", function (needs) {
     await visit("/new-topic");
 
     const appEvents = getOwner(this).lookup("service:app-events");
+    const done = assert.async();
     const cancellations = [];
     appEvents.on("composer:upload-cancelled", () =>
       cancellations.push("upload-cancelled")
@@ -631,26 +611,24 @@ acceptance("Uppy Composer Attachment - Rich Editor", function (needs) {
     appEvents.on("composer:uploads-cancelled", () =>
       cancellations.push("uploads-cancelled")
     );
-    const uploadsComplete = new Promise((resolve) => {
-      appEvents.one("composer:all-uploads-complete", resolve);
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
+      assert
+        .dom(".composer-image-node img")
+        .hasAttribute(
+          "data-orig-src",
+          "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+          "the uploaded image replaces the placeholder"
+        );
+      assert.deepEqual(
+        cancellations,
+        [],
+        "the successful upload is not reported as cancelled"
+      );
+      done();
     });
 
     appEvents.trigger("composer:add-files", createFile("avatar.png"));
-    await uploadsComplete;
-    await settled();
-
-    assert
-      .dom(".composer-image-node img")
-      .hasAttribute(
-        "data-orig-src",
-        "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
-        "the uploaded image replaces the placeholder"
-      );
-    assert.deepEqual(
-      cancellations,
-      [],
-      "the successful upload is not reported as cancelled"
-    );
   });
 
   test("cancels the upload when its placeholder is deleted", async function (assert) {
