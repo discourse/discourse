@@ -664,3 +664,4 @@ CREATE TABLE users
 );
 
 CREATE INDEX idx_users_uploaded_avatar_id ON users (uploaded_avatar_id) WHERE uploaded_avatar_id IS NOT NULL;
+
