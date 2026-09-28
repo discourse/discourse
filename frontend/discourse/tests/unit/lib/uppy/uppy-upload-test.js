@@ -142,6 +142,41 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
     upload.teardown();
   });
 
+  test("explicit single-file cancellation is reported", async function (assert) {
+    const cancellations = [];
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-cancel-single-test",
+      type: "composer",
+      autoStartUploads: false,
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    getOwner(this)
+      .lookup("service:app-events")
+      .on(
+        "upload-mixin:uppy-upload-cancel-single-test:upload-cancelled",
+        (fileId) => cancellations.push(fileId)
+      );
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+    const fileId = upload.uppyWrapper.uppyInstance.getFiles()[0].id;
+    upload.cancelSingleUpload({ fileId });
+
+    assert.deepEqual(
+      cancellations,
+      [fileId],
+      "explicit cancellation reports the removed file once"
+    );
+    assert.deepEqual(
+      upload.uppyWrapper.uppyInstance.getFiles(),
+      [],
+      "the cancelled file is removed"
+    );
+
+    upload.teardown();
+  });
+
   test("explicit cancel all is reported as cancelled", async function (assert) {
     const cancellations = [];
     const upload = new UppyUpload(getOwner(this), {
