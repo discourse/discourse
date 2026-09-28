@@ -62,6 +62,59 @@ RSpec.describe Jobs::PublishTopicToCategory do
     end
   end
 
+  it "keeps the publishing timer when the destination rejects a topic tag" do
+    user = Fabricate(:trust_level_4)
+    timer_group = Fabricate(:group)
+    timer_group.add(user)
+    SiteSetting.topic_timers_allowed_groups = timer_group.id.to_s
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+    forbidden_tag = Fabricate(:tag)
+    allowed_tag = Fabricate(:tag)
+    allowed_tag_group = Fabricate(:tag_group, tags: [allowed_tag])
+    another_category.update!(tag_groups: [allowed_tag_group])
+
+    topic.update!(user: user, tags: [forbidden_tag], created_at: 1.hour.ago)
+    timer = topic.public_topic_timer
+    timer.update!(user: user)
+    original_created_at = topic.reload.created_at
+    guardian = Guardian.new(user)
+
+    expect(guardian.can_set_topic_timer?(topic)).to eq(true)
+    expect(guardian.can_create_topic_on_category?(another_category)).to eq(true)
+
+    expect { described_class.new.execute(topic_timer_id: timer.id) }.to raise_error(
+      ActiveRecord::RecordInvalid,
+    )
+
+    topic.reload
+    expect(topic.category).to eq(category)
+    expect(topic).to be_visible
+    expect(topic.created_at).to eq_time(original_created_at)
+    expect(topic.public_topic_timer).to eq(timer)
+    expect(
+      UserHistory.exists?(
+        action: UserHistory.actions[:topic_published],
+        acting_user_id: user.id,
+        topic_id: topic.id,
+      ),
+    ).to eq(false)
+  end
+
+  it "publishes when the topic is already in the destination category" do
+    topic.update!(visible: false)
+    timer = topic.public_topic_timer
+    timer.update!(category_id: category.id)
+
+    described_class.new.execute(topic_timer_id: timer.id)
+
+    topic.reload
+    expect(topic.category).to eq(category)
+    expect(topic).to be_visible
+    expect(topic.public_topic_timer).to be_nil
+  end
+
   describe "when topic is a private message" do
     it "publishes the topic to the new category" do
       freeze_time 1.hour.ago do
