@@ -1334,8 +1334,9 @@ RSpec.describe Guardian do
         end
 
         it "returns false when the category is read only" do
+          topic.update!(category: Fabricate(:category))
           topic.category.set_permissions(everyone: :readonly)
-          topic.category.save
+          topic.category.save!
 
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
 
@@ -1346,8 +1347,9 @@ RSpec.describe Guardian do
         end
 
         it "returns false for trust level 3 if category is secured" do
+          topic.update!(category: Fabricate(:category))
           topic.category.set_permissions(everyone: :create_post, staff: :full)
-          topic.category.save
+          topic.category.save!
 
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
           expect(Guardian.new(admin).can_edit?(topic)).to eq(true)

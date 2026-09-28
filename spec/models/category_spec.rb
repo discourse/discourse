@@ -1334,6 +1334,43 @@ RSpec.describe Category do
     end
   end
 
+  describe "validate special category permissions" do
+    fab!(:group)
+    fab!(:staff_category) do
+      Fabricate(:category).tap do |category|
+        category.set_permissions(staff: :full)
+        category.save!
+      end
+    end
+
+    before { SiteSetting.staff_category_id = staff_category.id }
+
+    it "is invalid when a special category's permissions change" do
+      staff_category.set_permissions(everyone: :full)
+
+      expect(staff_category.valid?).to eq(false)
+      expect(staff_category.errors.full_messages).to contain_exactly(
+        I18n.t("category.errors.special_category_permissions"),
+      )
+    end
+
+    it "is valid when a special category's current permissions are resubmitted" do
+      staff_category.set_permissions(staff: :full)
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      uncategorized.set_permissions(everyone: :full)
+
+      expect(staff_category.valid?).to eq(true)
+      expect(uncategorized.valid?).to eq(true)
+    end
+
+    it "is valid when a regular category's permissions change" do
+      category = Fabricate(:category)
+      category.set_permissions(group => :full)
+
+      expect(category.valid?).to eq(true)
+    end
+  end
+
   describe "tree metrics" do
     fab!(:category) { Category.create!(user: user, name: "foo") }
 
