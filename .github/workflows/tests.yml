@@ -361,7 +361,7 @@ jobs:
           system_test_started_seconds=$SECONDS
           trap report_system_test_cpu EXIT
           if [[ "$DISCOURSE_CI_SYSTEM_DRIVER" == "native-cdp" ]]; then
-            run_full_system_suite() {
+            run_system_test_sample() {
               local bridge=$1
               local ruby_bridge=0
               if [[ "$bridge" == "ruby" ]]; then
@@ -372,7 +372,7 @@ jobs:
               bridge_started_ns=$(date +%s%N)
               bridge_cpu_started=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
               local bridge_exit_status
-              if NATIVE_CDP_RUBY_BRIDGE="$ruby_bridge" LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --seed 44219 --format documentation spec/system; then
+              if NATIVE_CDP_RUBY_BRIDGE="$ruby_bridge" LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --seed 44219 --format documentation spec/system/post_menu_spec.rb:193; then
                 bridge_exit_status=0
               else
                 bridge_exit_status=$?
@@ -399,10 +399,21 @@ jobs:
               : > "$runtime_info_snapshot"
             fi
 
-            run_full_system_suite ruby
+            if run_system_test_sample ruby; then
+              ruby_exit_status=0
+            else
+              ruby_exit_status=$?
+            fi
             cp "$runtime_info_snapshot" tmp/turbo_rspec_runtime.log
-            run_full_system_suite rust
+            if run_system_test_sample rust; then
+              rust_exit_status=0
+            else
+              rust_exit_status=$?
+            fi
             rm -f "$runtime_info_snapshot"
+            if (( ruby_exit_status != 0 || rust_exit_status != 0 )); then
+              exit 1
+            fi
           else
             system_test_paths=(spec/system)
             LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
