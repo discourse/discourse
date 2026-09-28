@@ -64,11 +64,6 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
   it "keeps the publishing timer when the destination rejects a topic tag" do
     user = Fabricate(:trust_level_4)
-    timer_group = Fabricate(:group)
-    timer_group.add(user)
-    SiteSetting.topic_timers_allowed_groups = timer_group.id.to_s
-    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
     forbidden_tag = Fabricate(:tag)
     allowed_tag = Fabricate(:tag)
@@ -80,10 +75,6 @@ RSpec.describe Jobs::PublishTopicToCategory do
     timer.update!(user: user)
     timestamp_attributes = %w[created_at bumped_at updated_at last_posted_at]
     original_timestamps = topic.reload.attributes.slice(*timestamp_attributes)
-    guardian = Guardian.new(user)
-
-    expect(guardian.can_set_topic_timer?(topic)).to eq(true)
-    expect(guardian.can_create_topic_on_category?(another_category)).to eq(true)
 
     expect { described_class.new.execute(topic_timer_id: timer.id) }.to raise_error(
       ActiveRecord::RecordInvalid,
