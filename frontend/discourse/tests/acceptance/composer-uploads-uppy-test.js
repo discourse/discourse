@@ -7,6 +7,7 @@ import {
   focus,
   settled,
   triggerEvent,
+  triggerKeyEvent,
   visit,
   waitFor,
 } from "@ember/test-helpers";
@@ -123,6 +124,40 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
     const image = createFile("avatar.png");
     appEvents.trigger("composer:add-files", image);
+  });
+
+  test("does not report a successful upload as cancelled", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const cancellations = [];
+    appEvents.on("composer:upload-cancelled", () =>
+      cancellations.push("upload-cancelled")
+    );
+    appEvents.on("composer:uploads-cancelled", () =>
+      cancellations.push("uploads-cancelled")
+    );
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
+    });
+
+    appEvents.trigger("composer:add-files", createFile("avatar.png"));
+    await uploadsComplete;
+    await settled();
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n",
+        "the uploaded image replaces the placeholder"
+      );
+    assert.deepEqual(
+      cancellations,
+      [],
+      "the successful upload is not reported as cancelled"
+    );
   });
 
   // TODO: On Firefox Evergreen this often fails, because the order of uploads
@@ -574,6 +609,71 @@ acceptance("Uppy Composer Attachment - Auto Image Grid", function (needs) {
     assert
       .dom(".composer-image-grid .upload-placeholder.--file")
       .doesNotExist("the completed uploads no longer use file placeholders");
+  });
+});
+
+acceptance("Uppy Composer Attachment - Rich Editor", function (needs) {
+  needs.user({ "user_option.composition_mode": 1 });
+  needs.pretender(pretender);
+  needs.settings({ allow_uncategorized_topics: true });
+  needs.hooks.afterEach(() => {
+    uploadNumber = 1;
+  });
+
+  test("does not cancel an upload once it succeeds", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const cancellations = [];
+    appEvents.on("composer:upload-cancelled", () =>
+      cancellations.push("upload-cancelled")
+    );
+    appEvents.on("composer:uploads-cancelled", () =>
+      cancellations.push("uploads-cancelled")
+    );
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
+    });
+
+    appEvents.trigger("composer:add-files", createFile("avatar.png"));
+    await uploadsComplete;
+    await settled();
+
+    assert
+      .dom(".composer-image-node img")
+      .hasAttribute(
+        "data-orig-src",
+        "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+        "the uploaded image replaces the placeholder"
+      );
+    assert.deepEqual(
+      cancellations,
+      [],
+      "the successful upload is not reported as cancelled"
+    );
+  });
+
+  test("cancels the upload when its placeholder is deleted", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const uploadCancelled = new Promise((resolve) => {
+      appEvents.one("composer:upload-cancelled", resolve);
+    });
+
+    appEvents.trigger("composer:add-files", createFile("avatar.png"));
+    await waitFor(".upload-placeholder.--image img");
+    await click(".upload-placeholder.--image img");
+    await triggerKeyEvent(".ProseMirror", "keydown", "Backspace");
+    await uploadCancelled;
+    await settled();
+
+    assert
+      .dom(".upload-placeholder")
+      .doesNotExist("the deleted placeholder stays removed");
+    assert
+      .dom(".composer-image-node img")
+      .doesNotExist("the cancelled upload is not inserted");
   });
 });
 
