@@ -929,8 +929,9 @@ establish full-suite equivalence.
 The initial `Target.getTargets` call in the driver's `start` phase remained
 faster in Rust in both order positions: 199ms and 166ms, compared with 401ms
 and 365ms in Ruby. Later `Target.getTargets` calls during reset were below
-1ms. The roughly 200ms difference is specific to browser startup, not
-steady-state target enumeration. Core used 49.74 CPU-seconds over 53 elapsed
+1ms. The difference is in the initial startup path, not steady-state target
+enumeration; the probe caveat below means it cannot be assigned to normal
+bridge startup alone. Core used 49.74 CPU-seconds over 53 elapsed
 seconds and peaked at 5,825.17 MiB across the whole job/container, not per
 bridge. [Core](https://github.com/discourse/discourse/actions/runs/36362322423/job/108741805733),
 [check 1](https://github.com/discourse/discourse/actions/runs/36362322424/job/108741805640),
@@ -985,25 +986,32 @@ the initial `Target.getTargets` command:
 
 Ruby's bridge became ready 150ms later than Rust in the first pair and 196ms
 later in the second. The corresponding start-command gaps were 150ms and
-200ms. The close match strongly ties the startup penalty to bridge launch and
-readiness, rather than CDP request handling. The same run's browser round trips
-were only 3–6ms in the previous profile, and response publication was below
-0.1ms. Ruby's two measured examples averaged 1.173s, versus 1.347s for Rust;
-the two warm-up examples were excluded because they include the first-run
-position effect.
+200ms. The same run's browser round trips were only 3–6ms in the previous
+profile, and response publication was below 0.1ms. Ruby's two measured
+examples averaged 1.173s, versus 1.347s for Rust; the two warm-up examples were
+excluded because they include the first-run position effect.
 
 Across the four balanced runs documented above (eight measured examples per
 backend), the simple means are 1.229s for Ruby and 1.352s for Rust. This narrow
 sample does not prove full-suite equivalence, but it gives no evidence that
-Rust is faster on the warmed interaction path. Ruby's startup cost is about
-0.17s per bridge process; whether that matters to a full CI job depends on how
-many browser processes that job starts. Core used 49.67 CPU-seconds over 53
-elapsed seconds and peaked at 6,142.99 MiB across the whole job/container, not
-per bridge. [Both generic checks passed](https://github.com/discourse/discourse/actions/runs/36364238856)
+Rust is faster on the warmed interaction path. The observed bridge-ready gap
+was about 0.17s per process; the runs used diagnostic probes before readiness,
+so that is not a clean measure of normal startup cost. Core used 49.67
+CPU-seconds over 53 elapsed seconds and peaked at 6,142.99 MiB across the
+whole job/container, not per bridge. [Both generic checks passed](https://github.com/discourse/discourse/actions/runs/36364238856)
 and [here](https://github.com/discourse/discourse/actions/runs/36364238911).
 
 The current browser scope is Chrome for CI and Firefox compatibility; Safari
 testing is out of scope.
+
+Methodology correction: the Ruby samples above set
+`NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE=1`, while Rust set
+`NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=1`. Each probe sends two
+`Target.getTargets` requests, but Ruby's diagnostic also inspects pipe state
+and process descriptors before reporting readiness. Neither probe is part of
+the normal driver configuration. Treat the readiness comparisons as
+instrumented measurements, not evidence that the Ruby interpreter itself
+accounts for the observed gap. A follow-up run disables both probes.
 
 ## Composer flow comparison
 
@@ -1043,9 +1051,10 @@ summed command time was not higher:
 
 These are two focused flows rather than a full-suite comparison. Together, the
 About-page and composer samples do not show a warmed-interaction performance
-advantage for Rust; Ruby's repeatable cost is bridge startup, around 0.2s per
-process. The Core job used 57.63 CPU-seconds over 61 elapsed seconds and peaked
-at 5,961.93 MiB across the whole job/container, not per backend.
+advantage for Rust. Their observed readiness gap is confounded by the
+diagnostic probes described above. The Core job used 57.63 CPU-seconds over 61
+elapsed seconds and peaked at 5,961.93 MiB across the whole job/container, not
+per backend.
 
 Run [36366038626](https://github.com/discourse/discourse/actions/runs/36366038626/job/108752520859)
 at head `2200fa134bd` passed the same two composer examples under Rust/Ruby/
@@ -1067,9 +1076,26 @@ CDP backends. Ruby and Rust both made six clicks, three fills, and six runtime
 evaluations. Ruby averaged 51.5 `Driver.find` calls versus 50 for Rust, but the
 summed times were lower: 153ms versus 164ms for `Driver.find`, 29ms versus
 44ms for `Runtime.callFunctionOn`, and 553ms versus 564ms for
-`Runtime.evaluate`. That is consistent with the previous flow: the Ruby
-bridge's observed penalty is process readiness, not slower warmed commands.
+`Runtime.evaluate`. The observed bridge-ready difference remains confounded
+by the diagnostic probes, rather than establishing a normal Ruby startup
+penalty.
 The Playwright run's complete focused RSpec invocation took 14s including
 process startup; the two selected examples took 10.72s combined. Core used
 70.92 CPU-seconds over 73 elapsed seconds; peak memory is reported for the
 whole job/container, not an individual driver.
+
+Run [36367149007](https://github.com/discourse/discourse/actions/runs/36367149007/job/108755715233)
+at head `5bbbd9a213c` bracketed the native sequence with Playwright on the same
+two examples. [Licenses](https://github.com/discourse/discourse/actions/runs/36367148943/job/108755714287)
+and [Linting](https://github.com/discourse/discourse/actions/runs/36367148958/job/108755714286)
+passed. The native-driver artifact was restored from cache; no build ran.
+
+The combined Top-2 profile for the Rust/Ruby/Ruby/Rust samples was
+10.34/10.43/10.43/10.33s. The tagged-topic example took 2.025/1.987/1.987/2.020s,
+so Ruby averaged 1.987s and Rust 2.022s (1.7% faster in Ruby across two runs).
+Playwright's first and last samples were 12.71s and 10.94s, showing a strong
+position effect even for the same driver. Ruby readiness was 390/389ms and
+Rust readiness was 192/205ms; those values still include the unequal
+diagnostic probes noted above. Core used 88.23 CPU-seconds over 90 elapsed
+seconds and peaked at 5,711.24 MiB across the whole job/container, not per
+driver.
