@@ -361,32 +361,48 @@ jobs:
           system_test_started_seconds=$SECONDS
           trap report_system_test_cpu EXIT
           if [[ "$DISCOURSE_CI_SYSTEM_DRIVER" == "native-cdp" ]]; then
-            sample_specs=(
-              spec/system/composer_spec.rb:9
-              spec/system/composer_spec.rb:106
-            )
-            run_bridge_sample() {
+            run_full_system_suite() {
               local bridge=$1
-              bridge_started_seconds=$SECONDS
+              local ruby_bridge=0
               if [[ "$bridge" == "ruby" ]]; then
-                LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=ruby NATIVE_CDP_COMMAND_PROFILE=1 NATIVE_CDP_RUBY_PIPE_TRANSPORT=0 NATIVE_CDP_RUBY_FD_TRACE=0 NATIVE_CDP_RUBY_BRIDGE=1 bundle exec rspec --require ./.github/ci/native-driver/native-command-profiler.rb --order defined --format documentation --profile 2 "${sample_specs[@]}"
-              else
-                LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=rust NATIVE_CDP_COMMAND_PROFILE=1 NATIVE_CDP_RUBY_BRIDGE=0 bundle exec rspec --require ./.github/ci/native-driver/native-command-profiler.rb --order defined --format documentation --profile 2 "${sample_specs[@]}"
+                ruby_bridge=1
               fi
-              printf 'CI_CDP_BRIDGE_TIME {"bridge":"%s","elapsed_seconds":%s}\n' "$bridge" "$((SECONDS - bridge_started_seconds))"
+              local bridge_started_ns
+              local bridge_cpu_started
+              bridge_started_ns=$(date +%s%N)
+              bridge_cpu_started=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+              local bridge_exit_status
+              if NATIVE_CDP_RUBY_BRIDGE="$ruby_bridge" LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --seed 44219 --format documentation spec/system; then
+                bridge_exit_status=0
+              else
+                bridge_exit_status=$?
+              fi
+              local bridge_ended_ns
+              local bridge_cpu_ended
+              bridge_ended_ns=$(date +%s%N)
+              bridge_cpu_ended=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+              local bridge_elapsed_ms=$(((bridge_ended_ns - bridge_started_ns) / 1000000))
+              local bridge_cpu_usec=null
+              if [[ "$bridge_cpu_started" =~ ^[0-9]+$ && "$bridge_cpu_ended" =~ ^[0-9]+$ ]]; then
+                bridge_cpu_usec=$((bridge_cpu_ended - bridge_cpu_started))
+              fi
+              printf 'CI_SYSTEM_DRIVER_SUITE {"bridge":"%s","elapsed_ms":%s,"cpu_usec":%s,"exit_status":%s}\n' \
+                "$bridge" "$bridge_elapsed_ms" "$bridge_cpu_usec" "$bridge_exit_status"
+              return "$bridge_exit_status"
             }
-            run_playwright_sample() {
-              local position=$1
-              playwright_started_seconds=$SECONDS
-              # SPEC_OPTS normally preloads the native driver; clear it for this baseline.
-              SPEC_OPTS= LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bundle exec rspec --order defined --format documentation --profile 2 "${sample_specs[@]}"
-              printf 'CI_DRIVER_SAMPLE_TIME {"driver":"playwright","position":"%s","elapsed_seconds":%s}\n' "$position" "$((SECONDS - playwright_started_seconds))"
-            }
-            run_playwright_sample first
-            for bridge in rust ruby ruby rust; do
-              run_bridge_sample "$bridge"
-            done
-            run_playwright_sample last
+
+            # Keep dynamic worker scheduling identical for both backend runs.
+            runtime_info_snapshot="$RUNNER_TEMP/turbo_rspec_runtime.baseline"
+            if [[ -f tmp/turbo_rspec_runtime.log ]]; then
+              cp tmp/turbo_rspec_runtime.log "$runtime_info_snapshot"
+            else
+              : > "$runtime_info_snapshot"
+            fi
+
+            run_full_system_suite ruby
+            cp "$runtime_info_snapshot" tmp/turbo_rspec_runtime.log
+            run_full_system_suite rust
+            rm -f "$runtime_info_snapshot"
           else
             system_test_paths=(spec/system)
             LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
