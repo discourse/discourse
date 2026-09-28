@@ -1161,6 +1161,27 @@ for the default context. The post-menu clipboard example passed once, and the
 desktop/mobile social-auth cookie example passed twice under Ruby in the DV.
 
 This is shared native-driver context handling, not evidence of a Ruby bridge
-performance or compatibility difference. The fix still needs the paired CI
-sample and full Core suite under both bridges before a performance result is
-valid.
+performance or compatibility difference. The corrected focused CI sample is
+recorded below; a full Core suite under both bridges is still needed before a
+suite-level performance conclusion.
+
+## Corrected focused CI comparison
+
+The corrected sample on [`b80fc7d0e9e`](https://github.com/discourse/discourse/commit/b80fc7d0e9e)
+ran the post-menu absolute-link example once under each bridge. Both
+`CI_SYSTEM_DRIVER_SUITE` markers exited successfully, and the log showed two
+post-menu target starts. The Core job passed in 1m42s
+([job 108773122937](https://github.com/discourse/discourse/actions/runs/36373012746/job/108773122937)).
+The log did not include an RSpec example-count summary, so the success markers
+are the available per-invocation evidence.
+
+| Bridge | Elapsed | Cgroup CPU |
+| --- | ---: | ---: |
+| Ruby | 18.303s | 29.445s |
+| Rust | 14.600s | 22.638s |
+
+Rust was 20.2% faster in wall time and used 23.1% less cgroup CPU for this
+single filtered invocation. These figures include a fresh `turbo_rspec`
+process and browser setup for each bridge. They establish a real focused-run
+difference, but do not isolate browser-command overhead or predict the full
+suite delta. A matched full Core run is the next measurement.
