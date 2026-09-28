@@ -851,3 +851,29 @@ markers were absent because the profiler was defined inside a spec file that
 the narrowed sample no longer loaded. These wall times are not usable for the
 driver comparison. The next run explicitly requires the profiler helper before
 loading the selected examples.
+
+Run [36360944446](https://github.com/discourse/discourse/actions/runs/36360944446/job/108737886118)
+at head `684ec39b146` passed both selected examples in all four Ruby/Rust/Rust/Ruby
+invocations and emitted both profiler markers in `warmup` then `measure` order;
+[Linting passed](https://github.com/discourse/discourse/actions/runs/36360944453/job/108737885972).
+The RSpec totals were 12.04s, 9.21s, 9.12s, and 9.28s; the top-two profile
+summaries reported only combined durations of 10.79s, 7.84s, 7.79s, and 7.93s.
+Thus the log does not separate the warm-up and measured example wall times.
+Core used about 51.66 CPU-seconds over 54 elapsed seconds and peaked at
+5,732.32 MiB across the entire job. These aggregate values are not per bridge.
+
+The first About flow paid a cold `Storage.clearDataForOrigin` delay of about
+3.01s in every invocation. Its initial `Target.getTargets` call took 388–447ms
+in Ruby and 174–186ms in Rust, a repeated 200–270ms startup-path advantage for
+Rust. First navigation was a 3.42s Ruby outlier in the first pair, but was
+1.49s for Ruby and Rust in the second pair. After the warm-up, the measured
+flow's `Page.navigate` took 135–164ms across all four runs. Each bridge made
+the same 79 `Driver.find`, 275 `Runtime.callFunctionOn`, and 2 `Driver.click`
+calls. The totals for those three operations were about 301ms in both Ruby #1
+and Rust #1; in the later pair they were about 253ms in Ruby and 300ms in Rust.
+The command profile therefore shows no stable Rust advantage in the warmed
+interaction path, while it does show a modest Rust advantage during initial
+target discovery. This is not enough by itself to estimate full-suite impact.
+
+The profiler marker now adds an `elapsed_ms` field so the next run can compare
+each example's total wall time directly.

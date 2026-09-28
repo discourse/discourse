@@ -83,10 +83,13 @@ RSpec.configure do |config|
       NativeSystemDriverCommandProfiler::PROFILE_THREAD_KEY,
       profile,
     )
+    example_started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
     begin
       example.run
     ensure
+      example_elapsed_ms =
+        (Process.clock_gettime(Process::CLOCK_MONOTONIC) - example_started_at) * 1000
       Thread.current.thread_variable_set(
         NativeSystemDriverCommandProfiler::PROFILE_THREAD_KEY,
         previous_profile,
@@ -118,6 +121,7 @@ RSpec.configure do |config|
         end
       warn(
         "NATIVE_CDP_COMMAND_PROFILE bridge=#{bridge} example=#{profiled_example} " \
+          "elapsed_ms=#{example_elapsed_ms.round(3)} " \
           "#{JSON.generate(command_profile)}",
       )
     end
