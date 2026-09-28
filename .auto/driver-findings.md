@@ -1045,6 +1045,31 @@ These are two focused flows rather than a full-suite comparison. Together, the
 About-page and composer samples do not show a warmed-interaction performance
 advantage for Rust; Ruby's repeatable cost is bridge startup, around 0.2s per
 process. The Core job used 57.63 CPU-seconds over 61 elapsed seconds and peaked
-at 5,961.93 MiB across the whole job/container, not per backend. The next
-focused run adds Playwright on the same two composer examples to compare the
-direct-CDP path with the current default driver.
+at 5,961.93 MiB across the whole job/container, not per backend.
+
+Run [36366038626](https://github.com/discourse/discourse/actions/runs/36366038626/job/108752520859)
+at head `2200fa134bd` passed the same two composer examples under Rust/Ruby/
+Ruby/Rust and then the default Playwright-backed driver. [Licenses](https://github.com/discourse/discourse/actions/runs/36366038557/job/108752520498)
+and [Linting](https://github.com/discourse/discourse/actions/runs/36366038531/job/108752520187)
+passed as well. The Rust artifact was restored from cache; no new compile ran.
+
+The tagged-topic example averaged 1.930s in Ruby and 1.997s in Rust (3.4%
+faster in Ruby over two runs). The Ruby startup gap appeared again: readiness
+averaged 385ms for Ruby and 199ms for Rust, while the start-phase target query
+averaged 378ms and 190ms. The action profile's summed time for both selected
+examples was 10.22s and 10.31s for Ruby, 11.97s and 10.10s for Rust, and
+10.72s for Playwright. Rust's first invocation again carried the cold-position
+outlier. Playwright ran only once, after all four native runs, so this is a
+directional sample rather than a balanced A/B comparison.
+
+The measured composer interaction commands remained close between the direct
+CDP backends. Ruby and Rust both made six clicks, three fills, and six runtime
+evaluations. Ruby averaged 51.5 `Driver.find` calls versus 50 for Rust, but the
+summed times were lower: 153ms versus 164ms for `Driver.find`, 29ms versus
+44ms for `Runtime.callFunctionOn`, and 553ms versus 564ms for
+`Runtime.evaluate`. That is consistent with the previous flow: the Ruby
+bridge's observed penalty is process readiness, not slower warmed commands.
+The Playwright run's complete focused RSpec invocation took 14s including
+process startup; the two selected examples took 10.72s combined. Core used
+70.92 CPU-seconds over 73 elapsed seconds; peak memory is reported for the
+whole job/container, not an individual driver.

@@ -375,13 +375,18 @@ jobs:
               fi
               printf 'CI_CDP_BRIDGE_TIME {"bridge":"%s","elapsed_seconds":%s}\n' "$bridge" "$((SECONDS - bridge_started_seconds))"
             }
+            run_playwright_sample() {
+              local position=$1
+              playwright_started_seconds=$SECONDS
+              # SPEC_OPTS normally preloads the native driver; clear it for this baseline.
+              SPEC_OPTS= LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bundle exec rspec --order defined --format documentation --profile 2 "${sample_specs[@]}"
+              printf 'CI_DRIVER_SAMPLE_TIME {"driver":"playwright","position":"%s","elapsed_seconds":%s}\n' "$position" "$((SECONDS - playwright_started_seconds))"
+            }
+            run_playwright_sample first
             for bridge in rust ruby ruby rust; do
               run_bridge_sample "$bridge"
             done
-            # SPEC_OPTS normally preloads the native driver; clear it for this Playwright baseline.
-            playwright_started_seconds=$SECONDS
-            SPEC_OPTS= LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bundle exec rspec --order defined --format documentation --profile 2 "${sample_specs[@]}"
-            printf 'CI_DRIVER_SAMPLE_TIME {"driver":"playwright","elapsed_seconds":%s}\n' "$((SECONDS - playwright_started_seconds))"
+            run_playwright_sample last
           else
             system_test_paths=(spec/system)
             LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
