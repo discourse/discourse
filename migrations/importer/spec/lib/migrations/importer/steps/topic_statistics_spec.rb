@@ -10,6 +10,7 @@ RSpec.describe "Migrations::Importer::Steps::TopicStatistics", :rails do
   let(:shared_data) { instance_double(Migrations::Importer::SharedData) }
   let(:topic_id) { base_id + 1 }
   let(:user_id) { base_id + 2 }
+  let(:source_topic_id) { 500 }
 
   after do
     DB.exec("DELETE FROM posts WHERE topic_id >= :id", id: base_id)
@@ -18,7 +19,11 @@ RSpec.describe "Migrations::Importer::Steps::TopicStatistics", :rails do
     discourse_db.close
   end
 
-  it "updates topic statistics from its posts" do
+  it "updates topic statistics only for topics with imported posts" do
+    unrelated_topic_id = topic_id + 1
+    first_post_id = base_id + 10
+    second_post_id = first_post_id + 1
+    unrelated_post_id = second_post_id + 1
     DB.exec(<<~SQL, id: user_id)
       INSERT INTO users (id, username, username_lower, trust_level, created_at, updated_at)
       VALUES (:id, 'alice', 'alice', 1, NOW(), NOW())
@@ -28,14 +33,46 @@ RSpec.describe "Migrations::Importer::Steps::TopicStatistics", :rails do
                           created_at, updated_at, bumped_at)
       VALUES (:id, 'A topic', 1, :user_id, :user_id, NOW(), NOW(), NOW())
     SQL
-    DB.exec(<<~SQL, topic_id:, user_id:)
-      INSERT INTO posts (topic_id, user_id, post_number, sort_order, raw, cooked,
-                         post_type, created_at, updated_at, last_version_at)
-      VALUES (:topic_id, :user_id, 1, 1, 'first', '', 1,
-              '2024-01-01', '2024-01-01', '2024-01-01'),
-             (:topic_id, :user_id, 2, 2, 'second', '', 1,
-              '2024-01-02', '2024-01-02', '2024-01-02')
+    DB.exec(<<~SQL, id: unrelated_topic_id, user_id:)
+      INSERT INTO topics (id, title, category_id, user_id, last_post_user_id, posts_count,
+                          created_at, updated_at, bumped_at)
+      VALUES (:id, 'An unrelated topic', 1, :user_id, :user_id, 42, NOW(), NOW(), NOW())
     SQL
+    DB.exec(
+      <<~SQL,
+      INSERT INTO posts (id, topic_id, user_id, post_number, sort_order, raw, cooked,
+                         post_type, created_at, updated_at, last_version_at)
+      VALUES (:first_post_id, :topic_id, :user_id, 1, 1, 'first', '', 1,
+              '2024-01-01', '2024-01-01', '2024-01-01'),
+             (:second_post_id, :topic_id, :user_id, 2, 2, 'second', '', 1,
+              '2024-01-02', '2024-01-02', '2024-01-02'),
+             (:unrelated_post_id, :unrelated_topic_id, :user_id, 1, 1, 'unrelated', '', 1,
+              '2024-01-03', '2024-01-03', '2024-01-03')
+    SQL
+      first_post_id:,
+      second_post_id:,
+      unrelated_post_id:,
+      topic_id:,
+      unrelated_topic_id:,
+      user_id:,
+    )
+    Migrations::Database::IntermediateDB::Topic.create(
+      original_id: source_topic_id,
+      title: "A source topic",
+    )
+    Migrations::Database::IntermediateDB::Post.create(
+      original_id: 1,
+      topic_id: source_topic_id,
+      raw: "first",
+    )
+    Migrations::Database::IntermediateDB::Post.create(
+      original_id: 2,
+      topic_id: source_topic_id,
+      raw: "second",
+    )
+    add_mapping(source_topic_id, mapping_type::TOPICS, topic_id)
+    add_mapping(1, mapping_type::POSTS, first_post_id)
+    add_mapping(2, mapping_type::POSTS, second_post_id)
 
     step =
       Migrations::Importer::Steps::TopicStatistics.new(
@@ -53,5 +90,6 @@ RSpec.describe "Migrations::Importer::Steps::TopicStatistics", :rails do
     expect(topic.last_posted_at).to eq_time(Time.utc(2024, 1, 2))
     expect(topic.bumped_at).to eq_time(Time.utc(2024, 1, 2))
     expect(topic.last_post_user_id).to eq(user_id)
+    expect(Topic.find(unrelated_topic_id).posts_count).to eq(42)
   end
 end
