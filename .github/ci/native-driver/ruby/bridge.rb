@@ -85,6 +85,11 @@ class RubyCDPBridge
   end
 
   def run
+    launched_at = ENV["NATIVE_CDP_BRIDGE_PROFILE_LAUNCHED_AT"]
+    if launched_at
+      ready_elapsed_ms = (Time.now.to_f - launched_at.to_f) * 1000
+      STDERR.puts("NATIVE_CDP_BRIDGE_PROFILE bridge=ruby ready_ms=#{ready_elapsed_ms.round(3)}")
+    end
     STDIN.each_line do |line|
       request = JSON.parse(line)
       if request.fetch("method").start_with?("Driver.")

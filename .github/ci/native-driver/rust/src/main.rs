@@ -10,6 +10,7 @@ use std::os::fd::AsRawFd;
 use std::os::unix::net::UnixStream;
 use std::os::unix::process::CommandExt;
 use std::process::{Command, Stdio};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 fn main() -> io::Result<()> {
     let mut arguments = std::env::args_os().skip(1);
@@ -76,6 +77,15 @@ fn main() -> io::Result<()> {
         }
         Ok(())
     });
+    if let Ok(launched_at) = std::env::var("NATIVE_CDP_BRIDGE_PROFILE_LAUNCHED_AT") {
+        if let (Ok(launched_at), Ok(now)) = (
+            launched_at.parse::<f64>(),
+            SystemTime::now().duration_since(UNIX_EPOCH),
+        ) {
+            let ready_elapsed_ms = (now.as_secs_f64() - launched_at) * 1000.0;
+            eprintln!("NATIVE_CDP_BRIDGE_PROFILE bridge=rust ready_ms={ready_elapsed_ms:.3}");
+        }
+    }
     let input_result = (|| -> io::Result<()> {
         for line in io::stdin().lock().lines() {
             let request: Value = serde_json::from_str(&line?)?;

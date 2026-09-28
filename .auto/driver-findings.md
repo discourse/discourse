@@ -937,8 +937,33 @@ bridge. [Core](https://github.com/discourse/discourse/actions/runs/36362322423/j
 and [check 2](https://github.com/discourse/discourse/actions/runs/36362322477/job/108741805726)
 passed.
 
-The next profile adds timings inside each bridge for the forwarded startup
-`Target.getTargets` command. Comparing the bridge-to-browser round trip and
-response-publication time with the driver's end-to-end command time will show
-whether the startup gap is in CDP handling, bridge scheduling, or returning
-the response to Ruby.
+Run [36363412796](https://github.com/discourse/discourse/actions/runs/36363412796/job/108744942647)
+at head `25ec010cb06` passed all four invocations in Rust/Ruby/Ruby/Rust order;
+[both generic checks passed](https://github.com/discourse/discourse/actions/runs/36363412794/job/108744942717)
+and [here](https://github.com/discourse/discourse/actions/runs/36363412799/job/108744942575).
+The measured example averaged 1.218s in Ruby and 1.383s in Rust, with both
+examples passing in every invocation. The first warm-up took 9.443s in Rust;
+the other three took 6.529–6.686s, again showing that the large first-run cost
+follows invocation position rather than backend.
+
+The bridge profile emitted three `Target.getTargets` markers per invocation.
+The first marker aligns with the driver's `start`-phase request by command
+order (an inference); the remaining two align with reset calls. For the start
+request, Ruby's bridge-to-browser round trip took 3.389ms and 3.907ms, and
+response publication took 0.064ms and 0.042ms. Rust took 4.593ms and 5.768ms
+for the round trip and 0.011ms and 0.012ms to publish. The driver's matching
+end-to-end start-phase commands took 397.960ms and 380.897ms in Ruby, versus
+209.608ms and 192.185ms in Rust. Later reset commands took less than 0.54ms
+end to end for either backend.
+
+The measured browser round trip and response publication account for only a
+few milliseconds of the roughly 190–200ms Rust advantage during startup. The
+delay is before the forwarded command reaches the bridge's CDP submit path or
+after its response has been written to the parent. Child bridge readiness is
+the leading hypothesis, especially the Ruby interpreter's startup cost; the
+next run records launch-to-ready time directly. The Core job used 51.34
+CPU-seconds over 55 elapsed seconds and peaked at 5,889.11 MiB for the whole
+job/container, not per bridge. [Core](https://github.com/discourse/discourse/actions/runs/36363412796/job/108744942647),
+[check 1](https://github.com/discourse/discourse/actions/runs/36363412794/job/108744942717),
+and [check 2](https://github.com/discourse/discourse/actions/runs/36363412799/job/108744942575)
+passed.

@@ -716,6 +716,9 @@ class NativeSystemDriver < Capybara::Driver::Base
       ]
     end
     bridge_environment = {}
+    if ENV["NATIVE_CDP_COMMAND_PROFILE"] == "1"
+      bridge_environment["NATIVE_CDP_BRIDGE_PROFILE_LAUNCHED_AT"] = Time.now.to_f.to_s
+    end
     if @fd_trace_directory
       bridge_environment["NATIVE_CDP_RUBY_FD_TRACE_TASKS"] = File.join(
         @fd_trace_directory,
