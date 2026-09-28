@@ -65,6 +65,7 @@ jobs:
       S3_SYSTEM_TEST_ACCESS_KEY_ID: minioadmin
       S3_SYSTEM_TEST_SECRET_ACCESS_KEY: minioadmin
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
+      DISCOURSE_TURBO_RSPEC_DYNAMIC_SCHEDULING: ${{ matrix.build_type == 'system' && '1' || '' }}
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       EMBER_ENV: development
