@@ -45,9 +45,9 @@ module Migrations
           @required_mappings || {}
         end
 
-        def requires_set(name, sql)
+        def requires_set(name, sql, condition: nil)
           @required_sets ||= {}
-          @required_sets[name] = sql
+          @required_sets[name] = { sql:, condition: }
         end
 
         def required_sets
@@ -88,8 +88,15 @@ module Migrations
           instance_variable_set("@#{name}", @shared_data.load_mapping(sql))
         end
 
-        required_sets.each do |name, sql|
-          instance_variable_set("@#{name}", @shared_data.load_set(sql))
+        required_sets.each do |name, requirement|
+          set =
+            if requirement[:condition].nil? || instance_exec(&requirement[:condition])
+              @shared_data.load_set(requirement[:sql])
+            else
+              SetStore.create(0)
+            end
+
+          instance_variable_set("@#{name}", set)
         end
       end
 

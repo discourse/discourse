@@ -16,6 +16,13 @@ module Migrations
         depends_on :categories, :users, :uploads
         store_mapped_ids true
 
+        requires_set :existing_ids,
+                     "SELECT id FROM topics",
+                     condition: -> do
+                       @intermediate_db.query_value(
+                         "SELECT 1 FROM topics WHERE existing_id IS NOT NULL LIMIT 1",
+                       )
+                     end
         requires_set :existing_external_ids, "SELECT LOWER(external_id) FROM topics"
 
         column_names %i[
@@ -71,16 +78,6 @@ module Migrations
         SQL
 
         private
-
-        def before(total_rows:)
-          @existing_ids = SetStore.create(0)
-
-          if @intermediate_db.query_value(
-               "SELECT 1 FROM topics WHERE existing_id IS NOT NULL LIMIT 1",
-             )
-            @existing_ids = @shared_data.load_set("SELECT id FROM topics")
-          end
-        end
 
         def transform_row(row)
           if @existing_ids.include?(row[:existing_id])
