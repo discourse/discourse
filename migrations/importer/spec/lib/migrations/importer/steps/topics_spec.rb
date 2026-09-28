@@ -78,5 +78,6 @@ RSpec.describe "Migrations::Importer::Steps::Topics", :rails do
     expect(DB.query_single("SELECT title FROM topics WHERE id = :id", id: discourse_id)).to eq(
       ["New topic"],
     )
+    expect(shared_data[:first_imported_topic_id]).to eq(discourse_id)
   end
 end

@@ -79,6 +79,10 @@ module Migrations
 
         private
 
+        def before(total_rows:)
+          @shared_data[:first_imported_topic_id] = @discourse_db.last_id_of("topics") + 1
+        end
+
         def transform_row(row)
           if @existing_ids.include?(row[:existing_id])
             row[:id] = row[:existing_id]

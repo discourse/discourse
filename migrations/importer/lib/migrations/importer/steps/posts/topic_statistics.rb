@@ -7,28 +7,32 @@ module Migrations
         TOPIC_BATCH_SIZE = 1_000
 
         depends_on :posts
+        requires_shared_data :first_imported_topic_id
 
         def execute
           super
 
-          each_imported_topic_id_batch { |topic_ids| update_topic_statistics(topic_ids) }
+          update_topic_statistics(
+            "posts.topic_id >= :first_imported_topic_id",
+            first_imported_topic_id: @first_imported_topic_id,
+          )
+          each_existing_topic_id_batch do |topic_ids|
+            update_topic_statistics("posts.topic_id IN (:topic_ids)", topic_ids:)
+          end
         end
 
         private
 
-        def each_imported_topic_id_batch
+        def each_existing_topic_id_batch
           topic_ids = []
 
-          @intermediate_db.query(<<~SQL, MappingType::POSTS, MappingType::TOPICS) do |row|
-            SELECT DISTINCT mapped_topic.discourse_id
-            FROM posts
-                 JOIN mapped.ids mapped_post
-                   ON mapped_post.original_id = posts.original_id AND mapped_post.type = ?
-                 JOIN mapped.ids mapped_topic
-                   ON mapped_topic.original_id = posts.topic_id AND mapped_topic.type = ?
-            ORDER BY mapped_topic.discourse_id
+          @intermediate_db.query(<<~SQL) do |row|
+            SELECT DISTINCT existing_id
+            FROM topics
+            WHERE existing_id IS NOT NULL
+            ORDER BY existing_id
           SQL
-            topic_ids << row[:discourse_id]
+            topic_ids << row[:existing_id]
             next if topic_ids.size < TOPIC_BATCH_SIZE
 
             yield topic_ids
@@ -38,15 +42,15 @@ module Migrations
           yield topic_ids if topic_ids.any?
         end
 
-        def update_topic_statistics(topic_ids)
-          DB.exec(<<~SQL, topic_ids:)
+        def update_topic_statistics(topic_filter, params)
+          DB.exec(<<~SQL, **params)
             WITH public_posts AS (
               SELECT posts.topic_id,
                      MAX(posts.post_number) AS highest_post_number,
                      COUNT(*) AS posts_count,
                      MAX(posts.created_at) AS last_posted_at
               FROM posts
-              WHERE posts.topic_id IN (:topic_ids)
+              WHERE (#{topic_filter})
                 AND posts.deleted_at IS NULL
                 AND #{Topic.public_post_types_sql}
               GROUP BY posts.topic_id
@@ -55,7 +59,7 @@ module Migrations
               SELECT posts.topic_id,
                      MAX(posts.post_number) AS highest_staff_post_number
               FROM posts
-              WHERE posts.topic_id IN (:topic_ids)
+              WHERE (#{topic_filter})
                 AND posts.deleted_at IS NULL
                 AND #{Topic.staff_post_types_sql}
               GROUP BY posts.topic_id
@@ -63,7 +67,7 @@ module Migrations
             last_posters AS (
               SELECT DISTINCT ON (posts.topic_id) posts.topic_id, posts.user_id
               FROM posts
-              WHERE posts.topic_id IN (:topic_ids)
+              WHERE (#{topic_filter})
                 AND posts.deleted_at IS NULL
                 AND NOT posts.hidden
                 AND #{Topic.public_post_types_sql}
