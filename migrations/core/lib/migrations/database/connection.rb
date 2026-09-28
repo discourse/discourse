@@ -78,7 +78,7 @@ module Migrations
         @db.query_array(sql, *parameters, &block)
       end
 
-      def query_splat(sql, *parameters, &block)
+      def query_column(sql, *parameters, &block)
         @db.query_splat(sql, *parameters, &block)
       end
 

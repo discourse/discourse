@@ -28,7 +28,7 @@ module Migrations
 
           loop do
             topic_ids =
-              @intermediate_db.query_splat(
+              @intermediate_db.query_column(
                 <<~SQL,
                   SELECT DISTINCT existing_id
                   FROM topics
