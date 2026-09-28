@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DButton from "discourse/ui-kit/d-button";
@@ -9,6 +10,14 @@ import { i18n } from "discourse-i18n";
 import Notifications from "./user-dropdown/notifications";
 
 export default class UserDropdown extends Component {
+  @service mobileTabBar;
+
+  get label() {
+    return this.mobileTabBar.enabled
+      ? i18n("mobile_tab_bar.notifications")
+      : i18n("user.avatar.header_title");
+  }
+
   @action
   click(e) {
     if (wantsNewWindow(e)) {
@@ -35,10 +44,10 @@ export default class UserDropdown extends Component {
       <DButton
         aria-expanded={{@active}}
         aria-haspopup="true"
-        aria-label={{i18n "user.avatar.header_title"}}
+        aria-label={{this.label}}
         class="icon btn-flat"
         id="toggle-current-user"
-        title={{i18n "user.avatar.header_title"}}
+        title={{this.label}}
         {{on "click" this.click}}
       >
         <Notifications @active={{@active}} />

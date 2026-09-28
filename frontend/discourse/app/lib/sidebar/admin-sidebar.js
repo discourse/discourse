@@ -1,5 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
+import MobileTabBarReviewBadge from "discourse/components/mobile-tab-bar/review-badge";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -379,6 +380,24 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   displayHeader = true;
   expandActiveSection = true;
   scrollActiveLinkIntoView = true;
+
+  get mobileTab() {
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+
+    if (!currentUser?.staff) {
+      return null;
+    }
+
+    return {
+      label: i18n("admin_title"),
+      icon: "wrench",
+      badgeComponent: MobileTabBarReviewBadge,
+      url: "/admin",
+      ownsRoute: (routeInfo) => routeInfo.name.startsWith("admin"),
+    };
+  }
 
   @cached
   get sections() {

@@ -39,6 +39,7 @@ en:
           other: "%{formatted_number} chat messages"
 
     chat:
+      start_new_message: "New message"
       edit_category:
         tab_title: "Chat"
         channel: "Channel"

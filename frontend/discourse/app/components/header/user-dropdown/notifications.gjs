@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { and, not } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   addExtraUserClasses,
@@ -17,6 +18,7 @@ const DEFAULT_AVATAR_SIZE = "medium";
 
 export default class Notifications extends Component {
   @service currentUser;
+  @service mobileTabBar;
   @service siteSettings;
 
   get avatar() {
@@ -54,7 +56,11 @@ export default class Notifications extends Component {
 
   <template>
     <PluginOutlet @name="user-dropdown-notifications__before" />
-    {{this.avatar}}
+    {{#if this.mobileTabBar.enabled}}
+      {{dIcon "bell"}}
+    {{else}}
+      {{this.avatar}}
+    {{/if}}
 
     {{#if this._shouldHighlightAvatar}}
       <UserTip
@@ -69,7 +75,7 @@ export default class Notifications extends Component {
       />
     {{/if}}
 
-    {{#if this.currentUser.status}}
+    {{#if (and this.currentUser.status (not this.mobileTabBar.enabled))}}
       <UserStatusBubble
         @status={{this.currentUser.status}}
         @timezone={{this.currentUser.user_option.timezone}}

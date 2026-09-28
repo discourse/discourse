@@ -1,3 +1,4 @@
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
@@ -24,6 +25,23 @@ class MainSidebarPanel extends BaseCustomSidebarPanel {
 
   get switchButtonDefaultUrl() {
     return this?.lastKnownURL || "/";
+  }
+
+  get mobileTab() {
+    const owner = getOwnerWithFallback(this);
+    const currentUser = owner.lookup("service:current-user");
+
+    return {
+      label: i18n("sidebar.panels.forum.label"),
+      icon: "house",
+      url: "/",
+      isNestedRoute: (routeInfo) => routeInfo.name.startsWith("topic."),
+      menuAction: currentUser?.can_create_topic && {
+        label: i18n("mobile_tab_bar.new_topic"),
+        icon: "plus",
+        action: () => owner.lookup("service:composer").openNewTopic(),
+      },
+    };
   }
 }
 

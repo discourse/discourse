@@ -13,6 +13,7 @@ const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
   @service footer;
+  @service mobileTabBar;
   @service router;
   @service scrollState;
   @service sidebarState;
@@ -114,9 +115,13 @@ export default class ApplicationController extends Controller {
     return this.siteSettings.login_required && !this.currentUser;
   }
 
-  @computed
+  // Inside the app, the tab bar takes over the footer and leads back to it
   get showFooterNav() {
-    return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
+    if (this.capabilities.isAppWebview) {
+      return !this.mobileTabBar.enabled;
+    }
+
+    return this.capabilities.isiOSPWA;
   }
 
   get sidebarEnabled() {

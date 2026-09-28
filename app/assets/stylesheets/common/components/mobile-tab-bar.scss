@@ -1,0 +1,185 @@
+html.mobile-tab-bar-visible {
+  // Layouts across the app already clear the footer nav by this height
+  --footer-nav-height: 3.625rem;
+}
+
+.mobile-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: z("footer-nav");
+  display: flex;
+  width: 100%;
+  height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: border-box;
+  background: var(--header_background);
+  border-top: 1px solid var(--content-border-color);
+
+  @include unselectable;
+
+  &__tab {
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: var(--space-half);
+    min-width: 0;
+    padding: var(--space-1) 0;
+    border-radius: 0;
+    color: var(--header_primary-medium);
+
+    &.--active {
+      color: var(--d-nav-color--active);
+    }
+  }
+
+  // Colour alone doesn't mark the active tab, so it also gets a pill
+  &__indicator {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.5rem;
+    height: 1.9rem;
+    border-radius: 999px;
+
+    .--active & {
+      background: var(--d-selected);
+    }
+
+    .d-icon {
+      margin: 0;
+      font-size: var(--font-up-1);
+      color: inherit;
+    }
+  }
+
+  &__label {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: var(--font-down-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .--active & {
+      font-weight: bold;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: -0.2rem;
+    left: 55%;
+    display: flex;
+  }
+
+  &__count {
+    min-width: 1rem;
+    padding: 0 0.3em;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: var(--tertiary);
+    color: var(--secondary);
+    font-size: var(--font-down-3);
+    font-weight: bold;
+    line-height: 1rem;
+    text-align: center;
+  }
+}
+
+html.keyboard-visible .mobile-tab-bar {
+  display: none;
+}
+
+html.mobile-tab-bar-visible {
+  // Keep the tab bar reachable while a menu is open, so tabs can switch menus
+  .menu-panel.slide-in,
+  .header-cloak {
+    height: calc(
+      100dvh - var(--footer-nav-height) - env(safe-area-inset-bottom)
+    );
+  }
+
+  .menu-panel.slide-in {
+    box-shadow: none;
+  }
+
+  // The tabs already lead back to the other sections, which leaves the
+  // back link's row with only the toggle-all button, not worth a row here
+  .sidebar-panel-header__row:has(.sidebar-sections__back-to-forum) {
+    display: none;
+  }
+}
+
+.sidebar-account-actions {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--content-border-color);
+
+  &.--status {
+    margin: 0 0 var(--space-2);
+    padding: 0 0 var(--space-2);
+    border-top: none;
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .profile-tab-btn,
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-2) var(--d-sidebar-row-horizontal-padding);
+    color: var(--d-sidebar-link-color);
+
+    .d-icon {
+      margin: 0;
+      color: var(--d-sidebar-link-icon-color);
+    }
+  }
+
+  .do-not-disturb.enabled .d-icon,
+  .presence-toggle.enabled .d-icon {
+    color: var(--tertiary);
+  }
+
+  .relative-date {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+  }
+
+  img.emoji {
+    width: 1em;
+    height: 1em;
+  }
+}
+
+.sidebar-menu-action {
+  padding: var(--space-2) var(--d-sidebar-row-horizontal-padding) var(--space-3);
+
+  &__button {
+    width: 100%;
+  }
+}
+
+// Sits before the logo, so it needs the header icons' spacing mirrored
+.d-header-icons.header-section-nav {
+  margin: 0 var(--space-1) 0 0;
+}
+
+// Next to a topic or channel title the small logo only crowds it; the tabs
+// already lead home
+html.mobile-tab-bar-nested .d-header .title--minimized {
+  display: none;
+}
+
+.hamburger-panel.--end .menu-panel.slide-in {
+  left: auto;
+  right: 0;
+}

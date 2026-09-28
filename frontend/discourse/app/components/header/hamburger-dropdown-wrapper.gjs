@@ -45,9 +45,12 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
+    // The header's menu and profile buttons open and close this menu themselves
     let exceptionSelectors = [
       ".sidebar-more-section-content",
       ".fk-d-menu-modal",
+      ".header-section-nav",
+      ".header-profile-toggle",
     ];
 
     exceptionSelectors = applyValueTransformer(

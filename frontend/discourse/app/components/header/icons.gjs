@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import HeaderProfileToggle from "discourse/components/header/profile-toggle";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
@@ -44,12 +45,17 @@ export default class Icons extends Component {
   @service search;
   @service interfaceColor;
   @service router;
+  @service mobileTabBar;
 
   get showHamburger() {
     // NOTE: In this scenario, we are forcing the sidebar on admin users,
     // so we need to still show the hamburger menu to be able to
     // access the legacy hamburger forum menu.
     if (this.header.headerButtonsHidden.includes("menu")) {
+      return false;
+    }
+
+    if (this.mobileTabBar.enabled) {
       return false;
     }
 
@@ -63,6 +69,7 @@ export default class Icons extends Component {
   get showSearchButton() {
     if (
       !this.site.can_search ||
+      this.mobileTabBar.enabled ||
       this.header.headerButtonsHidden.includes("search") ||
       ALL_PAGES_EXCLUDED_ROUTES.some(
         (name) => name === this.router.currentRouteName
@@ -139,6 +146,9 @@ export default class Icons extends Component {
               @active={{this.header.userVisible}}
               @toggleUserMenu={{@toggleUserMenu}}
             />
+            {{#if this.mobileTabBar.enabled}}
+              <HeaderProfileToggle />
+            {{/if}}
           {{/if}}
         {{else if (eq entry.key "interface-color-selector")}}
           {{#if this.interfaceColor.selectorAvailableInHeader}}

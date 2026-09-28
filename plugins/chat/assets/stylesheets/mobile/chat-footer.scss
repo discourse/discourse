@@ -42,3 +42,36 @@
     }
   }
 }
+
+// The core tab bar owns the bottom edge, so chat's own tabs move to the top
+html.mobile-tab-bar-visible {
+  .full-page-chat #main-chat-outlet.chat-view {
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "footer"
+      "list";
+  }
+
+  .c-footer.--pills {
+    display: block;
+    padding: var(--space-2) var(--space-3) 0;
+    border-top: none;
+
+    .nav-pills {
+      margin: 0;
+    }
+
+    .c-unread-indicator {
+      margin-left: var(--space-1);
+    }
+  }
+
+  .chat-header-icon {
+    display: none;
+  }
+}
+
+.mobile-tab-bar__badge .chat-channel-unread-indicator {
+  position: static;
+  margin: 0;
+}

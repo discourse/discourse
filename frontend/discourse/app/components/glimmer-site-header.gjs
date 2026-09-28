@@ -30,15 +30,18 @@ export default class GlimmerSiteHeader extends Component {
   @service currentUser;
   @service site;
   @service header;
+  @service mobileTabBar;
 
   pxClosed;
   headerElement;
 
+  #animatesRenderedHamburger = false;
   _animate = false;
   _headerWrap;
   _mainOutletWrapper;
   _swipeMenuOrigin;
   _applicationElement;
+
   _resizeObserver;
 
   constructor() {
@@ -55,11 +58,11 @@ export default class GlimmerSiteHeader extends Component {
     super.willDestroy(...arguments);
     this.appEvents.off("user-menu:rendered", this, this.animateMenu);
 
-    if (this.dropDownHeaderEnabled) {
+    if (this.#animatesRenderedHamburger) {
       this.appEvents.off(
         "sidebar-hamburger-dropdown:rendered",
         this,
-        this.animateMenu
+        this.animateRenderedHamburger
       );
     }
 
@@ -179,11 +182,15 @@ export default class GlimmerSiteHeader extends Component {
   @action
   setupHeader() {
     this.appEvents.on("user-menu:rendered", this, this.animateMenu);
-    if (this.dropDownHeaderEnabled) {
+
+    // The mobile tab bar opens the hamburger menu without the header's toggle
+    this.#animatesRenderedHamburger =
+      this.dropDownHeaderEnabled || this.mobileTabBar.enabled;
+    if (this.#animatesRenderedHamburger) {
       this.appEvents.on(
         "sidebar-hamburger-dropdown:rendered",
         this,
-        this.animateMenu
+        this.animateRenderedHamburger
       );
     }
 
@@ -240,10 +247,7 @@ export default class GlimmerSiteHeader extends Component {
         let animationFinished;
         let finalPosition = PANEL_WIDTH;
         this._swipeMenuOrigin = "right";
-        if (
-          this.slideInMode &&
-          panel.parentElement.classList.contains(this.leftMenuClass)
-        ) {
+        if (this.slideInMode && this.#opensFromLeft(panel)) {
           this._swipeMenuOrigin = "left";
           finalPosition = -PANEL_WIDTH;
         }
@@ -272,6 +276,11 @@ export default class GlimmerSiteHeader extends Component {
 
       this._animate = false;
     });
+  }
+
+  animateRenderedHamburger() {
+    this._animate = this.slideInMode;
+    this.animateMenu();
   }
 
   @bind
@@ -345,6 +354,12 @@ export default class GlimmerSiteHeader extends Component {
       ],
       { fill: "forwards" }
     );
+  }
+
+  // A panel marked `--end` opens from the other side of its usual one
+  #opensFromLeft(panel) {
+    const wrapper = panel.parentElement.classList;
+    return wrapper.contains(this.leftMenuClass) !== wrapper.contains("--end");
   }
 
   _handleArrowKeysNav(event) {

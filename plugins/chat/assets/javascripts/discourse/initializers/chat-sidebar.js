@@ -11,6 +11,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
@@ -293,6 +295,7 @@ export default {
     }
 
     withPluginApi((api) => {
+      const chatService = this.chatService;
       const chatStateManager = container.lookup("service:chat-state-manager");
 
       api.addSidebarPanel(
@@ -305,6 +308,25 @@ export default {
 
             get switchButtonDefaultUrl() {
               return chatStateManager.lastKnownChatURL || "/chat";
+            }
+
+            get mobileTab() {
+              return {
+                label: this.switchButtonLabel,
+                icon: this.switchButtonIcon,
+                badgeComponent: ChatHeaderIconUnreadIndicator,
+                url: "/chat",
+                primary: true,
+                ownsRoute: (routeInfo) => /^chat(\.|$)/.test(routeInfo.name),
+                isNestedRoute: (routeInfo) =>
+                  /^chat\.channel(\.|$)/.test(routeInfo.name),
+                menuAction: chatService.userCanChat && {
+                  label: i18n("chat.start_new_message"),
+                  icon: "plus",
+                  action: () =>
+                    container.lookup("service:modal").show(ChatModalNewMessage),
+                },
+              };
             }
           }
       );

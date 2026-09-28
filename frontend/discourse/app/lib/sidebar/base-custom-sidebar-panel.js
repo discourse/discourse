@@ -44,6 +44,36 @@ export default class BaseCustomSidebarPanel {
   }
 
   /**
+   * @typedef {Object} MobileTab
+   * @property {string} label Translated tab label.
+   * @property {string} icon
+   * @property {string} url The section's top level.
+   * @property {boolean} [primary] Places the tab right after the forum's,
+   * ahead of search, where it never folds into "More".
+   * @property {Object} [badgeComponent] Renders over the icon, for unread
+   * counts and the like; it should render nothing when there is nothing new.
+   * @property {(routeInfo: Object) => boolean} [ownsRoute] Whether a route
+   * belongs to this tab's section, which highlights the tab. The main panel's
+   * tab takes every route no other tab owns, so it needs no matcher.
+   * @property {(routeInfo: Object) => boolean} [isNestedRoute] Whether a
+   * route sits below the section's top level. Tapping the active tab there
+   * returns to the list the page was opened from.
+   * @property {{label: string, icon: string, action: Function}} [menuAction]
+   * Leads the section's menu, for starting something new in the section.
+   */
+
+  /**
+   * Opts the panel into the mobile tab bar as a section of the site. Tapping
+   * the tab goes to the section, and the header's menu button opens this
+   * panel while the user is in it.
+   *
+   * @returns {MobileTab|null} The tab, or null to stay out of the tab bar.
+   */
+  get mobileTab() {
+    return null;
+  }
+
+  /**
    * @returns {boolean} Controls whether the panel will display a header
    */
   get displayHeader() {

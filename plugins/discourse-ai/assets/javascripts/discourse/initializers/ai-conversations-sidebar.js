@@ -1,6 +1,23 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { i18n } from "discourse-i18n";
 import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
+
+// Matches the rule the sidebar uses to treat a topic as an AI conversation
+function isOwnBotConversation(routeInfo, currentUser) {
+  for (let route = routeInfo; route; route = route.parent) {
+    if (route.name === "topic") {
+      const topic = route.attributes;
+      return (
+        topic?.archetype === "private_message" &&
+        topic.user_id === currentUser?.id &&
+        !!topic.is_bot_pm
+      );
+    }
+  }
+
+  return false;
+}
 
 export default {
   name: "ai-conversations-sidebar",
@@ -25,6 +42,27 @@ export default {
             hidden = true;
             displayHeader = false; // this would add a misplaced back to forum button
             expandActiveSection = true;
+
+            get mobileTab() {
+              const hasBot = currentUser?.ai_enabled_chat_bots?.some(
+                (bot) => !bot.is_agent || bot.has_default_llm
+              );
+
+              if (!hasBot) {
+                return null;
+              }
+
+              return {
+                label: i18n("discourse_ai.ai_bot.conversations.tab_label"),
+                icon: "discobot",
+                url: "/discourse-ai/ai-bot/conversations",
+                ownsRoute: (routeInfo) =>
+                  routeInfo.name === "discourse-ai-bot-conversations" ||
+                  isOwnBotConversation(routeInfo, currentUser),
+                isNestedRoute: (routeInfo) =>
+                  routeInfo.name.startsWith("topic."),
+              };
+            }
           }
       );
 

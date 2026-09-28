@@ -27,6 +27,19 @@ export function clearAdditionalUserNavSidebarLinks() {
   additionalLinks = {};
 }
 
+/**
+ * @param {Object} routeInfo
+ * @returns {string|undefined} The username of the profile the route shows, or
+ * undefined when the route is not part of a profile.
+ */
+export function profileUsernameForRoute(routeInfo) {
+  for (let route = routeInfo; route; route = route.parent) {
+    if (route.name === "user") {
+      return route.params.username;
+    }
+  }
+}
+
 // Mirrors `components/user-nav.gjs`. The tabs that own a secondary nav become
 // sections of their own below, so they are not repeated here — their section
 // header stands in for the tab.
@@ -539,7 +552,9 @@ export function isUserRoute(routeInfo) {
 // The `user` controller owns the nav visibility rules and holds the user being
 // viewed, which is not necessarily the current user.
 function navContext(owner) {
-  const controller = owner.lookup("controller:user");
+  const controller = owner.lookup(
+    "service:user-nav-sidebar-state-manager"
+  ).navController;
 
   return {
     owner,

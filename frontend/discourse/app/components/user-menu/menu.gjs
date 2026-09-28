@@ -196,6 +196,7 @@ function resolvePanelComponent(owner, panelComponent) {
 export default class UserMenu extends Component {
   @service appEvents;
   @service currentUser;
+  @service mobileTabBar;
   @service router;
   @service site;
   @service siteSettings;
@@ -267,6 +268,11 @@ export default class UserMenu extends Component {
   @cached
   get bottomTabs() {
     const tabs = [];
+
+    // The tab bar's profile menu holds the profile tab's contents instead
+    if (this.mobileTabBar.enabled) {
+      return tabs;
+    }
 
     CORE_BOTTOM_TABS.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);

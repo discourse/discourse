@@ -6386,6 +6386,15 @@ en:
       share: "Share"
       dismiss: "Dismiss"
 
+    mobile_tab_bar:
+      label: "Site sections"
+      profile: "Profile"
+      notifications: "Notifications"
+      more: "More"
+      new_topic: "New topic"
+      menu: "Menu"
+      hub: "Hub"
+
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 

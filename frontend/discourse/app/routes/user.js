@@ -69,7 +69,9 @@ export default class UserRoute extends DiscourseRoute {
       this.onUserCountersMessage
     );
 
-    this.userNavSidebarStateManager.forceUserNavSidebar();
+    if (this.userNavSidebarStateManager.servesProfileOf(user)) {
+      this.userNavSidebarStateManager.forceUserNavSidebar();
+    }
   }
 
   deactivate() {

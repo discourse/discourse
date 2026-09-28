@@ -157,18 +157,12 @@ export default class GlimmerHeader extends Component {
     }
 
     if (this.site.mobileView) {
-      const context = this.search.searchContext;
-      let params = "";
-      if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.site.mobileView}`;
-      }
-
       if (this.router.currentRouteName === "full-page-search") {
         scrollTop();
         document.querySelector(".full-page-search").focus();
         return false;
       } else {
-        return DiscourseURL.routeTo("/search" + params);
+        return DiscourseURL.routeTo(this.search.fullPageSearchURL);
       }
     }
 
