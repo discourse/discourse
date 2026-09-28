@@ -229,6 +229,7 @@ describe "MCP group tools" do
     call_tool("discourse_get_group", { id: group.id })
 
     expect(response.status).to eq(200)
+    expect(structured_content.dig("group", "id")).to eq(group.id)
     expect(response.body).not_to include(secret, group.incoming_email, group.email_username)
   end
 
@@ -259,6 +260,30 @@ describe "MCP group tools" do
     expect(structured_content["groups"].pluck("id")).not_to include(filtered_group.id)
   ensure
     DiscoursePluginRegistry.unregister_modifier(plugin, :groups_index_query, &modifier) if plugin
+  end
+
+  it "keeps membership queries bounded for moderators managing owner-visible groups" do
+    SiteSetting.moderators_manage_groups = true
+    moderator = Fabricate(:moderator, refresh_auto_groups: true)
+    group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+    make_owner(group, moderator)
+    authorize("mcp:groups:read", auth_user: moderator)
+
+    initial_queries =
+      track_sql_queries { call_tool("discourse_list_groups", { limit: 100 }) }.grep(/group_users/i)
+    expect(structured_content["groups"]).to include(
+      include("id" => group.id, "can_admin_group" => true, "can_edit_group" => true),
+    )
+
+    5.times do
+      owned_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+      make_owner(owned_group, moderator)
+    end
+    expanded_queries =
+      track_sql_queries { call_tool("discourse_list_groups", { limit: 100 }) }.grep(/group_users/i)
+
+    expect(response.status).to eq(200)
+    expect(expanded_queries.size).to be <= initial_queries.size
   end
 
   it "preserves the difference between moderator and administrator visibility" do
