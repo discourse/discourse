@@ -254,11 +254,11 @@ module TurboTests
           else
             File.open(tmp_filename) do |fd|
               fd.each_line do |line|
-                message = JSON.parse(line)
-                message = message.symbolize_keys
-                message[:process_id] = process_id
-                message[:command_string] = command_string
-                @messages << message
+                enqueue_formatter_message(
+                  line,
+                  process_id: process_id,
+                  command_string: command_string,
+                )
               end
             end
           end
@@ -398,8 +398,11 @@ module TurboTests
           if chunk.is_a?(String)
             buffer << chunk
             while (newline = buffer.index("\n"))
-              message = JSON.parse(buffer.slice!(0..newline), symbolize_names: true)
-              @messages << message.merge(process_id: process_id, command_string: command_string)
+              enqueue_formatter_message(
+                buffer.slice!(0..newline),
+                process_id: process_id,
+                command_string: command_string,
+              )
             end
           elsif chunk == :wait_readable
             IO.select([fd], nil, nil, 0.25)
@@ -413,6 +416,11 @@ module TurboTests
       end
     rescue StandardError
       @messages << { type: "dynamic_error", message: "worker formatter stream failed" }
+    end
+
+    def enqueue_formatter_message(line, process_id:, command_string:)
+      message = JSON.parse(line).symbolize_keys
+      @messages << message.merge(process_id: process_id, command_string: command_string)
     end
 
     def finish_dynamic_subprocesses
