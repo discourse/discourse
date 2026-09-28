@@ -369,9 +369,9 @@ jobs:
               local bridge=$1
               bridge_started_seconds=$SECONDS
               if [[ "$bridge" == "ruby" ]]; then
-                LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=ruby NATIVE_CDP_COMMAND_PROFILE=1 NATIVE_CDP_RUBY_PIPE_TRANSPORT=0 NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE=1 NATIVE_CDP_RUBY_FD_TRACE=0 NATIVE_CDP_RUBY_BRIDGE=1 NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=0 bundle exec rspec --order defined --format documentation --profile 2 "${sample_specs[@]}"
+                LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=ruby NATIVE_CDP_COMMAND_PROFILE=1 NATIVE_CDP_RUBY_PIPE_TRANSPORT=0 NATIVE_CDP_RUBY_BRIDGE_SYNC_PROBE=1 NATIVE_CDP_RUBY_FD_TRACE=0 NATIVE_CDP_RUBY_BRIDGE=1 NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=0 bundle exec rspec --require ./.github/ci/native-driver/native-command-profiler.rb --order defined --format documentation --profile 2 "${sample_specs[@]}"
               else
-                LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=rust NATIVE_CDP_COMMAND_PROFILE=1 NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=1 NATIVE_CDP_RUBY_BRIDGE=0 bundle exec rspec --order defined --format documentation --profile 2 "${sample_specs[@]}"
+                LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error NATIVE_CDP_BRIDGE_LABEL=rust NATIVE_CDP_COMMAND_PROFILE=1 NATIVE_CDP_RUST_BRIDGE_SELF_PROBE=1 NATIVE_CDP_RUBY_BRIDGE=0 bundle exec rspec --require ./.github/ci/native-driver/native-command-profiler.rb --order defined --format documentation --profile 2 "${sample_specs[@]}"
               fi
               printf 'CI_CDP_BRIDGE_TIME {"bridge":"%s","elapsed_seconds":%s}\n' "$bridge" "$((SECONDS - bridge_started_seconds))"
             }

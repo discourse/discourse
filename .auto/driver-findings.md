@@ -842,3 +842,12 @@ the expansion flow as the measured target. It profiles both separately. This
 keeps the experiment at two examples per bridge and gives the measured flow a
 same-process warm-up, while still recording each bridge's initial startup on
 the first example.
+
+Run [36360338616](https://github.com/discourse/discourse/actions/runs/36360338616/job/108736130725)
+at head `e1278a766ae` passed two examples in each Ruby/Rust/Rust/Ruby invocation;
+[Linting passed](https://github.com/discourse/discourse/actions/runs/36360338617/job/108736130706).
+The invocation totals were 11.86s, 9.19s, 9.16s, and 9.25s. The CI profile
+markers were absent because the profiler was defined inside a spec file that
+the narrowed sample no longer loaded. These wall times are not usable for the
+driver comparison. The next run explicitly requires the profiler helper before
+loading the selected examples.
