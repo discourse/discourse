@@ -1004,3 +1004,47 @@ and [here](https://github.com/discourse/discourse/actions/runs/36364238911).
 
 The current browser scope is Chrome for CI and Firefox compatibility; Safari
 testing is out of scope.
+
+## Composer flow comparison
+
+Run [36365377245](https://github.com/discourse/discourse/actions/runs/36365377245/job/108750588510)
+at head `7adb53f1621` passed the two selected composer examples in all four
+Rust/Ruby/Ruby/Rust invocations. [Licenses](https://github.com/discourse/discourse/actions/runs/36365377250/job/108750588547)
+and [Linting](https://github.com/discourse/discourse/actions/runs/36365377258/job/108750588288)
+passed too. The native-driver binary was restored from CI cache, so no fresh
+Rust build ran; Rust source had not changed since its previous successful
+build.
+
+The examples exercised mention preview followed by creating a tagged topic.
+The measured tagged-topic flow averaged 1.972s in Ruby and 2.046s in Rust (74ms
+or 3.6% in Ruby's favor across two runs):
+
+| Invocation | Bridge ready | Start-phase command | Warm-up example | Measured example |
+| --- | ---: | ---: | ---: | ---: |
+| Rust 1 | 243.309ms | 237.499ms | 9.963s | 2.112s |
+| Ruby 1 | 451.999ms | 442.294ms | 8.550s | 1.960s |
+| Ruby 2 | 409.197ms | 400.352ms | 8.464s | 1.983s |
+| Rust 2 | 177.373ms | 171.500ms | 8.312s | 1.980s |
+
+Ruby readiness lagged Rust by 209ms and 232ms in the two adjacent pairs. The
+initial `Target.getTargets` command lagged by 205ms and 229ms, again closely
+tracking bridge launch and readiness. The composer interaction phase made six
+clicks, three fills, and six runtime evaluations per measured example for both
+backends. Ruby made one to four additional locator/polling calls, but its
+summed command time was not higher:
+
+| Main interaction-phase command | Rust calls / total | Ruby calls / total |
+| --- | ---: | ---: |
+| `Driver.click` | 6 / 309.7ms | 6 / 308.1ms |
+| `Driver.fill` | 3 / 14.9ms | 3 / 15.9ms |
+| `Driver.find` | 50 / 164.6ms | 51.5 / 149.7ms |
+| `Runtime.callFunctionOn` | 63 / 45.4ms | 66 / 32.1ms |
+| `Runtime.evaluate` | 6 / 597.1ms | 6 / 569.1ms |
+
+These are two focused flows rather than a full-suite comparison. Together, the
+About-page and composer samples do not show a warmed-interaction performance
+advantage for Rust; Ruby's repeatable cost is bridge startup, around 0.2s per
+process. The Core job used 57.63 CPU-seconds over 61 elapsed seconds and peaked
+at 5,961.93 MiB across the whole job/container, not per backend. The next
+focused run adds Playwright on the same two composer examples to compare the
+direct-CDP path with the current default driver.

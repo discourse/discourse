@@ -378,6 +378,10 @@ jobs:
             for bridge in rust ruby ruby rust; do
               run_bridge_sample "$bridge"
             done
+            # SPEC_OPTS normally preloads the native driver; clear it for this Playwright baseline.
+            playwright_started_seconds=$SECONDS
+            SPEC_OPTS= LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bundle exec rspec --order defined --format documentation --profile 2 "${sample_specs[@]}"
+            printf 'CI_DRIVER_SAMPLE_TIME {"driver":"playwright","elapsed_seconds":%s}\n' "$((SECONDS - playwright_started_seconds))"
           else
             system_test_paths=(spec/system)
             LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation "${system_test_paths[@]}"
