@@ -1037,9 +1037,6 @@ module Discourse
       # V8 does not support forking, make sure all contexts are disposed
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
     end
-
-    # get rid of rubbish so we don't share it
-    Process.warmup
   end
 
   # Called in web worker processes after fork to apply worker-specific
