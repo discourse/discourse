@@ -471,6 +471,7 @@ CREATE TABLE topics
 );
 
 CREATE INDEX idx_topics_archetype ON topics (archetype);
+CREATE INDEX idx_topics_existing_id ON topics (existing_id);
 CREATE INDEX idx_topics_slug ON topics (slug);
 
 CREATE TABLE upload_sources

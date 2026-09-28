@@ -24,22 +24,24 @@ module Migrations
         private
 
         def each_existing_topic_id_batch
-          topic_ids = []
+          last_topic_id = 0
 
-          @intermediate_db.query(<<~SQL) do |row|
-            SELECT DISTINCT existing_id
-            FROM topics
-            WHERE existing_id IS NOT NULL
-            ORDER BY existing_id
-          SQL
-            topic_ids << row[:existing_id]
-            next if topic_ids.size < TOPIC_BATCH_SIZE
+          loop do
+            topic_ids =
+              @intermediate_db
+                .query(<<~SQL, last_topic_id, TOPIC_BATCH_SIZE)
+                  SELECT DISTINCT existing_id
+                  FROM topics
+                  WHERE existing_id > ?
+                  ORDER BY existing_id
+                  LIMIT ?
+                SQL
+                .map { |row| row[:existing_id] }
 
+            break if topic_ids.empty?
             yield topic_ids
-            topic_ids = []
+            last_topic_id = topic_ids.last
           end
-
-          yield topic_ids if topic_ids.any?
         end
 
         def update_topic_statistics(topic_filter, params)
