@@ -12,10 +12,15 @@ enum Recipient {
     Internal(Sender<io::Result<Value>>),
 }
 
+struct PendingCommand {
+    recipient: Recipient,
+    profile_started_at: Option<Instant>,
+}
+
 struct Connection {
     stream: UnixStream,
     sequence: u64,
-    pending: HashMap<u64, Recipient>,
+    pending: HashMap<u64, PendingCommand>,
     closed: bool,
 }
 
@@ -26,6 +31,15 @@ pub struct Transport {
 
 impl Transport {
     fn submit(&self, mut request: Value, recipient: Recipient) -> io::Result<u64> {
+        let profile_started_at =
+            if std::env::var_os("NATIVE_CDP_COMMAND_PROFILE").is_some()
+                && request["method"] == "Target.getTargets"
+                && matches!(&recipient, Recipient::External(_))
+            {
+                Some(Instant::now())
+            } else {
+                None
+            };
         let mut connection = self.connection.lock().map_err(|error| io::Error::other(error.to_string()))?;
         if connection.closed {
             return Err(io::Error::new(io::ErrorKind::BrokenPipe, "Chromium pipe closed"));
@@ -33,7 +47,7 @@ impl Transport {
         connection.sequence += 1;
         let id = connection.sequence;
         request["id"] = json!(id);
-        connection.pending.insert(id, recipient);
+        connection.pending.insert(id, PendingCommand { recipient, profile_started_at });
         let result = serde_json::to_writer(&mut connection.stream, &request)
             .map_err(io::Error::other)
             .and_then(|_| connection.stream.write_all(&[0]));
@@ -83,11 +97,28 @@ impl Protocol {
                     if let Some(id) = message["id"].as_u64() {
                         let recipient = reader_transport.connection.lock().unwrap().pending.remove(&id);
                         match recipient {
-                            Some(Recipient::External(id)) => {
-                                message["id"] = id;
-                                write_message(&output, &message)?;
+                            Some(pending) => {
+                                let profile_started_at = pending.profile_started_at;
+                                let response_received_at = profile_started_at.map(|_| Instant::now());
+                                match pending.recipient {
+                                    Recipient::External(id) => {
+                                        message["id"] = id;
+                                        write_message(&output, &message)?;
+                                    }
+                                    Recipient::Internal(sender) => { let _ = sender.send(Ok(message)); }
+                                }
+                                if let (Some(profile_started_at), Some(response_received_at)) =
+                                    (profile_started_at, response_received_at)
+                                {
+                                    let publish_elapsed = response_received_at.elapsed();
+                                    let roundtrip_elapsed = response_received_at.duration_since(profile_started_at);
+                                    eprintln!(
+                                        "NATIVE_CDP_BRIDGE_PROFILE bridge=rust method=Target.getTargets roundtrip_ms={:.3} publish_ms={:.3}",
+                                        roundtrip_elapsed.as_secs_f64() * 1000.0,
+                                        publish_elapsed.as_secs_f64() * 1000.0,
+                                    );
+                                }
                             }
-                            Some(Recipient::Internal(sender)) => { let _ = sender.send(Ok(message)); }
                             None => {}
                         }
                     } else {
@@ -104,8 +135,8 @@ impl Protocol {
                 connection.closed = true;
                 std::mem::take(&mut connection.pending)
             };
-            for recipient in pending.into_values() {
-                match recipient {
+            for pending in pending.into_values() {
+                match pending.recipient {
                     Recipient::External(id) => {
                         let _ = write_message(&output, &json!({"id": id, "error": {"message": error}}));
                     }

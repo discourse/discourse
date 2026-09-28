@@ -727,11 +727,17 @@ class NativeSystemDriver < Capybara::Driver::Base
     @pending_commands = {}
     @transport_error = nil
     @errors = []
-    @error_reader = Thread.new { errors.each_line { |line| @errors << line } }
+    @error_reader =
+      Thread.new do
+        errors.each_line do |stderr_line|
+          @errors << stderr_line
+          warn(stderr_line.chomp) if stderr_line.start_with?("NATIVE_CDP_BRIDGE_PROFILE ")
+        end
+      end
     @output_reader =
       Thread.new do
-        while line = @output.gets
-          response = JSON.parse(line)
+        while output_line = @output.gets
+          response = JSON.parse(output_line)
           if response.key?("id")
             queue = @command_mutex.synchronize { @pending_commands.delete(response.fetch("id")) }
             queue << response if queue
@@ -1004,9 +1010,9 @@ class NativeSystemDriver < Capybara::Driver::Base
               if local_close_range && local_close_range[1].to_f >= endpoint_created_at
                 first_fd, last_fd =
                   local_close_range[2].split(",").first(2).map { |fd| Integer(fd.strip, 0) }
-                descriptors.each do |descriptor|
-                  if first_fd <= descriptor && descriptor <= last_fd
-                    ruby_closed_fds[descriptor] ||= local_close_range[1].to_f
+                descriptors.each do |closed_descriptor|
+                  if first_fd <= closed_descriptor && closed_descriptor <= last_fd
+                    ruby_closed_fds[closed_descriptor] ||= local_close_range[1].to_f
                   end
                 end
               end

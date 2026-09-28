@@ -3,7 +3,6 @@
 require "json"
 require "io/nonblock"
 require "socket"
-require "thread"
 require "timeout"
 
 class RubyCDPBridge
@@ -327,9 +326,13 @@ class RubyCDPBridge
   def read_browser
     while message = @browser_reader.gets("\0")
       response = JSON.parse(message.delete_suffix("\0"))
+      pending = nil
       if response.key?("id")
         pending = @pending_mutex.synchronize { @pending.delete(response.fetch("id")) }
         next unless pending
+        if pending[:profile_started_at]
+          response_received_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        end
         record_protocol_event("response-#{pending.fetch(:origin)}", pending.fetch(:method))
         if pending[:queue]
           pending[:queue] << response
@@ -340,6 +343,16 @@ class RubyCDPBridge
         record_protocol_event("event", response["method"])
         @drags << response if response["method"] == "Input.dragIntercepted"
         write_output(response)
+      end
+      if pending && pending[:profile_started_at]
+        publish_elapsed_ms =
+          (Process.clock_gettime(Process::CLOCK_MONOTONIC) - response_received_at) * 1000
+        roundtrip_elapsed_ms = (response_received_at - pending[:profile_started_at]) * 1000
+        STDERR.puts(
+          "NATIVE_CDP_BRIDGE_PROFILE bridge=ruby method=Target.getTargets " \
+            "roundtrip_ms=#{roundtrip_elapsed_ms.round(3)} " \
+            "publish_ms=#{publish_elapsed_ms.round(3)}",
+        )
       end
     end
     raise IOError, "Chromium CDP pipe closed"
@@ -389,6 +402,11 @@ class RubyCDPBridge
   def submit(request, queue: nil, external_id: nil)
     method = safe_protocol_method(request.fetch("method"))
     origin = external_id.nil? ? "internal" : "forwarded"
+    profile_started_at =
+      if ENV["NATIVE_CDP_COMMAND_PROFILE"] == "1" && origin == "forwarded" &&
+           method == "Target.getTargets"
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      end
     write_stage = "json"
     id =
       @write_mutex.synchronize do
@@ -400,6 +418,7 @@ class RubyCDPBridge
               external_id: external_id,
               method: method,
               origin: origin,
+              profile_started_at: profile_started_at,
             }
             @sequence
           end
@@ -1327,7 +1346,7 @@ class RubyCDPBridge
     pressed = []
     begin
       keys.each do |key|
-        next unless (modifiers & modifier_flag(key)).zero?
+        next if (modifiers & modifier_flag(key)).nonzero?
         pressed << key
         modifiers = key_event(session, key, modifiers, true)
       end
@@ -1364,11 +1383,9 @@ class RubyCDPBridge
       error = caught
     ensure
       pressed.reverse_each do |key|
-        begin
-          modifiers = key_event(session, key, modifiers, false)
-        rescue StandardError => caught
-          error ||= caught
-        end
+        modifiers = key_event(session, key, modifiers, false)
+      rescue StandardError => caught
+        error ||= caught
       end
     end
     raise error if error

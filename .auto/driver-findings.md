@@ -907,7 +907,38 @@ bridge.
 
 The Core job and both generic checks passed: [Core](https://github.com/discourse/discourse/actions/runs/36361712191/job/108740028165), [check 1](https://github.com/discourse/discourse/actions/runs/36361712256/job/108740028315), and [check 2](https://github.com/discourse/discourse/actions/runs/36361712323/job/108740028172).
 
-The next run reverses the order to Rust/Ruby/Ruby/Rust while keeping the same
-two examples, per-example timing, and profiling. This checks whether the
-first-invocation navigation outlier follows runner position rather than the
-Ruby bridge.
+Run [36362322423](https://github.com/discourse/discourse/actions/runs/36362322423/job/108741805733)
+at head `bc3b294760b` passed the same two examples in reversed Rust/Ruby/Ruby/Rust
+order. The first warm-up took 8.876s in Rust; the remaining warm-ups took
+6.429–6.583s across both backends. This confirms the large first-run delay
+follows invocation position, not Ruby. The measured flow took 1.475s and
+1.240s in Rust, versus 1.260s and 1.120s in Ruby. Ruby was faster in both
+adjacent pairs in this run; the means were 1.190s for Ruby and 1.358s for Rust.
+Together with the preceding run, this remains a small and noisy comparison,
+but it shows no consistent warmed-flow Rust advantage.
+
+The measured example made the same 79 `Driver.find`, 275
+`Runtime.callFunctionOn`, and 2 `Driver.click` calls per invocation. Ruby's
+`Driver.find` totals were 75ms and 62ms, and its `Runtime.callFunctionOn`
+totals were 112ms and 81ms; Rust's corresponding totals were 96ms and 89ms,
+and 219ms and 131ms. Ruby therefore used less time in repeated locator and
+JavaScript-read operations in both pairs, while click latency varied. These
+timings do not show a performance need for Rust in this warmed flow, but do not
+establish full-suite equivalence.
+
+The initial `Target.getTargets` call in the driver's `start` phase remained
+faster in Rust in both order positions: 199ms and 166ms, compared with 401ms
+and 365ms in Ruby. Later `Target.getTargets` calls during reset were below
+1ms. The roughly 200ms difference is specific to browser startup, not
+steady-state target enumeration. Core used 49.74 CPU-seconds over 53 elapsed
+seconds and peaked at 5,825.17 MiB across the whole job/container, not per
+bridge. [Core](https://github.com/discourse/discourse/actions/runs/36362322423/job/108741805733),
+[check 1](https://github.com/discourse/discourse/actions/runs/36362322424/job/108741805640),
+and [check 2](https://github.com/discourse/discourse/actions/runs/36362322477/job/108741805726)
+passed.
+
+The next profile adds timings inside each bridge for the forwarded startup
+`Target.getTargets` command. Comparing the bridge-to-browser round trip and
+response-publication time with the driver's end-to-end command time will show
+whether the startup gap is in CDP handling, bridge scheduling, or returning
+the response to Ruby.
