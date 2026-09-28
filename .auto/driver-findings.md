@@ -1260,10 +1260,9 @@ multisite examples, a small variation in asynchronous polling.
 The large warmup gap is localized to page navigation: the two `Page.navigate`
 calls took 3.51–3.72s under Ruby and 1.77–1.79s under Rust. `Storage.clearDataForOrigin`
 reset time was approximately 3.0s in both. Because Ruby ran first and Rust
-second, the navigation gap is confounded by first-run cache warming. Across
-the full and focused pairs so far, the second invocation was 2.9–3.7s faster
-regardless of language, though the workloads differ. The next sample reverses
-bridge order to check whether this warmup advantage follows position.
+second, the navigation gap is confounded by first-run cache warming. The
+reversed-order run below confirms the navigation and warmup advantage follows
+run position rather than bridge language.
 
 Sampled peak cgroup memory was about 4,691.5 MiB for Ruby and 4,489.4 MiB for
 Rust. The sampler includes the worker, browser, and cache; it does not isolate
@@ -1275,3 +1274,40 @@ The profiler records Capybara driver's outer command timings, not every CDP
 message emitted internally by `Driver.*` handlers. It therefore shows that
 the tested user flow behaves similarly after warmup, but it does not prove the
 two bridges issue identical low-level CDP traffic.
+
+## Reversed-order profile on CI
+
+Run [36376488149](https://github.com/discourse/discourse/actions/runs/36376488149)
+at head `d8ee507e329` ran the same two examples with Rust first and Ruby
+second. The [Core job](https://github.com/discourse/discourse/actions/runs/36376488149/job/108783293377)
+passed in 1m45s; each bridge passed four executions with 0 failures.
+
+| Measurement | Rust first | Ruby second |
+| --- | ---: | ---: |
+| Suite marker elapsed | 20.257s | 17.562s |
+| Cgroup CPU | 36.176s | 30.182s |
+| Sampled peak cgroup memory | 4,558.6 MiB | 4,486.7 MiB |
+| Warmup example, mean | 9.842s | 8.545s |
+| Measured topic flow, mean | 2.072s | 2.015s |
+
+The visit's two `Page.navigate` calls took 3.656s under first-run Rust and
+1.775s under second-run Ruby. In the prior Ruby-first run, the first bridge's
+navigations took 3.51–3.72s and second-run Rust took 1.77–1.79s. The slowdown
+therefore follows run order, not bridge language. `Storage.clearDataForOrigin`
+remained around 3.0s under both bridges in this run as well.
+
+Across the two focused pairs, the measured topic flow averaged 2.012s for Ruby
+and 2.055s for Rust. Ruby was 29–57ms faster in each pair, but these short
+samples do not establish that Ruby is generally faster. The cgroup CPU and
+memory samples also changed with run order and include the worker, browser,
+and cache; they do not isolate the bridge process.
+
+This agrees with the matched full Core suite pair at
+[run 36373688510](https://github.com/discourse/discourse/actions/runs/36373688510):
+both bridges passed 2,321 examples with 0 failures. Rust took 442.950s and Ruby
+439.261s, so Ruby was 0.8% faster in that run. Rust ran first and Ruby second,
+which is a cache/order caveat. The focused runs show a small Ruby edge on the
+measured flow while the whole Core suite is near tied; neither result
+establishes a meaningful performance advantage for either bridge. Current
+evidence supports Ruby matching Rust's CI performance and does not support the
+claim that Rust is the source of the direct-CDP speedup over Playwright.
