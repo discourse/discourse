@@ -134,7 +134,10 @@ class Demon::Sidekiq < ::Demon::Base
 
     cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
-    cli.run
+
+    # This process inherits a heap that Discourse.before_fork already warmed up.
+    # Warming it again compacts it, copying every page shared with the parent.
+    cli.run(warmup: false)
   rescue => error
     log(
       "Error encountered while starting Sidekiq: [#{error.class}] #{error.message}\n#{error.backtrace.join("\n")}",

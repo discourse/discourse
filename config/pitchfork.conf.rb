@@ -111,7 +111,8 @@ before_service_worker_ready do |server, service_worker|
 
     require "demon/sidekiq"
     Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
-    Demon::Sidekiq.start(sidekiqs, logger: server.logger)
+    # The mold ran Discourse.before_fork just before forking this service worker.
+    Demon::Sidekiq.start(sidekiqs, logger: server.logger, prepare_fork: false)
 
     if Discourse.enable_sidekiq_logging?
       # Trap USR1, so we can re-issue to sidekiq workers

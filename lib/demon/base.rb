@@ -25,9 +25,15 @@ class Demon::Base
     end
   end
 
-  def self.start(count = 1, verbose: false, logger: nil)
+  # Pass `prepare_fork: false` when the calling process was itself just forked
+  # from a process that ran `Discourse.before_fork`. Running it again compacts
+  # and re-promotes the inherited heap, which copies every shared page into the
+  # caller and the demon instead of leaving them shared.
+  def self.start(count = 1, verbose: false, logger: nil, prepare_fork: true)
     @demons ||= {}
-    count.times { |i| (@demons["#{prefix}_#{i}"] ||= new(i, verbose:, logger:)).start }
+    count.times do |i|
+      (@demons["#{prefix}_#{i}"] ||= new(i, verbose:, logger:, prepare_fork:)).start
+    end
   end
 
   def self.stop
@@ -51,8 +57,16 @@ class Demon::Base
 
   attr_reader :pid, :parent_pid, :started, :index
 
-  def initialize(index, rails_root: nil, parent_pid: nil, verbose: false, logger: nil)
+  def initialize(
+    index,
+    rails_root: nil,
+    parent_pid: nil,
+    verbose: false,
+    logger: nil,
+    prepare_fork: true
+  )
     @index = index
+    @prepare_fork = prepare_fork
     @pid = nil
     @parent_pid = parent_pid || Process.pid
     @started = false
@@ -178,7 +192,7 @@ class Demon::Base
   end
 
   def run
-    Discourse.before_fork if defined?(Discourse)
+    Discourse.before_fork if @prepare_fork && defined?(Discourse)
 
     @pid =
       fork do
