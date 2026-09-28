@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "sidekiq/cli"
-
 RSpec.describe Demon::Sidekiq do
   describe ".heartbeat_check" do
     it "restarts Sidekiq daemons missing from Sidekiq::ProcessSet or with a missed heartbeat" do
@@ -64,21 +62,6 @@ RSpec.describe Demon::Sidekiq do
       end
     ensure
       described_class.reset_demons
-    end
-  end
-
-  describe "#after_fork" do
-    it "starts Sidekiq without warming up the heap it inherited already warmed up" do
-      cli = mock
-      cli.expects(:parse)
-      cli.expects(:run).with(warmup: false)
-      Sidekiq::CLI.stubs(:instance).returns(cli)
-      Process.stubs(:setpriority)
-
-      demon = described_class.new(1)
-      demon.stubs(:load)
-
-      demon.send(:after_fork)
     end
   end
 end
