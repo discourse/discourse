@@ -366,7 +366,6 @@ $show-interested: inherit;
       overflow-wrap: anywhere;
     }
 
-
     &.is-clamped .event-description__text {
       @include line-clamp(3);
     }
