@@ -35,7 +35,7 @@ module PageObjects
     include RSpec::Matchers
 
     def allow_clipboard
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.context.grant_permissions(["clipboard-read"], origin: pw_page.url)
         pw_page.context.grant_permissions(["clipboard-write"], origin: pw_page.url)
       end
@@ -99,7 +99,7 @@ module PageObjects
     end
 
     def with_network_disconnected
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         cdp_client = pw_page.context.new_cdp_session(pw_page)
 
         cdp_client.send_message(
@@ -127,7 +127,7 @@ module PageObjects
     end
 
     def with_slow_download
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         cdp_client = pw_page.context.new_cdp_session(pw_page)
 
         cdp_client.send_message(
@@ -155,7 +155,7 @@ module PageObjects
     end
 
     def with_slow_upload
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         cdp_client = pw_page.context.new_cdp_session(pw_page)
 
         cdp_client.send_message(
@@ -184,7 +184,7 @@ module PageObjects
 
     # Holds matching requests in-flight for the duration of the block.
     def with_pending_requests(pattern)
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.route(pattern, ->(_route, _request) {})
         yield
       ensure
@@ -196,7 +196,7 @@ module PageObjects
       paused_request = PausedRequest.new
       handler = paused_request.method(:intercept)
 
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.route(pattern, handler, times: 1)
         yield(paused_request)
       ensure

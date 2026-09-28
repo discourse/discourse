@@ -27,7 +27,7 @@ RSpec.describe "Stage a private theme" do
   end
 
   it "keeps installation unavailable when deploy key generation fails" do
-    page.driver.with_playwright_page do |playwright_page|
+    page.driver.with_browser_page do |playwright_page|
       pattern = %r{/admin/themes/generate_key_pair}
       playwright_page.route(
         pattern,

@@ -126,10 +126,10 @@ gem "goldiloader"
 group :test do
   gem "capybara", require: false
   gem "webmock", require: false
+  gem "websocket-driver", require: false
   gem "simplecov", require: false
   gem "test-prof", require: false
   gem "rails-dom-testing", require: false
-  gem "capybara-playwright-driver", require: false
   gem "puma", require: false
 end
 

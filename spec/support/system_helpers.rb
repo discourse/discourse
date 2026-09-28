@@ -12,40 +12,40 @@ module SystemHelpers
     msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
     msg += "Browser inspection URLs:\n"
 
-    response =
-      Net::HTTP.get(CHROME_REMOTE_DEBUGGING_ADDRESS, "/json/list", CHROME_REMOTE_DEBUGGING_PORT)
-
     socat_pid = nil
+    if page.driver.respond_to?(:debugging_port)
+      port = page.driver.debugging_port
+      response = Net::HTTP.get("127.0.0.1", "/json/list", port)
 
-    if exposed_port =
-         ENV["PLAYWRIGHT_FORWARD_DEVTOOLS_TO_PORT"].presence ||
-           ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
-      socat_pid =
-        fork do
-          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{CHROME_REMOTE_DEBUGGING_PORT}"
-        end
-    end
-
-    JSON
-      .parse(response)
-      .each do |result|
-        devtools_url = result["devtoolsFrontendUrl"]
-
-        devtools_url.gsub!(":#{CHROME_REMOTE_DEBUGGING_PORT}", ":#{exposed_port}") if exposed_port
-
-        if ENV["CODESPACE_NAME"]
-          devtools_url =
-            devtools_url
-              .gsub(
-                "localhost:#{exposed_port}",
-                "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
-              )
-              .gsub("http://", "https://")
-              .gsub("ws=", "wss=")
-        end
-
-        msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
+      if exposed_port =
+           ENV["PLAYWRIGHT_FORWARD_DEVTOOLS_TO_PORT"].presence ||
+             ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
+        socat_pid =
+          fork { exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{port}" }
       end
+
+      JSON
+        .parse(response)
+        .each do |result|
+          devtools_url = result["devtoolsFrontendUrl"]
+          devtools_url.gsub!(":#{port}", ":#{exposed_port}") if exposed_port
+
+          if ENV["CODESPACE_NAME"] && exposed_port
+            devtools_url =
+              devtools_url
+                .gsub(
+                  "localhost:#{exposed_port}",
+                  "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
+                )
+                .gsub("http://", "https://")
+                .gsub("ws=", "wss=")
+          end
+
+          msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
+        end
+    else
+      msg += " - Open about:debugging in Firefox.\n"
+    end
 
     result = ask("\n\e[33m#{msg}\e[0m")
     debugger if result == "d" # rubocop:disable Lint/Debugger
@@ -156,7 +156,7 @@ module SystemHelpers
 
   def using_browser_timezone(timezone, &example)
     using_session(timezone) do
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         cdp_session = pw_page.context.new_cdp_session(pw_page)
         cdp_session.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
         freeze_time(&example)
@@ -274,7 +274,7 @@ module SystemHelpers
 
   def with_logs
     playwright_logger = nil
-    page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
+    page.driver.with_browser_page { |pw_page| playwright_logger = BrowserLogger.new(pw_page) }
 
     yield(playwright_logger)
   end
@@ -326,7 +326,7 @@ module SystemHelpers
   end
 
   def with_virtual_authenticator(options = {})
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |pw_page|
       cdp_client = pw_page.context.new_cdp_session(pw_page)
       cdp_client.send_message("WebAuthn.enable")
 
@@ -364,7 +364,7 @@ module SystemHelpers
   end
 
   def add_cookie(options = {})
-    page.driver.with_playwright_page do |playwright_page|
+    page.driver.with_browser_page do |playwright_page|
       playwright_page.context.add_cookies(
         [{ domain: Discourse.current_hostname, path: "/" }.merge(options)],
       )
@@ -374,7 +374,7 @@ module SystemHelpers
   def expect_no_alert
     opened_dialog = false
 
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |pw_page|
       pw_page.on("dialog", ->(dialog) { opened_dialog = true })
 
       yield
@@ -397,14 +397,19 @@ module SystemHelpers
   # should be used only on very rare occasion when you need to wait for something
   # that is not visually changing on the page
   def wait_for_timeout(ms = 100)
-    page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(ms) }
+    page.driver.with_browser_page { |pw_page| pw_page.wait_for_timeout(ms) }
   end
 
   def wait_until_hidden(element)
-    element.with_playwright_element_handle do |playwright_element|
-      playwright_element.wait_for_element_state("hidden")
-    rescue Playwright::Error => e
-      raise if !detached_element_error?(e)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + Capybara.default_max_wait_time
+    loop do
+      return unless element.visible?
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+        raise Capybara::ElementNotFound, "Element remained visible"
+      end
+      sleep 0.01
+    rescue DiscourseSystemDriver::StaleElement, FirefoxBidiDriver::StaleElement
+      return
     end
   end
 
@@ -414,26 +419,27 @@ module SystemHelpers
     deadline = Time.current + timeout.seconds
     begin
       yield
-    rescue Playwright::Error => e
+    rescue DiscourseSystemDriver::BrowserError => e
       retry if detached_element_error?(e) && Time.current < deadline
       raise
     end
   end
 
   def detached_element_error?(error)
-    error.is_a?(Playwright::Error) && error.message.include?("Element is not attached to the DOM")
+    error.is_a?(DiscourseSystemDriver::BrowserError) &&
+      error.message.include?("Element is not attached to the DOM")
   end
 
   def locator(selector, locator = nil)
     if locator
       locator.locator(selector)
     else
-      page.driver.with_playwright_page { |pw_page| pw_page.locator(selector) }
+      page.driver.with_browser_page { |pw_page| pw_page.locator(selector) }
     end
   end
 
   def tap_screen_at(x, y)
-    page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
+    page.driver.with_browser_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
 
   # Drives a real native drag through Playwright's CDP drag interception.
@@ -456,7 +462,7 @@ module SystemHelpers
   # patched node methods, and driving Playwright directly bypasses it. Assert
   # through a retrying matcher, not a value read once.
   def drag_and_drop(source:, target:, source_position: nil, target_position: nil, steps: nil)
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |pw_page|
       options = {}
       options[:sourcePosition] = source_position if source_position
       options[:targetPosition] = target_position if target_position
@@ -480,7 +486,7 @@ module SystemHelpers
   # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
   # through a retrying matcher rather than a value read once.
   def drag_and_hold(from:, over:, to:, steps: 10)
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |pw_page|
       session = pw_page.context.new_cdp_session(pw_page)
       session.send_message("Input.setInterceptDrags", params: { "enabled" => true })
 
@@ -497,14 +503,14 @@ module SystemHelpers
     begin
       # Outside the driver block, so Capybara's own matchers work normally in it.
       yield if block_given?
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         drop_x, drop_y = viewport_centre_of(pw_page, to)
         pw_page.mouse.move(drop_x, drop_y, steps: steps)
       end
     ensure
       # Released even when an in-drag assertion fails, so the example does not
       # run its remaining hooks with the button still held.
-      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+      page.driver.with_browser_page { |pw_page| pw_page.mouse.up }
     end
   end
 
@@ -550,7 +556,7 @@ module SystemHelpers
   def drag_with_pointer(from:, to: nil, by: nil, steps: 10)
     raise ArgumentError, "pass exactly one of to: or by:" if to.nil? == by.nil?
 
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |pw_page|
       # Waited for rather than queried once: `query_selector` returns nil without
       # waiting, so a not-yet-rendered element would fail as a `NoMethodError` on
       # nil, naming neither the selector nor the timing.
@@ -583,7 +589,7 @@ module SystemHelpers
     ensure
       # Released even when an in-gesture assertion fails, so the example does not
       # run its remaining hooks with the button still held.
-      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+      page.driver.with_browser_page { |pw_page| pw_page.mouse.up }
     end
   end
 

@@ -6,7 +6,7 @@ describe "script encoding" do
   before { stub_and_log_cdn_requests }
 
   def stub_and_log_cdn_requests
-    page.driver.with_playwright_page do |page|
+    page.driver.with_browser_page do |page|
       page.route(
         "http://cdn.example.com/**/*",
         ->(route, request) do

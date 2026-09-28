@@ -19,7 +19,7 @@ module PageObjects
 
       def reload_with_pending_pagination
         # Capybara's refresh waits for AJAX to settle, but pagination is intentionally held open.
-        page.driver.with_playwright_page(&:reload)
+        page.driver.with_browser_page(&:reload)
         self
       end
 
@@ -273,7 +273,7 @@ module PageObjects
       def user_scroll_by(distance:)
         start_position = current_scroll_position
 
-        page.driver.with_playwright_page do |playwright_page|
+        page.driver.with_browser_page do |playwright_page|
           viewport = playwright_page.viewport_size
           playwright_page.mouse.move(viewport[:width] * 0.65, viewport[:height] * 0.5)
           playwright_page.mouse.wheel(0, distance)

@@ -71,7 +71,7 @@ module BrowserTime
   #
   # Playwright warns about this "stuck page" behaviour for pinned clocks too.
   def self.freeze(page, time)
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |pw_page|
       pw_page.clock.install(time:)
       pw_page.clock.resume
     end

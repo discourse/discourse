@@ -17,7 +17,7 @@ RSpec.describe "Cakeday/Birthday emojis" do
     fab!(:user_with_cakeday) { Fabricate(:user, created_at: CONTROL_DATE.prev_year) }
 
     it "correctly shows emojis in users' profiles" do
-      page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time: CONTROL_DATE) }
+      page.driver.with_browser_page { |pw_page| pw_page.clock.install(time: CONTROL_DATE) }
 
       user_page.visit(user_with_cakeday)
 

@@ -161,7 +161,7 @@ describe "Topic page" do
 
       paragraph = find("#test-last-cooked-paragraph")
 
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         paragraph.hover
 
         rect = paragraph.native.bounding_box

@@ -13,7 +13,7 @@ module PageObjects
         Capybara.save_path = Downloads::FOLDER.join("_unused")
 
         zip_path =
-          page.driver.with_playwright_page do |pw_page|
+          page.driver.with_browser_page do |pw_page|
             pw_page.expect_download { click_link ".zip" }.path
           end
 

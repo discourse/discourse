@@ -12,15 +12,13 @@ describe "JS Deprecation Handling" do
     JS
 
     warn_calls = nil
-    page.driver.with_playwright_page do |playwright_page|
-      warn_calls = playwright_page.evaluate <<~JS
+    page.driver.with_browser_page { |playwright_page| warn_calls = playwright_page.evaluate <<~JS }
         () => {
           const { deprecate } = require('@ember/debug');
           deprecate("Some message", false, { id: "fake.deprecation", for: "discourse", since: "3.4.0", until: "3.5.0" });
           return window.intercepted_warnings;
         }
       JS
-    end
 
     expect(warn_calls.size).to eq(1)
     call, backtrace = warn_calls[0]
@@ -72,7 +70,7 @@ describe "JS Deprecation Handling" do
 
     try_until_success do
       expect(
-        $playwright_logger.logs.any? do |log|
+        $browser_logger.logs.any? do |log|
           log[:message].include?("ember-this-fallback.this-property-fallback")
         end,
       ).to eq(true)

@@ -12,7 +12,7 @@ module VoiceFakeMedia
   def install_voice_fake_media(video_feeds: DEFAULT_VIDEO_FEEDS)
     feeds_json = JSON.generate(video_feeds)
 
-    page.driver.with_playwright_page do |playwright_page|
+    page.driver.with_browser_page do |playwright_page|
       playwright_page.add_init_script(script: <<~JS)
         (() => {
           if (window.__voiceFakeMediaInstalled) {

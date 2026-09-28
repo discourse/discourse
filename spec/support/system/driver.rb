@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-# Playwright/Chrome driver setup for system specs: the remote-debugging endpoint,
-# the Chrome launch args, and driver registration.
-CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
-CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
+# Browser driver registration and Chrome launch arguments for system specs.
 
 module SystemDrivers
   # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
@@ -32,9 +29,9 @@ module SystemDrivers
   # suffix for the `allow_network:` host set so each set gets its own browser
   # (host-resolver-rules are a launch arg and can't be changed per-test).
   def self.driver_for(example)
-    driver = [:playwright]
+    driver = [:discourse]
     driver << :mobile if example.metadata[:mobile]
-    driver << :chrome
+    driver << (ENV["DISCOURSE_SYSTEM_BROWSER"] == "firefox" ? :firefox : :chrome)
 
     hosts = allow_network_hosts(example)
     driver << "net#{Digest::SHA1.hexdigest(hosts.join(","))[0, 10]}" if hosts.any?
@@ -43,67 +40,17 @@ module SystemDrivers
   end
 
   def self.register!(example)
-    base_options = {
-      browser_type: :chromium,
-      channel: :chromium,
-      headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
-      acceptDownloads: true,
-      downloadsPath: Downloads::FOLDER,
-      slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
-      playwright_cli_executable_path: "./node_modules/.bin/playwright",
-      logger: Logger.new(IO::NULL),
-      # NOTE: timezoneId is NOT set here because the driver is cached and reused,
-      # so only the first test's timezone would be applied. Instead, we use CDP
-      # to override the timezone per-test in the system before(:each) hook.
-      colorScheme: example.metadata[:color_scheme],
-    }
-
-    if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
-      base_options[:browser] = :remote
-      base_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
-    end
-
-    register_chrome(
-      :playwright_mobile_chrome,
-      **base_options,
-      args: apply_base_chrome_args,
-      mobile: true,
-    )
-    register_chrome(:playwright_chrome, **base_options, args: apply_base_chrome_args, mobile: false)
-
-    # Specs that need a specific external host register their own browser, with
-    # those hosts excluded from the request block (see apply_base_chrome_args).
-    hosts = allow_network_hosts(example)
-    if hosts.any?
-      register_chrome(
-        driver_for(example),
-        **base_options,
-        args: apply_base_chrome_args(allow_network: hosts),
-        mobile: !!example.metadata[:mobile],
-      )
-    end
-
-    Capybara.default_driver = :playwright_chrome
-  end
-
-  def self.register_chrome(name, mobile:, **options)
-    mobile_options =
-      if mobile
-        {
-          deviceScaleFactor: 3,
-          isMobile: true,
-          hasTouch: true,
-          userAgent: MOBILE_USER_AGENT,
-          defaultBrowserType: "webkit",
-          viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
-        }
-      else
-        { viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 } }
-      end
-
+    name = driver_for(example)
+    mobile = !!example.metadata[:mobile]
     Capybara.register_driver(name) do |app|
-      Capybara::Playwright::Driver.new(app, **options, **mobile_options)
+      if ENV["DISCOURSE_SYSTEM_BROWSER"] == "firefox"
+        FirefoxBidiDriver.new(app, mobile: mobile, allow_network: allow_network_hosts(example))
+      else
+        args = apply_base_chrome_args(allow_network: allow_network_hosts(example))
+        DiscourseSystemDriver.new(app, args: args, mobile: mobile)
+      end
     end
+    Capybara.default_driver = name
   end
 
   def self.apply_base_chrome_args(args = [], allow_network: [])
@@ -118,11 +65,6 @@ module SystemDrivers
 
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
       base_args << "--auto-open-devtools-for-tabs"
-    end
-
-    if !ENV["CI"]
-      base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
-      base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
     end
 
     resolver_rules = ["MAP test.localhost:80 127.0.0.1:#{Capybara.server_port}"]
@@ -171,7 +113,7 @@ module SystemDrivers
 
     base_args + args
   end
-  private_class_method :apply_base_chrome_args, :register_chrome, :allow_network_hosts
+  private_class_method :apply_base_chrome_args, :allow_network_hosts
 end
 
 RSpec.configure do |config|

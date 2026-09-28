@@ -5,7 +5,7 @@ module PageObjects
     module DevTools
       class Toolbar < PageObjects::Components::Base
         def enable
-          page.driver.with_playwright_page { |pw| pw.evaluate("window.enableDevTools()") }
+          page.driver.with_browser_page { |pw| pw.evaluate("window.enableDevTools()") }
           has_toolbar? # Wait for toolbar to appear
           self
         end

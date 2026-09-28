@@ -35,7 +35,7 @@ describe "Standalone scripts" do
 
   context "with Google analytics scripts" do
     before do
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.route(
           /googletagmanager\.com|google-analytics\.com/,
           ->(route, _request) { route.fulfill(status: 204, body: "") },
@@ -87,7 +87,7 @@ describe "Standalone scripts" do
 
   describe "print-page.js" do
     it "triggers the browser print dialog on the topic print page" do
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.add_init_script(script: "window.print = () => { window.__printCalled = true; };")
       end
 
@@ -100,7 +100,7 @@ describe "Standalone scripts" do
   describe "pageview.js" do
     it "sends a beacon pageview tracking request on a non-ember page" do
       pageview_requests = []
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.on(
           "request",
           ->(request) { pageview_requests << request.url if request.url.end_with?("/srv/pv") },
@@ -116,7 +116,7 @@ describe "Standalone scripts" do
       original_track_requests = ENV.delete("TRACK_REQUESTS")
       Rails.env.stubs(:development?).returns(true)
       tracking_requests = []
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.on(
           "request",
           lambda { |request| tracking_requests << request.url if request.url.end_with?("/srv/pv") },
@@ -125,7 +125,7 @@ describe "Standalone scripts" do
 
       visit("/safe-mode")
 
-      page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(100) }
+      page.driver.with_browser_page { |pw_page| pw_page.wait_for_timeout(100) }
       expect(tracking_requests).to eq([])
     ensure
       ENV["TRACK_REQUESTS"] = original_track_requests if original_track_requests
@@ -139,7 +139,7 @@ describe "Standalone scripts" do
 
     it "renders a published page without script errors" do
       page_errors = []
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.on("pageerror", ->(error) { page_errors << error.message })
       end
 
@@ -155,7 +155,7 @@ describe "Standalone scripts" do
     before { SiteSetting.embed_any_origin = true }
 
     it "posts a resize message to the parent frame" do
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.add_init_script(
           script:
             "window.addEventListener('message', (event) => { window.__embedMessage = event.data; });",

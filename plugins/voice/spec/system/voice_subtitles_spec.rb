@@ -18,7 +18,7 @@ describe "Voice subtitles" do
   end
 
   def stub_webgpu
-    page.driver.with_playwright_page do |playwright_page|
+    page.driver.with_browser_page do |playwright_page|
       playwright_page.add_init_script(script: <<~JS)
         if (!navigator.gpu) {
           Object.defineProperty(navigator, "gpu", { configurable: true, value: {} });

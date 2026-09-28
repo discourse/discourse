@@ -203,7 +203,7 @@ module PageObjects
             section_selector =
               ".sidebar-section[data-section-name='#{name}'] .sidebar-section-header-wrapper"
 
-            page.driver.with_playwright_page { |pw_page| pw_page.locator(section_selector).hover }
+            page.driver.with_browser_page { |pw_page| pw_page.locator(section_selector).hover }
             expect(page).to have_css("button.sidebar-section-header-button", visible: true)
             find("#{section_selector} button.sidebar-section-header-button").click
           end

@@ -85,7 +85,8 @@ lazy_support_files.each { |constant, file| Object.autoload(constant, file) }
 Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
 if system_specs_requested
-  require "capybara-playwright-driver"
+  require Rails.root.join("spec/support/browser_driver/native-system-driver")
+  require Rails.root.join("spec/support/browser_driver/firefox_bidi_driver")
   system_support_files.each { |f| require f }
   Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
   Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
@@ -199,10 +200,7 @@ RSpec.configure do |config|
       s3_system_test_urls = [s3_endpoint.to_s, s3_bucket_endpoint.to_s]
     end
 
-    WebMock.disable_net_connect!(
-      allow_localhost: true,
-      allow: [*s3_system_test_urls, ENV["CAPYBARA_REMOTE_DRIVER_URL"]].compact,
-    )
+    WebMock.disable_net_connect!(allow_localhost: true, allow: s3_system_test_urls)
 
     # Registering this from inside before(:suite) makes it run at the end of the
     # before(:each) chain. It must run after the specs' `sign_in`, so the auth
@@ -239,11 +237,12 @@ RSpec.configure do |config|
     # they click things in the composer.
     SiteSetting.educate_until_posts = 0
 
+    $browser_logger = nil
     SystemArtifacts.record_video(example)
     SystemArtifacts.start_trace(page, example)
 
-    page.driver.with_playwright_page do |pw_page|
-      $playwright_logger = PlaywrightLogger.new(pw_page)
+    page.driver.with_browser_page do |pw_page|
+      $browser_logger = BrowserLogger.new(pw_page)
 
       if (tz = example.metadata[:timezone])
         BrowserTime.override_timezone(pw_page, tz)
@@ -279,6 +278,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system) do |example|
+    SystemArtifacts.stop_video(example)
     SystemArtifacts.stop_trace(page, example)
 
     lines = example.metadata[:extra_failure_lines]
@@ -290,15 +290,15 @@ RSpec.configure do |config|
 
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
-    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank? && $playwright_logger && example.exception
-      $playwright_logger.append_failure_logs(lines)
+    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank? && $browser_logger && example.exception
+      $browser_logger.append_failure_logs(lines)
     end
 
-    deprecation_error = EmberDeprecations.fatal_error($playwright_logger&.logs)
+    deprecation_error = EmberDeprecations.fatal_error($browser_logger&.logs)
     expect(deprecation_error).to be_nil, deprecation_error
 
-    EmberDeprecations.record_counts($playwright_logger&.logs, example.metadata)
-    EmberDeprecations.record_details($playwright_logger&.logs, example.metadata)
+    EmberDeprecations.record_counts($browser_logger&.logs, example.metadata)
+    EmberDeprecations.record_details($browser_logger&.logs, example.metadata)
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
 

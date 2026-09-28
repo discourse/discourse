@@ -53,7 +53,7 @@ describe "Voice LiveKit rooms", if: ENV["VOICE_LIVEKIT_TEST_URL"] do
   # to the SFU. Belt and braces on top of the transport-pin assertion below:
   # a stale client bundle once ran this whole flow green on mesh.
   def install_sfu_connection_probe
-    page.driver.with_playwright_page { |pw| pw.add_init_script(script: <<~JS) }
+    page.driver.with_browser_page { |pw| pw.add_init_script(script: <<~JS) }
         window.__voiceWsUrls = [];
         const NativeWebSocket = window.WebSocket;
         window.WebSocket = new Proxy(NativeWebSocket, {

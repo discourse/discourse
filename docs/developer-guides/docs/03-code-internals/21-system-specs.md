@@ -6,9 +6,9 @@ id: system-specs
 
 ## Background
 
-Rails system specs are used to simulate the actions of a real user using the app in a browser. We use the `Playwright ruby driver` which is becoming an industry standard. The tests run locally and in CI out of the box. Capybara is the test framework used on top of `rspec` to interact with the web browser, and it sends commands to `Playwright`.
+Rails system specs simulate user actions in a browser. Capybara sends commands through Discourse's Ruby driver, which uses Chrome DevTools Protocol for Chrome and WebDriver BiDi for Firefox. The tests run locally and in CI.
 
-We currently only support running system specs in Chrome, make sure you have Chrome installed before proceeding. Run `pnpm i` to ensure Playwright is correctly set up.
+Chrome is the default browser for the full system suite. Run `pnpm i` to install the browser assets. To run a focused spec in Firefox, install Firefox and use `DISCOURSE_SYSTEM_BROWSER=firefox bin/rspec path/to/spec.rb`.
 
 Since the Discourse app is an Ember Single Page Application, there are some unique constraints and challenges to writing system specs. It's important to keep in mind that you should always be observing for changes in the DOM in your tests, not manually waiting for things to happen or adding artificial sleep time. Also, the JavaScript build is separate from the Rails server, which means you must be running the frontend bundler when writing system specs.
 
@@ -28,13 +28,13 @@ There are various environment flags that can be used to change how the spec is r
 
 ### Rarely Used
 
-[details="These environment variables aren't often used but provide greater control over Playwright and Capybara"]
+[details="These environment variables aren't often used but provide greater control over the browser and Capybara"]
 
-- `CAPYBARA_REMOTE_DRIVER_URL` - Allows Capybara to control a remote Chrome browser instead of a local one.
 - `PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS` - By default JS logs are verbose, so errors from JS are shown when running system tests, you can disable this by setting it to `1`.
-- `CAPYBARA_SERVER_HOST` - The hostname of the server that Playwright Webdriver is running on.
-- `CAPYBARA_SERVER_PORT` - The port of the server that Playwright Webdriver is running on.
+- `CAPYBARA_SERVER_HOST` - The hostname of the test server that the browser connects to.
+- `CAPYBARA_SERVER_PORT` - The port of the test server that the browser connects to.
 - `CAPYBARA_DEFAULT_MAX_WAIT_TIME` - Overrides the default wait time when looking for DOM elements in Capybara.
+- `DISCOURSE_SYSTEM_CHROMIUM_PATH` and `DISCOURSE_SYSTEM_FIREFOX_PATH` - Override the local browser executable. The driver starts the browser locally; the former `CAPYBARA_REMOTE_DRIVER_URL` Playwright server setting is no longer supported.
   [/details]
 
 ## Writing system specs
@@ -495,7 +495,7 @@ JS
 
 Writing and debugging system specs can be tricky at times, especially when they become "flaky" and start failing in strange ways. These debugging tools help with writing the specs in the first place and figuring out what is wrong.
 
-- `:trace` allows to capture a trace in a zip file which you can load at https://trace.playwright.dev or locally through `pnpm dlx playwright show-trace /path/to/trace.zip`
+- `:trace` saves console messages, JavaScript errors, request URLs, and a final screenshot in a zip file under `tmp/capybara`.
 
 ```rb
 it "shows bar", trace: true do
@@ -503,7 +503,7 @@ it "shows bar", trace: true do
 end
 ```
 
-- `:video` allows to capture a video of your spec
+- `:video` captures a timed sequence of browser screenshots in a zip file under `tmp/capybara`.
 
 ```rb
 it "shows bar", video: true do
@@ -511,7 +511,7 @@ it "shows bar", video: true do
 end
 ```
 
-- `pause_test` - This helper can be used in your spec to pause execution using `binding.pry` so you can inspect the page and other local spec variables. You can resume execution when done. This can be used with `PWDEBUG=1` to start the playwright debugger, this is currently limited.
+- `pause_test` - Pause execution using `binding.pry` so you can inspect the page and other local spec variables. Chrome also prints its DevTools inspection URL.
 - `debugger` and `{{debugger}}` - If you are using `PLAYWRIGHT_HEADLESS=0` then any JavaScript debug breakpoints will be hit in the browser. The Ember `{{debugger}}` helper in templates works as well.
 - Screenshots - Every time a system spec fails Capybara will produce a screenshot, typically in the `$REPO/tmp/capybara` directory. You can also manually call `save_screenshot` inside your spec to do this.
 - `save_and_open_page` - Use this to dump the current HTML of the page and open it in your browser.

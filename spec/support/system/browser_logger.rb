@@ -2,7 +2,7 @@
 
 # Captures browser console messages and page errors during system specs
 # and dumps them into the failure output.
-class PlaywrightLogger
+class BrowserLogger
   attr_reader :logs
 
   def initialize(page)

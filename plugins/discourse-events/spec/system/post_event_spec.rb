@@ -95,7 +95,7 @@ describe "Post event" do
 
       time = Time.new(2025, 6, 15, 14, 30, 0, "+02:00")
       freeze_time(time)
-      page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
+      page.driver.with_browser_page { |pw_page| pw_page.clock.install(time:) }
 
       visit("/new-topic")
       find(".toolbar-menu__options-trigger").click
@@ -210,7 +210,7 @@ describe "Post event" do
 
   context "when showing local time", timezone: "Australia/Brisbane" do
     it "correctly shows month/day" do
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         pw_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
       end
 
@@ -430,7 +430,7 @@ describe "Post event" do
 
         # Freeze browser clock **after** sign_in (which may navigate/reset state)
         # so moment() uses the same time as the server.
-        page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
+        page.driver.with_browser_page { |pw_page| pw_page.clock.install(time:) }
 
         visit(post.topic.url)
 
@@ -645,7 +645,7 @@ describe "Post event" do
       visit(post.topic.url)
 
       ics_content = nil
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |pw_page|
         download = pw_page.expect_download { post_event_page.add_to_calendar }
         ics_content = download.path.then { |path| File.read(path) }
       end
