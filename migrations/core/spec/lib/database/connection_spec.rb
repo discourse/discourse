@@ -125,6 +125,19 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
+  describe "#query_splat" do
+    it "returns single-column results without row containers" do
+      create_connection do |connection|
+        connection.execute("CREATE TABLE foo (id INTEGER)")
+        connection.execute("INSERT INTO foo (id) VALUES (1), (2), (3)")
+
+        expect(
+          connection.query_splat("SELECT id FROM foo WHERE id > :minimum_id", minimum_id: 1),
+        ).to eq([2, 3])
+      end
+    end
+  end
+
   describe "#attach_database" do
     it "commits pending inserts and safely quotes the database name" do
       create_connection do |connection|

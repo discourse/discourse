@@ -28,15 +28,17 @@ module Migrations
 
           loop do
             topic_ids =
-              @intermediate_db
-                .query(<<~SQL, last_topic_id:, topic_batch_size: TOPIC_BATCH_SIZE)
+              @intermediate_db.query_splat(
+                <<~SQL,
                   SELECT DISTINCT existing_id
                   FROM topics
                   WHERE existing_id > :last_topic_id
                   ORDER BY existing_id
                   LIMIT :topic_batch_size
                 SQL
-                .map { |row| row[:existing_id] }
+                last_topic_id:,
+                topic_batch_size: TOPIC_BATCH_SIZE,
+              )
 
             break if topic_ids.empty?
             yield topic_ids
