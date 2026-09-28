@@ -875,5 +875,39 @@ The command profile therefore shows no stable Rust advantage in the warmed
 interaction path, while it does show a modest Rust advantage during initial
 target discovery. This is not enough by itself to estimate full-suite impact.
 
-The profiler marker now adds an `elapsed_ms` field so the next run can compare
-each example's total wall time directly.
+Run [36361712191](https://github.com/discourse/discourse/actions/runs/36361712191/job/108740028165)
+at head `c6c809d505b` passed both examples in each Ruby/Rust/Rust/Ruby
+invocation. The profiler reported the two example durations separately:
+
+| Invocation | Warm-up example | Measured example |
+| --- | ---: | ---: |
+| Ruby 1 | 9.150s | 1.408s |
+| Rust 1 | 6.501s | 1.333s |
+| Rust 2 | 6.496s | 1.304s |
+| Ruby 2 | 6.726s | 1.259s |
+
+The measured-flow means were 1.334s for Ruby and 1.318s for Rust, only 1.2%
+apart; Rust won the first pair by 76ms, while Ruby won the second by 45ms. In
+both measured pairs, Ruby spent less time in the 79 `Driver.find`, 275
+`Runtime.callFunctionOn`, and 2 `Driver.click` calls combined: 271ms versus
+319ms in pair one, and 252ms versus 316ms in pair two. The end-to-end example
+time therefore does not show a stable Rust advantage on this warmed flow.
+
+Rust did consistently reach the initial `Target.getTargets` response sooner:
+166ms versus 449ms in pair one and 172ms versus 382ms in pair two. Conversely,
+the first Ruby warm-up had a 3.434s user navigation versus 1.497s in Rust, but
+the later pair was effectively even at 1.483s versus 1.476s. The first
+`Storage.clearDataForOrigin` call took about 3.01–3.05s across all four runs;
+the backend did not change that cold cleanup cost. This separates a repeatable
+roughly 0.2–0.3s startup-query gap from a much larger first-invocation
+navigation outlier. The next run reverses the bridge order to test whether
+that outlier follows runner position. Core used about 51.66 CPU-seconds over
+54 elapsed seconds and peaked at 5,732.32 MiB across the whole job, not per
+bridge.
+
+The Core job and both generic checks passed: [Core](https://github.com/discourse/discourse/actions/runs/36361712191/job/108740028165), [check 1](https://github.com/discourse/discourse/actions/runs/36361712256/job/108740028315), and [check 2](https://github.com/discourse/discourse/actions/runs/36361712323/job/108740028172).
+
+The next run reverses the order to Rust/Ruby/Ruby/Rust while keeping the same
+two examples, per-example timing, and profiling. This checks whether the
+first-invocation navigation outlier follows runner position rather than the
+Ruby bridge.

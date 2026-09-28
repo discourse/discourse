@@ -375,7 +375,7 @@ jobs:
               fi
               printf 'CI_CDP_BRIDGE_TIME {"bridge":"%s","elapsed_seconds":%s}\n' "$bridge" "$((SECONDS - bridge_started_seconds))"
             }
-            for bridge in ruby rust rust ruby; do
+            for bridge in rust ruby ruby rust; do
               run_bridge_sample "$bridge"
             done
           else
