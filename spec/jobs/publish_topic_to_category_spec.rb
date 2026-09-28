@@ -75,10 +75,11 @@ RSpec.describe Jobs::PublishTopicToCategory do
     allowed_tag_group = Fabricate(:tag_group, tags: [allowed_tag])
     another_category.update!(tag_groups: [allowed_tag_group])
 
-    topic.update!(user: user, tags: [forbidden_tag], created_at: 1.hour.ago)
+    topic.update!(user: user, tags: [forbidden_tag], visible: false, created_at: 1.hour.ago)
     timer = topic.public_topic_timer
     timer.update!(user: user)
-    original_created_at = topic.reload.created_at
+    timestamp_attributes = %w[created_at bumped_at updated_at last_posted_at]
+    original_timestamps = topic.reload.attributes.slice(*timestamp_attributes)
     guardian = Guardian.new(user)
 
     expect(guardian.can_set_topic_timer?(topic)).to eq(true)
@@ -90,8 +91,8 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
     topic.reload
     expect(topic.category).to eq(category)
-    expect(topic).to be_visible
-    expect(topic.created_at).to eq_time(original_created_at)
+    expect(topic).not_to be_visible
+    expect(topic.attributes.slice(*timestamp_attributes)).to eq(original_timestamps)
     expect(topic.public_topic_timer).to eq(timer)
     expect(
       UserHistory.exists?(
