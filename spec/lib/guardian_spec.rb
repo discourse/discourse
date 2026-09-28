@@ -2945,6 +2945,27 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_edit_group?" do
+    it "accepts a preloaded group membership" do
+      group.add(member)
+      group.add_owner(owner)
+
+      expect(
+        Guardian.new(owner).can_edit_group?(
+          group,
+          group_user: group.group_users.find_by(user: owner),
+        ),
+      ).to eq(true)
+      expect(
+        Guardian.new(member).can_edit_group?(
+          group,
+          group_user: group.group_users.find_by(user: member),
+        ),
+      ).to eq(false)
+      expect(Guardian.new(another_user).can_edit_group?(group, group_user: nil)).to eq(false)
+    end
+  end
+
   describe "#can_see_group?" do
     it "Correctly handles owner visible groups" do
       group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])

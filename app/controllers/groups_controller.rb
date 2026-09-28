@@ -23,100 +23,41 @@ class GroupsController < ApplicationController
   skip_before_action :check_xhr, only: [:show]
   after_action :add_noindex_header
 
-  TYPE_FILTERS = {
-    my:
-      Proc.new do |groups, user|
-        raise Discourse::NotFound unless user
-        Group.member_of(groups, user)
-      end,
-    owner:
-      Proc.new do |groups, user|
-        raise Discourse::NotFound unless user
-        Group.owner_of(groups, user)
-      end,
-    public: Proc.new { |groups| groups.where(public_admission: true, automatic: false) },
-    close: Proc.new { |groups| groups.where(public_admission: false, automatic: false) },
-    automatic: Proc.new { |groups| groups.where(automatic: true) },
-    non_automatic: Proc.new { |groups| groups.where(automatic: false) },
-  }
+  TYPE_FILTERS = GroupDirectoryQuery::TYPE_FILTERS
   ADD_MEMBERS_LIMIT = 1000
 
   def index
-    unless SiteSetting.enable_group_directory? || current_user&.staff?
-      raise Discourse::InvalidAccess.new(:enable_group_directory)
-    end
-
-    requested_order = %w[name user_count].delete(params[:order])
-    dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
-    groups = Group.visible_groups(current_user)
-    type_filters = TYPE_FILTERS.keys
-
-    if (username = params[:username]).present?
-      raise Discourse::NotFound unless user = User.find_by_username(username)
-      groups = TYPE_FILTERS[:my].call(groups.members_visible_groups(current_user), user)
-      type_filters = type_filters - %i[my owner]
-    end
-
-    if (filter = params[:filter]).present?
-      groups = Group.search_groups(filter, groups: groups)
-    end
-
-    if !guardian.is_staff?
-      # hide automatic groups from all non stuff to de-clutter page
-      groups =
-        groups.where("groups.automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
-      type_filters.delete(:automatic)
-    end
-
-    if Group.preloaded_custom_field_names.present?
-      Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
-    end
-
-    if type = params[:type]&.to_sym
-      raise Discourse::InvalidParameters.new(:type) unless callback = TYPE_FILTERS[type]
-      groups = callback.call(groups, current_user)
-    end
-
-    if current_user
-      group_users = GroupUser.where(group: groups, user: current_user)
-      user_group_ids = group_users.pluck(:group_id)
-      owner_group_ids = group_users.where(owner: true).pluck(:group_id)
-    else
-      type_filters = type_filters - %i[my owner]
-    end
-
-    groups = DiscoursePluginRegistry.apply_modifier(:groups_index_query, groups, self)
-
-    type_filters.delete(:non_automatic)
-
-    order = group_directory_order(groups, requested_order)
-    groups = apply_group_directory_order(groups, order, dir)
-
-    # count the total before doing pagination
-    total = groups.count
-
     page = fetch_int_from_params(:page, default: 0)
     page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
-    groups = groups.offset(page * page_size).limit(page_size)
+    filter = params[:filter]
+    type = params[:type]
+    result =
+      GroupDirectoryQuery.new(user: current_user, guardian:, modifier_context: self).call(
+        username: params[:username],
+        filter:,
+        type:,
+        order: params[:order],
+        ascending: params[:asc].to_s == "true",
+        page:,
+        limit: page_size,
+      )
+    user_group_ids = result.memberships.keys
+    owner_group_ids =
+      result.memberships.filter_map { |group_id, membership| group_id if membership.owner? }
 
     render_json_dump(
       groups:
-        serialize_data(
-          groups,
-          BasicGroupSerializer,
-          user_group_ids: user_group_ids || [],
-          owner_group_ids: owner_group_ids || [],
-        ),
+        serialize_data(result.groups, BasicGroupSerializer, user_group_ids:, owner_group_ids:),
       extras: {
-        type_filters: type_filters,
+        type_filters: result.type_filters,
       },
-      total_rows_groups: total,
+      total_rows_groups: result.total,
       load_more_groups:
         groups_path(
           page: page + 1,
           type: type,
-          order: order,
-          asc: order ? params[:asc] : nil,
+          order: result.order,
+          asc: result.order ? params[:asc] : nil,
           filter: filter,
         ),
     )
@@ -793,28 +734,6 @@ class GroupsController < ApplicationController
   end
 
   private
-
-  def group_directory_order(groups, requested_order)
-    return requested_order if requested_order != "user_count"
-
-    member_visible_group_ids =
-      Group.members_visible_groups(current_user).unscope(:order).select(:id)
-
-    requested_order if !groups.unscope(:order).where.not(id: member_visible_group_ids).exists?
-  end
-
-  def apply_group_directory_order(groups, order, dir)
-    return groups if order.blank?
-
-    sort =
-      if order == "user_count"
-        "groups.user_count #{dir}, groups.name ASC"
-      else
-        "groups.name #{dir}"
-      end
-
-    groups.reorder(sort)
-  end
 
   def add_users_to_group(group, users, notify = false)
     user_ids = users.map(&:id)
