@@ -1230,3 +1230,48 @@ dispatch with Ruby queues and mutexes versus Rust `serde_json` and Rust
 channels. Thus this comparison holds Capybara and the browser protocol
 constant; it tests whether that bridge implementation language changes CI
 performance.
+
+## Two-flow command profile on CI
+
+Run [36375487214](https://github.com/discourse/discourse/actions/runs/36375487214)
+at head `fffa2148149` passed both bridges on two composer flows. The [Core job](https://github.com/discourse/discourse/actions/runs/36375487214/job/108780344523)
+finished in 1m47s. Each backend completed four executions of the two selected
+examples (the regular and multisite variants) with 0 failures. Ruby ran first;
+Rust ran second. The instrumentation adds command timers and bridge readiness
+logs, so these are diagnostic timings rather than uninstrumented benchmarks.
+
+| Measurement | Ruby first | Rust second |
+| --- | ---: | ---: |
+| Suite marker elapsed | 20.303s | 17.436s |
+| Cgroup CPU | 36.332s | 29.951s |
+| Sampled peak cgroup memory | 4,691.5 MiB | 4,489.4 MiB |
+| Bridge ready, mean | 217.381ms | 14.229ms |
+| Warmup example, mean | 10.096s | 8.337s |
+| Measured topic flow, mean | 2.009s | 2.038s |
+
+Rust's bridge process became ready about 203ms sooner. Cold `Target.getTargets`
+round trips took 158–193ms under Ruby and 170–171ms under Rust; after startup,
+both were below 1ms. In the measured `creates a topic with tags` flow, action
+counts were the same for clicks (6), fills (3), and runtime evaluations (6).
+The total flow timings differed by only 29ms, with Ruby slightly faster.
+`Driver.find` was called 52 times under Ruby and 49–50 under Rust in the
+multisite examples, a small variation in asynchronous polling.
+
+The large warmup gap is localized to page navigation: the two `Page.navigate`
+calls took 3.51–3.72s under Ruby and 1.77–1.79s under Rust. `Storage.clearDataForOrigin`
+reset time was approximately 3.0s in both. Because Ruby ran first and Rust
+second, the navigation gap is confounded by first-run cache warming. Across
+the full and focused pairs so far, the second invocation was 2.9–3.7s faster
+regardless of language, though the workloads differ. The next sample reverses
+bridge order to check whether this warmup advantage follows position.
+
+Sampled peak cgroup memory was about 4,691.5 MiB for Ruby and 4,489.4 MiB for
+Rust. The sampler includes the worker, browser, and cache; it does not isolate
+the bridge process. Ruby's cgroup peak was also higher in the full-suite pair,
+so memory is a directional trade-off to measure again, not a confirmed
+per-process cost.
+
+The profiler records Capybara driver's outer command timings, not every CDP
+message emitted internally by `Driver.*` handlers. It therefore shows that
+the tested user flow behaves similarly after warmup, but it does not prove the
+two bridges issue identical low-level CDP traffic.

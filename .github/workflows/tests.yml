@@ -435,16 +435,16 @@ jobs:
               : > "$runtime_info_snapshot"
             fi
 
-            if run_system_test_profile ruby 1; then
-              ruby_exit_status=0
-            else
-              ruby_exit_status=$?
-            fi
-            cp "$runtime_info_snapshot" tmp/turbo_rspec_runtime.log
-            if run_system_test_profile rust 2; then
+            if run_system_test_profile rust 1; then
               rust_exit_status=0
             else
               rust_exit_status=$?
+            fi
+            cp "$runtime_info_snapshot" tmp/turbo_rspec_runtime.log
+            if run_system_test_profile ruby 2; then
+              ruby_exit_status=0
+            else
+              ruby_exit_status=$?
             fi
             rm -f "$runtime_info_snapshot"
             if (( ruby_exit_status != 0 || rust_exit_status != 0 )); then
