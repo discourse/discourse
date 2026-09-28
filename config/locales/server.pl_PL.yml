@@ -14,9 +14,16 @@ pl_PL:
     next_page: "Następna strona"
     empty: "Brak wpisów do wyświetlenia."
     replies: "Odpowiedzi"
-    post_author: "Autor: %{author}"
-    post_date: "Data publikacji: %{timestamp}"
+    post_author: "**Autor:** %{author}"
+    post_date: "**Data wpisu:** %{timestamp}"
     last_updated: "Ostatnio zaktualizowane"
+    event:
+      name: "Wydarzenie"
+      start: "Początek"
+      end: "Koniec"
+      location: "Lokalizacja"
+      link: "Odnośnik"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_sequence_conflict: "Konflikt sekwencji roboczej"

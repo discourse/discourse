@@ -12,6 +12,10 @@ zh_TW:
     previous_page: "上一頁"
     next_page: "下一頁"
     replies: "回覆"
+    event:
+      location: "地點"
+      link: "連結"
+      date_with_timezone: "%{date}（%{timezone}）"
   mcp:
     errors:
       topic_not_found: "未找到話題"

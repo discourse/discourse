@@ -13,6 +13,9 @@ da:
     next_page: "Næste side"
     replies: "Svar"
     last_updated: "Sidst opdateret"
+    event:
+      location: "Sted"
+      link: "Link"
   mcp:
     errors:
       topic_not_found: "Emne ikke fundet"

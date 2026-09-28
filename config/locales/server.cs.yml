@@ -13,6 +13,10 @@ cs:
     next_page: "Další strana"
     replies: "Odpovědi"
     last_updated: "Poslední aktualizace"
+    event:
+      name: "Událost"
+      location: "Poloha"
+      link: "Odkaz"
   mcp:
     errors:
       draft_too_long: "Koncept je příliš dlouhý"

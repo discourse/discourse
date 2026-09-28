@@ -13,6 +13,10 @@ hu:
     next_page: "Következő oldal"
     replies: "Válaszok"
     last_updated: "Legutóbb frissítve"
+    event:
+      name: "Esemény"
+      location: "Hely"
+      link: "Hivatkozás"
   mcp:
     errors:
       draft_too_long: "A vázlat túl hosszú"

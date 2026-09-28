@@ -13,6 +13,11 @@ uk:
     next_page: "Наступна сторінка"
     replies: "Відповіді"
     last_updated: "Останнє оновлення"
+    event:
+      name: "Подія"
+      location: "Місцеположення"
+      link: "Посилання"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_too_long: "Чернетка занадто довга"

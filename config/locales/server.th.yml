@@ -12,6 +12,9 @@ th:
     previous_page: "หน้าก่อนหน้า"
     next_page: "หน้าถัดไป"
     replies: "ตอบ"
+    event:
+      location: "ที่อยู่"
+      link: "ลิงก์"
   mcp:
     errors:
       topic_not_found: "ไม่พบกระทู้"

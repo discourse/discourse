@@ -13,6 +13,10 @@ el:
     next_page: "Επόμενη σελίδα"
     replies: "Απαντήσεις"
     last_updated: "Τελευταία ενημέρωση"
+    event:
+      name: "Εκδήλωση"
+      location: "Τοποθεσία"
+      link: "Σύνδεσμος"
   mcp:
     errors:
       draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο"
