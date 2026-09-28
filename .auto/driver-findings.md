@@ -1131,3 +1131,36 @@ so this run cannot estimate a stable Playwright-versus-CDP delta. The Core job
 passed in 2m41s. Trustworthy whole-job CPU and peak-memory values were not
 available in the safe log fields. This is a focused sample of two unique
 composer examples repeated across backends, not a full-suite equivalence test.
+
+## Default browser context failure
+
+The full Ruby run at head `0800019b3a4` reached the Core system suite but ended
+with 84 failures and 2 pending examples in 6m56s. The Rust run did not start
+because the workflow stopped after Ruby failed. Many failures involved
+clipboard permission grants or cookie setup using a browser-context ID.
+
+The first paired one-example CI attempt at head `d65bca66c40` was not a valid
+driver comparison. `bin/turbo_rspec --use-runtime-info` rejected a `file:line`
+target before RSpec started (`File.stat` in `parallel_tests/test/runner.rb`);
+neither bridge executed the example. The Core job is
+[run 36371849663](https://github.com/discourse/discourse/actions/runs/36371849663/job/108769682209).
+The workflow now passes a plain spec file and sets the example-name filter in
+`SPEC_OPTS`, which RSpec reads. The sample limits execution to one parallel
+worker.
+
+In the task DV, the post-menu clipboard example reproduced under Ruby. A
+temporary diagnostic confirmed that `Target.getTargetInfo` returned an ID equal
+to `Target.getBrowserContexts.defaultBrowserContextId`; the latter returned no
+created contexts. The CDP definition distinguishes the default context from
+contexts created by `Target.createBrowserContext`
+([Target.pdl](https://github.com/ChromeDevTools/devtools-protocol/blob/master/pdl/domains/Target.pdl#L1127-L1138)).
+`NativeSystemDriver#initialize_page` had retained the default ID and passed it
+to `Browser.grantPermissions` and `Storage.setCookies`; Chromium rejects that
+ID. The driver now keeps only context IDs it created and omits the optional ID
+for the default context. The post-menu clipboard example passed once, and the
+desktop/mobile social-auth cookie example passed twice under Ruby in the DV.
+
+This is shared native-driver context handling, not evidence of a Ruby bridge
+performance or compatibility difference. The fix still needs the paired CI
+sample and full Core suite under both bridges before a performance result is
+valid.

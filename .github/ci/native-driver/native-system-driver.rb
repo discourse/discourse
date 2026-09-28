@@ -628,7 +628,6 @@ class NativeSystemDriver < Capybara::Driver::Base
     return @pages_by_target[handle] if @pages_by_target.key?(handle)
     raise NoSuchWindowError if window_handles.exclude?(handle)
     info = command("Driver.attachPage", { targetId: handle }, browser: true)
-    info["browserContextId"] = nil if @owned_contexts.exclude?(info["browserContextId"])
     initialize_page(info)
     @page
   ensure
@@ -1188,6 +1187,8 @@ class NativeSystemDriver < Capybara::Driver::Base
   end
 
   def initialize_page(info)
+    context_id = info["browserContextId"]
+    context_id = nil if @owned_contexts.exclude?(context_id)
     viewport =
       (
         if @mobile
@@ -1200,7 +1201,7 @@ class NativeSystemDriver < Capybara::Driver::Base
       NativeBrowserPage.new(
         target: info.fetch("targetId"),
         session: info.fetch("sessionId"),
-        context_id: info["browserContextId"],
+        context_id: context_id,
         viewport: viewport,
       )
     @pages_by_target[@page.target] = @page

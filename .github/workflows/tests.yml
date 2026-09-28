@@ -364,6 +364,7 @@ jobs:
             run_system_test_sample() {
               local bridge=$1
               local ruby_bridge=0
+              local sample_spec_options="${SPEC_OPTS:-} --example 'copies the absolute link to the post when clicked'"
               if [[ "$bridge" == "ruby" ]]; then
                 ruby_bridge=1
               fi
@@ -372,7 +373,13 @@ jobs:
               bridge_started_ns=$(date +%s%N)
               bridge_cpu_started=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
               local bridge_exit_status
-              if NATIVE_CDP_RUBY_BRIDGE="$ruby_bridge" LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --seed 44219 --format documentation spec/system/post_menu_spec.rb:193; then
+              if SPEC_OPTS="$sample_spec_options" \
+                PARALLEL_TEST_PROCESSORS=1 \
+                NATIVE_CDP_RUBY_BRIDGE="$ruby_bridge" \
+                LD_PRELOAD="$RUBY_ALLOCATOR" \
+                RAILS_ENABLE_TEST_LOG=1 \
+                RAILS_TEST_LOG_LEVEL=error \
+                bin/turbo_rspec --use-runtime-info --seed 44219 --format documentation spec/system/post_menu_spec.rb; then
                 bridge_exit_status=0
               else
                 bridge_exit_status=$?
