@@ -195,6 +195,7 @@ task "multisite:migrate" => %w[
         database_shards = databases.each_slice(database_shard_size).to_a
 
         Discourse.before_fork
+        Process.warmup
 
         pids =
           database_shards.map do |database_shard|
