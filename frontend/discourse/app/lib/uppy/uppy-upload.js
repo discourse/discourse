@@ -351,10 +351,6 @@ export default class UppyUpload {
     }
 
     this.uppyWrapper.uppyInstance.on("cancel-all", () => {
-      this.appEvents.trigger(
-        `upload-mixin:${this.config.id}:uploads-cancelled`
-      );
-
       if (this.inProgressUploads.length) {
         this.inProgressUploads.length = 0; // Clear array in-place
         this.#triggerInProgressUploadsEvent();
@@ -414,7 +410,12 @@ export default class UppyUpload {
 
   @bind
   cancelAllUploads() {
-    this.uppyWrapper.uppyInstance?.cancelAll();
+    if (this.uppyWrapper.uppyInstance) {
+      this.uppyWrapper.uppyInstance.cancelAll();
+      this.appEvents.trigger(
+        `upload-mixin:${this.config.id}:uploads-cancelled`
+      );
+    }
     this.inProgressUploads.length = 0;
     this.#triggerInProgressUploadsEvent();
     this.#finishBatch();

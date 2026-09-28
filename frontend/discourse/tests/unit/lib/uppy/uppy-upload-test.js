@@ -120,6 +120,11 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       .on("upload-mixin:uppy-upload-success-test:upload-cancelled", (fileId) =>
         cancelled.push(fileId)
       );
+    getOwner(this)
+      .lookup("service:app-events")
+      .on("upload-mixin:uppy-upload-success-test:uploads-cancelled", () =>
+        cancelled.push("uploads-cancelled")
+      );
 
     await upload.addFiles([createFile(SIBLING_FILE)]);
 
@@ -133,6 +138,30 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       [],
       "the finished upload is not reported as cancelled"
     );
+
+    upload.teardown();
+  });
+
+  test("explicit cancel all is reported as cancelled", async function (assert) {
+    const cancellations = [];
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-cancel-all-test",
+      type: "composer",
+      autoStartUploads: false,
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    getOwner(this)
+      .lookup("service:app-events")
+      .on("upload-mixin:uppy-upload-cancel-all-test:uploads-cancelled", () =>
+        cancellations.push("uploads-cancelled")
+      );
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+    upload.cancelAllUploads();
+
+    assert.deepEqual(cancellations, ["uploads-cancelled"]);
 
     upload.teardown();
   });
