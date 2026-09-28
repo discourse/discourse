@@ -1160,10 +1160,8 @@ ID. The driver now keeps only context IDs it created and omits the optional ID
 for the default context. The post-menu clipboard example passed once, and the
 desktop/mobile social-auth cookie example passed twice under Ruby in the DV.
 
-This is shared native-driver context handling, not evidence of a Ruby bridge
-performance or compatibility difference. The corrected focused CI sample is
-recorded below; a full Core suite under both bridges is still needed before a
-suite-level performance conclusion.
+The context fix is shared by the Ruby and Rust bridge paths. The corrected
+focused and full-suite CI comparisons are recorded below.
 
 ## Corrected focused CI comparison
 
@@ -1184,4 +1182,51 @@ Rust was 20.2% faster in wall time and used 23.1% less cgroup CPU for this
 single filtered invocation. These figures include a fresh `turbo_rspec`
 process and browser setup for each bridge. They establish a real focused-run
 difference, but do not isolate browser-command overhead or predict the full
-suite delta. A matched full Core run is the next measurement.
+suite delta. The matched full Core result is recorded below.
+
+## Matched full Core suite on CI
+
+Run [36373688510](https://github.com/discourse/discourse/actions/runs/36373688510)
+at head `a15a7ce0e8b` passed the full Core system suite under both bridges.
+The [Core System Tests job](https://github.com/discourse/discourse/actions/runs/36373688510/job/108775066417)
+completed in 15m50s. Each invocation reported 2,321 examples and 0 failures;
+the Rust bridge ran first and the Ruby bridge second. Both used seed `44219`,
+the same runtime-history snapshot, and the normal Core worker count.
+
+| Bridge | Order | Elapsed | Cgroup CPU | Sampled peak cgroup memory |
+| --- | ---: | ---: | ---: | ---: |
+| Rust | First | 7m22.950s | 4,803.3s | 17,432.81 MiB |
+| Ruby | Second | 7m19.261s | 4,604.0s | 18,737.28 MiB |
+
+In this run Ruby was 0.8% faster by wall time and used 4.1% less cgroup CPU,
+while its sampled peak cgroup memory was 7.5% higher. The wall-time gap is
+small enough to be within ordinary CI variation, and Ruby ran second after
+the first full suite had warmed the runner. The memory sampler read
+`memory.current` every 250ms; it measures all processes and cache charged to
+the job cgroup, not the driver process alone. The second run may inherit page
+cache from the first, so the memory difference does not establish a
+Ruby-driver memory penalty.
+
+Together with the earlier two-example profiles, this supports the conclusion
+that the Ruby CDP bridge can match the Rust CDP bridge on the full Chrome CI
+suite. It does not establish that Ruby is faster, or isolate which bridge
+implementation detail accounts for the small observed differences. The
+focused post-menu sample had Rust second and showed Rust 20.2% faster, but it
+was a different, single-example workload. Combined with the 1.97s run-position
+spread in the earlier two-example Playwright profile, this cautions against
+inferring a bridge-language advantage from short samples. The next comparison
+profiles two composer flows under both bridges, including driver-command
+timings and bridge startup diagnostics.
+
+## What the Rust and Ruby paths share
+
+Both backends use the same Ruby `NativeSystemDriver` Capybara adapter. It
+starts either the [Ruby bridge](../.github/ci/native-driver/ruby/bridge.rb)
+or the [Rust bridge](../.github/ci/native-driver/rust/src/main.rs), and both
+launch Chrome with `--remote-debugging-pipe`. The bridge handles the same
+high-level `Driver.*` requests and forwards other CDP methods. The main
+implementation difference is the bridge process: Ruby JSON parsing and
+dispatch with Ruby queues and mutexes versus Rust `serde_json` and Rust
+channels. Thus this comparison holds Capybara and the browser protocol
+constant; it tests whether that bridge implementation language changes CI
+performance.

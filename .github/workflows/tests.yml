@@ -361,10 +361,13 @@ jobs:
           system_test_started_seconds=$SECONDS
           trap report_system_test_cpu EXIT
           if [[ "$DISCOURSE_CI_SYSTEM_DRIVER" == "native-cdp" ]]; then
-            run_system_test_suite() {
+            run_system_test_profile() {
               local bridge=$1
+              local run_index=$2
               local ruby_bridge=0
-              local system_test_paths=(spec/system)
+              local profile_spec_paths=(spec/system/composer_spec.rb)
+              local profile_spec_options="${SPEC_OPTS:-} --require ./.github/ci/native-driver/native-command-profiler.rb"
+              profile_spec_options+=" --example 'displays user cards in preview' --example 'creates a topic with tags'"
               if [[ "$bridge" == "ruby" ]]; then
                 ruby_bridge=1
               fi
@@ -391,10 +394,14 @@ jobs:
               local bridge_exit_status
               if \
                 NATIVE_CDP_RUBY_BRIDGE="$ruby_bridge" \
+                NATIVE_CDP_COMMAND_PROFILE=1 \
+                NATIVE_CDP_BRIDGE_LABEL="$bridge" \
                 LD_PRELOAD="$RUBY_ALLOCATOR" \
                 RAILS_ENABLE_TEST_LOG=1 \
                 RAILS_TEST_LOG_LEVEL=error \
-                bin/turbo_rspec --use-runtime-info --seed 44219 --format documentation "${system_test_paths[@]}"; then
+                SPEC_OPTS="$profile_spec_options" \
+                PARALLEL_TEST_PROCESSORS=1 \
+                bin/turbo_rspec --use-runtime-info --seed 44219 --format documentation "${profile_spec_paths[@]}"; then
                 bridge_exit_status=0
               else
                 bridge_exit_status=$?
@@ -414,13 +421,13 @@ jobs:
               if [[ -f "$memory_sampler_result" ]]; then
                 bridge_peak_memory_bytes=$(cat "$memory_sampler_result")
               fi
-              printf 'CI_SYSTEM_DRIVER_SUITE {"bridge":"%s","elapsed_ms":%s,"cpu_usec":%s,"peak_memory_bytes":%s,"exit_status":%s}\n' \
-                "$bridge" "$bridge_elapsed_ms" "$bridge_cpu_usec" "$bridge_peak_memory_bytes" "$bridge_exit_status"
+              printf 'CI_SYSTEM_DRIVER_SUITE {"bridge":"%s","run_index":%s,"elapsed_ms":%s,"cpu_usec":%s,"peak_memory_bytes":%s,"exit_status":%s}\n' \
+                "$bridge" "$run_index" "$bridge_elapsed_ms" "$bridge_cpu_usec" "$bridge_peak_memory_bytes" "$bridge_exit_status"
               rm -f "$memory_sampler_result"
               return "$bridge_exit_status"
             }
 
-            # Keep dynamic worker scheduling identical for both backend runs.
+            # Keep turbo-rspec runtime history identical for both backend runs.
             runtime_info_snapshot="$RUNNER_TEMP/turbo_rspec_runtime.baseline"
             if [[ -f tmp/turbo_rspec_runtime.log ]]; then
               cp tmp/turbo_rspec_runtime.log "$runtime_info_snapshot"
@@ -428,16 +435,16 @@ jobs:
               : > "$runtime_info_snapshot"
             fi
 
-            if run_system_test_suite rust; then
-              rust_exit_status=0
-            else
-              rust_exit_status=$?
-            fi
-            cp "$runtime_info_snapshot" tmp/turbo_rspec_runtime.log
-            if run_system_test_suite ruby; then
+            if run_system_test_profile ruby 1; then
               ruby_exit_status=0
             else
               ruby_exit_status=$?
+            fi
+            cp "$runtime_info_snapshot" tmp/turbo_rspec_runtime.log
+            if run_system_test_profile rust 2; then
+              rust_exit_status=0
+            else
+              rust_exit_status=$?
             fi
             rm -f "$runtime_info_snapshot"
             if (( ruby_exit_status != 0 || rust_exit_status != 0 )); then
