@@ -443,6 +443,39 @@ describe "MCP group tools" do
     expect(structured_content["posts"].pluck("id")).not_to include(private_message.id)
   end
 
+  it "paginates group posts when IDs and creation times have different orders" do
+    group =
+      Fabricate(
+        :group,
+        visibility_level: Group.visibility_levels[:public],
+        members_visibility_level: Group.visibility_levels[:public],
+      )
+    author = Fabricate(:user)
+    group.add(author)
+    newest_post = Fabricate(:post, user: author, created_at: 1.day.ago)
+    shared_created_at = 2.days.ago
+    lower_id_post = Fabricate(:post, user: author, created_at: shared_created_at)
+    higher_id_post = Fabricate(:post, user: author, created_at: shared_created_at)
+    authorize("mcp:groups:read")
+
+    call_tool("discourse_list_group_posts", { name: group.name, limit: 1 })
+
+    expect(structured_content["posts"].pluck("id")).to eq([newest_post.id])
+    expect(structured_content.dig("meta", "has_more")).to eq(true)
+    cursor = structured_content.dig("meta", "next_before_post_id")
+
+    call_tool("discourse_list_group_posts", { name: group.name, limit: 1, before_post_id: cursor })
+
+    expect(structured_content["posts"].pluck("id")).to eq([higher_id_post.id])
+    expect(structured_content.dig("meta", "has_more")).to eq(true)
+
+    cursor = structured_content.dig("meta", "next_before_post_id")
+    call_tool("discourse_list_group_posts", { name: group.name, limit: 1, before_post_id: cursor })
+
+    expect(structured_content["posts"].pluck("id")).to eq([lower_id_post.id])
+    expect(structured_content.dig("meta", "has_more")).to eq(false)
+  end
+
   it "rejects multiple group post cursors" do
     group =
       Fabricate(
