@@ -4,9 +4,15 @@ require_relative "native-lifecycle-waits"
 
 module NativeSystemDriverCommandProfiler
   PROFILE_THREAD_KEY = :native_system_driver_command_profile
-  PROFILED_ABOUT_PAGE_EXAMPLES = {
-    "displays only the 6 most recently seen admins when there are more than 6 admins" => "warmup",
-    "allows expanding and collapsing the list of admins" => "measure",
+  PROFILED_EXAMPLES = {
+    "about_page_spec.rb" => {
+      "displays only the 6 most recently seen admins when there are more than 6 admins" => "warmup",
+      "allows expanding and collapsing the list of admins" => "measure",
+    },
+    "composer_spec.rb" => {
+      "displays user cards in preview" => "warmup",
+      "creates a topic with tags" => "measure",
+    },
   }.freeze
 
   def command(method, params = {}, browser: false, session: nil)
@@ -57,13 +63,14 @@ NativeSystemDriver.prepend(NativeSystemDriverCommandProfiler)
 
 RSpec.configure do |config|
   config.around(:example) do |example|
-    profiled_example =
-      if ENV["NATIVE_CDP_COMMAND_PROFILE"] == "1" &&
-           example.metadata[:file_path].to_s.end_with?("spec/system/about_page_spec.rb")
-        NativeSystemDriverCommandProfiler::PROFILED_ABOUT_PAGE_EXAMPLES[
-          example.metadata[:description]
-        ]
+    profiled_examples =
+      if ENV["NATIVE_CDP_COMMAND_PROFILE"] == "1"
+        file_path = example.metadata[:file_path].to_s
+        NativeSystemDriverCommandProfiler::PROFILED_EXAMPLES
+          .find { |file_name, _| file_path.end_with?("spec/system/#{file_name}") }
+          &.last
       end
+    profiled_example = profiled_examples&.fetch(example.metadata[:description], nil)
 
     unless profiled_example
       example.run

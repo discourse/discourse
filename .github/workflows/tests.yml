@@ -362,8 +362,8 @@ jobs:
           trap report_system_test_cpu EXIT
           if [[ "$DISCOURSE_CI_SYSTEM_DRIVER" == "native-cdp" ]]; then
             sample_specs=(
-              spec/system/about_page_spec.rb:200
-              spec/system/about_page_spec.rb:215
+              spec/system/composer_spec.rb:9
+              spec/system/composer_spec.rb:106
             )
             run_bridge_sample() {
               local bridge=$1

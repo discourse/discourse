@@ -959,11 +959,48 @@ end to end for either backend.
 The measured browser round trip and response publication account for only a
 few milliseconds of the roughly 190–200ms Rust advantage during startup. The
 delay is before the forwarded command reaches the bridge's CDP submit path or
-after its response has been written to the parent. Child bridge readiness is
-the leading hypothesis, especially the Ruby interpreter's startup cost; the
-next run records launch-to-ready time directly. The Core job used 51.34
+after its response has been written to the parent. The next run records
+launch-to-ready time to test whether bridge startup explains that delay. The
+Core job used 51.34
 CPU-seconds over 55 elapsed seconds and peaked at 5,889.11 MiB for the whole
 job/container, not per bridge. [Core](https://github.com/discourse/discourse/actions/runs/36363412796/job/108744942647),
 [check 1](https://github.com/discourse/discourse/actions/runs/36363412794/job/108744942717),
 and [check 2](https://github.com/discourse/discourse/actions/runs/36363412799/job/108744942575)
 passed.
+
+Run [36364238880](https://github.com/discourse/discourse/actions/runs/36364238880/job/108747359503)
+at head `b7882374b0f` passed all four invocations in Rust/Ruby/Ruby/Rust order;
+[Licenses](https://github.com/discourse/discourse/actions/runs/36364238856/job/108747359449)
+and [Linting](https://github.com/discourse/discourse/actions/runs/36364238911/job/108747359594)
+also passed. The Rust driver build passed. The run added a child-process
+launch-to-ready timestamp so bridge startup could be compared directly with
+the initial `Target.getTargets` command:
+
+| Invocation | Bridge ready | Start-phase command | Warm-up example | Measured example |
+| --- | ---: | ---: | ---: | ---: |
+| Rust 1 | 218.964ms | 214.140ms | 8.858s | 1.443s |
+| Ruby 1 | 368.750ms | 364.255ms | 6.565s | 1.172s |
+| Ruby 2 | 373.076ms | 366.077ms | 6.616s | 1.175s |
+| Rust 2 | 176.683ms | 166.376ms | 6.451s | 1.252s |
+
+Ruby's bridge became ready 150ms later than Rust in the first pair and 196ms
+later in the second. The corresponding start-command gaps were 150ms and
+200ms. The close match strongly ties the startup penalty to bridge launch and
+readiness, rather than CDP request handling. The same run's browser round trips
+were only 3–6ms in the previous profile, and response publication was below
+0.1ms. Ruby's two measured examples averaged 1.173s, versus 1.347s for Rust;
+the two warm-up examples were excluded because they include the first-run
+position effect.
+
+Across the four balanced runs documented above (eight measured examples per
+backend), the simple means are 1.229s for Ruby and 1.352s for Rust. This narrow
+sample does not prove full-suite equivalence, but it gives no evidence that
+Rust is faster on the warmed interaction path. Ruby's startup cost is about
+0.17s per bridge process; whether that matters to a full CI job depends on how
+many browser processes that job starts. Core used 49.67 CPU-seconds over 53
+elapsed seconds and peaked at 6,142.99 MiB across the whole job/container, not
+per bridge. [Both generic checks passed](https://github.com/discourse/discourse/actions/runs/36364238856)
+and [here](https://github.com/discourse/discourse/actions/runs/36364238911).
+
+The current browser scope is Chrome for CI and Firefox compatibility; Safari
+testing is out of scope.
