@@ -1011,7 +1011,7 @@ Methodology correction: the Ruby samples above set
 and process descriptors before reporting readiness. Neither probe is part of
 the normal driver configuration. Treat the readiness comparisons as
 instrumented measurements, not evidence that the Ruby interpreter itself
-accounts for the observed gap. A follow-up run disables both probes.
+accounts for the observed gap. The clean follow-up below disables both probes.
 
 ## Composer flow comparison
 
@@ -1099,3 +1099,35 @@ Rust readiness was 192/205ms; those values still include the unequal
 diagnostic probes noted above. Core used 88.23 CPU-seconds over 90 elapsed
 seconds and peaked at 5,711.24 MiB across the whole job/container, not per
 driver.
+
+Run [36367772414](https://github.com/discourse/discourse/actions/runs/36367772414/job/108757515410)
+at head `b9b2d7c6db8` passed all six focused invocations, with two examples and
+no failures in each. [Linting](https://github.com/discourse/discourse/actions/runs/36367772331/job/108757515162)
+and [Licenses](https://github.com/discourse/discourse/actions/runs/36367772411/job/108757515403)
+passed. The native-driver artifact was restored from cache; no Rust build ran.
+Both bridge self-probes were disabled, so the readiness figures measure the
+normal bridge initialization path.
+
+| Invocation | Bridge ready | Start-phase `Target.getTargets` | Warm-up example | Tagged-topic example | Top-2 profile |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Playwright first | — | — | — | — | 12.78s |
+| Rust 1 | 15.981ms | 162.707ms | 8.229s | 2.002s | 10.23s |
+| Ruby 1 | 217.974ms | 389.421ms | 8.407s | 1.976s | 10.39s |
+| Ruby 2 | 221.688ms | 350.977ms | 8.453s | 1.975s | 10.43s |
+| Rust 2 | 15.814ms | 164.725ms | 8.228s | 1.982s | 10.21s |
+| Playwright last | — | — | — | — | 10.81s |
+
+The Ruby bridge took about 220ms to become ready, versus 16ms for Rust. This
+startup gap accounts for the larger Ruby start-phase timings; the difference
+appears before warmed browser interactions. The tagged-topic flow itself
+averaged 1.976s in Ruby and 1.992s in Rust, within 17ms (0.8%) of each other,
+with Ruby slightly faster. The combined Top-2 profiles averaged 10.41s for
+Ruby and 10.22s for Rust, a 0.19s (1.9%) Ruby slowdown across each two-example
+RSpec process, consistent with its additional bridge startup time.
+
+The Playwright Top-2 profile ranged from 12.78s first to 10.81s last, a 1.97s
+position effect in this job. That is much larger than the Ruby/Rust difference,
+so this run cannot estimate a stable Playwright-versus-CDP delta. The Core job
+passed in 2m41s. Trustworthy whole-job CPU and peak-memory values were not
+available in the safe log fields. This is a focused sample of two unique
+composer examples repeated across backends, not a full-suite equivalence test.
