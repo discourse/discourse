@@ -603,7 +603,6 @@ acceptance("Uppy Composer Attachment - Rich Editor", function (needs) {
     await visit("/new-topic");
 
     const appEvents = getOwner(this).lookup("service:app-events");
-    const done = assert.async();
     const cancellations = [];
     appEvents.on("composer:upload-cancelled", () =>
       cancellations.push("upload-cancelled")
@@ -611,24 +610,26 @@ acceptance("Uppy Composer Attachment - Rich Editor", function (needs) {
     appEvents.on("composer:uploads-cancelled", () =>
       cancellations.push("uploads-cancelled")
     );
-    appEvents.on("composer:all-uploads-complete", async () => {
-      await settled();
-      assert
-        .dom(".composer-image-node img")
-        .hasAttribute(
-          "data-orig-src",
-          "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
-          "the uploaded image replaces the placeholder"
-        );
-      assert.deepEqual(
-        cancellations,
-        [],
-        "the successful upload is not reported as cancelled"
-      );
-      done();
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
     });
 
     appEvents.trigger("composer:add-files", createFile("avatar.png"));
+    await uploadsComplete;
+    await settled();
+
+    assert
+      .dom(".composer-image-node img")
+      .hasAttribute(
+        "data-orig-src",
+        "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+        "the uploaded image replaces the placeholder"
+      );
+    assert.deepEqual(
+      cancellations,
+      [],
+      "the successful upload is not reported as cancelled"
+    );
   });
 
   test("cancels the upload when its placeholder is deleted", async function (assert) {
