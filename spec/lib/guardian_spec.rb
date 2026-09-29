@@ -2948,23 +2948,33 @@ RSpec.describe Guardian do
   end
 
   describe "#can_edit_group?" do
-    it "accepts a preloaded group membership" do
+    it "accepts known ownership and looks it up when omitted" do
       group.add(member)
       group.add_owner(owner)
 
-      expect(
-        Guardian.new(owner).can_edit_group?(
-          group,
-          group_user: group.group_users.find_by(user: owner),
-        ),
-      ).to eq(true)
-      expect(
-        Guardian.new(member).can_edit_group?(
-          group,
-          group_user: group.group_users.find_by(user: member),
-        ),
-      ).to eq(false)
-      expect(Guardian.new(another_user).can_edit_group?(group, group_user: nil)).to eq(false)
+      expect(owner.guardian.can_edit_group?(group, is_group_owner: true)).to eq(true)
+      expect(member.guardian.can_edit_group?(group, is_group_owner: false)).to eq(false)
+      expect(owner.guardian.can_edit_group?(group)).to eq(true)
+      expect(member.guardian.can_edit_group?(group)).to eq(false)
+    end
+  end
+
+  describe "#can_admin_group?" do
+    it "preserves role and visibility restrictions with known ownership" do
+      SiteSetting.moderators_manage_groups = true
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+      group.add_owner(moderator)
+      group.add_owner(owner)
+      expect(moderator.guardian.can_admin_group?(group, is_group_owner: true)).to eq(true)
+      expect(owner.guardian.can_admin_group?(group, is_group_owner: true)).to eq(false)
+      expect(admin.guardian.can_admin_group?(group, is_group_owner: false)).to eq(true)
+
+      hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+      expect(moderator.guardian.can_admin_group?(hidden_group, is_group_owner: false)).to eq(false)
+      expect(moderator.guardian.can_admin_group?(Group[:admins], is_group_owner: true)).to eq(false)
+
+      SiteSetting.moderators_manage_groups = false
+      expect(moderator.guardian.can_admin_group?(group, is_group_owner: true)).to eq(false)
     end
   end
 
