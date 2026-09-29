@@ -25,7 +25,10 @@ RSpec.describe Demon::Base do
   let(:pid_file) { Rails.root.join("tmp/pids/test_demon_0.pid").to_s }
   let!(:previous_pid) { Process.spawn("sleep", "600") }
 
-  before { File.write(pid_file, previous_pid) }
+  before do
+    FileUtils.mkdir_p(File.dirname(pid_file))
+    File.write(pid_file, previous_pid)
+  end
 
   after do
     described_class.handoff_supervisor_pid = nil
