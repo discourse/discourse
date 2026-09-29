@@ -18,52 +18,61 @@ module Migrations
         configure_session
       end
 
-      def copy_data(table_name, column_names, rows)
+      # Inserts `rows` in transactional batches and yields `inserted, skipped`
+      # after each commit. With `on_failed_row`, a failing batch is bisected
+      # until the bad rows are isolated: good rows are still inserted, each bad
+      # row is handed to the callback and left out (no ID mapping, so a later
+      # run retries it). A batch whose rows all fail aborts instead — that's
+      # not bad data, that's something systemic.
+      def copy_data(table_name, column_names, rows, on_failed_row: nil, &on_commit)
         quoted_column_name_list = column_names.map { |c| quote_identifier(c) }.join(",")
         sql = "COPY #{table_name} (#{quoted_column_name_list}) FROM STDIN"
-
-        inserted_rows = []
-        skipped_rows = []
-        column_count = column_names.size
-        data = Array.new(column_count)
 
         type_map = build_type_map(table_name, column_names)
         encoder = PG::TextEncoder::CopyRow.new(type_map:)
 
         row_offset = 0
         rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
-          begin
-            @connection.transaction do
-              @connection.copy_data(sql, encoder) do
-                sliced_rows.each do |row|
-                  if row[SKIP_ROW_MARKER]
-                    skipped_rows << row
-                    next
-                  end
+          if on_failed_row
+            failed = []
+            # percent-level failure is not bad data, it's something systemic;
+            # the cap also bounds the bisection work for a broken batch
+            failed_limit = [sliced_rows.size / 100, 10].max
+            insert_rows_with_quarantine(
+              sql,
+              encoder,
+              table_name,
+              column_names,
+              sliced_rows,
+              failed,
+              failed_limit,
+              &on_commit
+            )
 
-                  i = 0
-                  while i < column_count
-                    data[i] = row[column_names[i]]
-                    i += 1
-                  end
+            if failed.any?
+              insertable_count = sliced_rows.count { |row| !row[SKIP_ROW_MARKER] }
+              first_error = failed.first.last
 
-                  @connection.put_copy_data(data)
-                  inserted_rows << row
-                end
+              if insertable_count > 1 && failed.size == insertable_count
+                raise first_error.class,
+                      "all #{insertable_count} rows of a batch failed to insert " \
+                        "(table #{table_name}, rows #{row_offset + 1}-#{row_offset + sliced_rows.size} of this step): " \
+                        "#{first_error.message.strip}",
+                      first_error.backtrace
               end
 
-              # give the caller a chance to do some work when a batch has been committed,
-              # for example, to store ID mappings
-              yield inserted_rows, skipped_rows
-
-              inserted_rows.clear
-              skipped_rows.clear
+              failed.each { |row, error| on_failed_row.call(row, error) }
             end
-          rescue PG::Error => e
-            raise e.class,
-                  "#{e.message.strip} (table #{table_name}, rows #{row_offset + 1}-#{row_offset + sliced_rows.size} of this step)",
-                  e.backtrace
+          else
+            begin
+              insert_batch(sql, encoder, column_names, sliced_rows, &on_commit)
+            rescue PG::Error => e
+              raise e.class,
+                    "#{e.message.strip} (table #{table_name}, rows #{row_offset + 1}-#{row_offset + sliced_rows.size} of this step)",
+                    e.backtrace
+            end
           end
+
           row_offset += sliced_rows.size
         end
 
@@ -152,6 +161,98 @@ module Migrations
       end
 
       private
+
+      def insert_batch(sql, encoder, column_names, batch, &on_commit)
+        inserted_rows = []
+        skipped_rows = []
+        column_count = column_names.size
+        data = Array.new(column_count)
+
+        @connection.transaction do
+          @connection.copy_data(sql, encoder) do
+            batch.each do |row|
+              if row[SKIP_ROW_MARKER]
+                skipped_rows << row
+                next
+              end
+
+              i = 0
+              while i < column_count
+                data[i] = row[column_names[i]]
+                i += 1
+              end
+
+              @connection.put_copy_data(data)
+              inserted_rows << row
+            end
+          end
+
+          # give the caller a chance to do some work when a batch has been committed,
+          # for example, to store ID mappings
+          on_commit.call(inserted_rows, skipped_rows)
+        end
+
+        nil
+      end
+
+      # Collects the isolated `[row, error]` failures into `failed` instead of
+      # raising. Bisects on failure, so the cost is O(log batch) extra
+      # attempts per bad row and the good rows around it still make it in.
+      # Gives up once `failed_limit` rows have been isolated.
+      def insert_rows_with_quarantine(
+        sql,
+        encoder,
+        table_name,
+        column_names,
+        batch,
+        failed,
+        failed_limit,
+        &on_commit
+      )
+        insert_batch(sql, encoder, column_names, batch, &on_commit)
+        nil
+      rescue PG::Error => e
+        insertable = batch.reject { |row| row[SKIP_ROW_MARKER] }
+        raise if insertable.empty?
+
+        if insertable.size == 1
+          # marker-skipped rows can still carry ID mappings; nothing was
+          # committed for them yet in this sub-batch
+          skipped = batch - insertable
+          on_commit.call([], skipped) if skipped.any?
+
+          failed << [insertable.first, e]
+          if failed.size > failed_limit
+            raise e.class,
+                  "too many rows of a batch failed to insert, giving up after #{failed.size} " \
+                    "(table #{table_name}): #{e.message.strip}",
+                  e.backtrace
+          end
+          return
+        end
+
+        mid = batch.size / 2
+        insert_rows_with_quarantine(
+          sql,
+          encoder,
+          table_name,
+          column_names,
+          batch[...mid],
+          failed,
+          failed_limit,
+          &on_commit
+        )
+        insert_rows_with_quarantine(
+          sql,
+          encoder,
+          table_name,
+          column_names,
+          batch[mid..],
+          failed,
+          failed_limit,
+          &on_commit
+        )
+      end
 
       # timestamps arrive as the literal NOW(), which Postgres evaluates in
       # the session timezone, and server-side timeouts must not kill long
