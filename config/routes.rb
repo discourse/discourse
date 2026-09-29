@@ -133,6 +133,7 @@ Discourse::Application.routes.draw do
     get "site/statistics" => "site#statistics"
 
     get "srv/status" => "forums#status"
+    post "srv/se", to: proc { [204, {}, []] } if Rails.env.development?
 
     get "wizard" => "wizard#index"
     get "wizard/steps/:id" => "wizard#index"
