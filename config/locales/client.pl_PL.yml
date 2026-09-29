@@ -10707,7 +10707,7 @@ pl_PL:
         invalid_description: "W tym tekście użyto nierozpoznanych symboli zastępczych. Użyj dostępnych poniżej kluczy interpolacji."
         status:
           customized: "Dostosowane"
-          outdated: "Przestarzałe"
+          outdated: "Nieaktualne"
           invalid: "Nieprawidłowe"
         title: "Teksty witryny"
         edit: "Edytuj"
