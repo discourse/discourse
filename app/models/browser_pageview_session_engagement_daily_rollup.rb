@@ -12,6 +12,7 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
     start_date = start_date.to_date
     end_date = end_date.to_date + 1
     transaction do
+      BrowserPageviewSessionRollupSummary.lock_daily_rollups!
       DB.exec(<<~SQL, start_date:, end_date:)
         DELETE FROM browser_pageview_session_engagement_daily_rollups rollup
         WHERE rollup.date >= :start_date

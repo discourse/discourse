@@ -175,6 +175,148 @@ END;
 $$;
 
 
+--
+-- Name: mark_browser_pageview_engagement_delete(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.mark_browser_pageview_engagement_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM mark_browser_pageview_session_rollup_dirty(
+    ARRAY(
+      SELECT DISTINCT session_id::text
+      FROM old_rows
+      WHERE created_at >= CURRENT_DATE - INTERVAL '3 days'
+    )
+  );
+  RETURN NULL;
+END;
+$$;
+
+
+--
+-- Name: mark_browser_pageview_engagement_insert(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.mark_browser_pageview_engagement_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM mark_browser_pageview_session_rollup_dirty(
+    ARRAY(SELECT DISTINCT session_id::text FROM new_rows)
+  );
+  RETURN NULL;
+END;
+$$;
+
+
+--
+-- Name: mark_browser_pageview_engagement_update(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.mark_browser_pageview_engagement_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM mark_browser_pageview_session_rollup_dirty(
+    ARRAY(
+      SELECT old_rows.session_id::text
+      FROM old_rows JOIN new_rows USING (id)
+      WHERE (old_rows.session_id, old_rows.engaged_seconds)
+        IS DISTINCT FROM (new_rows.session_id, new_rows.engaged_seconds)
+      UNION
+      SELECT new_rows.session_id::text
+      FROM old_rows JOIN new_rows USING (id)
+      WHERE (old_rows.session_id, old_rows.engaged_seconds)
+        IS DISTINCT FROM (new_rows.session_id, new_rows.engaged_seconds)
+    )
+  );
+  RETURN NULL;
+END;
+$$;
+
+
+--
+-- Name: mark_browser_pageview_event_delete(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.mark_browser_pageview_event_delete() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM mark_browser_pageview_session_rollup_dirty(
+    ARRAY(
+      SELECT DISTINCT session_id::text
+      FROM old_rows
+      WHERE created_at >= CURRENT_DATE - INTERVAL '3 days'
+    )
+  );
+  RETURN NULL;
+END;
+$$;
+
+
+--
+-- Name: mark_browser_pageview_event_insert(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.mark_browser_pageview_event_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM mark_browser_pageview_session_rollup_dirty(
+    ARRAY(SELECT DISTINCT session_id::text FROM new_rows)
+  );
+  RETURN NULL;
+END;
+$$;
+
+
+--
+-- Name: mark_browser_pageview_event_update(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.mark_browser_pageview_event_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM mark_browser_pageview_session_rollup_dirty(
+    ARRAY(
+      SELECT old_rows.session_id::text
+      FROM old_rows JOIN new_rows USING (id)
+      WHERE (old_rows.session_id, old_rows.created_at, old_rows.user_id, old_rows.score)
+        IS DISTINCT FROM
+        (new_rows.session_id, new_rows.created_at, new_rows.user_id, new_rows.score)
+      UNION
+      SELECT new_rows.session_id::text
+      FROM old_rows JOIN new_rows USING (id)
+      WHERE (old_rows.session_id, old_rows.created_at, old_rows.user_id, old_rows.score)
+        IS DISTINCT FROM
+        (new_rows.session_id, new_rows.created_at, new_rows.user_id, new_rows.score)
+    )
+  );
+  RETURN NULL;
+END;
+$$;
+
+
+--
+-- Name: mark_browser_pageview_session_rollup_dirty(text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.mark_browser_pageview_session_rollup_dirty(session_ids text[]) RETURNS void
+    LANGUAGE sql
+    AS $$
+  INSERT INTO browser_pageview_session_rollup_summaries (session_id)
+  SELECT DISTINCT session_id
+  FROM unnest(session_ids) AS session_id
+  WHERE session_id IS NOT NULL
+  ON CONFLICT (session_id) DO UPDATE
+  SET dirty_generation = browser_pageview_session_rollup_summaries.dirty_generation + 1
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -2456,6 +2598,61 @@ CREATE SEQUENCE public.browser_pageview_session_engagements_id_seq
 --
 
 ALTER SEQUENCE public.browser_pageview_session_engagements_id_seq OWNED BY public.browser_pageview_session_engagements.id;
+
+
+--
+-- Name: browser_pageview_session_rollup_repair_dates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_rollup_repair_dates (
+    date date NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_rollup_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_rollup_statuses (
+    id bigint NOT NULL,
+    version integer NOT NULL,
+    initialized_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_rollup_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_session_rollup_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_session_rollup_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_session_rollup_statuses_id_seq OWNED BY public.browser_pageview_session_rollup_statuses.id;
+
+
+--
+-- Name: browser_pageview_session_rollup_summaries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_rollup_summaries (
+    session_id character varying(32) NOT NULL,
+    first_pageview_at timestamp(6) without time zone,
+    pageview_count bigint DEFAULT 0 NOT NULL,
+    logged_in boolean DEFAULT false NOT NULL,
+    likely_crawler boolean DEFAULT false NOT NULL,
+    engaged_seconds bigint DEFAULT 0 NOT NULL,
+    dirty_generation bigint DEFAULT 1 NOT NULL,
+    refreshed_generation bigint DEFAULT 0 NOT NULL
+);
 
 
 --
@@ -14117,6 +14314,13 @@ ALTER TABLE ONLY public.browser_pageview_session_engagements ALTER COLUMN id SET
 
 
 --
+-- Name: browser_pageview_session_rollup_statuses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_rollup_statuses ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_session_rollup_statuses_id_seq'::regclass);
+
+
+--
 -- Name: calendar_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16658,6 +16862,30 @@ ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups
 
 ALTER TABLE ONLY public.browser_pageview_session_engagements
     ADD CONSTRAINT browser_pageview_session_engagements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_session_rollup_repair_dates browser_pageview_session_rollup_repair_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_rollup_repair_dates
+    ADD CONSTRAINT browser_pageview_session_rollup_repair_dates_pkey PRIMARY KEY (date);
+
+
+--
+-- Name: browser_pageview_session_rollup_statuses browser_pageview_session_rollup_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_rollup_statuses
+    ADD CONSTRAINT browser_pageview_session_rollup_statuses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_session_rollup_summaries browser_pageview_session_rollup_summaries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_rollup_summaries
+    ADD CONSTRAINT browser_pageview_session_rollup_summaries_pkey PRIMARY KEY (session_id);
 
 
 --
@@ -19967,6 +20195,13 @@ CREATE UNIQUE INDEX idx_mcp_primitives_unique ON public.mcp_primitives USING btr
 --
 
 CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USING btree (user_id, notification_type) WHERE (NOT read);
+
+
+--
+-- Name: idx_on_first_pageview_at_b3b9b0191c; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_first_pageview_at_b3b9b0191c ON public.browser_pageview_session_rollup_summaries USING btree (first_pageview_at);
 
 
 --
@@ -25255,6 +25490,48 @@ CREATE UNIQUE INDEX web_hooks_tags ON public.tags_web_hooks USING btree (web_hoo
 
 
 --
+-- Name: browser_pageview_session_engagements browser_pageview_engagement_rollup_delete; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER browser_pageview_engagement_rollup_delete AFTER DELETE ON public.browser_pageview_session_engagements REFERENCING OLD TABLE AS old_rows FOR EACH STATEMENT EXECUTE FUNCTION public.mark_browser_pageview_engagement_delete();
+
+
+--
+-- Name: browser_pageview_session_engagements browser_pageview_engagement_rollup_insert; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER browser_pageview_engagement_rollup_insert AFTER INSERT ON public.browser_pageview_session_engagements REFERENCING NEW TABLE AS new_rows FOR EACH STATEMENT EXECUTE FUNCTION public.mark_browser_pageview_engagement_insert();
+
+
+--
+-- Name: browser_pageview_session_engagements browser_pageview_engagement_rollup_update; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER browser_pageview_engagement_rollup_update AFTER UPDATE ON public.browser_pageview_session_engagements REFERENCING OLD TABLE AS old_rows NEW TABLE AS new_rows FOR EACH STATEMENT EXECUTE FUNCTION public.mark_browser_pageview_engagement_update();
+
+
+--
+-- Name: browser_pageview_events browser_pageview_event_rollup_delete; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER browser_pageview_event_rollup_delete AFTER DELETE ON public.browser_pageview_events REFERENCING OLD TABLE AS old_rows FOR EACH STATEMENT EXECUTE FUNCTION public.mark_browser_pageview_event_delete();
+
+
+--
+-- Name: browser_pageview_events browser_pageview_event_rollup_insert; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER browser_pageview_event_rollup_insert AFTER INSERT ON public.browser_pageview_events REFERENCING NEW TABLE AS new_rows FOR EACH STATEMENT EXECUTE FUNCTION public.mark_browser_pageview_event_insert();
+
+
+--
+-- Name: browser_pageview_events browser_pageview_event_rollup_update; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER browser_pageview_event_rollup_update AFTER UPDATE ON public.browser_pageview_events REFERENCING OLD TABLE AS old_rows NEW TABLE AS new_rows FOR EACH STATEMENT EXECUTE FUNCTION public.mark_browser_pageview_event_update();
+
+
+--
 -- Name: category_settings category_settings_require_reply_approval_readonly; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -25545,6 +25822,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260930114733'),
+('20260929054112'),
 ('20260928103925'),
 ('20260925054715'),
 ('20260923141924'),
