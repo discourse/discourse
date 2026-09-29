@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 te:
+  js:
+    discourse_captcha:
+      configuration_test:
+        tab_title: "పరీక్షించండి"

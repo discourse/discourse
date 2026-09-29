@@ -851,6 +851,7 @@ tr_TR:
       description_too_long:
         one: "Açıklama çok uzun (maksimum %{count} karakter)."
         other: "Açıklama çok uzun (maksimum %{count} karakter)."
+      special_category_permissions: "Bu önceden belirlenmiş bir kategoridir ve güvenlik ayarları düzenlenemez. Bu kategoriyi kullanmak istemiyorsanız, yeniden kullanmak yerine silin."
       permission_conflict: "Bir alt kategoriye erişmesine izin verilen herhangi bir grubun üst kategoriye erişmesine de izin verilmelidir. Aşağıdaki grupların alt kategorilerden birine erişimi bulunur, ancak üst kategoriye erişimi yoktur: %{group_names}."
       disallowed_topic_tags: "Bu konu, bu kategori tarafından izin verilmeyen etiketlere sahip: \"%{tags}\""
       disallowed_tags_generic: "Bu konu izin verilmeyen etiketlere sahip."
