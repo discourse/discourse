@@ -28,6 +28,43 @@ module DiscourseVips
       Rails.root.join("tmp", "discourse-vips-worker", Rails.env, "socket").to_s
     end
 
+    # How the service keeper runs the shared worker: the keeper creates the
+    # listening socket and holds the owner pipe, so the worker's parent-death
+    # and owner checks tie it to the keeper instead of a service worker.
+    def self.keeper_spec(socket_path:)
+      {
+        "argv" => [*worker_command, "%{listener_fd}", "%{owner_fd}"],
+        "env" => worker_environment,
+        "unsetenv_others" => true,
+        "unix_listener" => socket_path,
+        "owner_pipe" => true,
+      }
+    end
+
+    def self.worker_command
+      load_paths = [Rails.root.join("lib").to_s]
+      %w[ffi landlock msgpack ruby-vips].each do |gem_name|
+        load_paths.concat(Gem.loaded_specs.fetch(gem_name).full_require_paths)
+      end
+
+      [
+        RbConfig.ruby,
+        "--disable-gems",
+        *load_paths.uniq.flat_map { |path| ["-I", path] },
+        Rails.root.join("script/discourse_vips_worker").to_s,
+      ]
+    end
+
+    def self.worker_environment
+      {
+        **ENV.to_h.slice("PATH", "LANG", "LC_ALL"),
+        "HOME" => "/tmp",
+        "MALLOC_ARENA_MAX" => "2",
+        "TMPDIR" => "/tmp",
+        "XDG_CACHE_HOME" => "/tmp",
+      }
+    end
+
     def initialize(socket_path: nil)
       @state_mutex = Mutex.new
       @socket_path = socket_path
@@ -115,27 +152,11 @@ module DiscourseVips
     end
 
     def worker_command
-      load_paths = [Rails.root.join("lib").to_s]
-      %w[ffi landlock msgpack ruby-vips].each do |gem_name|
-        load_paths.concat(Gem.loaded_specs.fetch(gem_name).full_require_paths)
-      end
-
-      [
-        RbConfig.ruby,
-        "--disable-gems",
-        *load_paths.uniq.flat_map { |path| ["-I", path] },
-        Rails.root.join("script/discourse_vips_worker").to_s,
-      ]
+      self.class.worker_command
     end
 
     def worker_environment
-      {
-        **ENV.to_h.slice("PATH", "LANG", "LC_ALL"),
-        "HOME" => "/tmp",
-        "MALLOC_ARENA_MAX" => "2",
-        "TMPDIR" => "/tmp",
-        "XDG_CACHE_HOME" => "/tmp",
-      }
+      self.class.worker_environment
     end
 
     def wait_for_worker(worker_pid)

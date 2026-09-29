@@ -128,18 +128,22 @@ module PrettyText
     return @ctx if @ctx
 
     # ensure we only init one of these
-    @ctx_init.synchronize do
-      return @ctx if @ctx
-      @ctx = create_es6_context
+    PitchforkReforking.prevent_fork do
+      @ctx_init.synchronize do
+        return @ctx if @ctx
+        @ctx = create_es6_context
+      end
     end
 
     @ctx
   end
 
   def self.reset_translations
-    @mutex.synchronize do
-      v8.call("__PrettyText.resetTranslations")
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    PitchforkReforking.prevent_fork do
+      @mutex.synchronize do
+        v8.call("__PrettyText.resetTranslations")
+        v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+      end
     end
   end
 
@@ -727,9 +731,11 @@ module PrettyText
 
   def self.protect
     rval = nil
-    @mutex.synchronize do
-      rval = yield
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    PitchforkReforking.prevent_fork do
+      @mutex.synchronize do
+        rval = yield
+        v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+      end
     end
     rval
   end

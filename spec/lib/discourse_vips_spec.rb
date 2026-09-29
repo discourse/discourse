@@ -513,6 +513,29 @@ RSpec.describe DiscourseVips do
       expect(described_class.version).to match(/\A\d+\.\d+\.\d+\z/)
     end
 
+    it "serves operations when the service keeper runs the shared worker" do
+      Dir.mktmpdir do |directory|
+        supervisor_pid = Process.spawn("sleep", "600")
+        ServiceKeeper.stubs(:socket_path).returns(File.join(directory, "keeper.sock"))
+        ServiceKeeper.enable!(supervisor_pid:)
+        socket_path = File.join(directory, "vips", "socket")
+
+        ServiceKeeper.ensure_running(
+          "discourse_vips",
+          DiscourseVips::WorkerProcess.keeper_spec(socket_path:),
+        )
+        DiscourseVips::Client.stubs(:worker_socket_path).returns(socket_path)
+
+        expect(described_class.version).to match(/\A\d+\.\d+\.\d+\z/)
+      ensure
+        if supervisor_pid
+          Process.kill("KILL", supervisor_pid)
+          Process.wait(supervisor_pid)
+        end
+        ServiceKeeper.disable!
+      end
+    end
+
     it "times out when the worker sends an incomplete response" do
       Dir.mktmpdir do |directory|
         socket_path = File.join(directory, "socket")

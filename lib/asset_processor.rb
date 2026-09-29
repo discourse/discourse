@@ -118,9 +118,11 @@ class AssetProcessor
     return @ctx if @ctx
 
     # ensure we only init one of these
-    @ctx_init.synchronize do
-      return @ctx if @ctx
-      @ctx = create_new_context
+    PitchforkReforking.prevent_fork do
+      @ctx_init.synchronize do
+        return @ctx if @ctx
+        @ctx = create_new_context
+      end
     end
 
     @ctx
@@ -129,10 +131,12 @@ class AssetProcessor
   # Call a method in the global scope of the v8 context. Promise results are
   # awaited and returned as values.
   def self.v8_call(*args)
-    mutex.synchronize do
-      result = v8.call_await(*args)
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
-      result
+    PitchforkReforking.prevent_fork do
+      mutex.synchronize do
+        result = v8.call_await(*args)
+        v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+        result
+      end
     end
   rescue MiniRacer::ScriptTerminatedError => e
     timeout_error = TimeoutError.new("Script terminated: timeout after #{timeout / 1000}s")

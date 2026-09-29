@@ -67,7 +67,23 @@ RSpec.describe Discourse do
     end
   end
 
-  describe ".apply_worker_db_variables_overrides" do
+  describe ".before_fork" do
+    it "accepts disposed contexts while preparing live contexts for a fork" do
+      disposed = MiniRacer::Context.new
+      disposed.eval("1")
+      disposed.dispose
+      live = MiniRacer::Context.new
+      live.eval("var value = 42")
+
+      Discourse.before_fork
+
+      expect(live.eval("value")).to eq(42)
+    ensure
+      live&.dispose
+    end
+  end
+
+  describe ".apply_worker_db_variables_overrides and .reset_worker_db_variables_overrides" do
     around do |example|
       original_env = ENV.to_hash
       original_config = ActiveRecord::Base.configurations
@@ -92,7 +108,7 @@ RSpec.describe Discourse do
       end
     end
 
-    it "applies worker-specific database variable overrides in a production environment" do
+    it "applies web overrides and restores the base configuration for service descendants" do
       test_database_config = Rails.application.config.database_configuration["test"]
 
       temp_discourse_conf = Tempfile.new("discourse.conf")
@@ -113,6 +129,12 @@ RSpec.describe Discourse do
       expect(
         ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
       ).to eq("100s")
+
+      Discourse.reset_worker_db_variables_overrides
+
+      expect(
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
+      ).to eq("10s")
     ensure
       %i[
         db_variables_statement_timeout

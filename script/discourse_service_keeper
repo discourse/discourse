@@ -1,0 +1,213 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Keeps server-lifetime services (the libvips worker, the metrics collector)
+# running while pitchfork reforks. It is exec'd without Rails so it holds no
+# Discourse heap: service workers come and go with each generation, and ask
+# this process over a UNIX socket to ensure a service is running. The keeper
+# is the services' parent, restarts them if they die, and stops them when the
+# server's supervisor process is gone.
+#
+# Standard library only: this runs with --disable-gems.
+
+require "json"
+require "socket"
+require "fileutils"
+
+class DiscourseServiceKeeper
+  STOP_TIMEOUT_SECONDS = 10
+  RESTART_BACKOFF_SECONDS = [1, 2, 5, 10, 30].freeze
+
+  Service =
+    Struct.new(
+      :name,
+      :spec,
+      :pid,
+      :owner_writer,
+      :restarts,
+      :restart_at,
+      keyword_init: true,
+    )
+
+  def initialize(socket_path:, supervisor_pid:)
+    @socket_path = socket_path
+    @supervisor_pid = supervisor_pid
+    @services = {}
+    @mutex = Mutex.new
+    @stopping = false
+  end
+
+  def run
+    Process.setproctitle("discourse service keeper")
+    server = listen
+    %w[TERM INT].each { |signal| Signal.trap(signal) { @stopping = true } }
+
+    until @stopping
+      if (ready = IO.select([server], nil, nil, 1))
+        handle_client(server.accept) if ready.first.include?(server)
+      end
+      @stopping = true unless supervisor_alive?
+      reap_and_restart
+    end
+  ensure
+    shutdown
+    server&.close
+    File.unlink(@socket_path) if File.socket?(@socket_path)
+  end
+
+  private
+
+  def listen
+    FileUtils.mkdir_p(File.dirname(@socket_path))
+    File.unlink(@socket_path) if File.socket?(@socket_path)
+    server = UNIXServer.new(@socket_path)
+    File.chmod(0o600, @socket_path)
+    server
+  end
+
+  def handle_client(client)
+    request = JSON.parse(client.gets.to_s)
+    response =
+      case request["command"]
+      when "ensure"
+        { "pid" => ensure_service(request.fetch("name"), request.fetch("spec")) }
+      when "stop"
+        stop_service(request.fetch("name"))
+        { "stopped" => true }
+      when "status"
+        { "services" => @services.transform_values(&:pid), "pid" => Process.pid }
+      else
+        { "error" => "unknown command" }
+      end
+    client.puts(JSON.generate(response))
+  rescue StandardError => error
+    client.puts(JSON.generate("error" => "#{error.class}: #{error.message}")) rescue nil
+  ensure
+    client.close
+  end
+
+  def ensure_service(name, spec)
+    service = @services[name]
+    return service.pid if service&.spec == spec && service.pid && alive?(service.pid)
+
+    stop_service(name) if service
+    @services[name] = Service.new(name: name, spec: spec, restarts: 0)
+    start_service(@services[name])
+    @services[name].pid
+  end
+
+  def start_service(service)
+    spec = service.spec
+    fds = {}
+    placeholders = {}
+    listener = owner_reader = nil
+
+    if (path = spec["unix_listener"])
+      FileUtils.mkdir_p(File.dirname(path), mode: 0o700)
+      File.chmod(0o700, File.dirname(path))
+      File.unlink(path) if File.socket?(path)
+      listener = UNIXServer.new(path)
+      File.chmod(0o600, path)
+      fds[listener.fileno] = listener
+      placeholders["%{listener_fd}"] = listener.fileno.to_s
+    end
+
+    if spec["owner_pipe"]
+      owner_reader, service.owner_writer = IO.pipe
+      fds[owner_reader.fileno] = owner_reader
+      placeholders["%{owner_fd}"] = owner_reader.fileno.to_s
+    end
+
+    argv = spec.fetch("argv").map { |arg| placeholders.fetch(arg, arg) }
+    options = {
+      in: File::NULL,
+      close_others: true,
+      pgroup: true,
+      unsetenv_others: spec.fetch("unsetenv_others", false),
+    }
+    options[:chdir] = spec["chdir"] if spec["chdir"]
+    service.pid = Process.spawn(spec.fetch("env", {}), *argv, **options, **fds)
+    log("started #{service.name} pid=#{service.pid}")
+  ensure
+    listener&.close
+    owner_reader&.close
+  end
+
+  def stop_service(name)
+    service = @services.delete(name)
+    return unless service&.pid
+
+    service.owner_writer&.close unless service.owner_writer&.closed?
+    begin
+      Process.kill("TERM", service.pid)
+    rescue Errno::ESRCH
+      return
+    end
+
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + STOP_TIMEOUT_SECONDS
+    until Process.waitpid(service.pid, Process::WNOHANG)
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        Process.kill("KILL", -service.pid) rescue nil
+        Process.waitpid(service.pid) rescue nil
+        break
+      end
+      sleep 0.05
+    end
+    log("stopped #{name} pid=#{service.pid}")
+  rescue Errno::ECHILD
+  end
+
+  def reap_and_restart
+    now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    @services.each_value do |service|
+      if service.pid && Process.waitpid(service.pid, Process::WNOHANG)
+        log("#{service.name} pid=#{service.pid} exited, restarting")
+        service.owner_writer&.close unless service.owner_writer&.closed?
+        service.pid = nil
+        delay = RESTART_BACKOFF_SECONDS.fetch(service.restarts, RESTART_BACKOFF_SECONDS.last)
+        service.restarts += 1
+        service.restart_at = now + delay
+      end
+
+      if service.pid.nil? && service.restart_at && now >= service.restart_at
+        start_service(service)
+        service.restart_at = nil
+      end
+    rescue Errno::ECHILD
+      service.pid = nil
+    end
+  end
+
+  def shutdown
+    @services.keys.each { |name| stop_service(name) }
+  end
+
+  # A zombie counts as gone: the supervisor may exit before its own parent
+  # reaps it.
+  def supervisor_alive?
+    Process.kill(0, @supervisor_pid)
+    stat = File.read("/proc/#{@supervisor_pid}/stat")
+    stat[stat.rindex(")") + 2] != "Z"
+  rescue Errno::ESRCH, Errno::ENOENT
+    false
+  rescue Errno::EPERM, SystemCallError
+    true
+  end
+
+  def alive?(pid)
+    Process.waitpid(pid, Process::WNOHANG).nil?
+  rescue Errno::ECHILD
+    false
+  end
+
+  def log(message)
+    $stdout.puts("[discourse service keeper #{Process.pid}] #{message}")
+    $stdout.flush
+  rescue IOError
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  socket_path, supervisor_pid = ARGV
+  DiscourseServiceKeeper.new(socket_path: socket_path, supervisor_pid: Integer(supervisor_pid)).run
+end

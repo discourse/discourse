@@ -21,7 +21,15 @@ class Demon::DiscourseVips < Demon::Base
     demons&.each_value(&:release_inherited_worker)
   end
 
+  def server_lifetime_spec
+    ::DiscourseVips::WorkerProcess.keeper_spec(
+      socket_path: ::DiscourseVips::WorkerProcess.shared_socket_path,
+    )
+  end
+
   def run
+    return super if keeper_managed?
+
     @worker_process&.discard
     @worker_process =
       ::DiscourseVips::WorkerProcess.new(
@@ -38,6 +46,8 @@ class Demon::DiscourseVips < Demon::Base
   end
 
   def stop
+    return super if keeper_managed?
+
     worker_pid = @pid
     @started = false
     @worker_process&.shutdown

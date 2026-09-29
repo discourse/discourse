@@ -116,6 +116,40 @@ RSpec.describe Scheduler::Defer do
     expect(s).to eq("good")
   end
 
+  describe "#after_fork" do
+    it "drops work queued before the fork" do
+      completed = Queue.new
+      @defer.instance_variable_get(:@queue).push(
+        { job: -> { completed << :inherited } },
+        force: true,
+      )
+
+      @defer.after_fork
+      @defer.later { completed << :new }
+
+      expect(completed.pop(timeout: 5)).to eq(:new)
+      expect(completed.pop(timeout: 0.1)).to eq(nil)
+    end
+  end
+
+  describe "#stop!" do
+    it "reports progress while waiting for work to finish and can restart" do
+      release = Queue.new
+      completed = Queue.new
+      @defer.later do
+        release.pop
+        completed << :drained
+      end
+
+      @defer.stop!(finish_work: true) { release << true }
+      @defer.later { completed << :restarted }
+
+      expect(2.times.map { completed.pop(timeout: 5) }).to eq(%i[drained restarted])
+    ensure
+      release << true
+    end
+  end
+
   describe "#later" do
     let!(:ivar) { Concurrent::IVar.new }
     let!(:responses) { Thread::Queue.new }

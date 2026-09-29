@@ -3,6 +3,18 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
+oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
+
+require_relative "../lib/pitchfork_reforking"
+
+refork_schedule = ENV["APP_SERVER_REFORK_AFTER"]
+
+if refork_schedule
+  unless Pitchfork::REFORKING_AVAILABLE
+    raise "APP_SERVER_REFORK_AFTER requires Linux refork support"
+  end
+  refork_after PitchforkReforking.parse_schedule(refork_schedule)
+end
 
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
@@ -57,9 +69,28 @@ before_fork do |server|
 
   throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
   sleep(throttle_time) if !Rails.env.development?
+
+  # A worker is about to fork a new mold. Background work that can be split by
+  # a fork runs inside PitchforkReforking.prevent_fork, except thread pool
+  # tasks, which run concurrently; a mold forked while one was running is
+  # discarded rather than used.
+  PitchforkReforking.discard_mold =
+    !PitchforkReforking.wait_for_idle_thread_pools if PitchforkReforking.worker
 end
 
 after_mold_fork do |server, mold|
+  if PitchforkReforking.discard_mold
+    server.logger.warn("#{mold.to_log} discarding: a thread pool task was running at fork")
+    exit!(1)
+  end
+  PitchforkReforking.worker = false
+
+  GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
+
+  if refork_schedule && !GlobalSetting.mini_racer_single_threaded
+    raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
+  end
+
   if mold.generation.zero?
     Discourse.preload_rails!
 
@@ -76,6 +107,9 @@ after_mold_fork do |server, mold|
         end
       end
     end
+  else
+    PitchforkReforking.detach_message_bus_clients
+    Scheduler::Defer.after_fork
   end
 
   Discourse.redis.close
@@ -84,15 +118,22 @@ after_mold_fork do |server, mold|
   Process.warmup
 end
 
-oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
-
 after_worker_fork do |server, worker|
+  PitchforkReforking.worker = true
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
 
   GC.config(rgengc_allow_full_mark: false) if oob_gc_enabled
+end
+
+before_worker_exit do |server, worker|
+  server.logger.info("#{worker.to_log} finishing deferred work before exit")
+  retiring = worker.outdated? && Thread.current == Thread.main
+  worker.update_deadline(server.timeout) if retiring
+  Scheduler::Defer.stop!(finish_work: true) { worker.update_deadline(server.timeout) if retiring }
+  ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
 end
 
 if oob_gc_enabled
@@ -102,6 +143,19 @@ if oob_gc_enabled
 end
 
 before_service_worker_ready do |server, service_worker|
+  # The service worker follows each refork so it holds the current heap. The
+  # processes it supervises must not have a gap when it is replaced: demons
+  # holding a heap hand off to the next service worker's replacements, and
+  # heap-free services (libvips, the metrics collector) run under the service
+  # keeper for the server's lifetime.
+  supervisor_pid = ENV["UNICORN_SUPERVISOR_PID"].to_i
+  if refork_schedule && supervisor_pid > 0
+    require "demon/base"
+    Demon::Base.handoff_supervisor_pid = supervisor_pid
+    ServiceKeeper.enable!(supervisor_pid:)
+  end
+
+  Discourse.reset_worker_db_variables_overrides if service_worker.generation.nonzero?
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"
@@ -133,8 +187,15 @@ before_service_worker_ready do |server, service_worker|
   end
 
   DiscoursePluginRegistry.demon_processes.each do |demon_class|
-    server.logger.info "starting #{demon_class.prefix} demon"
-    demon_class.start(1, logger: server.logger)
+    # The service worker is itself an idle Discourse process: demons that can
+    # run as a thread here avoid forking another full process.
+    if demon_class.respond_to?(:start_in_service_worker)
+      server.logger.info "starting #{demon_class.prefix} in the service worker"
+      demon_class.start_in_service_worker
+    else
+      server.logger.info "starting #{demon_class.prefix} demon"
+      demon_class.start(1, logger: server.logger)
+    end
   end
 
   if Rails.env.development? && !ENV["CI"]
@@ -165,7 +226,9 @@ before_service_worker_ready do |server, service_worker|
 
         Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
 
-        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
+        DiscoursePluginRegistry.demon_processes.each do |demon_class|
+          demon_class.ensure_running if !demon_class.respond_to?(:start_in_service_worker)
+        end
       rescue => e
         Rails.logger.warn(
           "Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}",

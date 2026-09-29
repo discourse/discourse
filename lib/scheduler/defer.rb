@@ -10,12 +10,7 @@ module Scheduler
 
     def initialize
       @async = !Rails.env.test?
-      @queue =
-        WorkQueue::ThreadSafeWrapper.new(
-          WorkQueue::FairQueue.new(:site, 500) do
-            WorkQueue::FairQueue.new(:user, 100) { WorkQueue::BoundedQueue.new(50) }
-          end,
-        )
+      @queue = build_queue
 
       @mutex = Mutex.new
       @stats_mutex = Mutex.new
@@ -77,12 +72,24 @@ module Scheduler
       if finish_work
         @finish = true
         @queue.push({ finish: true }, force: true)
-        @thread&.join
+        if block_given?
+          yield while @thread && !@thread.join(1)
+        else
+          @thread&.join
+        end
       end
       @thread.kill if @thread&.alive?
       @thread = nil
       @reactor&.stop
       @reactor = nil
+    end
+
+    # A forked child has none of the parent's threads, so jobs queued in the
+    # parent would otherwise run again in every process forked from it.
+    def after_fork
+      @thread = nil
+      @reactor = nil
+      @queue = build_queue
     end
 
     # test only
@@ -107,8 +114,17 @@ module Scheduler
 
     private
 
+    def build_queue
+      WorkQueue::ThreadSafeWrapper.new(
+        WorkQueue::FairQueue.new(:site, 500) do
+          WorkQueue::FairQueue.new(:user, 100) { WorkQueue::BoundedQueue.new(50) }
+        end,
+      )
+    end
+
     def start_thread
       @mutex.synchronize do
+        @finish = false
         @reactor = MessageBus::TimerThread.new if !@reactor
         @thread =
           Thread.new do
@@ -132,7 +148,7 @@ module Scheduler
           @reactor.queue(@timeout) do
             Rails.logger.error "'#{desc}' is still running after #{@timeout} seconds on db #{db}, this process may need to be restarted!"
           end if !non_block
-        job.call
+        PitchforkReforking.prevent_fork { job.call }
       rescue => ex
         @stats_mutex.synchronize do
           stats = @stats[desc]
