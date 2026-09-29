@@ -74,7 +74,8 @@ before_fork do |server|
   # a fork runs inside PitchforkReforking.prevent_fork, except thread pool
   # tasks, which run concurrently; a mold forked while one was running is
   # discarded rather than used.
-  PitchforkReforking.discard_mold = !PitchforkReforking.wait_for_idle_thread_pools if PitchforkReforking.worker
+  PitchforkReforking.discard_mold =
+    !PitchforkReforking.wait_for_idle_thread_pools if PitchforkReforking.worker
 end
 
 after_mold_fork do |server, mold|

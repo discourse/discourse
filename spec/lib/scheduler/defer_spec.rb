@@ -119,7 +119,10 @@ RSpec.describe Scheduler::Defer do
   describe "#after_fork" do
     it "drops work queued before the fork" do
       completed = Queue.new
-      @defer.instance_variable_get(:@queue).push({ job: -> { completed << :inherited } }, force: true)
+      @defer.instance_variable_get(:@queue).push(
+        { job: -> { completed << :inherited } },
+        force: true,
+      )
 
       @defer.after_fork
       @defer.later { completed << :new }
