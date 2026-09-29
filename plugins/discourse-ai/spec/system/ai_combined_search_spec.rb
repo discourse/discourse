@@ -422,4 +422,42 @@ describe "AI combined search" do
       expect(scopes.last).to eq("topic:#{inside.id}")
     end
   end
+
+  context "with the full page" do
+    fab!(:bot) { Fabricate(:user, username: "answerbot") }
+
+    it "follows the query through history" do
+      visit "/discourse-ai/discoveries/search?q=first"
+      expect(find(".ai-search__query-input").value).to eq("first")
+
+      find(".ai-search__query-input").fill_in(with: "second")
+      find(".ai-search__query-input").send_keys(:enter)
+      expect(page).to have_current_path(/q=second/)
+
+      page.go_back
+
+      expect(page).to have_current_path(/q=first/)
+      expect(find(".ai-search__query-input").value).to eq("first")
+    end
+
+    it "keeps a finished answer when its closing stream message is replayed" do
+      conversation = Fabricate(:private_message_topic, user:, recipient: bot)
+      Fabricate(:post, topic: conversation, user:, raw: "How do widgets work?")
+      Fabricate(:post, topic: conversation, user: bot, raw: "Widgets work like this.")
+      Fabricate(:post, topic: conversation, user:, raw: "And gadgets?")
+      reply = Fabricate(:post, topic: conversation, user: bot, raw: "Gadgets are similar.")
+
+      visit "/discourse-ai/discoveries/search?topic=#{conversation.id}"
+      expect(page).to have_css(".ai-search__turn.--answer .cooked", text: "Gadgets are similar")
+
+      MessageBus.publish(
+        "discourse-ai/ai-bot/topic/#{conversation.id}",
+        { post_id: reply.id, post_number: reply.post_number, cooked: reply.cooked, done: true },
+        user_ids: [user.id],
+      )
+
+      expect(page).to have_css(".ai-search__turn.--answer .cooked", text: "Gadgets are similar")
+      expect(page).to have_css(".ai-search__turn.--question", text: "And gadgets?")
+    end
+  end
 end

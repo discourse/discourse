@@ -133,18 +133,24 @@ export default class AiSearchConversation extends Component {
     }
 
     const existing = this.turns.find((turn) => turn.postId === data.post_id);
+    // the closing message carries only the cooked post, and it is replayed
+    // to anyone who opens the conversation soon after
     const updated = {
       key: `a${data.post_id}`,
       kind: "answer",
       postId: data.post_id,
       turn: existing?.turn ?? this.#currentTurn,
       raw: data.raw ?? existing?.raw ?? "",
+      cooked: data.cooked ?? (data.raw ? null : existing?.cooked),
       streaming: !data.done,
     };
     this.#replaceTurn(updated);
 
     if (data.done) {
-      this.#ranker.add(updated.turn, "cited", citedTopicsFromRaw(updated.raw));
+      const cited = updated.cooked
+        ? citedTopicsFromCooked(updated.cooked)
+        : citedTopicsFromRaw(updated.raw);
+      this.#ranker.add(updated.turn, "cited", cited);
       this.references = this.#ranker.rank(this.#currentTurn);
     }
   }
@@ -163,7 +169,7 @@ export default class AiSearchConversation extends Component {
     }
 
     this.#ranker.exclude(topic.id);
-    const [queryPost, answerPost, ...rest] = topic.post_stream.posts;
+    const [queryPost, answerPost, ...rest] = await this.#allPosts(topic);
     this.query = queryPost?.cooked
       ? new DOMParser().parseFromString(queryPost.cooked, "text/html").body
           .textContent
@@ -193,17 +199,42 @@ export default class AiSearchConversation extends Component {
       }
     });
 
-    // a reply that started streaming while the topic loaded is already in place
-    const streamed = this.turns.filter((existing) => existing.postId);
+    // A reply still streaming while the topic loaded is further along than the
+    // loaded copy; one that finished is better loaded, which is cooked. Either
+    // way it answers the latest question.
+    const streaming = this.turns
+      .filter((existing) => existing.postId && existing.streaming)
+      .map((existing) => ({ ...existing, turn }));
     this.turns = [
       ...turns.filter(
-        (existing) => !streamed.some((s) => s.postId === existing.postId)
+        (existing) => !streaming.some((s) => s.postId === existing.postId)
       ),
-      ...streamed,
+      ...streaming,
     ];
     this.#currentTurn = turn;
 
     await this.#rankHistory(answerPost, turns);
+  }
+
+  // the topic comes with only its first chunk of posts
+  async #allPosts(topic) {
+    const loaded = topic.post_stream.posts;
+    const loadedIds = new Set(loaded.map((post) => post.id));
+    const missing = topic.post_stream.stream.filter((id) => !loadedIds.has(id));
+    if (missing.length === 0) {
+      return loaded;
+    }
+
+    try {
+      const more = await ajax(`/t/${topic.id}/posts.json`, {
+        data: { post_ids: missing },
+      });
+      return [...loaded, ...more.post_stream.posts].sort(
+        (a, b) => a.post_number - b.post_number
+      );
+    } catch {
+      return loaded;
+    }
   }
 
   async #rankHistory(answerPost, turns) {

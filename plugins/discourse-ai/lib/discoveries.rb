@@ -40,8 +40,9 @@ module DiscourseAi
       return 1
     LUA
 
-    SCOPE_PATTERN =
-      /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:[\p{L}\p{M}0-9\-_+]{1,100}|user:[\p{L}\p{M}0-9_.\-]{1,60})\z/
+    # Tag and user names follow their own configurable rules, so they are only
+    # held to being one token: that is what keeps a scope from adding filters.
+    SCOPE_PATTERN = /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:\S{1,100}|user:\S{1,60})\z/
 
     class RequestConflict < StandardError
     end

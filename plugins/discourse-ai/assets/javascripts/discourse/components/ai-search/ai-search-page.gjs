@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import SearchResultEntry from "discourse/components/search-result-entry";
 import { eq } from "discourse/truth-helpers";
@@ -18,17 +19,34 @@ export default class AiSearchPage extends Component {
 
   @tracked inputValue = this.args.query || "";
 
+  #startTimer = null;
+
   constructor() {
     super(...arguments);
 
-    const query = this.inputValue.trim();
-    if (query && !this.args.topicId && !this.session.isActiveFor(query)) {
-      this.session.start(query, "page");
-    }
+    // after this render, which may already have read the state starting
+    // changes
+    this.#startTimer = next(() => {
+      const query = this.inputValue.trim();
+      if (query && !this.args.topicId && !this.pageActiveFor(query)) {
+        this.session.start(query, "page");
+      }
+    });
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this.#startTimer);
   }
 
   get session() {
     return this.aiSearchSession;
+  }
+
+  // the header search shares the session, so a search started there is not
+  // this page's to show
+  get pageActive() {
+    return this.session.surface === "page" && Boolean(this.session.query);
   }
 
   get keywordResults() {
@@ -42,6 +60,10 @@ export default class AiSearchPage extends Component {
       return [];
     }
     return this.session.semanticPosts || [];
+  }
+
+  pageActiveFor(query) {
+    return this.session.surface === "page" && this.session.isActiveFor(query);
   }
 
   @action
@@ -88,7 +110,7 @@ export default class AiSearchPage extends Component {
           />
         </form>
 
-        {{#if this.session.query}}
+        {{#if this.pageActive}}
           <AiSearchAnswer />
 
           <section class="ai-search__keyword-results">
