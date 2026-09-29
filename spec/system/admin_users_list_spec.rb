@@ -122,9 +122,11 @@ describe "Admin Users Page" do
       admin_users_page.visit
       admin_users_page.bulk_select_button.click
       admin_users_page.search_input.fill_in(with: user_1.username)
+      expect(admin_users_page).to have_no_users([user_2.id, user_3.id])
       admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
 
       admin_users_page.search_input.fill_in(with: user_2.username)
+      expect(admin_users_page).to have_no_users([user_1.id, user_3.id])
       admin_users_page.user_row(user_2.id).bulk_select_checkbox.click
 
       admin_users_page.search_input.fill_in(with: "")
