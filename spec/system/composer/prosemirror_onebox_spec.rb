@@ -189,9 +189,13 @@ describe "Composer - ProseMirror - Oneboxing" do
     cdp.allow_clipboard
     open_composer
     cdp.copy_paste("https://example.com/fail")
-    page.send_keys(:enter)
+    cdp.with_paused_request(%r{/onebox(?:\?|$)}) do |request|
+      page.send_keys(:enter)
+      request.wait
+      expect(rich).to have_css(".onebox-loading")
+      request.resume
+    end
 
-    expect(rich).to have_css(".onebox-loading")
     expect(rich).to have_no_css(".onebox-loading")
     expect(rich).to have_css("a[href='https://example.com/fail']")
     expect(rich).to have_no_css(".onebox-wrapper")

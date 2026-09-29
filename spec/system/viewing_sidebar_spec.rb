@@ -39,15 +39,15 @@ describe "Viewing sidebar" do
     describe "Community sidebar section" do
       fab!(:user) { Fabricate(:user, locale: "pl_PL") }
       fab!(:translation_override) do
-        TranslationOverride.create!(
-          locale: "pl_PL",
-          translation_key: "js.sidebar.sections.community.links.topics.content",
-          value: "Tematy",
+        TranslationOverride.upsert!(
+          "pl_PL",
+          "js.sidebar.sections.community.links.topics.content",
+          "Tematy",
         )
-        TranslationOverride.create!(
-          locale: "pl_PL",
-          translation_key: "js.sidebar.sections.community.links.topics.title",
-          value: "Wszystkie tematy",
+        TranslationOverride.upsert!(
+          "pl_PL",
+          "js.sidebar.sections.community.links.topics.title",
+          "Wszystkie tematy",
         )
       end
 
@@ -179,10 +179,10 @@ describe "Viewing sidebar" do
 
       context "with translation override" do
         fab!(:translation_override) do
-          TranslationOverride.create!(
-            locale: "en",
-            translation_key: "js.sidebar.sections.community.links.my_messages.content",
-            value: "Overrided",
+          TranslationOverride.upsert!(
+            "en",
+            "js.sidebar.sections.community.links.my_messages.content",
+            "Overrided",
           )
         end
 
