@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "monitor"
-
 module Scheduler
   # ThreadPool manages a pool of worker threads that process tasks from a queue.
   # It maintains a minimum number of threads and can scale up to a maximum number
@@ -16,9 +14,6 @@ module Scheduler
   #  pool.wait_for_termination(timeout: 1) (optional timeout)
 
   class ThreadPool
-    FORK_LOCK = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Monitor.new
-    private_constant :FORK_LOCK
-
     def self.idle?
       ObjectSpace.each_object(self).all?(&:idle?)
     end
@@ -50,14 +45,14 @@ module Scheduler
       @shutdown = false
 
       # Initialize minimum number of threads
-      FORK_LOCK.synchronize do
+      PitchforkReforking.prevent_fork do
         @min_threads.times { spawn_thread }
         @pid = Process.pid
       end
     end
 
     def post(&block)
-      FORK_LOCK.synchronize do
+      PitchforkReforking.prevent_fork do
         reset_after_fork if @pid != Process.pid
         raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if shutdown?
 

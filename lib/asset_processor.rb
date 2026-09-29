@@ -19,8 +19,8 @@ class AssetProcessor
       Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.mjs")
     end
 
-  @mutex = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
-  @ctx_init = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
+  @mutex = Mutex.new
+  @ctx_init = Mutex.new
 
   class TranspileError < StandardError
   end
@@ -110,19 +110,19 @@ class AssetProcessor
   end
 
   def self.reset_context
-    @ctx_init.synchronize do
-      @ctx&.dispose
-      @ctx = nil
-    end
+    @ctx&.dispose
+    @ctx = nil
   end
 
   def self.v8
     return @ctx if @ctx
 
     # ensure we only init one of these
-    @ctx_init.synchronize do
-      return @ctx if @ctx
-      @ctx = create_new_context
+    PitchforkReforking.prevent_fork do
+      @ctx_init.synchronize do
+        return @ctx if @ctx
+        @ctx = create_new_context
+      end
     end
 
     @ctx
@@ -131,10 +131,12 @@ class AssetProcessor
   # Call a method in the global scope of the v8 context. Promise results are
   # awaited and returned as values.
   def self.v8_call(*args)
-    mutex.synchronize do
-      result = v8.call_await(*args)
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
-      result
+    PitchforkReforking.prevent_fork do
+      mutex.synchronize do
+        result = v8.call_await(*args)
+        v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+        result
+      end
     end
   rescue MiniRacer::ScriptTerminatedError => e
     timeout_error = TimeoutError.new("Script terminated: timeout after #{timeout / 1000}s")

@@ -116,60 +116,16 @@ RSpec.describe Scheduler::Defer do
     expect(s).to eq("good")
   end
 
-  describe "#with_idle" do
-    it "skips running and queued work without dropping either job" do
-      started = Queue.new
-      release = Queue.new
+  describe "#after_fork" do
+    it "drops work queued before the fork" do
       completed = Queue.new
-      @defer.later do
-        started << true
-        release.pop
-        completed << :first
-      end
-      expect(started.pop(timeout: 5)).to eq(true)
-      @defer.later { completed << :second }
+      @defer.instance_variable_get(:@queue).push({ job: -> { completed << :inherited } }, force: true)
 
-      expect(@defer.with_idle { raise "forked with pending work" }).to eq(false)
-      release << true
-      @defer.stop!(finish_work: true)
+      @defer.after_fork
+      @defer.later { completed << :new }
 
-      expect(2.times.map { completed.pop(timeout: 5) }).to eq(%i[first second])
-      expect(@defer.with_idle { :idle }).to eq(:idle)
-    ensure
-      release << true
-    end
-
-    it "releases the admission barrier when the operation fails" do
-      expect { @defer.with_idle { raise "fork failed" } }.to raise_error("fork failed")
-
-      completed = Queue.new
-      @defer.later { completed << true }
-
-      expect(completed.pop(timeout: 5)).to eq(true)
-    end
-
-    it "holds new work until the idle operation finishes" do
-      entered = Queue.new
-      release = Queue.new
-      completed = Queue.new
-      operation =
-        Thread.new do
-          @defer.with_idle do
-            entered << true
-            release.pop
-          end
-        end
-      expect(entered.pop(timeout: 5)).to eq(true)
-      enqueue = Thread.new { @defer.later { completed << true } }
-
-      expect(completed.pop(timeout: 0.05)).to eq(nil)
-      release << true
-
-      expect(completed.pop(timeout: 5)).to eq(true)
-    ensure
-      release << true
-      operation&.join(5)
-      enqueue&.join(5)
+      expect(completed.pop(timeout: 5)).to eq(:new)
+      expect(completed.pop(timeout: 0.1)).to eq(nil)
     end
   end
 

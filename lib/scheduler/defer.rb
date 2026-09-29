@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "weakref"
-require "monitor"
 
 module Scheduler
   module Deferrable
@@ -11,15 +10,9 @@ module Scheduler
 
     def initialize
       @async = !Rails.env.test?
-      @queue =
-        WorkQueue::ThreadSafeWrapper.new(
-          WorkQueue::FairQueue.new(:site, 500) do
-            WorkQueue::FairQueue.new(:user, 100) { WorkQueue::BoundedQueue.new(50) }
-          end,
-        )
+      @queue = build_queue
 
-      @mutex = Monitor.new
-      @pending_jobs = 0
+      @mutex = Mutex.new
       @stats_mutex = Mutex.new
       @paused = false
       @thread = nil
@@ -68,24 +61,10 @@ module Scheduler
       end
 
       if @async
-        @mutex.synchronize do
-          start_thread if !@thread&.alive? && !@paused
-          @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
-          @pending_jobs += 1
-        end
+        start_thread if !@thread&.alive? && !@paused
+        @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
       else
         blk.call
-      end
-    end
-
-    def with_idle
-      return false unless @mutex.try_enter
-
-      begin
-        return false if @pending_jobs > 0
-        yield
-      ensure
-        @mutex.exit
       end
     end
 
@@ -103,6 +82,14 @@ module Scheduler
       @thread = nil
       @reactor&.stop
       @reactor = nil
+    end
+
+    # A forked child has none of the parent's threads, so jobs queued in the
+    # parent would otherwise run again in every process forked from it.
+    def after_fork
+      @thread = nil
+      @reactor = nil
+      @queue = build_queue
     end
 
     # test only
@@ -126,6 +113,14 @@ module Scheduler
     end
 
     private
+
+    def build_queue
+      WorkQueue::ThreadSafeWrapper.new(
+        WorkQueue::FairQueue.new(:site, 500) do
+          WorkQueue::FairQueue.new(:user, 100) { WorkQueue::BoundedQueue.new(50) }
+        end,
+      )
+    end
 
     def start_thread
       @mutex.synchronize do
@@ -153,7 +148,7 @@ module Scheduler
           @reactor.queue(@timeout) do
             Rails.logger.error "'#{desc}' is still running after #{@timeout} seconds on db #{db}, this process may need to be restarted!"
           end if !non_block
-        job.call
+        PitchforkReforking.prevent_fork { job.call }
       rescue => ex
         @stats_mutex.synchronize do
           stats = @stats[desc]
@@ -166,21 +161,17 @@ module Scheduler
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
-      begin
-        if ActiveRecord::Base.connection&.verify!
-          ActiveRecord::Base.connection_handler.clear_active_connections!
-        end
-        if start
-          @stats_mutex.synchronize do
-            stats = @stats[desc]
-            if stats
-              stats[:finished] += 1
-              stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
-            end
+      if ActiveRecord::Base.connection&.verify!
+        ActiveRecord::Base.connection_handler.clear_active_connections!
+      end
+      if start
+        @stats_mutex.synchronize do
+          stats = @stats[desc]
+          if stats
+            stats[:finished] += 1
+            stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
           end
         end
-      ensure
-        @mutex.synchronize { @pending_jobs -= 1 } if job
       end
     end
   end

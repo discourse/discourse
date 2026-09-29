@@ -1,188 +1,92 @@
 # frozen_string_literal: true
 
 RSpec.describe PitchforkReforking do
-  describe ".dispose_v8_contexts" do
-    it "disposes contexts and rebuilds the rendering and compiler contexts on demand" do
-      rendering = PrettyText.v8
-      compiler = AssetProcessor.v8
-      temporary = MiniRacer::Context.new
-      temporary.eval("1 + 1")
+  describe ".prevent_fork" do
+    before { require "pitchfork" }
 
-      described_class.dispose_v8_contexts
-
-      [rendering, compiler, temporary].each do |context|
-        expect { context.eval("1 + 1") }.to raise_error(MiniRacer::ContextDisposedError)
-      end
-      expect(PrettyText.cook("**rebuilt**")).to include("<strong>rebuilt</strong>")
-      expect(AssetProcessor.v8.eval("1 + 1")).to eq(2)
-    end
-  end
-
-  describe PitchforkReforking::PromotionGuard do
-    let(:fork_lock) { Monitor.new }
-    let(:worker) { Struct.new(:to_log).new("worker=0") }
-    let(:defer) { Class.new { include Scheduler::Deferrable }.new }
-    let(:spawn_timeout) { 5 }
-    let(:server) do
-      Class
-        .new do
-          def initialize(spawn_timeout:)
-            @spawn_timeout = spawn_timeout
-          end
-
-          def logger
-            Logger.new(StringIO.new)
-          end
-
-          def spawn_mold(_worker, &block)
-            fork_sibling("spawn_mold", &block)
-          end
-
-          private
-
-          def fork_sibling(_role)
-            yield
+    it "holds off forks while a background thread runs the block" do
+      entered = Queue.new
+      release = Queue.new
+      background =
+        Thread.new do
+          described_class.prevent_fork do
+            entered << true
+            release.pop
           end
         end
-        .prepend(PitchforkReforking::PromotionGuard)
-        .new(spawn_timeout: spawn_timeout)
-    end
+      expect(entered.pop(timeout: 5)).to eq(true)
+      forking = Thread.new { Pitchfork.prevent_fork { :forked } }
 
-    around do |example|
-      pitchfork = Module.new
-      stub_const(Object, :Pitchfork, pitchfork) do
-        stub_const(pitchfork, :FORK_LOCK, fork_lock) do
-          stub_const(Scheduler, :Defer, defer) { example.run }
-        end
-      end
+      expect(forking.join(0.1)).to eq(nil)
+      release << true
+      expect(forking.value).to eq(:forked)
     ensure
-      defer.stop!
+      release << true
+      background&.join(5)
     end
 
-    describe "#spawn_mold" do
-      it "waits for native work before promoting" do
-        entered = Queue.new
-        release = Queue.new
-        native_work =
-          Thread.new do
-            fork_lock.synchronize do
-              entered << true
-              release.pop
-            end
+    it "does not lock on the main thread, which is the thread that forks" do
+      blocker =
+        Thread.new do
+          Pitchfork.prevent_fork do
+            Thread.current[:locked] = true
+            sleep
           end
-        expect(entered.pop(timeout: 5)).to eq(true)
-        promotion = Thread.new { server.spawn_mold(worker) { :promoted } }
-        wait_for { promotion.status == "sleep" }
-
-        release << true
-
-        expect(promotion.join(5)).to eq(promotion)
-        expect(promotion.value).to eq(:promoted)
-      ensure
-        release << true
-        native_work&.join(5)
-        promotion&.join(5)
-      end
-
-      it "drains existing deferred work before promoting" do
-        defer.async = true
-        started = Queue.new
-        release = Queue.new
-        completed = Queue.new
-        defer.later do
-          started << true
-          release.pop
-          completed << :original
         end
-        expect(started.pop(timeout: 5)).to eq(true)
-        promotion = Thread.new { server.spawn_mold(worker) { :promoted } }
-        wait_for { promotion.status == "sleep" }
+      wait_for { blocker[:locked] }
 
-        release << true
-
-        expect(promotion.join(5)).to eq(promotion)
-        expect(promotion.value).to eq(:promoted)
-        expect(completed.pop(timeout: 5)).to eq(:original)
-      ensure
-        release << true
-        promotion&.join(5)
-      end
-
-      it "abandons promotion after the drain timeout without losing deferred work" do
-        defer.async = true
-        started = Queue.new
-        release = Queue.new
-        completed = Queue.new
-        defer.later do
-          started << true
-          release.pop
-          completed << :finished
-        end
-        expect(started.pop(timeout: 5)).to eq(true)
-        short_timeout_server = server.class.new(spawn_timeout: 0.05)
-
-        expect(short_timeout_server.spawn_mold(worker) { raise "forked before drain" }).to eq(false)
-        release << true
-
-        expect(completed.pop(timeout: 5)).to eq(:finished)
-        expect(server.spawn_mold(worker) { :promoted }).to eq(:promoted)
-      ensure
-        release << true
-      end
-
-      it "releases both barriers after a failed promotion" do
-        expect { server.spawn_mold(worker) { raise "fork failed" } }.to raise_error("fork failed")
-
-        operation = Thread.new { server.spawn_mold(worker) { :promoted } }
-
-        expect(operation.join(5)).to eq(operation)
-        expect(operation.value).to eq(:promoted)
-      ensure
-        operation&.kill
-        operation&.join
-      end
-
-      it "rejects manual promotion with multithreaded V8" do
-        global_setting :mini_racer_single_threaded, false
-
-        expect(server.spawn_mold(worker) { raise "forked multithreaded V8" }).to eq(false)
-      end
+      expect(described_class.prevent_fork { :ran }).to eq(:ran)
+    ensure
+      blocker&.kill
+      blocker&.join(5)
     end
   end
 
-  describe PitchforkReforking::ReforkCondition do
-    let(:logger) { Logger.new(nil) }
-    let(:condition) { described_class.new([100, 1000, 5000], min_interval: 600) }
+  it "keeps V8 contexts usable in a process forked after they were warmed" do
+    expect(PrettyText.cook("**parent**")).to include("<strong>parent</strong>")
+    expect(AssetProcessor.v8.eval("1 + 1")).to eq(2)
 
-    def worker(generation:, requests:)
-      stub(generation:, requests_count: requests, to_log: "worker")
+    reader, writer = IO.pipe
+    child =
+      fork do
+        reader.close
+        writer.write(PrettyText.cook("**child**"))
+        writer.write(AssetProcessor.v8.eval("2 + 2").to_s)
+        exit!(0)
+      end
+    writer.close
+    output = reader.read
+    _, status = Process.wait2(child)
+
+    expect(status).to be_success
+    expect(output).to include("<strong>child</strong>")
+    expect(output).to end_with("4")
+  ensure
+    reader&.close
+  end
+
+  describe ".wait_for_idle_thread_pools" do
+    let(:pool) { Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1, idle_time: 1) }
+
+    after do
+      pool.shutdown
+      pool.wait_for_termination(timeout: 1)
     end
 
-    after { PitchforkReforking.worker_started_at = nil }
+    it "waits for running tasks and gives up after the timeout" do
+      started = Queue.new
+      release = Queue.new
+      pool.post do
+        started << true
+        release.pop
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
 
-    it "follows the request schedule for the initial generations regardless of worker age" do
-      PitchforkReforking.worker_started_at = Pitchfork.time_now
-
-      expect(condition.met?(worker(generation: 0, requests: 100), logger)).to eq(true)
-      expect(condition.met?(worker(generation: 1, requests: 999), logger)).to eq(false)
-      expect(condition.met?(worker(generation: 1, requests: 1000), logger)).to eq(true)
-    end
-
-    it "waits for the minimum interval before periodic reforks" do
-      PitchforkReforking.worker_started_at = Pitchfork.time_now - 10
-
-      expect(condition.met?(worker(generation: 2, requests: 5000), logger)).to eq(false)
-
-      PitchforkReforking.worker_started_at = Pitchfork.time_now - 601
-
-      expect(condition.met?(worker(generation: 3, requests: 5000), logger)).to eq(true)
-    end
-
-    it "does not wait when no minimum interval is set" do
-      condition = described_class.new([100, 1000, 5000], min_interval: 0)
-      PitchforkReforking.worker_started_at = Pitchfork.time_now
-
-      expect(condition.met?(worker(generation: 2, requests: 5000), logger)).to eq(true)
+      expect(described_class.wait_for_idle_thread_pools(timeout: 0.05)).to eq(false)
+      release << true
+      expect(described_class.wait_for_idle_thread_pools(timeout: 5)).to eq(true)
+    ensure
+      release << true
     end
   end
 

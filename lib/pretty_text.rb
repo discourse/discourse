@@ -24,8 +24,8 @@ module PrettyText
   VIMEO_PLAYER_PATH = %r{\A/video/(?<id>\d+)/?\z}
   VIMEO_UNLISTED_HASH = /\A[a-zA-Z0-9]+\z/
 
-  @mutex = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
-  @ctx_init = defined?(Pitchfork::FORK_LOCK) ? Pitchfork::FORK_LOCK : Mutex.new
+  @mutex = Mutex.new
+  @ctx_init = Mutex.new
 
   def self.app_root
     Rails.root
@@ -128,18 +128,22 @@ module PrettyText
     return @ctx if @ctx
 
     # ensure we only init one of these
-    @ctx_init.synchronize do
-      return @ctx if @ctx
-      @ctx = create_es6_context
+    PitchforkReforking.prevent_fork do
+      @ctx_init.synchronize do
+        return @ctx if @ctx
+        @ctx = create_es6_context
+      end
     end
 
     @ctx
   end
 
   def self.reset_translations
-    @mutex.synchronize do
-      v8.call("__PrettyText.resetTranslations")
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    PitchforkReforking.prevent_fork do
+      @mutex.synchronize do
+        v8.call("__PrettyText.resetTranslations")
+        v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+      end
     end
   end
 
@@ -727,9 +731,11 @@ module PrettyText
 
   def self.protect
     rval = nil
-    @mutex.synchronize do
-      rval = yield
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    PitchforkReforking.prevent_fork do
+      @mutex.synchronize do
+        rval = yield
+        v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+      end
     end
     rval
   end

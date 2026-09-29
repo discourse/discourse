@@ -6,7 +6,6 @@ stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
 
 require_relative "../lib/pitchfork_reforking"
-Pitchfork::HttpServer.prepend(PitchforkReforking::PromotionGuard)
 
 refork_schedule = ENV["APP_SERVER_REFORK_AFTER"]
 
@@ -14,10 +13,7 @@ if refork_schedule
   unless Pitchfork::REFORKING_AVAILABLE
     raise "APP_SERVER_REFORK_AFTER requires Linux refork support"
   end
-  set[:refork_condition] = PitchforkReforking::ReforkCondition.new(
-    PitchforkReforking.parse_schedule(refork_schedule),
-    min_interval: Integer(ENV.fetch("APP_SERVER_REFORK_MIN_INTERVAL", "0")),
-  )
+  refork_after PitchforkReforking.parse_schedule(refork_schedule)
 end
 
 if enable_logstash_logger
@@ -73,9 +69,21 @@ before_fork do |server|
 
   throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
   sleep(throttle_time) if !Rails.env.development?
+
+  # A worker is about to fork a new mold. Background work that can be split by
+  # a fork runs inside PitchforkReforking.prevent_fork, except thread pool
+  # tasks, which run concurrently; a mold forked while one was running is
+  # discarded rather than used.
+  PitchforkReforking.discard_mold = !PitchforkReforking.wait_for_idle_thread_pools if PitchforkReforking.worker
 end
 
 after_mold_fork do |server, mold|
+  if PitchforkReforking.discard_mold
+    server.logger.warn("#{mold.to_log} discarding: a thread pool task was running at fork")
+    exit!(1)
+  end
+  PitchforkReforking.worker = false
+
   GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
 
   if refork_schedule && !GlobalSetting.mini_racer_single_threaded
@@ -100,10 +108,7 @@ after_mold_fork do |server, mold|
     end
   else
     PitchforkReforking.detach_message_bus_clients
-
-    # Rebuild the V8 contexts disposed before promotion so workers share them.
-    PrettyText.cook("warm up **pretty text**")
-    AssetProcessor.v8
+    Scheduler::Defer.after_fork
   end
 
   Discourse.redis.close
@@ -113,7 +118,7 @@ after_mold_fork do |server, mold|
 end
 
 after_worker_fork do |server, worker|
-  PitchforkReforking.worker_started_at = Pitchfork.time_now
+  PitchforkReforking.worker = true
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
