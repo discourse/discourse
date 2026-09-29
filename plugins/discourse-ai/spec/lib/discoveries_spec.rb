@@ -63,6 +63,23 @@ describe DiscourseAi::Discoveries do
     end
   end
 
+  describe ".scope_filter" do
+    it "turns a scope into the search filter it stands for" do
+      expect(described_class.scope_filter("messages")).to eq("in:messages")
+      expect(described_class.scope_filter("topic:12")).to eq("topic:12")
+      expect(described_class.scope_filter("category:3")).to eq("category:3")
+      expect(described_class.scope_filter("tag:how-to")).to eq("tags:how-to")
+      expect(described_class.scope_filter("user:sam.s")).to eq("user:sam.s")
+    end
+
+    it "ignores anything that is not a scope" do
+      expect(described_class.scope_filter(nil)).to be_nil
+      expect(described_class.scope_filter("category:3 in:all")).to be_nil
+      expect(described_class.scope_filter("order:latest")).to be_nil
+      expect(described_class.scope_filter("topic:abc")).to be_nil
+    end
+  end
+
   describe ".enqueue_reply" do
     it "records a failed ask if the job cannot be queued" do
       allow(Jobs).to receive(:enqueue).and_raise(StandardError, "queue unavailable")

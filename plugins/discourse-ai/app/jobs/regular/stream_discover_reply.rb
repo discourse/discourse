@@ -67,19 +67,34 @@ module Jobs
       end
       return if !active_request?(user, args[:request_id])
 
+      if !rewritten_queries.failed &&
+           (rewritten_queries.keyword_query != query || rewritten_queries.semantic_query != query)
+        publish_update(
+          user,
+          base.merge(
+            done: false,
+            phase: "rewritten",
+            keyword_query: rewritten_queries.keyword_query,
+            semantic_query: rewritten_queries.semantic_query,
+          ),
+        )
+      end
+
       stage = :retrieval
       retrieval = DiscourseAi::Discoveries::Retrieval.new(user:)
-      retrieval_result =
-        retrieval.call(
-          query,
-          keyword_query: rewritten_queries.keyword_query,
-          semantic_query: rewritten_queries.semantic_query,
-        )
+      retrieval_options = {
+        keyword_query: rewritten_queries.keyword_query,
+        semantic_query: rewritten_queries.semantic_query,
+      }
+      scope_filter = DiscourseAi::Discoveries.scope_filter(args[:scope])
+      retrieval_options[:scope_filter] = scope_filter if scope_filter
+      retrieval_result = retrieval.call(query, **retrieval_options)
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
         return
       end
       return if !active_request?(user, args[:request_id])
       ask_log.candidate_post_ids = retrieval_result.synthesis_candidates.pluck("post_id") if ask_log
+      base = base.merge(scope_fallback: true) if retrieval_result.scope_fallback
       if retrieval_result.synthesis_candidates.empty?
         ask_log.ask_outcome = :no_answer if ask_log
         publish_no_answer(user, base)

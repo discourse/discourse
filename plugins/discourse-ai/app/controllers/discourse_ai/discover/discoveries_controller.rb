@@ -26,7 +26,12 @@ module DiscourseAi
 
         RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
 
-        DiscourseAi::Discoveries.enqueue_reply(user: current_user, request_id:, query:)
+        scope = params[:scope].presence
+        if scope && !DiscourseAi::Discoveries.valid_scope?(scope)
+          raise Discourse::InvalidParameters.new(:scope)
+        end
+
+        DiscourseAi::Discoveries.enqueue_reply(user: current_user, request_id:, query:, scope:)
 
         DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
 
@@ -36,6 +41,11 @@ module DiscourseAi
           I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
           status: :conflict,
         )
+      end
+
+      # the Ember app is served for HTML loads before this runs
+      def search_page
+        head :no_content
       end
 
       def recent
@@ -156,7 +166,7 @@ module DiscourseAi
       end
 
       def ask_ai_action?
-        %w[recent clear_recent].include?(action_name) || params[:request_id].present?
+        %w[search_page recent clear_recent].include?(action_name) || params[:request_id].present?
       end
 
       def normalized_query

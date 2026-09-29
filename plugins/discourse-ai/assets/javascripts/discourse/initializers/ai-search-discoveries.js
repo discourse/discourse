@@ -39,16 +39,27 @@ export default apiInitializer((api) => {
   const asksByDefault = () =>
     Boolean(get(currentUser, "user_option.ai_ask_ai_default"));
 
-  api.addQuickSearchRandomTip({
-    label: shortcutLabel("shift", "enter"),
-    get description() {
-      return i18n(
-        asksByDefault()
-          ? "discourse_ai.discobot_discoveries.tip_search"
-          : "discourse_ai.discobot_discoveries.tip_ask"
-      );
-    },
-  });
+  // enter answers and searches at once, so nothing in the menu picks between them
+  const combinedSearch = settings.ai_ask_ai_combined_search_prototype;
+  const aiSearchSession = api.container.lookup("service:ai-search-session");
+  if (combinedSearch) {
+    aiSearchSession.subscribe();
+    // a scope taken off applies to the page it was taken off on
+    api.onPageChange(() => aiSearchSession.restoreScope());
+  }
+
+  if (!combinedSearch) {
+    api.addQuickSearchRandomTip({
+      label: shortcutLabel("shift", "enter"),
+      get description() {
+        return i18n(
+          asksByDefault()
+            ? "discourse_ai.discobot_discoveries.tip_search"
+            : "discourse_ai.discobot_discoveries.tip_ask"
+        );
+      },
+    });
+  }
 
   // Asking is offered on /search the way users and categories are: a type of
   // its own, which owns the results area while it is selected.
@@ -97,7 +108,7 @@ export default apiInitializer((api) => {
       }
 
       const query = search.activeGlobalSearchTerm?.trim();
-      if (query && discobotDiscoveries.lastQuery === query) {
+      if (!combinedSearch && query && discobotDiscoveries.lastQuery === query) {
         value.set("search_type", SEARCH_TYPE_ASK_AI);
       }
 
@@ -149,7 +160,7 @@ export default apiInitializer((api) => {
   api.registerValueTransformer(
     "search-advanced-icon-enabled",
     ({ value, context }) =>
-      offersDiscoveries(context?.location) ? false : value
+      !combinedSearch && offersDiscoveries(context?.location) ? false : value
   );
 
   // Once a term has been asked, the indexed results stay behind their option,
@@ -158,7 +169,7 @@ export default apiInitializer((api) => {
   api.registerValueTransformer(
     "search-menu-indexed-results-enabled",
     ({ value, context }) => {
-      if (!offersDiscoveries(context?.location)) {
+      if (combinedSearch || !offersDiscoveries(context?.location)) {
         return value;
       }
 
@@ -186,6 +197,20 @@ export default apiInitializer((api) => {
         })),
         ...value,
       ];
+    }
+  );
+
+  // Clearing the search is a fresh start, so a scope taken off comes back. The
+  // answer goes with the term, or the returning scope would re-run it.
+  api.registerBehaviorTransformer(
+    "search-menu-clear-search",
+    ({ context, next }) => {
+      if (combinedSearch && offersDiscoveries(context?.location)) {
+        aiSearchSession.reset();
+        aiSearchSession.restoreScope();
+      }
+
+      return next();
     }
   );
 
@@ -225,6 +250,19 @@ export default apiInitializer((api) => {
     if (event.key === "Enter") {
       const query = search.activeGlobalSearchTerm?.trim();
 
+      if (combinedSearch) {
+        if (!event.shiftKey && query) {
+          // the session runs the keyword search as well, in the same scope as
+          // the answer; returning false skips the menu's own enter handling,
+          // which would otherwise treat a second enter as "open the full page"
+          searchTerm.args.updateTypeFilter(null);
+          aiSearchSession.start(query, "menu", aiSearchSession.contextScope);
+          return false;
+        }
+        aiSearchSession.reset();
+        return true;
+      }
+
       const enterAsks = !search.inTopicContext && asksByDefault();
       if (
         enterAsks &&
@@ -255,6 +293,12 @@ export default apiInitializer((api) => {
     // back when the same term is typed a second time, since by then the answer
     // it would be matched against is already gone.
     if (
+      combinedSearch &&
+      aiSearchSession.query &&
+      !aiSearchSession.isActiveFor(search.activeGlobalSearchTerm)
+    ) {
+      aiSearchSession.reset();
+    } else if (
       discobotDiscoveries.lastQuery &&
       discobotDiscoveries.lastQuery !== search.activeGlobalSearchTerm?.trim()
     ) {
@@ -274,17 +318,18 @@ export default apiInitializer((api) => {
   api.registerValueTransformer(
     "search-menu-search-context-enabled",
     ({ value, context }) =>
-      offersDiscoveries(context?.location) ? false : value
+      !combinedSearch && offersDiscoveries(context?.location) ? false : value
   );
 
   // advanced search is offered in the options row instead
   api.registerValueTransformer(
     "search-menu-advanced-button-enabled",
     ({ value, context }) =>
-      offersDiscoveries(context?.location) ? false : value
+      !combinedSearch && offersDiscoveries(context?.location) ? false : value
   );
 
-  // the menu offers every way to resolve the term as options of its own
+  // the menu offers every way to resolve the term as options of its own, or
+  // with combined search, enter resolves it every way at once
   api.registerValueTransformer(
     "search-menu-search-shortcuts-enabled",
     ({ value, context }) =>

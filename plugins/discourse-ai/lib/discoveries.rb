@@ -40,6 +40,9 @@ module DiscourseAi
       return 1
     LUA
 
+    SCOPE_PATTERN =
+      /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:[\p{L}\p{M}0-9\-_+]{1,100}|user:[\p{L}\p{M}0-9_.\-]{1,60})\z/
+
     class RequestConflict < StandardError
     end
 
@@ -63,6 +66,31 @@ module DiscourseAi
 
       def valid_request_id?(request_id)
         request_id.to_s.match?(REQUEST_ID_PATTERN)
+      end
+
+      # A scope is where the question was asked from. It narrows retrieval
+      # without being part of the question, so the question can still be
+      # rewritten and searched semantically.
+      def valid_scope?(scope)
+        scope.to_s.match?(SCOPE_PATTERN)
+      end
+
+      def scope_filter(scope)
+        return if scope.blank? || !valid_scope?(scope)
+
+        type, value = scope.to_s.split(":", 2)
+        case type
+        when "messages"
+          "in:messages"
+        when "topic"
+          "topic:#{value}"
+        when "category"
+          "category:#{value}"
+        when "tag"
+          "tags:#{value}"
+        when "user"
+          "user:#{value}"
+        end
       end
 
       def private_message_query?(query)
@@ -109,7 +137,7 @@ module DiscourseAi
         }
       end
 
-      def enqueue_reply(user:, request_id:, query:)
+      def enqueue_reply(user:, request_id:, query:, scope: nil)
         return if bind_request(user_id: user.id, request_id:, query:) != :created
 
         asked_at = Time.current
@@ -124,6 +152,7 @@ module DiscourseAi
           queued_at: asked_at.to_f,
           summary_detail: settings[:summary_detail].to_s,
           related_count: settings[:related_count],
+          scope:,
         )
       rescue StandardError
         ask_log&.update!(ask_outcome: :failed)
