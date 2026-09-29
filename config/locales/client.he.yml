@@ -48,6 +48,7 @@ he:
       manage:
         access_permission_editor: "עורכים"
         access_permission_remove: "הסרה"
+        add_group: "הוספת משתמש או קבוצה"
         mandatory: "חובה"
         disallowed: "אסור"
     carousel:
@@ -520,7 +521,13 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
+      select_theme:
+        action: "הצגת האפשרויות"
+        completed: "שינוי האפשרויות"
+        show_light_screenshot: "הצגת צילום מסך בהיר"
+        show_dark_screenshot: "הצגת צילום מסך כהה"
       invite_collaborators:
+        title: "הזמנת משתפי פעולה"
         action: "יצירת הזמנה"
       start_posting:
         action: "הצגת רעיונות"
@@ -540,8 +547,12 @@ he:
           what_is_your_favorite_food:
             title: "מה המאכל האהוב עליך או עלייך?"
     design_wizard:
+      title: "התאמת האתר שלך"
+      step_label: "מעבר לשלב %{index}"
+      save: "שמירה וסיום"
       back: "חזרה"
       next: "הבא"
+      launch: "אשף עיצוב"
       sections:
         theme: "ערכת עיצוב"
         fonts: "גופנים"
@@ -561,6 +572,19 @@ he:
         categories: "קטגוריות"
         styles:
           boxes: "תיבות"
+      welcome_banner:
+        location: "מקום כרזה"
+        locations:
+          below_site_header: "מתחת לכותרת האתר"
+          above_topic_content: "מעל לרשימת הנושאים"
+      search:
+        experiences:
+          search_icon:
+            title: "סמל חיפוש"
+            description: "זכוכית מגדלת בכותרת שפותחת את החיפוש."
+          search_field:
+            title: "שדה חיפוש"
+            description: "שדה חיפוש מלא בכותרת, תמיד זמין."
     about:
       edit: "עריכת העמוד הזה"
       simple_title: "על אודות"
@@ -686,6 +710,9 @@ he:
       topic_bookmark: "נושא"
       post_bookmark: "פוסט מס׳ %{post_number}"
       jump_to_post: "קפיצה למס׳ %{post_number}"
+      bookmark_topic: "סימון נושא"
+      edit_topic_bookmark: "עריכת סימניית נושא"
+      delete_topic_bookmark: "מחיקת סימניית נושא"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
@@ -765,12 +792,14 @@ he:
           other: "+%{count} טיוטות נוספות"
     embed_mode:
       allow_access: "לאפשר גישה"
+      continue_as_guest: "להמשיך כאורח/ת"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
         share_session_title: "כניסה אל %{site_name}"
         signin_required_title: "כניסה אל %{site_name}"
         open_signin_tab: "פתיחת לשונית כניסה"
+        waiting_title: "בהמתנה לכניסה"
         cancel: "ביטול"
         sign_in_to_reply: "יש להיכנס כדי להגיב"
     topic_count_all:
@@ -1812,6 +1841,11 @@ he:
         status: "מצב"
         statuses:
           active: "פעיל"
+          server_disabled: "השרת הושבת"
+          client_blocked: "לקוח נחסם"
+          client_not_approved: "הלקוח לא אושר"
+          access_removed: "גישה הוסרה"
+          user_unavailable: "משתמש לא זמין"
           revoked: "נשל"
       revoke_access: "שלילת גישה"
       undo_revoke_access: "ביטול שלילת גישה"
