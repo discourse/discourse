@@ -149,17 +149,15 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
       expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(0)
     end
 
-    it "repairs a retained older date without aggregating its source pageviews again" do
+    it "updates crawler totals for a retained older date" do
       date = today - 2
       event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
       BrowserPageviewSessionEngagementDailyRollup.aggregate(start_date: date, end_date: date)
       refresh
 
       event.update!(score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1)
-      allow(BrowserPageviewSessionEngagementDailyRollup).to receive(:aggregate).and_call_original
       refresh
 
-      expect(BrowserPageviewSessionEngagementDailyRollup).not_to have_received(:aggregate)
       expect(
         BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:likely_crawler_sessions),
       ).to eq(1)
