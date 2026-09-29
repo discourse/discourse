@@ -11,6 +11,20 @@ class Demon::Base
     @demons
   end
 
+  class << self
+    # Set when pitchfork reforks under a supervisor process. Demons then watch
+    # the supervisor instead of the service worker that started them, so they
+    # outlive it until its successor has started their replacements (see
+    # #start), and server-lifetime demons run under the service keeper.
+    def handoff_supervisor_pid
+      Demon::Base.instance_variable_get(:@handoff_supervisor_pid)
+    end
+
+    def handoff_supervisor_pid=(pid)
+      Demon::Base.instance_variable_set(:@handoff_supervisor_pid, pid)
+    end
+  end
+
   if Rails.env.test?
     def self.set_demons(demons)
       @demons = demons
@@ -98,6 +112,12 @@ class Demon::Base
   def stop
     @started = false
 
+    if keeper_managed?
+      ServiceKeeper.stop(keeper_name)
+      @pid = nil
+      return
+    end
+
     if @pid
       Process.kill(stop_signal, @pid)
 
@@ -143,6 +163,13 @@ class Demon::Base
   def ensure_running
     return unless @started
 
+    if keeper_managed?
+      # The keeper restarts crashed services itself; this also respawns the
+      # keeper if it has gone away.
+      @pid = ServiceKeeper.ensure_running(keeper_name, server_lifetime_spec)
+      return
+    end
+
     if !@pid
       @started = false
       start
@@ -167,7 +194,16 @@ class Demon::Base
   def start
     return if @pid || @started
 
-    if existing = already_running?
+    existing = already_running? if !keeper_managed?
+
+    if existing && Demon::Base.handoff_supervisor_pid
+      # Left running by the previous service worker: start the replacement
+      # first so there is no gap, then let the old one shut down gracefully.
+      @started = true
+      run
+      stop_previous(existing)
+      return
+    elsif existing
       # should not happen ... so kill violently
       log("Attempting to kill pid #{existing}")
       Process.kill("TERM", existing)
@@ -177,7 +213,24 @@ class Demon::Base
     run
   end
 
+  # Processes that hold no Discourse heap and must survive service worker
+  # rotation can return a spec (see ServiceKeeper.ensure_running); they then
+  # run under the service keeper when reforking is enabled.
+  def server_lifetime_spec
+    nil
+  end
+
+  def keeper_managed?
+    !!(Demon::Base.handoff_supervisor_pid && ServiceKeeper.enabled? && server_lifetime_spec)
+  end
+
   def run
+    if keeper_managed?
+      @pid = ServiceKeeper.ensure_running(keeper_name, server_lifetime_spec)
+      write_pid_file
+      return
+    end
+
     Discourse.before_fork if defined?(Discourse)
 
     @pid =
@@ -207,7 +260,40 @@ class Demon::Base
     false
   end
 
+  # Like .alive?, but a zombie counts as gone: the supervisor may exit before
+  # its own parent reaps it.
+  def self.running?(pid)
+    return false if !alive?(pid)
+
+    stat = File.read("/proc/#{pid}/stat")
+    stat[stat.rindex(")") + 2] != "Z"
+  rescue Errno::ENOENT
+    false
+  rescue SystemCallError
+    true
+  end
+
   private
+
+  def keeper_name
+    "#{self.class.prefix}_#{@index}"
+  end
+
+  # TERM rather than #stop_signal: the default HUP handler deletes the pid
+  # file, which by now belongs to the replacement.
+  def stop_previous(pid)
+    log("Stopping previous #{self.class.prefix} pid #{pid} after starting #{@pid}")
+
+    Thread.new do
+      Process.kill("TERM", pid)
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + stop_timeout
+      while Demon::Base.alive?(pid) && Process.clock_gettime(Process::CLOCK_MONOTONIC) < deadline
+        sleep 0.5
+      end
+      Process.kill("KILL", pid) if Demon::Base.alive?(pid)
+    rescue Errno::ESRCH
+    end
+  end
 
   def verbose(msg)
     puts msg if @verbose
@@ -233,9 +319,11 @@ class Demon::Base
   end
 
   def monitor_parent_tick
-    if !alive?(@parent_pid)
+    supervisor = Demon::Base.handoff_supervisor_pid
+
+    if !(supervisor ? Demon::Base.running?(supervisor) : alive?(@parent_pid))
       Process.kill "TERM", Process.pid
-      sleep 10
+      sleep(supervisor ? stop_timeout : 10)
       Process.kill "KILL", Process.pid
     end
   rescue Exception => e

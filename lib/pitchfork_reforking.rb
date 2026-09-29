@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "pitchfork"
+
 module PitchforkReforking
   def self.parse_schedule(value)
     entries = value.split(",", -1).map(&:strip)
@@ -39,9 +41,28 @@ module PitchforkReforking
   class DrainTimeout < StandardError
   end
 
-  module PersistentService
-    def outdated?
-      false
+  class << self
+    attr_accessor :worker_started_at
+  end
+
+  # Pitchfork's request-count condition, except that once the schedule reaches
+  # its last (repeating) value a worker must also have been alive for
+  # min_interval seconds. Request counts scale with traffic, and every refork
+  # hands Sidekiq off to a new process, so this bounds how often that happens.
+  class ReforkCondition < Pitchfork::ReforkCondition::RequestsCount
+    def initialize(request_counts, min_interval:)
+      super(request_counts)
+      @periodic_from = request_counts.size - 1
+      @min_interval = min_interval
+    end
+
+    def met?(worker, logger)
+      if @min_interval > 0 && worker.generation >= @periodic_from
+        started_at = PitchforkReforking.worker_started_at
+        return false if started_at && Pitchfork.time_now - started_at < @min_interval
+      end
+
+      super
     end
   end
 

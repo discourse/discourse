@@ -7,13 +7,17 @@ oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSI
 
 require_relative "../lib/pitchfork_reforking"
 Pitchfork::HttpServer.prepend(PitchforkReforking::PromotionGuard)
-Pitchfork::Service.prepend(PitchforkReforking::PersistentService)
 
-if ENV.key?("APP_SERVER_REFORK_AFTER")
+refork_schedule = ENV["APP_SERVER_REFORK_AFTER"]
+
+if refork_schedule
   unless Pitchfork::REFORKING_AVAILABLE
     raise "APP_SERVER_REFORK_AFTER requires Linux refork support"
   end
-  refork_after PitchforkReforking.parse_schedule(ENV.fetch("APP_SERVER_REFORK_AFTER"))
+  set[:refork_condition] = PitchforkReforking::ReforkCondition.new(
+    PitchforkReforking.parse_schedule(refork_schedule),
+    min_interval: Integer(ENV.fetch("APP_SERVER_REFORK_MIN_INTERVAL", "0")),
+  )
 end
 
 if enable_logstash_logger
@@ -74,7 +78,7 @@ end
 after_mold_fork do |server, mold|
   GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
 
-  if ENV.key?("APP_SERVER_REFORK_AFTER") && !GlobalSetting.mini_racer_single_threaded
+  if refork_schedule && !GlobalSetting.mini_racer_single_threaded
     raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
   end
 
@@ -96,6 +100,10 @@ after_mold_fork do |server, mold|
     end
   else
     PitchforkReforking.detach_message_bus_clients
+
+    # Rebuild the V8 contexts disposed before promotion so workers share them.
+    PrettyText.cook("warm up **pretty text**")
+    AssetProcessor.v8
   end
 
   Discourse.redis.close
@@ -105,6 +113,7 @@ after_mold_fork do |server, mold|
 end
 
 after_worker_fork do |server, worker|
+  PitchforkReforking.worker_started_at = Pitchfork.time_now
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
@@ -128,6 +137,18 @@ if oob_gc_enabled
 end
 
 before_service_worker_ready do |server, service_worker|
+  # The service worker follows each refork so it holds the current heap. The
+  # processes it supervises must not have a gap when it is replaced: demons
+  # holding a heap hand off to the next service worker's replacements, and
+  # heap-free services (libvips, the metrics collector) run under the service
+  # keeper for the server's lifetime.
+  supervisor_pid = ENV["UNICORN_SUPERVISOR_PID"].to_i
+  if refork_schedule && supervisor_pid > 0
+    require "demon/base"
+    Demon::Base.handoff_supervisor_pid = supervisor_pid
+    ServiceKeeper.enable!(supervisor_pid:)
+  end
+
   Discourse.reset_worker_db_variables_overrides if service_worker.generation.nonzero?
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
@@ -160,8 +181,15 @@ before_service_worker_ready do |server, service_worker|
   end
 
   DiscoursePluginRegistry.demon_processes.each do |demon_class|
-    server.logger.info "starting #{demon_class.prefix} demon"
-    demon_class.start(1, logger: server.logger)
+    # The service worker is itself an idle Discourse process: demons that can
+    # run as a thread here avoid forking another full process.
+    if demon_class.respond_to?(:start_in_service_worker)
+      server.logger.info "starting #{demon_class.prefix} in the service worker"
+      demon_class.start_in_service_worker
+    else
+      server.logger.info "starting #{demon_class.prefix} demon"
+      demon_class.start(1, logger: server.logger)
+    end
   end
 
   if Rails.env.development? && !ENV["CI"]
@@ -192,7 +220,9 @@ before_service_worker_ready do |server, service_worker|
 
         Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
 
-        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
+        DiscoursePluginRegistry.demon_processes.each do |demon_class|
+          demon_class.ensure_running if !demon_class.respond_to?(:start_in_service_worker)
+        end
       rescue => e
         Rails.logger.warn(
           "Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}",

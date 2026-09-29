@@ -150,6 +150,42 @@ RSpec.describe PitchforkReforking do
     end
   end
 
+  describe PitchforkReforking::ReforkCondition do
+    let(:logger) { Logger.new(nil) }
+    let(:condition) { described_class.new([100, 1000, 5000], min_interval: 600) }
+
+    def worker(generation:, requests:)
+      stub(generation:, requests_count: requests, to_log: "worker")
+    end
+
+    after { PitchforkReforking.worker_started_at = nil }
+
+    it "follows the request schedule for the initial generations regardless of worker age" do
+      PitchforkReforking.worker_started_at = Pitchfork.time_now
+
+      expect(condition.met?(worker(generation: 0, requests: 100), logger)).to eq(true)
+      expect(condition.met?(worker(generation: 1, requests: 999), logger)).to eq(false)
+      expect(condition.met?(worker(generation: 1, requests: 1000), logger)).to eq(true)
+    end
+
+    it "waits for the minimum interval before periodic reforks" do
+      PitchforkReforking.worker_started_at = Pitchfork.time_now - 10
+
+      expect(condition.met?(worker(generation: 2, requests: 5000), logger)).to eq(false)
+
+      PitchforkReforking.worker_started_at = Pitchfork.time_now - 601
+
+      expect(condition.met?(worker(generation: 3, requests: 5000), logger)).to eq(true)
+    end
+
+    it "does not wait when no minimum interval is set" do
+      condition = described_class.new([100, 1000, 5000], min_interval: 0)
+      PitchforkReforking.worker_started_at = Pitchfork.time_now
+
+      expect(condition.met?(worker(generation: 2, requests: 5000), logger)).to eq(true)
+    end
+  end
+
   describe ".parse_schedule" do
     it "supports per-generation limits and a final stop marker" do
       expect(described_class.parse_schedule("100, 500, false")).to eq([100, 500, false])
