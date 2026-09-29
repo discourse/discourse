@@ -137,6 +137,18 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
       ).to eq(1)
     end
 
+    it "removes an older daily row when its final retained pageview is deleted" do
+      date = today - 3
+      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
+      described_class.refresh_recent!(start_date: date, end_date: date)
+      expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(1)
+
+      event.delete
+      refresh
+
+      expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(0)
+    end
+
     it "does not dirty sessions when old source records are removed by retention" do
       event = Fabricate(:browser_pageview_event, created_at: 4.months.ago)
       described_class.where(session_id: event.session_id).update_all(

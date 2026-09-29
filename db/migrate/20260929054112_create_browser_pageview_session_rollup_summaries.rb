@@ -24,7 +24,9 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
     end
 
     execute <<~SQL
-      CREATE FUNCTION mark_browser_pageview_session_rollup_dirty(session_ids text[])
+      CREATE SCHEMA IF NOT EXISTS discourse_functions;
+
+      CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_session_rollup_dirty(session_ids text[])
       RETURNS void LANGUAGE sql AS $$
         INSERT INTO browser_pageview_session_rollup_summaries (session_id)
         SELECT DISTINCT session_id
@@ -34,20 +36,20 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
         SET dirty_generation = browser_pageview_session_rollup_summaries.dirty_generation + 1
       $$;
 
-      CREATE FUNCTION mark_browser_pageview_event_insert()
+      CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_event_insert()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM mark_browser_pageview_session_rollup_dirty(
+        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
           ARRAY(SELECT DISTINCT session_id::text FROM new_rows)
         );
         RETURN NULL;
       END;
       $$;
 
-      CREATE FUNCTION mark_browser_pageview_event_update()
+      CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_event_update()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM mark_browser_pageview_session_rollup_dirty(
+        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
           ARRAY(
             SELECT old_rows.session_id::text
             FROM old_rows JOIN new_rows USING (id)
@@ -66,10 +68,10 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       END;
       $$;
 
-      CREATE FUNCTION mark_browser_pageview_event_delete()
+      CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_event_delete()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM mark_browser_pageview_session_rollup_dirty(
+        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
           ARRAY(
             SELECT DISTINCT session_id::text
             FROM old_rows
@@ -80,20 +82,20 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       END;
       $$;
 
-      CREATE FUNCTION mark_browser_pageview_engagement_insert()
+      CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_engagement_insert()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM mark_browser_pageview_session_rollup_dirty(
+        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
           ARRAY(SELECT DISTINCT session_id::text FROM new_rows)
         );
         RETURN NULL;
       END;
       $$;
 
-      CREATE FUNCTION mark_browser_pageview_engagement_update()
+      CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_engagement_update()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM mark_browser_pageview_session_rollup_dirty(
+        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
           ARRAY(
             SELECT old_rows.session_id::text
             FROM old_rows JOIN new_rows USING (id)
@@ -110,10 +112,10 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       END;
       $$;
 
-      CREATE FUNCTION mark_browser_pageview_engagement_delete()
+      CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_engagement_delete()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM mark_browser_pageview_session_rollup_dirty(
+        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
           ARRAY(
             SELECT DISTINCT session_id::text
             FROM old_rows
@@ -127,32 +129,32 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       CREATE TRIGGER browser_pageview_event_rollup_insert
       AFTER INSERT ON browser_pageview_events
       REFERENCING NEW TABLE AS new_rows
-      FOR EACH STATEMENT EXECUTE FUNCTION mark_browser_pageview_event_insert();
+      FOR EACH STATEMENT EXECUTE FUNCTION discourse_functions.mark_browser_pageview_event_insert();
 
       CREATE TRIGGER browser_pageview_event_rollup_update
       AFTER UPDATE ON browser_pageview_events
       REFERENCING OLD TABLE AS old_rows NEW TABLE AS new_rows
-      FOR EACH STATEMENT EXECUTE FUNCTION mark_browser_pageview_event_update();
+      FOR EACH STATEMENT EXECUTE FUNCTION discourse_functions.mark_browser_pageview_event_update();
 
       CREATE TRIGGER browser_pageview_event_rollup_delete
       AFTER DELETE ON browser_pageview_events
       REFERENCING OLD TABLE AS old_rows
-      FOR EACH STATEMENT EXECUTE FUNCTION mark_browser_pageview_event_delete();
+      FOR EACH STATEMENT EXECUTE FUNCTION discourse_functions.mark_browser_pageview_event_delete();
 
       CREATE TRIGGER browser_pageview_engagement_rollup_insert
       AFTER INSERT ON browser_pageview_session_engagements
       REFERENCING NEW TABLE AS new_rows
-      FOR EACH STATEMENT EXECUTE FUNCTION mark_browser_pageview_engagement_insert();
+      FOR EACH STATEMENT EXECUTE FUNCTION discourse_functions.mark_browser_pageview_engagement_insert();
 
       CREATE TRIGGER browser_pageview_engagement_rollup_update
       AFTER UPDATE ON browser_pageview_session_engagements
       REFERENCING OLD TABLE AS old_rows NEW TABLE AS new_rows
-      FOR EACH STATEMENT EXECUTE FUNCTION mark_browser_pageview_engagement_update();
+      FOR EACH STATEMENT EXECUTE FUNCTION discourse_functions.mark_browser_pageview_engagement_update();
 
       CREATE TRIGGER browser_pageview_engagement_rollup_delete
       AFTER DELETE ON browser_pageview_session_engagements
       REFERENCING OLD TABLE AS old_rows
-      FOR EACH STATEMENT EXECUTE FUNCTION mark_browser_pageview_engagement_delete();
+      FOR EACH STATEMENT EXECUTE FUNCTION discourse_functions.mark_browser_pageview_engagement_delete();
     SQL
   end
 
@@ -164,13 +166,13 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       DROP TRIGGER browser_pageview_engagement_rollup_insert ON browser_pageview_session_engagements;
       DROP TRIGGER browser_pageview_engagement_rollup_update ON browser_pageview_session_engagements;
       DROP TRIGGER browser_pageview_engagement_rollup_delete ON browser_pageview_session_engagements;
-      DROP FUNCTION mark_browser_pageview_event_insert();
-      DROP FUNCTION mark_browser_pageview_event_update();
-      DROP FUNCTION mark_browser_pageview_event_delete();
-      DROP FUNCTION mark_browser_pageview_engagement_insert();
-      DROP FUNCTION mark_browser_pageview_engagement_update();
-      DROP FUNCTION mark_browser_pageview_engagement_delete();
-      DROP FUNCTION mark_browser_pageview_session_rollup_dirty(text[]);
+      DROP FUNCTION discourse_functions.mark_browser_pageview_event_insert();
+      DROP FUNCTION discourse_functions.mark_browser_pageview_event_update();
+      DROP FUNCTION discourse_functions.mark_browser_pageview_event_delete();
+      DROP FUNCTION discourse_functions.mark_browser_pageview_engagement_insert();
+      DROP FUNCTION discourse_functions.mark_browser_pageview_engagement_update();
+      DROP FUNCTION discourse_functions.mark_browser_pageview_engagement_delete();
+      DROP FUNCTION discourse_functions.mark_browser_pageview_session_rollup_dirty(text[]);
     SQL
 
     drop_table :browser_pageview_session_rollup_statuses

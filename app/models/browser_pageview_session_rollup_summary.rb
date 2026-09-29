@@ -258,6 +258,15 @@ class BrowserPageviewSessionRollupSummary < ActiveRecord::Base
         date = row.date
         if date >= BrowserPageviewEvent.retention_cutoff.to_date + 1
           BrowserPageviewSessionEngagementDailyRollup.aggregate(start_date: date, end_date: date)
+          DB.exec(<<~SQL, date:)
+            DELETE FROM browser_pageview_session_engagement_daily_rollups
+            WHERE date = :date
+              AND NOT EXISTS (
+                SELECT 1
+                FROM browser_pageview_events
+                WHERE created_at >= :date AND created_at < :date::date + 1
+              )
+          SQL
         end
         DB.exec(<<~SQL, date:)
         DELETE FROM browser_pageview_session_rollup_repair_dates WHERE date = :date
