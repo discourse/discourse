@@ -270,6 +270,4 @@ end
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_session_created_at                   (session_id,created_at)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
-#  index_browser_pageview_events_on_topic_id    (topic_id)
-#  index_browser_pageview_events_on_user_id     (user_id)
 #
