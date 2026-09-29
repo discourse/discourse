@@ -29,12 +29,12 @@ RSpec.describe Demon::Base do
 
   after do
     described_class.handoff_supervisor_pid = nil
-    [previous_pid, File.exist?(pid_file) && File.read(pid_file).to_i].compact.each do |pid|
+    [previous_pid, File.exist?(pid_file) && File.read(pid_file).to_i].compact.uniq.each do |pid|
       Process.kill("KILL", pid)
+      Process.waitpid(pid)
     rescue StandardError
       nil
     end
-    Process.waitall
     FileUtils.rm_f(pid_file)
   end
 
@@ -91,6 +91,8 @@ RSpec.describe Demon::Base do
 
       expect(described_class.alive?(pid)).to eq(true)
       expect(described_class.running?(pid)).to eq(false)
+    ensure
+      Process.waitpid(pid) if pid
     end
   end
 end
