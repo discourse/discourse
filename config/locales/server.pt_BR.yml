@@ -13,6 +13,10 @@ pt_BR:
     next_page: "Próxima página"
     replies: "Respostas"
     last_updated: "Última atualização"
+    event:
+      name: "Evento"
+      location: "Local"
+      link: "Link"
   mcp:
     errors:
       draft_too_long: "O rascunho é muito longo"

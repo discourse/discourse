@@ -13,6 +13,8 @@ id:
     next_page: "Halaman berikutnya"
     replies: "balasan"
     last_updated: "Terakhir diperbarui"
+    event:
+      location: "Lokasi"
   mcp:
     errors:
       draft_too_long: "Draf terlalu panjang"

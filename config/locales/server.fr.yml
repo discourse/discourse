@@ -13,6 +13,10 @@ fr:
     next_page: "Page suivante"
     replies: "Réponses"
     last_updated: "Dernière mise à jour "
+    event:
+      location: "Emplacement"
+      link: "Insérer un lien"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_too_long: "Le brouillon est trop long"

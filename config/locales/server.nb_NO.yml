@@ -13,6 +13,8 @@ nb_NO:
     next_page: "Neste side"
     replies: "Svar"
     last_updated: "Sist oppdatert"
+    event:
+      location: "Sted"
   mcp:
     errors:
       topic_not_found: "Fant ikke emnet"

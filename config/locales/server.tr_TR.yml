@@ -13,6 +13,10 @@ tr_TR:
     next_page: "Sonraki sayfa"
     replies: "Yanıtlar"
     last_updated: "Son güncelleme"
+    event:
+      name: "Etkinlik"
+      location: "Konum"
+      link: "Bağlantı"
   mcp:
     errors:
       draft_too_long: "Taslak fazla uzun"

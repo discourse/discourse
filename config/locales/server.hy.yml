@@ -12,6 +12,8 @@ hy:
     previous_page: "Նախորդ էջ"
     next_page: "Հաջորդ էջ"
     replies: "Պատասխաններ"
+    event:
+      location: "Տեղակայություն"
   mcp:
     errors:
       topic_not_found: "Թեման չի գտնվել"

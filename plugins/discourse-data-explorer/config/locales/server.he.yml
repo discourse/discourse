@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 he:
+  discourse_data_explorer:
+    mcp:
+      query_failed: "לא ניתן להריץ את השאילתה: %{message}"
+      query_not_found: "השאילתה לא נמצאה"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

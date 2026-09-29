@@ -11,6 +11,11 @@ ar:
     tags: "الوسوم"
     replies: "الردود"
     last_updated: "آخر تحديث"
+    event:
+      name: "حدث"
+      location: "الموقع الجغرافي"
+      link: "رابط"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_too_long: "المسودة طويلة للغاية"

@@ -13,6 +13,10 @@ es:
     next_page: "Página siguiente"
     replies: "Respuestas"
     last_updated: "Última actualización"
+    event:
+      name: "Evento"
+      location: "Ubicación"
+      link: "Enlace"
   mcp:
     errors:
       draft_too_long: "El borrador es demasiado largo"

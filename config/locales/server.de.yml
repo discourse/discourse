@@ -13,6 +13,11 @@ de:
     next_page: "Nächste Seite"
     replies: "Antworten"
     last_updated: "Zuletzt aktualisiert"
+    event:
+      name: "Ereignis"
+      location: "Ort"
+      link: "Link"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_too_long: "Der Entwurf ist zu lang"

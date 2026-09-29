@@ -13,6 +13,10 @@ ru:
     next_page: "Следующая страница"
     replies: "Ответы"
     last_updated: "Последнее обновление"
+    event:
+      name: "Событие"
+      location: "Расположение"
+      link: "Ссылки"
   mcp:
     errors:
       draft_too_long: "Черновик слишком длинный"
