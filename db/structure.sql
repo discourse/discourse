@@ -18807,20 +18807,6 @@ CREATE INDEX index_browser_pageview_events_on_created_at ON public.browser_pagev
 
 
 --
--- Name: index_browser_pageview_events_on_topic_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_browser_pageview_events_on_topic_id ON public.browser_pageview_events USING btree (topic_id);
-
-
---
--- Name: index_browser_pageview_events_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_browser_pageview_events_on_user_id ON public.browser_pageview_events USING btree (user_id);
-
-
---
 -- Name: index_browser_pageview_session_engagements_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23057,6 +23043,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260929043240'),
 ('20260810154331'),
 ('20260728150000'),
 ('20260728071552'),
