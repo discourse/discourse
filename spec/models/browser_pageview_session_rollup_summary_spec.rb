@@ -149,6 +149,22 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
       expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(0)
     end
 
+    it "repairs a retained older date without aggregating its source pageviews again" do
+      date = today - 2
+      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
+      BrowserPageviewSessionEngagementDailyRollup.aggregate(start_date: date, end_date: date)
+      refresh
+
+      event.update!(score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1)
+      allow(BrowserPageviewSessionEngagementDailyRollup).to receive(:aggregate).and_call_original
+      refresh
+
+      expect(BrowserPageviewSessionEngagementDailyRollup).not_to have_received(:aggregate)
+      expect(
+        BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:likely_crawler_sessions),
+      ).to eq(1)
+    end
+
     it "does not dirty sessions when old source records are removed by retention" do
       event = Fabricate(:browser_pageview_event, created_at: 4.months.ago)
       described_class.where(session_id: event.session_id).update_all(
@@ -260,6 +276,18 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
   end
 
   describe ".verify_recent!" do
+    it "covers the verifier date during initial seeding" do
+      date = 2.days.ago.to_date
+      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
+      described_class.where(session_id: event.session_id).delete_all
+      Fabricate(:browser_pageview_event, created_at: 1.day.ago.to_date.to_time(:utc) + 8.hours)
+
+      described_class.refresh_recent!(start_date: 1.day.ago.to_date, end_date: Time.zone.today)
+
+      expect(described_class.exists?(event.session_id)).to eq(true)
+      expect { described_class.verify_recent!(date:) }.not_to raise_error
+    end
+
     it "raises when clean summary values differ from retained source records" do
       date = 2.days.ago.to_date
       event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)

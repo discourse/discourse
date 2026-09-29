@@ -8,19 +8,19 @@ class BrowserPageviewSessionRollupSummary < ActiveRecord::Base
   private_constant :BATCH_SIZE, :STATUS_VERSION
 
   def self.refresh_recent!(start_date:, end_date:)
-    seed_recent!(start_date:, end_date:) if !initialized?
+    seed_recent!(start_date: start_date - 2, end_date:) if !initialized?
     refresh_dirty!
 
     transaction do
       lock_daily_rollups!
       refresh_dirty!
       repair_older_dates!(start_date:)
-      rebuild_recent!(start_date:, end_date:)
+      rebuild_from_summaries!(start_date:, end_date:)
       DB.exec(<<~SQL, version: STATUS_VERSION)
-        INSERT INTO browser_pageview_session_rollup_statuses (id, version, initialized_at)
-        VALUES (1, :version, CURRENT_TIMESTAMP)
+        INSERT INTO browser_pageview_session_rollup_statuses (id, version)
+        VALUES (1, :version)
         ON CONFLICT (id) DO UPDATE
-        SET version = EXCLUDED.version, initialized_at = EXCLUDED.initialized_at
+        SET version = EXCLUDED.version
       SQL
     end
 
@@ -47,7 +47,7 @@ class BrowserPageviewSessionRollupSummary < ActiveRecord::Base
         WHERE first_pageview_at >= :start_date
       SQL
       refresh_dirty!
-      rebuild_recent!(start_date: recent_start, end_date: Time.zone.today)
+      rebuild_from_summaries!(start_date: recent_start, end_date: Time.zone.today)
     end
   end
 
@@ -156,6 +156,7 @@ class BrowserPageviewSessionRollupSummary < ActiveRecord::Base
       ) stats
       LEFT JOIN browser_pageview_session_engagements engagement
         ON engagement.session_id = active_sessions.session_id
+      WHERE stats.first_pageview_at >= :start_date
       ON CONFLICT (session_id) DO NOTHING
     SQL
   end
@@ -256,7 +257,9 @@ class BrowserPageviewSessionRollupSummary < ActiveRecord::Base
     SQL
       .each do |row|
         date = row.date
-        if date >= BrowserPageviewEvent.retention_cutoff.to_date + 1
+        if date >= start_date - 2
+          rebuild_from_summaries!(start_date: date, end_date: date)
+        elsif date >= BrowserPageviewEvent.retention_cutoff.to_date + 1
           BrowserPageviewSessionEngagementDailyRollup.aggregate(start_date: date, end_date: date)
           DB.exec(<<~SQL, date:)
             DELETE FROM browser_pageview_session_engagement_daily_rollups
@@ -275,7 +278,7 @@ class BrowserPageviewSessionRollupSummary < ActiveRecord::Base
   end
   private_class_method :repair_older_dates!
 
-  def self.rebuild_recent!(start_date:, end_date:)
+  def self.rebuild_from_summaries!(start_date:, end_date:)
     DB.exec(<<~SQL, start_date:, end_date: end_date + 1)
       DELETE FROM browser_pageview_session_engagement_daily_rollups
       WHERE date >= :start_date AND date < :end_date
@@ -318,7 +321,7 @@ class BrowserPageviewSessionRollupSummary < ActiveRecord::Base
       WHERE date >= :start_date AND date < :end_date
     SQL
   end
-  private_class_method :rebuild_recent!
+  private_class_method :rebuild_from_summaries!
 
   def self.expire_clean!(start_date:)
     DB.exec(<<~SQL, cutoff: start_date - 2)

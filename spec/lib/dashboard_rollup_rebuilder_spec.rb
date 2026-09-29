@@ -44,6 +44,7 @@ RSpec.describe DashboardRollupRebuilder do
     end
 
     it "keeps recent session totals correct after a manual rebuild and scheduled refresh" do
+      freeze_time(Time.utc(2026, 6, 20, 12, 0, 0))
       today = Time.zone.today
       event = Fabricate(:browser_pageview_event, created_at: today.to_time(:utc) + 2.hours)
       BrowserPageviewSessionRollupSummary.refresh_recent!(start_date: today - 1, end_date: today)

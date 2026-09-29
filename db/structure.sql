@@ -2615,8 +2615,7 @@ CREATE TABLE public.browser_pageview_session_rollup_repair_dates (
 
 CREATE TABLE public.browser_pageview_session_rollup_statuses (
     id bigint NOT NULL,
-    version integer NOT NULL,
-    initialized_at timestamp(6) without time zone NOT NULL
+    version integer NOT NULL
 );
 
 

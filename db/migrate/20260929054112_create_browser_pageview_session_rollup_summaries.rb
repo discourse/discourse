@@ -20,7 +20,6 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
 
     create_table :browser_pageview_session_rollup_statuses do |t|
       t.integer :version, null: false
-      t.datetime :initialized_at, null: false
     end
 
     execute <<~SQL
