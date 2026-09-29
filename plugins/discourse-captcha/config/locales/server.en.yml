@@ -1,4 +1,16 @@
 en:
+  discourse_captcha:
+    configuration_test:
+      success: "Verification succeeded. Your saved CAPTCHA keys work on this site."
+      errors:
+        not_configured: "Select a CAPTCHA provider and save both keys in Settings before testing."
+        configuration_changed: "The CAPTCHA configuration changed. Reload this page and try again."
+        invalid_secret: "The CAPTCHA provider rejected the secret key. Check the saved secret key in Settings."
+        key_mismatch: "The site key and secret key do not match. Check that both keys belong to the same configuration with your provider."
+        invalid_response: "The CAPTCHA response was invalid. Start a new test and try again."
+        expired: "The challenge expired or has already been verified. Start a new test and complete it again."
+        unavailable: "Could not contact the CAPTCHA provider or it returned an unexpected response. Try again later."
+        verification_failed: "The CAPTCHA provider rejected the challenge. Check your saved keys and provider configuration, then try again."
   dashboard:
     problem:
       hcaptcha_configuration: "There is a problem with your hCaptcha `site_key` or `secret_key` configuration"
