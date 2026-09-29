@@ -186,10 +186,15 @@ before_service_worker_ready do |server, service_worker|
     end
   end
 
+  # With reforking, a forked demon would be handed off on every refork. The
+  # service worker is itself an idle Discourse process that follows each
+  # refork, so demons that can run as a thread here do so instead.
+  runs_in_service_worker = ->(demon_class) do
+    refork_schedule && demon_class.respond_to?(:start_in_service_worker)
+  end
+
   DiscoursePluginRegistry.demon_processes.each do |demon_class|
-    # The service worker is itself an idle Discourse process: demons that can
-    # run as a thread here avoid forking another full process.
-    if demon_class.respond_to?(:start_in_service_worker)
+    if runs_in_service_worker.call(demon_class)
       server.logger.info "starting #{demon_class.prefix} in the service worker"
       demon_class.start_in_service_worker
     else
@@ -227,7 +232,7 @@ before_service_worker_ready do |server, service_worker|
         Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
 
         DiscoursePluginRegistry.demon_processes.each do |demon_class|
-          demon_class.ensure_running if !demon_class.respond_to?(:start_in_service_worker)
+          demon_class.ensure_running if !runs_in_service_worker.call(demon_class)
         end
       rescue => e
         Rails.logger.warn(
