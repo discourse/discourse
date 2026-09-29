@@ -5,12 +5,17 @@ module Migrations
     class DiscourseDB
       QueryResult = Data.define(:rows, :column_count)
 
-      COPY_BATCH_SIZE = 1_000
+      # amortizes the per-commit fsync; measured throughput plateaus between
+      # 20k and 100k for both narrow and text-heavy tables, while the batch
+      # is also what a crash can lose and what stays in memory between commits
+      COPY_BATCH_SIZE = 20_000
       SKIP_ROW_MARKER = :$skip
 
       def initialize
         @connection = PG::Connection.new(database_configuration)
         @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
+        @columns = {}
+        configure_session
       end
 
       def copy_data(table_name, column_names, rows)
@@ -25,38 +30,41 @@ module Migrations
         type_map = build_type_map(table_name, column_names)
         encoder = PG::TextEncoder::CopyRow.new(type_map:)
 
+        row_offset = 0
         rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
-          # TODO Maybe add error handling and check if all rows fail to insert, or only
-          # some of them fail. Currently, if a single row fails to insert, then an exception
-          # will stop the whole import. Which seems fine because ideally the import script
-          # should ensure all data is valid. We might need to see how this works out in
-          # actual migrations...
-          @connection.transaction do
-            @connection.copy_data(sql, encoder) do
-              sliced_rows.each do |row|
-                if row[SKIP_ROW_MARKER]
-                  skipped_rows << row
-                  next
-                end
+          begin
+            @connection.transaction do
+              @connection.copy_data(sql, encoder) do
+                sliced_rows.each do |row|
+                  if row[SKIP_ROW_MARKER]
+                    skipped_rows << row
+                    next
+                  end
 
-                i = 0
-                while i < column_count
-                  data[i] = row[column_names[i]]
-                  i += 1
-                end
+                  i = 0
+                  while i < column_count
+                    data[i] = row[column_names[i]]
+                    i += 1
+                  end
 
-                @connection.put_copy_data(data)
-                inserted_rows << row
+                  @connection.put_copy_data(data)
+                  inserted_rows << row
+                end
               end
+
+              # give the caller a chance to do some work when a batch has been committed,
+              # for example, to store ID mappings
+              yield inserted_rows, skipped_rows
+
+              inserted_rows.clear
+              skipped_rows.clear
             end
-
-            # give the caller a chance to do some work when a batch has been committed,
-            # for example, to store ID mappings
-            yield inserted_rows, skipped_rows
-
-            inserted_rows.clear
-            skipped_rows.clear
+          rescue PG::Error => e
+            raise e.class,
+                  "#{e.message.strip} (table #{table_name}, rows #{row_offset + 1}-#{row_offset + sliced_rows.size} of this step)",
+                  e.backtrace
           end
+          row_offset += sliced_rows.size
         end
 
         nil
@@ -86,19 +94,11 @@ module Migrations
       end
 
       def column_names(table_name)
-        query = <<~SQL
-          SELECT column_name
-          FROM information_schema.columns
-          WHERE table_name = $1
-          ORDER BY ordinal_position
-        SQL
-
-        result = @connection.exec_params(query, [table_name])
-        result.column_values(0).map(&:to_sym)
+        columns_of(table_name).keys
       end
 
       def query_array(sql, *params)
-        query_result(sql, *params).rows
+        query_result(sql, *params).rows.to_a
       end
 
       def query_result(sql, *params)
@@ -106,30 +106,63 @@ module Migrations
         @connection.set_single_row_mode
 
         first_result = @connection.get_result
-        return QueryResult.new(rows: Enumerator.new {}, column_count: 0) unless first_result
+        return QueryResult.new(rows: [], column_count: 0) unless first_result
 
         column_count = first_result.nfields
         single_column = column_count == 1
 
-        rows_enumerator =
-          Enumerator.new do |y|
-            first_result.stream_each_row { |row| single_column ? y << row[0] : y << row }
-            first_result.clear
-
-            while (result = @connection.get_result)
-              result.stream_each_row { |row| single_column ? y << row[0] : y << row }
-              result.clear
-            end
-          end
-
-        QueryResult.new(rows: rows_enumerator, column_count:)
+        rows = RowStream.new(@connection, first_result, single_column)
+        QueryResult.new(rows:, column_count:)
       end
 
       def close
         @connection.finish
       end
 
+      # Streams rows in single-row mode. Safe to abandon: when iteration
+      # stops early, the remaining server results are drained so the next
+      # query on the connection still works. Not a fiber-backed Enumerator
+      # on purpose — under external iteration (.next) its ensure would only
+      # run at GC time, when it could consume another query's results.
+      class RowStream
+        include Enumerable
+
+        def initialize(connection, first_result, single_column)
+          @connection = connection
+          @first_result = first_result
+          @single_column = single_column
+        end
+
+        def each(&block)
+          return to_enum(:each) unless block_given?
+          raise "the result stream can only be consumed once" if @consumed
+          @consumed = true
+
+          result = @first_result
+          while result
+            result.stream_each_row { |row| block.call(@single_column ? row[0] : row) }
+            result.clear
+            result = @connection.get_result
+          end
+        ensure
+          while (pending = @connection.get_result)
+            pending.clear
+          end
+        end
+      end
+
       private
+
+      # timestamps arrive as the literal NOW(), which Postgres evaluates in
+      # the session timezone, and server-side timeouts must not kill long
+      # COPY batches or MAX(id) scans
+      def configure_session
+        @connection.exec(<<~SQL)
+          SET TimeZone = 'UTC';
+          SET statement_timeout = 0;
+          SET idle_in_transaction_session_timeout = 0;
+        SQL
+      end
 
       def database_configuration
         db_config = ActiveRecord::Base.connection_db_config.configuration_hash
@@ -146,6 +179,7 @@ module Migrations
           user: db_config[:username] || username,
           password: db_config[:password] || password,
           dbname: db_config[:database],
+          application_name: "discourse-migrations-importer",
         }.compact
       end
 
@@ -153,19 +187,30 @@ module Migrations
         PG::Connection.quote_ident(identifier.to_s)
       end
 
-      def build_type_map(table_name, column_names)
-        sql = <<~SQL
-          SELECT a.attname AS name,
-                 t.typname AS pg_type
-          FROM pg_attribute a
-               JOIN pg_type t ON a.atttypid = t.oid
-          WHERE a.attrelid = $1::regclass
-            AND a.attnum > 0
-            AND NOT a.attisdropped
-        SQL
+      # resolved through the search_path (regclass), so a same-named table in
+      # another schema can't shadow the one COPY writes to
+      def columns_of(table_name)
+        @columns[table_name] ||= begin
+          sql = <<~SQL
+            SELECT a.attname AS name,
+                   t.typname AS pg_type
+            FROM pg_attribute a
+                 JOIN pg_type t ON a.atttypid = t.oid
+            WHERE a.attrelid = $1::regclass
+              AND a.attnum > 0
+              AND NOT a.attisdropped
+            ORDER BY a.attnum
+          SQL
 
-        result = @connection.exec_params(sql, [table_name]).to_a
-        column_type_map = result.to_h { |row| [row["name"].to_sym, row["pg_type"]] }
+          @connection
+            .exec_params(sql, [table_name.to_s])
+            .to_a
+            .to_h { |row| [row["name"].to_sym, row["pg_type"]] }
+        end
+      end
+
+      def build_type_map(table_name, column_names)
+        column_type_map = columns_of(table_name)
 
         encoders =
           column_names.map do |column_name|
