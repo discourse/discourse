@@ -38,7 +38,7 @@ module Migrations
             # percent-level failure is not bad data, it's something systemic;
             # the cap also bounds the bisection work for a broken batch
             failed_limit = [sliced_rows.size / 100, 10].max
-            insert_rows_with_quarantine(
+            insert_rows_and_collect_failures(
               sql,
               encoder,
               table_name,
@@ -199,7 +199,7 @@ module Migrations
       # raising. Bisects on failure, so the cost is O(log batch) extra
       # attempts per bad row and the good rows around it still make it in.
       # Gives up once `failed_limit` rows have been isolated.
-      def insert_rows_with_quarantine(
+      def insert_rows_and_collect_failures(
         sql,
         encoder,
         table_name,
@@ -232,7 +232,7 @@ module Migrations
         end
 
         mid = batch.size / 2
-        insert_rows_with_quarantine(
+        insert_rows_and_collect_failures(
           sql,
           encoder,
           table_name,
@@ -242,7 +242,7 @@ module Migrations
           failed_limit,
           &on_commit
         )
-        insert_rows_with_quarantine(
+        insert_rows_and_collect_failures(
           sql,
           encoder,
           table_name,
