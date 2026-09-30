@@ -30,6 +30,15 @@ RSpec.describe Migrations::Importer::DiscourseDB, :rails do
     expect { rows.to_a }.to raise_error(RuntimeError, /consumed once/)
   end
 
+  it "does not drain a newer query when a consumed stream is read again" do
+    consumed_rows = db.query_result("SELECT 1").rows
+    consumed_rows.to_a
+    newer_rows = db.query_result("SELECT generate_series(2, 3)").rows
+
+    expect { consumed_rows.to_a }.to raise_error(RuntimeError, /consumed once/)
+    expect(newer_rows.to_a).to eq([2, 3])
+  end
+
   it "stores NOW() timestamps in UTC" do
     db.query_array("CREATE TEMP TABLE _db_spec_now (id int NOT NULL, created_at timestamp)")
     db.copy_data("_db_spec_now", %i[id created_at], [{ id: 1, created_at: "NOW()" }]) { |_i, _s| }

@@ -147,15 +147,17 @@ module Migrations
           raise "the result stream can only be consumed once" if @consumed
           @consumed = true
 
-          result = @first_result
-          while result
-            result.stream_each_row { |row| block.call(@single_column ? row[0] : row) }
-            result.clear
-            result = @connection.get_result
-          end
-        ensure
-          while (pending = @connection.get_result)
-            pending.clear
+          begin
+            result = @first_result
+            while result
+              result.stream_each_row { |row| block.call(@single_column ? row[0] : row) }
+              result.clear
+              result = @connection.get_result
+            end
+          ensure
+            while (pending = @connection.get_result)
+              pending.clear
+            end
           end
         end
       end
