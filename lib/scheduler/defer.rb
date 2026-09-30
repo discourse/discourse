@@ -19,6 +19,7 @@ module Scheduler
 
       @mutex = Mutex.new
       @stats_mutex = Mutex.new
+      @pid = Process.pid
       @paused = false
       @thread = nil
       @reactor = nil
@@ -45,6 +46,7 @@ module Scheduler
     end
 
     def resume
+      reset_after_fork if @pid != Process.pid
       return if !@paused
       @paused = false
       start_thread if @async && !@queue.empty?
@@ -62,6 +64,7 @@ module Scheduler
       current_user: nil,
       &blk
     )
+      reset_after_fork if @pid != Process.pid
       @stats_mutex.synchronize do
         stats = (@stats[desc] ||= { queued: 0, finished: 0, duration: 0, errors: 0 })
         stats[:queued] += 1
@@ -108,6 +111,11 @@ module Scheduler
     end
 
     private
+
+    def reset_after_fork
+      @queue.shift(block: false) until @queue.empty?
+      @pid = Process.pid
+    end
 
     def start_thread
       @mutex.synchronize do

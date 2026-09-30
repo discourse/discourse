@@ -92,6 +92,38 @@ RSpec.describe Demon::Base do
     end
   end
 
+  describe "#stop" do
+    it "finishes stopping a replacement whose startup is already running" do
+      previous, previous_release = previous_instance
+      started = Queue.new
+      release = Queue.new
+      pool = Scheduler::ThreadPool.new(min_threads: 1, max_threads: 1)
+      pool.post do
+        started << true
+        release.pop
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+      demon.start
+      previous_release.write("x")
+      wait_for { Scheduler::ThreadPool.paused? }
+
+      stopping = Thread.new { demon.stop }
+      expect(stopping.join(0.1)).to eq(nil)
+      release << true
+
+      expect(stopping.join(5)).to eq(stopping)
+      expect(demon.started).to eq(false)
+      expect(demon.pid).to eq(nil)
+      expect(described_class.running?(File.read(demon.pid_file).to_i)).to eq(false)
+    ensure
+      release << true
+      Scheduler::ThreadPool.resume
+      stopping&.join(5)
+      pool&.shutdown
+      pool&.wait_for_termination(timeout: 5)
+    end
+  end
+
   describe "#ensure_running" do
     it "keeps one replacement while the previous instance is stopping" do
       _previous, release = previous_instance

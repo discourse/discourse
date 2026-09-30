@@ -1052,8 +1052,9 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
-    Scheduler::ThreadPool.pause
+    resume_after_fork
     Scheduler::Defer.pause
+    Scheduler::ThreadPool.pause
     ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
 
     DiscourseVips.before_fork
