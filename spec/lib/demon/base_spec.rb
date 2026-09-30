@@ -26,6 +26,7 @@ RSpec.describe Demon::Base do
   let(:directory) { Dir.mktmpdir }
   let(:demon) { demon_class.new(0, rails_root: "#{directory}/") }
   let(:spawned) { [] }
+  let(:reapers) { [] }
   let(:pipes) { [] }
 
   after do
@@ -35,6 +36,7 @@ RSpec.describe Demon::Base do
       Process.waitpid(pid)
     rescue Errno::ESRCH, Errno::ECHILD
     end
+    reapers.each(&:join)
     pipes.each { |pipe| pipe.close unless pipe.closed? }
     FileUtils.remove_entry(directory)
   end
@@ -53,6 +55,7 @@ RSpec.describe Demon::Base do
         out: ready_writer,
       )
     spawned << pid
+    reapers << Process.detach(pid)
     ready_writer.close
     release_reader.close
     expect(ready_reader.gets).to eq("ready\n")
