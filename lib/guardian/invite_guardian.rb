@@ -35,7 +35,8 @@ module InviteGuardian
       end
 
       if (category = object.category) && category.read_restricted
-        return category.groups&.where(automatic: false)&.any? { |g| can_edit_group?(g) }
+        return true if category.groups.exists?(id: Group.invitee_auto_group_ids)
+        return category.groups.where(automatic: false).any? { |g| can_edit_group?(g) }
       end
     end
 

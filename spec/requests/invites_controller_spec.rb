@@ -504,6 +504,35 @@ RSpec.describe InvitesController do
           expect(response.status).to eq(403)
         end
       end
+
+      context "when the topic is visible to groups an invitee joins automatically" do
+        fab!(:group)
+        fab!(:category) do
+          Fabricate(:category).tap do |c|
+            c.update!(permissions: { :trust_level_0 => :full, group.name => :full })
+          end
+        end
+        fab!(:topic) { Fabricate(:topic, category:) }
+
+        it "works without adding the invitee to a group" do
+          sign_in(admin)
+
+          post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
+
+          expect(response.status).to eq(200)
+          expect(Invite.find_by(email: "test@example.com").topics).to contain_exactly(topic)
+        end
+
+        it "works when only automatic groups can see the topic" do
+          category.update!(permissions: { logged_in_users: :full })
+          sign_in(admin)
+
+          post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
+
+          expect(response.status).to eq(200)
+          expect(Invite.find_by(email: "test@example.com").topics).to contain_exactly(topic)
+        end
+      end
     end
 
     context "with invite to group" do
