@@ -39,8 +39,6 @@ module Scheduler
       @stats_mutex.synchronize { @stats.to_a }
     end
 
-    # Runs every queued job, then stops the worker thread. Jobs queued while
-    # paused wait until resume.
     def pause
       @paused = true
       stop!(finish_work: !!@thread&.alive?)

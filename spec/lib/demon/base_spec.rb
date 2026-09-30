@@ -9,85 +9,99 @@ RSpec.describe Demon::Base do
         "test_demon"
       end
 
-      attr_reader :runs
-
-      # Stands in for the forked process.
-      def run
-        @runs = (@runs || 0) + 1
-        @pid = Process.spawn("sleep", "600")
-        write_pid_file
+      def stop_timeout
+        1
       end
 
-      def stop_timeout
-        2
+      def after_fork
+        sleep
       end
     end
   end
 
-  let(:pid_file) { Rails.root.join("tmp/pids/test_demon_0.pid").to_s }
+  let(:directory) { Dir.mktmpdir }
+  let(:demon) { demon_class.new(0, rails_root: "#{directory}/") }
   let(:spawned) { [] }
-
-  before { FileUtils.mkdir_p(File.dirname(pid_file)) }
+  let(:pipes) { [] }
 
   after do
-    [*spawned, File.exist?(pid_file) && File.read(pid_file).to_i].compact.uniq.each do |pid|
+    demon.stop
+    spawned.each do |pid|
       Process.kill("KILL", pid)
       Process.waitpid(pid)
-    rescue StandardError
-      nil
+    rescue Errno::ESRCH, Errno::ECHILD
     end
-    FileUtils.rm_f(pid_file)
+    pipes.each { |pipe| pipe.close unless pipe.closed? }
+    FileUtils.remove_entry(directory)
   end
 
-  # A previous instance that takes `delay` seconds to exit after TERM.
-  def previous_instance(delay:)
-    pid = Process.spawn(RbConfig.ruby, "-e", "trap('TERM') { sleep #{delay}; exit }; sleep")
+  def previous_instance(ignore_term: false)
+    ready_reader, ready_writer = IO.pipe
+    release_reader, release_writer = IO.pipe
+    pipes.concat([ready_reader, ready_writer, release_reader, release_writer])
+    handler = ignore_term ? "nil" : "STDIN.read(1); exit"
+    pid =
+      Process.spawn(
+        RbConfig.ruby,
+        "-e",
+        "trap('TERM') { #{handler} }; STDOUT.puts('ready'); STDOUT.flush; sleep",
+        in: release_reader,
+        out: ready_writer,
+      )
     spawned << pid
-    File.write(pid_file, pid)
-    sleep 0.3 # let it install its TERM handler
-    pid
-  end
-
-  def wait_until(timeout: 10)
-    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
-    until yield
-      raise "timed out" if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
-      sleep 0.05
-    end
+    ready_writer.close
+    release_reader.close
+    expect(ready_reader.gets).to eq("ready\n")
+    FileUtils.mkdir_p(File.dirname(demon.pid_file))
+    File.write(demon.pid_file, pid)
+    [pid, release_writer]
   end
 
   describe "#start" do
-    it "starts right away when no previous instance is running" do
-      demon = demon_class.new(0)
+    it "starts immediately when no previous instance is running" do
       demon.start
 
-      expect(demon.runs).to eq(1)
       expect(described_class.running?(demon.pid)).to eq(true)
+      expect(File.read(demon.pid_file).to_i).to eq(demon.pid)
     end
 
-    it "starts the replacement only after the previous instance has exited" do
-      previous = previous_instance(delay: 0.5)
-      demon = demon_class.new(0)
+    it "waits for the previous instance to exit without blocking the caller" do
+      previous, release = previous_instance
 
       demon.start
+
       expect(demon.pid).to eq(nil)
+      expect(described_class.running?(previous)).to eq(true)
+      release.write("x")
+      wait_for(timeout: 5) { demon.pid && File.read(demon.pid_file).to_i == demon.pid }
+      expect(described_class.running?(previous)).to eq(false)
+      expect(File.read(demon.pid_file).to_i).to eq(demon.pid)
+    end
+
+    it "kills a previous instance that exceeds the stop timeout" do
+      previous_instance(ignore_term: true)
+
+      demon.start
+
+      wait_for(timeout: 5) { demon.pid && File.read(demon.pid_file).to_i == demon.pid }
+      expect(described_class.running?(spawned.first)).to eq(false)
+    end
+  end
+
+  describe "#ensure_running" do
+    it "keeps one replacement while the previous instance is stopping" do
+      _previous, release = previous_instance
+      demon.start
 
       demon.ensure_running
       demon.start
+      release.write("x")
 
-      wait_until { demon.pid }
-      expect(described_class.running?(previous)).to eq(false)
-      expect(demon.runs).to eq(1)
-    end
-
-    it "kills a previous instance that doesn't exit within the stop timeout" do
-      previous = previous_instance(delay: 600)
-      demon = demon_class.new(0)
-
-      demon.start
-
-      wait_until { demon.pid }
-      expect(described_class.running?(previous)).to eq(false)
+      wait_for(timeout: 5) { demon.pid && File.read(demon.pid_file).to_i == demon.pid }
+      replacement = demon.pid
+      demon.ensure_running
+      expect(demon.pid).to eq(replacement)
+      expect(File.read(demon.pid_file).to_i).to eq(replacement)
     end
   end
 
@@ -98,14 +112,13 @@ RSpec.describe Demon::Base do
       expect(described_class.running?(123)).to eq(false)
     end
 
-    it "treats a zombie as gone" do
+    it "treats an unreaped exited process as stopped" do
       pid = Process.spawn("true")
-      wait_until { File.read("/proc/#{pid}/stat").split(") ").last.start_with?("Z") }
+      spawned << pid
+      wait_for { File.read("/proc/#{pid}/stat").split(") ").last.start_with?("Z") }
 
       expect(described_class.alive?(pid)).to eq(true)
       expect(described_class.running?(pid)).to eq(false)
-    ensure
-      Process.waitpid(pid) if pid
     end
   end
 end

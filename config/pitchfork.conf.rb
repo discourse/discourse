@@ -4,9 +4,6 @@ discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/.
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 
-# Reforking promotes a warmed-up worker to be the mold new workers are forked
-# from, so they share the memory it has touched. For example "100,1000,5000"
-# (the last limit repeats) or "100,500,false".
 refork_after_setting = ENV["APP_SERVER_REFORK_AFTER"]
 if refork_after_setting
   raise "APP_SERVER_REFORK_AFTER requires Linux" if !Pitchfork::REFORKING_AVAILABLE
@@ -73,8 +70,6 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
-  # Only a mold forked from a web worker can hold a V8 context that survives
-  # the fork, which requires single-threaded mini_racer.
   if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
     raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
   end
@@ -110,13 +105,8 @@ after_worker_fork do |server, worker|
 
 end
 
-after_request_complete do |_server, _worker, _rack_env|
-  # A worker keeps serving after it forks a new mold.
-  Discourse.resume_after_fork
-end
 
 before_worker_exit do |_server, _worker|
-  # Runs within the worker's normal deadline; anything longer is cut short.
   Scheduler::Defer.stop!(finish_work: true)
   Scheduler::ThreadPool.wait_for_idle(timeout: 10)
 end
