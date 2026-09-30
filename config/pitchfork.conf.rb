@@ -115,8 +115,9 @@ if oob_gc_enabled
 end
 
 before_worker_exit do |_server, _worker|
-  Scheduler::Defer.stop!(finish_work: true)
+  Discourse.resume_after_fork
   Scheduler::ThreadPool.wait_for_idle(timeout: 10)
+  Scheduler::Defer.stop!(finish_work: true)
 end
 
 before_service_worker_ready do |server, service_worker|

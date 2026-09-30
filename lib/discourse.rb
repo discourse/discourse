@@ -1088,6 +1088,7 @@ module Discourse
 
     return if variables_overrides == (@db_variables_overrides || {})
 
+    RailsMultisite::ConnectionManagement.establish_connection(db: "default")
     @db_variables_overrides = variables_overrides
     ActiveRecord::Base.configurations =
       Rails.application.config.database_configuration(variables_overrides:)
