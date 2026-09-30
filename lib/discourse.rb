@@ -1070,34 +1070,30 @@ module Discourse
     end
   end
 
-  # Called in web worker processes after fork to apply worker-specific
-  # database variable overrides (e.g. a stricter statement_timeout for
-  # web requests than for sidekiq jobs). Configured via GlobalSettings
-  # with the `unicorn_worker_db_variables_` prefix.
-  def self.apply_worker_db_variables_overrides
+  # Called after fork so each process uses the database variables for its role:
+  # web workers may override some (e.g. a stricter statement_timeout for web
+  # requests than for sidekiq jobs), configured via GlobalSettings with the
+  # `unicorn_worker_db_variables_` prefix. Other processes, including those
+  # forked from a web worker, use the defaults.
+  def self.apply_db_variables_overrides(web:)
     variables_overrides = {}
-    prefix = "unicorn_worker_db_variables_"
 
-    GlobalSetting.provider.keys.each do |key|
-      if key.start_with?(prefix)
-        variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
-          key,
-        )
+    if web
+      prefix = "unicorn_worker_db_variables_"
+      GlobalSetting.provider.keys.each do |key|
+        if key.start_with?(prefix)
+          variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
+            key,
+          )
+        end
       end
     end
 
-    if variables_overrides.any?
-      ActiveRecord::Base.configurations =
-        Rails.application.config.database_configuration(variables_overrides:)
-      ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
-      ActiveRecord::Base.establish_connection
-    end
-  end
+    return if variables_overrides == (@db_variables_overrides || {})
 
-  # Undoes apply_worker_db_variables_overrides in a process forked from a web
-  # worker that shouldn't use the web-only database settings.
-  def self.reset_worker_db_variables_overrides
-    ActiveRecord::Base.configurations = Rails.application.config.database_configuration
+    @db_variables_overrides = variables_overrides
+    ActiveRecord::Base.configurations =
+      Rails.application.config.database_configuration(variables_overrides:)
     ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
     ActiveRecord::Base.establish_connection
   end
