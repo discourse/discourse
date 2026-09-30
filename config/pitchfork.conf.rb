@@ -3,7 +3,7 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
-oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
+oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"]
 
 # Reforking promotes a warmed-up worker to be the mold new workers are forked
 # from, so they share the memory it has touched. For example "100,1000,5000"
