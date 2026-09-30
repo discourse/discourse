@@ -75,6 +75,10 @@ before_fork do |server|
   # mold resumes after its next request.
   Scheduler::Defer.pause
   Scheduler::ThreadPool.pause
+
+  # Likewise end open MessageBus long-polls, which also cancels their cleanup
+  # timers. Clients poll again and catch up from the backlog.
+  ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
 end
 
 after_mold_fork do |server, mold|
@@ -86,15 +90,6 @@ after_mold_fork do |server, mold|
 
   Discourse.preload_rails!
 
-  # A mold forked from a web worker inherits its state: major GC deferred, and
-  # copies of its long-poll connections. Release the copies without touching
-  # the connections, so inherited MessageBus timers can't write to them.
-  ObjectSpace.each_object(MessageBus::Client) do |client|
-    next if !(io = client.io)
-    io.reopen(File::NULL) if !io.closed?
-    io.close
-    client.io = nil
-  end
 
   supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
 
