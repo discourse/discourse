@@ -505,7 +505,7 @@ RSpec.describe InvitesController do
         end
       end
 
-      context "when the topic is visible to groups an invitee joins automatically" do
+      context "when the topic is visible to trust level 0" do
         fab!(:group)
         fab!(:category) do
           Fabricate(:category).tap do |c|
@@ -514,13 +514,24 @@ RSpec.describe InvitesController do
         end
         fab!(:topic) { Fabricate(:topic, category:) }
 
-        it "works without adding the invitee to a group" do
-          sign_in(admin)
+        before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
+        after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
+        it "creates an invite that brings the new user to the topic without adding a group" do
+          SiteSetting.enable_local_logins_via_code = false
+          sign_in(admin)
           post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
 
           expect(response.status).to eq(200)
-          expect(Invite.find_by(email: "test@example.com").topics).to contain_exactly(topic)
+          invite = Invite.find_by(email: "test@example.com")
+          expect(invite.topics).to contain_exactly(topic)
+          expect(invite.groups).to be_empty
+
+          delete "/session/#{admin.username}.json"
+          put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
         end
 
         it "does not work when only trust levels above 0 can see the topic" do
@@ -533,14 +544,14 @@ RSpec.describe InvitesController do
           expect(response.status).to eq(403)
         end
 
-        it "works when only automatic groups can see the topic" do
+        it "does not work when only logged in users can see the topic" do
+          # Category visibility is computed from real group memberships, which this pseudogroup has none of.
           category.update!(permissions: { logged_in_users: :full })
           sign_in(admin)
 
           post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
 
-          expect(response.status).to eq(200)
-          expect(Invite.find_by(email: "test@example.com").topics).to contain_exactly(topic)
+          expect(response.status).to eq(403)
         end
       end
     end

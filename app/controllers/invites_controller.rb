@@ -699,7 +699,7 @@ class InvitesController < ApplicationController
     return true if !topic&.read_restricted_category?
 
     allowed_group_ids = topic.category.groups.pluck(:id)
-    invitee_group_ids = Group.invitee_auto_group_ids + Array(groups).map(&:id)
+    invitee_group_ids = [Group::AUTO_GROUPS[:trust_level_0], *Array(groups).map(&:id)]
     allowed_group_ids.intersect?(invitee_group_ids)
   end
 
