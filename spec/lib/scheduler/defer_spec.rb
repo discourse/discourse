@@ -95,6 +95,32 @@ RSpec.describe Scheduler::Defer do
     expect(x).to eq(3)
   end
 
+  it "finishes queued work before pausing and runs work queued while paused on resume" do
+    release = Queue.new
+    completed = Queue.new
+    @defer.later do
+      release.pop
+      completed << :first
+    end
+    @defer.later { completed << :second }
+
+    pausing = Thread.new { @defer.pause }
+    expect(pausing.join(0.1)).to eq(nil)
+    release << true
+    expect(pausing.join(5)).to eq(pausing)
+
+    expect(2.times.map { completed.pop(timeout: 5) }).to eq(%i[first second])
+    expect(@defer.stopped?).to eq(true)
+
+    @defer.later { completed << :third }
+    expect(completed.pop(timeout: 0.1)).to eq(nil)
+
+    @defer.resume
+    expect(completed.pop(timeout: 5)).to eq(:third)
+  ensure
+    release << true
+  end
+
   it "recovers from a crash / fork" do
     s = nil
     @defer.stop!

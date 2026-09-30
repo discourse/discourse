@@ -4,6 +4,18 @@ discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/.
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 
+# Reforking promotes a warmed-up worker to be the mold new workers are forked
+# from, so they share the memory it has touched. For example "100,1000,5000"
+# (the last limit repeats) or "100,500,false".
+refork_after_setting = ENV["APP_SERVER_REFORK_AFTER"]
+if refork_after_setting
+  raise "APP_SERVER_REFORK_AFTER requires Linux" if !Pitchfork::REFORKING_AVAILABLE
+  refork_after(
+    refork_after_setting.split(",").map { |limit| limit.strip == "false" ? false : Integer(limit) },
+  )
+end
+thread_pools_busy_at_fork = false
+
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/pitchfork_logstash_patch"
@@ -57,23 +69,50 @@ before_fork do |server|
 
   throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
   sleep(throttle_time) if !Rails.env.development?
+
+  # A fork copies memory but only the forking thread, so background work
+  # caught mid-way would leave the child with a held lock or a busy V8 context.
+  # Finish it first. Forked processes resume it, and a worker that forked a
+  # mold resumes after its next request.
+  Scheduler::Defer.pause
+  thread_pools_busy_at_fork = !Scheduler::ThreadPool.idle?
 end
 
 after_mold_fork do |server, mold|
-  if mold.generation.zero?
-    Discourse.preload_rails!
+  if thread_pools_busy_at_fork
+    # Pitchfork discards a mold that exits here and reforks again later.
+    server.logger.info("#{mold.to_log} discarded: a thread pool was busy when it was forked")
+    exit!(1)
+  end
 
-    supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+  # Only a mold forked from a web worker can hold a V8 context that survives
+  # the fork, which requires single-threaded mini_racer.
+  if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
+    raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
+  end
 
-    if supervisor > 0
-      Thread.new do
-        while true
-          unless File.exist?("/proc/#{supervisor}")
-            server.logger.error "Kill self, supervisor is gone"
-            Process.kill "TERM", Process.pid
-          end
-          sleep 2
+  Discourse.preload_rails!
+
+  # A mold forked from a web worker inherits its state: major GC deferred, and
+  # copies of its long-poll connections. Release the copies without touching
+  # the connections, so inherited MessageBus timers can't write to them.
+  ObjectSpace.each_object(MessageBus::Client) do |client|
+    next if !(io = client.io)
+    io.reopen(File::NULL) if !io.closed?
+    io.close
+    client.io = nil
+  end
+
+  supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+
+  if supervisor > 0
+    Thread.new do
+      while true
+        unless File.exist?("/proc/#{supervisor}")
+          server.logger.error "Kill self, supervisor is gone"
+          Process.kill "TERM", Process.pid
         end
+        sleep 2
       end
     end
   end
@@ -85,13 +124,29 @@ after_mold_fork do |server, mold|
 end
 
 after_worker_fork do |server, worker|
+  Scheduler::Defer.resume
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
+
+end
+
+after_request_complete do |_server, _worker, _rack_env|
+  Scheduler::Defer.resume
+end
+
+before_worker_exit do |_server, _worker|
+  # Runs within the worker's normal deadline; anything longer is cut short.
+  Scheduler::Defer.stop!(finish_work: true)
+  Scheduler::ThreadPool.wait_for_idle(timeout: 10)
 end
 
 before_service_worker_ready do |server, service_worker|
+  Scheduler::Defer.resume
+  # A service worker forked via a web worker inherits its web-only database settings.
+  Discourse.reset_worker_db_variables_overrides if service_worker.generation.nonzero?
+
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"

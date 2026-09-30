@@ -39,13 +39,17 @@ module Scheduler
       @stats_mutex.synchronize { @stats.to_a }
     end
 
+    # Runs every queued job, then stops the worker thread. Jobs queued while
+    # paused wait until resume.
     def pause
-      stop!
       @paused = true
+      stop!(finish_work: !!@thread&.alive?)
     end
 
     def resume
+      return if !@paused
       @paused = false
+      start_thread if @async && !@queue.empty?
     end
 
     # for test and sidekiq
@@ -109,6 +113,7 @@ module Scheduler
 
     def start_thread
       @mutex.synchronize do
+        @finish = false
         @reactor = MessageBus::TimerThread.new if !@reactor
         @thread =
           Thread.new do

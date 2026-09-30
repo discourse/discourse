@@ -1086,6 +1086,14 @@ module Discourse
     end
   end
 
+  # Undoes apply_worker_db_variables_overrides in a process forked from a web
+  # worker that shouldn't use the web-only database settings.
+  def self.reset_worker_db_variables_overrides
+    ActiveRecord::Base.configurations = Rails.application.config.database_configuration
+    ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+    ActiveRecord::Base.establish_connection
+  end
+
   # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state
