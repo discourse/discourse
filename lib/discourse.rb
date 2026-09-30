@@ -1051,13 +1051,9 @@ module Discourse
   # all forking servers must call this
   # before forking, otherwise the forked process might
   # be in a bad state
-  # A fork copies memory but only the forking thread, so background work caught
-  # mid-way would leave the child with a held lock or a busy V8 context. Finish
-  # it first, and end open long-polls, which also cancels their cleanup timers.
-  # The child resumes in after_fork; the parent calls resume_after_fork.
   def self.before_fork
-    Scheduler::Defer.pause
     Scheduler::ThreadPool.pause
+    Scheduler::Defer.pause
     ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
 
     DiscourseVips.before_fork

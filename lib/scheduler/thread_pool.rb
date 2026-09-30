@@ -24,9 +24,6 @@ module Scheduler
         @paused
       end
 
-      # Stops every pool in this process from starting queued tasks and waits
-      # for running ones to finish, so the process can fork without copying a
-      # task mid-way. Tasks posted meanwhile wait until resume.
       def pause
         @paused = true
         pools = ObjectSpace.each_object(self).to_a
@@ -39,21 +36,19 @@ module Scheduler
         @paused = false
         ObjectSpace.each_object(self, &:resume)
       end
-    end
 
-    def self.idle?
-      ObjectSpace.each_object(self).all?(&:idle?)
-    end
-
-    # Waits up to timeout seconds for every pool in this process to finish its
-    # work. Returns whether they did.
-    def self.wait_for_idle(timeout:)
-      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
-      until idle?
-        return false if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
-        sleep 0.05
+      def idle?
+        ObjectSpace.each_object(self).all?(&:idle?)
       end
-      true
+
+      def wait_for_idle(timeout:)
+        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+        until idle?
+          return false if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+          sleep 0.05
+        end
+        true
+      end
     end
 
     def initialize(min_threads:, max_threads:, idle_time: nil)
@@ -145,7 +140,6 @@ module Scheduler
     end
 
     def resume
-      # A forked process starts afresh on the next post.
       return @paused = false if @pid != Process.pid
 
       @mutex.synchronize do
@@ -162,7 +156,6 @@ module Scheduler
     end
 
     def idle?
-      # A forked process has none of the parent's threads.
       return true if @pid != Process.pid
 
       @mutex.synchronize do
@@ -185,8 +178,6 @@ module Scheduler
 
     private
 
-    # A forked process inherits this pool's state but not its threads, and
-    # queued tasks keep running in the parent, so start again empty.
     def reset_after_fork
       @pid = Process.pid
       @threads = Set.new
@@ -221,7 +212,6 @@ module Scheduler
           # condition between spinning up threads and posting work
           work = @queue.pop(timeout: 0)
           @new_work.wait(@mutex, @idle_time) if !work
-          # Paused while waiting: check again at the top of the loop.
           next if !work && @paused && !@shutdown
 
           if !work && @queue.empty?

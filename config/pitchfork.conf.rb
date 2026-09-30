@@ -5,9 +5,6 @@ enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"]
 
-# Reforking promotes a warmed-up worker to be the mold new workers are forked
-# from, so they share the memory it has touched. For example "100,1000,5000"
-# (the last limit repeats) or "100,500,false".
 refork_after_setting = ENV["APP_SERVER_REFORK_AFTER"]
 if refork_after_setting
   raise "APP_SERVER_REFORK_AFTER requires Linux" if !Pitchfork::REFORKING_AVAILABLE
@@ -74,8 +71,6 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
-  # Only a mold forked from a web worker can hold a V8 context that survives
-  # the fork, which requires single-threaded mini_racer.
   if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
     raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
   end
@@ -83,7 +78,6 @@ after_mold_fork do |server, mold|
   Discourse.preload_rails!
   Discourse.apply_db_variables_overrides(web: false)
 
-  # A mold forked from a web worker inherits its state: major GC deferred.
   GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
 
   supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
@@ -114,14 +108,13 @@ after_worker_fork do |server, worker|
   GC.config(rgengc_allow_full_mark: false) if oob_gc_enabled
 end
 
-after_request_complete do |_server, _worker, _rack_env|
-  GC.start if oob_gc_enabled && GC.latest_gc_info(:need_major_by)
-  # A worker keeps serving after it forks a new mold.
-  Discourse.resume_after_fork
+if oob_gc_enabled
+  after_request_complete do |_server, _worker, _rack_env|
+    GC.start if GC.latest_gc_info(:need_major_by)
+  end
 end
 
 before_worker_exit do |_server, _worker|
-  # Runs within the worker's normal deadline; anything longer is cut short.
   Scheduler::Defer.stop!(finish_work: true)
   Scheduler::ThreadPool.wait_for_idle(timeout: 10)
 end

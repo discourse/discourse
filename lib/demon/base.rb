@@ -168,14 +168,9 @@ class Demon::Base
     return if @pid || @started
 
     @started = true
-    # A replacement is already waiting for the previous instance to exit.
     return if @replacement&.alive?
 
     if existing = already_running?
-      # Left by a previous server process, such as a service worker replaced on
-      # refork. Two instances would contend for the same ports and sockets, so
-      # the replacement starts once this one has exited. The wait happens in a
-      # thread because demons are started from hooks that must not block.
       log("Stopping previous #{self.class.prefix} pid #{existing}")
       Process.kill("TERM", existing)
       @replacement = Thread.new { replace(existing) }
@@ -215,15 +210,12 @@ class Demon::Base
     false
   end
 
-  # Like alive?, but a zombie counts as gone: a process whose parent has not
-  # reaped it yet no longer holds its ports or sockets.
   def self.running?(pid)
     return alive?(pid) if !File.directory?("/proc")
 
     stat = File.read("/proc/#{pid}/stat")
     stat[stat.rindex(")") + 2] != "Z"
   rescue SystemCallError
-    # Reading the stat of a process that is exiting or gone raises ENOENT or ESRCH.
     false
   end
 

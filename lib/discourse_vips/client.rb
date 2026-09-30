@@ -14,8 +14,6 @@ module DiscourseVips
     WORKER_GRACE_SECONDS = 2
     private_constant :WORKER_GRACE_SECONDS
 
-    # The shared worker restarts with the process that supervises it, leaving
-    # its socket missing for a few seconds.
     SHARED_WORKER_RETRY_SECONDS = 10
     private_constant :SHARED_WORKER_RETRY_SECONDS
 

@@ -67,15 +67,57 @@ RSpec.describe Discourse do
     end
   end
 
-  describe ".before_fork and .resume_after_fork" do
-    it "pauses background work until resumed" do
-      Discourse.before_fork
-      expect(Scheduler::ThreadPool.paused?).to eq(true)
+  describe ".before_fork" do
+    after { Discourse.resume_after_fork }
 
-      Discourse.resume_after_fork
-      expect(Scheduler::ThreadPool.paused?).to eq(false)
+    it "pauses thread pools before returning" do
+      Discourse.before_fork
+
+      expect(Scheduler::ThreadPool.paused?).to eq(true)
+    end
+
+    it "finishes deferred work submitted by running pool tasks" do
+      original_async = Scheduler::Defer.async
+      Scheduler::Defer.async = true
+      started = Queue.new
+      completed = Queue.new
+      pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1)
+      pool.post do
+        started << true
+        sleep 0.01 until Scheduler::ThreadPool.paused?
+        Scheduler::Defer.later { completed << :completed }
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+
+      Discourse.before_fork
+
+      expect(completed.pop(timeout: 0.1)).to eq(:completed)
+      expect(Scheduler::Defer.length).to eq(0)
     ensure
       Discourse.resume_after_fork
+      pool&.shutdown
+      pool&.wait_for_termination(timeout: 5)
+      Scheduler::Defer.stop!(finish_work: true)
+      Scheduler::Defer.async = original_async
+    end
+  end
+
+  describe ".resume_after_fork" do
+    after { Discourse.resume_after_fork }
+
+    it "resumes paused background work" do
+      completed = Queue.new
+      pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1)
+      Discourse.before_fork
+      pool.post { completed << :completed }
+
+      Discourse.resume_after_fork
+
+      expect(completed.pop(timeout: 5)).to eq(:completed)
+    ensure
+      Discourse.resume_after_fork
+      pool&.shutdown
+      pool&.wait_for_termination(timeout: 5)
     end
   end
 
