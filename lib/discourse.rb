@@ -1051,7 +1051,15 @@ module Discourse
   # all forking servers must call this
   # before forking, otherwise the forked process might
   # be in a bad state
+  # A fork copies memory but only the forking thread, so background work caught
+  # mid-way would leave the child with a held lock or a busy V8 context. Finish
+  # it first, and end open long-polls, which also cancels their cleanup timers.
+  # The child resumes in after_fork; the parent calls resume_after_fork.
   def self.before_fork
+    Scheduler::Defer.pause
+    Scheduler::ThreadPool.pause
+    ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
+
     DiscourseVips.before_fork
 
     if GlobalSetting.mini_racer_single_threaded
@@ -1094,10 +1102,16 @@ module Discourse
     ActiveRecord::Base.establish_connection
   end
 
+  def self.resume_after_fork
+    Scheduler::Defer.resume
+    Scheduler::ThreadPool.resume
+  end
+
   # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    resume_after_fork
     Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
 
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
