@@ -227,7 +227,7 @@ module Scheduler
 
           @busy_threads << Thread.current if work
 
-          if !done && work && @queue.length > 0 && @threads.length < @max_threads &&
+          if !done && !@shutdown && work && @queue.length > 0 && @threads.length < @max_threads &&
                @busy_threads.length == @threads.length
             spawn_thread
           end

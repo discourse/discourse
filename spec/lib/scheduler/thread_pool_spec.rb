@@ -192,13 +192,15 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
         completed << 0
       end
       expect(started.pop(timeout: 5)).to eq(true)
+      pool.pause
       3.times { |index| pool.post { completed << index + 1 } }
 
       pool.shutdown
+      expect(3.times.map { completed.pop(timeout: 5) }.sort).to eq([1, 2, 3])
       release << true
       pool.wait_for_termination(timeout: 5)
 
-      expect(4.times.map { completed.pop(timeout: 5) }.sort).to eq([0, 1, 2, 3])
+      expect(completed.pop(timeout: 5)).to eq(0)
       expect(pool.stats[:thread_count]).to eq(0)
     ensure
       release << true

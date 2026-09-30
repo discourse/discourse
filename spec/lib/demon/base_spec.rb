@@ -9,6 +9,10 @@ RSpec.describe Demon::Base do
         "test_demon"
       end
 
+      def stop_signal
+        "KILL"
+      end
+
       def stop_timeout
         1
       end
