@@ -76,7 +76,24 @@ RSpec.describe Discourse do
       expect(Scheduler::ThreadPool.paused?).to eq(true)
     end
 
-    it "finishes deferred work submitted by running pool tasks" do
+    it "drains deferred jobs accumulated between forks" do
+      original_async = Scheduler::Defer.async
+      Scheduler::Defer.async = true
+      completed = Queue.new
+      Discourse.before_fork
+      Scheduler::Defer.later { completed << :completed }
+
+      Discourse.before_fork
+
+      expect(completed.pop(timeout: 0.1)).to eq(:completed)
+      expect(Scheduler::Defer.length).to eq(0)
+    ensure
+      Discourse.resume_after_fork
+      Scheduler::Defer.stop!(finish_work: true)
+      Scheduler::Defer.async = original_async
+    end
+
+    it "retains deferred jobs submitted by draining pools for the parent" do
       original_async = Scheduler::Defer.async
       Scheduler::Defer.async = true
       started = Queue.new
@@ -91,10 +108,46 @@ RSpec.describe Discourse do
 
       Discourse.before_fork
 
-      expect(completed.pop(timeout: 0.1)).to eq(:completed)
-      expect(Scheduler::Defer.length).to eq(0)
+      expect(Scheduler::Defer.length).to eq(1)
+      Discourse.resume_after_fork
+      expect(completed.pop(timeout: 5)).to eq(:completed)
     ensure
       Discourse.resume_after_fork
+      pool&.shutdown
+      pool&.wait_for_termination(timeout: 5)
+      Scheduler::Defer.stop!(finish_work: true)
+      Scheduler::Defer.async = original_async
+    end
+
+    it "keeps pools available while draining deferred work" do
+      original_async = Scheduler::Defer.async
+      Scheduler::Defer.async = true
+      started = Queue.new
+      release = Queue.new
+      completed = Queue.new
+      pool = Scheduler::ThreadPool.new(min_threads: 1, max_threads: 1)
+      pool.post do
+        started << true
+        release.pop
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+      Scheduler::Defer.later do
+        pool.post { completed << :completed }
+        completed.pop
+      end
+      wait_for { pool.stats[:queued_tasks] == 1 }
+
+      preparing = Thread.new { Discourse.before_fork }
+      expect(preparing.join(0.1)).to eq(nil)
+      release << true
+
+      expect(preparing.join(5)).to eq(preparing)
+      expect(Scheduler::Defer.length).to eq(0)
+      expect(Scheduler::ThreadPool.paused?).to eq(true)
+    ensure
+      release << true
+      Discourse.resume_after_fork
+      preparing&.join(5)
       pool&.shutdown
       pool&.wait_for_termination(timeout: 5)
       Scheduler::Defer.stop!(finish_work: true)

@@ -96,7 +96,7 @@ class Demon::Base
   end
 
   def stop
-    @started = false
+    cancel_replacement
 
     if @pid
       Process.kill(stop_signal, @pid)
@@ -221,10 +221,15 @@ class Demon::Base
 
   private
 
+  def cancel_replacement
+    @started = false
+    @replacement&.join
+  end
+
   def replace(existing)
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + stop_timeout
     killed = false
-    while Demon::Base.running?(existing)
+    while @started && Demon::Base.running?(existing)
       if !killed && Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
         log("Previous #{self.class.prefix} pid #{existing} did not stop, killing", level: :warn)
         begin

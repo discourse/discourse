@@ -38,8 +38,8 @@ class Demon::DiscourseVips < Demon::Base
   end
 
   def stop
+    cancel_replacement
     worker_pid = @pid
-    @started = false
     @worker_process&.shutdown
   ensure
     @worker_process = nil
