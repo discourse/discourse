@@ -208,6 +208,16 @@ RSpec.describe InviteGuardian do
           expect(admin.guardian.can_invite_to?(topic)).to eq(true)
         end
 
+        it "returns false when the inviter cannot see the topic" do
+          SiteSetting.default_invitee_trust_level = 1
+          category.update!(permissions: { trust_level_1: :full })
+          inviter = Fabricate(:user, trust_level: TrustLevel[0])
+          Group.refresh_automatic_groups!
+
+          expect(inviter.guardian.can_see?(topic)).to eq(false)
+          expect(inviter.guardian.can_invite_to?(topic)).to eq(false)
+        end
+
         it "returns false when the default invitee trust level is too low" do
           SiteSetting.default_invitee_trust_level = 1
           category.update!(permissions: { trust_level_2: :full })
