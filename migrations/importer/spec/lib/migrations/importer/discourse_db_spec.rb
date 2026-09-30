@@ -17,6 +17,12 @@ RSpec.describe Migrations::Importer::DiscourseDB, :rails do
     expect(db.query_array("SELECT 42").first).to eq(42)
   end
 
+  it "materializes query arrays" do
+    rows = db.query_array("SELECT generate_series(1, 3)")
+
+    expect(rows).to eq([1, 2, 3])
+  end
+
   it "refuses to consume a result stream twice" do
     rows = db.query_result("SELECT 1").rows
     rows.to_a
