@@ -173,6 +173,7 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
                             passthrough_authorize_options:
                               SiteSetting.openid_connect_authorize_parameters.split("|"),
                             claims: SiteSetting.openid_connect_claims,
+                            email_claim: SiteSetting.openid_connect_email_claim,
                             pkce: SiteSetting.openid_connect_use_pkce,
                             pkce_options: {
                               code_verifier: -> { generate_code_verifier },
