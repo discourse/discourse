@@ -194,6 +194,7 @@ class Demon::Base
         establish_app
         after_fork
       end
+    Discourse.resume_after_fork if defined?(Discourse)
 
     write_pid_file
   end

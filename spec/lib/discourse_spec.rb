@@ -67,6 +67,18 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".before_fork and .resume_after_fork" do
+    it "pauses background work until resumed" do
+      Discourse.before_fork
+      expect(Scheduler::ThreadPool.paused?).to eq(true)
+
+      Discourse.resume_after_fork
+      expect(Scheduler::ThreadPool.paused?).to eq(false)
+    ensure
+      Discourse.resume_after_fork
+    end
+  end
+
   describe ".apply_worker_db_variables_overrides and .reset_worker_db_variables_overrides" do
     around do |example|
       original_env = ENV.to_hash

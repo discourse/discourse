@@ -69,16 +69,7 @@ before_fork do |server|
   throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
   sleep(throttle_time) if !Rails.env.development?
 
-  # A fork copies memory but only the forking thread, so background work
-  # caught mid-way would leave the child with a held lock or a busy V8 context.
-  # Finish it first. Forked processes resume it, and a worker that forked a
-  # mold resumes after its next request.
-  Scheduler::Defer.pause
-  Scheduler::ThreadPool.pause
-
-  # Likewise end open MessageBus long-polls, which also cancels their cleanup
-  # timers. Clients poll again and catch up from the backlog.
-  ObjectSpace.each_object(MessageBus::Client) { |client| client.synchronize { client.close } }
+  Discourse.before_fork
 end
 
 after_mold_fork do |server, mold|
@@ -107,13 +98,10 @@ after_mold_fork do |server, mold|
 
   Discourse.redis.close
   DiscourseVips::Client.use_shared_worker
-  Discourse.before_fork
   Process.warmup
 end
 
 after_worker_fork do |server, worker|
-  Scheduler::Defer.resume
-  Scheduler::ThreadPool.resume
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
@@ -122,8 +110,8 @@ after_worker_fork do |server, worker|
 end
 
 after_request_complete do |_server, _worker, _rack_env|
-  Scheduler::Defer.resume
-  Scheduler::ThreadPool.resume
+  # A worker keeps serving after it forks a new mold.
+  Discourse.resume_after_fork
 end
 
 before_worker_exit do |_server, _worker|
@@ -133,8 +121,7 @@ before_worker_exit do |_server, _worker|
 end
 
 before_service_worker_ready do |server, service_worker|
-  Scheduler::Defer.resume
-  Scheduler::ThreadPool.resume
+  Discourse.resume_after_fork
   # A service worker forked via a web worker inherits its web-only database settings.
   Discourse.reset_worker_db_variables_overrides if service_worker.generation.nonzero?
 
