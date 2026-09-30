@@ -76,7 +76,7 @@ function normalizeList(value) {
   }
 
   return (value || "")
-    .split(/[\n,]/)
+    .split("\n")
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -109,6 +109,7 @@ export default class AdminMcp extends Component {
   @tracked saving = false;
   @tracked clients;
   @tracked clientRecord;
+  @tracked clientEditData;
   @tracked clientNextCursor;
   @tracked clientLoading = false;
   @tracked selectedClientPresetId;
@@ -142,12 +143,20 @@ export default class AdminMcp extends Component {
   authorizationRequestId = 0;
   activityRequestId = 0;
 
+  #clientFormApi;
+
   constructor() {
     super(...arguments);
     const model = this.args.model || {};
     this.clients = model.clients || model.oauth_clients;
     this.clientNextCursor = model.meta?.next_cursor;
     this.clientRecord = model.client;
+    if (this.args.section === "client-edit") {
+      this.clientEditData = {
+        name: model.client.name,
+        redirect_uris: model.client.redirect_uris.join("\n"),
+      };
+    }
     this.primitiveRecords = model.primitives;
     this.primitiveEnabledStates = new Map(
       (model.primitives || []).map((primitive) => [
@@ -710,6 +719,50 @@ export default class AdminMcp extends Component {
         "adminConfig.mcp.clients.show",
         result.client.id
       );
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  @action
+  cancelClientEdit() {
+    this.router.transitionTo("adminConfig.mcp.clients.show", this.client.id);
+  }
+
+  @action
+  registerClientForm(api) {
+    this.#clientFormApi = api;
+  }
+
+  @action
+  async updateClient(data) {
+    this.saving = true;
+    try {
+      const client = {};
+      if (data.name !== this.clientEditData.name) {
+        client.name = data.name;
+      }
+      const redirectUris = normalizeList(data.redirect_uris);
+      if (
+        redirectUris.join("\n") !==
+        normalizeList(this.clientEditData.redirect_uris).join("\n")
+      ) {
+        client.redirect_uris = redirectUris;
+      }
+      if (Object.keys(client).length) {
+        await ajax(`/admin/mcp/clients/${this.client.id}.json`, {
+          type: "PUT",
+          data: { client },
+        });
+      }
+      this.#clientFormApi.commit();
+      this.router.transitionTo("adminConfig.mcp.clients.show", this.client.id);
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("admin.config.mcp.clients.updated") },
+      });
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -1707,7 +1760,7 @@ export default class AdminMcp extends Component {
                 @description={{i18n
                   "admin.config.mcp.clients.redirect_uris_description"
                 }}
-                @format="large"
+                @format="full"
                 @name="redirect_uris"
                 @title={{i18n "admin.config.mcp.clients.redirect_uris"}}
                 @type="textarea"
@@ -1751,6 +1804,59 @@ export default class AdminMcp extends Component {
           </AdminSectionLandingWrapper>
         </section>
       {{/if}}
+    {{else if (eq @section "client-edit")}}
+      <BackButton
+        @model={{this.client.id}}
+        @route="adminConfig.mcp.clients.show"
+      />
+      <AdminConfigAreaCard @heading="admin.config.mcp.clients.edit">
+        <:content>
+          <p>{{i18n
+              (if
+                this.client.admin_managed
+                "admin.config.mcp.clients.manual_description"
+                "admin.config.mcp.clients.automatic_description"
+              )
+            }}</p>
+          <Form
+            class="admin-mcp__edit-client-form"
+            @commitOnSubmit={{false}}
+            @data={{this.clientEditData}}
+            @isLoading={{this.saving}}
+            @onRegisterApi={{this.registerClientForm}}
+            @onSubmit={{this.updateClient}}
+            as |form|
+          >
+            <form.Field
+              @description={{i18n "admin.config.mcp.clients.name_description"}}
+              @format="large"
+              @name="name"
+              @title={{i18n "admin.config.mcp.clients.name"}}
+              @type="input"
+              @validation="required"
+              as |field|
+            ><field.Control /></form.Field>
+            <form.Field
+              @description={{i18n
+                "admin.config.mcp.clients.redirect_uris_description"
+              }}
+              @format="full"
+              @name="redirect_uris"
+              @title={{i18n "admin.config.mcp.clients.redirect_uris"}}
+              @type="textarea"
+              @validation="required"
+              as |field|
+            ><field.Control @height={{100}} /></form.Field>
+            <form.Submit @label="save" />
+            <DButton
+              class="btn-default admin-mcp__cancel-client-edit"
+              @action={{this.cancelClientEdit}}
+              @disabled={{this.saving}}
+              @label="cancel"
+            />
+          </Form>
+        </:content>
+      </AdminConfigAreaCard>
     {{else if (eq @section "client-detail")}}
       <BackButton
         @label="admin.config.mcp.clients.back"
@@ -1761,6 +1867,12 @@ export default class AdminMcp extends Component {
         @titleLabel={{this.client.name}}
       >
         <:actions as |actions|>
+          <actions.Default
+            class="admin-mcp__edit-client"
+            @label="admin.config.mcp.clients.edit"
+            @route="adminConfig.mcp.clients.edit"
+            @routeModels={{array this.client.id}}
+          />
           <actions.Default
             @action={{fn this.toggleClientBlock this.client}}
             @label={{if
@@ -1806,6 +1918,14 @@ export default class AdminMcp extends Component {
                   {{/each}}
                 </ul>
               </dd></div>
+            <div><dt>{{i18n "admin.config.mcp.clients.management"}}</dt><dd
+              >{{i18n
+                  (if
+                    this.client.admin_managed
+                    "admin.config.mcp.clients.manual"
+                    "admin.config.mcp.clients.automatic"
+                  )
+                }}</dd></div>
             <div><dt>{{i18n "admin.config.mcp.clients.first_seen"}}</dt><dd
               >{{dFormatDate this.client.first_seen_at}}</dd></div>
             <div><dt>{{i18n "admin.config.mcp.clients.last_seen"}}</dt><dd>{{#if
