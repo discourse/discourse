@@ -523,6 +523,16 @@ RSpec.describe InvitesController do
           expect(Invite.find_by(email: "test@example.com").topics).to contain_exactly(topic)
         end
 
+        it "does not work when only trust levels above 0 can see the topic" do
+          SiteSetting.default_invitee_trust_level = 1
+          category.update!(permissions: { trust_level_1: :full })
+          sign_in(admin)
+
+          post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
+
+          expect(response.status).to eq(403)
+        end
+
         it "works when only automatic groups can see the topic" do
           category.update!(permissions: { logged_in_users: :full })
           sign_in(admin)
@@ -2070,6 +2080,19 @@ RSpec.describe InvitesController do
               topic: topic,
             ).count,
           ).to eq(1)
+        end
+
+        it "redirects an existing trust level 0 user to a topic in a category visible to trust level 0" do
+          user.update!(trust_level: TrustLevel[0])
+          Group.refresh_automatic_groups!
+          category = Fabricate(:private_category, group: Group[:trust_level_0])
+          topic = Fabricate(:topic, category:)
+          TopicInvite.create!(invite:, topic:)
+
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
         end
 
         it "adds the user to the groups specified on the invite and allows them to access the secure topic" do

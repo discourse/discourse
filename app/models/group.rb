@@ -827,12 +827,10 @@ class Group < ActiveRecord::Base
     trust_group_ids.keep_if { |id| id == AUTO_GROUPS[:trust_level_0] || (trust_level + 10) >= id }
   end
 
-  # Automatic groups a user created by redeeming an invite is guaranteed to belong to.
+  # Automatic groups any invite redeemer belongs to. Higher trust level groups are excluded
+  # because existing users can redeem invites without being raised to `default_invitee_trust_level`.
   def self.invitee_auto_group_ids
-    [
-      AUTO_GROUPS[:logged_in_users],
-      *desired_trust_level_groups(SiteSetting.default_invitee_trust_level),
-    ]
+    [AUTO_GROUPS[:logged_in_users], AUTO_GROUPS[:trust_level_0]]
   end
 
   def self.refresh_automatic_groups_for_user!(user)
