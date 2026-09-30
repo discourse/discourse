@@ -17,6 +17,21 @@ module Scheduler
     class ShutdownError < StandardError
     end
 
+    def self.idle?
+      ObjectSpace.each_object(self).all?(&:idle?)
+    end
+
+    # Waits up to timeout seconds for every pool in this process to finish its
+    # work. Returns whether they did.
+    def self.wait_for_idle(timeout:)
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+      until idle?
+        return false if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+        sleep 0.05
+      end
+      true
+    end
+
     def initialize(min_threads:, max_threads:, idle_time: nil)
       # 30 seconds is a reasonable default for idle time
       # it is particularly useful for the use case of:
@@ -39,12 +54,14 @@ module Scheduler
       @mutex = Mutex.new
       @new_work = ConditionVariable.new
       @shutdown = false
+      @pid = Process.pid
 
       # Initialize minimum number of threads
       @min_threads.times { spawn_thread }
     end
 
     def post(&block)
+      reset_after_fork if @pid != Process.pid
       raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if shutdown?
 
       db = RailsMultisite::ConnectionManagement.current_db
@@ -98,6 +115,15 @@ module Scheduler
       @mutex.synchronize { @shutdown }
     end
 
+    def idle?
+      # A forked process has none of the parent's threads.
+      return true if @pid != Process.pid
+
+      @mutex.synchronize do
+        @threads.none?(&:alive?) || (@queue.empty? && @busy_threads.none?(&:alive?))
+      end
+    end
+
     def stats
       @mutex.synchronize do
         {
@@ -112,6 +138,18 @@ module Scheduler
     end
 
     private
+
+    # A forked process inherits this pool's state but not its threads, and
+    # queued tasks keep running in the parent, so start again empty.
+    def reset_after_fork
+      @pid = Process.pid
+      @threads = Set.new
+      @busy_threads = Set.new
+      @queue = Queue.new
+      @mutex = Mutex.new
+      @new_work = ConditionVariable.new
+      @min_threads.times { spawn_thread } if !@shutdown
+    end
 
     def wrap_block(block, db, locale)
       proc do

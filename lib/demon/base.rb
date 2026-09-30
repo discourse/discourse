@@ -167,14 +167,21 @@ class Demon::Base
   def start
     return if @pid || @started
 
-    if existing = already_running?
-      # should not happen ... so kill violently
-      log("Attempting to kill pid #{existing}")
-      Process.kill("TERM", existing)
-    end
-
     @started = true
-    run
+    # A replacement is already waiting for the previous instance to exit.
+    return if @replacement&.alive?
+
+    if existing = already_running?
+      # Left by a previous server process, such as a service worker replaced on
+      # refork. Two instances would contend for the same ports and sockets, so
+      # the replacement starts once this one has exited. The wait happens in a
+      # thread because demons are started from hooks that must not block.
+      log("Stopping previous #{self.class.prefix} pid #{existing}")
+      Process.kill("TERM", existing)
+      @replacement = Thread.new { replace(existing) }
+    else
+      run
+    end
   end
 
   def run
@@ -207,7 +214,38 @@ class Demon::Base
     false
   end
 
+  # Like alive?, but a zombie counts as gone: a process whose parent has not
+  # reaped it yet no longer holds its ports or sockets.
+  def self.running?(pid)
+    return false if !alive?(pid)
+
+    stat = File.read("/proc/#{pid}/stat")
+    stat[stat.rindex(")") + 2] != "Z"
+  rescue Errno::ENOENT
+    RUBY_PLATFORM.include?("darwin")
+  end
+
   private
+
+  def replace(existing)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + stop_timeout
+    killed = false
+    while Demon::Base.running?(existing)
+      if !killed && Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        log("Previous #{self.class.prefix} pid #{existing} did not stop, killing", level: :warn)
+        begin
+          Process.kill("KILL", existing)
+        rescue Errno::ESRCH
+        end
+        killed = true
+      end
+      sleep 0.1
+    end
+
+    run if @started
+  rescue Exception => e
+    log_error(e)
+  end
 
   def verbose(msg)
     puts msg if @verbose

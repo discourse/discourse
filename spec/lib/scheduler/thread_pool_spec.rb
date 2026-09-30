@@ -146,6 +146,52 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
     end
   end
 
+  describe "#idle?" do
+    it "is false while a task runs or waits" do
+      started = Queue.new
+      release = Queue.new
+      pool.post do
+        started << true
+        release.pop
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+
+      expect(pool.idle?).to eq(false)
+      expect(described_class.wait_for_idle(timeout: 0.05)).to eq(false)
+
+      release << true
+      expect(described_class.wait_for_idle(timeout: 5)).to eq(true)
+      expect(pool.idle?).to eq(true)
+    ensure
+      release << true
+    end
+  end
+
+  describe "after a fork" do
+    it "starts new threads in the child and leaves the parent's tasks to the parent" do
+      started = Queue.new
+      release = Queue.new
+      pool.post do
+        started << true
+        release.pop
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+
+      child =
+        fork do
+          completed = Queue.new
+          pool.post { completed << true }
+          exit!(completed.pop(timeout: 5) ? 0 : 1)
+        end
+      _, status = Process.wait2(child)
+
+      expect(status).to be_success
+      expect(pool.idle?).to eq(false)
+    ensure
+      release << true
+    end
+  end
+
   describe "error handling" do
     it "captures and logs exceptions without crashing the thread" do
       completion_queue = Queue.new
