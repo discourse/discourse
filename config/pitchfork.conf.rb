@@ -4,6 +4,14 @@ discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/.
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 
+require_relative "../lib/discourse_vips/monitor"
+DiscourseVips::Monitor.configure(
+  root: discourse_path,
+  environment: ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "development",
+)
+
+after_monitor_ready { |server| DiscourseVips::Monitor.start(logger: server.logger) }
+
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/pitchfork_logstash_patch"
@@ -104,8 +112,10 @@ end
 before_service_worker_ready do |server, service_worker|
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
-  require "demon/discourse_vips"
-  Demon::DiscourseVips.start(logger: server.logger) if GlobalSetting.enable_vips_image_processing
+  if GlobalSetting.enable_vips_image_processing
+    DiscourseVips::Monitor.ensure_running
+    DiscourseVips.version
+  end
 
   if sidekiqs > 0
     server.logger.info "starting #{sidekiqs} supervised sidekiqs"
@@ -163,7 +173,7 @@ before_service_worker_ready do |server, service_worker|
           Demon::Sidekiq.rss_memory_check
         end
 
-        Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
+        DiscourseVips::Monitor.ensure_running if GlobalSetting.enable_vips_image_processing
 
         DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
       rescue => e

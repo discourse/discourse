@@ -28,8 +28,9 @@ module DiscourseVips
       Rails.root.join("tmp", "discourse-vips-worker", Rails.env, "socket").to_s
     end
 
-    def initialize(socket_path: nil)
+    def initialize(socket_path: nil, root: Rails.root)
       @state_mutex = Mutex.new
+      @root = root
       @socket_path = socket_path
       start
     end
@@ -109,13 +110,13 @@ module DiscourseVips
         File.chmod(0o700, socket_directory)
         FileUtils.rm_f(@socket_path)
       else
-        socket_directory = Dir.mktmpdir("discourse-vips-worker-", Rails.root.join("tmp").to_s)
+        socket_directory = Dir.mktmpdir("discourse-vips-worker-", File.join(@root, "tmp"))
         @socket_path = File.join(socket_directory, "socket")
       end
     end
 
     def worker_command
-      load_paths = [Rails.root.join("lib").to_s]
+      load_paths = [File.join(@root, "lib")]
       %w[ffi landlock msgpack ruby-vips].each do |gem_name|
         load_paths.concat(Gem.loaded_specs.fetch(gem_name).full_require_paths)
       end
@@ -124,7 +125,7 @@ module DiscourseVips
         RbConfig.ruby,
         "--disable-gems",
         *load_paths.uniq.flat_map { |path| ["-I", path] },
-        Rails.root.join("script/discourse_vips_worker").to_s,
+        File.join(@root, "script/discourse_vips_worker"),
       ]
     end
 
