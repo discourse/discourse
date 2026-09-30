@@ -14,15 +14,6 @@ RSpec.describe Scheduler::Defer do
   end
 
   describe "#later" do
-    it "starts a new worker after the previous worker stops" do
-      completed = Queue.new
-      defer.stop!
-
-      defer.later { completed << :completed }
-
-      expect(completed.pop(timeout: 5)).to eq(:completed)
-    end
-
     let(:release) { Concurrent::IVar.new }
     let(:responses) { Thread::Queue.new }
 
@@ -37,6 +28,22 @@ RSpec.describe Scheduler::Defer do
         release.value
         responses.push([db, user_id, request])
       end
+    end
+
+    it "keeps processing jobs after pausing an active worker" do
+      completed = Queue.new
+      defer.later { completed << :first }
+      expect(completed.pop(timeout: 5)).to eq(:first)
+      defer.pause
+      defer.resume
+
+      defer.later { completed << Thread.current }
+
+      worker = completed.pop(timeout: 5)
+      expect(worker).to be_a(Thread)
+      expect(worker.join(0.1)).to eq(nil)
+      defer.later { completed << :second }
+      expect(completed.pop(timeout: 5)).to eq(:second)
     end
 
     it "runs jobs in a fair order" do

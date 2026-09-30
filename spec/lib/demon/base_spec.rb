@@ -143,12 +143,23 @@ RSpec.describe Demon::Base do
 
   describe ".running?" do
     it "treats a process that vanishes while being checked as gone" do
+      File.stubs(:directory?).with("/proc").returns(true)
       File.stubs(:read).with("/proc/123/stat").raises(Errno::ESRCH)
 
       expect(described_class.running?(123)).to eq(false)
     end
 
+    it "checks process existence when /proc is unavailable" do
+      File.stubs(:directory?).with("/proc").returns(false)
+      pid = Process.spawn("true")
+      Process.waitpid(pid)
+
+      expect(described_class.running?(Process.pid)).to eq(true)
+      expect(described_class.running?(pid)).to eq(false)
+    end
+
     it "treats an unreaped exited process as stopped" do
+      skip "requires /proc process state" unless File.directory?("/proc")
       pid = Process.spawn("true")
       spawned << pid
       wait_for { File.read("/proc/#{pid}/stat").split(") ").last.start_with?("Z") }
