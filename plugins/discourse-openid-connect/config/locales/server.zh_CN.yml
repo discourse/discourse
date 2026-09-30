@@ -25,6 +25,7 @@ zh_CN:
     openid_connect_groups_claim: "OIDC 令牌中以字符串数组形式包含用户群组信息的声明名称。留空则禁用群组同步。"
     openid_connect_user_field_mappings: "将 OIDC 声明映射到 Discourse 用户字段。每个条目将 OIDC 声明名称与 Discourse 用户字段的数字 ID 配对。"
     openid_connect_match_by_email: "使用电子邮件地址将 OpenID Connect 身份验证与现有 Discourse 用户帐户相匹配。"
+    openid_connect_email_claim: "包含用户电子邮件地址的申请。默认为电子邮件。 只选择一个包含您身份提供者验证的电子邮件地址的申请，因为它可以将用户链接到现有帐户。"
     openid_connect_use_pkce: "为 OpenID Connect 身份验证启用代码交换验证密钥 (PKCE)。"
     openid_connect_mtls_client_cert: "用于向 OIDC 提供商进行 mTLS 客户端身份验证的 X.509 客户端证书。要启用 mTLS，还必须设置{{setting:openid_connect_mtls_client_key}}。"
     openid_connect_mtls_client_key: "mTLS 客户端证书的 X.509 私钥。要启用 mTLS，还必须设置{{setting:openid_connect_mtls_client_cert}}。"
