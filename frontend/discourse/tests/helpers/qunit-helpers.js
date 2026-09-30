@@ -77,7 +77,7 @@ import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
-import { clearAdditionalUserNavPreferencesLinks } from "discourse/lib/sidebar/user-nav-sidebar";
+import { clearAdditionalUserNavSidebarLinks } from "discourse/lib/sidebar/user-nav-sidebar";
 import {
   resetHighestReadCache,
   setTopicList,
@@ -283,7 +283,7 @@ export function testCleanup(container, app) {
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
-  clearAdditionalUserNavPreferencesLinks();
+  clearAdditionalUserNavSidebarLinks();
   resetAdminPluginConfigNav();
   resetTransformers();
   rollbackAllPrepends();

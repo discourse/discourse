@@ -7778,7 +7778,8 @@ CREATE TABLE public.mcp_oauth_clients (
     redirect_uris character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     last_seen_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    admin_managed boolean DEFAULT false NOT NULL
 );
 
 
@@ -21222,6 +21223,13 @@ CREATE INDEX index_chat_messages_on_chat_channel_id_and_id ON public.chat_messag
 
 
 --
+-- Name: index_chat_messages_on_in_reply_to_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chat_messages_on_in_reply_to_id ON public.chat_messages USING btree (in_reply_to_id) WHERE (in_reply_to_id IS NOT NULL);
+
+
+--
 -- Name: index_chat_messages_on_last_editor_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25536,6 +25544,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260930114733'),
+('20260928103925'),
 ('20260925151913'),
 ('20260925151909'),
 ('20260925054715'),

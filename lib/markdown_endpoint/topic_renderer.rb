@@ -59,7 +59,7 @@ module MarkdownEndpoint
 
     def header(visible_post_count)
       title = ContentLocalization.translated_topic_title(@topic, @guardian) || @topic.title
-      lines = ["# #{escape_text(EmojiConverter.convert(title))}", "", "**URL:** #{@topic.url}"]
+      lines = ["**URL:** <#{@topic.url}>"]
       lines << "**Category:** #{escape_text(@topic.category.name)}" if @topic.category
       tags = @topic_view.visible_tags.map(&:name)
       lines << "**Tags:** #{tags.map { |tag| escape_text(tag) }.join(", ")}" if tags.present?
@@ -67,7 +67,7 @@ module MarkdownEndpoint
       lines << "**Posts on this page:** #{visible_post_count}"
       lines << "**Page:** #{@topic_view.page}" unless single_post?
       lines << "**Showing post:** #{@post_number}" if single_post?
-      lines.join("\n")
+      "# #{escape_text(EmojiConverter.convert(title))}\n\n#{lines.join("\\\n")}"
     end
 
     def render_post(post)
@@ -75,15 +75,20 @@ module MarkdownEndpoint
       serializer.topic_view = @topic_view
       cooked = serializer.cooked.to_s
       lines = ['<div class="post-metadata">', ""]
+      metadata = []
       if post.user
         avatar_url = UrlHelper.absolute(post.user.avatar_template.gsub("{size}", "32"))
         avatar_url = "#{Discourse.base_protocol}:#{avatar_url}" if avatar_url.start_with?("//")
         avatar_url = URI::DEFAULT_PARSER.escape(avatar_url, /[^\x21-\x7E]|[<>"()\\]/)
         author = escape_text(post.user.username)
         author_link = "![#{author}](#{avatar_url}) [@#{author}](#{post.user.full_url})"
-        lines << "### #{I18n.t("markdown_endpoints.post_author", author: author_link)}"
+        metadata << I18n.t("markdown_endpoints.post_author", author: author_link)
       end
-      lines << "#### #{I18n.t("markdown_endpoints.post_date", timestamp: @timestamp.render(post.created_at, url: post.full_url))}"
+      metadata << I18n.t(
+        "markdown_endpoints.post_date",
+        timestamp: @timestamp.render(post.created_at, url: post.full_url),
+      )
+      lines << metadata.join("\\\n")
       lines.concat(["", "</div>", ""])
       lines << cached_body(cooked, post_url: post.full_url)
       lines.join("\n")

@@ -15,11 +15,13 @@ class TopicPublisher
       .change! do
         if @topic.private_message?
           @topic = TopicConverter.new(@topic, @published_by).convert_to_public_topic(@category_id)
-        else
-          PostRevisor.new(@topic.first_post, @topic).revise!(
-            @published_by,
-            category_id: @category_id,
-          )
+        elsif @topic.category_id != @category_id
+          revised =
+            PostRevisor.new(@topic.first_post, @topic).revise!(
+              @published_by,
+              category_id: @category_id,
+            )
+          raise ActiveRecord::RecordInvalid.new(@topic) unless revised
         end
 
         @topic.update_columns(visible: true)

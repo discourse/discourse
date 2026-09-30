@@ -3,6 +3,7 @@
 describe "Assign | Bulk Assign" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
+  let(:assignee_chooser) { PageObjects::Components::SelectKit.new("#assignee-chooser") }
   let(:topic_list_header) { PageObjects::Components::TopicListHeader.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
 
@@ -78,7 +79,8 @@ describe "Assign | Bulk Assign" do
       topic_list_header.click_assign_topics_button
       expect(topic_list_header).to have_bulk_select_modal
 
-      assign_modal.assignee = assignable_group
+      assignee_chooser.search(assignable_group.name)
+      assignee_chooser.select_row_by_value(assignable_group.name)
 
       topic_list_header.click_bulk_topics_confirm
 

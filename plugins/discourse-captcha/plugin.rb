@@ -12,6 +12,7 @@
 enabled_site_setting :discourse_captcha_enabled
 
 register_svg_icon "hand"
+register_asset "stylesheets/common/captcha-configuration-test.scss", :admin
 
 module ::DiscourseCaptcha
   PLUGIN_NAME = "discourse-captcha"
@@ -24,6 +25,8 @@ require_relative "lib/discourse_captcha/create_users_controller_patch"
 require_relative "lib/discourse_captcha/session_controller_patch"
 
 after_initialize do
+  add_admin_route("discourse_captcha.title", "discourse-captcha", use_new_show_route: true)
+
   reloadable_patch { UsersController.include(DiscourseCaptcha::CreateUsersControllerPatch) }
   reloadable_patch { SessionController.prepend(DiscourseCaptcha::SessionControllerPatch) }
 

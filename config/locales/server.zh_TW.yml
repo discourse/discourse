@@ -12,6 +12,10 @@ zh_TW:
     previous_page: "上一頁"
     next_page: "下一頁"
     replies: "回覆"
+    event:
+      location: "地點"
+      link: "連結"
+      date_with_timezone: "%{date}（%{timezone}）"
   mcp:
     errors:
       topic_not_found: "未找到話題"
@@ -834,6 +838,7 @@ zh_TW:
       description_incomplete: "分類描述貼文至少要有一段。"
       description_too_long:
         other: "說明太長（最多 %{count} 個字元）。"
+      special_category_permissions: "這是預先建立的分類，無法編輯安全性設定。若不想使用此分類，請刪除它，而非變更用途。"
       permission_conflict: "任何被允許訪問子分類的組也必須被允許訪問父分類。以下群組可以訪問子分類之一，但無法訪問父分類：%{group_names}。"
       disallowed_topic_tags: "此主題包含此分類不允許的標簽：%{tags}"
       disallowed_tags_generic: "此主題含有不允許的標籤。"

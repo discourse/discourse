@@ -10,19 +10,21 @@ import { USER_NAV_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
 
 /**
- * Preferences tabs registered by plugins. They reach the horizontal nav through
- * the `user-preferences-nav` outlet, which renders markup this panel cannot
- * read, so a plugin that wants its tab in the panel registers it here too.
+ * Links plugins add to the panel, keyed by section name. Plugins reach the
+ * horizontal navs through outlets — `user-main-nav`, `user-activity-bottom`,
+ * `user-notifications-bottom`, `user-preferences-nav` — whose markup this panel
+ * cannot read, so a plugin that wants its tab here registers it too.
  */
-let additionalPreferencesLinks = [];
+let additionalLinks = {};
 
-export function addUserNavPreferencesLink(link) {
-  additionalPreferencesLinks.push(link);
+export function addUserNavSidebarLink(sectionName, link) {
+  additionalLinks[sectionName] ??= [];
+  additionalLinks[sectionName].push(link);
 }
 
 // For testing
-export function clearAdditionalUserNavPreferencesLinks() {
-  additionalPreferencesLinks = [];
+export function clearAdditionalUserNavSidebarLinks() {
+  additionalLinks = {};
 }
 
 // Mirrors `components/user-nav.gjs`. The tabs that own a secondary nav become
@@ -121,7 +123,6 @@ const NOTIFICATION_LINKS = [
     route: "userNotifications.index",
     label: "user.filters.all",
     icon: "bell",
-    count: ({ currentUser }) => currentUser?.all_unread_notifications_count,
   },
   {
     name: "notifications-responses",
@@ -498,9 +499,11 @@ const NAV_SECTIONS = [
     name: "preferences",
     title: "user.preferences.title",
     // Staff can open someone else's preferences, so this follows `can_edit`
-    // rather than "is this me".
-    displayed: ({ user }) => !!user?.can_edit,
-    links: () => [...PREFERENCES_LINKS, ...additionalPreferencesLinks],
+    // rather than "is this me". A user's admin page serializes a different
+    // shape that carries no `can_edit`, and only staff can be there at all.
+    displayed: ({ user, currentUser }) =>
+      user?.can_edit ?? !!currentUser?.staff,
+    links: () => PREFERENCES_LINKS,
   },
 ];
 
@@ -655,7 +658,13 @@ function buildSection(config) {
     }
 
     get links() {
-      return buildLinks(config.links, getOwner(this));
+      return buildLinks(
+        (context) => [
+          ...config.links(context),
+          ...(additionalLinks[config.name] ?? []),
+        ],
+        getOwner(this)
+      );
     }
 
     get moreLinks() {

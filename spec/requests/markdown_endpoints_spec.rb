@@ -248,6 +248,35 @@ RSpec.describe "Markdown endpoints" do
     expect(response).to have_http_status(:not_found)
   end
 
+  it "separates topic metadata rows with hard line breaks" do
+    SiteSetting.tagging_enabled = true
+    topic.tags << Fabricate(:tag)
+
+    ["/t/#{topic.slug}/#{topic.id}.md", "/t/#{topic.slug}/#{topic.id}/1.md"].each do |path|
+      get path
+
+      expect(response).to have_http_status(:ok)
+      heading, metadata = response.body.split("\n\n", 3)
+      expect(heading).to eq("# #{topic.title}")
+      rows = metadata.lines.map(&:chomp)
+      expect(rows.map { |row| row[/\A\*\*(.+):\*\*/, 1] }).to eq(
+        [
+          "URL",
+          "Category",
+          "Tags",
+          "Created",
+          "Posts on this page",
+          path.end_with?("/1.md") ? "Showing post" : "Page",
+        ],
+      )
+      expect(rows[0...-1]).to all(end_with("\\"))
+      expect(rows.last).to eq(path.end_with?("/1.md") ? "**Showing post:** 1" : "**Page:** 1")
+      expect(rows.first).to eq("**URL:** <#{topic.url}>\\")
+      rendered_metadata = Nokogiri::HTML5.fragment(PrettyText.cook(metadata))
+      expect(rendered_metadata.at_css("a")["href"]).to eq(topic.url)
+    end
+  end
+
   it "paginates rendered posts with translated Markdown navigation links" do
     TranslationOverride.upsert!("en", "markdown_endpoints.previous_page", "Earlier posts")
     TranslationOverride.upsert!("en", "markdown_endpoints.next_page", "Later posts")
@@ -302,8 +331,8 @@ RSpec.describe "Markdown endpoints" do
     get "/t/#{topic.slug}/#{topic.id}.md"
     expect(response.body).to include(
       "[@#{user.username}](#{Discourse.base_url}/u/#{user.encoded_username})",
-      "### Author: ![reply\\_author](#{Discourse.base_url}/letter_avatar/reply_author/32/#{LetterAvatar.version}.png) [@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
-      "\n#### Post date: ",
+      "**Author:** ![reply\\_author](#{Discourse.base_url}/letter_avatar/reply_author/32/#{LetterAvatar.version}.png) [@reply\\_author](#{Discourse.base_url}/u/#{author.encoded_username})",
+      "\n**Post date:** ",
     )
 
     get "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md"
@@ -314,8 +343,8 @@ RSpec.describe "Markdown endpoints" do
     reply.update_columns(user_id: nil)
     get "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md"
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("#### Post date: ")
-    expect(response.body).not_to include("### Author:")
+    expect(response.body).to include("**Post date:** ")
+    expect(response.body).not_to include("**Author:**")
   end
 
   it "wraps list metadata separately from titles and excerpts with Markdown block boundaries" do
@@ -334,7 +363,7 @@ RSpec.describe "Markdown endpoints" do
     )
   end
 
-  it "wraps each post's headings separately from its body with Markdown block boundaries" do
+  it "wraps each post's metadata separately from its body with Markdown block boundaries" do
     reply = Fabricate(:post, topic: topic, user: user, raw: "Another visible body")
 
     [
@@ -349,7 +378,9 @@ RSpec.describe "Markdown endpoints" do
       posts
         .zip(metadata)
         .each do |rendered_post, block|
-          expect(block).to include("### Author: ![", "\n#### Post date: ")
+          expect(block).to include("**Author:** ![", "\\\n**Post date:** ")
+          rendered_metadata = Nokogiri::HTML5.fragment(PrettyText.cook(block))
+          expect(rendered_metadata.css("br").size).to eq(1)
           expect(block).not_to include(rendered_post.raw)
           expect(response.body).to include("</div>\n\n#{rendered_post.raw}")
         end
@@ -366,7 +397,7 @@ RSpec.describe "Markdown endpoints" do
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include(
-      "### Author: ![依云](#{Discourse.base_url}/letter_avatar/%E4%BE%9D%E4%BA%91/32/#{LetterAvatar.version}.png) [@依云](#{user.full_url})",
+      "**Author:** ![依云](#{Discourse.base_url}/letter_avatar/%E4%BE%9D%E4%BA%91/32/#{LetterAvatar.version}.png) [@依云](#{user.full_url})",
       post.raw,
     )
   end
@@ -377,7 +408,7 @@ RSpec.describe "Markdown endpoints" do
     get "/t/#{topic.slug}/#{topic.id}.md"
 
     expect(response.body).to include(
-      "### Author: ![#{user.username}](#{Discourse.base_protocol}://cdn.example.com/avatar%281%29.png)",
+      "**Author:** ![#{user.username}](#{Discourse.base_protocol}://cdn.example.com/avatar%281%29.png)",
     )
   end
 
@@ -390,7 +421,7 @@ RSpec.describe "Markdown endpoints" do
 
     get "/t/#{topic.slug}/#{topic.id}.md"
     expect(response.body).to include(
-      %(#### Post date: [July 15, 2026, 12:30pm EDT](#{post.full_url} "2026-07-15T12:30:45-04:00")),
+      %(**Post date:** [July 15, 2026, 12:30pm EDT](#{post.full_url} "2026-07-15T12:30:45-04:00")),
     )
 
     get "/latest.md"

@@ -406,6 +406,7 @@ export default function () {
           this.route("clients", function () {
             this.route("index", { path: "/" });
             this.route("new");
+            this.route("edit", { path: "/:id/edit" });
             this.route("show", { path: "/:id" });
           });
           this.route("authorizations");

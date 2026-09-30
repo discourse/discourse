@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  discourse_captcha:
+    configuration_test:
+      success: "Weryfikacja powiodła się. Twoje zapisane klucze CAPTCHA działają na tej stronie."
+      errors:
+        not_configured: "Przed testowaniem wybierz dostawcę CAPTCHA i zapisz oba klucze w Ustawieniach."
+        configuration_changed: "Konfiguracja CAPTCHA uległa zmianie. Odśwież stronę i spróbuj ponownie."
+        invalid_secret: "Dostawca CAPTCHA odrzucił klucz tajny. Sprawdź zapisany klucz tajny w Ustawieniach."
+        key_mismatch: "Klucz witryny i klucz tajny nie są zgodne. Sprawdź, czy oba klucze należą do tej samej konfiguracji u swojego dostawcy."
+        invalid_response: "Odpowiedź CAPTCHA była nieprawidłowa. Rozpocznij nowy test i spróbuj ponownie."
+        expired: "Wyzwanie wygasło lub zostało już zweryfikowane. Rozpocznij nowy test i ukończ go ponownie."
+        unavailable: "Nie udało się skontaktować z dostawcą CAPTCHA lub zwrócono nieoczekiwaną odpowiedź. Spróbuj ponownie później."
+        verification_failed: "Dostawca CAPTCHA odrzucił wyzwanie. Sprawdź zapisane klucze i konfigurację dostawcy, a następnie spróbuj ponownie."
   dashboard:
     problem:
       hcaptcha_configuration: "Wystąpił problem z konfiguracją `site_key` lub `secret_key` hCaptcha"

@@ -13,6 +13,9 @@ sl:
     next_page: "Naslednja stran"
     replies: "Odgovori"
     last_updated: "Zadnjič posodobljeno"
+    event:
+      location: "Lokacija"
+      link: "Povezava"
   mcp:
     errors:
       topic_not_found: "Ne najdemo temo."

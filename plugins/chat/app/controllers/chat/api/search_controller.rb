@@ -2,6 +2,8 @@
 
 class Chat::Api::SearchController < Chat::ApiController
   def index
+    raise Discourse::NotFound unless SiteSetting.chat_search_enabled
+
     Chat::SearchMessage.call(service_params) do
       on_success do |messages:, metadata:|
         render json: {

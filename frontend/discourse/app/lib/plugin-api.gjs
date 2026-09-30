@@ -124,7 +124,7 @@ import {
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { addUserNavPreferencesLink } from "discourse/lib/sidebar/user-nav-sidebar";
+import { addUserNavSidebarLink } from "discourse/lib/sidebar/user-nav-sidebar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   _addTransformerName,
@@ -2995,31 +2995,36 @@ class _PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
-   * Adds a link to the preferences section of the user nav sidebar panel.
+   * Adds a link to a section of the user nav sidebar panel.
    *
-   * The `user-preferences-nav` plugin outlet renders markup the panel cannot
-   * read, so a plugin with a preferences tab registers it here as well to stay
-   * reachable once the horizontal nav is hidden.
+   * The panel replaces the horizontal user navs, and the outlets a plugin adds
+   * its tabs through (`user-main-nav`, `user-activity-bottom`,
+   * `user-notifications-bottom`, `user-preferences-nav`) render markup the
+   * panel cannot read. A plugin with a tab in any of them registers it here as
+   * well to stay reachable once those navs are hidden.
    *
    * ```javascript
-   * api.addUserNavPreferencesLink({
-   *   name: "preferences-chat",
-   *   route: "preferences.chat",
-   *   label: "chat.title_capitalized",
-   *   icon: "d-chat",
-   *   displayed: ({ siteSettings }) => siteSettings.chat_enabled,
+   * api.addUserNavSidebarLink("activity", {
+   *   name: "activity-solved",
+   *   route: "userActivity.solved",
+   *   label: "solved.title",
+   *   icon: "square-check",
+   *   displayed: ({ siteSettings }) => siteSettings.solved_enabled,
    * });
    * ```
    *
-   * @param {Object} link - A link object representing a preferences link.
+   * @param {String} sectionName - The panel section to add the link to: profile,
+   *   activity, notifications, messages, invites or preferences.
+   * @param {Object} link - A link object representing a section link.
    * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
    * @param {string} link.route - The Ember route name the link points at.
    * @param {string} link.label - The i18n key for the link's text.
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+   * @param {Array} [link.routeParams] - Extra route models, after the username.
    * @param {Function} [link.displayed] - Predicate deciding whether to show the link.
    */
-  addUserNavPreferencesLink(link) {
-    addUserNavPreferencesLink(link);
+  addUserNavSidebarLink(sectionName, link) {
+    addUserNavSidebarLink(sectionName, link);
   }
 
   /**

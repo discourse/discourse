@@ -11,6 +11,9 @@ he:
     tags: "תגיות"
     replies: "תשובות"
     last_updated: "עדכון אחרון"
+    event:
+      location: "מיקום"
+      link: "קישור"
   mcp:
     errors:
       draft_too_long: "הטיוטה ארוכה מדי"

@@ -12,6 +12,9 @@ te:
     previous_page: "గత పుట"
     next_page: "తరువాతి పుట"
     replies: "ప్రత్యుత్తరాలు"
+    event:
+      location: "ప్రాంతం"
+      link: "లింక్"
   mcp:
     errors:
       topic_not_found: "విషయం కనిపించలేదు"

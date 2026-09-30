@@ -35,6 +35,18 @@ You can enable either provider based on your preference and requirements.
    - Select `recaptcha` in the `discourse_captcha_provider` setting.
    - Add the site key and secret key you obtained from reCaptcha.
 
+## Testing saved keys
+
+Admins can open **Test** on the CAPTCHA plugin's admin page to test
+the selected provider with the saved site key and secret key. Click **Test configuration**, then complete the challenge
+to verify the keys with the provider. The test works with registration enforcement
+disabled and does not create an account or authorize a registration.
+
+The test runs on the current site's domain, which must be allowed by the provider.
+reCAPTCHA keys must support the v2 checkbox challenge. The secret key stays on the
+server. Provider errors, expired challenges, and connection failures are displayed
+in the test section; a successful test confirms the configuration at that moment.
+
 ## Migration Notes
 
 If you were using this plugin when it was named "discourse-hcaptcha", your existing settings have been automatically migrated.

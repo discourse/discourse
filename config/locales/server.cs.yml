@@ -13,6 +13,10 @@ cs:
     next_page: "Další strana"
     replies: "Odpovědi"
     last_updated: "Poslední aktualizace"
+    event:
+      name: "Událost"
+      location: "Poloha"
+      link: "Odkaz"
   mcp:
     errors:
       draft_too_long: "Koncept je příliš dlouhý"
@@ -936,6 +940,7 @@ cs:
         few: "Popis je příliš dlouhý (maximálně %{count} znaky)."
         many: "Popis je příliš dlouhý (maximálně %{count} znaků)."
         other: "Popis je příliš dlouhý (maximálně %{count} znaků)."
+      special_category_permissions: "Tato kategorie je přednastavená a její nastavení zabezpečení nelze změnit. Pokud tuto kategorii nechcete používat, nesnažte se ji měnit, ale odstraňte ji."
       permission_conflict: "Každá skupina, která má přístup k podkategorii, musí mít také přístup k nadřazené kategorii. Následující skupiny mají přístup k jedné z podkategorií, ale nemají přístup k nadřazené kategorii: %{group_names}."
       disallowed_topic_tags: "Toto téma obsahuje štítky, které tato kategorie nepovoluje: '%{tags}'"
       disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
