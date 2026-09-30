@@ -146,6 +146,7 @@ export default class TopicController extends Controller {
   init() {
     super.init(...arguments);
 
+    this.appEvents.on("post:highlight", this, "_highlightPost");
     this.appEvents.on("post:show-revision", this, "_showRevision");
     this.appEvents.on("post:created", this, () =>
       this._removeDeleteOnOwnerReplyBookmarks()
@@ -154,6 +155,7 @@ export default class TopicController extends Controller {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.appEvents.off("post:highlight", this, "_highlightPost");
     this.appEvents.off("post:show-revision", this, "_showRevision");
   }
 
@@ -1904,6 +1906,12 @@ export default class TopicController extends Controller {
     if (!isEmpty(title)) {
       // force update lazily loaded titles
       this.send("refreshTitle");
+    }
+  }
+
+  _highlightPost(postNumber, options = {}) {
+    if (options.jump !== false) {
+      this.model?.postStream?.focusPostOnRender(postNumber);
     }
   }
 
