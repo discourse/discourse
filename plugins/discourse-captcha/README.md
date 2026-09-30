@@ -2,12 +2,13 @@
 
 ## Overview
 
-This plugin integrates captcha verification into the sign-up form of Discourse forums to enhance security and bot protection. The plugin supports two captcha providers:
+This plugin integrates captcha verification into the sign-up form of Discourse forums to enhance security and bot protection. The plugin supports three captcha providers:
 
 - **hCaptcha**: Privacy-centric captcha service
-- **reCaptcha**: Google's captcha service
+- **reCaptcha v2**: Google's visible captcha widget
+- **reCaptcha v3**: Google's invisible, score-based captcha
 
-You can enable either provider based on your preference and requirements.
+You can enable one provider based on your preference and requirements.
 
 ## Installation
 
@@ -23,7 +24,7 @@ You can enable either provider based on your preference and requirements.
    - Select `hcaptcha` in the `discourse_captcha_provider` setting.
    - Add the site key and secret key you obtained from hCaptcha.
 
-### For reCaptcha
+### For reCaptcha v2 or v3
 
 1. **Create a reCaptcha Account**:
    - Visit [Google reCaptcha](https://www.google.com/recaptcha) to register your site. After registering, you'll receive a site key and a secret key.
@@ -32,8 +33,8 @@ You can enable either provider based on your preference and requirements.
    - Log into your Discourse admin panel.
    - Navigate to `Admin` > `Settings` > `Plugins` > `Captcha Plugin`.
    - Enable the master toggle: `discourse_captcha_enabled`
-   - Select `recaptcha` in the `discourse_captcha_provider` setting.
-   - Add the site key and secret key you obtained from reCaptcha.
+   - Select `recaptcha` (v2) or `recaptcha_v3` in the `discourse_captcha_provider` setting.
+   - Add the site key and secret key you obtained from reCaptcha. For v3 you can also adjust the minimum accepted score with `recaptcha_v3_score_threshold`.
 
 ## Testing saved keys
 

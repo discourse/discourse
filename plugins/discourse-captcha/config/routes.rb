@@ -12,4 +12,5 @@ end
 DiscourseCaptcha::Engine.routes.draw do
   post "/hcaptcha/create", to: "hcaptcha#create"
   post "/recaptcha/create", to: "recaptcha#create"
+  post "/recaptcha_v3/create", to: "recaptcha_v3#create"
 end

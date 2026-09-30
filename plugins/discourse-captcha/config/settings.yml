@@ -9,6 +9,7 @@ discourse_captcha:
     choices:
       - hcaptcha
       - recaptcha
+      - recaptcha_v3
       - none
   hcaptcha_site_key:
     default: ''
@@ -24,3 +25,16 @@ discourse_captcha:
     default: ''
     client: false
     secret: true
+  recaptcha_v3_site_key:
+    default: ''
+    client: true
+  recaptcha_v3_secret_key:
+    default: ''
+    client: false
+    secret: true
+  recaptcha_v3_score_threshold:
+    default: 0.5
+    type: float
+    min: 0.0
+    max: 1.0
+    client: false

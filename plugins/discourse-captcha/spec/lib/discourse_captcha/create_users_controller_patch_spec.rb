@@ -25,6 +25,9 @@ RSpec.describe "Users", type: :request do
       SiteSetting.recaptcha_site_key = "site-key"
       SiteSetting.recaptcha_secret_key = "secret-key"
 
+      SiteSetting.recaptcha_v3_site_key = "site-key"
+      SiteSetting.recaptcha_v3_secret_key = "secret-key"
+
       stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
         body: {
           secret: SiteSetting.hcaptcha_secret_key,
@@ -70,6 +73,25 @@ RSpec.describe "Users", type: :request do
           expect(JSON.parse(response.body)["success"]).to be(false)
         end
       end
+
+      context "when using reCaptcha v3" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+
+          stub_request(:post, DiscourseCaptcha::RecaptchaV3Provider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              secret: SiteSetting.recaptcha_v3_secret_key,
+              response: "token-from-reCaptchaV3",
+            },
+          ).to_return(status: 200, body: '{"success":false}', headers: {})
+        end
+
+        it "fails registration" do
+          post "/captcha/recaptcha_v3/create.json", params: { token: "token-from-reCaptchaV3" }
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+        end
+      end
     end
 
     context "when captcha token is missing" do
@@ -87,6 +109,17 @@ RSpec.describe "Users", type: :request do
       context "when using reCaptcha" do
         before do
           SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+        end
+
+        it "fails registration" do
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+        end
+      end
+
+      context "when using reCaptcha v3" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
         end
 
         it "fails registration" do
@@ -131,6 +164,31 @@ RSpec.describe "Users", type: :request do
 
         it "succeeds in registration" do
           post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
+          post "/u.json", params: user_params
+
+          expect(JSON.parse(response.body)["success"]).to be(true)
+        end
+      end
+
+      context "when using reCaptcha v3" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+
+          stub_request(:post, DiscourseCaptcha::RecaptchaV3Provider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              "response" => "token-from-reCaptchaV3",
+              "secret" => SiteSetting.recaptcha_v3_secret_key,
+            },
+          ).to_return(
+            status: 200,
+            body: '{"success":true,"score":0.9,"action":"signup"}',
+            headers: {
+            },
+          )
+        end
+
+        it "succeeds in registration" do
+          post "/captcha/recaptcha_v3/create.json", params: { token: "token-from-reCaptchaV3" }
           post "/u.json", params: user_params
 
           expect(JSON.parse(response.body)["success"]).to be(true)
@@ -190,6 +248,20 @@ RSpec.describe "Users", type: :request do
           SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
           SiteSetting.recaptcha_site_key = ""
           SiteSetting.recaptcha_secret_key = ""
+        end
+
+        it "blocks registration" do
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+          expect(JSON.parse(response.body)["message"]).to include("not properly configured")
+        end
+      end
+
+      context "when reCaptcha v3 is selected but keys are missing" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+          SiteSetting.recaptcha_v3_site_key = ""
+          SiteSetting.recaptcha_v3_secret_key = ""
         end
 
         it "blocks registration" do

@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import { eq } from "discourse/truth-helpers";
 import HCaptcha from "../../components/h-captcha";
 import ReCaptcha from "../../components/re-captcha";
+import ReCaptchaV3 from "../../components/re-captcha-v3";
 
 export default class CaptchaFieldsConnector extends Component {
   @service siteSettings;
@@ -16,6 +17,10 @@ export default class CaptchaFieldsConnector extends Component {
           (eq this.siteSettings.discourse_captcha_provider "recaptcha")
         }}
           <ReCaptcha @siteKey={{this.siteSettings.recaptcha_site_key}} />
+        {{else if
+          (eq this.siteSettings.discourse_captcha_provider "recaptcha_v3")
+        }}
+          <ReCaptchaV3 @siteKey={{this.siteSettings.recaptcha_v3_site_key}} />
         {{/if}}
       </div>
     </div>

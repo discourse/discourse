@@ -125,6 +125,7 @@ RSpec.describe "Signup with captcha" do
         signup_page.open
         expect(captcha).to have_no_hcaptcha_container
         expect(captcha).to have_no_recaptcha_container
+        expect(captcha).to have_no_recaptcha_v3_container
       end
     end
   end
@@ -152,6 +153,25 @@ RSpec.describe "Signup with captcha" do
     end
   end
 
+  context "with reCaptcha v3", allow_network: %w[www.google.com www.gstatic.com] do
+    before do
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
+      SiteSetting.recaptcha_v3_site_key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+      SiteSetting.recaptcha_v3_secret_key = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+    end
+
+    it "renders the invisible reCaptcha v3 container on signup page" do
+      signup_page.open
+      expect(captcha).to have_recaptcha_v3_container
+    end
+
+    it "does not display hCaptcha or reCaptcha v2 containers" do
+      signup_page.open
+      expect(captcha).to have_no_hcaptcha_container
+      expect(captcha).to have_no_recaptcha_container
+    end
+  end
+
   context "when captcha provider is none" do
     before { SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::NONE }
 
@@ -159,6 +179,7 @@ RSpec.describe "Signup with captcha" do
       signup_page.open
       expect(captcha).to have_no_hcaptcha_container
       expect(captcha).to have_no_recaptcha_container
+      expect(captcha).to have_no_recaptcha_v3_container
     end
   end
 end
