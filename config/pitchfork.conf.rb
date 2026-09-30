@@ -15,7 +15,6 @@ if refork_after_setting
     refork_after_setting.split(",").map { |limit| limit.strip == "false" ? false : Integer(limit) },
   )
 end
-thread_pools_busy_at_fork = false
 
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
@@ -76,16 +75,10 @@ before_fork do |server|
   # Finish it first. Forked processes resume it, and a worker that forked a
   # mold resumes after its next request.
   Scheduler::Defer.pause
-  thread_pools_busy_at_fork = !Scheduler::ThreadPool.idle?
+  Scheduler::ThreadPool.pause
 end
 
 after_mold_fork do |server, mold|
-  if thread_pools_busy_at_fork
-    # Pitchfork discards a mold that exits here and reforks again later.
-    server.logger.info("#{mold.to_log} discarded: a thread pool was busy when it was forked")
-    exit!(1)
-  end
-
   # Only a mold forked from a web worker can hold a V8 context that survives
   # the fork, which requires single-threaded mini_racer.
   if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
@@ -127,6 +120,7 @@ end
 
 after_worker_fork do |server, worker|
   Scheduler::Defer.resume
+  Scheduler::ThreadPool.resume
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
@@ -138,6 +132,7 @@ end
 after_request_complete do |_server, _worker, _rack_env|
   GC.start if oob_gc_enabled && GC.latest_gc_info(:need_major_by)
   Scheduler::Defer.resume
+  Scheduler::ThreadPool.resume
 end
 
 before_worker_exit do |_server, _worker|
@@ -148,6 +143,7 @@ end
 
 before_service_worker_ready do |server, service_worker|
   Scheduler::Defer.resume
+  Scheduler::ThreadPool.resume
   # A service worker forked via a web worker inherits its web-only database settings.
   Discourse.reset_worker_db_variables_overrides if service_worker.generation.nonzero?
 

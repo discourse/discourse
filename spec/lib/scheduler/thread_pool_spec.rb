@@ -167,6 +167,43 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
     end
   end
 
+  describe ".pause" do
+    after { described_class.resume }
+
+    it "waits for running tasks and holds queued ones until resume" do
+      started = Queue.new
+      release = Queue.new
+      completed = Queue.new
+      pool.post do
+        started << true
+        release.pop
+        completed << :first
+      end
+      expect(started.pop(timeout: 5)).to eq(true)
+
+      pausing = Thread.new { described_class.pause }
+      expect(pausing.join(0.1)).to eq(nil)
+      pool.post { completed << :second }
+      release << true
+
+      expect(pausing.join(5)).to eq(pausing)
+      expect(completed.pop(timeout: 5)).to eq(:first)
+      expect(completed.pop(timeout: 0.2)).to eq(nil)
+
+      described_class.resume
+      expect(completed.pop(timeout: 5)).to eq(:second)
+    ensure
+      release << true
+    end
+
+    it "can still shut down while paused" do
+      described_class.pause
+      pool.shutdown
+
+      expect { pool.wait_for_termination(timeout: 5) }.not_to raise_error
+    end
+  end
+
   describe "after a fork" do
     it "starts new threads in the child and leaves the parent's tasks to the parent" do
       started = Queue.new
