@@ -203,6 +203,22 @@ describe OpenIDConnectAuthenticator do
     end
   end
 
+  describe "#register_middleware" do
+    it "configures the strategy with the selected email claim" do
+      SiteSetting.openid_connect_email_claim = "mail"
+      SiteSetting.openid_connect_discovery_document =
+        "https://id.example.com/.well-known/openid-configuration"
+      stub_request(:get, SiteSetting.openid_connect_discovery_document).to_return(body: "{}")
+      builder = OmniAuth::Builder.new(->(_env) { [200, {}, []] })
+      authenticator.register_middleware(builder)
+      strategy = builder.to_app
+
+      strategy.options.setup.call("omniauth.strategy" => strategy)
+
+      expect(strategy.options.email_claim).to eq("mail")
+    end
+  end
+
   describe "#required_settings" do
     it "requires a client secret by default" do
       expect(authenticator.required_settings).to contain_exactly(

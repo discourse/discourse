@@ -59,7 +59,8 @@ discourse_openid_connect:
     area: "oidc"
   openid_connect_email_claim:
     default: "email"
-    min: 1
+    validator: "RegexPresenceValidator"
+    regex_error: "errors.messages.blank"
     area: "oidc"
   openid_connect_groups_claim:
     default: ""
