@@ -218,12 +218,13 @@ class Demon::Base
   # Like alive?, but a zombie counts as gone: a process whose parent has not
   # reaped it yet no longer holds its ports or sockets.
   def self.running?(pid)
-    return false if !alive?(pid)
+    return alive?(pid) if !File.directory?("/proc")
 
     stat = File.read("/proc/#{pid}/stat")
     stat[stat.rindex(")") + 2] != "Z"
-  rescue Errno::ENOENT
-    RUBY_PLATFORM.include?("darwin")
+  rescue SystemCallError
+    # Reading the stat of a process that is exiting or gone raises ENOENT or ESRCH.
+    false
   end
 
   private

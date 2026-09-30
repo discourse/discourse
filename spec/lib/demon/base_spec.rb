@@ -92,6 +92,12 @@ RSpec.describe Demon::Base do
   end
 
   describe ".running?" do
+    it "treats a process that vanishes while being checked as gone" do
+      File.stubs(:read).with("/proc/123/stat").raises(Errno::ESRCH)
+
+      expect(described_class.running?(123)).to eq(false)
+    end
+
     it "treats a zombie as gone" do
       pid = Process.spawn("true")
       wait_until { File.read("/proc/#{pid}/stat").split(") ").last.start_with?("Z") }
