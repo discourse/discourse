@@ -23,6 +23,7 @@ en:
     chat_pinning_messages_allowed_groups: "Users in these groups are allowed to pin chat messages in channels that they can access. Note that admins and moderators can always pin chat messages. Any member of a group chat or DM can pin messages there."
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
+    chat_homepage_channel: "The channel people land on when {{setting:default_homepage}} is set to a chat channel. People who cannot access the channel see the first item in {{setting:top_menu}} instead, including anonymous visitors, unless {{setting:chat_allowed_groups}} includes anonymous users."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
     chat_editing_grace_period: "For (n) seconds after sending a chat, editing will not display the (edited) tag by the chat message."
     chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."

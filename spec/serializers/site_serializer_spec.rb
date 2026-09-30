@@ -70,6 +70,56 @@ RSpec.describe SiteSerializer do
         server_side: false,
       )
     end
+
+    it "only resolves a callable homepage path for the homepage in use" do
+      calls = 0
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { calls += 1 and "/dynamic" },
+        route: "plugin#index",
+      )
+      SiteSetting.top_menu = "latest|categories"
+      SiteSetting.default_homepage = "latest"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(calls).to eq(0)
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: false)
+
+      SiteSetting.default_homepage = "dynamic"
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(calls).to eq(1)
+      expect(serialized[:homepage_options]).to include(
+        id: "dynamic",
+        path: "/dynamic",
+        server_side: false,
+      )
+    end
+
+    it "resolves a registered homepage path that depends on settings" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { "/dynamic/#{SiteSetting.title.parameterize}" },
+        route: "plugin#index",
+      )
+      SiteSetting.title = "Great Site"
+      SiteSetting.default_homepage = "dynamic"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:homepage_options]).to include(
+        id: "dynamic",
+        path: "/dynamic/great-site",
+        server_side: false,
+      )
+    end
   end
 
   describe "#anonymous_list_filters" do

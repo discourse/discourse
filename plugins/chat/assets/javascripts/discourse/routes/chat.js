@@ -1,5 +1,8 @@
 import { service } from "@ember/service";
-import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
+import {
+  discoveryHomepageRoute,
+  isHomepageTransition,
+} from "discourse/lib/homepage-router-overrides";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Session from "discourse/models/session";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -47,9 +50,12 @@ export default class ChatRoute extends DiscourseRoute {
     // This preserves the original behavior: if someone directly types /chat in
     // the address bar, show them full page chat (they explicitly chose it).
     // But if requiresRefresh caused a reload mid-session, respect drawer preference.
+    // The homepage always opens full page: there is no page beneath for the
+    // drawer to open over.
     if (
       isDrawerPreferred &&
       canHandleInDrawer &&
+      !isHomepageTransition(transition) &&
       (!fullPageReload || requiresRefresh)
     ) {
       transition.abort();
