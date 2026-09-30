@@ -81,6 +81,7 @@ after_mold_fork do |server, mold|
   end
 
   Discourse.preload_rails!
+  Discourse.apply_db_variables_overrides(web: false)
 
   # A mold forked from a web worker inherits its state: major GC deferred.
   GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
@@ -106,7 +107,7 @@ end
 
 after_worker_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
-  Discourse.apply_worker_db_variables_overrides
+  Discourse.apply_db_variables_overrides(web: true)
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
 
@@ -127,8 +128,6 @@ end
 
 before_service_worker_ready do |server, service_worker|
   Discourse.resume_after_fork
-  # A service worker forked via a web worker inherits its web-only database settings.
-  Discourse.reset_worker_db_variables_overrides if service_worker.generation.nonzero?
 
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
