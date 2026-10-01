@@ -7,8 +7,8 @@
     "@discourse/lint-configs": "^3.7.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.3.1",
-    "@glint/ember-tsc": "^1.11.4",
-    "@glint/tsserver-plugin": "^2.7.7",
+    "@glint/ember-tsc": "^1.11.6",
+    "@glint/tsserver-plugin": "^2.7.9",
     "@rdil/parallel-prettier": "^3.0.0",
     "concurrently": "^10.0.5",
     "eslint": "10.6.0",
@@ -23,7 +23,7 @@
     "postcss-value-parser": "^4.2.0",
     "prettier": "3.8.1",
     "stylelint": "17.5.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "dev": "bin/dev",
