@@ -166,20 +166,21 @@ module Onebox
                     next
                   end
 
-                  AUTOLOADED_URL_ATTRIBUTES
-                    .fetch(env[:node_name], [])
-                    .each do |attribute|
-                      value = node[attribute]
-                      next if value.blank?
+                  attributes = AUTOLOADED_URL_ATTRIBUTES.fetch(env[:node_name], [])
+                  node.attribute_nodes.each do |attribute|
+                    next if attributes.exclude?(attribute.name)
 
-                      urls =
-                        if attribute == "srcset"
-                          value.split(",").filter_map { |entry| entry.strip.split.first }
-                        else
-                          [value]
-                        end
-                      node.remove_attribute(attribute) if urls.any? { |url| !safe_media_url?(url) }
-                    end
+                    value = attribute.value
+                    next if value.blank?
+
+                    urls =
+                      if attribute.name == "srcset"
+                        value.split(",").filter_map { |entry| entry.strip.split.first }
+                      else
+                        [value]
+                      end
+                    attribute.remove if urls.any? { |url| !safe_media_url?(url) }
+                  end
                 end,
               ],
           css: Sanitize::Config.merge(ONEBOX[:css], protocols: []),
