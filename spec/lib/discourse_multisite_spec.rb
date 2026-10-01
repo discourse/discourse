@@ -60,9 +60,10 @@ RSpec.describe Discourse, type: :multisite do
           exit!(0)
         end
       writer.close
-      Process.waitpid(child)
+      _, status = Timeout.timeout(10) { Process.wait2(child) }
       child = nil
 
+      expect(status).to be_success
       expect(JSON.parse(reader.read)).to eq([default_database, second_database])
     ensure
       if child

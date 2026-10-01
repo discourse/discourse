@@ -3,7 +3,9 @@
 require "demon/base"
 
 RSpec.describe Demon::Base do
+  let(:stop_timeout) { 10 }
   let(:demon_class) do
+    timeout = stop_timeout
     Class.new(described_class) do
       def self.prefix
         "test_demon"
@@ -13,9 +15,7 @@ RSpec.describe Demon::Base do
         "KILL"
       end
 
-      def stop_timeout
-        1
-      end
+      define_method(:stop_timeout) { timeout }
 
       def after_fork
         sleep
@@ -58,7 +58,7 @@ RSpec.describe Demon::Base do
     reapers << Process.detach(pid)
     ready_writer.close
     release_reader.close
-    expect(ready_reader.gets).to eq("ready\n")
+    expect(Timeout.timeout(5) { ready_reader.gets }).to eq("ready\n")
     FileUtils.mkdir_p(File.dirname(demon.pid_file))
     File.write(demon.pid_file, pid)
     [pid, release_writer]
@@ -75,7 +75,7 @@ RSpec.describe Demon::Base do
     it "waits for the previous instance to exit without blocking the caller" do
       previous, release = previous_instance
 
-      demon.start
+      Timeout.timeout(5) { demon.start }
 
       expect(demon.pid).to eq(nil)
       expect(described_class.running?(previous)).to eq(true)
@@ -85,13 +85,17 @@ RSpec.describe Demon::Base do
       expect(File.read(demon.pid_file).to_i).to eq(demon.pid)
     end
 
-    it "kills a previous instance that exceeds the stop timeout" do
-      previous_instance(ignore_term: true)
+    context "when the previous instance exceeds the stop timeout" do
+      let(:stop_timeout) { 0.1 }
 
-      demon.start
+      it "kills the previous instance and starts its replacement" do
+        previous_instance(ignore_term: true)
 
-      wait_for(timeout: 5) { demon.pid && File.read(demon.pid_file).to_i == demon.pid }
-      expect(described_class.running?(spawned.first)).to eq(false)
+        demon.start
+
+        wait_for(timeout: 5) { demon.pid && File.read(demon.pid_file).to_i == demon.pid }
+        expect(described_class.running?(spawned.first)).to eq(false)
+      end
     end
   end
 
@@ -108,9 +112,10 @@ RSpec.describe Demon::Base do
       expect(started.pop(timeout: 5)).to eq(true)
       demon.start
       previous_release.write("x")
-      wait_for { Scheduler::ThreadPool.paused? }
+      wait_for(timeout: 5) { Scheduler::ThreadPool.paused? }
 
       stopping = Thread.new { demon.stop }
+      wait_for(timeout: 5) { stopping.status == "sleep" || !stopping.alive? }
       expect(stopping.join(0.1)).to eq(nil)
       release << true
 
@@ -119,7 +124,7 @@ RSpec.describe Demon::Base do
       expect(demon.pid).to eq(nil)
       expect(described_class.running?(File.read(demon.pid_file).to_i)).to eq(false)
     ensure
-      release << true
+      release&.push(true)
       Scheduler::ThreadPool.resume
       stopping&.join(5)
       pool&.shutdown
@@ -165,7 +170,7 @@ RSpec.describe Demon::Base do
       skip "requires /proc process state" unless File.directory?("/proc")
       pid = Process.spawn("true")
       spawned << pid
-      wait_for { File.read("/proc/#{pid}/stat").split(") ").last.start_with?("Z") }
+      wait_for(timeout: 5) { File.read("/proc/#{pid}/stat").split(") ").last.start_with?("Z") }
 
       expect(described_class.alive?(pid)).to eq(true)
       expect(described_class.running?(pid)).to eq(false)
