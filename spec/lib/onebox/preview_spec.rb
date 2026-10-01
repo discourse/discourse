@@ -39,6 +39,8 @@ RSpec.describe Onebox::Preview do
         <img src="http://2130706433/a.png">
         <img src="http://127.0.0.%31/a.png">
         <img src="http://%31%32%37.0.0.1/a.png">
+        <img src="///127.0.0.1/a.png">
+        <img src="////127.0.0.1/a.png">
         <img src="http://printer.local/a.png">
         <img src="http://localhost/a.png">
         <img src="https://cdn.example.com/a.png">

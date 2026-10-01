@@ -13,6 +13,8 @@ module Onebox
     }.freeze
 
     def self.safe_media_url?(url)
+      return false if url.start_with?("///")
+
       uri = URI.parse(url)
       return uri.scheme.nil? if uri.host.nil?
       return false unless uri.scheme.nil? || uri.scheme.in?(HTTP_PROTOCOLS)
