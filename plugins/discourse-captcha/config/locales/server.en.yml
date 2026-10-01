@@ -1,6 +1,8 @@
 en:
   discourse_captcha:
     configuration_test:
+      v3_success: "Your reCAPTCHA v3 keys work. This test scored %{score}, meeting the signup threshold of %{threshold}."
+      v3_low_score: "Your reCAPTCHA v3 keys work, but this test scored %{score}, below the signup threshold of %{threshold}."
       success: "Verification succeeded. Your saved CAPTCHA keys work on this site."
       errors:
         not_configured: "Select a CAPTCHA provider and save both keys in Settings before testing."
@@ -27,8 +29,8 @@ en:
     discourse_captcha_provider: "Choose a Captcha provider. This requires you to own an account of the chosen provider"
     hcaptcha_site_key: "hCaptcha Site Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
     hcaptcha_secret_key: "hCaptcha Secret Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
-    recaptcha_site_key: "ReCaptcha v2 Site Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account. Used only when the captcha provider is set to reCaptcha v2."
-    recaptcha_secret_key: "ReCaptcha v2 Secret Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account. Used only when the captcha provider is set to reCaptcha v2."
+    recaptcha_v2_site_key: "ReCaptcha v2 Site Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account. Used only when the captcha provider is set to reCaptcha v2."
+    recaptcha_v2_secret_key: "ReCaptcha v2 Secret Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account. Used only when the captcha provider is set to reCaptcha v2."
     recaptcha_v3_site_key: "ReCaptcha v3 Site Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account"
     recaptcha_v3_secret_key: "ReCaptcha v3 Secret Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account"
     recaptcha_v3_score_threshold: "The minimum score a reCaptcha v3 challenge must reach for a signup to be accepted. Lower values are more permissive, higher values provide stronger bot protection."

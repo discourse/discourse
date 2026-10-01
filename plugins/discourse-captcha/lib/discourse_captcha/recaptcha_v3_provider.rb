@@ -19,17 +19,16 @@ module DiscourseCaptcha
       )
     end
 
-    def validate_captcha_response(response)
-      response_json = super
-      # reCAPTCHA v3 responses include `action` and `score`, but Google's test
-      # keys omit them. Only enforce these checks when they are actually present.
-      if response_json["action"].present? && response_json["action"] != CAPTCHA_ACTION
-        raise Discourse::InvalidAccess
-      end
-      if response_json["score"].present? &&
-           response_json["score"].to_f < SiteSetting.recaptcha_v3_score_threshold
-        raise Discourse::InvalidAccess
-      end
+    def validate_captcha_response(
+      response,
+      action: CAPTCHA_ACTION,
+      score_threshold: SiteSetting.recaptcha_v3_score_threshold
+    )
+      response_json = super(response)
+      raise Discourse::InvalidAccess if response_json["action"] != action
+
+      score = response_json["score"]
+      raise Discourse::InvalidAccess if !score.is_a?(Numeric) || score < score_threshold
 
       response_json
     end

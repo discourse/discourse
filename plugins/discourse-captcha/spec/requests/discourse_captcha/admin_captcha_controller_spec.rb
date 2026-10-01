@@ -6,9 +6,9 @@ RSpec.describe DiscourseCaptcha::AdminCaptchaController do
   fab!(:user)
 
   before do
-    SiteSetting.discourse_captcha_provider = "recaptcha"
-    SiteSetting.recaptcha_site_key = "test-site-key"
-    SiteSetting.recaptcha_secret_key = "test-secret-key"
+    SiteSetting.discourse_captcha_provider = "recaptcha_v2"
+    SiteSetting.recaptcha_v2_site_key = "test-site-key"
+    SiteSetting.recaptcha_v2_secret_key = "test-secret-key"
   end
 
   describe "#show" do
@@ -20,11 +20,11 @@ RSpec.describe DiscourseCaptcha::AdminCaptchaController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body).to eq(
-        "provider" => "recaptcha",
-        "site_key" => SiteSetting.recaptcha_site_key,
+        "provider" => "recaptcha_v2",
+        "site_key" => SiteSetting.recaptcha_v2_site_key,
         "configured" => true,
       )
-      expect(response.body).not_to include(SiteSetting.recaptcha_secret_key)
+      expect(response.body).not_to include(SiteSetting.recaptcha_v2_secret_key)
     end
 
     it "supports directly loading the test page" do
@@ -37,7 +37,7 @@ RSpec.describe DiscourseCaptcha::AdminCaptchaController do
 
     it "identifies missing credentials" do
       sign_in(admin)
-      SiteSetting.recaptcha_secret_key = ""
+      SiteSetting.recaptcha_v2_secret_key = ""
 
       get "/admin/plugins/discourse-captcha/test.json"
 
@@ -56,8 +56,72 @@ RSpec.describe DiscourseCaptcha::AdminCaptchaController do
     end
   end
 
+  describe "reCAPTCHA v3 configuration" do
+    before do
+      sign_in(admin)
+      SiteSetting.discourse_captcha_provider = "recaptcha_v3"
+      SiteSetting.recaptcha_v3_site_key = "v3-site-key"
+      SiteSetting.recaptcha_v3_secret_key = "v3-secret-key"
+      SiteSetting.recaptcha_v3_score_threshold = 0.5
+    end
+
+    it "recognizes the saved v3 configuration" do
+      get "/admin/plugins/discourse-captcha/test.json"
+
+      expect(response.parsed_body).to eq(
+        "provider" => "recaptcha_v3",
+        "site_key" => "v3-site-key",
+        "configured" => true,
+      )
+    end
+
+    it "reports the score separately from whether the keys work" do
+      [0.9, 0.1].each do |score|
+        stub_request(:post, "https://www.google.com/recaptcha/api/siteverify").with(
+          body: {
+            secret: "v3-secret-key",
+            response: "test-token",
+          },
+        ).to_return(
+          status: 200,
+          body: { success: true, score: score, action: "configuration_test" }.to_json,
+        )
+
+        post "/admin/plugins/discourse-captcha/test.json",
+             params: {
+               provider: "recaptcha_v3",
+               site_key: "v3-site-key",
+               token: "test-token",
+             }
+
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["score"]).to eq(score)
+        expect(response.parsed_body["meets_threshold"]).to eq(score >= 0.5)
+        expect(server_session["recaptcha_v3_token"]).to be_nil
+      end
+    end
+
+    it "rejects a response with the signup action" do
+      stub_request(:post, "https://www.google.com/recaptcha/api/siteverify").to_return(
+        status: 200,
+        body: { success: true, score: 0.9, action: "signup" }.to_json,
+      )
+
+      post "/admin/plugins/discourse-captcha/test.json",
+           params: {
+             provider: "recaptcha_v3",
+             site_key: "v3-site-key",
+             token: "test-token",
+           }
+
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t("discourse_captcha.configuration_test.errors.invalid_response"),
+      )
+    end
+  end
+
   describe "#verify" do
-    let(:params) { { token: "test-token", provider: "recaptcha", site_key: "test-site-key" } }
+    let(:params) { { token: "test-token", provider: "recaptcha_v2", site_key: "test-site-key" } }
     let(:verification_url) { "https://www.google.com/recaptcha/api/siteverify" }
 
     it "verifies the saved keys without creating an account or storing a signup token" do
@@ -111,7 +175,7 @@ RSpec.describe DiscourseCaptcha::AdminCaptchaController do
         "success" => false,
         "message" => I18n.t("discourse_captcha.configuration_test.errors.invalid_secret"),
       )
-      expect(response.body).not_to include(SiteSetting.recaptcha_secret_key)
+      expect(response.body).not_to include(SiteSetting.recaptcha_v2_secret_key)
     end
 
     it "handles expired challenges" do
@@ -169,7 +233,7 @@ RSpec.describe DiscourseCaptcha::AdminCaptchaController do
 
     it "reports missing credentials and no selected provider" do
       sign_in(admin)
-      SiteSetting.recaptcha_secret_key = ""
+      SiteSetting.recaptcha_v2_secret_key = ""
       post "/admin/plugins/discourse-captcha/test.json", params: params
       expect(response.parsed_body["success"]).to eq(false)
 

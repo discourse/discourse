@@ -70,10 +70,29 @@ RSpec.describe DiscourseCaptcha::RecaptchaV3Provider do
       expect { provider.validate_captcha_response(response) }.not_to raise_error
     end
 
-    it "accepts a successful response without action or score (Google test keys)" do
-      response = captcha_response.new(200, '{"success":true}')
+    it "rejects a response without an action" do
+      response = captcha_response.new(200, '{"success":true,"score":0.9}')
 
-      expect { provider.validate_captcha_response(response) }.not_to raise_error
+      expect { provider.validate_captcha_response(response) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+    end
+
+    it "rejects a response without a score" do
+      response = captcha_response.new(200, '{"success":true,"action":"signup"}')
+
+      expect { provider.validate_captcha_response(response) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+    end
+
+    it "rejects a nonnumeric score even when the threshold is zero" do
+      SiteSetting.recaptcha_v3_score_threshold = 0
+      response = captcha_response.new(200, '{"success":true,"score":"invalid","action":"signup"}')
+
+      expect { provider.validate_captcha_response(response) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
     end
 
     it "rejects a response whose score is below the threshold" do

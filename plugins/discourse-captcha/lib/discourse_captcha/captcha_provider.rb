@@ -3,7 +3,7 @@
 module DiscourseCaptcha
   class CaptchaProvider
     HCAPTCHA = "hcaptcha"
-    RECAPTCHA = "recaptcha"
+    RECAPTCHA_V2 = "recaptcha_v2"
     RECAPTCHA_V3 = "recaptcha_v3"
     NONE = "none"
 

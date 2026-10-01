@@ -22,8 +22,8 @@ RSpec.describe "Users", type: :request do
       SiteSetting.hcaptcha_site_key = "site-key"
       SiteSetting.hcaptcha_secret_key = "secret-key"
 
-      SiteSetting.recaptcha_site_key = "site-key"
-      SiteSetting.recaptcha_secret_key = "secret-key"
+      SiteSetting.recaptcha_v2_site_key = "site-key"
+      SiteSetting.recaptcha_v2_secret_key = "secret-key"
 
       SiteSetting.recaptcha_v3_site_key = "site-key"
       SiteSetting.recaptcha_v3_secret_key = "secret-key"
@@ -57,18 +57,18 @@ RSpec.describe "Users", type: :request do
 
       context "when using reCaptcha" do
         before do
-          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
 
           stub_request(:post, DiscourseCaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
-              secret: SiteSetting.recaptcha_secret_key,
+              secret: SiteSetting.recaptcha_v2_secret_key,
               response: "token-from-reCaptcha",
             },
           ).to_return(status: 200, body: '{"success":false}', headers: {})
         end
 
         it "fails registration" do
-          post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
+          post "/captcha/recaptcha_v2/create.json", params: { token: "token-from-reCaptcha" }
           post "/u.json", params: user_params
           expect(JSON.parse(response.body)["success"]).to be(false)
         end
@@ -108,7 +108,7 @@ RSpec.describe "Users", type: :request do
 
       context "when using reCaptcha" do
         before do
-          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
         end
 
         it "fails registration" do
@@ -152,18 +152,18 @@ RSpec.describe "Users", type: :request do
 
       context "when using reCaptcha" do
         before do
-          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
 
           stub_request(:post, DiscourseCaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
               "response" => "token-from-reCaptcha",
-              "secret" => SiteSetting.recaptcha_secret_key,
+              "secret" => SiteSetting.recaptcha_v2_secret_key,
             },
           ).to_return(status: 200, body: '{"success":true}', headers: {})
         end
 
         it "succeeds in registration" do
-          post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
+          post "/captcha/recaptcha_v2/create.json", params: { token: "token-from-reCaptcha" }
           post "/u.json", params: user_params
 
           expect(JSON.parse(response.body)["success"]).to be(true)
@@ -245,9 +245,9 @@ RSpec.describe "Users", type: :request do
 
       context "when reCaptcha is selected but keys are missing" do
         before do
-          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
-          SiteSetting.recaptcha_site_key = ""
-          SiteSetting.recaptcha_secret_key = ""
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
+          SiteSetting.recaptcha_v2_site_key = ""
+          SiteSetting.recaptcha_v2_secret_key = ""
         end
 
         it "blocks registration" do
@@ -294,18 +294,18 @@ RSpec.describe "Users", type: :request do
 
       context "when using reCaptcha" do
         before do
-          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
 
           stub_request(:post, DiscourseCaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
-              secret: SiteSetting.recaptcha_secret_key,
+              secret: SiteSetting.recaptcha_v2_secret_key,
               response: "token-from-reCaptcha",
             },
           ).to_return(status: 503, body: "Service Unavailable")
         end
 
         it "fails registration" do
-          post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
+          post "/captcha/recaptcha_v2/create.json", params: { token: "token-from-reCaptcha" }
           post "/u.json", params: user_params
           expect(JSON.parse(response.body)["success"]).to be(false)
         end
@@ -334,18 +334,18 @@ RSpec.describe "Users", type: :request do
 
       context "when using reCaptcha" do
         before do
-          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+          SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
 
           stub_request(:post, DiscourseCaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
-              secret: SiteSetting.recaptcha_secret_key,
+              secret: SiteSetting.recaptcha_v2_secret_key,
               response: "token-from-reCaptcha",
             },
           ).to_return(status: 200, body: "not valid json")
         end
 
         it "fails registration" do
-          post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
+          post "/captcha/recaptcha_v2/create.json", params: { token: "token-from-reCaptcha" }
           post "/u.json", params: user_params
           expect(JSON.parse(response.body)["success"]).to be(false)
         end

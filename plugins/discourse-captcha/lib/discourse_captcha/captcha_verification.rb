@@ -29,8 +29,9 @@ module DiscourseCaptcha
         if SiteSetting.hcaptcha_site_key.present? && SiteSetting.hcaptcha_secret_key.present?
           DiscourseCaptcha::HcaptchaProvider.new
         end
-      when CaptchaProvider::RECAPTCHA
-        if SiteSetting.recaptcha_site_key.present? && SiteSetting.recaptcha_secret_key.present?
+      when CaptchaProvider::RECAPTCHA_V2
+        if SiteSetting.recaptcha_v2_site_key.present? &&
+             SiteSetting.recaptcha_v2_secret_key.present?
           DiscourseCaptcha::RecaptchaProvider.new
         end
       when CaptchaProvider::RECAPTCHA_V3

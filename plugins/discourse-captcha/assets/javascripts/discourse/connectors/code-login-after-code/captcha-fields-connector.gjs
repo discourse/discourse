@@ -14,9 +14,9 @@ export default class CaptchaFieldsConnector extends Component {
         {{#if (eq this.siteSettings.discourse_captcha_provider "hcaptcha")}}
           <HCaptcha @siteKey={{this.siteSettings.hcaptcha_site_key}} />
         {{else if
-          (eq this.siteSettings.discourse_captcha_provider "recaptcha")
+          (eq this.siteSettings.discourse_captcha_provider "recaptcha_v2")
         }}
-          <ReCaptcha @siteKey={{this.siteSettings.recaptcha_site_key}} />
+          <ReCaptcha @siteKey={{this.siteSettings.recaptcha_v2_site_key}} />
         {{else if
           (eq this.siteSettings.discourse_captcha_provider "recaptcha_v3")
         }}

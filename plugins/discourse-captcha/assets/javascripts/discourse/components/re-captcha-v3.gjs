@@ -5,45 +5,51 @@ import { i18n } from "discourse-i18n";
 import BaseCaptcha from "./base-captcha";
 
 export default class ReCaptchaV3 extends BaseCaptcha {
-  fetchToken = modifierFn((_element, _args, { captchaApi }) => {
-    const fetchToken = () =>
-      captchaApi
-        .execute(this.siteKey, { action: "signup" })
-        .then((response) => {
-          // `grecaptcha.execute` can resolve with an empty result when called
-          // again shortly after a previous call, so only treat a real token as
-          // success and otherwise keep any token we already have.
-          if (!response) {
-            this.captchaService.invalid = true;
-            return;
+  registerCaptcha = modifierFn((_element, _args, { captchaApi }) => {
+    let active = true;
+    if (this.args.onResponse) {
+      captchaApi.execute(this.siteKey, { action: "configuration_test" }).then(
+        (token) => {
+          if (active) {
+            this.args.onResponse(token);
           }
-          this.captchaService.token = response;
-          this.captchaService.invalid = false;
-        })
-        .catch(() => {
-          this.captchaService.invalid = true;
-        });
+        },
+        () => {
+          if (active) {
+            this.args.onError?.();
+          }
+        }
+      );
+      return () => {
+        active = false;
+      };
+    }
 
-    const refresh = () => {
-      // ReCAPTCHA v3 tokens are single-use and valid for a short window, but
-      // re-executing immediately returns an empty result. Reuse the token we
-      // already captured unless there is none to submit.
-      if (this.captchaService.token) {
-        this.captchaService.invalid = false;
-        return;
+    const refresh = async () => {
+      this.captchaService.token = null;
+      this.captchaService.invalid = true;
+
+      try {
+        const token = await captchaApi.execute(this.siteKey, {
+          action: "signup",
+        });
+        if (active) {
+          this.captchaService.token = token || null;
+          this.captchaService.invalid = !token;
+        }
+      } catch {
+        // Leave verification invalid so the user can retry submission.
       }
-      return fetchToken();
     };
 
     this.captchaService.refreshToken = refresh;
-    // A token may already be present if the captcha step was re-rendered (e.g.
-    // when going back and forward through the signup steps). Reusing it avoids
-    // the empty response that `grecaptcha.execute` returns on rapid re-calls.
-    if (!this.captchaService.token) {
-      fetchToken();
-    } else {
-      this.captchaService.invalid = false;
-    }
+    return () => {
+      active = false;
+      if (this.captchaService.refreshToken === refresh) {
+        this.captchaService.refreshToken = null;
+        this.captchaService.reset();
+      }
+    };
   });
 
   get scriptUrl() {
@@ -77,18 +83,22 @@ export default class ReCaptchaV3 extends BaseCaptcha {
         <div
           class="captcha-container re-captcha-v3"
           id={{this.containerId}}
-          {{this.fetchToken captchaApi=captchaApi}}
+          {{this.registerCaptcha captchaApi=captchaApi}}
         ></div>
       </:content>
       <:error>
-        <div class="alert alert-error">
-          {{i18n this.captchaErrorKey}}
-        </div>
+        {{#unless @onError}}
+          <div class="alert alert-error">
+            {{i18n this.captchaErrorKey}}
+          </div>
+        {{/unless}}
       </:error>
     </DAsyncContent>
 
-    {{#if this.captchaService.submitFailed}}
-      <DInputTip @validation={{this.captchaService.inputValidation}} />
-    {{/if}}
+    {{#unless @onResponse}}
+      {{#if this.captchaService.submitFailed}}
+        <DInputTip @validation={{this.captchaService.inputValidation}} />
+      {{/if}}
+    {{/unless}}
   </template>
 }

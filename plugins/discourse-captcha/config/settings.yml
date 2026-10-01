@@ -8,7 +8,7 @@ discourse_captcha:
     type: enum
     choices:
       - hcaptcha
-      - recaptcha
+      - recaptcha_v2
       - recaptcha_v3
       - none
   hcaptcha_site_key:
@@ -18,10 +18,10 @@ discourse_captcha:
     default: ''
     client: false
     secret: true
-  recaptcha_site_key:
+  recaptcha_v2_site_key:
     default: ''
     client: true
-  recaptcha_secret_key:
+  recaptcha_v2_secret_key:
     default: ''
     client: false
     secret: true
