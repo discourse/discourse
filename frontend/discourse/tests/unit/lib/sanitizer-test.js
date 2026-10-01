@@ -52,6 +52,24 @@ module("Unit | Utility | sanitizer", function (hooks) {
       "we can embed proper links"
     );
 
+    cooked(
+      "[visit](http://[2001:db8:0:0:0:0:0:1]:1896/)",
+      '<p><a href="http://[2001:db8:0:0:0:0:0:1]:1896/">visit</a></p>',
+      "allows fully expanded IPv6 markdown links"
+    );
+
+    cooked(
+      "[visit](http://[2001:db8::1]:1926/)",
+      '<p><a href="http://[2001:db8::1]:1926/">visit</a></p>',
+      "allows compressed IPv6 markdown links"
+    );
+
+    cooked(
+      '<a href="http://[::1]/">loopback</a>',
+      '<p><a href="http://[::1]/">loopback</a></p>',
+      "allows IPv6 loopback hrefs"
+    );
+
     cooked("<center>hello</center>", "hello", "does not allow centering");
     cooked(
       "<blockquote>a\n</blockquote>\n",
@@ -376,6 +394,22 @@ module("Unit | Utility | sanitizer", function (hooks) {
     allowed("http://eviltrout.com/evil/trout", "allows full urls");
     allowed("https://eviltrout.com/evil/trout", "allows https urls");
     allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
+    allowed(
+      "http://[2001:db8:0:0:0:0:0:1]:2026/",
+      "allows fully expanded IPv6 urls with a port"
+    );
+    allowed(
+      "http://[2001:db8::1]:2026/",
+      "allows compressed IPv6 urls with a port"
+    );
+    allowed("http://[::1]/", "allows IPv6 loopback urls");
+    allowed("http://[::ffff:192.0.2.1]/", "allows IPv4-mapped IPv6 urls");
+
+    assert.strictEqual(
+      hrefAllowed("http://[]/"),
+      undefined,
+      "rejects empty IPv6 brackets"
+    );
 
     assert.strictEqual(
       hrefAllowed("http://google.com/test'onmouseover=alert('XSS!');//.swf"),
