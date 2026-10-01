@@ -3,7 +3,7 @@
   "properties": {
     "target_username": {
       "type": "string",
-      "description": "Username of the existing user that receives the source user's posts and other data"
+      "description": "Username of the user to merge into"
     }
   },
   "required": [

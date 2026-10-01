@@ -504,10 +504,10 @@ RSpec.describe "users" do
   end
 
   path "/admin/users/{id}/merge.json" do
-    post "Merge a user into another user" do
+    post "Merge a user" do
       tags "Users", "Admin"
       operationId "mergeUser"
-      description "Merge the source user into the target user. Requires an admin, and the source user cannot be a staff member. The merge runs in a background job, and the source user is deleted."
+      description "Merge a user into another user. Requires admin permissions. The source user cannot be a staff member. The merge runs in the background and deletes the source user when complete."
       consumes "application/json"
       parameter name: "Api-Key", in: :header, type: :string, required: true
       parameter name: "Api-Username", in: :header, type: :string, required: true
@@ -515,12 +515,12 @@ RSpec.describe "users" do
                 in: :path,
                 type: :integer,
                 required: true,
-                description: "ID of the source user to merge into the target user"
+                description: "ID of the user to merge"
       expected_request_schema = load_spec_schema("user_merge_request")
       parameter name: :params, in: :body, schema: expected_request_schema
 
       produces "application/json"
-      response "200", "merge queued" do
+      response "200", "response" do
         expected_response_schema = load_spec_schema("success_ok_response")
         schema expected_response_schema
 
