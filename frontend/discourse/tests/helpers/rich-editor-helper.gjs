@@ -9,6 +9,7 @@ export async function setupRichEditor(assert, markdown, opts = {}) {
     disabled = false,
     multiToggle = false,
     markdownOptions,
+    onSetup,
     withMenus = false,
   } = opts;
   const self = new (class {
@@ -17,6 +18,7 @@ export async function setupRichEditor(assert, markdown, opts = {}) {
   })();
   const handleSetup = (textManipulation) => {
     self.view = textManipulation.view;
+    onSetup?.(textManipulation);
   };
 
   await render(

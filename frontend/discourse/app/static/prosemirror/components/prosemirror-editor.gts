@@ -352,6 +352,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
+      tryConvertFromMarkdown: this.tryConvertFromMarkdown,
       convertToMarkdown: this.convertToMarkdown,
       splitNonEmptyLines: this.splitNonEmptyLines,
       buildListNode: this.buildListNode,
@@ -374,28 +375,39 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
 
   @bind
   convertFromMarkdown(markdown: string): Node {
+    const doc = this.tryConvertFromMarkdown(markdown);
+    if (doc) {
+      return doc;
+    }
+
+    this.dialog.alert({
+      message: i18n("composer.unsupported_token"),
+      didConfirm: this.args.toggleRichEditor,
+      didCancel: this.args.toggleRichEditor,
+    });
+
+    return this.schema.nodes.paragraph.create(
+      null,
+      markdown
+        // our html_block avoids double newlines
+        // because markdown-it closes the html block parsing at double newlines
+        .split("\n\n")
+        .filter(Boolean)
+        .map((line) =>
+          // this creates a dependency on having a html_block in the schema
+          this.schema.nodes.html_block.create(null, this.schema.text(line))
+        )
+    );
+  }
+
+  /** Parses markdown, returning null instead of alerting on unsupported tokens. */
+  @bind
+  tryConvertFromMarkdown(markdown: string): Node | null {
     try {
       return this.parser.convert(this.schema, markdown);
     } catch (e) {
       if (e instanceof UnsupportedTokenError) {
-        this.dialog.alert({
-          message: i18n("composer.unsupported_token"),
-          didConfirm: this.args.toggleRichEditor,
-          didCancel: this.args.toggleRichEditor,
-        });
-
-        return this.schema.nodes.paragraph.create(
-          null,
-          markdown
-            // our html_block avoids double newlines
-            // because markdown-it closes the html block parsing at double newlines
-            .split("\n\n")
-            .filter(Boolean)
-            .map((line) =>
-              // this creates a dependency on having a html_block in the schema
-              this.schema.nodes.html_block.create(null, this.schema.text(line))
-            )
-        );
+        return null;
       }
 
       throw e;
