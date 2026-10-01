@@ -67,6 +67,7 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_event_delete()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
+        PERFORM pg_advisory_xact_lock(130712, 1);
         UPDATE browser_pageview_session_rollup_summaries
         SET dirty = true
         WHERE session_id IN (SELECT session_id FROM old_rows);
@@ -107,6 +108,7 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_engagement_delete()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
+        PERFORM pg_advisory_xact_lock(130712, 1);
         UPDATE browser_pageview_session_rollup_summaries
         SET dirty = true
         WHERE session_id IN (SELECT session_id FROM old_rows);

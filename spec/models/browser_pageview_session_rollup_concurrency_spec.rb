@@ -70,6 +70,110 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
         )
       end
     end
+
+    it "seeds after an in-progress deletion commits" do
+      date = 1.day.ago.to_date
+      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
+      session_id = event.session_id
+      described_class.refresh_recent!(start_date: date, end_date: Time.zone.today)
+      described_class.reconcile_manual_rebuild!(start_date: date, end_date: Time.zone.today)
+      options =
+        ActiveRecord::Base.connection.raw_connection.conninfo_hash.reject do |_, value|
+          value.blank?
+        end
+      deleting = PG.connect(options)
+      deleting.exec("BEGIN")
+      deleting_open_transaction = true
+      deleting.exec_params("DELETE FROM browser_pageview_events WHERE id = $1", [event.id])
+      deleting_pid = deleting.exec("SELECT pg_backend_pid()").getvalue(0, 0).to_i
+      refresher_started = Queue.new
+
+      refresher =
+        Thread.new do
+          ActiveRecord::Base.connection_pool.with_connection do |connection|
+            refresher_started << connection.select_value("SELECT pg_backend_pid()")
+            described_class.refresh_recent!(start_date: date, end_date: Time.zone.today)
+          end
+        end
+      refresher_pid = Timeout.timeout(5) { refresher_started.pop }
+      wait_until_blocked_by(refresher_pid, deleting_pid)
+      deleting.exec("COMMIT")
+      deleting_open_transaction = false
+      refresher.value
+
+      expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(0)
+    ensure
+      deleting&.exec("ROLLBACK") if deleting_open_transaction
+      deleting&.close
+      refresher&.join(5)
+      if session_id
+        BrowserPageviewEvent.where(session_id:).delete_all
+        described_class.where(session_id:).delete_all
+        BrowserPageviewSessionEngagementDailyRollup.where(date:).delete_all
+        ActiveRecord::Base.connection.execute(
+          "DELETE FROM browser_pageview_session_rollup_statuses",
+        )
+      end
+    end
+
+    it "retracts a deletion that waits for cache seeding" do
+      date = 1.day.ago.to_date
+      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
+      session_id = event.session_id
+      described_class.refresh_recent!(start_date: date, end_date: Time.zone.today)
+      described_class.reconcile_manual_rebuild!(start_date: date, end_date: Time.zone.today)
+      options =
+        ActiveRecord::Base.connection.raw_connection.conninfo_hash.reject do |_, value|
+          value.blank?
+        end
+      ActiveRecord::Base.connection_pool.release_connection
+      blocker = PG.connect(options)
+      blocker.exec("BEGIN")
+      blocker_open_transaction = true
+      blocker.exec("LOCK TABLE browser_pageview_session_engagements IN ACCESS EXCLUSIVE MODE")
+      blocker_pid = blocker.exec("SELECT pg_backend_pid()").getvalue(0, 0).to_i
+      refresher_started = Queue.new
+      deleting_started = Queue.new
+
+      refresher =
+        Thread.new do
+          ActiveRecord::Base.connection_pool.with_connection do |connection|
+            refresher_started << connection.select_value("SELECT pg_backend_pid()")
+            described_class.refresh_recent!(start_date: date, end_date: Time.zone.today)
+          end
+        end
+      refresher_pid = Timeout.timeout(5) { refresher_started.pop }
+      wait_until_blocked_by(refresher_pid, blocker_pid)
+      deleting =
+        Thread.new do
+          PG.connect(options) do |connection|
+            deleting_started << connection.exec("SELECT pg_backend_pid()").getvalue(0, 0).to_i
+            connection.exec_params("DELETE FROM browser_pageview_events WHERE id = $1", [event.id])
+          end
+        end
+      deleting_pid = Timeout.timeout(5) { deleting_started.pop }
+      wait_until_blocked_by(deleting_pid, refresher_pid)
+      blocker.exec("COMMIT")
+      blocker_open_transaction = false
+      refresher.value
+      deleting.value
+      described_class.refresh_recent!(start_date: date, end_date: Time.zone.today)
+
+      expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(0)
+    ensure
+      blocker&.exec("ROLLBACK") if blocker_open_transaction
+      blocker&.close
+      refresher&.join(5)
+      deleting&.join(5)
+      if session_id
+        BrowserPageviewEvent.where(session_id:).delete_all
+        described_class.where(session_id:).delete_all
+        BrowserPageviewSessionEngagementDailyRollup.where(date:).delete_all
+        ActiveRecord::Base.connection.execute(
+          "DELETE FROM browser_pageview_session_rollup_statuses",
+        )
+      end
+    end
   end
 
   def wait_until_blocked_by(waiter_pid, blocker_pid)
