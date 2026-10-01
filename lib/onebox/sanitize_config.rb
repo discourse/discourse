@@ -3,6 +3,47 @@
 module Onebox
   module SanitizeConfig
     HTTP_PROTOCOLS = ["http", "https", :relative].freeze
+    AUTOLOADED_URL_ATTRIBUTES = {
+      "audio" => %w[src],
+      "embed" => %w[src],
+      "iframe" => %w[src],
+      "img" => %w[src srcset],
+      "source" => %w[src srcset],
+      "video" => %w[src poster],
+    }.freeze
+
+    def self.safe_media_url?(url)
+      uri = URI.parse(url)
+      return uri.scheme.nil? if uri.host.nil?
+      return false unless uri.scheme.nil? || uri.scheme.in?(HTTP_PROTOCOLS)
+
+      hostname = uri.hostname.downcase.delete_suffix(".")
+      own_hostname = URI.parse(Discourse.base_url_no_prefix).hostname.downcase
+      return true if hostname == own_hostname
+      return false if hostname.include?("%")
+      return false if hostname == "localhost" || !hostname.include?(".")
+      if hostname.end_with?(
+           ".localhost",
+           ".local",
+           ".localdomain",
+           ".lan",
+           ".internal",
+           ".home.arpa",
+         )
+        return false
+      end
+
+      begin
+        return FinalDestination::SSRFDetector.ip_allowed?(IPAddr.new(hostname))
+      rescue IPAddr::InvalidAddressError
+        return false if hostname.match?(/\A(?:0x[0-9a-f]+|\d+)(?:\.(?:0x[0-9a-f]+|\d+))*\z/i)
+      end
+
+      true
+    rescue URI::InvalidURIError
+      false
+    end
+    private_class_method :safe_media_url?
 
     ONEBOX =
       Sanitize::Config.freeze_config(
@@ -112,6 +153,29 @@ module Onebox
         Sanitize::Config.merge(
           ONEBOX,
           attributes: Sanitize::Config.merge(ONEBOX[:attributes], "aside" => [:data]),
+          transformers:
+            ONEBOX[:transformers] +
+              [
+                lambda do |env|
+                  node = env[:node]
+                  AUTOLOADED_URL_ATTRIBUTES
+                    .fetch(env[:node_name], [])
+                    .each do |attribute|
+                      value = node[attribute]
+                      next if value.blank?
+
+                      urls =
+                        if attribute == "srcset"
+                          value.split(",").filter_map { |entry| entry.strip.split.first }
+                        else
+                          [value]
+                        end
+                      node.remove_attribute(attribute) if urls.any? { |url| !safe_media_url?(url) }
+                    end
+
+                  node.remove_attribute("style") if node["style"]&.match?(/url\s*\(/i)
+                end,
+              ],
         ),
       )
   end

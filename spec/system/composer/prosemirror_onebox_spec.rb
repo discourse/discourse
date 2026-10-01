@@ -74,6 +74,57 @@ describe "Composer - ProseMirror - Oneboxing" do
     expect(composer).to have_value("https://example.com")
   end
 
+  it "omits local images while retaining preview text" do
+    local_url = "https://example.com/local-image"
+    local_image = "http://127.0.0.1:8080/favicon.ico"
+
+    stub_request(:get, local_url).to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <meta property="og:title" content="Local image page">
+          <meta property="og:description" content="A useful summary">
+          <meta property="og:image" content="#{local_image}">
+        </head></html>
+      HTML
+    cdp.allow_clipboard
+    open_composer
+    composer.fill_title("Onebox image safety")
+    composer.focus
+    cdp.copy_paste(local_url)
+    page.send_keys(:enter)
+
+    local_onebox = rich.find("div.onebox-wrapper[data-onebox-src='#{local_url}']")
+    expect(local_onebox).to have_content("Local image page")
+    expect(local_onebox).to have_content("A useful summary")
+    expect(local_onebox).to have_no_css("img[src='#{local_image}']")
+
+    composer.create
+
+    expect(page).to have_css(".cooked .onebox", text: "Local image page")
+    expect(page).to have_no_css(".cooked img[src='#{local_image}']")
+  end
+
+  it "retains public images in onebox previews" do
+    public_url = "https://example2.com/public-image"
+    public_image = "https://images.example.com/photo.jpg"
+
+    stub_request(:get, public_url).to_return(status: 200, body: <<~HTML)
+        <html><head>
+          <meta property="og:title" content="Public image page">
+          <meta property="og:description" content="Another useful summary">
+          <meta property="og:image" content="#{public_image}">
+        </head></html>
+      HTML
+
+    cdp.allow_clipboard
+    open_composer
+    cdp.copy_paste(public_url)
+    page.send_keys(:enter)
+
+    public_onebox = rich.find("div.onebox-wrapper[data-onebox-src='#{public_url}']")
+    expect(public_onebox).to have_content("Public image page")
+    expect(public_onebox).to have_css("img[src='#{public_image}']")
+  end
+
   it "creates an inline onebox for links that are part of a paragraph" do
     cdp.allow_clipboard
     open_composer
