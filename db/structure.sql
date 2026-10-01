@@ -75,13 +75,9 @@ CREATE FUNCTION discourse_functions.mark_browser_pageview_engagement_delete() RE
     LANGUAGE plpgsql
     AS $$
 BEGIN
-  PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
-    ARRAY(
-      SELECT DISTINCT session_id::text
-      FROM old_rows
-      WHERE created_at >= CURRENT_DATE - INTERVAL '3 days'
-    )
-  );
+  UPDATE browser_pageview_session_rollup_summaries
+  SET dirty = true
+  WHERE session_id IN (SELECT session_id FROM old_rows);
   RETURN NULL;
 END;
 $$;
@@ -137,13 +133,9 @@ CREATE FUNCTION discourse_functions.mark_browser_pageview_event_delete() RETURNS
     LANGUAGE plpgsql
     AS $$
 BEGIN
-  PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
-    ARRAY(
-      SELECT DISTINCT session_id::text
-      FROM old_rows
-      WHERE created_at >= CURRENT_DATE - INTERVAL '3 days'
-    )
-  );
+  UPDATE browser_pageview_session_rollup_summaries
+  SET dirty = true
+  WHERE session_id IN (SELECT session_id FROM old_rows);
   RETURN NULL;
 END;
 $$;
@@ -205,7 +197,7 @@ CREATE FUNCTION discourse_functions.mark_browser_pageview_session_rollup_dirty(s
   FROM unnest(session_ids) AS session_id
   WHERE session_id IS NOT NULL
   ON CONFLICT (session_id) DO UPDATE
-  SET dirty_generation = browser_pageview_session_rollup_summaries.dirty_generation + 1
+  SET dirty = true
 $$;
 
 
@@ -2601,21 +2593,11 @@ ALTER SEQUENCE public.browser_pageview_session_engagements_id_seq OWNED BY publi
 
 
 --
--- Name: browser_pageview_session_rollup_repair_dates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.browser_pageview_session_rollup_repair_dates (
-    date date NOT NULL
-);
-
-
---
 -- Name: browser_pageview_session_rollup_statuses; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.browser_pageview_session_rollup_statuses (
-    id bigint NOT NULL,
-    version integer NOT NULL
+    id bigint NOT NULL
 );
 
 
@@ -2649,8 +2631,7 @@ CREATE TABLE public.browser_pageview_session_rollup_summaries (
     logged_in boolean DEFAULT false NOT NULL,
     likely_crawler boolean DEFAULT false NOT NULL,
     engaged_seconds bigint DEFAULT 0 NOT NULL,
-    dirty_generation bigint DEFAULT 1 NOT NULL,
-    refreshed_generation bigint DEFAULT 0 NOT NULL
+    dirty boolean DEFAULT true NOT NULL
 );
 
 
@@ -16864,14 +16845,6 @@ ALTER TABLE ONLY public.browser_pageview_session_engagements
 
 
 --
--- Name: browser_pageview_session_rollup_repair_dates browser_pageview_session_rollup_repair_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_session_rollup_repair_dates
-    ADD CONSTRAINT browser_pageview_session_rollup_repair_dates_pkey PRIMARY KEY (date);
-
-
---
 -- Name: browser_pageview_session_rollup_statuses browser_pageview_session_rollup_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19557,6 +19530,13 @@ CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summ
 --
 
 CREATE UNIQUE INDEX idx_bookmarks_user_polymorphic_unique ON public.bookmarks USING btree (user_id, bookmarkable_type, bookmarkable_id);
+
+
+--
+-- Name: idx_bp_session_rollup_dirty; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bp_session_rollup_dirty ON public.browser_pageview_session_rollup_summaries USING btree (session_id) WHERE dirty;
 
 
 --

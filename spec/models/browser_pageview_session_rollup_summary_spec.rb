@@ -58,9 +58,18 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
         ),
       ).to eq([1, 0, 22, 1, true])
       expect(BrowserPageviewSessionEngagementDailyRollup.where(date: today).count).to eq(0)
-      expect(described_class.find(event.session_id).dirty_generation).to eq(
-        described_class.find(event.session_id).refreshed_generation,
-      )
+    end
+
+    it "reuses summaries without reading unchanged pageviews" do
+      Fabricate(:browser_pageview_event, created_at: yesterday.to_time(:utc) + 8.hours)
+      refresh
+
+      queries = track_sql_queries { refresh }
+
+      expect(queries.grep(/\bbrowser_pageview_events\b/)).to eq([])
+      expect(
+        BrowserPageviewSessionEngagementDailyRollup.where(date: yesterday).sum(:sessions),
+      ).to eq(1)
     end
 
     it "keeps historical rows and retries an interrupted initialization" do
@@ -115,64 +124,48 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
       ).to eq(2)
     end
 
-    it "repairs both older dates when a pending session moves during an outage" do
-      first_date = today - 5
-      earlier_date = today - 6
-      event = Fabricate(:browser_pageview_event, created_at: first_date.to_time(:utc) + 12.hours)
-      Fabricate(:browser_pageview_session_engagement_daily_rollup, date: first_date, sessions: 1)
-      described_class.refresh_recent!(start_date: first_date, end_date: first_date)
-      Fabricate(
-        :browser_pageview_event,
-        session_id: event.session_id,
-        created_at: earlier_date.to_time(:utc) + 12.hours,
-      )
-
-      refresh
-
-      expect(
-        BrowserPageviewSessionEngagementDailyRollup.where(date: first_date).sum(:sessions),
-      ).to eq(0)
-      expect(
-        BrowserPageviewSessionEngagementDailyRollup.where(date: earlier_date).sum(:sessions),
-      ).to eq(1)
-    end
-
-    it "removes an older daily row when its final retained pageview is deleted" do
-      date = today - 3
-      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
-      described_class.refresh_recent!(start_date: date, end_date: date)
-      expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(1)
-
-      event.delete
-      refresh
-
-      expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(0)
-    end
-
-    it "updates crawler totals for a retained older date" do
-      date = today - 2
+    it "preserves historical totals when expired pageviews are removed by retention" do
+      date = 4.months.ago.to_date
       event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
       BrowserPageviewSessionEngagementDailyRollup.aggregate(start_date: date, end_date: date)
       refresh
 
-      event.update!(score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1)
+      event.delete
       refresh
 
-      expect(
-        BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:likely_crawler_sessions),
-      ).to eq(1)
+      expect(BrowserPageviewSessionEngagementDailyRollup.where(date:).sum(:sessions)).to eq(1)
+      expect(described_class.exists?(event.session_id)).to eq(false)
     end
 
-    it "does not dirty sessions when old source records are removed by retention" do
-      event = Fabricate(:browser_pageview_event, created_at: 4.months.ago)
-      described_class.where(session_id: event.session_id).update_all(
-        dirty_generation: 1,
-        refreshed_generation: 1,
-      )
+    it "expires older summaries and leaves their historical totals unchanged" do
+      freeze_time(Time.utc(2026, 10, 1, 12))
+      date = Time.zone.today - 1
+      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
+      refresh
+
+      freeze_time(Time.utc(2026, 10, 3, 12))
+      described_class.refresh_recent!(start_date: Time.zone.today - 1, end_date: Time.zone.today)
+      event.update!(score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1)
+      described_class.refresh_recent!(start_date: Time.zone.today - 1, end_date: Time.zone.today)
+
+      expect(
+        BrowserPageviewSessionEngagementDailyRollup.where(date:).pluck(
+          :sessions,
+          :likely_crawler_sessions,
+        ),
+      ).to eq([[1, 0]])
+      expect(described_class.exists?(event.session_id)).to eq(false)
+    end
+
+    it "removes a recent session when its final pageview is deleted" do
+      event = Fabricate(:browser_pageview_event, created_at: yesterday.to_time(:utc) + 8.hours)
+      refresh
 
       event.delete
+      refresh
 
-      expect(described_class.find(event.session_id).dirty_generation).to eq(1)
+      expect(BrowserPageviewSessionEngagementDailyRollup.where(date: yesterday)).to be_empty
+      expect(described_class.exists?(event.session_id)).to eq(false)
     end
 
     it "reclassifies a session after its crawler score changes in either direction" do
@@ -270,51 +263,6 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
           :likely_crawler_engaged_seconds_total,
         ),
       ).to eq(incremental_totals)
-    end
-  end
-
-  describe ".verify_recent!" do
-    it "covers the verifier date during initial seeding" do
-      date = 2.days.ago.to_date
-      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
-      described_class.where(session_id: event.session_id).delete_all
-      Fabricate(:browser_pageview_event, created_at: 1.day.ago.to_date.to_time(:utc) + 8.hours)
-
-      described_class.refresh_recent!(start_date: 1.day.ago.to_date, end_date: Time.zone.today)
-
-      expect(described_class.exists?(event.session_id)).to eq(true)
-      expect { described_class.verify_recent!(date:) }.not_to raise_error
-    end
-
-    it "raises when clean summary values differ from retained source records" do
-      date = 2.days.ago.to_date
-      event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
-      described_class.refresh_recent!(start_date: date, end_date: date)
-
-      expect { described_class.verify_recent!(date:) }.not_to raise_error
-
-      described_class.where(session_id: event.session_id).update_all(pageview_count: 99)
-
-      expect { described_class.verify_recent!(date:) }.to raise_error(
-        /Browser pageview session rollup differs from source/,
-      )
-    end
-
-    it "detects a clean summary whose source session no longer exists" do
-      date = 2.days.ago.to_date
-      Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
-      described_class.refresh_recent!(start_date: date, end_date: date)
-      described_class.create!(
-        session_id: SecureRandom.hex(16),
-        first_pageview_at: date.to_time(:utc) + 9.hours,
-        pageview_count: 1,
-        dirty_generation: 1,
-        refreshed_generation: 1,
-      )
-
-      expect { described_class.verify_recent!(date:) }.to raise_error(
-        /Browser pageview session rollup differs from source/,
-      )
     end
   end
 end

@@ -9,18 +9,15 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       t.boolean :logged_in, null: false, default: false
       t.boolean :likely_crawler, null: false, default: false
       t.bigint :engaged_seconds, null: false, default: 0
-      t.bigint :dirty_generation, null: false, default: 1
-      t.bigint :refreshed_generation, null: false, default: 0
+      t.boolean :dirty, null: false, default: true
     end
     add_index :browser_pageview_session_rollup_summaries, :first_pageview_at
+    add_index :browser_pageview_session_rollup_summaries,
+              :session_id,
+              where: "dirty",
+              name: "idx_bp_session_rollup_dirty"
 
-    create_table :browser_pageview_session_rollup_repair_dates, id: false do |t|
-      t.date :date, null: false, primary_key: true
-    end
-
-    create_table :browser_pageview_session_rollup_statuses do |t|
-      t.integer :version, null: false
-    end
+    create_table :browser_pageview_session_rollup_statuses
 
     execute <<~SQL
       CREATE SCHEMA IF NOT EXISTS discourse_functions;
@@ -32,7 +29,7 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
         FROM unnest(session_ids) AS session_id
         WHERE session_id IS NOT NULL
         ON CONFLICT (session_id) DO UPDATE
-        SET dirty_generation = browser_pageview_session_rollup_summaries.dirty_generation + 1
+        SET dirty = true
       $$;
 
       CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_event_insert()
@@ -70,13 +67,9 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_event_delete()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
-          ARRAY(
-            SELECT DISTINCT session_id::text
-            FROM old_rows
-            WHERE created_at >= CURRENT_DATE - INTERVAL '3 days'
-          )
-        );
+        UPDATE browser_pageview_session_rollup_summaries
+        SET dirty = true
+        WHERE session_id IN (SELECT session_id FROM old_rows);
         RETURN NULL;
       END;
       $$;
@@ -114,13 +107,9 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
       CREATE OR REPLACE FUNCTION discourse_functions.mark_browser_pageview_engagement_delete()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN
-        PERFORM discourse_functions.mark_browser_pageview_session_rollup_dirty(
-          ARRAY(
-            SELECT DISTINCT session_id::text
-            FROM old_rows
-            WHERE created_at >= CURRENT_DATE - INTERVAL '3 days'
-          )
-        );
+        UPDATE browser_pageview_session_rollup_summaries
+        SET dirty = true
+        WHERE session_id IN (SELECT session_id FROM old_rows);
         RETURN NULL;
       END;
       $$;
@@ -175,7 +164,6 @@ class CreateBrowserPageviewSessionRollupSummaries < ActiveRecord::Migration[8.1]
     SQL
 
     drop_table :browser_pageview_session_rollup_statuses
-    drop_table :browser_pageview_session_rollup_repair_dates
     drop_table :browser_pageview_session_rollup_summaries
   end
 end

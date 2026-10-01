@@ -43,14 +43,15 @@ RSpec.describe DashboardRollupRebuilder do
       }
     end
 
-    it "keeps recent session totals correct after a manual rebuild and scheduled refresh" do
+    it "recovers recent session totals after a summary is lost" do
       freeze_time(Time.utc(2026, 6, 20, 12, 0, 0))
       today = Time.zone.today
       event = Fabricate(:browser_pageview_event, created_at: today.to_time(:utc) + 2.hours)
       BrowserPageviewSessionRollupSummary.refresh_recent!(start_date: today - 1, end_date: today)
-      BrowserPageviewSessionEngagementDailyRollup.where(date: today).update_all(sessions: 99)
+      BrowserPageviewSessionRollupSummary.where(session_id: event.session_id).delete_all
 
       rebuilder.rebuild!("browser_pageview_session_engagement")
+      expect(BrowserPageviewSessionEngagementDailyRollup.where(date: today).sum(:sessions)).to eq(1)
       BrowserPageviewSessionRollupSummary.refresh_recent!(start_date: today - 1, end_date: today)
 
       expect(BrowserPageviewSessionEngagementDailyRollup.where(date: today).sum(:sessions)).to eq(1)

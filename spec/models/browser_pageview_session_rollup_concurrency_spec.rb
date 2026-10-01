@@ -4,7 +4,7 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
   self.use_transactional_tests = false
 
   describe ".refresh_recent!" do
-    it "does not lose a concurrent pageview write while acknowledging an earlier generation" do
+    it "does not lose a concurrent pageview write while refreshing its session" do
       date = 1.day.ago.to_date
       event = Fabricate(:browser_pageview_event, created_at: date.to_time(:utc) + 8.hours)
       session_id = event.session_id
@@ -53,9 +53,7 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
       writer.value
 
       summary = described_class.find(session_id)
-      expect(
-        summary.pageview_count == 3 || summary.dirty_generation > summary.refreshed_generation,
-      ).to eq(true)
+      expect(summary.pageview_count == 3 || summary.dirty).to eq(true)
       described_class.refresh_recent!(start_date: date, end_date: Time.zone.today)
       expect(described_class.find(session_id).pageview_count).to eq(3)
     ensure
@@ -67,9 +65,6 @@ RSpec.describe BrowserPageviewSessionRollupSummary do
         BrowserPageviewEvent.where(session_id:).delete_all
         described_class.where(session_id:).delete_all
         BrowserPageviewSessionEngagementDailyRollup.where(date:).delete_all
-        ActiveRecord::Base.connection.execute(
-          "DELETE FROM browser_pageview_session_rollup_repair_dates",
-        )
         ActiveRecord::Base.connection.execute(
           "DELETE FROM browser_pageview_session_rollup_statuses",
         )
