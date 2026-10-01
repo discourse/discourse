@@ -5903,10 +5903,6 @@ packages:
     peerDependencies:
       markdown-it: '>= 13.0.0'
 
-  markdown-it@14.3.1:
-    resolution: {integrity: sha512-4Ej49aYTDFIQ+uBkfX8GBvJGccoARxxPep+7aWTs55ozbjQJpW9M26Fe53vnGgvLeVzva/amzjQQaQu9w0vMhA==}
-    hasBin: true
-
   markdown-it@14.3.2:
     resolution: {integrity: sha512-sHHjZ5fJKlgrG4qns2YwVcdNep35h5fERrfkD2YNsb9UFk0UIHarbiTaHKVMlPuWAoiilyK8Fv/jAm11slsY7Q==}
     hasBin: true
@@ -12100,8 +12096,8 @@ snapshots:
       is-git-url: 1.0.0
       is-language-code: 5.2.0
       lodash: 4.18.1
-      markdown-it: 14.3.1
-      markdown-it-terminal: 0.4.0(markdown-it@14.3.1)
+      markdown-it: 14.3.2
+      markdown-it-terminal: 0.4.0(markdown-it@14.3.2)
       minimatch: 10.2.6
       morgan: 1.12.0
       nopt: 3.0.6
@@ -13755,8 +13751,8 @@ snapshots:
       escape-string-regexp: 2.0.0
       js2xmlparser: 4.0.2
       klaw: 3.0.0
-      markdown-it: 14.3.1
-      markdown-it-anchor: 8.6.7(@types/markdown-it@14.2.0)(markdown-it@14.3.1)
+      markdown-it: 14.3.2
+      markdown-it-anchor: 8.6.7(@types/markdown-it@14.2.0)(markdown-it@14.3.2)
       marked: 4.3.0
       mkdirp: 1.0.4
       requizzle: 0.2.4
@@ -14145,18 +14141,10 @@ snapshots:
     dependencies:
       p-defer: 1.0.0
 
-  markdown-it-anchor@8.6.7(@types/markdown-it@14.2.0)(markdown-it@14.3.1):
+  markdown-it-anchor@8.6.7(@types/markdown-it@14.2.0)(markdown-it@14.3.2):
     dependencies:
       '@types/markdown-it': 14.2.0
-      markdown-it: 14.3.1
-
-  markdown-it-terminal@0.4.0(markdown-it@14.3.1):
-    dependencies:
-      ansi-styles: 3.2.1
-      cardinal: 1.0.0
-      cli-table: 0.3.11
-      lodash.merge: 4.6.2
-      markdown-it: 14.3.1
+      markdown-it: 14.3.2
 
   markdown-it-terminal@0.4.0(markdown-it@14.3.2):
     dependencies:
@@ -14165,15 +14153,6 @@ snapshots:
       cli-table: 0.3.11
       lodash.merge: 4.6.2
       markdown-it: 14.3.2
-
-  markdown-it@14.3.1:
-    dependencies:
-      argparse: 2.0.1
-      entities: 4.5.0
-      linkify-it: 5.0.2
-      mdurl: 2.1.0
-      punycode.js: 2.3.1
-      uc.micro: 2.1.0
 
   markdown-it@14.3.2:
     dependencies:
