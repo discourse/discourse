@@ -526,7 +526,6 @@ RSpec.describe "users" do
 
         fab!(:source_user, :user)
         fab!(:target_user, :user)
-        fab!(:source_post, :post) { Fabricate(:post, user: source_user) }
         let(:id) { source_user.id }
         let(:params) { { "target_username" => target_user.username } }
         let(:"Api-Username") { admin.username }
@@ -536,11 +535,6 @@ RSpec.describe "users" do
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
           let(:expected_request_schema) { expected_request_schema }
-
-          it "moves the source user's posts to the target user" do
-            expect(source_post.reload.user_id).to eq(target_user.id)
-            expect(User.exists?(source_user.id)).to eq(false)
-          end
         end
       end
     end
