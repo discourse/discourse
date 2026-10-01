@@ -12,8 +12,8 @@ module Migrations
         end
 
         def initialize(settings)
-          # hook registration and connect are one unit; see ForkManager.without_forks
-          ForkManager.without_forks do
+          # Hook registration and connect are one unit; see ForkManager.synchronize.
+          ForkManager.synchronize do
             @fork_hook = ForkManager.after_fork_child { discard! }
 
             begin

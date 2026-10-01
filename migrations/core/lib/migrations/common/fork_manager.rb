@@ -24,12 +24,12 @@ module Migrations
     @fork_monitor = Monitor.new
 
     class << self
-      # Excludes forks while the block runs. A connection must register its
+      # Excludes concurrent forks while the block runs. A connection must register its
       # after-fork hook and finish connecting as one unit: a fork in between
       # inherits the half-open socket without a usable hook, and the child
       # terminates the parent's session on exit. Reentrant, so nested use and
       # forking from inside a hook can't deadlock.
-      def without_forks(&block)
+      def synchronize(&block)
         @fork_monitor.synchronize(&block)
       end
 
