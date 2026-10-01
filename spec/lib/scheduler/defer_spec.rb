@@ -17,12 +17,6 @@ RSpec.describe Scheduler::Defer do
     let(:release) { Concurrent::IVar.new }
     let(:responses) { Thread::Queue.new }
 
-    before do
-      allow(RailsMultisite::ConnectionManagement).to receive(:with_connection) do |_db, &blk|
-        blk.call
-      end
-    end
-
     def enqueue(db:, user_id:, request:)
       defer.later(nil, db, current_user: user_id) do
         release.value
@@ -47,6 +41,12 @@ RSpec.describe Scheduler::Defer do
     end
 
     it "runs jobs in a fair order" do
+      allow(RailsMultisite::ConnectionManagement).to receive(
+        :with_connection,
+      ) do |_database, &block|
+        block.call
+      end
+
       enqueue(db: "site1", user_id: 1, request: 1)
       enqueue(db: "site1", user_id: 1, request: 2)
       enqueue(db: "site1", user_id: 2, request: 3)
@@ -157,6 +157,7 @@ RSpec.describe Scheduler::Defer do
       defer.later { completed << :second }
 
       pausing = Thread.new { defer.pause }
+      wait_for(timeout: 5) { pausing.status == "sleep" || !pausing.alive? }
       expect(pausing.join(0.1)).to eq(nil)
       release << true
 
@@ -189,8 +190,9 @@ RSpec.describe Scheduler::Defer do
           defer.stop!(finish_work: true)
           exit!(0)
         end
-      Process.waitpid(child)
+      _, status = Timeout.timeout(10) { Process.wait2(child) }
       child = nil
+      expect(status).to be_success
       defer.resume
       defer.stop!(finish_work: true)
       writer.close

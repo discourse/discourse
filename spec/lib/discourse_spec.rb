@@ -70,12 +70,6 @@ RSpec.describe Discourse do
   describe ".before_fork" do
     after { Discourse.resume_after_fork }
 
-    it "pauses thread pools before returning" do
-      Discourse.before_fork
-
-      expect(Scheduler::ThreadPool.paused?).to eq(true)
-    end
-
     it "drains deferred jobs accumulated between forks" do
       original_async = Scheduler::Defer.async
       Scheduler::Defer.async = true
@@ -97,22 +91,28 @@ RSpec.describe Discourse do
       original_async = Scheduler::Defer.async
       Scheduler::Defer.async = true
       started = Queue.new
+      release = Queue.new
       completed = Queue.new
       pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1)
       pool.post do
         started << true
-        sleep 0.01 until Scheduler::ThreadPool.paused?
+        release.pop
         Scheduler::Defer.later { completed << :completed }
       end
       expect(started.pop(timeout: 5)).to eq(true)
 
-      Discourse.before_fork
+      preparing = Thread.new { Discourse.before_fork }
+      wait_for(timeout: 5) { Scheduler::ThreadPool.paused? }
+      release << true
 
+      expect(preparing.join(5)).to eq(preparing)
       expect(Scheduler::Defer.length).to eq(1)
       Discourse.resume_after_fork
       expect(completed.pop(timeout: 5)).to eq(:completed)
     ensure
+      release&.push(true)
       Discourse.resume_after_fork
+      preparing&.join(5)
       pool&.shutdown
       pool&.wait_for_termination(timeout: 5)
       Scheduler::Defer.stop!(finish_work: true)
@@ -135,9 +135,10 @@ RSpec.describe Discourse do
         pool.post { completed << :completed }
         completed.pop
       end
-      wait_for { pool.stats[:queued_tasks] == 1 }
+      wait_for(timeout: 5) { pool.stats[:queued_tasks] == 1 }
 
       preparing = Thread.new { Discourse.before_fork }
+      wait_for(timeout: 5) { preparing.status == "sleep" || !preparing.alive? }
       expect(preparing.join(0.1)).to eq(nil)
       release << true
 
@@ -145,32 +146,13 @@ RSpec.describe Discourse do
       expect(Scheduler::Defer.length).to eq(0)
       expect(Scheduler::ThreadPool.paused?).to eq(true)
     ensure
-      release << true
+      release&.push(true)
       Discourse.resume_after_fork
       preparing&.join(5)
       pool&.shutdown
       pool&.wait_for_termination(timeout: 5)
       Scheduler::Defer.stop!(finish_work: true)
       Scheduler::Defer.async = original_async
-    end
-  end
-
-  describe ".resume_after_fork" do
-    after { Discourse.resume_after_fork }
-
-    it "resumes paused background work" do
-      completed = Queue.new
-      pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1)
-      Discourse.before_fork
-      pool.post { completed << :completed }
-
-      Discourse.resume_after_fork
-
-      expect(completed.pop(timeout: 5)).to eq(:completed)
-    ensure
-      Discourse.resume_after_fork
-      pool&.shutdown
-      pool&.wait_for_termination(timeout: 5)
     end
   end
 

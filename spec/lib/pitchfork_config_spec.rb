@@ -4,8 +4,8 @@ require "pitchfork"
 require "pitchfork/configurator"
 
 RSpec.describe Pitchfork::Configurator do
-  describe "before_worker_exit" do
-    it "finishes paused jobs and deferred work submitted by queued pool tasks" do
+  describe "#[]" do
+    it "configures before_worker_exit to finish pool tasks and their deferred jobs" do
       original_async = Scheduler::Defer.async
       Scheduler::Defer.async = true
       completed = Queue.new

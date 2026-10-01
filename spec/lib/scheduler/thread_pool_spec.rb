@@ -51,7 +51,7 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
           pool.post { completed << :child }
           exit!(completed.pop(timeout: 5) == :child ? 0 : 1)
         end
-      _, status = Process.wait2(child)
+      _, status = Timeout.timeout(10) { Process.wait2(child) }
       child = nil
 
       expect(status).to be_success
@@ -270,6 +270,7 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
       expect(started.pop(timeout: 5)).to eq(true)
 
       pausing = Thread.new { described_class.pause }
+      wait_for(timeout: 5) { pausing.status == "sleep" || !pausing.alive? }
       expect(pausing.join(0.1)).to eq(nil)
       release << true
 
