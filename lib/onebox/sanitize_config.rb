@@ -158,6 +158,11 @@ module Onebox
               [
                 lambda do |env|
                   node = env[:node]
+                  if env[:node_name] == "style"
+                    node.remove
+                    next
+                  end
+
                   AUTOLOADED_URL_ATTRIBUTES
                     .fetch(env[:node_name], [])
                     .each do |attribute|
@@ -172,10 +177,9 @@ module Onebox
                         end
                       node.remove_attribute(attribute) if urls.any? { |url| !safe_media_url?(url) }
                     end
-
-                  node.remove_attribute("style") if node["style"]&.match?(/url\s*\(/i)
                 end,
               ],
+          css: Sanitize::Config.merge(ONEBOX[:css], protocols: []),
         ),
       )
   end
