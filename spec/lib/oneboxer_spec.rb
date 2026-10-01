@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe Oneboxer do
+  it "allows plugins to customize a visible topic onebox's template arguments" do
+    post = Fabricate(:post)
+    plugin = Plugin::Instance.new
+    modifier = ->(args, linked_post, opts) do
+      args.merge(quote: "Post #{linked_post.id} in #{opts[:locale]}")
+    end
+    plugin.register_modifier(:local_topic_onebox_args, &modifier)
+
+    html = Nokogiri::HTML5.fragment(described_class.preview(post.url, locale: "en"))
+
+    expect(html.at_css("blockquote").text.strip).to eq("Post #{post.id} in en")
+    expect(html.at_css("aside.quote")["data-topic"]).to eq(post.topic_id.to_s)
+    expect(html.at_css(".title a")["href"]).to eq(post.url)
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :local_topic_onebox_args, &modifier)
+  end
+
   def response(file)
     file = File.join("spec", "fixtures", "onebox", "#{file}.response")
     File.exist?(file) ? File.read(file) : ""

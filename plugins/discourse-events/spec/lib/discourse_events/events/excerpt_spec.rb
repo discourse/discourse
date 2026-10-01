@@ -34,6 +34,13 @@ describe DiscourseEvents::Events::Excerpt do
       expect(html).to include("June 5, 2018 6:39 PM (America/New_York)")
     end
 
+    it "does not repeat the date of a single-day all-day event" do
+      html = excerpt(start: "2018-06-05", end: "2018-06-05", all_day: "true")
+
+      expect(html).to include("📅 June 5, 2018")
+      expect(html).not_to include("→")
+    end
+
     it "uses a date-only format without timezone for all-day events" do
       html = excerpt(start: "2018-06-05", all_day: "true")
 
@@ -67,6 +74,12 @@ describe DiscourseEvents::Events::Excerpt do
       html = excerpt(start: "not-a-date")
 
       expect(html).to include("📅 not-a-date (UTC)")
+    end
+
+    it "keeps dates too long to parse as-is" do
+      html = excerpt(start: "2" * 200)
+
+      expect(html).to include("📅 #{"2" * 200} (UTC)")
     end
 
     it "removes the event node when there is nothing to summarize" do

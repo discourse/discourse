@@ -2,7 +2,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import ComposerEventEditor from "discourse/plugins/discourse-events/discourse/components/composer-event-editor";
 import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
-import DiscoursePostEventOneboxPreview from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/onebox-preview";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 const ComposerEventEditorTemplate = <template>
@@ -52,38 +51,6 @@ function _decorateEventOneboxes(cooked, helper) {
     });
 }
 
-function _decorateEventPreviewOneboxes(cooked, helper) {
-  // In the composer preview there's no post model / preloaded data, so we fetch
-  // the event by topic id and render a read-only card. The original quote is
-  // passed as a fallback so non-event links (and the loading state) keep showing
-  // the normal onebox.
-  cooked
-    .querySelectorAll(
-      "aside.quote[data-topic][data-post='1']:not([data-username])"
-    )
-    .forEach((aside) => {
-      const topicId = parseInt(aside.dataset.topic, 10);
-      if (!topicId) {
-        return;
-      }
-
-      const fallbackHtml = aside.outerHTML;
-      const wrapper = document.createElement("div");
-      wrapper.className = "discourse-post-event-onebox";
-      aside.replaceWith(wrapper);
-
-      helper.renderGlimmer(
-        wrapper,
-        <template>
-          <DiscoursePostEventOneboxPreview
-            @fallbackHtml={{fallbackHtml}}
-            @topicId={{topicId}}
-          />
-        </template>
-      );
-    });
-}
-
 function _decorateEventPreview(api, cooked, helper) {
   const eventContainers = cooked.querySelectorAll(".discourse-post-event");
 
@@ -105,9 +72,6 @@ function initializeDiscoursePostEventDecorator(api) {
     (cooked, helper) => {
       if (cooked.classList.contains("d-editor-preview")) {
         _decorateEventPreview(api, cooked, helper);
-        if (helper) {
-          _decorateEventPreviewOneboxes(cooked, helper);
-        }
         return;
       }
 
