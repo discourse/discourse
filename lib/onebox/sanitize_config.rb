@@ -9,6 +9,7 @@ module Onebox
       "iframe" => %w[src],
       "img" => %w[src srcset],
       "source" => %w[src srcset],
+      "use" => %w[href],
       "video" => %w[src poster],
     }.freeze
 

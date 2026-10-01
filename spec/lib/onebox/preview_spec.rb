@@ -66,6 +66,7 @@ RSpec.describe Onebox::Preview do
         <span style="background-image: image-set(&quot;http://127.0.0.1/a.png&quot; 1x)">Text</span>
         <span style="background-image: u\\72l(http://127.0.0.1/a.png); color: red">Text</span>
         <style>.local-image { background-image: url(http://127.0.0.1/a.png) }</style>
+        <svg><use href="///127.0.0.1/a.svg#icon"></use><use href="#local-icon"></use></svg>
       HTML
 
       output = Nokogiri::HTML5.fragment(preview.to_s)
@@ -77,6 +78,7 @@ RSpec.describe Onebox::Preview do
       expect(output.at_css("iframe")["src"]).to be_nil
       expect(output.css("span").map { |span| span["style"] }).to eq([nil, nil, " color: red"])
       expect(output.at_css("style")).to be_nil
+      expect(output.css("use").map { |use| use["href"] }).to eq([nil, "#local-icon"])
     end
 
     it "retains relative and own-site image URLs" do
