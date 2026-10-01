@@ -1,0 +1,12 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "target_username": {
+      "type": "string",
+      "description": "Username of the existing user that receives the source user's posts and other data"
+    }
+  },
+  "required": [
+    "target_username"
+  ]
+}

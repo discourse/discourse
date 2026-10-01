@@ -503,6 +503,49 @@ RSpec.describe "users" do
     end
   end
 
+  path "/admin/users/{id}/merge.json" do
+    post "Merge a user into another user" do
+      tags "Users", "Admin"
+      operationId "mergeUser"
+      description "Merge the source user into the target user. Requires an admin, and the source user cannot be a staff member. The merge runs in a background job, and the source user is deleted."
+      consumes "application/json"
+      parameter name: "Api-Key", in: :header, type: :string, required: true
+      parameter name: "Api-Username", in: :header, type: :string, required: true
+      parameter name: :id,
+                in: :path,
+                type: :integer,
+                required: true,
+                description: "ID of the source user to merge into the target user"
+      expected_request_schema = load_spec_schema("user_merge_request")
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces "application/json"
+      response "200", "merge queued" do
+        expected_response_schema = load_spec_schema("success_ok_response")
+        schema expected_response_schema
+
+        fab!(:source_user, :user)
+        fab!(:target_user, :user)
+        fab!(:source_post, :post) { Fabricate(:post, user: source_user) }
+        let(:id) { source_user.id }
+        let(:params) { { "target_username" => target_user.username } }
+        let(:"Api-Username") { admin.username }
+
+        before { sign_out }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+
+          it "moves the source user's posts to the target user" do
+            expect(source_post.reload.user_id).to eq(target_user.id)
+            expect(User.exists?(source_user.id)).to eq(false)
+          end
+        end
+      end
+    end
+  end
+
   path "/admin/users/{id}/log_out.json" do
     post "Log a user out" do
       tags "Users", "Admin"
