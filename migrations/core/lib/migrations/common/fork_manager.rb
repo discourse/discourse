@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "monitor"
+
 module Migrations
   # The fork hooks for a run. `before_fork` and `after_fork_parent` run around a
   # fork, so a connection can close before it and reopen after. `after_fork_child`
@@ -19,8 +21,18 @@ module Migrations
     @after_fork_parent_hooks = []
     @after_fork_child_hooks = []
     @mutex = Mutex.new
+    @fork_monitor = Monitor.new
 
     class << self
+      # Excludes forks while the block runs. A connection must register its
+      # after-fork hook and finish connecting as one unit: a fork in between
+      # inherits the half-open socket without a usable hook, and the child
+      # terminates the parent's session on exit. Reentrant, so nested use and
+      # forking from inside a hook can't deadlock.
+      def without_forks(&block)
+        @fork_monitor.synchronize(&block)
+      end
+
       def with_batched_forks
         previous = Thread.current[BATCHED_FORKS_KEY]
 
@@ -84,10 +96,12 @@ module Migrations
         @mutex.synchronize { run_before_fork_hooks } if execute_parent
 
         pid =
-          Process.fork do
-            child_hooks = @mutex.synchronize { @after_fork_child_hooks.dup }
-            child_hooks.each(&:call)
-            yield
+          @fork_monitor.synchronize do
+            Process.fork do
+              child_hooks = @mutex.synchronize { @after_fork_child_hooks.dup }
+              child_hooks.each(&:call)
+              yield
+            end
           end
 
         @mutex.synchronize { run_after_fork_parent_hooks } if execute_parent

@@ -139,4 +139,40 @@ RSpec.describe Migrations::ForkManager do
       a.join
     end
   end
+
+  describe ".without_forks" do
+    it "delays a concurrent fork until the block has finished" do
+      entered = Queue.new
+      release = Queue.new
+      holder =
+        Thread.new do
+          described_class.without_forks do
+            entered << true
+            release.pop
+          end
+        end
+      entered.pop
+
+      forked = Queue.new
+      forker = Thread.new { forked << described_class.fork { exit!(0) } }
+
+      sleep 0.05
+      expect(forked).to be_empty
+
+      release << true
+      pid = forked.pop
+      Process.waitpid(pid)
+      holder.join
+      forker.join
+    end
+
+    it "is reentrant, so forking inside the block works" do
+      described_class.without_forks do
+        described_class.without_forks do
+          pid = described_class.fork { exit!(0) }
+          Process.waitpid(pid)
+        end
+      end
+    end
+  end
 end

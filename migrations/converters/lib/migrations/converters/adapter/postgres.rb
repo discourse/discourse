@@ -12,17 +12,20 @@ module Migrations
         end
 
         def initialize(settings)
-          @fork_hook = ForkManager.after_fork_child { discard! }
+          # hook registration and connect are one unit; see ForkManager.without_forks
+          ForkManager.without_forks do
+            @fork_hook = ForkManager.after_fork_child { discard! }
 
-          begin
-            @connection = PG::Connection.new(settings)
-            @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
-            @connection.field_name_type = :symbol
-            configure_connection
-          rescue StandardError
-            ForkManager.remove_after_fork_child(@fork_hook)
-            @fork_hook = nil
-            raise
+            begin
+              @connection = PG::Connection.new(settings)
+              @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
+              @connection.field_name_type = :symbol
+              configure_connection
+            rescue StandardError
+              ForkManager.remove_after_fork_child(@fork_hook)
+              @fork_hook = nil
+              raise
+            end
           end
         end
 
