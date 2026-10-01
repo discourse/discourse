@@ -100,11 +100,7 @@ RSpec.describe Migrations::ForkManager do
       expect(parent_ran).to be(true)
     end
 
-    it "keeps the batched state thread-local so a concurrent batch doesn't leak" do
-      # Observe the parent-hook decision without a real fork: a batched fork skips
-      # the per-fork parent hooks (they run once in `with_batched_forks`), an
-      # unbatched one runs them itself. The hook tags itself with the running
-      # thread so we can tell whose fork ran it.
+    it "delays a concurrent fork until the batch has finished" do
       allow(Process).to receive(:fork).and_return(4242)
       ran = Queue.new
       described_class.after_fork_parent { ran << Thread.current[:tag] }
@@ -122,21 +118,24 @@ RSpec.describe Migrations::ForkManager do
       a_batched.pop
 
       b_done = Queue.new
-      Thread.new do
-        Thread.current[:tag] = :b
-        described_class.fork {} # not batched: must run the parent hook itself
-        b_done << true
-      end
-      b_done.pop
+      b =
+        Thread.new do
+          Thread.current[:tag] = :b
+          described_class.fork {}
+          b_done << true
+        end
 
-      # B's unbatched fork ran the parent hook despite A being mid-batch. With a
-      # process-global flag, B would have seen A's batched state and skipped it.
-      collected = []
-      collected << ran.pop until ran.empty?
-      expect(collected).to include(:b)
+      sleep 0.05
+      expect(b_done).to be_empty
 
       release_a << true
       a.join
+      b_done.pop
+      b.join
+
+      collected = []
+      collected << ran.pop until ran.empty?
+      expect(collected).to eq(%i[a b])
     end
   end
 
@@ -173,6 +172,30 @@ RSpec.describe Migrations::ForkManager do
           Process.waitpid(pid)
         end
       end
+    end
+
+    it "waits until a fork's parent hooks have finished" do
+      allow(Process).to receive(:fork).and_return(4242)
+      hook_started = Queue.new
+      release_hook = Queue.new
+      described_class.before_fork do
+        hook_started << true
+        release_hook.pop
+      end
+
+      forker = Thread.new { described_class.fork {} }
+      hook_started.pop
+
+      synchronized = Queue.new
+      waiter = Thread.new { described_class.synchronize { synchronized << true } }
+
+      sleep 0.05
+      expect(synchronized).to be_empty
+
+      release_hook << true
+      forker.join
+      waiter.join
+      expect(synchronized.pop).to be(true)
     end
   end
 end
