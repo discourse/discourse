@@ -1729,6 +1729,9 @@ zh_CN:
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
       enable_quoting: "为高亮显示的文字启用引用回复"
       enable_smart_lists: "在编辑器中编写时启用智能列表"
+      composer_toolbar:
+        title: "编辑器工具栏"
+        instructions: "选择哪些按钮显示在编辑器工具栏中。隐藏的按钮仍然可以使用键盘快捷键。"
       enable_markdown_monospace_font: "在输入框的 Markdown 模式下使用等宽字体"
       automatically_translate: "自动翻译以其他语言发布的话题和帖子"
       content_languages:
@@ -2795,6 +2798,7 @@ zh_CN:
       signup_instructions: "输入您的电子邮件地址即可加入此社区。我们将向您发送验证码，验证通过后您就可以加入了！"
       user_fields_title: "即将完成"
       user_fields_instructions: "只需再填写一些详细信息，即可完成帐户创建。"
+      signup_details_title: "选择您的用户名和头像"
       account_ready_continue: "继续"
       account_details_title: "完成账户创建"
       account_details_instructions: "在提交帐户以供审核之前，请选择您在社区中的显示方式。"
@@ -6330,7 +6334,7 @@ zh_CN:
               kind: "类型"
             groups_label: "原语群组"
             all_primitives: "所有原语"
-            group_count: "%{enabled} 中的 %{total} 已启用"
+            group_count: "%{total} 中的 %{enabled} 已启用"
             provider: "提供商"
             kind: "类型"
             scope: "作用域"
