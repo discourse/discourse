@@ -42,6 +42,7 @@ Discourse/Plugins/NoMonkeyPatching:
 Lint/Debugger:
   Exclude:
     - script/**/*
+    - spec/system/persistent_browser_spec.rb
   DebuggerMethods:
     SystemHelpers:
       - pause_test

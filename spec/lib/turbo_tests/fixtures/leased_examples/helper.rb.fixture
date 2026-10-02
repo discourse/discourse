@@ -1,0 +1,23 @@
+# frozen_string_literal: true
+
+require "json"
+
+def record_scheduler_event(event, id: nil)
+  File.open(ENV.fetch("SCHEDULER_FIXTURE_EVENTS"), File::WRONLY | File::CREAT | File::APPEND, 0o600) do |file|
+    file.flock(File::LOCK_EX)
+    file.puts(JSON.generate(event: event, worker: ENV.fetch("TEST_ENV_NUMBER"), id: id))
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:suite) { record_scheduler_event("before-suite") }
+  config.after(:suite) do
+    record_scheduler_event("after-suite")
+    raise "Fixture suite failure" if ENV["SCHEDULER_FIXTURE_SUITE_FAILURE"] == "1"
+  end
+  config.before(:example) { |example| record_scheduler_event("example", id: example.id) }
+end
+
+RSpec.shared_examples "a leased shared example" do
+  it("runs the shared example", :selected) { expect(1 + 1).to eq(2) }
+end

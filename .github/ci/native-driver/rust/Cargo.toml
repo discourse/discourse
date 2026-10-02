@@ -1,0 +1,12 @@
+[package]
+name = "discourse-cdp-bridge"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+libc = "0.2"
+serde_json = "1"
+
+[profile.release]
+lto = true
+codegen-units = 1
