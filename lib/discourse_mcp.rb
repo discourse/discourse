@@ -4,6 +4,8 @@ module DiscourseMcp
   module Scopes
     PROFILE_READ = "mcp:profile:read"
     PROFILE_WRITE = "mcp:profile:write"
+    CATEGORIES_READ = "mcp:categories:read"
+    CATEGORIES_WRITE = "mcp:categories:write"
     CONTENT_READ = "mcp:content:read"
     CONTENT_WRITE = "mcp:content:write"
     DRAFTS_READ = "mcp:drafts:read"
