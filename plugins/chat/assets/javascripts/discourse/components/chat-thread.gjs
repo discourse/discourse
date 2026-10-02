@@ -526,7 +526,6 @@ export default class ChatThread extends Component {
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.id,
-          client_created_at: message.createdAt.toISOString(),
           ...extractCurrentTopicInfo(this),
         }
       );
