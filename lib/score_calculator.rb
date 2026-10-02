@@ -49,7 +49,7 @@ SQL
     limit = 20_000
 
     builder = DB.build <<~SQL
-      WITH eligible_posts AS MATERIALIZED (
+      WITH eligible_posts AS (
         SELECT posts.id, posts.topic_id, posts.score
         FROM posts
         JOIN topics ON posts.topic_id = topics.id
@@ -79,7 +79,7 @@ SQL
 
   def update_topics_rank(opts)
     builder = DB.build <<~SQL
-      WITH eligible_posts AS MATERIALIZED (
+      WITH eligible_posts AS (
         SELECT p.topic_id, p.score
         FROM posts AS p
         JOIN topics ON p.topic_id = topics.id
