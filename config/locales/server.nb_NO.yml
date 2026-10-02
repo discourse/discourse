@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  markdown_endpoints:
+    latest: "Siste"
+    categories: "Kategorier"
+    tags: "Stikkord"
+    previous_page: "Forrige side"
+    next_page: "Neste side"
+    replies: "Svar"
+    last_updated: "Sist oppdatert"
+    event:
+      location: "Sted"
   mcp:
     errors:
       topic_not_found: "Fant ikke emnet"
@@ -1139,6 +1149,7 @@ nb_NO:
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
+    missing_username: "Skriv inn et brukernavn"
     second_factor_title: "To-faktor autentisering"
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
     second_factor_toggle:

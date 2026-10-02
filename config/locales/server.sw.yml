@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 sw:
+  markdown_endpoints:
+    latest: "Hivi Karibuni"
+    categories: "Kategoria"
+    tags: "Lebo"
+    previous_page: "Ukurasa uliopita"
+    next_page: "Ukurasa ujao"
+    replies: "Majibu"
+    event:
+      location: "Sehemu"
   mcp:
     errors:
       topic_not_found: "Mada haijapatikana"
@@ -1747,7 +1756,7 @@ sw:
         Msaidizi amethibitisha akaunti yako kwenye %{site_name}.
 
         Unaweza kuingia kwenye akaunti yako kupitia:
-        %{base_url}
+        %{login_url}
 
         Kama kiungo hakiwezi kubonyezwa, jaribu kunakili na kubandika kwenye sehemu ya kuandika anwani ya mtandao ndani ya kivinjari.
 

@@ -3092,6 +3092,7 @@ et:
         site_traffic:
           series:
             anonymous: "Anonüümne"
+          crawler_learn_more: "Uuri veel"
         period:
           custom: "Individuaalne"
         reports:
@@ -3946,12 +3947,11 @@ et:
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:
-        search: "Otsi teksi, mida soovid muuta"
+        search_label: "Otsi"
+        theme_disabled: "Välja lülitatud"
+        filters: "Filtrid"
         edit: "Muuda"
-        revert: "Pööra tagasi muudatused"
         revert_confirm: "Kas oled kindel, et soovid enda muudatused tagasi pöörata?"
-        go_back: "Tagasi otsingusse"
-        recommended: "Soovitame järgnevat teksti oma vajadustele vastavalt kohandada:"
         show_overriden: "Näita vaid käsitsi muudetuid"
         outdated:
           dismiss: "Ignoreeri"

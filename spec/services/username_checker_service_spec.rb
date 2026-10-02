@@ -58,5 +58,12 @@ RSpec.describe UsernameCheckerService do
       result = @service.check_username("vincent", @nil_email)
       expect(result[:available]).to eq(true)
     end
+
+    it "rejects usernames that clash with an existing user route" do
+      result = @service.check_username("ACCOUNT-CREATED", @email)
+
+      expect(result[:available]).to eq(false)
+      expect(result[:suggestion]).to be_present
+    end
   end
 end

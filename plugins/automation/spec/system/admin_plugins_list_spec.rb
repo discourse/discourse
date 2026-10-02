@@ -34,16 +34,13 @@ describe "Admin Plugins List" do
 
   it "can toggle whether a plugin is enabled" do
     admin_plugins_list_page.visit
-    toggle_switch =
-      PageObjects::Components::DToggleSwitch.new(
-        admin_plugins_list_page.plugin_row_selector("automation") +
-          " .admin-plugins-list__enabled .d-toggle-switch__checkbox",
-      )
-    toggle_switch.toggle
-    expect(toggle_switch).to be_unchecked
+
+    admin_plugins_list_page.toggle_plugin("automation")
+    expect(admin_plugins_list_page).to have_plugin_disabled("automation")
     expect(SiteSetting.discourse_automation_enabled).to eq(false)
-    toggle_switch.toggle
-    expect(toggle_switch).to be_checked
+
+    admin_plugins_list_page.toggle_plugin("automation")
+    expect(admin_plugins_list_page).to have_plugin_enabled("automation")
     expect(SiteSetting.discourse_automation_enabled).to eq(true)
   end
 

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 fr:
+  markdown_endpoints:
+    latest: "Récents"
+    categories: "Catégories"
+    tags: "Étiquettes"
+    previous_page: "Page précédente"
+    next_page: "Page suivante"
+    replies: "Réponses"
+    last_updated: "Dernière mise à jour "
+    event:
+      location: "Emplacement"
+      link: "Insérer un lien"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_too_long: "Le brouillon est trop long"
@@ -870,6 +882,7 @@ fr:
       description_too_long:
         one: "La description est trop longue (maximum %{count} caractère)."
         other: "La description est trop longue (maximum %{count} caractères)."
+      special_category_permissions: "Cette catégorie est préconfigurée et ses paramètres de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas l'utiliser, supprimez-la plutôt que de la réutiliser."
       permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente. Les groupes suivants ont accès à une des sous-catégories, mais n'ont pas accès à la catégorie parente : %{group_names}."
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
       disallowed_tags_generic: "Ce sujet contient des étiquettes interdites."
@@ -3109,6 +3122,7 @@ fr:
     wrong_invite_code: "Le code d'invitation est invalide."
     reserved_username: "Ce nom d'utilisateur n'est pas autorisé."
     missing_user_field: "Vous n'avez pas rempli tous les champs d'utilisateur obligatoires"
+    missing_username: "Veuillez entrer un nom d'utilisateur"
     missing_full_name: "Saisissez votre nom complet"
     auth_complete: "Authentification terminée."
     click_to_continue: "Cliquez ici pour continuer."
@@ -4616,7 +4630,7 @@ fr:
 
         Pour accéder à votre nouveau compte, vous pouvez utiliser le lien suivant :
 
-        %{base_url}
+        %{login_url}
 
         Dans le cas où le lien ci-dessus ne serait pas utilisable, nous vous invitons à le copier-coller dans la barre d'adresse de votre navigateur.
 
@@ -5564,6 +5578,9 @@ fr:
         title: "Rétablir la publication"
         description: "Rejeter le signalement et restaurer la publication"
         complete: "Publication restaurée."
+      disagree_and_keep_deleted:
+        title: "Conserver la suppression de la publication"
+        complete: "Publication maintenue supprimée."
       disagree_bundle:
         title: "Non"
       disagree:

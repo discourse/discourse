@@ -56,6 +56,32 @@ RSpec.describe Boards::Publisher do
     end
   end
 
+  describe "topic card events" do
+    let(:topic_card_data) { card_data.merge(card_type: "topic", topic_id: 1) }
+
+    it "publishes metadata-free board updates" do
+      messages =
+        MessageBus.track_publish(channel) do
+          described_class.publish_card_created!(board, topic_card_data, client_id: test_client_id)
+          described_class.publish_card_updated!(board, topic_card_data, client_id: test_client_id)
+          described_class.publish_card_moved!(
+            board,
+            topic_card_data,
+            acting_user: admin,
+            client_id: test_client_id,
+          )
+        end
+
+      expect(messages.map(&:data)).to eq(
+        [
+          { type: "board_updated", client_id: test_client_id },
+          { type: "board_updated", client_id: test_client_id },
+          { type: "board_updated", client_id: test_client_id },
+        ],
+      )
+    end
+  end
+
   describe ".publish_topic_memberships_changed!" do
     fab!(:topic)
 
@@ -169,7 +195,12 @@ RSpec.describe Boards::Publisher do
     it "publishes a card_deleted message with card_id" do
       messages =
         MessageBus.track_publish(channel) do
-          described_class.publish_card_deleted!(board, card.id, client_id: test_client_id)
+          described_class.publish_card_deleted!(
+            board,
+            card.id,
+            topic: false,
+            client_id: test_client_id,
+          )
         end
 
       expect(messages.size).to eq(1)
@@ -177,6 +208,20 @@ RSpec.describe Boards::Publisher do
       expect(msg.data[:type]).to eq("card_deleted")
       expect(msg.data[:client_id]).to eq(test_client_id)
       expect(msg.data[:card_id]).to eq(card.id)
+    end
+
+    it "publishes a board update for a topic card" do
+      messages =
+        MessageBus.track_publish(channel) do
+          described_class.publish_card_deleted!(
+            board,
+            card.id,
+            topic: true,
+            client_id: test_client_id,
+          )
+        end
+
+      expect(messages.first.data).to eq(type: "board_updated", client_id: test_client_id)
     end
   end
 
@@ -224,7 +269,7 @@ RSpec.describe Boards::Publisher do
         acting_user: admin,
         client_id: test_client_id,
       )
-      described_class.publish_card_deleted!(board, card.id, client_id: test_client_id)
+      described_class.publish_card_deleted!(board, card.id, topic: false, client_id: test_client_id)
       described_class.publish_column_cleared!(board, column.id, client_id: test_client_id)
       described_class.publish_columns_reordered!(board, [column.id], client_id: test_client_id)
       described_class.publish_board_updated!(board, client_id: test_client_id)

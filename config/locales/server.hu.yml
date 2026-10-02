@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 hu:
+  markdown_endpoints:
+    latest: "Legutóbbi"
+    categories: "Kategóriák"
+    tags: "Címkék"
+    previous_page: "Előző oldal"
+    next_page: "Következő oldal"
+    replies: "Válaszok"
+    last_updated: "Legutóbb frissítve"
+    event:
+      name: "Esemény"
+      location: "Hely"
+      link: "Hivatkozás"
   mcp:
     errors:
       draft_too_long: "A vázlat túl hosszú"
@@ -832,6 +844,7 @@ hu:
       description_too_long:
         one: "A leírás túl hosszú (maximum %{count} karakter)."
         other: "A leírás túl hosszú (maximum %{count} karakter)."
+      special_category_permissions: "Ez egy előre létrehozott kategória, és a biztonsági beállításai nem szerkeszthetők. Ha nem szeretné használni ezt a kategóriát, törölje ahelyett, hogy más célra használná fel."
       permission_conflict: "Minden olyan csoportnak, amely hozzáférhet egy alkategóriához, a szülőkategóriához is hozzá kell férnie. A következő csoportok hozzáférhetnek valamelyik alkategóriához, de nem férnek hozzá a szülőkategóriához: %{group_names}."
       disallowed_topic_tags: "Ebben a témában vannak olyan címkék, amelyeket ez a kategória nem engedélyez: '%{tags}'"
       disallowed_tags_generic: "Ez a téma nem engedélyezett címkéket tartalmaz."
@@ -2785,6 +2798,7 @@ hu:
     wrong_invite_code: "A megadott meghívókód helytelen."
     reserved_username: "Ez a felhasználónév nem engedélyezett."
     missing_user_field: "Nem töltötte ki az összes kötelező felhasználói mezőt"
+    missing_username: "Adjon meg egy felhasználónevet"
     auth_complete: "A hitelesítés befejeződött."
     click_to_continue: "Kattintson ide a folytatáshoz."
     already_logged_in: "Sajnálom! Ez a meghívás új felhasználóknak szól, akik még nem rendelkeznek meglévő fiókkal."
@@ -4065,7 +4079,7 @@ hu:
         Üdvözölünk a %{site_name}n!
 
         Egy adminisztrátorunk jóváhagyta a fiókodat a %{site_name}.n, most már beléphetsz, ha bejelentkezel az alábbi oldalon:
-        %{base_url}
+        %{login_url}
 
         Ha a fenti link nem kattintható, próbáld meg másolni és beilleszteni a webböngésző címsorába.
 
@@ -4896,6 +4910,8 @@ hu:
         title: "Bejegyzés visszaállítása"
         description: "Nem értek egyet a megjelöléssel és visszaállítom a bejegyzést"
         complete: "A bejegyzés visszaállítva."
+      disagree_and_keep_deleted:
+        title: "A bejegyzés maradjon törölve"
       disagree_bundle:
         title: "Nem"
       disagree:

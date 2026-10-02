@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 nl:
+  markdown_endpoints:
+    latest: "Recent"
+    categories: "Categorieën"
+    tags: "Tags"
+    previous_page: "Vorige pagina"
+    next_page: "Volgende pagina"
+    replies: "Antwoorden"
+    last_updated: "Laatst bijgewerkt"
+    event:
+      name: "Evenement"
+      location: "Locatie"
+      link: "Link"
   mcp:
     errors:
       draft_too_long: "Concept is te lang"
@@ -839,6 +851,7 @@ nl:
       description_too_long:
         one: "De beschrijving is te lang (maximaal %{count} teken)."
         other: "De beschrijving is te lang (maximaal %{count} tekens)."
+      special_category_permissions: "Dit is een vooraf geseede categorie, de beveiligingsinstellingen kunnen niet worden bewerkt. Als je deze categorie niet wilt gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       permission_conflict: "Een groep die toegang heeft tot een subcategorie moet ook toegang hebben tot de bovenliggende categorie. De volgende groepen hebben toegang tot een van de subcategorieën, maar niet tot de bovenliggende categorie: %{group_names}."
       disallowed_topic_tags: "Dit topic heeft tags die niet worden toegestaan door deze categorie: '%{tags}'"
       disallowed_tags_generic: "Dit topic heeft niet-toegestane tags."
@@ -2830,6 +2843,7 @@ nl:
     wrong_invite_code: "De ingevoerde code is ongeldig."
     reserved_username: "Die gebruikersnaam is niet toegestaan."
     missing_user_field: "Je hebt niet alle verplichte gebruikersvelden ingevuld"
+    missing_username: "Voer een gebruikersnaam in"
     auth_complete: "Authenticatie is voltooid."
     click_to_continue: "Klik hier om door te gaan."
     already_logged_in: "Sorry! Deze uitnodiging is bedoeld voor nieuwe gebruikers die nog geen bestaand account hebben."
@@ -4307,7 +4321,7 @@ nl:
         Een medewerker heeft je account op %{site_name} goedgekeurd.
 
         Je kunt nu toegang krijgen tot je nieuwe account door je aan te melden op:
-        %{base_url}
+        %{login_url}
 
         Als je niet op de bovenstaande link kunt klikken, kopieer en plak deze dan in de adresbalk van je webbrowser.
 
@@ -5145,6 +5159,8 @@ nl:
         title: "Bericht herstellen"
         description: "Niet akkoord met markering en bericht herstellen"
         complete: "Bericht hersteld."
+      disagree_and_keep_deleted:
+        title: "Bericht verwijderd houden"
       disagree_bundle:
         title: "Nee"
       disagree:

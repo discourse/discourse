@@ -293,12 +293,15 @@ export default class CreateInvite extends Component {
       invite: this.invite,
     });
 
+    const groupIds = this.data.inviteToGroups;
+
     await this.save({
       max_redemptions_allowed: this.defaultRedemptionsAllowed,
       expires_at: moment()
         .add(this.siteSettings.invite_expiry_days, "days")
         .format(DATE_INPUT_FORMAT),
       ...(topicId != null && { topic_id: topicId }),
+      ...(groupIds.length > 0 && { group_ids: groupIds }),
     });
   }
 

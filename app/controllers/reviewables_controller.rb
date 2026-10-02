@@ -280,7 +280,7 @@ class ReviewablesController < ApplicationController
 
     result = nil
     begin
-      reviewable = find_reviewable
+      reviewable = with_deleted_content { find_reviewable }
 
       if error = claim_error?(reviewable)
         return render_json_error(error)

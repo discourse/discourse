@@ -856,6 +856,12 @@
                 "type": "string"
               }
             },
+            "hidden_composer_toolbar_buttons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "show_original_content": {
               "type": "boolean"
             },
@@ -906,7 +912,8 @@
             "show_original_content",
             "send_shortcut",
             "automatically_translate",
-            "understood_languages"
+            "understood_languages",
+            "hidden_composer_toolbar_buttons"
           ]
         }
       },

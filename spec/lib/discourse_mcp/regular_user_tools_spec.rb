@@ -220,11 +220,13 @@ describe DiscourseMcp::Tools do
             Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
         )
       hidden_bookmark = Fabricate(:bookmark, user:, bookmarkable: private_post)
+      context = request_context(user)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ,
+      ).and_return(false)
 
       result =
-        described_class.call(arguments: {}, request_context: request_context(user)).fetch(
-          :structuredContent,
-        )
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
 
       bookmark_ids = result.fetch(:bookmarks).pluck(:id)
       expect(bookmark_ids).to include(visible_bookmark.id)

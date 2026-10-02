@@ -263,28 +263,6 @@ export default class UppyComposerUpload {
       });
     });
 
-    this.uppyWrapper.uppyInstance.on("file-removed", (file, reason) => {
-      run(() => {
-        // we handle the cancel-all event specifically, so no need
-        // to do anything here. this event is also fired when some files
-        // are handled by an upload handler
-        if (reason === "cancel-all") {
-          return;
-        }
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:upload-cancelled`,
-          file.id
-        );
-        file.meta.cancelled = true;
-        this.#removeInProgressUpload(file.id);
-        this.#resetUpload(file);
-        if (this.#inProgressUploads.length === 0) {
-          this.#userCancelled = true;
-          this.uppyWrapper.uppyInstance.cancelAll();
-        }
-      });
-    });
-
     this.uppyWrapper.uppyInstance.on("upload-progress", (file, progress) => {
       run(() => {
         if (this.isDestroying) {
@@ -553,7 +531,23 @@ export default class UppyComposerUpload {
   _cancelUpload(data) {
     if (data) {
       // Single file
-      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+      const file = this.uppyWrapper.uppyInstance.getFile(data.fileId);
+      if (!file) {
+        return;
+      }
+
+      file.meta.cancelled = true;
+      this.uppyWrapper.uppyInstance.removeFile(file.id);
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:upload-cancelled`,
+        file.id
+      );
+      this.#removeInProgressUpload(file.id);
+      this.#resetUpload(file);
+      if (this.#inProgressUploads.length === 0) {
+        this.#userCancelled = true;
+        this.uppyWrapper.uppyInstance.cancelAll();
+      }
     } else {
       // All files
       this.#userCancelled = true;

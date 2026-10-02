@@ -20,9 +20,15 @@ function initializeHCaptcha(api, container) {
     return;
   }
 
+  api.registerValueTransformer("code-login-auto-create-account", () => false);
+
   api.registerBehaviorTransformer("create-account", async ({ next }) => {
     const captchaService = container.lookup("service:captcha-service");
     captchaService.submitted = true;
+
+    if (captchaService.refreshToken) {
+      await captchaService.refreshToken();
+    }
 
     if (captchaService.invalid) {
       return {

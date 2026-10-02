@@ -67,6 +67,8 @@ module DiscourseMcp
       register_write_tools(registry)
       register_moderation_tools(registry)
       register_site_setting_tools(registry)
+      register_theme_tools(registry)
+      register_group_tools(registry)
       register_resources(registry)
       register_prompts(registry)
     end
@@ -1488,6 +1490,306 @@ module DiscourseMcp
           openWorldHint: true,
         },
         risk: :administration,
+      )
+    end
+
+    def register_theme_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_theme",
+        title: "Get theme",
+        description:
+          "Reads a theme or theme component and its fields. Requires administrator access.",
+        implementation: Tools::GetTheme,
+        input_schema: object_schema({ theme_id: { type: "integer" } }, required: %w[theme_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+
+      theme_field_schema = {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 255,
+          },
+          target: {
+            type: "string",
+            enum: Tools::ThemeSupport::TARGETS,
+          },
+          value: {
+            type: "string",
+            maxLength: 1_000_000,
+          },
+          type: {
+            type: "string",
+            enum: Tools::ThemeSupport::FIELD_TYPES,
+          },
+          type_id: {
+            type: "integer",
+            minimum: 0,
+          },
+          upload_id: {
+            type: "integer",
+            minimum: 1,
+          },
+        },
+        required: %w[name target],
+        additionalProperties: false,
+      }
+      register_tool(
+        registry,
+        "discourse_create_theme",
+        title: "Create theme",
+        description:
+          "Creates a theme or theme component with optional HTML, SCSS, and settings fields.",
+        implementation: Tools::CreateTheme,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              user_selectable: {
+                type: "boolean",
+                default: false,
+              },
+              color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              component: {
+                type: "boolean",
+                default: false,
+              },
+              default: {
+                type: "boolean",
+                default: false,
+              },
+              theme_fields: {
+                type: "array",
+                items: theme_field_schema,
+                maxItems: 100,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme",
+        title: "Update theme",
+        description:
+          "Updates attributes and fields on a theme when the authenticated user may edit it.",
+        implementation: Tools::UpdateTheme,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              dark_color_scheme_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              user_selectable: {
+                type: "boolean",
+              },
+              enabled: {
+                type: "boolean",
+              },
+              auto_update: {
+                type: "boolean",
+              },
+              default: {
+                type: "boolean",
+              },
+              theme_fields: {
+                type: "array",
+                items: theme_field_schema,
+                maxItems: 100,
+              },
+              child_theme_ids: {
+                type: "array",
+                items: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                maxItems: 50,
+              },
+              parent_theme_ids: {
+                type: "array",
+                items: {
+                  type: "integer",
+                },
+                maxItems: 50,
+              },
+            },
+            required: %w[theme_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+    end
+
+    def register_group_tools(registry)
+      group_name = { type: "string", minLength: 1, maxLength: 100 }
+      pagination = {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+        offset: {
+          type: "integer",
+          minimum: 0,
+        },
+      }
+      register_tool(
+        registry,
+        "discourse_list_groups",
+        title: "List groups",
+        description: "Lists groups visible to the authenticated user.",
+        implementation: Tools::ListGroups,
+        input_schema:
+          object_schema(
+            {
+              page: {
+                type: "integer",
+                minimum: 0,
+              },
+              limit: pagination[:limit],
+              order: {
+                type: "string",
+                enum: %w[name user_count],
+              },
+              ascending: {
+                type: "boolean",
+              },
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              type: {
+                type: "string",
+                enum: %w[my owner public close automatic non_automatic],
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_get_group",
+        title: "Get group",
+        description: "Gets safe details and caller capabilities for one visible group.",
+        implementation: Tools::GetGroup,
+        input_schema: object_schema({ id: { type: "integer", minimum: 1 }, name: group_name }),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_members",
+        title: "List group members",
+        description: "Lists members and owners when the authenticated user may see them.",
+        implementation: Tools::ListGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              **pagination,
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              order: {
+                type: "string",
+                enum: %w[username last_posted_at last_seen_at added_at],
+              },
+              ascending: {
+                type: "boolean",
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_membership_requests",
+        title: "List group membership requests",
+        description: "Lists pending requests for a group the authenticated user may manage.",
+        implementation: Tools::ListGroupMembershipRequests,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              **pagination,
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+              ascending: {
+                type: "boolean",
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
+      )
+      register_tool(
+        registry,
+        "discourse_list_group_posts",
+        title: "List group posts",
+        description: "Lists visible public-topic posts authored by members of a visible group.",
+        implementation: Tools::ListGroupPosts,
+        input_schema:
+          object_schema(
+            {
+              name: group_name,
+              before_post_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              before: {
+                type: "string",
+                format: "date-time",
+              },
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 20,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: READ_ONLY,
       )
     end
 

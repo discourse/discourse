@@ -41,6 +41,8 @@ zh_TW:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "活動提醒"
   site_settings:
     map_events_to_color: "為每個標籤或分類指派顏色。"
     map_events_title: "依分類覆寫「即將舉行的活動」側邊欄標題中的「活動」。"
@@ -83,6 +85,10 @@ zh_TW:
     livestream_embeddable_chat_allowed_paths: "可嵌入直播聊天室所允許的路徑。"
     livestream_enable_modal_chat_on_mobile: "在行動裝置上以對話框顯示直播聊天室。"
   discourse_events:
+    reminder:
+      guest: "- %{name}"
+      additional_guests:
+        other: "  與其他 %{count} 人"
     category_type:
       default_calendar_view:
         label: "預設行事曆檢視"

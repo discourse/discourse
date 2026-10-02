@@ -89,7 +89,9 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 8.0
+    config.load_defaults 8.1
+    # Existing permalink targets and redirect settings can contain path-relative URLs.
+    config.action_controller.action_on_path_relative_redirect = :log
     config.yjit = GlobalSetting.yjit_enabled
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
@@ -101,7 +103,10 @@ module Discourse
       Symbol,
     ]
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
-    config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
+    config.action_dispatch.cookies_serializer = :message_pack
+
+    # Missing controllers use the same not-found response as missing routes.
+    config.action_dispatch.rescue_responses["ActionDispatch::MissingController"] = :not_found
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
     config.active_record.dump_schema_after_migration = false

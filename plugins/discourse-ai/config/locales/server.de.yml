@@ -138,7 +138,6 @@ de:
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "Wenn der GPT-Bot Zugriff auf die PN hat, wird er den Mitgliedern dieser Gruppen antworten."
     ai_bot_debugging_allowed_groups: "Erlaube diesen Gruppen, eine Debug-Schaltfläche in Beiträgen zu sehen, der die rohe KI-Anfrage und -Antwort anzeigt."
     ai_bot_public_sharing_allowed_groups: "Erlaube diesen Gruppen, persönliche KI-Nachrichten über einen eindeutigen, öffentlich zugänglichen Link mit der Öffentlichkeit zu teilen. Hinweis: Wenn für deine Website eine Anmeldung erforderlich ist, ist auch zum Ansehen des geteilten Inhalts eine Anmeldung erforderlich."
     ai_bot_add_to_header: "Eine Schaltfläche in der Kopfzeile anzeigen, um eine PN mit einem KI-Bot zu starten"

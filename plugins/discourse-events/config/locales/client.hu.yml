@@ -27,6 +27,11 @@ hu:
               label: Témaazonosító
     discourse_events:
       title: "Események"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Értesítés"
+            none: "Egyik sem"
       on_holiday: "Szabadságon"
       disable_holiday: "Letiltás"
       enable_holiday: "Engedélyezés"

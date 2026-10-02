@@ -75,7 +75,6 @@ Migrations::Tooling::Schema.ignored do
          :post_search_data,
          :post_stats,
          :post_timings,
-         :posts,
          :quoted_posts,
          :shared_drafts
 
@@ -83,6 +82,7 @@ Migrations::Tooling::Schema.ignored do
          :linked_topics,
          :top_topics,
          :topic_custom_fields,
+         :topic_embed_aliases,
          :topic_embeds,
          :topic_groups,
          :topic_hot_scores,
@@ -177,7 +177,6 @@ Migrations::Tooling::Schema.ignored do
          :browser_pageview_events_backup,
          :browser_pageview_session_engagement_daily_rollups,
          :browser_pageview_session_engagements,
-         :custom_emojis,
          :developers,
          :directory_columns,
          :directory_items,

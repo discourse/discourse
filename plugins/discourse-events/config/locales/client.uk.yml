@@ -46,6 +46,10 @@ uk:
           rsvp_to_event_with_link: "Підтвердіть свою присутність на <a href='%{url}'>події</a> , щоб розпочати чат"
           rsvp_body: "Спілкуйтеся з іншими учасниками до, під час та після заходу."
       preferences:
+        reminders:
+          preferences:
+            notification: "Сповіщення"
+            none: "Немає"
         all_events: "Події дискурсу — Усі події"
         all_events_description: "Усі події форуму"
         my_events: "Події Дискурсу - Мої події"

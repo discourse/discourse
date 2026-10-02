@@ -239,12 +239,17 @@
 
   .composer-image-grid {
     position: relative;
+
+    // Portal whitespace should not create anonymous line boxes in the grid.
+    display: flex;
+    flex-direction: column;
+    min-block-size: var(--composer-image-grid-controls-min-block-size, 0);
     border: 2px dashed var(--primary-low-mid);
     border-radius: var(--d-border-radius);
     padding: var(--space-half) var(--space-2) 0 var(--space-2);
     margin-block: var(--space-4);
 
-    > div:not(.composer-image-gallery__mode-buttons) {
+    &__content {
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-2);
@@ -256,25 +261,33 @@
     }
 
     &__remove-btn {
-      position: absolute;
-      bottom: var(--space-2);
-      right: var(--space-2);
       color: var(--primary-medium);
       padding: var(--space-1) var(--space-2);
       background: var(--secondary);
-      border: 1px solid var(--primary-low);
+      border: 0;
+      border-radius: var(--d-border-radius);
       font-size: var(--font-down-1-rem);
+      white-space: nowrap;
       display: flex;
       align-items: center;
       gap: var(--space-1);
+      cursor: pointer;
 
       @include viewport.until(sm) {
         padding: var(--space-2) var(--space-4);
       }
 
-      &:hover {
+      html.discourse-no-touch &:hover:not(:disabled) {
         color: var(--primary);
-        background: var(--primary-low);
+        background: var(--d-hover);
+      }
+
+      &:active:not(:disabled) {
+        background: var(--secondary);
+      }
+
+      &:focus-visible {
+        @include default-focus;
       }
     }
 
@@ -427,6 +440,8 @@
 .fk-d-menu[data-identifier="composer-link-toolbar"],
 .fk-d-menu[data-identifier="composer-image-toolbar"],
 .fk-d-menu[data-identifier="composer-image-alt-text"],
+.fk-d-menu[data-identifier^="composer-image-grid-mode-"],
+.fk-d-menu[data-identifier^="composer-image-grid-remove-"],
 .fk-d-menu[data-identifier="composer-preview-toolbar"],
 .fk-d-menu[data-identifier="composer-onebox-toolbar"] {
   user-select: none;

@@ -18,6 +18,9 @@ sr:
               buckets:
                 gt_24h: "> 24 sata"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Tagovi"
     notifications:
       alt:
         solved:

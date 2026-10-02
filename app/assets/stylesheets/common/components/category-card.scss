@@ -83,7 +83,6 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-half);
-    color: var(--primary-medium);
     font-size: var(--font-down-1);
 
     .d-icon {
@@ -104,6 +103,13 @@
   &__latest-title {
     margin-bottom: var(--space-1);
     color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__view-all {
+    display: block;
+    padding-top: var(--space-1);
+    border-top: 1px solid var(--content-border-color);
     font-size: var(--font-down-1);
   }
 

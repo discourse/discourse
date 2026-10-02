@@ -5,6 +5,17 @@
 # https://translate.discourse.org/
 
 vi:
+  markdown_endpoints:
+    latest: "Gần đây"
+    categories: "Danh mục"
+    tags: "Thẻ"
+    previous_page: "Trang trước"
+    next_page: "Trang sau"
+    replies: "Lượt trả lời"
+    last_updated: "Cập nhật lần cuối"
+    event:
+      location: "Vị trí"
+      link: "Link"
   mcp:
     errors:
       topic_not_found: "Không tìm thấy chủ đề"
@@ -1642,6 +1653,7 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     wrong_invite_code: "Mã mời bạn đã nhập không chính xác."
     reserved_username: "Tên đăng nhập không được cho phép."
+    missing_username: "Vui lòng nhập tên người dùng"
     missing_full_name: "Vui lòng nhập đầy đủ họ và tên"
     auth_complete: "Xác thực đã hoàn tất."
     click_to_continue: "Nhấn vào đây để tiếp tục."
@@ -2821,6 +2833,9 @@ vi:
         complete: "Tút đã bị xóa."
       delete_and_agree_replies:
         confirm: "Bạn có chắc muốn xóa các câu trả lời của tút?"
+      disagree_and_keep_deleted:
+        title: "Giữ tút bị xóa"
+        complete: "Đã giữ nguyên trạng thái xóa bài viết."
       disagree_bundle:
         title: "Không"
       ignore:

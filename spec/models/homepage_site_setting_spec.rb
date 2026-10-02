@@ -43,6 +43,38 @@ describe HomepageSiteSetting do
     expect(described_class.values.map { |value| value[:value] }).not_to include("directory")
   end
 
+  it "offers a plugin homepage only while its enabled condition holds" do
+    plugin = Plugin::Instance.new
+    plugin.stubs(:enabled?).returns(true)
+    plugin.register_homepage(
+      "directory",
+      name: "discourse_directory.navigation.title",
+      path: "/directory",
+      route: "discourse_directory/directory#index",
+      enabled: -> { SiteSetting.enable_user_directory },
+    )
+
+    SiteSetting.enable_user_directory = true
+    expect(described_class.choices).to include("directory")
+
+    SiteSetting.enable_user_directory = false
+    expect(described_class.choices).not_to include("directory")
+  end
+
+  it "does not offer a plugin homepage whose enabled condition raises" do
+    plugin = Plugin::Instance.new
+    plugin.stubs(:enabled?).returns(true)
+    plugin.register_homepage(
+      "directory",
+      name: "discourse_directory.navigation.title",
+      path: "/directory",
+      route: "discourse_directory/directory#index",
+      enabled: -> { raise "enabled check failed" },
+    )
+
+    expect(described_class.choices).not_to include("directory")
+  end
+
   it "does not offer unread when it is excluded from top menu choices" do
     TopMenu.stubs(:choices).returns(%w[latest new top categories])
 

@@ -60,6 +60,8 @@ module JsonApiKit
               ]
         end
       end
+
+      delegate :attribute_names, :relationships, :fields, :resolves?, to: :class
     end
   end
 end

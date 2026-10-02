@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import Category from "discourse/models/category";
 import formatEventForCalendar from "../lib/format-event-for-calendar";
 import openEventComposer from "../lib/open-event-composer";
 import FullCalendar from "./full-calendar";
@@ -32,7 +31,12 @@ export default class CategoryCalendar extends Component {
   }
 
   get refreshKey() {
-    return `${this.category.id}-${this.includeSubcategories}`;
+    return JSON.stringify([
+      this.category.id,
+      this.includeSubcategories,
+      this.tags,
+      this.noTags,
+    ]);
   }
 
   get shouldRender() {
@@ -41,10 +45,6 @@ export default class CategoryCalendar extends Component {
     }
 
     if (this.siteSettings.login_required && !this.currentUser) {
-      return false;
-    }
-
-    if (!this.router.currentRoute?.params?.category_slug_path_with_id) {
       return false;
     }
 
@@ -60,34 +60,44 @@ export default class CategoryCalendar extends Component {
   }
 
   get validCategory() {
-    if (
-      !this.categorySetting &&
-      !this.siteSettings.events_calendar_categories
-    ) {
-      return false;
-    }
-
-    return (
-      this.categorySetting?.categoryId === this.category.id.toString() ||
-      this.siteSettings.events_calendar_categories
-        .split("|")
-        .filter(Boolean)
-        .includes(this.category.id.toString())
-    );
+    return !!this.calendarCategory;
   }
 
   get category() {
-    return Category.findBySlugPathWithID(
-      this.router.currentRoute.params.category_slug_path_with_id
-    );
+    return this.router.currentRoute?.attributes?.category;
+  }
+
+  get tags() {
+    const { tag, additionalTags = [] } =
+      this.router.currentRoute?.attributes || {};
+    return tag && !this.noTags ? [tag.name, ...additionalTags] : [];
+  }
+
+  get noTags() {
+    const tag = this.router.currentRoute?.attributes?.tag;
+    return tag?.slug === "none" && !tag.id;
+  }
+
+  get calendarCategory() {
+    const categoryIds = [
+      ...this.siteSettings.events_calendar_categories.split("|"),
+      ...this.categorySettings.map((item) => item.categoryId),
+    ];
+    let category = this.category;
+    while (category) {
+      if (categoryIds.includes(category.id.toString())) {
+        return category;
+      }
+      category = category.parentCategory;
+    }
   }
 
   get renderWeekends() {
     return this.categorySetting?.weekends !== "false";
   }
 
-  get categorySetting() {
-    const settings = this.siteSettings.calendar_categories
+  get categorySettings() {
+    return this.siteSettings.calendar_categories
       .split("|")
       .filter(Boolean)
       .map((stringSetting) => {
@@ -101,9 +111,11 @@ export default class CategoryCalendar extends Component {
           });
         return data;
       });
+  }
 
-    return settings.find(
-      (item) => item.categoryId === this.category.id.toString()
+  get categorySetting() {
+    return this.categorySettings.find(
+      (item) => item.categoryId === this.calendarCategory?.id.toString()
     );
   }
 
@@ -130,6 +142,12 @@ export default class CategoryCalendar extends Component {
 
       if (this.includeSubcategories) {
         params.include_subcategories = true;
+      }
+
+      if (this.noTags) {
+        params.no_tags = true;
+      } else if (this.tags.length) {
+        params.tags = this.tags;
       }
 
       const events = await this.discoursePostEventService.fetchEvents(params);

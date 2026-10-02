@@ -18,7 +18,6 @@ ur:
       admin_dashboard_card:
         no_results: "کوئی نتائج نہیں"
     explorer:
-      default_query: "ڈِیفالٹ"
       view_query: "مشاهده"
       or: "یا"
       admins_only: "ڈیٹا ایکسپلورر صرف منتظمین کو دستیاب ہے۔"
@@ -54,6 +53,7 @@ ur:
         other: "%{count} نتائج۔"
       query_name: "ڈیٹا کمانڈ"
       query_groups: "گروپس"
+      query_tags: "ٹیگز"
       report_name: "رپورٹ"
       query_description: "تفصیل"
       query_time: "چلا آخری دفعہ"

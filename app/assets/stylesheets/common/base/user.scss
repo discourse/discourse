@@ -565,6 +565,23 @@
 .avatar-selector {
   --label-max-width: 300px;
 
+  &__placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 45px;
+    height: 45px;
+    margin-inline-end: 0.75em;
+    border-radius: 50%;
+    background: var(--primary-low);
+    color: var(--primary-medium);
+  }
+
+  .selectable-avatar[aria-current="true"] {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+
   .avatar-choice {
     display: grid;
     grid-template-columns: 2em 1fr auto;

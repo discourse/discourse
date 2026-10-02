@@ -259,14 +259,16 @@ module DiscourseTagging
           end
           return false
         end
-
-        topic.tags = tags
       else
         return false unless validate_min_required_tags_for_category(guardian, topic, category)
         return false unless validate_required_tags_from_group(guardian, topic, category)
 
-        topic.tags = []
+        tags = []
       end
+
+      yield(tags) if block_given?
+
+      topic.tags = tags
       topic.tags_changed = true
 
       DiscourseEvent.trigger(
@@ -954,6 +956,10 @@ module DiscourseTagging
         .all
       new_tag_names.each { |name| taggable.tags << Tag.create(name: name) }
     end
+  end
+
+  def self.editable_synonym_ids(synonyms, guardian)
+    synonyms.filter_map { |synonym| synonym.id if guardian.can_edit_tag?(synonym) }
   end
 
   # Add synonyms to a target tag.

@@ -48,6 +48,7 @@ he:
       manage:
         access_permission_editor: "עורכים"
         access_permission_remove: "הסרה"
+        add_group: "הוספת משתמש או קבוצה"
         mandatory: "חובה"
         disallowed: "אסור"
     carousel:
@@ -288,7 +289,7 @@ he:
       pt:
         name: פורטוגלית
       pt_BR:
-        name: פורטוגלית
+        name: פורטוגלית ברזילאית
       ro:
         name: רומנית
       ru:
@@ -383,7 +384,7 @@ he:
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
       message: "עדכנו את האתר, <span>נא לרענן</span> כדי שהדברים פה יחזרו לרוץ בצורה חלקה."
-      dismiss: "התעלמות"
+      dismiss: "סילוק"
     notifications_tracking:
       tooltip: "רמת התראה: %{level}"
     back_button: "חזרה"
@@ -520,7 +521,13 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
+      select_theme:
+        action: "הצגת האפשרויות"
+        completed: "שינוי האפשרויות"
+        show_light_screenshot: "הצגת צילום מסך בהיר"
+        show_dark_screenshot: "הצגת צילום מסך כהה"
       invite_collaborators:
+        title: "הזמנת משתפי פעולה"
         action: "יצירת הזמנה"
       start_posting:
         action: "הצגת רעיונות"
@@ -530,20 +537,15 @@ he:
         predefined_topics_description: "אפשר לבחור מתוך אוסף של פותחי שיחה כדי להניע את השיח"
         use_predefined: "עיון בתבניות"
         back: "חזרה"
-        icebreakers:
-          fun_facts:
-            title: "אילו עובדות משעשעות עליך או עלייך היית רוצה לחלוק עם הקהילה?"
-            body: "היי כולם! מרגש אותי להקים את הקהילה הזאת. כדי להיכנס לעניינים, בואו נשתף עובדות משעשעות על עצמנו. אני אתחיל: התחביב שלי הוא טיולים וחקר מסלולים חדשים! איזו עובדה מעניינת יש עליך או עלייך?"
-          coolest_thing_you_have_seen_today:
-            title: "מה הדבר הכי מגניב שראית היום?"
-            body: "מה הדבר הכי מגניב שראית או חווית היום? זה יכול להיות כל דבר, החל משקיעה יפה ועד מחווה אדיבה אקראית. אני אתחיל: ראיתי כלב שעוזר לאדם מבוגר לחצות את הכביש!"
-          what_is_your_favorite_food:
-            title: "מה המאכל האהוב עליך או עלייך?"
     design_wizard:
+      title: "התאמת האתר שלך"
+      step_label: "מעבר לשלב %{index}"
+      save: "שמירה וסיום"
       back: "חזרה"
       next: "הבא"
+      launch: "אשף עיצוב"
       sections:
-        theme: "תמה"
+        theme: "ערכת עיצוב"
         fonts: "גופנים"
         homepage: "דף הבית"
         welcome_banner: "כרזת קבלת פנים"
@@ -561,8 +563,21 @@ he:
         categories: "קטגוריות"
         styles:
           boxes: "תיבות"
+      welcome_banner:
+        location: "מקום כרזה"
+        locations:
+          below_site_header: "מתחת לכותרת האתר"
+          above_topic_content: "מעל לרשימת הנושאים"
+      search:
+        experiences:
+          search_icon:
+            title: "סמל חיפוש"
+            description: "זכוכית מגדלת בכותרת שפותחת את החיפוש."
+          search_field:
+            title: "שדה חיפוש"
+            description: "שדה חיפוש מלא בכותרת, תמיד זמין."
     about:
-      edit: "עריכת עמוד זה"
+      edit: "עריכת העמוד הזה"
       simple_title: "על אודות"
       title: "על %{title}"
       stats: "סטטיסטיקת אתר"
@@ -686,6 +701,9 @@ he:
       topic_bookmark: "נושא"
       post_bookmark: "פוסט מס׳ %{post_number}"
       jump_to_post: "קפיצה למס׳ %{post_number}"
+      bookmark_topic: "סימון נושא"
+      edit_topic_bookmark: "עריכת סימניית נושא"
+      delete_topic_bookmark: "מחיקת סימניית נושא"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
@@ -765,12 +783,14 @@ he:
           other: "+%{count} טיוטות נוספות"
     embed_mode:
       allow_access: "לאפשר גישה"
+      continue_as_guest: "להמשיך כאורח/ת"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
         share_session_title: "כניסה אל %{site_name}"
         signin_required_title: "כניסה אל %{site_name}"
         open_signin_tab: "פתיחת לשונית כניסה"
+        waiting_title: "בהמתנה לכניסה"
         cancel: "ביטול"
         sign_in_to_reply: "יש להיכנס כדי להגיב"
     topic_count_all:
@@ -1812,6 +1832,11 @@ he:
         status: "מצב"
         statuses:
           active: "פעיל"
+          server_disabled: "השרת הושבת"
+          client_blocked: "לקוח נחסם"
+          client_not_approved: "הלקוח לא אושר"
+          access_removed: "גישה הוסרה"
+          user_unavailable: "משתמש לא זמין"
           revoked: "נשל"
       revoke_access: "שלילת גישה"
       undo_revoke_access: "ביטול שלילת גישה"
@@ -2987,6 +3012,7 @@ he:
       enter: "Enter"
       option: "אפשרות"
       period: "פרק זמן"
+      tab: "Tab"
       delete: "מחיקה"
       home: "בית"
     conditional_loading_section:
@@ -4492,7 +4518,7 @@ he:
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       cancel_composer:
-        confirm: "להתעלם מהפוסט שלך?"
+        confirm: "לסלק את הפוסט שלך?"
         confirm_edit: "להתעלם מהשינויים שלך?"
         discard: "להשליך"
         discard_edit: "התעלמות מהשינויים"
@@ -5396,7 +5422,7 @@ he:
       manage_groups: "ניהול קבוצות תגיות"
       manage_groups_description: "הגדרת קבוצות לארגון תגיות"
       upload: "העלאת תגיות"
-      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות בבת אחת"
+      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות במרוכז"
       upload_instructions: "אחת בשורה, אפשר עם קבוצת תגיות בתצורה ‚שם_תגית,קבוצת_תגיות’."
       upload_successful: "התגיות הועלו בהצלחה"
       bulk_create_inline_placeholder: "יצירת תגיות (מופרדות בפסיקים)"
@@ -6073,7 +6099,6 @@ he:
             status: "מצב"
             actions: "פעולות"
           activity:
-            rate_limits: "מגבלות קצב"
             outcome: "תוצאה"
             time: "מועד"
             user: "משתמש"
@@ -6551,7 +6576,7 @@ he:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
         discourse_last_updated: "עדכון Discourse:"
-        version: "גירסה"
+        version: "גרסה"
         up_to_date: "הכול עדכני!"
         updates_available: "עדכונים מוכנים."
         please_update: "נא לעדכן!"
@@ -6670,6 +6695,7 @@ he:
           series:
             anonymous: "אלמוני"
             crawlers: "סורקי אינטרנט"
+          crawler_learn_more: "מידע נוסף"
         period:
           last_7_days: "7 הימים האחרונים"
           last_30_days: "30 הימים האחרונים"
@@ -8714,13 +8740,14 @@ he:
           multiselect: "מגוון בחירות"
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
-        search: "חיפוש הטקסט שמיועד לעריכה"
+        search_label: "חיפוש"
+        theme_disabled: "כבוי"
+        filters: "מסננים"
+        status:
+          invalid: "שגוי"
         title: "טקסטים של האתר"
         edit: "עריכה"
-        revert: "ביטול שינויים"
         revert_confirm: "לבטל את השינויים שלך?"
-        go_back: "חזרה לחיפוש"
-        recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         show_outdated: "להציג רק מיושן/שגוי"
         show_untranslated: "להציג רק לא מתורגמות"

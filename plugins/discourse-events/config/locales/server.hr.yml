@@ -28,6 +28,8 @@ hr:
         %{logs}
         ```
   discourse_events:
+    reminder:
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "Dan"

@@ -12,10 +12,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
-import bodyClass from "discourse/helpers/body-class";
-import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
@@ -31,10 +28,11 @@ import {
 import { clipboardHelpers, slugify } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
+import AiBotConversationsLayout from "discourse/plugins/discourse-ai/discourse/components/ai-bot-conversations-layout";
+import { takeConversationDraft } from "discourse/plugins/discourse-ai/discourse/lib/ai-bot-conversation-draft";
 
 @tagName("")
 export default class AiBotConversations extends Component {
@@ -43,6 +41,7 @@ export default class AiBotConversations extends Component {
   @service capabilities;
   @service currentUser;
   @service mediaOptimizationWorker;
+  @service sessionStore;
   @service site;
   @service siteSettings;
   @service tooltip;
@@ -266,6 +265,7 @@ export default class AiBotConversations extends Component {
   setTextArea(element) {
     this.textarea = element;
     this.setupAutocomplete(element);
+    this.#restoreDraft();
     scheduleOnce("afterRender", this, this.focusTextarea);
   }
 
@@ -387,6 +387,14 @@ export default class AiBotConversations extends Component {
     }
   }
 
+  #restoreDraft() {
+    const draft = takeConversationDraft(this.sessionStore);
+    if (draft) {
+      this.textarea.value = draft;
+      this.updateInputValue(draft);
+    }
+  }
+
   async #checkCreditStatus(id, type) {
     // Clear status immediately to prevent stale data
     this.creditStatus = null;
@@ -422,85 +430,66 @@ export default class AiBotConversations extends Component {
   }
 
   <template>
-    <div class="ai-bot-conversations" ...attributes>
-      {{bodyClass "ai-bot-conversations-page"}}
-
-      <div class="ai-bot-conversations__content-wrapper">
-        <div class="ai-bot-conversations__title">
-          {{dIcon "far-discobot"}}
-          {{i18n "discourse_ai.ai_bot.conversations.header"}}
-        </div>
-        <PluginOutlet
-          @name="ai-bot-conversations-above-input"
-          @outletArgs={{lazyHash
-            updateInput=this.updateInputValue
-            submit=this.prepareAndSubmitToBot
+    <AiBotConversationsLayout
+      ...attributes
+      @submit={{this.prepareAndSubmitToBot}}
+      @updateInput={{this.updateInputValue}}
+    >
+      <:default>
+        <div
+          class={{dConcatClass
+            "ai-bot-conversations__input-wrapper"
+            (if this.isSubmitDisabled "--disabled")
           }}
-        />
-        <div class="ai-bot-conversations__input-container">
-          <div
-            class={{dConcatClass
-              "ai-bot-conversations__input-wrapper"
-              (if this.isSubmitDisabled "--disabled")
-            }}
-            {{this.creditLimitTooltipModifier}}
-          >
-            <DButton
-              class="btn btn-transparent ai-bot-upload-btn"
-              @action={{unless this.isSubmitDisabled this.openFileUpload}}
-              @disabled={{this.isSubmitDisabled}}
-              @icon="upload"
-              @title="discourse_ai.ai_bot.conversations.upload_files"
-            />
-            <textarea
-              autofocus={{unless this.isSubmitDisabled "true"}}
-              disabled={{if this.isSubmitDisabled true this.loading}}
-              id="ai-bot-conversations-input"
-              minlength="10"
-              placeholder={{i18n
-                "discourse_ai.ai_bot.conversations.placeholder"
-              }}
-              rows="1"
-              {{didInsert this.setTextArea}}
-              {{on "input" this.updateInputValue}}
-              {{on "keydown" this.handleKeyDown}}
-              {{on "beforeinput" this.handleBeforeInput}}
-            />
-            <DButton
-              class="ai-bot-button btn-transparent ai-conversation-submit"
-              @action={{unless
-                this.isSubmitDisabled
-                this.prepareAndSubmitToBot
-              }}
-              @disabled={{this.isSubmitDisabled}}
-              @icon="paper-plane"
-              @isLoading={{unless this.isSubmitDisabled this.loading}}
-              @title="discourse_ai.ai_bot.conversations.header"
-            />
-            <input
-              class="hidden-upload-field"
-              id="ai-bot-file-uploader"
-              multiple="multiple"
-              type="file"
-              {{didInsert this.registerFileInput}}
-            />
-          </div>
-
-          <AiAgentLlmSelector
-            @agentName={{@controller.agent}}
-            @llmName={{@controller.llm}}
-            @onSelectionChanged={{this.onSelectionChanged}}
-            @setAgentId={{this.setAgentId}}
-            @setLlmId={{this.setLlmId}}
-            @setTargetRecipient={{this.setTargetRecipient}}
-            @showLabels={{true}}
+          {{this.creditLimitTooltipModifier}}
+        >
+          <DButton
+            class="btn btn-transparent ai-bot-upload-btn"
+            @action={{unless this.isSubmitDisabled this.openFileUpload}}
+            @disabled={{this.isSubmitDisabled}}
+            @icon="upload"
+            @title="discourse_ai.ai_bot.conversations.upload_files"
+          />
+          <textarea
+            autofocus={{unless this.isSubmitDisabled "true"}}
+            disabled={{if this.isSubmitDisabled true this.loading}}
+            id="ai-bot-conversations-input"
+            minlength="10"
+            placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
+            rows="1"
+            {{didInsert this.setTextArea}}
+            {{on "input" this.updateInputValue}}
+            {{on "keydown" this.handleKeyDown}}
+            {{on "beforeinput" this.handleBeforeInput}}
+          />
+          <DButton
+            class="ai-bot-button btn-transparent ai-conversation-submit"
+            @action={{unless this.isSubmitDisabled this.prepareAndSubmitToBot}}
+            @disabled={{this.isSubmitDisabled}}
+            @icon="paper-plane"
+            @isLoading={{unless this.isSubmitDisabled this.loading}}
+            @title="discourse_ai.ai_bot.conversations.header"
+          />
+          <input
+            class="hidden-upload-field"
+            id="ai-bot-file-uploader"
+            multiple="multiple"
+            type="file"
+            {{didInsert this.registerFileInput}}
           />
         </div>
 
-        <p class="ai-disclaimer">
-          {{i18n "discourse_ai.ai_bot.conversations.disclaimer"}}
-        </p>
-
+        <AiAgentLlmSelector
+          @agentName={{@controller.agent}}
+          @llmName={{@controller.llm}}
+          @onSelectionChanged={{this.onSelectionChanged}}
+          @setAgentId={{this.setAgentId}}
+          @setLlmId={{this.setLlmId}}
+          @setTargetRecipient={{this.setTargetRecipient}}
+          @showLabels={{true}}
+        />
+      </:default>
+      <:footer>
         {{#if this.showUploadsContainer}}
           <div class="ai-bot-conversations__uploads-container">
             {{#each this.uploads as |upload|}}
@@ -531,7 +520,7 @@ export default class AiBotConversations extends Component {
             {{/each}}
           </div>
         {{/if}}
-      </div>
-    </div>
+      </:footer>
+    </AiBotConversationsLayout>
   </template>
 }

@@ -5,6 +5,17 @@
 # https://translate.discourse.org/
 
 hr:
+  markdown_endpoints:
+    latest: "Posljednje"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Prethodna stranica"
+    next_page: "Slijedeća stranica"
+    replies: "Odgovori"
+    last_updated: "Posljednje ažuriranje"
+    event:
+      location: "Lokacija"
+      link: "Veza"
   mcp:
     errors:
       topic_not_found: "Tema nije pronađena"
@@ -1680,6 +1691,7 @@ hr:
     errors: "%{errors}"
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
     omniauth_confirm_button: "Nastavi"
+    missing_username: "Unesite korisničko ime"
     second_factor_title: "Dvofaktorska autentifikacija"
     second_factor_backup_description: "Unesite jedan od vaših rezervnih kodova:"
     second_factor_toggle:
@@ -2418,7 +2430,7 @@ hr:
         Član osoblja odobrio je vaš korisnički račun na %{site_name}.
 
         Sada možete pristupiti svom novom korisničkom računu tako da se prijavite na:
-        %{base_url}
+        %{login_url}
 
         Ako gornju poveznicu ne možete kliknuti, pokušajte je kopirati i zalijepiti u adresnu traku vaš web preglednik.
 

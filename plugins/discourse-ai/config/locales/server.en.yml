@@ -156,7 +156,7 @@ en:
     ai_bot_enabled: "Enable the AI Bot module."
     ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overridden by editing the translation string: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
+    ai_bot_allowed_groups: "Members of these groups can have conversations with AI bots. Agents that allow personal messages use their own allowed groups instead. Anonymous users can't use the bot; when added to this setting, they can only preview the AI bot conversations page and are prompted to log in to ask a question."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
     ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
     ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"

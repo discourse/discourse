@@ -123,6 +123,7 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
   validate :ensure_slug
   validate :permissions_compatibility_validator
+  validate :special_category_permissions_validator, on: :update
   validate :posting_review_groups_validator
 
   validates :default_slow_mode_seconds,
@@ -183,6 +184,7 @@ class Category < ActiveRecord::Base
     end
   end
 
+  after_commit :enqueue_upload_security_updates, on: :update, if: :saved_change_to_read_restricted?
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
@@ -1093,6 +1095,15 @@ class Category < ActiveRecord::Base
     ].include? id
   end
 
+  # Seeding resets these categories' permissions on every migration, so edits would be lost.
+  def special?
+    [
+      SiteSetting.meta_category_id,
+      SiteSetting.staff_category_id,
+      SiteSetting.uncategorized_category_id,
+    ].include? id
+  end
+
   def full_slug(separator = "-")
     start_idx = "#{Discourse.base_path}/c/".size
     url[start_idx..-1].gsub("/", separator)
@@ -1234,6 +1245,15 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def special_category_permissions_validator
+    return if !@permissions || !special?
+
+    current_permissions = category_groups.pluck(:group_id, :permission_type)
+    return if !read_restricted_changed? && @permissions.sort == current_permissions.sort
+
+    errors.add(:base, I18n.t("category.errors.special_category_permissions"))
+  end
+
   def self.ensure_consistency!
     sql = <<~SQL
       SELECT t.id FROM topics t
@@ -1296,6 +1316,10 @@ class Category < ActiveRecord::Base
 
   def saved_change_to_hashtag_ref?
     saved_change_to_slug? || saved_change_to_parent_category_id?
+  end
+
+  def enqueue_upload_security_updates
+    Jobs.enqueue(:update_category_upload_security, category_id: id)
   end
 
   def enqueue_category_hashtag_remap

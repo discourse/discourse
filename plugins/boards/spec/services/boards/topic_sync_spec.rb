@@ -56,7 +56,7 @@ RSpec.describe Boards::TopicSync do
     expect(card.column_changed_at).to be_present
   end
 
-  it "publishes created topic cards to board ACL groups" do
+  it "publishes board updates for created topic cards to board ACL groups" do
     tagged_topic = Fabricate(:topic, tags: [tag_a])
     board =
       Boards::Board.create!(
@@ -83,11 +83,11 @@ RSpec.describe Boards::TopicSync do
       MessageBus.track_publish("/boards/#{board.id}") { described_class.sync_topic(tagged_topic) }
 
     expect(messages.size).to eq(1)
-    expect(messages.first.data[:type]).to eq("card_created")
+    expect(messages.first.data).to eq(type: "board_updated", client_id: nil)
     expect(messages.first.group_ids).to contain_exactly(read_group.id, write_group.id)
   end
 
-  it "publishes created topic cards without group restrictions for anonymous board ACLs" do
+  it "publishes board updates for created topic cards without group restrictions for anonymous board ACLs" do
     tagged_topic = Fabricate(:topic, tags: [tag_a])
     board =
       Boards::Board.create!(
@@ -108,7 +108,7 @@ RSpec.describe Boards::TopicSync do
       MessageBus.track_publish("/boards/#{board.id}") { described_class.sync_topic(tagged_topic) }
 
     expect(messages.size).to eq(1)
-    expect(messages.first.data[:type]).to eq("card_created")
+    expect(messages.first.data).to eq(type: "board_updated", client_id: nil)
     expect(messages.first.group_ids).to be_nil
   end
 
@@ -307,14 +307,13 @@ RSpec.describe Boards::TopicSync do
         created_by_id: admin.id,
       )
     column = board.columns.create!(title: "Backlog", position: 0)
-    card =
-      board.cards.create!(
-        topic_id: topic.id,
-        card_type: :topic,
-        column_id: column.id,
-        position: 0,
-        created_by_id: admin.id,
-      )
+    board.cards.create!(
+      topic_id: topic.id,
+      card_type: :topic,
+      column_id: column.id,
+      position: 0,
+      created_by_id: admin.id,
+    )
     Fabricate(
       :access_control_list_with_groups,
       target: board,
@@ -326,8 +325,7 @@ RSpec.describe Boards::TopicSync do
       MessageBus.track_publish("/boards/#{board.id}") { described_class.remove_topic(topic.id) }
 
     expect(messages.size).to eq(1)
-    expect(messages.first.data[:type]).to eq("card_deleted")
-    expect(messages.first.data[:card_id]).to eq(card.id)
+    expect(messages.first.data).to eq(type: "board_updated", client_id: nil)
     expect(messages.first.group_ids).to contain_exactly(read_group.id)
   end
 

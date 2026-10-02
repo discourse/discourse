@@ -34,6 +34,10 @@ el:
     discourse_events:
       title: "Συμβάντα"
       preferences:
+        reminders:
+          preferences:
+            notification: "Ειδοποίηση"
+            none: "Κανένα"
         all_events_description: "Όλες οι εκδηλώσεις του φόρουμ"
         my_events_description: "Εκδηλώσεις στις οποίες θα παραστείτε ή ενδιαφέρεστε"
       disable_holiday: "Απενεργοποίηση"

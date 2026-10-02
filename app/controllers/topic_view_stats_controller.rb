@@ -2,7 +2,8 @@
 
 class TopicViewStatsController < ApplicationController
   def index
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless topic
 
     from = 30.days.ago.to_date
     to = Date.today
@@ -15,7 +16,14 @@ class TopicViewStatsController < ApplicationController
       return
     end
 
-    stats = TopicViewStatsQuery.call(topic:, guardian:, from:, to:)
+    stats =
+      begin
+        TopicViewStatsQuery.call(topic:, guardian:, from:, to:)
+      rescue Discourse::InvalidAccess
+        raise if SiteSetting.detailed_404
+
+        raise Discourse::NotFound
+      end
 
     rows = []
 

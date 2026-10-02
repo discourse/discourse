@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  markdown_endpoints:
+    latest: "En son"
+    categories: "Kategoriler"
+    tags: "Etiketler"
+    previous_page: "Önceki sayfa"
+    next_page: "Sonraki sayfa"
+    replies: "Yanıtlar"
+    last_updated: "Son güncelleme"
+    event:
+      name: "Etkinlik"
+      location: "Konum"
+      link: "Bağlantı"
   mcp:
     errors:
       draft_too_long: "Taslak fazla uzun"
@@ -839,6 +851,7 @@ tr_TR:
       description_too_long:
         one: "Açıklama çok uzun (maksimum %{count} karakter)."
         other: "Açıklama çok uzun (maksimum %{count} karakter)."
+      special_category_permissions: "Bu önceden belirlenmiş bir kategoridir ve güvenlik ayarları düzenlenemez. Bu kategoriyi kullanmak istemiyorsanız, yeniden kullanmak yerine silin."
       permission_conflict: "Bir alt kategoriye erişmesine izin verilen herhangi bir grubun üst kategoriye erişmesine de izin verilmelidir. Aşağıdaki grupların alt kategorilerden birine erişimi bulunur, ancak üst kategoriye erişimi yoktur: %{group_names}."
       disallowed_topic_tags: "Bu konu, bu kategori tarafından izin verilmeyen etiketlere sahip: \"%{tags}\""
       disallowed_tags_generic: "Bu konu izin verilmeyen etiketlere sahip."
@@ -2830,6 +2843,7 @@ tr_TR:
     wrong_invite_code: "Girdiğiniz davet kodu yanlış."
     reserved_username: "Bu kullanıcı adına izin verilmiyor."
     missing_user_field: "Tüm gerekli kullanıcı alanlarını doldurmadınız"
+    missing_username: "Lütfen bir kullanıcı adı girin"
     auth_complete: "Kimlik doğrulama tamamlandı."
     click_to_continue: "Devam etmek için buraya tıklayın."
     already_logged_in: "Üzgünüz! Bu davet, halihazırda mevcut bir hesabı olmayan yeni kullanıcılara yöneliktir."
@@ -4281,7 +4295,7 @@ tr_TR:
       title: "Onaydan Sonra Kayıt"
       preview: "Yeni hesap onaylandı."
       subject_template: "%{site_name}'ta onaylandınız!"
-      text_body_template: "%{site_name}'a hoş geldiniz!\n\nBir personel, %{site_name}'daki hesabınızı onayladı.\n\nArtık yeni hesabınıza %{base_url} adresinden giriş yaparak erişebilirsiniz\n\nYukarıdaki bağlantı tıklanabilir değilse kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin. \n\n%{new_user_tips} \n\nHer zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nKeyfini çıkarın!\n"
+      text_body_template: "%{site_name}'a hoş geldiniz!\n\nBir personel, %{site_name}'daki hesabınızı onayladı.\n\nArtık yeni hesabınıza %{login_url} adresinden giriş yaparak erişebilirsiniz\n\nYukarıdaki bağlantı tıklanabilir değilse kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin. \n\n%{new_user_tips} \n\nHer zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz. \n\nKeyfini çıkarın!\n"
     signup_after_reject:
       title: "Reddedildikten Sonra Kayıt"
       subject_template: "%{site_name}'ta reddedildiniz"
@@ -5105,6 +5119,8 @@ tr_TR:
         title: "Gönderiyi geri yükle"
         description: "Bayrağa onay verme ve gönderiyi geri yükle"
         complete: "Gönderi geri yüklendi."
+      disagree_and_keep_deleted:
+        title: "Gönderiyi silinmiş olarak tut"
       disagree_bundle:
         title: "Hayır"
       disagree:

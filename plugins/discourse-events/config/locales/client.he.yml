@@ -27,6 +27,11 @@ he:
               label: מזהה נושא
     discourse_events:
       title: "אירועים"
+      preferences:
+        reminders:
+          preferences:
+            notification: "התראה"
+            none: "ללא"
       on_holiday: "בחג"
       disable_holiday: "השבתה"
       enable_holiday: "הפעלה"

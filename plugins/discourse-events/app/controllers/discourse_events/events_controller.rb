@@ -198,6 +198,7 @@ module DiscourseEvents
         :after,
         :order,
         :tags,
+        :no_tags,
         :search,
         :status,
         tags: [],

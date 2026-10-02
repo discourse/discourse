@@ -2,6 +2,7 @@ import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
+import { USER_ACCOUNT_TYPES } from "discourse/admin/lib/user-account-types";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -36,6 +37,21 @@ const ACTIVATION_FILTER_OPTIONS = [
   },
 ];
 
+const ACCOUNT_TYPE_FILTER_OPTIONS = [
+  {
+    value: USER_ACCOUNT_TYPES.HUMAN,
+    label: i18n("admin.users.account_type_filter.human"),
+  },
+  {
+    value: USER_ACCOUNT_TYPES.BOT,
+    label: i18n("admin.users.account_type_filter.bot"),
+  },
+  {
+    value: USER_ACCOUNT_TYPES.ALL,
+    label: i18n("admin.users.account_type_filter.all"),
+  },
+];
+
 export default <template>
   <DPageSubheader @titleLabel={{@controller.title}}>
     <:actions as |actions|>
@@ -61,16 +77,35 @@ export default <template>
 
   <DFilterControls
     @array={{@controller.users}}
-    @dropdownOptions={{if
-      @controller.showActivationFilter
-      ACTIVATION_FILTER_OPTIONS
+    @defaultDropdownValue={{if
+      @controller.showAccountTypeFilter
+      USER_ACCOUNT_TYPES.HUMAN
+      "all"
     }}
-    @dropdownValue={{or @controller.activation "all"}}
+    @dropdownFilterQueryParam={{if
+      @controller.showAccountTypeFilter
+      "account_type"
+      (if @controller.showActivationFilter "activation")
+    }}
+    @dropdownOptions={{if
+      @controller.showAccountTypeFilter
+      ACCOUNT_TYPE_FILTER_OPTIONS
+      (if @controller.showActivationFilter ACTIVATION_FILTER_OPTIONS)
+    }}
+    @dropdownValue={{if
+      @controller.showAccountTypeFilter
+      @controller.accountType
+      (or @controller.activation "all")
+    }}
     @initialTextFilter={{@controller.initialFilter}}
-    @inputPlaceholder={{@controller.searchHint}}
+    @inputPlaceholder={{i18n "search_hint"}}
     @loading={{@controller.refreshing}}
     @noResultsMessage={{i18n "search.no_results"}}
-    @onDropdownFilterChange={{@controller.onActivationChange}}
+    @onDropdownFilterChange={{if
+      @controller.showAccountTypeFilter
+      @controller.onAccountTypeChange
+      @controller.onActivationChange
+    }}
     @onResetFilters={{@controller.onResetFilters}}
     @onTextFilterChange={{@controller.onListFilterChange}}
     @textFilterQueryParam="filter"

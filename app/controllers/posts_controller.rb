@@ -240,6 +240,7 @@ class PostsController < ApplicationController
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
 
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
+        guardian.ensure_can_edit_topic!(post.topic)
         category = Category.find_by(id: changes[:category_id])
         if category || (changes[:category_id].to_i == 0)
           guardian.ensure_can_move_topic_to_category!(category)
@@ -714,6 +715,14 @@ class PostsController < ApplicationController
       raise Discourse::InvalidParameters.new(:post_type)
     end
 
+    if post_type == Post.types[:whisper] && !guardian.can_create_whisper?
+      raise Discourse::InvalidAccess.new(
+              "invalid_whisper_access",
+              nil,
+              custom_message: "invalid_whisper_access",
+            )
+    end
+
     post.revise(current_user, post_type: post_type)
 
     render body: nil
@@ -1097,9 +1106,12 @@ class PostsController < ApplicationController
   end
 
   def find_post_from_params_by_date
+    topic = Topic.with_deleted.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless guardian.can_see?(topic)
+
     by_date_finder =
       TopicView
-        .new(params[:topic_id], current_user)
+        .new(topic, current_user)
         .filtered_posts
         .where("created_at >= ?", Time.zone.parse(params[:date]))
         .order("created_at ASC")
@@ -1119,7 +1131,7 @@ class PostsController < ApplicationController
       raise Discourse::NotFound unless guardian.can_moderate_topic?(post.topic)
     end
 
-    guardian.ensure_can_see!(post)
+    raise Discourse::NotFound unless guardian.can_see?(post)
 
     post
   end

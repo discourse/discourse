@@ -2,6 +2,6 @@
 
 module JsonApiKit
   module Name
-    Sort = Data.define(:value, :type) { include Name }
+    Sort = Data.define(:value, :type) { include Name::ResourceScope }
   end
 end

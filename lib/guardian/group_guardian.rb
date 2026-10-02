@@ -10,17 +10,21 @@ module GroupGuardian
   # Edit authority for groups means membership changes only.
   # Automatic groups are not represented in the GROUP_USERS
   # table and thus do not allow membership changes.
-  def can_edit_group?(group)
-    !group.automatic &&
-      (can_admin_group?(group) || group.users.where("group_users.owner").include?(user))
+  def can_edit_group?(group, is_group_owner: nil)
+    return false if group.automatic
+    return true if can_admin_group?(group, is_group_owner:)
+    return is_group_owner unless is_group_owner.nil?
+
+    group.group_users.exists?(user:, owner: true)
   end
 
-  def can_admin_group?(group)
-    is_admin? ||
-      (
-        SiteSetting.moderators_manage_groups && is_moderator? && can_see?(group) &&
-          group.id != Group::AUTO_GROUPS[:admins]
-      )
+  def can_admin_group?(group, is_group_owner: false)
+    return true if is_admin?
+    return false unless SiteSetting.moderators_manage_groups && is_moderator?
+    return false if group.id == Group::AUTO_GROUPS[:admins]
+    return true if is_group_owner
+
+    can_see?(group)
   end
 
   def can_see_group_messages?(group)

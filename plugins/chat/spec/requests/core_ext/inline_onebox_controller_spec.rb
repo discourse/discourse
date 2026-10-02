@@ -18,15 +18,21 @@ RSpec.describe InlineOneboxController do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.enable_public_channels = true
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
     sign_in(current_user)
   end
 
   it "does not disclose a private thread title through a public channel URL" do
-    get "/inline-onebox.json",
-        params: {
-          urls: ["#{Discourse.base_url}/chat/c/-/#{public_channel.id}/t/#{private_thread.id}"],
-        }
+    get "/chat/api/channels/#{private_channel.id}/threads/#{private_thread.id}"
+
+    expect(response.status).to eq(403)
+
+    chat_thread_url = "#{Discourse.base_url}/chat/c/-/#{public_channel.id}/t/#{private_thread.id}"
+    InlineOneboxer.invalidate(chat_thread_url)
+
+    get "/inline-onebox.json", params: { urls: [chat_thread_url] }
 
     expect(response.status).to eq(200)
     expect(response.body).not_to include(private_thread.title)

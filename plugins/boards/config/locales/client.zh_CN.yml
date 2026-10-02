@@ -132,6 +132,7 @@ zh_CN:
         created_by: "创建者"
         show_older_cards: "显示 %{count} 旧卡片"
         errors:
+          category_unavailable: "该目标类别已不再可用。请在创建主题前更新看板或列设置。"
           acl_update_failed: "更新看板权限失败。"
           acl_create_failed: "创建看板权限失败。"
       manage:

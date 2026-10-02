@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 sq:
+  markdown_endpoints:
+    latest: "Më të fundit"
+    categories: "Categories"
+    tags: "Etiketat"
+    previous_page: "Faqe mëparshme"
+    next_page: "Faqja tjetër"
+    replies: "Përgjigjet"
+    last_updated: "Përditësimi i fundit"
+    event:
+      location: "Vendndodhja"
   mcp:
     errors:
       draft_too_long: "Mesazhi shembull është shumë i gjatë"
@@ -958,6 +968,7 @@ sq:
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "Ky emër nuk lejohet."
+    missing_username: "Ju lutemi shkruani një emër përdoruesi"
   admin:
     email:
       sent_test: "u dërgua!"

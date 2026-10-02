@@ -36,6 +36,8 @@ cs:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Připomenutí události"
   site_settings:
     map_events_to_color: "Každému štítku nebo kategorii přiřadit barvu."
     map_events_title: "Přepíše „Události“ v názvu postranního panelu „Nadcházející události“ podle kategorie."
@@ -65,6 +67,17 @@ cs:
     sidebar_show_upcoming_events: "Zobrazit odkaz na nadcházející události na postranním panelu pod položkou 'Více'."
     calendar_first_day_of_week: "Nastavte první den v týdnu pro zobrazení kalendáře. Možnosti jsou sobota, neděle nebo pondělí."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} brzy začne"
+        ongoing: "%{title} probíhá"
+        after: "%{title} skončila"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  a %{count} další"
+        few: "  a %{count} další"
+        many: "  a %{count} dalších"
+        other: "  a %{count} dalších"
     category_type:
       default_calendar_view:
         day: "Den"

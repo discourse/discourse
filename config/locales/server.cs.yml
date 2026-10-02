@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 cs:
+  markdown_endpoints:
+    latest: "Nejnovější"
+    categories: "Kategorie"
+    tags: "Tagy"
+    previous_page: "Předchozí strana"
+    next_page: "Další strana"
+    replies: "Odpovědi"
+    last_updated: "Poslední aktualizace"
+    event:
+      name: "Událost"
+      location: "Poloha"
+      link: "Odkaz"
   mcp:
     errors:
       draft_too_long: "Koncept je příliš dlouhý"
@@ -928,6 +940,7 @@ cs:
         few: "Popis je příliš dlouhý (maximálně %{count} znaky)."
         many: "Popis je příliš dlouhý (maximálně %{count} znaků)."
         other: "Popis je příliš dlouhý (maximálně %{count} znaků)."
+      special_category_permissions: "Tato kategorie je přednastavená a její nastavení zabezpečení nelze změnit. Pokud tuto kategorii nechcete používat, nesnažte se ji měnit, ale odstraňte ji."
       permission_conflict: "Každá skupina, která má přístup k podkategorii, musí mít také přístup k nadřazené kategorii. Následující skupiny mají přístup k jedné z podkategorií, ale nemají přístup k nadřazené kategorii: %{group_names}."
       disallowed_topic_tags: "Toto téma obsahuje štítky, které tato kategorie nepovoluje: '%{tags}'"
       disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
@@ -2590,6 +2603,7 @@ cs:
     wrong_invite_code: "Zadaný kód pozvánky byl nesprávný."
     reserved_username: "Toto uživatelské jméno není povoleno."
     missing_user_field: "Nevyplnili jste všechna požadovaná uživatelská pole"
+    missing_username: "Zadejte uživatelské jméno"
     auth_complete: "Ověřování je dokončeno."
     click_to_continue: "Pro pokračování klikněte zde."
     already_logged_in: "Promiňte! Tato pozvánka je určena pro nové uživatele, kteří ještě nemají existující účet."
@@ -3729,7 +3743,7 @@ cs:
         Člen redakce schválil váš účet do %{site_name}.
 
         Ke svému novému účtu se nyní můžete přihlásit na adrese:
-        %{base_url}
+        %{login_url}
 
         Pokud na výše uvedený odkaz nelze kliknout, zkuste jej zkopírovat a vložit do adresního řádku webového prohlížeče.
 
@@ -4473,6 +4487,8 @@ cs:
       disagree_and_restore:
         title: "Obnovit příspěvek"
         complete: "Příspěvek obnoven."
+      disagree_and_keep_deleted:
+        title: "Ponechat příspěvek smazaný"
       disagree_bundle:
         title: "Ne"
       disagree:

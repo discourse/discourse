@@ -29,7 +29,6 @@ pl_PL:
         description: "Napisz niestandardowe zapytanie SQL, aby wyświetlić informacje specyficzne dla Twojej społeczności."
     explorer:
       resize_editor: "Zmień rozmiar edytora zapytań"
-      default_query: "Domyślny"
       default_query_notice: "To jest zapytanie domyślne, którego nie można edytować. Aby edytować zapytanie SQL, utwórz nowe zapytanie."
       view_query: "Widok"
       queries: "Zapytania"
@@ -133,6 +132,8 @@ pl_PL:
         other: "Wyświetlanie %{count} najlepszych wyników."
       query_name: "Zapytanie"
       query_groups: "Grupy"
+      query_tags: "Tagi"
+      default_tag_mandatory: "Domyślnego tagu nie można usunąć z zapytań pakietowych."
       link: "Link do"
       report_name: "Zgłoszenie"
       query_description: "Opis"
@@ -142,6 +143,8 @@ pl_PL:
       save_params: "Ustaw wartości domyślne"
       reset_params: "Przywróć"
       search_placeholder: "Wyszukiwanie..."
+      filter_by_tag: "Filtruj według tagu"
+      filter_by_this_tag: "Filtruj listę według tego tagu"
       no_search_results: "Nie znaleziono żadnych wyników."
       form:
         errors:

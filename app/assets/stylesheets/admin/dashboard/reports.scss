@@ -15,6 +15,21 @@
 
     @include viewport.until(sm) {
       padding-inline: 0;
+      padding-bottom: 0;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        background: linear-gradient(
+          to bottom,
+          rgb(var(--secondary-rgb), 0),
+          rgb(var(--secondary-rgb), 0.5)
+        );
+        height: var(--space-2);
+      }
     }
 
     &.--wide {
@@ -120,6 +135,7 @@
   }
 
   &__header {
+    position: relative;
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -127,6 +143,21 @@
 
     @include viewport.until(sm) {
       padding-inline: var(--space-4);
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: calc(var(--space-4) * -1);
+        left: 0;
+        right: 0;
+        background: linear-gradient(
+          to top,
+          rgb(var(--secondary-rgb), 0),
+          rgb(var(--secondary-rgb), 0.5)
+        );
+        height: var(--space-2);
+        z-index: 1;
+      }
     }
   }
 
@@ -166,7 +197,7 @@
   }
 
   &__chart {
-    overflow: hidden;
+    overflow: auto;
     flex: 1 1 auto;
     min-height: 0;
 

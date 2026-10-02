@@ -27,6 +27,31 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     expect(names.last).to eq("migrations/emoji-data")
   end
 
+  # The converter loads the bundle from several threads, and Ruby doesn't
+  # allow a block-form `chdir` while another thread is inside one.
+  it "loads while another thread holds a working-directory block" do
+    bundle
+    loaded = nil
+    Dir.mktmpdir do |dir|
+      Dir.chdir(dir) { loaded = Thread.new { described_class.load_or_build }.value }
+      # rubocop:enable Discourse/NoChdir
+    end
+
+    expect(loaded.entries.size).to eq(bundle.entries.size)
+  end
+
+  it "names the missing frontend dependency instead of failing inside the build" do
+    stub_const(
+      "#{described_class}::PLUGIN_VENDOR_FILES",
+      ["frontend/discourse/node_modules/not-installed/index.js"],
+    )
+
+    expect { described_class.load_or_build(cache_dir: Dir.mktmpdir) }.to raise_error(
+      described_class::BuildError,
+      %r{not-installed/index\.js.*pnpm install},
+    )
+  end
+
   it "caches the built bundle on disk and reuses it" do
     bundle
     cache_dir =

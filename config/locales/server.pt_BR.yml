@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  markdown_endpoints:
+    latest: "Últimos"
+    categories: "Categorias"
+    tags: "Tags"
+    previous_page: "Página anterior"
+    next_page: "Próxima página"
+    replies: "Respostas"
+    last_updated: "Última atualização"
+    event:
+      name: "Evento"
+      location: "Local"
+      link: "Link"
   mcp:
     errors:
       draft_too_long: "O rascunho é muito longo"
@@ -832,6 +844,7 @@ pt_BR:
       description_too_long:
         one: "A descrição é longa demais (deve ter no máximo %{count} caractere)."
         other: "A descrição é longa demais (deve ter no máximo %{count} caracteres)."
+      special_category_permissions: "Esta é uma categoria pré-propagada, e as configurações de segurança não podem ser editadas. Se você não quer usar esta categoria, exclua em vez de reaproveitar."
       permission_conflict: "Qualquer grupo que tenha permissão para acessar uma subcategoria também deve ter permissão para acessar a categoria pai. Os grupos a seguir têm acesso a uma das subcategorias, mas não têm acesso à categoria pai: %{group_names}."
       disallowed_topic_tags: "Este tópico tem etiquetas não permitidas por esta categoria: \"%{tags}\""
       disallowed_tags_generic: "Este tópico tem etiquetas não permitidas."
@@ -2786,6 +2799,7 @@ pt_BR:
     wrong_invite_code: "O código de convite inserido estava incorreto."
     reserved_username: "Este nome de usuário(a) não é permitido."
     missing_user_field: "Você não completou todos campos de usuário(a) obrigatórios"
+    missing_username: "Digite um nome do(a) usuário(a)"
     auth_complete: "A autenticação está completa."
     click_to_continue: "Clique aqui para continuar."
     already_logged_in: "Desculpe! Este convite foi elaborado para usuários(as) novos(as), que ainda nao têm uma conta ativa."
@@ -4127,7 +4141,7 @@ pt_BR:
         Um membro da equipe aprovou sua conta em %{site_name}.
 
         Agora você pode acessar sua nova conta entrando em:
-        %{base_url}
+        %{login_url}
 
         Se não for possível clicar no link acima, tente copiar e colar na barra de endereço do seu navegador.
 
@@ -4963,6 +4977,8 @@ pt_BR:
         title: "Restaurar postagem"
         description: "Discordar da denúncia e restaurar a publicação."
         complete: "Postagem restaurada."
+      disagree_and_keep_deleted:
+        title: "Manter a postagem excluída"
       disagree_bundle:
         title: "Não"
       disagree:

@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 ug:
+  markdown_endpoints:
+    latest: "ئاخىرقى"
+    categories: "سەھىپە"
+    tags: "بەلگە"
+    replies: "جاۋاب"
+    last_updated: "ئاخىرقى يېڭىلانغان ۋاقىت"
+    event:
+      location: "ئورنى"
+      link: "ئۇلانما"
   mcp:
     errors:
       draft_too_long: "دەسلەپكى نۇسخا بەك ئۇزۇن"
@@ -2671,6 +2680,7 @@ ug:
     wrong_invite_code: "سىز كىرگۈزگەن تەكلىپ كودى خاتا."
     reserved_username: "ئۇ ئىشلەتكۈچى نامىغا يول قويۇلمايدۇ."
     missing_user_field: "چوقۇم تولدۇرۇشقا تېگىشلىك ئىشلەتكۈچى بۆلەكلىرىنى تاماملىمىدىڭىز"
+    missing_username: "ئىشلەتكۈچى ئاتىنى كىرگۈزۈڭ"
     auth_complete: "سالاھىيەت دەلىللەش تاماملاندى."
     click_to_continue: "بۇ جاي چېكىلسە داۋاملىشىدۇ."
     already_logged_in: "كەچۈرۈڭ! بۇ تەكلىپ نۆۋەتتە تېخى ھېساباتى يوق يېڭى ئىشلەتكۈچىنى نىشانلىغان."
@@ -3928,7 +3938,7 @@ ug:
         باشقۇرغۇچى ئەزا %{site_name} دىكى ھېساباتىڭىزنى تەستىقلايدۇ.
 
         سىزھازىر تىزىمغا كىرىپ يېڭى ھېساباتىڭىزنى زىيارەت قىلالايسىز:
-        %{base_url}
+        %{login_url}
 
         ئەگەر ئۈستىدىكى ئۇلانمىنى چەككىلى بولمىسا، ئۇنى كۆچۈرۈپ تور كۆرگۈڭىزنىڭ ئادرېس بالدىقىغا چاپلاڭ.
 
@@ -4699,6 +4709,8 @@ ug:
       disagree_and_restore:
         title: "يازمىنى ئەسلىگە كەلتۈرىدۇ"
         complete: "يازما ئەسلىگە كەلتۈرۈلدى."
+      disagree_and_keep_deleted:
+        title: "يازما ئۆچۈرۈشنى ساقلاپ قال"
       disagree_bundle:
         title: "ياق"
       disagree:

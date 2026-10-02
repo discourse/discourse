@@ -8,6 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import getURL from "discourse/lib/get-url";
+import { applyQueryParams } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export default class PluginsExplorerController extends Controller {
@@ -20,22 +22,28 @@ export default class PluginsExplorerController extends Controller {
   @tracked params;
   @tracked loading = false;
   @tracked searchLoading = false;
+  @tracked queryTags = [];
+  @tracked tags = "";
 
-  queryParams = ["id"];
+  queryParams = ["id", "tags"];
   explain = false;
   acceptedImportFileTypes = ["application/json"];
   order = null;
   form = null;
+  #latestQueryRequest;
   _currentFilter = "";
 
   get parsedParams() {
     return this.params ? JSON.parse(this.params) : null;
   }
 
-  get _fetchParams() {
+  get fetchParams() {
     const params = {};
     if (this._currentFilter) {
       params.filter = this._currentFilter;
+    }
+    if (this.currentTags.length) {
+      params.tags = this.currentTags.join(",");
     }
     if (this.sortByProperty !== "last_run_at") {
       params.order = this.sortByProperty;
@@ -44,6 +52,22 @@ export default class PluginsExplorerController extends Controller {
       params.ascending = "true";
     }
     return params;
+  }
+
+  get hasTagFilter() {
+    return this.currentTags.length > 0;
+  }
+
+  get currentTags() {
+    return this.tags ? this.tags.split(",") : [];
+  }
+
+  get textFilter() {
+    return this._currentFilter;
+  }
+
+  get tagSelection() {
+    return this.currentTags.map((tag) => ({ id: tag, name: tag }));
   }
 
   addCreatedRecord(record) {
@@ -83,13 +107,52 @@ export default class PluginsExplorerController extends Controller {
   @action
   onTextFilterChange(event) {
     this._currentFilter = event.target?.value || "";
+    this.#latestQueryRequest = null;
     this.searchLoading = true;
     discourseDebounce(this, this._fetchQueries, INPUT_DELAY);
   }
 
   @action
+  async loadTags(searchTerm) {
+    const term = (searchTerm || "").toLowerCase();
+    return this.queryTags
+      .filter((tag) => tag.toLowerCase().includes(term))
+      .map((tag) => ({ id: tag, name: tag }));
+  }
+
+  @action
+  onTagFilterChange(selection) {
+    this.tags = selection.map((tag) => tag.name).join(",");
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  addTagFilter(tagName, event) {
+    event?.preventDefault();
+
+    if (this.currentTags.includes(tagName)) {
+      return;
+    }
+
+    this.tags = [...this.currentTags, tagName].join(",");
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  tagFilterHref(tagName) {
+    return getURL(
+      applyQueryParams(this.router.urlFor("adminPlugins.show.explorer.index"), {
+        tags: tagName,
+      })
+    );
+  }
+
+  @action
   onResetFilters() {
     this._currentFilter = "";
+    this.tags = "";
     this.searchLoading = true;
     this._fetchQueries();
   }
@@ -145,25 +208,37 @@ export default class PluginsExplorerController extends Controller {
   }
 
   async _fetchQueries() {
+    const model = this.model;
+    const request = (this.#latestQueryRequest = {});
+
     try {
       const result = await ajax(
         "/admin/plugins/discourse-data-explorer/queries.json",
-        { data: this._fetchParams }
+        { data: this.fetchParams }
       );
+
+      if (request !== this.#latestQueryRequest || model !== this.model) {
+        return;
+      }
 
       const queries = result.queries.map((q) =>
         this.store.createRecord("query", q)
       );
 
-      this.model.content.splice(0, this.model.content.length, ...queries);
-      this.model.totalRows = result.total_rows_queries || queries.length;
-      this.model.loadMoreUrl = result.load_more_queries || null;
+      model.content.splice(0, model.content.length, ...queries);
+      model.totalRows = result.total_rows_queries || queries.length;
+      model.loadMoreUrl = result.load_more_queries || null;
+      this.queryTags = result.extras?.tags ?? this.queryTags;
 
       this._setGroupNames(queries);
     } catch (e) {
-      popupAjaxError(e);
+      if (request === this.#latestQueryRequest && model === this.model) {
+        popupAjaxError(e);
+      }
     } finally {
-      this.searchLoading = false;
+      if (request === this.#latestQueryRequest) {
+        this.searchLoading = false;
+      }
     }
   }
 

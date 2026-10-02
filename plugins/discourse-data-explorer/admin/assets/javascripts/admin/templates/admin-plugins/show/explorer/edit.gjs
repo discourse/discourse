@@ -20,6 +20,7 @@ import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse
 import QueryResultDownloadButtons from "discourse/plugins/discourse-data-explorer/discourse/components/query-result-download-buttons";
 import QueryResultsWrapper from "discourse/plugins/discourse-data-explorer/discourse/components/query-results-wrapper";
 import QueryRunSplitButton from "discourse/plugins/discourse-data-explorer/discourse/components/query-run-split-button";
+import QueryTagChooser from "discourse/plugins/discourse-data-explorer/discourse/components/query-tag-chooser";
 
 const PaneSeparator = <template>
   <DResizeSeparator
@@ -96,15 +97,31 @@ export default class QueriesEdit extends Component {
         {{/if}}
 
         {{#unless @controller.model.destroyed}}
-          <div class="groups">
-            <span class="label">{{i18n "explorer.allow_groups"}}</span>
-            <span>
+          <div class="query-edit__metadata-fields">
+            <div class="query-edit__metadata-field">
+              <span class="query-edit__metadata-label">
+                {{i18n "explorer.allow_groups"}}
+              </span>
               <GroupChooser
                 @content={{@controller.groupOptions}}
                 @onChange={{@controller.updateGroupIds}}
                 @value={{@controller.model.group_ids}}
               />
-            </span>
+            </div>
+
+            <div class="query-edit__metadata-field">
+              <span class="query-edit__metadata-label">
+                {{i18n "explorer.query_tags"}}
+              </span>
+              <QueryTagChooser
+                @allowDefaultTag={{@controller.model.is_default}}
+                @availableTags={{@controller.availableTags}}
+                @mandatoryValues={{@controller.mandatoryTags}}
+                @mandatoryValueTitle={{i18n "explorer.default_tag_mandatory"}}
+                @onChange={{@controller.updateTags}}
+                @value={{@controller.model.tags}}
+              />
+            </div>
           </div>
         {{/unless}}
 

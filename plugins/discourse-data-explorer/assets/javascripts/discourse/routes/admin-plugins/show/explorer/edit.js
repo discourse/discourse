@@ -14,43 +14,35 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
     },
   };
 
-  model(params, transition) {
-    const groupPromise = ajax(
-      "/admin/plugins/discourse-data-explorer/groups.json"
-    );
-    const schemaPromise = ajax(
-      "/admin/plugins/discourse-data-explorer/schema.json",
-      {
-        cache: true,
-      }
-    );
-
+  async model(params, transition) {
     const data = {};
     const urlParams = transition.to.queryParams.params;
     if (urlParams) {
       data.params = urlParams;
     }
-    const queryPromise = ajax(
-      `/admin/plugins/discourse-data-explorer/queries/${params.query_id}`,
-      { data }
+
+    const [groups, schema, availableTags, queryResponse] = await Promise.all([
+      ajax("/admin/plugins/discourse-data-explorer/groups.json"),
+      ajax("/admin/plugins/discourse-data-explorer/schema.json", {
+        cache: true,
+      }),
+      ajax("/admin/plugins/discourse-data-explorer/queries/tags.json"),
+      ajax(
+        `/admin/plugins/discourse-data-explorer/queries/${params.query_id}`,
+        { data }
+      ),
+    ]);
+    const groupNames = {};
+    groups.forEach((group) => {
+      groupNames[group.id] = group.name;
+    });
+    const model = this.store.createRecord("query", queryResponse.query);
+    model.set(
+      "group_names",
+      (model.group_ids || []).map((id) => groupNames[id])
     );
 
-    return groupPromise.then((groups) => {
-      let groupNames = {};
-      groups.forEach((g) => {
-        groupNames[g.id] = g.name;
-      });
-      return schemaPromise.then((schema) => {
-        return queryPromise.then((queryResponse) => {
-          const model = this.store.createRecord("query", queryResponse.query);
-          model.set(
-            "group_names",
-            (model.group_ids || []).map((id) => groupNames[id])
-          );
-          return { model, schema, groups };
-        });
-      });
-    });
+    return { model, schema, groups, availableTags };
   }
 
   setupController(controller, model, transition) {

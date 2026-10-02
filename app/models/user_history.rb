@@ -14,7 +14,13 @@ class UserHistory < ActiveRecord::Base
 
   # Subjects logged alongside the :admin_onboarding_step_completed action, one
   # per step of the admin onboarding panel.
-  ADMIN_ONBOARDING_STEPS = %w[select_theme invite_collaborators start_posting].freeze
+  ADMIN_ONBOARDING_STEPS = %w[select_theme start_posting invite_collaborators].freeze
+  ADMIN_ONBOARDING_TOPIC_OPTIONS = %w[
+    plan_categories
+    plan_invites
+    introduce_yourself
+    write_your_own
+  ].freeze
 
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000

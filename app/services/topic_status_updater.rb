@@ -4,16 +4,27 @@ TopicStatusUpdater =
   Struct.new(:topic, :user) do
     def update!(status, enabled, opts = {})
       status = Status.new(status, enabled)
+      previous_pin = topic.slice(:pinned_at, :pinned_globally, :pinned_until) if status.pinned? ||
+        status.pinned_globally?
 
       @topic_timer = topic.public_topic_timer
 
-      updated = nil
-      Topic.transaction do
+      Topic.transaction(requires_new: true) do
         updated = change(status, opts)
         create_moderator_post_for(status, opts) if updated
-      end
 
-      updated
+        changed = previous_pin ? previous_pin != topic.slice(*previous_pin.keys) : updated
+        event_status = status.name
+        if previous_pin && status.disabled?
+          event_status = previous_pin["pinned_globally"] ? "pinned_globally" : "pinned"
+        end
+
+        if changed
+          DiscourseEvent.trigger(:topic_status_updated, topic, event_status, status.enabled?)
+        end
+
+        updated
+      end
     end
 
     private
@@ -70,11 +81,12 @@ TopicStatusUpdater =
       end
 
       if @topic_timer
-        if status.manually_closing_topic? || status.closing_topic?
-          topic.delete_topic_timer(TopicTimer.types[:close])
-          topic.delete_topic_timer(TopicTimer.types[:silent_close])
-        elsif status.manually_opening_topic? || status.opening_topic?
-          topic.delete_topic_timer(TopicTimer.types[:open])
+        reason = status.autoclosed? ? :completed : :cancelled
+        if status.closing_topic?
+          topic.delete_topic_timer(TopicTimer.types[:close], by_user: user, reason: reason)
+          topic.delete_topic_timer(TopicTimer.types[:silent_close], by_user: user, reason: reason)
+        elsif status.opening_topic?
+          topic.delete_topic_timer(TopicTimer.types[:open], by_user: user, reason: reason)
           topic.inherit_auto_close_from_category
         end
       end
@@ -177,10 +189,6 @@ TopicStatusUpdater =
 
         def manually_closing_topic?
           closed? && enabled?
-        end
-
-        def manually_opening_topic?
-          closed? && disabled?
         end
       end
   end

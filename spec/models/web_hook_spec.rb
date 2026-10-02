@@ -196,8 +196,8 @@ RSpec.describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(topic_id)
 
-      %w[archived closed visible].each do |status|
-        post.topic.update_status(status, true, topic.user)
+      { "archived" => true, "closed" => true, "visible" => false }.each do |status, enabled|
+        post.topic.update_status(status, enabled, topic.user)
         job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
         expect(job_args["event_name"]).to eq("topic_#{status}_status_updated")

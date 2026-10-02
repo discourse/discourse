@@ -43,6 +43,15 @@ RSpec.describe Voice::PageController do
       expect(response.status).to eq(200)
     end
 
+    it "renders the app shell for an invite link when the inviter's username contains a period" do
+      staff.update!(username: "alice.smith")
+      sign_in(user)
+
+      get "/voice/r/#{room.slug}/invited-by/#{staff.username_lower}"
+
+      expect(response.status).to eq(200)
+    end
+
     it "returns 404 for an unknown slug" do
       sign_in(user)
 

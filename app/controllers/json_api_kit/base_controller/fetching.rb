@@ -19,7 +19,7 @@ module JsonApiKit
 
       private
 
-      def client = Client.new(guardian:, glossary:, urls:)
+      def client = Client.new(guardian:, edition:, urls:)
 
       def urls
         Urls.new(

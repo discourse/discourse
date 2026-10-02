@@ -305,6 +305,23 @@ RSpec.describe Admin::ApiController do
           expect(scope.allowed_parameters["topic_id"]).to contain_exactly("55")
         end
 
+        it "creates a scope with allowed path parameters" do
+          post "/admin/api/keys.json",
+               params: {
+                 key: {
+                   description: "path restricted key",
+                   scopes: [{ scope_id: "topics:delete", topic_id: "55" }],
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          scope = ApiKeyScope.find_by(api_key_id: response.parsed_body.dig("key", "id"))
+          serialized_scope = response.parsed_body.dig("key", "api_key_scopes", 0)
+
+          expect(scope.allowed_parameters).to eq("topic_id" => ["55"])
+          expect(serialized_scope["parameters"]).to eq(["topic_id"])
+        end
+
         it "creates an scope for /logs" do
           post "/admin/api/keys.json",
                params: {
@@ -320,6 +337,7 @@ RSpec.describe Admin::ApiController do
 
           expect(scope.resource).to eq("logs")
           expect(scope.action).to eq("messages")
+          expect(data.dig("key", "api_key_scopes", 0, "parameters")).to eq([])
 
           api_key = data.dig("key", "key")
           post "/logs/messages.json", headers: { "Api-Key": api_key, "Api-Username": "system" }
@@ -479,6 +497,17 @@ RSpec.describe Admin::ApiController do
           "wordpress",
           "logs",
         )
+
+        topic_delete_scope = scopes["topics"].find { it["key"] == "delete" }
+        topic_update_scope = scopes["topics"].find { it["key"] == "update" }
+        topic_write_scope = scopes["topics"].find { it["key"] == "write" }
+        global_read_scope = scopes["global"].find { it["key"] == "read" }
+
+        expect(topic_delete_scope).to include("params" => ["topic_id"])
+        expect(topic_update_scope).to include("params" => %w[category_id topic_id])
+        expect(topic_write_scope).to include("params" => ["topic_id"])
+        expect(global_read_scope).to include("params" => nil)
+        expect(topic_delete_scope).not_to have_key("path_params")
 
         topic_routes = [
           "/t/:id (GET)",

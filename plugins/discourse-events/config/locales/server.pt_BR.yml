@@ -37,6 +37,8 @@ pt_BR:
         ``` texto
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Lembrete de evento"
   site_settings:
     map_events_to_color: "Atribua uma cor a cada etiqueta ou categoria."
     map_events_title: "Substitui \"Eventos\" no título da barra lateral \"Próximos eventos\" por categoria."
@@ -66,6 +68,15 @@ pt_BR:
     sidebar_show_upcoming_events: "Mostre o link dos próximos eventos na barra lateral, em \"Mais\"."
     calendar_first_day_of_week: "Escolher o primeiro dia da semana do calendário. As opções são sábado, domingo ou segunda-feira."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} está prestes a começar"
+        ongoing: "%{title} está em andamento"
+        after: "%{title} terminou"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  e %{count} outro"
+        other: "  e %{count} outros"
     category_type:
       default_calendar_view:
         day: "Dia"

@@ -257,7 +257,7 @@ end
 #  id                   :bigint           not null, primary key
 #  archived             :boolean          default(FALSE), not null
 #  archived_at          :datetime
-#  card_style           :integer          default("detailed"), not null
+#  card_style           :integer          default(0), not null
 #  category_ids         :integer          default([]), not null, is an Array
 #  name                 :string           not null
 #  original_slug        :string

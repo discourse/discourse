@@ -105,13 +105,14 @@ module Patreon
             end
 
             pledges[patron_id] = attrs["currently_entitled_amount_cents"]
+            users[patron_id] = attrs["email"].downcase if attrs["email"].present?
             declines[patron_id] = attrs["last_charge_date"] if attrs["last_charge_status"] ==
               "Declined"
           end
 
           (member_data["included"] || []).each do |entry|
             if entry["type"] == "user" && entry["attributes"]["email"].present?
-              users[entry["id"]] = entry["attributes"]["email"].downcase
+              users[entry["id"]] ||= entry["attributes"]["email"].downcase
             end
           end
         end

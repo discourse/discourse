@@ -93,6 +93,11 @@ zh_TW:
                 slower: "慢 %{duration}"
                 tooltip: "平均回覆時間趨勢。"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "已移除"
+        tag_names: "標簽"
+        tag_names_description: "只針對至少具有其中一個標籤的主題觸發"
     notifications:
       alt:
         solved:

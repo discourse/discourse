@@ -422,6 +422,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
             id: 12355,
             name: "Busy",
             slug: "busy",
+            topic_count: 1234,
             topic_url: "/t/about-the-busy-category/700",
           },
         ],
@@ -485,6 +486,10 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
         "About the Busy category",
         "leaves out the about topic"
       );
+    assert
+      .dom(".category-card__view-all")
+      .hasAttribute("href", "/c/busy/12355")
+      .hasText("View all topics (1.2k)");
     assert.strictEqual(
       latestRequests[0]?.per_page,
       "4",
@@ -498,6 +503,52 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       .dom(".category-card__topics .featured-topic")
       .exists({ count: 2 }, "the reopened card lists the topics");
     assert.strictEqual(latestRequests.length, 1, "the list is cached");
+  });
+
+  test("omits the view all link when every topic is already listed", async function (assert) {
+    this.site.set("lazy_load_categories", true);
+
+    pretender.get("/categories/find", () =>
+      response({
+        categories: [
+          { id: 12356, name: "Quiet", slug: "quiet", topic_count: 3 },
+        ],
+      })
+    );
+    pretender.get("/c/quiet/12356/l/latest.json", () =>
+      response({
+        topic_list: {
+          topics: [
+            {
+              id: 801,
+              slug: "only-topic",
+              fancy_title: "Only topic",
+              bumped_at: "2026-09-01T00:00:00.000Z",
+              posters: [],
+            },
+          ],
+        },
+      })
+    );
+
+    await render(
+      <template>
+        <div id="main-outlet">
+          <a
+            class="hashtag-cooked"
+            data-id="12356"
+            data-type="category"
+            href="/c/quiet/12356"
+          >#quiet</a>
+        </div>
+        <CategoryCardContents />
+      </template>
+    );
+
+    await click('a.hashtag-cooked[data-type="category"]');
+
+    assert.dom(".category-card__topics .featured-topic").exists({ count: 1 });
+    assert.dom(".category-card__view-all").doesNotExist();
   });
 });
 

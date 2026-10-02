@@ -13,6 +13,11 @@ hy:
             topic_id:
               label: Թեմայի ID
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Ծանուցում"
+            none: "Ոչ մի"
       disable_holiday: "Անջատել"
       enable_holiday: "Միացնել"
       date: "Ամսաթիվ"

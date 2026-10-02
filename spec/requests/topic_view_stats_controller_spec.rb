@@ -9,11 +9,31 @@ describe TopicViewStatsController do
     expect(response.status).to eq(403)
   end
 
-  it "does not allow access to private topics" do
+  it "returns the same not found response for inaccessible and nonexistent topics" do
+    SiteSetting.detailed_404 = false
     topic.category.update!(read_restricted: true)
 
     get "/t/#{topic.id}/view-stats.json"
+
+    expect(response.status).to eq(404)
+    inaccessible_topic_response = response.parsed_body
+
+    get "/t/#{topic.id + 1_000_000}/view-stats.json"
+
+    expect(response.status).to eq(404)
+    expect(response.parsed_body).to eq(inaccessible_topic_response)
+  end
+
+  it "returns an access error for private topics when detailed 404 errors are enabled" do
+    SiteSetting.detailed_404 = true
+    topic.category.update!(read_restricted: true)
+
+    get "/t/#{topic.id}/view-stats.json"
+
     expect(response.status).to eq(403)
+    expect(response.parsed_body).to include(
+      "errors" => ["You are not permitted to view the requested resource."],
+    )
   end
 
   it "returns errors for invalid parameters" do

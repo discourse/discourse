@@ -40,6 +40,8 @@ nl:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Evenementherinnering"
   site_settings:
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
@@ -69,6 +71,15 @@ nl:
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
     calendar_first_day_of_week: "Stel de eerste dag van de week in voor de kalenderweergave. Opties zijn zaterdag, zondag en maandag."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} gaat beginnen"
+        ongoing: "%{title} is gaande"
+        after: "%{title} is afgelopen"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  en %{count} ander"
+        other: "  en %{count} anderen"
     category_type:
       default_calendar_view:
         day: "Dag"

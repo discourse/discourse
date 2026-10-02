@@ -10,8 +10,8 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -419,7 +419,7 @@ export default class VoiceRoomPage extends Component {
     }
 
     // Nothing to return to, e.g. the room page was opened directly.
-    this.router.replaceWith(`discovery.${defaultHomepage()}`);
+    this.router.replaceWith(homepageNavigationDestination());
   }
 
   @action

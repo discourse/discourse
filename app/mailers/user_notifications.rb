@@ -30,10 +30,18 @@ class UserNotifications < ActionMailer::Base
         locale: locale,
       )
 
+    login_url =
+      if !user.has_password? && Invite.email_code_enabled?(user)
+        "#{Discourse.base_url}/login?mode=code"
+      else
+        Discourse.base_url
+      end
+
     build_email(
       user.email,
       template: "user_notifications.signup_after_approval",
       locale: locale,
+      login_url:,
       new_user_tips: tips,
       recipient_user: user,
     )
@@ -719,7 +727,7 @@ class UserNotifications < ActionMailer::Base
           invite_template,
           username: username,
           group_name: group_name,
-          topic_title: gsub_emoji_to_unicode(title),
+          topic_title: ERB::Util.html_escape(gsub_emoji_to_unicode(title)),
           topic_excerpt: topic_excerpt,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
