@@ -325,7 +325,7 @@ RSpec.configure do |config|
     else
       page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
     end
-
+  ensure
     # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
     BlockRequestsMiddleware.block_requests!
 

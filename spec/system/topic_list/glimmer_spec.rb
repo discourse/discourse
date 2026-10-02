@@ -61,7 +61,7 @@ describe "glimmer topic list", native_playwright: true do
       expect(topic_page.new_topic_badge(topic2)).to be_visible
 
       expect(topic_page.suggested_topic(new_reply)).to be_visible
-      expect(topic_page.unread_posts_badge(new_reply)).to have_text("3")
+      expect(topic_page.unread_posts_badge(new_reply)).to have_text(/^3$/, useInnerText: true)
     end
   end
 

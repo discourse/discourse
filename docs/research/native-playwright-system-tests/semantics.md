@@ -10,7 +10,7 @@ All three pinned pilot files are converted, retaining 35 examples and their fixt
 | send_keys, keyboard typing | Locator.press / press_sequentially | Same individual key chords and keystroke input; typing is not replaced with fill. Original 100ms editor wait retained. Keyboard budget 30000ms. |
 | DOM selection ranges | Locator.evaluate with original range algorithm | Same selection offsets/content; baseline already uses DOM selections. |
 | have_css visible / no_css | be_visible on named visible locator / have_count(0) | Visible-only selectors retained; negative counts retry. |
-| have_css text | contain_text regex with useInnerText:true, or have_text for exact badge | Case and horizontal spacing retained. Baseline visible_text collapses repeated newlines; native regex explicitly permits repeated newlines. String-normalized matcher is avoided for indentation-sensitive assertions. |
+| have_css text | contain_text regex with useInnerText:true, or anchored have_text regex with useInnerText:true for the exact badge | Case and horizontal spacing retained. Baseline visible_text collapses repeated newlines; native regex explicitly permits repeated newlines. String-normalized matcher is avoided for indentation-sensitive assertions. |
 | exact field value | have_value | Exact Markdown value retained. |
 | disabled CSS presence | be_visible + be_disabled | Visibility retained and disabled state explicitly asserted. |
 | absence of disabled control | be_enabled | Also requires control attached/enabled, stronger than absence of a disabled selector. |
@@ -39,3 +39,17 @@ Local 4s / CI 20s assertions, action budget default*1100ms (4.4s/22s), navigatio
 - Global clientSettled/Ember-boot waits and Capybara-timeout MessageBus recovery are replaced by native actionability/assertions in migrated examples. This is a waiting strategy treatment as well as adapter removal. Reliability must be measured; do not call all savings pure Ruby overhead.
 - Video transition behavior differs from an existing control bug: control ordinary-to-video after soft reset captures nothing, then fresh context records; native ensures recording on transition. Video/trace are disabled in the frozen timed pilot, so this cannot explain measured savings. Sticky control video callbacks can alter later reset policy; do not compare globally enabled video without resolving that experimental-control gap.
 - StackProf wall mode targets the starting native thread and does not establish Rails request coverage. Complementary CPU profile captures controller execution. Both forms cover the entire pilot process, excluding browser/Node and separate DV development services; protocol observations complement waits.
+
+## Failure cleanup verification
+
+Cleanup runs in `ensure`, including when fatal deprecation assertions or browser evaluation fail during teardown. The [fault probe](recipes/isolation_fault_spec.rb) deliberately fails one control and one native example through a real console deprecation. The following examples verify a fresh page, database rollback, signed-out UI, and cleared local storage. Run it separately from performance measurements. Copy it under an ignored `spec/system` path so the harness loads system-test support:
+
+```sh
+mkdir -p tmp/native-playwright-research/spec/system
+cp docs/research/native-playwright-system-tests/recipes/isolation_fault_spec.rb tmp/native-playwright-research/spec/system/isolation_fault_spec.rb
+bin/rspec --seed 12345 --format documentation tmp/native-playwright-research/spec/system/isolation_fault_spec.rb
+```
+
+Expected result: four examples and exactly two failures, both named “emits a fatal deprecation after establishing browser state”. Both “starts the next example with a fresh page” checks must pass. The nonzero exit is intentional; this recipe is not part of normal CI discovery or the measured pilot. An earlier candidate produced a third failure because native state survived failed teardown; the repaired version preserves the original failure without leaking that state.
+
+The pinned Ruby client's string `have_text` uses substring matching. The unread-count assertion therefore uses the JavaScript-compatible anchored regex `/^3$/` and `useInnerText:true`. Verification accepted `3`, retried a delayed change to `3`, and rejected `13`, `30`, and `3 new`.
