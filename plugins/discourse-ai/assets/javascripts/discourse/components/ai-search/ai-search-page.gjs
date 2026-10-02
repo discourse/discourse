@@ -29,7 +29,7 @@ export default class AiSearchPage extends Component {
     this.#startTimer = next(() => {
       const query = this.inputValue.trim();
       if (query && !this.args.topicId && !this.pageActiveFor(query)) {
-        this.session.start(query, "page");
+        this.session.start(query, "page", null, { trigger: "page" });
       }
     });
   }
@@ -77,7 +77,7 @@ export default class AiSearchPage extends Component {
     const query = this.inputValue.trim();
     if (query) {
       this.args.onQueryChange?.(query);
-      this.session.start(query, "page");
+      this.session.start(query, "page", null, { trigger: "page" });
     }
   }
 

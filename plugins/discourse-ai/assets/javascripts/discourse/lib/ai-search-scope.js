@@ -8,6 +8,20 @@ import { i18n } from "discourse-i18n";
  *   the combined search shows one of its own
  */
 
+/**
+ * Whether the header search answers and searches together for this user. It
+ * fetches its own semantic matches, so features that add them to the menu
+ * stand aside.
+ */
+export function combinedSearchActive(siteSettings, currentUser) {
+  return Boolean(
+    siteSettings.ai_ask_ai_combined_search_prototype &&
+    siteSettings.ai_ask_ai_enabled &&
+    siteSettings.ai_ask_ai_agent &&
+    currentUser?.can_use_ask_ai
+  );
+}
+
 const FILTERS = {
   messages: () => "in:messages",
   topic: (value) => `topic:${value}`,
@@ -29,8 +43,14 @@ export function scopeFilter(key) {
   return FILTERS[type]?.(value) ?? null;
 }
 
+/**
+ * The query as keyword search should see it, within the scope. Closing
+ * punctuation is dropped: it adds nothing to the keywords, and a search within
+ * a topic finds nothing when the term ends with it.
+ */
 export function withScope(query, key) {
-  return [query, scopeFilter(key)].filter(Boolean).join(" ");
+  const keywords = (query ?? "").replace(/[\s?？!！.。]+$/u, "");
+  return [keywords, scopeFilter(key)].filter(Boolean).join(" ");
 }
 
 /**

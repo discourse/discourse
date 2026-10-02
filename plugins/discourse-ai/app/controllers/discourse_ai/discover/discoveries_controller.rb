@@ -31,7 +31,21 @@ module DiscourseAi
           raise Discourse::InvalidParameters.new(:scope)
         end
 
-        DiscourseAi::Discoveries.enqueue_reply(user: current_user, request_id:, query:, scope:)
+        trigger = params[:trigger].to_s
+        trigger = "" if DiscourseAi::Discoveries::TRIGGERS.exclude?(trigger)
+        trigger_reason = params[:trigger_reason].to_s
+        if !trigger_reason.match?(DiscourseAi::Discoveries::TRIGGER_REASON_PATTERN)
+          trigger_reason = ""
+        end
+
+        DiscourseAi::Discoveries.enqueue_reply(
+          user: current_user,
+          request_id:,
+          query:,
+          scope:,
+          trigger:,
+          trigger_reason:,
+        )
 
         DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
 

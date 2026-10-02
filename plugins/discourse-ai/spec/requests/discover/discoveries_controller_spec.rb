@@ -77,6 +77,35 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.status).to eq(200)
       end
 
+      it "records what set off the request" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               trigger: "pause",
+               trigger_reason: "after_skip:places",
+             }
+
+        expect(response.status).to eq(200)
+        expect(AskAiLog.last).to have_attributes(
+          ask_trigger: "pause",
+          ask_trigger_reason: "after_skip:places",
+        )
+      end
+
+      it "ignores a trigger it does not know rather than failing the request" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               trigger: "telepathy",
+               trigger_reason: "<script>",
+             }
+
+        expect(response.status).to eq(200)
+        expect(AskAiLog.last).to have_attributes(ask_trigger: "", ask_trigger_reason: "")
+      end
+
       it "rejects a scope that is not one" do
         post "/discourse-ai/discoveries/reply",
              params: {

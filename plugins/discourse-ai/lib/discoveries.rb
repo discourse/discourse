@@ -44,6 +44,11 @@ module DiscourseAi
     # held to being one token: that is what keeps a scope from adding filters.
     SCOPE_PATTERN = /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:\S{1,100}|user:\S{1,60})\z/
 
+    # what set off an Ask AI request and why, recorded so the choice of when to
+    # answer can be tuned against what readers do with the answers
+    TRIGGERS = %w[enter pause page scope recent].freeze
+    TRIGGER_REASON_PATTERN = /\A[a-z_:]{0,60}\z/
+
     class RequestConflict < StandardError
     end
 
@@ -138,11 +143,18 @@ module DiscourseAi
         }
       end
 
-      def enqueue_reply(user:, request_id:, query:, scope: nil)
+      def enqueue_reply(user:, request_id:, query:, scope: nil, trigger: "", trigger_reason: "")
         return if bind_request(user_id: user.id, request_id:, query:) != :created
 
         asked_at = Time.current
-        ask_log = AskAiLog.create!(user:, query:, asked_at:)
+        ask_log =
+          AskAiLog.create!(
+            user:,
+            query:,
+            asked_at:,
+            ask_trigger: trigger,
+            ask_trigger_reason: trigger_reason,
+          )
         settings = result_settings
         Jobs.enqueue(
           :stream_discover_reply,

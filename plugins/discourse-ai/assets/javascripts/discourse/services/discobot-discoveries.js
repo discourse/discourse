@@ -196,7 +196,7 @@ export default class DiscobotDiscoveries extends Service {
   }
 
   @action
-  async triggerDiscovery(query, { scope } = {}) {
+  async triggerDiscovery(query, { scope, trigger, triggerReason } = {}) {
     const normalizedQuery = query?.trim();
 
     // an answer that failed or timed out is worth asking again, even though the
@@ -235,6 +235,8 @@ export default class DiscobotDiscoveries extends Service {
           query: normalizedQuery,
           request_id: requestId,
           ...(scope && { scope }),
+          ...(trigger && { trigger }),
+          ...(triggerReason && { trigger_reason: triggerReason }),
         },
       });
 

@@ -126,13 +126,14 @@
   }
 }
 
-// Fixed heights keep the block the same size from placeholder to answer, so
-// the results below never move while it loads. Nothing may shrink: the search
-// menu is a height-limited flex column, and a scrolling or clipped box would
-// otherwise give up a different amount of height as a placeholder than filled.
+// The answer keeps a fixed height from placeholder to full answer, so the
+// results below never move while it loads; only opening it changes its size.
+// Nothing may shrink: the search menu is a height-limited flex column, and a
+// clipped box would otherwise give up height there.
 .ai-search-answer {
   --ai-search-answer-height: 12rem;
   --ai-search-related-height: 7.5rem;
+  position: relative;
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
@@ -143,37 +144,54 @@
     flex-shrink: 0;
     height: var(--ai-search-answer-height);
     overflow: hidden;
-
-    // fades the cut-off edge; drawn over the text so it takes no space
-    &.--overflowing:not(.--expanded)::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0;
-      height: 4.5rem;
-      background: linear-gradient(transparent, var(--secondary) 55%);
-      pointer-events: none;
-    }
-
-    &.--expanded {
-      height: auto;
-      min-height: var(--ai-search-answer-height);
-    }
+    padding: var(--space-2) var(--space-4);
 
     .cooked > *:last-child {
       margin-bottom: 0;
     }
   }
 
-  &__expand {
+  // fades the cut-off edge; drawn over the text so it takes no space
+  &.--has-more:not(.--expanded) &__body::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 4.5rem;
+    background: linear-gradient(transparent, var(--secondary) 55%);
+    pointer-events: none;
+  }
+
+  &.--expanded &__body {
+    height: auto;
+    min-height: var(--ai-search-answer-height);
+  }
+
+  &__more {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0 var(--space-4);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 0 var(--space-4) var(--space-2);
+  }
+
+  // the size of the small "Show more" button it stands in for
+  &__expand-skeleton {
+    --d-skeleton-item-width: 6.72em;
+    --d-skeleton-item-height: 2.3em;
+    font-size: var(--font-down-1);
+  }
+
+  &:not(.--expanded) &__actions {
     position: absolute;
     bottom: 0;
     left: 0;
     z-index: 1;
-
-    .--expanded & {
-      position: static;
-      margin-top: var(--space-2);
-    }
   }
 
   &__scope-note {
@@ -202,12 +220,16 @@
     text-align: center;
   }
 
+  &.--no-answer &__content {
+    height: 100%;
+  }
+
   &__related {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+
+    // auto-fit, so a lone related topic takes the whole row
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     gap: var(--space-3);
-    flex-shrink: 0;
-    min-height: var(--ai-search-related-height);
     margin: 0;
     list-style: none;
   }
@@ -215,18 +237,12 @@
   &__related-item {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
     box-sizing: border-box;
     height: var(--ai-search-related-height);
     overflow: hidden;
     border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
     animation: ai-search-fade-in 0.3s ease-out;
-
-    &.--skeleton {
-      padding: var(--space-3);
-      animation: none;
-    }
   }
 
   &__related-link {
@@ -262,11 +278,6 @@
   &__follow-up {
     display: flex;
     gap: var(--space-2);
-    margin-top: var(--space-3);
-
-    &.--disabled {
-      opacity: 0.6;
-    }
   }
 
   &__follow-up-input[type="text"] {
@@ -275,69 +286,8 @@
     margin: 0;
   }
 
-  &__rewrites {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    overflow: hidden;
-    height: 1.5em;
-    line-height: 1.5;
-    margin: var(--space-2) 0 0;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  // the keywords give way to the scope link, which is an action and has to
-  // stay whole
-  &__rewrite {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    animation: ai-search-fade-in 0.3s ease-out;
-  }
-
-  // sits in the keywords line, so offering it takes no room of its own
-  &__rewrites .d-skeleton {
-    flex: 0 1 50%;
-  }
-
-  &__restore-scope.btn-link {
-    flex-shrink: 0;
-    padding: 0;
-    margin-left: var(--space-2);
-    font-size: inherit;
-    vertical-align: baseline;
-
-    &::before {
-      content: "·";
-      margin-right: var(--space-2);
-      color: var(--primary-medium);
-    }
-  }
-
-  // without an answer there are no related topics either, so the message takes
-  // the whole block rather than leaving it half empty
-  &.--no-answer {
-    .ai-search-answer__body {
-      height: calc(
-        var(--ai-search-answer-height) + var(--space-3) +
-          var(--ai-search-related-height)
-      );
-    }
-
-    .ai-search-answer__related {
-      display: none;
-    }
-
-    .ai-search-answer__content {
-      height: 100%;
-    }
-  }
-
   &.--compact {
-    --ai-search-answer-height: 9rem;
+    --ai-search-answer-height: 7.5rem;
     --ai-search-related-height: 6.5rem;
 
     .ai-search-answer__title {
@@ -352,11 +302,60 @@
 
 .ai-search-menu-answer {
   flex-shrink: 0;
-
-  // inset like the search field and the result rows, so all three line up
-  padding: var(--space-2) var(--space-4) var(--space-3);
   border-bottom: 1px solid var(--content-border-color);
-  margin-bottom: var(--space-2);
+}
+
+// one line however much matched, so it never pushes the results down
+.ai-search-entities {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  white-space: nowrap;
+  font-size: var(--font-0);
+  overflow: auto;
+  padding: var(--space-2) var(--space-4);
+  scrollbar-width: thin;
+  border-top: 1px solid var(--content-border-color);
+
+  &__restore.btn-link {
+    flex-shrink: 0;
+    padding: 0;
+    font-size: inherit;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
+  }
+
+  &__item {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--primary-high);
+
+    // category and tag badges otherwise keep their own smaller sizes
+    .badge-category__wrapper,
+    .discourse-tag {
+      font-size: inherit;
+    }
+
+    // a link, which would otherwise take the link colour
+    &.--group {
+      color: var(--primary-high);
+    }
+
+    &.--user .avatar,
+    &.--group .avatar-flair {
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
 }
 
 // Hung off the result's edge, so it appears without moving it. The menu clips
@@ -385,6 +384,18 @@
   .menu-panel .panel-body-contents {
     margin-left: calc(-1 * var(--ai-search-overhang));
     padding-left: var(--ai-search-overhang);
+  }
+}
+
+// Results sit under an answer that already summarises them, so each one is
+// held to a line per part: more of them fit in the menu.
+.search-menu:has(.ai-search-menu-answer) .search-result-topic {
+  .first-line,
+  .blurb {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

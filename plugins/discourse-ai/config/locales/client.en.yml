@@ -1722,7 +1722,6 @@ en:
         send: "Send"
         composer_label: "Ask another question"
         composer_placeholder: "Ask another question…"
-        keywords_label: "Keywords:"
         use_original: "Search for “%{query}” instead"
         no_keyword_results: "No keyword matches."
         semantic_fallback: "No keyword matches. These are related by meaning:"
@@ -1741,6 +1740,10 @@ en:
           keyword: "Keyword"
         best_match: "Best match"
         show_more: "Show more"
+        no_keyword_matches: "No keyword matches found."
+        entities_label: "Matching people, groups, categories and tags"
+        no_answer: "AI couldn’t find a clear answer. %{askLink}"
+        ask_community: "Ask the community."
         scope:
           chip: "in %{name}"
           remove: "Search everywhere instead"

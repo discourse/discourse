@@ -9,6 +9,10 @@ import { withScope } from "../lib/ai-search-scope";
 
 const SEMANTIC_MATCH_RANK = 5;
 const BEST_MATCH_COUNT = 2;
+// a search this soon after the last one on the same page is still the same hunt
+const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
+// sooner than this, it is the same search still being typed
+const SEARCH_AGAIN_MIN_MS = 2000;
 
 export async function keywordSearch(query) {
   try {
@@ -48,12 +52,15 @@ export default class AiSearchSession extends Service {
   @tracked originalKeywordPosts = null;
   @tracked rewrittenKeywordQuery = "";
   @tracked semanticPosts = null;
-  @tracked rewritePending = false;
-  @tracked rewriteSettled = false;
 
   /** @type {import("../lib/ai-search-scope").AiSearchScope|null} */
   @tracked scope = null;
+  @tracked answering = false;
+  @tracked noKeywordMatches = false;
+  @tracked expandedFor = null;
+
   @tracked scopeFallback = false;
+  @tracked fallbackScopeLabel = null;
 
   /** The scope the menu is currently in, which the next search starts from. */
   @tracked contextScope = null;
@@ -61,11 +68,23 @@ export default class AiSearchSession extends Service {
   /** A scope the reader took off, which can be put back until they move on. */
   @tracked dismissedScope = null;
 
+  /** Why the last pause left the AI out, for telling when enter overrules it. */
+  skipReason = null;
+
+  /** Switches the open search menu to showing topics; set by the menu. */
+  showTopicsInMenu = null;
+
   #subscribed = false;
   #originalMenuSearch = null;
+  #menuResults = null;
+  #lastSearch = null;
+  #termListener = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this.#termListener) {
+      document.removeEventListener("input", this.#termListener);
+    }
     if (this.#subscribed) {
       this.messageBus.unsubscribe(
         "/discourse-ai/discoveries",
@@ -135,20 +154,16 @@ export default class AiSearchSession extends Service {
     );
   }
 
-  /**
-   * Whether the keyword query is final, so the label never shows one query and
-   * then another. A rewrite is published before any of the answer, so once the
-   * answer starts without one, none is coming.
-   */
-  get rewriteResolved() {
-    return (
-      !this.rewritePending &&
-      (this.rewriteSettled || !this.discoveries.loadingDiscoveries)
-    );
-  }
-
   get showingRewrittenKeywords() {
     return Boolean(this.keywordQuery) && this.keywordQuery !== this.query;
+  }
+
+  /**
+   * Whether the reader opened the answer for this search, which then has the
+   * menu to itself.
+   */
+  get expanded() {
+    return Boolean(this.query) && this.expandedFor === this.query;
   }
 
   isActiveFor(query) {
@@ -179,48 +194,64 @@ export default class AiSearchSession extends Service {
    * @param {string} query
    * @param {"menu"|"page"} surface where the keyword results are shown
    * @param {import("../lib/ai-search-scope").AiSearchScope|null} [scope]
+   * @param {Object} [options]
+   * @param {boolean} [options.answer] whether to ask for an AI answer too, or
+   *   only search
+   * @param {(results: Object) => boolean} [options.answerAfter] when not
+   *   answering, whether to ask once the menu's keyword results are in
+   * @param {string} [options.trigger] what started the search, for the log
+   * @param {string} [options.reason] why it answers or not, for the log
+   * @param {string} [options.answerAfterReason] why, when it answers later
    */
-  start(query, surface, scope = null) {
+  start(
+    query,
+    surface,
+    scope = null,
+    {
+      answer = true,
+      answerAfter = null,
+      trigger = "",
+      reason = "",
+      answerAfterReason = "",
+    } = {}
+  ) {
     this.subscribe();
 
     this.query = query;
+    this.answering = answer;
     this.surface = surface;
     this.scope = scope;
     this.scopeFallback = false;
+    this.fallbackScopeLabel = null;
     this.keywordQuery = query;
     this.keywordPosts = null;
     this.originalKeywordPosts = null;
     this.rewrittenKeywordQuery = "";
     this.semanticPosts = null;
-    this.rewritePending = false;
-    this.rewriteSettled = false;
 
-    // a fresh request every time, so the rewrite is always published
+    this.skipReason = answer ? null : reason;
     this.discoveries.dismissDiscovery();
-    this.discoveries.triggerDiscovery(query, { scope: scope?.key });
-
-    // embeddings describe public topics, so they cannot rank within one topic
-    // or among messages
-    const semanticInScope = !["topic", "messages"].includes(
-      scope?.key.split(":")[0]
-    );
-    if (
-      this.siteSettings.ai_embeddings_semantic_search_enabled &&
-      semanticInScope
-    ) {
-      semanticSearch(this.#scoped(query)).then((posts) => {
-        if (this.query === query) {
-          this.semanticPosts = posts;
-        }
-      });
+    if (answer) {
+      this.#ask(query, { trigger, reason });
     } else {
       this.semanticPosts = [];
     }
 
     if (surface === "menu") {
+      // what the menu found as the reader typed stays until this search lands,
+      // so its users, groups, categories and tags do not blink out
+      this.#menuResults = null;
+      this.noKeywordMatches = false;
       this.search.noResults = false;
-      this.search.results = {};
       this.#originalMenuSearch = this.#searchMenu(query, { replace: true });
+      this.#lastSearch = { query, at: Date.now() };
+
+      if (!answer && answerAfter) {
+        this.#answerAfterResults(query, answerAfter, {
+          trigger,
+          reason: answerAfterReason,
+        });
+      }
     } else {
       keywordSearch(this.#scoped(query)).then((posts) => {
         if (this.query !== query) {
@@ -248,6 +279,7 @@ export default class AiSearchSession extends Service {
 
   reset() {
     this.query = "";
+    this.answering = false;
     this.scope = null;
     this.discoveries.dismissDiscovery();
   }
@@ -264,8 +296,63 @@ export default class AiSearchSession extends Service {
       this.query &&
       scope?.key !== this.scope?.key
     ) {
-      this.start(this.query, "menu", scope);
+      this.start(this.query, "menu", scope, {
+        answer: this.answering,
+        trigger: "scope",
+      });
     }
+  }
+
+  /**
+   * Whether the reader is searching again after an earlier search on this
+   * page, sharing a word with it, which suggests its results did not help.
+   */
+  searchedAgain(query) {
+    const last = this.#lastSearch;
+    if (!last) {
+      return false;
+    }
+
+    // still typing the same search, with a pause along the way
+    const lower = query.toLowerCase();
+    const earlierLower = last.query.toLowerCase();
+    if (lower.startsWith(earlierLower) || earlierLower.startsWith(lower)) {
+      return false;
+    }
+
+    const age = Date.now() - last.at;
+    if (age < SEARCH_AGAIN_MIN_MS || age > SEARCH_AGAIN_WINDOW_MS) {
+      return false;
+    }
+
+    const words = (text) =>
+      new Set(text.toLowerCase().split(/\s+/).filter(Boolean));
+    const earlier = words(last.query);
+    return [...words(query)].some((word) => earlier.has(word));
+  }
+
+  /**
+   * Calls back on every change to the header or welcome banner search term,
+   * typed or not, so pasting or dictating counts as typing does. Core has
+   * already taken the new term by the time the event reaches the document.
+   */
+  listenForTermChanges(callback) {
+    this.#termListener = (event) => {
+      if (
+        event.target?.classList?.contains("search-term__input") &&
+        event.target.closest(
+          ".search-input--header, .search-input--welcome-banner"
+        )
+      ) {
+        callback();
+      }
+    };
+    document.addEventListener("input", this.#termListener);
+  }
+
+  /** Leaving the page ends the hunt, whether or not a result was opened. */
+  forgetSearches() {
+    this.#lastSearch = null;
   }
 
   @action
@@ -303,28 +390,37 @@ export default class AiSearchSession extends Service {
     if (isCurrent && update.phase === "rewritten") {
       this.#applyRewrite(update);
     }
-    if (isCurrent && update.scope_fallback) {
-      this.scopeFallback = true;
+    if (isCurrent && update.scope_fallback && !this.scopeFallback) {
+      this.#leaveScope();
     }
 
     this.discoveries.onDiscoveryUpdate(update);
   }
 
-  async #applyRewrite(update) {
-    const query = this.query;
-    this.rewritePending = true;
-    try {
-      await this.#chooseKeywordQuery(query, update.keyword_query || "");
-    } finally {
-      if (this.query === query) {
-        this.rewritePending = false;
-        this.rewriteSettled = true;
-      }
+  @action
+  toggleExpanded() {
+    this.expandedFor = this.expanded ? null : this.query;
+  }
+
+  /**
+   * Puts this search's results back if something else replaced them. The
+   * menu's own search, started while the reader was still typing, can land
+   * after this one and would otherwise swap in results for no topics.
+   */
+  guardMenuResults() {
+    if (
+      this.surface === "menu" &&
+      this.#menuResults &&
+      this.search.results !== this.#menuResults &&
+      this.isActiveFor(this.search.activeGlobalSearchTerm)
+    ) {
+      this.#showMenuResults();
     }
   }
 
-  async #chooseKeywordQuery(query, rewrittenKeywordQuery) {
-    this.rewrittenKeywordQuery = rewrittenKeywordQuery;
+  async #applyRewrite(update) {
+    const query = this.query;
+    this.rewrittenKeywordQuery = update.keyword_query || "";
 
     if (!this.rewrittenKeywordQuery || this.rewrittenKeywordQuery === query) {
       return;
@@ -336,8 +432,7 @@ export default class AiSearchSession extends Service {
     }
 
     const posts = await keywordSearch(this.#scoped(this.rewrittenKeywordQuery));
-    // the rewrite drops filler words, so it is the clearer label for the same
-    // matches and is kept unless it finds less
+    // the rewrite drops filler words, so it is preferred unless it finds less
     if (
       this.query === query &&
       posts.length >= (this.originalKeywordPosts?.length || 0)
@@ -381,14 +476,87 @@ export default class AiSearchSession extends Service {
       typeof replace === "function" ? replace(found) : replace;
 
     if (results && stillCurrent && shouldReplace) {
-      this.search.noResults = results.resultTypes.length === 0;
-      this.search.results = results;
+      // Topics shown through the session are listed by their posts. Left in
+      // the topics list, they would have core treat the next keystroke as a
+      // full search, logged to recent searches, rather than as typing.
+      this.#menuResults = { ...results, topics: [] };
+      this.#showMenuResults();
     }
     return found;
   }
 
-  // Keyword results stay in the scope even when the answer had to leave it,
-  // so they always match the chip the reader can see.
+  // core's empty message speaks of results in general, so the session says
+  // itself when no topics matched the keywords
+  #showMenuResults() {
+    this.search.noResults = false;
+    this.search.results = this.#menuResults;
+    this.noKeywordMatches = !this.#menuResults.posts?.length;
+  }
+
+  #ask(query, { trigger, reason }) {
+    // a fresh request every time, so the rewrite is always published
+    this.discoveries.triggerDiscovery(query, {
+      scope: this.scope?.key,
+      trigger,
+      triggerReason: reason,
+    });
+
+    // Semantic ranks only mark the best matches once there is an answer.
+    // Embeddings describe public topics, so they cannot rank within one topic
+    // or among messages.
+    const semanticInScope = !["topic", "messages"].includes(
+      this.scope?.key.split(":")[0]
+    );
+    if (
+      this.siteSettings.ai_embeddings_semantic_search_enabled &&
+      semanticInScope
+    ) {
+      semanticSearch(this.#scoped(query)).then((posts) => {
+        if (this.query === query) {
+          this.semanticPosts = posts;
+        }
+      });
+    } else {
+      this.semanticPosts = [];
+    }
+  }
+
+  // A search started without an answer can still earn one once its keyword
+  // results show what it is.
+  async #answerAfterResults(query, answerAfter, logged) {
+    await this.#originalMenuSearch;
+    if (
+      this.query === query &&
+      !this.answering &&
+      this.#menuResults &&
+      answerAfter(this.#menuResults)
+    ) {
+      this.answering = true;
+      this.skipReason = null;
+      this.#ask(query, logged);
+    }
+  }
+
+  // The answer had to look past the scope, so the search follows it out: the
+  // chip comes off, with a way back, and the keyword results widen to match.
+  // The answer is not asked for again, as removing the chip would.
+  #leaveScope() {
+    this.scopeFallback = true;
+    if (!this.scope) {
+      return;
+    }
+
+    this.fallbackScopeLabel = this.scope.label;
+    if (this.surface === "menu") {
+      this.dismissedScope = this.scope;
+      this.scope = null;
+      this.#originalMenuSearch = this.#searchMenu(this.keywordQuery, {
+        replace: true,
+      });
+    }
+  }
+
+  // keyword results follow the session's scope, which is the chip on screen
   #scoped(query) {
     return withScope(query, this.scope?.key);
   }
