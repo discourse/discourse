@@ -30,6 +30,22 @@ module("Unit | Model | user-badge", function (hooks) {
     );
   });
 
+  test("inlined topic exposes computed url and fancyTitle", function (assert) {
+    const userBadge = UserBadge.createFromJson(
+      cloneJSON(badgeFixtures["/user_badges"])
+    );
+    assert.strictEqual(
+      userBadge.topic.url,
+      "/t/topic-280/280",
+      "topic url is computed from the sideloaded topic"
+    );
+    assert.strictEqual(
+      userBadge.topic.fancyTitle,
+      "Topic &amp; more",
+      "topic fancyTitle is computed from the sideloaded topic"
+    );
+  });
+
   test("createFromJson array", function (assert) {
     const userBadges = UserBadge.createFromJson(
       cloneJSON(badgeFixtures["/user-badges/:username"])
