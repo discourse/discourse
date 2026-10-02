@@ -6,9 +6,12 @@ import deprecated from "discourse/lib/deprecated";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
+import { serializeBBCodeAttr } from "discourse-markdown-it/features/bbcode-block";
 
-export { parseBBCodeTag } from "discourse-markdown-it/features/bbcode-block";
+export {
+  parseBBCodeTag,
+  serializeBBCodeAttr,
+} from "discourse-markdown-it/features/bbcode-block";
 
 async function withEngine(name, ...args) {
   const engine = await waitForPromise(import("discourse/static/markdown-it"));
@@ -154,52 +157,6 @@ export function humanizeList(listItems) {
       last,
     ].join(" ");
   }
-}
-
-// Characters that require quoting in BBCode attribute values
-// Based on the BBCode parser regex: [^\s\]]+ for unquoted values
-const BBCODE_REQUIRES_QUOTES_PATTERN = /[\s\]]/;
-
-/**
- * Serializes a value for use in a BBCode attribute.
- *
- * Automatically determines whether quotes are needed based on the value content.
- * Quotes are required when the value contains whitespace or `]` characters.
- * When the value contains quotation marks, cycles through supported quote pairs
- * to find one that doesn't conflict with the value's content.
- *
- * @param {string|null|undefined} value - The attribute value to serialize
- * @param {string} name - The attribute name
- * @returns {string} The serialized attribute (e.g., ` name=value` or ` name="value"`) or empty string if value is falsy
- *
- * @example
- * serializeBBCodeAttr("12:00:00", "time") // returns ' time=12:00:00'
- * serializeBBCodeAttr("YYYY-MM-DD HH:mm", "format") // returns ' format="YYYY-MM-DD HH:mm"'
- * serializeBBCodeAttr('Design "Gems"', "channel") // returns " channel='Design \"Gems\"'"
- * serializeBBCodeAttr("Sam's \"Release\"", "title") // returns ' title=«Sam's "Release"»'
- * serializeBBCodeAttr(null, "time") // returns ''
- */
-export function serializeBBCodeAttr(value, name) {
-  if (!value) {
-    return "";
-  }
-
-  const stringValue = String(value);
-  const needsQuotes = BBCODE_REQUIRES_QUOTES_PATTERN.test(stringValue);
-
-  if (!needsQuotes) {
-    return ` ${name}=${stringValue}`;
-  }
-
-  for (const pair of QUOTATION_MARKS) {
-    const [open, close] = pair;
-    if (!stringValue.includes(open) && !stringValue.includes(close)) {
-      return ` ${name}=${open}${stringValue}${close}`;
-    }
-  }
-
-  // Unreachable in practice - would require all 18 quote characters in value
-  return ` ${name}="${stringValue.replaceAll('"', "")}"`;
 }
 
 /**
