@@ -885,6 +885,10 @@ describe DiscourseMcp::Tools do
       "discourse_get_theme" => [DiscourseMcp::Scopes::THEMES_READ],
       "discourse_create_theme" => [DiscourseMcp::Scopes::THEMES_WRITE],
       "discourse_update_theme" => [DiscourseMcp::Scopes::THEMES_WRITE],
+      "discourse_get_category" => [DiscourseMcp::Scopes::CATEGORIES_READ],
+      "discourse_create_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
+      "discourse_update_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
+      "discourse_delete_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
     }
 
     actual =
@@ -899,6 +903,10 @@ describe DiscourseMcp::Tools do
     expect(
       DiscourseMcp.registry.find(:tool, "discourse_update_site_setting").annotations,
     ).to include("destructiveHint" => true, "idempotentHint" => true, "openWorldHint" => true)
+    expect(DiscourseMcp.registry.find(:tool, "discourse_delete_category").annotations).to include(
+      "destructiveHint" => true,
+      "openWorldHint" => false,
+    )
 
     schemas = DiscourseMcp.registry.all.map(&:input_schema)
     expect(schemas.to_json).not_to include('\\\\A', '\\\\z')

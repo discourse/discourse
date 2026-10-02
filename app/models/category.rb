@@ -830,6 +830,11 @@ class Category < ActiveRecord::Base
 
   def parent_category_validator
     if parent_category_id
+      if parent_category.blank?
+        errors.add(:base, I18n.t("category.errors.not_found"))
+        return
+      end
+
       errors.add(:base, I18n.t("category.errors.uncategorized_parent")) if uncategorized?
 
       errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
