@@ -26,6 +26,12 @@ module PageObjects
         page.has_no_css?(RICH_EDITOR)
       end
 
+      def has_no_animated_images?
+        page.has_no_css?("#{RICH_EDITOR} .composer-image-node img") do |image|
+          image.evaluate_script("getComputedStyle(this).animationName") != "none"
+        end
+      end
+
       def opened?
         page.has_css?("#{@composer_id}.open")
       end

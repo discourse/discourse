@@ -2,7 +2,7 @@
 
 module Jobs
   class MaintainBrowserPageviewRollups < ::Jobs::Scheduled
-    every 10.minutes
+    every 30.minutes
 
     cluster_concurrency 1
 

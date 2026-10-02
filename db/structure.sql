@@ -7780,7 +7780,8 @@ CREATE TABLE public.mcp_oauth_clients (
     redirect_uris character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     last_seen_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    admin_managed boolean DEFAULT false NOT NULL
 );
 
 
@@ -25546,6 +25547,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261002200029'),
+('20261001073226'),
+('20260930114733'),
 ('20260928103925'),
 ('20260925054715'),
 ('20260923141924'),

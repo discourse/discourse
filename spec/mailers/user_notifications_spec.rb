@@ -1476,6 +1476,41 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe "invitation email titles" do
+    fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:invitee, :user)
+
+    %i[private_message topic].each do |destination|
+      it "renders HTML in a #{destination} title as text" do
+        post =
+          if destination == :private_message
+            Fabricate(:private_message_post, recipient: inviter)
+          else
+            Fabricate(:post)
+          end
+        post.topic.update!(title: %(<img src="x" onerror="alert(1)"> Meeting & planning))
+        post.topic.invite(inviter, invitee.username)
+        notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+        notification_type = "invited_to_#{destination}"
+        mail =
+          UserNotifications.public_send(
+            "user_#{notification_type}",
+            invitee,
+            notification_type: notification_type,
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+        renderer = Email::Renderer.new(mail)
+        html = Nokogiri::HTML5.fragment(renderer.html)
+
+        expect(html.css("[onerror], img[src='x']")).to be_empty
+        expect(html.text).to include(post.topic.title)
+        expect(renderer.text).to include(post.topic.title)
+        expect(html.css("a").map { |link| link["href"] }).to include(post.topic.url)
+      end
+    end
+  end
+
   describe "user invited to a private message" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_private_message }

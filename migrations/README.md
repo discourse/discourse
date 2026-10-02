@@ -122,22 +122,60 @@ bundle install
 bundle update --group migrations
 ```
 
-### Running tests
+### Standalone install (e.g. a converter container)
 
-Each gem has an isolated, no-Rails suite, run from the gem directory:
+A checkout of `Gemfile`, `Gemfile.lock` and `migrations/` is enough to run the converter
+without the rest of the application. `BUNDLE_ONLY` restricts the install to the
+migrations group and its dependencies, pinned by the root lockfile:
 
 ```bash
-cd migrations/core       && bundle exec rspec
-cd migrations/tooling    && bundle exec rspec
-cd migrations/converters && bundle exec rspec
-cd migrations/importer   && bundle exec rspec
+BUNDLE_WITH=migrations BUNDLE_ONLY=migrations bundle install
+BUNDLE_WITH=migrations BUNDLE_ONLY=migrations migrations/bin/disco convert ...
 ```
 
-Specs that need a booted Rails environment are tagged `:rails`. They are excluded by default and
-run from the host app's bundle:
+`disco` picks up `BUNDLE_ONLY` at boot. Commands that need a booted Rails environment
+(`disco check`, `disco import`) don't work in such an install.
+
+The markdown engine additionally needs parts of the frontend to build its parser bundle
+(a warm cache under `tmp/migrations/` needs neither node nor pnpm, so the build can also
+happen once at image build time). A sparse checkout covers that and stays updatable with
+a plain `git pull`, which only downloads blobs inside the sparse cone:
 
 ```bash
-cd migrations/<gem> && BUNDLE_GEMFILE=../../Gemfile MIGRATIONS_RAILS=1 bundle exec rspec --tag rails
+git clone --filter=blob:none --no-checkout https://github.com/discourse/discourse.git
+cd discourse
+git sparse-checkout set migrations lib config app/assets/stylesheets patches
+git checkout main
+# pnpm needs every workspace package from pnpm-workspace.yaml (an explicit list, not globs)
+git sparse-checkout add $(ruby -ryaml -e 'puts YAML.load_file("pnpm-workspace.yaml")["packages"]')
+
+BUNDLE_WITH=migrations BUNDLE_ONLY=migrations bundle install
+pnpm install --frozen-lockfile
+```
+
+`lib`, `config` and `app/assets/stylesheets` are inputs of the parser bundle build. When
+a new workspace package appears upstream, `pnpm install` fails naming the missing
+directory; add it with `git sparse-checkout add`.
+
+### Running tests
+
+All specs resolve gems through the root `Gemfile` and its lockfile — the same versions as
+`disco` and CI. There are no per-gem Gemfiles. Run a suite from the gem directory through
+the wrapper (it fills in `BUNDLE_GEMFILE` and `BUNDLE_WITH` for fresh checkouts):
+
+```bash
+cd migrations/core       && ../bin/rspec
+cd migrations/tooling    && ../bin/rspec
+cd migrations/converters && ../bin/rspec
+cd migrations/importer   && ../bin/rspec
+```
+
+Plain `bundle exec rspec` from a gem directory works too once the migrations group is
+installed. Specs that need a booted Rails environment are tagged `:rails`; they are
+excluded by default and need `MIGRATIONS_RAILS=1`:
+
+```bash
+cd migrations/<gem> && MIGRATIONS_RAILS=1 ../bin/rspec --tag rails
 ```
 
 ### Linting

@@ -26,6 +26,10 @@ function initializeHCaptcha(api, container) {
     const captchaService = container.lookup("service:captcha-service");
     captchaService.submitted = true;
 
+    if (captchaService.refreshToken) {
+      await captchaService.refreshToken();
+    }
+
     if (captchaService.invalid) {
       return {
         success: false,

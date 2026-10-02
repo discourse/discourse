@@ -12,7 +12,7 @@ module("Integration | Component | CaptchaConfigurationTest", function (hooks) {
   hooks.beforeEach(function () {
     this.configuration = {
       configured: true,
-      provider: "recaptcha",
+      provider: "recaptcha_v2",
       site_key: "saved-site-key",
     };
     this.originalRecaptcha = window.grecaptcha;
@@ -33,6 +33,93 @@ module("Integration | Component | CaptchaConfigurationTest", function (hooks) {
     window.hcaptcha = this.originalHcaptcha;
   });
 
+  test("tests v3 only after clicking and keeps signup state separate", async function (assert) {
+    this.configuration.provider = "recaptcha_v3";
+    const captchaService = this.owner.lookup("service:captcha-service");
+    captchaService.token = "signup-token";
+    captchaService.invalid = false;
+    const refreshToken = () => {};
+    captchaService.refreshToken = refreshToken;
+    const execute = sinon.stub().resolves("v3-test-token");
+    window.grecaptcha = { execute };
+    pretender.post("/admin/plugins/discourse-captcha/test.json", (request) => {
+      const data = new URLSearchParams(request.requestBody);
+      assert.strictEqual(
+        data.get("provider"),
+        "recaptcha_v3",
+        "tests the v3 provider"
+      );
+      assert.strictEqual(
+        data.get("token"),
+        "v3-test-token",
+        "sends the test token"
+      );
+      return response({
+        success: true,
+        message: "Keys work; score is below the signup threshold.",
+      });
+    });
+
+    await render(
+      <template>
+        <CaptchaConfigurationTest @configuration={{this.configuration}} />
+      </template>
+    );
+    assert.false(execute.called, "does not execute before clicking Test");
+    await click(".captcha-configuration-test .btn-primary");
+
+    assert.true(
+      execute.calledOnceWithExactly("saved-site-key", {
+        action: "configuration_test",
+      }),
+      "uses a separate test action"
+    );
+    assert
+      .dom(".alert-success")
+      .hasText(
+        "Keys work; score is below the signup threshold.",
+        "displays the score result"
+      );
+    assert.strictEqual(
+      captchaService.token,
+      "signup-token",
+      "preserves the signup token"
+    );
+    assert.false(captchaService.invalid, "preserves signup validity");
+    assert.strictEqual(
+      captchaService.refreshToken,
+      refreshToken,
+      "preserves the signup callback"
+    );
+  });
+
+  test("allows retrying a failed v3 token request", async function (assert) {
+    this.configuration.provider = "recaptcha_v3";
+    window.grecaptcha = {
+      execute: sinon.stub().rejects(new Error("unavailable")),
+    };
+
+    await render(
+      <template>
+        <CaptchaConfigurationTest @configuration={{this.configuration}} />
+      </template>
+    );
+    await click(".captcha-configuration-test .btn-primary");
+
+    assert
+      .dom(".alert-error")
+      .hasText(
+        i18n("discourse_captcha.configuration_test.challenge_failed"),
+        "shows the failure"
+      );
+    assert
+      .dom(".captcha-configuration-test .btn-primary")
+      .hasText(
+        i18n("discourse_captcha.configuration_test.retry"),
+        "offers another attempt"
+      );
+  });
+
   test("verifies saved keys and keeps signup state separate", async function (assert) {
     const captchaService = this.owner.lookup("service:captcha-service");
     captchaService.token = "signup-token";
@@ -51,7 +138,7 @@ module("Integration | Component | CaptchaConfigurationTest", function (hooks) {
       );
       assert.strictEqual(
         data.get("provider"),
-        "recaptcha",
+        "recaptcha_v2",
         "identifies the tested provider"
       );
       return response({ success: true, message: "Verification succeeded." });
@@ -200,7 +287,7 @@ module("Integration | Component | CaptchaConfigurationTest", function (hooks) {
     assert.dom(".alert-error").doesNotExist("clears the failure");
   });
 
-  for (const provider of ["recaptcha", "hcaptcha"]) {
+  for (const provider of ["recaptcha_v2", "hcaptcha"]) {
     test(`${provider} ignores callbacks from a replaced challenge`, async function (assert) {
       this.configuration.provider = provider;
       let verificationRequests = 0;

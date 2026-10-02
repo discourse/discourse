@@ -4,6 +4,7 @@ import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -37,6 +38,26 @@ export default class PostStream extends Component {
   @tracked suppressLoadAbove = false;
 
   viewportTracker = new PostStreamViewportTracker();
+
+  /**
+   * Focuses the post requested via `PostStream#focusPostOnRender` once its
+   * content exists, which may be several renders after the request.
+   */
+  focusWhenRendered = modifier((element, [postNumber, cloaked, target]) => {
+    if (cloaked || target?.done || target?.postNumber !== postNumber) {
+      return;
+    }
+
+    const body = element.querySelector(".topic-body, .small-action-desc");
+    if (!body) {
+      return;
+    }
+
+    target.done = true;
+    body.setAttribute("tabindex", "0");
+    // jumpToPost owns scrolling; letting focus scroll too makes the page jump
+    body.focus({ preventScroll: true });
+  });
 
   constructor() {
     super(...arguments);
@@ -390,6 +411,11 @@ export default class PostStream extends Component {
                 @unlockPost={{fn @unlockPost post}}
                 @updateTopicPageQueryParams={{@updateTopicPageQueryParams}}
                 {{this.viewportTracker.registerPost post}}
+                {{this.focusWhenRendered
+                  post.post_number
+                  cloakingData.active
+                  @postStream.focusTarget
+                }}
               />
             {{/let}}
 

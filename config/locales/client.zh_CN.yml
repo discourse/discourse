@@ -526,10 +526,20 @@ zh_CN:
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
         back: "返回"
+        category_unavailable: "该分类不支持发布内容。"
         icebreakers:
+          plan_categories:
+            title: "我们应该从哪些类别开始？"
+            body: "让我们在正式上线前先理清思路！大家最想讨论什么？我们可以先从几个类别开始，以后再添加更多。"
+          plan_invites:
+            title: "在正式上线之前，我们应该邀请哪些成员？"
+            body: "加入一个已经有成员的社区总是令人愉快的。我们应该先邀请谁呢？想想那些喜欢聊天、乐于助人，并且会很兴奋能尽早参与进来的人吧。"
           introduce_yourself:
             title: "自我介绍"
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
+          write_your_own:
+            title: "写你自己的"
+            body: "选择一个适合您社区的话题，开启一场讨论。"
     design_wizard:
       title: "自定义您的网站"
       subtitle: "选择颜色、字体以及网站的布局。"
@@ -5915,6 +5925,7 @@ zh_CN:
         forum:
           label: 论坛
       back_to_forum: "返回论坛"
+      back_to_admin: "返回管理员页面"
       filter_links: "筛选链接…"
       clear_filter: "清除筛选器"
       no_results:
@@ -6401,8 +6412,12 @@ zh_CN:
             empty: "没有 MCP 授权符合此筛选条件。"
           activity:
             title: "活动和诊断"
+            description: "查看 MCP 活动。"
             tool_calls: "工具调用"
+            failed_tool_calls: "工具调用失败"
+            rate_limits: "限速请求"
             p95_latency: "第 95 百分位延迟"
+            no_latency: "—"
             search_placeholder: "按用户、客户端、工具或确切请求 ID 搜索"
             outcome: "成果"
             time: "时间"
@@ -9145,6 +9160,10 @@ zh_CN:
           all: "所有用户"
           activated: "已激活"
           not_activated: "未激活"
+        account_type_filter:
+          human: "人类账户"
+          bot: "机器人帐户"
+          all: "所有账户"
         approved: "已批准？"
         titles:
           active: "活跃用户"
@@ -9500,14 +9519,29 @@ zh_CN:
           multiselect: "多选"
       site_text:
         description: "您可以自定义论坛上的任何文本。"
+        search: "搜索文本或翻译键"
         search_label: "搜索"
+        theme: "主题或组件"
+        all_themes: "所有站点文本"
         theme_disabled: "已禁用"
         filters: "筛选器"
+        filters_active:
+          other: "筛选（%{count}）"
+        edit_title: "编辑站点文本"
+        default_text: "默认文本"
+        value_label: "您的文本 · %{language}"
+        invalid_title: "无效的插值占位符"
+        invalid_description: "此文本使用无法识别的占位符。使用下面可用的插值键。"
         status:
+          customized: "定制"
+          outdated: "过期"
           invalid: "无效"
         title: "网站文本"
         edit: "编辑"
+        revert: "恢复默认"
         revert_confirm: "确定要还原您的变更吗？"
+        go_back: "返回结果"
+        recommended: "建议的自定义文本"
         show_overriden: "只显示被替换"
         show_outdated: "仅显示过期/无效"
         show_untranslated: "只显示未翻译的内容"
