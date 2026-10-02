@@ -1,0 +1,446 @@
+{
+  "control": {
+    "wall": {
+      "Playwright::ChannelOwners::BrowserType:launch": {
+        "count": 2,
+        "seconds": 0.32154651500059117
+      },
+      "Playwright::ChannelOwners::Browser:newContext": {
+        "count": 2,
+        "seconds": 0.02006870800141769
+      },
+      "Playwright::ChannelOwners::BrowserContext:newPage": {
+        "count": 37,
+        "seconds": 1.659338415001912
+      },
+      "Playwright::ChannelOwners::Frame:goto": {
+        "count": 64,
+        "seconds": 30.89636671900007
+      },
+      "Playwright::ChannelOwners::Frame:querySelectorAll": {
+        "count": 392,
+        "seconds": 7.511939504005568
+      },
+      "Playwright::ChannelOwners::Frame:evaluateExpressionHandle": {
+        "count": 736,
+        "seconds": 4.970033584999328
+      },
+      "Playwright::ChannelOwners::JSHandle:evaluateExpression": {
+        "count": 743,
+        "seconds": 1.3217994440256007
+      },
+      "Playwright::ChannelOwners::JSHandle:jsonValue": {
+        "count": 731,
+        "seconds": 0.22292986497814127
+      },
+      "Playwright::ChannelOwners::ElementHandle:isEnabled": {
+        "count": 652,
+        "seconds": 7.032149235021279
+      },
+      "Playwright::ChannelOwners::ElementHandle:evaluateExpression": {
+        "count": 691,
+        "seconds": 0.6207224880163267
+      },
+      "Playwright::ChannelOwners::ElementHandle:click": {
+        "count": 67,
+        "seconds": 2.120601388007344
+      },
+      "Playwright::ChannelOwners::ElementHandle:type": {
+        "count": 38,
+        "seconds": 3.1017190309976286
+      },
+      "Playwright::ChannelOwners::Page:keyboardPress": {
+        "count": 15,
+        "seconds": 0.07649405999836745
+      },
+      "Playwright::ChannelOwners::ElementHandle:querySelectorAll": {
+        "count": 61,
+        "seconds": 0.1935456180053734
+      },
+      "Playwright::ChannelOwners::Frame:evaluateExpression": {
+        "count": 75,
+        "seconds": 0.1778228159964783
+      },
+      "Playwright::ChannelOwners::Page:close": {
+        "count": 35,
+        "seconds": 0.21504029899915622
+      },
+      "Playwright::ChannelOwners::BrowserContext:newCDPSession": {
+        "count": 35,
+        "seconds": 0.047042027001225506
+      },
+      "Playwright::ChannelOwners::CDPSession:send": {
+        "count": 35,
+        "seconds": 4.594736369999737
+      },
+      "Playwright::ChannelOwners::CDPSession:detach": {
+        "count": 35,
+        "seconds": 0.036930344000211335
+      },
+      "Playwright::ChannelOwners::BrowserContext:clearPermissions": {
+        "count": 35,
+        "seconds": 0.0215277730148955
+      },
+      "Playwright::ChannelOwners::Page:bringToFront": {
+        "count": 35,
+        "seconds": 0.018342815004871227
+      },
+      "Playwright::ChannelOwners::ElementHandle:getProperty": {
+        "count": 5,
+        "seconds": 0.007333006999033387
+      },
+      "Playwright::ChannelOwners::ElementHandle:getAttribute": {
+        "count": 18,
+        "seconds": 0.03561070199975802
+      },
+      "Playwright::ChannelOwners::ElementHandle:press": {
+        "count": 9,
+        "seconds": 0.07296480799959681
+      },
+      "Playwright::ChannelOwners::ElementHandle:dblclick": {
+        "count": 1,
+        "seconds": 0.03142919699894264
+      },
+      "Playwright::ChannelOwners::Frame:waitForTimeout": {
+        "count": 1,
+        "seconds": 0.10135898599946813
+      },
+      "Playwright::ChannelOwners::ElementHandle:fill": {
+        "count": 13,
+        "seconds": 0.09982638800465793
+      },
+      "Playwright::ChannelOwners::JSHandle:getPropertyList": {
+        "count": 2,
+        "seconds": 0.0016908199995668838
+      },
+      "Playwright::ChannelOwners::Page:goBack": {
+        "count": 1,
+        "seconds": 0.004135328999836929
+      },
+      "Playwright::ChannelOwners::Browser:close": {
+        "count": 2,
+        "seconds": 0.12437387799946009
+      }
+    },
+    "cpu": {
+      "Playwright::ChannelOwners::BrowserType:launch": {
+        "count": 2,
+        "seconds": 0.32359207599984074
+      },
+      "Playwright::ChannelOwners::Browser:newContext": {
+        "count": 2,
+        "seconds": 0.018661980000615586
+      },
+      "Playwright::ChannelOwners::BrowserContext:newPage": {
+        "count": 37,
+        "seconds": 1.6861271239904454
+      },
+      "Playwright::ChannelOwners::Frame:goto": {
+        "count": 64,
+        "seconds": 30.937242758009234
+      },
+      "Playwright::ChannelOwners::Frame:querySelectorAll": {
+        "count": 392,
+        "seconds": 7.290073260024656
+      },
+      "Playwright::ChannelOwners::Frame:evaluateExpressionHandle": {
+        "count": 742,
+        "seconds": 5.20586250200904
+      },
+      "Playwright::ChannelOwners::JSHandle:evaluateExpression": {
+        "count": 749,
+        "seconds": 1.1945192719886109
+      },
+      "Playwright::ChannelOwners::JSHandle:jsonValue": {
+        "count": 737,
+        "seconds": 0.23745198501637788
+      },
+      "Playwright::ChannelOwners::ElementHandle:isEnabled": {
+        "count": 652,
+        "seconds": 7.186117904973798
+      },
+      "Playwright::ChannelOwners::ElementHandle:evaluateExpression": {
+        "count": 691,
+        "seconds": 0.6711561649535724
+      },
+      "Playwright::ChannelOwners::ElementHandle:click": {
+        "count": 67,
+        "seconds": 2.3060725549967174
+      },
+      "Playwright::ChannelOwners::ElementHandle:type": {
+        "count": 38,
+        "seconds": 3.1244938479994744
+      },
+      "Playwright::ChannelOwners::Page:keyboardPress": {
+        "count": 15,
+        "seconds": 0.07465062799929001
+      },
+      "Playwright::ChannelOwners::ElementHandle:querySelectorAll": {
+        "count": 61,
+        "seconds": 0.3158196299827978
+      },
+      "Playwright::ChannelOwners::Frame:evaluateExpression": {
+        "count": 75,
+        "seconds": 0.22545388298931357
+      },
+      "Playwright::ChannelOwners::Page:close": {
+        "count": 35,
+        "seconds": 0.20655363100013346
+      },
+      "Playwright::ChannelOwners::BrowserContext:newCDPSession": {
+        "count": 35,
+        "seconds": 0.0338458900077967
+      },
+      "Playwright::ChannelOwners::CDPSession:send": {
+        "count": 35,
+        "seconds": 3.1097341800013965
+      },
+      "Playwright::ChannelOwners::CDPSession:detach": {
+        "count": 35,
+        "seconds": 0.03777973500837106
+      },
+      "Playwright::ChannelOwners::BrowserContext:clearPermissions": {
+        "count": 35,
+        "seconds": 0.02140697700997407
+      },
+      "Playwright::ChannelOwners::Page:bringToFront": {
+        "count": 35,
+        "seconds": 0.015912374003164587
+      },
+      "Playwright::ChannelOwners::ElementHandle:getProperty": {
+        "count": 5,
+        "seconds": 0.006695856998703675
+      },
+      "Playwright::ChannelOwners::ElementHandle:getAttribute": {
+        "count": 18,
+        "seconds": 0.0343729960040946
+      },
+      "Playwright::ChannelOwners::ElementHandle:press": {
+        "count": 9,
+        "seconds": 0.08116621900080645
+      },
+      "Playwright::ChannelOwners::ElementHandle:dblclick": {
+        "count": 1,
+        "seconds": 0.008913833000406157
+      },
+      "Playwright::ChannelOwners::Frame:waitForTimeout": {
+        "count": 1,
+        "seconds": 0.10128108000026259
+      },
+      "Playwright::ChannelOwners::ElementHandle:fill": {
+        "count": 13,
+        "seconds": 0.09798321799826226
+      },
+      "Playwright::ChannelOwners::JSHandle:getPropertyList": {
+        "count": 2,
+        "seconds": 0.0017637880009715445
+      },
+      "Playwright::ChannelOwners::Page:goBack": {
+        "count": 1,
+        "seconds": 0.0040784269986033905
+      },
+      "Playwright::ChannelOwners::Browser:close": {
+        "count": 2,
+        "seconds": 0.12337875599951076
+      }
+    }
+  },
+  "candidate": {
+    "wall": {
+      "Playwright::ChannelOwners::BrowserType:launch": {
+        "count": 2,
+        "seconds": 0.3253149809988827
+      },
+      "Playwright::ChannelOwners::Browser:newContext": {
+        "count": 2,
+        "seconds": 0.018781237000439432
+      },
+      "Playwright::ChannelOwners::BrowserContext:newPage": {
+        "count": 37,
+        "seconds": 1.7686957650021213
+      },
+      "Playwright::ChannelOwners::Frame:goto": {
+        "count": 64,
+        "seconds": 31.17407931299931
+      },
+      "Playwright::ChannelOwners::Frame:expect": {
+        "count": 151,
+        "seconds": 16.22197286700066
+      },
+      "Playwright::ChannelOwners::Frame:click": {
+        "count": 67,
+        "seconds": 4.405914483988454
+      },
+      "Playwright::ChannelOwners::Frame:type": {
+        "count": 25,
+        "seconds": 3.0354475830008596
+      },
+      "Playwright::ChannelOwners::Frame:press": {
+        "count": 24,
+        "seconds": 0.27546881999114703
+      },
+      "Playwright::ChannelOwners::Frame:evaluateExpression": {
+        "count": 969,
+        "seconds": 1.015117540033316
+      },
+      "Playwright::ChannelOwners::Page:close": {
+        "count": 35,
+        "seconds": 0.2383548360048735
+      },
+      "Playwright::ChannelOwners::BrowserContext:newCDPSession": {
+        "count": 35,
+        "seconds": 0.07627568500356574
+      },
+      "Playwright::ChannelOwners::CDPSession:send": {
+        "count": 35,
+        "seconds": 3.0560656160014332
+      },
+      "Playwright::ChannelOwners::CDPSession:detach": {
+        "count": 35,
+        "seconds": 0.051995226993312826
+      },
+      "Playwright::ChannelOwners::BrowserContext:clearPermissions": {
+        "count": 35,
+        "seconds": 0.03893271399647347
+      },
+      "Playwright::ChannelOwners::Page:bringToFront": {
+        "count": 35,
+        "seconds": 0.017419858995708637
+      },
+      "Playwright::ChannelOwners::Frame:waitForSelector": {
+        "count": 13,
+        "seconds": 0.23858406599538284
+      },
+      "Playwright::ChannelOwners::ElementHandle:evaluateExpression": {
+        "count": 8,
+        "seconds": 0.07666191999851435
+      },
+      "Playwright::ChannelOwners::ElementHandle:dispose": {
+        "count": 8,
+        "seconds": 0.00558049199571542
+      },
+      "Playwright::ChannelOwners::Frame:getAttribute": {
+        "count": 5,
+        "seconds": 0.01080236499910825
+      },
+      "Playwright::ChannelOwners::Frame:dblclick": {
+        "count": 1,
+        "seconds": 0.03389384699949005
+      },
+      "Playwright::ChannelOwners::Frame:waitForTimeout": {
+        "count": 1,
+        "seconds": 0.10172248900016712
+      },
+      "Playwright::ChannelOwners::Frame:fill": {
+        "count": 13,
+        "seconds": 0.13756597800238524
+      },
+      "Playwright::ChannelOwners::Page:goBack": {
+        "count": 1,
+        "seconds": 0.018305031000636518
+      },
+      "Playwright::ChannelOwners::Browser:close": {
+        "count": 2,
+        "seconds": 0.11436466899976949
+      }
+    },
+    "cpu": {
+      "Playwright::ChannelOwners::BrowserType:launch": {
+        "count": 2,
+        "seconds": 0.3304063640007371
+      },
+      "Playwright::ChannelOwners::Browser:newContext": {
+        "count": 2,
+        "seconds": 0.018636953000168432
+      },
+      "Playwright::ChannelOwners::BrowserContext:newPage": {
+        "count": 37,
+        "seconds": 1.7004919470073219
+      },
+      "Playwright::ChannelOwners::Frame:goto": {
+        "count": 64,
+        "seconds": 31.025339328998598
+      },
+      "Playwright::ChannelOwners::Frame:expect": {
+        "count": 151,
+        "seconds": 16.422946429995136
+      },
+      "Playwright::ChannelOwners::Frame:click": {
+        "count": 67,
+        "seconds": 4.028650708007262
+      },
+      "Playwright::ChannelOwners::Frame:type": {
+        "count": 25,
+        "seconds": 2.9925218080024933
+      },
+      "Playwright::ChannelOwners::Frame:press": {
+        "count": 24,
+        "seconds": 0.2923207369985903
+      },
+      "Playwright::ChannelOwners::Frame:evaluateExpression": {
+        "count": 1027,
+        "seconds": 1.006707562984957
+      },
+      "Playwright::ChannelOwners::Page:close": {
+        "count": 35,
+        "seconds": 0.2809628589911881
+      },
+      "Playwright::ChannelOwners::BrowserContext:newCDPSession": {
+        "count": 35,
+        "seconds": 0.07488941900373902
+      },
+      "Playwright::ChannelOwners::CDPSession:send": {
+        "count": 35,
+        "seconds": 3.6036385860006703
+      },
+      "Playwright::ChannelOwners::CDPSession:detach": {
+        "count": 35,
+        "seconds": 0.05828509700586437
+      },
+      "Playwright::ChannelOwners::BrowserContext:clearPermissions": {
+        "count": 35,
+        "seconds": 0.026635018992237747
+      },
+      "Playwright::ChannelOwners::Page:bringToFront": {
+        "count": 35,
+        "seconds": 0.023347981999904732
+      },
+      "Playwright::ChannelOwners::Frame:waitForSelector": {
+        "count": 13,
+        "seconds": 0.24259672799598775
+      },
+      "Playwright::ChannelOwners::ElementHandle:evaluateExpression": {
+        "count": 8,
+        "seconds": 0.06872005499826628
+      },
+      "Playwright::ChannelOwners::ElementHandle:dispose": {
+        "count": 8,
+        "seconds": 0.005224122000072384
+      },
+      "Playwright::ChannelOwners::Frame:getAttribute": {
+        "count": 5,
+        "seconds": 0.010992285002430435
+      },
+      "Playwright::ChannelOwners::Frame:dblclick": {
+        "count": 1,
+        "seconds": 0.032137148000401794
+      },
+      "Playwright::ChannelOwners::Frame:waitForTimeout": {
+        "count": 1,
+        "seconds": 0.10180307300106506
+      },
+      "Playwright::ChannelOwners::Frame:fill": {
+        "count": 13,
+        "seconds": 0.1377291140051966
+      },
+      "Playwright::ChannelOwners::Page:goBack": {
+        "count": 1,
+        "seconds": 0.006197265000082552
+      },
+      "Playwright::ChannelOwners::Browser:close": {
+        "count": 2,
+        "seconds": 0.10630360600043787
+      }
+    }
+  }
+}

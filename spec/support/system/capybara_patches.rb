@@ -189,9 +189,6 @@ end
 Playwright::Error.prepend(PlaywrightErrorPatch)
 
 module PlaywrightSoftReset
-  RESET_STORAGE_TYPES = "all"
-  private_constant :RESET_STORAGE_TYPES
-
   module Browser
     def create_browser_context
       # Each example registering a service worker that the soft reset then
@@ -206,38 +203,15 @@ module PlaywrightSoftReset
     end
 
     def soft_reset!
-      contexts = @playwright_browser.contexts
-      return false unless contexts.size == 1
-      return false if @context_downloaded
+      new_page =
+        SystemBrowserReset.soft_reset(
+          browser: @playwright_browser,
+          downloaded: @context_downloaded,
+        ) { |context| create_page(context) }
+      return false unless new_page
 
-      context = contexts.first
-      context.pages.each(&:close)
-      new_page = create_page(context)
-      return false if fake_clock_installed?(new_page)
-
-      clear_storage(new_page)
-      context.clear_permissions
-      @playwright_page = new_page.tap(&:bring_to_front)
+      @playwright_page = new_page
       true
-    end
-
-    private
-
-    def fake_clock_installed?(pw_page)
-      !pw_page.evaluate("() => setTimeout.toString()").include?("[native code]")
-    end
-
-    def clear_storage(pw_page)
-      cdp = pw_page.context.new_cdp_session(pw_page)
-      cdp.send_message(
-        "Storage.clearDataForOrigin",
-        params: {
-          origin: "*",
-          storageTypes: RESET_STORAGE_TYPES,
-        },
-      )
-    ensure
-      cdp&.detach
     end
   end
 

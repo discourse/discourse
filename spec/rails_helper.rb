@@ -127,6 +127,7 @@ RSpec.configure do |config|
   if system_specs_requested
     config.include SystemHelpers, type: :system
     config.include ThemeScreenshotMarker, type: :system
+    config.include NativeSystemHelpers, native_playwright: true
   end
   config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
@@ -210,7 +211,12 @@ RSpec.configure do |config|
     config.before(:each, type: :system) do |example|
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
-        BrowserTime.freeze(page, example.metadata[:time])
+        if example.metadata[:native_playwright]
+          browser_page.clock.install(time: example.metadata[:time])
+          browser_page.clock.resume
+        else
+          BrowserTime.freeze(page, example.metadata[:time])
+        end
       end
     end
 
@@ -227,8 +233,14 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system) do |example|
     SystemDrivers.preload_model_schemas!
-    SystemDrivers.register!(example)
-    driven_by SystemDrivers.driver_for(example)
+    if example.metadata[:native_playwright]
+      driven_by :native_system_server
+      native_browser.start(example, base_url: Capybara.current_session.server.base_url)
+      Playwright::Test.expect_timeout = Capybara.default_max_wait_time * 1000
+    else
+      SystemDrivers.register!(example)
+      driven_by SystemDrivers.driver_for(example)
+    end
 
     setup_system_test
 
@@ -239,15 +251,23 @@ RSpec.configure do |config|
     # they click things in the composer.
     SiteSetting.educate_until_posts = 0
 
-    SystemArtifacts.record_video(example)
-    SystemArtifacts.start_trace(page, example)
+    unless example.metadata[:native_playwright]
+      SystemArtifacts.record_video(example)
+      SystemArtifacts.start_trace(page, example)
+    end
 
-    page.driver.with_playwright_page do |pw_page|
-      $playwright_logger = PlaywrightLogger.new(pw_page)
+    capture_browser =
+      lambda do |pw_page|
+        $playwright_logger = PlaywrightLogger.new(pw_page)
 
-      if (tz = example.metadata[:timezone])
-        BrowserTime.override_timezone(pw_page, tz)
+        if (tz = example.metadata[:timezone])
+          BrowserTime.override_timezone(pw_page, tz)
+        end
       end
+    if example.metadata[:native_playwright]
+      capture_browser.call(browser_page)
+    else
+      page.driver.with_playwright_page(&capture_browser)
     end
   end
 
@@ -279,7 +299,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system) do |example|
-    SystemArtifacts.stop_trace(page, example)
+    SystemArtifacts.stop_trace(page, example) unless example.metadata[:native_playwright]
 
     lines = example.metadata[:extra_failure_lines]
 
@@ -300,11 +320,16 @@ RSpec.configure do |config|
     EmberDeprecations.record_counts($playwright_logger&.logs, example.metadata)
     EmberDeprecations.record_details($playwright_logger&.logs, example.metadata)
 
-    page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+    if example.metadata[:native_playwright]
+      browser_page.evaluate("() => window.MessageBus?.stop()")
+    else
+      page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+    end
 
     # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
     BlockRequestsMiddleware.block_requests!
 
+    native_browser.reset if example.metadata[:native_playwright]
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
   end
