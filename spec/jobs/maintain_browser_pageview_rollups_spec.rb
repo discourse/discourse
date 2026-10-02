@@ -116,6 +116,25 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         job.execute({})
 
         expect(BrowserPageviewSessionEngagementDailyRollup.count).to eq(0)
+        expect(BrowserPageviewSessionRollupSummary.count).to eq(0)
+      end
+
+      it "seeds recent sessions after engagement begins on a site with earlier pageviews" do
+        event = Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 20, 9))
+        job.execute({})
+        Fabricate(
+          :browser_pageview_session_engagement,
+          session_id: event.session_id,
+          created_at: Time.utc(2026, 6, 20, 10),
+        )
+
+        job.execute({})
+
+        expect(
+          BrowserPageviewSessionEngagementDailyRollup.where(date: Date.new(2026, 6, 20)).sum(
+            :sessions,
+          ),
+        ).to eq(1)
       end
 
       it "floors aggregation at the earliest engagement row's date" do
