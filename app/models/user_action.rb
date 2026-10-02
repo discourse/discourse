@@ -438,15 +438,18 @@ class UserAction < ActiveRecord::Base
     builder.where("t.deleted_at is null")
 
     # We will return deleted posts though if the user can see it
-    unless guardian.can_see_deleted_posts?
+    if guardian.can_see_deleted_posts?
+      # Staff see all deleted and hidden posts.
+    elsif guardian.moderated_category_ids.present?
+      # Category group moderators see deleted and hidden posts in the categories they moderate.
+      builder.where(
+        "(p.deleted_at is null and p2.deleted_at is null) OR t.category_id IN (:moderated_category_ids)",
+        moderated_category_ids: guardian.moderated_category_ids,
+      )
+      filter_hidden_posts(builder, guardian, category_ids: guardian.moderated_category_ids)
+    else
       builder.where("p.deleted_at is null and p2.deleted_at is null")
-
-      current_user_id = -2
-      current_user_id = guardian.user.id if guardian.user
-      builder.where(<<~SQL, current_user_id: current_user_id)
-        NOT COALESCE(p.hidden, p2.hidden, false) OR
-        CASE WHEN p.id IS NULL THEN p2.user_id ELSE p.user_id END = :current_user_id
-      SQL
+      filter_hidden_posts(builder, guardian)
     end
 
     visible_post_types = Topic.visible_post_types(guardian.user)
@@ -455,13 +458,32 @@ class UserAction < ActiveRecord::Base
       visible_post_types: visible_post_types,
     )
 
-    if !guardian.is_staff? && (guardian.user.nil? || guardian.user.id != user_id)
+    if guardian.is_staff?
+      # Staff see all topics including invisible.
+    elsif guardian.moderated_category_ids.present?
+      # Category group moderators see invisible topics in the categories they moderate.
+      builder.where(
+        "t.visible OR t.category_id IN (:moderated_category_ids)",
+        moderated_category_ids: guardian.moderated_category_ids,
+      )
+    elsif guardian.user.nil? || guardian.user.id != user_id
       builder.where("t.visible")
     end
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)
     filter_ignored_users(builder, guardian)
+  end
+
+  def self.filter_hidden_posts(builder, guardian, category_ids: [])
+    current_user_id = -2
+    current_user_id = guardian.user.id if guardian.user
+
+    builder.where(<<~SQL, current_user_id: current_user_id, category_ids: category_ids)
+      NOT COALESCE(p.hidden, p2.hidden, false) OR
+      t.category_id IN (:category_ids) OR
+      CASE WHEN p.id IS NULL THEN p2.user_id ELSE p.user_id END = :current_user_id
+    SQL
   end
 
   def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)

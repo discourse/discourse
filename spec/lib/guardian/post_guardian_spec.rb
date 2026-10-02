@@ -358,6 +358,28 @@ RSpec.describe PostGuardian do
 
       expect(Guardian.new(moderator).can_unhide?(post)).to be_truthy
     end
+
+    it "returns true for a category group moderator viewing a hidden post in their category" do
+      SiteSetting.enable_category_group_moderation = true
+      cat_moderator = Fabricate(:user)
+      mod_group = Fabricate(:group)
+      mod_group.add(cat_moderator)
+      Fabricate(:category_moderation_group, category: topic.category, group: mod_group)
+
+      post.update!(hidden: true)
+      expect(Guardian.new(cat_moderator).can_unhide?(post)).to be_truthy
+    end
+
+    it "returns false for a category group moderator viewing a hidden post outside their category" do
+      SiteSetting.enable_category_group_moderation = true
+      cat_moderator = Fabricate(:user)
+      mod_group = Fabricate(:group)
+      mod_group.add(cat_moderator)
+      Fabricate(:category_moderation_group, category: Fabricate(:category), group: mod_group)
+
+      post.update!(hidden: true)
+      expect(Guardian.new(cat_moderator).can_unhide?(post)).to be_falsey
+    end
   end
 
   describe "#can_skip_bump?" do
