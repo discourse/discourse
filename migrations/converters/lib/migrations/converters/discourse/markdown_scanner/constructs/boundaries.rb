@@ -112,6 +112,19 @@ module Migrations
               pos >= 2 && input.getbyte(pos - 1) == 0x3a && input.getbyte(pos - 2) == 0x5d
             end
 
+            # An HTML attribute value opens at `pos`: a quote sits before it,
+            # or the `=` does where the value carries none. Core rewrites an
+            # upload source inside a raw tag, so a URL standing there is a
+            # destination like a link's — the bytes to replace are the URL
+            # itself.
+            def attribute_value_before?(input, pos)
+              # 0x22 = `"`, 0x27 = `'`
+              pos -= 1 if pos > 0 && [0x22, 0x27].include?(input.getbyte(pos - 1))
+              # A tag may put its attributes on lines of their own.
+              pos -= 1 while pos > 0 && [0x20, 0x09, 0x0a, 0x0d].include?(input.getbyte(pos - 1))
+              pos > 0 && input.getbyte(pos - 1) == 0x3d # `=`
+            end
+
             def bang_before?(input, pos)
               return false if pos.zero?
 
