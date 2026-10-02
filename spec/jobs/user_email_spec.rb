@@ -37,6 +37,46 @@ RSpec.describe Jobs::UserEmail do
     fab!(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
     fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
+    it "delivers translated digests according to each recipient's language preferences" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      popular_topic.update!(locale: "en")
+      post = Fabricate(:post, topic: popular_topic, locale: "en", raw: "Original digest post")
+      post_translation = Fabricate(:post_localization, post: post)
+      topic_translation = Fabricate(:topic_localization, topic: popular_topic)
+      french_post_translation =
+        Fabricate(:post_localization, post: post, locale: "fr", raw: "Contenu traduit")
+      french_topic_translation =
+        Fabricate(:topic_localization, topic: popular_topic, locale: "fr", title: "Sujet traduit")
+      user.update!(locale: "ja")
+      french_user =
+        Fabricate(:user, locale: "fr", last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+      english_reader =
+        Fabricate(:user, locale: "ja", last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+      english_reader.user_option.update!(understood_languages: ["en"])
+      english_user =
+        Fabricate(:user, locale: "en", last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+
+      recipients = [
+        [user, topic_translation.title, post_translation.raw],
+        [french_user, french_topic_translation.title, french_post_translation.raw],
+        [english_reader, popular_topic.title, post.raw],
+        [english_user, popular_topic.title, post.raw],
+      ]
+      content = recipients.flat_map { |recipient, title, raw| [title, raw] }.uniq
+      recipients.each do |recipient, title, raw|
+        Jobs::UserEmail.new.execute(type: :digest, user_id: recipient.id)
+        mail = ActionMailer::Base.deliveries.last
+        expect(mail.to).to eq([recipient.email])
+        renderer = Email::Renderer.new(mail)
+        [renderer.html, renderer.text].each do |body|
+          expect(body).to include(title, raw)
+          expect(body).not_to include(*(content - [title, raw]))
+        end
+      end
+      expect(ActionMailer::Base.deliveries.size).to eq(4)
+    end
+
     it "doesn't call the mailer when the user is missing" do
       Jobs::UserEmail.new.execute(type: :digest, user_id: User.last.id + 10_000)
       expect(ActionMailer::Base.deliveries).to eq([])
