@@ -3,11 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { i18n } from "discourse-i18n";
+import { combinedSearchActive } from "../../lib/ai-search-scope";
 
 export default class AiQuickSearchNotice extends Component {
-  static shouldRender(args, { siteSettings }) {
+  static shouldRender(args, { siteSettings, currentUser }) {
     return (
       siteSettings.ai_embeddings_semantic_quick_search_enabled &&
+      !combinedSearchActive(siteSettings, currentUser) &&
       args.resultType?.type === "topic"
     );
   }

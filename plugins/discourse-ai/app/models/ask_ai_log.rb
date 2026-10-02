@@ -22,6 +22,8 @@ end
 #  answer                  :text
 #  answer_title            :text
 #  ask_outcome             :integer
+#  ask_trigger             :string           default(""), not null
+#  ask_trigger_reason      :string           default(""), not null
 #  asked_at                :datetime         not null
 #  candidate_post_ids      :bigint           default([]), not null, is an Array
 #  failure_stage           :integer

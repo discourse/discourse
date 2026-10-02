@@ -34,6 +34,87 @@ describe DiscourseAi::Discoveries::Retrieval do
   end
 
   describe "#call" do
+    context "with a scope" do
+      it "narrows both retrievals to the scope" do
+        lexical_retriever = instance_spy(Proc, call: [source(post_1)])
+        semantic_retriever = instance_spy(Proc, call: [source(post_2)])
+
+        result =
+          described_class.new(user:, lexical_retriever:, semantic_retriever:).call(
+            "how do I reset my password",
+            keyword_query: "reset password",
+            semantic_query: "How can I reset a forgotten password?",
+            scope_filter: "category:#{category.id}",
+          )
+
+        expect(lexical_retriever).to have_received(:call).with(
+          "reset password category:#{category.id}",
+        )
+        expect(semantic_retriever).to have_received(:call).with(
+          "How can I reset a forgotten password? category:#{category.id}",
+        )
+        expect(result.scope_fallback).to be_nil
+      end
+
+      it "searches the whole site when nothing matches inside the scope" do
+        lexical_retriever = ->(query) { query.include?("category:") ? [] : [source(post_1)] }
+
+        result =
+          described_class.new(
+            user:,
+            lexical_retriever:,
+            semantic_retriever: ->(_query) { [] },
+          ).call("reset password", scope_filter: "category:#{category.id}")
+
+        expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+          [topic_1.id],
+        )
+        expect(result.scope_fallback).to eq(true)
+      end
+
+      it "searches a personal message the reader is in as a message" do
+        message = Fabricate(:private_message_topic, user:)
+        message_post = Fabricate(:post, topic: message, user:, raw: "Widget reset steps")
+
+        result =
+          described_class.new(user:, lexical_retriever: ->(_query) { [source(message_post)] }).call(
+            "widget",
+            scope_filter: "topic:#{message.id}",
+          )
+
+        expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+          [message.id],
+        )
+        expect(result.scope_fallback).to be_nil
+      end
+
+      it "searches a topic post by post, without semantic retrieval" do
+        SearchIndexer.enable
+        widget_posts = [
+          Fabricate(:post, topic: topic_1, raw: "Widgets need a reset after updating"),
+          Fabricate(:post, topic: topic_1, raw: "Another widget tip: clear the cache"),
+        ]
+        widget_posts.each { |post| SearchIndexer.index(post, force: true) }
+        semantic_retriever = instance_spy(Proc, call: [source(post_2)])
+
+        result =
+          described_class.new(user:, semantic_retriever:).call(
+            "widget",
+            scope_filter: "topic:#{topic_1.id}",
+          )
+
+        expect(semantic_retriever).not_to have_received(:call)
+        expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+          [topic_1.id],
+        )
+        expect(result.candidates.first.fetch("passages").pluck("post_id")).to match_array(
+          widget_posts.map(&:id),
+        )
+      ensure
+        SearchIndexer.disable
+      end
+    end
+
     it "uses semantic retrieval with embeddings configured even when full-page semantic search is disabled" do
       SiteSetting.ai_embeddings_semantic_search_enabled = false
 

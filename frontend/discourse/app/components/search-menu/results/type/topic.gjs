@@ -35,6 +35,10 @@ export default class Results extends Component {
 
   <template>
     <span class="topic">
+      <PluginOutlet
+        @name="search-menu-results-topic-above-title"
+        @outletArgs={{lazyHash topic=@result.topic}}
+      />
       <span class="first-line">
         <TopicStatus
           @context="topic-view-title"

@@ -239,6 +239,54 @@ describe Jobs::StreamDiscoverReply do
     )
   end
 
+  it "publishes rewritten queries before retrieval when they differ from the query" do
+    allow(query_rewriter).to receive(:call).with(query).and_return(
+      DiscourseAi::Discoveries::QueryRewriter::Result.new(
+        keyword_query: "create plugin",
+        semantic_query: "how to create a Discourse plugin",
+        original_query_locale: "en",
+      ),
+    )
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:)
+        end
+        .map(&:data)
+
+    expect(messages.map { |message| message[:phase] }.first(2)).to eq(%w[searching rewritten])
+    expect(messages.second).to include(
+      keyword_query: "create plugin",
+      semantic_query: "how to create a Discourse plugin",
+    )
+  end
+
+  it "retrieves within the scope and says when it had to search the whole site" do
+    allow(retrieval).to receive(:call).and_return(
+      DiscourseAi::Discoveries::Retrieval::Result.new(
+        candidates: [candidate],
+        scope_fallback: true,
+      ),
+    )
+    allow(retrieval).to receive(:validated_sources).and_return([candidate])
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:, scope: "category:7")
+        end
+        .map(&:data)
+
+    expect(retrieval).to have_received(:call).with(
+      query,
+      keyword_query: query,
+      semantic_query: query,
+      scope_filter: "category:7",
+    )
+    expect(messages.last).to include(phase: "complete", scope_fallback: true)
+  end
+
   it "uses the original query when the configured rewrite agent is unavailable" do
     SiteSetting.ai_ask_ai_query_rewriter_agent = 99_999
 
