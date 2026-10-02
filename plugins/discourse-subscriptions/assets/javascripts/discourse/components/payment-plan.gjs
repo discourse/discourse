@@ -1,8 +1,6 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -10,21 +8,18 @@ import formatCurrency from "../helpers/format-currency";
 
 const RECURRING = "recurring";
 
-@tagName("")
 export default class PaymentPlan extends Component {
-  @computed("selectedPlan")
   get selectedClass() {
-    return this.selectedPlan === this.plan.id ? "btn-primary" : "";
+    return this.args.selectedPlan === this.args.plan.id ? "btn-primary" : "";
   }
 
-  @computed("plan.type")
   get recurringPlan() {
-    return this.plan?.type === RECURRING;
+    return this.args.plan?.type === RECURRING;
   }
 
   @action
   planClick() {
-    this.clickPlan(this.plan);
+    this.args.clickPlan(this.args.plan);
     return false;
   }
 
@@ -34,14 +29,14 @@ export default class PaymentPlan extends Component {
         "btn-discourse-subscriptions-subscribe"
         this.selectedClass
       }}
-      @action={{this.planClick}}
+      @action={{@planClick}}
     >
       <span class="interval">
         {{#if this.recurringPlan}}
           {{i18n
             (concat
               "discourse_subscriptions.plans.interval.adverb."
-              this.plan.recurring.interval
+              @plan.recurring.interval
             )
           }}
         {{else}}
@@ -50,7 +45,7 @@ export default class PaymentPlan extends Component {
       </span>
 
       <span class="amount">
-        {{formatCurrency this.plan.currency this.plan.amountDollars}}
+        {{formatCurrency @plan.currency @plan.amountDollars}}
       </span>
     </DButton>
   </template>
