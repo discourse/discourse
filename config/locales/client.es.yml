@@ -5866,6 +5866,7 @@ es:
             use_preset: "Configurar"
             presets:
               custom: "Personalizado"
+            automatic: "Automático"
           authorizations:
             user: "Usuario"
             scopes: "Ámbitos concedidos"

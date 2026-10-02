@@ -4074,6 +4074,7 @@ ro:
             block: "Blochează"
             presets:
               custom: "Personalizat"
+            automatic: "Automat"
           authorizations:
             user: "Utilizator"
             last_used: "Ultima utilizare"

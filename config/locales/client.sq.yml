@@ -4090,6 +4090,7 @@ sq:
             block: "Blloko"
             presets:
               custom: "Grupet e krijuara"
+            automatic: "Automatik"
           authorizations:
             user: "User"
             status: "Status"

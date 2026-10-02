@@ -4450,6 +4450,7 @@ te:
             block: "బ్లాక్"
             presets:
               custom: "అనురూప"
+            automatic: "స్వీయంగా"
           authorizations:
             user: "సభ్యుడు"
             status: "స్థితి"

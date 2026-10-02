@@ -5913,6 +5913,7 @@ el:
             block: "Αποκλεισμός"
             presets:
               custom: "Προσαρμοσμένο"
+            automatic: "Αυτόματα"
           authorizations:
             user: "Χρήστης"
             last_used: "Τελευταία χρήση"

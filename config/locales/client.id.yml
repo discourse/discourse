@@ -2489,6 +2489,7 @@ id:
             kind: "Tipe"
           clients:
             actions: "Aksi"
+            automatic: "Otomatis"
           authorizations:
             user: "Pengguna"
             status: "Status"

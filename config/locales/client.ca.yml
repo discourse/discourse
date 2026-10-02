@@ -3216,6 +3216,7 @@ ca:
             block: "Bloca"
             presets:
               custom: "Personalitzat"
+            automatic: "Automàtic"
           authorizations:
             user: "Usuari"
             status: "Estat"

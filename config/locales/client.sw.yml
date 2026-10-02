@@ -2533,6 +2533,7 @@ sw:
             block: "Zuia"
             presets:
               custom: "Binafsi"
+            automatic: "otomatiki"
           authorizations:
             user: "Mtumiaji"
             actions: "Vitendo"

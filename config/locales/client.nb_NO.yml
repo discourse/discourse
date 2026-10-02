@@ -4431,6 +4431,7 @@ nb_NO:
             block: "Blokker"
             presets:
               custom: "Egendefinert"
+            automatic: "Automatisk"
           authorizations:
             user: "Bruker"
             status: "Status"

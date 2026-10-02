@@ -3929,6 +3929,7 @@ hy:
             block: "Արգելափակել"
             presets:
               custom: "Մասնավոր"
+            automatic: "Ավտոմատ"
           authorizations:
             user: "Օգտատեր"
             status: "Ստատուս"

@@ -2863,6 +2863,7 @@ et:
             block: "Blokeeri"
             presets:
               custom: "Individuaalne"
+            automatic: "Automaatne"
           authorizations:
             user: "Kasutaja"
             status: "Staatus"

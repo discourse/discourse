@@ -3929,6 +3929,7 @@ ko:
             block: "차단"
             presets:
               custom: "사용자 정의"
+            automatic: "자동화"
           authorizations:
             user: "사용자"
             status: "상태"

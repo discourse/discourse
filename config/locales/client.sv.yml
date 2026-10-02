@@ -4502,6 +4502,7 @@ sv:
             block: "Blockera"
             presets:
               custom: "Anpassad"
+            automatic: "Automatisk"
           authorizations:
             user: "Användare"
             status: "Status"

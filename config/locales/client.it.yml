@@ -5308,6 +5308,7 @@ it:
             use_preset: "Configura"
             presets:
               custom: "Personalizzato"
+            automatic: "Automatico"
           authorizations:
             user: "Utente"
             last_used: "Ultimo utilizzo"

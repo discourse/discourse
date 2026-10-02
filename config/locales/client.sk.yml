@@ -5715,6 +5715,7 @@ sk:
             use_preset: "Nastavenie"
             presets:
               custom: "Vlastné"
+            automatic: "Automaticky"
           authorizations:
             user: "Používateľ"
             last_used: "Naposledy použité"

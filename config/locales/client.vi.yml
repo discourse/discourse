@@ -5383,6 +5383,7 @@ vi:
             block: "Khóa"
             presets:
               custom: "Tùy biến"
+            automatic: "Tự động"
           authorizations:
             user: "Người dùng"
             last_used: "Lần cuối sử dụng"

@@ -4686,6 +4686,7 @@ pt:
             block: "Bloquear"
             presets:
               custom: "Personalizar"
+            automatic: "Automático"
           authorizations:
             user: "Utilizador"
             status: "Estado"

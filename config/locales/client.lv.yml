@@ -2996,6 +2996,7 @@ lv:
           clients:
             actions: "Darbības"
             block: "Bloķēt"
+            automatic: "Automātiski"
           authorizations:
             user: "Lietotājs"
             status: "Statuss"

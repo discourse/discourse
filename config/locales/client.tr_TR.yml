@@ -5953,6 +5953,7 @@ tr_TR:
             use_preset: "Kur"
             presets:
               custom: "Özel"
+            automatic: "Otomatik"
           authorizations:
             user: "Kullanıcı"
             scopes: "Verilen kapsamlar"

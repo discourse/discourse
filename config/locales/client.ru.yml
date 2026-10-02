@@ -6312,6 +6312,7 @@ ru:
             use_preset: "Настроить"
             presets:
               custom: "Другое"
+            automatic: "Автоматическая"
           authorizations:
             user: "Пользователь"
             last_used: "Последнее использование"

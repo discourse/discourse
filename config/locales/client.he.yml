@@ -6093,6 +6093,7 @@ he:
             use_preset: "הגדרה"
             presets:
               custom: "מותאם"
+            automatic: "אוטומטי"
           authorizations:
             user: "משתמש"
             last_used: "שימוש אחרון"

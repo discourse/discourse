@@ -5341,6 +5341,7 @@ ja:
             use_preset: "セットアップ"
             presets:
               custom: "カスタム"
+            automatic: "自動作成"
           authorizations:
             user: "ユーザー"
             last_used: "最後の使用"
