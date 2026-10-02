@@ -2940,6 +2940,10 @@ trust:
     default: ""
     area: "flags"
     client: true
+  enable_dsa_reporting:
+    default: false
+    area: "flags"
+    client: true
   post_links_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators

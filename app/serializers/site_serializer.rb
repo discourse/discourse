@@ -8,6 +8,7 @@ class SiteSerializer < ApplicationSerializer
     :notification_types,
     :post_types,
     :user_tips,
+    :dsa_taxonomy,
     :trust_levels,
     :groups,
     :filters,
@@ -221,6 +222,14 @@ class SiteSerializer < ApplicationSerializer
 
   def include_user_tips?
     SiteSetting.enable_user_tips
+  end
+
+  def dsa_taxonomy
+    Reviewable::DsaTaxonomy.data
+  end
+
+  def include_dsa_taxonomy?
+    SiteSetting.enable_dsa_reporting && scope.can_see_review_queue?
   end
 
   def filters

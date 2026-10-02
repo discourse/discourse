@@ -7,10 +7,15 @@ import { isPresent } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { REVIEWABLE_UNKNOWN_TYPE_SOURCE } from "discourse/lib/constants";
+import { dsaCategoryLabel } from "discourse/lib/dsa-classification";
 import { i18n } from "discourse-i18n";
+
+export const DSA_CLASSIFICATION_STATUS = "dsa_classification";
+const UNCLASSIFIED_DSA_CATEGORY = "unclassified";
 
 export default class ReviewIndexController extends Controller {
   @service currentUser;
+  @service site;
   @service dialog;
   @service siteSettings;
   @service toasts;
@@ -30,10 +35,12 @@ export default class ReviewIndexController extends Controller {
     "additional_filters",
     "flagged_by",
     "score_type",
+    "dsa_category",
   ];
 
   type = null;
   status = "pending";
+  dsa_category = null;
   priority = this.siteSettings.reviewable_default_visibility;
   category_id = null;
   reviewables = null;
@@ -60,6 +67,27 @@ export default class ReviewIndexController extends Controller {
         name: i18n(`review.types.${translationKey}.title`),
       };
     });
+  }
+
+  // The type filter becomes a DSA category filter while filtering by classification.
+  @computed("filterStatus")
+  get filteringByDsaClassification() {
+    return this.filterStatus === DSA_CLASSIFICATION_STATUS;
+  }
+
+  @computed("site.dsa_taxonomy")
+  get allDsaCategories() {
+    const categories = Object.values(this.site.dsa_taxonomy ?? {}).flatMap(
+      (c) => Object.keys(c)
+    );
+
+    return [
+      {
+        id: UNCLASSIFIED_DSA_CATEGORY,
+        name: i18n("review.filters.dsa_category.unclassified"),
+      },
+      ...categories.map((id) => ({ id, name: dsaCategoryLabel(id) })),
+    ];
   }
 
   @computed("scoreTypes")
@@ -89,7 +117,7 @@ export default class ReviewIndexController extends Controller {
     );
   }
 
-  @computed
+  @computed("siteSettings.enable_dsa_reporting")
   get statuses() {
     return [
       "pending",
@@ -98,6 +126,9 @@ export default class ReviewIndexController extends Controller {
       "deleted",
       "ignored",
       "reviewed",
+      ...(this.siteSettings.enable_dsa_reporting
+        ? [DSA_CLASSIFICATION_STATUS]
+        : []),
       "all",
     ].map((id) => {
       return { id, name: i18n(`review.statuses.${id}.title`) };
@@ -183,7 +214,7 @@ export default class ReviewIndexController extends Controller {
     const currentOrder = this.sort_order;
     let nextOrder = this.filterSortOrder;
 
-    const createdAtStatuses = ["reviewed", "all"];
+    const createdAtStatuses = ["reviewed", "all", DSA_CLASSIFICATION_STATUS];
     const priorityStatuses = [
       "approved",
       "rejected",
@@ -211,7 +242,10 @@ export default class ReviewIndexController extends Controller {
     }
 
     this.setProperties({
-      type: this.filterType,
+      type: this.filteringByDsaClassification ? null : this.filterType,
+      dsa_category: this.filteringByDsaClassification
+        ? this.filterDsaCategory
+        : null,
       priority: this.filterPriority,
       status: this.filterStatus,
       category_id: this.filterCategoryId,
