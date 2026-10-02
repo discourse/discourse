@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { getCSSColors } from "discourse/lib/css-color";
 import loadChartJS from "discourse/lib/load-chart-js";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -113,13 +114,13 @@ export default class TopicViewsChart extends Component {
     const topicMapElement = document.querySelector(".topic-map");
 
     // grab colors from CSS
-    const lineColor =
-      getComputedStyle(topicMapElement).getPropertyValue("--chart-line-color");
-    const pointColor = getComputedStyle(topicMapElement).getPropertyValue(
-      "--chart-point-color"
-    );
-    const predictionColor = getComputedStyle(topicMapElement).getPropertyValue(
-      "--chart-prediction-color"
+    const {
+      "--chart-line-color": lineColor,
+      "--chart-point-color": pointColor,
+      "--chart-prediction-color": predictionColor,
+    } = getCSSColors(
+      ["--chart-line-color", "--chart-point-color", "--chart-prediction-color"],
+      { context: topicMapElement }
     );
 
     if (this.chart) {

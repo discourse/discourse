@@ -1,17 +1,12 @@
 import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
 import { buildLegendIcon, dimColor } from "discourse/lib/chart-legend-icon";
+import { getCSSColors } from "discourse/lib/css-color";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import { remToPx } from "discourse/lib/rem-to-px";
 import I18n, { i18n } from "discourse-i18n";
 import Chart from "./chart";
-
-function getCSSColor(varName) {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(varName)
-    .trim();
-}
 
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -77,6 +72,13 @@ export default class AdminReportStackedChart extends Component {
 
     const chartOptions = options || {};
     chartOptions.hiddenLabels ??= [];
+
+    const colors = getCSSColors([
+      "--primary",
+      "--primary-high",
+      "--primary-very-low",
+      "--secondary",
+    ]);
 
     const sourceData = makeArray(model.chartData || model.data);
     const chartGrouping =
@@ -151,7 +153,7 @@ export default class AdminReportStackedChart extends Component {
               padding: remToPx(1),
               font: { size: remToPx(0.75) },
               generateLabels: (chart) => {
-                const textColor = getCSSColor("--primary-high");
+                const textColor = colors["--primary-high"];
                 return chart.data.datasets.map((dataset, i) => {
                   const isVisible = chart.isDatasetVisible(i);
                   return {
@@ -168,10 +170,10 @@ export default class AdminReportStackedChart extends Component {
           tooltip: {
             mode: "index",
             intersect: false,
-            backgroundColor: getCSSColor("--primary"),
-            titleColor: getCSSColor("--secondary"),
-            bodyColor: getCSSColor("--secondary"),
-            footerColor: getCSSColor("--secondary"),
+            backgroundColor: colors["--primary"],
+            titleColor: colors["--secondary"],
+            bodyColor: colors["--secondary"],
+            footerColor: colors["--secondary"],
             titleMarginBottom: 16,
             footerMarginTop: 16,
             padding: {
@@ -211,7 +213,7 @@ export default class AdminReportStackedChart extends Component {
             stacked: true,
             display: true,
             grid: {
-              color: getCSSColor("--primary-very-low"),
+              color: colors["--primary-very-low"],
               display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
