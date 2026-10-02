@@ -26,6 +26,14 @@ class HomepageHelper
     top_menu_homepage(current_user)
   end
 
+  def self.option_path(option)
+    path = option[:path]
+    return path if !path.respond_to?(:call)
+    return if option[:id] != SiteSetting.homepage && !option[:server_side]
+
+    path.call
+  end
+
   def self.custom_homepage_route(request)
     if CrawlerDetection.crawler_layout_request?(request)
       return SiteSetting.custom_homepage_crawler_route

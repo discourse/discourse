@@ -75,6 +75,18 @@ chat:
     default: 60
     min: 0
     area: "flags"
+  chat_homepage_channel:
+    type: enum
+    default: ""
+    enum: "Chat::HomepageChannelSiteSetting"
+    area: "interface"
+    depends_on:
+      - default_homepage
+    depends_on_values:
+      default_homepage:
+        - chat
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
   chat_allow_archiving_channels:
     default: false
     client: true

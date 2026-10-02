@@ -201,10 +201,7 @@ acceptance("Admin - Site Settings", function (needs) {
       .hasValue("default", "parent controls reset the dependent setting");
     assert
       .dom(".setting-depends-on-notice")
-      .includesText(
-        "This setting only applies when Highlight scope is set to a compatible value.",
-        "value-based dependencies do not use enabled copy"
-      );
+      .doesNotExist("the parent already shows the dependency");
   });
 
   test("filtering by an inline dependent site setting shows its parent setting", async function (assert) {

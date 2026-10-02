@@ -90,6 +90,21 @@ export function discoveryHomepageRoute() {
   return `discovery.${item ?? "latest"}`;
 }
 
+/**
+ * Whether the transition is rendering the homepage at `/`.
+ *
+ * @param {Transition} transition
+ * @returns {boolean}
+ */
+export function isHomepageTransition(transition) {
+  const intent = transition?.intent;
+
+  return Boolean(
+    intent?.queryParams?.[homepageRewriteParam] ||
+    intent?.url?.includes(`${homepageRewriteParam}=`)
+  );
+}
+
 export function serverSideHomepage() {
   return registeredHomepageOption()?.server_side === true;
 }

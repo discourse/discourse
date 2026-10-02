@@ -1173,7 +1173,9 @@ class Plugin::Instance
   #
   # @param id [String, Symbol] stable identifier stored in the site setting
   # @param name [String] client-side translation key used in the admin setting
-  # @param path [String] application path for the homepage
+  # @param path [String, Proc] application path for the homepage, or a lambda
+  #   returning one when it depends on settings (it is resolved per request and
+  #   sent with the site data)
   # @param route [String] Rails controller action, in `controller#action` form
   # @param anonymous [Boolean] whether logged-out visitors may use this homepage
   # @param server_side [Boolean] whether navigation requires a full page request
@@ -1201,7 +1203,9 @@ class Plugin::Instance
             "homepage id must contain only lowercase letters, numbers, underscores, and hyphens"
     end
     raise ArgumentError, "homepage name must be present" if name.blank?
-    raise ArgumentError, "homepage path must start with /" if !path.to_s.start_with?("/")
+    if !path.respond_to?(:call) && !path.to_s.start_with?("/")
+      raise ArgumentError, "homepage path must start with /"
+    end
     if !route.to_s.match?(/\A[^#]+#[^#]+\z/)
       raise ArgumentError, "homepage route must use controller#action format"
     end
@@ -1230,7 +1234,7 @@ class Plugin::Instance
       {
         id: id,
         name: name,
-        path: path.to_s,
+        path: path.respond_to?(:call) ? path : path.to_s,
         route: route.to_s,
         anonymous: anonymous,
         server_side: server_side,
