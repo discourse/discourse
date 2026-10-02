@@ -696,12 +696,11 @@ class InvitesController < ApplicationController
   end
 
   def groups_can_see_topic?(groups, topic)
-    if topic&.read_restricted_category?
-      topic_groups = topic.category.groups
-      return false if (groups & topic_groups).blank?
-    end
+    return true if !topic&.read_restricted_category?
 
-    true
+    allowed_group_ids = topic.category.groups.pluck(:id)
+    invitee_group_ids = [Group::AUTO_GROUPS[:trust_level_0], *Array(groups).map(&:id)]
+    allowed_group_ids.intersect?(invitee_group_ids)
   end
 
   def post_process_invite(user)
