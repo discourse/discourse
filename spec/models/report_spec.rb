@@ -855,19 +855,20 @@ RSpec.describe Report do
         result =
           PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: "bad").perform
 
-        result.reviewable.perform(flagger, :agree_and_hide)
+        reviewer = Fabricate(:admin)
+        result.reviewable.perform(reviewer, :agree_and_hide)
         expect(result.success).to eq(true)
         expect(report.data).to be_present
 
         exporter = Jobs::ExportCsvFile.new
         exporter.entity = "report"
         exporter.extra = ActiveSupport::HashWithIndifferentAccess.new(name: "flags_status")
-        exporter.current_user = flagger
+        exporter.current_user = reviewer
         exported_csv = []
         exporter.report_export { |entry| exported_csv << entry }
         expect(exported_csv[0]).to eq(["Type", "Assigned", "Poster", "Flagger", "Resolution time"])
         expect(exported_csv[1]).to eq(
-          ["spam", flagger.username, post.user.username, flagger.username, "0.0"],
+          ["spam", reviewer.username, post.user.username, flagger.username, "0.0"],
         )
       end
     end
