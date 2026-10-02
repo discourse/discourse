@@ -8,18 +8,15 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
   subject(:uploader) do
     described_class.allocate.tap do |task|
       task.instance_variable_set(:@seen_upload_ids, Set.new)
-      task.instance_variable_set(
-        :@downloader,
-        Migrations::Importer::Uploads::Downloader.new(cache_path: "", downloads: {}),
-      )
+      task.instance_variable_set(:@upload_service, upload_service)
       task.reporter = reporter
     end
   end
 
   let(:reporter) { instance_double(Migrations::Reporting::Reporter::StepHandle, notice: nil) }
+  let(:upload_service) { instance_double(Migrations::Importer::Uploads::UploadCreationService) }
 
-  let(:status) { described_class::Status }
-  let(:skip_reason) { described_class::SkipReason }
+  let(:enums) { Migrations::Database::FilesDB::Enums }
 
   before do
     allow(Migrations::Database::FilesDB::Upload).to receive(:create)
@@ -31,11 +28,11 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
     def result_for(source_id, upload_id)
       {
         id: source_id,
-        status: status::OK,
+        status: enums::UploadResultStatus::OK,
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
-        file_type: Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
+        file_type: enums::UploadFileType::IMAGE,
         upload: {
           id: upload_id,
           sha1: "abc",
@@ -68,11 +65,11 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
     it "records the uploads row and the ok result, returning :ok" do
       result = {
         id: "hash-ok",
-        status: status::OK,
+        status: enums::UploadResultStatus::OK,
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
-        file_type: Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
+        file_type: enums::UploadFileType::IMAGE,
         upload: {
           id: 7,
           sha1: "abc",
@@ -90,11 +87,11 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
       )
       expect(Migrations::Database::FilesDB::UploadResult).to have_received(:create).with(
         id: "hash-ok",
-        status: status::OK,
+        status: enums::UploadResultStatus::OK,
         skip_reason: nil,
         skip_details: nil,
         markdown: "![](x)",
-        file_type: Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
+        file_type: enums::UploadFileType::IMAGE,
         upload_id: 7,
       )
     end
@@ -102,8 +99,8 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
     it "records the error result with a null upload_id and reports it" do
       result = {
         id: "hash-err",
-        status: status::ERROR,
-        skip_reason: skip_reason::DOWNLOAD_ERROR,
+        status: enums::UploadResultStatus::ERROR,
+        skip_reason: enums::UploadSkipReason::DOWNLOAD_ERROR,
         skip_details: "boom",
         markdown: nil,
         file_type: nil,
@@ -115,7 +112,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
 
       expect(Migrations::Database::FilesDB::Upload).not_to have_received(:create)
       expect(Migrations::Database::FilesDB::UploadResult).to have_received(:create).with(
-        hash_including(id: "hash-err", status: status::ERROR, upload_id: nil),
+        hash_including(id: "hash-err", status: enums::UploadResultStatus::ERROR, upload_id: nil),
       )
       expect(reporter).to have_received(:notice)
     end
@@ -123,8 +120,8 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
     it "records a download row when the result carries one" do
       result = {
         id: "hash-dl",
-        status: status::SKIPPED,
-        skip_reason: skip_reason::FILE_NOT_FOUND,
+        status: enums::UploadResultStatus::SKIPPED,
+        skip_reason: enums::UploadSkipReason::FILE_NOT_FOUND,
         skip_details: nil,
         markdown: nil,
         file_type: nil,
@@ -145,18 +142,13 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
   end
 
   describe "upload classification" do
-    it "records the created upload's file type" do
-      metadata = described_class::UploadMetadata.new(description: nil)
-      upload_markdown_class =
-        Class.new do
-          def initialize(*)
-          end
+    let(:service_class) { Migrations::Importer::Uploads::UploadCreationService }
 
-          def to_markdown(display_name: nil)
-            "markdown"
-          end
-        end
-      file_helper =
+    before do
+      stub_const("Discourse", Module.new)
+      stub_const("Discourse::SYSTEM_USER_ID", -1)
+      stub_const(
+        "FileHelper",
         Module.new do
           def self.is_supported_image?(filename)
             filename.end_with?(".png")
@@ -169,21 +161,34 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
           def self.is_supported_video?(filename)
             filename.end_with?(".mp4")
           end
-        end
-      stub_const("UploadMarkdown", upload_markdown_class)
-      stub_const("FileHelper", file_helper)
+        end,
+      )
+    end
 
+    def created(filename)
+      service_class::Result.new(
+        source_id: filename,
+        status: enums::UploadResultStatus::OK,
+        upload: Data.define(:original_filename, :attributes).new(filename, {}),
+        markdown: "markdown",
+        skip_reason: nil,
+        skip_details: nil,
+        download: nil,
+      )
+    end
+
+    it "records the created upload's file type" do
       expected_types = {
-        "image.png" => Migrations::Database::FilesDB::Enums::UploadFileType::IMAGE,
-        "audio.mp3" => Migrations::Database::FilesDB::Enums::UploadFileType::AUDIO,
-        "video.mp4" => Migrations::Database::FilesDB::Enums::UploadFileType::VIDEO,
-        "document.pdf" => Migrations::Database::FilesDB::Enums::UploadFileType::ATTACHMENT,
+        "image.png" => enums::UploadFileType::IMAGE,
+        "audio.mp3" => enums::UploadFileType::AUDIO,
+        "video.mp4" => enums::UploadFileType::VIDEO,
+        "document.pdf" => enums::UploadFileType::ATTACHMENT,
       }
 
       expected_types.each do |filename, file_type|
-        upload = Data.define(:original_filename, :attributes).new(filename, {})
+        allow(upload_service).to receive(:create).and_return(created(filename))
 
-        result = uploader.__send__(:success_result, { id: filename }, upload, metadata, nil)
+        result = uploader.process({ id: filename }, nil)
 
         expect(result[:file_type]).to eq(file_type)
       end

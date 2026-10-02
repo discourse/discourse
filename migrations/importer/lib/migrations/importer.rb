@@ -11,9 +11,28 @@ module Migrations
     def self.execute(options)
       config_path = File.join(root_path, "config", "import.yml")
       config = YAML.load_file(config_path, symbolize_names: true)
+      resolve_config_defaults(config)
 
       executor = Executor.new(config, options)
       executor.start
+    end
+
+    # The derived `files_db` is only used when that file exists, because a
+    # missing files DB switches the uploads step to inline mode. The `uploads`
+    # section is added when it is missing, because inline mode can run without
+    # it when every upload comes from a URL or a data blob.
+    def self.resolve_config_defaults(config)
+      intermediate_db = config[:intermediate_db]
+
+      if config[:files_db].blank?
+        derived = CompanionPaths.files_db(intermediate_db)
+        config[:files_db] = derived if File.exist?(derived)
+      end
+
+      uploads = (config[:uploads] ||= {})
+      if uploads[:download_cache_path].blank?
+        uploads[:download_cache_path] = CompanionPaths.download_cache_path(intermediate_db)
+      end
     end
 
     def self.loader
