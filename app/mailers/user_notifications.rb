@@ -727,7 +727,7 @@ class UserNotifications < ActionMailer::Base
           invite_template,
           username: username,
           group_name: group_name,
-          topic_title: gsub_emoji_to_unicode(title),
+          topic_title: ERB::Util.html_escape(gsub_emoji_to_unicode(title)),
           topic_excerpt: topic_excerpt,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
