@@ -41,6 +41,7 @@ module Migrations
               created_at: item[:created_at],
               deleted_at: item[:deleted_at],
               deleted_by_id: item[:deleted_by_id],
+              existing_id: nil,
               external_id: item[:external_id],
               featured_link: item[:featured_link],
               locale: item[:locale],

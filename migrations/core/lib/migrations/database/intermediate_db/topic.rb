@@ -19,6 +19,7 @@ module Migrations
             created_at,
             deleted_at,
             deleted_by_id,
+            existing_id,
             external_id,
             featured_link,
             locale,
@@ -36,7 +37,7 @@ module Migrations
             visible
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -52,6 +53,7 @@ module Migrations
         # @param created_at             [Time, nil]
         # @param deleted_at             [Time, nil]
         # @param deleted_by_id          [Integer, String, nil]
+        # @param existing_id            [Integer, nil]
         # @param external_id            [Integer, String, nil]
         # @param featured_link          [String, nil]
         # @param locale                 [String, nil]
@@ -79,6 +81,7 @@ module Migrations
           created_at: nil,
           deleted_at: nil,
           deleted_by_id: nil,
+          existing_id: nil,
           external_id: nil,
           featured_link: nil,
           locale: nil,
@@ -106,6 +109,7 @@ module Migrations
             Migrations::Database.format_datetime(created_at),
             Migrations::Database.format_datetime(deleted_at),
             deleted_by_id,
+            existing_id,
             external_id,
             featured_link,
             locale,

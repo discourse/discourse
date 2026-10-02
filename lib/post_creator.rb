@@ -298,7 +298,7 @@ class PostCreator
   def self.before_create_tasks(post)
     set_reply_info(post)
 
-    post.word_count = post.raw.scan(/[[:word:]]+/).size
+    post.word_count = Post.count_words(post.raw)
 
     post.post_number ||=
       Topic.next_post_number(
