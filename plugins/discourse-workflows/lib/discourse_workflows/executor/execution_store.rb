@@ -80,7 +80,7 @@ module DiscourseWorkflows
           waiting_until: nil,
           timeout_action: nil,
         )
-        trigger_error_workflow(error, steps)
+        execution.trigger_error_workflow(error, steps: steps)
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
         )
@@ -478,15 +478,6 @@ module DiscourseWorkflows
 
       def compact_run_ports(ports)
         Array(ports).map { |port| port.except("items").merge("items" => [], "truncated" => true) }
-      end
-
-      def trigger_error_workflow(error, steps)
-        ErrorWorkflowTrigger.new(
-          workflow,
-          steps,
-          execution: execution,
-          execution_mode: @options.execution_mode,
-        ).trigger_error_workflow(error)
       end
 
       def publish_waiting_form_notification(node)

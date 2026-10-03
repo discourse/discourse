@@ -201,11 +201,21 @@ module DiscourseWorkflows
 
       if claimed
         reload
+        trigger_error_workflow(StandardError.new(message))
         DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
         DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)
       end
 
       claimed
+    end
+
+    def trigger_error_workflow(error, steps: execution_data&.steps_array || [])
+      Executor::ErrorWorkflowTrigger.new(
+        workflow,
+        steps,
+        execution: self,
+        execution_mode: execution_mode.to_sym,
+      ).trigger_error_workflow(error)
     end
 
     def waiting_step_input_items
