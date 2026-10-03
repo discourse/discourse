@@ -200,8 +200,8 @@ importers:
         specifier: ^3.0.0
         version: 3.1.0
       '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
-        specifier: ^3.2.0
-        version: 3.2.0
+        specifier: ^3.2.1
+        version: 3.2.1
       '@codemirror/autocomplete':
         specifier: ^6.20.3
         version: 6.20.3
@@ -1014,11 +1014,14 @@ packages:
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
 
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.0':
-    resolution: {integrity: sha512-vuL+AJae6c6lkmFd63v7c/7J7seyi7ZA8uMLNe9GvvApySToun3Zlv8SfyZU0d+wcNG4+Ix6qpRb8jOobZgNNg==}
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.1':
+    resolution: {integrity: sha512-2fhWAG48EjPoKhoHLG6RcT3/VaCzYEbRb6BtA/Vcfx4FrL0P1KrEgBJ6OAwB0X8MOV6UH22YgjFFHjv8fQD9rA==}
 
   '@atlaskit/pragmatic-drag-and-drop@3.1.0':
     resolution: {integrity: sha512-VU+2Oh6OgvC6D1xiX3lfm1gZJsaSPD+ZKjAHodOQ9IO6RfOvAyReLlK5ut9gIUpPmbD8d09wlCs7y4A6/I8c5Q==}
+
+  '@atlaskit/pragmatic-drag-and-drop@4.0.0':
+    resolution: {integrity: sha512-pyDo2B5NiaExoKGmgeXKGNUL4aR4UzzSZm8QWWjYTEyBLVqSqKyKUwtVxMw2YEkakagOGFONUdHM32LAH2nPug==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -8151,12 +8154,18 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
 
-  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.0':
+  '@atlaskit/pragmatic-drag-and-drop-auto-scroll@3.2.1':
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop': 3.1.0
+      '@atlaskit/pragmatic-drag-and-drop': 4.0.0
       '@babel/runtime': 7.29.7
 
   '@atlaskit/pragmatic-drag-and-drop@3.1.0':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      bind-event-listener: 3.0.0
+      raf-schd: 4.0.3
+
+  '@atlaskit/pragmatic-drag-and-drop@4.0.0':
     dependencies:
       '@babel/runtime': 7.29.7
       bind-event-listener: 3.0.0
