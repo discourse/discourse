@@ -1,7 +1,6 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import LatestTopicListItem from "discourse/components/topic-list/latest-topic-list-item";
 import getUrl from "discourse/lib/get-url";
@@ -9,20 +8,21 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 // Exists so plugins can use it
-@tagName("")
 export default class CategoriesTopicList extends Component {
+  @service siteSettings;
+
   <template>
     <div ...attributes>
       <div aria-level="2" class="table-heading" role="heading">
-        {{i18n (concat "filters." this.filter ".title")}}
+        {{i18n (concat "filters." @filter ".title")}}
         <PluginOutlet
           @connectorTagName="div"
           @name="categories-topics-table-heading"
         />
       </div>
 
-      {{#if this.topics}}
-        {{#each this.topics as |t|}}
+      {{#if @topics}}
+        {{#each @topics as |t|}}
           <LatestTopicListItem @topic={{t}} />
         {{/each}}
 
@@ -35,18 +35,18 @@ export default class CategoriesTopicList extends Component {
           }}
             <a
               class="btn btn-default pull-right"
-              href={{getUrl (concat "/" this.filter "?order=created")}}
+              href={{getUrl (concat "/" @filter "?order=created")}}
             >{{i18n "more"}}</a>
           {{else}}
             <a
               class="btn btn-default pull-right"
-              href={{getUrl (concat "/" this.filter)}}
+              href={{getUrl (concat "/" @filter)}}
             >{{i18n "more"}}</a>
           {{/if}}
         </div>
       {{else}}
         <div class="no-topics">
-          <h3>{{i18n (concat "topics.none." this.filter)}}</h3>
+          <h3>{{i18n (concat "topics.none." @filter)}}</h3>
         </div>
       {{/if}}
     </div>
