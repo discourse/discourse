@@ -1,6 +1,7 @@
 import { click, currentURL, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Category from "discourse/models/category";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import {
   acceptance,
@@ -585,6 +586,13 @@ acceptance("Tag info", function (needs) {
         category: "feature",
       }) + ` - ${this.siteSettings.title}`
     );
+  });
+
+  test("untagged view of a category defaulting to no subcategories", async function (assert) {
+    Category.findById(2).set("default_list_filter", "none");
+
+    await visit("/tags/c/feature/2/none");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/none");
   });
 
   test("can visit show-category-latest routes", async function (assert) {
