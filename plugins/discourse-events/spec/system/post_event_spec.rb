@@ -537,11 +537,14 @@ describe "Post event" do
   end
 
   context "when using bulk inline invite" do
+    before { Jobs.run_immediately! }
+
     let!(:post) do
       PostCreator.create(
         admin,
         title: "My test meetup event",
-        raw: "[event name='cool-event' status='public' start='2222-02-22 00:00' ]\n[/event]",
+        raw:
+          "[event name='cool-event' status='public' start='2222-02-22 00:00' recurrence='every_week']\n[/event]",
       )
     end
 
@@ -559,6 +562,20 @@ describe "Post event" do
         .send_invites
 
       expect(bulk_invite_modal_page).to be_closed
+    end
+
+    it "can apply bulk attendance to every following occurrence" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page
+        .set_invitee_at_row(invitable_user_1.username, "going", 1)
+        .apply_to_following_events
+        .send_invites
+
+      expect(
+        DiscourseEvents::Events::Invitee.find_by(user_id: invitable_user_1.id, post_id: post.id),
+      ).to be_recurring
     end
 
     it "keeps a single row when removing the last invitee" do
@@ -580,15 +597,22 @@ describe "Post event" do
       visit(post.topic.url)
 
       post_event_page.open_bulk_invite_modal
-      bulk_invite_modal_page.upload_csv(
-        "#{Rails.root.join("plugins/discourse-events/spec/fixtures/csv/bulk_invite.csv")}",
-      )
-      PageObjects::Components::Dialog.new.click_yes
+      bulk_invite_modal_page.apply_to_following_events
+
+      Tempfile.create(%w[bulk-invite .csv]) do |file|
+        file.write("#{invitable_user_1.username},going\n")
+        file.flush
+        bulk_invite_modal_page.upload_csv(file.path)
+        PageObjects::Components::Dialog.new.click_yes
+      end
 
       expect(bulk_invite_modal_page).to be_closed
       expect(PageObjects::Components::Toasts.new).to have_success(
         I18n.t("js.discourse_post_event.bulk_invite_modal.success"),
       )
+      expect(
+        DiscourseEvents::Events::Invitee.find_by(user_id: invitable_user_1.id, post_id: post.id),
+      ).to be_recurring
     end
   end
 

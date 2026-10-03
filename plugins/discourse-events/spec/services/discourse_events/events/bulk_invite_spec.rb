@@ -89,6 +89,7 @@ RSpec.describe(DiscourseEvents::Events::BulkInvite) do
           args: {
             event_id: event.id,
             invitees: invitees,
+            recurring: false,
             current_user_id: admin.id,
           },
         ) { result }
@@ -107,6 +108,7 @@ RSpec.describe(DiscourseEvents::Events::BulkInvite) do
             args: {
               event_id: event.id,
               invitees: invitees.first(2),
+              recurring: false,
               current_user_id: admin.id,
             },
           ) { result }

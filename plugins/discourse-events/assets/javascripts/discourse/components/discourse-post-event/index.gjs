@@ -98,6 +98,9 @@ export default class DiscoursePostEvent extends Component {
     this.messageBus.subscribe(path, async (msg) => {
       const eventData = await this.discoursePostEventApi.event(msg.id);
       this.event.updateFromEvent(eventData);
+      if (this.event.isFutureOccurrence) {
+        this.event.filterForFutureOccurrence();
+      }
     });
 
     return () => this.messageBus.unsubscribe(path);
@@ -226,7 +229,7 @@ export default class DiscoursePostEvent extends Component {
         displayedStartsAt &&
         displayedStartsAt !== fetched.startsAt
       ) {
-        this.#filterForFutureOccurrence(fetched);
+        fetched.filterForFutureOccurrence();
       }
 
       fetched.startsAt = displayedStartsAt;
@@ -236,26 +239,6 @@ export default class DiscoursePostEvent extends Component {
       popupAjaxError(error);
     } finally {
       this.isLoading = false;
-    }
-  }
-
-  #filterForFutureOccurrence(event) {
-    event.sampleInvitees = event.sampleInvitees.filter(
-      (invitee) => invitee.status !== "going" || invitee.recurring
-    );
-
-    const recurringCount = event.stats?.goingRecurring ?? 0;
-    if (event.stats) {
-      event.stats.going = recurringCount;
-    }
-    event.atCapacity =
-      event.maxAttendees != null && recurringCount >= event.maxAttendees;
-
-    if (
-      event.watchingInvitee?.status === "going" &&
-      !event.watchingInvitee?.recurring
-    ) {
-      event.watchingInvitee = null;
     }
   }
 
