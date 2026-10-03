@@ -296,7 +296,7 @@ module DiscourseDataExplorer
         },
         badge: {
           class: Badge,
-          fields: %i[id name badge_type_id description icon image_upload_id],
+          fields: %i[id name badge_type_id description icon image_upload_id system],
           include: %i[badge_type image_upload],
           serializer: SmallBadgeSerializer,
         },

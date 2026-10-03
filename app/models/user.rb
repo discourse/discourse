@@ -1908,8 +1908,7 @@ class User < ActiveRecord::Base
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).pick(:name)
-    next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
+    badges.where(allow_title: true).first&.display_name
   end
 
   def create_reviewable

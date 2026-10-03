@@ -202,8 +202,8 @@ en:
       name: "Omnipresent"
       description: "Joined 50 different voice rooms."
       long_description: "Awarded for joining 50 different voice rooms."
-    patron:
-      name: "Patron"
+    frequenter:
+      name: "Frequenter"
       description: "Visited the same room on 10 different days."
       long_description: "Awarded for joining the same voice room on 10 distinct days."
     barfly:

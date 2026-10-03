@@ -120,18 +120,18 @@ RSpec.describe BadgeGranter, ".backfill" do
   end
 
   describe "loyalty" do
-    it "grants Patron for ten distinct days in the same room" do
+    it "grants Frequenter for ten distinct days in the same room" do
       9.times do |day|
         create_session(user_id: user.id, joined_at: (day + 1).days.ago.change(hour: 12))
         create_session(user_id: user.id, joined_at: (day + 1).days.ago.change(hour: 14))
       end
       create_session(user_id: user.id, room_id: Fabricate(:voice_room).id, joined_at: 1.hour.ago)
-      backfill("Patron")
-      expect(holders_of("Patron")).to be_empty
+      backfill("Frequenter")
+      expect(holders_of("Frequenter")).to be_empty
 
       create_session(user_id: user.id, joined_at: 10.days.ago.change(hour: 12))
-      backfill("Patron")
-      expect(holders_of("Patron")).to contain_exactly(user.id)
+      backfill("Frequenter")
+      expect(holders_of("Frequenter")).to contain_exactly(user.id)
     end
   end
 
