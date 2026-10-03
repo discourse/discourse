@@ -296,7 +296,12 @@ module DiscourseWorkflows
       end
 
       def get_credentials(slot, item_index = 0)
-        fetch_credentials(slot, item_index)
+        credential = get_credential(slot)
+        with_item_index(item_index) { @resolver.resolve_hash(credential.public_data) }
+      end
+
+      def get_credential(slot)
+        fetch_credential(slot)
       end
 
       def actor_from_parameter(path, item_index = 0, default: "system")
@@ -542,7 +547,7 @@ module DiscourseWorkflows
         post.save_custom_fields
       end
 
-      def fetch_credentials(slot, item_index)
+      def fetch_credential(slot)
         raise ArgumentError, "credential slot is required" if slot.blank?
 
         credential_id = credential_id_for(slot)
@@ -553,7 +558,7 @@ module DiscourseWorkflows
           raise Discourse::InvalidAccess
         end
 
-        with_item_index(item_index) { @resolver.resolve_hash(credential.data || {}) }
+        credential
       end
 
       def ensure_actor_allowed!(actor, field:, item_index:)

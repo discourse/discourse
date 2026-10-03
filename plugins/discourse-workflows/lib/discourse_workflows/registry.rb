@@ -33,14 +33,26 @@ module DiscourseWorkflows
         nodes.select { |n| n.identifier.start_with?("flow:") }
       end
 
-      def credential_types
-        DiscoursePluginRegistry.discourse_workflows_credential_types.map do |reference|
-          resolve_class(reference)
-        end
+      def credential_types(include_disabled_plugins: false)
+        references =
+          if include_disabled_plugins
+            DiscoursePluginRegistry._raw_discourse_workflows_credential_types.map do |entry|
+              entry[:value]
+            end
+          else
+            DiscoursePluginRegistry.discourse_workflows_credential_types
+          end
+        references.map { |reference| resolve_class(reference) }.uniq
       end
 
-      def find_credential_type(identifier)
-        resolve_class(credential_type_index[identifier])
+      def find_credential_type(identifier, include_disabled_plugins: false)
+        if include_disabled_plugins
+          credential_types(include_disabled_plugins: true).find do |type|
+            type.identifier == identifier
+          end
+        else
+          resolve_class(credential_type_index[identifier])
+        end
       end
 
       def find_node_type(identifier, version: nil, include_disabled_plugins: false)

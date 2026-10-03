@@ -41,7 +41,11 @@ module DiscourseWorkflows
       DiscourseWorkflows::Credential.create(
         name: params.name,
         credential_type: params.credential_type,
-        data: params.normalized_data,
+        data:
+          DiscourseWorkflows::Credential.public_data_for(
+            params.credential_type,
+            params.normalized_data,
+          ),
       )
     end
 

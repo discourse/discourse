@@ -7,6 +7,19 @@ en:
             error_workflow_id:
               cannot_be_self: "cannot be set to the workflow itself"
   discourse_workflows:
+    oauth2:
+      display_name: "OAuth2 client credentials"
+      api_origin: "API origin"
+      errors:
+        invalid_configuration: "Check the OAuth2 app credentials, endpoints, and client authentication method. Fixed values are required."
+        provider_error: "The OAuth2 provider rejected the request. Check the app configuration and try again."
+        provider_unavailable: "The OAuth2 provider could not be reached. Please try again later."
+        invalid_response: "The OAuth2 provider returned an unexpected response."
+        reconnect_required: "The OAuth2 credential could not authenticate. Check the configuration and test the connection."
+        revocation_failed: "The provider could not revoke the token. The credential was kept; please try again."
+        invalid_api_host: "The request URL must use the API origin allowed by this credential."
+        credential_reconnect: "OAuth2 credential '%{name}' could not authenticate. Check its configuration and test the connection."
+        credential_failed: "OAuth2 credential '%{name}': %{message}"
     ai:
       default_code_node_name: "Code"
       error_agent_not_configured: "The workflow authoring agent is not configured."

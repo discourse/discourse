@@ -60,6 +60,9 @@ module DiscourseWorkflows
           )
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_exceptions(Oauth2Provider::Error) do |error|
+          render json: failed_json.merge(errors: [error.message]), status: :unprocessable_entity
+        end
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
           render(
@@ -83,6 +86,9 @@ module DiscourseWorkflows
       ) do |result|
         on_success { head :no_content }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_exceptions(Oauth2Provider::Error) do |error|
+          render json: failed_json.merge(errors: [error.message]), status: :unprocessable_entity
+        end
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_policy(:credential_not_in_use) do
           render(

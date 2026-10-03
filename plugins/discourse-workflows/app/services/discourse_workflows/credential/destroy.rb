@@ -14,7 +14,9 @@ module DiscourseWorkflows
     model :referencing_workflows, optional: true
     policy :credential_not_in_use
 
-    step :remove_credential
+    try Oauth2Provider::Error do
+      step :remove_credential
+    end
 
     step :log
 
@@ -42,7 +44,11 @@ module DiscourseWorkflows
     end
 
     def remove_credential(credential:)
-      credential.destroy!
+      if credential.oauth2?
+        Oauth2Connection.new(credential).destroy
+      else
+        credential.destroy!
+      end
     end
 
     def log(credential:, guardian:)

@@ -13,7 +13,25 @@ module DiscourseWorkflows
           auth_mode = config.fetch("authentication") { "none" }
           return [] if auth_mode == "none"
 
-          cred_data = fetch_credential_data(exec_ctx, auth_mode, item_index)
+          if exec_ctx.nil?
+            raise_node_error!(
+              I18n.t("discourse_workflows.errors.http_request.exec_ctx_required", mode: auth_mode),
+            )
+          end
+
+          credential_type = Registry.find_credential_type(auth_mode)
+          raise Discourse::InvalidAccess unless credential_type
+
+          if auth_mode == "oauth2_client_credentials"
+            credential = exec_ctx.get_credential("auth")
+            raise Discourse::InvalidAccess unless credential.credential_type == auth_mode
+            headers["Authorization"] = Oauth2Connection.new(credential).authorization_header(
+              config["url"],
+            )
+            return ["Authorization"]
+          end
+
+          cred_data = exec_ctx.get_credentials("auth", item_index)
 
           case auth_mode
           when "basic_auth"
@@ -23,17 +41,8 @@ module DiscourseWorkflows
           when "header_auth"
             apply_header_auth(headers, cred_data)
           else
-            []
+            raise Discourse::InvalidAccess
           end
-        end
-
-        def self.fetch_credential_data(exec_ctx, auth_mode, item_index)
-          if exec_ctx.nil?
-            raise_node_error!(
-              I18n.t("discourse_workflows.errors.http_request.exec_ctx_required", mode: auth_mode),
-            )
-          end
-          exec_ctx.get_credentials("auth", item_index)
         end
 
         def self.apply_basic_auth(headers, cred_data)
@@ -58,10 +67,7 @@ module DiscourseWorkflows
           [name]
         end
 
-        private_class_method :fetch_credential_data,
-                             :apply_basic_auth,
-                             :apply_bearer_token,
-                             :apply_header_auth
+        private_class_method :apply_basic_auth, :apply_bearer_token, :apply_header_auth
       end
     end
   end

@@ -461,6 +461,10 @@ export function fieldVisible(schema = {}, configuration = {}) {
   return fieldDisplayState(schema, configuration) !== "hidden";
 }
 
+export function fieldAdvanced(schema = {}) {
+  return !!fieldUi(schema).advanced;
+}
+
 export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
   return fieldDisplayState(schema, configuration) === "visible";
 }

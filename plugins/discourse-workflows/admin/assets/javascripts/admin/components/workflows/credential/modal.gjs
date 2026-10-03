@@ -3,17 +3,20 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isBlank } from "@ember/utils";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import {
+  fieldAdvanced,
   fieldVisible,
   normalizeSchema,
   propertyLabel,
 } from "../../../lib/workflows/property-engine";
 import Field from "../configurators/field";
+import OAuth2ConnectionDetails from "./oauth2-connection-details";
 
 const CREDENTIAL_DATA_NAME_FIELD = "credential_data_name";
 
@@ -28,6 +31,44 @@ function credentialTypeSchema(credentialTypes, type) {
   const def = credentialTypeDefinition(credentialTypes, type);
   return def ? normalizeSchema(def.property_schema) : [];
 }
+
+function visibleFields(credentialTypes, type, configuration, advanced) {
+  return credentialTypeSchema(credentialTypes, type).filter(
+    (field) =>
+      fieldVisible(field, configuration) && fieldAdvanced(field) === advanced
+  );
+}
+
+function basicFields(credentialTypes, type, configuration) {
+  return visibleFields(credentialTypes, type, configuration, false);
+}
+
+function advancedFields(credentialTypes, type, configuration) {
+  return visibleFields(credentialTypes, type, configuration, true);
+}
+
+function hasAdvancedValues(fields, configuration) {
+  return fields.some((field) => {
+    const value = configuration?.[field.name];
+    return !isBlank(value) && value !== field.default;
+  });
+}
+
+const SchemaField = <template>
+  <Field
+    @configuration={{@configuration}}
+    @fieldName={{if
+      (eq @schema.name "name")
+      CREDENTIAL_DATA_NAME_FIELD
+      @schema.name
+    }}
+    @form={{@form}}
+    @formApi={{@form.api}}
+    @label={{propertyLabel @definition @schema.name}}
+    @nodeDefinition={{@definition}}
+    @schema={{@schema}}
+  />
+</template>;
 
 export default class CredentialModal extends Component {
   @service workflowsNodeTypes;
@@ -53,7 +94,10 @@ export default class CredentialModal extends Component {
   get formData() {
     const credential = this.args.model.credential;
     if (!credential) {
-      return { name: "", credential_type: "" };
+      return {
+        name: "",
+        credential_type: "",
+      };
     }
 
     return {
@@ -160,38 +204,69 @@ export default class CredentialModal extends Component {
             </form.Field>
           {{/if}}
 
-          {{#each
-            (credentialTypeSchema
+          {{#let
+            (credentialTypeDefinition
               this.credentialTypes transientData.credential_type
             )
-            key="name"
-            as |fieldSchema|
+            (advancedFields
+              this.credentialTypes transientData.credential_type transientData
+            )
+            as |definition advanced|
           }}
-            {{#if (fieldVisible fieldSchema transientData)}}
-              <Field
+            {{#each
+              (basicFields
+                this.credentialTypes transientData.credential_type transientData
+              )
+              key="name"
+              as |fieldSchema|
+            }}
+              <SchemaField
                 @configuration={{transientData}}
-                @fieldName={{if
-                  (eq fieldSchema.name "name")
-                  "credential_data_name"
-                  fieldSchema.name
-                }}
+                @definition={{definition}}
                 @form={{form}}
-                @formApi={{form.api}}
-                @label={{propertyLabel
-                  (credentialTypeDefinition
-                    this.credentialTypes transientData.credential_type
-                  )
-                  fieldSchema.name
-                }}
-                @nodeDefinition={{credentialTypeDefinition
-                  this.credentialTypes
-                  transientData.credential_type
-                }}
                 @schema={{fieldSchema}}
               />
-            {{/if}}
-          {{/each}}
+            {{/each}}
 
+            {{#if advanced.length}}
+              <details
+                class="workflows-credential-modal__advanced"
+                open={{hasAdvancedValues advanced transientData}}
+              >
+                <summary
+                  class="workflows-credential-modal__advanced-summary"
+                >{{i18n "discourse_workflows.credentials.advanced"}}</summary>
+                <div class="workflows-credential-modal__advanced-fields">
+                  {{#each advanced key="name" as |fieldSchema|}}
+                    <SchemaField
+                      @configuration={{transientData}}
+                      @definition={{definition}}
+                      @form={{form}}
+                      @schema={{fieldSchema}}
+                    />
+                  {{/each}}
+                </div>
+              </details>
+            {{/if}}
+          {{/let}}
+
+          {{#let
+            (credentialTypeDefinition
+              this.credentialTypes transientData.credential_type
+            )
+            as |definition|
+          }}
+            {{#if definition.oauth2}}
+              {{#if definition.setup_key}}<p>{{i18n
+                    definition.setup_key
+                  }}</p>{{/if}}
+              {{#if @model.credential.oauth_connection}}
+                <OAuth2ConnectionDetails
+                  @connection={{@model.credential.oauth_connection}}
+                />
+              {{/if}}
+            {{/if}}
+          {{/let}}
           <form.Submit />
         </Form>
       </:body>

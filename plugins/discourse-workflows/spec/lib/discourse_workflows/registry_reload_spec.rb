@@ -131,7 +131,7 @@ RSpec.describe DiscourseWorkflows::Registry do
     expect(handled.size).to eq(2)
   end
 
-  it "resolves the current credential class after warming the identifier cache" do
+  it "resolves the current credential class after a reload" do
     previous = described_class.find_credential_type("reload_test")
     expect(previous.display_name).to eq("orange")
 
