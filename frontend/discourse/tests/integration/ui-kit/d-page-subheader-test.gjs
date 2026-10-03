@@ -18,6 +18,25 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
       .hasText(i18n("admin.title"));
   });
 
+  test("the title is an h2 by default", async function (assert) {
+    await render(<template><DPageSubheader @titleLabel="Title" /></template>);
+
+    assert.dom("h2.d-page-subheader__title").exists();
+  });
+
+  test("@titleHeadingLevel picks the heading element", async function (assert) {
+    await render(
+      <template>
+        <DPageSubheader @titleLabel="Title" @titleHeadingLevel={{3}} />
+      </template>
+    );
+
+    assert.dom("h3.d-page-subheader__title").exists();
+    assert
+      .dom("h2.d-page-subheader__title")
+      .doesNotExist("it does not also render the default level");
+  });
+
   test("no @descriptionLabel", async function (assert) {
     await render(<template><DPageSubheader /></template>);
     assert.dom(".d-page-subheader__description").doesNotExist();
