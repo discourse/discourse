@@ -50,7 +50,7 @@
     "@fullcalendar/moment-timezone": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
     "@glimmer/syntax": "0.95.0",
-    "@glint/ember-tsc": "^1.11.4",
+    "@glint/ember-tsc": "^1.11.6",
     "@glint/template": "^1.9.0",
     "@highlightjs/cdn-assets": "11.12.0",
     "@json-editor/json-editor": "2.17.2",
@@ -176,7 +176,7 @@
     "source-map-js": "^1.2.1",
     "testem": "^3.20.2",
     "tracked-built-ins": "^4.1.2",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "util": "^0.12.5",
     "xss": "^1.0.15"
   },
