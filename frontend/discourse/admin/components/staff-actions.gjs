@@ -1,12 +1,12 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 
-@tagName("")
 export default class StaffActions extends Component {
+  @service store;
+
   @action
   openLinks(event) {
     const dataset = event.target.dataset;

@@ -1,13 +1,10 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import { eq } from "discourse/truth-helpers";
 import HCaptcha from "../../components/h-captcha";
 import ReCaptcha from "../../components/re-captcha";
 import ReCaptchaV3 from "../../components/re-captcha-v3";
 
-@tagName("")
 export default class CaptchaFieldsConnector extends Component {
   @service siteSettings;
 
