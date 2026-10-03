@@ -51,6 +51,14 @@ RSpec.describe DiscourseWorkflows::Execution do
       expect(first).to be_present
       expect(second).to be_nil
     end
+
+    it "preserves a newer wait when the caller holds a stale execution" do
+      stale_execution = described_class.find(execution.id)
+      execution.update!(resume_token: "new-wait-token")
+
+      expect(described_class.claim_for_resume(stale_execution)).to be_nil
+      expect(execution.reload).to have_attributes(status: "waiting", resume_token: "new-wait-token")
+    end
   end
 
   describe ".claim_pending" do
@@ -114,6 +122,23 @@ RSpec.describe DiscourseWorkflows::Execution do
 
       expect(execution.fail_with_timeout!).to eq(false)
       expect(execution.reload.status).to eq("running")
+    end
+
+    it "preserves a newer wait when an expired wait is processed late" do
+      stale_execution = described_class.find(execution.id)
+      next_wait = {
+        waiting_node_id: "node-2",
+        waiting_until: 1.minute.from_now,
+        resume_token: "next-wait-token",
+      }
+      execution.update!(next_wait)
+
+      expect(stale_execution.fail_with_timeout!).to eq(false)
+      expect(execution.reload).to have_attributes(
+        status: "waiting",
+        **next_wait,
+        waiting_until: eq_time(next_wait[:waiting_until]),
+      )
     end
   end
 

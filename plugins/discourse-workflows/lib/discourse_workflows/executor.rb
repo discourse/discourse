@@ -968,6 +968,7 @@ module DiscourseWorkflows
         [resolved - now, 0].max,
         Jobs::DiscourseWorkflows::ResumeWaitingExecution,
         execution_id: @store.execution.id,
+        resume_token: execution.resume_token,
       )
       execution
     end

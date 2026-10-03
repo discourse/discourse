@@ -8,6 +8,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
       workflow: workflow,
       status: :waiting,
       waiting_until: 1.minute.ago,
+      resume_token: "wait-token",
     )
   end
 
@@ -15,7 +16,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
     SiteSetting.enable_discourse_workflows = false
     before_updated_at = execution.updated_at
 
-    described_class.new.execute(execution_id: execution.id)
+    described_class.new.execute(execution_id: execution.id, resume_token: execution.resume_token)
 
     execution.reload
     expect(execution.status).to eq("waiting")
@@ -26,7 +27,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
     allow(::DiscourseWorkflows::Execution).to receive(:claim_for_resume).and_return(nil)
     before_updated_at = execution.updated_at
 
-    described_class.new.execute(execution_id: execution.id)
+    described_class.new.execute(execution_id: execution.id, resume_token: execution.resume_token)
 
     execution.reload
     expect(execution.status).to eq("waiting")
@@ -37,7 +38,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
     execution.update!(status: :running)
     before_updated_at = execution.updated_at
 
-    described_class.new.execute(execution_id: execution.id)
+    described_class.new.execute(execution_id: execution.id, resume_token: execution.resume_token)
 
     execution.reload
     expect(execution.status).to eq("running")
@@ -48,7 +49,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
     before { execution.update!(timeout_action: "fail") }
 
     it "fails the execution with the existing timeout error and clears its wait state" do
-      described_class.new.execute(execution_id: execution.id)
+      described_class.new.execute(execution_id: execution.id, resume_token: execution.resume_token)
 
       expect(execution.reload).to have_attributes(
         status: "error",
