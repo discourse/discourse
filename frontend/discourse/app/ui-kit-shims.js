@@ -80,12 +80,6 @@ loaderShim("discourse/components/cdn-img", () =>
 loaderShim("discourse/components/char-counter", () =>
   importSync("discourse/ui-kit/d-char-counter")
 );
-loaderShim("discourse/components/color-picker", () =>
-  importSync("discourse/ui-kit/d-color-picker")
-);
-loaderShim("discourse/components/color-picker-choice", () =>
-  importSync("discourse/ui-kit/d-color-picker-choice")
-);
 loaderShim("discourse/components/conditional-in-element", () =>
   importSync("discourse/ui-kit/d-conditional-in-element")
 );
