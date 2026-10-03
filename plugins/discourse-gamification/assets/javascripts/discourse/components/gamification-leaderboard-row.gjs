@@ -1,40 +1,39 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { or } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import fullnumber from "../helpers/fullnumber";
 
-@tagName("")
 export default class GamificationLeaderboardRow extends Component {
-  rank = null;
+  @service site;
+  @service siteSettings;
 
   <template>
     <div
-      class="user {{if this.rank.currentUser 'user-highlight'}}"
-      id="leaderboard-user-{{this.rank.id}}"
+      class="user {{if @rank.currentUser 'user-highlight'}}"
+      id="leaderboard-user-{{@rank.id}}"
     >
-      <div class="user__rank">{{this.rank.position}}</div>
+      <div class="user__rank">{{@rank.position}}</div>
       <div
         class="user__avatar clickable"
-        data-user-card={{this.rank.username}}
+        data-user-card={{@rank.username}}
         role="button"
       >
-        {{dAvatar this.rank imageSize="large"}}
+        {{dAvatar @rank imageSize="large"}}
         <span class="user__name">
           {{#if this.siteSettings.prioritize_username_in_ux}}
-            {{this.rank.username}}
+            {{@rank.username}}
           {{else}}
-            {{or this.rank.name this.rank.username}}
+            {{or @rank.name @rank.username}}
           {{/if}}
         </span>
       </div>
       <div class="user__score">
         {{#if this.site.mobileView}}
-          {{dNumber this.rank.total_score}}
+          {{dNumber @rank.total_score}}
         {{else}}
-          {{fullnumber this.rank.total_score}}
+          {{fullnumber @rank.total_score}}
         {{/if}}
       </div>
     </div>
