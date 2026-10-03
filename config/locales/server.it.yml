@@ -13,6 +13,9 @@ it:
     next_page: "Pagina seguente"
     replies: "Risposte"
     last_updated: "Ultimo aggiornamento"
+    event:
+      location: "Località"
+      link: "Link"
   mcp:
     errors:
       draft_too_long: "La bozza è troppo lunga"

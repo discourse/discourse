@@ -27,22 +27,27 @@ module DiscourseMcp
         enforce_rate_limits!(user, uri.host)
         metadata = fetch_metadata(uri)
         validate_metadata!(metadata, client_id)
-        redirect_uris = metadata["redirect_uris"]
         metadata_hash = Digest::SHA256.hexdigest(JSON.generate(canonicalize(metadata)))
         trust_state = trust_state_for(uri.host)
         client = existing || McpOauthClient.new(client_id: client_id)
-        previous_hash = client.metadata_hash
 
         McpOauthClient.transaction do
+          client.lock! if client.persisted?
+          raise Discourse::InvalidAccess if client.blocked?
+          previous_hash = client.metadata_hash
+          unless client.admin_managed?
+            client.assign_attributes(
+              name: metadata["client_name"].presence || uri.host,
+              redirect_uris: metadata["redirect_uris"],
+            )
+          end
           client.assign_attributes(
-            name: metadata["client_name"].presence || uri.host,
             registration_type: "cimd",
             trust_state: trust_state,
             metadata_uri: client_id,
             metadata_hash: metadata_hash,
             metadata_expires_at: METADATA_CACHE_TTL.from_now,
             metadata: metadata,
-            redirect_uris: redirect_uris,
             last_seen_at: Time.zone.now,
           )
           client.save!

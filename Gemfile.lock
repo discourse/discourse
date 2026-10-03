@@ -32,7 +32,6 @@ PATH
   remote: migrations/importer
   specs:
     migrations-importer (0.0.1)
-      activerecord
       activesupport
       colored2
       i18n
@@ -44,7 +43,6 @@ PATH
   remote: migrations/tooling
   specs:
     migrations-tooling (0.0.1)
-      activerecord
       activesupport
       colored2
       i18n

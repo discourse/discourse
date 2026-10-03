@@ -13,6 +13,8 @@ ca:
     next_page: "Pàgina següent"
     replies: "Respostes"
     last_updated: "Darrera actualització"
+    event:
+      location: "Ubicació"
   mcp:
     errors:
       topic_not_found: "Tema no trobat"

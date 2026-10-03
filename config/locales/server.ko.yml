@@ -13,6 +13,9 @@ ko:
     next_page: "다음 페이지"
     replies: "댓글"
     last_updated: "마지막 업데이트"
+    event:
+      location: "위치"
+      link: "링크"
   mcp:
     errors:
       topic_not_found: "글을 찾을 수 없음"

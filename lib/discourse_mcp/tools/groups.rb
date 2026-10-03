@@ -5,7 +5,6 @@ require "group_directory_query"
 module DiscourseMcp
   module Tools
     module GroupSupport
-      MEMBERSHIP_NOT_LOADED = Object.new.freeze
       SAFE_DETAIL_FIELDS = %i[
         id
         automatic
@@ -75,20 +74,9 @@ module DiscourseMcp
         group or raise ToolError, I18n.t("mcp.errors.group_not_found")
       end
 
-      def group_json(
-        group,
-        guardian,
-        membership: MEMBERSHIP_NOT_LOADED,
-        can_see_members: MEMBERSHIP_NOT_LOADED
-      )
-        if membership.equal?(MEMBERSHIP_NOT_LOADED)
-          membership = group.group_users.find_by(user: guardian.user) if guardian.authenticated?
-        end
-        if can_see_members.equal?(MEMBERSHIP_NOT_LOADED)
-          can_see_members = guardian.can_see_group_members?(group)
-        end
-
-        can_admin_group = guardian.can_admin_group?(group)
+      def group_json(group, guardian, membership:, can_see_members:)
+        is_group_owner = membership&.owner? || false
+        can_admin_group = guardian.can_admin_group?(group, is_group_owner:)
         {
           id: group.id,
           name: group.name,
@@ -105,9 +93,9 @@ module DiscourseMcp
           allow_membership_requests: group.allow_membership_requests,
           bio_excerpt: group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 200) : nil,
           is_group_user: membership.present?,
-          is_group_owner: membership&.owner? || false,
+          is_group_owner:,
           can_see_members:,
-          can_edit_group: guardian.can_edit_group?(group, group_user: membership),
+          can_edit_group: guardian.can_edit_group?(group, is_group_owner:),
           can_admin_group:,
         }
       end

@@ -13,6 +13,9 @@ sk:
     next_page: "Nasledujúca stránka"
     replies: "Odpovede"
     last_updated: "Posledná aktualizácia"
+    event:
+      location: "Poloha"
+      link: "Odkaz"
   mcp:
     errors:
       draft_too_long: "Koncept je príliš dlhý"

@@ -1997,6 +1997,7 @@ Discourse::Application.routes.draw do
       get "/clients" => "admin/mcp_clients#index"
       post "/clients" => "admin/mcp_clients#create"
       get "/clients/:id" => "admin/mcp_clients#show"
+      put "/clients/:id" => "admin/mcp_clients#update"
       put "/clients/:id/block" => "admin/mcp_clients#block"
       post "/clients/:id/refresh" => "admin/mcp_clients#refresh"
       get "/authorizations" => "admin/mcp_authorizations#index"

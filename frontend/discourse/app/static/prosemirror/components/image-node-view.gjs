@@ -173,6 +173,15 @@ export default class ImageNodeView extends Component {
     return !!this.altMenuInstance?.content?.contains(document.activeElement);
   }
 
+  update(node) {
+    if (this.#progressEvent && !node.attrs.placeholder) {
+      this.args.dom.classList.remove(...PLACEHOLDER_CLASSES);
+      delete this.args.dom.dataset.uploadId;
+      this.appEvents.off(this.#progressEvent, this, this.onUploadProgress);
+      this.#progressEvent = null;
+    }
+  }
+
   stopEvent(event) {
     if (["dragover", "dragend", "drop", "dragleave"].includes(event.type)) {
       return false;

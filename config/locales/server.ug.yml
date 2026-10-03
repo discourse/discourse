@@ -11,6 +11,9 @@ ug:
     tags: "بەلگە"
     replies: "جاۋاب"
     last_updated: "ئاخىرقى يېڭىلانغان ۋاقىت"
+    event:
+      location: "ئورنى"
+      link: "ئۇلانما"
   mcp:
     errors:
       draft_too_long: "دەسلەپكى نۇسخا بەك ئۇزۇن"

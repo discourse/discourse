@@ -13,6 +13,11 @@ de:
     next_page: "Nächste Seite"
     replies: "Antworten"
     last_updated: "Zuletzt aktualisiert"
+    event:
+      name: "Ereignis"
+      location: "Ort"
+      link: "Link"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
       draft_too_long: "Der Entwurf ist zu lang"
@@ -877,6 +882,7 @@ de:
       description_too_long:
         one: "Die Beschreibung ist zu lang (maximal %{count} Zeichen)."
         other: "Die Beschreibung ist zu lang (maximal %{count} Zeichen)."
+      special_category_permissions: "Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen, anstatt sie für andere Zwecke zu verwenden."
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
