@@ -232,6 +232,17 @@ export default class QueriesEdit extends Component {
               @value={{@controller.view}}
             />
           {{/if}}
+          {{#if @controller.showDashboardToggle}}
+            <DButton
+              class="btn-default query-action-bar__dashboard-toggle"
+              @action={{@controller.toggleDashboard}}
+              @disabled={{@controller.dashboardToggleDisabled}}
+              @icon="thumbtack"
+              @isLoading={{@controller.dashboardBusy}}
+              @label={{@controller.dashboardToggleLabel}}
+              @translatedTitle={{@controller.dashboardToggleTitle}}
+            />
+          {{/if}}
           <QueryResultDownloadButtons
             @content={{@controller.results}}
             @includeQueryExport={{true}}

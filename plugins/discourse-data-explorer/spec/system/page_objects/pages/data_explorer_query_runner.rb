@@ -84,6 +84,23 @@ module PageObjects
         )
       end
 
+      def has_dashboard_toggle?(label)
+        page.has_css?(".query-action-bar__dashboard-toggle", text: label)
+      end
+
+      def has_no_dashboard_toggle?
+        page.has_no_css?(".query-action-bar__dashboard-toggle")
+      end
+
+      def has_disabled_dashboard_toggle?
+        page.has_css?(".query-action-bar__dashboard-toggle:disabled")
+      end
+
+      def click_dashboard_toggle
+        page.find(".query-action-bar__dashboard-toggle:not(:disabled)").click
+        self
+      end
+
       def visit_new_query
         page.visit("/admin/plugins/discourse-data-explorer/queries/new")
         self
