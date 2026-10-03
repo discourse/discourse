@@ -26,7 +26,10 @@ module JsonApiKit
         def meta = @meta&.call(self) || {}
 
         def parameter
-          ParameterName.new(*error.attribute.to_s.split(".").map { member_value(member(it)) })
+          ParameterName.new(
+            *error.attribute.to_s.split(".").map { member_value(member(it)) },
+            *options.fetch(:members, []),
+          )
         end
 
         def name = member_value(options[:name])

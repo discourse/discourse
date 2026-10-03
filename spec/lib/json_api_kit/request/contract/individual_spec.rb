@@ -23,6 +23,21 @@ RSpec.describe JsonApiKit::Request::Contract::Individual, type: :model do
     end
   end
 
+  describe "#refusals" do
+    subject(:refusals) { contract.refusals }
+
+    let(:params) { { data: { type: "users", attributes: { "unknown_field" => "value" } } } }
+
+    before { contract.invalid? }
+
+    it "identifies each unknown query parameter" do
+      expect(refusals.map(&:source)).to contain_exactly(
+        { parameter: "data[type]" },
+        { parameter: "data[attributes][unknown_field]" },
+      )
+    end
+  end
+
   describe "Unknown parameters" do
     context "when a parameter is unknown" do
       let(:params) { { fieldsets: { topics: %w[title] } } }
