@@ -567,6 +567,14 @@ export default class ChatChannelsManager extends Service {
       return this.#compareChannelsAlphabetically(channelA, channelB);
     }
 
+    if (sort === CHAT_CHANNEL_LIST_SORTS.UNREAD_FIRST) {
+      return (
+        this.#sidebarChannelUnreadTier(channelA) -
+          this.#sidebarChannelUnreadTier(channelB) ||
+        this.#compareChannelsAlphabetically(channelA, channelB)
+      );
+    }
+
     if (sort === CHAT_CHANNEL_LIST_SORTS.PRIORITY) {
       const priority =
         this.#sidebarChannelPriority(channelA) -
@@ -617,6 +625,17 @@ export default class ChatChannelsManager extends Service {
     }
 
     return this.#sidebarUnreadCount(channel) > 0 ? 1 : 2;
+  }
+
+  // Two tiers for the "unread first" sort: anything unread (including
+  // mentions and watched threads) comes before everything read. Muted
+  // channels count as read, matching the priority sort.
+  #sidebarChannelUnreadTier(channel) {
+    if (channel.currentUserMembership?.muted) {
+      return 1;
+    }
+
+    return this.#sidebarUnreadCount(channel) > 0 ? 0 : 1;
   }
 
   #sidebarUnreadCount(channel) {

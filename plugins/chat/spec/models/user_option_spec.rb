@@ -55,6 +55,14 @@ RSpec.describe UserOption do
       expect(user_option).not_to be_valid
       expect(user_option.errors[:chat_channel_list_sort]).to be_present
     end
+
+    it "accepts every sort the channel list offers" do
+      %w[alphabetical recent_activity priority unread_first].each do |sort|
+        user_option = described_class.new(chat_channel_list_sort: sort)
+        user_option.valid?
+        expect(user_option.errors[:chat_channel_list_sort]).to be_empty
+      end
+    end
   end
 
   describe "#chat_send_shortcut" do
