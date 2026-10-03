@@ -55,7 +55,7 @@
     "@highlightjs/cdn-assets": "11.12.0",
     "@json-editor/json-editor": "2.17.2",
     "@lezer/common": "^1.5.2",
-    "@lezer/highlight": "^1.2.3",
+    "@lezer/highlight": "^1.2.4",
     "@lezer/javascript": "^1.5.4",
     "@lezer/lr": "^1.4.8",
     "@warp-drive/core": "5.9.0-alpha.15",
