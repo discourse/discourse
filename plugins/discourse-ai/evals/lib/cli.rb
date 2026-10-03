@@ -17,7 +17,8 @@ class DiscourseAi::Evals::Cli
                 :feature_key,
                 :judge_name,
                 :comparison_mode,
-                :dataset_path
+                :dataset_path,
+                :limit
 
   def self.parse_options!(features_registry)
     cli = new
@@ -43,6 +44,15 @@ class DiscourseAi::Evals::Cli
         ) { |models| cli.models = models }
 
         opts.on("-l", "--list", "List evals") { cli.list = true }
+
+        opts.on("--limit N", Integer, "Maximum number of evaluations to run") do |limit|
+          if !limit.positive?
+            $stderr.puts("--limit must be a positive integer.")
+            exit 1
+          end
+
+          cli.limit = limit
+        end
 
         opts.on(
           "-f",
@@ -140,7 +150,15 @@ class DiscourseAi::Evals::Cli
       exit 1
     end
 
-    evals
+    apply_limit(evals)
+  end
+
+  def apply_limit(evals)
+    limit ? evals.first(limit) : evals
+  end
+
+  def select_dataset_evals(path:, feature:)
+    apply_limit(DiscourseAi::Evals::Eval.from_dataset_csv(path: path, feature: feature))
   end
 
   def validate_comparison_requirements!(llms:, agent_variants:)
