@@ -6206,6 +6206,7 @@ ur:
             block: "بلاک کریں"
             presets:
               custom: "اپنی مرضی کا"
+            automatic: "خود کار طریقے سے"
           authorizations:
             user: "رکن"
             last_used: "آخری بار استعمال ہوا۔"

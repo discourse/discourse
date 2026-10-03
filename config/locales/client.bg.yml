@@ -3572,6 +3572,7 @@ bg:
             block: "Блокирай "
             presets:
               custom: "По избор"
+            automatic: "Автоматично"
           authorizations:
             user: "Потребител"
             status: "Статус"

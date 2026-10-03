@@ -3856,6 +3856,7 @@ sl:
             block: "Blokiraj"
             presets:
               custom: "Po meri"
+            automatic: "Samodejno"
           authorizations:
             user: "Uporabnik"
             status: "Status"

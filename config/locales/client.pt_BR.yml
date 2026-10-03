@@ -5820,6 +5820,7 @@ pt_BR:
             use_preset: "Configurar"
             presets:
               custom: "Personalizadas"
+            automatic: "Automático"
           authorizations:
             user: "Usuário(a)"
             last_used: "Último uso"

@@ -3539,6 +3539,7 @@ gl:
             block: "Bloquear"
             presets:
               custom: "Personalizado"
+            automatic: "Automático"
           authorizations:
             user: "Usuario"
             status: "Estado"

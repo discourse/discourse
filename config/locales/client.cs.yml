@@ -6169,6 +6169,7 @@ cs:
             block: "Zablokovat"
             presets:
               custom: "Přizpůsobené"
+            automatic: "Automatické"
           authorizations:
             user: "Uživatel"
             last_used: "Poslední použití"

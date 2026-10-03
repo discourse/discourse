@@ -6339,6 +6339,7 @@ fr:
             use_preset: "Configurer"
             presets:
               custom: "Personnalisé"
+            automatic: "Automatique"
           authorizations:
             user: "Utilisateur"
             scopes: "Portées accordées"

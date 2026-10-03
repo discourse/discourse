@@ -4972,6 +4972,7 @@ fa_IR:
             block: "بستن"
             presets:
               custom: "سفارشی"
+            automatic: "خودکار"
           authorizations:
             user: "کاربر"
             last_used: "آخرین استفاده"

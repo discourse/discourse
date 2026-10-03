@@ -7532,6 +7532,7 @@ ar:
             use_preset: "إعداد"
             presets:
               custom: "مخصَّصة"
+            automatic: "تلقائية"
           authorizations:
             user: "المستخدم"
             scopes: "المجالات الممنوحة"

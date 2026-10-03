@@ -6167,6 +6167,7 @@ zh_TW:
             use_preset: "設置"
             presets:
               custom: "客製"
+            automatic: "自動建立"
           authorizations:
             user: "使用者"
             scopes: "授予的作用域"

@@ -5311,6 +5311,7 @@ fi:
             use_preset: "Määritä"
             presets:
               custom: "Mukautettu"
+            automatic: "Automaattiset"
           authorizations:
             user: "Käyttäjä"
             last_used: "Viimeksi käytetty"

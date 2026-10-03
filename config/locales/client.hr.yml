@@ -5563,6 +5563,7 @@ hr:
             block: "Blokiraj"
             presets:
               custom: "Posebna"
+            automatic: "Automatska"
           authorizations:
             user: "Korisnik"
             last_used: "Zadnje korišteno"

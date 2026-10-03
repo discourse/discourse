@@ -5741,6 +5741,7 @@ hu:
             block: "Letiltás"
             presets:
               custom: "Egyéni"
+            automatic: "Autómatikus"
           authorizations:
             user: "Felhasználó"
             last_used: "Utoljára használva"

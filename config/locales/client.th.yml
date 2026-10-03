@@ -2738,6 +2738,7 @@ th:
           clients:
             actions: "การกระทำ"
             block: "บล็อก"
+            automatic: "อัตโนมัติ"
           authorizations:
             user: "ผู้ใช้"
             status: "สถานะ"

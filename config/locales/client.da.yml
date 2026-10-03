@@ -508,6 +508,9 @@ da:
           other: "Oprettet %{count} år siden"
     bookmarked:
       title: "Bogmærke"
+      edit_bookmark:
+        one: "Rediger bogmærke"
+        other: "Rediger bogmærker"
       help:
         bookmark: "Klik for at bogmærke dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
@@ -4482,6 +4485,7 @@ da:
             block: "Blokér"
             presets:
               custom: "Tilpasset"
+            automatic: "Automatisk"
           authorizations:
             user: "Bruger"
             status: "Status"

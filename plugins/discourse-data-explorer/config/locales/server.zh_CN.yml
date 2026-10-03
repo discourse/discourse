@@ -34,7 +34,11 @@ zh_CN:
       error_agent_not_configured: "AI 智能体尚未配置。请检查 AI 功能设置。"
       error_no_sql_returned: "AI 未返回有效的 SQL 查询。请重试或手动编写查询。"
     errors:
+      default_tag_reserved: "默认标签保留用于系统查询。"
+      tag_contains_comma: "标签中不能包含逗号。"
+      tag_too_long: "标签最多可以包含 %{max} 个字符。"
       tool_not_allowed: "您无权使用此工具"
+      too_many_tags: "一个查询最多可以有 %{max} 标签。"
     discourse_workflows:
       sql_action:
         no_query_selected: "未选择查询。"

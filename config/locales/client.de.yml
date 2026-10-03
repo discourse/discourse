@@ -6340,6 +6340,7 @@ de:
             use_preset: "Einrichten"
             presets:
               custom: "Benutzerdefiniert"
+            automatic: "Automatisch"
           authorizations:
             user: "Nutzer"
             scopes: "Gewährte Bereiche"

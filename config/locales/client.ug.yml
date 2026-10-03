@@ -5721,6 +5721,7 @@ ug:
             block: "توس"
             presets:
               custom: "ئىختىيارى"
+            automatic: "ئۆزلۈكىدىن"
           authorizations:
             user: "ئىشلەتكۈچى"
             last_used: "ئاخىرقى ئىشلەتكەن ۋاقتى"

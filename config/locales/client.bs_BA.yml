@@ -3267,6 +3267,7 @@ bs_BA:
             block: "Block"
             presets:
               custom: "Custom"
+            automatic: "Automatsko"
           authorizations:
             user: "User"
             status: "Status"
