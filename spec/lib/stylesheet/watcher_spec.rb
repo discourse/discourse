@@ -86,4 +86,62 @@ RSpec.describe Stylesheet::Watcher do
       expect(messages).to be_empty
     end
   end
+
+  describe "#core_assets_refresh" do
+    let(:manager) { instance_double(Stylesheet::Manager) }
+
+    before do
+      allow(Stylesheet::Manager).to receive(:new).and_return(manager)
+      allow(manager).to receive(:stylesheet_data) do |target|
+        [{ target: target, new_href: "/stylesheets/#{target}.css" }]
+      end
+      allow(manager).to receive(:color_scheme_stylesheet_details) do |id, **|
+        { color_scheme_id: id, new_href: "/stylesheets/color_definitions_#{id}.css" }.freeze
+      end
+    end
+
+    it "publishes fresh color scheme stylesheets for color definition changes" do
+      scheme = Fabricate(:color_scheme, user_selectable: true)
+
+      messages =
+        MessageBus.track_publish("/file-change") do
+          watcher.core_assets_refresh("color_definitions")
+        end
+
+      expect(messages.first.data.map { |m| m[:target] }.uniq).to eq(["color_definitions"])
+      expect(messages.first.data.map { |m| m[:color_scheme_id] }).to include(scheme.id, nil)
+    end
+
+    it "publishes the default theme's color schemes" do
+      scheme = Fabricate(:color_scheme)
+      dark_scheme = Fabricate(:color_scheme)
+      theme = Fabricate(:theme, color_scheme_id: scheme.id, dark_color_scheme_id: dark_scheme.id)
+      theme.set_default!
+
+      messages =
+        MessageBus.track_publish("/file-change") do
+          watcher.core_assets_refresh("color_definitions")
+        end
+
+      expect(messages.first.data.map { |m| m[:color_scheme_id] }).to include(
+        scheme.id,
+        dark_scheme.id,
+      )
+    end
+
+    it "also refreshes color scheme stylesheets for changes without a target" do
+      messages = MessageBus.track_publish("/file-change") { watcher.core_assets_refresh(nil) }
+
+      targets = messages.flat_map(&:data).map { |m| m[:target] }
+      expect(targets).to include(:admin, :common, "color_definitions")
+    end
+
+    it "does not refresh color scheme stylesheets for targeted changes" do
+      allow(Stylesheet::Manager).to receive(:clear_color_scheme_cache!)
+
+      MessageBus.track_publish("/file-change") { watcher.core_assets_refresh("admin") }
+
+      expect(Stylesheet::Manager).not_to have_received(:clear_color_scheme_cache!)
+    end
+  end
 end
