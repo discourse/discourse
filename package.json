@@ -14,7 +14,7 @@
     "eslint": "10.6.0",
     "execa": "^10.0.1",
     "jsdoc": "^4.0.5",
-    "lefthook": "^2.1.12",
+    "lefthook": "^2.1.14",
     "licensee": "^12.0.2",
     "lint-to-the-future": "^3.2.0",
     "lint-to-the-future-eslint": "^4.0.0",
