@@ -607,7 +607,7 @@ class Admin::UsersController < Admin::StaffController
       previous_value:,
       context: params[:context],
     )
-    @user.user_associated_accounts.delete_all
+    @user.user_associated_accounts.destroy_all
     render json: success_json
   end
 

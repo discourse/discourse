@@ -380,7 +380,7 @@ module DiscourseMcp
         User.transaction do
           updated = UserUpdater.new(request_context.user, user).update(attributes)
           raise ToolError, user.errors.full_messages.join(", ") if !updated
-          update_avatar!(user, upload) if upload
+          user.pick_avatar!(upload.id, type: :custom) if upload
         end
 
         user.reload
@@ -429,12 +429,6 @@ module DiscourseMcp
         end
       end
       private_class_method :validate_background_uploads!
-
-      def self.update_avatar!(user, upload)
-        (user.user_avatar || user.build_user_avatar).update!(custom_upload_id: upload.id)
-        user.update!(uploaded_avatar_id: upload.id)
-      end
-      private_class_method :update_avatar!
     end
 
     class SetUserStatus
