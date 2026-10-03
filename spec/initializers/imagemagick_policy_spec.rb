@@ -19,4 +19,37 @@ RSpec.describe "ImageMagick security policy" do
       /not (allowed|authorized) by the security policy/,
     )
   end
+
+  it "processes temporary images when the configured temporary directory is a symlink" do
+    original_tmpdir = ENV["TMPDIR"]
+    avatar_size = Discourse.avatar_sizes.first
+
+    Dir.mktmpdir(nil, File.realpath(Dir.tmpdir)) do |directory|
+      linked_directory = File.join(directory, "linked")
+      File.symlink(directory, linked_directory)
+      ENV["TMPDIR"] = linked_directory
+
+      load Rails.root.join("config/initializers/003-imagemagick.rb")
+
+      Dir.mktmpdir do |image_directory|
+        input = File.join(image_directory, "input.png")
+        output = File.join(image_directory, "output.png")
+        FileUtils.cp(Rails.root.join("spec/fixtures/images/logo.png"), input)
+
+        ImageMagick.magick(
+          input,
+          "-resize",
+          "#{avatar_size}x#{avatar_size}!",
+          output,
+          operation: :avatar_resize,
+          read: [input],
+          write: [image_directory],
+        )
+
+        expect(FastImage.size(output)).to eq([avatar_size, avatar_size])
+      end
+    end
+  ensure
+    ENV["TMPDIR"] = original_tmpdir
+  end
 end
