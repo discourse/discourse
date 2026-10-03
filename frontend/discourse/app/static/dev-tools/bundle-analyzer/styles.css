@@ -1,0 +1,230 @@
+/* Bundle analyzer viz, ported from the standalone HTML report. All rules are
+   scoped under `.bundle-analyzer` and use Discourse's semantic color variables
+   so it follows the active (light/dark) color scheme. */
+
+/* Pinned to the height it is allowed anyway, so switching tabs or expanding a
+   card scrolls the body instead of resizing the modal. `--modal-min-height` is
+   the documented utility for this; 80vh is what `--modal-max-height` defaults
+   to. */
+.bundle-analyzer-modal {
+  --modal-min-height: 80vh;
+}
+.bundle-analyzer-modal .d-modal__container {
+  width: min(1200px, 92vw);
+  max-width: 92vw;
+}
+/* Deliberately hard to miss: it is the only thing between a reader and numbers
+   that look authoritative and are not. */
+.bundle-analyzer-modal .ba-warning {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+.bundle-analyzer-modal .ba-warning h2 {
+  margin: 0 0 0.5em;
+}
+.bundle-analyzer-modal .ba-warning p {
+  max-width: 34em;
+  margin: 0 auto 1.5em;
+  color: var(--primary-high);
+}
+
+.bundle-analyzer {
+  --ba-bg: var(--secondary);
+  --ba-panel: var(--primary-very-low);
+  --ba-panel2: var(--primary-low);
+  --ba-border: var(--primary-low);
+  --ba-text: var(--primary);
+  --ba-muted: var(--primary-medium);
+  --ba-accent: var(--tertiary);
+  --ba-good: var(--success);
+  --ba-bar: var(--primary-low);
+
+  background: var(--ba-bg);
+  color: var(--ba-text);
+  font-size: 0.8125em;
+  line-height: 1.5;
+}
+
+.bundle-analyzer * {
+  box-sizing: border-box;
+}
+.bundle-analyzer code {
+  color: var(--ba-good);
+}
+.bundle-analyzer .ba-header {
+  margin-bottom: 16px;
+}
+.bundle-analyzer .ba-sub {
+  color: var(--ba-muted);
+  font-size: 12px;
+}
+.bundle-analyzer .ba-hint {
+  color: var(--ba-muted);
+  font-size: 12px;
+  margin: -4px 0 12px;
+}
+
+/* The filter takes the slack so the scope and the switch sit at the right edge.
+   The select is full width by default, which in a flex row means all of it. */
+.bundle-analyzer .ba-toolbar .filter-input-container {
+  flex: 1;
+}
+.bundle-analyzer .ba-toolbar .d-native-select {
+  width: auto;
+}
+.bundle-analyzer .ba-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.bundle-analyzer .ba-row {
+  border: 1px solid var(--ba-border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: var(--ba-panel);
+  overflow: hidden;
+}
+.bundle-analyzer .ba-row > .ba-head {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: var(--ba-panel);
+  display: grid;
+  grid-template-columns: 1fr 130px 130px;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+.bundle-analyzer .ba-row > .ba-head:hover {
+  background: var(--ba-panel2);
+}
+.bundle-analyzer .ba-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.bundle-analyzer .ba-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bundle-analyzer .ba-label.root {
+  color: var(--ba-muted);
+  font-style: italic;
+}
+.bundle-analyzer .ba-tw {
+  color: var(--ba-muted);
+  width: 12px;
+  display: inline-block;
+  transition: transform 0.1s;
+  flex: none;
+}
+.bundle-analyzer .ba-row.open > .ba-head .ba-tw {
+  transform: rotate(90deg);
+}
+.bundle-analyzer .ba-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.bundle-analyzer .ba-num.muted {
+  color: var(--ba-muted);
+}
+.bundle-analyzer .ba-body {
+  padding: 0 12px 12px 32px;
+}
+
+.bundle-analyzer .ba-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--ba-bar);
+  color: var(--ba-text);
+  flex: none;
+}
+.bundle-analyzer .ba-badge.dyn {
+  background: var(--love-low);
+  color: var(--love);
+}
+.bundle-analyzer .ba-badge.entry {
+  background: var(--tertiary-low);
+  color: var(--tertiary);
+}
+.bundle-analyzer .ba-badge.add {
+  background: var(--highlight-low);
+  color: var(--primary);
+}
+.bundle-analyzer .ba-badge.route {
+  background: var(--success-low);
+  color: var(--success);
+}
+.bundle-analyzer .ba-badge.base {
+  background: var(--tertiary);
+  color: var(--secondary);
+}
+
+.bundle-analyzer .ba-bar {
+  height: 4px;
+  background: var(--ba-bar);
+  border-radius: 2px;
+  margin-top: 4px;
+}
+.bundle-analyzer .ba-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--ba-accent);
+  border-radius: 2px;
+}
+.bundle-analyzer .ba-mod {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--ba-border);
+  color: var(--ba-muted);
+}
+.bundle-analyzer .ba-mname {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ba-text);
+}
+.bundle-analyzer .ba-sites {
+  margin: 4px 0 10px;
+}
+.bundle-analyzer .ba-site {
+  color: var(--ba-muted);
+  padding: 2px 0;
+}
+.bundle-analyzer .ba-sub-list {
+  margin-top: 8px;
+}
+.bundle-analyzer .ba-pill,
+.bundle-analyzer .pill {
+  font-size: 11px;
+  color: var(--ba-muted);
+}
+.bundle-analyzer .ba-empty {
+  color: var(--ba-muted);
+  padding: 12px;
+}
+
+.bundle-analyzer .ba-loaded-dot {
+  color: var(--ba-good);
+  font-size: 9px;
+  line-height: 1;
+  flex: none;
+}
+.bundle-analyzer .ba-row.loaded {
+  border-color: color-mix(in srgb, var(--ba-good) 45%, var(--ba-border));
+}
+.bundle-analyzer .ba-row.loaded > .ba-head {
+  box-shadow: inset 3px 0 0 var(--ba-good);
+}

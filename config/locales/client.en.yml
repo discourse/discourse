@@ -473,8 +473,19 @@ en:
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
       open_styleguide: "Open styleguide"
+      toggle_bundle_analyzer: "Bundle analyzer"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
+      bundle_analyzer:
+        title: "Bundle analysis"
+        scope_all: "Core and plugins"
+        scope_core: "Core only"
+        scope_plugins: "Plugins only"
+        only_loaded: "Only show loaded chunks"
+        development_title: "Development build"
+        development_warning: "Chunk splitting and sizes are completely different to production, and brotli sizes aren't available. Restart the server with EMBER_ENV=production."
+        development_continue: "Open analyzer anyway"
+        load_failed: "Failed to load bundle-analysis.json: %{error}"
 
     s3:
       regions:
