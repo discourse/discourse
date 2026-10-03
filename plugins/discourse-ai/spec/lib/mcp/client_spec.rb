@@ -62,6 +62,81 @@ RSpec.describe DiscourseAi::Mcp::Client do
     end
   end
 
+  describe "#list_tools" do
+    it "returns tools from every page" do
+      stub_request(:post, server.url).to_return(
+        {
+          status: 200,
+          body: {
+            jsonrpc: "2.0",
+            result: {
+              tools: [{ name: "search_issues" }],
+              nextCursor: "opaque-page-2",
+            },
+          }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        },
+        {
+          status: 200,
+          body: { jsonrpc: "2.0", result: { tools: [{ name: "create_issue" }] } }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        },
+      )
+
+      tools = described_class.new(server).list_tools(session_id: "session-1")
+
+      expect(tools).to eq([{ "name" => "search_issues" }, { "name" => "create_issue" }])
+      expect(
+        a_request(:post, server.url).with do |request|
+          payload = JSON.parse(request.body)
+
+          payload["method"] == "tools/list" &&
+            payload["params"] == { "cursor" => "opaque-page-2" } &&
+            request.headers["Mcp-Session-Id"] == "session-1"
+        end,
+      ).to have_been_made.once
+    end
+
+    it "rejects a repeated pagination cursor" do
+      stub_request(:post, server.url).to_return(
+        status: 200,
+        body: { jsonrpc: "2.0", result: { tools: [], nextCursor: "repeated-cursor" } }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      expect { described_class.new(server).list_tools }.to raise_error(
+        described_class::Error,
+        "MCP tools/list returned a repeated pagination cursor",
+      )
+    end
+
+    it "rejects pagination beyond the page limit" do
+      stub_const(described_class, :MAX_PAGINATION_PAGES, 2) do
+        stub_request(:post, server.url).to_return(
+          {
+            status: 200,
+            body: { jsonrpc: "2.0", result: { tools: [], nextCursor: "page-2" } }.to_json,
+          },
+          {
+            status: 200,
+            body: { jsonrpc: "2.0", result: { tools: [], nextCursor: "page-3" } }.to_json,
+          },
+        )
+
+        expect { described_class.new(server).list_tools }.to raise_error(
+          described_class::Error,
+          "MCP tools/list exceeded the 2-page limit",
+        )
+      end
+    end
+  end
+
   describe "#call_tool" do
     it "parses streamable HTTP SSE responses with CRLF separators" do
       stub_request(:post, server.url).to_return(
