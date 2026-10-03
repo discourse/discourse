@@ -16,6 +16,8 @@ module JsonApiKit
 
       def previous_names(name) = downward[name].previous_names
 
+      def affects?(name) = upward.key?(name)
+
       def verify!
         duplicate_name(&:previous_names).try { raise Conflict, "changes #{it} twice." }
         duplicate_name(&:current_names).try { raise Conflict, "changes two names into #{it}." }

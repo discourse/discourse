@@ -6,7 +6,7 @@ module JsonApiKit
       Data.define(:from, :to, :up, :down) do
         def current_names = to
 
-        def current_pairs(attributes) = to.zip(up.call(attributes.fetch(from)))
+        def current_pairs(attributes, **) = to.zip(up.call(attributes.fetch(from)))
 
         def previous_names = [from]
 

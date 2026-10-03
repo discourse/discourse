@@ -15,7 +15,7 @@ RSpec.describe JsonApiKit::VersionChange::Rename do
   end
 
   describe "#current_pairs" do
-    subject(:current_pairs) { rename.current_pairs(old_name => value) }
+    subject(:current_pairs) { rename.current_pairs({ old_name => value }) }
 
     let(:value) { "2026/08/01" }
 
