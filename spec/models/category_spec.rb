@@ -803,9 +803,13 @@ RSpec.describe Category do
     before { SiteSetting.shared_drafts_category = category.id.to_s }
 
     it "is deleted correctly" do
+      Fabricate(:post, topic: category.topic)
       category.destroy
       expect(Category.exists?(id: category_id)).to be false
-      expect(Topic.with_deleted.where.not(deleted_at: nil).exists?(id: topic_id)).to be true
+      topic = Topic.with_deleted.find(topic_id)
+      expect(topic).to be_trashed
+      expect(Post.only_deleted.where(topic_id:)).to contain_exactly(topic.first_post_with_deleted)
+      expect(topic.posts_count).to eq(1)
       expect(SiteSetting.shared_drafts_category).to be_blank
     end
 
