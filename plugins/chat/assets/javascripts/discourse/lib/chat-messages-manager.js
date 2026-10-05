@@ -6,6 +6,18 @@ import {
 } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
+function compareMessages(a, b) {
+  if (a.staged !== b.staged) {
+    return a.staged ? 1 : -1;
+  }
+
+  if (a.staged) {
+    return 0;
+  }
+
+  return a.createdAt - b.createdAt || a.id - b.id;
+}
+
 export default class ChatMessagesManager {
   @autoTrackedArray messages = [];
 
@@ -35,7 +47,11 @@ export default class ChatMessagesManager {
     this.messages = uniqueItemsFromArray(
       this.messages.concat(messages),
       "id"
-    ).sort((a, b) => a.createdAt - b.createdAt);
+    ).sort(compareMessages);
+  }
+
+  sortMessages() {
+    this.messages = this.messages.toSorted(compareMessages);
   }
 
   findMessage(messageId) {
