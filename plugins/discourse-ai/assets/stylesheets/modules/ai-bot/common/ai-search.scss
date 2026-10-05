@@ -474,6 +474,14 @@
       flex: 0 0 auto;
     }
 
+    &.is-active {
+      &:hover {
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+    }
+
     // an empty tab stays offered, but reads as having nothing in it
     &.--empty:not(.is-active) {
       opacity: 0.6;
