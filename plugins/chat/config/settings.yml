@@ -76,6 +76,7 @@ chat:
     min: 0
     area: "flags"
   chat_homepage_channel:
+    refresh: true
     type: enum
     default: ""
     enum: "Chat::HomepageChannelSiteSetting"

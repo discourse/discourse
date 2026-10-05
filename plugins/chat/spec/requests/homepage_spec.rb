@@ -41,6 +41,17 @@ RSpec.describe "Chat channel homepage" do
     )
   end
 
+  it "asks open clients to refresh when the channel changes" do
+    channel_2 = Fabricate(:category_channel)
+
+    messages =
+      MessageBus.track_publish("/global/asset-version") do
+        SiteSetting.set("chat_homepage_channel", channel_2.id)
+      end
+
+    expect(messages.map(&:data)).to eq(["clobber"])
+  end
+
   it "renders the app at the root path" do
     SiteSetting.has_login_hint = false
     sign_in(user)
