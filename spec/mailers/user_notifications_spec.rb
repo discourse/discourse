@@ -529,7 +529,7 @@ RSpec.describe UserNotifications do
 
       it "applies lang/xml:lang html attributes" do
         SiteSetting.default_locale = "pl_PL"
-        html = email.html_part.to_s
+        html = email.html_part.body.to_s
 
         expect(html).to match(' lang="pl-PL"')
         expect(html).to match(' xml:lang="pl-PL"')
@@ -557,6 +557,474 @@ RSpec.describe UserNotifications do
         html = email.html_part.body.to_s
         expect(html).not_to include(old_topic.title)
       end
+    end
+  end
+
+  describe "translated digest content" do
+    fab!(:user) { Fabricate(:user, locale: "ja") }
+    fab!(:author) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:topic) { Fabricate(:topic, user: author, locale: "en", created_at: 1.hour.ago) }
+    fab!(:other_topic) { Fabricate(:topic, user: author, locale: "en", created_at: 2.hours.ago) }
+    fab!(:post) do
+      Fabricate(:post, user: author, topic: topic, locale: "en", raw: "Original first post")
+    end
+    fab!(:reply) do
+      Fabricate(
+        :post,
+        user: author,
+        topic: topic,
+        locale: "en",
+        raw: "Original popular reply",
+        score: 100,
+        created_at: 1.hour.ago,
+      )
+    end
+    fab!(:post_translation) { Fabricate(:post_localization, post: post) }
+    fab!(:reply_translation) { Fabricate(:post_localization, post: reply) }
+    fab!(:topic_translation) { Fabricate(:topic_localization, topic: topic) }
+    fab!(:other_topic_translation) { Fabricate(:topic_localization, topic: other_topic) }
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.digest_topics = 1
+      SiteSetting.digest_other_topics = 1
+      SiteSetting.digest_posts = 1
+      topic.update!(bumped_at: 1.hour.ago)
+      other_topic.update!(bumped_at: 2.hours.ago)
+    end
+
+    def digest_mail(recipient = user)
+      UserNotifications.digest(recipient, since: 1.day.ago)
+    end
+
+    it "translates popular topics, popular posts, and other new topics in both parts" do
+      mail = digest_mail
+      html = mail.html_part.body.to_s
+      text = mail.text_part.body.to_s
+      [html, text].each do |body|
+        expect(body).to include(
+          topic_translation.title,
+          other_topic_translation.title,
+          reply_translation.raw,
+        )
+        expect(body).not_to include(topic.title, other_topic.title, reply.raw)
+      end
+      expect(html).to include(post_translation.raw)
+      expect(text).not_to include(post.raw)
+      expect(html).to include(I18n.t("user_notifications.digest.popular_topics", locale: "ja"))
+      expect(I18n.locale).to eq(:en)
+    end
+
+    it "keeps content in the recipient's selected language and understood languages" do
+      topic.update!(locale: "ja")
+      post.update!(locale: "ja")
+      reply.update!(locale: "en")
+      other_topic.update!(locale: "fr")
+      user.user_option.update!(understood_languages: ["en"])
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, reply.raw, other_topic_translation.title)
+        expect(body).not_to include(
+          topic_translation.title,
+          reply_translation.raw,
+          other_topic.title,
+        )
+      end
+      expect(mail.html_part.body.to_s).to include(post.raw)
+    end
+
+    it "falls back for missing and stale post translations" do
+      post_translation.destroy!
+      topic_translation.destroy!
+      reply_translation.update!(post_version: reply.version - 1)
+      mail = digest_mail
+      expect(mail.html_part.body.to_s).to include(topic.title, post.raw, reply.raw)
+      expect(mail.text_part.body.to_s).to include(topic.title, reply.raw)
+      expect(mail.html_part.body.to_s).not_to include(reply_translation.raw)
+    end
+
+    it "respects the automatic translation preference" do
+      user.user_option.update!(automatically_translate: false)
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, other_topic.title, reply.raw)
+        expect(body).not_to include(topic_translation.title, reply_translation.raw)
+      end
+    end
+
+    it "keeps original content when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, reply.raw)
+        expect(body).not_to include(topic_translation.title, reply_translation.raw)
+      end
+    end
+
+    it "uses the effective locale when user locales are disabled" do
+      SiteSetting.allow_user_locale = false
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, reply.raw)
+        expect(body).not_to include(topic_translation.title, reply_translation.raw)
+      end
+    end
+
+    it "uses normalized language matches and skips sources whose language is unknown" do
+      user.update!(locale: "pt_BR")
+      topic_translation.update!(locale: "pt")
+      reply_translation.update!(locale: "pt")
+      post.update!(locale: nil)
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic_translation.title, reply_translation.raw)
+      end
+      expect(mail.html_part.body.to_s).to include(post.raw)
+      expect(mail.html_part.body.to_s).not_to include(post_translation.raw)
+    end
+
+    it "escapes translated titles and sanitizes translated post content" do
+      title = %(<img src="x" onerror="alert(1)"> Translated meeting)
+      topic_translation.update!(title: title)
+      PostLocalizationUpdater.update(
+        post: reply,
+        locale: "ja",
+        user: author,
+        raw:
+          %(Safe localized reply\n\n<img src="x" onerror="alert(1)">\n\n<script>alert(1)</script>),
+      )
+      html = Nokogiri::HTML5.fragment(Email::Renderer.new(digest_mail).html)
+      expect(html.text).to include(title, "Safe localized reply")
+      expect(html.css("script, [onerror], [onload]")).to be_empty
+    end
+
+    it "formats translated links and redacts secure images from digest excerpts" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      SiteSetting.login_required = true
+      secure_url = "/secure-uploads/original/1X/translated.png"
+      [post_translation, reply_translation].each do |translation|
+        translation.update!(
+          cooked: "<p>#{translation.raw}<a href='/u/admin'>Admin</a><img src='#{secure_url}'></p>",
+        )
+      end
+      mail = digest_mail
+      renderer = Email::Renderer.new(mail)
+      html = Nokogiri::HTML5.fragment(renderer.html)
+      expect(html.css("a").map { |link| link["href"] }).to include("#{Discourse.base_url}/u/admin")
+      expect(html.at_css("[data-stripped-secure-upload]")).to be_present
+      expect(html.css("img").map { |image| image["src"] }).not_to include(
+        secure_url,
+        "#{Discourse.base_url}#{secure_url}",
+      )
+    end
+
+    it "loads translations in a bounded number of queries as the digest grows" do
+      original_queries = track_sql_queries { digest_mail.html_part.body.to_s }
+      additional_topic = Fabricate(:topic, user: author, locale: "en", created_at: 1.hour.ago)
+      additional_post = Fabricate(:post, user: author, topic: additional_topic, locale: "en")
+      Fabricate(:topic_localization, topic: additional_topic)
+      Fabricate(:post_localization, post: additional_post)
+      SiteSetting.digest_topics = 2
+      expanded_queries = track_sql_queries { digest_mail.html_part.body.to_s }
+      %w[post_localizations topic_localizations].each do |table|
+        expect(expanded_queries.count { |query| query.include?(%(FROM "#{table}")) }).to eq(
+          original_queries.count { |query| query.include?(%(FROM "#{table}")) },
+        )
+      end
+    end
+  end
+
+  describe "translated notification content" do
+    fab!(:user) { Fabricate(:user, locale: "ja") }
+    fab!(:topic) { Fabricate(:topic, locale: "en") }
+    fab!(:post) { Fabricate(:post, topic: topic, locale: "en") }
+    fab!(:reply) { Fabricate(:post, topic: topic, locale: "en", reply_to_post_number: 1) }
+    fab!(:post_translation) { Fabricate(:post_localization, post: post) }
+    fab!(:reply_translation) { Fabricate(:post_localization, post: reply) }
+    fab!(:topic_translation) { Fabricate(:topic_localization, topic: topic) }
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      user.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+        email_in_reply_to: true,
+      )
+    end
+
+    def notification_mail(recipient = user)
+      UserNotifications.user_replied(
+        recipient,
+        post: reply,
+        notification_type: "replied",
+        notification_data_hash: {
+          original_username: reply.username,
+          topic_title: topic.title,
+        },
+      )
+    end
+
+    it "uses the recipient's translations for the subject, post, and previous replies" do
+      original_post_attributes = reply.attributes.slice("raw", "cooked")
+      original_topic_title = topic.title
+      mail = notification_mail
+      expect(mail.subject).to include(topic_translation.title)
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(reply_translation.raw, post_translation.raw)
+        expect(body).not_to include(reply.raw, post.raw)
+      end
+      expect(reply.reload.attributes.slice("raw", "cooked")).to eq(original_post_attributes)
+      expect(topic.reload.title).to eq(original_topic_title)
+      expect(I18n.locale).to eq(:en)
+    end
+
+    it "uses translations for mailing list notifications" do
+      mail = UserNotifications.mailing_list_notify(user, reply)
+      expect(mail.subject).to include(topic_translation.title)
+      expect(mail.html_part.body.to_s).to include(reply_translation.raw)
+      expect(mail.text_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "preserves the original PM subject when the topic has been renamed" do
+      topic.update!(archetype: Archetype.private_message, category_id: nil)
+      original_title = "Original PM title"
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: reply,
+          notification_type: "private_message",
+          notification_data_hash: {
+            original_username: reply.username,
+            topic_title: original_title,
+          },
+        )
+      expect(mail.subject).to include(original_title)
+      expect(mail.html_part.body.to_s).to include(reply_translation.raw)
+      expect(mail.text_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "preserves plugin title and body overrides when translations are available" do
+      plugin = Plugin::Instance.new
+      custom_title = "Plugin supplied title"
+      custom_raw = "Plugin supplied plain text"
+      custom_cooked = "<p>Plugin supplied HTML</p>"
+      modifier =
+        proc do |options|
+          options[:title] = custom_title
+          options[:post].raw = custom_raw
+          options[:post].cooked = custom_cooked
+          options
+        end
+      DiscoursePluginRegistry.register_modifier(plugin, :user_notification_email_options, &modifier)
+
+      mail = notification_mail
+      aggregate_failures do
+        expect(mail.subject).to include(custom_title)
+        expect(mail.html_part.body.to_s).to include(custom_cooked)
+        expect(mail.text_part.body.to_s).to include(custom_raw)
+        expect(mail.html_part.body.to_s).to include(post_translation.raw)
+        expect(mail.text_part.body.to_s).to include(post_translation.raw)
+      end
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modifier
+      )
+    end
+
+    it "uses translated excerpts" do
+      SiteSetting.post_excerpts_in_emails = true
+      expect(notification_mail.html_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "falls back to the original when translations are missing" do
+      reply_translation.destroy!
+      topic_translation.destroy!
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "respects the automatic translation preference" do
+      user.user_option.update!(automatically_translate: false)
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "keeps content in languages the recipient understands" do
+      user.user_option.update!(understood_languages: ["en"])
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "keeps selected and understood languages while translating other context posts" do
+      topic.update!(locale: "ja")
+      reply.update!(locale: "ja", post_number: 4)
+      french_post =
+        Fabricate(:post, topic: topic, locale: "fr", post_number: 3, raw: "French context")
+      french_translation = Fabricate(:post_localization, post: french_post)
+      user.user_option.update!(understood_languages: ["en_GB"])
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(reply.raw, post.raw, french_translation.raw)
+        expect(body).not_to include(
+          topic_translation.title,
+          reply_translation.raw,
+          post_translation.raw,
+          french_post.raw,
+        )
+      end
+    end
+
+    it "keeps original content when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "keeps original content when the source language is unknown" do
+      topic.update!(locale: nil)
+      reply.update!(locale: nil)
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "redacts translated content in private emails" do
+      SiteSetting.private_email = true
+      mail = notification_mail
+      expect(mail.subject).not_to include(topic_translation.title, topic.title)
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).not_to include(
+          reply_translation.raw,
+          post_translation.raw,
+          reply.raw,
+          post.raw,
+        )
+      end
+    end
+
+    it "falls back to original content for stale translations" do
+      reply_translation.update!(post_version: reply.version - 1)
+      mail = notification_mail
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "uses normalized locale matches" do
+      user.update!(locale: "pt_BR")
+      reply_translation.update!(locale: "pt")
+      mail = notification_mail
+      expect(mail.html_part.body.to_s).to include(reply_translation.raw)
+      expect(mail.text_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "uses the effective locale when user locales are disabled" do
+      SiteSetting.allow_user_locale = false
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "uses translated content with customized email templates" do
+      [SiteSetting.default_locale, user.locale].each do |locale|
+        TranslationOverride.upsert!(
+          locale,
+          "user_notifications.user_replied.text_body_template",
+          "%{topic_title}\n\n%{message}\n\n%{context}",
+        )
+      end
+      mail = notification_mail
+      renderer = Email::Renderer.new(mail)
+      [renderer.html, renderer.text].each do |body|
+        expect(body).to include(
+          topic_translation.title,
+          reply_translation.raw,
+          post_translation.raw,
+        )
+      end
+    end
+
+    it "uses the translated title and excerpt when inviting a user to a topic" do
+      mail =
+        UserNotifications.user_invited_to_topic(
+          user,
+          post: post,
+          notification_type: "invited_to_topic",
+          notification_data_hash: {
+            original_username: post.username,
+            topic_title: topic.title,
+          },
+        )
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic_translation.title, post_translation.raw)
+      end
+    end
+
+    it "keeps original incoming email subjects for staged recipients" do
+      user.update!(staged: true)
+      incoming_email = Fabricate(:incoming_email, post: post, subject: "Original incoming subject")
+      expect(notification_mail.subject).to include(incoming_email.subject)
+    end
+
+    it "formats translated links and redacts secure images" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      SiteSetting.login_required = true
+      secure_url = "/secure-uploads/original/1X/translated.png"
+      reply_translation.update!(
+        cooked:
+          "<p>#{reply_translation.raw}<a href='/u/admin'>Admin</a><img src='#{secure_url}'></p>",
+      )
+      html = Nokogiri::HTML5.fragment(notification_mail.html_part.body.to_s)
+      expect(html.css("a").map { |link| link["href"] }).to include("#{Discourse.base_url}/u/admin")
+      expect(html.css("img").map { |image| image["src"] }).not_to include(
+        secure_url,
+        "#{Discourse.base_url}#{secure_url}",
+      )
+      expect(html.at_css("[data-stripped-secure-upload]")).to be_present
+    end
+
+    it "loads post translations in a bounded number of queries as context grows" do
+      original_queries = track_sql_queries { notification_mail.html_part.body.to_s }
+      3.times do
+        context_post = Fabricate(:post, topic: topic, locale: "en")
+        Fabricate(:post_localization, post: context_post)
+      end
+      latest_post = Fabricate(:post, topic: topic, locale: "en")
+      latest_translation = Fabricate(:post_localization, post: latest_post)
+      mail = nil
+      expanded_queries =
+        track_sql_queries do
+          mail = UserNotifications.mailing_list_notify(user, latest_post)
+          mail.html_part.body.to_s
+        end
+      expect(mail.html_part.body.to_s).to include(latest_translation.raw, reply_translation.raw)
+      expect(expanded_queries.count { |query| query.include?('FROM "post_localizations"') }).to eq(
+        original_queries.count { |query| query.include?('FROM "post_localizations"') },
+      )
+    end
+
+    it "selects content independently for each recipient" do
+      notification_mail.html_part.body.to_s
+      other_user = Fabricate(:user, locale: "en")
+      mail = notification_mail(other_user)
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
     end
   end
 
