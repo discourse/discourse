@@ -37,7 +37,7 @@ acceptance("Managing Automatic Group Email Settings", function (needs) {
       return helper.response({ success: "OK" });
     });
     server.put("/groups/50", (request) => {
-      const { group } = JSON.parse(request.requestBody);
+      const { group } = helper.parsePostData(request.requestBody);
       if (
         group.smtp_server === "smtp.gmail.com" &&
         group.email_username === "moderators@example.com" &&

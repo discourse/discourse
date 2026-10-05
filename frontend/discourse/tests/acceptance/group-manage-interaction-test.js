@@ -76,7 +76,7 @@ acceptance("Managing Automatic Group Incoming Email", function (needs) {
       return helper.response(fixture);
     });
     server.put("/groups/50", (request) => {
-      const { group } = JSON.parse(request.requestBody);
+      const { group } = helper.parsePostData(request.requestBody);
       return helper.response(
         group.incoming_email === "moderators@example.com" ? 200 : 422,
         { success: "OK" }
