@@ -100,6 +100,13 @@ RSpec.describe "Chat channel homepage" do
     channel_1.chatable.update!(read_restricted: true)
 
     expect(HomepageHelper.resolve(nil, user)).to eq("latest")
+
+    serialized = SiteSerializer.new(Site.new(user.guardian), scope: user.guardian, root: false)
+    expect(serialized.as_json[:homepage_options]).to include(
+      id: "chat",
+      path: nil,
+      server_side: false,
+    )
   end
 
   it "falls back for crawlers" do

@@ -239,7 +239,7 @@ class SiteSerializer < ApplicationSerializer
     DiscoursePluginRegistry.homepage_options.map do |option|
       {
         id: option[:id],
-        path: HomepageHelper.option_path(option),
+        path: HomepageHelper.option_path(option, scope),
         server_side: option[:server_side],
       }
     end

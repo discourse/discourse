@@ -26,10 +26,14 @@ class HomepageHelper
     top_menu_homepage(current_user)
   end
 
-  def self.option_path(option)
+  def self.option_path(option, guardian)
     path = option[:path]
     return path if !path.respond_to?(:call)
-    return if option[:id] != SiteSetting.homepage && !option[:server_side]
+
+    if !option[:server_side]
+      return if option[:id] != SiteSetting.homepage
+      return if !option_available?(option[:id], nil, guardian.user)
+    end
 
     path.call
   rescue StandardError => e

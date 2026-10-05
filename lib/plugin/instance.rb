@@ -1186,7 +1186,7 @@ class Plugin::Instance
   #   back to the top menu homepage
   # @param available [Proc, nil] called with `guardian:` and `request:` (which
   #   may be nil); when it returns false the visitor gets the regular top menu
-  #   homepage instead. It runs whenever the homepage is resolved, including on
+  #   homepage instead, and a lambda `path` is not sent to them. It runs whenever the homepage is resolved, including on
   #   page loads and topic list requests, so keep it cheap.
   def register_homepage(
     id,
