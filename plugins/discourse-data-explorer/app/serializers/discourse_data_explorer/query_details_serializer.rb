@@ -16,12 +16,12 @@ module DiscourseDataExplorer
       AdminDashboardReportProvider.mountable?(object)
     end
 
-    def include_dashboard_mountable?
-      scope&.is_admin?
-    end
-
     def dashboard_mounted
       AdminDashboardReportProvider.mounted?(object)
+    end
+
+    def include_dashboard_mountable?
+      scope&.is_admin?
     end
 
     def include_dashboard_mounted?
