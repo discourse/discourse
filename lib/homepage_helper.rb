@@ -32,6 +32,9 @@ class HomepageHelper
     return if option[:id] != SiteSetting.homepage && !option[:server_side]
 
     path.call
+  rescue StandardError => e
+    Discourse.warn_exception(e, message: "Homepage path failed for '#{option[:id]}'")
+    nil
   end
 
   def self.custom_homepage_route(request)

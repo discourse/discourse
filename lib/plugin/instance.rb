@@ -1173,9 +1173,11 @@ class Plugin::Instance
   #
   # @param id [String, Symbol] stable identifier stored in the site setting
   # @param name [String] client-side translation key used in the admin setting
-  # @param path [String, Proc] application path for the homepage, or a lambda
-  #   returning one when it depends on settings (it is resolved per request and
-  #   sent with the site data)
+  # @param path [String, Proc] application path for the homepage, excluding any
+  #   subfolder, or a lambda returning one when it depends on settings. A lambda
+  #   is resolved when the site data is built; anonymous site data is cached
+  #   until a site setting changes, so call `Site.clear_anon_cache!` if the path
+  #   depends on anything else.
   # @param route [String] Rails controller action, in `controller#action` form
   # @param anonymous [Boolean] whether logged-out visitors may use this homepage
   # @param server_side [Boolean] whether navigation requires a full page request

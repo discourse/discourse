@@ -100,6 +100,23 @@ RSpec.describe SiteSerializer do
       )
     end
 
+    it "omits a callable homepage path that raises" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { raise "boom" },
+        route: "plugin#index",
+      )
+      SiteSetting.default_homepage = "dynamic"
+      Discourse.expects(:warn_exception).once
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: false)
+    end
+
     it "resolves a registered homepage path that depends on settings" do
       plugin = Plugin::Instance.new
       plugin.stubs(:enabled?).returns(true)

@@ -25,4 +25,19 @@ RSpec.describe Chat::HomepageChannelSiteSetting do
     expect(described_class.valid_value?(channel_1.id)).to eq(true)
     expect(described_class.valid_value?(-1)).to eq(false)
   end
+
+  it "does not validate archived channels" do
+    channel_1.update!(status: :archived)
+
+    expect(described_class.valid_value?(channel_1.id)).to eq(false)
+  end
+
+  it "loads channel categories without a query per channel" do
+    described_class.values
+    initial_count = track_sql_queries { described_class.values }.size
+
+    Fabricate(:category_channel)
+
+    expect(track_sql_queries { described_class.values }.size).to eq(initial_count)
+  end
 end

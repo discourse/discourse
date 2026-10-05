@@ -5,13 +5,12 @@ require "enum_site_setting"
 module Chat
   class HomepageChannelSiteSetting < ::EnumSiteSetting
     def self.valid_value?(val)
-      val.blank? || values.any? { |v| v[:value].to_s == val.to_s }
+      val.blank? || selectable_channels.exists?(id: val)
     end
 
     def self.values
-      Chat::Channel
-        .public_channels
-        .where.not(status: :archived)
+      selectable_channels
+        .includes(:chatable)
         .order(:id)
         .map { |channel| { name: channel.title, value: channel.id } }
     end
@@ -19,5 +18,11 @@ module Chat
     def self.translate_names?
       false
     end
+
+    def self.selectable_channels
+      Chat::Channel.public_channels.where.not(status: :archived)
+    end
+
+    private_class_method :selectable_channels
   end
 end

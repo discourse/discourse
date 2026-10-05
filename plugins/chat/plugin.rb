@@ -447,7 +447,7 @@ after_initialize do
   register_homepage(
     "chat",
     name: "chat.homepage_option",
-    path: -> { homepage_channel.call&.relative_url || "/chat" },
+    path: -> { homepage_channel.call&.relative_url&.delete_prefix(Discourse.base_path) || "/chat" },
     route: "chat/chat#respond",
     anonymous: true,
     enabled: -> { SiteSetting.enable_public_channels },

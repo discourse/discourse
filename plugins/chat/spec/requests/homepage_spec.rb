@@ -29,6 +29,18 @@ RSpec.describe "Chat channel homepage" do
     )
   end
 
+  it "leaves the subfolder out of the homepage path" do
+    set_subfolder "/forum"
+
+    serialized = SiteSerializer.new(Site.new(user.guardian), scope: user.guardian, root: false)
+
+    expect(serialized.as_json[:homepage_options]).to include(
+      id: "chat",
+      path: "/chat/c/#{channel_1.slug}/#{channel_1.id}",
+      server_side: false,
+    )
+  end
+
   it "renders the app at the root path" do
     SiteSetting.has_login_hint = false
     sign_in(user)
