@@ -317,6 +317,7 @@ export default {
                 badgeComponent: ChatHeaderIconUnreadIndicator,
                 url: "/chat",
                 primary: true,
+                beforeNavigate: () => chatStateManager.requestFullPage(),
                 ownsRoute: (routeInfo) => /^chat(\.|$)/.test(routeInfo.name),
                 isNestedRoute: (routeInfo) =>
                   /^chat\.channel(\.|$)/.test(routeInfo.name),

@@ -36,7 +36,9 @@ export default class ChatRoute extends DiscourseRoute {
     }
 
     // Check if user prefers drawer mode and the route can be handled in drawer
-    const isDrawerPreferred = this.chatStateManager.isDrawerPreferred;
+    const fullPageRequested = this.chatStateManager.consumeFullPageRequest();
+    const isDrawerPreferred =
+      !fullPageRequested && this.chatStateManager.isDrawerPreferred;
     const canHandleInDrawer = this.chatDrawerRouter.canHandleRoute(
       transition.to
     );

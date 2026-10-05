@@ -60,6 +60,10 @@ export default class BaseCustomSidebarPanel {
    * returns to the list the page was opened from.
    * @property {{label: string, icon: string, action: Function}} [menuAction]
    * Leads the section's menu, for starting something new in the section.
+   * @property {number} [order] Sorts the tab among the other sections that
+   * aren't primary, lowest first. Defaults to 0, then registration order.
+   * @property {Function} [beforeNavigate] Runs before the tab navigates into
+   * its section from another, to prepare how the section opens.
    */
 
   /**

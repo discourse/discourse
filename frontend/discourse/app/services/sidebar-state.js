@@ -18,6 +18,7 @@ import {
 @disableImplicitInjections
 export default class SidebarState extends Service {
   @service keyValueStore;
+  @service mobileTabBar;
   @service router;
 
   @tracked currentPanelKey = currentPanelKey;
@@ -42,8 +43,9 @@ export default class SidebarState extends Service {
     return this.panels.find((panel) => panel.key === this.currentPanelKey);
   }
 
+  // Each sidebar tab shows a single panel
   get combinedMode() {
-    return this.mode === COMBINED_MODE;
+    return this.mode === COMBINED_MODE && !this.mobileTabBar.sidebarTabsEnabled;
   }
 
   get showMainPanel() {
@@ -108,8 +110,12 @@ export default class SidebarState extends Service {
 
   setCombinedMode() {
     this.mode = COMBINED_MODE;
-    this.currentPanelKey = MAIN_PANEL;
     this.hideSwitchPanelButtons();
+
+    // Runs while the app boots, too early to ask whether the tabs show
+    if (!this.mobileTabBar.sidebarTabsConfigured) {
+      this.currentPanelKey = MAIN_PANEL;
+    }
   }
 
   showSwitchPanelButtons() {

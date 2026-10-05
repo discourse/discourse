@@ -4,19 +4,32 @@ html.mobile-tab-bar-visible {
 }
 
 .mobile-tab-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: z("footer-nav");
   display: flex;
-  width: 100%;
-  height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
   box-sizing: border-box;
-  background: var(--header_background);
-  border-top: 1px solid var(--content-border-color);
 
   @include unselectable;
+
+  &.--footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: z("footer-nav");
+    width: 100%;
+    height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--header_background);
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  &.--sidebar {
+    padding-block: var(--space-1);
+    border-bottom: 1px solid var(--content-border-color);
+
+    // Narrower than a phone, so the pill gives up some width
+    .mobile-tab-bar__indicator {
+      min-width: 2.75rem;
+    }
+  }
 
   &__tab {
     flex: 1 1 0;

@@ -2,10 +2,12 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import SidebarAccountActions from "discourse/components/sidebar/account-actions";
 import ApiPanels from "discourse/components/sidebar/api-panels";
 import Footer from "discourse/components/sidebar/footer";
 import Sections from "discourse/components/sidebar/sections";
 import SwitchPanelButtons from "discourse/components/sidebar/switch-panel-buttons";
+import SidebarTabBar from "discourse/components/sidebar/tab-bar";
 import bodyClass from "discourse/helpers/body-class";
 import { bind } from "discourse/lib/decorators";
 import {
@@ -21,6 +23,7 @@ export default class Sidebar extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service mobileTabBar;
   @service sidebarState;
 
   constructor() {
@@ -51,7 +54,8 @@ export default class Sidebar extends Component {
     if (
       !this.sidebarState.displaySwitchPanelButtons ||
       this.sidebarState.panels.length === 1 ||
-      !this.currentUser
+      !this.currentUser ||
+      this.mobileTabBar.sidebarTabsEnabled
     ) {
       return [];
     }
@@ -125,9 +129,13 @@ export default class Sidebar extends Component {
         indicator=false
       }}
     >
+      <SidebarTabBar />
+
       {{#if this.showSwitchPanelButtonsOnTop}}
         <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
       {{/if}}
+
+      <SidebarAccountActions @status={{true}} />
 
       <PluginOutlet @name="before-sidebar-sections" />
 
@@ -146,6 +154,8 @@ export default class Sidebar extends Component {
       {{/if}}
 
       <PluginOutlet @name="after-sidebar-sections" />
+
+      <SidebarAccountActions />
 
       {{#unless this.showSwitchPanelButtonsOnTop}}
         <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />

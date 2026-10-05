@@ -146,7 +146,7 @@ export default class Icons extends Component {
               @active={{this.header.userVisible}}
               @toggleUserMenu={{@toggleUserMenu}}
             />
-            {{#if this.mobileTabBar.enabled}}
+            {{#if this.mobileTabBar.splitsProfileMenu}}
               <HeaderProfileToggle />
             {{/if}}
           {{/if}}

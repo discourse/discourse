@@ -270,7 +270,7 @@ export default class UserMenu extends Component {
     const tabs = [];
 
     // The tab bar's profile menu holds the profile tab's contents instead
-    if (this.mobileTabBar.enabled) {
+    if (this.mobileTabBar.splitsProfileMenu) {
       return tabs;
     }
 

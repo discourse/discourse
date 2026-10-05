@@ -56,7 +56,7 @@ export default class Notifications extends Component {
 
   <template>
     <PluginOutlet @name="user-dropdown-notifications__before" />
-    {{#if this.mobileTabBar.enabled}}
+    {{#if this.mobileTabBar.splitsProfileMenu}}
       {{dIcon "bell"}}
     {{else}}
       {{this.avatar}}
@@ -75,7 +75,9 @@ export default class Notifications extends Component {
       />
     {{/if}}
 
-    {{#if (and this.currentUser.status (not this.mobileTabBar.enabled))}}
+    {{#if
+      (and this.currentUser.status (not this.mobileTabBar.splitsProfileMenu))
+    }}
       <UserStatusBubble
         @status={{this.currentUser.status}}
         @timezone={{this.currentUser.user_option.timezone}}

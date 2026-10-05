@@ -5028,3 +5028,10 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+  enable_sidebar_tab_bar:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"

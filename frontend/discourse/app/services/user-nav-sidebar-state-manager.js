@@ -65,7 +65,8 @@ export default class UserNavSidebarStateManager extends Service {
   servesProfileOf(user) {
     return (
       this.enabled &&
-      (!this.mobileTabBar.enabled || user?.id === this.currentUser?.id)
+      (!this.mobileTabBar.splitsProfileMenu ||
+        user?.id === this.currentUser?.id)
     );
   }
 

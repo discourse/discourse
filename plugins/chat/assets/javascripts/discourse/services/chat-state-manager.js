@@ -41,7 +41,9 @@ export default class ChatStateManager extends Service {
    */
   @tracked headerNavbarSlot = null;
 
+  #fullPageRequested = false;
   @tracked _chatURL = null;
+
   @tracked _appURL = null;
 
   _store = new KeyValueStore(PREFERRED_MODE_STORE_NAMESPACE);
@@ -120,6 +122,21 @@ export default class ChatStateManager extends Service {
     this._store.remove(PREFERRED_MODE_KEY);
     this._chatURL = null;
     this._appURL = null;
+  }
+
+  /**
+   * Opens the next visit to chat full page, whatever the preferred mode, so
+   * chat can be entered as a section of the site.
+   */
+  requestFullPage() {
+    this.#fullPageRequested = true;
+  }
+
+  /** @returns {boolean} Whether a full page visit was requested. */
+  consumeFullPageRequest() {
+    const requested = this.#fullPageRequested;
+    this.#fullPageRequested = false;
+    return requested;
   }
 
   prefersFullPage() {

@@ -13,7 +13,7 @@ export default class UserDropdown extends Component {
   @service mobileTabBar;
 
   get label() {
-    return this.mobileTabBar.enabled
+    return this.mobileTabBar.splitsProfileMenu
       ? i18n("mobile_tab_bar.notifications")
       : i18n("user.avatar.header_title");
   }
