@@ -92,6 +92,7 @@ module DiscourseAi
           bot_user_id: post.user_id,
           agent_id: agent_id,
           authorization_user_id: authorization_user_id,
+          visibility_user_id: current_user.id,
           reply_post_id: post.id,
         }
 
@@ -133,7 +134,7 @@ module DiscourseAi
           agent_id = AiAgent.find_by(name: agent_name)&.id if agent_name.present?
         end
 
-        agent_id ||= DiscourseAi::Agents::General.id
+        agent_id ||= DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General]
         agent_id.to_i
       end
     end

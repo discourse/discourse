@@ -23,6 +23,11 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   /** @type {moment.Moment | null} */
   endDate = null;
 
+  @computed("model")
+  get initialModelLoading() {
+    return !this.model?.content;
+  }
+
   @computed("filters.action_name")
   get actionFilter() {
     return this.filters?.action_name

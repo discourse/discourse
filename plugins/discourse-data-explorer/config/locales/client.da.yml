@@ -18,7 +18,6 @@ da:
       admin_dashboard_card:
         no_results: "Ingen resultater"
     explorer:
-      default_query: "Standard"
       or: "eller"
       admins_only: "Data explorer er kun tilgængelige for administratorer."
       allow_groups: "Tillad grupper at få adgang til denne forespørgsel"
@@ -54,6 +53,7 @@ da:
         other: "%{count} resultater."
       query_name: "Forespørgsel"
       query_groups: "Grupper"
+      query_tags: "Mærker"
       report_name: "Rapport"
       query_description: "Beskrivelse"
       query_user: "Oprettet af"

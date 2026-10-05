@@ -37,8 +37,6 @@ export default class SearchTerm extends Component {
       this.search.activeGlobalSearchTerm,
       input.target.value
     );
-
-    this.searchCleared = this.search.activeGlobalSearchTerm ? false : true;
   }
 
   @action
@@ -51,6 +49,10 @@ export default class SearchTerm extends Component {
 
   @action
   onKeydown(e) {
+    if (e.key === "Backspace") {
+      this.searchCleared = !e.target.value;
+    }
+
     if (e.key === "Escape") {
       this.args.closeSearchMenu();
       e.preventDefault();

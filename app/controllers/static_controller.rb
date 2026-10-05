@@ -9,6 +9,10 @@ class StaticController < ApplicationController
 
   before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]
 
+  # `enter` is the post-login redirect helper; it performs no writes and must
+  # work on archived sites so login can complete.
+  allow_when_archived :enter
+
   PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup]
   MODAL_PAGES = %w[password_reset signup]
   DEFAULT_PAGES = {
@@ -234,7 +238,9 @@ class StaticController < ApplicationController
         response.headers["Expires"] = 1.year.from_now.httpdate
         response.headers["Content-Length"] = data.bytesize.to_s
         response.headers["Last-Modified"] = Time.new(2000, 01, 01).httpdate
-        render body: data, content_type: "image/png"
+        content_type =
+          MiniMime.lookup_by_filename(SiteIconManager.favicon_url)&.content_type || "image/png"
+        render body: data, content_type: content_type
       end
     end
   end

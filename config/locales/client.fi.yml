@@ -321,6 +321,7 @@ fi:
       message: "Olemme päivittäneet tämän sivuston, <span>päivitä</span> sivu, jotta asiat toimivat sujuvasti."
       dismiss: "Sulje"
     back_button: "Takaisin"
+    confirm_button: "Vahvista"
     welcome_banner:
       header:
         logged_in_members: "Tervetuloa takaisin, %{preferred_display_name}!"
@@ -1572,6 +1573,16 @@ fi:
       tracked_topics_link: "Näytä"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun"
       apps: "Sovellukset"
+      mcp_authorizations:
+        endpoint: "Resurssi"
+        scopes: "Näkyvyysalueet"
+        details: "Tiedot"
+        last_used: "Viimeksi käytetty"
+        never: "Ei koskaan"
+        status: "Tila"
+        statuses:
+          active: "Aktiivinen"
+          revoked: "Peruttu"
       revoke_access: "Peru käyttöoikeus"
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
       api_approved: "Sallittu:"
@@ -4180,6 +4191,7 @@ fi:
       list: "Listaa alueet"
       no_description: "Lisää alueelle kuvaus."
       change_in_category_topic: "Muokkaa kuvausta"
+      latest_topics: "Tuoreimmat ketjut"
       description_expand: "Näytä lisää"
       description_collapse: "Näytä vähemmän"
       already_used: "Tämä väri on jo käytössä toisella alueella"
@@ -4438,6 +4450,7 @@ fi:
       with_category: "%{filter} %{category} ketjut"
       filter:
         title: "Suodatetut tulokset suodattimella %{filter}"
+        reset: "palauta"
         button:
           label: "Suodatin"
       latest:
@@ -4643,11 +4656,11 @@ fi:
       favorite_max_not_reached: "Merkitse tämä kunniamerkki suosikiksi"
       favorite_count: "%{count}/%{max} kunniamerkkiä merkitty suosikeiksi"
     download_calendar:
-      title: "Lataa kalenteri"
+      title: "Lisää kalenteriin"
+      calendar: "Kalenteri"
       save_ics: "Lataa .ics-tiedosto"
       save_google: "Lisää Google-kalenteriin"
       remember: "Älä kysy uudelleen"
-      remember_explanation: "(voit muuttaa tätä asetusta käyttäjäasetuksissasi)"
       download: "Lataa"
       default_calendar: "Oletuskalenteri"
       default_calendar_instruction: "Määritä, mitä kalenteria käytetään, kun päivämäärät tallennetaan"
@@ -5267,6 +5280,73 @@ fi:
           header_description: "Anna tässä tietoja tästä sivustosta ja tiimistäsi, jotta ihmiset voivat oppia, mistä yhteisöstäsi on kyse, kuka sen takana on ja miten sinuun voi ottaa yhteyttä ongelmatilanteissa. Näytetään sivustosi <a href='%{basePath}/about'>Tietoa-sivulla</a>."
         developer:
           title: "Kehittäjä"
+        mcp:
+          tabs:
+            access: "Käyttöoikeudet"
+            activity: "Toiminta"
+          overview:
+            status: "Tila"
+            tools: "Työkalut"
+          access:
+            title: "Käyttöoikeudet"
+            group: "Ryhmä"
+            groups: "Ryhmät"
+            actions: "Toiminnot"
+            edit: "Muokkaa"
+            delete: "Poista"
+          primitives:
+            group_by: "Ryhmittely"
+            group_by_options:
+              scope: "Soveltamisala"
+              provider: "Palveluntarjoaja"
+              kind: "Tyyppi"
+            provider: "Palveluntarjoaja"
+            kind: "Tyyppi"
+            scope: "Soveltamisala"
+            state: "Osavaltio"
+            scopes: "Näkyvyysalueet"
+          clients:
+            actions: "Toiminnot"
+            block: "Estä"
+            use_preset: "Määritä"
+            presets:
+              custom: "Mukautettu"
+          authorizations:
+            user: "Käyttäjä"
+            last_used: "Viimeksi käytetty"
+            status: "Tila"
+            actions: "Toiminnot"
+          activity:
+            outcome: "Tulos"
+            time: "Aika"
+            user: "Käyttäjä"
+            duration: "Kesto"
+          values:
+            server_status:
+              disabled: "Pois käytöstä"
+            client_trust:
+              approved: "Hyväksytty"
+            authorization_status:
+              active: "Aktiivinen"
+              revoked: "Peruttu"
+            activity_outcome:
+              success: "Onnistui"
+              error: "Virhe"
+            primitive_state:
+              enabled: "Käytössä"
+              disabled: "Pois käytöstä"
+            primitive_kind:
+              all: "Kaikki tyypit"
+              tool: "Työkalu"
+              resource: "Resurssi"
+            primitive_risk:
+              read: "Vain luku"
+              moderation: "Valvonta"
+            filter:
+              all: "Kaikki"
+          never: "Ei koskaan"
+          actions:
+            revoke: "Peru"
         experimental:
           title: "Kokeellinen"
           header_description: "Ota sivustosi kokeellisia ominaisuukssia käyttöön tai poista niitä käytöstä. Useimpia niistä voi hallita ryhmäkohtaisesti."
@@ -5759,6 +5839,7 @@ fi:
           series:
             anonymous: "Anonyymeja"
             crawlers: "Hakurobotit"
+          crawler_learn_more: "Lue lisää"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"
@@ -7727,13 +7808,14 @@ fi:
           multiselect: "Monivalinta"
       site_text:
         description: "Voit mukauttaa mitä tahansa tekstiä foorumillasi."
-        search: "Hae tekstiä, jota haluaisit muokata"
+        search_label: "Haku"
+        theme_disabled: "Pois käytöstä"
+        filters: "Suodattimet"
+        status:
+          invalid: "Virheellinen"
         title: "Sivuston tekstit"
         edit: "Muokkaa"
-        revert: "Palauta muutokset"
         revert_confirm: "Haluatko varmasti palauttaa muutokset?"
-        go_back: "Takaisin hakuun"
-        recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
         show_overriden: "Näytä vain korvatut"
         show_outdated: "Näytä vain vanhentuneet/virheelliset"
         show_untranslated: "Näytä vain kääntämättömät"

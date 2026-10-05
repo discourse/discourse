@@ -1,4 +1,4 @@
-import { next } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -55,7 +55,9 @@ export default class RouteScrollManager extends Service {
 
     const scrollLocation = this.historyStore.get(STORE_KEY) || [0, 0];
 
-    next(() => this.scrollElement.scrollTo(...scrollLocation));
+    schedule("afterRender", () =>
+      this.scrollElement.scrollTo(...scrollLocation)
+    );
   }
 
   #shouldScroll(routeInfo) {

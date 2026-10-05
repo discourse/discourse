@@ -27,6 +27,11 @@ cs:
               label: ID tématu
     discourse_events:
       title: "Události"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Upozornění"
+            none: "Žádný"
       on_holiday: "Na dovolené"
       disable_holiday: "Vypnout"
       enable_holiday: "Zapnout"

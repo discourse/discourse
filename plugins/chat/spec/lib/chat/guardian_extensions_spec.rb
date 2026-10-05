@@ -594,6 +594,19 @@ RSpec.describe Chat::GuardianExtensions do
             context "when group moderation is enabled" do
               before { SiteSetting.enable_category_group_moderation = true }
 
+              it "disallows a silenced group moderator from restoring" do
+                moderator = Fabricate(:user)
+                mods = Fabricate(:group)
+                mods.add(moderator)
+                Fabricate(:category_moderation_group, category: chatable, group: mods)
+
+                expect(Guardian.new(moderator).can_restore_chat?(message, chatable)).to eq(true)
+
+                UserSilencer.new(moderator).silence
+
+                expect(Guardian.new(moderator).can_restore_chat?(message, chatable)).to eq(false)
+              end
+
               it "allows a group moderator to restore" do
                 moderator = Fabricate(:user)
                 mods = Fabricate(:group)

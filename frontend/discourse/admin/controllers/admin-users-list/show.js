@@ -1,64 +1,56 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { dependentKeyCompat } from "@ember/object/compat";
+import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import BulkUserDeleteConfirmation from "discourse/admin/components/bulk-user-delete-confirmation";
 import BulkUserSuspendConfirmation from "discourse/admin/components/bulk-user-suspend-confirmation";
+import { USER_ACCOUNT_TYPES } from "discourse/admin/lib/user-account-types";
 import AdminUser from "discourse/admin/models/admin-user";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { applyQueryParams } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 const MAX_BULK_SELECT_LIMIT = 100;
+const USERS_PER_PAGE = 100;
 
 export default class AdminUsersListShowController extends Controller {
   @service modal;
+  @service router;
   @service toasts;
 
   @tracked bulkSelect = false;
   @tracked displayBulkActions = false;
   @tracked bulkSelectedUsersMap = {};
 
+  @tracked accountType = USER_ACCOUNT_TYPES.HUMAN;
   @tracked activation = null;
   @tracked refreshing = false;
   @tracked listFilter = null;
   @tracked initialFilter = null;
 
-  query = null;
-  order = null;
-  asc = null;
-  showEmails = false;
+  @tracked query = null;
+  @tracked order = null;
+  @tracked asc = null;
+  @tracked showEmails = false;
+
   lastSelected = null;
 
-  _page = 1;
-  _results = trackedArray();
-  _canLoadMore = true;
-
-  @computed("siteSettings.moderators_view_emails")
-  get canModeratorsViewEmails() {
-    return this.siteSettings.moderators_view_emails;
-  }
-
-  @dependentKeyCompat
-  get searchHint() {
-    return i18n(`search_hint`);
-  }
+  #page = 1;
+  #results = trackedArray();
+  #canLoadMore = true;
 
   get users() {
-    return this._results.flat();
+    return this.#results.flat();
   }
 
-  @computed("query")
   get title() {
     return i18n("admin.users.titles." + this.query);
   }
 
-  @computed("showEmails")
   get columnCount() {
     let colCount = 7; // note that the first column is hardcoded in the template
 
@@ -73,35 +65,26 @@ export default class AdminUsersListShowController extends Controller {
     return colCount;
   }
 
-  @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
       this.model?.id,
-      this.canModeratorsViewEmails,
+      this.siteSettings.moderators_view_emails,
       this.currentUser
     ).canCheckEmails;
   }
 
-  @computed("model.id", "currentUser.id")
-  get canAdminCheckEmails() {
-    return new CanCheckEmailsHelper(
-      this.model?.id,
-      this.canModeratorsViewEmails,
-      this.currentUser
-    ).canAdminCheckEmails;
-  }
-
-  @computed("query")
   get showSilenceReason() {
     return this.query === "silenced";
   }
 
-  @computed("query")
   get showSuspendReason() {
     return this.query === "suspended";
   }
 
-  @computed("query")
+  get showAccountTypeFilter() {
+    return this.query === "staff";
+  }
+
   get showActivationFilter() {
     return this.query === "new";
   }
@@ -111,7 +94,9 @@ export default class AdminUsersListShowController extends Controller {
       !this.refreshing &&
       this.users.length === 0 &&
       !this.listFilter &&
-      !this.activation
+      !this.activation &&
+      (!this.showAccountTypeFilter ||
+        this.accountType === USER_ACCOUNT_TYPES.HUMAN)
     );
   }
 
@@ -120,10 +105,10 @@ export default class AdminUsersListShowController extends Controller {
   }
 
   resetFilters() {
-    this._page = 1;
-    this._results.length = 0;
-    this._canLoadMore = true;
-    return this._refreshUsers();
+    this.#page = 1;
+    this.#results.length = 0;
+    this.#canLoadMore = true;
+    return this.#refreshUsers();
   }
 
   stripHtml(html) {
@@ -144,11 +129,15 @@ export default class AdminUsersListShowController extends Controller {
   onResetFilters() {
     this.listFilter = null;
     this.activation = null;
-    // `filter` is owned by the filter controls; drop the remaining params here
-    const url = new URL(window.location.href);
-    url.searchParams.delete("username");
-    url.searchParams.delete("activation");
-    DiscourseURL.replaceState(url.pathname + url.search);
+    this.accountType = USER_ACCOUNT_TYPES.HUMAN;
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, {
+        username: null,
+        filter: null,
+        activation: null,
+        account_type: null,
+      })
+    );
     this.resetFilters();
   }
 
@@ -157,34 +146,35 @@ export default class AdminUsersListShowController extends Controller {
     if (this.refreshing) {
       return;
     }
-    this._page += 1;
-    this._refreshUsers();
+    this.#page += 1;
+    this.#refreshUsers();
   }
 
   @action
   toggleEmailVisibility() {
-    this.toggleProperty("showEmails");
+    this.showEmails = !this.showEmails;
     this.resetFilters();
   }
 
   @action
   updateOrder(field, asc) {
-    this.setProperties({
-      order: field,
-      asc,
-    });
+    this.order = field;
+    this.asc = asc;
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, { order: field, asc })
+    );
+    this.resetFilters();
+  }
+
+  @action
+  onAccountTypeChange(value) {
+    this.accountType = value;
+    this.resetFilters();
   }
 
   @action
   onActivationChange(value) {
     this.activation = value === "all" ? null : value;
-    const url = new URL(window.location.href);
-    if (this.activation) {
-      url.searchParams.set("activation", this.activation);
-    } else {
-      url.searchParams.delete("activation");
-    }
-    DiscourseURL.replaceState(url.pathname + url.search);
     this.resetFilters();
   }
 
@@ -323,13 +313,13 @@ export default class AdminUsersListShowController extends Controller {
     });
   }
 
-  _refreshUsers() {
-    if (!this._canLoadMore) {
+  #refreshUsers() {
+    if (!this.#canLoadMore) {
       return;
     }
 
-    const page = this._page;
-    this.set("refreshing", true);
+    const page = this.#page;
+    this.refreshing = true;
 
     return AdminUser.findAll(this.query, {
       filter: this.listFilter,
@@ -337,16 +327,17 @@ export default class AdminUsersListShowController extends Controller {
       order: this.order,
       asc: this.asc,
       activation: this.activation,
+      account_type: this.showAccountTypeFilter ? this.accountType : undefined,
       page,
     })
       .then((result) => {
-        this._results[page] = result;
-        if (result.length === 0) {
-          this._canLoadMore = false;
+        this.#results[page] = result;
+        if (result.length < USERS_PER_PAGE) {
+          this.#canLoadMore = false;
         }
       })
       .finally(() => {
-        this.set("refreshing", false);
+        this.refreshing = false;
       });
   }
 }

@@ -331,6 +331,11 @@ module Discourse
   class ReadOnly < StandardError
   end
 
+  # Raised when the site is archived (site_archived setting) and a write is
+  # attempted from an action not declared with `allow_when_archived`.
+  class SiteArchived < StandardError
+  end
+
   # Cross site request forgery
   class CSRF < StandardError
   end
@@ -1047,15 +1052,14 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
+    DiscourseVips.before_fork
+
     if GlobalSetting.mini_racer_single_threaded
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
     else
       # V8 does not support forking, make sure all contexts are disposed
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
     end
-
-    # get rid of rubbish so we don't share it
-    Process.warmup
   end
 
   # Called in web worker processes after fork to apply worker-specific
@@ -1086,6 +1090,8 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
+
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
@@ -1328,7 +1334,7 @@ module Discourse
         ActionviewPrecompiler.precompile
       end,
       Thread.new do
-        LetterAvatar.image_magick_version
+        LetterAvatar.version
         LetterAvatar.cleanup_old
       end,
       Thread.new { SvgSprite.core_svgs },

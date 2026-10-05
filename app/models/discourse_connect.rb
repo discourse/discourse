@@ -247,6 +247,8 @@ class DiscourseConnect < DiscourseConnectBase
       user = User.find_by_email(email) if !require_activation
 
       if !user
+        raise Discourse::SiteArchived if SiteSetting.site_archived
+
         user_params = {
           primary_email:
             UserEmail.new(email: email, primary: true) do |user_email|

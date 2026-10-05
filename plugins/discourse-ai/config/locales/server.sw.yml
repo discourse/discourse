@@ -14,6 +14,19 @@ sw:
         image_generation_custom:
           name: "Binafsi"
     ai_bot:
+      navigation:
+        users:
+          title: "Watumiaji"
+        groups:
+          title: "Makundi"
+        categories:
+          title: "Kategoria"
+        tags:
+          title: "Lebo"
+        themes:
+          title: "Mandhari"
+        backups:
+          title: "Machelezo"
       read_post:
         unknown_post: "ujumbe"
       tool_summary:

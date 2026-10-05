@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import BackgroundBlurManager from "./background-blur";
 import {
   cameraConstraints,
@@ -202,8 +203,7 @@ export default class LocalVideoManager {
         });
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(`[voice] failed to obtain ${kind} stream`, error);
+      voiceLog.warn(`[voice] failed to obtain ${kind} stream`);
       if (
         !silent &&
         error?.name !== "NotAllowedError" &&
@@ -364,9 +364,8 @@ export default class LocalVideoManager {
               this.#getCameraQuality(roomId)
             )
           );
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to re-apply camera constraints", error);
+        } catch {
+          voiceLog.warn("[voice] failed to re-apply camera constraints");
         }
       }
     }
@@ -402,12 +401,8 @@ export default class LocalVideoManager {
       if (transceiver && transceiver.sender.track !== desired) {
         try {
           await transceiver.sender.replaceTrack(desired);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[voice] failed to sync video sender for user ${remoteUserId}`,
-            error
-          );
+        } catch {
+          voiceLog.warn("[voice] failed to sync video sender for peer");
         }
       }
 
@@ -421,12 +416,8 @@ export default class LocalVideoManager {
           if (desiredAudio) {
             await applyScreenAudioQuality(audioTransceiver.sender);
           }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[voice] failed to sync screen audio sender for user ${remoteUserId}`,
-            error
-          );
+        } catch {
+          voiceLog.warn("[voice] failed to sync screen audio sender for peer");
         }
       }
     }
@@ -528,8 +519,7 @@ export default class LocalVideoManager {
       newStream = await navigator.mediaDevices.getUserMedia(constraints);
     } catch (error) {
       if (!this.#cameraBusyError(error)) {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to switch camera", error);
+        voiceLog.warn("[voice] failed to switch camera");
         this.inputDeviceId = previousDeviceId;
         this.#showSwitchError(error);
         return false;
@@ -578,8 +568,7 @@ export default class LocalVideoManager {
   // can't silently keep the previous stream: reacquire it, and if even that
   // fails treat the camera as gone.
   async #rollbackSwitch(previousDeviceId, epoch, error) {
-    // eslint-disable-next-line no-console
-    console.warn("[voice] failed to switch camera", error);
+    voiceLog.warn("[voice] failed to switch camera");
     this.inputDeviceId = previousDeviceId;
 
     if (epoch === this.#epoch && this.kind === "camera") {
@@ -681,9 +670,8 @@ export default class LocalVideoManager {
         track.contentHint = "motion";
       });
       return { manager, processed };
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to start background blur", error);
+    } catch {
+      voiceLog.warn("[voice] failed to start background blur");
       manager.teardown();
       return null;
     }
@@ -717,9 +705,8 @@ export default class LocalVideoManager {
           this.#onScreenShareEnded?.();
         }
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to stop local video", error);
+      .catch(() => {
+        voiceLog.warn("[voice] failed to stop local video");
       });
   }
 

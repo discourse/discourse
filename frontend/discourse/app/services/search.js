@@ -9,16 +9,34 @@ export default class Search extends Service {
   @service siteSettings;
 
   @tracked activeGlobalSearchTerm = "";
-  @tracked searchContext;
   @tracked highlightTerm;
   @tracked inTopicContext = false;
   @tracked visible = false;
   @tracked results = {};
   @tracked noResults = false;
   @tracked welcomeBannerSearchInViewport = false;
-
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search
+
+  @tracked _searchContext;
+
+  get searchContext() {
+    return this._searchContext;
+  }
+
+  set searchContext(context) {
+    if (
+      this.inTopicContext &&
+      (context?.type !== this._searchContext?.type ||
+        context?.id !== this._searchContext?.id)
+    ) {
+      this.inTopicContext = false;
+      this.results = {};
+      this.noResults = false;
+    }
+
+    this._searchContext = context;
+  }
 
   get currentSearchInputId() {
     if (this.welcomeBannerSearchInViewport) {
@@ -83,11 +101,13 @@ export default class Search extends Service {
         return;
       }
 
+      const groupedItem =
+        ".search-menu .results [data-search-menu-navigation-item]:not([tabindex='-1'])";
       const focusableItems = document.querySelectorAll(
-        ".search-menu .results a, .search-menu .results [data-search-menu-navigation-item]"
+        `.search-menu .results a, ${groupedItem}`
       );
       const navigationItems = document.querySelectorAll(
-        ".search-menu .results .search-link, .search-menu .results [data-search-menu-navigation-item]"
+        `.search-menu .results .search-link, ${groupedItem}`
       );
 
       if (!navigationItems.length) {
@@ -124,7 +144,18 @@ export default class Search extends Service {
             ) || navigationItems[0];
         firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
-        this.focusSearchInput();
+        // the menu's own input, since the one the search experience names
+        // isn't rendered everywhere (e.g. a scrolled topic swaps the header field
+        // for the topic title and search opens from the icon instead)
+        const input = focused
+          .closest(".search-menu")
+          .querySelector(".search-term__input");
+
+        if (input) {
+          input.focus();
+        } else {
+          this.focusSearchInput();
+        }
       } else if (index > -1) {
         // change focus to the next navigation item if present
         index += e.key === "ArrowDown" ? 1 : -1;

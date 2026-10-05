@@ -21,6 +21,8 @@ module Voice
       render json: {
                recordings: serialize_data(recordings, Voice::AdminRecordingSerializer, root: false),
                has_more: has_more,
+               last_webhook_at: Voice::Livekit.last_webhook_at&.iso8601,
+               webhook_url: "#{Discourse.base_url}/voice/livekit/webhook",
              }
     end
   end

@@ -12,6 +12,7 @@ module Jobs
 
         card = ::Boards::Card.find_by(id: card_id)
         return unless current_floater?(card, title)
+        return if card.board.archived?
 
         inline_onebox_data = ::Boards::Action::CardInlineOnebox.call(title:)
         return if card.inline_onebox_data == inline_onebox_data

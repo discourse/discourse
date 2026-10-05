@@ -393,6 +393,7 @@ cs:
     notifications_tracking:
       tooltip: "Úroveň oznámení: %{level}"
     back_button: "Zpět"
+    confirm_button: "Potvrdit"
     welcome_banner:
       header:
         new_members: "Vítejte, %{preferred_display_name}!"
@@ -1829,6 +1830,16 @@ cs:
       tracked_topics_link: "Zobrazit"
       automatically_unpin_topics: "Automaticky odepnout témata, když se dostanu na konec"
       apps: "Aplikace"
+      mcp_authorizations:
+        endpoint: "Zdroj"
+        scopes: "Rozsah"
+        details: "Podrobnosti"
+        last_used: "Poslední použití"
+        never: "Nikdy"
+        status: "Stav"
+        statuses:
+          active: "Aktivní"
+          revoked: "Zrušeno"
       revoke_access: "Odebrat přístup"
       undo_revoke_access: "Zrušit odebrání přístupu"
       api_approved: "Schváleno:"
@@ -4853,6 +4864,7 @@ cs:
       list: "Přehled kategorií"
       no_description: "Doplňte prosím popis této kategorie."
       change_in_category_topic: "Úprava popisu"
+      latest_topics: "Nejnovější témata"
       description_expand: "Zobrazit více"
       description_collapse: "Zobrazit méně"
       already_used: "Tato barva je již použita jinou kategorií"
@@ -5165,6 +5177,7 @@ cs:
       with_category: "%{filter} %{category} témata"
       filter:
         title: "Filtrované výsledky pro %{filter}"
+        reset: "resetovat"
         button:
           label: "Filtr"
       latest:
@@ -5397,11 +5410,11 @@ cs:
       favorite_max_not_reached: "Označit tento odznak jako oblíbený"
       favorite_count: "%{count}/%{max} odznaků označeno jako oblíbené"
     download_calendar:
-      title: "Stáhnout kalendář"
+      title: "Přidat do kalendáře"
+      calendar: "Kalendář"
       save_ics: "Stáhnout soubor .ics"
       save_google: "Přidat do kalendáře Google"
       remember: "Již se mě neptejte"
-      remember_explanation: "(toto nastavení můžete změnit v předvolbách uživatele)"
       download: "Stáhnout"
       default_calendar: "Výchozí kalendář"
       default_calendar_instruction: "Určí, který kalendář se má použít při ukládání dat"
@@ -6131,6 +6144,67 @@ cs:
           header_description: "Zde uveďte informace o tomto webu a svém týmu, aby se lidé dozvěděli, o čem je vaše komunita, kdo za ní stojí a jak vás kontaktovat v případě problému. Zobrazeno na stránce <a href='%{basePath}/about'>O tomto webu</a>."
         developer:
           title: "Vývojáři"
+        mcp:
+          tabs:
+            access: "Přístup"
+            activity: "Aktivita"
+          overview:
+            status: "Stav"
+          access:
+            title: "Přístup"
+            group: "Skupina"
+            groups: "Skupiny"
+            actions: "Akce"
+            edit: "Upravit"
+            delete: "Smazat"
+          primitives:
+            group_by_options:
+              scope: "Rozsah"
+              kind: "Typ"
+            kind: "Typ"
+            scope: "Rozsah"
+            scopes: "Rozsah"
+          clients:
+            actions: "Akce"
+            block: "Zablokovat"
+            presets:
+              custom: "Přizpůsobené"
+          authorizations:
+            user: "Uživatel"
+            last_used: "Poslední použití"
+            status: "Stav"
+            actions: "Akce"
+          activity:
+            outcome: "Výsledky"
+            time: "Čas"
+            user: "Uživatel"
+            duration: "Doba trvání"
+          values:
+            server_status:
+              disabled: "Vypnuto"
+            client_trust:
+              approved: "Schválen"
+            authorization_status:
+              active: "Aktivní"
+              revoked: "Zrušeno"
+            activity_outcome:
+              success: "Úspěch"
+              error: "Chyba"
+            primitive_state:
+              enabled: "Zapnuto"
+              disabled: "Vypnuto"
+            primitive_kind:
+              all: "Všechny typy"
+              tool: "Nástroj"
+              resource: "Zdroj"
+            primitive_risk:
+              read: "Pouze pro čtení"
+              moderation: "Moderování"
+            filter:
+              all: "Vše"
+          never: "Nikdy"
+          actions:
+            revoke: "Odvolat"
         experimental:
           title: "Experimentální"
           header_description: "Zapněte nebo vypněte experimentální funkce pro svůj web, většinu z nich lze ovládat pomocí skupin"
@@ -6683,6 +6757,7 @@ cs:
           series:
             anonymous: "Anonymní"
             crawlers: "Vyhledávače"
+          crawler_learn_more: "Zjistit více"
         period:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"
@@ -8787,13 +8862,12 @@ cs:
           multiselect: "Více možností"
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
-        search: "Vyhledejte text, který chcete upravit"
+        search_label: "Vyhledat"
+        theme_disabled: "Vypnuto"
+        filters: "Filtry"
         title: "Texty"
         edit: "Upravit"
-        revert: "Vrátit změny"
         revert_confirm: "Opravdu chcete vrátit změny?"
-        go_back: "Zpět na hledání"
-        recommended: "Doporučujeme přizpůsobit následující texty tak, aby vyhovovaly vašim potřebám:"
         show_overriden: "Zobrazit pouze změněné"
         show_outdated: "Zobrazit pouze zastaralé/neplatné"
         show_untranslated: "Zobrazit pouze nepřeložené"

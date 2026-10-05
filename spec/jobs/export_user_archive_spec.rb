@@ -90,7 +90,12 @@ RSpec.describe Jobs::ExportUserArchive do
 
       files = []
       Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
-        zip_file.each { |entry| files << entry.name }
+        zip_file.each do |entry|
+          files << entry.name
+
+          bom = entry.name.end_with?(".csv") ? be_truthy : be_falsey
+          expect(zip_file.read(entry).start_with?(Encodings::BOM.b)).to bom
+        end
       end
 
       expect(files.size).to eq(Jobs::ExportUserArchive::COMPONENTS.length)

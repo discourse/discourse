@@ -11,43 +11,78 @@ describe "Patreon Oauth2" do
 
   before do
     SiteSetting.patreon_creator_discourse_username = user2.username
-    SiteSetting.patreon_login_enabled = true
     SiteSetting.patreon_client_id = client_id
     SiteSetting.patreon_client_secret = client_secret
+    SiteSetting.patreon_login_enabled = true
   end
 
   shared_examples "patreon oauth" do
-    it "doesn't sign in the user if the email from patreon is not verified" do
-      post "/auth/patreon"
-      expect(response.status).to eq(302)
-      expect(response.location).to start_with("https://www.patreon.com/oauth2/authorize")
-
-      stub_request(:get, identity_url).with(
-        headers: {
-          "Authorization" => "Bearer #{access_token}",
-        },
-      ).to_return(
-        status: 200,
-        body:
-          JSON.dump(
-            data: {
-              id: "493290423324",
-              attributes: {
-                email: user1.email,
-                full_name: "Patron",
-                is_email_verified: false,
-              },
+    [false, nil].each do |verified|
+      it "does not sign in a synced patron when email verification is #{verified.inspect}" do
+        group = Fabricate(:group)
+        Patreon.set("filters", group.id.to_s => ["0"])
+        Patreon::Pledge.save!(
+          [
+            {
+              "data" => [
+                {
+                  "type" => "member",
+                  "attributes" => {
+                    "email" => user1.email,
+                    "patron_status" => "active_patron",
+                    "currently_entitled_amount_cents" => 100,
+                  },
+                  "relationships" => {
+                    "user" => {
+                      "data" => {
+                        "id" => "493290423324",
+                      },
+                    },
+                  },
+                },
+              ],
             },
-          ),
-        headers: {
-          "Content-Type" => "application/json",
-        },
-      )
+          ],
+          adapter: Patreon::ApiVersion::V2,
+        )
+        Patreon::Patron.sync_groups
 
-      post "/auth/patreon/callback", params: { state: session["omniauth.state"], code: temp_code }
-      expect(response.status).to eq(302)
-      expect(response.location).to eq("http://test.localhost/")
-      expect(session[:current_user_id]).to be_blank
+        expect(group.users).to contain_exactly(user1)
+        expect(user1.reload.custom_fields["patreon_id"]).to eq("493290423324")
+        expect(UserAssociatedAccount.where(user_id: user1.id, provider_name: "patreon")).to be_empty
+
+        post "/auth/patreon"
+        expect(response.status).to eq(302)
+        expect(response.location).to start_with("https://www.patreon.com/oauth2/authorize")
+
+        stub_request(:get, identity_url).with(
+          headers: {
+            "Authorization" => "Bearer #{access_token}",
+          },
+        ).to_return(
+          status: 200,
+          body:
+            JSON.dump(
+              data: {
+                id: "493290423324",
+                attributes: {
+                  email: user1.email,
+                  full_name: "Patron",
+                  is_email_verified: verified,
+                }.compact,
+              },
+            ),
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        post "/auth/patreon/callback", params: { state: session["omniauth.state"], code: temp_code }
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("http://test.localhost/")
+        expect(session[:current_user_id]).to be_blank
+        expect(UserAssociatedAccount.where(user_id: user1.id, provider_name: "patreon")).to be_empty
+      end
     end
 
     it "signs in the user if the email from patreon is verified" do

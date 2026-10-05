@@ -826,80 +826,51 @@ RSpec.describe Email::Receiver do
       expect(handler_calls).to eq(1)
     end
 
-    it "creates visible topic for ham" do
-      SiteSetting.email_in_spam_header = "none"
-
-      Fabricate(
-        :user,
-        email: "existing@bar.com",
-        trust_level: TrustLevel[2],
-        refresh_auto_groups: true,
-      )
-      expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
-
-      topic = Topic.last
-      expect(topic.visible).to eq(true)
-
-      post = Post.last
-      expect(post.hidden).to eq(false)
-      expect(post.hidden_at).to eq(nil)
-      expect(post.hidden_reason_id).to eq(nil)
-    end
-
-    it "creates hidden topic for X-Spam-Flag" do
-      SiteSetting.email_in_spam_header = "X-Spam-Flag"
-
-      user =
+    context "with spam and Authentication-Results headers" do
+      fab!(:user) do
         Fabricate(
           :user,
           email: "existing@bar.com",
           trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
-      expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+      end
 
-    it "creates hidden topic for X-Spam-Status" do
-      SiteSetting.email_in_spam_header = "X-Spam-Status"
+      it "creates visible topic for ham" do
+        SiteSetting.email_in_spam_header = "none"
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+        expect { process(:existing_user) }.to change { Topic.count }.by(1)
 
-    it "creates hidden topic for X-SES-Spam-Verdict" do
-      SiteSetting.email_in_spam_header = "X-SES-Spam-Verdict"
+        expect(Topic.last.visible).to eq(true)
+        expect(Post.last).to have_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
+      end
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(true)
-    end
+      {
+        "X-Spam-Flag" => :spam_x_spam_flag,
+        "X-Spam-Status" => :spam_x_spam_status,
+        "X-SES-Spam-Verdict" => :spam_x_ses_spam_verdict,
+      }.each do |header, fixture|
+        it "enqueues the post and silences the user for #{header}" do
+          SiteSetting.email_in_spam_header = header
 
-    it "creates hidden topic for failed Authentication-Results header" do
-      SiteSetting.email_in_authserv_id = "example.com"
+          expect { process(fixture) }.to change { ReviewableQueuedPost.count }.by(1)
+          expect(user.reload.silenced?).to be(true)
+        end
+      end
 
-      user =
-        Fabricate(
-          :user,
-          email: "existing@bar.com",
-          trust_level: TrustLevel[2],
-          refresh_auto_groups: true,
-        )
-      expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
-      expect(user.reload.silenced?).to be(false)
+      it "enqueues the post for a failed Authentication-Results header" do
+        SiteSetting.email_in_authserv_id = "example.com"
+
+        expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
+        expect(user.reload.silenced?).to be(false)
+      end
+
+      it "enqueues the post when evaluating the Authentication-Results header fails" do
+        Email::AuthenticationResults.any_instance.stubs(:action).raises(StandardError)
+        Discourse.expects(:warn_exception).once
+
+        expect { process(:existing_user) }.to change { ReviewableQueuedPost.count }.by(1)
+      end
     end
 
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do

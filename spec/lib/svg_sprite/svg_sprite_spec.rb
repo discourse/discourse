@@ -288,11 +288,14 @@ RSpec.describe SvgSprite do
   end
 
   it "includes icons from plugin registry" do
+    original_icons = DiscoursePluginRegistry.svg_icons.dup
     DiscoursePluginRegistry.register_svg_icon "blender"
     DiscoursePluginRegistry.register_svg_icon "fab fa-bandcamp"
 
     expect(SvgSprite.all_icons).to include("blender")
     expect(SvgSprite.all_icons).to include("fab fa-bandcamp")
+  ensure
+    DiscoursePluginRegistry.svg_icons.replace(original_icons)
   end
 
   describe "icon sources registered by plugins" do

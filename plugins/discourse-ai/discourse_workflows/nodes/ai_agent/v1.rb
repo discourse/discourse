@@ -7,6 +7,7 @@ if defined?(DiscourseWorkflows)
         class V1 < DiscourseWorkflows::NodeType
           RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
           RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
+          RESULT_PROPERTY = { "result" => { "type" => "string" } }.freeze
 
           description(
             name: "action:ai_agent",
@@ -19,6 +20,7 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.discourse_ai_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_ai",
             i18n_prefix: "discourse_ai.discourse_workflows",
+            output_schema_resolver: "ai-agent",
             capabilities: {
               run_scope: {
                 parameter: "mode",
@@ -28,19 +30,7 @@ if defined?(DiscourseWorkflows)
                 },
               },
             },
-            output_contracts: [
-              {
-                schema: {
-                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
-                  "type" => "object",
-                  "properties" => {
-                    "result" => {
-                      "type" => "string",
-                    },
-                  },
-                },
-              },
-            ],
+            output_contracts: [{ schema: DiscourseWorkflows::Schema.document(RESULT_PROPERTY) }],
             properties: {
               agent_id: {
                 type: :integer,
@@ -64,11 +54,19 @@ if defined?(DiscourseWorkflows)
                     agent_name: "name",
                     agent_force_default_llm: "force_default_llm",
                     agent_resolved_llm_name: "resolved_llm_name",
+                    agent_response_format: "response_format",
                   },
                 },
               },
               agent_name: {
                 type: :string,
+                ui: {
+                  hidden: true,
+                },
+              },
+              agent_response_format: {
+                type: :array,
+                default: [],
                 ui: {
                   hidden: true,
                 },
@@ -152,6 +150,14 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          def self.output_schemas(configuration = {}, input_schemas: [])
+            fields =
+              Array((configuration || {}).deep_stringify_keys["agent_response_format"]).grep(Hash)
+            properties = DiscourseAi::Agents::Bot.json_schema_properties(fields).deep_stringify_keys
+
+            [DiscourseWorkflows::Schema.document(RESULT_PROPERTY.merge(properties))]
+          end
+
           def self.group_definition
             { icon: "robot", label_key: "discourse_workflows.add_node.categories.ai", order: 40 }
           end
@@ -170,16 +176,16 @@ if defined?(DiscourseWorkflows)
               ::AiAgent
                 .where(enabled: true)
                 .order(:name)
-                .pluck(:id, :name, :default_llm_id, :force_default_llm)
+                .pluck(:id, :name, :default_llm_id, :force_default_llm, :response_format)
 
             site_default_llm_id = SiteSetting.ai_default_llm_model.presence&.to_i
-            llm_model_ids = agents.map { |_id, _name, default_llm_id, _force| default_llm_id }
+            llm_model_ids = agents.map { |_id, _name, default_llm_id, *| default_llm_id }
             llm_model_ids << site_default_llm_id
             llm_models_by_id = ::LlmModel.where(id: llm_model_ids.compact.uniq).index_by(&:id)
 
             default_llm = llm_models_by_id[site_default_llm_id]
 
-            agents.map do |id, name, default_llm_id, force_default_llm|
+            agents.map do |id, name, default_llm_id, force_default_llm, response_format|
               configured_llm = llm_models_by_id[default_llm_id]
               resolved_llm = force_default_llm ? configured_llm : configured_llm || default_llm
               {
@@ -189,6 +195,7 @@ if defined?(DiscourseWorkflows)
                 force_default_llm: force_default_llm,
                 resolved_llm_id: resolved_llm&.id,
                 resolved_llm_name: resolved_llm&.display_name,
+                response_format: response_format || [],
               }
             end
           end
@@ -209,18 +216,21 @@ if defined?(DiscourseWorkflows)
             mode = exec_ctx.get_node_parameter("mode", 0, default: RUN_ONCE_FOR_EACH_ITEM)
             validate_mode!(mode)
 
-            return [[run_once_for_all_items(exec_ctx)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
+            agent = resolve_agent(exec_ctx)
+
+            return [[run_once_for_all_items(exec_ctx, agent)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
 
             items =
               exec_ctx.input_items.map.with_index do |item, item_index|
                 result =
                   run_agent(
-                    agent_config(exec_ctx, item_index),
+                    agent,
+                    item_config(exec_ctx, item_index),
                     exec_ctx.log,
                     runner(exec_ctx, item_index),
                   )
 
-                wrap({ "result" => result }, paired_item: exec_ctx.paired_item_for(item))
+                wrap(result, paired_item: exec_ctx.paired_item_for(item))
               end
 
             [items]
@@ -228,22 +238,37 @@ if defined?(DiscourseWorkflows)
 
           private
 
-          def run_once_for_all_items(exec_ctx)
-            result = run_agent(agent_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
+          def run_once_for_all_items(exec_ctx, agent)
+            result = run_agent(agent, item_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
 
             wrap(
-              { "result" => result },
+              result,
               paired_item: exec_ctx.input_items.map { |item| exec_ctx.paired_item_for(item) },
             )
           end
 
-          def agent_config(exec_ctx, item_index)
+          def item_config(exec_ctx, item_index)
             {
-              "agent_id" => exec_ctx.get_node_parameter("agent_id", item_index),
-              "llm_model_id" => exec_ctx.get_node_parameter("llm_model_id", item_index),
               "prompt" => exec_ctx.get_node_parameter("prompt", item_index),
               "upload_ids" => exec_ctx.get_node_parameter("upload_ids", item_index),
             }
+          end
+
+          def resolve_agent(exec_ctx)
+            agent_id = exec_ctx.get_node_parameter("agent_id", 0)
+            record = ::AiAgent.find_by(id: agent_id)
+            raise_node_error!("AI Agent with id #{agent_id} not found") if record.nil?
+            raise_node_error!("AI Agent '#{record.name}' is disabled") if !record.enabled
+
+            llm_model = resolve_llm_model(record, exec_ctx.get_node_parameter("llm_model_id", 0))
+            bot =
+              DiscourseAi::Agents::Bot.as(
+                Discourse.system_user,
+                agent: record.class_instance.new,
+                model: llm_model,
+              )
+
+            { record: record, llm_model: llm_model, bot: bot }
           end
 
           def runner(exec_ctx, item_index)
@@ -253,9 +278,7 @@ if defined?(DiscourseWorkflows)
           def validate_mode!(mode)
             return if [RUN_ONCE_FOR_ALL_ITEMS, RUN_ONCE_FOR_EACH_ITEM].include?(mode)
 
-            raise_node_error!(
-              I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.invalid_mode", mode: mode),
-            )
+            raise_node_error!(error_text("invalid_mode", mode: mode))
           end
 
           def resolve_llm_model(agent_record, requested_llm_model_id)
@@ -264,24 +287,14 @@ if defined?(DiscourseWorkflows)
                 ::LlmModel.find_by(id: agent_record.default_llm_id) if agent_record.default_llm_id
               return llm_model if llm_model.present?
 
-              raise_node_error!(
-                I18n.t(
-                  "discourse_ai.discourse_workflows.ai_agent.errors.locked_default_llm_missing",
-                  agent: agent_record.name,
-                ),
-              )
+              raise_node_error!(error_text("locked_default_llm_missing", agent: agent_record.name))
             end
 
             if requested_llm_model_id.present?
               llm_model = ::LlmModel.find_by(id: requested_llm_model_id)
               return llm_model if llm_model.present?
 
-              raise_node_error!(
-                I18n.t(
-                  "discourse_ai.discourse_workflows.ai_agent.errors.llm_not_found",
-                  llm_model_id: requested_llm_model_id,
-                ),
-              )
+              raise_node_error!(error_text("llm_not_found", llm_model_id: requested_llm_model_id))
             end
 
             [agent_record.default_llm_id, SiteSetting.ai_default_llm_model].each do |llm_model_id|
@@ -289,33 +302,62 @@ if defined?(DiscourseWorkflows)
               return llm_model if llm_model.present?
             end
 
-            raise_node_error!(
-              I18n.t(
-                "discourse_ai.discourse_workflows.ai_agent.errors.no_llm_configured",
-                agent: agent_record.name,
-              ),
-            )
+            raise_node_error!(error_text("no_llm_configured", agent: agent_record.name))
           end
 
-          def prompt_content(prompt, upload_ids, agent_record, llm_model, guardian, log)
-            upload_ids = filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
+          def prompt_content(prompt, upload_ids, agent_record, llm_model, runner, log)
+            upload_ids = normalize_upload_ids(upload_ids)
             return prompt if upload_ids.blank?
+
+            uploads_by_id =
+              ::DiscourseAi::Completions::PromptMessagesBuilder.uploads_for_prompt(
+                upload_ids,
+              ).index_by(&:id)
+            guardian = runner.guardian
+            reasons =
+              upload_ids.filter_map do |upload_id|
+                key = drop_reason_key(uploads_by_id[upload_id], agent_record, llm_model, guardian)
+                next if key.nil?
+
+                error_text(
+                  key,
+                  upload_id: upload_id,
+                  agent: agent_record.name,
+                  llm: llm_model.display_name,
+                  username: runner.username,
+                  formats: ::DiscourseAi::Completions::UploadEncoder::SUPPORTED_IMAGE_FORMATS,
+                )
+              end
+            raise_uploads_not_sent!(agent_record, reasons) if reasons.any?
 
             log.info("Attachments: #{upload_ids.size} upload(s)")
             [prompt, *upload_ids.map { |upload_id| { upload_id: upload_id } }]
           end
 
-          def filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
-            upload_ids = normalize_upload_ids(upload_ids)
-            return [] if upload_ids.blank?
+          def drop_reason_key(upload, agent_record, llm_model, guardian)
+            return "upload_not_found" if upload.nil?
+            return "upload_not_visible" if !guardian.can_see_upload?(upload)
 
-            ::DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
-              upload_ids,
-              include_image_uploads: agent_record.vision_enabled,
-              include_document_uploads: llm_model.allowed_attachment_types.present?,
-              allowed_attachment_types: llm_model.allowed_attachment_types,
-              guardian: guardian,
-            ) || []
+            encoder = ::DiscourseAi::Completions::UploadEncoder
+            if !encoder.image?(upload)
+              return "llm_cannot_read_documents" if llm_model.allowed_attachment_types.blank?
+
+              return
+            end
+            return "agent_cannot_see_images" if !agent_record.vision_enabled
+            return "llm_cannot_see_images" if !llm_model.agent_image_capable?
+            "unsupported_image_format" if !encoder.supported_image_upload?(upload)
+          end
+
+          def raise_uploads_not_sent!(agent_record, reasons)
+            raise_node_error!(
+              error_text("uploads_not_sent", agent: agent_record.name),
+              description: reasons.join(". "),
+            )
+          end
+
+          def error_text(key, **args)
+            I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.#{key}", **args)
           end
 
           def normalize_upload_ids(upload_ids)
@@ -329,10 +371,12 @@ if defined?(DiscourseWorkflows)
               upload_ids.flatten
             else
               Array.wrap(upload_ids)
-            end.filter_map do |upload_id|
-              id = Integer(upload_id, exception: false)
-              id if id&.positive?
             end
+              .filter_map do |upload_id|
+                id = Integer(upload_id, exception: false)
+                id if id&.positive?
+              end
+              .uniq
           end
 
           def parse_upload_ids_json(upload_ids)
@@ -341,51 +385,41 @@ if defined?(DiscourseWorkflows)
             nil
           end
 
-          def run_agent(config, log, runner)
-            agent_id = config["agent_id"]
+          def run_agent(agent, config, log, runner)
+            agent_record = agent[:record]
+            llm_model = agent[:llm_model]
             prompt = config["prompt"].to_s
-
-            agent_record = ::AiAgent.find_by(id: agent_id)
-            raise_node_error!("AI Agent with id #{agent_id} not found") if agent_record.nil?
-
-            if !agent_record.enabled
-              raise_node_error!("AI Agent '#{agent_record.name}' is disabled")
-            end
-
-            agent_instance = agent_record.class_instance.new
-            llm_model = resolve_llm_model(agent_record, config["llm_model_id"])
 
             log.info("Agent: #{agent_record.name}")
             log.info("Runner: #{runner.username}")
             log.info("LLM: #{llm_model.display_name} (#{llm_model.id})")
-            log.info("Prompt: #{prompt.to_s[0..200]}")
-
-            bot =
-              DiscourseAi::Agents::Bot.as(
-                Discourse.system_user,
-                agent: agent_instance,
-                model: llm_model,
-              )
+            log.info("Prompt: #{prompt[0..200]}")
 
             content =
-              prompt_content(
-                prompt,
-                config["upload_ids"],
-                agent_record,
-                llm_model,
-                runner.guardian,
-                log,
-              )
+              prompt_content(prompt, config["upload_ids"], agent_record, llm_model, runner, log)
 
+            execution_context = DiscourseAi::Completions::ExecutionContext.new
             bot_context =
               DiscourseAi::Agents::BotContext.new(
                 user: runner,
                 guardian: runner.guardian,
                 messages: [{ type: :user, content: content }],
                 feature_name: "workflow",
+                execution_context: execution_context,
               )
 
+            result, structured = collect_reply(agent[:bot], bot_context, log)
+
+            skipped =
+              execution_context.upload_skips.map { |skip| error_text("upload_skipped", **skip) }
+            raise_uploads_not_sent!(agent_record, skipped) if skipped.any?
+
+            { "result" => result }.merge(structured_fields(structured, agent_record))
+          end
+
+          def collect_reply(bot, bot_context, log)
             result = +""
+            structured = nil
             tool_calls = 0
 
             bot.reply(bot_context) do |partial, _, type|
@@ -393,7 +427,8 @@ if defined?(DiscourseWorkflows)
                 tool_calls += 1
                 log.info("Tool call: #{partial}") if partial.is_a?(String)
               elsif type == :structured_output
-                result = partial.to_s
+                structured = partial
+                result = partial.to_s.dup
               elsif type.blank?
                 result << partial
               end
@@ -402,7 +437,18 @@ if defined?(DiscourseWorkflows)
             log.info("Tool calls: #{tool_calls}") if tool_calls > 0
             log.info("Result length: #{result.size} chars")
 
-            result
+            [result, structured]
+          end
+
+          def structured_fields(structured, agent_record)
+            return {} if structured.nil?
+
+            Array(agent_record.response_format)
+              .grep(Hash)
+              .to_h do |field|
+                key = field["key"].to_s
+                [key, structured.read_buffered_property(key.to_sym)]
+              end
           end
         end
       end

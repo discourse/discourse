@@ -41,6 +41,8 @@ zh_TW:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "活動提醒"
   site_settings:
     map_events_to_color: "為每個標籤或分類指派顏色。"
     map_events_title: "依分類覆寫「即將舉行的活動」側邊欄標題中的「活動」。"
@@ -83,6 +85,10 @@ zh_TW:
     livestream_embeddable_chat_allowed_paths: "可嵌入直播聊天室所允許的路徑。"
     livestream_enable_modal_chat_on_mobile: "在行動裝置上以對話框顯示直播聊天室。"
   discourse_events:
+    reminder:
+      guest: "- %{name}"
+      additional_guests:
+        other: "  與其他 %{count} 人"
     category_type:
       default_calendar_view:
         label: "預設行事曆檢視"
@@ -145,11 +151,9 @@ zh_TW:
           raw_invitees_length: "活動最多只能有 %{count} 位使用者／群組。"
           raw_invitees:
             only_group: "活動只接受群組名稱。"
-          ends_at_before_starts_at: "活動不能在開始前結束。"
           max_attendees_reached: "此活動名額已滿。"
           start_must_be_present_and_a_valid_date: "活動需要有效的開始日期。"
           end_must_be_a_valid_date: "結束日期必須是有效日期。"
-          invalid_recurrence: "重複週期必須是以下其中一項：every_month、every_week、every_two_weeks、every_four_weeks、every_day、every_weekday。"
           invalid_timezone: "無法辨識時區。"
           invalid_url: "URL 必須是有效的網址。"
           acting_user_not_allowed_to_create_event: "目前的使用者無權建立活動。"

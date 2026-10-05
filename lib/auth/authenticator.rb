@@ -18,8 +18,28 @@ class Auth::Authenticator
     nil
   end
 
+  def enable_setting
+    nil
+  end
+
+  def required_settings
+    []
+  end
+
+  def missing_settings
+    required_settings.select { SiteSetting.get(it).blank? }
+  end
+
+  def configured?
+    missing_settings.empty?
+  end
+
   def enabled?
-    raise NotImplementedError
+    if enable_setting.nil?
+      raise NotImplementedError, "#{self.class} must implement `enable_setting` or `enabled?`"
+    end
+
+    SiteSetting.get(enable_setting) && configured?
   end
 
   # run once the user has completed authentication on the third party system. Should return an instance of Auth::Result.

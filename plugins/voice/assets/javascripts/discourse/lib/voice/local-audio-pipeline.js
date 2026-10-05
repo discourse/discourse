@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import {
   autoGainControlPreferred,
   echoCancellationPreferred,
@@ -161,8 +162,8 @@ export default class LocalAudioPipeline {
         audio: audioConstraints(this.inputDeviceId),
       });
       this.lastAcquisitionError = null;
-      // eslint-disable-next-line no-console
-      console.log("[voice] local stream obtained");
+
+      voiceLog.info("[voice] local stream obtained");
 
       this.#rawStream = rawStream;
 
@@ -182,8 +183,8 @@ export default class LocalAudioPipeline {
       return true;
     } catch (error) {
       this.lastAcquisitionError = error;
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to obtain local stream", error);
+
+      voiceLog.warn("[voice] failed to obtain local stream");
       return false;
     }
   }
@@ -213,16 +214,15 @@ export default class LocalAudioPipeline {
       }
       // Capture failed: the current stream is untouched, so just undo the
       // preference.
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to apply noise suppression mode", error);
+
+      voiceLog.warn("[voice] failed to apply noise suppression mode");
       this.noiseSuppressionMode = previousMode;
       setPreferredNoiseSuppressionMode(previousMode);
       return;
     }
 
     if (reacquired) {
-      // eslint-disable-next-line no-console
-      console.log(`[voice] noise suppression mode: ${mode}`);
+      voiceLog.info(`[voice] noise suppression mode: ${mode}`);
       return;
     }
 
@@ -235,8 +235,7 @@ export default class LocalAudioPipeline {
       await this.#reacquire({ userGesture: true });
     } catch (error) {
       if (!(error instanceof SupersededError)) {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to restore previous mode", error);
+        voiceLog.warn("[voice] failed to restore previous mode");
       }
     }
   }
@@ -257,8 +256,8 @@ export default class LocalAudioPipeline {
       if (error instanceof SupersededError) {
         return true;
       }
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to switch input device", error);
+
+      voiceLog.warn("[voice] failed to switch input device");
       this.inputDeviceId = previousDeviceId;
       setPreferredInputDeviceId(previousDeviceId);
       return false;
@@ -308,8 +307,8 @@ export default class LocalAudioPipeline {
       if (error instanceof SupersededError) {
         return;
       }
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to apply audio processing change", error);
+
+      voiceLog.warn("[voice] failed to apply audio processing change");
     }
   }
 
@@ -333,15 +332,15 @@ export default class LocalAudioPipeline {
       });
       this.noiseSuppressionState = "on";
       this.#setOutgoingStream(suppressed);
-      // eslint-disable-next-line no-console
-      console.log("[voice] AI noise suppression enabled");
+
+      voiceLog.info("[voice] AI noise suppression enabled");
       return true;
     } catch (error) {
       if (error instanceof SupersededError) {
         throw error;
       }
-      // eslint-disable-next-line no-console
-      console.warn("[voice] AI noise suppression setup failed", error);
+
+      voiceLog.warn("[voice] AI noise suppression setup failed");
       this.noiseSuppressionState = "off";
       this.#setOutgoingStream(rawStream);
       return false;
@@ -366,10 +365,9 @@ export default class LocalAudioPipeline {
           return;
         }
         // Capture failed: publish what we still have rather than nothing.
-        // eslint-disable-next-line no-console
-        console.warn(
-          "[voice] failed to reacquire after suppression breakdown",
-          error
+
+        voiceLog.warn(
+          "[voice] failed to reacquire after suppression breakdown"
         );
         this.#noiseSuppression.teardown();
         this.noiseSuppressionState = "off";
@@ -392,9 +390,8 @@ export default class LocalAudioPipeline {
           upstream,
           sliderToRms(this.gateThreshold)
         );
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to set up input gate", error);
+      } catch {
+        voiceLog.warn("[voice] failed to set up input gate");
         stream = upstream;
       }
     }

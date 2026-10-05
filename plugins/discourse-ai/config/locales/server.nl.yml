@@ -110,7 +110,6 @@ nl:
     ai_bot_enabled: "Schakel de AI-botmodule in."
     ai_bot_enabled_llms: "LLM's beschikbaar om te selecteren voor AI-botconversaties"
     ai_bot_enable_chat_warning: "Geef een waarschuwing weer wanneer een privéchat wordt gestart. Kan worden genegeerd door de vertaling te bewerken: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "Wanneer de GPT-bot toegang heeft tot het privébericht, zal deze reageren op leden van deze groepen."
     ai_bot_debugging_allowed_groups: "Geef deze groepen een debugknop bij berichten die het ruwe AI-verzoek en -antwoord weergeeft"
     ai_bot_public_sharing_allowed_groups: "Sta deze groepen toe persoonlijke AI-berichten met het publiek delen via een unieke, openbaar beschikbare link. Let op: als aanmelden vereist is op je site, is dat ook vereist voor delen."
     ai_bot_add_to_header: "Geef een knop weer in de kop om een privéchat te starten met een AI-bot"
@@ -349,10 +348,28 @@ nl:
       configuration_missing: "De configuratie voor de AI-spamdetectie ontbreekt. Voeg de configuratie toe via 'Beheer > Plug-ins > Discourse AI > Spam' voordat u deze inschakelt."
       logging_subject: "Spamdetectie"
     ai_bot:
+      navigation:
+        settings:
+          title: "Site-instellingen"
+        users:
+          title: "Gebruikers"
+        groups:
+          title: "Groepen"
+        review:
+          title: "Beoordelingswachtrij"
+        categories:
+          title: "Categorieën"
+        tags:
+          title: "Tags"
+        themes:
+          title: "Thema's"
+        authentication:
+          title: "Aanmelden en verificatie"
+        backups:
+          title: "Back-ups"
       reply_error: "Het lijkt erop dat ons systeem een onverwacht probleem heeft ondervonden terwijl het probeerde te antwoorden.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
       thinking: "Denken"
-      tool_pending_approval: "Deze actie vereist goedkeuring van een moderator voordat deze kan worden uitgevoerd."
       read_post:
         unknown_post: "bericht"
       chat_tool_approval:

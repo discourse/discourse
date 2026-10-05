@@ -26,9 +26,9 @@ describe "discourse_post_event_recurrence" do
     DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, post_event_1.id, :going)
 
     post_event_1.update!(original_starts_at: starts_at + 10.minutes)
-    post_event_1.set_next_date
+    post_event_1.set_next_recurrent_event_date
     post_event_1.update!(original_starts_at: starts_at - 10.minutes)
-    post_event_1.set_next_date
+    post_event_1.set_next_recurrent_event_date
 
     expect(
       going_user
@@ -42,7 +42,7 @@ describe "discourse_post_event_recurrence" do
     before { post_event_1.update!(recurrence: "every_month") }
 
     it "sets the next month at the same weekday" do
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       expect(post_event_1.starts_at).to eq_time(Time.zone.parse("2020-10-08 19:00"))
     end
@@ -52,7 +52,7 @@ describe "discourse_post_event_recurrence" do
     before { post_event_1.update!(recurrence: "every_week") }
 
     it "sets the next week at the same weekday" do
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       expect(post_event_1.starts_at).to eq_time(Time.zone.parse("2020-09-17 19:00"))
     end
@@ -62,7 +62,7 @@ describe "discourse_post_event_recurrence" do
     before { post_event_1.update!(recurrence: "every_two_weeks") }
 
     it "sets in two weeks at the same weekday" do
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       expect(post_event_1.starts_at).to eq_time(Time.zone.parse("2020-09-24 19:00"))
     end
@@ -72,7 +72,7 @@ describe "discourse_post_event_recurrence" do
     before { post_event_1.update!(recurrence: "every_four_weeks") }
 
     it "sets in four weeks at the same weekday" do
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       expect(post_event_1.starts_at).to eq_time(Time.zone.parse("2020-10-08 19:00"))
     end
@@ -82,7 +82,7 @@ describe "discourse_post_event_recurrence" do
     before { post_event_1.update!(recurrence: "every_day") }
 
     it "sets the next day" do
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       expect(post_event_1.starts_at).to eq_time(Time.zone.parse("2020-09-11 19:00"))
     end
@@ -99,7 +99,7 @@ describe "discourse_post_event_recurrence" do
 
     it "sets the next day" do
       freeze_time(post_event_1.original_starts_at + 1.minute)
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       expect(post_event_1.starts_at).to eq_time(Time.zone.parse("2020-09-14 19:00"))
     end
@@ -112,7 +112,7 @@ describe "discourse_post_event_recurrence" do
       it "sets the next month at the same weekday" do
         freeze_time(starts_at + 1.day)
 
-        post_event_1.set_next_date
+        post_event_1.set_next_recurrent_event_date
 
         expect(post_event_1.starts_at).to eq_time(Time.zone.parse("2020-10-08 19:00"))
       end
@@ -138,7 +138,7 @@ describe "discourse_post_event_recurrence" do
         recurring: true,
       )
 
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       once = post_event_1.invitees.find_by(user_id: going_once_user.id)
       recurring = post_event_1.invitees.find_by(user_id: going_recurring_user.id)
@@ -154,7 +154,7 @@ describe "discourse_post_event_recurrence" do
 
     it "does not generate the next occurrence" do
       initial_starts_at = post_event_1.starts_at
-      post_event_1.set_next_date
+      post_event_1.set_next_recurrent_event_date
 
       expect(post_event_1.starts_at).to eq_time(initial_starts_at)
     end

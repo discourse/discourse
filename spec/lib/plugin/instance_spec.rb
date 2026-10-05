@@ -21,6 +21,26 @@ TEXT
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe "#register_navigation_destination" do
+    it "namespaces destinations and filters disabled plugins at lookup time" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugin_instance.register_navigation_destination(
+        "example",
+        path: "/admin/example",
+        title: "example.title",
+        description: "example.description",
+      ) { |guardian| guardian.is_admin? }
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.navigation_destinations.map(&:id)).to eq(
+        ["discourse-sample-plugin:example"],
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.navigation_destinations).to eq([])
+    end
+  end
+
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
 
   describe ".humanized_name" do
@@ -825,6 +845,21 @@ TEXT
         *actions,
       )
     end
+
+    it "retains path parameters and replaces conflicting mapping arrays" do
+      plugin_instance.add_api_key_scope(
+        :topics,
+        read: {
+          actions: %w[topics#show],
+          path_params: %i[topic_id],
+        },
+      )
+
+      mapping = ApiKeyScope.scope_mappings.dig(:topics, :read)
+
+      expect(mapping[:actions]).to eq(%w[topics#show])
+      expect(mapping[:path_params]).to eq(%i[topic_id])
+    end
   end
 
   describe "#add_directory_column" do
@@ -1203,6 +1238,8 @@ TEXT
           route: "sample_plugin/homepage#index",
           anonymous: true,
           server_side: false,
+          enabled: nil,
+          available: nil,
         },
       )
 
@@ -1238,6 +1275,26 @@ TEXT
           server_side: nil,
         )
       end.to raise_error(ArgumentError, /server_side/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          available: true,
+        )
+      end.to raise_error(ArgumentError, /available/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          enabled: true,
+        )
+      end.to raise_error(ArgumentError, /enabled/)
 
       plugin_instance.register_homepage(
         "sample_homepage",

@@ -4,11 +4,13 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PollUiBuilder from "discourse/plugins/poll/discourse/components/modal/poll-ui-builder";
 
-async function setupBuilder() {
+async function setupBuilder(poll) {
   const noop = () => {};
   const results = [];
   const model = {
     toolbarEvent: { getText: () => "", addText: (t) => results.push(t) },
+    poll,
+    onSave: poll ? (attrs) => results.push(attrs) : undefined,
   };
 
   await render(
@@ -22,6 +24,174 @@ async function setupBuilder() {
 
 module("Component | PollUiBuilder", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("editing keeps the settings the builder does not show", async function (assert) {
+    const results = await setupBuilder({
+      name: "existing",
+      type: "regular",
+      optionCount: 2,
+      public: "false",
+      groups: "custom_group",
+      close: "2050-01-01",
+      status: "closed",
+      order: "desc",
+    });
+
+    assert
+      .dom(".poll-options")
+      .doesNotExist("options are edited in the document, not in the builder");
+    assert.dom(".poll-title").doesNotExist("neither is the title");
+    assert
+      .dom(".advanced-mode-btn")
+      .doesNotExist(
+        "every remaining setting is shown, so there is no advanced mode"
+      );
+    assert.dom(".poll-date").exists("the close date is one of them");
+    await click(".insert-poll");
+
+    assert.deepEqual(
+      results[0],
+      {
+        name: "existing",
+        type: "regular",
+        results: null,
+        min: null,
+        max: null,
+        step: null,
+        public: "false",
+        chartType: null,
+        dynamic: null,
+        groups: "custom_group",
+        close: "2050-01-01",
+        status: "closed",
+        order: "desc",
+      },
+      "keeps what it carried and adds no default it lacked"
+    );
+  });
+
+  test("editing writes no attribute that matches its default", async function (assert) {
+    const results = await setupBuilder({ optionCount: 2 });
+
+    await click(".insert-poll");
+
+    assert.deepEqual(
+      results[0],
+      {
+        name: null,
+        type: null,
+        results: null,
+        min: null,
+        max: null,
+        step: null,
+        public: null,
+        chartType: null,
+        dynamic: null,
+        groups: null,
+        close: null,
+        status: null,
+        order: null,
+      },
+      "saving an untouched poll leaves its markdown alone"
+    );
+  });
+
+  test("editing leaves a range the poll did not carry to the options", async function (assert) {
+    const results = await setupBuilder({ type: "multiple", optionCount: 2 });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[0].min,
+      null,
+      "writes no minimum, so one option stays enough"
+    );
+    assert.strictEqual(
+      results[0].max,
+      null,
+      "and no maximum, so a later option is still selectable"
+    );
+  });
+
+  test("editing keeps a range the poll spelled out", async function (assert) {
+    const results = await setupBuilder({
+      type: "multiple",
+      optionCount: 3,
+      min: "1",
+      max: "2",
+    });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(results[0].min, "1", "keeps the minimum it carried");
+    assert.strictEqual(results[0].max, "2", "and the maximum");
+  });
+
+  test("editing a number poll leaves its implied range out", async function (assert) {
+    const results = await setupBuilder({ type: "number" });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(results[0].min, null, "writes no minimum");
+    assert.strictEqual(
+      results[0].max,
+      null,
+      "and no maximum, so the range still follows the setting"
+    );
+    assert.strictEqual(results[0].step, null, "nor a step of one");
+  });
+
+  test("editing keeps a number poll's own step", async function (assert) {
+    const results = await setupBuilder({ type: "number", step: "5" });
+
+    await click(".insert-poll");
+
+    assert.strictEqual(results[0].step, "5", "keeps the step it carried");
+  });
+
+  test("a range field cannot be dropped by emptying it", async function (assert) {
+    await setupBuilder({ type: "number", min: "1", max: "5", step: "1" });
+
+    assert.dom(".insert-poll").isEnabled("the poll starts out saveable");
+
+    await fillIn(".poll-options-max", "");
+    assert
+      .dom(".insert-poll")
+      .isDisabled("an empty maximum is refused, not read as having none");
+
+    await fillIn(".poll-options-max", "5");
+    await fillIn(".poll-options-min", "");
+    assert
+      .dom(".insert-poll")
+      .isDisabled("and an empty minimum is not read as zero");
+  });
+
+  test("editing a poll with more options than the site allows", async function (assert) {
+    const results = await setupBuilder({ type: "regular", optionCount: 25 });
+
+    assert
+      .dom(".insert-poll")
+      .isEnabled("the option count belongs to the document, not the builder");
+    await click(".insert-poll");
+
+    assert.strictEqual(results.length, 1, "so the settings still save");
+  });
+
+  test("editing a ranked choice poll leaves range attributes out", async function (assert) {
+    const results = await setupBuilder({
+      type: "ranked_choice",
+      optionCount: 2,
+      min: "3",
+    });
+
+    assert
+      .dom(".insert-poll")
+      .isNotDisabled("a stale range does not block saving a type without one");
+    await click(".insert-poll");
+
+    assert.strictEqual(results[0].min, null, "drops the stale minimum");
+    assert.strictEqual(results[0].max, null, "and writes no maximum");
+  });
 
   test("Can switch poll type", async function (assert) {
     await setupBuilder();
@@ -73,6 +243,11 @@ module("Component | PollUiBuilder", function (hooks) {
     assert
       .dom(".insert-poll")
       .isDisabled("Insert button disabled when no options specified");
+
+    await fillIn(".poll-option-value input", "   ");
+    assert
+      .dom(".insert-poll")
+      .isDisabled("Insert button disabled for a whitespace-only option");
 
     await fillIn(".poll-option-value input", "a");
     assert

@@ -76,8 +76,34 @@ module DiscourseAi
           @fake_content = content
         end
 
-        def self.fake_content
-          @fake_content || STOCK_CONTENT
+        def self.fake_content(response_format = nil)
+          return @fake_content if @fake_content
+
+          properties = schema_properties(response_format)
+          return STOCK_CONTENT if properties.blank?
+
+          properties.to_h { |key, property| [key, stock_value(key, property)] }.to_json
+        end
+
+        def self.json_object?(content)
+          content.is_a?(String) && JSON.parse(content).is_a?(Hash)
+        rescue JSON::ParserError
+          false
+        end
+
+        def self.stock_value(key, property)
+          case property[:type].to_s
+          when "integer"
+            42
+          when "number"
+            4.2
+          when "boolean"
+            true
+          when "array"
+            [stock_value(key, property[:items] || {})]
+          else
+            "fake #{key}"
+          end
         end
 
         def self.delays
@@ -132,9 +158,12 @@ module DiscourseAi
           # guard memory in test
           self.class.previous_calls.shift if self.class.previous_calls.length > 10
 
-          content = self.class.fake_content
+          content = self.class.fake_content(model_params[:response_format])
 
           content = content.shift if content.is_a?(Array)
+          structured_output = build_structured_output(model_params) if self.class.json_object?(
+            content,
+          )
 
           if block_given?
             if content.is_a?(DiscourseAi::Completions::ToolCall)
@@ -171,12 +200,21 @@ module DiscourseAi
                   break if cancel
 
                   content << chunk
-                  yield(chunk, cancel_proc)
+                  next yield(chunk, cancel_proc) if structured_output.nil?
+
+                  structured_output << chunk
+                  yield(structured_output, cancel_proc)
                 end
             end
+          elsif structured_output
+            structured_output << content
           end
 
-          content
+          return content if structured_output.nil?
+
+          structured_output.finish
+          yield(structured_output, -> {}) if block_given?
+          structured_output
         end
       end
     end

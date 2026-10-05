@@ -113,8 +113,73 @@ describe OpenIDConnectAuthenticator do
         expect(result.associated_groups).to eq([])
       end
 
-      it "logs an error and clears groups when the claim is not an array" do
-        hash[:extra][:raw_info][:groups] = "not_an_array"
+      it "extracts groups from comma-separated strings, ignoring whitespace and empty entries" do
+        hash[:extra][:raw_info][:groups] = " group1, ,group2, "
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "preserves commas in array entries" do
+        hash[:extra][:raw_info][:groups] = ["group1,group2"]
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([{ id: "group1,group2", name: "group1,group2" }])
+      end
+
+      it "extracts a string claim from the id_token" do
+        hash[:extra][:id_token_info] = { "groups" => "group1,group2" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "treats blank strings as empty groups lists without falling back to the id_token" do
+        hash[:extra][:id_token_info] = { "groups" => ["group1"] }
+
+        ["", "   ", ", ,"].each do |claim|
+          hash[:extra][:raw_info][:groups] = claim
+          expect(authenticator.after_authenticate(hash).associated_groups).to eq([])
+        end
+      end
+
+      it "syncs memberships as a string claim loses groups" do
+        SiteSetting.openid_connect_discovery_document =
+          "https://example.com/.well-known/openid-configuration"
+        SiteSetting.openid_connect_client_id = "client_id"
+        SiteSetting.openid_connect_client_secret = "client_secret"
+        SiteSetting.openid_connect_enabled = true
+        groups =
+          %w[group1 group2].map do |name|
+            group = Fabricate(:group)
+            associated_group =
+              Fabricate(:associated_group, name: name, provider_id: name, provider_name: "oidc")
+            GroupAssociatedGroup.create!(group: group, associated_group: associated_group)
+            group
+          end
+
+        hash[:extra][:raw_info][:groups] = "group1,group2"
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to contain_exactly(*groups)
+
+        hash[:extra][:raw_info][:groups] = "group2"
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to contain_exactly(groups.last)
+
+        hash[:extra][:raw_info][:groups] = ""
+        result = authenticator.after_authenticate(hash)
+        result.authenticator_name = authenticator.name
+        result.apply_associated_attributes!
+        expect(user.groups.where(automatic: false)).to be_empty
+      end
+
+      it "logs an error and clears groups when the claim is not an array or string" do
+        hash[:extra][:raw_info][:groups] = 123
         Rails.logger.expects(:error).with(includes("not an array"))
         result = authenticator.after_authenticate(hash)
         expect(result.associated_groups).to eq([])
@@ -200,6 +265,74 @@ describe OpenIDConnectAuthenticator do
         result = authenticator.after_authenticate(hash)
         expect(result.user_field_values).to eq(user_field.id.to_s => "")
       end
+    end
+  end
+
+  describe "#register_middleware" do
+    it "configures the strategy with the selected email claim" do
+      SiteSetting.openid_connect_email_claim = "mail"
+      SiteSetting.openid_connect_discovery_document =
+        "https://id.example.com/.well-known/openid-configuration"
+      stub_request(:get, SiteSetting.openid_connect_discovery_document).to_return(body: "{}")
+      builder = OmniAuth::Builder.new(->(_env) { [200, {}, []] })
+      authenticator.register_middleware(builder)
+      strategy = builder.to_app
+
+      strategy.options.setup.call("omniauth.strategy" => strategy)
+
+      expect(strategy.options.email_claim).to eq("mail")
+    end
+  end
+
+  describe "#required_settings" do
+    it "requires a client secret by default" do
+      expect(authenticator.required_settings).to contain_exactly(
+        :openid_connect_discovery_document,
+        :openid_connect_client_id,
+        :openid_connect_client_secret,
+      )
+    end
+
+    it "does not require a client secret when using PKCE" do
+      SiteSetting.openid_connect_use_pkce = true
+      expect(authenticator.required_settings).not_to include(:openid_connect_client_secret)
+    end
+
+    it "does not require a client secret when using mTLS" do
+      SiteSetting.openid_connect_mtls_client_cert = "cert-pem"
+      SiteSetting.openid_connect_mtls_client_key = "key-pem"
+      expect(authenticator.required_settings).not_to include(:openid_connect_client_secret)
+    end
+
+    it "requires a client secret when only half of the mTLS pair is set" do
+      SiteSetting.openid_connect_mtls_client_cert = "cert-pem"
+      expect(authenticator.required_settings).to include(:openid_connect_client_secret)
+    end
+  end
+
+  describe "enabling the plugin" do
+    before do
+      SiteSetting.openid_connect_discovery_document =
+        "https://id.example.com/.well-known/openid-configuration"
+      SiteSetting.openid_connect_client_id = "my-client-id"
+    end
+
+    it "is refused while credentials are missing" do
+      expect { SiteSetting.openid_connect_enabled = true }.to raise_error(
+        Discourse::InvalidHTMLParameters,
+      )
+    end
+
+    it "is allowed once credentials are set" do
+      SiteSetting.openid_connect_client_secret = "my-client-secret"
+      SiteSetting.openid_connect_enabled = true
+      expect(authenticator.enabled?).to eq(true)
+    end
+
+    it "is allowed without a client secret when using PKCE" do
+      SiteSetting.openid_connect_use_pkce = true
+      SiteSetting.openid_connect_enabled = true
+      expect(authenticator.enabled?).to eq(true)
     end
   end
 

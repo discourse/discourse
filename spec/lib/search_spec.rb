@@ -9,6 +9,41 @@ RSpec.describe Search do
     Jobs.run_immediately!
   end
 
+  it "excludes private messages from every search mode when requested" do
+    message = Fabricate(:private_message_post, user: admin, raw: "scopeboundaryneedle private")
+    public_post = Fabricate(:post, raw: "scopeboundaryneedle public")
+    [message, public_post].each { |post| SearchIndexer.index(post, force: true) }
+    options = { guardian: admin.guardian, exclude_private_messages: true }
+
+    [
+      "in:messages",
+      "in:personal-direct",
+      "in:all-pms",
+      "topic:#{message.topic_id}",
+      "personal_messages:#{admin.username}",
+    ].each do |filter|
+      expect(Search.execute("#{filter} scopeboundaryneedle", options.dup).posts).to eq([])
+    end
+    expect(
+      Search.execute("scopeboundaryneedle", options.merge(type_filter: "private_messages")).posts,
+    ).to eq([])
+    expect(
+      Search.execute("scopeboundaryneedle", options.merge(search_context: message.topic)).posts,
+    ).to eq([])
+    expect(Search.execute("in:all scopeboundaryneedle", options.dup).posts.map(&:id)).to eq(
+      [public_post.id],
+    )
+    expect(
+      Search.execute(
+        message.topic_id.to_s,
+        options.merge(search_for_id: true, type_filter: "topic"),
+      ).posts,
+    ).to eq([])
+    expect(
+      Search.execute("in:all scopeboundaryneedle", guardian: admin.guardian).posts.map(&:id),
+    ).to contain_exactly(message.id, public_post.id)
+  end
+
   describe ".need_segmenting?" do
     subject(:search) { described_class }
 
@@ -2248,6 +2283,44 @@ RSpec.describe Search do
       expect(Search.execute("test after:2001").posts).to contain_exactly(post_1, post_2)
       expect(Search.execute("test before:monday").posts).to contain_exactly(post_1)
       expect(Search.execute("test after:jan").posts).to contain_exactly(post_1, post_2)
+    end
+
+    it "returns no posts when a before or after date is invalid" do
+      post = Fabricate(:post, raw: "A searchable post")
+
+      expect(Search.execute("searchable", type_filter: "topic").posts).to contain_exactly(post)
+
+      %w[before after].each do |filter|
+        ["0346-04-07", "invalid", "2001-13-01", ""].each do |date|
+          expect(
+            Search.execute("searchable #{filter}:#{date}", type_filter: "topic").posts,
+          ).to be_empty
+        end
+      end
+    end
+
+    it "returns no posts when only one date bound is valid" do
+      Fabricate(:post, created_at: Time.zone.parse("2001-05-20"))
+
+      expect(
+        Search.execute("after:0346-04-07 before:2030-01-01", type_filter: "topic").posts,
+      ).to be_empty
+      expect(
+        Search.execute("after:2000-01-01 before:0346-05-07", type_filter: "topic").posts,
+      ).to be_empty
+    end
+
+    it "returns no posts for a search containing only invalid date bounds" do
+      post = Fabricate(:post)
+      SiteSetting.search_recent_regular_posts_offset_post_id = post.id
+
+      expect(
+        Search.execute(
+          "after:0346-04-07 before:0346-05-07",
+          type_filter: "topic",
+          search_type: :full_page,
+        ).posts,
+      ).to be_empty
     end
 
     it "supports before/after filters and is not affected by the `search_recent_regular_posts_offset_post_id` site setting" do

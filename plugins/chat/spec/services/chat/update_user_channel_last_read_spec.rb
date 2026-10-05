@@ -10,7 +10,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:chatters, :group)
-    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
+    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id], last_seen_at: 1.minute.ago) }
     fab!(:channel, :chat_channel)
     let(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
@@ -112,42 +112,24 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
           expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
         end
 
+        it "publishes the updated notifications state" do
+          message = messages.find { |m| m.channel == "/notification/#{current_user.id}" }
+          expect(message.data[:recent]).to include([notification.id, true])
+        end
+
+        context "when there are no unread mentions" do
+          before { notification.update!(read: true) }
+
+          it "does not publish the notifications state" do
+            expect(messages.map(&:channel)).not_to include("/notification/#{current_user.id}")
+          end
+        end
+
         it "updates the channel membership last_viewed_at datetime" do
           membership.update!(last_viewed_at: 1.day.ago)
           old_last_viewed_at = membership.last_viewed_at
           result
           expect(membership.reload.last_viewed_at).not_to eq_time(old_last_viewed_at)
-        end
-
-        context "with DM channel reply threads" do
-          fab!(:other_user, :user)
-          fab!(:dm_channel) do
-            Fabricate(:direct_message_channel, users: [current_user, other_user])
-          end
-          fab!(:first_message) do
-            Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
-          end
-
-          let(:params) { { channel_id: dm_channel.id, message_id: reply_message.id } }
-          let(:reply_message) do
-            Chat::CreateMessage.call(
-              guardian: Guardian.new(other_user),
-              params: {
-                chat_channel_id: dm_channel.id,
-                message: "This is a reply",
-                in_reply_to_id: first_message.id,
-              },
-            ).message_instance
-          end
-
-          it "marks DM reply thread memberships as read" do
-            thread = reply_message.thread
-            thread_membership = thread.membership_for(current_user)
-
-            expect { result }.to change { thread_membership.reload.last_read_message_id }.to(
-              reply_message.id,
-            )
-          end
         end
       end
     end

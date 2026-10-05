@@ -26,6 +26,43 @@ RSpec.describe DiscourseAi::Admin::AiFeaturesController do
       )
     end
 
+    it "reflects changes to the spam detector agent's default language model" do
+      hosted_model = Fabricate(:seeded_model)
+      agent_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::SpamDetector]
+
+      put "/admin/plugins/discourse-ai/ai-spam.json",
+          params: {
+            is_enabled: true,
+            llm_model_id: hosted_model.id,
+            ai_agent_id: agent_id,
+          }
+
+      expect(response.status).to eq(200)
+      expect(SiteSetting.ai_spam_detection_enabled).to eq(true)
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent_id}.json",
+          params: {
+            ai_agent: {
+              default_llm_id: llm_model.id,
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(AiAgent.find(agent_id).default_llm_id).to eq(llm_model.id)
+
+      get "/admin/plugins/discourse-ai/ai-features.json"
+
+      expect(response.status).to eq(200)
+      spam_module =
+        response.parsed_body["ai_features"].find { |ai_module| ai_module["module_name"] == "spam" }
+      spam_feature = spam_module["features"].find { |feature| feature["name"] == "inspect_posts" }
+
+      expect(spam_feature["llm_models"]).to contain_exactly(
+        "id" => llm_model.id,
+        "name" => llm_model.display_name,
+      )
+    end
+
     it "includes automation-related features" do
       SiteSetting.discourse_automation_enabled = true
 

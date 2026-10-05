@@ -3,14 +3,16 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 
-// Directory broadcasts are serialized without a user, so fields the server
-// gates per user (chat availability, manager-only chat settings) are absent
-// from them. A broadcast replaces the whole room object; carry over what this
-// client already knows so a mid-call room update doesn't wipe its own state.
+// Shared directory broadcasts omit user-specific fields. Preserve them until
+// a response scoped to the current user supplies fresh values.
 const USER_GATED_ROOM_FIELDS = [
+  "can_manage",
+  "can_invite",
+  "membership",
   "chat_available",
   "chat_channel_id",
   "chat_idle_minutes",
+  "livekit_enabled",
 ];
 
 // Participant broadcasts arrive in arbitrary database order, so every list

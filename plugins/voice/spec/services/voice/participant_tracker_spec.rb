@@ -17,8 +17,16 @@ RSpec.describe Voice::ParticipantTracker do
 
     it "ignores invalid user ids" do
       described_class.add(room.id, 0)
-      described_class.add(room.id, -1)
+      described_class.add(room.id, nil)
       expect(described_class.user_ids(room.id)).to be_empty
+    end
+
+    it "includes bot identities in both individual and batched rosters" do
+      bot = Fabricate(:user, id: -1400)
+      described_class.add(room.id, bot.id)
+      expect(described_class.list(room.id)).to contain_exactly(bot)
+      expect(described_class.room_states([room.id])[room.id].participant_ids).to eq([bot.id])
+      expect(described_class.human_user_ids(room.id)).to be_empty
     end
   end
 

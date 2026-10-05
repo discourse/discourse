@@ -236,6 +236,23 @@ RSpec.describe PostActionCreator do
       expect(reviewable.reviewable_scores.pending.count).to eq(1)
     end
 
+    it "lets a flag agreed with again hide the post after the author's edit removed the user's earlier flag" do
+      reviewable = PostActionCreator.create(user, post, :inappropriate).reviewable
+      reviewable.perform(admin, :agree_and_hide)
+
+      freeze_time 10.minutes.from_now
+      PostRevisor.new(post.reload).revise!(post.user, raw: "#{post.raw} with an edit by its author")
+
+      freeze_time 10.minutes.from_now
+      result = PostActionCreator.create(user, post.reload, :inappropriate)
+
+      expect(PostAction.active.where(post:, user:)).to contain_exactly(result.post_action)
+
+      result.reviewable.perform(admin, :agree_and_hide)
+
+      expect(post.reload).to be_hidden
+    end
+
     describe "Auto hide spam flagged posts" do
       before do
         user.trust_level = TrustLevel[3]

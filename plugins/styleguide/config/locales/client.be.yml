@@ -10,6 +10,9 @@ be:
       sections:
         typography:
           example: "Сардэчна запрашаем у дыскурсе"
+        context_menu:
+          actions:
+            delete: "Выдаліць"
         colors:
           title: "<......"
         icons:

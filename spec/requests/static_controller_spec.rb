@@ -4,6 +4,8 @@ RSpec.describe StaticController do
   fab!(:upload)
 
   describe "#favicon" do
+    fab!(:user)
+
     let(:filename) { "smallest.png" }
     let(:file) { file_from_fixtures(filename) }
 
@@ -20,6 +22,15 @@ RSpec.describe StaticController do
         expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
       end
 
+      it "does not include a username in the cacheable response" do
+        sign_in(user)
+
+        get "/favicon/proxied"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Username"]).to be_nil
+      end
+
       it "returns the configured favicon" do
         SiteSetting.favicon = upload
 
@@ -28,6 +39,22 @@ RSpec.describe StaticController do
         expect(response.status).to eq(200)
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(upload.filesize)
+      end
+
+      it "serves the original ICO favicon with its content type" do
+        ico =
+          UploadCreator.new(
+            file_from_fixtures("smallest.ico", "images"),
+            "smallest.ico",
+            for_site_setting: true,
+          ).create_for(Discourse.system_user.id)
+        SiteSetting.favicon = ico
+
+        get "/favicon/proxied"
+
+        expect(response.status).to eq(200)
+        expect(response.media_type).to eq("image/vnd.microsoft.icon")
+        expect(response.body.b).to eq(File.binread(file_from_fixtures("smallest.ico", "images")))
       end
     end
 
@@ -617,11 +644,22 @@ RSpec.describe StaticController do
   end
 
   describe "#service_worker_asset" do
+    fab!(:user)
+
     it "renders the requested static page" do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("text/javascript")
       expect(response.body).to include("addEventListener")
+    end
+
+    it "does not include a username in the cacheable response" do
+      sign_in(user)
+
+      get "/service-worker.js"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Username"]).to be_nil
     end
   end
 

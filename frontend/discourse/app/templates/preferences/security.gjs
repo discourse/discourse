@@ -4,6 +4,7 @@ import { trustHTML } from "@ember/template";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
+import UserMcpAuthorizations from "discourse/components/user-preferences/user-mcp-authorizations";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { not } from "discourse/truth-helpers";
@@ -170,6 +171,7 @@ export default <template>
   {{/if}}
 
   <UserApiKeys @model={{@model}} />
+  <UserMcpAuthorizations @model={{@model}} />
 
   <span>
     <PluginOutlet

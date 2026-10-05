@@ -93,6 +93,7 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
     return (
       this.canManageRoom &&
       this.isStageRoom &&
+      !this.participant.external_agent &&
       !this.isCurrentUser &&
       !this.participantIsSpeakerOrMod
     );
@@ -102,6 +103,7 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
     return (
       this.canManageRoom &&
       this.isStageRoom &&
+      !this.participant.external_agent &&
       !this.isCurrentUser &&
       this.participant.role === "speaker"
     );

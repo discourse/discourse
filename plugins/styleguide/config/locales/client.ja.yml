@@ -32,6 +32,10 @@ ja:
           title: "日付/時刻の入力"
         menus:
           title: "メニュー"
+        context_menu:
+          actions:
+            duplicate: "複製"
+            delete: "削除"
         multi_select:
           title: "複数選択"
         toasts:

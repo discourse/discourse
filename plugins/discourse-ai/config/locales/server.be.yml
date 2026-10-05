@@ -10,6 +10,17 @@ be:
       title: "😐 нейтральны"
   discourse_ai:
     ai_bot:
+      navigation:
+        users:
+          title: "карыстальнікаў"
+        groups:
+          title: "Груп"
+        categories:
+          title: "катэгорыі"
+        tags:
+          title: "Цэтлікі"
+        backups:
+          title: "Рэзервовыя копіі"
       read_post:
         unknown_post: "пост"
       tool_summary:

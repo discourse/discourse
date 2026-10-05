@@ -7,6 +7,87 @@ RSpec.describe UploadCreator do
   fab!(:admin)
 
   describe "#create_for" do
+    shared_examples "animated upload preservation" do
+      it "preserves animated GIF uploads" do
+        FastImage.stubs(:animated?).returns(nil)
+        file = file_from_fixtures("tiny_animated.gif")
+        original = File.binread(file.path)
+
+        upload = described_class.new(file, "tiny_animated.gif").create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload.animated).to eq(true)
+        expect(File.binread(Discourse.store.path_for(upload))).to eq(original)
+      end
+    end
+
+    context "when animation detection uses ImageMagick" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "animated upload preservation"
+    end
+
+    context "when animation detection uses libvips" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "animated upload preservation"
+    end
+
+    shared_examples "image extension correction" do
+      it "resizes PNG data with a .bin extension and stores it as a PNG" do
+        file = Tempfile.new(%w[upload .bin])
+        FileUtils.copy_file(file_from_fixtures("logo.png").path, file.path)
+
+        upload =
+          described_class.new(
+            file,
+            "wrong_upload.bin",
+            type: "avatar",
+            force_optimize: true,
+          ).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload.original_filename).to eq("wrong_upload.png")
+        expect(upload.extension).to eq("png")
+        expect(upload).to have_attributes(
+          width: Discourse.avatar_sizes.max,
+          height: Discourse.avatar_sizes.max,
+        )
+        expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq(
+          [Discourse.avatar_sizes.max, Discourse.avatar_sizes.max],
+        )
+      ensure
+        file&.close!
+      end
+    end
+
+    context "when processing images with ImageMagick" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "image extension correction"
+    end
+
+    context "when processing images with libvips" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "image extension correction"
+
+      it "accepts JPEG uploads after downsizing them below the size limit" do
+        file = file_from_fixtures("logo.jpg")
+        SiteSetting.max_image_size_kb = 16
+        expect(File.size(file.path)).to be > SiteSetting.max_image_size_kb.kilobytes
+
+        upload = described_class.new(file, "large.jpg", force_optimize: true).create_for(user.id)
+
+        expect(upload).to be_persisted
+        stored_path = Discourse.store.path_for(upload)
+        width, height = FastImage.size(stored_path)
+        expect(upload).to have_attributes(width:, height:, filesize: File.size(stored_path))
+        expect(upload.filesize).to be < SiteSetting.max_image_size_kb.kilobytes
+      end
+    end
+
     context "when the upload is an SVG" do
       before { SiteSetting.authorized_extensions = "svg" }
 
@@ -290,6 +371,29 @@ RSpec.describe UploadCreator do
           end
         end
       end
+
+      it "stores upright JPEGs at the configured quality with libvips enabled" do
+        global_setting :enable_vips_image_processing, true
+        uploads = []
+
+        [50, 95].each do |quality|
+          SiteSetting.recompress_original_jpg_quality = quality
+          with_jpeg_orientation(source_path:, orientation: 6) do |oriented_file|
+            upload =
+              described_class.new(oriented_file, "oriented.jpg", force_optimize: true).create_for(
+                user.id,
+              )
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(width: 40, height: 60)
+            image_info = FastImage.new(Discourse.store.path_for(upload))
+            expect(image_info.size).to eq([40, 60])
+            expect(image_info.orientation).to eq(1)
+            uploads << upload
+          end
+        end
+
+        expect(uploads.first.filesize).to be < uploads.last.filesize
+      end
     end
 
     context "when a detected PNG cannot be decoded during conversion" do
@@ -331,7 +435,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe "converting to jpeg" do
+    shared_examples "JPEG upload conversion" do |enable_vips|
       def image_quality(path)
         local_path = File.join(Rails.root, "public", path)
         Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
@@ -356,7 +460,7 @@ RSpec.describe UploadCreator do
 
       it "does not store a JPEG when the absolute byte savings are insufficient" do
         # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
-        # the absolute savings required of 25_000 bytes, if you save less than that
+        # the absolute savings required of 75_000 bytes, if you save less than that
         # skip this
 
         expect do
@@ -424,17 +528,58 @@ RSpec.describe UploadCreator do
           SiteSetting.image_preview_jpg_quality = 10
         end
 
-        it "alters the image quality" do
-          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+        it "stores the JPEG at the configured recompression quality when libvips processing is disabled" do
+          global_setting :enable_vips_image_processing, false
+          jpeg_file = file_from_fixtures("logo.jpg")
+          File.truncate(
+            jpeg_file.path,
+            UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + jpeg_file.size,
+          )
 
-          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          upload =
+            UploadCreator.new(jpeg_file, "logo.jpg", force_optimize: true).create_for(user.id)
+
+          output_path = Discourse.store.path_for(upload)
+          expect(FastImage.type(output_path)).to eq(:jpeg)
+          expect(FastImage.size(output_path)).to eq(FastImage.size(jpeg_file.path))
+
+          if enable_vips
+            SiteSetting.recompress_original_jpg_quality = 70
+            higher_quality_file = file_from_fixtures("logo.jpg")
+            File.truncate(
+              higher_quality_file.path,
+              UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + higher_quality_file.size,
+            )
+            higher_quality_upload =
+              UploadCreator.new(higher_quality_file, "logo.jpg", force_optimize: true).create_for(
+                user.id,
+              )
+
+            expect(higher_quality_upload).to be_persisted
+            expect(FastImage.type(Discourse.store.path_for(higher_quality_upload))).to eq(:jpeg)
+            expect(upload.filesize).to be < higher_quality_upload.filesize
+          else
+            expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          end
 
           upload.create_thumbnail!(100, 100)
           upload.reload
 
-          expect(image_quality(upload.optimized_images.first.url)).to eq(
-            SiteSetting.image_preview_jpg_quality,
-          )
+          if enable_vips
+            preview = upload.optimized_images.first
+            lower_quality_filesize = preview.filesize
+            preview.destroy!
+            SiteSetting.image_preview_jpg_quality = 90
+
+            upload.create_thumbnail!(100, 100)
+            upload.reload
+
+            expect(upload.optimized_images.first.filesize).to be > lower_quality_filesize
+          else
+            expect(image_quality(upload.optimized_images.first.url)).to eq(
+              SiteSetting.image_preview_jpg_quality,
+            )
+          end
         end
 
         it "does not convert animated images" do
@@ -499,23 +644,108 @@ RSpec.describe UploadCreator do
           expect(File.extname(upload.url)).to eq(".webp")
           expect(upload.original_filename).to eq("animated.webp")
         end
+
+        it "does not convert non-JPEG images to JPEG based on JPEG quality" do
+          filename = "static.gif"
+          file = file_from_fixtures(filename)
+          File.truncate(file.path, UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + 1_000)
+
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(extension: "gif", original_filename: filename)
+          expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:gif)
+        end
       end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "JPEG upload conversion", false
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "JPEG upload conversion", true
     end
 
     describe "converting HEIF to jpeg" do
       let(:filename) { "should_be_jpeg.heic" }
       let(:file) { file_from_fixtures(filename, "images") }
 
-      it "stores the upload with the expected extension" do
-        expect do
-          UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
-        end.to change { Upload.count }.by(1)
+      shared_examples "HEIF image conversion" do |grid_filename, width, height|
+        it "stores #{grid_filename} as a JPEG with the expected dimensions" do
+          upload =
+            described_class.new(
+              file_from_fixtures(grid_filename),
+              grid_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-        upload = Upload.last
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(extension: "jpeg", width:, height:)
+          stored_path = Discourse.store.path_for(upload)
+          expect(FastImage.type(stored_path)).to eq(:jpeg)
+          expect(FastImage.size(stored_path)).to eq([width, height])
+        end
+      end
 
-        expect(upload.extension).to eq("jpeg")
-        expect(File.extname(upload.url)).to eq(".jpeg")
-        expect(upload.original_filename).to eq("should_be_jpeg.jpg")
+      shared_examples "HEIF upload conversion" do
+        it "stores a JPEG" do
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+          stored_path = Discourse.store.path_for(upload)
+
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(
+            extension: "jpeg",
+            original_filename: "should_be_jpeg.jpg",
+            width: 846,
+            height: 1129,
+          )
+          expect(File.extname(upload.url)).to eq(".jpeg")
+          expect(FastImage.type(stored_path)).to eq(:jpeg)
+          expect(FastImage.size(stored_path)).to eq([846, 1129])
+        end
+
+        it "removes conversion tempfiles after an invalid HEIF" do
+          source_file = file_from_fixtures("heif-truncated-payload.heic")
+
+          Dir.mktmpdir do |directory|
+            Dir.stubs(:tmpdir).returns(directory)
+
+            expect {
+              described_class.new(source_file, "invalid.heic", force_optimize: true).create_for(
+                user.id,
+              )
+            }.to raise_error(error_class)
+
+            expect(Dir.children(directory)).to eq([])
+            expect(source_file).to be_closed
+          end
+        end
+
+        include_examples "HEIF image conversion", "heif-color-grid-rotated.heic", 40, 60
+        include_examples "HEIF image conversion", "heif-color-grid-mirrored.heic", 60, 40
+        include_examples "HEIF image conversion", "heif-color-grid-8bit.heic", 60, 40
+        include_examples "HEIF image conversion", "heif-color-grid-alpha-8bit.heic", 60, 40
+      end
+
+      context "with libvips disabled" do
+        before { global_setting :enable_vips_image_processing, false }
+
+        let(:error_class) { Discourse::Utils::CommandError }
+
+        include_examples "HEIF upload conversion"
+      end
+
+      context "with libvips enabled" do
+        before { global_setting :enable_vips_image_processing, true }
+
+        let(:error_class) { DiscourseVips::InvalidImage }
+
+        include_examples "HEIF upload conversion"
       end
     end
 
@@ -829,74 +1059,111 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context "when the upload is an ICO favicon" do
+    context "when the file contains an ICO image" do
       let(:filename) { "smallest.ico" }
       let(:file) { file_from_fixtures(filename, "images") }
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      it "stores it as a PNG" do
+      it "stores the original file without conversion" do
+        original_contents = File.binread(file.path)
+
         upload = described_class.new(file, filename).create_for(user.id)
         stored_path = Discourse.store.path_for(upload)
 
         expect(upload).to be_persisted
-        expect(upload.extension).to eq("png")
-        expect(upload.original_filename).to eq("smallest.png")
-        expect(FastImage.type(stored_path)).to eq(:png)
-        expect(FastImage.size(stored_path)).to eq([1, 1])
+        expect(upload.extension).to eq("ico")
+        expect(upload.original_filename).to eq(filename)
+        expect(File.binread(stored_path)).to eq(original_contents)
+      end
+
+      it "rejects ICO images for avatar uploads" do
+        upload = described_class.new(file, filename, type: "avatar").create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(I18n.t("upload.ico_as_avatar"))
       end
     end
-  end
 
-  describe "svg sizes expressed in units other than pixels" do
-    let(:tiny_svg_filename) { "tiny.svg" }
-    let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
+    context "when reading SVG upload dimensions" do
+      shared_examples "SVG upload dimensions" do |expected_zero_dimensions|
+        let(:tiny_svg_filename) { "tiny.svg" }
+        let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
 
-    let(:massive_svg_filename) { "massive.svg" }
-    let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+        let(:massive_svg_filename) { "massive.svg" }
+        let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
 
-    let(:zero_sized_svg_filename) { "zero_sized.svg" }
-    let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+        let(:zero_sized_svg_filename) { "zero_sized.svg" }
+        let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
 
-    it "remains viewable when a dimension is fractional" do
-      upload =
-        UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
-          user.id,
-        )
+        it "remains viewable when a dimension is fractional" do
+          upload =
+            UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
+              user.id,
+            )
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+          expect(upload.width).to be > 50
+          expect(upload.height).to be > 50
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-    end
+          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+        end
 
-    it "does not exceed the maximum thumbnail size" do
-      upload =
-        UploadCreator.new(massive_svg_file, massive_svg_filename, force_optimize: true).create_for(
-          user.id,
-        )
+        it "does not exceed the maximum thumbnail size" do
+          upload =
+            UploadCreator.new(
+              massive_svg_file,
+              massive_svg_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+          expect(upload.width).to be > 50
+          expect(upload.height).to be > 50
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-    end
+          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+        end
 
-    it "handles files with a zero dimension" do
-      upload =
-        UploadCreator.new(
-          zero_sized_svg_file,
-          zero_sized_svg_filename,
-          force_optimize: true,
-        ).create_for(user.id)
+        it "stores the detected dimensions for a zero-sized SVG" do
+          upload =
+            UploadCreator.new(
+              zero_sized_svg_file,
+              zero_sized_svg_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+          expect(upload).to be_persisted
+          expect([upload.width, upload.height]).to eq(expected_zero_dimensions)
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+          expect([upload.thumbnail_width, upload.thumbnail_height]).to eq(expected_zero_dimensions)
+        end
+
+        it "stores zero dimensions when the SVG has no usable dimensions" do
+          file =
+            file_from_contents(
+              '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"/>',
+              "zero.svg",
+            )
+
+          upload = described_class.new(file, "zero.svg").create_for(user.id)
+
+          expect(upload).to be_persisted
+          expect([upload.width, upload.height]).to eq([0, 0])
+          expect([upload.thumbnail_width, upload.thumbnail_height]).to eq([0, 0])
+        end
+      end
+
+      context "with libvips disabled" do
+        before { global_setting :enable_vips_image_processing, false }
+
+        include_examples "SVG upload dimensions", [120, 90]
+      end
+
+      context "with libvips enabled" do
+        before { global_setting :enable_vips_image_processing, true }
+
+        include_examples "SVG upload dimensions", [0, 0]
+      end
     end
   end
 

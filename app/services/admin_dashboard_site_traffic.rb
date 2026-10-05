@@ -40,7 +40,7 @@ class AdminDashboardSiteTraffic
       pageview_series: pageview_series(current_rows, include_embedded: include_embedded),
     }
 
-    if SiteSetting.persist_browser_pageview_events && !SiteSetting.use_legacy_pageviews
+    if !SiteSetting.use_legacy_pageviews
       top_countries = fetch_card("top_countries_by_browser_pageviews")
       response[:top_countries] = top_countries if top_countries
 
@@ -120,10 +120,8 @@ class AdminDashboardSiteTraffic
     direct_traffic = direct_traffic_value
     kpis[:direct_traffic] = { value: direct_traffic } if !direct_traffic.nil?
 
-    if SiteSetting.persist_browser_pageview_events
-      kpis[:bounce_rate] = { value: bounce_rate_value }
-      kpis[:average_session_duration_seconds] = { value: average_session_duration_value }
-    end
+    kpis[:bounce_rate] = { value: bounce_rate_value }
+    kpis[:average_session_duration_seconds] = { value: average_session_duration_value }
 
     kpis
   end
@@ -183,8 +181,6 @@ class AdminDashboardSiteTraffic
   end
 
   def direct_traffic_value
-    return nil if !SiteSetting.persist_browser_pageview_events
-
     count_sql = BrowserPageviewEvent.rollup_count_sql
 
     row = DB.query(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date).first
@@ -311,15 +307,32 @@ class AdminDashboardSiteTraffic
     }
   end
 
-  def beacon_cutover_date
-    return @beacon_cutover_date if defined?(@beacon_cutover_date)
+  def human_pageviews_sql(range_start_date, range_end_date)
+    requests =
+      if SiteSetting.use_legacy_pageviews
+        ApplicationRequest.where(req_type: selected_request_types.values_at(:logged_in, :anonymous))
+      else
+        ApplicationRequest.browser_pageviews
+      end
 
-    @beacon_cutover_date = BrowserPageviewEvent.beacon_cutover_date
+    <<~SQL
+      SELECT date,
+        COALESCE(SUM(count) FILTER (WHERE req_type IN (#{logged_in_req_types.join(",")})), 0)::bigint AS logged_in,
+        COALESCE(SUM(count) FILTER (WHERE req_type IN (#{anonymous_req_types.join(",")})), 0)::bigint AS anonymous
+      FROM (#{requests.where(date: range_start_date..range_end_date).to_sql}) requests
+      GROUP BY date
+    SQL
+  end
+
+  def logged_in_req_types
+    [selected_request_types[:logged_in], beacon_request_types[:logged_in]].compact
+  end
+
+  def anonymous_req_types
+    [selected_request_types[:anonymous], beacon_request_types[:anonymous]].compact
   end
 
   def traffic_rows(range_start_date, range_end_date)
-    cutover_date = beacon_cutover_date || (range_end_date + 1.day)
-
     DB.query(
       <<~SQL,
         WITH dates AS (
@@ -341,34 +354,19 @@ class AdminDashboardSiteTraffic
             AND date >= CAST(:start_date AS date)
             AND date <= CAST(:end_date AS date)
           GROUP BY date
+        ),
+        human_pageviews AS (
+          #{human_pageviews_sql(range_start_date, range_end_date)}
         )
         SELECT
           dates.date,
           GREATEST(
             0,
-            COALESCE(
-              SUM(
-                CASE
-                  WHEN dates.date < :beacon_cutover_date AND ar.req_type = :logged_in_req_type THEN ar.count
-                  WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :logged_in_beacon_req_type THEN ar.count
-                  ELSE 0
-                END
-              ),
-              0
-            ) - COALESCE(MAX(lc.logged_in), 0)
+            COALESCE(MAX(hp.logged_in), 0) - COALESCE(MAX(lc.logged_in), 0)
           )::bigint AS logged_in,
           GREATEST(
             0,
-            COALESCE(
-              SUM(
-                CASE
-                  WHEN dates.date < :beacon_cutover_date AND ar.req_type = :anonymous_req_type THEN ar.count
-                  WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :anonymous_beacon_req_type THEN ar.count
-                  ELSE 0
-                END
-              ),
-              0
-            ) - COALESCE(MAX(lc.anonymous), 0)
+            COALESCE(MAX(hp.anonymous), 0) - COALESCE(MAX(lc.anonymous), 0)
           )::bigint AS anonymous,
           COALESCE(SUM(CASE WHEN ar.req_type = :crawler_req_type THEN ar.count ELSE 0 END), 0)::bigint AS crawlers,
           COALESCE(SUM(CASE WHEN ar.req_type = :embedded_req_type THEN ar.count ELSE 0 END), 0)::bigint AS embedded,
@@ -379,14 +377,8 @@ class AdminDashboardSiteTraffic
         FROM dates
         LEFT JOIN application_requests ar
           ON ar.date = dates.date
-          AND ar.req_type IN (
-            :logged_in_req_type,
-            :anonymous_req_type,
-            :logged_in_beacon_req_type,
-            :anonymous_beacon_req_type,
-            :crawler_req_type,
-            :embedded_req_type
-          )
+          AND ar.req_type IN (:crawler_req_type, :embedded_req_type)
+        LEFT JOIN human_pageviews hp ON hp.date = dates.date
         LEFT JOIN likely_crawlers lc ON lc.date = dates.date
         GROUP BY dates.date
         ORDER BY dates.date ASC
@@ -395,11 +387,6 @@ class AdminDashboardSiteTraffic
       end_date: range_end_date,
       likely_crawlers_enabled: likely_crawlers_enabled?,
       login_required: login_required?,
-      beacon_cutover_date: cutover_date,
-      logged_in_req_type: selected_request_types[:logged_in],
-      anonymous_req_type: selected_request_types[:anonymous],
-      logged_in_beacon_req_type: beacon_request_types[:logged_in],
-      anonymous_beacon_req_type: beacon_request_types[:anonymous],
       crawler_req_type: selected_request_types[:crawlers],
       embedded_req_type: selected_request_types[:embedded],
     )

@@ -282,10 +282,8 @@ module Chat
       entity
     ]
 
-    def self.cook(message, opts = {})
+    def self.markdown_options(opts = {})
       bot = opts[:user_id] && opts[:user_id].negative?
-      slash_command = match_slash_command(message, opts[:author_username])
-      message_to_cook = slash_command ? slash_command[:content] : message
 
       features = MARKDOWN_FEATURES.dup
       features << "image-grid" if bot
@@ -300,15 +298,20 @@ module Chat
       # this when cooking #hashtags to determine whether we should render
       # the found hashtag based on whether the user can access the channel it
       # is referencing.
-      cooked =
-        PrettyText.cook(
-          message_to_cook,
-          features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
-          markdown_it_rules: rules,
-          force_quote_link: true,
-          user_id: opts[:user_id],
-          hashtag_context: "chat-composer",
-        )
+      {
+        features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
+        markdown_it_rules: rules,
+        force_quote_link: true,
+        user_id: opts[:user_id],
+        hashtag_context: "chat-composer",
+      }
+    end
+
+    def self.cook(message, opts = {})
+      slash_command = match_slash_command(message, opts[:author_username])
+      message_to_cook = slash_command ? slash_command[:content] : message
+
+      cooked = PrettyText.cook(message_to_cook, markdown_options(opts))
       cooked = format_slash_command(cooked, slash_command, opts[:author_username]) if slash_command
 
       result =
@@ -533,6 +536,7 @@ end
 #  idx_chat_messages_thread_id_id_user_id_not_deleted     (thread_id,id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
 #  index_chat_messages_on_chat_channel_id_and_id          (chat_channel_id,id) WHERE (deleted_at IS NOT NULL)
+#  index_chat_messages_on_in_reply_to_id                  (in_reply_to_id) WHERE (in_reply_to_id IS NOT NULL)
 #  index_chat_messages_on_last_editor_id                  (last_editor_id)
 #  index_chat_messages_on_thread_id                       (thread_id)
 #

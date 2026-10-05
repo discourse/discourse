@@ -64,6 +64,12 @@ RSpec.describe "Create channel" do
         context "when category is a child" do
           fab!(:group_2, :group)
           fab!(:child_category) do
+            private_category_1.update!(
+              permissions: {
+                group_1.name => :full,
+                group_2.name => :full,
+              },
+            )
             Fabricate(:private_category, parent_category_id: private_category_1.id, group: group_2)
           end
 

@@ -488,6 +488,7 @@ ar:
     notifications_tracking:
       tooltip: "مستوى الإشعارات: %{level}"
     back_button: "الرجوع"
+    confirm_button: "تأكيد"
     welcome_banner:
       header:
         new_members: "مرحبًا بك، %{preferred_display_name}!"
@@ -668,18 +669,9 @@ ar:
         use_predefined: "تصفح القوالب"
         back: "رجوع"
         icebreakers:
-          fun_facts:
-            title: "اذكر بعض الحقائق الممتعة عنك"
-            body: "مرحبًا بالجميع! أنا متحمسٌ جدًا للبدء في تأسيس هذا المجتمع الجديد. ولإطلاق شرارة البداية، دعونا نتشارك حقيقةً ممتعةً عن أنفسنا. سأبدأ أنا أولاً: أنا أعشق التنزه سيرًا على الأقدام واستكشاف مسارات جديدة! فما هو الشيء المثير للاهتمام بخصوصكم؟"
-          coolest_thing_you_have_seen_today:
-            title: "ما أروع شيء رأيته اليوم؟"
-            body: "ما أروع شيء رأيته أو عشته اليوم؟ يمكن أن يكون أي شيء، بدءًا من غروب شمس بديع، وصولًا إلى عمل إنساني عفوي. سأبدأ أنا أولًا: لقد رأيت كلبًا يساعد شخصًا مسنًا على عبور الشارع!"
           introduce_yourself:
             title: "عرّف بنفسك"
             body: "أهلاً بكم في هذا المجتمع! دعونا نبدأ بالتعرف على بعضنا بعضًا؛ يُرجى تقديم أنفسكم ومشاركتنا نبذة يسيرة عن اهتماماتكم. سأبدأ أنا أولاً: أنا شغوفٌ جدًا بعالم التكنولوجيا وأعشق تعليم الآخرين!"
-          what_is_your_favorite_food:
-            title: "ما طعامك المفضل؟"
-            body: "شارك طعامك المفضل مع المجتمع! سأبدأ: أنا أحب البيتزا، وخاصة مع إضافة الجبن والبيبروني."
     design_wizard:
       title: "تخصيص موقعك"
       back: "رجوع"
@@ -2152,6 +2144,16 @@ ar:
       tracked_topics_link: "إظهار"
       automatically_unpin_topics: "إلغاء تثبيت الموضوعات تلقائيًا عند وصولي إلى نهايتها"
       apps: "التطبيقات"
+      mcp_authorizations:
+        endpoint: "المورد"
+        scopes: "النطاقات"
+        details: "التفاصيل"
+        last_used: "آخر استخدام"
+        never: "أبدًا"
+        status: "الحالة"
+        statuses:
+          active: "نشطة"
+          revoked: "سُحب"
       revoke_access: "إلغاء الوصول"
       undo_revoke_access: "التراجع عن إلغاء الوصول"
       api_approved: "تمت الموافقة عليها:"
@@ -3336,8 +3338,6 @@ ar:
       signup_instructions: "أدخل عنوان بريدك الإلكتروني للانضمام إلى هذا المجتمع. سنرسل إليك رمزًا لتأكيده وستصبح جاهزًا للانطلاق!"
       user_fields_title: "أوشكت على الانتهاء"
       user_fields_instructions: "بضع تفاصيل إضافية للانتهاء من إنشاء حسابك."
-      account_ready_title: "حسابك جاهز! 🎉"
-      account_ready_edit: "اختر اسم المستخدم الخاص بك وصورتك الرمزية"
       account_ready_continue: "متابعة"
       username_label: "اسم المستخدم"
       username_placeholder: "اختر اسم مستخدم"
@@ -5999,6 +5999,7 @@ ar:
       list: "إدراج الفئات"
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
+      latest_topics: "أحدث الموضوعات"
       description_updated: "تم تحديث الوصف"
       description_expand: "عرض المزيد"
       description_collapse: "عرض أقل"
@@ -6335,6 +6336,7 @@ ar:
       with_category: "موضوعات %{filter} في %{category}"
       filter:
         title: "تمت تصفية النتائج حسب %{filter}"
+        reset: "إعادة التعيين"
         button:
           label: "المرشح"
       latest:
@@ -6647,16 +6649,18 @@ ar:
       favorite_max_not_reached: "وضع علامة على هذه الشارة كمفضَّلة"
       favorite_count: "تم وضع علامة على %{count}/%{max} شارة كمفضَّلة"
     download_calendar:
-      title: "تنزيل التقويم"
+      title: "إضافة إلى التقويم"
+      calendar: "التقويم"
       save_ics: "تنزيل ملف .ics"
       save_google: "إضافة إلى تقويم Google"
       remember: "لا تسألني مرة أخرى"
-      remember_explanation: "(يمكنك تغيير هذا التفضيل في تفضيلات المستخدم لديك)"
       download: "تنزيل"
       default_calendar: "التقويم الافتراضي"
       default_calendar_instruction: "حدِّد التقويم الذي ينبغي استخدامه عند حفظ التواريخ"
       add_to_calendar: "إضافة إلى التقويم"
       google: "تقويم Google"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Calendar"
       ics: "ICS"
       default_title: "حدث مجدول"
     tagging:
@@ -7496,6 +7500,78 @@ ar:
         developer:
           title: "المطور"
           header_description: "إعدادات المطوّر للتحكم في الوضع الآمن والميزات المتقدمة الأخرى"
+        mcp:
+          title: "خادم MCP"
+          tabs:
+            access: "الوصول"
+            activity: "النشاط"
+          overview:
+            status: "الحالة"
+            tools: "الأدوات"
+          access:
+            title: "الوصول"
+            group: "المجموعة"
+            groups: "المجموعات"
+            actions: "الإجراءات"
+            edit: "تعديل"
+            delete: "حذف"
+          primitives:
+            group_by: "التجميع حسب"
+            group_by_options:
+              scope: "المجال"
+              provider: "مقدِّم الخدمة"
+              kind: "النوع"
+            provider: "مقدِّم الخدمة"
+            kind: "النوع"
+            scope: "المجال"
+            state: "الحالة"
+            scopes: "النطاقات"
+          clients:
+            actions: "الإجراءات"
+            block: "حظر"
+            use_preset: "إعداد"
+            presets:
+              custom: "مخصَّصة"
+          authorizations:
+            user: "المستخدم"
+            scopes: "المجالات الممنوحة"
+            last_used: "آخر استخدام"
+            status: "الحالة"
+            actions: "الإجراءات"
+          activity:
+            outcome: "النتيجة"
+            time: "الوقت"
+            user: "المستخدم"
+            duration: "المدة"
+          values:
+            server_status:
+              available: "متوفر"
+              disabled: "متوقفة"
+            client_trust:
+              approved: "تمت الموافقة"
+            authorization_status:
+              active: "نشطة"
+              revoked: "سُحب"
+            activity_outcome:
+              success: "تم بنجاح"
+              error: "خطأ"
+            primitive_state:
+              enabled: "مفعَّلة"
+              disabled: "متوقفة"
+              unavailable: "غير متوفر"
+            primitive_kind:
+              all: "كل الأنواع"
+              tool: "أداة"
+              resource: "المورد"
+              prompt: "الأمر"
+            primitive_risk:
+              read: "للقراءة فقط"
+              moderation: "الإشراف"
+            filter:
+              all: "الكل"
+          never: "أبدًا"
+          actions:
+            revoke: "إلغاء"
         experimental:
           title: "تجريبي"
           header_description: "تفعيل/إيقاف الميزات التجريبية إلى وضع التشغيل أو الإيقاف لموقعك، ويمكن التحكم في معظم تلك الميزات بشكلٍ جماعي"
@@ -8340,6 +8416,7 @@ ar:
             embedded: "مشاهدات الصفحات المضمَّنة"
             crawlers: "زاحفات الويب"
           see_details: "عرض التفاصيل"
+          crawler_learn_more: "معرفة المزيد"
         period:
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"
@@ -10579,13 +10656,14 @@ ar:
           multiselect: "حقل اختيارات متعددة"
       site_text:
         description: "يمكنك تخصيص أي نص في المنتدى الخاص بك."
-        search: "البحث عن النص الذي تريد تعديله"
+        search_label: "البحث"
+        theme_disabled: "متوقفة"
+        filters: "المرشحات"
+        status:
+          invalid: "غير صالح"
         title: "نصوص الموقع"
         edit: "تعديل"
-        revert: "التراجع عن التغييرات"
         revert_confirm: "هل تريد بالتأكيد التراجع عن التغييرات؟"
-        go_back: "العودة إلى البحث"
-        recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         show_outdated: "عرض القديمة/غير الصالحة فقط"
         show_untranslated: "إظهار غير المترجمة فقط"

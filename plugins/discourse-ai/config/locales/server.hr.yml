@@ -16,6 +16,23 @@ hr:
     spam_detection:
       logging_subject: "Otkrivanje neželjene pošte"
     ai_bot:
+      navigation:
+        settings:
+          title: "Postavke web-mjesta"
+        users:
+          title: "Korisnika"
+        groups:
+          title: "Grupe"
+        review:
+          title: "Red čekanja za pregled"
+        categories:
+          title: "Kategorije"
+        tags:
+          title: "Oznake"
+        themes:
+          title: "Teme"
+        backups:
+          title: "Sigurnosne kopije"
       read_post:
         unknown_post: "Objava"
       tool_summary:

@@ -349,6 +349,7 @@ nl:
     notifications_tracking:
       tooltip: "Meldingsniveau: %{level}"
     back_button: "Terug"
+    confirm_button: "Bevestigen"
     welcome_banner:
       header:
         new_members: "Welkom, %{preferred_display_name}!"
@@ -492,18 +493,9 @@ nl:
         use_predefined: "Sjablonen bekijken"
         back: "Terug"
         icebreakers:
-          fun_facts:
-            title: "Wat zijn leuke weetjes over jou?"
-            body: "Hoi allemaal! Ik heb veel zin om deze nieuwe community te starten. Laten we om te beginnen een leuk weetje over onszelf delen. Ik begin: ik ben dol op wandelen en nieuwe paden ontdekken! Wat is iets interessants over jou?"
-          coolest_thing_you_have_seen_today:
-            title: "Wat is het gaafste dat je vandaag hebt gezien?"
-            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een en spontaan gebaar van vriendelijkheid. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
           introduce_yourself:
             title: "Stel jezelf voor"
             body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
-          what_is_your_favorite_food:
-            title: "Wat is je favoriete eten?"
-            body: "Deel je favoriete eten met de community! Ik begin: ik hou van pizza, vooral met extra kaas en pepperoni."
     design_wizard:
       back: "Terug"
       next: "Volgende"
@@ -1736,6 +1728,16 @@ nl:
       tracked_topics_link: "Weergeven"
       automatically_unpin_topics: "Topics automatisch losmaken als ik de onderkant bereik"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Bron"
+        scopes: "Scopes"
+        details: "Details"
+        last_used: "Laatst gebruikt"
+        never: "Nooit"
+        status: "Status"
+        statuses:
+          active: "Actief"
+          revoked: "Ingetrokken"
       revoke_access: "Toegang intrekken"
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
@@ -4657,6 +4659,7 @@ nl:
       list: "Categorieën weergeven"
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
+      latest_topics: "Nieuwste topics"
       description_updated: "Beschrijving bijgewerkt"
       description_expand: "Meer weergeven"
       description_collapse: "Minder weergeven"
@@ -4952,6 +4955,7 @@ nl:
       with_category: "%{filter} topics in %{category}"
       filter:
         title: "Gefilterde resultaten voor %{filter}"
+        reset: "resetten"
         button:
           label: "Filter"
       latest:
@@ -5164,16 +5168,18 @@ nl:
       favorite_max_not_reached: "Deze badge markeren als favoriet"
       favorite_count: "%{count}/%{max} badges gemarkeerd als favoriet"
     download_calendar:
-      title: "Agenda downloaden"
+      title: "Toevoegen aan agenda"
+      calendar: "Kalender"
       save_ics: ".ics-bestand downloaden"
       save_google: "Toevoegen aan Google-agenda"
       remember: "Niet meer vragen"
-      remember_explanation: "(je kunt deze voorkeur wijzigen in je gebruikersvoorkeuren)"
       download: "Downloaden"
       default_calendar: "Standaardagenda"
       default_calendar_instruction: "Bepaal welke agenda moet worden gebruikt wanneer datums worden opgeslagen"
       add_to_calendar: "Toevoegen aan agenda"
       google: "Google-agenda"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Agenda"
       ics: "ICS"
       default_title: "Geplande gebeurtenis"
     tagging:
@@ -5889,6 +5895,75 @@ nl:
         developer:
           title: "Ontwikkelaar"
           header_description: "Ontwikkelaarsinstellingen om de veilige modus en andere geavanceerde functies te beheren"
+        mcp:
+          title: "MCP-server"
+          tabs:
+            access: "Toegang"
+            activity: "Activiteit"
+          overview:
+            status: "Status"
+            tools: "Tools"
+          access:
+            title: "Toegang"
+            group: "Groep"
+            groups: "Groepen"
+            actions: "Acties"
+            edit: "Bewerken"
+            delete: "Verwijderen"
+          primitives:
+            group_by: "Groeperen op"
+            group_by_options:
+              scope: "Bereik"
+              provider: "Provider"
+              kind: "Type"
+            provider: "Provider"
+            kind: "Type"
+            scope: "Bereik"
+            state: "Staat"
+            scopes: "Scopes"
+          clients:
+            actions: "Acties"
+            block: "Blokkeren"
+            use_preset: "Instellen"
+            presets:
+              custom: "Aangepast"
+          authorizations:
+            user: "Gebruiker"
+            scopes: "Toegekende bereiken"
+            last_used: "Laatst gebruikt"
+            status: "Status"
+            actions: "Acties"
+          activity:
+            outcome: "Resultaat"
+            time: "Tijd"
+            user: "Gebruiker"
+            duration: "Duur"
+          values:
+            server_status:
+              disabled: "Uitgeschakeld"
+            client_trust:
+              approved: "Goedgekeurd"
+            authorization_status:
+              active: "Actief"
+              revoked: "Ingetrokken"
+            activity_outcome:
+              success: "Succes"
+              error: "Fout"
+            primitive_state:
+              enabled: "Ingeschakeld"
+              disabled: "Uitgeschakeld"
+            primitive_kind:
+              all: "Alle typen"
+              tool: "Tool"
+              resource: "Bron"
+            primitive_risk:
+              read: "Alleen-lezen"
+              moderation: "Moderatie"
+            filter:
+              all: "Alles"
+          never: "Nooit"
+          actions:
+            revoke: "Intrekken"
         experimental:
           title: "Experimenteel"
           header_description: "Schakel experimentele functies voor je site in of uit. De meeste hiervan kunnen op groepsbasis worden beheerd."
@@ -6454,6 +6529,7 @@ nl:
           series:
             anonymous: "Anoniem"
             crawlers: "Crawlers"
+          crawler_learn_more: "Meer info"
         period:
           last_7_days: "Afgelopen 7 dagen"
           last_30_days: "Afgelopen 30 dagen"
@@ -8501,13 +8577,14 @@ nl:
           multiselect: "Meervoudige selectie"
       site_text:
         description: "Je kunt elke tekst op je forum aanpassen."
-        search: "Zoek de tekst die je wilt bewerken"
+        search_label: "Zoeken"
+        theme_disabled: "Uitgeschakeld"
+        filters: "Filters"
+        status:
+          invalid: "Ongeldig"
         title: "Siteteksten"
         edit: "Bewerken"
-        revert: "Wijzigingen ongedaan maken"
         revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
-        go_back: "Terug naar Zoeken"
-        recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste weergeven"
         show_outdated: "Alleen verouderd/ongeldig weergeven"
         show_untranslated: "Alleen onvertaalde weergeven"

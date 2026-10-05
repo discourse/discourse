@@ -11,6 +11,7 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import dContextMenu from "discourse/float-kit/modifiers/d-context-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -169,7 +170,7 @@ export default class WorkflowCanvas extends Component {
 
   @action
   isStickyNoteSelected(clientId) {
-    this.selectionVersion;
+    manuallyTrack(this.selectionVersion);
     return this.rete.isStickyNoteSelected(clientId);
   }
 

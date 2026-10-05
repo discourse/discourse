@@ -43,6 +43,7 @@ export default class SectionLink extends Component {
   @service capabilities;
   @service currentUser;
   @service router;
+  @service sidebarState;
 
   @tracked hovering = false;
   @tracked hoverActionActive = false;
@@ -196,11 +197,43 @@ export default class SectionLink extends Component {
 
   @bind
   maybeScrollIntoView(element) {
+    this.#revealLink(element);
+  }
+
+  @bind
+  revealActiveLink(element) {
+    this.#revealLink(element, { force: true });
+  }
+
+  #revealLink(element, { force = false } = {}) {
     if (!this.args.scrollIntoView) {
       return;
     }
 
     schedule("afterRender", () => {
+      if (
+        this.isDestroying ||
+        !element.isConnected ||
+        !this.args.scrollIntoView
+      ) {
+        return;
+      }
+
+      const container = element.closest(".sidebar-sections");
+      const destination = element.querySelector("a")?.href;
+
+      // Reinserting the same destination in another section is not navigation.
+      if (
+        container &&
+        destination &&
+        !this.sidebarState.shouldRevealLink(container, destination, {
+          force,
+          linkRoute: this.args.route,
+        })
+      ) {
+        return;
+      }
+
       if (isFullyScrolledIntoView(element)) {
         return;
       }
@@ -219,7 +252,7 @@ export default class SectionLink extends Component {
         data-list-item-name={{@linkName}}
         ...attributes
         {{didInsert this.maybeScrollIntoView}}
-        {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
+        {{didUpdate this.revealActiveLink @scrollIntoView}}
         {{on "mouseenter" this.hoveringSectionLink}}
         {{on "mouseleave" this.stopHoveringSectionLink}}
       >

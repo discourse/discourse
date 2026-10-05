@@ -14,6 +14,19 @@ bs_BA:
         image_generation_custom:
           name: "Custom"
     ai_bot:
+      navigation:
+        users:
+          title: "Korisnici"
+        groups:
+          title: "Grupa"
+        categories:
+          title: "Kategorije"
+        tags:
+          title: "Oznake"
+        themes:
+          title: "Teme"
+        backups:
+          title: "Backups"
       read_post:
         unknown_post: "objava"
       tool_summary:

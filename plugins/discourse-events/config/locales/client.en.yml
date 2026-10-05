@@ -39,11 +39,25 @@ en:
           rsvp_to_event: "RSVP to the event to start chatting"
           rsvp_to_event_with_link: "RSVP to <a href='%{url}'>the event</a> to start chatting"
           rsvp_body: "Connect with other attendees before, during, and after the event."
+      calendar_prompt:
+        title: "Add this event to your calendar?"
+        subscribed: 'This event will be added to your <a href="%{calendarUrl}">subscribed calendar</a>.'
+        dismiss: "Dismiss calendar prompt"
+        subscribe: "Subscribe to your events"
+        subscribe_with_preferences: "Subscribe to events or change notification preferences"
       preferences:
+        reminders:
+          title: "Event reminders"
+          description: "For events you're Going to or Interested in. The organizer chooses when reminders are sent."
+          preference: "Send event reminders via"
+          preferences:
+            personal_message: "Send a personal message"
+            notification: "Notification"
+            none: "None"
         all_events: "Discourse Events - All events"
         all_events_description: "All forum events"
         my_events: "Discourse Events - My events"
-        my_events_description: "Events you are going to or interested in"
+        my_events_description: "Events you are Going to or Interested in"
       on_holiday: "On Holiday"
       disable_holiday: "Disable"
       enable_holiday: "Enable"
@@ -393,7 +407,7 @@ en:
       all_hosts:
         one: "%{count} host"
         other: "%{count} hosts"
-      bulk_invite: "Bulk Invite"
+      bulk_invite: "Bulk invite"
       close_event: "Close event"
       open_event: "Open event"
       destroy_event: "Destroy event"
@@ -406,7 +420,7 @@ en:
       bulk_invite_modal:
         confirm: "confirm"
         text: "Upload CSV file"
-        title: "Bulk Invite"
+        title: "Bulk invite"
         success: "File uploaded successfully, you will be notified via message when the process is complete."
         error: "Sorry, file should be CSV format."
         confirmation_message: "You’re about to notify everyone in the uploaded file."
@@ -414,6 +428,7 @@ en:
         description_private: "Private events only accept group names for bulk invites."
         download_sample_csv: "Download a sample CSV file"
         send_bulk_invites: "Send invites"
+        add_attendee: "Add attendee"
         group_selector_placeholder: "Choose a group..."
         user_selector_placeholder: "Choose user..."
         attendance_label: "Attendance"

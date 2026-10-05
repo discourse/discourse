@@ -19,7 +19,7 @@ export default class BoardsBoardConfigureRoute extends DiscourseRoute {
   afterModel(model, transition) {
     const board = model.board;
 
-    if (board && !board.can_manage) {
+    if (board && !board.canManage) {
       this.router.replaceWith("boardsBoard", board.slug, board.id);
       return;
     }

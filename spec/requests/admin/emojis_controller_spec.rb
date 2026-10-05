@@ -281,7 +281,9 @@ RSpec.describe Admin::EmojiController do
             expect(entries).to include("emoji-a.png")
             expect(entries).to include("emoji-b.png")
 
-            csv = zip.read("emojis.csv")
+            csv = zip.read("emojis.csv").force_encoding(Encoding::UTF_8)
+            expect(csv).to start_with(Encodings::BOM)
+            csv = csv.delete_prefix(Encodings::BOM)
             rows = CSV.parse(csv, headers: true)
             expect(rows.map { |r| r["name"] }).to contain_exactly("emoji-a", "emoji-b")
             emoji_b_row = rows.find { |r| r["name"] == "emoji-b" }

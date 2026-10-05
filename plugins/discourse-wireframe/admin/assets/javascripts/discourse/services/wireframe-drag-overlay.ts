@@ -50,7 +50,7 @@ export interface ImageArgClaim {
 }
 
 /**
- * The single active overlay. `kind` is the discriminator; `kind: null` is an
+ * The single active overlay. `kind` is the discriminator; `null` is an
  * own-but-blank claim (the deepest target owns the slot but shows nothing).
  */
 type OverlayClaim =
@@ -89,7 +89,7 @@ type ActiveDragOverlay = (
   | Exclude<OverlayClaim, null>
   | {
       /** Marks the absence of a current overlay claim. */
-      kind: null;
+      kind: "blank";
     }
 ) & {
   /** Sequence token that prevents stale release callbacks clearing new claims. */
@@ -326,7 +326,7 @@ export default class WireframeDragOverlay extends Service {
    */
   #claim(overlay: OverlayClaim): () => void {
     const seq = ++this.#seq;
-    this.#state.active = { ...(overlay ?? { kind: null }), seq };
+    this.#state.active = { ...(overlay ?? { kind: "blank" as const }), seq };
     // `overlay?.kind` mirrors the active overlay's discriminator (active is
     // built from `overlay`), and narrows `overlay` to the slot-insert arm so
     // its `dispatch` is reachable.

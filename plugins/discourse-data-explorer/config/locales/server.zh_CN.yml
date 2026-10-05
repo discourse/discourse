@@ -27,6 +27,9 @@ zh_CN:
         run_sql: "已运行 SQL 查询"
         submit_query: "提交的生成查询 %{name}"
   discourse_data_explorer:
+    mcp:
+      query_failed: "查询无法运行： %{message}"
+      query_not_found: "查询未找到"
     ai:
       error_agent_not_configured: "AI 智能体尚未配置。请检查 AI 功能设置。"
       error_no_sql_returned: "AI 未返回有效的 SQL 查询。请重试或手动编写查询。"

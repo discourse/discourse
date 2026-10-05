@@ -118,6 +118,11 @@ gl:
         sort:
           relevance: "Relevancia"
           latest: "Últimos"
+      channel_list:
+        options:
+          filter: "Filtro"
+        filter:
+          mentions: "Mencións"
       incoming_webhooks:
         back: "Volver"
         description: "Descrición"

@@ -32,6 +32,10 @@ ru:
           title: "Поля ввода Даты/Времени"
         menus:
           title: "Меню"
+        context_menu:
+          actions:
+            duplicate: "Дублировать"
+            delete: "Удалить"
         multi_select:
           title: "Множественный выбор"
         toasts:

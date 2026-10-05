@@ -28,6 +28,18 @@ RSpec.describe Admin::EmailTemplatesController do
         expect(json["email_templates"]).to be_present
       end
 
+      it "includes the password reset code template" do
+        get "/admin/email/templates.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email_templates"]).to include(
+          a_hash_including(
+            "id" => "password_reset_code_mailer",
+            "interpolation_keys" => %w[code minutes site_name],
+          ),
+        )
+      end
+
       it "returns overridden = true if subject or body has translation_overrides record" do
         put "/admin/email/templates/user_notifications.admin_login",
             params: {

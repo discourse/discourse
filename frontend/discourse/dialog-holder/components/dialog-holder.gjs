@@ -19,7 +19,7 @@ export default class DialogHolder extends Component {
       this.dialog.hide();
     });
 
-    () => {
+    return () => {
       dialogInstance.hide();
       dialogInstance.destroy();
     };

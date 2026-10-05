@@ -19,6 +19,11 @@ ro:
               label: ID subiect
     discourse_events:
       title: "Evenimente"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificare"
+            none: "Nimic"
       disable_holiday: "Dezactivează"
       enable_holiday: "Activează"
       date: "Dată"

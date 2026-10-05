@@ -414,7 +414,11 @@ export default class SupportSection extends Component {
               @categories={{this.selectedCategories}}
               @onChange={{this.onCategoriesChange}}
               @onClose={{this.onClose}}
-              @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
+              @options={{hash
+                maximum=MAX_CATEGORIES
+                none="category.all"
+                showAncestorsInSelectedChoice=true
+              }}
             />
           </div>
         {{/if}}

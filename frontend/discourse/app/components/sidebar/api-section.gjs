@@ -26,6 +26,7 @@ export default class SidebarApiSection extends Component {
         @expandWhenActive={{@expandWhenActive}}
         @headerActions={{@section.actions}}
         @headerActionsIcon={{@section.actionsIcon}}
+        @headerActionsInline={{@section.actionsInline}}
         @headerLinkText={{@section.text}}
         @headerLinkTitle={{@section.title}}
         @hideSectionHeader={{@section.hideSectionHeader}}
@@ -58,6 +59,7 @@ export default class SidebarApiSection extends Component {
                 @identifier={{concat "sidebar-more-" @section.name}}
                 @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
                 @sectionLinks={{this.moreLinks}}
+                @toggleNavigationMenu={{@toggleNavigationMenu}}
                 @triggerPrefixType={{@section.moreLinksTriggerPrefixType}}
                 @triggerPrefixValue={{@section.moreLinksTriggerPrefixValue}}
                 @triggerSuffixType={{@section.moreLinksTriggerSuffixType}}
@@ -129,6 +131,7 @@ export default class SidebarApiSection extends Component {
                 @identifier={{concat "sidebar-more-" @section.name}}
                 @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
                 @sectionLinks={{this.moreLinks}}
+                @toggleNavigationMenu={{@toggleNavigationMenu}}
                 @triggerPrefixType={{@section.moreLinksTriggerPrefixType}}
                 @triggerPrefixValue={{@section.moreLinksTriggerPrefixValue}}
                 @triggerSuffixType={{@section.moreLinksTriggerSuffixType}}

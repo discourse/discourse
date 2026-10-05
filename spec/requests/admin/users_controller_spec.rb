@@ -471,6 +471,18 @@ RSpec.describe Admin::UsersController do
         evil_trout.reload
         expect(evil_trout.approved).to eq(true)
       end
+
+      it "approves a user whose previous reviewable was rejected" do
+        evil_trout.update!(active: true)
+        reviewable =
+          Fabricate(:reviewable_user, target: evil_trout, status: Reviewable.statuses[:rejected])
+
+        put "/admin/users/approve-bulk.json", params: { users: [evil_trout.id] }
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(reviewable.reload).to be_approved
+      end
     end
 
     context "when logged in as an admin" do
@@ -3299,10 +3311,16 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       it "deletes the record and logs the deletion" do
+        upload = Fabricate(:upload)
+        user_associated_accounts.update!(avatar_upload_id: upload.id)
+        user.user_avatar.update!(selected_user_associated_account_id: user_associated_accounts.id)
+
         put "/admin/users/#{user.id}/delete_associated_accounts.json"
 
         expect(response.status).to eq(200)
         expect(user.user_associated_accounts).to eq([])
+        expect(user.user_avatar.reload.selected_user_associated_account_id).to be_nil
+        expect(UploadReference.where(target: user_associated_accounts)).not_to exist
         expect(UserHistory.last).to have_attributes(
           acting_user_id: admin.id,
           target_user_id: user.id,

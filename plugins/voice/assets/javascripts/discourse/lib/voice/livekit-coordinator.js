@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import LivekitRoomSession from "./livekit-session";
 
 // Owns the livekit sessions for SFU-transport rooms: connecting on join,
@@ -115,10 +116,8 @@ export default class LivekitCoordinator {
       try {
         await session.connect(livekit.url, livekit.token);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice-livekit] failed to connect to the media server for room ${room.id}`,
-          error
+        voiceLog.warn(
+          `[voice-livekit] failed to connect to the media server for room ${room.id}`
         );
         failureMessage = error?.unsupportedBrowser
           ? "voice.livekit.browser_unsupported"
@@ -175,11 +174,7 @@ export default class LivekitCoordinator {
 
     for (const participant of participants) {
       const participantId = Number(participant?.id);
-      if (
-        !participantId ||
-        participantId <= 0 ||
-        participantId === currentUserId
-      ) {
+      if (!participantId || participantId === currentUserId) {
         continue;
       }
 
@@ -204,6 +199,19 @@ export default class LivekitCoordinator {
     this.#rosterIds.set(roomId, next);
 
     const session = this.#sessions.get(roomId);
+    session?.syncAgentIdentities(participants);
+    for (const participant of participants) {
+      const userId = Number(participant.id);
+      if (userId >= 0) {
+        continue;
+      }
+      if (participant.role !== "speaker") {
+        session?.dropParticipant(userId);
+        this.#removeRemoteStream(roomId, userId);
+      } else if (!this.#getRemoteUserIds(roomId).includes(userId)) {
+        session?.restoreParticipant(userId);
+      }
+    }
     for (const entryUserId of this.#getRemoteUserIds(roomId)) {
       if (
         entryUserId &&
@@ -222,11 +230,9 @@ export default class LivekitCoordinator {
     for (const [roomId, session] of this.#sessions) {
       try {
         await session.replaceAudioTrack(newTrack);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice-livekit] failed to replace the published audio track for room ${roomId}`,
-          error
+      } catch {
+        voiceLog.warn(
+          `[voice-livekit] failed to replace the published audio track for room ${roomId}`
         );
       }
     }
@@ -269,8 +275,7 @@ export default class LivekitCoordinator {
       return;
     }
 
-    // eslint-disable-next-line no-console
-    console.warn(
+    voiceLog.warn(
       `[voice-livekit] disconnected from the media server for room ${roomId} (${reason})`
     );
 

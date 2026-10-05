@@ -16,6 +16,25 @@ hu:
         image_generation_custom:
           name: "Egyéni"
     ai_bot:
+      navigation:
+        settings:
+          title: "Webhely beállítások"
+        users:
+          title: "Felhasználók"
+        groups:
+          title: "Csoportok"
+        review:
+          title: "Felülvizsgálati sor"
+        categories:
+          title: "Kategóriák"
+        tags:
+          title: "Címkék"
+        themes:
+          title: "Témák"
+        authentication:
+          title: "Bejelentkezés és hitelesítés"
+        backups:
+          title: "Biztonsági mentések"
       read_post:
         unknown_post: "bejegyzéssel"
       tool_summary:

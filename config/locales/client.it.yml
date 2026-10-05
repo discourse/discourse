@@ -321,6 +321,7 @@ it:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     back_button: "Indietro"
+    confirm_button: "Conferma"
     welcome_banner:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
@@ -1572,6 +1573,16 @@ it:
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo"
       apps: "App"
+      mcp_authorizations:
+        endpoint: "Risorsa"
+        scopes: "Ambiti"
+        details: "Dettagli"
+        last_used: "Ultimo utilizzo"
+        never: "Mai"
+        status: "Stato"
+        statuses:
+          active: "Attivi"
+          revoked: "Revocata"
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
@@ -4177,6 +4188,7 @@ it:
       list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
+      latest_topics: "Argomenti più recenti"
       description_expand: "Mostra altro"
       description_collapse: "Mostra meno"
       already_used: "Questo colore è già stato usato in un'altra categoria."
@@ -4435,6 +4447,7 @@ it:
       with_category: "%{filter} %{category} argomenti"
       filter:
         title: "Risultati filtrati per %{filter}"
+        reset: "reimposta"
         button:
           label: "Filtro"
       latest:
@@ -4640,11 +4653,11 @@ it:
       favorite_max_not_reached: "Imposta questo distintivo come preferito"
       favorite_count: "%{count}/%{max} distintivi contrassegnati come preferiti"
     download_calendar:
-      title: "Scarica il calendario"
+      title: "Aggiungi al calendario"
+      calendar: "Calendario"
       save_ics: "Scarica il file.ics"
       save_google: "Aggiungi al calendario di Google"
       remember: "Non chiedermelo più"
-      remember_explanation: "(puoi cambiare questa impostazione nelle tue preferenze utente)"
       download: "Scarica"
       default_calendar: "Calendario predefinito"
       default_calendar_instruction: "Determina quale calendario usare quando si salvano le date"
@@ -5264,6 +5277,73 @@ it:
           header_description: "Fornisci qui informazioni su questo sito e sul tuo team in modo che le persone possano scoprire di cosa si occupa la tua community, chi c'è dietro e come contattarti in caso di problemi. I dati verranno visualizzati sulla pagina <a href='%{basePath}/about'>Informazioni</a> del tuo sito."
         developer:
           title: "Sviluppatore"
+        mcp:
+          tabs:
+            access: "Accesso"
+            activity: "Attività"
+          overview:
+            status: "Stato"
+            tools: "Strumenti"
+          access:
+            title: "Accesso"
+            group: "Gruppo"
+            groups: "Gruppi"
+            actions: "Azioni"
+            edit: "Modifica"
+            delete: "Elimina"
+          primitives:
+            group_by: "Raggruppa per"
+            group_by_options:
+              scope: "Ambito"
+              provider: "Fornitore"
+              kind: "Tipo"
+            provider: "Fornitore"
+            kind: "Tipo"
+            scope: "Ambito"
+            state: "Stato"
+            scopes: "Ambiti"
+          clients:
+            actions: "Azioni"
+            block: "Blocca"
+            use_preset: "Configura"
+            presets:
+              custom: "Personalizzato"
+          authorizations:
+            user: "Utente"
+            last_used: "Ultimo utilizzo"
+            status: "Stato"
+            actions: "Azioni"
+          activity:
+            outcome: "Esito"
+            time: "Ora"
+            user: "Utente"
+            duration: "Durata"
+          values:
+            server_status:
+              disabled: "Disabilitati"
+            client_trust:
+              approved: "Approvato"
+            authorization_status:
+              active: "Attivi"
+              revoked: "Revocata"
+            activity_outcome:
+              success: "Operazione riuscita"
+              error: "Errore"
+            primitive_state:
+              enabled: "Abilitato"
+              disabled: "Disabilitati"
+            primitive_kind:
+              all: "Tutti i tipi"
+              tool: "Strumento"
+              resource: "Risorsa"
+            primitive_risk:
+              read: "Sola lettura"
+              moderation: "Moderazione"
+            filter:
+              all: "Tutte"
+          never: "Mai"
+          actions:
+            revoke: "Revoca"
         experimental:
           title: "Sperimentale"
           header_description: "Attiva o disattiva le funzionalità sperimentali per il tuo sito: la maggior parte di queste può essere controllata a livello di gruppo"
@@ -5757,6 +5837,7 @@ it:
           series:
             anonymous: "Anonimo"
             crawlers: "Crawler"
+          crawler_learn_more: "Scopri di più"
         period:
           last_7_days: "Ultimi 7 giorni"
           last_30_days: "Ultimi 30 giorni"
@@ -7718,13 +7799,14 @@ it:
           multiselect: "Selezione multipla"
       site_text:
         description: "Puoi personalizzare qualsiasi testo sul tuo forum."
-        search: "Trova il testo che vorresti modificare"
+        search_label: "Cerca"
+        theme_disabled: "Disabilitati"
+        filters: "Filtri"
+        status:
+          invalid: "Non valido"
         title: "Testi del sito"
         edit: "Modifica"
-        revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
-        go_back: "Torna alla Ricerca"
-        recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         show_outdated: "Mostra solo obsoleti/non validi"
         show_untranslated: "Mostra solo non tradotti"

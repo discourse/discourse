@@ -114,12 +114,8 @@ module Boards
       topic&.title
     end
 
-    def unicode_resolved_title
-      Emoji.gsub_emoji_to_unicode(resolved_title)
-    end
-
     def unicode_title
-      Emoji.gsub_emoji_to_unicode(title)
+      Emoji.gsub_emoji_to_unicode(resolved_title)
     end
 
     private
@@ -159,7 +155,7 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  assigned_to_type   :string
-#  card_type          :integer          default("floater"), not null
+#  card_type          :integer          default(0), not null
 #  column_changed_at  :datetime         not null
 #  due_at             :datetime
 #  inline_onebox_data :jsonb

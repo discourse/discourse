@@ -12,8 +12,6 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
-// @ts-expect-error - `@glimmer/validator` is a transitive dependency without
-// direct types resolution under our pnpm layout.
 import { untrack } from "@glimmer/validator";
 import type Owner from "@ember/owner";
 import {

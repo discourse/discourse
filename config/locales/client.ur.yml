@@ -379,6 +379,7 @@ ur:
     notifications_tracking:
       tooltip: "اطلاع کی سطح: %{level}"
     back_button: "واپس"
+    confirm_button: "تصدیق کریں"
     welcome_banner:
       header:
         new_members: "خوش آمدید، %{preferred_display_name}!"
@@ -552,18 +553,9 @@ ur:
         use_predefined: "سانچے پرکھیں"
         back: "واپس"
         icebreakers:
-          fun_facts:
-            title: "اپنے بارے میں کچھ دلچسپ حقائق درج کریں؟"
-            body: "سب کوآداب! میں اس نئی کمیونٹی کے آغاز پر بہت پرجوش ہوں۔ شروعات کرنے کے لیے، آئیے اپنے بارے میں کچھ دلچسپ شیئر کریں۔ میں پہل کرتا ہوں: مجھے پیدل سفر کرنا اور نئے راستے دریافت کرنا بہت پسند ہے! آپ کے بارے میں دلچسپ بات کیا ہے؟"
-          coolest_thing_you_have_seen_today:
-            title: "آج آپ نے سب سے زبردست چیز دیکھی ہو وہ کیا ہے؟"
-            body: "آج آپ نے سب سے شاندار چیز دیکھی یا کوئی تجربہ ہوا، وہ کیا ہے؟ یہ کسی خوبصورت غروب آفتاب سے لے کر کسی بے لوث نیکی تک کچھ بھی ہو سکتا ہے۔ میں شروع کرتا ہوں: میں نے ایک کتے کو ایک بوڑھے شخص کو سڑک پار کرنے میں مدد کرتے ہوئے دیکھا!"
           introduce_yourself:
             title: "اپنا تعارف کروائیں"
             body: "کمیونٹی میں خوش آمدید! آئیے ایک دوسرے کو جانیں۔ براہِ کرم اپنا تعارف کروائیں اور اپنی دلچسپیوں کو رقم کریں۔ میں پہل کرتا ہوں: مجھے ٹیکنالوجی کا بہت شوق ہے اور دوسروں کو سکھانا پسند ہے!"
-          what_is_your_favorite_food:
-            title: "آپ کا پسندیدہ کھانا کیا ہے؟"
-            body: "فورم کو اپنے پسندیدہ کھانے کے بارے بتائیں! میں شروع کروں: مجھے پیزا پسند ہے، خاص طور پر اضافی پنیر اور پیپرونی کے ساتھ۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
       subtitle: "رنگ، خط اور آپ کے فورم کی ترتیب کا انتخاب کریں۔"
@@ -1860,6 +1852,16 @@ ur:
       tracked_topics_link: "دیکھیں"
       automatically_unpin_topics: "جب میں نیچے پہنچ جاوں تو خودکار طور پر موضوعات کو اَن پِن کردیں"
       apps: "اپلیکیشنز"
+      mcp_authorizations:
+        endpoint: "وسائل"
+        scopes: "اسکوپس"
+        details: "تفصیلات"
+        last_used: "آخری بار استعمال ہوا۔"
+        never: "کبھی نہیں"
+        status: "حیثیت"
+        statuses:
+          active: "فعال"
+          revoked: "منسوخ"
       revoke_access: "رسائی مٹائیں"
       undo_revoke_access: "رسائی مٹانے کو منسوخ کریں"
       api_approved: "منظورشدہ"
@@ -2876,8 +2878,6 @@ ur:
       signup_instructions: "اس فورم میں شمولیت کے لیے اپنا ای میل درج کریں۔ ہم آپ کو تصدیق کے لیے ایک کوڈ بھیجیں گے جس سے آپ کی شروعات ہو جائے گی!"
       user_fields_title: "تقریباً مکمل"
       user_fields_instructions: "چند مزید تفصیلات، آپ کے اکاؤنٹ کی تخلیق کو انجام دینے کے لیے۔"
-      account_ready_title: "آپ کا اکاؤنٹ تیار ہے! 🎉"
-      account_ready_edit: "اپنا اسم صارف اور اوتار منتخب کریں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
       username_placeholder: "ایک اسم صارف منتخب کریں"
@@ -4970,6 +4970,7 @@ ur:
       list: "زمرہ جات کی فہرست دیکھیں"
       no_description: "براہ مہربانی اس زمرہ کی تفصیل شامل کریں۔"
       change_in_category_topic: "تفصیل میں ترمیم کریں"
+      latest_topics: "تازہ ترین ٹاپک"
       description_updated: "تفصیل اپ ڈیٹ ہو گئی"
       description_expand: "مزید دکھائیں"
       description_collapse: "کم دکھائیں"
@@ -5257,6 +5258,7 @@ ur:
       with_category: "%{filter} %{category} ٹاپک"
       filter:
         title: "%{filter}کے لیے فلٹر شدہ نتائج"
+        reset: "ری سیٹ"
         button:
           label: "فِلٹر"
       latest:
@@ -5501,16 +5503,18 @@ ur:
       favorite_max_not_reached: "اس تمغہ کو پسندیدہ کے بطور نشان زد کریں"
       favorite_count: "%{max} تمغات کو پسندیدہ کے طور پر %{count}نشان زد کیا گیا"
     download_calendar:
-      title: "کیلنڈر ڈاؤن لوڈ کریں"
+      title: "کیلنڈر میں شامل کریں"
+      calendar: "کیلنڈر"
       save_ics: ".ics فائل ڈاؤن لوڈ کریں"
       save_google: "گوگل کیلنڈر میں شامل کریں"
       remember: "مجھے دوبارہ مت پوچھیں"
-      remember_explanation: "(آپ اس ترجیح کو اپنے رکن کی ترجیحات میں تبدیل کر سکتے ہیں)"
       download: "ڈاؤن لوڈ"
       default_calendar: "ڈیفالٹ کیلنڈر"
       default_calendar_instruction: "تعین کریں کہ تاریخیں محفوظ ہونے پر کون سا کیلنڈر استعمال کیا جائے"
       add_to_calendar: "کیلنڈر میں شامل کریں"
       google: "گوگل کیلنڈر"
+      outlook: "مائیکروسافٹ آؤٹ لک"
+      apple: "ایپل کیلنڈر"
       ics: "ICS"
       default_title: "طے شدہ ایونٹس"
     tagging:
@@ -6174,6 +6178,71 @@ ur:
           header_description: "اس سائٹ اور اپنی ٹیم کے بارے میں یہاں معلومات فراہم کریں تاکہ لوگ جان سکیں کہ آپ کی کمیونٹی کیا ہے، اس کے پیچھے کون ہے، اور کوئی مسئلہ ہونے کی صورت میں آپ تک کیسے پہنچنا ہے۔ آپ کی سائٹ کے <a href='%{basePath}/about'>کے بارے میں صفحہ</a>پر دکھایا گیا ہے۔"
         developer:
           title: "ڈیولپر"
+        mcp:
+          tabs:
+            access: "رسائی"
+            activity: "سرگرمی"
+          overview:
+            status: "حیثیت"
+          access:
+            title: "رسائی"
+            group: "گروپ"
+            groups: "گروپس"
+            actions: "عمل"
+            edit: "ترمیم کریں"
+            delete: "مٹائیں"
+          primitives:
+            group_by: "گروہ بذریعہ"
+            group_by_options:
+              scope: "دائرہ کار"
+              provider: "پرووَائیڈر"
+              kind: "قِسم"
+            provider: "پرووَائیڈر"
+            kind: "قِسم"
+            scope: "دائرہ کار"
+            scopes: "اسکوپس"
+          clients:
+            actions: "عمل"
+            block: "بلاک کریں"
+            presets:
+              custom: "اپنی مرضی کا"
+          authorizations:
+            user: "رکن"
+            last_used: "آخری بار استعمال ہوا۔"
+            status: "حیثیت"
+            actions: "عمل"
+          activity:
+            outcome: "نتیجہ"
+            time: "وقت"
+            user: "رکن"
+            duration: "دورانیہ"
+          values:
+            server_status:
+              available: "دستیاب"
+              disabled: "غیر فعال"
+            client_trust:
+              approved: "منظورشدہ"
+            authorization_status:
+              active: "فعال"
+              revoked: "منسوخ"
+            activity_outcome:
+              success: "کامیابی"
+              error: "خرابی"
+            primitive_state:
+              enabled: "فعال شدہ"
+              disabled: "غیر فعال"
+              unavailable: "دستیاب نہیں"
+            primitive_kind:
+              all: "تمام اقسام"
+              resource: "وسائل"
+            primitive_risk:
+              read: "صرف پڑھنے کیلے"
+              moderation: "ماڈریٹر کا کام"
+            filter:
+              all: "تمام"
+          never: "کبھی نہیں"
+          actions:
+            revoke: "منسوخ کریں"
         experimental:
           title: "تجرباتی"
           header_description: "اپنی سائٹ کے لیے تجرباتی خصوصیات کو آن یا آف کریں، ان میں سے زیادہ تر کو گروپ کی بنیاد پر کنٹرول کیا جا سکتا ہے"
@@ -6904,6 +6973,7 @@ ur:
             anonymous: "گمنام"
             crawlers: "کرالرز"
           see_details: "تفصیلات دیکھیں"
+          crawler_learn_more: "مزید جانیں"
         period:
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"
@@ -8749,13 +8819,12 @@ ur:
           multiselect: "کثیر الانتخاب"
       site_text:
         description: "آپ اپنے فورم پر کسی بھی متن کو اپنی مرضی کے مطابق بنا سکتے ہیں"
-        search: "وہ متن تلاش کریں جس میں آپ ترمیم کرنا چاہتے ہیں۔"
+        search_label: "تلاش"
+        theme_disabled: "غیر فعال"
+        filters: "فِلٹر"
         title: "سائٹ کے متون"
         edit: "ترمیم کریں"
-        revert: "تبدیلیاں لوٹائیں"
         revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
-        go_back: "واپس سَرچ پر"
-        recommended: "اَپنی ضروریات کے مطابق کرنے کے لئے ہم مندرجہ ذیل ٹَیکسٹ کو اپنی مرضی کے حساب سے تبدیل کرنے کی تجویز دیں گے:"
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         show_outdated: "صرف پرانا/غلط دکھائیں"
         show_untranslated: "صرف بغیر ترجمہ والی دکھائیں"

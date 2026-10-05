@@ -5,15 +5,15 @@ require_relative "../../lib/omniauth_apple"
 pem = ::OpenSSL::PKey::EC.generate("prime256v1").to_pem
 
 describe "sign in with apple" do
-  let(:jwk) { ::JWT::JWK.new(OpenSSL::PKey::RSA.generate(1024)) }
+  let(:jwk) { ::JWT::JWK.new(OpenSSL::PKey::RSA.generate(2048)) }
 
   before do
     Discourse.cache.delete("sign-in-with-apple-jwks")
-    SiteSetting.sign_in_with_apple_enabled = true
     SiteSetting.apple_client_id = "myclientid"
     SiteSetting.apple_team_id = "myteamid"
     SiteSetting.apple_key_id = "mykeyid"
     SiteSetting.apple_pem = pem
+    SiteSetting.sign_in_with_apple_enabled = true
 
     stub_request(:get, "https://appleid.apple.com/auth/keys").to_return(
       body: { keys: [jwk.export] }.to_json,

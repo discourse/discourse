@@ -7,7 +7,7 @@ module Migrations
   module Database
     class Connection
       TRANSACTION_BATCH_SIZE = 1000
-      PREPARED_STATEMENT_CACHE_SIZE = 5
+      PREPARED_STATEMENT_CACHE_SIZE = 32
 
       # `journal_mode` defaults to WAL for the run DB. A shard passes "off": it has a
       # single writer, is never read while written, and is thrown away on any
@@ -16,7 +16,11 @@ module Migrations
         path = File.expand_path(path, Migrations.root_path)
         FileUtils.mkdir_p(File.dirname(path))
 
-        db = Extralite::Database.new(path)
+        # Extralite 3.1.0's statement cache is never finalized on `close`, which
+        # keeps the connection alive as a zombie and leaves the WAL unflushed;
+        # `PreparedStatementCache` covers the hot statements anyway. TODO: Revisit
+        # `stmt_cache` when upgrading Extralite.
+        db = Extralite::Database.new(path, stmt_cache: false)
         db.pragma(
           busy_timeout: 60_000, # 60 seconds
           journal_mode:,
@@ -91,11 +95,15 @@ module Migrations
       end
 
       # `ATTACH` can't run inside a transaction, so commit any open batch first.
+      def attach_database(path, name:)
+        commit_transaction
+        @db.execute("ATTACH DATABASE ? AS #{quote_identifier(name)}", path)
+      end
+
       # `dedupe_tables` merge with `INSERT OR IGNORE`; the rest raise on a
       # duplicate row (see `Consolidator`).
       def merge_database(other_path, tables:, dedupe_tables: [])
-        commit_transaction
-        @db.execute("ATTACH DATABASE ? AS merge_source", other_path)
+        attach_database(other_path, name: "merge_source")
         begin
           tables.each do |table|
             quoted = quote_identifier(table)

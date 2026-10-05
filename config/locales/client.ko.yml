@@ -192,6 +192,7 @@ ko:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
       dismiss: "읽음으로 표시..."
     back_button: "뒤로"
+    confirm_button: "확인"
     welcome_banner:
       header:
         new_members: "%{preferred_display_name}에 오신 것을 환영합니다!"
@@ -1263,6 +1264,15 @@ ko:
       tracked_topics_link: "표시"
       automatically_unpin_topics: "글 끝에 도달하면 글을 자동으로 고정 해제합니다"
       apps: "앱"
+      mcp_authorizations:
+        endpoint: "자원"
+        scopes: "범위"
+        details: "세부 정보"
+        never: "알림 받지 않기"
+        status: "상태"
+        statuses:
+          active: "활성화 사용자"
+          revoked: "해지"
       revoke_access: "액세스 취소"
       undo_revoke_access: "액세스 취소 실행 취소"
       api_approved: "승인됨:"
@@ -3173,6 +3183,7 @@ ko:
       delete_error: "카테고리를 삭제하는 중에 오류가 발생했습니다."
       no_description: "이 카테고리에 대한 설명을 추가하세요."
       change_in_category_topic: "설명 수정"
+      latest_topics: "최신 글"
       description_expand: "더 보기"
       description_collapse: "간략히 보기"
       already_used: "이 색은 다른 카테고리에서 사용 중입니다"
@@ -3369,6 +3380,7 @@ ko:
       with_category: "%{filter} %{category} 주제"
       filter:
         title: "%{filter}에 대한 필터링된 결과"
+        reset: "리셋"
         button:
           label: "필터"
       latest:
@@ -3537,11 +3549,10 @@ ko:
       favorite_max_not_reached: "이 배지를 즐겨찾기에 표시"
       favorite_count: "%{count}/%{max}개의 배지가 즐겨찾기 배지로 표시됨"
     download_calendar:
-      title: "캘린더 다운로드"
+      title: "캘린더에 추가"
       save_ics: ".ics 파일 다운로드"
       save_google: "Google Calendar에 추가"
       remember: "다시 묻지 않음"
-      remember_explanation: "(사용자 환경설정에서 이 환경설정을 변경할 수 있습니다)"
       download: "다운로드"
       default_calendar: "디폴트 캘린더"
       default_calendar_instruction: "날짜를 저장할 때 어떤 캘린더를 사용할지 결정"
@@ -3891,6 +3902,66 @@ ko:
       config:
         developer:
           title: "개발자"
+        mcp:
+          tabs:
+            access: "접근성"
+            activity: "활동"
+          overview:
+            status: "상태"
+          access:
+            title: "접근성"
+            group: "그룹"
+            groups: "그룹"
+            actions: "작업"
+            edit: "편집"
+            delete: "삭제"
+          primitives:
+            group_by_options:
+              scope: "범위"
+              provider: "공급자"
+              kind: "형식"
+            provider: "공급자"
+            kind: "형식"
+            scope: "범위"
+            scopes: "범위"
+          clients:
+            actions: "작업"
+            block: "차단"
+            presets:
+              custom: "사용자 정의"
+          authorizations:
+            user: "사용자"
+            status: "상태"
+            actions: "작업"
+          activity:
+            time: "시간"
+            user: "사용자"
+            duration: "기간"
+          values:
+            server_status:
+              disabled: "비활성"
+            client_trust:
+              approved: "승인"
+            authorization_status:
+              active: "활성화 사용자"
+              revoked: "해지"
+            activity_outcome:
+              success: "성공"
+              error: "에러"
+            primitive_state:
+              enabled: "활성화"
+              disabled: "비활성"
+            primitive_kind:
+              all: "모든 유형"
+              resource: "자원"
+            primitive_risk:
+              read: "읽기 전용"
+              moderation: "관리"
+            filter:
+              all: "모두"
+          never: "알림 받지 않기"
+          actions:
+            revoke: "취소"
         emojis:
           title: "이모티콘"
         flags:
@@ -4143,6 +4214,7 @@ ko:
           series:
             anonymous: "익명"
             crawlers: "겉옷"
+          crawler_learn_more: "더 보기"
         period:
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"
@@ -5412,12 +5484,11 @@ ko:
           dropdown: "드롭다운"
           multiselect: "다중 선택"
       site_text:
-        search: "편집하고 싶은 텍스트를 검색하세요"
+        search_label: "검색"
+        theme_disabled: "비활성"
+        filters: "필터"
         edit: "편집"
-        revert: "변경사항 되돌리기"
         revert_confirm: "변경사항을 되돌릴까요?"
-        go_back: "검색으로 돌아가기"
-        recommended: "다음 텍스트를 필요에 맞게 사용자 지정하는 것이 좋습니다."
         show_overriden: "오버라이드된 항목만 표시"
         locale: "언어:"
         more_than_50_results: "50개 이상의 결과가 있습니다. 검색 범위를 좁혀보세요."

@@ -22,7 +22,11 @@ export default class ChatModalNewMessage extends Component {
         @inline={{@inline}}
         @title="chat.new_message_modal.title"
       >
-        <MessageCreator @channel={{@model}} @onClose={{@closeModal}} />
+        <MessageCreator
+          @channel={{@model}}
+          @initialMode={{@model.initialMode}}
+          @onClose={{@closeModal}}
+        />
       </DModal>
     {{/if}}
   </template>

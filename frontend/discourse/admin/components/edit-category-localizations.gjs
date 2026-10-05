@@ -1,10 +1,12 @@
 import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+@classNames("form-kit__section")
 export default class EditCategoryLocalizations extends buildCategoryPanel(
   "localizations"
 ) {
@@ -29,11 +31,9 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
     <@form.Section>
       <@form.Field
         @description={{i18n "category.localization.language_description"}}
-        @format="full"
         @name="locale"
         @title={{i18n "category.localization.language"}}
         @type="select"
-        @validation="required"
         as |field|
       >
         <field.Control as |select|>

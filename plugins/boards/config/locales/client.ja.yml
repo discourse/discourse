@@ -6,7 +6,23 @@
 
 ja:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "タイトル"
+        icon: "アイコン"
+        color: "色"
+        tag_name: "タグ"
+        default_sort_priority: "優先度"
+      create_board:
+        name: "名前"
+        slug: "スラッグ"
+        tag_names: "タグ"
+        category_ids: "カテゴリ"
     boards:
+      status:
+        all: "すべて"
+        open: "オープン"
+        archived: "アーカイブ済み"
       board:
         remove_card: "削除"
         new_topic: "新規トピック..."

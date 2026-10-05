@@ -25,6 +25,26 @@ module PageObjects
           self
         end
 
+        def has_calendar_prompt?
+          has_css?(
+            ".event-calendar-prompt",
+            text: I18n.t("js.discourse_events.calendar_prompt.title"),
+          ) &&
+            has_css?(
+              ".event-calendar-prompt__actions button",
+              text: I18n.t("js.discourse_post_event.add_to_calendar"),
+            )
+        end
+
+        def has_no_calendar_prompt?
+          has_no_css?(".event-calendar-prompt")
+        end
+
+        def dismiss_calendar_prompt
+          find(".event-calendar-prompt__dismiss").click
+          self
+        end
+
         def not_going
           locator(".not-going-button").click
           self

@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 
 export default class SignalingManager {
   static peerKey(roomId, userId) {
@@ -223,9 +224,8 @@ export default class SignalingManager {
     this.#signalQueues.set(key, queue);
 
     if (queue.length >= this.#candidateBatchSize) {
-      this.flushQueued(roomId, recipientId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush signal queue", error);
+      this.flushQueued(roomId, recipientId).catch(() => {
+        voiceLog.warn("[voice] failed to flush signal queue");
       });
       return;
     }
@@ -237,9 +237,8 @@ export default class SignalingManager {
 
     const timer = setTimeout(() => {
       this.#signalFlushTimers.delete(key);
-      this.flushQueued(roomId, recipientId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush signal queue", error);
+      this.flushQueued(roomId, recipientId).catch(() => {
+        voiceLog.warn("[voice] failed to flush signal queue");
       });
     }, this.#candidateBatchDelayMs);
 
@@ -290,9 +289,8 @@ export default class SignalingManager {
         clearTimeout(timer);
         this.#httpSignalFlushTimers.delete(roomId);
       }
-      this.#flushHttp(roomId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush HTTP signal queue", error);
+      this.#flushHttp(roomId).catch(() => {
+        voiceLog.warn("[voice] failed to flush HTTP signal queue");
       });
     } else {
       this.#scheduleHttpFlush(roomId);
@@ -308,9 +306,8 @@ export default class SignalingManager {
 
     const timer = setTimeout(() => {
       this.#httpSignalFlushTimers.delete(roomId);
-      this.#flushHttp(roomId).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to flush HTTP signal queue", error);
+      this.#flushHttp(roomId).catch(() => {
+        voiceLog.warn("[voice] failed to flush HTTP signal queue");
       });
     }, this.#httpBatchDelayMs);
 
@@ -374,8 +371,7 @@ export default class SignalingManager {
 
     const payload = SignalingManager.#buildPayload(messages);
 
-    // eslint-disable-next-line no-console
-    console.log(
+    voiceLog.info(
       `[voice] 🚀 sending ${messages.length} batched signal recipient(s) in room ${roomId}`
     );
 

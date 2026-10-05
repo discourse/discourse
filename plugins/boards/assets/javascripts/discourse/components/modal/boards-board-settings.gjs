@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { array, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -8,15 +8,17 @@ import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { slugify } from "discourse/lib/utilities";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import { eq, or } from "discourse/truth-helpers";
-import DAccessControlField from "discourse/ui-kit/d-access-control-field";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import { buildDefaultBoardAcl } from "../../lib/boards-access-control";
+import { loadCategories } from "../../lib/boards-categories";
+import BoardsAccessControlField from "../boards-access-control-field";
 import BoardsEditableTitle from "../boards-editable-title";
 
 const CONSTRAINT_TYPE_OPTIONS = [
@@ -69,58 +71,27 @@ export default class BoardsBoardSettings extends Component {
 
   @cached
   get formData() {
-    const board = this.args.model.board;
-
-    // Existing board
-    if (board) {
-      return {
-        name: board.name || "",
-        slug: board.slug || "",
-        constraint_type: inferConstraintType(
-          board.category_ids,
-          board.tag_names
-        ),
-        category_ids: board.category_ids || [],
-        tag_names: board.tag_names || [],
-        card_style: board.card_style || "detailed",
-        show_tags: board.show_tags ?? false,
-        show_topic_thumbnail: board.show_topic_thumbnail ?? false,
-        require_confirmation: board.require_confirmation ?? false,
-        acl: board.acl,
-      };
-    }
-
-    // New board
-    return {
-      name: "",
-      slug: "",
-      constraint_type: null,
-      category_ids: [],
-      tag_names: [],
-      card_style: "detailed",
+    const board = this.args.model.board || {
       show_tags: true,
-      show_topic_thumbnail: false,
-      require_confirmation: false,
-      acl: this.#buildDefaultAcl(),
+      acl: buildDefaultBoardAcl(this.site, this.siteSettings),
+    };
+
+    return {
+      name: board.name || "",
+      slug: board.slug || "",
+      constraint_type: inferConstraintType(board.category_ids, board.tag_names),
+      category_ids: board.category_ids || [],
+      tag_names: board.tag_names || [],
+      card_style: board.card_style || "detailed",
+      show_tags: board.show_tags ?? false,
+      show_topic_thumbnail: board.show_topic_thumbnail ?? false,
+      require_confirmation: board.require_confirmation ?? false,
+      acl: board.acl,
     };
   }
 
   get isNew() {
     return this.args.model.isNew;
-  }
-
-  get boardsManageBoardAllowedGroupIds() {
-    return this.siteSettings.groupSettingArray(
-      "boards_manage_board_allowed_groups"
-    );
-  }
-
-  get aclTarget() {
-    return {
-      type: "Boards::Board",
-      id: this.args.model.board?.id,
-      name: i18n("boards.manage.board"),
-    };
   }
 
   get slugPlaceholder() {
@@ -136,13 +107,6 @@ export default class BoardsBoardSettings extends Component {
   @action
   toggleAdvanced() {
     this.showAdvanced = !this.showAdvanced;
-  }
-
-  @action
-  selectedCategories(categoryIds) {
-    return (categoryIds || [])
-      .map((id) => this.site.categories?.find((c) => c.id === id))
-      .filter(Boolean);
   }
 
   @action
@@ -201,30 +165,6 @@ export default class BoardsBoardSettings extends Component {
   }
 
   @action
-  transformPermissionOptions(options) {
-    const viewOption = options.find((option) => option.id === "view");
-    viewOption.description = i18n(
-      "boards.manage.board_access_permission_viewer_description"
-    );
-
-    const editOption = options.find((option) => option.id === "edit");
-    editOption.description = i18n(
-      "boards.manage.board_access_permission_editor_description"
-    );
-
-    options.push({
-      id: "manage",
-      level: 3,
-      name: i18n("boards.manage.board_access_permission_manager"),
-      description: i18n(
-        "boards.manage.board_access_permission_manager_description"
-      ),
-    });
-
-    return options;
-  }
-
-  @action
   aclChanged(acl) {
     this.reloadAfterSave = false;
     this.formApi.set("acl", acl);
@@ -233,37 +173,6 @@ export default class BoardsBoardSettings extends Component {
   @action
   accessLossConfirmed() {
     this.reloadAfterSave = true;
-  }
-
-  #buildDefaultAcl() {
-    const defaultAcl = [];
-
-    this.boardsManageBoardAllowedGroupIds.forEach((groupId) => {
-      const group = this.site.groupsById[groupId];
-      if (group) {
-        defaultAcl.push({
-          type: "group",
-          id: group.id,
-          permission: "manage",
-          display_name: group.full_name,
-        });
-      }
-    });
-
-    if (
-      !this.boardsManageBoardAllowedGroupIds.includes(
-        AUTO_GROUPS.logged_in_users.id
-      )
-    ) {
-      defaultAcl.push({
-        type: "group",
-        id: AUTO_GROUPS.logged_in_users.id,
-        permission: "view",
-        display_name: this.site.groupFullName(AUTO_GROUPS.logged_in_users.id),
-      });
-    }
-
-    return defaultAcl;
   }
 
   _checkConstraints(categoryIds, tagNames) {
@@ -355,15 +264,13 @@ export default class BoardsBoardSettings extends Component {
             </form.Section>
 
             <form.Section>
-              <DAccessControlField
-                @aclTarget={{this.aclTarget}}
+              <BoardsAccessControlField
+                @boardId={{@model.board.id}}
                 @description={{i18n "boards.manage.board_access_description"}}
                 @form={{form}}
-                @mustHavePermissions={{array "manage"}}
                 @onAccessLossConfirmed={{this.accessLossConfirmed}}
                 @onChange={{this.aclChanged}}
                 @title={{i18n "boards.manage.board_access"}}
-                @transformPermissionOptions={{this.transformPermissionOptions}}
               />
             </form.Section>
 
@@ -400,10 +307,17 @@ export default class BoardsBoardSettings extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <CategorySelector
-                      @categories={{this.selectedCategories data.category_ids}}
-                      @onChange={{fn this.onCategoriesChange field}}
-                    />
+                    <DAsyncContent
+                      @asyncData={{loadCategories}}
+                      @context={{data.category_ids}}
+                    >
+                      <:content as |categories|>
+                        <CategorySelector
+                          @categories={{categories}}
+                          @onChange={{fn this.onCategoriesChange field}}
+                        />
+                      </:content>
+                    </DAsyncContent>
                   </field.Control>
                 </form.Field>
               {{/if}}

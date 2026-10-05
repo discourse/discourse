@@ -10,6 +10,9 @@ sw:
       sections:
         typography:
           example: "Karibu kwenye Discourse"
+        context_menu:
+          actions:
+            delete: "Futa"
         colors:
           title: "Rangi"
         icons:

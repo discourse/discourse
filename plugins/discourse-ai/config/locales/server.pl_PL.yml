@@ -72,6 +72,11 @@ pl_PL:
         title: Taguj tematy za pomocą AI
         description: "Automatycznie taguj tematy za pomocą AI"
   site_settings:
+    ai_ask_ai_report_weekly_enabled: "Automatycznie generuj raport Zapytaj AI co tydzień za ostatnie siedem pełnych dni. Raporty pojawiają się na pulpicie nawigacyjnym. Jeśli grupy są wybrane w {{setting:ai_ask_ai_report_recipient_groups}}, otrzymają one również PM. Wymaga włączenia Zapytaj AI i skonfigurowanego modelu języka raportów. Raporty ręczne pozostają dostępne."
+    ai_ask_ai_report_agent: "Agent służy do grupowania pytań użytkowników w raportach na pulpicie nawigacyjnym Zapytaj AI."
+    ai_ask_ai_report_exclude_groups: "Wyklucz pytania zadawane przez członków tych grup z nowych raportów Zapytaj AI. Pozostaw puste, aby uwzględnić wszystkich."
+    ai_ask_ai_report_max_asks: "Maksymalna liczba zapytań analizowanych w raporcie. Obejmuje wszystkie zapytania w wybranym okresie lub najnowsze zapytania do tego limitu, w zależności od tego, która liczba jest mniejsza. Większe raporty wymagają szerszego kontekstu modelu i mogą kosztować więcej."
+    ai_ask_ai_report_recipient_groups: "Grupy otrzymujące automatyczne cotygodniowe raporty PW i mogą być uwzględniane w ręcznych raportach PW. Raporty zawierają pytania użytkowników. Pozostaw puste, aby automatyczne raporty były widoczne tylko na pulpicie."
     discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
     enable_ai_bot_starred_conversations: "Zezwól użytkownikom na wyróżnianie rozmów botów AI i wyświetlanie ich w sekcji oznaczonej gwiazdką na pasku bocznym."
     ai_default_llm_model: "Domyślny model LLM do wykorzystania we wszystkich funkcjach AI"
@@ -151,7 +156,7 @@ pl_PL:
     ai_bot_enabled: "Włącz moduł bota AI."
     ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
     ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można to pominąć, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "Gdy bot GPT uzyska dostęp do PW, odpowie członkom tych grup."
+    ai_bot_allowed_groups: "Członkowie tych grup mogą prowadzić rozmowy z botami AI. Agenci, którzy zezwalają na wiadomości prywatne, korzystają z własnych, dozwolonych grup. Użytkownicy anonimowi nie mogą korzystać z bota; po dodaniu tego ustawienia mogą jedynie przeglądać stronę rozmów z botem AI i są proszeni o zalogowanie się w celu zadania pytania."
     ai_bot_debugging_allowed_groups: "Zezwól tym grupom na wyświetlanie przycisku debugowania w postach, który wyświetla surowe żądanie i odpowiedź AI"
     ai_bot_public_sharing_allowed_groups: "Zezwól tym grupom na udostępnianie osobistych wiadomości AI publicznie za pośrednictwem unikalnego, publicznie dostępnego linku. Uwaga: jeśli Twoja witryna wymaga logowania, udostępnianie również będzie wymagało logowania."
     ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć wiadomość prywatną z botem AI"
@@ -284,6 +289,17 @@ pl_PL:
       title: "😲 Niespodzianka"
       description: "Posty sklasyfikowane według emocji zaskoczenia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
   discourse_ai:
+    ask_ai_reports:
+      no_model: "Przed wygenerowaniem raportów skonfiguruj domyślny model języka sztucznej inteligencji."
+      no_asks: "W tym okresie nie ma pytań odpowiadających ustawieniom raportu."
+      title: "O co pytają użytkownicy: %{start} – %{end}"
+      coverage: "Przeanalizowano ostatnie %{count} z %{total} pytań w tym okresie. Pytania mogą pojawiać się w wielu tematach."
+      ungrouped_name: "Pytania niepogrupowane"
+      ungrouped_description: "W raporcie nie przypisano tych pytań do konkretnego podmiotu."
+      no_insights: "Pytania te nie dostarczyły wystarczających dowodów, aby sformułować konkretne zalecenia dotyczące dalszych działań."
+      suggested_action: "Sugerowane dalsze działania: %{action}"
+      view_dashboard: "Przeglądaj wszystkie tematy i pytania na pulpicie nawigacyjnym"
+      disclaimer: "Obserwacje generowane przez sztuczną inteligencję opisują zadane pytania, a nie jakość czy przydatność odpowiedzi. Sugerowane działania następcze to możliwości zbadania tematu, a nie potwierdzone luki. Pytania mogą dotyczyć wielu przedmiotów."
     ai_artifact:
       errors:
         max_keys_exceeded:
@@ -305,6 +321,14 @@ pl_PL:
           locked_default_llm_missing: "Agent „%{agent}” jest zablokowany na swoim domyślnym LLM, ale nie skonfigurowano żadnego prawidłowego domyślnego LLM"
           llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
           no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
+          uploads_not_sent: "Agent „%{agent}” nie otrzymał wszystkich przesłanych plików"
+          upload_not_found: "Nie znaleziono przesłania %{upload_id}"
+          upload_not_visible: "%{username} nie można zobaczyć przesłania %{upload_id}"
+          agent_cannot_see_images: "Prześlij %{upload_id} to obraz, a agent „%{agent}” ma wyłączoną widoczność"
+          llm_cannot_see_images: "Prześlij %{upload_id} to obraz, a LLM '%{llm}' ma wyłączoną widoczność"
+          llm_cannot_read_documents: "Prześlij %{upload_id} to dokument, a LLM '%{llm}' nie akceptuje żadnych załączników"
+          unsupported_image_format: "Prześlij %{upload_id} nie jest obsługiwanym formatem obrazu (%{formats})"
+          upload_skipped: "Przesłanie %{upload_id} (%{filename}) nie zostało wysłane: %{message}"
     tools:
       custom_name: "%{name} (niestandardowe)"
       presets:
@@ -439,14 +463,49 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      search_discourse_navigation:
+        not_allowed: "Nie masz uprawnień do wyszukiwania w celach administracyjnych."
+        invalid_query: "Wprowadź zapytanie wyszukiwania składające się z 1 do %{max} znaków."
+      navigation:
+        settings:
+          title: "Ustawienia witryny"
+          description: "Wyszukaj i zmień wszystkie ustawienia konfiguracji witryny."
+        users:
+          title: "Użytkownicy"
+          description: "Znajdź i zarządzaj kontami członków i uprawnieniami użytkowników."
+        groups:
+          title: "Grupy"
+          description: "Zarządzaj grupami i członkostwem w grupach."
+        review:
+          title: "Kolejka do przeglądu"
+          description: "Moderuj oznaczone wpisy i zatwierdzaj oczekujących użytkowników i treści."
+        invites:
+          title: "Utwórz zaproszenie"
+          description: "Zaproś ludzi do dołączenia do tej społeczności."
+        categories:
+          title: "Kategorie"
+          description: "Przeglądaj, twórz i zarządzaj kategoriami dyskusji."
+        tags:
+          title: "Tagi"
+          description: "Przeglądaj i zarządzaj tagami tematów."
+        themes:
+          title: "Motywy"
+          description: "Zainstaluj i dostosuj motywy, aby zmienić wygląd i projekt witryny."
+        authentication:
+          title: "Logowanie i uwierzytelnianie"
+          description: "Skonfiguruj logowanie, rejestrację, uwierzytelnianie i logowanie jednokrotne."
+        backups:
+          title: "Kopie zapasowe"
+          description: "Twórz, pobieraj i przywracaj kopie zapasowe witryn."
       ai_users: "Użytkownicy AI"
+      ai_users_bio: "Automatyczna grupa kont botów AI"
       errors:
         invalid_agent_id: "Określony agent AI nie istnieje lub nie masz do niego dostępu"
         cannot_send_pm_to_agent: "Nie możesz wysyłać wiadomości osobistych do tego agenta AI"
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
-      tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
+      tool_pending_approval: "Ta czynność wymaga zatwierdzenia:"
       spawn_agent:
         description: "Deleguj samodzielny monit do jednego z dozwolonych agentów i zwróć jego odpowiedź"
         prompt_description: "Kompletny, samodzielny monit wysyłany do wybranego agenta i wyświetlany w bloku myślowym"
@@ -600,6 +659,9 @@ pl_PL:
         discover:
           name: "Odkrywaj"
           description: "Domyślny agent używany w funkcji odkrywania (bezpłatne wyszukiwanie)"
+        ask_ai_reporter:
+          name: "Tworzący raporty Zapytaj AI"
+          description: "Grupuje pytania użytkowników według tematów na potrzeby raportów na pulpicie nawigacyjnym Zapytaj AI."
         ask_ai_synthesis:
           name: "Synteza Zapytaj AI"
           description: "Wybiera źródła i przygotowuje odpowiedź wyświetlaną przez Zapytaj AI"
@@ -750,6 +812,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukiwanie ustawień witryny"
+        search_discourse_navigation: "Przeszukiwanie nawigacji witryny"
         read_site_setting: "Odczytaj ustawienia witryny"
         change_site_setting: "Zmień ustawienia witryny"
         dall_e: "Wygeneruj obraz"
@@ -811,6 +874,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukaj ustawienia witryny"
+        search_discourse_navigation: "Znajdź zweryfikowane linki do dostępnych stron w tej witrynie"
         read_site_setting: "Odczytaj aktualną wartość ustawienia witryny"
         change_site_setting: "Zmień wartość ustawienia witryny"
         dall_e: "Wygeneruj obraz za pomocą DALL-E 3"
@@ -913,6 +977,11 @@ pl_PL:
           few: "Znaleziono %{count} wyniki dla '%{query}'"
           many: "Znaleziono %{count} wyników dla '%{query}'"
           other: "Znaleziono %{count} wyników dla '%{query}'"
+        search_discourse_navigation:
+          one: "Znaleziono %{count} miejsce docelowe"
+          few: "Znaleziono %{count} miejsca docelowe"
+          many: "Znaleziono %{count} miejsc docelowych"
+          other: "Znaleziono %{count} miejsc docelowych"
         read_site_setting: "Ustawienia witryny do odczytania %{setting_name}"
         change_site_setting: "Zmiana ustawień witryny %{setting_name} na '%{value}'"
       discoveries:

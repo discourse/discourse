@@ -29,6 +29,8 @@ en:
 
 Administrators can override individual keys on a per-theme basis in the /admin/customize/themes user interface. Fallback is handled in the same way as core, so it is ok to have incomplete translations for non-english languages will make use of the english keys.
 
+Administrators can also manage these translations in **Appearance → Site texts**. Select a theme or component to search its locale-file strings, edit a translation in the selected language, or revert an override to the locale-file default. The selection is linkable using `/admin/customize/site_texts?theme_id=THEME_ID`. Site texts identifies these entries as `js.theme_translations.THEME_ID.KEY`; edits use the same theme translation overrides as the theme editor.
+
 ![39|690x388,50%](/assets/localizable-strings-1.png)
 
 In the background, these translations are stored alongside the core translations, under a theme-specific namespace. For example:

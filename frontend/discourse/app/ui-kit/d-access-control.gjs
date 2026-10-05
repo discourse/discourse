@@ -3,13 +3,12 @@ import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DMenu from "discourse/float-kit/components/d-menu";
+import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { eq } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
-import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import { eq, or } from "discourse/truth-helpers";
+import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -38,7 +37,7 @@ const REMOVE_ACTION = {
   ),
 };
 
-function defaultPermissions() {
+export function defaultPermissions() {
   return [
     {
       id: READ_ONLY_PERMISSION,
@@ -63,20 +62,6 @@ function rowTypeSortOrder(type) {
   return ROW_TYPE_SORT_ORDER[type] ?? 2;
 }
 
-const AccessControlPermissionTrigger = <template>
-  <button
-    class="btn btn-default d-access-control__permission"
-    disabled={{@disabled}}
-    type="button"
-    ...attributes
-  >
-    <span class="d-button-label">
-      {{@label}}
-    </span>
-    {{dIcon "angle-down"}}
-  </button>
-</template>;
-
 export default class DAccessControl extends Component {
   @service site;
 
@@ -97,7 +82,9 @@ export default class DAccessControl extends Component {
     }
 
     return (
-      this.site.access_control?.mandatory_acl?.[this.args.aclTarget.type] || []
+      this.site.access_control?.mandatory_acl?.[
+        this.args.aclTarget.key ?? this.args.aclTarget.type
+      ] || []
     );
   }
 
@@ -114,7 +101,9 @@ export default class DAccessControl extends Component {
     }
 
     return (
-      this.site.access_control?.banned_acl?.[this.args.aclTarget.type] || []
+      this.site.access_control?.banned_acl?.[
+        this.args.aclTarget.key ?? this.args.aclTarget.type
+      ] || []
     );
   }
 
@@ -166,18 +155,25 @@ export default class DAccessControl extends Component {
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
   get rows() {
-    const mappedAcl = this.acl.map((entry) => ({
-      key: `${granteeValue(entry.type, entry.id)}:${entry.permission}`,
-      id: entry.id,
-      permission: entry.permission,
-      display_name: entry.display_name,
-      sort_name: entry.sort_name || entry.name || entry.display_name,
-      username: entry.username,
-      name: entry.name,
-      avatar_template: entry.avatar_template,
-      type: entry.type,
-      mandatory: Boolean(entry.mandatory),
-    }));
+    const mappedAcl = this.acl.map((entry) => {
+      const hydratedEntry = this.#hydrateDisplayName({ ...entry });
+
+      return {
+        key: `${granteeValue(hydratedEntry.type, hydratedEntry.id)}:${hydratedEntry.permission}`,
+        id: hydratedEntry.id,
+        permission: hydratedEntry.permission,
+        display_name: hydratedEntry.display_name,
+        sort_name:
+          hydratedEntry.sort_name ||
+          hydratedEntry.name ||
+          hydratedEntry.display_name,
+        username: hydratedEntry.username,
+        name: hydratedEntry.name,
+        avatar_template: hydratedEntry.avatar_template,
+        type: hydratedEntry.type,
+        mandatory: Boolean(hydratedEntry.mandatory),
+      };
+    });
 
     return mappedAcl.sort((a, b) => {
       if (a.mandatory !== b.mandatory) {
@@ -331,9 +327,7 @@ export default class DAccessControl extends Component {
   }
 
   @action
-  onRowPermissionChange(close, granteeType, granteeId, permission) {
-    close?.();
-
+  onRowPermissionChange(granteeType, granteeId, permission) {
     if (permission === REMOVE_ACTION.id) {
       this.args.onChange(
         this.acl.filter(
@@ -372,10 +366,19 @@ export default class DAccessControl extends Component {
     });
   }
 
-  @action
-  permissionLabel(permissionId) {
-    return this.permissionOptions.find((option) => option.id === permissionId)
-      .name;
+  #hydrateDisplayName(entry) {
+    if (!isEmpty(entry.display_name)) {
+      return entry;
+    }
+
+    if (entry.type === "group") {
+      const group = (this.args.groups || []).find(({ id }) => id === entry.id);
+      entry.display_name = group?.full_name || group?.name;
+    } else if (entry.type === "user") {
+      entry.display_name = prioritizeNameFallback(entry.name, entry.username);
+    }
+
+    return entry;
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission
@@ -402,7 +405,7 @@ export default class DAccessControl extends Component {
         }}
         @value={{null}}
       />
-      {{#if this.rows.length}}
+      {{#if (or this.rows.length (has-block "additionalRows"))}}
         <div class="d-access-control__rows">
           {{#each this.rows key="key" as |row|}}
             <div
@@ -441,64 +444,18 @@ export default class DAccessControl extends Component {
                   {{/if}}
                 </span>
               </span>
-              <DMenu
-                data-permission={{row.permission}}
-                @autofocus={{false}}
-                @identifier="d-access-control__permission-menu"
-                @modalForMobile={{true}}
-                @triggerComponent={{component
-                  AccessControlPermissionTrigger
-                  label=(this.permissionLabel row.permission)
-                  disabled=row.mandatory
+              <DAccessControlPermissionMenu
+                @disabled={{row.mandatory}}
+                @onChange={{fn this.onRowPermissionChange row.type row.id}}
+                @options={{this.excludeBannedPermissions
+                  this.permissionOptions
+                  row
                 }}
-              >
-                <:content as |args|>
-                  <DDropdownMenu as |dropdown|>
-                    {{#each
-                      (this.excludeBannedPermissions this.permissionOptions row)
-                      key="id"
-                      as |option|
-                    }}
-                      {{#if (eq option.id "remove")}}
-                        <dropdown.divider />
-                      {{/if}}
-                      <dropdown.item>
-                        <DButton
-                          class={{dConcatClass
-                            "d-access-control__permission-option"
-                            "--with-description"
-                            (if (eq option.id "remove") "--remove")
-                            (if (eq option.id row.permission) "-selected")
-                          }}
-                          data-permission-id={{option.id}}
-                          @action={{fn
-                            this.onRowPermissionChange
-                            args.close
-                            row.type
-                            row.id
-                            option.id
-                          }}
-                        >
-                          <div class="d-access-control__permission-texts">
-                            <span class="d-access-control__permission-label">
-                              {{option.name}}
-                            </span>
-                            {{#if option.description}}
-                              <span
-                                class="d-access-control__permission-description"
-                              >
-                                {{option.description}}
-                              </span>
-                            {{/if}}
-                          </div>
-                        </DButton>
-                      </dropdown.item>
-                    {{/each}}
-                  </DDropdownMenu>
-                </:content>
-              </DMenu>
+                @value={{row.permission}}
+              />
             </div>
           {{/each}}
+          {{yield to="additionalRows"}}
         </div>
       {{/if}}
     </div>

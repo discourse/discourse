@@ -6,9 +6,49 @@
 
 zh_CN:
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_boards: "需要启用看板"
+      nodes:
+        "action:create_board_column": "创建看板列"
+        "action:create_board": "创建看板"
+        "trigger:card_moved": "卡片已移动"
+      node_descriptions:
+        "action:create_board_column": "在看板上创建列，可选择添加图标、颜色、标签和默认排序方式。"
+        "action:create_board": "创建看板，并设置访问权限以及可选的标签和类别限制。"
+        "trigger:card_moved": "当看板上的卡片从一列移动到另一列时触发。"
+      create_board_column:
+        board_id: "看板"
+        board_id_description: "选择看板或使用上一步中的看板 ID。"
+        title: "标题"
+        icon: "图标"
+        color: "颜色"
+        tag_name: "标签"
+        default_sort: "默认排序"
+        default_sort_priority: "优先级"
+        default_sort_recency: "最近"
+        actor_username: "由用户执行"
+      create_board:
+        name: "名称"
+        slug: "缩略名"
+        slug_description: "留空则根据看板名生成别名。"
+        tag_names: "标签"
+        category_ids: "类别"
+        category_ids_description: "选择一个或多个主题卡片可以所属的类别。"
+        actor_username: "由用户执行"
+        acl: "看板权限"
+        acl_description: "选择谁可以查看、编辑和管理看板。"
+      card_moved:
+        board_id: "看板"
+        board_id_description: "选择一个看板来限制此触发条件，或者留空以限制所有看板。"
+        board_id_placeholder: "所有看板"
     boards:
       filter_boards: "过滤看板"
       filter_boards_no_results: "没有符合您搜索条件的看板"
+      status:
+        all: "所有"
+        open: "已打开"
+        archived: "已归档"
       topic_footer:
         add_to_board: "添加到看板"
         already_added: "已添加"
@@ -51,6 +91,15 @@ zh_CN:
         column_settings_title: "列设置"
         new_column_title: "新列"
         new_board: "新看板"
+        archive_board: "存档看版"
+        unarchive_board: "取消存档看版"
+        unarchive_board_menu: "取消存档看版..."
+        confirm_archive: '你确定要存档这个看版吗？通过从筛选器下拉列表中选择 “已存档”，你可以在 <a href="%{boards_url}">看版列表</a> 上查看已存档的看版。'
+        confirm_unarchive: "确定要取消存档此看版吗？"
+        archived_successfully: "看版已成功存档"
+        unarchived_successfully: "看版已成功取消存档"
+        unarchive_slug_required: "原来的看版 slug 已被使用。选择一个新的 slug 来取消存档此看版。"
+        archived_tooltip: "此看板已存档。卡片和列将无法再进行更改。"
         delete_board: "删除看板"
         remove_card: "移除"
         new_topic: "新建话题..."
@@ -83,6 +132,7 @@ zh_CN:
         created_by: "创建者"
         show_older_cards: "显示 %{count} 旧卡片"
         errors:
+          category_unavailable: "该目标类别已不再可用。请在创建主题前更新看板或列设置。"
           acl_update_failed: "更新看板权限失败。"
           acl_create_failed: "创建看板权限失败。"
       manage:

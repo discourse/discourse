@@ -40,6 +40,23 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
+      navigation:
+        settings:
+          title: "Ρυθμίσεις ιστότοπου"
+        users:
+          title: "Χρήστες"
+        groups:
+          title: "Ομάδες"
+        review:
+          title: "Ουρά ελέγχου"
+        categories:
+          title: "Κατηγορίες"
+        tags:
+          title: "Ετικέτες"
+        themes:
+          title: "Θέματα"
+        backups:
+          title: "Αντίγραφα ασφαλέιας"
       read_post:
         unknown_post: "ανάρτηση"
       agents:

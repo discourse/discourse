@@ -29,6 +29,18 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     let(:score) { result.reviewable_score }
     let(:guardian) { Guardian.new(moderator) }
 
+    it "disagrees with flags without restoring a soft-deleted post" do
+      post.update!(hidden: true)
+      post.trash!
+
+      reviewable.perform(moderator, :disagree_and_keep_deleted)
+
+      expect(reviewable.reload).to be_rejected
+      expect(score.reload).to be_disagreed
+      expect(post.reload).to be_trashed
+      expect(post).to be_hidden
+    end
+
     describe "actions_for" do
       it "returns appropriate defaults" do
         actions = reviewable.actions_for(guardian)
@@ -149,15 +161,25 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:agree_and_silence)).to eq(true)
       end
 
-      it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
-        post.update!(hidden: true)
-        post.topic.trash!
+      it "offers flag resolution without visibility or delete actions for soft-deleted posts" do
+        post.update!(reply_count: 3)
         post.trash!
-        expect(reviewable.actions_for(guardian).has?(:ignore_and_do_nothing)).to eq(false)
-        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore)).to eq(false)
-        expect(
-          reviewable.actions_for(guardian).bundles.find { |bundle| bundle.id.include?("-ignore") },
-        ).to be_blank
+
+        [false, true].each do |hidden|
+          post.update!(hidden: hidden)
+
+          actions = reviewable.actions_for(guardian)
+
+          expect(actions.to_a.map(&:server_action)).to contain_exactly(
+            "agree_and_keep_deleted",
+            "disagree_and_keep_deleted",
+            "ignore_and_do_nothing",
+            "agree_and_silence",
+            "agree_and_suspend",
+            "delete_user",
+            "delete_user_block",
+          )
+        end
       end
 
       context "when flagged as potential_spam" do
@@ -558,6 +580,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       UserSilencer.silence(author, moderator, post_id: flagged_post.id)
 
       expect(reviewable.reload.actions_for(guardian).has?(:unsilence_user)).to eq(true)
+    end
+
+    it "is set apart from the actions that resolve the reviewable" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      secondary_bundles = reviewable.reload.actions_for(guardian).bundles.select(&:secondary)
+
+      expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["unsilence_user"])
     end
 
     it "is offered even when the silence is not linked to this post" do

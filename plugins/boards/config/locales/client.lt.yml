@@ -6,7 +6,20 @@
 
 lt:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Antraštė"
+        icon: "Ikona"
+        color: "Spalva"
+        tag_name: "Žymėti"
+      create_board:
+        name: "Vardas"
+        tag_names: "Žymos"
+        category_ids: "Kategorijos"
     boards:
+      status:
+        all: "Visi"
+        open: "Atidaryti"
       board:
         remove_card: "Pašalinti"
         title: "Antraštė"

@@ -19,6 +19,11 @@ ur:
               label: ٹاپک ID
     discourse_events:
       title: "ایوینٹس"
+      preferences:
+        reminders:
+          preferences:
+            notification: "اطلاع"
+            none: "کوئی نہیں"
       disable_holiday: "غیر فعال کریں"
       enable_holiday: "فعال کریں"
       date: "تاریخ"

@@ -20,7 +20,7 @@ export default class AiBotChatsTab extends Component {
         @ariaCurrentContext="subNav"
         @route="discourse-ai-bot-conversations"
       >
-        {{dIcon "robot"}}
+        {{dIcon "discobot"}}
         <span>{{i18n "discourse_ai.bot_chats.tab_label"}}</span>
       </DNavigationItem>
     {{/if}}

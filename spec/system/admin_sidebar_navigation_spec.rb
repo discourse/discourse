@@ -146,6 +146,14 @@ describe "Admin | Sidebar Navigation" do
     )
   end
 
+  it "highlights the 'All site settings' link on the all settings page" do
+    visit("/admin/site_settings/category/all_results")
+
+    expect(page).to have_css(
+      '.sidebar-section-link-wrapper[data-list-item-name="admin_all_site_settings"] a.active',
+    )
+  end
+
   it "does not show the button to customize sidebar sections, that is only supported in the main panel" do
     visit("/")
     expect(sidebar).to have_add_section_button

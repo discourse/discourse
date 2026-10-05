@@ -10,7 +10,6 @@ RSpec.describe JsonApiKit::Included do
 
   let(:author_record) { record_of(author, "users") }
   let(:records) { [record_of(topic, "topics", "user" => linkage(author_record))] }
-
   let(:guardian) { Guardian.new }
 
   def record_of(model, type, relationships = {})
@@ -22,6 +21,7 @@ RSpec.describe JsonApiKit::Included do
         attributes: [],
         relationships: [],
         schema: JsonApiKit::Schema.new(model.class),
+        type:,
       ),
       type:,
       relationships:,

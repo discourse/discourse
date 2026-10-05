@@ -22,6 +22,13 @@ module DiscourseWorkflows
                   Schema::POST_SCHEMA,
                   Schema::TOPIC_LIST_ITEM_SCHEMA,
                   Schema::USER_SCHEMA,
+                  Schema.document(
+                    "editor" => {
+                      "type" => %w[object null],
+                      "description" => "User who performed the edit, when available",
+                      "properties" => Schema::USER_PROPERTIES,
+                    },
+                  ),
                 ),
             },
           ],
@@ -58,7 +65,8 @@ module DiscourseWorkflows
           {
             post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
             topic: topic_data(@post.topic),
-            user: user_data(@post.user),
+            user: serialize_user(@post.user),
+            editor: serialize_user(@revisor&.editor),
           }
         end
 
@@ -76,10 +84,6 @@ module DiscourseWorkflows
         end
 
         private
-
-        def user_data(user)
-          serialize_user(user)
-        end
 
         def matches_post_scope?(post_scope)
           case post_scope

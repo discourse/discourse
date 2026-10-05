@@ -5,7 +5,7 @@ discourse_patreon:
   patreon_login_enabled:
     default: false
     client: true
-    validator: 'PatreonLoginEnabledValidator'
+    validator: 'AuthProviderCredentialsValidator'
   patreon_api_version:
     default: "1"
     type: enum

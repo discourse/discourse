@@ -790,7 +790,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -800,7 +800,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at > ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -1110,6 +1110,7 @@ class Search
     end
 
     return nil unless @guardian.can_see?(post)
+    return nil if @opts[:exclude_private_messages] && post.topic.private_message?
 
     @results.add(post)
     @results
@@ -1287,6 +1288,9 @@ class Search
     end
 
     posts = apply_filters(posts)
+    if @opts[:exclude_private_messages]
+      posts = posts.where.not(topics: { archetype: Archetype.private_message })
+    end
 
     # If we have a search context, prioritize those posts first
     posts =

@@ -6,7 +6,20 @@
 
 ro:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Titlu"
+        icon: "Icon"
+        color: "Culoare"
+        tag_name: "Etichetă"
+      create_board:
+        name: "Nume"
+        tag_names: "Etichete"
+        category_ids: "Categorii"
     boards:
+      status:
+        all: "Toate"
+        open: "Deschide"
       board:
         remove_card: "Elimină"
         new_topic: "Subiect nou..."

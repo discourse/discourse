@@ -311,15 +311,12 @@ RSpec.describe ReviewableClaimedTopicsController do
       end
 
       it "works with deleted topics" do
-        first_post = topic.first_post || Fabricate(:post, topic: topic)
-        PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
+        topic.trash!(Discourse.system_user)
 
         delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
 
         expect(response.status).to eq(200)
-        expect(
-          ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?,
-        ).to eq(false)
+        expect(ReviewableClaimedTopic.where(topic_id: topic.id).exists?).to eq(false)
       end
 
       it "raises an error if topic is missing" do

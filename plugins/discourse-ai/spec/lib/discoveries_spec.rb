@@ -37,10 +37,10 @@ describe DiscourseAi::Discoveries do
       expect(described_class.enabled_for_user?(user)).to eq(true)
     end
 
-    it "requires the configured agent to be enabled" do
+    it "allows Ask AI when its agent is disabled for AI bot" do
       ai_agent.update!(enabled: false)
 
-      expect(described_class.enabled_for_user?(user)).to eq(false)
+      expect(described_class.enabled_for_user?(user)).to eq(true)
     end
 
     it "does not require the optional query rewrite agent" do

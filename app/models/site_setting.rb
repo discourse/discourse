@@ -24,6 +24,7 @@ class SiteSetting < ActiveRecord::Base
     interface
     legal
     localization
+    mcp
     navigation
     notifications
     permalinks

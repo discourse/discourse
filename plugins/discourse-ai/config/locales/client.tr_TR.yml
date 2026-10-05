@@ -19,6 +19,16 @@ tr_TR:
         categories:
           discourse_ai: "Discourse YZ"
       dashboard:
+        sections:
+          ask_ai:
+            title: "YZ'ye sor"
+        ask_ai:
+          title: "YZ'ye sor"
+          reports:
+            retry_questions: "Tekrar Dene"
+          date: "Tarih"
+          outcomes:
+            failed: "Başarısız"
         emotion:
           title: "Duygu"
         reports:

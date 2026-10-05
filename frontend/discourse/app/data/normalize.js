@@ -10,8 +10,11 @@ import { TopicDetailsSchema } from "discourse/data/schemas/topic-details";
 import { UserBadgeSchema } from "discourse/data/schemas/user-badge";
 import { badgeGroupingDisplayName } from "discourse/models/badge-grouping";
 
-function badgeResource(raw, includedIds) {
+function badgeResource(raw, includedIds, { grantsKnown = false } = {}) {
   const resource = resourceFrom("badge", BadgeSchema, raw);
+  if (grantsKnown) {
+    resource.attributes.has_badge = raw.has_badge ?? false;
+  }
   const relationships = {};
   maybeRelate(
     relationships,
@@ -89,11 +92,14 @@ export function normalizeBadgesPayload(payload) {
   collectBadgeMetaIncluded(payload, included);
   const includedIds = indexIncluded(included);
 
+  const opts = { grantsKnown: true };
   if (payload.badge) {
-    return { data: badgeResource(payload.badge, includedIds), included };
+    return { data: badgeResource(payload.badge, includedIds, opts), included };
   }
   return {
-    data: (payload.badges ?? []).map((raw) => badgeResource(raw, includedIds)),
+    data: (payload.badges ?? []).map((raw) =>
+      badgeResource(raw, includedIds, opts)
+    ),
     included,
   };
 }

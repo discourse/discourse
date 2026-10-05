@@ -371,8 +371,17 @@ export default class FullPageSearchController extends Controller {
       : "search-info";
   }
 
-  @computed("model.posts", "additionalSearchResults")
+  @computed(
+    "model.posts",
+    "additionalSearchResults",
+    "usingDefaultSearchType",
+    "customSearchType"
+  )
   get searchResultPosts() {
+    if (!this.usingDefaultSearchType && !this.customSearchType) {
+      return [];
+    }
+
     if (this.additionalSearchResults?.list?.length > 0) {
       // a search type that renders its own results need not produce posts at
       // all, and ranking against a list that is not there throws

@@ -204,6 +204,8 @@ RSpec.describe Voice::Livekit::RoomServiceClient do
   end
 
   context "when LiveKit is down" do
+    before { SiteSetting.voice_verbose_logging = true }
+
     it "never raises on a timeout and logs the failure" do
       twirp_stub("DeleteRoom").to_timeout
       Rails.logger.expects(:warn).with(regexp_matches(/\[voice-livekit\] DeleteRoom failed/))

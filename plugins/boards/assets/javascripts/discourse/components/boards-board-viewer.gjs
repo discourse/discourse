@@ -22,25 +22,27 @@ import discourseLater from "discourse/lib/later";
 import DiscourseURL from "discourse/lib/url";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import { or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { i18n } from "discourse-i18n";
-import {
-  autoScrollSpeedForPointer,
-  dragToScroll,
-} from "../lib/boards-auto-scroll";
+import { dragToScroll } from "../lib/boards-auto-scroll";
 import {
   isRecencyColumn,
   sortCardsForColumn,
 } from "../lib/boards-card-ordering";
+import { loadCategories } from "../lib/boards-categories";
 import { boardsBoardConfigureUrl, boardsBoardUrl } from "../lib/boards-urls";
 import Board from "../models/board";
 import Card from "../models/card";
 import Column from "../models/column";
 import BoardsColumn from "./boards-column";
+import BoardsArchive from "./modal/boards-archive";
 import BoardsBoardSettings from "./modal/boards-board-settings";
 import BoardsCardDetailModal from "./modal/boards-card-detail";
 import BoardsColumnSettings from "./modal/boards-column-settings";
@@ -120,23 +122,7 @@ export default class BoardsBoardViewer extends Component {
   @tracked fullscreen = false;
   @tracked linkHighlightCardId = null;
   @tracked linkedCardId = null;
-
-  horizontalAutoScrollFrame = null;
-  horizontalAutoScrollSpeed = 0;
-  horizontalAutoScrollContainer = null;
-  horizontalAutoScrollHasDocumentListeners = false;
-  stopHorizontalAutoScroll = () => this.#stopHorizontalAutoScroll();
-  updateHorizontalAutoScroll = (event) => {
-    if (!this.dragData || !this.horizontalAutoScrollContainer) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    this.#updateHorizontalAutoScroll(
-      this.horizontalAutoScrollContainer,
-      event.clientX
-    );
-  };
+  @tracked pendingDropCardId = null;
 
   setupMessageBus = modifier((element) => {
     const channel = `/boards/${this.board.id}`;
@@ -186,7 +172,7 @@ export default class BoardsBoardViewer extends Component {
       });
     }
 
-    if (this.args.openBoardSettings && this.canManage) {
+    if (this.args.openBoardSettings && this.board.canManage) {
       schedule("afterRender", () => {
         if (this.isDestroying) {
           return;
@@ -200,21 +186,6 @@ export default class BoardsBoardViewer extends Component {
     super.willDestroy(...arguments);
     this._clearDropHighlight();
     this._cleanupPromotion();
-    this.#stopHorizontalAutoScroll();
-  }
-
-  get canWrite() {
-    return this.board.can_write;
-  }
-
-  get canManage() {
-    return this.board.can_manage;
-  }
-
-  get boardCategories() {
-    return (this.board.category_ids || [])
-      .map((id) => Category.findById(id))
-      .filter(Boolean);
   }
 
   get boardTagNames() {
@@ -222,7 +193,7 @@ export default class BoardsBoardViewer extends Component {
   }
 
   get hasBoardFilters() {
-    return this.boardCategories.length > 0 || this.boardTagNames.length > 0;
+    return this.board.category_ids?.length > 0 || this.boardTagNames.length > 0;
   }
 
   get allSameCategory() {
@@ -250,6 +221,10 @@ export default class BoardsBoardViewer extends Component {
     }
 
     switch (data.type) {
+      case "board_archived":
+      case "board_unarchived":
+        reload();
+        break;
       case "card_created":
         this.#handleCardCreated(data.card);
         break;
@@ -304,152 +279,19 @@ export default class BoardsBoardViewer extends Component {
   }
 
   @action
-  dragOverBoardContainer(event) {
-    const dragData = this.dragData;
-    if (!dragData) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    event.preventDefault();
-    this.#updateHorizontalAutoScroll(event.currentTarget, event.clientX);
-  }
-
-  @action
-  dragLeaveBoardContainer(event) {
-    if (!this.dragData && !event.currentTarget.contains(event.relatedTarget)) {
-      this.#stopHorizontalAutoScroll();
-    }
-  }
-
-  @action
-  dropBoardContainer() {
-    this.#stopHorizontalAutoScroll();
-  }
-
-  @action
   async onDrop(cardId, toColumnId, afterCardId, fromColumnId) {
-    if (!fromColumnId) {
-      return;
-    }
-
-    const fromColumn = this.columns.find((c) => c.id === fromColumnId);
-    const toColumn = this.columns.find((c) => c.id === toColumnId);
-    if (!fromColumn || !toColumn) {
-      return;
-    }
-
-    const cardIndex = fromColumn.cards.findIndex((c) => c.id === cardId);
-    if (cardIndex === -1) {
-      return;
-    }
-
-    const card = fromColumn.cards[cardIndex];
-    const isSameColumn = fromColumnId === toColumnId;
-    const targetIsRecency = isRecencyColumn(toColumn);
-    if (isSameColumn && targetIsRecency) {
-      this.dragData = null;
-      return;
-    }
-
-    if (targetIsRecency) {
-      afterCardId = null;
-    }
-
-    let constraintFix = null;
-
-    if (!isSameColumn && card.topic) {
-      try {
-        constraintFix = await this.#resolveConstraintFix(
-          card.topic_id || card.topic.id,
-          card.topic,
-          toColumn
-        );
-      } catch (error) {
-        popupAjaxError(error);
-        return;
-      }
-
-      if (constraintFix === false) {
-        return;
-      }
-    }
-
-    if (!isSameColumn && !constraintFix && this.board.require_confirmation) {
-      const confirmed = await this._confirmMove(card, toColumn);
-      if (!confirmed) {
-        return;
-      }
-    }
-
-    const snapshot = this.columns.map((col) =>
-      col.copy({ cards: col.cards.map((c) => c.copy()) })
-    );
-
-    fromColumn.cards.splice(cardIndex, 1);
-
-    let insertIndex = targetIsRecency ? 0 : toColumn.cards.length;
-    if (!targetIsRecency && afterCardId != null) {
-      const idx = toColumn.cards.findIndex((c) => c.id === afterCardId);
-      if (idx !== -1) {
-        insertIndex = idx + 1;
-      }
-    } else {
-      insertIndex = 0;
-    }
-    toColumn.cards.splice(insertIndex, 0, card);
-    card.column_id = toColumnId;
-
-    this.columns = this.columns.map((col) => {
-      if (col.id === fromColumnId || col.id === toColumnId) {
-        return col.copy({ cards: [...col.cards] });
-      }
-      return col;
-    });
-    this.dragData = null;
-
-    const data = {
-      client_id: this.messageBus.clientId,
-      card: {
-        column_id: toColumnId,
-        after_card_id: afterCardId,
-      },
-    };
-    if (constraintFix) {
-      data.constraint_fix = constraintFix;
-    }
-
+    // A move can wait on a server check or a confirmation. Until it settles,
+    // keep the card hidden and the placeholder where it was dropped.
+    this.pendingDropCardId = cardId;
     try {
-      const result = await ajax(
-        `/boards/api/boards/${this.board.id}/cards/${card.id}`,
-        { type: "PUT", data }
+      await this.#moveDroppedCard(
+        cardId,
+        toColumnId,
+        afterCardId,
+        fromColumnId
       );
-      if (result?.card) {
-        const existingCard = this.columns
-          .flatMap((col) => col.cards)
-          .find((c) => c.id === result.card.id);
-        const mergedCard = existingCard
-          ? existingCard.copy(result.card)
-          : Card.create(result.card);
-        const withoutCard = this.columns.map((col) =>
-          col.copy({
-            cards: col.cards.filter((c) => c.id !== result.card.id),
-          })
-        );
-
-        this.columns = withoutCard.map((col) => {
-          if (col.id === mergedCard.column_id) {
-            return col.copy({
-              cards: sortCardsForColumn(col, [...col.cards, mergedCard]),
-            });
-          }
-          return col;
-        });
-      }
-      this._highlightDroppedCard(card.id);
-    } catch (error) {
-      this.columns = snapshot;
-      popupAjaxError(error);
+    } finally {
+      this.#settlePendingDrop(cardId);
     }
   }
 
@@ -459,11 +301,7 @@ export default class BoardsBoardViewer extends Component {
       col.copy({ cards: [...col.cards] })
     );
 
-    this.columns = this.columns.map((col) =>
-      col.copy({
-        cards: col.cards.filter((c) => c.id !== cardId),
-      })
-    );
+    this.#handleCardDeleted(cardId);
 
     try {
       await ajax(`/boards/api/boards/${this.board.id}/cards/${cardId}`, {
@@ -573,7 +411,7 @@ export default class BoardsBoardViewer extends Component {
   }
 
   @action
-  onPromoteToTopic(cardId) {
+  async onPromoteToTopic(cardId) {
     let card;
     let column;
     for (const col of this.columns) {
@@ -613,7 +451,18 @@ export default class BoardsBoardViewer extends Component {
     const categoryId =
       column.move_to_category_id || this.board.category_ids?.[0];
     if (categoryId) {
-      opts.category = Category.findById(categoryId);
+      try {
+        opts.category = await Category.asyncFindById(categoryId);
+        if (!opts.category) {
+          this._cleanupPromotion();
+          this.dialog.alert(i18n("boards.board.errors.category_unavailable"));
+          return;
+        }
+      } catch (error) {
+        this._cleanupPromotion();
+        popupAjaxError(error);
+        return;
+      }
     }
     this.composer.openNewTopic(opts);
   }
@@ -799,6 +648,29 @@ export default class BoardsBoardViewer extends Component {
   // Board settings actions
 
   @action
+  openArchiveModal(closeMenu) {
+    closeMenu();
+    this.modal.show(BoardsArchive, {
+      model: {
+        board: this.board,
+        onSuccess: async (board) => {
+          this.toasts.success({
+            data: {
+              message: board.archived
+                ? i18n("boards.board.archived_successfully")
+                : i18n("boards.board.unarchived_successfully"),
+            },
+            duration: "short",
+          });
+          Object.assign(this.board, board);
+          await this.#handleBoardUpdated();
+          DiscourseURL.replaceState(boardsBoardUrl(this.board));
+        },
+      },
+    });
+  }
+
+  @action
   openBoardSettings(closeMenu) {
     closeMenu();
     this.#openBoardSettingsModal();
@@ -862,18 +734,7 @@ export default class BoardsBoardViewer extends Component {
       return;
     }
 
-    card = Card.create(card);
-    this.columns = this.columns.map((col) => {
-      if (col.id === card.column_id) {
-        return col.copy({
-          cards: sortCardsForColumn(col, [
-            ...col.cards.filter((c) => c.id !== card.id),
-            card,
-          ]),
-        });
-      }
-      return col;
-    });
+    this.#appendCardToColumn(card, card.column_id);
   }
 
   #handleCardUpdated(card) {
@@ -936,6 +797,7 @@ export default class BoardsBoardViewer extends Component {
   async #handleBoardUpdated() {
     try {
       const result = await ajax(`/boards/api/boards/${this.board.id}.json`);
+      await Board.preloadCategories(result);
       if (result.columns) {
         this.columns = result.columns.map((col) =>
           Column.create({
@@ -950,100 +812,144 @@ export default class BoardsBoardViewer extends Component {
     }
   }
 
-  #updateHorizontalAutoScroll(container, clientX) {
-    const speed = autoScrollSpeedForPointer(
-      clientX,
-      container.getBoundingClientRect(),
-      "x"
+  async #moveDroppedCard(cardId, toColumnId, afterCardId, fromColumnId) {
+    if (!this.board.canWrite || !fromColumnId) {
+      return;
+    }
+
+    const fromColumn = this.columns.find((c) => c.id === fromColumnId);
+    const toColumn = this.columns.find((c) => c.id === toColumnId);
+    if (!fromColumn || !toColumn) {
+      return;
+    }
+
+    const cardIndex = fromColumn.cards.findIndex((c) => c.id === cardId);
+    if (cardIndex === -1) {
+      return;
+    }
+
+    const card = fromColumn.cards[cardIndex];
+    const isSameColumn = fromColumnId === toColumnId;
+    const targetIsRecency = isRecencyColumn(toColumn);
+    if (isSameColumn && targetIsRecency) {
+      this.dragData = null;
+      return;
+    }
+
+    if (targetIsRecency) {
+      afterCardId = null;
+    }
+
+    let constraintFix = null;
+
+    if (!isSameColumn && card.topic) {
+      try {
+        constraintFix = await this.#resolveConstraintFix(
+          card.topic_id || card.topic.id,
+          card.topic,
+          toColumn
+        );
+      } catch (error) {
+        popupAjaxError(error);
+        return;
+      }
+
+      if (constraintFix === false) {
+        return;
+      }
+    }
+
+    if (!isSameColumn && !constraintFix && this.board.require_confirmation) {
+      const confirmed = await this._confirmMove(card, toColumn);
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    const snapshot = this.columns.map((col) =>
+      col.copy({ cards: col.cards.map((c) => c.copy()) })
     );
 
-    if (
-      (speed < 0 && container.scrollLeft <= 0) ||
-      (speed > 0 &&
-        container.scrollLeft + container.clientWidth >= container.scrollWidth)
-    ) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
+    fromColumn.cards.splice(cardIndex, 1);
 
-    this.horizontalAutoScrollSpeed = speed;
-    this.horizontalAutoScrollContainer = container;
-    this.#ensureHorizontalAutoScrollDocumentListeners();
-
-    if (speed === 0) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    if (!this.horizontalAutoScrollFrame) {
-      this.#horizontalAutoScroll();
-    }
-  }
-
-  #horizontalAutoScroll() {
-    this.horizontalAutoScrollFrame = requestAnimationFrame(() => {
-      this.horizontalAutoScrollFrame = null;
-
-      const container = this.horizontalAutoScrollContainer;
-      if (!container || this.horizontalAutoScrollSpeed === 0) {
-        return;
+    let insertIndex = targetIsRecency ? 0 : toColumn.cards.length;
+    if (!targetIsRecency && afterCardId != null) {
+      const idx = toColumn.cards.findIndex((c) => c.id === afterCardId);
+      if (idx !== -1) {
+        insertIndex = idx + 1;
       }
+    } else {
+      insertIndex = 0;
+    }
+    toColumn.cards.splice(insertIndex, 0, card);
+    card.column_id = toColumnId;
 
-      const previousScrollLeft = container.scrollLeft;
-      container.scrollLeft += this.horizontalAutoScrollSpeed;
-
-      if (container.scrollLeft === previousScrollLeft) {
-        this.#stopHorizontalAutoScroll();
-        return;
+    this.#settlePendingDrop(cardId);
+    this.columns = this.columns.map((col) => {
+      if (col.id === fromColumnId || col.id === toColumnId) {
+        return col.copy({ cards: [...col.cards] });
       }
-
-      this.#horizontalAutoScroll();
+      return col;
     });
+    this.dragData = null;
+
+    const data = {
+      client_id: this.messageBus.clientId,
+      card: {
+        column_id: toColumnId,
+        after_card_id: afterCardId,
+      },
+    };
+    if (constraintFix) {
+      data.constraint_fix = constraintFix;
+    }
+
+    try {
+      const result = await ajax(
+        `/boards/api/boards/${this.board.id}/cards/${card.id}`,
+        { type: "PUT", data }
+      );
+      if (result?.card) {
+        const existingCard = this.columns
+          .flatMap((col) => col.cards)
+          .find((c) => c.id === result.card.id);
+        const mergedCard = existingCard
+          ? existingCard.copy(result.card)
+          : Card.create(result.card);
+        const withoutCard = this.columns.map((col) =>
+          col.copy({
+            cards: col.cards.filter((c) => c.id !== result.card.id),
+          })
+        );
+
+        this.columns = withoutCard.map((col) => {
+          if (col.id === mergedCard.column_id) {
+            return col.copy({
+              cards: sortCardsForColumn(col, [...col.cards, mergedCard]),
+            });
+          }
+          return col;
+        });
+      }
+      this._highlightDroppedCard(card.id);
+    } catch (error) {
+      this.columns = snapshot;
+      popupAjaxError(error);
+    }
   }
 
-  #ensureHorizontalAutoScrollDocumentListeners() {
-    if (this.horizontalAutoScrollHasDocumentListeners) {
+  #settlePendingDrop(cardId) {
+    if (this.pendingDropCardId !== cardId) {
       return;
     }
 
-    document.addEventListener(
-      "dragover",
-      this.updateHorizontalAutoScroll,
-      true
-    );
-    document.addEventListener("dragend", this.stopHorizontalAutoScroll, true);
-    document.addEventListener("drop", this.stopHorizontalAutoScroll, true);
-    this.horizontalAutoScrollHasDocumentListeners = true;
-  }
-
-  #removeHorizontalAutoScrollDocumentListeners() {
-    if (!this.horizontalAutoScrollHasDocumentListeners) {
-      return;
-    }
-
-    document.removeEventListener(
-      "dragover",
-      this.updateHorizontalAutoScroll,
-      true
-    );
-    document.removeEventListener(
-      "dragend",
-      this.stopHorizontalAutoScroll,
-      true
-    );
-    document.removeEventListener("drop", this.stopHorizontalAutoScroll, true);
-    this.horizontalAutoScrollHasDocumentListeners = false;
-  }
-
-  #stopHorizontalAutoScroll() {
-    if (this.horizontalAutoScrollFrame) {
-      cancelAnimationFrame(this.horizontalAutoScrollFrame);
-      this.horizontalAutoScrollFrame = null;
-    }
-
-    this.horizontalAutoScrollSpeed = 0;
-    this.horizontalAutoScrollContainer = null;
-    this.#removeHorizontalAutoScrollDocumentListeners();
+    this.pendingDropCardId = null;
+    document
+      .querySelectorAll(".discourse-boards-column__drop-indicator")
+      .forEach((indicator) => indicator.remove());
+    document
+      .querySelectorAll(".discourse-boards-column__empty[hidden]")
+      .forEach((emptyMessage) => (emptyMessage.hidden = false));
   }
 
   async #resolveConstraintFix(topicId, topic, column) {
@@ -1246,7 +1152,7 @@ export default class BoardsBoardViewer extends Component {
             DiscourseURL.routeTo(url);
           },
         }
-      : { card, canWrite: this.canWrite, onUpdateCard: this.onUpdateCard };
+      : { card, board: this.board, onUpdateCard: this.onUpdateCard };
 
     this.modal.show(ModalComponent, { model }).finally(() => {
       if (!navigatedAway && !this.isDestroying) {
@@ -1388,16 +1294,33 @@ export default class BoardsBoardViewer extends Component {
       <div class="discourse-boards-board-viewer__header">
         <div class="discourse-boards-board-viewer__title-wrapper">
           <BackButton @label="boards.board.all_boards" @route="boards" />
-          <h2
-            class="discourse-boards-board-viewer__title"
-          >{{this.board.fancyTitle}}</h2>
+          <h2 class="discourse-boards-board-viewer__title">
+            {{#if this.board.archived}}
+              <DTooltip>
+                <:trigger>
+                  {{dIcon "box-archive"}}
+                </:trigger>
+                <:content>
+                  <span>{{i18n "boards.board.archived_tooltip"}}</span>
+                </:content>
+              </DTooltip>
+            {{/if}}
+            {{this.board.fancyTitle}}
+          </h2>
 
           <div class="discourse-boards-board-viewer__metadata">
             {{#if this.hasBoardFilters}}
               <div class="discourse-boards-board-viewer__constraint">
-                {{#each this.boardCategories as |category|}}
-                  {{dBoundCategoryLink category link=true}}
-                {{/each}}
+                <DAsyncContent
+                  @asyncData={{loadCategories}}
+                  @context={{this.board.category_ids}}
+                >
+                  <:content as |categories|>
+                    {{#each categories as |category|}}
+                      {{dBoundCategoryLink category link=true}}
+                    {{/each}}
+                  </:content>
+                </DAsyncContent>
                 {{#if this.boardTagNames.length}}
                   <div class="list-tags">
                     {{dDiscourseTags null tags=this.boardTagNames}}
@@ -1417,43 +1340,67 @@ export default class BoardsBoardViewer extends Component {
         </div>
 
         <div class="discourse-boards-board-viewer__controls">
-          <DMenu
-            @icon="ellipsis"
-            @identifier="boards-board-controls"
-            @title="boards.board.controls"
-            @triggerClass="btn-flat"
-          >
-            <:content as |args|>
-              <DDropdownMenu as |dropdown|>
-                {{#if this.canManage}}
-                  <dropdown.item data-identifier="add-column">
-                    <DButton
-                      class="btn-transparent"
-                      @action={{fn this.openAddColumnModal args.close}}
-                      @icon="plus"
-                      @label="boards.board.add_column"
-                    />
-                  </dropdown.item>
-                  <dropdown.item data-identifier="board-settings">
-                    <DButton
-                      class="btn-transparent"
-                      @action={{fn this.openBoardSettings args.close}}
-                      @icon="gear"
-                      @label="boards.board.board_settings"
-                    />
-                  </dropdown.item>
-                  <dropdown.item data-identifier="delete-board">
-                    <DButton
-                      class="btn-transparent btn-danger"
-                      @action={{fn this.deleteBoard args.close}}
-                      @icon="trash-can"
-                      @label="boards.board.delete_board"
-                    />
-                  </dropdown.item>
-                {{/if}}
-              </DDropdownMenu>
-            </:content>
-          </DMenu>
+          {{#if
+            (or
+              this.board.canManage
+              this.board.can_archive
+              this.board.can_unarchive
+            )
+          }}
+            <DMenu
+              @icon="ellipsis"
+              @identifier="boards-board-controls"
+              @title="boards.board.controls"
+              @triggerClass="btn-flat"
+            >
+              <:content as |args|>
+                <DDropdownMenu as |dropdown|>
+                  {{#if this.board.canManage}}
+                    <dropdown.item data-identifier="add-column">
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openAddColumnModal args.close}}
+                        @icon="plus"
+                        @label="boards.board.add_column"
+                      />
+                    </dropdown.item>
+                    <dropdown.item data-identifier="board-settings">
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openBoardSettings args.close}}
+                        @icon="gear"
+                        @label="boards.board.board_settings"
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                  {{#if (or this.board.can_archive this.board.can_unarchive)}}
+                    <dropdown.item data-identifier="archive-board">
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openArchiveModal args.close}}
+                        @icon="box-archive"
+                        @label={{if
+                          this.board.archived
+                          "boards.board.unarchive_board_menu"
+                          "boards.board.archive_board"
+                        }}
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                  {{#if this.board.canManage}}
+                    <dropdown.item data-identifier="delete-board">
+                      <DButton
+                        class="btn-transparent btn-danger"
+                        @action={{fn this.deleteBoard args.close}}
+                        @icon="trash-can"
+                        @label="boards.board.delete_board"
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                </DDropdownMenu>
+              </:content>
+            </DMenu>
+          {{/if}}
           {{#if this.fullscreen}}
             <DButton
               class="btn-flat discourse-boards-board-viewer__exit-fullscreen"
@@ -1475,9 +1422,7 @@ export default class BoardsBoardViewer extends Component {
       {{#if this.columns.length}}
         <div
           class="discourse-boards-board-container"
-          {{on "dragover" this.dragOverBoardContainer}}
-          {{on "dragleave" this.dragLeaveBoardContainer}}
-          {{on "drop" this.dropBoardContainer}}
+          {{dDragAndDropAutoScroll axis="horizontal" types="boards-card"}}
           {{dragToScroll}}
         >
           {{#each this.columns key="id" as |column|}}
@@ -1485,8 +1430,6 @@ export default class BoardsBoardViewer extends Component {
               @allColumns={{this.columns}}
               @allSameCategory={{this.allSameCategory}}
               @board={{this.board}}
-              @canManage={{this.canManage}}
-              @canWrite={{this.canWrite}}
               @column={{column}}
               @dragData={{this.dragData}}
               @dropHighlightCardId={{this.dropHighlightCardId}}
@@ -1504,9 +1447,10 @@ export default class BoardsBoardViewer extends Component {
               @onPromoteToTopic={{this.onPromoteToTopic}}
               @onRefreshBoard={{this.refreshBoard}}
               @onUpdateCard={{this.onUpdateCard}}
+              @pendingDropCardId={{this.pendingDropCardId}}
             />
           {{/each}}
-          {{#if this.canManage}}
+          {{#if this.board.canManage}}
             <button
               class="discourse-boards-board-container__add-column"
               title={{i18n "boards.board.add_column"}}
@@ -1523,8 +1467,8 @@ export default class BoardsBoardViewer extends Component {
           <div class="discourse-boards-board-viewer__empty-column">
             {{dIcon "table-columns"}}
             <h3>{{i18n "boards.board.empty_board"}}</h3>
-            <p>{{i18n "boards.board.empty_board_cta"}}</p>
-            {{#if this.canManage}}
+            {{#if this.board.canManage}}
+              <p>{{i18n "boards.board.empty_board_cta"}}</p>
               <DButton
                 class="btn-primary"
                 @action={{this.openAddColumnModal}}

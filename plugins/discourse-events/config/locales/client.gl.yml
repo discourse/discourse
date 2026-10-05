@@ -13,6 +13,11 @@ gl:
             topic_id:
               label: ID do tema
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificación"
+            none: "Ningunha"
       disable_holiday: "Desactivar"
       enable_holiday: "Activar"
       date: "Data"

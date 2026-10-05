@@ -6,7 +6,22 @@
 
 el:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Τίτλος"
+        icon: "Εικονίδιο"
+        color: "Χρώμα"
+        tag_name: "Ετικέτα"
+      create_board:
+        name: "Όνομα"
+        slug: "Slug"
+        tag_names: "Ετικέτες"
+        category_ids: "Κατηγορίες"
     boards:
+      status:
+        all: "Όλα"
+        open: "Άνοιγμα"
+        archived: "Αρχειοθετημένο"
       board:
         remove_card: "Αφαίρεση"
         new_topic: "Νέο θέμα..."

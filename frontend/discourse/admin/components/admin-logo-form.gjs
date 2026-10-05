@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
@@ -187,6 +187,10 @@ export default class AdminLogoForm extends Component {
           as |field|
         >
           <field.Control
+            @additionalParams={{hash
+              for_site_setting=true
+              site_setting_name="favicon"
+            }}
             @placeholderUrl={{this.placeholders.favicon}}
             @type="branding"
           />

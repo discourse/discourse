@@ -304,6 +304,7 @@ vi:
       message: "Chúng tôi đã cập nhật trang này, <span>vui lòng tải lại trang</span> để cho mọi thứ hoạt động ổn định."
       dismiss: "Hủy bỏ"
     back_button: "Quay lại"
+    confirm_button: "Xác nhận"
     welcome_banner:
       header:
         new_members: "Chào mừng, %{preferred_display_name}!"
@@ -1571,6 +1572,16 @@ vi:
       tracked_topics_link: "Xem"
       automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang"
       apps: "Ứng dụng"
+      mcp_authorizations:
+        endpoint: "Nguồn"
+        scopes: "Phạm vi"
+        details: "Chi tiết"
+        last_used: "Lần cuối sử dụng"
+        never: "Không bao giờ"
+        status: "Trạng thái"
+        statuses:
+          active: "Hoạt động"
+          revoked: "Đã thu hồi"
       revoke_access: "Lấy lại quyền"
       undo_revoke_access: "Cấp lại quyền"
       api_approved: "Chấp thuận:"
@@ -4201,6 +4212,7 @@ vi:
       list: "Danh sách chuyên mục"
       no_description: "Hãy thêm mô tả cho chuyên mục này"
       change_in_category_topic: "Sửa mô tả"
+      latest_topics: "Chủ đề mới nhất"
       description_expand: "Hiện thêm"
       description_collapse: "Thu gọn"
       already_used: "Màu này đã được dùng bởi chuyên mục khác"
@@ -4472,6 +4484,7 @@ vi:
       with_category: "%{filter} %{category} chủ đề"
       filter:
         title: "Kết quả đã lọc cho %{filter}"
+        reset: "trạng thái đầu"
         button:
           label: "Lọc"
       latest:
@@ -4670,11 +4683,11 @@ vi:
       favorite_max_not_reached: "Đánh dấu huy hiệu này là yêu thích"
       favorite_count: "%{count}/%{max} huy hiệu được đánh dấu yêu thích"
     download_calendar:
-      title: "Tải xuống lịch"
+      title: "Thêm vào lịch"
+      calendar: "Lịch"
       save_ics: "Tải xuống tệp .ics"
       save_google: "Thêm vào lịch Google"
       remember: "Đừng hỏi tôi nữa"
-      remember_explanation: "(bạn có thể thay đổi tùy chọn này trong prefs người dùng của mình)"
       download: "Tải xuống"
       default_calendar: "Lịch mặc định"
       default_calendar_instruction: "Xác định lịch nào sẽ được sử dụng khi ngày tháng được lưu"
@@ -5344,6 +5357,67 @@ vi:
           header_description: "Hãy cung cấp thông tin ở đây về trang web này và nhóm của bạn để mọi người có thể hiểu cộng đồng của bạn là gì, ai đứng sau nó và cách liên hệ với bạn trong trường hợp có vấn đề. Thông tin này sẽ được hiển thị trên trang <a href='%{basePath}/about'>Giới thiệu</a>của trang web của bạn."
         developer:
           title: "Nhà phát triển"
+        mcp:
+          tabs:
+            access: "Truy cập"
+            activity: "Hoạt động"
+          overview:
+            status: "Trạng thái"
+          access:
+            title: "Truy cập"
+            group: "Nhóm"
+            groups: "Nhóm"
+            actions: "Hành động"
+            edit: "Sửa"
+            delete: "Xóa"
+          primitives:
+            group_by: "Nhóm theo"
+            group_by_options:
+              scope: "Phạm vi"
+              kind: "Loại"
+            kind: "Loại"
+            scope: "Phạm vi"
+            scopes: "Phạm vi"
+          clients:
+            actions: "Hành động"
+            block: "Khóa"
+            presets:
+              custom: "Tùy biến"
+          authorizations:
+            user: "Người dùng"
+            last_used: "Lần cuối sử dụng"
+            status: "Trạng thái"
+            actions: "Hành động"
+          activity:
+            outcome: "Kết quả"
+            time: "Thời gian"
+            user: "Người dùng"
+            duration: "Thời hạn"
+          values:
+            server_status:
+              disabled: "Vô hiệu hóa"
+            client_trust:
+              approved: "Đã phê duyệt"
+            authorization_status:
+              active: "Hoạt động"
+              revoked: "Đã thu hồi"
+            activity_outcome:
+              success: "Thành công"
+              error: "Lỗi"
+            primitive_state:
+              enabled: "Đã bật"
+              disabled: "Vô hiệu hóa"
+            primitive_kind:
+              all: "Tất cả các loại"
+              resource: "Nguồn"
+            primitive_risk:
+              read: "Chỉ đọc"
+              moderation: "Người kiểm duyệt"
+            filter:
+              all: "Tất cả"
+          never: "Không bao giờ"
+          actions:
+            revoke: "Hủy chấp thuận"
         experimental:
           title: "Thí nghiệm"
           header_description: "Bật hoặc tắt các tính năng thử nghiệm cho trang web của bạn, hầu hết các tính năng này có thể được kiểm soát theo nhóm."
@@ -5918,6 +5992,7 @@ vi:
           series:
             anonymous: "Ẩn danh"
             crawlers: "Trình thu thập thông tin"
+          crawler_learn_more: "Tìm hiểu thêm"
         period:
           last_7_days: "7 ngày qua"
           last_30_days: "30 ngày qua"
@@ -7939,13 +8014,12 @@ vi:
           multiselect: "Chọn nhiều"
       site_text:
         description: "Bạn có thể tùy chỉnh bất kỳ văn bản nào trên diễn đàn của mình."
-        search: "Tìm kiếm nội dung bạn muốn sửa"
+        search_label: "Tìm"
+        theme_disabled: "Vô hiệu hóa"
+        filters: "Bộ lọc"
         title: "Văn bản trang web"
         edit: "Sửa"
-        revert: "Hoàn nguyên thay đổi"
         revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
-        go_back: "Quay lại tìm kiếm"
-        recommended: "Bạn nên tùy biến các nội dung sau đây cho phù hợp với nhu cầu:"
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         show_outdated: "Chỉ hiển thị các thông tin đã lỗi thời/không hợp lệ."
         show_untranslated: "Chỉ hiển thị các phần chưa được dịch"

@@ -16,6 +16,38 @@ RSpec.describe Topic do
 
   it_behaves_like "it has custom fields"
 
+  describe "#move_posts" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+    fab!(:destination_topic, :topic)
+
+    it "rejects the move when only the credited user has permission" do
+      expect do
+        expect do
+          topic.move_posts(
+            admin,
+            [reply.id],
+            destination_topic_id: destination_topic.id,
+            guardian: user.guardian,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "credits the specified user for a move authorized by an admin" do
+      topic.move_posts(
+        user,
+        [reply.id],
+        destination_topic_id: destination_topic.id,
+        guardian: admin.guardian,
+      )
+
+      expect(reply.reload.topic_id).to eq(destination_topic.id)
+      expect(topic.posts.find_by(action_code: "split_topic").user_id).to eq(user.id)
+    end
+  end
+
   describe "Validations" do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -1571,6 +1603,51 @@ RSpec.describe Topic do
     let!(:original_bumped_at) { topic.bumped_at }
 
     before { user.admin = true }
+
+    it "emits a status event only when the status changes" do
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          2.times { topic.update_status("closed", true, user) }
+        end
+
+      expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+    end
+
+    it "emits pin status events only when pin attributes change" do
+      freeze_time
+
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          2.times { topic.update_status("pinned", false, user) }
+          2.times { topic.update_status("pinned", true, user) }
+          2.times { topic.update_status("pinned", false, user) }
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, "pinned", true], [topic, "pinned", false]],
+      )
+    end
+
+    it "emits pin status events when re-pinning or changing the pin scope or expiry" do
+      freeze_time
+      topic.update_status("pinned", true, user)
+      freeze_time(1.hour.from_now)
+
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          topic.update_status("pinned", true, user)
+          topic.update_status("pinned_globally", true, user)
+          topic.update_status("pinned_globally", true, user, until: 1.day.from_now.iso8601)
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [topic, "pinned", true],
+          [topic, "pinned_globally", true],
+          [topic, "pinned_globally", true],
+        ],
+      )
+    end
 
     context "with visibility" do
       let(:category) { Fabricate(:category_with_definition) }

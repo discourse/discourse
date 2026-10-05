@@ -42,6 +42,7 @@ module JsonApiKit
             attributes: declared_attributes,
             relationships: declared_relationships,
             schema:,
+            type:,
           )
         end
 
@@ -59,6 +60,8 @@ module JsonApiKit
               ]
         end
       end
+
+      delegate :attribute_names, :relationships, :fields, :resolves?, to: :class
     end
   end
 end

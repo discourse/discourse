@@ -14,6 +14,19 @@ sl:
         image_generation_custom:
           name: "Po meri"
     ai_bot:
+      navigation:
+        users:
+          title: "Uporabniki"
+        groups:
+          title: "Skupine"
+        categories:
+          title: "Kategorije"
+        tags:
+          title: "Oznake"
+        themes:
+          title: "Videzi"
+        backups:
+          title: "Varnostne kopije"
       read_post:
         unknown_post: "prispevek"
       tool_summary:

@@ -484,10 +484,13 @@ RSpec.describe Invite do
     end
 
     context "when inviting to a topic" do
-      fab!(:topic, :private_message_topic)
+      fab!(:topic) { Fabricate(:private_message_topic, user: invite.invited_by) }
       fab!(:another_topic, :private_message_topic)
 
-      before { invite.topic_invites.create!(topic: topic) }
+      before do
+        Group.refresh_automatic_groups_for_user!(invite.invited_by)
+        invite.topic_invites.create!(topic: topic)
+      end
 
       it "adds the user to topic_users" do
         invited_user = invite.redeem

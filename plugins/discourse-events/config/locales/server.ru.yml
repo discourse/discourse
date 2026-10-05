@@ -41,6 +41,8 @@ ru:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Напоминание о мероприятии"
   site_settings:
     map_events_to_color: "Назначать цвет каждому тегу или категории."
     map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
@@ -73,6 +75,17 @@ ru:
     enable_events_category_type_setup: "Включает опцию типа категории «События» при настройке создания категории."
     livestream_enable_modal_chat_on_mobile: "Отображение чата прямой трансляции в модальном окне на мобильных устройствах."
   discourse_events:
+    reminder:
+      subjects:
+        before: "Мероприятие «%{title}» вот-вот начнется"
+        ongoing: "Мероприятие «%{title}» продолжается"
+        after: "Мероприятие «%{title}» закончилось"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  и ещё %{count}"
+        few: "  и ещё %{count}"
+        many: "  и ещё %{count}"
+        other: "  и ещё %{count}"
     category_type:
       default_calendar_view:
         label: "Стандартный вид календаря"
@@ -122,11 +135,9 @@ ru:
           raw_invitees_length: "Мероприятие ограничено по числу пользователей/групп (%{count})."
           raw_invitees:
             only_group: "Мероприятие принимает только имена групп."
-          ends_at_before_starts_at: "Мероприятие не может закончиться до того, как начнется."
           max_attendees_reached: "Это мероприятие заполнено."
           start_must_be_present_and_a_valid_date: "В мероприятии должна быть установлена правильная дата начала."
           end_must_be_a_valid_date: "Дата окончания должна быть правильной."
-          invalid_recurrence: "Повторение должно быть одним из следующих значений: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Часовой пояс не распознан."
           acting_user_not_allowed_to_create_event: "Текущему пользователю не разрешено создавать мероприятия."
           acting_user_not_allowed_to_act_on_this_event: "Текущий пользователь не имеет права работать с этим мероприятием."

@@ -48,6 +48,15 @@ id:
       prompts:
         custom_prompt: "Perintah Khusus"
     ai_bot:
+      navigation:
+        users:
+          title: "Pengguna"
+        groups:
+          title: "Grup"
+        categories:
+          title: "Kategori"
+        tags:
+          title: "Label"
       default_pm_prefix: "[PM bot AI tanpa judul]"
       read_post:
         unknown_post: "post"

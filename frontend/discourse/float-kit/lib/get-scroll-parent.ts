@@ -11,7 +11,7 @@ export function getScrollParent(
     return null;
   } else if (
     isScrollable &&
-    (node as HTMLElement).scrollHeight >= (node as HTMLElement).clientHeight
+    (node as HTMLElement).scrollHeight > (node as HTMLElement).clientHeight
   ) {
     return node as HTMLElement;
   }

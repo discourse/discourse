@@ -52,6 +52,13 @@ module PageObjects
         )
       end
 
+      def has_enum_value?(setting_name, value, text: nil)
+        has_css?(
+          "#{setting_row_selector(setting_name)} select option[value='#{value}']:checked",
+          text:,
+        )
+      end
+
       def has_setting?(setting_name)
         has_css?(".row.setting[data-setting=\"#{setting_name}\"]")
       end

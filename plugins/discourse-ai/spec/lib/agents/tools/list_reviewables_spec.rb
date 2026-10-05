@@ -56,6 +56,26 @@ RSpec.describe DiscourseAi::Agents::Tools::ListReviewables do
       expect(item[:post_id]).to eq(post.id)
     end
 
+    it "includes the content and title of deleted posts and topics" do
+      topic = post.topic
+      post_reviewable =
+        ReviewablePost.needs_review!(
+          target: post,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+      post.trash!
+      topic.trash!
+
+      result = tool({}).invoke
+
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        item = result[:reviewables].find { |entry| entry[:id] == reviewable.id }
+        expect(item[:post_excerpt]).to be_present
+        expect(item[:topic_title]).to eq(topic.title)
+      end
+    end
+
     it "filters by type" do
       result = tool(type: "ReviewableUser").invoke
 

@@ -16,6 +16,12 @@ pt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Tentar novamente"
+          date: "Data"
+          outcomes:
+            failed: "Falhado"
         emotion:
           title: "Emoção"
         reports:

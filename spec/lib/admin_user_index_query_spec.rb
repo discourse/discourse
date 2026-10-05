@@ -142,6 +142,54 @@ RSpec.describe AdminUserIndexQuery do
     end
   end
 
+  describe "staff account types" do
+    fab!(:admin) { Fabricate(:admin, created_at: 2.days.ago) }
+    fab!(:moderator) { Fabricate(:moderator, created_at: 1.day.ago) }
+    fab!(:bot) { Fabricate(:admin, id: -100, created_at: Time.zone.now) }
+    fab!(:user)
+
+    it "defaults missing or unknown account types to human staff before paginating" do
+      query = described_class.new(query: "staff")
+
+      expect(query.find_users).to eq([moderator, admin])
+      expect(
+        described_class.new(query: "staff", account_type: "unknown").find_users,
+      ).to contain_exactly(admin, moderator)
+      expect(query.find_users(1)).to eq([moderator])
+      expect(described_class.new(query: "staff", page: 2).find_users(1)).to eq([admin])
+    end
+
+    it "includes bots and system accounts when selected" do
+      users = described_class.new(query: "staff", account_type: "bot").find_users
+
+      expect(users).to include(bot, Discourse.system_user)
+      expect(users).not_to include(admin, moderator, user)
+    end
+
+    it "includes all staff accounts when selected" do
+      users = described_class.new(query: "staff", account_type: "all").find_users
+
+      expect(users).to include(admin, moderator, bot, Discourse.system_user)
+      expect(users).not_to include(user)
+    end
+
+    it "keeps search and sorting within the selected account type" do
+      query = described_class.new(query: "staff", order: "created", asc: true)
+
+      expect(query.find_users).to eq([admin, moderator])
+      expect(described_class.new(query: "staff", filter: bot.username).find_users).to be_empty
+      expect(
+        described_class.new(query: "staff", account_type: "all", filter: bot.username).find_users,
+      ).to eq([bot])
+    end
+
+    it "leaves other user lists unfiltered" do
+      users = described_class.new(query: "new", account_type: "human").find_users
+
+      expect(users).to include(admin, moderator, bot, user, Discourse.system_user)
+    end
+  end
+
   describe "with a moderator" do
     fab!(:user) { Fabricate(:user, moderator: true) }
     fab!(:user2) { Fabricate(:user, moderator: false) }

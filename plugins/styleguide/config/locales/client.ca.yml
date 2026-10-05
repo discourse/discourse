@@ -13,6 +13,9 @@ ca:
       sections:
         typography:
           example: "Benvingut a Discourse"
+        context_menu:
+          actions:
+            delete: "Suprimeix"
         colors:
           title: "Colors"
         icons:

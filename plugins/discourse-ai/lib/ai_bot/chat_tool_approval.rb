@@ -77,7 +77,7 @@ module DiscourseAi
         message = interaction.message
 
         begin
-          reviewable.perform(user, parsed[:action].to_sym)
+          reviewable.perform(user, parsed[:action].to_sym, chat_message_id: message.id)
           status_key = parsed[:action] == "approve" ? "approved" : "rejected"
           resolve_message!(
             message,

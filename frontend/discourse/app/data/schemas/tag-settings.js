@@ -6,6 +6,7 @@ export const TagSettingsSchema = withDefaults({
   fields: [
     ...attrs(
       "name",
+      "locale",
       "slug",
       "description",
       "synonyms",

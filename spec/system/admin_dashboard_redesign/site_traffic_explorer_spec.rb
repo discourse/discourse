@@ -8,9 +8,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   before do
     SiteSetting.dashboard_improvements = true
     SiteSetting.improved_crawler_detection = true
-    SiteSetting.persist_browser_pageview_events = true
     SiteSetting.use_legacy_pageviews = false
-    BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
     Discourse.stubs(:current_hostname).returns("test.localhost")
     DiscourseIpInfo
       .stubs(:get)
@@ -55,7 +53,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       url: "/crawler-shaped-traffic",
       session_id: "crawler-shaped-session",
       score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-10 10:00:00",
     )
 
@@ -72,7 +69,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       :browser_pageview_event,
       url: "/engaged-session",
       session_id: "engaged-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-14 10:00:00",
     )
     Fabricate(
@@ -84,7 +80,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       :browser_pageview_event,
       url: "/active-session",
       session_id: "active-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-14 11:50:00",
     )
     Fabricate(
@@ -107,20 +102,17 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       :browser_pageview_event,
       user_id: admin.id,
       session_id: "logged-in-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-10 10:00:00",
     )
     Fabricate(
       :browser_pageview_event,
       session_id: "anonymous-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-11 10:00:00",
     )
     Fabricate(
       :browser_pageview_event,
       session_id: "crawler-session",
       score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-12 10:00:00",
     )
 
@@ -199,9 +191,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         created_at: "2026-05-12 10:00:00",
       },
     ]
-    events.each do |attributes|
-      Fabricate(:browser_pageview_event, source: BrowserPageviewEvent::SOURCE_BEACON, **attributes)
-    end
+    events.each { |attributes| Fabricate(:browser_pageview_event, **attributes) }
 
     Fabricate(
       :browser_pageview_session_engagement,
@@ -429,7 +419,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
           :browser_pageview_event,
           url: path,
           topic_id: topic.id,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 10, index, event_index),
         )
       end
@@ -484,7 +473,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         normalized_referrer: normalized_referrer,
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         session_id: session_id,
-        source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: "2026-05-10 10:00:00",
       )
     end
@@ -589,7 +577,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         :browser_pageview_event,
         url: url,
         session_id: url.delete_prefix("/"),
-        source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: created_at,
       )
     end

@@ -27,6 +27,7 @@ export default <template>
               {{#each bg.badges as |b|}}
                 <DBadgeCard
                   @badge={{b}}
+                  @granted={{b.has_badge}}
                   @username={{@controller.currentUser.username}}
                 />
               {{/each}}

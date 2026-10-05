@@ -9,7 +9,10 @@ import { forceMobile } from "discourse/lib/mobile";
 import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { Placeholder } from "discourse/models/post-stream";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  response,
+  TOO_MANY_REQUESTS,
+} from "discourse/tests/helpers/create-pretender";
 
 function topicWithStream(streamDetails) {
   const topic = this.store.createRecord("topic");
@@ -782,6 +785,42 @@ module("Unit | Controller | topic", function (hooks) {
       stub.called,
       "ignored user's post is not fetched into the stream"
     );
+  });
+
+  test("retryOnRateLimit retries a 429 that only carries a Retry-After header", async function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model: this.store.createRecord("topic") });
+
+    const rateLimited = {
+      jqXHR: {
+        status: TOO_MANY_REQUESTS,
+        getResponseHeader: (name) => (name === "Retry-After" ? "1" : null),
+      },
+    };
+
+    const promise = sinon.stub();
+    promise.onFirstCall().callsFake(() => Promise.reject(rateLimited));
+    promise.onSecondCall().resolves();
+
+    controller.retryOnRateLimit(2, promise);
+    await settled();
+
+    assert.strictEqual(promise.callCount, 2, "the request is retried");
+  });
+
+  test("retryOnRateLimit does not swallow errors that are not rate limits", async function (assert) {
+    const controller = getOwner(this).lookup("controller:topic");
+    controller.setProperties({ model: this.store.createRecord("topic") });
+
+    const promise = sinon
+      .stub()
+      .callsFake(() => Promise.reject({ jqXHR: { status: 500 } }));
+
+    await assert.rejects(
+      controller.retryOnRateLimit(2, promise),
+      "the error reaches the caller"
+    );
+    assert.strictEqual(promise.callCount, 1, "it is not retried");
   });
 
   test("onMessage live-inserts new posts from regular users", async function (assert) {

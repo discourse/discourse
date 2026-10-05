@@ -1,39 +1,38 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class BadgeTitle extends Component {
+  @service currentUser;
   @service dialog;
 
-  selectableUserBadges = null;
-  _selectedUserBadgeId = null;
-  _isSaved = false;
-  _isSaving = false;
+  @tracked _selectedUserBadgeId;
+  @tracked _isSaved = false;
+  @tracked _isSaving = false;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     const badge = this._findBadgeByTitle(
-      this.selectableUserBadges,
+      this.args.selectableUserBadges,
       this.currentUser.title
     );
-    this.set("_selectedUserBadgeId", badge?.id || 0);
+    this._selectedUserBadgeId = badge?.id || 0;
   }
 
   @action
   saveBadgeTitle() {
-    this.setProperties({ _isSaved: false, _isSaving: true });
+    this._isSaved = false;
+    this._isSaving = true;
 
     const selectedUserBadge = this._findBadgeById(
-      this.selectableUserBadges,
+      this.args.selectableUserBadges,
       this._selectedUserBadgeId
     );
 
@@ -43,14 +42,14 @@ export default class BadgeTitle extends Component {
     })
       .then(
         () => {
-          this.set("_isSaved", true);
+          this._isSaved = true;
           this.currentUser.set("title", selectedUserBadge?.badge?.name || "");
         },
         () => {
           this.dialog.alert(i18n("generic_error"));
         }
       )
-      .finally(() => this.set("_isSaving", false));
+      .finally(() => (this._isSaving = false));
   }
 
   _findBadgeById(badges, id) {
@@ -70,7 +69,7 @@ export default class BadgeTitle extends Component {
         <div class="control-group">
           <div class="controls">
             <ComboBox
-              @content={{this.selectableUserBadges}}
+              @content={{@selectableUserBadges}}
               @nameProperty="badge.name"
               @onChange={{fn (mut this._selectedUserBadgeId)}}
               @value={{this._selectedUserBadgeId}}
@@ -86,10 +85,10 @@ export default class BadgeTitle extends Component {
               @disabled={{this._isSaving}}
               @label={{if this._isSaving "saving" "save"}}
             />
-            {{#if this.closeAction}}
+            {{#if @closeAction}}
               <DButton
                 class="btn-default close-btn"
-                @action={{this.closeAction}}
+                @action={{@closeAction}}
                 @label="close"
               />
             {{/if}}

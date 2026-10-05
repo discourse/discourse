@@ -43,6 +43,10 @@ end
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::SolutionChanged::V1 }
+  end
+
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-solved/db/fixtures").to_s
 
   UserUpdater::OPTION_ATTR.push(:notify_on_solved)
@@ -482,4 +486,36 @@ after_initialize do
 
   DiscourseDev::DiscourseSolved.populate(self)
   DiscourseAutomation::EntryPoint.inject(self) if defined?(DiscourseAutomation)
+end
+
+after_initialize do
+  require_relative "lib/discourse_solved/mcp_tools"
+  register_mcp_tool(
+    "discourse_solved_solution_set",
+    title: "Set accepted solution",
+    description: "Accepts or unaccepts a post as the topic solution when permitted.",
+    implementation: DiscourseSolved::McpTools::SetSolution,
+    input_schema: {
+      type: "object",
+      properties: {
+        post_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        accepted: {
+          type: "boolean",
+        },
+      },
+      required: %w[post_id accepted],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseSolved::McpTools::SetSolution::OUTPUT_SCHEMA,
+    required_scopes: DiscourseSolved::McpTools::SetSolution::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.solved_enabled },
+  )
 end

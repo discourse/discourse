@@ -21,6 +21,16 @@ RSpec.describe Jobs::ExportCsvFile do
         admin.uploads.each(&:destroy!)
       end
 
+      it "prefixes every exported CSV with a UTF-8 BOM" do
+        Jobs::ExportCsvFile.new.execute(user_id: admin.id, entity: "user_list")
+
+        Zip::File.open(Discourse.store.path_for(Upload.last)) do |zip_file|
+          zip_file.each { |entry| expect(zip_file.read(entry)).to start_with(Encodings::BOM.b) }
+        end
+      ensure
+        admin.uploads.each(&:destroy!)
+      end
+
       it "raises an error when the admin was demoted after enqueueing" do
         admin.revoke_admin!
 
@@ -514,7 +524,8 @@ RSpec.describe Jobs::ExportCsvFile do
     rows = []
     Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
       zip_file.each do |entry|
-        csv_rows = CSV.parse(zip_file.read(entry), headers: true)
+        content = zip_file.read(entry).force_encoding(Encoding::UTF_8)
+        csv_rows = CSV.parse(content.delete_prefix(Encodings::BOM), headers: true)
         rows.concat(csv_rows.map(&:to_h))
       end
     end
@@ -553,7 +564,7 @@ RSpec.describe Jobs::ExportCsvFile do
 
     user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
-    expect(user["location"]).to eq('"La,La Land"')
+    expect(user["location"]).to eq("La,La Land")
     expect(user["external_id"]).to eq("123")
     expect(user["external_email"]).to eq("test@test.com")
   end

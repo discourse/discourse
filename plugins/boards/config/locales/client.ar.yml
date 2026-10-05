@@ -6,7 +6,22 @@
 
 ar:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "العنوان"
+        icon: "الأيقونة"
+        color: "اللون"
+        tag_name: "الوسم"
+        default_sort_priority: "الأولوية"
+      create_board:
+        name: "الاسم"
+        slug: "المسار"
+        tag_names: "الوسوم"
+        category_ids: "الفئات"
     boards:
+      status:
+        all: "الكل"
+        open: "فتح"
       board:
         remove_card: "إزالة"
         new_topic: "موضوع جديد..."

@@ -135,6 +135,18 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       end.to change { AiSpamLog.count }.by(1)
     end
 
+    it "uses the configured agent's updated default model for spam scans" do
+      updated_model = Fabricate(:fake_model)
+      spam_setting.ai_agent.update!(default_llm_id: updated_model.id)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: false }],
+        llm: updated_model,
+      ) { described_class.perform_scan!(post) }
+
+      expect(AiSpamLog.find_by!(post: post).llm_model_id).to eq(updated_model.id)
+    end
+
     it "does nothing when disabled" do
       SiteSetting.ai_spam_detection_enabled = false
       expect { described_class.perform_scan!(post) }.not_to change { AiSpamLog.count }

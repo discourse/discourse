@@ -16,6 +16,29 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "post_action_types" do
+    it "marks flags as system when they come from registered flag settings" do
+      # Plugins can replace flag settings, which makes the payload serialize
+      # PostActionType records instead of Flag records. The admin UI keys
+      # editability off `system`, so it has to be present on both paths.
+      settings = FlagSettings.new
+      settings.add(4, :inappropriate)
+      settings.add(99, :custom_plugin_flag, name: "Custom plugin flag")
+      PostActionType.replace_flag_settings(settings)
+      # Expire the cached payload without resetting the settings we just registered.
+      PostActionType.new.expire_cache
+      Site.clear_cache
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:post_action_types]).to be_present
+      expect(serialized[:post_action_types].map { |type| type[:system] }.uniq).to eq([true])
+    ensure
+      PostActionType.replace_flag_settings(nil)
+      Flag.reset_flag_settings!
+    end
+  end
+
   describe "#homepage_choices" do
     around do |example|
       registrations = DiscoursePluginRegistry._raw_homepage_options.dup
@@ -112,6 +135,12 @@ RSpec.describe SiteSerializer do
       end
     end
 
+    around do |example|
+      stub_const(target_class, :ACL_PERMISSIONS, Acl::Permissions.new(:edit, :manage)) do
+        example.run
+      end
+    end
+
     after { DiscoursePluginRegistry.reset_register!(:acl_target_classes) }
 
     it "includes mandatory ACLs by target class" do
@@ -139,22 +168,21 @@ RSpec.describe SiteSerializer do
     end
 
     it "includes plugin-registered target classes" do
-      Object.const_set(:SiteSerializerSpecTarget, target_class)
-      AclTarget.loaded_target_classes.delete(target_class)
-      DiscoursePluginRegistry.register_acl_target_class(
-        "SiteSerializerSpecTarget",
-        Plugin::Instance.new,
-      )
+      stub_const(Object, :SiteSerializerSpecTarget, target_class) do
+        AclTarget.loaded_target_classes.delete(target_class)
+        DiscoursePluginRegistry.register_acl_target_class(
+          "SiteSerializerSpecTarget",
+          Plugin::Instance.new,
+        )
 
-      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+        serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
-        "SiteSerializerSpecTarget" => [
-          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
-        ],
-      )
-    ensure
-      Object.send(:remove_const, :SiteSerializerSpecTarget) if defined?(SiteSerializerSpecTarget)
+        expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+          "SiteSerializerSpecTarget" => [
+            { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+          ],
+        )
+      end
     end
   end
 

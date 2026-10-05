@@ -25,6 +25,14 @@ const KIND_OPTIONS = [
 export default class ActorControl extends Component {
   @tracked kind = actorKindForValue(this.args.field.value);
 
+  get kindOptions() {
+    if (this.args.schema?.control_options?.allow_anonymous === false) {
+      return KIND_OPTIONS.filter(({ id }) => id !== ACTOR_KIND.anonymous);
+    }
+
+    return KIND_OPTIONS;
+  }
+
   get showUserChooser() {
     return this.kind === ACTOR_KIND.user;
   }
@@ -66,7 +74,7 @@ export default class ActorControl extends Component {
       <div class="workflows-actor-control">
         <ComboBox
           class="workflows-actor-control__kind"
-          @content={{KIND_OPTIONS}}
+          @content={{this.kindOptions}}
           @nameProperty="name"
           @onChange={{this.handleKindChange}}
           @value={{this.kind}}

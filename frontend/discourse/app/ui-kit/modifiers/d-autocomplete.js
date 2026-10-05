@@ -1,5 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { registerDestructor } from "@ember/destroyable";
+import {
+  associateDestroyableChild,
+  registerDestructor,
+} from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -19,7 +22,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * Used to ensure consistency between trigger detection and completion position calculation.
  */
 export const EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP =
-  /[\s.?,@/#!%&*;:\[\]{}=\-_()+]/;
+  /[\s.…?,@/#!%&*;:\[\]{}=\-_()+]/;
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -54,6 +57,7 @@ export default class DAutocompleteModifier extends Modifier {
       named: {},
       positional: [],
     });
+    associateDestroyableChild(owner, modifier);
 
     const modifierOptions = {
       ...options,
@@ -573,11 +577,12 @@ export default class DAutocompleteModifier extends Modifier {
     let completeEnd;
     let completeStart;
 
-    if (pos.completeStart !== undefined && pos.completeEnd !== undefined) {
+    if (pos.completeStart != null && pos.completeEnd != null) {
       completeStart = pos.completeStart;
       completeEnd = pos.completeEnd;
     } else {
-      completeStart = completeEnd = this.getCaretPosition();
+      completeStart = this.getCaretPosition();
+      completeEnd = completeStart - 1;
     }
 
     // Use textHandler's replaceTerm method for consistent behavior

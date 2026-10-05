@@ -244,9 +244,7 @@ module Voice
 
       def raise_unless_chat_success(result)
         return if result.success?
-        Rails.logger.warn(
-          "[voice] chat operation failed: #{Service::StepsInspector.new(result).inspect}",
-        )
+        Voice.warn("[voice] chat operation failed")
         raise Error, chat_failure_message(result)
       end
 

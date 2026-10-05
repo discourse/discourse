@@ -49,7 +49,7 @@ export default class OnboardingStep extends Component {
 
   // Awaits the audit write so callers that reload the page on completion can't
   // cancel it in flight.
-  async markAsCompleted() {
+  async markAsCompleted(options = {}) {
     // app events backing some steps can fire more than once, so only audit the
     // first transition into the completed state
     const alreadyCompleted = this.completed;
@@ -62,7 +62,11 @@ export default class OnboardingStep extends Component {
     this.appEvents.trigger(`onboarding-step:completed`, this.name);
 
     if (!alreadyCompleted) {
-      await logOnboardingEvent("step_completed", this.name);
+      await logOnboardingEvent(
+        "step_completed",
+        this.name,
+        options?.topicOption
+      );
     }
 
     return this.args.onCompleted?.(this.name);

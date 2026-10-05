@@ -427,9 +427,9 @@ export default class Chat extends Service {
     const manager = this.chatChannelsManager;
 
     return [
-      ...manager.starredChannels,
-      ...manager.unstarredPublicMessageChannels,
-      ...manager.truncatedUnstarredDirectMessageChannels,
+      ...manager.starredChannelsByPreference,
+      ...manager.sidebarPublicMessageChannels,
+      ...manager.sidebarDirectMessageChannels,
     ];
   }
 
@@ -445,16 +445,15 @@ export default class Chat extends Service {
     const manager = this.chatChannelsManager;
 
     // Filter each section for channels with activity
-    const starredWithActivity = manager.starredChannels.filter(
+    const starredWithActivity = manager.starredChannelsByPreference.filter(
       (c) => c.hasUnread
     );
-    const publicWithActivity = manager.unstarredPublicMessageChannels.filter(
+    const publicWithActivity = manager.sidebarPublicMessageChannels.filter(
       (c) => c.hasUnread
     );
-    const dmsWithActivity =
-      manager.truncatedUnstarredDirectMessageChannels.filter(
-        (c) => c.hasUnread
-      );
+    const dmsWithActivity = manager.sidebarDirectMessageChannels.filter(
+      (c) => c.hasUnread
+    );
 
     const allChannels = [
       ...starredWithActivity,

@@ -1312,7 +1312,7 @@ export default class SelectKit extends Component {
           `The \`${from}\` attribute is deprecated. Use \`${to}\` instead`
         );
 
-        resolvedDeprecations[(to, this.get(from))];
+        resolvedDeprecations[to] = this.get(from);
       }
     });
 

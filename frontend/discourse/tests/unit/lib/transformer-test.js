@@ -400,9 +400,7 @@ module("Unit | Utility | transformers", function (hooks) {
       });
 
       assert.throws(
-        function () {
-          testObject1.value1;
-        },
+        () => testObject1.value1,
         function (error) {
           return error.message === "sabotaged";
         },

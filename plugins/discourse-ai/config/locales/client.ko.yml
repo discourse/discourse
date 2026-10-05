@@ -8,6 +8,12 @@ ko:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "재시도"
+          date: "날짜"
+          outcomes:
+            failed: "실패"
         reports:
           filters:
             sort_by:

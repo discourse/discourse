@@ -53,7 +53,7 @@ export default class DBadgeCard extends Component {
       ids.push(`badge-granted-${badge.slug}`);
     }
 
-    if (badge.has_badge) {
+    if (this.args.granted) {
       ids.push(`badge-awarded-${badge.slug}`);
     }
 
@@ -112,7 +112,7 @@ export default class DBadgeCard extends Component {
         </div>
       </div>
 
-      {{#if @badge.has_badge}}
+      {{#if @granted}}
         <div
           aria-label={{i18n "notifications.titles.granted_badge"}}
           class="check-display status-checked"

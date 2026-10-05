@@ -277,4 +277,35 @@ RSpec.describe Boards::Board do
       expect(described_class.acl_is_banned?(acl)).to eq(false)
     end
   end
+
+  describe "#archive_slug" do
+    fab!(:board) { Fabricate(:boards_board, slug: "roadmap") }
+
+    it "finds the first available dated suffix" do
+      Fabricate(:boards_board, slug: "roadmap-archived-20260910")
+      Fabricate(:boards_board, slug: "roadmap-archived-20260910-2")
+
+      expect(board.archive_slug(Date.new(2026, 9, 10))).to eq("roadmap-archived-20260910-3")
+    end
+  end
+
+  describe "#old_slug_used?" do
+    fab!(:board) do
+      Fabricate(:boards_board, slug: "archived-board", archived: true, original_slug: "roadmap")
+    end
+
+    it "reports whether another board has claimed the original slug" do
+      expect(board.old_slug_used?).to eq(false)
+
+      Fabricate(:boards_board, slug: board.original_slug)
+
+      expect(board.old_slug_used?).to eq(true)
+    end
+
+    it "does not report an open board as having lost its slug" do
+      board.update!(archived: false, original_slug: nil)
+
+      expect(board.old_slug_used?).to eq(false)
+    end
+  end
 end

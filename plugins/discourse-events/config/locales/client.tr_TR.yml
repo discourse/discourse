@@ -34,6 +34,10 @@ tr_TR:
     discourse_events:
       title: "Olaylar"
       preferences:
+        reminders:
+          preferences:
+            notification: "Bildirim"
+            none: "Hiçbiri"
         all_events_description: "Tüm forum etkinlikleri"
         my_events_description: "Katılacağınız veya ilgilendiğiniz etkinlikler"
       on_holiday: "Tatilde"

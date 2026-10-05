@@ -224,6 +224,7 @@ sl:
     software_update_prompt:
       dismiss: "Opusti"
     back_button: "Nazaj"
+    confirm_button: "Potrdi"
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
@@ -1234,6 +1235,13 @@ sl:
       tracked_topics_link: "Prikaži"
       automatically_unpin_topics: "Samodejno odpni temo, ko preberem zadnji prispevek"
       apps: "Aplikacije"
+      mcp_authorizations:
+        details: "Podrobnosti"
+        never: "Nikoli"
+        status: "Status"
+        statuses:
+          active: "Aktivni"
+          revoked: "Preklican"
       revoke_access: "Prekliči dostop"
       undo_revoke_access: "Razveljavi preklic dostopa"
       api_approved: "Odobreno"
@@ -3091,6 +3099,7 @@ sl:
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       no_description: "Dodajte opis kategorije."
+      latest_topics: "Zadnje teme"
       description_expand: "Več"
       description_collapse: "Manj"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
@@ -3300,6 +3309,7 @@ sl:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "ponastavi"
         button:
           label: "Filter"
       latest:
@@ -3483,6 +3493,7 @@ sl:
         posting:
           name: Prispevki
     download_calendar:
+      title: "Dodaj v koledar"
       download: "Naloži"
     tagging:
       other_tags: "Druge oznake"
@@ -3823,6 +3834,59 @@ sl:
       config:
         developer:
           title: "Razvijalci"
+        mcp:
+          tabs:
+            access: "Dostopnost"
+            activity: "Aktivnost"
+          overview:
+            status: "Status"
+          access:
+            title: "Dostopnost"
+            group: "Skupina"
+            groups: "Skupine"
+            actions: "Akcije"
+            edit: "Uredi"
+            delete: "Izbriši"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Blokiraj"
+            presets:
+              custom: "Po meri"
+          authorizations:
+            user: "Uporabnik"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Čas"
+            user: "Uporabnik"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Onemogočeno"
+            client_trust:
+              approved: "Potrjeno"
+            authorization_status:
+              active: "Aktivni"
+              revoked: "Preklican"
+            activity_outcome:
+              success: "Uspeh"
+              error: "napaka"
+            primitive_state:
+              enabled: "Vključeno"
+              disabled: "Onemogočeno"
+            primitive_kind:
+              all: "Vse vrste"
+            primitive_risk:
+              moderation: "Moderiranje"
+            filter:
+              all: "Vsi"
+          never: "Nikoli"
+          actions:
+            revoke: "Odstrani"
         emojis:
           title: "Emoji"
         flags:
@@ -4042,6 +4106,7 @@ sl:
         site_traffic:
           series:
             anonymous: "Anonimni"
+          crawler_learn_more: "Več o tem"
         period:
           last_7_days: "Zadnjih 7 dni"
           last_30_days: "Zadnjih 30 dni"
@@ -4868,11 +4933,11 @@ sl:
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
-        search: "Išči besedilo, ki bi ga rad/a uredil/a"
+        search_label: "Išči"
+        theme_disabled: "Onemogočeno"
+        filters: "Filtri"
         edit: "Uredi"
-        revert: "Prekliči spremembe"
         revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
-        go_back: "Nazaj na iskalnik"
         show_overriden: "Prikaži samo preglašene/spremenjene"
         locale: "Jezik:"
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."

@@ -212,6 +212,7 @@ te:
       message: "మేము ఈ సైట్‌ని నవీకరించాము. ప్రతిదీ సజావుగా పని చేస్తుందని నిర్ధారించుకోవడానికి <span>దయచేసి ఈ పేజీని రిఫ్రెష్ చేయండి</span>."
       dismiss: "రద్దుచేయండి"
     back_button: "వెనుకకు"
+    confirm_button: "నిర్ధారించండి"
     welcome_banner:
       header:
         anonymous_members: "%{site_name} కు సుస్వాగతం!"
@@ -1274,6 +1275,15 @@ te:
       ignored_users_instructions: "ఈ సభ్యుల నుండి అన్ని పోస్ట్‌లు, నోటిఫికేషన్‌లు మరియు సందేశాలను అణచివేయండి."
       tracked_topics_link: "చూపించండి"
       apps: "యాప్‌లు"
+      mcp_authorizations:
+        endpoint: "వనరు"
+        scopes: "పరిధులు"
+        details: "వివరాలు"
+        never: "ఎప్పటికీ వద్దు"
+        status: "స్థితి"
+        statuses:
+          active: "క్రియాశీల"
+          revoked: "రద్దు చేయబడింది"
       revoke_access: "యాక్సెస్‌ని రద్దు చేయండి"
       undo_revoke_access: "యాక్సెస్‌ ఉపసంహరణ ని రద్దు చేయండి"
       api_approved: "ఆమోదించబడింది:"
@@ -3493,6 +3503,7 @@ te:
       delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"
       delete_error: "ఈ వర్గం తొలగించేప్పుడు దొషం."
       no_description: "ఈ వర్గానికి వివరణ రాయండి"
+      latest_topics: "తాజా విషయాలు"
       description_expand: "మరిన్ని చూపించండి"
       description_collapse: "తక్కువ చూపించండి"
       already_used: "ఈ రంగు వేరే వర్గం వాడింది"
@@ -3719,6 +3730,7 @@ te:
       with_topics: "%{filter} విషయాలు"
       with_category: "%{filter} %{category} విషయాలు"
       filter:
+        reset: "రీసెట్"
         button:
           label: "ఫిల్టర్ చేయండి"
       latest:
@@ -3905,11 +3917,10 @@ te:
       favorite_max_not_reached: "ఈ బ్యాడ్జ్‌ను ఇష్టమైనదిగా గుర్తించండి"
       favorite_count: "%{count}/%{max} బ్యాడ్జ్‌లు ఇష్టమైనవిగా గుర్తించబడ్డాయి"
     download_calendar:
-      title: "క్యాలెండర్‌ని డౌన్‌లోడ్ చేయండి"
+      title: "క్యాలెండర్‌కు జోడించండి"
       save_ics: ".ics ఫైల్‌ని డౌన్‌లోడ్ చేయండి"
       save_google: "Google క్యాలెండర్‌కు జోడించండి"
       remember: "నన్ను మళ్ళీ అడగవద్దు"
-      remember_explanation: "(మీరు మీ ప్రాధాన్యతలలో ఈ ప్రాధాన్యతను మార్చవచ్చు)"
       download: "దిగుమతి"
       default_calendar: "డిఫాల్ట్ క్యాలెండర్"
       default_calendar_instruction: "తేదీలు సేవ్ చేయబడినప్పుడు ఏ క్యాలెండర్ ఉపయోగించాలో నిర్ణయించండి"
@@ -4414,6 +4425,63 @@ te:
           title: "మీ సైట్ గురించి"
         developer:
           title: "డవలపరు"
+        mcp:
+          tabs:
+            access: "యాక్సెస్"
+            activity: "కలాపం"
+          overview:
+            status: "స్థితి"
+          access:
+            title: "యాక్సెస్"
+            group: "సమూహం"
+            groups: "సమూహాలు"
+            actions: "చర్యలు"
+            edit: "సవరించండి"
+            delete: "తొలగించు"
+          primitives:
+            group_by_options:
+              scope: "పరిధి"
+              kind: "రకం"
+            kind: "రకం"
+            scope: "పరిధి"
+            scopes: "పరిధులు"
+          clients:
+            actions: "చర్యలు"
+            block: "బ్లాక్"
+            presets:
+              custom: "అనురూప"
+          authorizations:
+            user: "సభ్యుడు"
+            status: "స్థితి"
+            actions: "చర్యలు"
+          activity:
+            time: "కాలం"
+            user: "సభ్యుడు"
+            duration: "వ్యవధి"
+          values:
+            server_status:
+              disabled: "నిలిపివేయబడింది"
+            client_trust:
+              approved: "ఆమోదించబడింది"
+            authorization_status:
+              active: "క్రియాశీల"
+              revoked: "రద్దు చేయబడింది"
+            activity_outcome:
+              success: "విజయం"
+              error: "లోపం"
+            primitive_state:
+              enabled: "ప్రారంభించబడింది"
+              disabled: "నిలిపివేయబడింది"
+            primitive_kind:
+              resource: "వనరు"
+            primitive_risk:
+              read: "చదవడానికి మాత్రమే"
+              moderation: "మోడరేషన్"
+            filter:
+              all: "అన్నీ"
+          never: "ఎప్పటికీ వద్దు"
+          actions:
+            revoke: "ఉపసంహరించుకోండి"
         emojis:
           title: "ఇమోజి"
         flags:
@@ -4644,6 +4712,7 @@ te:
           series:
             anonymous: "అనామక"
             crawlers: "క్రాలర్లు"
+          crawler_learn_more: "మరింత తెలుసుకోండి"
         period:
           last_3_months: "గత 3 నెలలు"
           custom: "అనురూప"
@@ -6152,12 +6221,10 @@ te:
           dropdown: "డ్రాప్డౌన్"
           multiselect: "బహుళ ఎంపిక"
       site_text:
-        search: "మీరు సవరించాలనుకుంటున్న వచనం కోసం శోధించండి"
+        search_label: "వెతుకు"
+        theme_disabled: "నిలిపివేయబడింది"
         edit: "సవరించండి"
-        revert: "మార్పులను తిరిగి మార్చండి"
         revert_confirm: "మీరు ఖచ్చితంగా మీ మార్పులను తిరిగి మార్చాలనుకుంటున్నారా?"
-        go_back: "శోధనకు తిరిగి వెళ్ళండి"
-        recommended: "మీ అవసరాలకు అనుగుణంగా కింది వచనాన్ని అనుకూలీకరించాలని మేము సిఫార్సు చేస్తున్నాము:"
         show_overriden: "ప్రాబల్యం ఉన్న వాటిని మాత్రమే చూపించు"
         show_outdated: "పాత/చెల్లనిది మాత్రమే చూపండి"
         locale: "భాష:"

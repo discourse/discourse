@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,14 +14,16 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @service chatChannelsManager;
   @service currentUser;
 
-  @tracked isTogglingStarred;
-
   get channel() {
     return this.args.data.channel;
   }
 
   get currentUserMembership() {
     return this.channel?.currentUserMembership;
+  }
+
+  get isTogglingStarred() {
+    return this.chatChannelsManager.isUpdatingStarred(this.channel);
   }
 
   get starIcon() {
@@ -43,27 +44,15 @@ export default class ChatChannelSidebarContextMenu extends Component {
 
   @action
   async toggleStarred() {
-    if (!this.currentUserMembership || this.isTogglingStarred) {
-      return;
-    }
+    const channel = this.channel;
+    const menuIdentifier = channel.isDirectMessageChannel
+      ? "chat-direct-message-channel-menu"
+      : "chat-channel-menu";
+    const menu = this.menu;
 
-    this.isTogglingStarred = true;
-    const previousValue = this.currentUserMembership.starred;
-    const newValue = !previousValue;
-
-    this.currentUserMembership.starred = newValue;
-
-    try {
-      await this.chatApi.updateCurrentUserChannelMembership(this.channel.id, {
-        starred: newValue,
-      });
-      this.args.close();
-    } catch (err) {
-      this.currentUserMembership.starred = previousValue;
-      popupAjaxError(err);
-    } finally {
-      this.isTogglingStarred = false;
-    }
+    await this.chatChannelsManager.toggleStarred(channel, {
+      beforeUpdate: () => menu.close(menuIdentifier),
+    });
   }
 
   @action

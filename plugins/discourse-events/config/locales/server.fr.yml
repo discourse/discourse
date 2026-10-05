@@ -41,6 +41,8 @@ fr:
         ```texte
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Rappel d'événement"
   site_settings:
     map_events_to_color: "Assigner une couleur à chaque étiquette ou catégorie."
     map_events_title: "Remplace « Événements » dans le titre de la barre latérale « Événements à venir » par catégorie."
@@ -82,6 +84,15 @@ fr:
     livestream_embeddable_chat_allowed_paths: "Chemins autorisés pour l'intégration du chat des diffusions en direct."
     livestream_enable_modal_chat_on_mobile: "Affiche le chat de diffusion en direct dans une fenêtre modale sur mobile."
   discourse_events:
+    reminder:
+      subjects:
+        before: "L'événement %{title} est sur le point de commencer"
+        ongoing: "L'événement %{title} est en cours"
+        after: "L'événement %{title} est terminé"
+      guest: "- %{name} "
+      additional_guests:
+        one: "  et %{count} autre utilisateur"
+        other: "  et %{count} autres utilisateurs"
     category_type:
       default_calendar_view:
         label: "Affichage par défaut du calendrier"
@@ -140,11 +151,9 @@ fr:
           raw_invitees_length: "Un événement est limité à %{count} utilisateurs/groupes."
           raw_invitees:
             only_group: "Un événement ne peut accepter que les noms de groupes."
-          ends_at_before_starts_at: "Un événement ne peut pas se terminer avant d'avoir commencé."
           max_attendees_reached: "Cet événement est complet."
           start_must_be_present_and_a_valid_date: "Un événement nécessite une date de début valide."
           end_must_be_a_valid_date: "La date de fin doit être une date valide."
-          invalid_recurrence: "La récurrence doit être l'une des suivantes : every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Fuseau horaire non reconnu."
           acting_user_not_allowed_to_create_event: "L'utilisateur actuel n'est pas autorisé à créer des événements."
           acting_user_not_allowed_to_act_on_this_event: "L'utilisateur actuel n'est pas autorisé à agir sur cet événement."

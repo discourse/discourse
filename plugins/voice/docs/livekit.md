@@ -10,7 +10,7 @@ Sites that need bigger calls can deploy their own [LiveKit](https://livekit.io)
 server and point the plugin at it. Rooms routed through LiveKit publish each
 track **once** to the SFU, which fans it out to subscribers — publisher
 upstream stays constant no matter how many people are in the room. Everything
-else (presence, sessions, badges, admin stats, the roster UI, mute/deafen,
+else for human participants (presence, sessions, badges, admin stats, the roster UI, mute/deafen,
 push-to-talk, noise suppression, background blur) works identically on both
 transports.
 
@@ -100,6 +100,51 @@ With `per_room` policy, room creators/managers get a "Use media server (SFU)"
 checkbox in the room form. Toggling it affects the room's next call, never a
 live one.
 
+## Recording to S3 with LiveKit Cloud
+
+LiveKit Cloud runs the recorder, but each recording request must specify
+where to store the file. Voice supports a dedicated S3 bucket using the
+settings below. These settings are independent of Discourse's upload and
+backup storage configuration.
+
+1. Create an S3 bucket for recordings and credentials with permission to
+   write objects under the recording prefix. Keep the bucket private unless
+   you intentionally want anyone with a recording URL to be able to read it.
+2. Configure `voice_livekit_url` with the project's `wss://` URL and set its
+   API key and secret.
+3. In Discourse site settings, configure these values, saving the bucket
+   last:
+
+   | Setting | Value |
+   | --- | --- |
+   | `voice_livekit_recording_s3_region` | The recording bucket's AWS region |
+   | `voice_livekit_recording_s3_access_key_id` | Dedicated recording access key |
+   | `voice_livekit_recording_s3_secret_access_key` | Dedicated recording secret key |
+   | `voice_livekit_recording_s3_endpoint` | Leave empty for AWS S3; an HTTPS origin for S3-compatible storage |
+   | `voice_livekit_recording_s3_bucket` | Bucket name only, without a folder prefix |
+   | `voice_livekit_recording_filepath` | Object key template, default `voice/{room_name}-{utc}` |
+
+4. Enable `voice_livekit_recording_enabled` and start a recording in a
+   LiveKit-routed room. Egress adds the file extension and Voice adds a random
+   suffix to the object key.
+
+The recording credentials are sent to the configured LiveKit server over
+HTTPS with each start request. No S3 credentials are sent to participants.
+The endpoint option uses path-style addressing for S3-compatible providers.
+
+When recording finishes, Voice sends the requester a PM with the location
+returned by LiveKit. **This is not a signed download URL.** For private
+buckets, an operator must retrieve the file using authenticated S3 access;
+the PM link alone does not grant access. Discourse secure-upload rules do
+not apply to these external recordings.
+
+An empty recording bucket preserves self-hosted Egress storage configuration.
+On LiveKit Cloud, a filepath without a storage destination can fail with
+`request has missing or invalid field: output`. Configure the dedicated S3
+settings to resolve this error; changing the filepath alone does not help.
+
+See [LiveKit's output and storage documentation](https://docs.livekit.io/transport/media/ingress-egress/egress/outputs/).
+
 ## Verifying a deployment
 
 1. Join a LiveKit-routed room from two different networks and confirm you can
@@ -154,11 +199,17 @@ webhook deliveries at `POST /voice/livekit/webhook` and uses them as a
 - `room_finished` clears the room's transport pin, so the next call
   re-resolves against current settings right away.
 
-Webhooks never *create* presence and never touch session analytics — those
-ride Discourse heartbeats on both transports. If webhooks are undelivered
+For human participants, webhooks never *create* presence and never touch session
+analytics — those ride Discourse heartbeats on both transports. If webhooks are undelivered
 (firewall, misconfigured URL), nothing breaks; the built-in TTLs just take a
 little longer to converge, so treat a stale delivery marker as a warning,
 never an outage.
+
+Authorized external agents have a separate lifecycle: provider connection events
+and reconciliation maintain their presence, while Discourse controls admission,
+invitations and removal. They do not create human session analytics. See
+[External agent participation](./roadmap/agent-participation.md) for the contract
+and its implementation checklist.
 
 Deliveries are authenticated by the `Authorization` JWT LiveKit signs with the
 API secret, which includes a hash of the request body — no extra shared
@@ -212,6 +263,89 @@ SDK never calls `getUserMedia`).
 
 The [local fake participants harness](./local-fake-participants.md) works
 against LiveKit-routed rooms unchanged, for the same reason.
+
+## LiveKit Agent Builder
+
+Voice supports manually inviting a chosen LiveKit Cloud agent into ongoing
+public Voice calls. Deploy the agent with Agent Builder in the same Cloud project
+configured for Voice. The agent does not need `VOICE_AGENT_CREDENTIAL` or a
+Discourse HTTP tool.
+
+### Setup and testing
+
+1. In **Admin → Settings**, enable `voice_livekit_agent_enabled`. This creates the
+   `livekit_agent_bot` account automatically. Voice uses its existing LiveKit URL
+   and API credentials.
+2. Make a public Voice room use LiveKit through the existing room policy. Join it
+   as a human and confirm that the call uses LiveKit. Mesh calls cannot invite an
+   agent and do not switch transport automatically.
+3. As a member of `voice_livekit_agent_invite_allowed_groups` (admins by default),
+   open the room's **…** menu (on its page or in the sidebar) and
+   select **Invite LiveKit agent**. The same action is available in the widget’s
+   **…** menu. The modal lists the agents deployed to the LiveKit Cloud project by
+   dispatch name; pick one and invite it. Agents without a dispatch name yet are not
+   listed, and workers running outside LiveKit's hosting (for example a local
+   `pnpm dev` worker) never are — use **Type a name instead** to enter such a dispatch
+   name by hand; when the list is empty or unavailable the modal shows the text field
+   directly. The list is cached for 30 seconds; use the refresh button after deploying
+   an agent while the modal is open. Do not use the `CA_` deployment ID.
+4. Wait for `livekit_agent_bot` to appear, then speak. With webhooks configured,
+   presence can appear promptly; otherwise allow the next one-minute scheduled
+   sweep. The agent's initial greeting may occur before roster admission.
+5. Open the bot's participant menu and select **Kick**. Verify that its roster
+   entry and audio disappear. Invite it again immediately from the room menu.
+   Each invitation creates a fresh session; no expulsion duration is stored.
+6. Leave as the last human and verify the bot disconnects. Repeat after closing
+   the human browser abruptly, allowing presence expiry and reconciliation.
+7. Disable the feature while the bot is present and verify that it is removed.
+   Enabling again reuses the same bot account. Private rooms, empty calls, users outside the
+   invite groups, and a missing or inactive bot cannot initiate an invitation.
+
+Set the LiveKit webhook URL to the site's public HTTPS origin followed by
+`/voice/livekit/webhook`. Keep scheduled jobs running even
+when webhooks are configured so missed events and cleanup failures are retried.
+
+Agents always join as speakers. They do not count toward human capacity,
+attendance, badges, or participation statistics. Room managers can kick them;
+only members of `voice_livekit_agent_invite_allowed_groups` (admins by default)
+can invite them. Nothing automatically dispatches an agent when humans join a
+room.
+
+### Hosting and provider behavior
+
+The LiveKit Agents framework and dispatch mechanism support both Cloud and
+self-hosted servers. Agent Builder and managed agent hosting are Cloud services.
+This UI intentionally supports only a configured `wss://*.livekit.cloud` project.
+See [LiveKit Cloud](https://docs.livekit.io/intro/cloud/) and
+[Agent Builder](https://docs.livekit.io/agents/start/builder/).
+
+An accepted invitation means LiveKit accepted the dispatch, not that a worker has
+connected. Check LiveKit's session logs if the bot does not appear, particularly
+the dispatch name and deployment status. Discourse associates the bot only with
+the running job's identity returned by LiveKit's authenticated dispatch API;
+participant metadata or matching display names cannot authorize roster access.
+
+LiveKit controls a managed agent's initial connection permissions. Discourse
+updates them before roster admission, disabling data publishing and applying the
+room's permitted media sources. Use trusted agents: roster gating does not block
+provider access before reconciliation. This flow supports audio conversation;
+it does not enable Agent Console transcription or data features.
+
+Cleanup records outlive revoked admission proofs, allowing failed deletion and
+ambiguous dispatch creation responses to be reconciled. Discourse clients stop
+agent playback on roster removal. Provider disconnection may lag during outages.
+See the [dispatch API](https://docs.livekit.io/reference/agents/agent-dispatch-service-api/)
+and [implementation contract](./roadmap/agent-participation.md).
+
+Automated checks:
+
+```bash
+LOAD_PLUGINS=1 bin/rspec plugins/voice/spec --exclude-pattern 'plugins/voice/spec/system/**/*_spec.rb'
+CI=1 bin/qunit --standalone --target voice --filter '/VoiceInviteAgentButton|VoiceParticipantSidebarContextMenu|voice-webrtc-livekit/i'
+```
+
+The real-SFU system spec above tests human media. A real dashboard-agent
+conversation still requires the manual checks in this section.
 
 ## Manual browser checklist
 

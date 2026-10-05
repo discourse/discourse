@@ -1455,4 +1455,33 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       .dom(".fk-d-menu")
       .exists("still opens after the trigger component is swapped");
   });
+  test("@closeOnScroll ignores an overflow container whose content fits", async function (assert) {
+    await render(
+      <template>
+        <div class="scroller" style="height: 100px; overflow-y: auto">
+          <div style="height: 1000px">
+            <div style="overflow-x: auto">
+              <DMenu
+                @closeOnScroll={{true}}
+                @content="content"
+                @inline={{true}}
+                @label="label"
+              />
+            </div>
+          </div>
+        </div>
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    assert.dom(".fk-d-menu").exists();
+
+    await triggerEvent(".scroller", "scroll");
+
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist(
+        "scrolling the nearest scrollable ancestor closes the menu"
+      );
+  });
 });
