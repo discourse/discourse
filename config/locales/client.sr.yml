@@ -3190,6 +3190,7 @@ sr:
             anonymous: "Anonimno"
             embedded: "Ugrađeni pregledi stranica"
             crawlers: "Pretraživači"
+          crawler_learn_more: "Saznaj više"
         period:
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"
@@ -3821,6 +3822,8 @@ sr:
         field_types:
           confirm: "Potvrda"
       site_text:
+        search_label: "Pretraži"
+        theme_disabled: "Isključeno"
         edit: "Izmeni"
         show_overriden: "Pokazuj samo promenjeno"
         outdated:

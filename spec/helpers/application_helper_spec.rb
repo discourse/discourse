@@ -112,12 +112,6 @@ RSpec.describe ApplicationHelper do
         expect(link).to include(%r{https://s3cdn.com/assets/js/discourse-\w{8}.digested.js})
       end
 
-      it "can fall back to gzip compression" do
-        helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
-        link = helper.preload_script("discourse")
-        expect(link).to include(%r{https://s3cdn.com/assets/gz/discourse-\w{8}.digested.js})
-      end
-
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script("discourse")

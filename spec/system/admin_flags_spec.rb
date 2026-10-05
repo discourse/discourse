@@ -163,6 +163,28 @@ describe "Admin Flags Page" do
     )
   end
 
+  it "allows editing and deleting the first custom flag" do
+    SiteSetting.custom_flags_limit = 4
+
+    # 1001 is where the flags id sequence starts, so this is the id every site's
+    # first custom flag gets. Unused custom flags must stay editable/deletable
+    # whatever their id.
+    Fabricate(
+      :flag,
+      id: 1001,
+      name: "colliding",
+      description: "custom flag at id 1001",
+      applies_to: %w[Post Topic],
+    )
+
+    admin_flags_page.visit.click_edit_flag("custom_colliding")
+    admin_flag_form_page.fill_in_description("edited description").click_save
+
+    admin_flags_page.visit.click_delete_flag("custom_colliding").confirm_delete
+
+    expect(admin_flags_page).to have_no_flag("custom_colliding")
+  end
+
   it "restricts actions on certain flags" do
     admin_flags_page.visit
 

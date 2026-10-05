@@ -39,7 +39,13 @@ RSpec.describe JsonApiKit::Sideloads do
   end
   let(:paths) { JsonApiKit::Paths.new(nil) }
   let(:rows) { [JsonApiKit::Pagination::Row.new(record: topic, segment: nil)] }
-  let(:request) { JsonApiKit::Request::Collection.new({}, guardian: Guardian.new) }
+  let(:request) do
+    JsonApiKit::Request::Collection.new(
+      {},
+      guardian: Guardian.new,
+      edition: JsonApiKit::Edition.current,
+    )
+  end
   let(:schema) { JsonApiKit::Schema.new(Topic) }
 
   describe "#linkage_for" do

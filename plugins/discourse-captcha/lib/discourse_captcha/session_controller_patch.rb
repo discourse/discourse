@@ -39,8 +39,8 @@ module DiscourseCaptcha
       return false if matched_user.present? || params[:invite_key].present?
       return false if !registration_via_login_code_open?
 
-      pending_approval_signup?(matched_user) ||
-        (!signup_user_fields_missing? && !signup_full_name_missing?)
+      !pending_approval_signup?(matched_user) && params[:username].present? &&
+        !signup_user_fields_missing? && !signup_full_name_missing?
     end
 
     include CaptchaVerification

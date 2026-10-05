@@ -1,35 +1,3 @@
-.rewind-logo {
-  height: 40px;
-
-  &.--light {
-    display: none;
-  }
-
-  &.--dark {
-    display: block;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    &.--light {
-      display: block;
-    }
-
-    &.--dark {
-      display: none;
-    }
-  }
-
-  @if is-dark-color-scheme() {
-    &.--dark {
-      display: none;
-    }
-
-    &.--light {
-      display: block;
-    }
-  }
-}
-
 .rewind__header {
   padding: 1em 0 1em 1em;
   background-color: #fbf8e4;
@@ -41,10 +9,6 @@
   z-index: 3;
   color: var(--rewind-black);
   display: flex;
-
-  .rewind-logo {
-    margin-bottom: 5px;
-  }
 
   p {
     margin: 0 0.5em 0 0;

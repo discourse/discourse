@@ -3,11 +3,11 @@
 RSpec.describe UserResource do
   fab!(:user) { Fabricate(:user, username: "someone") }
   let(:guardian) { Guardian.new }
-  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:edition) { JsonApiKit::Edition.current }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/users")
   end
-  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:document) do
     JsonApiKit::Document::Individual.for(user.id, {}, resource: described_class, client:)
   end

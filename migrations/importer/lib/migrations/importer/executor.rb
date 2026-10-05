@@ -7,11 +7,11 @@ module Migrations
         @intermediate_db = Database.connect(config[:intermediate_db])
         @discourse_db = DiscourseDB.new
         @shared_data = SharedData.new(@discourse_db)
-        @config = config[:config]
+        @config = config.except(:intermediate_db, :mappings_db, :files_db)
         @options = options
 
         attach_mappings_db(config[:mappings_db], options[:reset])
-        attach_uploads_db(config[:uploads_db])
+        attach_files_db(config[:files_db])
       end
 
       def start
@@ -40,13 +40,17 @@ module Migrations
         migrate_and_attach(db_path, Database::MAPPINGS_DB_SCHEMA_PATH, "mapped")
       end
 
-      def attach_uploads_db(db_path)
-        migrate_and_attach(db_path, Database::UPLOADS_DB_SCHEMA_PATH, "files")
+      def attach_files_db(db_path)
+        # An import can run without a files database (no uploads). The steps that
+        # read from it check whether it is attached and skip when it is not.
+        return if db_path.blank?
+
+        migrate_and_attach(db_path, Database::FILES_DB_SCHEMA_PATH, "files")
       end
 
       def migrate_and_attach(db_path, schema_path, alias_name)
         Database.migrate(db_path, migrations_path: schema_path)
-        @intermediate_db.execute("ATTACH DATABASE ? AS #{alias_name}", db_path)
+        @intermediate_db.attach_database(db_path, name: alias_name)
       end
 
       def optimize_intermediate_db

@@ -132,15 +132,19 @@ module DiscourseEvents
       end
 
       def dates
-        return "-" if @event&.expired? && @event.recurring?
-
+        start_date, end_date = displayed_dates
         suffix = timezone_suffix
-        formatted = "#{format_date(starts_at)}#{suffix}"
-
-        ends_at = event_node["data-end"]
-        formatted = "#{formatted} → #{format_date(ends_at)}#{suffix}" if ends_at
+        formatted = "#{format_date(start_date)}#{suffix}"
+        formatted = "#{formatted} → #{format_date(end_date)}#{suffix}" if end_date
 
         formatted
+      end
+
+      def displayed_dates
+        return starts_at, event_node["data-end"] if @event.nil?
+
+        serializer = BasicEventSerializer.new(@event, root: false)
+        [serializer.starts_at, serializer.ends_at]
       end
 
       def format_date(value)

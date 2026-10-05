@@ -5,9 +5,9 @@ RSpec.describe JsonApiKit::VersionChange::PassThrough do
 
   let(:name) { JsonApiKit::Name::Field.new(value: "title", type: "topics") }
 
-  describe "#current" do
+  describe "#current_names" do
     it "returns the name" do
-      expect(pass_through.current).to eq(name)
+      expect(pass_through.current_names).to eq([name])
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.describe JsonApiKit::VersionChange::PassThrough do
 
   describe "#previous_pairs" do
     it "returns the name with the value" do
-      expect(pass_through.previous_pairs("A")).to eq([[name, "A"]])
+      expect(pass_through.previous_pairs(name => "A")).to eq([[name, "A"]])
     end
   end
 end

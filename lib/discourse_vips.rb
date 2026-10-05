@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "discourse_vips/client"
-require "tempfile"
+require "image_processing/output_file"
 
 module DiscourseVips
   SVG_DIMENSIONS_TIMEOUT_SECONDS = 3
@@ -15,12 +15,14 @@ module DiscourseVips
   end
 
   def self.letter_avatar(letter:, output_path:, background_color:, font:, font_path:)
-    Client.call(
-      ["letter-avatar", letter, output_path, background_color, font, font_path],
-      operation: :letter_avatar_render,
-      read: ["/etc/fonts", "/var/cache/fontconfig", font_path],
-      write: [File.dirname(output_path)],
-    )
+    ImageProcessing::OutputFile.write(output_path) do |temporary_path|
+      Client.call(
+        ["letter-avatar", letter, temporary_path, background_color, font, font_path],
+        operation: :letter_avatar_render,
+        read: ["/etc/fonts", "/var/cache/fontconfig", font_path],
+        write: [temporary_path],
+      )
+    end
   end
 
   def self.dominant_color(input_path:, timeout:)
@@ -57,62 +59,67 @@ module DiscourseVips
     )
   end
 
-  def self.heif_to_jpeg(input_path:, output_path:, quality:, timeout:, read:, write:)
-    Client.call(
-      ["heif-to-jpeg", input_path, output_path, quality],
-      operation: :upload_heif_to_jpeg,
-      read:,
-      write:,
-      timeout:,
-    )
+  def self.heif_to_jpeg(input_path:, output_path:, quality:, timeout:)
+    ImageProcessing::OutputFile.write(output_path) do |temporary_path|
+      Client.call(
+        ["heif-to-jpeg", input_path, temporary_path, quality],
+        operation: :upload_heif_to_jpeg,
+        read: [input_path],
+        write: [temporary_path],
+        timeout:,
+      )
+    end
   end
 
-  def self.reencode_jpeg(input_path:, output_path:, quality:, timeout:, read:, write:)
-    Client.call(
-      ["reencode-jpeg", input_path, output_path, quality],
-      operation: :upload_jpeg_reencoding,
-      timeout:,
-      read:,
-      write:,
-    )
+  def self.reencode_jpeg(input_path:, output_path:, quality:, timeout:)
+    ImageProcessing::OutputFile.write(output_path) do |temporary_path|
+      Client.call(
+        ["reencode-jpeg", input_path, temporary_path, quality],
+        operation: :upload_jpeg_reencoding,
+        read: [input_path],
+        write: [temporary_path],
+        timeout:,
+      )
+    end
   end
 
-  def self.png_to_jpeg(input_path:, output_path:, quality:, timeout:, read:, write:)
-    Client.call(
-      ["png-to-jpeg", input_path, output_path, quality],
-      operation: :upload_png_to_jpeg,
-      read:,
-      write:,
-      timeout:,
-    )
+  def self.png_to_jpeg(input_path:, output_path:, quality:, timeout:)
+    ImageProcessing::OutputFile.write(output_path) do |temporary_path|
+      Client.call(
+        ["png-to-jpeg", input_path, temporary_path, quality],
+        operation: :upload_png_to_jpeg,
+        read: [input_path],
+        write: [temporary_path],
+        timeout:,
+      )
+    end
   end
 
   def self.svg_to_png(
     input_path:,
     output_path:,
-    read:,
-    write:,
+    asset_paths: [],
     timeout: SVG_TO_PNG_TIMEOUT_SECONDS,
     operation: :svg_to_png,
     nice: nil
   )
     timeout = [timeout, SVG_TO_PNG_TIMEOUT_SECONDS].min
-    Client.call(
-      ["svg-to-png", input_path, output_path],
-      operation:,
-      read: ["/etc/fonts", "/var/cache/fontconfig", *read],
-      write:,
-      timeout:,
-      nice:,
-    )
+    ImageProcessing::OutputFile.write(output_path) do |temporary_path|
+      Client.call(
+        ["svg-to-png", input_path, temporary_path],
+        operation:,
+        read: [input_path, "/etc/fonts", "/var/cache/fontconfig", *asset_paths],
+        write: [temporary_path],
+        timeout:,
+        nice:,
+      )
+    end
   end
 
   def self.thumbnail(
     input_path:,
     output_path:,
     timeout:,
-    read:,
-    write:,
     operation:,
     input_format: nil,
     output_format: nil,
@@ -132,16 +139,12 @@ module DiscourseVips
             "provide exactly one resize target: scale, width and height, or max_pixels"
     end
 
-    Tempfile.create(
-      ["thumbnail-", File.extname(output_path)],
-      File.dirname(output_path),
-    ) do |output|
-      output.close
+    ImageProcessing::OutputFile.write(output_path) do |temporary_path|
       Client.call(
         [
           "thumbnail",
           input_path,
-          output.path,
+          temporary_path,
           width,
           height,
           scale,
@@ -156,12 +159,11 @@ module DiscourseVips
           output_format,
         ],
         operation:,
-        read:,
-        write:,
+        read: [input_path],
+        write: [temporary_path],
         timeout:,
         nice: 10,
       )
-      FileUtils.copy_file(output.path, output_path)
     end
     nil
   end

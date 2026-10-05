@@ -51,7 +51,7 @@
   &__second-factor-step,
   &__account-details-step,
   &__user-fields-step,
-  &__complete-step,
+  &__signup-details-step,
   &__pending-approval-step {
     display: flex;
     flex-direction: column;
@@ -150,6 +150,22 @@
 
     .avatar {
       display: block;
+    }
+  }
+
+  &__avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 144px;
+    height: 144px;
+    border-radius: 50%;
+    background: var(--primary-low);
+    color: var(--primary-medium);
+
+    .d-icon {
+      width: 50%;
+      height: 50%;
     }
   }
 

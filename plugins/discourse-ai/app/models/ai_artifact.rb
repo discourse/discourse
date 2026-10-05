@@ -97,6 +97,21 @@ class AiArtifact < ActiveRecord::Base
     version
   end
 
+  def available_to?(guardian)
+    if !SiteSetting.discourse_ai_enabled ||
+         !SiteSetting.ai_artifact_security.in?(%w[lax hybrid strict])
+      return false
+    end
+
+    source_post = Post.find_by(id: post_id)
+    return false if source_post.blank? || source_post.topic.blank?
+
+    shared_conversation = SharedAiConversation.find_by(target: source_post.topic) if public?
+    return true if public? && (shared_conversation.blank? || shared_conversation.publicly_visible?)
+
+    guardian.can_see?(source_post)
+  end
+
   def public?
     metadata&.dig("public") == true
   end

@@ -46,6 +46,8 @@ module DiscourseMcp
     rescue Discourse::InvalidAccess
       error = Error.new("Not authorized", code: -32_001, http_status: 403)
       Response.new(http_status: 403, body: failure(payload&.dig("id"), error), headers: {})
+    rescue RateLimiter::LimitExceeded
+      raise
     rescue JSONSchemer::InvalidSchema => error
       protocol_error = Error.new("Invalid schema", code: -32_000, http_status: 500)
       Discourse.warn_exception(error, message: "MCP schema validation failed")

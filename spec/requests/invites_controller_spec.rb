@@ -1764,6 +1764,41 @@ RSpec.describe InvitesController do
         expect(User.count).to eq(user_count + 1)
       end
 
+      it "does not grant a bounded invite after another request has consumed its capacity" do
+        group = Fabricate(:group)
+        invite.update!(invited_by: admin)
+        InvitedGroup.create!(invite: invite, group: group)
+        stale_invite = Invite.find(invite.id)
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: "first@example.com",
+              password: "verystrongpassword",
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
+
+        allow(Invite).to receive(:find_by).with(invite_key: invite.invite_key).and_return(
+          stale_invite,
+        )
+
+        expect {
+          put "/invites/show/#{invite.invite_key}.json",
+              params: {
+                email: "second@example.com",
+                password: "verystrongpassword",
+              }
+        }.not_to change { User.count }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_found_json"))
+        expect(invite.reload.redemption_count).to eq(1)
+        expect(invite.invited_users.count).to eq(1)
+        expect(
+          GroupUser.where(group: group, user_id: invite.invited_users.select(:user_id)).count,
+        ).to eq(1)
+      end
+
       it "sends an activation email and does not activate the user" do
         expect {
           put "/invites/show/#{invite.invite_key}.json",

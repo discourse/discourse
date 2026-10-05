@@ -621,8 +621,6 @@ describe Jobs::DiscoursePostEventSendReminder do
       it "handles expired recurring events" do
         DiscourseEvents::Events::Invitee.create_attendance!(going_user.id, expired_event.id, :going)
 
-        expect(expired_event.starts_at).to be_nil
-
         expect { send_reminder(expired_event) }.not_to change {
           going_user.reload.unread_notifications
         }

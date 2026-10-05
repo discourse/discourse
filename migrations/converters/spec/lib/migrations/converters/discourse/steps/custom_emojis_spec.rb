@@ -23,7 +23,7 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
     )
 
     upload_id = Migrations::ID.hash(path)
-    expect(rows("uploads")).to contain_exactly(
+    expect(rows("upload_sources")).to contain_exactly(
       hash_including(id: upload_id, path:, filename: "parrot.png", type: "custom_emoji"),
     )
     expect(rows("custom_emojis")).to contain_exactly(

@@ -25,8 +25,12 @@ module JsonApiKit
 
         def max_page_size = page_limits.max
 
-        def paged_from?(cursor, ordering: {}) = order(ordering).compatible_with?(cursor:)
+        def paged_from?(cursor, ordering:) = order(ordering).compatible_with?(cursor:)
       end
+
+      delegate :page_limits, :page_size, :max_page_size, to: :class
+
+      def paged_from?(cursor, ordering:) = order(ordering).compatible_with?(cursor:)
     end
   end
 end

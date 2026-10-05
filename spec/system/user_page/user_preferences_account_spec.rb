@@ -13,13 +13,28 @@ describe "User preferences | Account" do
       expect(avatar_selector_modal).to be_open
       expect(avatar_selector_modal).to have_avatar_options("system", "gravatar", "upload")
 
-      avatar_selector_modal.select_avatar_upload_option
-      file_path = File.absolute_path(file_from_fixtures("logo.jpg"))
-      attach_file("custom-profile-upload", file_path, make_visible: true)
+      file_path = File.absolute_path(file_from_fixtures("logo.png"))
+      avatar_selector_modal.upload_image(file_path)
       expect(avatar_selector_modal).to have_user_avatar_image_uploaded
+      expect(avatar_selector_modal).to have_custom_picture_selected
+      expect(avatar_selector_modal).to have_upload_warning_below_choice
+      screenshot_marker(label: "avatar-upload-warning")
+      upload_id = avatar_selector_modal.uploaded_avatar_id
       avatar_selector_modal.click_primary_button
       expect(avatar_selector_modal).to be_closed
-      expect(user_account_preferences_page).to have_custom_uploaded_avatar_image
+      expect(user_account_preferences_page).to have_custom_uploaded_avatar_image(upload_id)
+
+      user_account_preferences_page.open_avatar_selector_modal(user)
+      expect(avatar_selector_modal).to have_custom_picture_selected
+      file_path = File.absolute_path(file_from_fixtures("logo.jpg"))
+      avatar_selector_modal.upload_image(file_path)
+      expect(avatar_selector_modal).not_to have_content(
+        I18n.t("js.user.change_avatar.image_is_not_a_square"),
+      )
+      upload_id = avatar_selector_modal.uploaded_avatar_id
+      avatar_selector_modal.click_primary_button
+      expect(avatar_selector_modal).to be_closed
+      expect(user_account_preferences_page).to have_custom_uploaded_avatar_image(upload_id)
 
       user_account_preferences_page.open_avatar_selector_modal(user)
       avatar_selector_modal.select_system_assigned_option
@@ -28,11 +43,23 @@ describe "User preferences | Account" do
       expect(user_account_preferences_page).to have_system_avatar_image
     end
 
-    it "does not allow for custom pictures when the user is not in uploaded_avatars_allowed_groups" do
+    it "hides uploads when an admin edits a user outside uploaded_avatars_allowed_groups" do
       SiteSetting.uploaded_avatars_allowed_groups = Group::AUTO_GROUPS[:admins]
+      sign_in(Fabricate(:admin, refresh_auto_groups: true))
       user_account_preferences_page.open_avatar_selector_modal(user)
       expect(avatar_selector_modal).to be_open
       expect(avatar_selector_modal).to have_no_avatar_upload_button
+    end
+
+    it "hides avatar editing when authentication controls the picture" do
+      %i[auth_overrides_avatar discourse_connect_overrides_avatar].each do |setting|
+        SiteSetting.public_send("#{setting}=", true)
+
+        user_account_preferences_page.visit(user)
+        expect(user_account_preferences_page).to have_no_avatar_editor
+
+        SiteSetting.public_send("#{setting}=", false)
+      end
     end
 
     it "does not show Gravatar option when gravatars are not enabled" do
@@ -79,15 +106,12 @@ describe "User preferences | Account" do
 
     after { DiscoursePluginRegistry.reset! }
 
-    it "displays the correct name when overridden" do
+    it "shows the provider's overridden name and icon" do
       user_account_preferences_page.visit(user)
       name = find(".pref-associated-accounts table tr.test-auth .associated-account__name")
       expect(name).not_to have_text("old pretty name")
       expect(name).to have_text("new pretty name")
-    end
 
-    it "displays the correct icon when overridden" do
-      user_account_preferences_page.visit(user)
       icon_classes =
         find(".pref-associated-accounts table tr.test-auth .associated-account__icon svg")[:class]
       expect(icon_classes).not_to have_content("d-icon-flash")

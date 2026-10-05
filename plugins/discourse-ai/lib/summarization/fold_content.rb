@@ -3,11 +3,6 @@
 module DiscourseAi
   module Summarization
     # This class offers a generic way of summarizing content from multiple sources using different prompts.
-    #
-    # It summarizes large amounts of content by recursively summarizing it in smaller chunks that
-    # fit the given model context window, finally concatenating the disjoint summaries
-    # into a final version.
-    #
     class FoldContent
       class MissingToolOutput < StandardError
       end
@@ -22,7 +17,6 @@ module DiscourseAi
 
       # @param user { User } - User object used for auditing usage.
       # @param &on_partial_blk { Block - Optional } - The passed block will get called with the LLM partial response.
-      # Note: The block is only called with results of the final summary, not intermediate summaries.
       #
       # This method doesn't care if we already have an up to date summary. It always regenerate.
       #
@@ -63,24 +57,13 @@ module DiscourseAi
         @existing_summary
       end
 
-      def delete_cached_summaries!
-        summaries = AiSummary.where(target: strategy.target, summary_type: strategy.type)
-
-        if strategy.locale.present?
-          summary_ids =
-            summaries
-              .where.not(locale: nil)
-              .filter_map do |summary|
-                summary.id if LocaleNormalizer.is_same?(summary.locale, strategy.locale)
-              end
-          AiSummary.where(id: summary_ids).destroy_all
-        else
-          summaries.where(locale: nil).destroy_all
-        end
-      end
-
       def truncate(item)
         item_content = item[:text].to_s
+        truncation_length = 500
+        tokenizer = llm_model.tokenizer_class
+        strict = SiteSetting.ai_strict_token_counting
+        return item if tokenizer.below_limit?(item_content, truncation_length * 2, strict:)
+
         # From https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries:
         #
         # A single Unicode code point is often, but not always, the same as a basic unit of a
@@ -94,24 +77,13 @@ module DiscourseAi
         graphemes = item_content.grapheme_clusters
         midpoint = graphemes.size / 2
 
-        first_half = graphemes.slice(0, midpoint)&.join || ""
-        second_half = (graphemes.slice(midpoint, graphemes.size - midpoint) || []).join
+        first_half = graphemes[...midpoint].join
+        second_half = graphemes[midpoint..].join
 
-        truncation_length = 500
-        tokenizer = llm_model.tokenizer_class
-
-        item[:text] = [
-          tokenizer.truncate(
-            first_half,
-            truncation_length,
-            strict: SiteSetting.ai_strict_token_counting,
-          ).to_s,
-          tokenizer.truncate(
-            second_half,
-            truncation_length,
-            strict: SiteSetting.ai_strict_token_counting,
-          ).to_s,
-        ].join(" ")
+        head = tokenizer.truncate(first_half, truncation_length, strict:)
+        tail_length = tokenizer.decode(tokenizer.encode(second_half).last(truncation_length)).length
+        tail = second_half[(second_half.length - tail_length)..]
+        item[:text] = "#{head} #{tail}"
 
         item
       end
@@ -147,10 +119,6 @@ module DiscourseAi
       # @param items { Array<Hash> } - Content to summarize. Structure will be: { poster: who wrote the content, id: a way to order content, text: content }
       # @param user { User } - User object used for auditing usage.
       # @param &on_partial_blk { Block - Optional } - The passed block will get called with the LLM partial response.
-      # Note: The block is only called with results of the final summary, not intermediate summaries.
-      #
-      # The summarization algorithm.
-      # It will summarize as much content summarize given the model's context window. If will prioriotize newer content in case it doesn't fit.
       #
       # @returns { String } - Resulting summary.
       def fold(items, user, &on_partial_blk)
@@ -158,7 +126,7 @@ module DiscourseAi
         tokens_left = available_tokens
         content_in_window = []
 
-        items.each_with_index do |item, idx|
+        items.each do |item|
           as_text = "(#{item[:id]} #{item[:poster]} said: #{item[:text]} "
 
           if tokenizer.below_limit?(

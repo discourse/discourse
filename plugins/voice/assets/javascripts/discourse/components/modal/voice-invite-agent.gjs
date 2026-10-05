@@ -84,6 +84,9 @@ export default class VoiceInviteAgentModal extends Component {
       @title={{i18n "voice.agent.invite"}}
     >
       <:body>
+        <p class="voice-invite-agent-modal__hint">
+          {{i18n "voice.agent.deploy_hint"}}
+        </p>
         <DConditionalLoadingSpinner @condition={{this.loading}}>
           <Form
             @data={{hash agent_name=""}}

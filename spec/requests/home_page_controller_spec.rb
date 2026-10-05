@@ -2,6 +2,61 @@
 
 RSpec.describe HomePageController do
   describe "homepage" do
+    context "with a registered homepage that has an availability check" do
+      fab!(:user)
+
+      let(:plugin) { Plugin::Instance.new }
+      let(:allowed_user_ids) { [] }
+      let(:check_calls) { [] }
+
+      before do
+        SiteSetting.has_login_hint = false
+        SiteSetting.top_menu = "latest|new|top|categories"
+        plugin.stubs(:enabled?).returns(true)
+        plugin.register_homepage(
+          "members",
+          name: "plugin.members",
+          path: "/members",
+          route: "home_page#blank",
+          available: ->(guardian:, request:) do
+            check_calls << guardian.user&.id
+            allowed_user_ids.include?(guardian.user&.id)
+          end,
+        )
+        Rails.application.reload_routes!
+        SiteSetting.default_homepage = "members"
+        sign_in(user)
+      end
+
+      after do
+        DiscoursePluginRegistry._raw_homepage_options.reject! do |registration|
+          registration[:plugin] == plugin
+        end
+        Rails.application.reload_routes!
+      end
+
+      it "serves the registered homepage and checks availability once" do
+        allowed_user_ids << user.id
+
+        get "/"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          '<meta name="discourse_current_homepage" content="members">',
+        )
+        expect(check_calls.size).to eq(1)
+      end
+
+      it "serves the top menu homepage when the registered one is unavailable" do
+        get "/"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          '<meta name="discourse_current_homepage" content="latest">',
+        )
+      end
+    end
+
     context "with crawler view" do
       before do
         SiteSetting.site_description = "This is a test description"

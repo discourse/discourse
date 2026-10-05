@@ -1,19 +1,21 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import AiUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/ai-usage";
@@ -21,7 +23,6 @@ import Assignments from "discourse/plugins/discourse-rewind/discourse/components
 import BestPosts from "discourse/plugins/discourse-rewind/discourse/components/reports/best-posts";
 import BestTopics from "discourse/plugins/discourse-rewind/discourse/components/reports/best-topics";
 import ChatUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/chat-usage";
-// import FavoriteGifs from "discourse/plugins/discourse-rewind/discourse/components/reports/favorite-gifs";
 import FBFF from "discourse/plugins/discourse-rewind/discourse/components/reports/fbff";
 import RewindHeader from "discourse/plugins/discourse-rewind/discourse/components/reports/header";
 import Invites from "discourse/plugins/discourse-rewind/discourse/components/reports/invites";
@@ -34,56 +35,65 @@ import TimeOfDayActivity from "discourse/plugins/discourse-rewind/discourse/comp
 import TopWords from "discourse/plugins/discourse-rewind/discourse/components/reports/top-words";
 import WritingAnalysis from "discourse/plugins/discourse-rewind/discourse/components/reports/writing-analysis";
 
-const BUFFER_SIZE = 3;
-const SCROLL_THRESHOLD = 0.7;
+const REPORT_COMPONENTS = {
+  "activity-calendar": ActivityCalendar,
+  "ai-usage": AiUsage,
+  assignments: Assignments,
+  "best-posts": BestPosts,
+  "best-topics": BestTopics,
+  "chat-usage": ChatUsage,
+  fbff: FBFF,
+  invites: Invites,
+  "most-viewed-categories": MostViewedCategories,
+  "most-viewed-tags": MostViewedTags,
+  "new-user-interactions": NewUserInteractions,
+  reactions: Reactions,
+  "reading-time": ReadingTime,
+  "time-of-day-activity": TimeOfDayActivity,
+  "top-words": TopWords,
+  "writing-analysis": WritingAnalysis,
+};
 
 export default class Rewind extends Component {
-  @service dialog;
   @service currentUser;
+  @service dialog;
   @service toasts;
 
-  @tracked rewind = [];
-  @tracked fullScreen = this.currentUser !== null;
-  @tracked loadingRewind = false;
-  @tracked totalAvailable = 0;
-  @tracked isLoadingMore = false;
   @tracked cannotViewRewind = false;
-  nextReportIndex = 0;
+  @tracked fullScreen = true;
+  @tracked isLoadingMore = false;
+  @tracked loadingRewind = false;
+  @tracked nextOffset = 0;
+  @tracked rewind = [];
+  @tracked scrollWrapper = null;
+  @tracked totalAvailable = 0;
 
-  get canShare() {
+  registerScrollWrapper = modifier((element) => {
+    this.scrollWrapper = element;
+    return () => (this.scrollWrapper = null);
+  });
+
+  get isOwnRewind() {
     return this.currentUser.id === this.args.user.id;
   }
 
-  get isOwnRewind() {
-    return this.currentUser?.id === this.args.user.id;
+  get #userParams() {
+    return this.isOwnRewind
+      ? {}
+      : { for_user_username: this.args.user.username };
   }
 
-  @action
-  registerScrollWrapper(element) {
-    this.scrollWrapper = element;
-    this.scrollWrapper.addEventListener("scroll", this.handleScroll);
-  }
-
-  @action
-  cleanup() {
-    this.scrollWrapper?.removeEventListener("scroll", this.handleScroll);
+  get hasMoreReports() {
+    return this.nextOffset < this.totalAvailable;
   }
 
   @action
   async loadRewind() {
-    let url = "/rewinds.json";
-    if (this.args.user.id !== this.currentUser.id) {
-      url += `?for_user_username=${this.args.user.username}`;
-    }
-
     try {
       this.loadingRewind = true;
-      const response = await ajax(url);
-      this.rewind = response.reports;
-      this.totalAvailable = response.total_available;
-      this.nextReportIndex = response.reports.length;
+      await this.#loadReports();
     } catch (err) {
-      if (err.jqXHR.status === 404 || err.jqXHR.status === 403) {
+      if (err.jqXHR?.status === 404 || err.jqXHR?.status === 403) {
         this.cannotViewRewind = true;
       } else {
         popupAjaxError(err);
@@ -91,73 +101,24 @@ export default class Rewind extends Component {
     } finally {
       this.loadingRewind = false;
     }
-
-    // Load more if content fits on screen without scrolling
-    this.checkIfMoreContentNeeded();
-  }
-
-  checkIfMoreContentNeeded() {
-    if (!this.scrollWrapper || this.nextReportIndex >= this.totalAvailable) {
-      return;
-    }
-
-    const { scrollHeight, clientHeight } = this.scrollWrapper;
-    if (scrollHeight <= clientHeight) {
-      this.preloadNextReports();
-    }
   }
 
   @action
-  handleScroll() {
-    if (this.isLoadingMore || this.nextReportIndex >= this.totalAvailable) {
+  async loadMoreReports() {
+    if (this.isLoadingMore) {
       return;
     }
-
-    const { scrollTop, scrollHeight, clientHeight } = this.scrollWrapper;
-    const scrollProgress = (scrollTop + clientHeight) / scrollHeight;
-
-    if (scrollProgress > SCROLL_THRESHOLD) {
-      this.preloadNextReports();
-    }
-  }
-
-  async preloadNextReports() {
-    if (this.nextReportIndex >= this.totalAvailable) {
-      return;
-    }
-
-    const targetIndex = Math.min(
-      this.nextReportIndex + BUFFER_SIZE,
-      this.totalAvailable
-    );
 
     this.isLoadingMore = true;
 
     try {
-      while (this.nextReportIndex < targetIndex) {
-        let url = `/rewinds/${this.nextReportIndex}.json`;
-        if (this.args.user.id !== this.currentUser.id) {
-          url += `?for_user_username=${this.args.user.username}`;
-        }
-
-        try {
-          const response = await ajax(url, {
-            ignoreUnsent: false,
-          });
-          if (response.report) {
-            this.rewind = [...this.rewind, response.report];
-          }
-        } catch {
-          // Skip failed reports and continue loading
-        }
-        this.nextReportIndex++;
-      }
+      await this.#loadReports();
+    } catch (err) {
+      this.totalAvailable = this.nextOffset;
+      popupAjaxError(err);
     } finally {
       this.isLoadingMore = false;
     }
-
-    // Re-check in case we need more content (failed reports or content fits on screen)
-    this.checkIfMoreContentNeeded();
   }
 
   @action
@@ -181,27 +142,7 @@ export default class Rewind extends Component {
   @action
   async toggleShareRewind() {
     if (this.currentUser.user_option.discourse_rewind_share_publicly) {
-      try {
-        const response = await ajax("/rewinds/toggle-share", {
-          type: "PUT",
-        });
-
-        this.currentUser.set(
-          "user_option.discourse_rewind_share_publicly",
-          response.shared
-        );
-
-        this.toasts.success({
-          duration: "short",
-          data: {
-            message: i18n("discourse_rewind.share.disabled_success"),
-          },
-        });
-      } catch (err) {
-        popupAjaxError(err);
-        return;
-      }
-
+      await this.#toggleShare("discourse_rewind.share.disabled_success");
       return;
     }
 
@@ -209,26 +150,8 @@ export default class Rewind extends Component {
       message: i18n("discourse_rewind.share.confirm"),
       confirmButtonLabel: "discourse_rewind.share.confirm_button.enable",
       cancelButtonLabel: "discourse_rewind.share.confirm_button.disable",
-      didConfirm: async () => {
-        try {
-          const response = await ajax("/rewinds/toggle-share", {
-            type: "PUT",
-          });
-          this.currentUser.set(
-            "user_option.discourse_rewind_share_publicly",
-            response.shared
-          );
-
-          this.toasts.success({
-            duration: "short",
-            data: {
-              message: i18n("discourse_rewind.share.enabled_success"),
-            },
-          });
-        } catch (err) {
-          popupAjaxError(err);
-        }
-      },
+      didConfirm: () =>
+        this.#toggleShare("discourse_rewind.share.enabled_success"),
     });
   }
 
@@ -246,49 +169,28 @@ export default class Rewind extends Component {
     }
   }
 
-  @action
-  registerRewindContainer(element) {
-    this.rewindContainer = element;
+  async #loadReports() {
+    const response = await ajax("/rewinds.json", {
+      data: { ...this.#userParams, offset: this.nextOffset },
+    });
+    this.rewind = [...this.rewind, ...response.reports.filter(Boolean)];
+    this.totalAvailable = response.total_available;
+    this.nextOffset += response.reports.length;
   }
 
-  getReportComponent(identifier) {
-    switch (identifier) {
-      case "fbff":
-        return FBFF;
-      case "reactions":
-        return Reactions;
-      case "top-words":
-        return TopWords;
-      case "best-posts":
-        return BestPosts;
-      case "best-topics":
-        return BestTopics;
-      case "activity-calendar":
-        return ActivityCalendar;
-      case "most-viewed-tags":
-        return MostViewedTags;
-      case "reading-time":
-        return ReadingTime;
-      case "most-viewed-categories":
-        return MostViewedCategories;
-      case "ai-usage":
-        return AiUsage;
-      case "assignments":
-        return Assignments;
-      case "chat-usage":
-        return ChatUsage;
-      // case "favorite-gifs":
-      //   return FavoriteGifs;
-      case "invites":
-        return Invites;
-      case "new-user-interactions":
-        return NewUserInteractions;
-      case "time-of-day-activity":
-        return TimeOfDayActivity;
-      case "writing-analysis":
-        return WritingAnalysis;
-      default:
-        return null;
+  async #toggleShare(successMessageKey) {
+    try {
+      const response = await ajax("/rewinds/toggle-share", { type: "PUT" });
+      this.currentUser.set(
+        "user_option.discourse_rewind_share_publicly",
+        response.shared
+      );
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n(successMessageKey) },
+      });
+    } catch (err) {
+      popupAjaxError(err);
     }
   }
 
@@ -302,20 +204,19 @@ export default class Rewind extends Component {
       {{didInsert this.loadRewind}}
       {{on "keydown" this.handleEscape}}
       {{on "click" this.handleBackdropClick}}
-      {{didInsert this.registerRewindContainer}}
     >
       <div class="rewind">
         <RewindHeader />
         {{#if this.loadingRewind}}
           <div class="rewind-loader">
-            <div class="spinner small"></div>
+            {{dLoadingSpinner size="small"}}
             <div class="rewind-loader__text">
               {{i18n "discourse_rewind.loading"}}
             </div>
           </div>
         {{else}}
           <div class="rewind__header-buttons">
-            {{#if this.canShare}}
+            {{#if this.isOwnRewind}}
               <div class="rewind__share-toggle-wrapper">
                 {{i18n "discourse_rewind.share.toggle_label.private"}}
 
@@ -350,12 +251,8 @@ export default class Rewind extends Component {
 
           </div>
 
-          <div
-            class="rewind__scroll-wrapper"
-            {{didInsert this.registerScrollWrapper}}
-            {{willDestroy this.cleanup}}
-          >
-            {{#unless (eq this.currentUser.id @user.id)}}
+          <div class="rewind__scroll-wrapper" {{this.registerScrollWrapper}}>
+            {{#unless this.isOwnRewind}}
               <p class="rewind-other-user">{{trustHTML
                   (i18n
                     "discourse_rewind.viewing_other_user"
@@ -386,7 +283,7 @@ export default class Rewind extends Component {
 
             {{#each this.rewind as |report|}}
               {{#let
-                (this.getReportComponent report.identifier)
+                (get REPORT_COMPONENTS report.identifier)
                 as |ReportComponent|
               }}
                 {{#if ReportComponent}}
@@ -401,28 +298,19 @@ export default class Rewind extends Component {
               {{/let}}
             {{/each}}
 
+            <DLoadMore
+              @action={{this.loadMoreReports}}
+              @enabled={{this.hasMoreReports}}
+              @isLoading={{this.isLoadingMore}}
+              @root={{this.scrollWrapper}}
+            />
+
             {{#if this.isLoadingMore}}
               <div class="rewind-loader --more">
-                <div class="spinner small"></div>
+                {{dLoadingSpinner size="small"}}
               </div>
             {{/if}}
           </div>
-
-          {{#if this.showPrev}}
-            <DButton
-              class="rewind__prev-btn"
-              @action={{this.prev}}
-              @icon="chevron-left"
-            />
-          {{/if}}
-
-          {{#if this.showNext}}
-            <DButton
-              class="rewind__next-btn"
-              @action={{this.next}}
-              @icon="chevron-right"
-            />
-          {{/if}}
         {{/if}}
       </div>
     </div>

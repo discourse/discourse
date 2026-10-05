@@ -883,7 +883,7 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
       }
     }
 
-    this.view.dispatch(tr);
+    this.view.dispatch(tr.setMeta("uploadPlaceholderResolved", true));
   }
 
   #revokeBlobUrl(node: Node): void {

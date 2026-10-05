@@ -379,6 +379,27 @@ RSpec.describe BadgeGranter do
       expect(Notification.where(user:).count).to eq(0)
     end
 
+    it "suppresses notifications without changing grant side effects" do
+      events =
+        DiscourseEvent.track_events { BadgeGranter.grant(badge, user, suppress_notification: true) }
+
+      expect(UserBadge.exists?(badge:, user:)).to eq(true)
+      expect(badge.reload.grant_count).to eq(1)
+      expect(user.user_stat.reload.distinct_badge_count).to eq(1)
+      expect(Notification.where(user:)).to be_empty
+      expect(events.map { |event| event[:event_name] }).to include(:user_badge_granted)
+    end
+
+    it "does not override existing notification suppression when false" do
+      freeze_time
+      bronze_badge = Fabricate(:badge, badge_type: BadgeType.find(BadgeType::Bronze))
+
+      BadgeGranter.grant(bronze_badge, user, created_at: 1.year.ago, suppress_notification: false)
+
+      expect(UserBadge.exists?(badge: bronze_badge, user:)).to eq(true)
+      expect(Notification.where(user:)).to be_empty
+    end
+
     it "handles deleted badge" do
       freeze_time
       user_badge = BadgeGranter.grant(nil, user, created_at: 1.year.ago)

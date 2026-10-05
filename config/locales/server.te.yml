@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 te:
+  markdown_endpoints:
+    latest: "తాజా"
+    categories: "వర్గాలు"
+    tags: "ట్యాగులు"
+    previous_page: "గత పుట"
+    next_page: "తరువాతి పుట"
+    replies: "ప్రత్యుత్తరాలు"
+    event:
+      location: "ప్రాంతం"
+      link: "లింక్"
   mcp:
     errors:
       topic_not_found: "విషయం కనిపించలేదు"

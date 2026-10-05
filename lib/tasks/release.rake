@@ -208,7 +208,7 @@ namespace :release do
         capture: true,
       )
 
-    prs = JSON.parse(json_output)
+    prs = JSON.parse(json_output).sort_by { |pr| pr["number"] }
     raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
 
     extract_ghsa_id = ->(body) do
@@ -247,6 +247,7 @@ namespace :release do
         )
       end
     raise "No PRs selected" if selected.empty?
+    selected.sort_by! { |pr| pr["number"] }
 
     puts "Staging security fixes for #{base} branch: #{selected.map { |pr| pr["headRefName"] }.inspect}"
 

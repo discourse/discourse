@@ -9,6 +9,12 @@ import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-ca
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
+import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
+import {
+  calculatePresetStartDate,
+  PERIOD_CUSTOM,
+  PERIOD_LAST_7_DAYS,
+} from "discourse/admin/lib/dashboard-date-range";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
@@ -70,7 +76,7 @@ function normalizeList(value) {
   }
 
   return (value || "")
-    .split(/[\n,]/)
+    .split("\n")
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -94,12 +100,16 @@ export default class AdminMcp extends Component {
   @tracked primitiveEnabledStates;
   @tracked authorizationFilter = "";
   @tracked clientFilter = "";
+  @tracked activityCustomEndDate;
+  @tracked activityCustomStartDate;
   @tracked activityFilter = "";
   @tracked activityOutcome = "all";
+  @tracked activityPeriod = PERIOD_LAST_7_DAYS;
   @tracked primitiveFormApi;
   @tracked saving = false;
   @tracked clients;
   @tracked clientRecord;
+  @tracked clientEditData;
   @tracked clientNextCursor;
   @tracked clientLoading = false;
   @tracked selectedClientPresetId;
@@ -124,11 +134,16 @@ export default class AdminMcp extends Component {
   };
   clientFilterFormData = { clientFilter: "" };
   authorizationFilterFormData = { authorizationFilter: "" };
-  activityFilterFormData = { activityFilter: "", activityOutcome: "all" };
+  activityFilterFormData = {
+    activityFilter: "",
+    activityOutcome: "all",
+  };
   clientPresetIds = Object.keys(CLIENT_PRESETS);
   clientRequestId = 0;
   authorizationRequestId = 0;
   activityRequestId = 0;
+
+  #clientFormApi;
 
   constructor() {
     super(...arguments);
@@ -136,6 +151,12 @@ export default class AdminMcp extends Component {
     this.clients = model.clients || model.oauth_clients;
     this.clientNextCursor = model.meta?.next_cursor;
     this.clientRecord = model.client;
+    if (this.args.section === "client-edit") {
+      this.clientEditData = {
+        name: model.client.name,
+        redirect_uris: model.client.redirect_uris.join("\n"),
+      };
+    }
     this.primitiveRecords = model.primitives;
     this.primitiveEnabledStates = new Map(
       (model.primitives || []).map((primitive) => [
@@ -184,6 +205,25 @@ export default class AdminMcp extends Component {
 
   get metrics() {
     return this.activityMetrics || this.model.metrics || {};
+  }
+
+  get activityEndDate() {
+    return this.activityCustomEndDate ?? moment().endOf("day").toDate();
+  }
+
+  get activityStartDate() {
+    return (
+      this.activityCustomStartDate ??
+      calculatePresetStartDate(this.activityPeriod)
+    );
+  }
+
+  get hasActivity() {
+    return Boolean(this.activity?.length);
+  }
+
+  get hasP95Latency() {
+    return Number.isFinite(this.metrics.p95_latency_ms);
   }
 
   get setupChecklist() {
@@ -687,6 +727,50 @@ export default class AdminMcp extends Component {
   }
 
   @action
+  cancelClientEdit() {
+    this.router.transitionTo("adminConfig.mcp.clients.show", this.client.id);
+  }
+
+  @action
+  registerClientForm(api) {
+    this.#clientFormApi = api;
+  }
+
+  @action
+  async updateClient(data) {
+    this.saving = true;
+    try {
+      const client = {};
+      if (data.name !== this.clientEditData.name) {
+        client.name = data.name;
+      }
+      const redirectUris = normalizeList(data.redirect_uris);
+      if (
+        redirectUris.join("\n") !==
+        normalizeList(this.clientEditData.redirect_uris).join("\n")
+      ) {
+        client.redirect_uris = redirectUris;
+      }
+      if (Object.keys(client).length) {
+        await ajax(`/admin/mcp/clients/${this.client.id}.json`, {
+          type: "PUT",
+          data: { client },
+        });
+      }
+      this.#clientFormApi.commit();
+      this.router.transitionTo("adminConfig.mcp.clients.show", this.client.id);
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("admin.config.mcp.clients.updated") },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  @action
   resetClientPreset() {
     this.selectedClientPresetId = null;
   }
@@ -873,6 +957,22 @@ export default class AdminMcp extends Component {
   }
 
   @action
+  setActivityCustomDateRange(startDate, endDate) {
+    this.activityCustomStartDate = startDate;
+    this.activityCustomEndDate = endDate;
+    this.activityPeriod = PERIOD_CUSTOM;
+    return this.reloadActivity();
+  }
+
+  @action
+  setActivityPeriod(period) {
+    this.activityCustomStartDate = null;
+    this.activityCustomEndDate = null;
+    this.activityPeriod = period;
+    return this.reloadActivity();
+  }
+
+  @action
   loadMoreActivity() {
     if (!this.canLoadMoreActivity || this.activityLoading) {
       return;
@@ -919,6 +1019,8 @@ export default class AdminMcp extends Component {
     if (this.activityOutcome !== "all") {
       data.outcome = this.activityOutcome;
     }
+    data.start_date = moment(this.activityStartDate).format("YYYY-MM-DD");
+    data.end_date = moment(this.activityEndDate).format("YYYY-MM-DD");
     if (cursor) {
       data.cursor = cursor;
     }
@@ -1658,7 +1760,7 @@ export default class AdminMcp extends Component {
                 @description={{i18n
                   "admin.config.mcp.clients.redirect_uris_description"
                 }}
-                @format="large"
+                @format="full"
                 @name="redirect_uris"
                 @title={{i18n "admin.config.mcp.clients.redirect_uris"}}
                 @type="textarea"
@@ -1702,6 +1804,59 @@ export default class AdminMcp extends Component {
           </AdminSectionLandingWrapper>
         </section>
       {{/if}}
+    {{else if (eq @section "client-edit")}}
+      <BackButton
+        @model={{this.client.id}}
+        @route="adminConfig.mcp.clients.show"
+      />
+      <AdminConfigAreaCard @heading="admin.config.mcp.clients.edit">
+        <:content>
+          <p>{{i18n
+              (if
+                this.client.admin_managed
+                "admin.config.mcp.clients.manual_description"
+                "admin.config.mcp.clients.automatic_description"
+              )
+            }}</p>
+          <Form
+            class="admin-mcp__edit-client-form"
+            @commitOnSubmit={{false}}
+            @data={{this.clientEditData}}
+            @isLoading={{this.saving}}
+            @onRegisterApi={{this.registerClientForm}}
+            @onSubmit={{this.updateClient}}
+            as |form|
+          >
+            <form.Field
+              @description={{i18n "admin.config.mcp.clients.name_description"}}
+              @format="large"
+              @name="name"
+              @title={{i18n "admin.config.mcp.clients.name"}}
+              @type="input"
+              @validation="required"
+              as |field|
+            ><field.Control /></form.Field>
+            <form.Field
+              @description={{i18n
+                "admin.config.mcp.clients.redirect_uris_description"
+              }}
+              @format="full"
+              @name="redirect_uris"
+              @title={{i18n "admin.config.mcp.clients.redirect_uris"}}
+              @type="textarea"
+              @validation="required"
+              as |field|
+            ><field.Control @height={{100}} /></form.Field>
+            <form.Submit @label="save" />
+            <DButton
+              class="btn-default admin-mcp__cancel-client-edit"
+              @action={{this.cancelClientEdit}}
+              @disabled={{this.saving}}
+              @label="cancel"
+            />
+          </Form>
+        </:content>
+      </AdminConfigAreaCard>
     {{else if (eq @section "client-detail")}}
       <BackButton
         @label="admin.config.mcp.clients.back"
@@ -1712,6 +1867,12 @@ export default class AdminMcp extends Component {
         @titleLabel={{this.client.name}}
       >
         <:actions as |actions|>
+          <actions.Default
+            class="admin-mcp__edit-client"
+            @label="admin.config.mcp.clients.edit"
+            @route="adminConfig.mcp.clients.edit"
+            @routeModels={{array this.client.id}}
+          />
           <actions.Default
             @action={{fn this.toggleClientBlock this.client}}
             @label={{if
@@ -1757,6 +1918,14 @@ export default class AdminMcp extends Component {
                   {{/each}}
                 </ul>
               </dd></div>
+            <div><dt>{{i18n "admin.config.mcp.clients.management"}}</dt><dd
+              >{{i18n
+                  (if
+                    this.client.admin_managed
+                    "admin.config.mcp.clients.manual"
+                    "admin.config.mcp.clients.automatic"
+                  )
+                }}</dd></div>
             <div><dt>{{i18n "admin.config.mcp.clients.first_seen"}}</dt><dd
               >{{dFormatDate this.client.first_seen_at}}</dd></div>
             <div><dt>{{i18n "admin.config.mcp.clients.last_seen"}}</dt><dd>{{#if
@@ -1879,19 +2048,6 @@ export default class AdminMcp extends Component {
         @descriptionLabel={{i18n "admin.config.mcp.activity.description"}}
         @titleLabel={{i18n "admin.config.mcp.activity.title"}}
       />
-      <div class="admin-mcp__metric-grid admin-mcp__activity-metrics">
-        <div><dt>{{i18n "admin.config.mcp.activity.tool_calls"}}</dt><dd
-          >{{this.metrics.tool_calls}}</dd></div><div><dt>{{i18n
-              "admin.config.mcp.activity.errors"
-            }}</dt><dd>{{this.metrics.errors}}</dd></div><div><dt>{{i18n
-              "admin.config.mcp.activity.rate_limits"
-            }}</dt><dd>{{this.metrics.rate_limits}}</dd></div><div><dt>{{i18n
-              "admin.config.mcp.activity.p95_latency"
-            }}</dt><dd>{{i18n
-              "admin.config.mcp.activity.duration_value"
-              milliseconds=this.metrics.p95_latency_ms
-            }}</dd></div>
-      </div>
       <Form
         class="admin-mcp__activity-filters"
         @data={{this.activityFilterFormData}}
@@ -1912,7 +2068,15 @@ export default class AdminMcp extends Component {
             placeholder={{i18n "admin.config.mcp.activity.search_placeholder"}}
           />
         </form.Field>
+        <DashboardDateRange
+          @endDate={{this.activityEndDate}}
+          @period={{this.activityPeriod}}
+          @setCustomDateRange={{this.setActivityCustomDateRange}}
+          @setPeriod={{this.setActivityPeriod}}
+          @startDate={{this.activityStartDate}}
+        />
         <form.Field
+          class="admin-mcp__activity-outcome"
           @name="activityOutcome"
           @showOptional={{false}}
           @showTitle={{false}}
@@ -1933,6 +2097,28 @@ export default class AdminMcp extends Component {
           </field.Control>
         </form.Field>
       </Form>
+      {{#if this.hasActivity}}
+        <div class="admin-mcp__activity-metrics">
+          <dl class="admin-mcp__metric-grid">
+            <div><dt>{{i18n "admin.config.mcp.activity.tool_calls"}}</dt><dd
+              >{{this.metrics.tool_calls}}</dd></div><div><dt>{{i18n
+                  "admin.config.mcp.activity.failed_tool_calls"
+                }}</dt><dd
+                class="admin-mcp__activity-failed-tool-calls"
+              >{{this.metrics.failed_tool_calls}}</dd></div><div><dt>{{i18n
+                  "admin.config.mcp.activity.rate_limits"
+                }}</dt><dd>{{this.metrics.rate_limits}}</dd></div><div><dt
+              >{{i18n "admin.config.mcp.activity.p95_latency"}}</dt><dd
+                class="admin-mcp__activity-p95-latency"
+              >{{#if this.hasP95Latency}}{{i18n
+                    "admin.config.mcp.activity.duration_value"
+                    milliseconds=this.metrics.p95_latency_ms
+                  }}{{else}}{{i18n
+                    "admin.config.mcp.activity.no_latency"
+                  }}{{/if}}</dd></div>
+          </dl>
+        </div>
+      {{/if}}
       <DLoadMore
         class="admin-mcp__load-more"
         @action={{this.loadMoreActivity}}

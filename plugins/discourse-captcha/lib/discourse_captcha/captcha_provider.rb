@@ -3,7 +3,8 @@
 module DiscourseCaptcha
   class CaptchaProvider
     HCAPTCHA = "hcaptcha"
-    RECAPTCHA = "recaptcha"
+    RECAPTCHA_V2 = "recaptcha_v2"
+    RECAPTCHA_V3 = "recaptcha_v3"
     NONE = "none"
 
     def fetch_captcha_token(server_session)
@@ -16,6 +17,17 @@ module DiscourseCaptcha
 
     def send_captcha_verification(captcha_token)
       raise NotImplementedError
+    end
+
+    def validate_captcha_response(response)
+      raise Discourse::InvalidAccess if response.code.to_i >= 500
+
+      response_json = JSON.parse(response.body)
+      if response_json["success"].nil? || response_json["success"] == false
+        raise Discourse::InvalidAccess
+      end
+
+      response_json
     end
 
     protected

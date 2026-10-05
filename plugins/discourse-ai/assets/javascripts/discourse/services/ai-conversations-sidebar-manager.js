@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -14,12 +15,14 @@ import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
 import AiConversationSidebarContextMenu from "../components/ai-conversation-sidebar-context-menu";
 
 export const AI_CONVERSATIONS_PANEL = "ai-conversations";
+const AI_CONVERSATIONS_HOMEPAGE = "ai-conversations";
 const SCROLL_BUFFER = 100;
 const DEBOUNCE = 100;
 const TITLE_CHANNEL = `/discourse-ai/ai-bot/topic-titles`;
 
 export default class AiConversationsSidebarManager extends Service {
   @service appEvents;
+  @service currentUser;
   @service sidebarState;
   @service messageBus;
   @service routeHistory;
@@ -78,7 +81,9 @@ export default class AiConversationsSidebarManager extends Service {
       this._attachScrollListener
     );
 
-    this._watchForTitleUpdates();
+    if (this.currentUser) {
+      this._watchForTitleUpdates();
+    }
   }
 
   willDestroy() {
@@ -119,6 +124,12 @@ export default class AiConversationsSidebarManager extends Service {
     this.sidebarState.setPanel(AI_CONVERSATIONS_PANEL);
     this.sidebarState.setSeparatedMode();
     this.sidebarState.hideSwitchPanelButtons();
+
+    // Anonymous visitors get the panel for its login prompt, but have no
+    // conversations to list.
+    if (!this.currentUser) {
+      return true;
+    }
 
     // don't render sidebar multiple times
     if (this._didInit) {
@@ -264,12 +275,19 @@ export default class AiConversationsSidebarManager extends Service {
   }
 
   _captureLastKnownAppURL() {
+    // When conversations are the homepage, `/` is not a way back to the forum.
+    const conversationsIsHomepage =
+      defaultHomepage() === AI_CONVERSATIONS_HOMEPAGE;
     const lastForumUrl = this.routeHistory.history.find((url) => {
+      if (conversationsIsHomepage && url.split(/[?#]/, 1)[0] === "/") {
+        return false;
+      }
+
       return !url.startsWith("/discourse-ai");
     });
 
     this.lastKnownAppURL =
-      lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
+      lastForumUrl || this.router.urlFor(discoveryHomepageRoute());
   }
 
   _handleNewBotPM(topic) {

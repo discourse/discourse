@@ -191,6 +191,8 @@ plugins:
     client: true
   voice_badges_enabled:
     default: true
+    depends_on:
+      - voice_enabled
   voice_analytics_enabled:
     default: true
   voice_session_retention_days:

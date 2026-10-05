@@ -595,6 +595,9 @@ zh_CN:
           translate:
             label: "翻译"
             title: "使用所选语言作为源语言，翻译成所有支持的语言"
+            confirm: "将 %{language} 翻译为："
+            override_existing: "同时覆盖现有翻译。"
+            no_targets: "未配置其他目标语言。请在内容本地化支持的区域设置中添加语言。"
             queued: "翻译已加入队列"
             failed: "无法将翻译加入队列"
         translations_menu:
@@ -1537,6 +1540,7 @@ zh_CN:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          homepage_option: "AI 机器人对话"
           header: "我能帮上什么忙？"
           submit: "提交问题"
           disclaimer: "生成式 AI 可能会犯错。请验证重要信息。"

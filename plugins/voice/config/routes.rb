@@ -41,7 +41,11 @@ Voice::Engine.routes.draw do
   get "contacts" => "contacts#index"
   get "chat_threads/:id" => "chat_threads#show", :constraints => { id: /\d+/ }
   get "r/:slug" => "page#show", :format => false
-  get "r/:slug/invited-by/:username" => "page#show", :format => false
+  get "r/:slug/invited-by/:username" => "page#show",
+      :format => false,
+      :constraints => {
+        username: RouteFormat.username,
+      }
 end
 
 Discourse::Application.routes.draw do

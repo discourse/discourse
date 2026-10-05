@@ -53,11 +53,12 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
       result.associated_groups = []
       groups =
         auth_token.extra&.dig(:raw_info, claim) || auth_token.extra&.dig(:id_token_info, claim)
+      groups = groups.split(",").map(&:strip).reject(&:empty?) if groups.is_a?(String)
 
       if groups.is_a?(Array)
         result.associated_groups = groups.map { |group_name| { id: group_name, name: group_name } }
       elsif groups.present?
-        oidc_log("groups claim '#{claim}' is not an array: #{groups.class}", error: true)
+        oidc_log("groups claim '#{claim}' is not an array or string: #{groups.class}", error: true)
       else
         oidc_log("groups claim '#{claim}' not found in auth token")
       end
@@ -173,6 +174,7 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
                             passthrough_authorize_options:
                               SiteSetting.openid_connect_authorize_parameters.split("|"),
                             claims: SiteSetting.openid_connect_claims,
+                            email_claim: SiteSetting.openid_connect_email_claim,
                             pkce: SiteSetting.openid_connect_use_pkce,
                             pkce_options: {
                               code_verifier: -> { generate_code_verifier },

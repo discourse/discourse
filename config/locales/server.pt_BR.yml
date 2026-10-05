@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  markdown_endpoints:
+    latest: "Últimos"
+    categories: "Categorias"
+    tags: "Tags"
+    previous_page: "Página anterior"
+    next_page: "Próxima página"
+    replies: "Respostas"
+    last_updated: "Última atualização"
+    event:
+      name: "Evento"
+      location: "Local"
+      link: "Link"
   mcp:
     errors:
       draft_too_long: "O rascunho é muito longo"
@@ -832,6 +844,7 @@ pt_BR:
       description_too_long:
         one: "A descrição é longa demais (deve ter no máximo %{count} caractere)."
         other: "A descrição é longa demais (deve ter no máximo %{count} caracteres)."
+      special_category_permissions: "Esta é uma categoria pré-propagada, e as configurações de segurança não podem ser editadas. Se você não quer usar esta categoria, exclua em vez de reaproveitar."
       permission_conflict: "Qualquer grupo que tenha permissão para acessar uma subcategoria também deve ter permissão para acessar a categoria pai. Os grupos a seguir têm acesso a uma das subcategorias, mas não têm acesso à categoria pai: %{group_names}."
       disallowed_topic_tags: "Este tópico tem etiquetas não permitidas por esta categoria: \"%{tags}\""
       disallowed_tags_generic: "Este tópico tem etiquetas não permitidas."

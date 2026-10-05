@@ -5,6 +5,17 @@
 # https://translate.discourse.org/
 
 vi:
+  markdown_endpoints:
+    latest: "Gần đây"
+    categories: "Danh mục"
+    tags: "Thẻ"
+    previous_page: "Trang trước"
+    next_page: "Trang sau"
+    replies: "Lượt trả lời"
+    last_updated: "Cập nhật lần cuối"
+    event:
+      location: "Vị trí"
+      link: "Link"
   mcp:
     errors:
       topic_not_found: "Không tìm thấy chủ đề"

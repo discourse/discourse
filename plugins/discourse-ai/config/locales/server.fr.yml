@@ -138,7 +138,6 @@ fr:
     ai_bot_enabled: "Activez le module du robot IA."
     ai_bot_enabled_llms: "LLM pouvant être sélectionnés pour les conversations avec le bot d'IA"
     ai_bot_enable_chat_warning: "Afficher un avertissement lorsqu'un chat par message personnel est lancé. Cet avertissement peut être remplacé en modifiant la chaîne de traduction suivante : discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
     ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages privés de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
     ai_bot_add_to_header: "Afficher un bouton dans l'en-tête pour démarrer un message personnel avec un bot d'IA"

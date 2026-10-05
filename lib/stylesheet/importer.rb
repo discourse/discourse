@@ -7,6 +7,7 @@ module Stylesheet
     include GlobalPath
 
     THEME_TARGETS = %w[embedded_theme common_theme mobile_theme desktop_theme]
+    FONT_TARGETS = %w[embed publish]
 
     def self.plugin_assets
       @plugin_assets ||= {}

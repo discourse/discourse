@@ -673,6 +673,9 @@ pl_PL:
           translate:
             label: "Przetłumacz"
             title: "Przetłumacz na wszystkie obsługiwane języki, używając wybranego języka jako języka źródłowego"
+            confirm: "Przetłumacz z %{language} na:"
+            override_existing: "Zastąp także istniejące tłumaczenia"
+            no_targets: "Nie skonfigurowano żadnych innych języków docelowych. Dodaj języki do ustawień obsługiwanych lokalizacji treści."
             queued: "Tłumaczenie w kolejce"
             failed: "Nie udało się dodać tłumaczenia do kolejki"
         translations_menu:
@@ -1665,6 +1668,10 @@ pl_PL:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          homepage_option: "Rozmowy botów AI"
+          preview:
+            title: "Zaloguj się, aby zadać pytanie"
+            body: "Uzyskaj odpowiedzi od sztucznej inteligencji i przechowuj swoje konwersacje tutaj, aby móc do nich wrócić później."
           header: "W czym mogę pomóc?"
           submit: "Prześlij pytanie"
           disclaimer: "Generatywna sztuczna inteligencja może popełniać błędy. Zweryfikuj ważne informacje."

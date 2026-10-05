@@ -311,10 +311,19 @@ module Voice
         return(render_json_error(I18n.t("voice.errors.livekit_room_instance_ended"), status: 410))
       end
 
+      # The reconnect ladder may have outlived presence, but it must still
+      # claim a slot atomically before receiving a new LiveKit join token.
+      admission =
+        Voice::ParticipantTracker.add_within_capacity(
+          @room.id,
+          current_user.id,
+          @room.effective_max_participants,
+        )
+      return render_json_error(I18n.t("voice.errors.room_full"), status: 422) if admission == :full
+
       # The reconnect ladder only runs while the client considers itself in the
-      # call, so an explicit token request voids any leave/kick tombstone.
+      # call, so an admitted explicit token request voids any leave/kick tombstone.
       Voice::ParticipantTracker.clear_left(@room.id, current_user.id)
-      Voice::ParticipantTracker.add(@room.id, current_user.id)
       # The session may have expired along with the lapsed presence — mint a
       # fresh one so heartbeat/state keep working after the reconnect.
       participant_session_id =

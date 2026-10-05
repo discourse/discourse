@@ -48,6 +48,7 @@ class UploadSecurity
     SiteSetting
     ThemeField
     User
+    UserAssociatedAccount
     UserAvatar
     UserProfile
   ]

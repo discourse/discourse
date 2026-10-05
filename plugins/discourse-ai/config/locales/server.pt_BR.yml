@@ -104,7 +104,6 @@ pt_BR:
     ai_bot_enabled: "Ative o módulo de Bot com IA."
     ai_bot_enabled_llms: "LLMs disponíveis para selecionar em conversas com bots de IA"
     ai_bot_enable_chat_warning: "Exibir um aviso quando o chat por mensagem privada for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "Quando o Bot com GPT tiver acesso às MPs, ele responderá aos membros destes grupos."
     ai_bot_debugging_allowed_groups: "Permitir a exibição de um botão de depuração nestes grupos, em postagens em que são exibidas respostas e pedidos de IA não processados"
     ai_bot_public_sharing_allowed_groups: "Permita que estes grupos compartilhem mensagens pessoais de IA com o público por meio de um link exclusivo disponível publicamente. Observação: se for preciso entrar com sua conta no site, também será preciso para o compartilhamento."
     ai_bot_add_to_header: "Exibir botão no cabeçalho para começar uma mensagem privada com um Bot de IA"

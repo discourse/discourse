@@ -153,7 +153,6 @@ zh_CN:
     ai_bot_enabled: "启用 AI 机器人模块。"
     ai_bot_enabled_llms: "用于选择 AI 机器人对话的 LLM"
     ai_bot_enable_chat_warning: "启动私信聊天时显示警告。可以通过编辑翻译字符串进行覆盖：discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
     ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
     ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人开始 PM"

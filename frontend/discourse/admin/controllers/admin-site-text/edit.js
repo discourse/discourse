@@ -12,8 +12,9 @@ export default class AdminSiteTextEdit extends Controller {
   @service dialog;
 
   @tracked siteText;
+  @tracked themeId = null;
   saved = false;
-  queryParams = ["locale"];
+  queryParams = ["locale", { themeId: "theme_id" }];
 
   #activeTextarea = null;
   #lastCursorPos = null;
@@ -29,6 +30,25 @@ export default class AdminSiteTextEdit extends Controller {
   @computed("buffered.value", "siteText.value")
   get saveDisabled() {
     return this.siteText.value === this.get("buffered.value"); // TODO (devxp) we need a buffered proxy that works with tracked properties
+  }
+
+  @computed("siteText.{new_default,value,overridden,can_revert}")
+  get defaultText() {
+    if (
+      this.siteText.new_default !== null &&
+      this.siteText.new_default !== undefined
+    ) {
+      return this.siteText.new_default;
+    }
+    if (!this.siteText.overridden && !this.siteText.can_revert) {
+      return this.siteText.value;
+    }
+    return null;
+  }
+
+  @computed("siteText.status")
+  get isInvalid() {
+    return this.siteText?.status === "invalid_interpolation_keys";
   }
 
   @computed("siteText.status")

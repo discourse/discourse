@@ -88,6 +88,7 @@ class SidebarSectionsController < ApplicationController
     case sidebar_section.section_type
     when "community"
       sidebar_section.reset_community!
+      Site.clear_anon_cache!
     end
 
     render_serialized(sidebar_section, SidebarSectionSerializer)
@@ -157,6 +158,7 @@ class SidebarSectionsController < ApplicationController
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_destroy_public_sidebar_section(sidebar_section)
       MessageBus.publish("/refresh-sidebar-sections", nil)
+      Site.clear_anon_cache!
     end
 
     render json: success_json

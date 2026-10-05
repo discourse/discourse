@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 gl:
+  markdown_endpoints:
+    latest: "Últimos"
+    categories: "Categorías"
+    tags: "Etiquetas"
+    previous_page: "Páxina anterior"
+    next_page: "Páxina seguinte"
+    replies: "Réplicas"
+    event:
+      location: "Localización"
+      link: "Ligazón"
   mcp:
     errors:
       topic_not_found: "Non foi posíbel atopar o tema"

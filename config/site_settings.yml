@@ -696,7 +696,7 @@ login:
         - everyone
   enable_random_usernames:
     client: true
-    default: true
+    default: false
     area: "login"
     depends_on:
       - enable_local_logins_via_code
@@ -4059,6 +4059,7 @@ uncategorized:
   staff_category_id:
     default: -1
     hidden: true
+    client: true
     area: "categories"
   uncategorized_category_id:
     default: -1
@@ -4781,6 +4782,16 @@ dashboard:
     client: true
 
 experimental:
+  enable_markdown_endpoints:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413006"
+      allow_enabled_for:
+        - everyone
   enable_generated_llms_txt:
     default: false
     hidden: true
@@ -4833,6 +4844,15 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_composer_toolbar_customization:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412749"
   enable_category_hashtag_cards:
     default: false
     client: true
@@ -4993,3 +5013,11 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  sidebar_user_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413150"

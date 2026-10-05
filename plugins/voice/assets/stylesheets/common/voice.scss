@@ -1299,6 +1299,12 @@
 }
 
 .voice-invite-agent-modal {
+  &__hint {
+    margin: 0 0 1em;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
   // The field content wrapper is a column flex box aligned to flex-start, so
   // the row must stretch to the field width before its controls can share it.
   &__picker {

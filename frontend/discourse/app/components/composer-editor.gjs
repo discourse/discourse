@@ -1023,6 +1023,7 @@ export default class ComposerEditor extends Component {
         @showLink={{this.showLink}}
         @toolbarPortalTarget={{this.toolbarPortalTarget}}
         @topicId={{this.composer.model.topic.id}}
+        @userToolbarPreferences={{true}}
         @validation={{this.validation}}
         @value={{this.composer.model.reply}}
         {{didInsert this._composerEditorInitEditor}}

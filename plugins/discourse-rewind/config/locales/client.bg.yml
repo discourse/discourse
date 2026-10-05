@@ -15,15 +15,7 @@ bg:
         reading_time:
           title: Време за четене
         chat_usage:
-          messages: съобщения
           author: Вие
           author_others: "%{username}"
-        invites:
-          title: Покани
-          invitee_posts: Създадени публикации
-          invitee_likes: Дадени харесвания
-        new_user_interactions:
-          likes_given: Дадени харесвания
-          mentions: Споменавания
         writing_analysis:
           menu_other: Други

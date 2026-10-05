@@ -520,18 +520,9 @@ zh_TW:
         use_predefined: "瀏覽範本"
         back: "上一步"
         icebreakers:
-          fun_facts:
-            title: "關於你，有哪些有趣的小事？"
-            body: "大家好！我很高興能開始這個新社群。作為開場，讓我們分享一個關於自己的有趣事實！我喜歡健行和探索新的步道！你呢？有什麼有趣的事想分享嗎？"
-          coolest_thing_you_have_seen_today:
-            title: "你今天看過最酷的是什麼？"
-            body: "你今天看過或經歷過最酷的是什麼？可以是美麗的日落，也可以是隨機的善舉。我先說：我看到一隻狗幫助一位長者過馬路！"
           introduce_yourself:
             title: "介紹自己"
             body: "歡迎來到社群！讓我們互相認識。請介紹一下自己並分享你的興趣。我先說：我熱愛科技，也喜歡教導他人！"
-          what_is_your_favorite_food:
-            title: "你最喜歡的食物是什麼？"
-            body: "和社群分享你最喜歡的食物吧！我先來：我愛披薩，尤其是加了額外起司和義大利辣香腸的。"
     design_wizard:
       title: "自訂你的網站"
       subtitle: "選擇顏色、字型以及網站的版面配置。"
@@ -2748,8 +2739,6 @@ zh_TW:
       signup_instructions: "輸入你的電子郵件地址以加入此社群。我們會傳送一組代碼供你確認，之後即可開始使用！"
       user_fields_title: "即將完成"
       user_fields_instructions: "只需再提供幾項資料，即可完成帳戶建立。"
-      account_ready_title: "你的帳戶已準備就緒！🎉"
-      account_ready_edit: "選擇你的使用者名稱與頭像"
       account_ready_continue: "繼續"
       username_label: "使用者名稱"
       username_placeholder: "選擇使用者名稱"
@@ -6186,8 +6175,6 @@ zh_TW:
             actions: "動作"
           activity:
             tool_calls: "工具呼叫"
-            errors: "錯誤"
-            rate_limits: "速率限制"
             outcome: "結果"
             time: "時間"
             user: "使用者"
@@ -7161,6 +7148,7 @@ zh_TW:
             embedded: "內嵌頁面瀏覽量"
             crawlers: "爬蟲"
           see_details: "查看詳情"
+          crawler_learn_more: "了解更多"
         period:
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"
@@ -9237,13 +9225,14 @@ zh_TW:
           multiselect: "多選"
       site_text:
         description: "您可以自訂論壇上的任何文字。"
-        search: "搜尋你想要編輯的文本"
+        search_label: "搜索"
+        theme_disabled: "已停用"
+        filters: "過濾器"
+        status:
+          invalid: "無效"
         title: "網站文字"
         edit: "編輯"
-        revert: "恢復變更"
         revert_confirm: "你確定要撤回這個改動?"
-        go_back: "回到搜尋"
-        recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: "只顯示修改過的項目"
         show_outdated: "僅顯示過時/無效"
         show_untranslated: "僅顯示未翻譯內容"
