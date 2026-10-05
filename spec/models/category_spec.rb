@@ -1250,6 +1250,43 @@ RSpec.describe Category do
       Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id)
     end
 
+    it "preserves compatible persisted permissions when moving a private category" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, group:)
+      permissions = child.category_groups.pluck(:group_id, :permission_type)
+
+      expect(child.update(parent_category_id: private_parent.id)).to eq(true)
+      expect(child.reload.category_groups.pluck(:group_id, :permission_type)).to eq(permissions)
+      expect(Guardian.new.can_see?(child)).to eq(false)
+    end
+
+    it "rejects moving a private category with a different audience" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, group: group2)
+
+      expect(child.update(parent_category_id: private_parent.id)).to eq(false)
+      expect(child.errors.full_messages).to include(
+        I18n.t("category.errors.permission_conflict", group_names: group2.name),
+      )
+      expect(child.reload.parent_category_id).to be_nil
+    end
+
+    it "allows compatible permissions supplied when creating a private subcategory" do
+      private_parent = Fabricate(:private_category, group:)
+      child =
+        Category.new(
+          name: "Private child",
+          user: admin,
+          parent_category_id: private_parent.id,
+          permissions: {
+            group.name => :full,
+          },
+        )
+
+      expect(child.save).to eq(true)
+      expect(Guardian.new.can_see?(child.reload)).to eq(false)
+    end
+
     context "when changing subcategory permissions" do
       it "is invalid when permissions are less restrictive" do
         subcategory.set_permissions(group => :readonly)

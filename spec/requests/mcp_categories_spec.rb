@@ -117,6 +117,35 @@ describe "MCP category tools" do
     )
   end
 
+  it "rejects a public subcategory beneath a private parent" do
+    group = Fabricate(:group)
+    parent = Fabricate(:private_category, group:)
+    authorize(DiscourseMcp::Scopes::CATEGORIES_WRITE, auth_user: admin)
+
+    expect do
+      call_create_category(name: "Public child", parent_category_id: parent.id)
+    end.not_to change(Category, :count)
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    expect(Guardian.new.can_see?(parent)).to eq(false)
+  end
+
+  it "rejects moving a public category beneath a private parent" do
+    group = Fabricate(:group)
+    parent = Fabricate(:private_category, group:)
+    category = Fabricate(:category)
+    authorize(DiscourseMcp::Scopes::CATEGORIES_WRITE, auth_user: admin)
+
+    call_tool("discourse_update_category", category_id: category.id, parent_category_id: parent.id)
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    expect(category.reload.parent_category_id).to be_nil
+    expect(Guardian.new.can_see?(category)).to eq(true)
+    expect(Guardian.new.can_see?(parent)).to eq(false)
+  end
+
   it "does not create a category with an invalid emoji" do
     authorize(DiscourseMcp::Scopes::CATEGORIES_WRITE, auth_user: admin)
 
