@@ -52,130 +52,233 @@ describe BackupRestore::Creator do
 
     after { FileUtils.rm_rf(creator.instance_variable_get(:@tmp_directory)) }
 
-    it "deduplicates uploads with the same original_sha1 using hardlinks" do
-      shared_sha1 = SecureRandom.hex(20)
-
-      # Create 3 uploads with the same original_sha1 (simulating secure upload duplicates)
-      upload1 =
-        Fabricate(
-          :upload,
-          sha1: SecureRandom.hex(20),
-          original_sha1: shared_sha1,
-          url: "//bucket.s3.amazonaws.com/original/1X/file1.png",
-        )
-      upload2 =
-        Fabricate(
-          :upload,
-          sha1: SecureRandom.hex(20),
-          original_sha1: shared_sha1,
-          url: "//bucket.s3.amazonaws.com/original/2X/file2.png",
-        )
-      upload3 =
-        Fabricate(
-          :upload,
-          sha1: SecureRandom.hex(20),
-          original_sha1: shared_sha1,
-          url: "//bucket.s3.amazonaws.com/original/3X/file3.png",
-        )
-
-      # Create 1 unique upload
-      unique_upload =
-        Fabricate(
-          :upload,
-          sha1: SecureRandom.hex(20),
-          original_sha1: SecureRandom.hex(20),
-          url: "//bucket.s3.amazonaws.com/original/4X/file4.png",
-        )
-
-      store = FileStore::S3Store.new
-      download_count = 0
-
-      # Stub get_path_for_upload to extract path from URL (works with UploadData structs)
-      store
-        .stubs(:get_path_for_upload)
-        .with { |obj| obj.url.include?("1X") }
-        .returns("original/1X/file1.png")
-      store
-        .stubs(:get_path_for_upload)
-        .with { |obj| obj.url.include?("2X") }
-        .returns("original/2X/file2.png")
-      store
-        .stubs(:get_path_for_upload)
-        .with { |obj| obj.url.include?("3X") }
-        .returns("original/3X/file3.png")
-      store
-        .stubs(:get_path_for_upload)
-        .with { |obj| obj.url.include?("4X") }
-        .returns("original/4X/file4.png")
-
-      store
-        .stubs(:download_file)
-        .with do |upload_data, filename|
-          download_count += 1
-          FileUtils.mkdir_p(File.dirname(filename))
-          File.write(filename, "file content for #{upload_data.id}")
-          true
+    [1, 4].each do |concurrency|
+      context "with #{concurrency} download workers" do
+        before do
+          GlobalSetting.stubs(:backup_s3_download_concurrency).returns(concurrency)
+          S3Helper.any_instance.stubs(:object).returns(nil)
         end
-        .returns(nil)
 
-      FileStore::S3Store.stubs(:new).returns(store)
+        it "deduplicates uploads with the same original_sha1 using hardlinks" do
+          shared_sha1 = SecureRandom.hex(20)
 
-      Discourse::Utils.stubs(:execute_command)
+          # Create 3 uploads with the same original_sha1 (simulating secure upload duplicates)
+          upload1 =
+            Fabricate(
+              :upload,
+              sha1: SecureRandom.hex(20),
+              original_sha1: shared_sha1,
+              url: "//bucket.s3.amazonaws.com/original/1X/file1.png",
+            )
+          upload2 =
+            Fabricate(
+              :upload,
+              sha1: SecureRandom.hex(20),
+              original_sha1: shared_sha1,
+              url: "//bucket.s3.amazonaws.com/original/2X/file2.png",
+            )
+          upload3 =
+            Fabricate(
+              :upload,
+              sha1: SecureRandom.hex(20),
+              original_sha1: shared_sha1,
+              url: "//bucket.s3.amazonaws.com/original/3X/file3.png",
+            )
 
-      silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
+          # Create 1 unique upload
+          unique_upload =
+            Fabricate(
+              :upload,
+              sha1: SecureRandom.hex(20),
+              original_sha1: SecureRandom.hex(20),
+              url: "//bucket.s3.amazonaws.com/original/4X/file4.png",
+            )
 
-      # Should only download 2 files: 1 for the duplicates group + 1 for the unique upload
-      expect(download_count).to eq(2)
+          store = FileStore::S3Store.new
+          download_count = 0
 
-      # All 4 file paths should exist in the tmp directory
-      tmp_dir = creator.instance_variable_get(:@tmp_directory)
-      upload_dir = Discourse.store.upload_path
-      expect(File.exist?(File.join(tmp_dir, upload_dir, "original/1X/file1.png"))).to eq(true)
-      expect(File.exist?(File.join(tmp_dir, upload_dir, "original/2X/file2.png"))).to eq(true)
-      expect(File.exist?(File.join(tmp_dir, upload_dir, "original/3X/file3.png"))).to eq(true)
-      expect(File.exist?(File.join(tmp_dir, upload_dir, "original/4X/file4.png"))).to eq(true)
+          # Stub get_path_for_upload to extract path from URL (works with UploadData structs)
+          store
+            .stubs(:get_path_for_upload)
+            .with { |obj| obj.url.include?("1X") }
+            .returns("original/1X/file1.png")
+          store
+            .stubs(:get_path_for_upload)
+            .with { |obj| obj.url.include?("2X") }
+            .returns("original/2X/file2.png")
+          store
+            .stubs(:get_path_for_upload)
+            .with { |obj| obj.url.include?("3X") }
+            .returns("original/3X/file3.png")
+          store
+            .stubs(:get_path_for_upload)
+            .with { |obj| obj.url.include?("4X") }
+            .returns("original/4X/file4.png")
 
-      # The duplicate files should be hardlinks (same inode as the primary)
-      file1_stat = File.stat(File.join(tmp_dir, upload_dir, "original/1X/file1.png"))
-      file2_stat = File.stat(File.join(tmp_dir, upload_dir, "original/2X/file2.png"))
-      file3_stat = File.stat(File.join(tmp_dir, upload_dir, "original/3X/file3.png"))
+          store
+            .stubs(:download_file)
+            .with do |upload_data, filename|
+              download_count += 1
+              FileUtils.mkdir_p(File.dirname(filename))
+              File.write(filename, "file content for #{upload_data.id}")
+              true
+            end
+            .returns(nil)
 
-      expect(file1_stat.ino).to eq(file2_stat.ino)
-      expect(file1_stat.ino).to eq(file3_stat.ino)
+          FileStore::S3Store.stubs(:new).returns(store)
+
+          Discourse::Utils.stubs(:execute_command)
+
+          silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
+
+          # Should only download 2 files: 1 for the duplicates group + 1 for the unique upload
+          expect(download_count).to eq(2)
+
+          # All 4 file paths should exist in the tmp directory
+          tmp_dir = creator.instance_variable_get(:@tmp_directory)
+          upload_dir = Discourse.store.upload_path
+          expect(File.exist?(File.join(tmp_dir, upload_dir, "original/1X/file1.png"))).to eq(true)
+          expect(File.exist?(File.join(tmp_dir, upload_dir, "original/2X/file2.png"))).to eq(true)
+          expect(File.exist?(File.join(tmp_dir, upload_dir, "original/3X/file3.png"))).to eq(true)
+          expect(File.exist?(File.join(tmp_dir, upload_dir, "original/4X/file4.png"))).to eq(true)
+
+          # The duplicate files should be hardlinks (same inode as the primary)
+          file1_stat = File.stat(File.join(tmp_dir, upload_dir, "original/1X/file1.png"))
+          file2_stat = File.stat(File.join(tmp_dir, upload_dir, "original/2X/file2.png"))
+          file3_stat = File.stat(File.join(tmp_dir, upload_dir, "original/3X/file3.png"))
+
+          expect(file1_stat.ino).to eq(file2_stat.ino)
+          expect(file1_stat.ino).to eq(file3_stat.ino)
+        end
+
+        it "skips duplicate uploads with the same path" do
+          shared_sha1 = SecureRandom.hex(20)
+          shared_url = "//bucket.s3.amazonaws.com/original/2X/3/#{shared_sha1}.png"
+
+          Fabricate(
+            :upload,
+            sha1: SecureRandom.hex(20),
+            original_sha1: shared_sha1,
+            url: shared_url,
+          )
+          Fabricate(:upload, sha1: shared_sha1, original_sha1: nil, url: shared_url)
+
+          store = FileStore::S3Store.new
+          download_count = 0
+
+          store.stubs(:get_path_for_upload).returns("original/2X/3/#{shared_sha1}.png")
+          store
+            .stubs(:download_file)
+            .with do |_upload_data, filename|
+              download_count += 1
+              FileUtils.mkdir_p(File.dirname(filename))
+              File.write(filename, "file content")
+              true
+            end
+            .returns(nil)
+
+          FileStore::S3Store.stubs(:new).returns(store)
+          Discourse::Utils.stubs(:execute_command)
+
+          silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
+
+          tmp_dir = creator.instance_variable_get(:@tmp_directory)
+          upload_path =
+            File.join(tmp_dir, Discourse.store.upload_path, "original/2X/3/#{shared_sha1}.png")
+
+          expect(download_count).to eq(1)
+          expect(File.read(upload_path)).to eq("file content")
+        end
+      end
+    end
+  end
+
+  describe "#download_upload_groups" do
+    let(:creator) { described_class.new(nil) }
+
+    before do
+      store = stub(s3_helper: stub(object: nil))
+      creator.instance_variable_set(:@s3_store, store)
     end
 
-    it "skips duplicate uploads with the same path" do
-      shared_sha1 = SecureRandom.hex(20)
-      shared_url = "//bucket.s3.amazonaws.com/original/2X/3/#{shared_sha1}.png"
+    it "processes groups on the calling thread when concurrency is 1" do
+      GlobalSetting.stubs(:backup_s3_download_concurrency).returns(1)
+      threads = []
+      creator.define_singleton_method(:process_upload_group) { |_| threads << Thread.current }
 
-      Fabricate(:upload, sha1: SecureRandom.hex(20), original_sha1: shared_sha1, url: shared_url)
-      Fabricate(:upload, sha1: shared_sha1, original_sha1: nil, url: shared_url)
+      creator.send(:download_upload_groups, [1, 2])
 
-      store = FileStore::S3Store.new
-      download_count = 0
+      expect(threads).to eq([Thread.current, Thread.current])
+    end
 
-      store.stubs(:get_path_for_upload).returns("original/2X/3/#{shared_sha1}.png")
-      store
-        .stubs(:download_file)
-        .with do |_upload_data, filename|
-          download_count += 1
-          FileUtils.mkdir_p(File.dirname(filename))
-          File.write(filename, "file content")
-          true
+    it "finishes active downloads and skips queued groups when the backup is cancelled" do
+      GlobalSetting.stubs(:backup_s3_download_concurrency).returns(2)
+      arrivals = Queue.new
+      release = Queue.new
+      cleanup_started = Queue.new
+      finished = Queue.new
+      active_workers = []
+      backup_thread = nil
+      instance = creator
+      instance.define_singleton_method(:process_upload_group) do |group|
+        arrivals << [group, Thread.current]
+        release.pop
+        finished << group
+      end
+
+      begin
+        Timeout.timeout(10) do
+          backup_thread =
+            Thread.new do
+              Thread.current.report_on_exception = false
+              instance.send(:download_upload_groups, [1, 2, 3])
+            end
+          active_workers = 2.times.map { arrivals.pop.last }
+          # Observe the cancellation join, after the ensure block clears the queue.
+          active_workers.each do |worker|
+            worker.define_singleton_method(:join) do |*args|
+              cleanup_started << true if $!.is_a?(SystemExit)
+              super(*args)
+            end
+          end
+
+          backup_thread.raise(SystemExit)
+          cleanup_started.pop
+          expect(finished.size).to eq(0)
+          2.times { release << true }
+          expect { backup_thread.value }.to raise_error(SystemExit)
+
+          expect(2.times.map { finished.pop }.sort).to eq([1, 2])
+          expect(arrivals).to be_empty
+          expect(active_workers.none?(&:alive?)).to eq(true)
         end
-        .returns(nil)
+      ensure
+        # Unblock workers even if an assertion or the timeout fails.
+        3.times { release << true }
+        if backup_thread
+          backup_thread.kill if backup_thread.alive?
+          begin
+            backup_thread.join
+          rescue SystemExit
+          end
+        end
+      end
+    end
 
-      FileStore::S3Store.stubs(:new).returns(store)
-      Discourse::Utils.stubs(:execute_command)
+    it "propagates ordinary worker failures after all workers finish" do
+      GlobalSetting.stubs(:backup_s3_download_concurrency).returns(2)
+      barrier = Concurrent::CyclicBarrier.new(2)
+      workers = Queue.new
+      creator.define_singleton_method(:process_upload_group) do |group|
+        workers << Thread.current
+        raise "Workers did not start" unless barrier.wait(5)
+        raise "Download group failed" if group == 1
+      end
 
-      silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
-
-      tmp_dir = creator.instance_variable_get(:@tmp_directory)
-      upload_path =
-        File.join(tmp_dir, Discourse.store.upload_path, "original/2X/3/#{shared_sha1}.png")
-
-      expect(download_count).to eq(1)
-      expect(File.read(upload_path)).to eq("file content")
+      expect do
+        Timeout.timeout(10) { creator.send(:download_upload_groups, [1, 2]) }
+      end.to raise_error(RuntimeError, "Download group failed")
+      expect(2.times.map { workers.pop }.none?(&:alive?)).to eq(true)
     end
   end
 
