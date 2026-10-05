@@ -409,7 +409,7 @@ class UploadsController < ApplicationController
 
   def create_direct_multipart_upload
     yield
-  rescue Aws::S3::Errors::ServiceError => err
+  rescue FileStore::ObjectStorage::ServiceError => err
     message =
       debug_upload_error(
         err,

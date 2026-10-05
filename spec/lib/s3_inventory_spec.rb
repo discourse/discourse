@@ -11,6 +11,7 @@ RSpec.describe S3Inventory do
     UploadReference
       .where(target_type: "ThemeField")
       .map { |screenshot| screenshot.upload.url }
+      .uniq
       .join("\n")
   end
 
@@ -191,9 +192,11 @@ RSpec.describe S3Inventory do
         },
       )
 
-      inventory.s3_helper.expects(:download_file).once
-
-      capture_stdout { inventory.backfill_etags_and_list_missing }
+      inventory.s3_client.stub_responses(:head_object, "AccessDenied")
+      expect { capture_stdout { inventory.backfill_etags_and_list_missing } }.to raise_error(
+        RuntimeError,
+        "Failed to download symlink file to tmp directory.",
+      )
     end
 
     it "does not run for newer inventory files and resets the statistics count" do
@@ -212,7 +215,7 @@ RSpec.describe S3Inventory do
         },
       )
 
-      inventory.s3_helper.expects(:download_file).never
+      inventory.s3_client.stub_responses(:head_object, "AccessDenied")
 
       capture_stdout { inventory.backfill_etags_and_list_missing }
 
