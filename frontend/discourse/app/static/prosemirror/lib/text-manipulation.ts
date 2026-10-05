@@ -6,7 +6,8 @@ import { isEmpty } from "@ember/utils";
 import { lookupCachedUploadUrl } from "pretty-text/upload-short-url";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import {
-  type Fragment,
+  Fragment,
+  type Mark,
   type Node,
   type NodeType,
   type Schema,
@@ -16,12 +17,14 @@ import {
   liftListItem,
   sinkListItem,
   wrapInList,
+  wrapRangeInList,
 } from "prosemirror-schema-list";
 import {
   type EditorState,
   NodeSelection,
   Selection,
   TextSelection,
+  type Transaction,
 } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
 import type {
@@ -31,6 +34,7 @@ import type {
   ReplaceTextOptions,
   SelectedText,
   SelectTextOptions,
+  SurroundOptions,
   TextManipulation,
   ToolbarState,
   UppyFile,
@@ -50,6 +54,7 @@ interface ProsemirrorTextManipulationOptions {
   schema: Schema;
   view: EditorView;
   convertFromMarkdown: (markdown: string) => Node;
+  tryConvertFromMarkdown: (markdown: string) => Node | null;
   convertToMarkdown: (doc: Node | Fragment | Slice) => string;
   splitNonEmptyLines: (text: string) => string[];
   buildListNode: (
@@ -70,6 +75,31 @@ interface HandlerOptions {
 interface FoundPlaceholder {
   node: Node;
   pos: number;
+}
+
+function singleChild(content: Node | Fragment | null | undefined): Node | null {
+  return content?.childCount === 1 ? content.firstChild : null;
+}
+
+function flattenSelection(doc: Node, from = 0, to = doc.content.size) {
+  const nodes: Node[] = [];
+  const segments: { start: number; end: number; pos: number }[] = [];
+  let size = 0;
+  doc.nodesBetween(from, to, (node, pos) => {
+    if (!node.isText && !node.isAtom) {
+      return true;
+    }
+    if (node.isText) {
+      const lower = Math.max(from - pos, 0);
+      node = node.cut(lower, Math.min(to - pos, node.nodeSize));
+      pos += lower;
+    }
+    nodes.push(node.mark([]));
+    segments.push({ start: size, end: size + node.nodeSize, pos });
+    size += node.nodeSize;
+    return false;
+  });
+  return { content: Fragment.fromArray(nodes), segments };
 }
 
 function isPlainTextFragment(fragment: Fragment, schema: Schema): boolean {
@@ -101,6 +131,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   autocompleteHandler: AutocompleteHandler;
   state = trackedObject<ToolbarState & Record<string, unknown>>({});
   convertFromMarkdown: (markdown: string) => Node;
+  tryConvertFromMarkdown: (markdown: string) => Node | null;
   convertToMarkdown: (doc: Node | Fragment | Slice) => string;
   splitNonEmptyLines: (text: string) => string[];
   buildListNode: (
@@ -117,6 +148,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       schema,
       view,
       convertFromMarkdown,
+      tryConvertFromMarkdown,
       convertToMarkdown,
       splitNonEmptyLines,
       buildListNode,
@@ -128,6 +160,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
+    this.tryConvertFromMarkdown = tryConvertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
     this.splitNonEmptyLines = splitNonEmptyLines;
     this.buildListNode = buildListNode;
@@ -146,10 +179,33 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     });
   }
 
-  getSelected(): SelectedText {
+  getSelected(trimLeading?: boolean | null | ""): SelectedText {
     const { state } = this.view;
-    const { from, to } = state.selection;
-    const value = this.convertToMarkdown(state.selection.content());
+    const { to } = state.selection;
+    let { from } = state.selection;
+    if (trimLeading) {
+      let found = false;
+      state.doc.nodesBetween(from, to, (node, pos) => {
+        if (found) {
+          return false;
+        }
+        if (node.isText) {
+          const start = Math.max(from - pos, 0);
+          const text = node.text!.slice(start, to - pos);
+          const whitespace = text.match(/^\s*/)![0].length;
+          from = pos + start + whitespace;
+          found = whitespace < text.length;
+        } else if (node.isInline) {
+          found = true;
+        }
+        return !found;
+      });
+    }
+    const selection =
+      from === state.selection.from
+        ? state.selection
+        : TextSelection.create(state.doc, from, to);
+    const value = this.convertToMarkdown(selection.content());
 
     // Document-absolute pre/post to match textarea semantics
     const pre = state.doc.textBetween(0, from, "\n", "\n");
@@ -204,48 +260,32 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   applySurroundSelection(
     head: string | ((previous?: string) => string),
     tail: string,
-    exampleKey: string
+    exampleKey: string,
+    opts?: SurroundOptions
   ): void {
-    this.applySurround(this.getSelected(), head, tail, exampleKey);
+    this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
   }
 
   applySurround(
     sel: SelectedText,
     head: string | ((previous?: string) => string),
     tail: string,
-    exampleKey: string
+    exampleKey: string,
+    opts?: SurroundOptions
   ): void {
-    const applySurroundMap = {
-      italic_text: this.schema.marks.em,
-      bold_text: this.schema.marks.strong,
-      code_title: this.schema.marks.code,
-    };
+    this.#restoreSelection(sel);
+    const hval = typeof head === "function" ? head() : head;
+    const mark = this.#probeMark(hval, tail);
 
-    if (applySurroundMap[exampleKey]) {
-      toggleMark(applySurroundMap[exampleKey])(
-        this.view.state,
-        this.view.dispatch
-      );
-
-      return;
-    }
-
-    const { state } = this.view;
-    const { from, to, empty } = state.selection;
-
-    let text;
-    if (empty) {
-      text = i18n(`composer.${exampleKey}`);
+    if (mark) {
+      toggleMark(mark.type, mark.attrs)(this.view.state, this.view.dispatch);
+    } else if (opts?.multiline && !this.view.state.selection.empty) {
+      this.#applySurroundLines(head, tail, opts);
     } else {
-      const selectedFragment = state.doc.slice(from, to).content;
-      text = this.convertToMarkdown(selectedFragment);
+      this.#applySurroundFallback(hval, tail, exampleKey, opts);
     }
 
-    const doc = this.convertFromMarkdown(head + text + tail);
-
-    this.view.dispatch(
-      this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
-    );
+    this.focus();
   }
 
   applyLink(url: string): void {
@@ -291,111 +331,55 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   applyList(
-    _selection: SelectedText,
+    sel: SelectedText,
     head: string | ((previous?: string) => string),
-    exampleKey: string
+    exampleKey: string,
+    opts?: SurroundOptions
   ): void {
-    let command;
+    this.#restoreSelection(sel);
+    const hval = typeof head === "function" ? head() : head;
+    const doc = hval == null ? null : this.tryConvertFromMarkdown(hval + "x");
+    const probe = singleChild(doc);
 
-    const findParentList = () => {
-      const $from = this.view.state.selection.$from;
-      for (let depth = $from.depth; depth > 0; depth--) {
-        const node = $from.node(depth);
-        if (
-          node.type === this.schema.nodes.bullet_list ||
-          node.type === this.schema.nodes.ordered_list
-        ) {
-          return {
-            node,
-            pos: $from.before(depth),
-            type: node.type,
-          };
-        }
-      }
-      return null;
-    };
-
-    const replaceSelectionWithList = (targetType) => {
-      const { state } = this.view;
-      const selectedContent = state.selection.content().content;
-
-      if (!isPlainTextFragment(selectedContent, this.schema)) {
-        return false;
-      }
-
-      const selectedText = state.doc.textBetween(
-        state.selection.from,
-        state.selection.to,
-        "\n",
-        "\n"
-      );
-      const lines = this.splitNonEmptyLines(selectedText);
-
-      if (lines.length <= 1) {
-        return false;
-      }
-
-      const listNode = this.buildListNode(this.schema, targetType, lines);
-
-      this.view.dispatch(
-        state.tr.replaceSelectionWith(listNode).scrollIntoView()
-      );
-
-      return true;
-    };
-
-    if (exampleKey === "list_item") {
-      const targetType =
-        head === "* "
-          ? this.schema.nodes.bullet_list
-          : this.schema.nodes.ordered_list;
-
-      const parentList = findParentList();
-
-      if (parentList) {
-        if (parentList.type === targetType) {
-          // Same list type - toggle off (lift)
-          command = liftListItem(this.schema.nodes.list_item);
-        } else {
-          // Different list type - convert selection
-          // We achieve this by lifting out of the current list, then wrapping in the new type
-          command = (state, dispatch) => {
-            if (dispatch) {
-              const liftCmd = liftListItem(this.schema.nodes.list_item);
-              let lifted = false;
-              liftCmd(state, (tr) => {
-                dispatch(tr);
-                lifted = true;
-              });
-
-              if (lifted) {
-                // If lift succeeded, now wrap in the new list type
-                // We need to re-fetch state from view since dispatch updated it
-                wrapInList(targetType)(this.view.state, dispatch);
-              }
-            }
-            return true;
-          };
-        }
-      } else {
-        if (replaceSelectionWithList(targetType)) {
-          this.focus();
-          return;
-        }
-
-        // Not in a list - wrap in the target type
-        command = wrapInList(targetType);
-      }
-    } else if (exampleKey === "blockquote_text") {
-      command = inNode(this.view.state, this.schema.nodes.blockquote)
-        ? lift
-        : wrapIn(this.schema.nodes.blockquote);
-    } else {
-      throw new Error("Unknown exampleKey");
+    if (!probe) {
+      this.#applyListFallback(head, exampleKey, opts);
+      return;
     }
 
-    command?.(this.view.state, this.view.dispatch);
-    this.focus();
+    const isList =
+      probe.type === this.schema.nodes.bullet_list ||
+      probe.type === this.schema.nodes.ordered_list;
+    const container = isList ? singleChild(probe) : probe;
+    const paragraph = singleChild(container);
+    if (
+      (isList && container?.type !== this.schema.nodes.list_item) ||
+      paragraph?.type !== this.schema.nodes.paragraph
+    ) {
+      this.#applyListFallback(head, exampleKey, opts);
+      return;
+    }
+    const isPlainProbe = singleChild(paragraph)?.eq(this.schema.text("x"));
+
+    if (
+      isPlainProbe &&
+      isList &&
+      (probe.type !== this.schema.nodes.ordered_list || probe.attrs.order === 1)
+    ) {
+      this.#toggleListType(probe.type);
+      this.focus();
+      return;
+    }
+
+    if (isPlainProbe && probe.type === this.schema.nodes.blockquote) {
+      const command = inNode(this.view.state, this.schema.nodes.blockquote)
+        ? lift
+        : wrapIn(this.schema.nodes.blockquote);
+      command(this.view.state, this.view.dispatch);
+      this.focus();
+      return;
+    }
+
+    this.#applyListFallback(head, exampleKey, opts);
   }
 
   applyHeading(_selection: SelectedText, level: number): void {
@@ -667,6 +651,396 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
       ...this.customState(this.view.state),
     });
+  }
+
+  #probeMark(head: string, tail: string): Mark | null {
+    const doc = this.tryConvertFromMarkdown(head + "x" + tail);
+    const paragraph = singleChild(doc);
+    const text =
+      paragraph?.type === this.schema.nodes.paragraph
+        ? singleChild(paragraph)
+        : null;
+
+    return text?.isText && text.text === "x" && text.marks.length === 1
+      ? text.marks[0]!
+      : null;
+  }
+
+  #restoreSelection(sel: SelectedText): void {
+    const { state } = this.view;
+    if (sel.start !== state.selection.from || sel.end !== state.selection.to) {
+      this.view.dispatch(
+        state.tr.setSelection(
+          TextSelection.between(
+            state.doc.resolve(sel.start),
+            state.doc.resolve(sel.end)
+          )
+        )
+      );
+    }
+  }
+
+  #applySurroundLines(
+    head: string | ((previous?: string) => string),
+    tail: string,
+    opts: SurroundOptions
+  ): void {
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const lines: { from: number; to: number; head: string }[] = [];
+    let previous: string | undefined;
+    const addLine = (start: number, end: number) => {
+      if (start < end || opts.applyEmptyLines) {
+        previous = typeof head === "function" ? head(previous) : head;
+        lines.push({ from: start, to: end, head: previous });
+      }
+    };
+
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (!node.isTextblock) {
+        return true;
+      }
+      let start = Math.max(from, pos + 1);
+      const end = Math.min(to, pos + 1 + node.content.size);
+      node.forEach((child, offset) => {
+        const childPos = pos + 1 + offset;
+        if (
+          child.type === this.schema.nodes.hard_break &&
+          childPos >= start &&
+          childPos < end
+        ) {
+          addLine(start, childPos);
+          start = childPos + child.nodeSize;
+        }
+      });
+      addLine(start, end);
+      return false;
+    });
+
+    const tr = state.tr;
+    for (const line of lines.reverse()) {
+      const text = this.convertToMarkdown(state.doc.slice(line.from, line.to));
+      this.#surroundRange(tr, line.from, line.to, text, line.head, tail, opts);
+    }
+    tr.setSelection(
+      TextSelection.between(
+        tr.doc.resolve(tr.mapping.map(from, -1)),
+        tr.doc.resolve(tr.mapping.map(to, 1))
+      )
+    );
+    this.view.dispatch(tr);
+  }
+
+  #applySurroundFallback(
+    head: string,
+    tail: string,
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const text = this.#selectedMarkdownOr(exampleKey);
+    const tr = this.#surroundRange(state.tr, from, to, text, head, tail, opts);
+    this.#selectInserted(tr, from, to, text);
+    this.view.dispatch(tr);
+  }
+
+  #surroundRange(
+    tr: Transaction,
+    from: number,
+    to: number,
+    text: string,
+    head: string,
+    tail: string,
+    opts?: SurroundOptions
+  ): Transaction {
+    const $from = tr.doc.resolve(from);
+    const $to = tr.doc.resolve(to);
+    const withinTextblock = $from.sameParent($to) && $from.parent.isTextblock;
+    const startsLine =
+      $from.parentOffset === 0 ||
+      $from.nodeBefore?.type === this.schema.nodes.hard_break;
+    let replacementFrom = from;
+    let replacementTo = to;
+
+    if (!tail && from !== to && withinTextblock && startsLine) {
+      replacementTo = $to.end();
+      if (opts?.multiline) {
+        $from.parent.forEach((child, offset) => {
+          const pos = $from.start() + offset;
+          if (child.type === this.schema.nodes.hard_break && pos >= from) {
+            replacementTo = Math.min(replacementTo, pos);
+          }
+        });
+      }
+      text = this.convertToMarkdown(tr.doc.slice(from, replacementTo));
+    }
+
+    const useBlockMode =
+      opts?.useBlockMode || (tail.length > 0 && !withinTextblock);
+    if (useBlockMode && text.includes("\n")) {
+      if (!head.endsWith("\n")) {
+        head += "\n";
+      }
+      if (!tail.startsWith("\n")) {
+        tail = "\n" + tail;
+      }
+    }
+
+    const markdown = head + text + tail;
+    const partialTextblock =
+      withinTextblock &&
+      (!startsLine ||
+        (tail.length > 0 && $from.parentOffset > 0) ||
+        (tail.length > 0 && $to.parentOffset < $from.parent.content.size));
+    const inlineContent = partialTextblock
+      ? this.#convertInlineMarkdown(markdown)
+      : null;
+    if (inlineContent) {
+      return tr.replaceWith(replacementFrom, replacementTo, inlineContent);
+    }
+    const parsed = this.convertFromMarkdown(markdown);
+    if (
+      !tail &&
+      withinTextblock &&
+      startsLine &&
+      (parsed.childCount !== 1 ||
+        parsed.firstChild?.type !== this.schema.nodes.paragraph)
+    ) {
+      if ($from.nodeBefore?.type === this.schema.nodes.hard_break) {
+        replacementFrom--;
+      }
+      if (
+        tr.doc.resolve(replacementTo).nodeAfter?.type ===
+        this.schema.nodes.hard_break
+      ) {
+        replacementTo++;
+      }
+    }
+    return this.#replaceWithParsed(tr, replacementFrom, replacementTo, parsed);
+  }
+
+  // Leading text keeps block rules from claiming the markup, like mid-line
+  // markdown when cooked.
+  #convertInlineMarkdown(markdown: string): Fragment | null {
+    const doc = this.tryConvertFromMarkdown("x " + markdown);
+    const paragraph = singleChild(doc);
+    const first =
+      paragraph?.type === this.schema.nodes.paragraph
+        ? paragraph.firstChild
+        : null;
+
+    return first?.isText && first.text!.startsWith("x ")
+      ? paragraph!.content.cut(2)
+      : null;
+  }
+
+  #replaceWithParsed(
+    tr: Transaction,
+    from: number,
+    to: number,
+    doc: Node
+  ): Transaction {
+    const paragraph =
+      doc.childCount === 1 &&
+      doc.firstChild?.type === this.schema.nodes.paragraph
+        ? doc.firstChild
+        : null;
+
+    if (paragraph) {
+      return tr.replaceWith(from, to, paragraph.content);
+    }
+
+    // replaceRange would also swallow covered non-defining ancestors such as
+    // a blockquote, so a fully covered textblock is replaced explicitly.
+    const $from = tr.doc.resolve(from);
+    const $to = tr.doc.resolve(to);
+    const wholeTextblock =
+      $from.sameParent($to) &&
+      $from.parent.isTextblock &&
+      $from.parentOffset === 0 &&
+      $to.parentOffset === $to.parent.content.size;
+
+    return wholeTextblock
+      ? tr.replaceWith($from.before(), $to.after(), doc.content)
+      : tr.replaceRange(from, to, new Slice(doc.content, 0, 0));
+  }
+
+  #selectInserted(
+    tr: Transaction,
+    from: number,
+    to: number,
+    text: string
+  ): void {
+    // The replace step knows where the content landed, even when it was
+    // placed before the selection's textblock.
+    let start = from;
+    let end = to;
+    tr.mapping.maps.at(-1)?.forEach((_, __, newStart, newEnd) => {
+      start = newStart;
+      end = newEnd;
+    });
+    const parsed = this.tryConvertFromMarkdown(text);
+    const expected = parsed
+      ? flattenSelection(parsed).content
+      : Fragment.from(text ? this.schema.text(text) : null);
+    const { content, segments } = flattenSelection(tr.doc, start, end);
+    const firstNode = expected.firstChild;
+    let match: number | undefined;
+    if (firstNode) {
+      content.forEach((node, offset) => {
+        if (match !== undefined) {
+          return;
+        }
+        let index =
+          node.isText && firstNode.isText
+            ? node.text!.indexOf(firstNode.text!)
+            : node.eq(firstNode)
+              ? 0
+              : -1;
+        while (index >= 0) {
+          if (
+            content
+              .cut(offset + index, offset + index + expected.size)
+              .eq(expected)
+          ) {
+            match = offset + index;
+            return;
+          }
+          if (!node.isText || !firstNode.isText) {
+            break;
+          }
+          index = node.text!.indexOf(firstNode.text!, index + 1);
+        }
+      });
+    }
+
+    if (firstNode && match !== undefined) {
+      const matchStart = match;
+      const first = segments.find((segment) => segment.end > matchStart)!;
+      const lastIndex = matchStart + expected.size - 1;
+      const last = segments.find((segment) => segment.end > lastIndex)!;
+      const selectionFrom = first.pos + matchStart - first.start;
+      tr.setSelection(
+        expected.childCount === 1 && NodeSelection.isSelectable(firstNode)
+          ? NodeSelection.create(tr.doc, selectionFrom)
+          : TextSelection.create(
+              tr.doc,
+              selectionFrom,
+              last.pos + lastIndex - last.start + 1
+            )
+      );
+    } else if (
+      content.childCount === 1 &&
+      NodeSelection.isSelectable(content.firstChild!)
+    ) {
+      tr.setSelection(NodeSelection.create(tr.doc, segments[0]!.pos));
+    } else {
+      tr.setSelection(
+        TextSelection.between(tr.doc.resolve(start), tr.doc.resolve(end))
+      );
+    }
+  }
+
+  #toggleListType(targetType: NodeType): void {
+    const { state } = this.view;
+    const { $from } = state.selection;
+    const { bullet_list, ordered_list, list_item } = this.schema.nodes;
+
+    let currentListType: NodeType | null = null;
+    for (let depth = $from.depth; depth > 0; depth--) {
+      const { type } = $from.node(depth);
+      if (type === bullet_list || type === ordered_list) {
+        currentListType = type;
+        break;
+      }
+    }
+
+    if (!currentListType) {
+      const content = state.selection.content().content;
+      const lines = this.splitNonEmptyLines(
+        state.doc.textBetween(
+          state.selection.from,
+          state.selection.to,
+          "\n",
+          "\n"
+        )
+      );
+      if (isPlainTextFragment(content, this.schema) && lines.length > 1) {
+        const list = this.buildListNode(this.schema, targetType, lines);
+        this.view.dispatch(
+          state.tr.replaceSelectionWith(list).scrollIntoView()
+        );
+        return;
+      }
+      wrapInList(targetType)(state, this.view.dispatch);
+      return;
+    }
+
+    if (currentListType === targetType) {
+      liftListItem(list_item)(state, this.view.dispatch);
+      return;
+    }
+
+    // Lifting and re-wrapping in one transaction keeps the switch a single undo step.
+    liftListItem(list_item)(state, (tr) => {
+      const range = tr.selection.$from.blockRange(tr.selection.$to);
+      if (range && wrapRangeInList(tr, range, targetType)) {
+        this.view.dispatch(tr);
+      }
+    });
+  }
+
+  #applyListFallback(
+    head: string | ((previous?: string) => string),
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const text = this.#selectedMarkdownOr(exampleKey);
+    if (opts?.multiline === false) {
+      this.#applySurroundFallback(
+        typeof head === "function" ? head() : head,
+        "",
+        exampleKey,
+        opts
+      );
+      this.focus();
+      return;
+    }
+
+    let previous: string | undefined;
+    const result = text
+      .split("\n")
+      .map((line) => {
+        if (!opts?.applyEmptyLines && !line.length) {
+          return line;
+        }
+        const lineHead = typeof head === "function" ? head(previous) : head;
+        previous = lineHead;
+        return lineHead + line;
+      })
+      .join("\n");
+
+    const tr = this.#replaceWithParsed(
+      state.tr,
+      from,
+      to,
+      this.convertFromMarkdown(result)
+    );
+
+    this.#selectInserted(tr, from, to, text);
+
+    this.view.dispatch(tr);
+    this.focus();
+  }
+
+  #selectedMarkdownOr(exampleKey: string): string {
+    const { from, to, empty } = this.view.state.selection;
+    return empty
+      ? i18n(`composer.${exampleKey}`)
+      : this.convertToMarkdown(this.view.state.doc.slice(from, to));
   }
 }
 
