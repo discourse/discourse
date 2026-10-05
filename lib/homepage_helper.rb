@@ -30,7 +30,8 @@ class HomepageHelper
     path = option[:path]
     return path if !path.respond_to?(:call)
 
-    return if !option[:server_side] && option[:id] != SiteSetting.homepage
+    effective_homepage = guardian.anonymous? ? SiteSetting.anonymous_homepage : SiteSetting.homepage
+    return if !option[:server_side] && option[:id] != effective_homepage
     return if !option_available?(option[:id], nil, guardian.user)
 
     path.call

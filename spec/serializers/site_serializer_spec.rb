@@ -80,6 +80,7 @@ RSpec.describe SiteSerializer do
         name: "plugin.dynamic",
         path: -> { calls += 1 and "/dynamic" },
         route: "plugin#index",
+        anonymous: true,
       )
       SiteSetting.top_menu = "latest|categories"
       SiteSetting.default_homepage = "latest"
@@ -125,6 +126,31 @@ RSpec.describe SiteSerializer do
       )
     end
 
+    it "omits a member-only callable homepage path for anonymous visitors" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { "/private/secret-slug" },
+        route: "plugin#index",
+      )
+      SiteSetting.top_menu = "latest|categories"
+      SiteSetting.default_homepage = "dynamic"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: false)
+
+      member_guardian = Fabricate(:user).guardian
+      serialized =
+        described_class.new(Site.new(member_guardian), scope: member_guardian, root: false).as_json
+      expect(serialized[:homepage_options]).to include(
+        id: "dynamic",
+        path: "/private/secret-slug",
+        server_side: false,
+      )
+    end
+
     it "omits a server side callable homepage path when it is unavailable to the visitor" do
       plugin = Plugin::Instance.new
       plugin.stubs(:enabled?).returns(true)
@@ -150,6 +176,7 @@ RSpec.describe SiteSerializer do
         name: "plugin.dynamic",
         path: -> { raise "boom" },
         route: "plugin#index",
+        anonymous: true,
       )
       SiteSetting.default_homepage = "dynamic"
       Discourse.expects(:warn_exception).once
@@ -167,6 +194,7 @@ RSpec.describe SiteSerializer do
         name: "plugin.dynamic",
         path: -> { "/dynamic/#{SiteSetting.title.parameterize}" },
         route: "plugin#index",
+        anonymous: true,
       )
       SiteSetting.title = "Great Site"
       SiteSetting.default_homepage = "dynamic"
