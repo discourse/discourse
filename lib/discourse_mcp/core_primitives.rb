@@ -69,8 +69,154 @@ module DiscourseMcp
       register_site_setting_tools(registry)
       register_theme_tools(registry)
       register_group_tools(registry)
+      register_category_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_category_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_category",
+        title: "Get category",
+        description: "Reads category details needed for category management.",
+        implementation: Tools::GetCategory,
+        input_schema:
+          object_schema(
+            { category_id: { type: "integer", minimum: 1 } },
+            required: %w[category_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_category",
+        title: "Create category",
+        description: "Creates a category and returns its ID, slug, and name.",
+        implementation: Tools::CreateCategory,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_NAME_LENGTH,
+              },
+              color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              text_color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              emoji: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              icon: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              parent_category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              description: {
+                type: "string",
+                maxLength: Tools::CreateCategory::MAX_DESCRIPTION_LENGTH,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_category",
+        title: "Update category",
+        description: "Updates basic details for a category.",
+        implementation: Tools::UpdateCategory,
+        input_schema:
+          object_schema(
+            {
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_NAME_LENGTH,
+              },
+              slug: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+              color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              text_color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              emoji: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              icon: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              parent_category_id: {
+                type: %w[integer null],
+                minimum: 1,
+              },
+              description: {
+                type: "string",
+                maxLength: Tools::UpdateCategory::MAX_DESCRIPTION_LENGTH,
+              },
+            },
+            required: %w[category_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_category",
+        title: "Delete category",
+        description: "Deletes an empty category after confirming its current name.",
+        implementation: Tools::DeleteCategory,
+        input_schema:
+          object_schema(
+            {
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              expected_name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_NAME_LENGTH,
+              },
+              confirm: {
+                type: "boolean",
+              },
+            },
+            required: %w[category_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :destructive,
+      )
     end
 
     def register_read_tools(registry)

@@ -20,6 +20,12 @@ en:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_create_failed: "Category could not be created"
+      category_delete_confirmation_required: "Category deletion must be confirmed"
+      category_delete_name_mismatch: "Category name does not match"
+      category_not_found: "Category not found"
+      category_update_failed: "Category could not be updated"
+      category_update_required: "At least one category field must be provided"
       draft_sequence_conflict: "Draft sequence conflict"
       draft_too_long: "Draft is too long"
       group_not_found: "Group not found"
