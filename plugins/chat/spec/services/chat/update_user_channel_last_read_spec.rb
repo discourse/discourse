@@ -10,7 +10,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:chatters, :group)
-    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
+    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id], last_seen_at: 1.minute.ago) }
     fab!(:channel, :chat_channel)
     let(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
@@ -110,6 +110,19 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
 
         it "publishes new last read to clients" do
           expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
+        end
+
+        it "publishes the updated notifications state" do
+          message = messages.find { |m| m.channel == "/notification/#{current_user.id}" }
+          expect(message.data[:recent]).to include([notification.id, true])
+        end
+
+        context "when there are no unread mentions" do
+          before { notification.update!(read: true) }
+
+          it "does not publish the notifications state" do
+            expect(messages.map(&:channel)).not_to include("/notification/#{current_user.id}")
+          end
         end
 
         it "updates the channel membership last_viewed_at datetime" do
