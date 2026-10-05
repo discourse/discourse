@@ -50,12 +50,12 @@ module JsonApiKit
       @member_names = {}
     end
 
-    def declared_attributes(attributes)
+    def declared_attributes(attributes, **options)
       attributes.each_key { declared_names(it) }
       rules
         .each_with_index
         .reduce(attributes) do |result, (rule, index)|
-          rule.declared_attributes(result)
+          rule.declared_attributes(result, **options)
         rescue VersionChange::Converter::Failure => failure
           raise BadValue.new(member_names_before(failure.names, index))
         end

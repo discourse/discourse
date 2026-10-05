@@ -22,6 +22,10 @@ module JsonApiKit
 
     def removed_sorts = @removed_sorts ||= RemovedSorts.new(changes)
 
+    def existing_values(resource:, id:)
+      ExistingValues.for(changes, current: resource.current_values(id))
+    end
+
     private
 
     attr_reader :changes
