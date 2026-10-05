@@ -437,7 +437,7 @@ module PostGuardian
   end
 
   def can_unhide?(post)
-    post.try(:hidden) && is_staff?
+    post.try(:hidden) && (is_staff? || is_category_group_moderator?(post.topic.category))
   end
 
   def can_skip_bump?
