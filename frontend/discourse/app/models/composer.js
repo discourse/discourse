@@ -209,6 +209,10 @@ export default class Composer extends RestModel {
     return Object.keys(_draft_serializer);
   }
 
+  static isEditDraft(draft) {
+    return isEdit(draft?.action) && !!draft.postId;
+  }
+
   static editDraftKey(post) {
     return `${EDIT_POST_KEY}${post.id}`;
   }

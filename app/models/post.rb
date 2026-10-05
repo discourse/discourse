@@ -951,11 +951,14 @@ class Post < ActiveRecord::Base
   end
 
   def edit_draft_key
-    "#{Draft::EDIT_POST}#{id}"
+    "#{Draft::EXISTING_POST}#{id}"
   end
 
   def advance_draft_sequence
-    DraftSequence.next!(last_editor_id, edit_draft_key) if last_editor_id
+    return if !last_editor_id
+
+    DraftSequence.next!(last_editor_id, edit_draft_key)
+    advance_legacy_edit_draft_sequence
   end
 
   # TODO: move to post-analyzer?
@@ -1236,6 +1239,27 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  # Edit drafts can still land on the topic key (stale clients, drafts the
+  # migration skipped). Only retire the topic draft when it's an edit of this
+  # post, so a reply draft is never lost.
+  def advance_legacy_edit_draft_sequence
+    topic_draft_key = "#{Draft::EXISTING_TOPIC}#{topic_id}"
+    data = Draft.where(user_id: last_editor_id, draft_key: topic_draft_key).pick(:data)
+    return if data.blank?
+
+    draft =
+      begin
+        JSON.parse(data)
+      rescue JSON::ParserError
+        nil
+      end
+
+    return if !draft.is_a?(Hash) || draft["postId"] != id
+    return if !draft["action"].to_s.start_with?("edit")
+
+    DraftSequence.next!(last_editor_id, topic_draft_key)
+  end
 
   def ensure_edit_reason_length
     return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH

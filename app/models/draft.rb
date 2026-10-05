@@ -4,7 +4,7 @@ class Draft < ActiveRecord::Base
   NEW_TOPIC = "new_topic"
   NEW_PRIVATE_MESSAGE = "new_private_message"
   EXISTING_TOPIC = "topic_"
-  EDIT_POST = "post_"
+  EXISTING_POST = "post_"
 
   belongs_to :user
 
@@ -159,7 +159,7 @@ class Draft < ActiveRecord::Base
   def topic_id
     if draft_key.starts_with?(EXISTING_TOPIC)
       draft_key.delete_prefix(EXISTING_TOPIC).to_i
-    elsif draft_key.starts_with?(EDIT_POST)
+    elsif draft_key.starts_with?(EXISTING_POST)
       post&.topic_id
     end
   end

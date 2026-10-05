@@ -920,6 +920,13 @@ export default class TopicController extends Controller {
         } else {
           opts.reply = data.reply;
         }
+
+        // An edit draft left on the topic key would be overwritten by a reply
+        // sharing that key, so resume the edit instead.
+        if (Composer.isEditDraft(data)) {
+          opts.draft = { ...data, reply: opts.reply };
+          opts.topic = topic;
+        }
       } else if (quotedText) {
         opts.quote = quotedText;
       }

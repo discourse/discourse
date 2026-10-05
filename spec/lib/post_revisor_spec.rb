@@ -2199,6 +2199,50 @@ describe PostRevisor do
 
       expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_nil
     end
+
+    it "deletes an edit draft for the post that was saved under the topic key" do
+      Draft.set(
+        post.user,
+        post.topic.draft_key,
+        0,
+        { action: "edit", postId: post.id, reply: "legacy edit draft" }.to_json,
+      )
+
+      post.revise(post.user, raw: "updated content here for the test")
+
+      expect(Draft.where(user_id: post.user.id)).to be_empty
+    end
+
+    it "keeps an edit draft for a different post saved under the topic key" do
+      other_post = Fabricate(:post, topic: post.topic, user: post.user)
+      Draft.set(
+        post.user,
+        post.topic.draft_key,
+        0,
+        { action: "edit", postId: other_post.id, reply: "other edit draft" }.to_json,
+      )
+
+      post.revise(post.user, raw: "updated content here for the test")
+
+      expect(Draft.where(user_id: post.user.id).pluck(:draft_key)).to contain_exactly(
+        post.topic.draft_key,
+      )
+    end
+
+    it "keeps a reply draft to the post saved under the topic key" do
+      Draft.set(
+        post.user,
+        post.topic.draft_key,
+        0,
+        { action: "reply", postId: post.id, reply: "reply draft" }.to_json,
+      )
+
+      post.revise(post.user, raw: "updated content here for the test")
+
+      expect(Draft.where(user_id: post.user.id).pluck(:draft_key)).to contain_exactly(
+        post.topic.draft_key,
+      )
+    end
   end
 
   describe "revising reply_to_post_number" do

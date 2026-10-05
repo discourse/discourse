@@ -360,6 +360,37 @@ describe "Composer - Drafts" do
     end
   end
 
+  context "with an edit draft saved under the topic key" do
+    fab!(:post_1) { Fabricate(:post, topic:, user: current_user, raw: "original post content") }
+
+    it "resumes the edit when clicking reply and clears the draft once saved" do
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_post_content(post_number: 2, content: "original post content")
+
+      # saved after page load so the topic route doesn't auto-open it
+      Draft.set(
+        current_user,
+        topic.draft_key,
+        0,
+        { action: "edit", postId: post_1.id, reply: "legacy edit content" }.to_json,
+      )
+
+      topic_page.click_reply_button
+
+      expect(composer).to have_content("legacy edit content")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+
+      composer.create
+
+      expect(composer).to be_closed
+      expect(topic_page).to have_post_content(
+        post_number: post_1.post_number,
+        content: "legacy edit content",
+      )
+      expect(Draft.where(user: current_user)).to be_empty
+    end
+  end
+
   context "when replying to a different topic with an active draft" do
     fab!(:other_topic, :topic_with_op)
 
