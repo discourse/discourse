@@ -6,6 +6,7 @@ module BackupRestore
 
   VERSION_PREFIX = "v"
   DUMP_FILE = "dump.sql.gz"
+  DUMP_DIRECTORY = "db"
   LOGS_CHANNEL = "/admin/backups/logs"
 
   def self.backup!(user_id, opts = {})

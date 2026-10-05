@@ -37,7 +37,7 @@ module BackupRestore
 
       log "Finalizing backup..."
 
-      @with_uploads ? create_archive : move_dump_backup
+      create_archive
       upload_archive
 
       after_create_hook
@@ -86,7 +86,7 @@ module BackupRestore
       @current_db = RailsMultisite::ConnectionManagement.current_db
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
-      @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+      @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_DIRECTORY)
       @archive_directory = BackupRestore::LocalBackupStore.base_directory(db: @current_db)
       filename = @filename_override || "#{get_parameterized_title}-#{@timestamp}"
       @archive_basename =
@@ -95,12 +95,7 @@ module BackupRestore
           "#{filename}-#{BackupRestore::VERSION_PREFIX}#{Discourse::VERSION::STRING.tr(".", "-")}-#{BackupRestore.current_database_version}",
         )
 
-      @backup_filename =
-        if @with_uploads
-          "#{File.basename(@archive_basename)}.tar.gz"
-        else
-          "#{File.basename(@archive_basename)}.sql.gz"
-        end
+      @backup_filename = "#{File.basename(@archive_basename)}.tar.gz"
     end
 
     def listen_for_shutdown_signal
@@ -144,20 +139,22 @@ module BackupRestore
     end
 
     def dump_public_schema
-      log "Dumping the public schema of the database..."
+      log "Dumping the public schema of the database with #{pg_dump_concurrency} workers..."
 
+      command = pg_dump_command
       logs = Queue.new
       pg_dump_running = true
 
-      Thread.new do
-        RailsMultisite::ConnectionManagement.establish_connection(db: @current_db)
-        while pg_dump_running
-          message = logs.pop.strip
-          log(message) if message.present?
+      log_thread =
+        Thread.new do
+          RailsMultisite::ConnectionManagement.establish_connection(db: @current_db)
+          while pg_dump_running || !logs.empty?
+            message = logs.pop.strip
+            log(message) if message.present?
+          end
         end
-      end
 
-      IO.popen("#{pg_dump_command} 2>&1") do |pipe|
+      IO.popen(command, err: %i[child out]) do |pipe|
         while line = pipe.readline
           logs << line
         end
@@ -168,25 +165,31 @@ module BackupRestore
         logs << ""
       end
 
+      log_thread.join
       raise "pg_dump failed" unless $?.success?
     end
 
     def pg_dump_command
       db_conf = BackupRestore.database_configuration
+      pg_dump_path =
+        PostgresTools.find("pg_dump", server_version: BackupRestore.postgresql_major_version)
 
-      password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
+      env = {}
+      env["PGPASSWORD"] = db_conf.password if db_conf.password.present?
       host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
       port_argument = "--port=#{db_conf.port}" if db_conf.port.present?
       username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
 
       [
-        password_argument, # pass the password to pg_dump (if any)
-        "pg_dump", # the pg_dump command
+        env,
+        pg_dump_path,
         "--schema=public", # only public schema
-        "-T public.pg_*", # exclude tables and views whose name starts with "pg_"
+        "--exclude-table=public.pg_*", # exclude tables and views whose name starts with "pg_"
         "--exclude-table-data=public.nested_hot_post_scores",
         "--exclude-table-data=public.nested_hot_score_snapshots",
-        "--file='#{@dump_filename}'", # output to the dump.sql file
+        "--file=#{@dump_filename}",
+        "--format=directory", # required for parallel dumps
+        "--jobs=#{pg_dump_concurrency}",
         "--no-owner", # do not output commands to set ownership of objects
         "--no-privileges", # prevent dumping of access privileges
         "--verbose", # specifies verbose mode
@@ -195,19 +198,11 @@ module BackupRestore
         port_argument, # the port to connect to (if any)
         username_argument, # the username to connect as (if any)
         db_conf.database, # the name of the database to dump
-      ].join(" ")
+      ].compact
     end
 
-    def move_dump_backup
-      log "Finalizing database dump file: #{@backup_filename}"
-
-      archive_filename = File.join(@archive_directory, @backup_filename)
-
-      FileUtils.mv(@dump_filename, archive_filename)
-
-      remove_tmp_directory
-    rescue SystemCallError => error
-      raise "Failed to move database dump file.\n#{error.message}"
+    def pg_dump_concurrency
+      [GlobalSetting.backup_database_concurrency.to_i, 1].max
     end
 
     def create_archive
@@ -243,8 +238,10 @@ module BackupRestore
         chdir: File.dirname(@dump_filename),
       )
 
-      add_local_uploads_to_archive(tar_filename)
-      add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
+      if @with_uploads
+        add_local_uploads_to_archive(tar_filename)
+        add_remote_uploads_to_archive(tar_filename) if SiteSetting.Upload.enable_s3_uploads
+      end
 
       remove_tmp_directory
 
