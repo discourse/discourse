@@ -32,6 +32,15 @@ describe DiscourseAi::AiBot::EntryPoint do
 
       it "falls back to the top menu homepage for anonymous visitors" do
         expect(HomepageHelper.resolve).to eq("latest")
+        expect(Site.json_for(Guardian.new)).not_to include("ai_bot_anonymous_preview")
+      end
+
+      it "offers anonymous visitors a preview when they're in the allowed groups" do
+        SiteSetting.ai_bot_allowed_groups =
+          "#{bot_allowed_group.id}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+
+        expect(HomepageHelper.resolve).to eq("ai-conversations")
+        expect(JSON.parse(Site.json_for(Guardian.new))["ai_bot_anonymous_preview"]).to eq(true)
       end
     end
 
@@ -79,6 +88,54 @@ describe DiscourseAi::AiBot::EntryPoint do
           post_args[:target_usernames] = [gpt_bot.username, user.username].join(",")
           topic = PostCreator.create!(admin, post_args).topic
           expect(topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to be_nil
+        end
+      end
+
+      describe "PM topic tracking state" do
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
+        let!(:bot_pm) { PostCreator.create!(admin, post_args).topic }
+        let!(:human_pm) do
+          PostCreator.create!(
+            user,
+            title: "A question for a human instead",
+            raw: "Hello there, do you have a minute?",
+            archetype: Archetype.private_message,
+            target_usernames: admin.username,
+          ).topic
+        end
+        let!(:bot_reply) do
+          PostCreator.create!(gpt_bot, topic_id: bot_pm.id, raw: "Here is my considered answer.")
+        end
+
+        before do
+          PostCreator.create!(user, topic_id: human_pm.id, raw: "Following up on this one.")
+          TopicUser.update_last_read(admin, bot_pm.id, 1, 1, 0)
+          TopicUser.update_last_read(admin, human_pm.id, 1, 1, 0)
+        end
+
+        it "leaves bot PMs out of the unread report" do
+          expect(PrivateMessageTopicTrackingState.report(admin).map(&:topic_id)).to contain_exactly(
+            human_pm.id,
+          )
+        end
+
+        it "does not publish unread updates for bot PMs" do
+          messages =
+            MessageBus.track_publish(PrivateMessageTopicTrackingState.user_channel(admin.id)) do
+              PrivateMessageTopicTrackingState.publish_unread(bot_reply)
+            end
+
+          expect(messages).to be_empty
+        end
+
+        it "includes bot PMs when the AI bot is disabled" do
+          SiteSetting.ai_bot_enabled = false
+
+          expect(PrivateMessageTopicTrackingState.report(admin).map(&:topic_id)).to contain_exactly(
+            bot_pm.id,
+            human_pm.id,
+          )
         end
       end
 

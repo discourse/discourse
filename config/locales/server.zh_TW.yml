@@ -5,6 +5,17 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  markdown_endpoints:
+    latest: "最新版本"
+    categories: "分類"
+    tags: "標簽"
+    previous_page: "上一頁"
+    next_page: "下一頁"
+    replies: "回覆"
+    event:
+      location: "地點"
+      link: "連結"
+      date_with_timezone: "%{date}（%{timezone}）"
   mcp:
     errors:
       topic_not_found: "未找到話題"
@@ -827,6 +838,7 @@ zh_TW:
       description_incomplete: "分類描述貼文至少要有一段。"
       description_too_long:
         other: "說明太長（最多 %{count} 個字元）。"
+      special_category_permissions: "這是預先建立的分類，無法編輯安全性設定。若不想使用此分類，請刪除它，而非變更用途。"
       permission_conflict: "任何被允許訪問子分類的組也必須被允許訪問父分類。以下群組可以訪問子分類之一，但無法訪問父分類：%{group_names}。"
       disallowed_topic_tags: "此主題包含此分類不允許的標簽：%{tags}"
       disallowed_tags_generic: "此主題含有不允許的標籤。"
@@ -2026,8 +2038,8 @@ zh_TW:
     enable_local_logins: "啟用基于本地使用者名和密碼登錄的帳號。警告：如果禁用，并且您之前沒有配置至少一種備用登錄方法，您可能無法登錄。"
     enable_local_logins_via_email: "允許使用者請求通過電子郵件向他們發送一鍵登錄連結。"
     enable_random_usernames: '針對使用一次性電子郵件驗證碼建立的帳戶，系統會以「形容詞 + 名詞 + 兩個隨機數字」的格式（例如：QuietFalcon34）生成隨機使用者名稱。新會員可在註冊過程中變更其使用者名稱。'
-    random_username_adjectives: '用於隨機產生使用者名稱前半部的詞彙。詞彙組合時，第一個字母會大寫。'
-    random_username_nouns: '用於隨機產生使用者名稱後半部的詞彙。詞彙組合時，第一個字母會大寫。'
+    random_username_adjectives: "用於隨機產生使用者名稱前半部的詞彙。詞彙組合時，第一個字母會大寫。"
+    random_username_nouns: "用於隨機產生使用者名稱後半部的詞彙。詞彙組合時，第一個字母會大寫。"
     allow_passkeys_for_2fa: "允許使用者在確認敏感操作時使用通行金鑰完成雙因素驗證。"
     allow_new_registrations: "允許新使用者注冊。取消選中此項以防止任何人創建新帳號。"
     enable_signup_cta: "向回訪匿名使用者顯示通知，提示他們注冊帳號。"

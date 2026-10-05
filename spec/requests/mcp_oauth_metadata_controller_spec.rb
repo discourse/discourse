@@ -3,6 +3,31 @@
 describe McpOauthMetadataController do
   before { SiteSetting.mcp_server_enabled = true }
 
+  %w[
+    /.well-known/oauth-protected-resource/mcp
+    /.well-known/oauth-authorization-server
+    /.well-known/openid-configuration
+  ].each do |endpoint|
+    context "when login is required for #{endpoint}" do
+      before { SiteSetting.login_required = true }
+
+      it "returns discovery metadata without a browser session" do
+        get endpoint, headers: { "Accept" => "application/json" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["scopes_supported"]).to eq(DiscourseMcp.registry.scopes)
+      end
+
+      it "returns not found when MCP is disabled" do
+        SiteSetting.mcp_server_enabled = false
+
+        get endpoint, headers: { "Accept" => "application/json" }
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   it "advertises every registered scope in protected resource metadata" do
     get "/.well-known/oauth-protected-resource/mcp"
 

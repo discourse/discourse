@@ -93,6 +93,11 @@ uk:
                 slower: "%{duration} повільніше"
                 tooltip: "Тенденція середнього часу відповіді."
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Вилучені"
+        tag_names: "Теґи"
+        tag_names_description: "Активувати лише для тем, які мають хоча б один із цих тегів"
     notifications:
       alt:
         solved:

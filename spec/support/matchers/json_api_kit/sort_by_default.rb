@@ -31,7 +31,7 @@ module JsonApiKitMatchers
     def leading_keys
       @leading_keys ||=
         resource
-          .order
+          .order(resource.default_ordering)
           .first
           .keyset
           .keys

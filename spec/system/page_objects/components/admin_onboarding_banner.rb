@@ -3,6 +3,10 @@
 module PageObjects
   module Components
     class AdminOnboardingBanner < PageObjects::Components::Base
+      def step_names
+        all(".admin-onboarding-banner .onboarding-step").map { |step| step[:id] }
+      end
+
       def visible?
         has_css?(".admin-onboarding-banner")
       end

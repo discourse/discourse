@@ -389,6 +389,10 @@ Discourse::Application.routes.draw do
           :constraints => AdminConstraint.new
       put "dashboard/reports/layout" => "dashboard#update_reports_section",
           :constraints => AdminConstraint.new
+      post "dashboard/reports/mount" => "dashboard#mount_report",
+           :constraints => AdminConstraint.new
+      delete "dashboard/reports/mount" => "dashboard#unmount_report",
+             :constraints => AdminConstraint.new
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"
@@ -1997,6 +2001,7 @@ Discourse::Application.routes.draw do
       get "/clients" => "admin/mcp_clients#index"
       post "/clients" => "admin/mcp_clients#create"
       get "/clients/:id" => "admin/mcp_clients#show"
+      put "/clients/:id" => "admin/mcp_clients#update"
       put "/clients/:id/block" => "admin/mcp_clients#block"
       post "/clients/:id/refresh" => "admin/mcp_clients#refresh"
       get "/authorizations" => "admin/mcp_authorizations#index"

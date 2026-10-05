@@ -71,4 +71,31 @@ describe "AI Discoveries search modes" do
     expect(discoveries_search).to have_ask_in_effect
     expect(discoveries_search).to have_discovery
   end
+
+  it "takes the user to full page search after pressing Enter twice with Ask AI as default" do
+    user.user_option.update!(ai_ask_ai_default: true)
+
+    visit "/"
+    discoveries_search.open.fill_query("miyazaki").submit
+    expect(discoveries_search).to have_discovery
+
+    discoveries_search.submit
+
+    expect(page).to have_current_path("/search?q=miyazaki&search_type=ai_discoveries")
+  end
+
+  it "takes the user to full page search from All topics with Ask AI as default" do
+    user.user_option.update!(ai_ask_ai_default: true)
+
+    visit "/"
+    discoveries_search.open.fill_query("miyazaki").submit
+    expect(discoveries_search).to have_discovery
+
+    discoveries_search.select_search
+    expect(discoveries_search).to have_topic_result(miyazaki_topic)
+
+    discoveries_search.submit
+
+    expect(page).to have_current_path("/search?q=miyazaki")
+  end
 end

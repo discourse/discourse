@@ -57,11 +57,7 @@ class Upload < ActiveRecord::Base
     )
   end
 
-  after_destroy do
-    User.where(uploaded_avatar_id: id).update_all(uploaded_avatar_id: nil)
-    UserAvatar.where(gravatar_upload_id: id).update_all(gravatar_upload_id: nil)
-    UserAvatar.where(custom_upload_id: id).update_all(custom_upload_id: nil)
-  end
+  after_destroy { UserAvatar.remove_upload(id) }
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 

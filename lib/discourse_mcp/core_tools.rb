@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "category_creator"
+require "category_destroyer"
+require "category_updater"
 require "discourse_mcp/tool_helpers"
 require "discourse_mcp/output_schema"
 require "discourse_mcp/tools/search"
@@ -13,3 +16,6 @@ require "discourse_mcp/tools/uploads"
 require "discourse_mcp/tools/private_messages"
 require "discourse_mcp/tools/moderation"
 require "discourse_mcp/tools/site_settings"
+require "discourse_mcp/tools/themes"
+require "discourse_mcp/tools/groups"
+require "discourse_mcp/tools/categories"

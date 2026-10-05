@@ -172,6 +172,8 @@ module DiscourseRewind
         }
       end
 
+      private
+
       def best_book_fit(reading_time)
         best_fit =
           POPULAR_BOOKS

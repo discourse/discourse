@@ -8,14 +8,28 @@ en:
     next_page: "Next page"
     empty: "No entries to display."
     replies: "Replies"
-    post_author: "Author: %{author}"
-    post_date: "Post date: %{timestamp}"
+    post_author: "**Author:** %{author}"
+    post_date: "**Post date:** %{timestamp}"
     last_updated: "Last updated"
+    event:
+      name: "Event"
+      start: "Starts"
+      end: "Ends"
+      location: "Location"
+      link: "Link"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_create_failed: "Category could not be created"
+      category_delete_confirmation_required: "Category deletion must be confirmed"
+      category_delete_name_mismatch: "Category name does not match"
+      category_not_found: "Category not found"
+      category_update_failed: "Category could not be updated"
+      category_update_required: "At least one category field must be provided"
       draft_sequence_conflict: "Draft sequence conflict"
       draft_too_long: "Draft is too long"
       group_not_found: "Group not found"
+      group_post_single_cursor: "Provide either before_post_id or before, not both"
       invalid_date: "Invalid date"
       invalid_directory_period: "Invalid directory period"
       invalid_reply_mode: "Invalid reply mode"
@@ -58,6 +72,10 @@ en:
       site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
       site_setting_value_required: "Provide a value when setting a site setting"
       site_setting_verification_failed: "The site setting update could not be verified"
+      theme_create_failed: "The theme could not be created"
+      theme_not_found: "Theme not found"
+      theme_update_failed: "The theme could not be updated"
+      theme_update_required: "Provide at least one theme field to update"
       topic_not_found: "Topic not found"
       topic_update_required: "Provide at least one topic field to update"
       top_period_only_for_top_view: "Top period is only supported by the top view"
@@ -1068,6 +1086,7 @@ en:
       description_too_long:
         one: "Description is too long (maximum is %{count} character)."
         other: "Description is too long (maximum is %{count} characters)."
+      special_category_permissions: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -2005,6 +2024,8 @@ en:
       description: "Show number of associated accounts grouped by login provider. Applicable only when social login methods are enabled."
 
   dashboard:
+    reports:
+      cap_reached: "The dashboard already shows the maximum of %{max} reports. Remove one before adding another."
     problem:
       twitter_login: 'Twitter login appears to not be working at the moment. Check the credentials in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.'
       group_email_credentials: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
@@ -2360,8 +2381,8 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     enable_local_logins_via_code: "Allow members to sign up, accept invitations, and log in with one-time email codes (OTPs), without requiring a password."
     enable_random_usernames: 'Generates random usernames for accounts created with a one-time email code using the format "adjective + noun + two random numbers" (example: QuietFalcon34). New members can change their username during the signup process.'
-    random_username_adjectives: 'Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined.'
-    random_username_nouns: 'Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined.'
+    random_username_adjectives: "Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined."
+    random_username_nouns: "Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -3117,6 +3138,7 @@ en:
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
+    enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
@@ -3176,8 +3198,9 @@ en:
     improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
+    sidebar_user_navigation: "Moves the navigation for user pages — profile, activity, notifications, messages, invites and preferences — out of the horizontal tab bars and into a dedicated sidebar panel, the way the admin area works. On mobile the panel is served from the hamburger menu."
     enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
-    experimental_markdown_endpoints: "Serve supported topics and topic lists as Markdown through .md URLs and Accept negotiation. Normal visibility and profile privacy rules always apply."
+    enable_markdown_endpoints: "Serve supported topics and topic lists as Markdown through .md URLs and requests with an Accept: text/markdown header. Normal visibility and profile privacy rules always apply."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -6307,6 +6330,7 @@ en:
       custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
+    admin_onboarding_topic_option: "Selected option: %{option}\nOption ID: %{option_id}"
     redacted: "[content not visible]"
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"

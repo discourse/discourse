@@ -102,7 +102,6 @@ ja:
     ai_summary_gists_enabled: "トピック内の最新の返信の簡単な要約を自動的に生成する"
     ai_bot_enabled: "AI ボットモジュールを有効にします。"
     ai_bot_enabled_llms: "AI ボット会話に選択できる LLM"
-    ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"
     ai_bot_debugging_allowed_groups: "これらのグループが生の AI リクエストと応答を表示するデバッグボタンを投稿に表示することを許可する"
     ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可する。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
     ai_bot_add_to_header: "AI ボットとの PM を開始するためのボタンをヘッダーに表示する"

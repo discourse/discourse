@@ -633,7 +633,7 @@ class TopicsController < ApplicationController
 
     status_type =
       begin
-        TopicTimer.types.fetch(params[:status_type].to_sym)
+        TopicTimer.public_types.fetch(params[:status_type].to_sym)
       rescue StandardError
         invalid_param(:status_type)
       end

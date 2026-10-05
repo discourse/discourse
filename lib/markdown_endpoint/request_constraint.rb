@@ -9,7 +9,7 @@ module MarkdownEndpoint
     end
 
     def matches?(request)
-      return false unless SiteSetting.experimental_markdown_endpoints
+      return false unless SiteSetting.enable_markdown_endpoints
       return true unless @accept
       return false if request.path.end_with?(".json", ".rss")
 

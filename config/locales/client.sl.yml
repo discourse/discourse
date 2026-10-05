@@ -4106,6 +4106,7 @@ sl:
         site_traffic:
           series:
             anonymous: "Anonimni"
+          crawler_learn_more: "Več o tem"
         period:
           last_7_days: "Zadnjih 7 dni"
           last_30_days: "Zadnjih 30 dni"
@@ -4932,11 +4933,11 @@ sl:
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
-        search: "Išči besedilo, ki bi ga rad/a uredil/a"
+        search_label: "Išči"
+        theme_disabled: "Onemogočeno"
+        filters: "Filtri"
         edit: "Uredi"
-        revert: "Prekliči spremembe"
         revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
-        go_back: "Nazaj na iskalnik"
         show_overriden: "Prikaži samo preglašene/spremenjene"
         locale: "Jezik:"
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."

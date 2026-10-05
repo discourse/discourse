@@ -1250,6 +1250,52 @@ RSpec.describe Category do
       Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id)
     end
 
+    it "preserves compatible persisted permissions when moving a private category" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, group:)
+      permissions = child.category_groups.pluck(:group_id, :permission_type)
+
+      expect(child.update(parent_category_id: private_parent.id)).to eq(true)
+      expect(child.reload.category_groups.pluck(:group_id, :permission_type)).to eq(permissions)
+      expect(Guardian.new.can_see?(child)).to eq(false)
+    end
+
+    it "validates permissions built with a new private subcategory" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, parent_category: private_parent, group:)
+
+      expect(child).to be_persisted
+      expect(child.category_groups.pluck(:group_id)).to contain_exactly(group.id)
+      expect(Guardian.new.can_see?(child)).to eq(false)
+    end
+
+    it "rejects moving a private category with a different audience" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, group: group2)
+
+      expect(child.update(parent_category_id: private_parent.id)).to eq(false)
+      expect(child.errors.full_messages).to include(
+        I18n.t("category.errors.permission_conflict", group_names: group2.name),
+      )
+      expect(child.reload.parent_category_id).to be_nil
+    end
+
+    it "allows compatible permissions supplied when creating a private subcategory" do
+      private_parent = Fabricate(:private_category, group:)
+      child =
+        Category.new(
+          name: "Private child",
+          user: admin,
+          parent_category_id: private_parent.id,
+          permissions: {
+            group.name => :full,
+          },
+        )
+
+      expect(child.save).to eq(true)
+      expect(Guardian.new.can_see?(child.reload)).to eq(false)
+    end
+
     context "when changing subcategory permissions" do
       it "is invalid when permissions are less restrictive" do
         subcategory.set_permissions(group => :readonly)
@@ -1331,6 +1377,43 @@ RSpec.describe Category do
 
         expect(parent_category.valid?).to eq(true)
       end
+    end
+  end
+
+  describe "validate special category permissions" do
+    fab!(:group)
+    fab!(:staff_category) do
+      Fabricate(:category).tap do |category|
+        category.set_permissions(staff: :full)
+        category.save!
+      end
+    end
+
+    before { SiteSetting.staff_category_id = staff_category.id }
+
+    it "is invalid when a special category's permissions change" do
+      staff_category.set_permissions(everyone: :full)
+
+      expect(staff_category.valid?).to eq(false)
+      expect(staff_category.errors.full_messages).to contain_exactly(
+        I18n.t("category.errors.special_category_permissions"),
+      )
+    end
+
+    it "is valid when a special category's current permissions are resubmitted" do
+      staff_category.set_permissions(staff: :full)
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      uncategorized.set_permissions(everyone: :full)
+
+      expect(staff_category.valid?).to eq(true)
+      expect(uncategorized.valid?).to eq(true)
+    end
+
+    it "is valid when a regular category's permissions change" do
+      category = Fabricate(:category)
+      category.set_permissions(group => :full)
+
+      expect(category.valid?).to eq(true)
     end
   end
 
@@ -1719,6 +1802,34 @@ RSpec.describe Category do
 
       it "allows limiting depth" do
         expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
+      end
+    end
+  end
+
+  describe "upload security updates" do
+    it "enqueues an update whenever read restrictions change" do
+      category = Fabricate(:category)
+
+      expect_enqueued_with(
+        job: :update_category_upload_security,
+        args: {
+          category_id: category.id,
+        },
+      ) { category.update!(permissions: { admins: :full }) }
+
+      expect_enqueued_with(
+        job: :update_category_upload_security,
+        args: {
+          category_id: category.id,
+        },
+      ) { category.update!(permissions: { everyone: :full }) }
+    end
+
+    it "does not enqueue an update when read restrictions stay unchanged" do
+      category = Fabricate(:category)
+
+      expect_not_enqueued_with(job: :update_category_upload_security) do
+        category.update!(permissions: { everyone: :readonly })
       end
     end
   end

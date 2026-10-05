@@ -134,7 +134,7 @@ module DiscourseAi
           agent_id = AiAgent.find_by(name: agent_name)&.id if agent_name.present?
         end
 
-        agent_id ||= DiscourseAi::Agents::General.id
+        agent_id ||= DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General]
         agent_id.to_i
       end
     end

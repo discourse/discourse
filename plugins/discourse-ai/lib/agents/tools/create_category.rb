@@ -78,12 +78,12 @@ module DiscourseAi
           end
 
           if parameters[:description].present? &&
-               parameters[:description].size > CategoriesController::MAX_DESCRIPTION_PARAM_LENGTH
+               parameters[:description].size > CategoryCreator::MAX_DESCRIPTION_LENGTH
             return(
               error_response(
                 I18n.t(
                   "category.errors.description_too_long",
-                  count: CategoriesController::MAX_DESCRIPTION_PARAM_LENGTH,
+                  count: CategoryCreator::MAX_DESCRIPTION_LENGTH,
                 ),
               )
             )
@@ -96,7 +96,7 @@ module DiscourseAi
           # Model validations (duplicate name, name length, color format) run
           # against the unsaved candidate so an invalid request is rejected
           # before it is queued for approval.
-          candidate = Category.new(category_attributes)
+          candidate = Category.new(category_attributes.merge(user: guardian.user))
           return error_response(candidate.errors.full_messages.to_sentence) if !candidate.valid?
 
           nil
@@ -117,7 +117,6 @@ module DiscourseAi
             name: parameters[:name],
             description: parameters[:description].presence,
             parent_category_id: parent_category&.id,
-            user: guardian.user,
           }
           %i[color text_color].each do |param|
             value = parameters[param]
@@ -127,14 +126,9 @@ module DiscourseAi
         end
 
         def perform_create
-          if !guardian.can_create_category?
-            return error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.not_allowed"))
-          end
+          category = CategoryCreator.create(guardian, category_attributes)
 
-          category = Category.new(category_attributes)
-
-          if category.save
-            StaffActionLogger.new(guardian.user).log_category_creation(category)
+          if category.persisted?
             {
               status: "success",
               category_id: category.id,
@@ -144,6 +138,8 @@ module DiscourseAi
           else
             error_response(category.errors.full_messages.to_sentence)
           end
+        rescue Discourse::InvalidAccess
+          error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.not_allowed"))
         end
       end
     end

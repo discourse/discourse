@@ -42,6 +42,13 @@ module DiscourseAi
         SQL
       end
 
+      # Anonymous users can't converse with a bot. Adding them to
+      # `ai_bot_allowed_groups` only lets them preview the conversations page.
+      def self.anonymous_preview_allowed?
+        SiteSetting.ai_bot_enabled &&
+          SiteSetting.ai_bot_allowed_groups_map.include?(Group::AUTO_GROUPS[:anonymous_users])
+      end
+
       def self.personal_message_bot_user_ids(user)
         return [] if user.blank? || !SiteSetting.ai_bot_enabled
 
@@ -99,11 +106,34 @@ module DiscourseAi
           name: "discourse_ai.ai_bot.conversations.homepage_option",
           path: "/discourse-ai/ai-bot/conversations",
           route: "discourse_ai/ai_bot/conversations#index",
+          anonymous: true,
           enabled: -> { SiteSetting.ai_bot_enabled },
           available: ->(guardian:, request:) do
-            EntryPoint.personal_message_bot_user_ids(guardian.user).present?
+            if guardian.anonymous?
+              DiscourseAi::AiBot::EntryPoint.anonymous_preview_allowed? &&
+                !CrawlerDetection.crawler_layout_request?(request)
+            else
+              DiscourseAi::AiBot::EntryPoint.personal_message_bot_user_ids(guardian.user).present?
+            end
           end,
         )
+
+        plugin.add_to_serializer(
+          :site,
+          :ai_bot_anonymous_preview,
+          include_condition: -> do
+            scope.anonymous? && DiscourseAi::AiBot::EntryPoint.anonymous_preview_allowed?
+          end,
+        ) { true }
+
+        not_bot_pm_sql = <<~SQL
+          NOT EXISTS (
+            SELECT 1 FROM topic_custom_fields tcf_pm_inbox
+            WHERE tcf_pm_inbox.topic_id = topics.id
+            AND tcf_pm_inbox.name = '#{TOPIC_AI_BOT_PM_FIELD}'
+            AND tcf_pm_inbox.value = 't'
+          )
+        SQL
 
         # Hide bot PMs from the personal inbox queries (Latest, New, Unread)
         # so human conversations are not buried under bot replies. Sent and
@@ -111,14 +141,15 @@ module DiscourseAi
         plugin.register_modifier(:private_messages_personal_inbox_query) do |list, _user|
           next list unless SiteSetting.ai_bot_enabled
 
-          list.where(<<~SQL, field: TOPIC_AI_BOT_PM_FIELD)
-            NOT EXISTS (
-              SELECT 1 FROM topic_custom_fields tcf_pm_inbox
-              WHERE tcf_pm_inbox.topic_id = topics.id
-              AND tcf_pm_inbox.name = :field
-              AND tcf_pm_inbox.value = 't'
-            )
-          SQL
+          list.where(not_bot_pm_sql)
+        end
+
+        # Keep bot PMs out of the inbox unread/new counts too, since the
+        # lists above no longer show them.
+        plugin.register_modifier(:private_message_topic_tracking_state_filters) do |filters|
+          next filters unless SiteSetting.ai_bot_enabled
+
+          filters + [not_bot_pm_sql]
         end
 
         plugin.register_modifier(:guardian_can_send_private_message_to_target) do |allowed, params|

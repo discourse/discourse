@@ -85,6 +85,70 @@ RSpec.describe DiscourseAi::AiBot::ArtifactKeyValuesController do
         expect(json["users"].map { |u| u["id"] }).to contain_exactly(user.id, other_user.id)
       end
 
+      it "returns 404 when artifact availability is revoked" do
+        SiteSetting.ai_artifact_security = "disabled"
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+        expect(response.status).to eq(404)
+
+        get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json",
+            params: {
+              all_users: true,
+            }
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(public_key_value.value)
+
+        SiteSetting.ai_artifact_security = "strict"
+        private_message_topic.trash!
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+        expect(response.status).to eq(404)
+
+        get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json",
+            params: {
+              all_users: true,
+            }
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(public_key_value.value)
+      end
+
+      it "allows anonymous access to public-post artifacts with private metadata" do
+        public_post = Fabricate(:post, topic: Fabricate(:topic, user: user), user: user)
+        public_artifact = Fabricate(:ai_artifact, post: public_post)
+        public_key_value =
+          Fabricate(
+            :ai_artifact_key_value,
+            ai_artifact: public_artifact,
+            user: user,
+            key: "public_key",
+            public: true,
+          )
+        private_key_value =
+          Fabricate(
+            :ai_artifact_key_value,
+            ai_artifact: public_artifact,
+            user: user,
+            key: "private_key",
+            value: "private_value",
+            public: false,
+          )
+
+        get "/discourse-ai/ai-bot/artifacts/#{public_artifact.id}"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(ERB::Util.html_escape(public_artifact.html))
+
+        get "/discourse-ai/ai-bot/artifact-key-values/#{public_artifact.id}.json",
+            params: {
+              all_users: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["key_values"].map { |key_value| key_value["key"] }).to eq(
+          [public_key_value.key],
+        )
+        expect(response.body).not_to include(private_key_value.value)
+      end
+
       it "returns 404 for private artifact" do
         get "/discourse-ai/ai-bot/artifact-key-values/#{private_artifact.id}.json"
         expect(response.status).to eq(404)

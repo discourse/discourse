@@ -13,7 +13,6 @@ el:
         title: "Δημιουργία ερωτήματος στο Data Explorer"
         description: "Γράψτε ένα προσαρμοσμένο ερώτημα SQL για να εμφανίσετε οτιδήποτε συγκεκριμένο για την κοινότητά σας."
     explorer:
-      default_query: "Προεπιλογή"
       view_query: "Προβολή"
       mode:
         label: "Λειτουργία σύνταξης ερωτήματος"
@@ -62,6 +61,7 @@ el:
         one: "%{count} αποτέλεσμα."
         other: "%{count} αποτελέσματα."
       query_groups: "Ομάδες"
+      query_tags: "Ετικέτες"
       query_description: "Περιγραφή"
       query_time: "Τελευταία εκτέλεση"
       query_user: "Δημιουργήθηκε από"

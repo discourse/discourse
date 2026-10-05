@@ -59,6 +59,7 @@ export default class SidebarApiSection extends Component {
                 @identifier={{concat "sidebar-more-" @section.name}}
                 @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
                 @sectionLinks={{this.moreLinks}}
+                @toggleNavigationMenu={{@toggleNavigationMenu}}
                 @triggerPrefixType={{@section.moreLinksTriggerPrefixType}}
                 @triggerPrefixValue={{@section.moreLinksTriggerPrefixValue}}
                 @triggerSuffixType={{@section.moreLinksTriggerSuffixType}}
@@ -130,6 +131,7 @@ export default class SidebarApiSection extends Component {
                 @identifier={{concat "sidebar-more-" @section.name}}
                 @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
                 @sectionLinks={{this.moreLinks}}
+                @toggleNavigationMenu={{@toggleNavigationMenu}}
                 @triggerPrefixType={{@section.moreLinksTriggerPrefixType}}
                 @triggerPrefixValue={{@section.moreLinksTriggerPrefixValue}}
                 @triggerSuffixType={{@section.moreLinksTriggerSuffixType}}

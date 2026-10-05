@@ -14,15 +14,7 @@ sr:
         reading_time:
           title: Vreme za čitanje
         chat_usage:
-          messages: poruke
           author: Ti
           author_others: "%{username}"
-        invites:
-          title: Pozivnice
-          invitee_posts: Poruka Otvoreno
-          invitee_likes: Lajkova Dato
-        new_user_interactions:
-          likes_given: Lajkova Dato
-          mentions: Spominjanja
         writing_analysis:
           menu_other: Ostalo

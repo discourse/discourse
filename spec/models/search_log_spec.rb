@@ -418,14 +418,15 @@ RSpec.describe SearchLog, type: :model do
       ).to eq(1)
     end
 
-    it "returns non-staff and anonymous searches minus crawlers with the human_only search type" do
+    it "returns non-staff and anonymous browser searches minus crawlers with the human_only search type" do
       SiteSetting.improved_crawler_detection = true
       member = Fabricate(:user)
       Fabricate(:search_log, term: "ruby", user: member)
       Fabricate(:search_log, term: "ruby", user: Fabricate(:admin))
       Fabricate(:search_log, term: "ruby", user: Fabricate(:moderator))
+      Fabricate(:search_log, term: "ruby", user: nil, session_id: "browser-session")
       Fabricate(:search_log, term: "ruby", user: nil)
-      Fabricate(:search_log, term: "ruby", user: nil, crawler: true)
+      Fabricate(:search_log, term: "ruby", user: nil, session_id: "browser-session", crawler: true)
 
       expect(
         SearchLog.term_details("ruby", :weekly, :human_only)[:data].sum { |point| point[:y] },
@@ -442,6 +443,7 @@ RSpec.describe SearchLog, type: :model do
         ip_address: "127.0.0.1",
         user_agent:
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        session_id: "browser-session",
         **opts,
       )
     end
@@ -487,10 +489,17 @@ RSpec.describe SearchLog, type: :model do
       expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
     end
 
-    it "returns non-staff and anonymous searches minus crawlers with the human_only search type" do
+    it "returns non-staff and anonymous browser searches minus crawlers with the human_only search type" do
       SiteSetting.improved_crawler_detection = true
       Fabricate(:search_log, term: "admin-search", user: Fabricate(:admin))
-      Fabricate(:search_log, term: "crawler-search", user: nil, crawler: true)
+      Fabricate(:search_log, term: "sessionless-search", user: nil)
+      Fabricate(
+        :search_log,
+        term: "crawler-search",
+        user: nil,
+        session_id: "browser-session",
+        crawler: true,
+      )
 
       results = SearchLog.trending(:all, :human_only).to_a
 

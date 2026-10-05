@@ -142,7 +142,9 @@ body.has-ai-conversations-sidebar {
       }
     }
   }
+}
 
+body.ai-bot-conversations-page {
   .ai-bot-conversations {
     --input-max-width: 46em;
     display: flex;
@@ -417,8 +419,16 @@ body.has-ai-conversations-sidebar {
         }
       }
     }
-  }
 
+    &.--preview #ai-bot-conversations-input {
+      padding-inline-start: var(--space-3);
+      border-radius: var(--d-input-border-radius) 0 0
+        var(--d-input-border-radius);
+    }
+  }
+}
+
+body.has-ai-conversations-sidebar {
   // custom user card link
   .user-card-meta__profile-link {
     display: block;
@@ -502,6 +512,85 @@ body.has-ai-conversations-sidebar {
   .fk-d-tooltip__inner-content {
     // ensures errors with links displays correctly
     display: block;
+  }
+}
+
+.ai-bot-anonymous-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "icon title"
+    "body body";
+  align-items: center;
+  gap: 0 var(--space-3);
+  box-sizing: border-box;
+  width: calc(100% - 2 * var(--space-4));
+  margin: var(--space-4) var(--space-4) 0;
+  padding: var(--space-4);
+  border: 1px solid var(--tertiary-medium);
+  background: rgb(var(--tertiary-rgb), 0.075);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--d-border-radius-large);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+
+  @include viewport.until(sm) {
+    margin-bottom: var(--space-4);
+    gap: var(--space-3);
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--tertiary);
+    background: rgb(var(--tertiary-rgb), 0.15);
+  }
+
+  .sidebar-container & {
+    flex-shrink: 0;
+    width: calc(var(--d-sidebar-width) - 2 * var(--space-4));
+    gap: var(--space-3);
+  }
+
+  .ai-bot-conversations & {
+    grid-template-areas:
+      "icon title"
+      "icon body";
+    width: 100%;
+    max-width: var(--input-max-width);
+    margin: 0;
+    align-items: start;
+
+    .ai-bot-anonymous-card__icon {
+      margin-top: var(--space-1);
+    }
+
+    body.has-sidebar-page & {
+      display: none;
+    }
+  }
+
+  &__icon {
+    grid-area: icon;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--tertiary);
+    color: var(--secondary);
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &__title {
+    grid-area: title;
+    font-weight: 700;
+  }
+
+  &__body {
+    grid-area: body;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
   }
 }
 

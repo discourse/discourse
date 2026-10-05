@@ -22,6 +22,9 @@ sl:
               buckets:
                 lt_1h: "< 1 ura"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Oznake"
     notifications:
       alt:
         solved:

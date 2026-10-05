@@ -1334,8 +1334,9 @@ RSpec.describe Guardian do
         end
 
         it "returns false when the category is read only" do
+          topic.update!(category: Fabricate(:category))
           topic.category.set_permissions(everyone: :readonly)
-          topic.category.save
+          topic.category.save!
 
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
 
@@ -1346,8 +1347,9 @@ RSpec.describe Guardian do
         end
 
         it "returns false for trust level 3 if category is secured" do
+          topic.update!(category: Fabricate(:category))
           topic.category.set_permissions(everyone: :create_post, staff: :full)
-          topic.category.save
+          topic.category.save!
 
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
           expect(Guardian.new(admin).can_edit?(topic)).to eq(true)
@@ -2942,6 +2944,37 @@ RSpec.describe Guardian do
       it "returns true for trust_level_4 user" do
         expect(Guardian.new(trust_level_4).can_wiki?(post)).to be_truthy
       end
+    end
+  end
+
+  describe "#can_edit_group?" do
+    it "accepts known ownership and looks it up when omitted" do
+      group.add(member)
+      group.add_owner(owner)
+
+      expect(owner.guardian.can_edit_group?(group, is_group_owner: true)).to eq(true)
+      expect(member.guardian.can_edit_group?(group, is_group_owner: false)).to eq(false)
+      expect(owner.guardian.can_edit_group?(group)).to eq(true)
+      expect(member.guardian.can_edit_group?(group)).to eq(false)
+    end
+  end
+
+  describe "#can_admin_group?" do
+    it "preserves role and visibility restrictions with known ownership" do
+      SiteSetting.moderators_manage_groups = true
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+      group.add_owner(moderator)
+      group.add_owner(owner)
+      expect(moderator.guardian.can_admin_group?(group, is_group_owner: true)).to eq(true)
+      expect(owner.guardian.can_admin_group?(group, is_group_owner: true)).to eq(false)
+      expect(admin.guardian.can_admin_group?(group, is_group_owner: false)).to eq(true)
+
+      hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+      expect(moderator.guardian.can_admin_group?(hidden_group, is_group_owner: false)).to eq(false)
+      expect(moderator.guardian.can_admin_group?(Group[:admins], is_group_owner: true)).to eq(false)
+
+      SiteSetting.moderators_manage_groups = false
+      expect(moderator.guardian.can_admin_group?(group, is_group_owner: true)).to eq(false)
     end
   end
 

@@ -28,14 +28,15 @@ class TopicUploadSecurityManager
         Rails.logger.debug("Updating upload security in topic #{@topic.id} - post #{post.id}")
         post.topic = @topic
 
-        secure_status_did_change =
-          post.owned_uploads_via_access_control.any? do |upload|
-            # We already have the post preloaded so we may as well
-            # attach it here to avoid another load in UploadSecurity
-            # (which is called via update_secure_status)
-            upload.access_control_post = post
-            upload.update_secure_status(source: "topic upload security")
-          end
+        secure_status_did_change = false
+        post.owned_uploads_via_access_control.each do |upload|
+          # We already have the post preloaded so we may as well
+          # attach it here to avoid another load in UploadSecurity
+          # (which is called via update_secure_status)
+          upload.access_control_post = post
+          upload_did_change = upload.update_secure_status(source: "topic upload security")
+          secure_status_did_change = upload_did_change || secure_status_did_change
+        end
 
         if secure_status_did_change
           post.rebake!
@@ -69,17 +70,15 @@ class TopicUploadSecurityManager
         )
         post.topic = @topic
 
-        secure_status_did_change =
-          post.uploads.any? do |upload|
-            first_post_upload_appeared_in =
-              upload.upload_references.where(target_type: "Post").first.target
-            if first_post_upload_appeared_in == post
-              upload.update(access_control_post: post)
-              upload.update_secure_status(source: "topic upload security")
-            else
-              false
-            end
+        secure_status_did_change = false
+        post.uploads.each do |upload|
+          first_post_upload_reference = upload.upload_references.where(target_type: "Post").first
+          if first_post_upload_reference.target_id == post.id
+            upload.update(access_control_post: post)
+            upload_did_change = upload.update_secure_status(source: "topic upload security")
+            secure_status_did_change = upload_did_change || secure_status_did_change
           end
+        end
 
         if secure_status_did_change
           post.rebake!
@@ -98,17 +97,20 @@ class TopicUploadSecurityManager
   private
 
   def posts_owning_uploads
-    Post.where(topic_id: @topic.id, id: Upload.select(:access_control_post_id))
+    Post.with_deleted.where(topic_id: @topic.id, id: Upload.select(:access_control_post_id))
   end
 
   def posts_with_unowned_uploads
-    Post.where(
-      topic_id: @topic.id,
-      id:
-        UploadReference.where(
-          target_type: "Post",
-          upload: Upload.where(access_control_post_id: nil),
-        ).select(:target_id),
-    ).includes(:uploads)
+    Post
+      .with_deleted
+      .where(
+        topic_id: @topic.id,
+        id:
+          UploadReference.where(
+            target_type: "Post",
+            upload: Upload.where(access_control_post_id: nil),
+          ).select(:target_id),
+      )
+      .includes(:uploads)
   end
 end

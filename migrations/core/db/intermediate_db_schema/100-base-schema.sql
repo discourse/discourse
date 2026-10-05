@@ -232,6 +232,7 @@ CREATE TABLE embed_uploads
 );
 
 CREATE INDEX idx_embed_uploads_owner_type_owner_id ON embed_uploads (owner_type, owner_id);
+CREATE INDEX idx_embed_uploads_upload_id ON embed_uploads (upload_id) WHERE upload_id IS NOT NULL;
 
 CREATE TABLE group_users
 (
@@ -470,7 +471,7 @@ CREATE TABLE topics
 CREATE INDEX idx_topics_archetype ON topics (archetype);
 CREATE INDEX idx_topics_slug ON topics (slug);
 
-CREATE TABLE uploads
+CREATE TABLE upload_sources
 (
     id          TEXT         NOT NULL PRIMARY KEY,
     data        BLOB,
@@ -583,6 +584,7 @@ CREATE TABLE user_options
     enable_smart_lists                             BOOLEAN,
     enable_upcoming_change_available_notifications BOOLEAN,
     external_links_in_new_tab                      BOOLEAN,
+    hidden_composer_toolbar_buttons                TEXT,
     hide_presence                                  BOOLEAN,
     hide_profile                                   BOOLEAN,
     hide_profile_and_presence                      BOOLEAN,
@@ -658,4 +660,5 @@ CREATE TABLE users
     views                     INTEGER
 );
 
+CREATE INDEX idx_users_uploaded_avatar_id ON users (uploaded_avatar_id) WHERE uploaded_avatar_id IS NOT NULL;
 

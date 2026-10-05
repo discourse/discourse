@@ -1329,6 +1329,7 @@ class BulkImport::Generic < BulkImport::Base
 
         if current_read_restricted != expected_read_restricted
           category.update_column(:read_restricted, expected_read_restricted)
+          Jobs.enqueue(:update_category_upload_security, category_id: category.id)
           updated_count += 1
         else
           skipped_count += 1
@@ -1473,6 +1474,10 @@ class BulkImport::Generic < BulkImport::Base
       update_delta_users
     end
 
+    query("SELECT id, username, email, sso_record, anonymized FROM users ORDER BY id") do |rows|
+      reserve_valid_usernames(rows)
+    end
+
     users = query(<<~SQL)
       SELECT *
       FROM users
@@ -1532,6 +1537,37 @@ class BulkImport::Generic < BulkImport::Base
 
     users.close
     finish_delta_entity(:users, :users)
+  end
+
+  # Lets each source username that is already valid claim its name before an
+  # earlier row's sanitized username can take it, so only the sanitized one
+  # receives a dedup suffix. Rows that process_user will map onto an existing
+  # user by email or external ID reserve nothing.
+  def reserve_valid_usernames(rows)
+    @reserved_usernames = {}
+    emails = Set.new
+    external_ids = Set.new
+
+    rows.each do |row|
+      next if user_id_from_imported_id(row["id"]).present? || row["anonymized"] == 1
+
+      if (email = row["email"].presence&.downcase)
+        next if @emails.key?(email) || emails.include?(email)
+      end
+
+      external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
+      if external_id.present?
+        next if @external_ids.key?(external_id) || external_ids.include?(external_id)
+      end
+
+      emails.add(email) if email
+      external_ids.add(external_id) if external_id.present?
+
+      username = row["username"]
+      next if username.blank? || fix_name(username) != username
+
+      @reserved_usernames[User.normalize_username(username)] ||= row["id"].to_i
+    end
   end
 
   def update_delta_users

@@ -6676,7 +6676,14 @@ RSpec.describe TopicsController do
       end
 
       context "with success" do
-        it "returns success" do
+        it "revokes a public published page when converting the topic" do
+          SiteSetting.enable_page_publishing = true
+          published_page = Fabricate(:published_page, topic: topic, public: true)
+
+          get published_page.path
+          expect(response.status).to eq(200)
+          expect(response.body).to include(post.raw)
+
           sign_in(admin)
           put "/t/#{topic.id}/convert-topic/private.json"
 
@@ -6687,6 +6694,12 @@ RSpec.describe TopicsController do
           result = response.parsed_body
           expect(result["success"]).to eq(true)
           expect(result["url"]).to be_present
+
+          sign_out
+          get published_page.path
+          expect(response.status).to eq(404)
+          expect(response.body).not_to include(post.raw)
+          expect(PublishedPage.exists?(topic: topic)).to eq(false)
         end
       end
     end
@@ -6902,6 +6915,19 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(topic.reload.public_topic_timer.user).to eq(user)
+      end
+
+      it "prevents scheduling a timer that clears slow mode" do
+        topic.update!(slow_mode_seconds: 3600)
+
+        post "/t/#{topic.id}/timer.json", params: { time: "1", status_type: "clear_slow_mode" }
+
+        expect(response.status).to eq(400)
+        expect(response.body).to include("status_type")
+        expect(topic.reload.slow_mode_seconds).to eq(3600)
+        expect(
+          TopicTimer.find_by(topic:, status_type: TopicTimer.types[:clear_slow_mode]),
+        ).to be_nil
       end
 
       it "requires delete permissions for destructive timers" do
@@ -7596,6 +7622,29 @@ RSpec.describe TopicsController do
           result = Topic.find(json["id"])
           expect(result.category_id).to eq(category.id)
           expect(result.visible).to eq(true)
+        end
+
+        it "restricts reload messages when publishing to a read-restricted category" do
+          restricted_group = Fabricate(:group)
+          restricted_category = Fabricate(:private_category, group: restricted_group)
+          excluded_user = Fabricate(:user)
+          restricted_group.add(moderator)
+
+          messages =
+            MessageBus.track_publish("/topic/#{topic.id}") do
+              put "/t/#{topic.id}/publish.json",
+                  params: {
+                    destination_category_id: restricted_category.id,
+                  }
+            end
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["basic_topic"]["id"]).to eq(topic.id)
+          expect(excluded_user.guardian.can_see?(topic.reload)).to eq(false)
+          reload_message =
+            messages.find { |message| message.data == { reload_topic: true, refresh_stream: true } }
+          expect(reload_message).to be_present
+          expect(reload_message.group_ids).to contain_exactly(restricted_group.id)
         end
 
         it "fails if the destination category is the shared drafts category" do

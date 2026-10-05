@@ -82,6 +82,7 @@ Migrations::Tooling::Schema.ignored do
          :linked_topics,
          :top_topics,
          :topic_custom_fields,
+         :topic_embed_aliases,
          :topic_embeds,
          :topic_groups,
          :topic_hot_scores,

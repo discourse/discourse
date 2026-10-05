@@ -145,7 +145,7 @@ end
 #
 #  index_email_logs_on_bounce_key  (bounce_key) UNIQUE WHERE (bounce_key IS NOT NULL)
 #  index_email_logs_on_bounced     (bounced)
-#  index_email_logs_on_created_at  (created_at)
+#  index_email_logs_on_created_at  (created_at DESC)
 #  index_email_logs_on_message_id  (message_id)
 #  index_email_logs_on_post_id     (post_id)
 #  index_email_logs_on_topic_id    (topic_id) WHERE (topic_id IS NOT NULL)

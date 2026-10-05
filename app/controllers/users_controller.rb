@@ -650,7 +650,8 @@ class UsersController < ApplicationController
     return render_available_true(username) if changing_case_of_own_username(target_user, username)
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
-    email = params[:email] || target_user.try(:email)
+    email = target_user&.email
+    email = params[:email] if !email && !SiteSetting.hide_email_address_taken?
     result = checker.check_username(username, email)
     result[:avatar_template] = User.default_template(username) if result[:available]
     render json: result
@@ -713,11 +714,12 @@ class UsersController < ApplicationController
 
   def user_from_params_or_current_user
     return current_user if !params[:for_user_id]
-    raise Discourse::InvalidAccess if !current_user
+    return User.find(params[:for_user_id]) if current_user&.admin?
 
-    user = User.find(params[:for_user_id])
-    guardian.ensure_can_edit_username!(user)
-    user
+    if current_user&.id == params[:for_user_id].to_i
+      guardian.ensure_can_edit_username!(current_user)
+    end
+    current_user
   end
 
   def create
@@ -1406,53 +1408,37 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
-  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar]
-
   def pick_avatar
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    if SiteSetting.discourse_connect_overrides_avatar || SiteSetting.auth_overrides_avatar
+    type = params[:type].presence || "system"
+    unless guardian.can_pick_avatar_source?(user, type)
       return render json: failed_json, status: :unprocessable_entity
     end
 
-    type = params[:type]
-
-    if type == "gravatar" && !SiteSetting.gravatar_enabled?
-      return render json: failed_json, status: :unprocessable_entity
-    end
-
-    invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != "system"
-    return render json: failed_json, status: :unprocessable_entity if invalid_type
-
-    if type.blank? || type == "system"
-      upload_id = nil
-    elsif !user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map) &&
-          !user.is_system_user?
-      return render json: failed_json, status: :unprocessable_entity
+    case type
+    when "associated_account"
+      picked = user.user_avatar&.pick_associated_account(params[:associated_account_id])
+      return render json: failed_json, status: :unprocessable_entity unless picked
+    when "system"
+      user.pick_avatar!(nil)
     else
       upload_id = params[:upload_id]
+      if type == "current" && upload_id.to_i != user.uploaded_avatar_id
+        return render json: failed_json, status: :unprocessable_entity
+      end
+
       upload = Upload.find_by(id: upload_id)
 
       return render_json_error I18n.t("avatar.missing") if upload.nil?
 
-      # old safeguard
-      user.create_user_avatar unless user.user_avatar
+      guardian.ensure_can_pick_avatar!(user.user_avatar || user.build_user_avatar, upload)
 
-      guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
-
-      if type == "gravatar"
-        user.user_avatar.gravatar_upload_id = upload_id
-      else
-        user.user_avatar.custom_upload_id = upload_id
-      end
+      user.pick_avatar!(upload_id, type: type.to_sym)
     end
 
     SiteSetting.use_site_small_logo_as_system_avatar = false if user.is_system_user?
-
-    user.uploaded_avatar_id = upload_id
-    user.save!
-    user.user_avatar.save!
 
     render json: success_json
   end
@@ -1461,39 +1447,29 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
+    unless guardian.can_edit_avatar?(user)
+      return render json: failed_json, status: :unprocessable_entity
+    end
+
     url = params[:url]
 
-    return render json: failed_json, status: :unprocessable_entity if url.blank?
-
-    if SiteSetting.selectable_avatars_mode == "disabled"
+    if url.blank? || SiteSetting.selectable_avatars_mode == "disabled" ||
+         SiteSetting.selectable_avatars.blank?
       return render json: failed_json, status: :unprocessable_entity
     end
 
-    if SiteSetting.selectable_avatars.blank?
+    upload = Upload.get_from_url(url)
+    unless upload && SiteSetting.selectable_avatars.include?(upload)
       return render json: failed_json, status: :unprocessable_entity
     end
-
-    unless upload = Upload.get_from_url(url)
-      return render json: failed_json, status: :unprocessable_entity
-    end
-
-    if SiteSetting.selectable_avatars.exclude?(upload)
-      return render json: failed_json, status: :unprocessable_entity
-    end
-
-    user.uploaded_avatar_id = upload.id
 
     SiteSetting.use_site_small_logo_as_system_avatar = false if user.is_system_user?
 
-    user.save!
-
-    avatar = user.user_avatar || user.create_user_avatar
-    avatar.custom_upload_id = upload.id
-    avatar.save!
+    user.pick_avatar!(upload.id)
 
     render json: {
              avatar_template: user.avatar_template,
-             custom_avatar_template: user.avatar_template,
+             custom_avatar_template: user.custom_avatar_template,
              uploaded_avatar_id: upload.id,
            }
   end
@@ -2301,9 +2277,12 @@ class UsersController < ApplicationController
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
     permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
-    permitted.concat(UserUpdater::OPTION_ATTR - [:understood_languages])
+    permitted.concat(
+      UserUpdater::OPTION_ATTR - %i[understood_languages hidden_composer_toolbar_buttons],
+    )
     permitted << UserUpdater::LEGACY_SHOW_ORIGINAL_CONTENT_ATTR
     permitted << { understood_languages: [] }
+    permitted << { hidden_composer_toolbar_buttons: [] }
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS

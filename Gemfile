@@ -73,7 +73,6 @@ gem "unf", require: false
 
 gem "email_reply_trimmer"
 
-gem "image_optim"
 gem "multi_json"
 gem "mustache"
 gem "liquid", "5.12.0"

@@ -9,10 +9,7 @@ RSpec.describe "Markdown directories" do
     Fabricate(:tag, public_topic_count: 1, staff_topic_count: 1, description: "A useful tag.")
   end
 
-  before do
-    SiteSetting.experimental_markdown_endpoints = true
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   after { category.clear_url_cache }
 
@@ -210,7 +207,7 @@ RSpec.describe "Markdown directories" do
   end
 
   it "keeps directories behind the Markdown feature setting" do
-    SiteSetting.experimental_markdown_endpoints = false
+    SiteSetting.enable_markdown_endpoints = false
     %w[categories tags].each do |directory|
       get "/#{directory}.md"
       expect(response).to have_http_status(:not_found)

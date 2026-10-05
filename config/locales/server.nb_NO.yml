@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  markdown_endpoints:
+    latest: "Siste"
+    categories: "Kategorier"
+    tags: "Stikkord"
+    previous_page: "Forrige side"
+    next_page: "Neste side"
+    replies: "Svar"
+    last_updated: "Sist oppdatert"
+    event:
+      location: "Sted"
   mcp:
     errors:
       topic_not_found: "Fant ikke emnet"

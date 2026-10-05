@@ -51,17 +51,24 @@ RSpec.describe Admin::SearchLogsController do
         )
       end
 
-      it "returns non-staff and anonymous searches minus crawlers with the human_only search type" do
+      it "returns non-staff and anonymous browser searches minus crawlers with the human_only search type" do
         SiteSetting.improved_crawler_detection = true
         Fabricate(:search_log, term: "member-search", user: user)
         Fabricate(:search_log, term: "admin-search", user: admin)
-        Fabricate(:search_log, term: "anonymous-search", user: nil)
-        Fabricate(:search_log, term: "crawler-search", user: nil, crawler: true)
+        Fabricate(:search_log, term: "anonymous-search", user: nil, session_id: "browser-session")
+        Fabricate(:search_log, term: "sessionless-search", user: nil)
+        Fabricate(
+          :search_log,
+          term: "crawler-search",
+          user: nil,
+          session_id: "browser-session",
+          crawler: true,
+        )
 
         get "/admin/logs/search_logs.json", params: { search_type: "human_only" }
 
         expect(response.parsed_body.map { |entry| [entry["term"], entry["searches"]] }).to eq(
-          [["anonymous-search", 1], ["member-search", 1], ["ruby", 1]],
+          [["anonymous-search", 1], ["member-search", 1]],
         )
       end
     end

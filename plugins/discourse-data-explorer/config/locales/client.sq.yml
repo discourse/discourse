@@ -7,7 +7,6 @@
 sq:
   js:
     explorer:
-      default_query: "Paracaktuar"
       or: "ose"
       create: "Krijo"
       ai:
@@ -26,6 +25,7 @@ sq:
         one: "%{count} rezultat."
         other: "%{count} rezultate."
       query_groups: "Grupet"
+      query_tags: "Etiketat"
       query_description: "Përshkrimi"
       reset_params: "Rivendosni"
     discourse_workflows:

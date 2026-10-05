@@ -490,18 +490,9 @@ hu:
         use_predefined: "Sablonok böngészése"
         back: "Vissza"
         icebreakers:
-          fun_facts:
-            title: "Milyen érdekességeket tudsz rólad mondani?"
-            body: "Sziasztok! Nagyon örülök, hogy elindíthatom ezt az új közösséget. Kezdésként osszunk meg magunkról egy-egy érdekességet! Kezdem is a sort: imádok túrázni és új ösvényeket felfedezni. Rólatok mit érdemes tudni? Mi az az érdekesség, amit megosztanátok velünk?"
-          coolest_thing_you_have_seen_today:
-            title: "Mi a legmenőbb dolog, amit ma láttál?"
-            body: "Mi a legmenőbb dolog, amit ma láttál vagy tapasztaltál? Bármi lehet, egy gyönyörű naplementétől kezdve egy véletlenszerű kedves gesztusig. Kezdem: Láttam egy kutyát, amint segített egy idős embernek átkelni az úton!"
           introduce_yourself:
             title: "Mutasd be magad"
             body: "Üdv a közösségben! Ismerjük meg egymást. Kérlek mutatkozz be, és mesélj egy kicsit az érdeklődési körödről. Először én kezdem: szenvedélyesen rajongok a technológiáért, és szeretek másokat tanítani!"
-          what_is_your_favorite_food:
-            title: "Mi a kedvenc ételed?"
-            body: "Oszd meg kedvenc ételeidet a közösséggel! Kezdjük: Imádom a pizzát, főleg extra sajttal és pepperonival."
     design_wizard:
       back: "Vissza"
       next: "Következő"
@@ -5756,7 +5747,6 @@ hu:
             status: "Állapot"
             actions: "Műveletek"
           activity:
-            rate_limits: "Korlátozások"
             outcome: "Eredmény"
             time: "Idő"
             user: "Felhasználó"
@@ -6339,6 +6329,7 @@ hu:
           series:
             anonymous: "Névtelen"
             crawlers: "Keresőrobotok"
+          crawler_learn_more: "Tudjon meg többet"
         period:
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"
@@ -8379,13 +8370,14 @@ hu:
           multiselect: "Többszörös kiválasztás"
       site_text:
         description: "Bármelyik szöveget személyre szabhatja a fórumon."
-        search: "A szerkesztendő szöveg keresése"
+        search_label: "Keresés"
+        theme_disabled: "Kikapcsolva"
+        filters: "Szűrők"
+        status:
+          invalid: "Érvénytelen"
         title: "Oldal szövegei"
         edit: "Szerkesztés"
-        revert: "Változtatások visszavonása"
         revert_confirm: "Biztos, hogy visszavonja a változtatásait?"
-        go_back: "Vissza a kereséshez"
-        recommended: "Azt tanácsoljuk, hogy módosítsd a következő szöveget az igényeidnek megfelelően:"
         show_overriden: "Csak a felülírtak megjelenítése"
         show_outdated: "Csak az elavult/érvénytelent jelenítse meg"
         show_untranslated: "Csak a lefordítatlanok megjelenítése"

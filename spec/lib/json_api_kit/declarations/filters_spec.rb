@@ -29,6 +29,19 @@ RSpec.describe JsonApiKit::Declarations::Filters do
     end
   end
 
+  describe "#with" do
+    subject(:combined) { filters.with([filter_class.new(:archived)]) }
+
+    it "includes the additional declaration" do
+      expect(combined.names).to contain_exactly("title", "closed", "archived")
+    end
+
+    it "preserves the original collection" do
+      combined.names
+      expect(filters.names).to contain_exactly("title", "closed")
+    end
+  end
+
   describe "#apply" do
     subject(:kept_ids) { filters.apply(scope, filtering).map(&:id) }
 
@@ -49,6 +62,14 @@ RSpec.describe JsonApiKit::Declarations::Filters do
     context "when there is no filtering" do
       it "returns the same scope" do
         expect(filters.apply(scope)).to be(scope)
+      end
+
+      context "when declarations are evaluated lazily" do
+        let(:declarations) { Enumerator.new { raise "Filters were evaluated." } }
+
+        it "returns the scope without evaluating the declarations" do
+          expect(filters.apply(scope)).to be(scope)
+        end
       end
     end
 

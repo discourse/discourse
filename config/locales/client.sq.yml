@@ -4304,6 +4304,7 @@ sq:
         site_traffic:
           series:
             anonymous: "Anonim"
+          crawler_learn_more: "Mësoni më shumë"
         period:
           custom: "Grupet e krijuara"
         reports:
@@ -5008,12 +5009,10 @@ sq:
           confirm: "Konfirmimi"
           dropdown: "Listë Dropdown"
       site_text:
-        search: "Kërkoni për tekstin që dëshironi të redaktoni"
+        search_label: "Kërko"
+        theme_disabled: "E çaktivizuar"
         edit: "Redaktoni"
-        revert: "Rikthe ndryshimet"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
-        go_back: "Kthehu tek kërkimi"
-        recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
         show_overriden: "Shfaq vetëm të ndryshuarat"
         outdated:
           dismiss: "Hiqe"

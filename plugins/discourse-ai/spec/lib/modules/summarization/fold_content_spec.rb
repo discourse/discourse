@@ -237,7 +237,7 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
       expect(regional_summarizer.existing_summary).to eq(existing_gist)
     end
 
-    it "finds and deletes a complete summary stored under an equivalent regional locale" do
+    it "finds a complete summary stored under an equivalent regional locale" do
       existing_summary =
         Fabricate(
           :ai_summary,
@@ -249,9 +249,6 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
       regional_summarizer = DiscourseAi::Summarization.topic_summary(topic, locale: "pt_BR")
 
       expect(regional_summarizer.existing_summary).to eq(existing_summary)
-
-      regional_summarizer.delete_cached_summaries!
-      expect(AiSummary.find_by(id: existing_summary.id)).to be_nil
     end
 
     context "when a summary already exists" do
@@ -289,24 +286,30 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
   end
 
   describe "#truncate" do
-    it "preserves grapheme clusters for multi-codepoint emoji sequences" do
-      # Starts with scales emoji (⚖️ = U+2696 + U+FE0F) so we can catch any split between code points.
-      sample_text = "⚖️🧩"
+    it "leaves content within the token limit untouched" do
+      text = "用 [keyd](https://man.archlinux.org/man/extra/keyd/keyd.1.en) 改键"
 
-      item = summarizer.truncate({ text: sample_text.dup })
-
-      expect(item[:text]).to start_with("⚖️ ")
-      expect(item[:text]).to include("🧩")
-      expect(item[:text]).not_to start_with("⚖ ️")
+      expect(summarizer.truncate({ text: text.dup })[:text]).to eq(text)
     end
 
-    it "keeps the second half of the text in the original order" do
-      sample_text = "abcdefgh"
+    it "doesn't let the tokenizer rewrite content within the token limit" do
+      llm_model.update!(tokenizer: "DiscourseAi::Tokenizer::AnthropicTokenizer")
+      text = "改键，很好用。" * 100
 
-      item = summarizer.truncate({ text: sample_text.dup })
+      expect(summarizer.truncate({ text: text.dup })[:text]).to eq(text)
+    end
 
-      expect(item[:text]).to include("efgh")
-      expect(item[:text]).not_to include("hgfe")
+    it "keeps the start and the end of longer content" do
+      item = summarizer.truncate({ text: "start #{"a " * 1500}#{"b " * 1500}end" })
+
+      expect(item[:text]).to start_with("start a")
+      expect(item[:text]).to end_with("b end")
+    end
+
+    it "preserves grapheme clusters at the split point" do
+      item = summarizer.truncate({ text: "#{"🧩" * 600}⚖️#{"a" * 600}" })
+
+      expect(item[:text]).to include(" ⚖️a")
     end
   end
 end

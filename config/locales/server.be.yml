@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 be:
+  markdown_endpoints:
+    latest: "Апошняя"
+    categories: "катэгорыі"
+    tags: "Цэтлікі"
+    replies: "Адказы"
+    event:
+      location: "Месцазнаходжанне"
+      link: "Спасылка"
   mcp:
     errors:
       topic_not_found: "Тэма не знойдзена"

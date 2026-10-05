@@ -4565,6 +4565,7 @@ lt:
         site_traffic:
           series:
             anonymous: "Anonimas"
+          crawler_learn_more: "Sužinoti daugiau"
         period:
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"
@@ -5714,12 +5715,11 @@ lt:
           dropdown: "Išskleidimas"
           multiselect: "Daugialypis pasirinkimas"
       site_text:
-        search: "Ieškoti teksto, kurį norėtum keisti"
+        search_label: "Paieška"
+        theme_disabled: "Uždrausta"
+        filters: "Filtrai"
         edit: "Redaguoti"
-        revert: "Atstatyti Pakeitimus"
         revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
-        go_back: "Atgal į Paiešką"
-        recommended: "Mes rekomenduojame pakeisti sekančius tekstus, kad jie atitiktų tavo poreikius:"
         show_overriden: "Rodyti tik pakeistus"
         locale: "Kalba:"
         more_than_50_results: "Yra daugiau nei 50 rezultatų. Prašome patikslinti paiešką."
