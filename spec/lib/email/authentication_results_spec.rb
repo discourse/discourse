@@ -8,7 +8,7 @@ RSpec.describe Email::AuthenticationResults do
       # https://tools.ietf.org/html/rfc8601#appendix-B.2
       results = described_class.new(" example.org 1; none").results
       expect(results[0][:authserv_id]).to eq "example.org"
-      expect(results[0][:resinfo]).to be nil
+      expect(results[0][:resinfo]).to eq []
     end
 
     it "parses 'Service Provided, Authentication Done' correctly" do
@@ -145,6 +145,11 @@ RSpec.describe Email::AuthenticationResults do
       expect(results[0][:resinfo][0][:props][0][:pvalue]).to eq "1362471462"
     end
 
+    it "doesn't mistake a method starting with 'none' for a no-result" do
+      results = described_class.new("example.com; nonexistent=pass").results
+      expect(results[0][:resinfo][0][:method]).to eq "nonexistent"
+    end
+
     it "parses header with no props correctly" do
       results = described_class.new(" example.com; dmarc=pass").results
       expect(results[0][:authserv_id]).to eq "example.com"
@@ -226,6 +231,24 @@ RSpec.describe Email::AuthenticationResults do
         include_examples "is verdict", :gray
       end
 
+      context "with a valid no-result" do
+        let(:headers) { "valid.com; none" }
+
+        include_examples "is verdict", :gray
+      end
+
+      context "with a valid versioned no-result" do
+        let(:headers) { "valid.com 1; NONE (no checks run)" }
+
+        include_examples "is verdict", :gray
+      end
+
+      context "with a fail following a misplaced 'none'" do
+        let(:headers) { "valid.com; none; dmarc=fail" }
+
+        include_examples "is verdict", :fail
+      end
+
       context "with no email_in_authserv_id set" do
         before { SiteSetting.email_in_authserv_id = "" }
 
@@ -252,6 +275,12 @@ RSpec.describe Email::AuthenticationResults do
 
       context "with a valid fail, and a valid pass" do
         let(:headers) { ["valid.com; dmarc=fail", "valid.com; dmarc=pass"] }
+
+        include_examples "is verdict", :fail
+      end
+
+      context "with a valid fail, and a valid no-result" do
+        let(:headers) { ["valid.com; dmarc=fail", "valid.com; none"] }
 
         include_examples "is verdict", :fail
       end
