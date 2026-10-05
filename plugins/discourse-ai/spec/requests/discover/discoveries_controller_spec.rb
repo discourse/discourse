@@ -57,6 +57,66 @@ describe DiscourseAi::Discover::DiscoveriesController do
         group.add(user)
       end
 
+      it "passes the scope the question was asked from to the job" do
+        expect_enqueued_with(
+          job: :stream_discover_reply,
+          args: {
+            user_id: user.id,
+            request_id:,
+            scope: "category:12",
+          },
+        ) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "What is Discourse?",
+                 request_id:,
+                 scope: "category:12",
+               }
+        end
+
+        expect(response.status).to eq(200)
+      end
+
+      it "records what set off the request" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               trigger: "pause",
+               trigger_reason: "after_skip:places",
+             }
+
+        expect(response.status).to eq(200)
+        expect(AskAiLog.last).to have_attributes(
+          ask_trigger: "pause",
+          ask_trigger_reason: "after_skip:places",
+        )
+      end
+
+      it "ignores a trigger it does not know rather than failing the request" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               trigger: "telepathy",
+               trigger_reason: "<script>",
+             }
+
+        expect(response.status).to eq(200)
+        expect(AskAiLog.last).to have_attributes(ask_trigger: "", ask_trigger_reason: "")
+      end
+
+      it "rejects a scope that is not one" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               scope: "category:12 in:all",
+             }
+
+        expect(response.status).to eq(400)
+      end
+
       it "returns a 200 and queues a job to reply" do
         SiteSetting.ai_ask_ai_summary_detail = "detailed"
         SiteSetting.ai_ask_ai_related_count = 5

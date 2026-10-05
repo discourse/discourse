@@ -196,7 +196,7 @@ export default class DiscobotDiscoveries extends Service {
   }
 
   @action
-  async triggerDiscovery(query) {
+  async triggerDiscovery(query, { scope, trigger, triggerReason } = {}) {
     const normalizedQuery = query?.trim();
 
     // an answer that failed or timed out is worth asking again, even though the
@@ -231,7 +231,13 @@ export default class DiscobotDiscoveries extends Service {
 
       const response = await ajax("/discourse-ai/discoveries/reply", {
         type: "POST",
-        data: { query: normalizedQuery, request_id: requestId },
+        data: {
+          query: normalizedQuery,
+          request_id: requestId,
+          ...(scope && { scope }),
+          ...(trigger && { trigger }),
+          ...(triggerReason && { trigger_reason: triggerReason }),
+        },
       });
 
       if (response.request_id !== requestId) {

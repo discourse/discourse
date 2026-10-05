@@ -9,12 +9,16 @@ import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isValidSearchTerm, translateResults } from "discourse/lib/search";
+import { combinedSearchActive } from "../../lib/ai-search-scope";
 
 const MAX_RESULTS_FOR_ADDING_AI = 3;
 
 export default class AiQuickSearch extends Component {
-  static shouldRender(args, { siteSettings }) {
-    return siteSettings.ai_embeddings_semantic_quick_search_enabled;
+  static shouldRender(args, { siteSettings, currentUser }) {
+    return (
+      siteSettings.ai_embeddings_semantic_quick_search_enabled &&
+      !combinedSearchActive(siteSettings, currentUser)
+    );
   }
 
   @service appEvents;

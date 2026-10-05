@@ -42,6 +42,8 @@ DiscourseAi::Engine.routes.draw do
     post "continue-convo" => "discoveries#continue_convo"
   end
 
+  get "/discoveries/search" => "discover/discoveries#search_page"
+
   scope module: :ai_bot, path: "/ai-bot/shared-ai-conversations" do
     post "/" => "shared_ai_conversations#create"
     delete "/:share_key" => "shared_ai_conversations#destroy"

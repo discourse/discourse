@@ -1,0 +1,537 @@
+@use "lib/viewport";
+
+.ai-search {
+  --ai-search-card-border: 1px solid var(--content-border-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 46rem;
+  margin: var(--space-6) auto;
+
+  &.--conversation {
+    max-width: 72rem;
+  }
+
+  &__query {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: var(--ai-search-card-border);
+    border-radius: var(--d-border-radius-large);
+    background: var(--secondary);
+
+    &:focus-within {
+      border-color: var(--tertiary);
+      outline: 2px solid var(--tertiary-low);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__query-input[type="search"] {
+    flex: 1;
+    margin: 0;
+    border: 0;
+    font-size: var(--font-up-1);
+    background: transparent;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &__heading {
+    margin-bottom: var(--space-2);
+  }
+
+  &__query-text {
+    margin: 0;
+  }
+
+  &__use-original {
+    display: inline-block;
+    margin-bottom: var(--space-2);
+    font-size: var(--font-down-1);
+  }
+
+  &__keyword-empty {
+    color: var(--primary-medium);
+  }
+
+  &__result {
+    position: relative;
+  }
+
+  &__conversation {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+    animation: ai-search-fade-in 0.3s ease-out;
+
+    @include viewport.until(md) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__thread {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__turn {
+    padding: var(--space-4);
+    border: var(--ai-search-card-border);
+    border-radius: var(--d-border-radius-large);
+    animation: ai-search-fade-in 0.3s ease-out;
+
+    &.--question {
+      display: flex;
+      gap: var(--space-2);
+      align-items: flex-start;
+      background: var(--primary-very-low);
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .cooked > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__composer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: var(--ai-search-card-border);
+    border-radius: var(--d-border-radius-large);
+
+    .expanding-text-area {
+      width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+// The answer has its own tab, so it grows as it streams; a minimum height
+// keeps the placeholder and the no-answer message in a steady box. Nothing may
+// shrink: the search menu is a height-limited flex column.
+.ai-search-answer {
+  --ai-search-answer-height: 12rem;
+  --ai-search-related-height: 7.5rem;
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &__body {
+    position: relative;
+    flex-shrink: 0;
+    min-height: var(--ai-search-answer-height);
+    padding: var(--space-2) var(--space-4);
+
+    .cooked > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__more {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0 var(--space-4) var(--space-2);
+  }
+
+  &__scope-note {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__title {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-up-1);
+  }
+
+  &__title-skeleton {
+    margin-bottom: var(--space-3);
+    font-size: var(--font-up-1);
+  }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  // the message fills the box to sit in its middle
+  &.--no-answer &__body,
+  &.--no-answer &__content {
+    display: flex;
+  }
+
+  &.--no-answer &__content,
+  &.--no-answer &__empty {
+    flex: 1;
+  }
+
+  &__related {
+    display: grid;
+
+    // auto-fit, so a lone related topic takes the whole row
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--space-3);
+    margin: 0;
+    list-style: none;
+  }
+
+  &__related-item {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: var(--ai-search-related-height);
+    overflow: hidden;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    animation: ai-search-fade-in 0.3s ease-out;
+  }
+
+  &__related-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    height: 100%;
+    padding: var(--space-3);
+    color: var(--primary);
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__related-title {
+    overflow: hidden;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--tertiary);
+  }
+
+  &__related-excerpt {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  &__follow-up {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__follow-up-input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+  }
+
+  &.--compact {
+    --ai-search-answer-height: 7.5rem;
+    --ai-search-related-height: 6.5rem;
+
+    .ai-search-answer__title {
+      font-size: var(--font-0);
+    }
+
+    .ai-search-answer__related-link {
+      padding: var(--space-2);
+    }
+  }
+}
+
+.ai-search-menu-answer {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--content-border-color);
+}
+
+// Hung off the result's edge, so it appears without moving it. The menu clips
+// at its edge, so while a combined search shows the scrolling list reaches past it by
+// the overhang (padded back so nothing inside moves) and the panel stops
+// clipping.
+.search-menu:has(.ai-search-tabs) {
+  --ai-search-overhang: 1rem;
+
+  .menu-panel,
+  .menu-panel .panel-body {
+    overflow: visible;
+  }
+
+  // clipping was also what let the body shrink to the panel, which is what
+  // gives the list a height to scroll within
+  .menu-panel .panel-body {
+    min-height: 0;
+  }
+
+  // anchors the sticker to its row, so it scrolls with the list
+  .search-result-topic .item {
+    position: relative;
+  }
+
+  .menu-panel .panel-body-contents {
+    margin-left: calc(-1 * var(--ai-search-overhang));
+    padding-left: var(--ai-search-overhang);
+  }
+}
+
+// Results sit beside an answer that summarises them, so each one is held to a
+// line per part: more of them fit in the menu.
+.search-menu:has(.ai-search-tabs) .search-result-topic {
+  .first-line,
+  .blurb {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.ai-search-best-match {
+  --ai-search-best-match-size: 1.25rem;
+
+  // a literal gold, like the stickers on marked homework, rather than a theme
+  // colour that could be anything
+  --ai-search-best-match-gold: #f6c343;
+  --ai-search-best-match-gold-edge: #c28a12;
+  position: absolute;
+  display: inline-flex;
+  width: var(--ai-search-best-match-size);
+  height: var(--ai-search-best-match-size);
+
+  // centred on the row's edge, past its padding
+  margin-left: calc(
+    -1 * (var(--space-4) + var(--ai-search-best-match-size) / 2)
+  );
+  line-height: 1;
+  transform: rotate(-12deg);
+  filter: drop-shadow(0 0 1px var(--secondary))
+    drop-shadow(0 1px 1px rgb(0 0 0 / 30%));
+  animation: ai-search-sticker-in 0.3s ease-out;
+
+  // set through fill, which the menu's tinting of result icons leaves alone
+  .d-icon {
+    width: 100%;
+    height: 100%;
+    fill: var(--ai-search-best-match-gold);
+    stroke: var(--ai-search-best-match-gold-edge);
+    stroke-width: 28px;
+    paint-order: stroke;
+  }
+}
+
+@keyframes ai-search-sticker-in {
+  from {
+    opacity: 0;
+    transform: rotate(-12deg) scale(0.4);
+  }
+}
+
+.ai-search-references {
+  position: sticky;
+  top: calc(var(--header-offset, 0px) + var(--space-4));
+  max-height: calc(100vh - var(--header-offset, 0px) - var(--space-6));
+  overflow-y: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius-large);
+
+  @include viewport.until(md) {
+    position: static;
+    max-height: none;
+  }
+
+  &__title {
+    margin: 0 0 var(--space-3);
+    font-size: var(--font-0);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: 0;
+    list-style: none;
+  }
+
+  &__item {
+    padding: var(--space-2);
+    border-radius: var(--d-border-radius);
+    transition: background-color 1s;
+
+    &.--new,
+    &.--up {
+      animation: ai-search-highlight 1.6s ease-out;
+    }
+
+    &.--cited-now {
+      box-shadow: inset 3px 0 0 var(--success);
+    }
+  }
+
+  &__link {
+    display: block;
+    font-weight: bold;
+    color: var(--tertiary);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+    margin-top: var(--space-1);
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+  }
+
+  &__kind {
+    padding: 0 var(--space-1);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+
+    &.--cited {
+      color: var(--success);
+      background: var(--success-low);
+    }
+
+    &.--semantic {
+      color: var(--tertiary);
+      background: var(--tertiary-very-low);
+    }
+  }
+
+  &__movement {
+    font-weight: bold;
+
+    .--up & {
+      color: var(--success);
+    }
+
+    .--down & {
+      color: var(--danger);
+    }
+
+    .--new & {
+      color: var(--tertiary);
+    }
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+  }
+}
+
+@keyframes ai-search-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes ai-search-highlight {
+  from {
+    background: var(--highlight-low);
+  }
+}
+
+// the classic search options' pills, as tabs over results already fetched
+.ai-search-tabs {
+  .ai-discoveries-search-options__option {
+    position: relative;
+    overflow: visible;
+
+    &.--ask,
+    &.--topics {
+      flex: 0 0 auto;
+    }
+
+    &.is-active {
+      &:hover {
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+    }
+
+    // an empty tab stays offered, but reads as having nothing in it
+    &.--empty:not(.is-active) {
+      opacity: 0.6;
+    }
+  }
+
+  // Pinned over the pill's corner like a notification badge, so a count
+  // arriving does not resize the pill. The row's own padding gives it room.
+  &__count,
+  &__empty {
+    position: absolute;
+    top: -0.5em;
+    right: -0.5em;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 1.5em;
+    height: 1.5em;
+    padding: 0 0.35em;
+    border-radius: var(--d-border-radius-pill);
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    line-height: 1;
+    color: var(--secondary);
+    background: var(--tertiary);
+    pointer-events: none;
+
+    .d-icon {
+      margin: 0;
+    }
+  }
+
+  .--empty &__count,
+  &__empty {
+    color: var(--primary-high);
+    background: var(--primary-low-mid);
+  }
+
+  // the results' gold star, pinned where the counts sit on the other tabs
+  &__answered.ai-search-best-match {
+    --ai-search-best-match-size: 1.3em;
+    top: -0.5em;
+    right: -0.5em;
+    margin-left: 0;
+    font-size: var(--font-down-2);
+  }
+}
+
+.ai-search-menu-loading {
+  padding: var(--space-2) var(--space-4);
+}

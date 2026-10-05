@@ -41,6 +41,7 @@ register_asset "stylesheets/modules/admin-dashboard/common/admin-dashboard-highl
 register_asset "stylesheets/modules/ai-bot/common/bot-replies.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-agent.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
+register_asset "stylesheets/modules/ai-bot/common/ai-search.scss"
 register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"

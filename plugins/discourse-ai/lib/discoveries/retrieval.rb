@@ -11,7 +11,7 @@ module DiscourseAi
       SEMANTIC_PRIVATE_MESSAGE_FILTER = /(?:\A|\s)in:(?:messages|personal)(?=\s|\z)/i
 
       Result =
-        Struct.new(:candidates, :private_messages, keyword_init: true) do
+        Struct.new(:candidates, :private_messages, :scope_fallback, keyword_init: true) do
           def synthesis_candidates
             candidates.first(Retrieval::SYNTHESIS_LIMIT)
           end
@@ -24,19 +24,48 @@ module DiscourseAi
         @semantic_retriever = semantic_retriever
       end
 
-      def call(query, keyword_query: query, semantic_query: query)
+      # A scope filter narrows both retrievals. When nothing matches inside it,
+      # the whole site is searched instead and the result says so.
+      def call(query, keyword_query: query, semantic_query: query, scope_filter: nil)
+        if scope_filter.present?
+          scoped = retrieve_candidates(query, keyword_query:, semantic_query:, scope_filter:)
+          return scoped if scoped.candidates.present?
+
+          fallback = retrieve_candidates(query, keyword_query:, semantic_query:)
+          fallback.scope_fallback = true
+          return fallback
+        end
+
+        retrieve_candidates(query, keyword_query:, semantic_query:)
+      end
+
+      def retrieve_candidates(query, keyword_query:, semantic_query:, scope_filter: nil)
         private_messages =
           DiscourseAi::Discoveries.private_message_query?(query) ||
-            DiscourseAi::Discoveries.private_message_query?(keyword_query)
+            DiscourseAi::Discoveries.private_message_query?(keyword_query) ||
+            DiscourseAi::Discoveries.private_message_query?(scope_filter)
+        # embeddings describe whole topics, so they cannot narrow within one;
+        # a topic is searched post by post instead
+        topic_scope = scope_filter.to_s.start_with?("topic:")
+        # a personal message is searched as one, or its posts are filtered out
+        if topic_scope &&
+             Topic.where(
+               id: scope_filter.delete_prefix("topic:").to_i,
+               archetype: Archetype.private_message,
+             ).exists?
+          private_messages = true
+        end
+        @per_post = topic_scope
+        scoped = ->(search_query) { [search_query, scope_filter].compact_blank.join(" ") }
 
         rankings =
           if self.class.explicit_filters_except_private_messages?(query)
-            [retrieve(@lexical_retriever, query)]
-          elsif !DiscourseAi::Embeddings.enabled? || semantic_query.blank? ||
+            [retrieve(@lexical_retriever, scoped.(query))]
+          elsif topic_scope || !DiscourseAi::Embeddings.enabled? || semantic_query.blank? ||
                 self.class.explicit_filters_except_private_messages?(keyword_query)
-            [retrieve(@lexical_retriever, keyword_query)]
+            [retrieve(@lexical_retriever, scoped.(keyword_query))]
           else
-            retrieve_in_parallel(keyword_query, semantic_query, private_messages:)
+            retrieve_in_parallel(scoped.(keyword_query), scoped.(semantic_query), private_messages:)
           end
         candidates = reciprocal_rank_fusion(rankings)
         candidates = revalidate_and_limit(candidates, private_messages:)
@@ -101,7 +130,7 @@ module DiscourseAi
 
         posts
           .filter_map do |post|
-            next if seen_topic_ids.include?(post.topic_id)
+            next if !@per_post && seen_topic_ids.include?(post.topic_id)
 
             seen_topic_ids << post.topic_id
             source_from_post(post, excerpt: results.blurb(post, scope: guardian))
