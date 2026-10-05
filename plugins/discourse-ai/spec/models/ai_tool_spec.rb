@@ -160,6 +160,22 @@ RSpec.describe AiTool do
     expect(result["next_release"]["scheduled_at"]).to eq("2026-10-14T12:30:00+00:00")
   end
 
+  it "returns an error when the fxmacrodata preset gets an error body with a 200" do
+    preset = AiTool.presets.find { |p| p[:preset_id] == "fxmacrodata" }
+    tool = create_tool(parameters: preset[:parameters], script: preset[:script])
+    base_url = "https://api.fxmacrodata.com/v1"
+
+    stub_request(:get, "#{base_url}/announcements/usd/inflation?limit=5").to_return(
+      status: 200,
+      body: { detail: "Unknown indicator" }.to_json,
+    )
+
+    runner = tool.runner({ "indicator" => "inflation" }, llm: nil, bot_user: nil)
+    result = runner.invoke
+
+    expect(result["error"]).to eq("Unknown indicator")
+  end
+
   describe "#set_image_generation_tool_flag" do
     it "sets flag to true when tool has all required characteristics" do
       tool =

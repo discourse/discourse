@@ -24,7 +24,8 @@ function invoke(params) {
 
   const path = `/announcements/${currency}/${indicator}?limit=${limit}`;
   const result = fetchJson(path);
-  if (result.status !== 200 || !result.data) {
+  const rows = result.data && result.data.data;
+  if (result.status !== 200 || !Array.isArray(rows)) {
     const detail = result.data && (result.data.detail || result.data.error);
     return { error: detail || "Failed to fetch indicator data" };
   }
@@ -36,7 +37,7 @@ function invoke(params) {
     name: data.name,
     unit: data.value_metadata && data.value_metadata.source_unit,
     source: data.source,
-    observations: (data.data || []).map((row) => ({
+    observations: rows.map((row) => ({
       date: row.date,
       value: row.val,
       released_at: row.announcement_datetime_local,
