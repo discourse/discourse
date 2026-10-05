@@ -90,6 +90,12 @@ RSpec.describe "Chat channel homepage" do
     expect(HomepageHelper.resolve(nil, user)).to eq("latest")
   end
 
+  it "falls back when the user has disabled chat in their preferences" do
+    user.user_option.update!(chat_enabled: false)
+
+    expect(HomepageHelper.resolve(nil, user)).to eq("latest")
+  end
+
   it "falls back when the user cannot see the channel's category" do
     channel_1.chatable.update!(read_restricted: true)
 

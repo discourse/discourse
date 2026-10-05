@@ -49,6 +49,16 @@ RSpec.describe "Chat channel as the homepage" do
     expect(page).to have_current_path("/")
   end
 
+  it "shows the usual homepage when the user has disabled chat" do
+    current_user.user_option.update!(chat_enabled: false)
+
+    visit("/")
+
+    expect(page).to have_css(".navigation-container .nav-item_latest.active")
+    expect(page).to have_no_css(".chat-channel")
+    expect(page).to have_current_path("/")
+  end
+
   it "leaves an individual homepage preference alone" do
     current_user.user_option.update!(homepage_id: UserOption::HOMEPAGES.key("categories"))
 

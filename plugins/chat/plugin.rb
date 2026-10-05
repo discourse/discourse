@@ -459,7 +459,8 @@ after_initialize do
       if guardian.anonymous?
         guardian.can_preview_anonymous_public_chat_channel?(channel)
       else
-        guardian.can_chat? && guardian.can_preview_chat_channel?(channel)
+        guardian.can_chat? && guardian.user.user_option&.chat_enabled &&
+          guardian.can_preview_chat_channel?(channel)
       end
     end,
   )
