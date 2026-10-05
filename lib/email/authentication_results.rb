@@ -2,12 +2,35 @@
 
 module Email
   class AuthenticationResults
-    VERDICT = Enum.new(:gray, :pass, :fail, start: 0)
+    # ordered by severity
+    VERDICTS = %i[gray pass fail].freeze
+
+    # based on https://tools.ietf.org/html/rfc8601#section-2.2
+    CFWS = /\s*(?:\([^()]*\))?\s*/
+    VALUE = /(?:"([^"]*)")|(?:([^\s";]*))/
+    VERSION = /\d+#{CFWS}?/
+    KEYWORD = /([a-zA-Z0-9-]*[a-zA-Z0-9])/
+    NO_RESULT = /#{CFWS}?;#{CFWS}?none#{CFWS}?\z/i
+    PAYLOAD = /\A#{CFWS}?#{VALUE}(?:#{CFWS}#{VERSION})?(?:#{NO_RESULT}|([\S\s]*))/
+    METHODSPEC =
+      %r{#{CFWS}?#{KEYWORD}\s*(?:#{CFWS}?/#{CFWS}?#{VERSION})?#{CFWS}?=#{CFWS}?#{KEYWORD}}
+    REASONSPEC = /reason#{CFWS}?=#{CFWS}?#{VALUE}/
+    RESINFO = /#{CFWS}?;#{METHODSPEC}(?:#{CFWS}#{REASONSPEC})?(?:#{CFWS}([^;]*))?/
+    PROPSPEC = /#{KEYWORD}#{CFWS}?\.#{CFWS}?#{VALUE}#{CFWS}?=#{CFWS}?#{VALUE}#{CFWS}?/
+    private_constant :CFWS,
+                     :VALUE,
+                     :VERSION,
+                     :KEYWORD,
+                     :NO_RESULT,
+                     :PAYLOAD,
+                     :METHODSPEC,
+                     :REASONSPEC,
+                     :RESINFO,
+                     :PROPSPEC
 
     def initialize(headers)
       @authserv_id = SiteSetting.email_in_authserv_id
       @headers = headers
-      @verdict = :gray if @authserv_id.blank?
     end
 
     def results
@@ -17,87 +40,58 @@ module Email
           .filter { |result| @authserv_id.blank? || @authserv_id == result[:authserv_id] }
     end
 
-    def action
-      @action ||= calc_action
-    end
-
     def verdict
       @verdict ||= calc_verdict
     end
 
+    def action
+      verdict == :fail ? :enqueue : :accept
+    end
+
     private
 
-    def calc_action
-      if verdict == :fail
-        :enqueue
-      else
-        :accept
-      end
-    end
-
     def calc_verdict
-      VERDICT[calc_dmarc]
-    end
+      # without a trusted authserv-id, any MTA along the way could have forged the header
+      return :gray if @authserv_id.blank?
 
-    def calc_dmarc
-      verdict = VERDICT[:gray]
-      results.each do |result|
-        result[:resinfo].each do |resinfo|
-          if resinfo[:method] == "dmarc"
-            v = VERDICT[resinfo[:result].to_sym].to_i
-            verdict = v if v > verdict
+      severity =
+        results
+          .flat_map { |result| result[:resinfo] }
+          .filter_map do |resinfo|
+            VERDICTS.index(resinfo[:result].downcase.to_sym) if resinfo[:method].casecmp?("dmarc")
           end
-        end
-      end
-      verdict = VERDICT[:gray] if SiteSetting.email_in_authserv_id.blank? &&
-        verdict == VERDICT[:pass]
-      verdict
+          .max
+
+      VERDICTS[severity || 0]
     end
 
     def parse_header(header)
-      # based on https://tools.ietf.org/html/rfc8601#section-2.2
-      cfws = /\s*(\([^()]*\))?\s*/
-      value = /(?:"([^"]*)")|(?:([^\s";]*))/
-      authserv_id = value
-      authres_version = /\d+#{cfws}?/
-      no_result = /#{cfws}?;#{cfws}?none#{cfws}?\z/i
-      keyword = /([a-zA-Z0-9-]*[a-zA-Z0-9])/
-      authres_payload =
-        /\A#{cfws}?#{authserv_id}(?:#{cfws}#{authres_version})?(?:#{no_result}|([\S\s]*))/
+      authserv_id_quoted, authserv_id, resinfo = PAYLOAD.match(header).captures
 
-      method_version = authres_version
-      method = %r{#{keyword}\s*(?:#{cfws}?/#{cfws}?#{method_version})?}
-      result = keyword
-      methodspec = /#{cfws}?#{method}#{cfws}?=#{cfws}?#{result}/
-      reasonspec = /reason#{cfws}?=#{cfws}?#{value}/
-      resinfo = /#{cfws}?;#{methodspec}(?:#{cfws}#{reasonspec})?(?:#{cfws}([^;]*))?/
-
-      ptype = keyword
-      property = value
-      pvalue = /#{cfws}?#{value}#{cfws}?/
-      propspec = /#{ptype}#{cfws}?\.#{cfws}?#{property}#{cfws}?=#{pvalue}/
-
-      authres_payload_match = authres_payload.match(header)
-      parsed_authserv_id = authres_payload_match[2] || authres_payload_match[3]
-      resinfo_val = authres_payload_match[-1]
-
-      if resinfo_val
-        resinfo_scan = resinfo_val.scan(resinfo)
-        parsed_resinfo =
-          resinfo_scan.map do |x|
-            {
-              method: x[2],
-              result: x[8],
-              reason: x[12] || x[13],
-              props:
-                x[-1]
-                  .scan(propspec)
-                  .map { |y| { ptype: y[0], property: y[4], pvalue: y[8] || y[9] } },
-            }
-          end
-      end
-
-      { authserv_id: parsed_authserv_id, resinfo: parsed_resinfo || [] }
+      {
+        authserv_id: authserv_id_quoted || authserv_id,
+        resinfo:
+          resinfo
+            .to_s
+            .scan(RESINFO)
+            .map do |method, result, reason_quoted, reason, props|
+              {
+                method:,
+                result:,
+                reason: reason_quoted || reason,
+                props:
+                  props
+                    .scan(PROPSPEC)
+                    .map do |ptype, property_quoted, property, pvalue_quoted, pvalue|
+                      {
+                        ptype:,
+                        property: property_quoted || property,
+                        pvalue: pvalue_quoted || pvalue,
+                      }
+                    end,
+              }
+            end,
+      }
     end
   end
 end
