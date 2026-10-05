@@ -60,7 +60,7 @@ module Email
       value = /(?:"([^"]*)")|(?:([^\s";]*))/
       authserv_id = value
       authres_version = /\d+#{cfws}?/
-      no_result = /#{cfws}?;#{cfws}?none/
+      no_result = /#{cfws}?;#{cfws}?none#{cfws}?\z/i
       keyword = /([a-zA-Z0-9-]*[a-zA-Z0-9])/
       authres_payload =
         /\A#{cfws}?#{authserv_id}(?:#{cfws}#{authres_version})?(?:#{no_result}|([\S\s]*))/
@@ -97,7 +97,7 @@ module Email
           end
       end
 
-      { authserv_id: parsed_authserv_id, resinfo: parsed_resinfo }
+      { authserv_id: parsed_authserv_id, resinfo: parsed_resinfo || [] }
     end
   end
 end
