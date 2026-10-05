@@ -332,8 +332,8 @@ RSpec.describe "a refused request" do
           errors: [
             refusal(
               title: "No such parameter",
-              detail: "There is no parameter named sorts.",
-              parameter: "sorts",
+              detail: "There is no parameter named sorts[createdAt].",
+              parameter: "sorts[createdAt]",
             ),
           ],
         )

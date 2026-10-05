@@ -13,5 +13,6 @@ module JsonApiKit
     include Versioning
     include Serving
     include Fetching
+    include RequestInput
   end
 end
