@@ -20,9 +20,11 @@ RSpec.describe "Admin AI agent configuration" do
     agent_editor_page.select_tool("SearchUploadedDocuments")
     agent_editor_page.select_tool("SearchUploadedDocuments", forced: true)
     form.field("forced_tool_count").select(-1)
+    form.field("priority").check
     form.submit
 
     expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    expect(agent.reload.priority).to eq(true)
     agent_editor_page.visit_edit(agent)
 
     expect(agent_editor_page).to have_forced_tool("Search Uploaded Documents")
@@ -55,6 +57,7 @@ RSpec.describe "Admin AI agent configuration" do
     tool_selector.collapse
 
     form.field("forced_tool_count").select(1)
+    agent_editor_page.toggle_enabled
 
     form.submit
 
@@ -67,6 +70,7 @@ RSpec.describe "Admin AI agent configuration" do
     expect(agent.description).to eq("I am a test agent")
     expect(agent.system_prompt).to eq("You are a helpful bot")
     expect(agent.forced_tool_count).to eq(1)
+    expect(agent.enabled).to eq(true)
 
     expected_tools = [["Read", { "read_private" => nil }, true], ["ListCategories", {}, true]]
     expect(agent.tools).to contain_exactly(*expected_tools)
@@ -199,19 +203,22 @@ RSpec.describe "Admin AI agent configuration" do
     expect(agent_editor_page).to have_no_agent_user(source_user.username)
   end
 
-  it "floats the actions after an existing agent is changed" do
+  it "saves the enabled toggle immediately without saving or resetting other edits" do
     agent = Fabricate(:ai_agent, enabled: false)
 
-    agent_editor_page.visit_edit(agent)
+    agent_editor_page.visit_edit(agent).toggle_enabled
 
+    expect(agent_editor_page).to have_agent_enabled_state(true)
     expect(agent_editor_page).to have_no_floating_actions
-
-    form.field("enabled").toggle
-
-    expect(agent_editor_page).to have_no_floating_actions
+    expect(agent.reload.enabled).to eq(true)
 
     form.field("name").fill_in("Updated agent")
+    agent_editor_page.toggle_enabled
 
+    expect(agent_editor_page).to have_agent_enabled_state(false)
+    expect(agent.reload.enabled).to eq(false)
+    expect(agent.name).not_to eq("Updated agent")
+    expect(form.field("name").value).to eq("Updated agent")
     expect(agent_editor_page).to have_floating_actions
   end
 
@@ -228,44 +235,6 @@ RSpec.describe "Admin AI agent configuration" do
       I18n.t("js.generic_error_with_reason", error: "Name has already been taken"),
     )
     expect(agent_editor_page).to have_floating_actions
-  end
-
-  it "enables the agent immediately without saving other edits" do
-    agent = Fabricate(:ai_agent, enabled: false)
-
-    visit "/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit"
-
-    form.field("name").fill_in("Test Agent 1")
-    form.field("enabled").toggle
-
-    expect(agent.reload.enabled).to eq(true)
-    expect(agent.name).not_to eq("Test Agent 1")
-  end
-
-  it "enabling a agent doesn't reset other fields" do
-    agent = Fabricate(:ai_agent, enabled: false)
-    updated_name = "Update agent 1"
-
-    visit "/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit"
-
-    form.field("name").fill_in(updated_name)
-    form.field("enabled").toggle
-
-    expect(agent.reload.enabled).to eq(true)
-    expect(form.field("name").value).to eq(updated_name)
-  end
-
-  it "toggling a agent's priority doesn't reset other fields" do
-    agent = Fabricate(:ai_agent, priority: false)
-    updated_name = "Update agent 1"
-
-    visit "/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit"
-
-    form.field("name").fill_in(updated_name)
-    form.field("priority").toggle
-
-    expect(agent.reload.priority).to eq(true)
-    expect(form.field("name").value).to eq(updated_name)
   end
 
   it "can navigate the AI plugin with breadcrumbs" do

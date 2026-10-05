@@ -64,6 +64,17 @@ if defined?(DiscourseWorkflows)
                   hidden: true,
                 },
               },
+              disabled_agent_notice: {
+                type: :notice,
+                control_options: {
+                  alert_type: "warning",
+                  show_for_option: {
+                    field: "agent_id",
+                    property: "enabled",
+                    value: false,
+                  },
+                },
+              },
               agent_response_format: {
                 type: :array,
                 default: [],
@@ -174,23 +185,26 @@ if defined?(DiscourseWorkflows)
           def self.agent_options
             agents =
               ::AiAgent
-                .where(enabled: true)
-                .order(:name)
-                .pluck(:id, :name, :default_llm_id, :force_default_llm, :response_format)
+                .order(enabled: :desc)
+                .ordered
+                .pluck(:id, :name, :enabled, :default_llm_id, :force_default_llm, :response_format)
 
             site_default_llm_id = SiteSetting.ai_default_llm_model.presence&.to_i
-            llm_model_ids = agents.map { |_id, _name, default_llm_id, *| default_llm_id }
+            llm_model_ids = agents.map { |_id, _name, _enabled, default_llm_id, *| default_llm_id }
             llm_model_ids << site_default_llm_id
             llm_models_by_id = ::LlmModel.where(id: llm_model_ids.compact.uniq).index_by(&:id)
 
             default_llm = llm_models_by_id[site_default_llm_id]
+            disabled_badge = I18n.t("discourse_ai.discourse_workflows.ai_agent.agent_disabled")
 
-            agents.map do |id, name, default_llm_id, force_default_llm, response_format|
+            agents.map do |id, name, enabled, default_llm_id, force_default_llm, response_format|
               configured_llm = llm_models_by_id[default_llm_id]
               resolved_llm = force_default_llm ? configured_llm : configured_llm || default_llm
               {
                 id: id,
                 name: name,
+                enabled: enabled,
+                badge: enabled ? nil : disabled_badge,
                 default_llm_id: default_llm_id,
                 force_default_llm: force_default_llm,
                 resolved_llm_id: resolved_llm&.id,

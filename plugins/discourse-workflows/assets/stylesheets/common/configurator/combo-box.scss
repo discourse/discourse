@@ -1,0 +1,22 @@
+.workflows-combo-box-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+
+  &__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__badge {
+    flex-shrink: 0;
+    padding: var(--space-half) var(--space-2);
+    border-radius: var(--d-button-border-radius);
+    background: var(--primary-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
+    white-space: nowrap;
+  }
+}

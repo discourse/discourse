@@ -2149,6 +2149,97 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(this.formApi.get("llm_model_id"), null);
   });
 
+  test("badges an option and shows its notice until another option is selected", async function (assert) {
+    const schema = {
+      agent_id: {
+        type: "integer",
+        type_options: { load_options_method: "agents" },
+        no_data_expression: true,
+        ui: { control: "combo_box" },
+        control_options: { name_property: "name", value_property: "id" },
+      },
+      disabled_agent_notice: {
+        type: "notice",
+        control_options: {
+          alert_type: "warning",
+          show_for_option: {
+            field: "agent_id",
+            property: "enabled",
+            value: false,
+          },
+        },
+      },
+      info_notice: { type: "notice" },
+    };
+
+    this.setProperties({
+      configuration: { agent_id: 2 },
+      nodeType: "action:ai_agent",
+      nodeTypes: [
+        {
+          identifier: "action:ai_agent",
+          properties: schema,
+          metadata: {
+            agents: [
+              { id: 1, name: "Support Bot", enabled: true },
+              {
+                id: 2,
+                name: "Helper Bot",
+                enabled: false,
+                badge: "Disabled",
+              },
+            ],
+          },
+        },
+      ],
+      schema,
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @configuration={{transientData}}
+            @form={{form}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const selector = selectKit(".combo-box");
+    assert
+      .dom(".combo-box-header .workflows-combo-box-option__name")
+      .hasText("Helper Bot");
+    assert
+      .dom(".combo-box-header .workflows-combo-box-option__badge")
+      .hasText("Disabled");
+    assert.dom(".form-kit__alert.alert-warning").exists();
+    assert.dom(".form-kit__alert.alert-info").exists();
+
+    await selector.expand();
+
+    assert
+      .dom(".select-kit-row[data-value='2'] .workflows-combo-box-option__name")
+      .hasText("Helper Bot");
+    assert
+      .dom(".select-kit-row[data-value='2'] .workflows-combo-box-option__badge")
+      .hasText("Disabled");
+    assert
+      .dom(".select-kit-row[data-value='1'] .workflows-combo-box-option")
+      .doesNotExist();
+
+    await selector.selectRowByValue("1");
+
+    assert
+      .dom(".combo-box-header .workflows-combo-box-option__badge")
+      .doesNotExist();
+    assert.dom(".form-kit__alert.alert-warning").doesNotExist();
+  });
+
   test("renders combo box actions with the selected field value as a route model", async function (assert) {
     const router = this.owner.lookup("service:router");
     const transitionTo = sinon.stub(router, "transitionTo");

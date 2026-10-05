@@ -323,6 +323,7 @@ en:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+          disabled_agent_notice_description: "This agent is disabled, so this step will fail when the workflow runs. Enable it from Manage agents."
           forced_llm_notice_description: "This agent is locked to its configured default LLM. The workflow cannot override it."
           llm_model_id: "LLM model"
           llm_model_default: "Use agent default"
@@ -902,7 +903,7 @@ en:
         mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this agent.
         user: User
         create_user: Create user
-        create_user_help: You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests.
+        create_user_help: "You can optionally attach a user to this agent. If you do, the AI will use this user to respond to requests. A user is created automatically when you save with topic mentions, chat direct messages, or chat channel mentions allowed."
         default_llm: Default language model
         default_llm_help: The default language model to use for this agent. When blank, the site default language model is used.
         system_prompt: System prompt
@@ -920,7 +921,8 @@ en:
         force_default_llm: "Always use default language model"
         save: "Save"
         saved: "Agent saved"
-        enabled: "Enabled?"
+        enabled: "Enabled"
+        enabled_help: "Disabled agents can't be used anywhere, including AI features, the AI bot, and workflows."
         tools: "Enabled tools"
         tokens: "tokens"
         context_cost: "Context Cost"
@@ -978,8 +980,8 @@ en:
           high: "High"
           xhigh: "Extra high"
           max: "Max"
-        priority: "Priority"
-        priority_help: "Priority agents are displayed to users at the top of the agent list. If multiple agents have priority, they will be sorted alphabetically."
+        priority: "Show first in agent lists"
+        priority_help: "When several agents are shown first, they're sorted alphabetically."
         tool_options: "Tool options"
         rag_conversation_chunks: "Search conversation chunks"
         rag_conversation_chunks_help: "The number of chunks to use for the RAG model searches. Increase to increase the amount of context the AI can use."
@@ -999,9 +1001,6 @@ en:
           collapsable_title: "Example #%{number}"
           user: "User message"
           model: "Model response"
-
-        list:
-          enabled: "AI Bot?"
 
         ai_bot:
           title: "AI bot options"

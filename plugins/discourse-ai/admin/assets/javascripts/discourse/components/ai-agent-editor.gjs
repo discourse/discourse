@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
@@ -11,6 +12,7 @@ import { trustHTML } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
@@ -22,6 +24,7 @@ import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, gt, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
@@ -53,6 +56,7 @@ export default class AgentEditor extends Component {
 
   @tracked allGroups = [];
   @tracked isSaving = false;
+  @tracked isTogglingEnabled = false;
   @tracked formApi = null;
 
   formDataModel = null;
@@ -272,15 +276,13 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  async toggleEnabled(form, value, { set }) {
-    await set("enabled", value);
-    await this.persistField(form, "enabled", value);
-  }
-
-  @action
-  async togglePriority(form, value, { set }) {
-    await set("priority", value);
-    await this.persistField(form, "priority", value, true);
+  async toggleEnabled(form, value) {
+    this.isTogglingEnabled = true;
+    try {
+      await this.persistField(form, "enabled", value);
+    } finally {
+      this.isTogglingEnabled = false;
+    }
   }
 
   @action
@@ -308,11 +310,7 @@ export default class AgentEditor extends Component {
       (file) => file.id !== upload.id
     );
 
-    await form.set("rag_uploads", updatedUploads);
-
-    if (!this.args.model.isNew) {
-      await this.persistField(form, "rag_uploads", updatedUploads);
-    }
+    await this.persistField(form, "rag_uploads", updatedUploads);
   }
 
   @action
@@ -641,21 +639,22 @@ export default class AgentEditor extends Component {
     return updatedOptions;
   }
 
-  async persistField(form, field, newValue, sortAgents) {
-    if (!this.args.model.isNew) {
-      try {
-        const args = {};
-        args[field] = newValue;
-
-        await this.args.model.update(args);
-        form.commitField(field);
-        if (sortAgents) {
-          this.#sortAgents();
-        }
-      } catch (e) {
-        popupAjaxError(e);
-      }
+  async persistField(form, field, newValue) {
+    if (this.args.model.isNew) {
+      await form.set(field, newValue);
+      return;
     }
+
+    try {
+      await this.args.model.update({ [field]: newValue });
+    } catch (e) {
+      popupAjaxError(e);
+      return;
+    }
+
+    // Setting and committing in the same tick keeps the form from rendering as dirty.
+    form.set(field, newValue);
+    form.commitField(field);
   }
 
   @action
@@ -718,6 +717,20 @@ export default class AgentEditor extends Component {
         @onSubmit={{this.save}}
         as |form data|
       >
+        <div class="ai-agent-editor__status">
+          <DToggleSwitch
+            class="ai-agent-editor__enabled-toggle"
+            disabled={{this.isTogglingEnabled}}
+            @label="discourse_ai.ai_agent.enabled"
+            @state={{data.enabled}}
+            {{on "click" (fn this.toggleEnabled form (not data.enabled))}}
+          />
+          <DTooltip
+            @content={{i18n "discourse_ai.ai_agent.enabled_help"}}
+            @icon="circle-question"
+          />
+        </div>
+
         <form.Field
           @disabled={{data.system}}
           @format="large"
@@ -1346,27 +1359,6 @@ export default class AgentEditor extends Component {
         {{/if}}
 
         <form.Section @title={{i18n "discourse_ai.ai_agent.ai_bot.title"}}>
-          <form.Field
-            @name="enabled"
-            @onSet={{fn this.toggleEnabled form}}
-            @title={{i18n "discourse_ai.ai_agent.enabled"}}
-            @type="toggle"
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
-
-          <form.Field
-            @name="priority"
-            @onSet={{fn this.togglePriority form}}
-            @title={{i18n "discourse_ai.ai_agent.priority"}}
-            @tooltip={{i18n "discourse_ai.ai_agent.priority_help"}}
-            @type="toggle"
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
-
           {{#if this.supportsAddressing}}
             {{#unless @model.isNew}}
               <form.Container
@@ -1460,6 +1452,18 @@ export default class AgentEditor extends Component {
               </form.Field>
             {{/if}}
           {{/if}}
+
+          <form.Field
+            @format="large"
+            @name="priority"
+            @showTitle={{false}}
+            @title={{i18n "discourse_ai.ai_agent.priority"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.priority_help"}}
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
         </form.Section>
 
         <form.Actions

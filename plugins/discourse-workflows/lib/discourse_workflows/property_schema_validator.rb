@@ -80,6 +80,7 @@ module DiscourseWorkflows
       action_label
       action_route
       action_route_models
+      alert_type
       filterable
       height
       lang
@@ -89,6 +90,7 @@ module DiscourseWorkflows
       none_label_i18n_key
       option_format
       set_from_option
+      show_for_option
       resets
       value_property
     ].freeze

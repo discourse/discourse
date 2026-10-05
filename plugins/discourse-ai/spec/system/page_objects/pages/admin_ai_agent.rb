@@ -53,11 +53,17 @@ module PageObjects
         page.has_field?(name, with: value)
       end
 
+      def enabled_toggle
+        PageObjects::Components::DToggleSwitch.new(".ai-agent-editor__enabled-toggle")
+      end
+
+      def toggle_enabled
+        enabled_toggle.toggle
+        self
+      end
+
       def has_agent_enabled_state?(enabled)
-        page.has_css?(
-          ".form-kit__field[data-name='enabled'] button[role='switch'][aria-checked='#{enabled}']",
-          visible: :all,
-        )
+        enabled ? enabled_toggle.checked? : enabled_toggle.unchecked?
       end
 
       def has_agent_user?(username = nil)

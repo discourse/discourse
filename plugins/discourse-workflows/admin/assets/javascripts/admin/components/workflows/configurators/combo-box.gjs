@@ -12,9 +12,15 @@ import {
   propertyOptionLabel,
   propertySelectNoneKey,
 } from "../../../lib/workflows/property-engine";
+import ComboBoxRow from "./combo-box-row";
+import ComboBoxSelectedName from "./combo-box-selected-name";
 import ExpressionWrapper from "./expression-wrapper";
 
 export class DynamicOptionsComboBox extends ComboBox {
+  modifyComponentForRow(collection, item) {
+    return item?.badge ? ComboBoxRow : null;
+  }
+
   search(filter) {
     if (this.loadOptions) {
       return this.loadOptions(filter);
@@ -118,6 +124,12 @@ export default class ComboBoxField extends Component {
     return value ? i18n(labelKey, { value }) : null;
   }
 
+  get selectedNameComponent() {
+    return this.options.some((option) => option.badge)
+      ? ComboBoxSelectedName
+      : undefined;
+  }
+
   get filterable() {
     return Boolean(this.controlOptions.filterable);
   }
@@ -204,6 +216,7 @@ export default class ComboBoxField extends Component {
       name:
         optionName(option, this.nameProperty) ||
         optionValue(option, this.valueProperty),
+      badge: option.badge,
       original: option,
     }));
   }
@@ -287,30 +300,7 @@ export default class ComboBoxField extends Component {
       @session={{@session}}
       @supportsExpression={{@supportsExpression}}
     >
-      {{#if this.showActionButton}}
-        <div class="workflows-property-engine__select-with-action">
-          <DynamicOptionsComboBox
-            @content={{this.options}}
-            @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
-            @nameProperty="name"
-            @onChange={{this.handleChange}}
-            @options={{hash
-              filterable=this.filterable
-              none=this.none
-              translatedNone=this.translatedNone
-              castInteger=this.castInteger
-            }}
-            @value={{@field.value}}
-            @valueProperty="id"
-          />
-          <DButton
-            class="btn-default"
-            @action={{this.performAction}}
-            @icon={{this.actionIcon}}
-            @label={{this.actionLabel}}
-          />
-        </div>
-      {{else}}
+      <div class="workflows-property-engine__select-with-action">
         <DynamicOptionsComboBox
           @content={{this.options}}
           @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
@@ -321,11 +311,20 @@ export default class ComboBoxField extends Component {
             none=this.none
             translatedNone=this.translatedNone
             castInteger=this.castInteger
+            selectedNameComponent=this.selectedNameComponent
           }}
           @value={{@field.value}}
           @valueProperty="id"
         />
-      {{/if}}
+        {{#if this.showActionButton}}
+          <DButton
+            class="btn-default"
+            @action={{this.performAction}}
+            @icon={{this.actionIcon}}
+            @label={{this.actionLabel}}
+          />
+        {{/if}}
+      </div>
     </ExpressionWrapper>
   </template>
 }

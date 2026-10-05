@@ -57,21 +57,27 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
       described_class.load_options_context(context)
     end
 
-    it "returns enabled AI agents for the chooser and includes resolved LLM metadata" do
-      option_ids = [agent.id, disabled_agent.id]
-      options = load_options.select { |option| option_ids.include?(option[:id]) }
+    it "lists enabled agents first with resolved LLM metadata and badges disabled ones" do
+      options = load_options
 
-      expect(options).to contain_exactly(
-        {
-          id: agent.id,
-          name: agent.name,
-          default_llm_id: llm_model.id,
-          force_default_llm: false,
-          resolved_llm_id: llm_model.id,
-          resolved_llm_name: llm_model.display_name,
-          response_format: [],
-        },
+      expect(options.find { |option| option[:id] == agent.id }).to eq(
+        id: agent.id,
+        name: agent.name,
+        enabled: true,
+        badge: nil,
+        default_llm_id: llm_model.id,
+        force_default_llm: false,
+        resolved_llm_id: llm_model.id,
+        resolved_llm_name: llm_model.display_name,
+        response_format: [],
       )
+      expect(options.find { |option| option[:id] == disabled_agent.id }).to include(
+        name: disabled_agent.name,
+        enabled: false,
+        badge: I18n.t("discourse_ai.discourse_workflows.ai_agent.agent_disabled"),
+      )
+      enabled, disabled = options.partition { |option| option[:enabled] }
+      expect(options).to eq(enabled + disabled)
     end
 
     it "includes the site default LLM in agent metadata when the agent has no default" do
@@ -89,10 +95,10 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     end
 
     it "filters AI agents by the filter term" do
-      option_ids = [matching_agent.id, other_agent.id]
-      options = load_options(filter: "alpha").select { |option| option_ids.include?(option[:id]) }
+      ids = load_options(filter: "alpha").pluck(:id)
 
-      expect(options.first[:id]).to eq(matching_agent.id)
+      expect(ids).to include(matching_agent.id)
+      expect(ids).not_to include(other_agent.id, agent.id)
     end
 
     it "returns LLM models for the override chooser" do
@@ -170,6 +176,15 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
         )
       }.to raise_error(DiscourseWorkflows::NodeError, /not a supported AI agent execution mode/)
     end
+  end
+
+  it "raises a node error when the agent is disabled" do
+    agent.update!(enabled: false)
+
+    expect {
+      execute_node_output(configuration: { "agent_id" => agent.id, "prompt" => "Hello" })
+    }.to raise_error(DiscourseWorkflows::NodeError, /is disabled/)
+    expect(bot).not_to have_received(:reply)
   end
 
   it "uses the system user as the default runner" do
