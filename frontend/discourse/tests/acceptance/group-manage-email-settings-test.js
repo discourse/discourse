@@ -1,6 +1,8 @@
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
+import { cloneJSON } from "discourse/lib/object";
+import groupFixtures from "discourse/tests/fixtures/group-fixtures";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -18,6 +20,59 @@ acceptance("Managing Group Email Settings - SMTP Disabled", function (needs) {
       "group.manage.profile",
       "it redirects to the group profile page"
     );
+  });
+});
+
+acceptance("Managing Automatic Group Email Settings", function (needs) {
+  needs.user({ admin: true });
+  needs.settings({ enable_smtp: true });
+
+  needs.pretender((server, helper) => {
+    server.get("/groups/moderators.json", () => {
+      const fixture = cloneJSON(groupFixtures["/groups/moderators.json"]);
+      fixture.group.can_admin_group = true;
+      return helper.response(fixture);
+    });
+    server.post("/groups/50/test_email_settings", () => {
+      return helper.response({ success: "OK" });
+    });
+    server.put("/groups/50", (request) => {
+      const { group } = JSON.parse(request.requestBody);
+      if (
+        group.smtp_server === "smtp.gmail.com" &&
+        group.email_username === "moderators@example.com" &&
+        group.email_password === "password"
+      ) {
+        return helper.response({ success: "OK" });
+      }
+      return helper.response(422, { errors: ["Unexpected email settings"] });
+    });
+  });
+
+  test("admins can configure SMTP for an automatic group", async function (assert) {
+    await visit("/g/moderators/manage");
+
+    assert.dom("a[href='/g/moderators/manage/email']").exists();
+    assert.dom("a[href='/g/moderators/manage/membership']").doesNotExist();
+
+    await click("a[href='/g/moderators/manage/email']");
+    await click("#enable_smtp");
+    await click("#prefill_smtp_gmail");
+    await formKit().field("email_username").fillIn("moderators@example.com");
+    await formKit().field("email_password").fillIn("password");
+    await formKit().submit();
+    await click(".group-manage-save");
+
+    assert.dom(".group-manage-save-button > span").hasText("Saved!");
+  });
+
+  test("SMTP settings remain unavailable when SMTP is disabled", async function (assert) {
+    this.siteSettings.enable_smtp = false;
+
+    await visit("/g/moderators/manage/email");
+
+    assert.dom("a[href='/g/moderators/manage/email']").doesNotExist();
+    assert.strictEqual(currentRouteName(), "group.manage.profile");
   });
 });
 

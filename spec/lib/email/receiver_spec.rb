@@ -15,6 +15,20 @@ RSpec.describe Email::Receiver do
     Email::Receiver.new(email(email_name), opts).process!
   end
 
+  context "when email is addressed to an automatic group" do
+    let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+    before { group.update!(incoming_email: "meat@bar.com") }
+
+    it "creates a private message in the group inbox" do
+      expect { process(:encoded_display_name) }.to change(Topic, :count).by(1)
+
+      topic = Topic.last
+      expect(topic).to be_private_message
+      expect(topic.allowed_groups).to contain_exactly(group)
+    end
+  end
+
   it "raises an EmptyEmailError when 'mail_string' is blank" do
     expect { Email::Receiver.new(nil) }.to raise_error(Email::Receiver::EmptyEmailError)
     expect { Email::Receiver.new("") }.to raise_error(Email::Receiver::EmptyEmailError)

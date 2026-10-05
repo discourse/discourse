@@ -767,22 +767,16 @@ class GroupsController < ApplicationController
     end
 
     attributes.push(:visibility_level, :members_visibility_level) if current_user.staff?
+    attributes.push(:incoming_email) if current_user.staff?
 
     if !automatic && current_user.staff?
-      attributes.push(
-        :incoming_email,
-        :title,
-        :primary_group,
-        :name,
-        :grant_trust_level,
-        :publish_read_state,
-      )
+      attributes.push(:title, :primary_group, :name, :grant_trust_level, :publish_read_state)
 
       custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
       attributes << { custom_fields: custom_fields } if custom_fields.present?
     end
 
-    if !automatic && current_user.admin
+    if current_user.admin
       attributes.push(
         :smtp_server,
         :smtp_port,
