@@ -3,9 +3,8 @@ import { i18n } from "discourse-i18n";
 /**
  * @typedef {Object} AiSearchScope
  * @property {string} key what the server accepts, e.g. `category:12` or `messages`
- * @property {string} label how the scope is named to the reader
- * @property {boolean} ownChip whether core has no chip for this context, so
- *   the combined search shows one of its own
+ * @property {string} label how the scope is named within a sentence
+ * @property {string} tabLabel how the scope's tab is named
  */
 
 /**
@@ -55,29 +54,21 @@ export function withScope(query, key) {
 
 /**
  * The scope the reader is searching from, or null when the search is site
- * wide or the scope has been dismissed.
+ * wide.
  *
  * @param {Object} search the search service
  * @param {Object} options
  * @param {boolean} options.inPMInboxContext whether the menu is scoped to messages
- * @param {string} [options.dismissedKey] a scope the reader has taken off
  * @returns {AiSearchScope|null}
  */
-export function contextScope(search, { inPMInboxContext, dismissedKey }) {
-  const scope = scopeFor(search, inPMInboxContext);
-  return scope && scope.key !== dismissedKey ? scope : null;
-}
-
-function scopeFor(search, inPMInboxContext) {
+export function contextScope(search, { inPMInboxContext }) {
   const context = search.searchContext;
 
-  // core only chips a topic once the reader picks "in this topic", so
-  // otherwise the topic gets a chip of its own
   if (context?.type === "topic") {
     return {
       key: `topic:${context.id}`,
       label: i18n("discourse_ai.ai_search.scope.this_topic"),
-      ownChip: !search.inTopicContext,
+      tabLabel: i18n("discourse_ai.ai_search.tabs.this_topic"),
     };
   }
 
@@ -85,30 +76,26 @@ function scopeFor(search, inPMInboxContext) {
     return {
       key: "messages",
       label: i18n("discourse_ai.ai_search.scope.messages"),
-      ownChip: false,
+      tabLabel: i18n("discourse_ai.ai_search.tabs.messages"),
     };
   }
 
   switch (context?.type) {
-    case "category":
-      return {
-        key: `category:${context.id}`,
-        label: context.category?.name ?? context.id,
-        ownChip: true,
-      };
+    case "category": {
+      const name = context.category?.name ?? context.id;
+      return { key: `category:${context.id}`, label: name, tabLabel: name };
+    }
     case "tag":
     case "tagIntersection": {
       const name = context.tagId ?? context.name ?? context.id;
       return name
-        ? { key: `tag:${name}`, label: `#${name}`, ownChip: true }
+        ? { key: `tag:${name}`, label: `#${name}`, tabLabel: `#${name}` }
         : null;
     }
-    case "user":
-      return {
-        key: `user:${context.id}`,
-        label: `@${context.user?.username ?? context.id}`,
-        ownChip: true,
-      };
+    case "user": {
+      const name = `@${context.user?.username ?? context.id}`;
+      return { key: `user:${context.id}`, label: name, tabLabel: name };
+    }
   }
 
   return null;

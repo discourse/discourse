@@ -126,10 +126,9 @@
   }
 }
 
-// The answer keeps a fixed height from placeholder to full answer, so the
-// results below never move while it loads; only opening it changes its size.
-// Nothing may shrink: the search menu is a height-limited flex column, and a
-// clipped box would otherwise give up height there.
+// The answer has its own tab, so it grows as it streams; a minimum height
+// keeps the placeholder and the no-answer message in a steady box. Nothing may
+// shrink: the search menu is a height-limited flex column.
 .ai-search-answer {
   --ai-search-answer-height: 12rem;
   --ai-search-related-height: 7.5rem;
@@ -142,8 +141,7 @@
   &__body {
     position: relative;
     flex-shrink: 0;
-    height: var(--ai-search-answer-height);
-    overflow: hidden;
+    min-height: var(--ai-search-answer-height);
     padding: var(--space-2) var(--space-4);
 
     .cooked > *:last-child {
@@ -151,47 +149,11 @@
     }
   }
 
-  // fades the cut-off edge; drawn over the text so it takes no space
-  &.--has-more:not(.--expanded) &__body::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    height: 4.5rem;
-    background: linear-gradient(transparent, var(--secondary) 55%);
-    pointer-events: none;
-  }
-
-  &.--expanded &__body {
-    height: auto;
-    min-height: var(--ai-search-answer-height);
-  }
-
   &__more {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: 0 var(--space-4);
-  }
-
-  &__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
     padding: 0 var(--space-4) var(--space-2);
-  }
-
-  // the size of the small "Show more" button it stands in for
-  &__expand-skeleton {
-    --d-skeleton-item-width: 6.72em;
-    --d-skeleton-item-height: 2.3em;
-    font-size: var(--font-down-1);
-  }
-
-  &:not(.--expanded) &__actions {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
   }
 
   &__scope-note {
@@ -220,8 +182,15 @@
     text-align: center;
   }
 
+  // the message fills the box to sit in its middle
+  &.--no-answer &__body,
   &.--no-answer &__content {
-    height: 100%;
+    display: flex;
+  }
+
+  &.--no-answer &__content,
+  &.--no-answer &__empty {
+    flex: 1;
   }
 
   &__related {
@@ -305,64 +274,11 @@
   border-bottom: 1px solid var(--content-border-color);
 }
 
-// one line however much matched, so it never pushes the results down
-.ai-search-entities {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  white-space: nowrap;
-  font-size: var(--font-0);
-  overflow: auto;
-  padding: var(--space-2) var(--space-4);
-  scrollbar-width: thin;
-  border-top: 1px solid var(--content-border-color);
-
-  &__restore.btn-link {
-    flex-shrink: 0;
-    padding: 0;
-    font-size: inherit;
-
-    .d-icon {
-      font-size: var(--font-down-1);
-      color: var(--primary-medium);
-    }
-  }
-
-  &__item {
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-    gap: var(--space-1);
-    color: var(--primary-high);
-
-    // category and tag badges otherwise keep their own smaller sizes
-    .badge-category__wrapper,
-    .discourse-tag {
-      font-size: inherit;
-    }
-
-    // a link, which would otherwise take the link colour
-    &.--group {
-      color: var(--primary-high);
-    }
-
-    &.--user .avatar,
-    &.--group .avatar-flair {
-      width: 1.25em;
-      height: 1.25em;
-    }
-
-    .d-icon {
-      color: var(--primary-medium);
-    }
-  }
-}
-
 // Hung off the result's edge, so it appears without moving it. The menu clips
-// at its edge, so while an answer shows the scrolling list reaches past it by
+// at its edge, so while a combined search shows the scrolling list reaches past it by
 // the overhang (padded back so nothing inside moves) and the panel stops
 // clipping.
-.search-menu:has(.ai-search-menu-answer) {
+.search-menu:has(.ai-search-tabs) {
   --ai-search-overhang: 1rem;
 
   .menu-panel,
@@ -387,9 +303,9 @@
   }
 }
 
-// Results sit under an answer that already summarises them, so each one is
-// held to a line per part: more of them fit in the menu.
-.search-menu:has(.ai-search-menu-answer) .search-result-topic {
+// Results sit beside an answer that summarises them, so each one is held to a
+// line per part: more of them fit in the menu.
+.search-menu:has(.ai-search-tabs) .search-result-topic {
   .first-line,
   .blurb {
     display: block;
@@ -545,4 +461,69 @@
   from {
     background: var(--highlight-low);
   }
+}
+
+// the classic search options' pills, as tabs over results already fetched
+.ai-search-tabs {
+  .ai-discoveries-search-options__option {
+    position: relative;
+    overflow: visible;
+
+    &.--ask,
+    &.--topics {
+      flex: 0 0 auto;
+    }
+
+    // an empty tab stays offered, but reads as having nothing in it
+    &.--empty:not(.is-active) {
+      opacity: 0.6;
+    }
+  }
+
+  // Pinned over the pill's corner like a notification badge, so a count
+  // arriving does not resize the pill. The row's own padding gives it room.
+  &__count,
+  &__empty {
+    position: absolute;
+    top: -0.5em;
+    right: -0.5em;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 1.5em;
+    height: 1.5em;
+    padding: 0 0.35em;
+    border-radius: var(--d-border-radius-pill);
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    line-height: 1;
+    color: var(--secondary);
+    background: var(--tertiary);
+    pointer-events: none;
+
+    .d-icon {
+      margin: 0;
+    }
+  }
+
+  .--empty &__count,
+  &__empty {
+    color: var(--primary-high);
+    background: var(--primary-low-mid);
+  }
+
+  // the results' gold star, pinned where the counts sit on the other tabs
+  &__answered.ai-search-best-match {
+    --ai-search-best-match-size: 1.3em;
+    top: -0.5em;
+    right: -0.5em;
+    margin-left: 0;
+    font-size: var(--font-down-2);
+  }
+}
+
+.ai-search-menu-loading {
+  padding: var(--space-2) var(--space-4);
 }

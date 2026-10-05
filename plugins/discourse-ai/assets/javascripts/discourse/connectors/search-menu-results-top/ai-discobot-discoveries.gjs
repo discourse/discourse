@@ -2,18 +2,14 @@ import Component from "@glimmer/component";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { isValidSearchTerm } from "discourse/lib/search";
 import { eq } from "discourse/truth-helpers";
+import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AiDiscoveriesSearchOptions from "../../components/ai-discoveries-search-options";
 import AiSearchAnswer from "../../components/ai-search/ai-search-answer";
-import AiSearchEntities from "../../components/ai-search/ai-search-entities";
+import AiSearchTabs from "../../components/ai-search/ai-search-tabs";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
-import {
-  matchesPlaces,
-  suggestionInProgress,
-} from "../../lib/ai-search-intent";
 import { contextScope } from "../../lib/ai-search-scope";
 
 export default class AiDiscobotDiscoveries extends Component {
@@ -31,8 +27,9 @@ export default class AiDiscobotDiscoveries extends Component {
   @service search;
   @service siteSettings;
 
-  // A search can start from a pause rather than a key press, so the session
-  // is given the menu's own way to show topics.
+  // A search can start from somewhere other than a key press, such as a recent
+  // search picked from the menu, so the session is given the menu's own way to
+  // show topics.
   connectMenu = modifier(() => {
     this.aiSearchSession.showTopicsInMenu = () =>
       this.args.outletArgs.updateTypeFilter(null);
@@ -60,7 +57,6 @@ export default class AiDiscobotDiscoveries extends Component {
   get currentScope() {
     return contextScope(this.search, {
       inPMInboxContext: this.args.outletArgs.inPMInboxContext,
-      dismissedKey: this.aiSearchSession.dismissedScope?.key,
     });
   }
 
@@ -68,30 +64,21 @@ export default class AiDiscobotDiscoveries extends Component {
     return this.args.outletArgs.searchTerm?.trim() ?? "";
   }
 
-  get showCombined() {
+  // tabs and results belong to a search that has run, not to the typing
+  // before it, which shows the menu's own suggestions
+  get searched() {
     return (
-      isValidSearchTerm(this.term, this.siteSettings) &&
-      !suggestionInProgress(this.term) &&
-      (this.showAnswer ||
-        matchesPlaces(this.search.results) ||
-        Boolean(this.aiSearchSession.dismissedScope))
+      this.aiSearchSession.surface === "menu" &&
+      this.aiSearchSession.isActiveFor(this.term)
     );
+  }
+
+  get tab() {
+    return this.aiSearchSession.selectedTab;
   }
 
   get showNoKeywordMatches() {
-    return (
-      this.aiSearchSession.surface === "menu" &&
-      this.aiSearchSession.isActiveFor(this.term) &&
-      this.aiSearchSession.noKeywordMatches &&
-      !this.aiSearchSession.expanded
-    );
-  }
-
-  get showAnswer() {
-    return (
-      this.aiSearchSession.isActiveFor(this.term) &&
-      this.aiSearchSession.answering
-    );
+    return this.aiSearchSession.noKeywordMatches;
   }
 
   get shouldShow() {
@@ -111,31 +98,34 @@ export default class AiDiscobotDiscoveries extends Component {
 
   <template>
     {{#if this.combinedSearch}}
-      {{! keeps the session in the menu's scope, so a chip taken off re-runs
-          the search on screen }}
       <span
         hidden
         {{this.connectMenu}}
         {{this.followScope this.currentScope}}
         {{this.guardResults this.search.results}}
       ></span>
-      {{#if this.showCombined}}
-        <div class="ai-search-menu-answer">
-          {{#if this.showAnswer}}
+      {{#if this.searched}}
+        <AiSearchTabs />
+
+        {{#if (eq this.tab "ask")}}
+          <div class="ai-search-menu-answer">
             <AiSearchAnswer
               @compact={{true}}
               @onNavigate={{@outletArgs.closeSearchMenu}}
             />
-          {{/if}}
-          {{#unless this.aiSearchSession.expanded}}
-            <AiSearchEntities @onNavigate={{@outletArgs.closeSearchMenu}} />
-          {{/unless}}
-        </div>
-      {{/if}}
-      {{#if this.showNoKeywordMatches}}
-        <div class="no-results">
-          {{i18n "discourse_ai.ai_search.no_keyword_matches"}}
-        </div>
+          </div>
+        {{else if (eq this.tab null)}}
+          {{! until the keyword searches are in and a tab is chosen }}
+          <div class="ai-search-menu-loading">
+            <DSkeleton @count={{3}} @lastLineWidth="70%" />
+          </div>
+        {{/if}}
+
+        {{#if this.showNoKeywordMatches}}
+          <div class="no-results">
+            {{i18n "discourse_ai.ai_search.no_keyword_matches"}}
+          </div>
+        {{/if}}
       {{/if}}
     {{else}}
       {{! rendered from here rather than its own connector so the options always

@@ -61,31 +61,32 @@ describe "AI combined search" do
     try_until_success { expect(request_ids).to be_present }
   end
 
-  def sizes
-    page.evaluate_script(<<~JS)
-      Object.fromEntries(
-        [".ai-search-menu-answer", ".ai-search-answer__body"].map((selector) => [
-          selector,
-          Math.round(document.querySelector(selector).getBoundingClientRect().height),
-        ])
-      )
-    JS
+  def tab(kind)
+    ".ai-search-tabs .ai-discoveries-search-options__option.--#{kind}"
   end
 
-  it "keeps the answer the same size from placeholder to answer, and opens on request" do
+  def expect_tab(kind)
+    expect(page).to have_css("#{tab(kind)}.is-active")
+  end
+
+  def select_tab(kind)
+    find(tab(kind)).click
+    expect_tab(kind)
+  end
+
+  it "streams the answer in full, adding its related topics once it is done" do
     visit "/"
     wait_for_discoveries_channel
     ask(query)
 
+    # a question opens on the answer
+    expect_tab("ask")
     expect(page).to have_css(".ai-search-answer .d-skeleton")
-    placeholder = sizes
-    box = <<~JS
-      (selector) => {
-        const rect = document.querySelector(selector).getBoundingClientRect();
-        return [rect.left, rect.top, rect.width, rect.height].map(Math.round);
-      }
-    JS
-    button_placeholder = page.evaluate_script("(#{box})('.ai-search-answer__expand-skeleton')")
+    expect(page).to have_no_css("#{tab("ask")} .ai-search-best-match")
+    width_before =
+      page.evaluate_script(
+        "Math.round(document.querySelector('#{tab("ask")}').getBoundingClientRect().width)",
+      )
 
     publish(
       done: false,
@@ -96,13 +97,16 @@ describe "AI combined search" do
     publish(done: false, phase: "sources", ai_discover_title: "Resetting your password", sources:)
     publish(done: false, phase: "answering", ai_discover_reply: "Use the **forgot")
 
-    # offered from the first words, so it does not pop in partway through, and
-    # it takes the place its placeholder held
     expect(page).to have_css(".ai-search-answer__body .cooked", text: "Use the")
-    expect(page).to have_css(".ai-search-answer__expand", text: "Show more")
-    button = page.evaluate_script("(#{box})('.ai-search-answer__expand')")
-    button.zip(button_placeholder).each { |actual, held| expect(actual).to be_within(1).of(held) }
-    expect(sizes).to eq(placeholder)
+    # the results' star marks that there is an answer, without resizing the pill
+    expect(page).to have_css("#{tab("ask")} .ai-search-best-match[title='AI answer found']")
+    expect(
+      page.evaluate_script(
+        "Math.round(document.querySelector('#{tab("ask")}').getBoundingClientRect().width)",
+      ),
+    ).to eq(width_before)
+    # added once the answer is complete, so they do not slide down as it streams
+    expect(page).to have_no_css(".ai-search-answer__more")
 
     publish(
       done: true,
@@ -115,45 +119,14 @@ describe "AI combined search" do
     )
 
     expect(page).to have_css(".ai-search-answer__body .cooked", text: "forgot password")
-    expect(sizes).to eq(placeholder)
-
-    # nothing matched the keywords, and the menu says which results it means
-    expect(page).to have_css(".search-menu .no-results", text: "No keyword matches found.")
-    expect(page).to have_no_text("No results found.")
-
-    # related topics, the follow-up and the keywords are not shown until asked
-    expect(page).to have_no_css(".ai-search-answer__related")
-    expect(page).to have_no_css(".ai-search-answer__follow-up")
+    within(".ai-search-answer__more") do
+      expect(page).to have_css(".ai-search-answer__related-link", count: 2)
+      expect(page).to have_css(
+        ".ai-search-answer__follow-up-input[placeholder='What if I no longer have access to my email?']",
+      )
+    end
+    expect(page).to have_no_css(".ai-search-answer__expand")
     expect(page).to have_no_text("Keywords")
-
-    body = find(".ai-search-answer__body")
-    expect(body).to match_style(overflow: "hidden")
-
-    find(".ai-search-answer__expand", text: "Show more").click
-
-    expect(page).to have_css(".ai-search-answer__expand", text: "Show less")
-    expect(page).to have_css(".ai-search-answer__related-link", count: 2)
-    expect(page).to have_css(
-      ".ai-search-answer__follow-up-input[placeholder='What if I no longer have access to my email?']",
-    )
-    expect(sizes[".ai-search-answer__body"]).to be > placeholder[".ai-search-answer__body"]
-  end
-
-  it "offers more for a short answer that fits" do
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-
-    publish(
-      done: true,
-      phase: "complete",
-      answerable: true,
-      ai_discover_reply: "Use the forgot password link.",
-      sources:,
-    )
-
-    find(".ai-search-answer__expand", text: "Show more").click
-    expect(page).to have_css(".ai-search-answer__related-link", count: 2)
   end
 
   it "gives a lone related topic the full width" do
@@ -168,7 +141,7 @@ describe "AI combined search" do
       ai_discover_reply: "Use the forgot password link.",
       sources: sources.first(1),
     )
-    find(".ai-search-answer__expand", text: "Show more").click
+    expect(page).to have_css(".ai-search-answer__related-item")
 
     widths = page.evaluate_script(<<~JS)
         ["ai-search-answer__related", "ai-search-answer__related-item"].map((name) =>
@@ -178,53 +151,50 @@ describe "AI combined search" do
     expect(widths.uniq.size).to eq(1)
   end
 
-  it "answers a query written outside the site's language" do
+  it "opens on the answer when nothing matches the keywords, and says so on the topics tab" do
     visit "/"
     wait_for_discoveries_channel
+    ask("unheard of things")
 
-    find("#welcome-banner-search-input").fill_in(with: "сброс пароля")
+    expect_tab("ask")
+    expect(page).to have_css("#{tab("topics")}.--empty .ai-search-tabs__count", text: "0")
 
-    try_until_success { expect(request_ids.size).to eq(1) }
-    expect(triggers.last).to eq(%w[pause language])
+    select_tab("topics")
+    expect(page).to have_css(".search-menu .no-results", text: "No keyword matches found.")
+    expect(page).to have_no_text("No results found.")
   end
 
-  it "searches a pasted query once it settles, with no keys pressed" do
+  it "marks the answer tab when no answer was found" do
     visit "/"
     wait_for_discoveries_channel
-    find("#welcome-banner-search-input").click
+    ask(query)
 
-    page.execute_script(<<~JS, query)
-      const input = document.querySelector("#welcome-banner-search-input");
-      input.value = arguments[0];
-      input.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertFromPaste" }));
-    JS
+    publish(done: true, phase: "complete", answerable: false, ai_discover_reply: "", sources: [])
 
-    try_until_success { expect(request_ids.size).to eq(1) }
-    expect(triggers.last).to eq(%w[pause question])
+    expect(page).to have_css("#{tab("ask")} .ai-search-tabs__empty .d-icon-ban")
+    expect(page).to have_no_css("#{tab("ask")} .ai-search-best-match")
   end
 
-  it "searches once typing pauses, clearing the answer as soon as the term changes" do
+  it "opens on the answer for a query outside the site's language" do
+    visit "/"
+    wait_for_discoveries_channel
+    ask("сброс")
+
+    expect_tab("ask")
+    expect(triggers.last).to eq(["enter", ""])
+  end
+
+  it "waits for enter rather than searching as the reader types" do
     visit "/"
     wait_for_discoveries_channel
 
     find("#welcome-banner-search-input").fill_in(with: query)
+    expect(page).to have_no_css(".ai-search-tabs")
+    expect(request_ids).to be_empty
+
+    find("#welcome-banner-search-input").send_keys(:enter)
     try_until_success { expect(request_ids.size).to eq(1) }
-    expect(page).to have_css(".ai-search-answer .d-skeleton")
-
-    publish(
-      done: true,
-      phase: "complete",
-      answerable: true,
-      ai_discover_reply: "First answer.",
-      sources:,
-    )
-    expect(page).to have_css(".ai-search-answer__body .cooked", text: "First answer")
-
-    find("#welcome-banner-search-input").send_keys(" quickly")
-    expect(page).to have_no_css(".ai-search-answer__body .cooked", text: "First answer")
-
-    try_until_success { expect(request_ids.size).to eq(2) }
-    expect(page).to have_css(".ai-search-answer .d-skeleton")
+    expect(page).to have_css(".ai-search-tabs")
   end
 
   context "with keyword results" do
@@ -237,6 +207,33 @@ describe "AI combined search" do
     end
 
     after { SearchIndexer.disable }
+
+    it "opens a lookup on its topics, with every tab fetched at once" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask(query)
+
+      expect_tab("topics")
+      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
+      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+
+      # the answer was asked for with the rest, so switching asks nothing more
+      select_tab("ask")
+      expect(page).to have_css(".ai-search-answer")
+      expect(page).to have_no_css(".search-menu .search-result-topic")
+      publish(
+        done: true,
+        phase: "complete",
+        answerable: true,
+        ai_discover_reply: "An answer.",
+        sources:,
+      )
+      expect(page).to have_css(".ai-search-answer__body .cooked", text: "An answer.")
+
+      select_tab("topics")
+      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      expect(request_ids.size).to eq(1)
+    end
 
     it "leaves related results to the combined search, so the list holds still" do
       SiteSetting.ai_embeddings_semantic_quick_search_enabled = true
@@ -255,35 +252,6 @@ describe "AI combined search" do
       expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
       expect(page).to have_no_css(".ai-quick-search-notice")
       expect(page).to have_no_css(".search-menu .ai-search-result")
-    end
-
-    it "gives an opened answer the menu to itself" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask(query)
-      publish(
-        done: true,
-        phase: "complete",
-        answerable: true,
-        ai_discover_reply: "Use the forgot password link.",
-        ai_discover_follow_up: "What about two-factor?",
-        sources:,
-      )
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-
-      find(".ai-search-answer__expand").click
-
-      within(".ai-search-answer__more") do
-        expect(page).to have_css(".ai-search-answer__related-link", count: 2)
-        expect(page).to have_css(".ai-search-answer__follow-up")
-      end
-      expect(page).to have_no_css(".search-menu .search-result-topic")
-      expect(page).to have_no_css(".ai-search-entities")
-
-      find(".ai-search-answer__expand", text: "Show less").click
-
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      expect(page).to have_no_css(".ai-search-answer__more")
     end
 
     it "puts a sticker on the best matches without moving them" do
@@ -305,12 +273,12 @@ describe "AI combined search" do
         sources:,
       )
 
-      expect(page).to have_css(".search-menu .ai-search-best-match", count: 1)
-      expect(find(".search-menu .ai-search-best-match").text).to be_blank
+      expect(page).to have_css(".search-menu .search-result-topic .ai-search-best-match", count: 1)
+      expect(find(".search-menu .search-result-topic .ai-search-best-match").text).to be_blank
       expect(page.evaluate_script(row_height)).to eq(before)
       overhang = page.evaluate_script(<<~JS)
         (() => {
-          const sticker = document.querySelector(".search-menu .ai-search-best-match").getBoundingClientRect();
+          const sticker = document.querySelector(".search-menu .search-result-topic .ai-search-best-match").getBoundingClientRect();
           const row = document.querySelector(".search-menu .search-result-topic .item").getBoundingClientRect();
           const centre = document.elementFromPoint(sticker.left + sticker.width / 2, sticker.top + sticker.height / 2);
           return {
@@ -347,12 +315,12 @@ describe "AI combined search" do
         ai_discover_reply: "Use the forgot password link.",
         sources: cited,
       )
-      expect(page).to have_css(".search-menu .ai-search-best-match")
+      expect(page).to have_css(".search-menu .search-result-topic .ai-search-best-match")
 
       offsets = page.evaluate_script(<<~JS)
           (() => {
-            const sticker = () => document.querySelector(".search-menu .ai-search-best-match").getBoundingClientRect();
-            const row = () => document.querySelector(".search-menu .ai-search-best-match").closest(".item");
+            const sticker = () => document.querySelector(".search-menu .search-result-topic .ai-search-best-match").getBoundingClientRect();
+            const row = () => document.querySelector(".search-menu .search-result-topic .ai-search-best-match").closest(".item");
             const offset = () => Math.round(sticker().top - row().getBoundingClientRect().top);
             const list = document.querySelector(".search-menu .panel-body-contents");
 
@@ -423,12 +391,11 @@ describe "AI combined search" do
       done: true,
       phase: "complete",
       answerable: true,
-      ai_discover_reply: "An answer.",
+      ai_discover_reply: "A long answer that runs on. " * 40,
       sources:,
     )
-    expect(page).to have_no_css(".ai-search-answer .d-skeleton")
-    # opened, so the menu runs past the window
-    find(".ai-search-answer__expand").click
+    # long enough to run past the window
+    expect(page).to have_css(".ai-search-answer__more")
 
     scroll = page.evaluate_script(<<~JS)
         (() => {
@@ -467,50 +434,37 @@ describe "AI combined search" do
       expect(page).to have_css("#icon-search-input")
     end
 
-    it "scopes the answer and results to the category, and the chip can be taken off and put back" do
+    it "offers the category as a tab, opening on it when it has matches" do
       visit category.url
       wait_for_discoveries_channel
       open_header_search
-
-      expect(page).to have_css(".ai-search-scope-chip", text: "in #{category.name}")
-
+      page.execute_script(<<~JS)
+        window.pillWidths = {};
+        new MutationObserver(() => {
+          document.querySelectorAll(".ai-search-tabs .ai-discoveries-search-options__option").forEach((pill) => {
+            const kind = [...pill.classList].find((name) => name.startsWith("--") && name !== "--empty");
+            (window.pillWidths[kind] ??= new Set()).add(Math.round(pill.getBoundingClientRect().width));
+          });
+        }).observe(document.body, { subtree: true, childList: true, characterData: true });
+      JS
       ask(query, input: "#icon-search-input")
 
+      expect(page).to have_css(tab("context"), text: category.name)
+      expect_tab("context")
       expect(scopes.last).to eq("category:#{category.id}")
+      expect(page).to have_css("#{tab("context")} .ai-search-tabs__count", text: "1")
+      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "2")
+      # the counts hang off the pills rather than widening them
+      widths = page.evaluate_script(<<~JS)
+        Object.fromEntries(Object.entries(window.pillWidths).map(([kind, set]) => [kind, set.size]))
+      JS
+      expect(widths.values).to all(eq(1))
       expect(page).to have_css(".search-menu .search-result-topic", text: inside.title)
       expect(page).to have_no_css(".search-menu .search-result-topic", text: outside.title)
 
-      find(".ai-search-scope-chip").click
-
-      expect(page).to have_no_css(".ai-search-scope-chip")
-      try_until_success { expect(request_ids.size).to eq(2) }
-      expect(scopes.last).to be_nil
+      select_tab("topics")
       expect(page).to have_css(".search-menu .search-result-topic", text: outside.title)
-
-      expect(page).to have_css(".ai-search-entities__restore .d-icon-filter")
-      find(".ai-search-entities__restore", text: "Search in #{category.name} only").click
-
-      expect(page).to have_css(".ai-search-scope-chip", text: "in #{category.name}")
-      try_until_success { expect(request_ids.size).to eq(3) }
-      expect(scopes.last).to eq("category:#{category.id}")
-      expect(page).to have_no_css(".search-menu .search-result-topic", text: outside.title)
-    end
-
-    it "puts a removed chip back when the search is cleared, without asking again" do
-      visit category.url
-      wait_for_discoveries_channel
-      open_header_search
-      ask(query, input: "#icon-search-input")
-
-      find(".ai-search-scope-chip").click
-      try_until_success { expect(request_ids.size).to eq(2) }
-
-      find(".search-menu .clear-search").click
-
-      expect(page).to have_css(".ai-search-scope-chip", text: "in #{category.name}")
-      expect(find("#icon-search-input").value).to be_blank
-      expect(page).to have_no_css(".ai-search-menu-answer")
-      expect(request_ids.size).to eq(2)
+      expect(request_ids.size).to eq(1)
     end
 
     it "says when the answer had to come from the whole site" do
@@ -518,6 +472,7 @@ describe "AI combined search" do
       wait_for_discoveries_channel
       open_header_search
       ask(query, input: "#icon-search-input")
+      select_tab("ask")
 
       publish(
         done: true,
@@ -532,11 +487,6 @@ describe "AI combined search" do
         ".ai-search-answer__scope-note",
         text: "Nothing found in #{category.name}",
       )
-
-      # the search follows the answer out of the category, without asking again
-      expect(page).to have_no_css(".ai-search-scope-chip")
-      expect(page).to have_css(".ai-search-entities__restore", text: category.name)
-      expect(page).to have_css(".search-menu .search-result-topic", text: outside.title)
       expect(request_ids.size).to eq(1)
     end
 
@@ -545,6 +495,7 @@ describe "AI combined search" do
       wait_for_discoveries_channel
       open_header_search
       ask(query, input: "#icon-search-input")
+      select_tab("ask")
 
       publish(
         done: true,
@@ -559,26 +510,23 @@ describe "AI combined search" do
       expect(page).to have_no_css(".ai-search-answer__scope-note")
     end
 
-    it "only searches a topic when its posts match, and answers when none do" do
+    it "opens a topic search on the topic when its posts match, and on the answer when not" do
       inside.posts.each { |post| SearchIndexer.index(post, force: true) }
 
       visit inside.url
       wait_for_discoveries_channel
       open_header_search
+      ask("widget configuration?", input: "#icon-search-input")
 
-      find("#icon-search-input").fill_in(with: "widget configuration?")
-
-      expect(page).to have_css(
-        ".search-menu .search-result-post, .search-menu .search-result-topic",
-      )
-      expect(page).to have_no_css(".ai-search-answer")
-      expect(request_ids).to be_empty
+      expect(page).to have_css(tab("context"), text: "This topic")
+      expect_tab("context")
+      expect(scopes.last).to eq("topic:#{inside.id}")
 
       find("#icon-search-input").fill_in(with: "something nobody wrote about here")
+      find("#icon-search-input").send_keys(:enter)
 
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(triggers.last).to eq(%w[pause no_topic_match])
-      expect(scopes.last).to eq("topic:#{inside.id}")
+      try_until_success { expect(request_ids.size).to eq(2) }
+      expect_tab("ask")
     end
 
     it "starts afresh in a new context rather than searching again" do
@@ -594,20 +542,8 @@ describe "AI combined search" do
       open_header_search
 
       expect(find("#icon-search-input").value).to be_blank
-      expect(page).to have_no_css(".ai-search-answer")
+      expect(page).to have_no_css(".ai-search-tabs")
       expect(request_ids.size).to eq(1)
-    end
-
-    it "scopes to the topic being read" do
-      visit inside.url
-      wait_for_discoveries_channel
-      open_header_search
-
-      expect(page).to have_css(".ai-search-scope-chip", text: "in this topic")
-
-      ask(query, input: "#icon-search-input")
-
-      expect(scopes.last).to eq("topic:#{inside.id}")
     end
   end
 
@@ -649,13 +585,12 @@ describe "AI combined search" do
     end
   end
 
-  context "when a pause finds a lookup rather than a question" do
+  context "with people and places to find" do
     fab!(:gardening) { Fabricate(:category, name: "Gardening") }
     fab!(:gardener) { Fabricate(:user, username: "plantlover", name: "Green Thumb") }
 
     before do
       SearchIndexer.enable
-      # more keyword matches than would warrant an answer on their own
       [
         "Gardening tips for the spring season",
         "Gardening in small spaces",
@@ -672,152 +607,54 @@ describe "AI combined search" do
 
     after { SearchIndexer.disable }
 
-    it "only searches when people or places match, and answers on enter" do
+    it "opens a lookup on its topics" do
       visit "/"
       wait_for_discoveries_channel
+      ask("gardening")
 
-      page.execute_script(<<~JS)
-        window.appeared = [];
-        new MutationObserver(() => {
-          const seen = {
-            places: document.querySelector(".ai-search-entities"),
-            topics: document.querySelector(".search-menu .search-result-topic"),
-            coreList: document.querySelector(".search-menu .search-result-user, .search-menu .search-result-category"),
-          };
-          for (const [name, element] of Object.entries(seen)) {
-            const last = window.appeared.filter((entry) => entry.startsWith(name + ":")).pop();
-            const state = element ? "shown" : "gone";
-            if ((last ?? `${name}:gone`) !== `${name}:${state}`) {
-              window.appeared.push(`${name}:${state}`);
-            }
-          }
-        }).observe(document.body, { subtree: true, childList: true });
-      JS
-
-      find("#welcome-banner-search-input").fill_in(with: "gardening")
-
+      expect_tab("topics")
       expect(page).to have_css(".search-menu .search-result-topic", text: "Gardening tips")
-      # the matches are in place before the pause, so nothing pops in when it
-      # runs, and core's own list of names never shows
-      appeared = page.evaluate_script("window.appeared")
-      expect(appeared.index("places:shown")).to be < appeared.index("topics:shown")
-      expect(appeared).not_to include("places:gone")
-      expect(appeared).not_to include("coreList:shown")
-      expect(page).to have_css(".ai-search-entities", text: "Gardening")
-      expect(page).to have_no_css(".ai-search-answer")
-      expect(request_ids).to be_empty
+    end
 
+    it "opens on the answer when only a person matches" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask("green thumb")
+
+      expect_tab("ask")
+    end
+
+    it "opens a question on the answer even when places match" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask("gardening?")
+
+      expect_tab("ask")
+    end
+
+    it "opens a query in search syntax on its topics" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask('"small spaces"')
+
+      expect_tab("topics")
+      expect(page).to have_css(
+        ".search-menu .search-result-topic",
+        text: "Gardening in small spaces",
+      )
+    end
+
+    it "opens on the answer when the reader searches again on the same page" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask("gardening")
+      expect_tab("topics")
+
+      find("#welcome-banner-search-input").fill_in(with: "spring gardening")
       find("#welcome-banner-search-input").send_keys(:enter)
 
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(page).to have_css(".ai-search-answer .d-skeleton")
-    end
-
-    it "still asks AI when a person matches but hardly any topics do" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: "green thumb")
-
-      expect(page).to have_css(".ai-search-entities", text: "plantlover")
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(page).to have_css(".ai-search-answer .d-skeleton")
-    end
-
-    it "asks AI for a single word that matches nothing but topics" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: "spring")
-
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(page).to have_css(".ai-search-answer .d-skeleton")
-    end
-
-    it "shows matching groups and tags the way search does elsewhere" do
-      SiteSetting.tagging_enabled = true
-      Fabricate(:group, name: "gardeners", full_name: "Garden club")
-      tag = Fabricate(:tag, name: "garden-tips")
-      Fabricate(:topic, tags: [tag])
-
-      visit "/"
-      wait_for_discoveries_channel
-      find("#welcome-banner-search-input").fill_in(with: "garden")
-
-      expect(page).to have_css(".ai-search-entities__item.--group", text: "Garden club")
-      expect(page).to have_css(".ai-search-entities__item.--group .d-icon-users")
-      expect(page).to have_css(".ai-search-entities__item.--tag .d-icon-tag")
-      expect(page).to have_css(
-        ".ai-search-entities__item.--tag[href*='/tag/garden-tips']",
-        text: "garden-tips",
-      )
-    end
-
-    it "answers a question even when places match" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: "gardening?")
-
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(page).to have_css(".ai-search-answer .d-skeleton")
-    end
-
-    it "only searches a query written in search syntax" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: '"small spaces"')
-
-      expect(page).to have_css(
-        ".search-menu .search-result-topic",
-        text: "Gardening in small spaces",
-      )
-      expect(page).to have_no_css(".ai-search-answer")
-      expect(request_ids).to be_empty
-    end
-
-    it "only searches when the top result is titled with the query" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: "gardening in small spaces")
-
-      expect(page).to have_css(
-        ".search-menu .search-result-topic",
-        text: "Gardening in small spaces",
-      )
-      expect(page).to have_no_css(".ai-search-answer")
-      expect(request_ids).to be_empty
-    end
-
-    it "answers when the reader searches again on the same page" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: "gardening")
-      expect(page).to have_css(".search-menu .search-result-topic", text: "Gardening tips")
-      expect(request_ids).to be_empty
-
-      # long enough after that it is a new search rather than the same one
-      sleep 2.1
-      find("#welcome-banner-search-input").fill_in(with: "spring gardening")
-
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(triggers.last).to eq(%w[pause searched_again])
-    end
-
-    it "does not count typing on after a pause as searching again" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: "gardening")
-      expect(page).to have_css(".search-menu .search-result-topic", text: "Gardening tips")
-
-      find("#welcome-banner-search-input").send_keys(" tips")
-
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(triggers.last).not_to eq(%w[pause searched_again])
+      try_until_success { expect(request_ids.size).to eq(2) }
+      expect_tab("ask")
     end
 
     it "runs the combined search for a recent search picked from the menu" do
@@ -833,30 +670,10 @@ describe "AI combined search" do
       find("#welcome-banner-search-input").click
       find(".search-menu-recent .search-menu-assistant-item", text: "gardening").click
 
+      expect_tab("topics")
       expect(page).to have_css(".search-menu .search-result-topic", text: "Gardening tips")
       expect(find("#welcome-banner-search-input").value).to eq("gardening")
-    end
-
-    it "notes when enter asks for what a pause left out" do
-      visit "/"
-      wait_for_discoveries_channel
-
-      find("#welcome-banner-search-input").fill_in(with: "gardening")
-      expect(page).to have_css(".search-menu .search-result-topic", text: "Gardening tips")
-
-      find("#welcome-banner-search-input").send_keys(:enter)
-
-      try_until_success { expect(request_ids.size).to eq(1) }
-      expect(triggers.last).to eq(%w[enter after_skip:places])
-    end
-
-    it "still answers on enter when people or places match" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask("gardening")
-
-      expect(page).to have_css(".ai-search-answer .d-skeleton")
-      expect(request_ids.size).to eq(1)
+      expect(triggers.last).to eq(["recent", ""])
     end
   end
 end

@@ -1,6 +1,3 @@
-// a "#" or "@" being typed is asking for core's suggestions, not a search
-const SUGGESTION_IN_PROGRESS = /(?:^|\s)[#@]\S*$/;
-
 // quoted phrases and search operators are someone after precise results
 const SEARCH_SYNTAX =
   /"[^"]+"|(?:^|\s)-?(?:in|status|order|before|after|with|category|categories|tags?|user|group|badge|topic|min_\w+|max_\w+):\S|(?:^|\s)[#@]\S+/i;
@@ -9,9 +6,6 @@ const QUESTION_MARK = /[?？]\s*$/;
 
 // this many words is natural language rather than keywords
 const QUESTION_LENGTH = 5;
-
-// as few keyword matches as this and an answer is worth having after all
-const FEW_KEYWORD_MATCHES = 3;
 
 // the writing systems each site language is searched in; anything else is
 // left out of the search index's stemming and matches poorly
@@ -50,81 +44,66 @@ const DETECTED_SCRIPTS = [
 const FOREIGN_SHARE = 0.6;
 
 /**
- * @typedef {Object} PauseDecision
- * @property {boolean} answer whether to ask for an AI answer straight away
- * @property {string} reason why it answers, or why it does not
- * @property {(results: Object) => boolean} [answerAfter] when not answering
- *   straight away, whether to ask once the keyword results are in
- * @property {string} [answerAfterReason] why, when it then does
+ * @typedef {"ask"|"topics"|"context"} SearchTab
  */
 
 /**
- * What a pause in typing should do with the query. Pressing enter always
- * answers; a pause answers when the query reads as a question, and leaves the
- * AI out when it reads as a lookup.
+ * Which tab a search should open on, guessed from how the query reads and
+ * what the keyword searches found. Every tab is fetched, so this only decides
+ * what the reader sees first.
  *
  * @param {string} query
- * @param {Object} [instantResults] the menu's results as the reader typed
- * @param {Object} [context]
- * @param {string} [context.siteLocale] the language the site is searched in
- * @param {boolean} [context.searchedAgain] whether the reader is still
- *   searching after an earlier search on this page
- * @param {string} [context.scope] the scope the search runs in
- * @returns {PauseDecision}
+ * @param {Object} found
+ * @param {Object} [found.topics] the site-wide keyword results
+ * @param {Object} [found.context] the keyword results within the context
+ * @param {string} [found.scope] the context's scope key, when there is one
+ * @param {string} [found.siteLocale] the language the site is searched in
+ * @param {boolean} [found.searchedAgain] whether an earlier search on this
+ *   page seems not to have helped
+ * @returns {{tab: SearchTab, reason: string}}
  */
-export function pauseDecision(
+export function chooseTab(
   query,
-  instantResults,
-  { siteLocale, searchedAgain, scope } = {}
+  { topics, context, scope, siteLocale, searchedAgain } = {}
 ) {
-  if (usesSearchSyntax(query)) {
-    return { answer: false, reason: "syntax" };
-  }
+  const topicCount = topics?.posts?.length ?? 0;
+  const contextCount = scope ? (context?.posts?.length ?? 0) : 0;
 
-  // within a topic the reader is after a passage of it, which a keyword match
-  // finds; the answer is for when nothing in the topic matches
-  if (scope?.startsWith("topic:")) {
+  if (usesSearchSyntax(query)) {
     return {
-      answer: false,
-      reason: "topic_match",
-      answerAfter: (results) => !results?.posts?.length,
-      answerAfterReason: "no_topic_match",
+      tab: contextCount > 0 ? "context" : "topics",
+      reason: "syntax",
     };
   }
 
-  // keyword search does poorly outside the site's language, which the answer
-  // bridges by searching in it
+  // within a topic the reader is after a passage of it
+  if (scope?.startsWith("topic:") && contextCount > 0) {
+    return { tab: "context", reason: "topic_match" };
+  }
+
+  // keyword search does poorly outside the site's language
   if (inForeignScript(query, siteLocale)) {
-    return { answer: true, reason: "language" };
+    return { tab: "ask", reason: "language" };
   }
 
   // a second search here means the first one's results did not help
   if (searchedAgain) {
-    return { answer: true, reason: "searched_again" };
+    return { tab: "ask", reason: "searched_again" };
   }
 
   if (readsAsQuestion(query)) {
-    return { answer: true, reason: "question" };
+    return { tab: "ask", reason: "question" };
   }
 
-  // a person or place is usually where the reader is going, unless the
-  // keywords then find little else
-  if (matchesPlaces(instantResults)) {
-    return {
-      answer: false,
-      reason: "places",
-      answerAfter: (results) =>
-        (results?.posts?.length ?? 0) <= FEW_KEYWORD_MATCHES,
-      answerAfterReason: "few_matches",
-    };
+  if (contextCount > 0) {
+    return { tab: "context", reason: "context_match" };
   }
 
-  return {
-    answer: false,
-    reason: "title_match",
-    answerAfter: (results) => !topResultIsTitled(query, results),
-    answerAfterReason: "no_title_match",
-  };
+  if (topicCount > 0) {
+    return { tab: "topics", reason: "topic_results" };
+  }
+
+  return { tab: "ask", reason: "no_keyword_matches" };
 }
 
 /**
@@ -149,43 +128,12 @@ export function inForeignScript(query, siteLocale) {
   return foreign.length / letters.length >= FOREIGN_SHARE;
 }
 
-export function suggestionInProgress(query) {
-  return SUGGESTION_IN_PROGRESS.test(query ?? "");
-}
-
 export function usesSearchSyntax(query) {
   return SEARCH_SYNTAX.test(query ?? "");
 }
 
 export function readsAsQuestion(query) {
   return QUESTION_MARK.test(query ?? "") || wordCount(query) >= QUESTION_LENGTH;
-}
-
-/** Whether the results include any people, groups, categories or tags. */
-export function matchesPlaces(results) {
-  return ["users", "groups", "categories", "tags"].some(
-    (kind) => results?.[kind]?.length > 0
-  );
-}
-
-/**
- * Whether the best keyword match is titled with (nearly) the query, which is
- * someone heading for that topic.
- */
-export function topResultIsTitled(query, results) {
-  const title = normalize(results?.posts?.[0]?.topic?.title);
-  const wanted = normalize(query);
-  if (!title || !wanted) {
-    return false;
-  }
-
-  if (title === wanted) {
-    return true;
-  }
-
-  const [shorter, longer] =
-    title.length < wanted.length ? [title, wanted] : [wanted, title];
-  return longer.includes(shorter) && shorter.length / longer.length >= 0.8;
 }
 
 /**
@@ -204,13 +152,4 @@ export function wordCount(query) {
   }
 
   return text.split(/\s+/).length;
-}
-
-function normalize(value) {
-  return (value ?? "")
-    .toString()
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s]/gu, "")
-    .replace(/\s+/g, " ")
-    .trim();
 }

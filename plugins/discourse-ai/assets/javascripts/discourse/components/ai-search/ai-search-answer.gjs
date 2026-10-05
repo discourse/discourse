@@ -55,22 +55,9 @@ export default class AiSearchAnswer extends Component {
     );
   }
 
-  get expanded() {
-    return this.session.expanded;
-  }
-
-  // The box is short enough that an answer nearly always runs past it, and
-  // related topics and the follow-up wait behind it too, so it is offered as
-  // soon as the answer starts rather than appearing partway through.
-  get hasMore() {
-    return (
-      this.expanded ||
-      (!this.discoveries.loadingDiscoveries && !this.session.answerFailed)
-    );
-  }
-
-  get showActions() {
-    return this.hasMore || this.discoveries.loadingDiscoveries;
+  // added once the answer is complete, so they do not slide down as it streams
+  get showMore() {
+    return this.session.answerSettled && !this.session.answerFailed;
   }
 
   get suggestedFollowUp() {
@@ -134,8 +121,6 @@ export default class AiSearchAnswer extends Component {
         "ai-search-answer"
         (if @compact "--compact")
         (if this.session.answerFailed "--no-answer")
-        (if this.expanded "--expanded")
-        (if this.hasMore "--has-more")
       }}
       {{on "click" this.followLink}}
     >
@@ -157,7 +142,7 @@ export default class AiSearchAnswer extends Component {
           {{/if}}
           {{#if this.discoveries.loadingDiscoveries}}
             <DSkeleton class="ai-search-answer__title-skeleton" @width="60%" />
-            <DSkeleton @count={{2}} @lastLineWidth="45%" />
+            <DSkeleton @count={{3}} @lastLineWidth="45%" />
           {{else if this.canAskCommunity}}
             <p class="ai-search-answer__empty">
               <span>
@@ -194,7 +179,7 @@ export default class AiSearchAnswer extends Component {
         </div>
       </div>
 
-      {{#if this.expanded}}
+      {{#if this.showMore}}
         <div class="ai-search-answer__more">
           <ul class="ai-search-answer__related">
             {{#each this.session.relatedTopics as |topic|}}
@@ -249,29 +234,6 @@ export default class AiSearchAnswer extends Component {
         </div>
       {{/if}}
 
-      {{! over the foot of the answer until it is opened, so offering them
-          moves nothing }}
-      {{#if this.showActions}}
-        <div class="ai-search-answer__actions">
-          {{#if this.discoveries.loadingDiscoveries}}
-            {{! holds the button's place while the answer loads }}
-            <DSkeleton
-              class="ai-search-answer__expand-skeleton"
-              @variant="rect"
-            />
-          {{else if this.hasMore}}
-            <DButton
-              class="btn-default btn-small ai-search-answer__expand"
-              @action={{this.session.toggleExpanded}}
-              @label={{if
-                this.expanded
-                "discourse_ai.ai_search.show_less"
-                "discourse_ai.ai_search.show_more"
-              }}
-            />
-          {{/if}}
-        </div>
-      {{/if}}
     </section>
   </template>
 }
