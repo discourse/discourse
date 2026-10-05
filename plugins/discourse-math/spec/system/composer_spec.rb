@@ -9,6 +9,7 @@ RSpec.describe "Discourse Math - composer" do
 
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
+  let(:toolbar) { PageObjects::Components::ComposerPreviewToolbar.new }
 
   before do
     SiteSetting.discourse_math_enabled = true
@@ -35,10 +36,29 @@ RSpec.describe "Discourse Math - composer" do
       expect(rich).to have_css(".composer-math-node .math-container mjx-container", wait: 10)
     end
 
-    it "renders block math in rich editor" do
+    it "renders block math and lets the user edit its source in place" do
       open_composer_and_type_math("Block math:\n\n$$\nx^2 + y^2 = z^2\n$$")
 
-      expect(rich).to have_css(".composer-math-node .math-container mjx-container", wait: 10)
+      expect(rich).to have_css(".composer-preview-node .math-block-preview mjx-container", wait: 10)
+      expect(rich).to have_no_css(".composer-preview-node.--source")
+
+      rich.find(".composer-preview-node .math-block-preview").click
+
+      expect(toolbar).to have_toolbar
+
+      toolbar.click_show_source
+
+      expect(rich).to have_css(".composer-preview-node.--source")
+
+      composer.type_content(" + 1")
+      toolbar.click_show_preview
+
+      expect(rich).to have_no_css(".composer-preview-node.--source")
+      expect(rich).to have_css(".composer-preview-node .math-block-preview mjx-container", wait: 10)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Block math:\n\n$$\nx^2 + y^2 = z^2 + 1\n$$")
     end
   end
 

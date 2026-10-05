@@ -109,13 +109,10 @@
     }
   }
 
-  div.composer-math-node {
-    display: block;
+  .math-block-preview {
     padding: var(--space-2);
-    margin: var(--space-2) 0;
 
-    .math-node-content {
-      display: block;
+    .math {
       white-space: pre-wrap;
     }
   }
