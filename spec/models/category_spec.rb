@@ -1260,6 +1260,15 @@ RSpec.describe Category do
       expect(Guardian.new.can_see?(child)).to eq(false)
     end
 
+    it "validates permissions built with a new private subcategory" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, parent_category: private_parent, group:)
+
+      expect(child).to be_persisted
+      expect(child.category_groups.pluck(:group_id)).to contain_exactly(group.id)
+      expect(Guardian.new.can_see?(child)).to eq(false)
+    end
+
     it "rejects moving a private category with a different audience" do
       private_parent = Fabricate(:private_category, group:)
       child = Fabricate(:private_category, group: group2)

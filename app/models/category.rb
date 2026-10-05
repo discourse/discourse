@@ -1229,7 +1229,9 @@ class Category < ActiveRecord::Base
       return if parent_category.blank? || parent_category.category_groups.empty?
 
       parent_permissions = parent_category.category_groups.pluck(:group_id, :permission_type)
-      child_permissions = @permissions || category_groups.pluck(:group_id, :permission_type)
+      child_permissions =
+        @permissions ||
+          category_groups.map { |permission| [permission.group_id, permission.permission_type] }
       if child_permissions.empty?
         child_permissions = [[Group[:everyone].id, CategoryGroup.permission_types[:full]]]
       end

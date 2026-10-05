@@ -118,8 +118,11 @@ RSpec.describe Site do
       category.set_permissions(staff: :full)
       category.save!
 
-      sub_category = Fabricate(:category, parent_category_id: category.id)
-      expect(Site.new(guardian).categories).not_to include(sub_category)
+      sub_category =
+        Fabricate(:category, parent_category_id: category.id, permissions: { staff: :full })
+      expect(Site.new(guardian).categories.map { |entry| entry[:id] }).not_to include(
+        sub_category.id,
+      )
     end
 
     it "clears the cache when custom fields change" do
