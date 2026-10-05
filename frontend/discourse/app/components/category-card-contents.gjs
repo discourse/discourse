@@ -17,6 +17,7 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import Topic from "discourse/models/topic";
 import { and, eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -170,11 +171,17 @@ export default class CategoryCardContents extends CardContentsBase {
         topic,
       });
 
+      const draftKey = Composer.editDraftKey(post);
+      const { draft, draft_sequence: draftSequence } =
+        await Draft.get(draftKey);
+
       this.composer.open({
         action: Composer.EDIT,
         post,
-        draftKey: topic.draft_key,
-        draftSequence: topic.draft_sequence,
+        topic,
+        draft: draft && JSON.parse(draft),
+        draftKey,
+        draftSequence,
       });
     } catch (error) {
       popupAjaxError(error);

@@ -3,8 +3,8 @@ import { service } from "@ember/service";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import {
-  EDIT_POST_KEY,
-  EDIT_TOPIC_KEY,
+  EXISTING_POST_KEY,
+  EXISTING_TOPIC_KEY,
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
@@ -44,9 +44,9 @@ export default class UserDraft extends RestModel {
       return i18n("drafts.new_topic");
     } else if (this.draft_key.startsWith(NEW_PRIVATE_MESSAGE_KEY)) {
       return i18n("drafts.new_private_message");
-    } else if (this.draft_key.startsWith(EDIT_TOPIC_KEY)) {
+    } else if (this.draft_key.startsWith(EXISTING_TOPIC_KEY)) {
       return i18n("drafts.edit_topic");
-    } else if (this.draft_key.startsWith(EDIT_POST_KEY)) {
+    } else if (this.draft_key.startsWith(EXISTING_POST_KEY)) {
       return i18n("drafts.edit_post");
     }
     return false;
