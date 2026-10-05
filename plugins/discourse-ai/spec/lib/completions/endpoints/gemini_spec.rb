@@ -1559,6 +1559,38 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     )
   end
 
+  it "raises when an error event arrives mid-stream instead of returning the partial reply" do
+    response = <<~TEXT
+      data: {"candidates": [{"content": {"parts": [{"text": "Partial"}],"role": "model"}}]}
+
+      data: {"error": {"code": 503,"message": "This model is currently experiencing high demand.","status": "UNAVAILABLE"}}
+
+    TEXT
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    expect { llm.generate("Hello", user: user) { |_| } }.to raise_error(
+      DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+      /high demand/,
+    )
+  end
+
+  it "logs the block reason when the prompt is blocked" do
+    response = <<~TEXT
+      data: {"promptFeedback": {"blockReason": "PROHIBITED_CONTENT"},"usageMetadata": {"promptTokenCount": 417,"totalTokenCount": 417}}
+
+    TEXT
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    stub_request(:post, url).to_return(status: 200, body: response)
+    Rails.logger.expects(:warn).with(includes("PROHIBITED_CONTENT"))
+
+    expect(llm.generate("Hello", user: user) { |_| }).to eq("")
+  end
+
   it "Can correctly handle streamed responses even if they are chunked badly" do
     data = +""
     data << "da|ta: |"
