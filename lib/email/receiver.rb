@@ -423,6 +423,10 @@ module Email
 
     def auth_res_action
       @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
+    rescue StandardError => e
+      # fail closed without losing the post: queue it for review
+      Discourse.warn_exception(e, message: "Failed to evaluate Authentication-Results")
+      @auth_res_action = :enqueue
     end
 
     def select_body
