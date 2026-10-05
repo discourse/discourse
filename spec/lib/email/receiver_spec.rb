@@ -902,6 +902,19 @@ RSpec.describe Email::Receiver do
       expect(user.reload.silenced?).to be(false)
     end
 
+    it "enqueues the post when evaluating the Authentication-Results header fails" do
+      Email::AuthenticationResults.any_instance.stubs(:action).raises(StandardError)
+      Discourse.expects(:warn_exception).once
+
+      Fabricate(
+        :user,
+        email: "existing@bar.com",
+        trust_level: TrustLevel[2],
+        refresh_auto_groups: true,
+      )
+      expect { process(:existing_user) }.to change { ReviewableQueuedPost.count }.by(1)
+    end
+
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
