@@ -147,7 +147,7 @@ discourse_events:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412427"
   livestream_allowed_hosts:
