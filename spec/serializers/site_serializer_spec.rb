@@ -125,6 +125,23 @@ RSpec.describe SiteSerializer do
       )
     end
 
+    it "omits a server side callable homepage path when it is unavailable to the visitor" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { "/dynamic/private" },
+        route: "plugin#index",
+        server_side: true,
+        available: ->(guardian:, request:) { false },
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: true)
+    end
+
     it "omits a callable homepage path that raises" do
       plugin = Plugin::Instance.new
       plugin.stubs(:enabled?).returns(true)

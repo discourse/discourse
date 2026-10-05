@@ -30,10 +30,8 @@ class HomepageHelper
     path = option[:path]
     return path if !path.respond_to?(:call)
 
-    if !option[:server_side]
-      return if option[:id] != SiteSetting.homepage
-      return if !option_available?(option[:id], nil, guardian.user)
-    end
+    return if !option[:server_side] && option[:id] != SiteSetting.homepage
+    return if !option_available?(option[:id], nil, guardian.user)
 
     path.call
   rescue StandardError => e

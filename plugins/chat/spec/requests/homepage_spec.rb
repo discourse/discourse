@@ -123,5 +123,15 @@ RSpec.describe "Chat channel homepage" do
 
       expect(HomepageHelper.resolve).to eq("chat")
     end
+
+    it "renders the app at the root path when anonymous chat access is allowed" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+      SiteSetting.has_login_hint = false
+
+      get "/"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<meta name="discourse_current_homepage" content="chat">')
+    end
   end
 end
