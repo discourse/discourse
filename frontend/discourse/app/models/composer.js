@@ -46,7 +46,7 @@ export const CREATE_TOPIC = "createTopic",
   NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
   NEW_TOPIC_KEY = "new_topic",
   EDIT_TOPIC_KEY = "topic_",
-  EDIT_POST_KEY = "edit_post_",
+  EDIT_POST_KEY = "post_",
   ADD_TRANSLATION = "add_translation";
 
 function isEdit(action) {

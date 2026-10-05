@@ -4,7 +4,7 @@ class Draft < ActiveRecord::Base
   NEW_TOPIC = "new_topic"
   NEW_PRIVATE_MESSAGE = "new_private_message"
   EXISTING_TOPIC = "topic_"
-  EDIT_POST = "edit_post_"
+  EDIT_POST = "post_"
 
   belongs_to :user
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require Rails.root.join("db/post_migrate/20260915141510_move_edit_drafts_to_edit_post_keys.rb")
+require Rails.root.join("db/post_migrate/20260915141510_move_edit_drafts_to_post_keys.rb")
 
-RSpec.describe MoveEditDraftsToEditPostKeys do
+RSpec.describe MoveEditDraftsToPostKeys do
   before do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false

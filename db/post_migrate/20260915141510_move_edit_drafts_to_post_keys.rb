@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MoveEditDraftsToEditPostKeys < ActiveRecord::Migration[8.0]
+class MoveEditDraftsToPostKeys < ActiveRecord::Migration[8.0]
   disable_ddl_transaction!
 
   BATCH_SIZE = 1000
@@ -32,7 +32,7 @@ class MoveEditDraftsToEditPostKeys < ActiveRecord::Migration[8.0]
 
         next if !post_id.is_a?(Integer)
 
-        move_draft(row, "edit_post_#{post_id}")
+        move_draft(row, "post_#{post_id}")
       end
     end
   end
