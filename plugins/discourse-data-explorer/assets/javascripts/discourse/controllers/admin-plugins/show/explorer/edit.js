@@ -154,6 +154,10 @@ export default class PluginsExplorerController extends Controller {
     return this.siteSettings.dashboard_improvements && !this.model.destroyed;
   }
 
+  get dashboardToggleIcon() {
+    return this.dashboardMounted ? "thumbtack-slash" : "thumbtack";
+  }
+
   get dashboardToggleLabel() {
     return this.dashboardMounted
       ? "explorer.dashboard.remove"

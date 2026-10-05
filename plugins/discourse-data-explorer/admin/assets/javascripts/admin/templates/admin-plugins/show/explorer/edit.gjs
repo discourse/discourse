@@ -237,7 +237,7 @@ export default class QueriesEdit extends Component {
               class="btn-default query-action-bar__dashboard-toggle"
               @action={{@controller.toggleDashboard}}
               @disabled={{@controller.dashboardToggleDisabled}}
-              @icon="thumbtack"
+              @icon={{@controller.dashboardToggleIcon}}
               @isLoading={{@controller.dashboardBusy}}
               @label={{@controller.dashboardToggleLabel}}
               @translatedTitle={{@controller.dashboardToggleTitle}}
