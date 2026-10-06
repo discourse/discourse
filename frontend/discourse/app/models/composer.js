@@ -548,10 +548,7 @@ export default class Composer extends RestModel {
     if (this.canEditTopicFeaturedLink) {
       return "composer.title_or_link_placeholder";
     }
-
-    return this.siteSettings.enable_composer_redesign
-      ? "composer.title_placeholder_redesign"
-      : "composer.title_placeholder";
+    return "composer.title_placeholder";
   }
 
   @computed("category.topic_title_placeholder")
