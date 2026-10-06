@@ -401,6 +401,11 @@ module DiscourseWorkflows
       self.class.category_ids_parameter(trigger_ctx)
     end
 
+    def matches_changes?(trigger_ctx, change)
+      changes = Array.wrap(trigger_ctx.get_node_parameter("changes", [])).compact_blank.map(&:to_s)
+      changes.empty? || changes.include?(change)
+    end
+
     def matches_topic_filters?(topic, trigger_ctx)
       matches_category_ids?(
         topic.category_id,
