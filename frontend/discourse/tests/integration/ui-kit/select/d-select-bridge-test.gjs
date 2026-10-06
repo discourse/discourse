@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -63,6 +64,34 @@ module(
         .dom("[role='listbox']")
         .exists("an action row keeps the menu open");
     });
+
+    // Legacy callbacks walk up from `selectKit.element` (for example to find the composer it
+    // sits in), so it must be the trigger, which stays where the select was rendered. The
+    // panel is moved elsewhere in the page, and on mobile it is a modal.
+    for (const mobile of [false, true]) {
+      test(`legacy callbacks receive the trigger as the element${mobile ? " on mobile" : ""}`, async function (assert) {
+        if (mobile) {
+          forceMobile();
+        }
+
+        let element;
+        withPluginApi((api) => {
+          api.modifySelectKit("test-select").appendContent((selectKit) => {
+            element = selectKit.element;
+          });
+        });
+
+        await render(<template><Host /></template>);
+        await click(".d-combobox__trigger");
+
+        assert.dom("[role='listbox']").exists("the menu is open");
+        assert.strictEqual(
+          element,
+          find(".d-combobox__trigger"),
+          "the element is the trigger, not the panel"
+        );
+      });
+    }
 
     test("reactive arg changes never recreate the engine behind the bridge", async function (assert) {
       const seen = new Set();

@@ -55,10 +55,12 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   - ☑ Theme screenshot coverage for Foundation/Horizon × light/dark × desktop/mobile;
     visual review confirms empty-control and dropdown-width parity. Manual on-device SR review
     remains part of the phase exit criteria.
-  - ☐ **Backlog (skipped review items)** — add tests when next editing these paths:
-    `handleTriggerBlur` keep-open branch; auto-highlight skipping a disabled first item;
-    `preventPointerBlur` static no-op; `legacy.getElement` host-DOM invariant (incl. mobile).
-    Convention nit: unkeyed `{{#each}}` at `d-roving-focus-test.gjs:395` (pre-existing) → key it.
+  - ☑ **Backlog (skipped review items)** — tested 2026-10-06, each checked against a planted
+    defect: `handleTriggerBlur` keep-open branch; auto-highlight skipping a disabled first item
+    (typing and keyboard open; the skip is `dRovingFocus` reading the row's `aria-disabled`);
+    `preventPointerBlur` acting only for the typeahead; `legacy.getElement` returning the trigger
+    (desktop and mobile). The unkeyed `{{#each}}` nit moved to `main` with
+    `d-roving-focus-test.gjs` (#42381) and is no longer this branch's.
 - ◐ **Trigger & list state model** (Decision 1b):
   - ☑ Item **normalization** — `buildItems` returns `{ key, value, item, flags }` descriptors
     (final render step; raw items unchanged upstream). The listbox keys on `descriptor.key`

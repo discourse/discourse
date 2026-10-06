@@ -559,6 +559,71 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .hasText("Cherry pie", "the highlight re-seeds to the new first match");
   });
 
+  test("auto-highlight skips a disabled first match", async function (assert) {
+    const items = [
+      { id: 1, name: "Apple", disabled: true },
+      { id: 2, name: "Apricot" },
+    ];
+
+    await render(
+      <template>
+        <DSelect @identifier="test-select" @items={{items}} />
+      </template>
+    );
+    await fillIn("[role='combobox']", "ap");
+
+    assert
+      .dom("[role='option'].--active")
+      .hasText("Apricot", "the first enabled match is highlighted");
+  });
+
+  // Pressing the label or the caret blurs the input without moving focus anywhere, and the
+  // menu must survive that. Only focus that lands outside the widget closes it.
+  test("focus leaving the input closes the menu only when it lands outside the widget", async function (assert) {
+    await render(
+      <template>
+        <button class="outside-btn" type="button">outside</button>
+        <Host />
+      </template>
+    );
+    await click("[role='combobox']");
+
+    await triggerEvent("[role='combobox']", "focusout", {
+      relatedTarget: null,
+    });
+    assert
+      .dom("[role='listbox']")
+      .exists("a blur with no focus target keeps the menu open");
+
+    await triggerEvent("[role='combobox']", "focusout", {
+      relatedTarget: find(".outside-btn"),
+    });
+    assert
+      .dom("[role='listbox']")
+      .doesNotExist("focus moving to an outside control closes the menu");
+  });
+
+  // The typeahead keeps focus in its input while an option is pressed, so the input does not
+  // blur-close the menu before the click lands. Other variants have no input to protect.
+  test("pressing an option keeps focus in the input only for the typeahead", async function (assert) {
+    const pressOption = () => {
+      const event = new MouseEvent("mousedown", {
+        bubbles: true,
+        cancelable: true,
+      });
+      find("[role='option']").dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+    assert.true(pressOption(), "the typeahead cancels the focus change");
+
+    await render(<template><Host @variant="button" /></template>);
+    await click(".d-combobox__trigger");
+    assert.false(pressOption(), "the button variant leaves the press alone");
+  });
+
   test("Enter selects the highlighted option without an ArrowDown, and closes", async function (assert) {
     await render(<template><Host /></template>);
     await fillIn("[role='combobox']", "app");
@@ -1325,6 +1390,29 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
         "aria-activedescendant",
         find("[role='option']").id,
         "ArrowDown also activates the first option on open"
+      );
+  });
+
+  test("keyboard opening skips a disabled first option", async function (assert) {
+    const items = [
+      { id: 1, name: "Apple", disabled: true },
+      { id: 2, name: "Banana" },
+    ];
+
+    await render(
+      <template>
+        <DSelect @identifier="test-select" @items={{items}} @variant="static" />
+      </template>
+    );
+    await focus(".d-combobox__trigger");
+    await triggerKeyEvent(".d-combobox__trigger", "keydown", "Enter");
+
+    assert
+      .dom(".d-combobox__trigger")
+      .hasAttribute(
+        "aria-activedescendant",
+        findAll("[role='option']")[1].id,
+        "the cursor lands on the first enabled option"
       );
   });
 
