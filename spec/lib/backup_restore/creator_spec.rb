@@ -13,7 +13,7 @@ describe BackupRestore::Creator do
           creator = described_class.new(nil, with_uploads: with_uploads)
 
           expect(creator.instance_variable_get(:@backup_filename)).to eq(
-            "my-forum-2026-09-25-120000-v2026-9-0-latest-20260923080644.tar.gz",
+            "my-forum-2026-09-25-120000-v2026-9-0-latest-20260923080644.tar",
           )
         end
       end
@@ -57,7 +57,6 @@ describe BackupRestore::Creator do
     fab!(:user)
 
     let(:creator) { described_class.new(user.id) }
-    let(:tar_filename) { "/tmp/test_backup.tar" }
 
     before do
       SiteSetting.enable_s3_uploads = true
@@ -72,6 +71,40 @@ describe BackupRestore::Creator do
     end
 
     after { FileUtils.rm_rf(creator.instance_variable_get(:@tmp_directory)) }
+
+    def archive_remote_uploads
+      directory = creator.instance_variable_get(:@tmp_directory)
+      filename = File.join(directory, "backup.tar")
+      creator.instance_variable_set(:@archive_mutex, Mutex.new)
+      BackupRestore::ArchiveWriter.open(filename) do |archive|
+        creator.instance_variable_set(:@archive, archive)
+        silence_stdout { creator.send(:add_remote_uploads_to_archive) }
+      end
+      expect(Dir.glob(File.join(directory, "backup-upload-*"))).to be_empty
+      extracted = File.join(directory, "extracted")
+      FileUtils.mkdir_p(extracted)
+      Discourse::Utils.execute_command("tar", "-xf", filename, "-C", extracted)
+      extracted
+    end
+
+    it "downloads uploads with a single GET and no HEAD request" do
+      GlobalSetting.stubs(:backup_s3_download_concurrency).returns(1)
+      Fabricate(:upload, url: "//bucket.s3.amazonaws.com/original/1X/file.png")
+      client = Aws::S3::Client.new(stub_responses: true)
+      client.stub_responses(:get_object, body: "file contents", content_length: 13)
+      S3Helper.any_instance.stubs(:s3_client).returns(client)
+
+      extracted = archive_remote_uploads
+
+      path = File.join(extracted, Discourse.store.upload_path, "original/1X/file.png")
+      expect(File.read(path)).to eq("file contents")
+      expect(client.api_requests.count { |request| request[:operation_name] == :get_object }).to eq(
+        1,
+      )
+      expect(
+        client.api_requests.none? { |request| request[:operation_name] == :head_object },
+      ).to eq(true)
+    end
 
     [1, 4].each do |concurrency|
       context "with #{concurrency} download workers" do
@@ -148,15 +181,12 @@ describe BackupRestore::Creator do
 
           FileStore::S3Store.stubs(:new).returns(store)
 
-          Discourse::Utils.stubs(:execute_command)
-
-          silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
+          tmp_dir = archive_remote_uploads
 
           # Should only download 2 files: 1 for the duplicates group + 1 for the unique upload
           expect(download_count).to eq(2)
 
           # All 4 file paths should exist in the tmp directory
-          tmp_dir = creator.instance_variable_get(:@tmp_directory)
           upload_dir = Discourse.store.upload_path
           expect(File.exist?(File.join(tmp_dir, upload_dir, "original/1X/file1.png"))).to eq(true)
           expect(File.exist?(File.join(tmp_dir, upload_dir, "original/2X/file2.png"))).to eq(true)
@@ -199,18 +229,205 @@ describe BackupRestore::Creator do
             .returns(nil)
 
           FileStore::S3Store.stubs(:new).returns(store)
-          Discourse::Utils.stubs(:execute_command)
+          tmp_dir = archive_remote_uploads
 
-          silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
-
-          tmp_dir = creator.instance_variable_get(:@tmp_directory)
           upload_path =
             File.join(tmp_dir, Discourse.store.upload_path, "original/2X/3/#{shared_sha1}.png")
 
           expect(download_count).to eq(1)
           expect(File.read(upload_path)).to eq("file content")
         end
+
+        it "bounds temporary downloads to the worker count and removes them after archiving" do
+          uploads =
+            12.times.map do |id|
+              described_class::UploadData.new(
+                id: id,
+                url: "//bucket.s3.amazonaws.com/#{id}",
+                sha1: id.to_s,
+                extension: "txt",
+                original_filename: "#{id}.txt",
+              )
+            end
+          creator.stubs(:group_remote_uploads_by_sha1).returns(uploads.index_with { |u| [u] })
+          store = FileStore::S3Store.new
+          FileStore::S3Store.stubs(:new).returns(store)
+          store.define_singleton_method(:get_path_for_upload) do |upload|
+            "original/#{upload.id}.txt"
+          end
+          staged_counts = Queue.new
+          store
+            .stubs(:download_file)
+            .with do |_upload, filename|
+              File.write(filename, "download")
+              staged_counts << Dir.glob(File.join(File.dirname(filename), "backup-upload-*")).size
+              true
+            end
+
+          extracted = archive_remote_uploads
+
+          expect(12.times.map { staged_counts.pop }.max).to be <= concurrency
+          uploads.each do |upload|
+            path = File.join(extracted, Discourse.store.upload_path, "original/#{upload.id}.txt")
+            expect(File.read(path)).to eq("download")
+            expect(File.stat(path).mode & 0o777).to eq(0o644)
+          end
+        end
+
+        it "discards failed downloads without adding partial files to the archive" do
+          upload = Fabricate(:upload)
+          store = FileStore::S3Store.new
+          FileStore::S3Store.stubs(:new).returns(store)
+          store.define_singleton_method(:download_file) do |_upload, filename, **_options|
+            File.write(filename, "partial download")
+            raise "Download failed"
+          end
+
+          extracted = archive_remote_uploads
+
+          expect(Dir.empty?(extracted)).to eq(true)
+          expect(creator.instance_variable_get(:@logs).join).to include("#{upload.id}")
+        end
       end
+    end
+  end
+
+  describe "#create_archive" do
+    before { described_class.any_instance.stubs(:dump_public_schema) }
+
+    it "streams remote backups without creating a local archive" do
+      Dir.mktmpdir do |directory|
+        dump = File.join(directory, "db")
+        FileUtils.mkdir_p(dump)
+        File.write(File.join(dump, "toc.dat"), "database")
+        creator = described_class.new(nil, with_uploads: false)
+        creator.instance_variable_set(:@dump_filename, dump)
+        creator.instance_variable_set(:@archive_basename, File.join(directory, "backup"))
+        creator.instance_variable_set(:@tmp_directory, File.join(directory, "tmp"))
+        store = stub(remote?: true)
+        creator.instance_variable_set(:@store, store)
+        io = StringIO.new
+        store
+          .expects(:upload_stream)
+          .with(
+            creator.instance_variable_get(:@backup_filename),
+            "application/x-tar",
+            logger: anything,
+          )
+          .yields(io)
+        store.expects(:upload_file).never
+
+        creator.send(:create_archive)
+
+        expect(Dir.glob(File.join(directory, "backup*"))).to be_empty
+        io.rewind
+        entries = {}
+        Gem::Package::TarReader.new(io) do |tar|
+          tar.each { |entry| entries[entry.full_name] = entry.read if entry.file? }
+        end
+        expect(entries).to eq("db/toc.dat" => "database")
+        expect(io.string.end_with?("\0" * 1024)).to eq(true)
+      end
+    end
+
+    it "keeps completed tar backups during cleanup" do
+      Dir.mktmpdir do |directory|
+        completed = File.join(directory, "backup.tar")
+        partial = File.join(directory, "backup.tar.partial")
+        File.write(completed, "completed")
+        File.write(partial, "partial")
+        creator = described_class.new(nil)
+        creator.instance_variable_set(:@archive_directory, directory)
+
+        creator.send(:remove_partial_archives)
+
+        expect(File.read(completed)).to eq("completed")
+        expect(File.exist?(partial)).to eq(false)
+      end
+    end
+
+    [RuntimeError, SystemExit].each do |error|
+      it "removes the partial archive when interrupted by #{error}" do
+        Dir.mktmpdir do |directory|
+          dump = File.join(directory, "db")
+          FileUtils.mkdir_p(dump)
+          File.write(File.join(dump, "toc.dat"), "database")
+          creator = described_class.new(nil, with_uploads: false)
+          creator.instance_variable_set(:@dump_filename, dump)
+          creator.instance_variable_set(:@archive_basename, File.join(directory, "backup"))
+          BackupRestore::ArchiveWriter.any_instance.expects(:add_file).raises(error)
+
+          expect { creator.send(:create_archive) }.to raise_error(error)
+
+          expect(Dir.glob(File.join(directory, "backup*"))).to be_empty
+        end
+      end
+    end
+  end
+
+  describe "#populate_archive" do
+    let(:creator) { described_class.new(nil) }
+
+    before do
+      creator.instance_variable_set(:@with_uploads, true)
+      creator.stubs(:add_local_uploads_to_archive)
+      SiteSetting.enable_s3_uploads = true
+    end
+
+    it "streams uploads while the dump runs and appends the database after both finish" do
+      dump_started = Queue.new
+      uploads_finished = Queue.new
+      events = Queue.new
+      creator.define_singleton_method(:dump_public_schema) do
+        dump_started << true
+        uploads_finished.pop
+        events << :dump_finished
+      end
+      creator.define_singleton_method(:add_remote_uploads_to_archive) do
+        dump_started.pop
+        events << :uploads_streamed
+        uploads_finished << true
+      end
+      creator.define_singleton_method(:add_path_to_archive) { |*| events << :database_archived }
+
+      Timeout.timeout(5) { creator.send(:populate_archive, Object.new) }
+
+      expect(3.times.map { events.pop }).to eq(%i[uploads_streamed dump_finished database_archived])
+    end
+
+    [RuntimeError, SystemExit].each do |error|
+      it "stops and joins the uploads thread when the dump raises #{error}" do
+        started = Queue.new
+        finished = Queue.new
+        creator.define_singleton_method(:add_remote_uploads_to_archive) do
+          started << Thread.current
+          Queue.new.pop
+        ensure
+          finished << true
+        end
+        thread = nil
+        creator.define_singleton_method(:dump_public_schema) do
+          thread = started.pop
+          raise error
+        end
+        creator.expects(:add_path_to_archive).never
+
+        expect do
+          Timeout.timeout(5) { creator.send(:populate_archive, Object.new) }
+        end.to raise_error(error)
+        expect(thread.alive?).to eq(false)
+        expect(finished.size).to eq(1)
+      end
+    end
+
+    it "propagates upload failures before archiving the database" do
+      creator.stubs(:dump_public_schema)
+      creator.expects(:add_remote_uploads_to_archive).raises("upload failed")
+      creator.expects(:add_path_to_archive).never
+
+      expect do
+        Timeout.timeout(5) { creator.send(:populate_archive, Object.new) }
+      end.to raise_error(RuntimeError, "upload failed")
     end
   end
 

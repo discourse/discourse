@@ -96,6 +96,126 @@ RSpec.describe BackupRestore::S3BackupStore do
   it_behaves_like "backup store"
   it_behaves_like "remote backup store"
 
+  describe "#upload_stream" do
+    around { |example| stub_const(BackupRestore::MultipartWriter, "PART_SIZE", 8) { example.run } }
+
+    before do
+      @s3_client.stub_responses(:create_multipart_upload, upload_id: "stream-id")
+      @uploaded_parts = []
+      @s3_client.stub_responses(
+        :upload_part,
+        ->(context) do
+          @uploaded_parts[context.params[:part_number] - 1] = context.params[:body].read
+          { etag: "etag-#{context.params[:part_number]}" }
+        end,
+      )
+    end
+
+    it "uploads bounded parts in order, including the final short part" do
+      store.upload_stream("backup.tar", "application/x-tar") do |io|
+        expect(io.write("123")).to eq(3)
+        io.write("456789abcdefghijk")
+      end
+
+      expect(@uploaded_parts).to eq(%w[12345678 9abcdefg hijk])
+      requests = @s3_client.api_requests
+      create = requests.find { |r| r[:operation_name] == :create_multipart_upload }[:params]
+      expect(create).to include(key: "default/backup.tar", content_type: "application/x-tar")
+      complete = requests.find { |r| r[:operation_name] == :complete_multipart_upload }[:params]
+      expect(complete[:multipart_upload][:parts]).to eq(
+        (1..3).map { |number| { part_number: number, etag: "etag-#{number}" } },
+      )
+      expect(requests.none? { |r| r[:operation_name] == :abort_multipart_upload }).to eq(true)
+    end
+
+    it "streams a tar archive that can be extracted after the parts are joined" do
+      Dir.mktmpdir do |directory|
+        source = File.join(directory, "source")
+        File.binwrite(source, "contents\0" * 20)
+        store.upload_stream("backup.tar", "application/x-tar") do |io|
+          BackupRestore::ArchiveWriter.write(io) do |archive|
+            archive.add_file(source, "first")
+            archive.add_hardlink("second", "first")
+          end
+        end
+
+        filename = File.join(directory, "backup.tar")
+        File.binwrite(filename, @uploaded_parts.join)
+        Discourse::Utils.execute_command("tar", "-xf", filename, "-C", directory)
+        expect(File.binread(File.join(directory, "first"))).to eq(File.binread(source))
+        expect(File.stat(File.join(directory, "first")).ino).to eq(
+          File.stat(File.join(directory, "second")).ino,
+        )
+      end
+    end
+
+    it "does not upload an empty trailing part at an exact boundary" do
+      store.upload_stream("backup.tar", "application/x-tar") { |io| io.write("12345678") }
+      expect(@uploaded_parts).to eq(["12345678"])
+    end
+
+    it "preserves the original failure if abort also fails" do
+      @s3_client.stub_responses(:abort_multipart_upload, "AccessDenied")
+      expect do
+        store.upload_stream("backup.tar", "application/x-tar") { raise "archive failed" }
+      end.to raise_error(RuntimeError, "archive failed")
+    end
+
+    [RuntimeError, SystemExit].each do |error|
+      it "aborts when the archive producer raises #{error}" do
+        expect do
+          store.upload_stream("backup.tar", "application/x-tar") do |io|
+            io.write("12345678")
+            raise error
+          end
+        end.to raise_error(error)
+
+        operations = @s3_client.api_requests.map { |r| r[:operation_name] }
+        expect(operations).to include(:abort_multipart_upload)
+        expect(operations).not_to include(:complete_multipart_upload)
+      end
+    end
+
+    %i[upload_part complete_multipart_upload].each do |operation|
+      it "aborts when #{operation} fails" do
+        @s3_client.stub_responses(operation, "AccessDenied")
+        expect do
+          store.upload_stream("backup.tar", "application/x-tar") { |io| io.write("data") }
+        end.to raise_error(Aws::S3::Errors::AccessDenied)
+        expect(@s3_client.api_requests.last[:operation_name]).to eq(:abort_multipart_upload)
+      end
+    end
+
+    it "refuses to replace an existing backup" do
+      @s3_client.stub_responses(:head_object, {})
+      expect do
+        store.upload_stream("backup.tar", "application/x-tar") { raise "must not run" }
+      end.to raise_error(BackupRestore::BackupStore::BackupFileExists)
+    end
+
+    it "aborts before exceeding the S3 part count limit" do
+      stub_const(BackupRestore::MultipartWriter, "MAX_PARTS", 1) do
+        expect do
+          store.upload_stream("backup.tar", "application/x-tar") { |io| io.write("123456789") }
+        end.to raise_error(/multipart upload limit/)
+      end
+      expect(@s3_client.api_requests.count { |r| r[:operation_name] == :upload_part }).to be <= 1
+      expect(@s3_client.api_requests.last[:operation_name]).to eq(:abort_multipart_upload)
+    end
+  end
+
+  it "lists plain tar backups but hides partial archives" do
+    %w[backup.tar backup.tar.partial].each do |filename|
+      @objects << {
+        key: "default/#{filename}",
+        size: 17,
+        last_modified: Time.parse("2018-09-13T15:10:00Z"),
+      }
+    end
+
+    expect(store.files.map(&:filename)).to eq(["backup.tar"])
+  end
+
   describe "S3 specific behavior" do
     before { create_backups }
     after { remove_backups }

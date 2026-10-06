@@ -23,6 +23,26 @@ RSpec.describe FileStore::S3Store do
     SiteSetting.s3_region = "us-west-1"
   end
 
+  describe "#download_file" do
+    it "keeps automatic downloads by default" do
+      helper = S3Helper.new("s3-upload-bucket", "", client: client)
+      store = described_class.new(helper)
+      client.stub_responses(:head_object, content_length: 13)
+      client.stub_responses(:get_object, body: "file contents", content_length: 13)
+
+      Dir.mktmpdir do |directory|
+        path = File.join(directory, "download")
+        store.download_file(upload, path)
+
+        expect(File.read(path)).to eq("file contents")
+        expect(client.api_requests.map { |request| request[:operation_name] }).to include(
+          :head_object,
+          :get_object,
+        )
+      end
+    end
+  end
+
   describe "uploading to s3" do
     let(:etag) { "etag" }
 

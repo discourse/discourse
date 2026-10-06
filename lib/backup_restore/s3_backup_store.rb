@@ -49,6 +49,30 @@ module BackupRestore
       reset_cache
     end
 
+    def upload_stream(filename, content_type, logger: nil)
+      obj = s3_helper.object(filename)
+      raise BackupFileExists.new if obj.exists?
+
+      upload = obj.initiate_multipart_upload(content_type: content_type)
+      completed = false
+      begin
+        MultipartWriter.open(upload, logger: logger) do |writer|
+          yield writer
+          writer.finish
+        end
+        completed = true
+      ensure
+        unless completed
+          begin
+            upload.abort
+          rescue StandardError => error
+            Rails.logger.warn("Failed to abort backup multipart upload: #{error.message}")
+          end
+        end
+      end
+      reset_cache
+    end
+
     def generate_upload_url(filename)
       obj = s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
@@ -157,7 +181,7 @@ module BackupRestore
             path = Regexp.quote(path)
           end
 
-          %r{\A#{path}[^/]*\.t?gz\z}i
+          %r{\A#{path}[^/]*\.(tar|t?gz)\z}i
         end
     end
 

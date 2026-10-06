@@ -1,6 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe BackupRestore::Creator, type: :multisite do
+  it "uses the originating database while archiving uploads alongside the dump" do
+    creator = described_class.new(nil)
+    creator.instance_variable_set(:@current_db, "second")
+    creator.instance_variable_set(:@with_uploads, true)
+    creator.stubs(:dump_public_schema)
+    creator.stubs(:add_path_to_archive)
+    observations = Queue.new
+    creator.define_singleton_method(:add_local_uploads_to_archive) do
+      observations << RailsMultisite::ConnectionManagement.current_db
+    end
+
+    Timeout.timeout(10) { creator.send(:populate_archive, Object.new) }
+
+    expect(observations.pop).to eq("second")
+  end
+
   it "downloads concurrently with the originating database context and waits for completion" do
     creator = described_class.new(nil)
     creator.instance_variable_set(:@s3_store, stub(s3_helper: stub(object: nil)))

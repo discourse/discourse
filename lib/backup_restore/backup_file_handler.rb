@@ -105,17 +105,16 @@ module BackupRestore
           %w[-s |var/www/discourse/public/uploads/|uploads/|]
         end
 
-      log "Unzipping archive, this may take a while..."
+      log "Extracting archive, this may take a while..."
       Discourse::Utils.execute_command(
         "tar",
         "--extract",
-        "--gzip",
         "--file",
         @archive_path,
         "--directory",
         @tmp_directory,
         *path_transformation,
-        failure_message: "Failed to decompress archive.",
+        failure_message: "Failed to extract archive.",
       )
     end
 

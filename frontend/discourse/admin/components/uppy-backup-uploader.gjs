@@ -47,7 +47,7 @@ export default class UppyBackupUploader extends Component {
       >
         {{this.uploadButtonText}}
         <input
-          accept=".gz"
+          accept=".tar,.gz,.tgz"
           class="hidden-upload-field"
           disabled={{this.uppyUpload.uploading}}
           type="file"

@@ -281,7 +281,7 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def valid_extension?(filename)
-    /\.(tar\.gz|t?gz)\z/i =~ filename
+    /\.(tar(?:\.gz)?|t?gz)\z/i =~ filename
   end
 
   def valid_filename?(filename)
