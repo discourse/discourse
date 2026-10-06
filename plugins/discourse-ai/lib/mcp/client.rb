@@ -133,6 +133,8 @@ module DiscourseAi
           raise Error, I18n.t("discourse_ai.mcp_servers.errors.missing_protocol_version")
         end
         if !SUPPORTED_CLASSIC_PROTOCOL_VERSIONS.include?(version)
+          return initialize_classic_session("2025-03-26") if offer == PROTOCOL_VERSION
+
           raise Error,
                 I18n.t(
                   "discourse_ai.mcp_servers.errors.unsupported_protocol_version",

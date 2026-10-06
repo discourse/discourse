@@ -143,6 +143,23 @@ RSpec.describe DiscourseAi::Mcp::Client do
       ).to have_been_made.twice
     end
 
+    it "retries 2025-03-26 when the server selects unsupported 2025-06-18" do
+      stub_request(:post, server.url).to_return(
+        { status: 200, body: { result: { protocolVersion: "2025-06-18" } }.to_json },
+        { status: 200, body: { result: { protocolVersion: "2025-03-26" } }.to_json },
+        { status: 202, body: "" },
+      )
+
+      result = described_class.new(server).initialize_classic_session
+
+      expect(result[:result]["protocolVersion"]).to eq("2025-03-26")
+      expect(
+        a_request(:post, server.url).with do |request|
+          JSON.parse(request.body).dig("params", "protocolVersion") == "2025-03-26"
+        end,
+      ).to have_been_made.once
+    end
+
     it "does not retry classic initialization for unrelated errors" do
       [200, 400].each do |status|
         stub_request(:post, server.url).to_return(
@@ -172,18 +189,18 @@ RSpec.describe DiscourseAi::Mcp::Client do
       expect(a_request(:post, server.url)).to have_been_made.once
     end
 
-    it "rejects missing and unsupported initialize response versions without notifying" do
+    it "rejects missing and unsupported versions after offering the oldest supported version" do
       [nil, "2026-07-28", "2025-06-18"].each do |version|
         stub_request(:post, server.url).to_return(
           status: 200,
           body: { jsonrpc: "2.0", result: { protocolVersion: version } }.to_json,
         )
 
-        expect { described_class.new(server).initialize_classic_session }.to raise_error(
-          described_class::Error,
-          /MCP protocol version/,
-        )
+        expect {
+          described_class.new(server).initialize_classic_session("2025-03-26")
+        }.to raise_error(described_class::Error, /MCP protocol version/)
       end
+      expect(a_request(:post, server.url)).to have_been_made.times(3)
       expect(
         a_request(:post, server.url).with do |request|
           JSON.parse(request.body)["method"] == "notifications/initialized"
