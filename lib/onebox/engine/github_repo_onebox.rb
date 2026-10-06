@@ -57,6 +57,9 @@ module Onebox
         result["description"] = description
         result["title"] = title
         result["is_private"] = result["private"]
+        result["stars"] = repository_count("stars", result["stargazers_count"])
+        result["forks"] = repository_count("forks", result["forks_count"])
+        result["has_metadata"] = result["language"].present? || result["stars"] || result["forks"]
 
         # The SecureRandom part of this doesn't matter, it's just used for caching the
         # repo thumbnail which is generated on the fly by GitHub. There isn't detail
@@ -67,6 +70,16 @@ module Onebox
           "thumbnail"
         ] = "https://opengraph.githubassets.com/#{SecureRandom.hex}/#{match[:org]}/#{match[:repository]}"
         result
+      end
+
+      def repository_count(key, count)
+        return unless count.to_i.positive?
+
+        I18n.t(
+          "onebox.github.#{key}",
+          count: count,
+          number: ActiveSupport::NumberHelper.number_to_delimited(count),
+        )
       end
     end
   end

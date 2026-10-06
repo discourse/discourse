@@ -699,6 +699,27 @@ pre.onebox code ol.lines li.selected {
   .github-row {
     display: contents;
   }
+
+  .github-repo-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 1em;
+    clear: both;
+    padding-top: 0.5em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    > span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+    }
+
+    svg {
+      fill: currentcolor;
+      flex-shrink: 0;
+    }
+  }
 }
 
 .onebox.githubactions {

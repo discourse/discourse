@@ -13,6 +13,72 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
+    describe "repository metadata" do
+      let(:repository) { MultiJson.load(onebox_response(described_class.onebox_name)) }
+      let(:metadata) do
+        stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(repository))
+        Nokogiri::HTML5.fragment(html).at_css(".github-repo-metadata")
+      end
+
+      it "includes the primary language, stars and forks at the bottom" do
+        expect(metadata.at_css(".github-repo-language").text).to eq("Ruby")
+        expect(metadata.at_css(".github-repo-stars").text.strip).to eq("41,215 stars")
+        expect(metadata.at_css(".github-repo-forks").text.strip).to eq("8,210 forks")
+        expect(metadata.parent.element_children.last).to eq(metadata)
+      end
+
+      it "omits zero stars while retaining forks" do
+        repository["stargazers_count"] = 0
+
+        expect(metadata.at_css(".github-repo-stars")).to be_nil
+        expect(metadata.at_css(".github-repo-forks")).to be_present
+      end
+
+      it "omits zero forks while retaining stars" do
+        repository["forks_count"] = 0
+
+        expect(metadata.at_css(".github-repo-forks")).to be_nil
+        expect(metadata.at_css(".github-repo-stars")).to be_present
+      end
+
+      it "omits an unknown language while retaining counts" do
+        repository["language"] = nil
+
+        expect(metadata.at_css(".github-repo-language")).to be_nil
+        expect(metadata.at_css(".github-repo-stars")).to be_present
+        expect(metadata.at_css(".github-repo-forks")).to be_present
+      end
+
+      it "uses singular labels for one star and one fork" do
+        repository["stargazers_count"] = 1
+        repository["forks_count"] = 1
+
+        expect(metadata.at_css(".github-repo-stars").text.strip).to eq("1 star")
+        expect(metadata.at_css(".github-repo-forks").text.strip).to eq("1 fork")
+      end
+
+      it "omits the footer when there is no metadata" do
+        repository["language"] = nil
+        repository["stargazers_count"] = 0
+        repository["forks_count"] = 0
+
+        expect(metadata).to be_nil
+      end
+
+      it "handles missing metadata fields" do
+        repository.except!("language", "stargazers_count", "forks_count")
+
+        expect(metadata).to be_nil
+      end
+
+      it "escapes the language" do
+        repository["language"] = "<script>alert(1)</script>"
+
+        expect(metadata.at_css(".github-repo-language").text).to eq(repository["language"])
+        expect(metadata.css("script")).to be_empty
+      end
+    end
+
     it "includes the description of the repo" do
       expect(html).to include("A platform for community discussion. Free, open, simple.")
     end

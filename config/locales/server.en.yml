@@ -6299,6 +6299,12 @@ en:
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
       no_description: "Contribute to %{repo} development by creating an account on GitHub."
+      stars:
+        one: "%{number} star"
+        other: "%{number} stars"
+      forks:
+        one: "%{number} fork"
+        other: "%{number} forks"
       pr_title:
         default: "Pull Request"
         draft: "Draft Pull Request"
