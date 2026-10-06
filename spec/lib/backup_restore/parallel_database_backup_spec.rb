@@ -89,7 +89,6 @@ RSpec.describe BackupRestore do
 
   [false, true].each do |with_uploads|
     it "packages and extracts a directory dump with uploads set to #{with_uploads}" do
-      dump_database
       SiteSetting.enable_s3_uploads = false
       @creator.instance_variable_set(:@with_uploads, with_uploads)
       public_directory = Pathname.new(File.join(@directory, "public"))

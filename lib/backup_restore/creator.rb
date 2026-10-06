@@ -32,10 +32,6 @@ module BackupRestore
       ensure_directory_exists(@archive_directory)
 
       update_metadata
-      dump_public_schema
-
-      log "Finalizing backup..."
-
       create_archive
 
       after_create_hook
@@ -225,14 +221,41 @@ module BackupRestore
     def populate_archive(archive)
       @archive = archive
       @archive_mutex = Mutex.new
+      upload_error = nil
+      uploads_thread = nil
+
+      begin
+        if @with_uploads
+          # Register the thread before cancellation can reach the backup thread.
+          Thread.handle_interrupt(Exception => :never) do
+            uploads_thread =
+              Thread.new do
+                Thread.handle_interrupt(Exception => :immediate) do
+                  RailsMultisite::ConnectionManagement.with_connection(@current_db) do
+                    add_local_uploads_to_archive
+                    add_remote_uploads_to_archive if SiteSetting.Upload.enable_s3_uploads
+                  end
+                end
+              rescue Exception => error
+                upload_error = error
+              ensure
+                ActiveRecord::Base.connection_handler.clear_active_connections!
+              end
+          end
+        end
+
+        dump_public_schema
+        uploads_thread&.join
+        raise upload_error if upload_error
+      ensure
+        # Stop scheduling downloads and finish active workers before closing the archive.
+        uploads_thread.raise(SystemExit) if uploads_thread&.alive?
+        uploads_thread&.join
+      end
+
       log "Archiving data dump..."
       add_path_to_archive(@dump_filename, File.basename(@dump_filename))
       FileUtils.rm_rf(@dump_filename)
-
-      if @with_uploads
-        add_local_uploads_to_archive
-        add_remote_uploads_to_archive if SiteSetting.Upload.enable_s3_uploads
-      end
     end
 
     def add_path_to_archive(source, path, exclude: nil)

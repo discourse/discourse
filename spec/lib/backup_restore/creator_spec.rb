@@ -274,6 +274,8 @@ describe BackupRestore::Creator do
   end
 
   describe "#create_archive" do
+    before { described_class.any_instance.stubs(:dump_public_schema) }
+
     it "streams remote backups without creating a local archive" do
       Dir.mktmpdir do |directory|
         dump = File.join(directory, "db")
@@ -337,6 +339,72 @@ describe BackupRestore::Creator do
           expect(Dir.glob(File.join(directory, "backup*"))).to be_empty
         end
       end
+    end
+  end
+
+  describe "#populate_archive" do
+    let(:creator) { described_class.new(nil) }
+
+    before do
+      creator.instance_variable_set(:@with_uploads, true)
+      creator.stubs(:add_local_uploads_to_archive)
+      SiteSetting.enable_s3_uploads = true
+    end
+
+    it "streams uploads while the dump runs and appends the database after both finish" do
+      dump_started = Queue.new
+      uploads_finished = Queue.new
+      events = Queue.new
+      creator.define_singleton_method(:dump_public_schema) do
+        dump_started << true
+        uploads_finished.pop
+        events << :dump_finished
+      end
+      creator.define_singleton_method(:add_remote_uploads_to_archive) do
+        dump_started.pop
+        events << :uploads_streamed
+        uploads_finished << true
+      end
+      creator.define_singleton_method(:add_path_to_archive) { |*| events << :database_archived }
+
+      Timeout.timeout(5) { creator.send(:populate_archive, Object.new) }
+
+      expect(3.times.map { events.pop }).to eq(%i[uploads_streamed dump_finished database_archived])
+    end
+
+    [RuntimeError, SystemExit].each do |error|
+      it "stops and joins the uploads thread when the dump raises #{error}" do
+        started = Queue.new
+        finished = Queue.new
+        creator.define_singleton_method(:add_remote_uploads_to_archive) do
+          started << Thread.current
+          Queue.new.pop
+        ensure
+          finished << true
+        end
+        thread = nil
+        creator.define_singleton_method(:dump_public_schema) do
+          thread = started.pop
+          raise error
+        end
+        creator.expects(:add_path_to_archive).never
+
+        expect do
+          Timeout.timeout(5) { creator.send(:populate_archive, Object.new) }
+        end.to raise_error(error)
+        expect(thread.alive?).to eq(false)
+        expect(finished.size).to eq(1)
+      end
+    end
+
+    it "propagates upload failures before archiving the database" do
+      creator.stubs(:dump_public_schema)
+      creator.expects(:add_remote_uploads_to_archive).raises("upload failed")
+      creator.expects(:add_path_to_archive).never
+
+      expect do
+        Timeout.timeout(5) { creator.send(:populate_archive, Object.new) }
+      end.to raise_error(RuntimeError, "upload failed")
     end
   end
 
