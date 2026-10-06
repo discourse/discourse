@@ -44,6 +44,25 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
       )
     end
 
+    it "records both workflows when they flag the same user" do
+      other_workflow = Fabricate(:discourse_workflows_workflow)
+
+      [workflow, other_workflow].each do |flagging_workflow|
+        execute_node_output(
+          configuration: {
+            "username" => target.username,
+          },
+          workflow: flagging_workflow,
+        )
+      end
+
+      reviewable = ReviewableUser.pending.find_by(target: target)
+      expect(reviewable.reviewable_scores.pluck(:context)).to contain_exactly(
+        "discourse_workflows:workflow:#{workflow.id}",
+        "discourse_workflows:workflow:#{other_workflow.id}",
+      )
+    end
+
     it "matches the declared output contract" do
       expect(flag).to match_node_output_schema(
         described_class,
