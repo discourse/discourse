@@ -1568,6 +1568,22 @@ var bar = 'bar';
     );
   });
 
+  test("image controls add only identifying attributes when previewing", function (assert) {
+    assert.cookedOptions(
+      "![cat|690x313](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.png)",
+      { previewing: true },
+      `<p><img src="/images/transparent.png" alt="cat" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.png" data-image-index="0" data-scale="100" data-image-run="1" width="690" height="313" class="resizable"></p>`
+    );
+  });
+
+  test("button tags are stripped when previewing", function (assert) {
+    assert.cookedOptions(
+      `<button class="delete-image-button">delete</button>`,
+      { previewing: true },
+      `<p>delete</p>`
+    );
+  });
+
   test("typographer arrows", function (assert) {
     const enabledTypographer = {
       siteSettings: { enable_markdown_typographer: true },

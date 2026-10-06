@@ -9,6 +9,7 @@ import { trustHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import { decorateImageControls } from "discourse/lib/composer/image-controls";
 import { cook } from "discourse/lib/text";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DDecoratedHtml, {
@@ -45,6 +46,7 @@ class DecoratedPreviewCookText extends Component {
 
   @action
   decoratePreview(preview, helper) {
+    decorateImageControls(preview);
     applyHtmlDecorators(preview, helper);
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
