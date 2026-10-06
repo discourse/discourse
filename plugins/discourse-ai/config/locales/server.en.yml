@@ -918,7 +918,7 @@ en:
         create_tag: "Creating tag '%{name}'"
         edit_tag: "Editing tag '%{name}' (%{fields})"
         create_category: "Creating category '%{name}'"
-        edit_category: "Editing category %{category_id} (%{fields})"
+        edit_category: "Editing %{fields} for %{category_name}"
         change_topic_category: "Moving topic %{topic_id} to category %{category_id}"
         set_topic_timer: "Setting %{timer_type} timer on topic %{topic_id} (%{duration_hours}h)"
         set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
