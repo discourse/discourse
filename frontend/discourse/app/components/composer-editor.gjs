@@ -409,7 +409,13 @@ export default class ComposerEditor extends Component {
     const matchingPlaceholder = this.get("composer.model.reply").match(
       IMAGE_MARKDOWN_REGEX
     );
-    const match = matchingPlaceholder[index];
+    const match = matchingPlaceholder?.[index];
+
+    if (!match) {
+      this.resetImageControls(buttonWrapper);
+      return;
+    }
+
     const input = buttonWrapper.querySelector("input.alt-text-input");
     const replacement = match.replace(
       IMAGE_MARKDOWN_REGEX,
