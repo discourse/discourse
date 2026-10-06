@@ -909,6 +909,51 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
           compliance.streaming_mode_tools(open_ai_mock)
         end
 
+        it "emits every tool call when a streamed event contains multiple calls" do
+          event = {
+            choices: [
+              {
+                index: 0,
+                delta: {
+                  content: "Searching\n",
+                  tool_calls: [
+                    {
+                      index: 0,
+                      id: "call_sam",
+                      function: {
+                        name: "search",
+                        arguments: '{"search_query":"sam"}',
+                      },
+                    },
+                    {
+                      index: 1,
+                      id: "call_dan",
+                      function: {
+                        name: "search",
+                        arguments: '{"search_query":"dan"}',
+                      },
+                    },
+                  ],
+                },
+                finish_reason: "tool_calls",
+              },
+            ],
+          }
+          open_ai_mock.stub_raw("data: #{event.to_json}\n\ndata: [DONE]\n\n")
+          dialect = compliance.dialect(prompt: compliance.generic_prompt(tools: tools))
+          response = []
+
+          endpoint.perform_completion!(dialect, user) { |partial| response << partial }
+
+          expect(response.first).to eq("Searching\n")
+          tool_calls = response.drop(1)
+          expect(tool_calls.map(&:id)).to eq(%w[call_sam call_dan])
+          expect(tool_calls.map(&:parameters)).to eq(
+            [{ search_query: "sam" }, { search_query: "dan" }],
+          )
+          expect(tool_calls).to all(have_attributes(partial: false))
+        end
+
         it "properly handles multiple tool calls" do
           raw_data = <<~TEXT.strip
               data: {"id":"chatcmpl-8xjcr5ZOGZ9v8BDYCx0iwe57lJAGk","object":"chat.completion.chunk","created":1709247429,"model":"gpt-4-0125-preview","system_fingerprint":"fp_91aa3742b1","choices":[{"index":0,"delta":{"role":"assistant","content":null},"logprobs":null,"finish_reason":null}]}
