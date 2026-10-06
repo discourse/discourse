@@ -4,6 +4,7 @@ import { cancel, next } from "@ember/runloop";
 import Service from "@ember/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import { i18n } from "discourse-i18n";
 
 let clearAnnouncements = true;
 
@@ -323,7 +324,8 @@ export default class A11y extends Service {
 
       this.#state.setMessage(
         type,
-        messages.join(". "),
+        // Translated because the sentence break differs by script, spacing included.
+        messages.join(i18n("a11y_announcement_separator")),
         announcement.clearDelay
       );
     });
