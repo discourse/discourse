@@ -2,6 +2,7 @@
 
 describe "hide_user_profiles_from_public" do
   let(:user) { Fabricate(:user) }
+
   before { SiteSetting.hide_user_profiles_from_public = true }
 
   it "displays an error when navigating straight to a profile" do

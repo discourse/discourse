@@ -5,6 +5,39 @@
 # https://translate.discourse.org/
 
 ru:
+  markdown_endpoints:
+    latest: "Последние"
+    categories: "Категории"
+    tags: "Теги"
+    previous_page: "Предыдущая страница"
+    next_page: "Следующая страница"
+    replies: "Ответы"
+    last_updated: "Последнее обновление"
+    event:
+      name: "Событие"
+      location: "Расположение"
+      link: "Ссылки"
+  mcp:
+    errors:
+      draft_too_long: "Черновик слишком длинный"
+      post_not_found: "Пост не найден"
+      topic_not_found: "Тема не найдена"
+      user_not_found: "Пользователь не найден"
+    oauth:
+      deny: "Отказать"
+      approve: "Разрешить"
+  llms_txt:
+    sections:
+      optional: "Опционально"
+    links:
+      search:
+        label: "Искать"
+      categories:
+        label: "Категории"
+      about:
+        label: "Информация"
+      guidelines:
+        label: "Рекомендации"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -918,6 +951,7 @@ ru:
       email_already_used_in_category: "Адрес «%{email}» уже используется категорией «%{category_name}»."
       groups_required_for_mode: "Для %{setting} необходимо выбрать хотя бы одну группу."
       description_incomplete: "Описание категории должно содержать по крайней мере один абзац."
+      special_category_permissions: "Это предварительно созданная категория, и параметры безопасности нельзя изменить. Если вы не хотите использовать эту категорию, удалите её, а не используйте для других целей."
       permission_conflict: "Группа, которой разрешён доступ к подкатегории, также должна иметь доступ к родительской категории. Следующие группы имеют доступ к одной из подкатегорий, но не имеют доступа к родительской категории: %{group_names}."
       disallowed_topic_tags: "В теме есть теги, не разрешённые в этой категории: «%{tags}»"
       disallowed_tags_generic: "В этой теме есть запрещённые теги."
@@ -1144,6 +1178,7 @@ ru:
       windows: "Microsoft Windows"
       unknown: "Неизвестная операционная система"
   admin_site_traffic_explorer:
+    unknown: "Расположение неизвестно"
     traffic_types:
       anonymous: "Анонимные просмотры"
   change_email:
@@ -1296,7 +1331,7 @@ ru:
   uploads:
     marked_insecure_from_theme_component_reason: "загрузить используемый в теме компонент"
   unsubscribe:
-    title: "Отписаться"
+    unsubscribe: "Отписаться"
     stop_watching_topic: "Прекратить наблюдение за этой темой: %{link}"
     mute_topic: "Отключить все уведомления по этой теме: %{link}"
     unwatch_category: "Прекратить наблюдение за всеми темами категории «%{category}»"
@@ -1450,6 +1485,11 @@ ru:
         share: "Поделиться"
       types:
         staff: "Персонал"
+    posters_by_member_type_members:
+      labels:
+        user: "Пользователь"
+        count: "Записи"
+        share: "Поделиться"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1828,12 +1868,6 @@ ru:
       host_names: "Файл config/database.yml использует имя хоста localhost по умолчанию. Измените его на имя хоста сайта."
       queue_size: "Большое количество заданий в очереди: %{queue_size}. Это может привести к проблемам с процессами Sidekiq — придется добавить больше рабочих процессов Sidekiq."
       ram: "Сервер использует менее 1 ГБ памяти. Рекомендовано использовать минимум 1 ГБ."
-      google_oauth2_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Google OAuth2 (enable_google_oauth2_logins), но идентификатор клиента и значения секретного кода клиента не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">этом руководстве</a>.'
-      facebook_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Facebook (enable_facebook_logins), но идентификатор приложения и значения ключа приложения не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">этом руководстве</a>.'
-      twitter_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Twitter (enable_twitter_logins), но ключ и значения ключа не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">этом руководстве</a>.'
-      github_config: 'Сервер настроен, так, чтобы разрешать регистрацию и вход с помощью GitHub (enable_github_logins), но идентификатор клиента и значения ключа не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">этом руководстве</a>.'
-      s3_upload_config: 'Сервер настроен на загрузку файлов в S3, но как минимум один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_upload_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — на странице <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">«Как настроить загрузку изображений в S3»</a>.'
-      s3_backup_config: 'Сервер настроен на загрузку резервных копий в S3, но как минимум один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_backup_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — на странице <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">«Как настроить загрузку изображений в S3»</a>.'
       s3_cdn: 'Сервер настроен на загрузку файлов в S3, но CDN не настроена. Это может привести к увеличению затрат на хранение данных и снижению производительности сайта. Подробнее — на странице <a href="https://meta.discourse.org/t/-/148916" target="_blank">«Использование объектного хранилища для загрузок»</a>.'
       image_magick: 'Сервер настроен на создание миниатюр больших изображений, но ImageMagick не установлен. Установите ImageMagick с помощью менеджера пакетов или <a href="https://www.imagemagick.org/script/download.php" target="_blank">скачайте последнюю версию</a> с официального сайта.'
       failing_emails: 'Не удалось выполнить задания электронной почты в количестве %{num_failed_jobs}. Проверьте настройки почтового сервера в файле app.yml. <a href="%{base_path}/sidekiq/retries" target="_blank">Смотрите невыполненные задания в Sidekiq</a>.'
@@ -2015,7 +2049,6 @@ ru:
     allowed_iframes: "Список префиксов URL-адресов для iframe src, которые Discourse может безопасно разрешить в публикациях. Символ * может использоваться для обозначения любого количества символов, кроме «/»."
     allowed_crawler_user_agents: "Перечень поисковых роботов, которым должен быть разрешён доступ к сайту. ВНИМАНИЕ! УСТАНОВКА ЭТОГО ПАРАМЕТРА ЗАПРЕТИТ ДОСТУП ВСЕМ ПОИСКОВЫМ БОТАМ, НЕ УКАЗАННЫМ В ПЕРЕЧНЕ!"
     blocked_crawler_user_agents: "Уникальное нечувствительное к регистру слово в строке User-Agent, идентифицирующее поисковых роботов, которым запрещён доступ к сайту. Не применяется, если определён белый список."
-    llms_txt: "Загрузите текстовый файл, который будет доступен по адресу /llms.txt для обходчиков LLM. Дополнительную информацию см. на сайте <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a>."
     content_security_policy_report_only: "Включить Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Ограничить через CSP число тех, кто может встроить этот сайт в iframes. Перечень разрешённых хостов настраивается на закладке <a href='%{base_path}/admin/customize/embedding'>Встраивание</a>."
     content_security_policy_script_src: "Дополнительные источники сценариев в белом списке. Текущий хост и CDN включены по умолчанию. См. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>«Смягчение атак XSS с помощью политики безопасности контента (CSP)».</a> Другие хост-источники игнорируются, так как включена директива strict-dynamic."
@@ -2029,7 +2062,7 @@ ru:
     share_links: "Укажите, какие элементы должны отображаться в окне «Поделиться» и в какой последовательности."
     allow_username_in_share_links: "Разрешить включать имена пользователей в ссылки доступа. Может быть полезно для награждения за привлечение уникальных посетителей."
     site_contact_username: "Все автоматические сообщения будут отправляться от имени указанного здесь пользователя. Если оставить поле пустым, то будет использован системный аккаунт по умолчанию — System."
-    site_contact_group_name: "Допустимое имя группы для приглашения ко всем автоматическим личным сообщениям."
+    site_contact_group_name: "Группа пользователей, получающих все автоматические уведомления в виде личных сообщений."
     send_welcome_message: "Отправлять всем новым пользователям приветственное сообщение с коротким описанием возможностей форума."
     send_tl1_welcome_message: "Отправлять всем новым пользователям с уровнем доверия 1 приветственное сообщение."
     send_tl2_promotion_message: "Отправлять новым пользователям с уровня доверия 2 сообщение о повышении."
@@ -2648,7 +2681,6 @@ ru:
       invalid_email: "Неправильный адрес электронной почты."
       invalid_username: "Такое имя пользователя не обнаружено."
       valid_username: "Такое имя пользователя уже существует."
-      invalid_group: "Нет группы с таким названием."
       invalid_svg: "Изображение в формате SVG недопустимо. Оно должно содержать элемент SVG и не содержать скриптов или обработчиков событий."
       invalid_upload: "Загруженный файл недействителен или отсутствует."
       invalid_topic: "Нет темы с таким ID."
@@ -2715,7 +2747,6 @@ ru:
       markdown_linkify_tlds: "Нельзя использовать значение «*»."
       google_oauth2_hd_groups: "Перед включением этого параметра необходимо задать все настройки «google oauth2 hd»."
       discourse_id_registration: "Не удалось автоматически зарегистрироваться в Discourse ID. Это может быть связано с проблемами сетевого подключения, ограничениями брандмауэра или недоступностью службы Discourse ID. Для получения более подробной информации проверьте журналы сервера или обратитесь в службу поддержки."
-      linkedin_oidc_credentials: "Прежде чем включать этот параметр, необходимо настроить учетные данные LinkedIn OIDC ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret')."
       search_tokenize_chinese_enabled: "Перед включением этого параметра нужно отключить «search_tokenize_chinese»."
       search_tokenize_japanese_enabled: "Перед включением этого параметра нужно отключить «search_tokenize_japanese»."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Нельзя включить DiscourseConnect, если принудительно включена двухфакторная аутентификация."
@@ -2759,8 +2790,6 @@ ru:
       tags_any: "Показывать темы с любым из указанных тегов (через запятую)"
       tags_all: "Показывать темы со всеми указанными тегами (теги указываются через «+»)"
       exclude_tag: "Исключать темы с определенным тегом"
-      exclude_tags_any: "Исключать темы с любым из указанных тегов (через запятую)"
-      exclude_tags_all: "Исключать темы со всеми указанными тегами (через «+»)"
       tag_group: "Показывать темы с тегами из определенной группы тегов"
       exclude_tag_group: "Исключать темы с тегами из определенной группы тегов"
       activity_before: "Показывать темы с последней активностью до указанной даты (YYYY-MM-DD или количество дней назад)"
@@ -2770,7 +2799,6 @@ ru:
       created_before: "Показывать темы, созданные до указанной даты (YYYY-MM-DD или количество дней назад)"
       created_after: "Показывать темы, созданные после указанной даты (YYYY-MM-DD или количество дней назад)"
       created_by: "Отображение тем, созданных конкретным пользователем или группой."
-      created_by_user: "Отображать темы, созданные пользователем по имени или группе (без символа «@»)."
       created_by_multiple: "Отобразить темы, созданные любым из указанных пользователей или групп (разделенных запятыми)."
       latest_post_before: "Показывать темы с последней публикацией до указанной даты (YYYY-MM-DD или количество дней назад)"
       latest_post_after: "Показывать темы с последней публикацией после указанной даты (YYYY-MM-DD или количество дней назад)"
@@ -3015,6 +3043,7 @@ ru:
     wrong_invite_code: "Вы указали неверный код приглашения."
     reserved_username: "Запрещенное имя пользователя."
     missing_user_field: "Вы не заполнили все обязательные пользовательские поля"
+    missing_username: "Введите имя пользователя"
     auth_complete: "Аутентификация завершена."
     click_to_continue: "Нажмите здесь для продолжения."
     already_logged_in: "Это приглашение предназначено для новых пользователей, у которых ещё нет аккаунта."
@@ -4496,7 +4525,7 @@ ru:
         Сотрудник подтвердил ваш аккаунт на сайте %{site_name}.
 
         Чтобы получить доступ к аккаунту, войдите по адресу:
-        %{base_url}
+        %{login_url}
 
         Если ссылка выше не активна, попробуйте скопировать и вставить её в адресную строку браузера.
 
@@ -5036,6 +5065,12 @@ ru:
   performance_report:
     initial_post_raw: Эта тема содержит ежедневные отчёты активности форума.
     initial_topic_title: Отчёты активности форума
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записью."
+      few: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
+      many: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
+      other: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
   tags:
     title: "Теги"
     groups:
@@ -5306,8 +5341,6 @@ ru:
         complete: "Публикация скрыта, пользователь уведомлен."
       agree_and_edit:
         title: "Редактировать пост"
-        description: "Согласиться с жалобой и открыть окно редактора, чтобы изменить публикацию."
-        complete: "Жалоба принята, теперь вы можете отредактировать публикацию."
       delete:
         title: "Удалить"
         complete: "Публикация удалена."
@@ -5328,6 +5361,8 @@ ru:
       disagree_and_restore:
         title: "Восстановить сообщение"
         complete: "Публикация восстановлена."
+      disagree_and_keep_deleted:
+        title: "Оставить сообщение удаленным"
       disagree_bundle:
         title: "Нет"
       disagree:
@@ -5401,30 +5436,6 @@ ru:
       approve_and_unhide:
         title: "Да"
         complete: "Публикация одобрена и показана"
-      post_actions:
-        bundle_title: "Что вы хотите сделать с этим постом?"
-      delete_post:
-        title: "Удалить публикацию"
-        description: "Удалить этот пост"
-        complete: "Публикация удалена"
-      hide_post:
-        title: "Скрыть сообщение"
-        description: "Скрыть этот пост от публичного просмотра"
-        complete: "Пост скрыт"
-      unhide_post:
-        title: "Показать пост"
-        description: "Сделать этот пост видимым для всех пользователей"
-        complete: "Пост не скрыт"
-      restore_post:
-        title: "Восстановить сообщение"
-        description: "Восстановить этот удаленный пост"
-        complete: "Публикация восстановлена"
-      edit_post:
-        title: "Редактировать сообщение"
-        description: "Отредактировать содержимое этой записи"
-        complete: "Сообщение отредактировано"
-      user_actions:
-        bundle_title: "Что вы хотите сделать с пользователем?"
       silence_user:
         title: "Заморозка пользователя"
         complete: "Пользователь заморожен"

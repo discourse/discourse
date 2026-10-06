@@ -136,9 +136,9 @@ module(
       await render(
         <template>
           <PostTranslationsModal
-            @model={{this.model}}
             @closeModal={{noop}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );
@@ -251,9 +251,9 @@ module(
       await render(
         <template>
           <PostTranslationsModal
-            @model={{this.model}}
             @closeModal={{noop}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );
@@ -307,9 +307,9 @@ module(
       await render(
         <template>
           <PostTranslationsModal
-            @model={{this.model}}
             @closeModal={{noop}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );

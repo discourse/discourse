@@ -60,13 +60,13 @@ export default class DTemplatesEditorPreview extends Component {
       {{#if this.templatesVisible}}
         <div class="d-templates-container">
           <DButton
+            class="modal-close close btn-flat"
             @action={{this.hide}}
             @icon="xmark"
-            class="modal-close close btn-flat"
           />
           <FilterableList
-            @onInsertTemplate={{this.onInsertTemplate}}
             @onAfterInsertTemplate={{this.hide}}
+            @onInsertTemplate={{this.onInsertTemplate}}
           />
         </div>
       {{/if}}

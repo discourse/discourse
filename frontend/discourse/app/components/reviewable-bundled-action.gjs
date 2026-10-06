@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import { penaltyEffectDescription } from "discourse/lib/reviewable-penalty";
 import { isRTL } from "discourse/lib/text-direction";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
@@ -13,6 +14,26 @@ export default class ReviewableBundledAction extends Component {
 
   get multiple() {
     return this.args.bundle.actions.length > 1;
+  }
+
+  get bundleActions() {
+    return this.args.bundle.actions.map((bundledAction) => {
+      const effect = penaltyEffectDescription(
+        bundledAction,
+        this.args.authorPenalties
+      );
+
+      if (!effect) {
+        return bundledAction;
+      }
+
+      return {
+        ...bundledAction,
+        description: [bundledAction.description, effect]
+          .filter(Boolean)
+          .join(" "),
+      };
+    });
   }
 
   get first() {
@@ -41,9 +62,14 @@ export default class ReviewableBundledAction extends Component {
   <template>
     {{#if this.multiple}}
       <DropdownSelectBox
+        class={{dConcatClass
+          "reviewable-action-dropdown"
+          "btn-icon-text"
+          (dasherize this.first.action_name)
+          this.first.button_class
+        }}
+        @content={{this.bundleActions}}
         @nameProperty="label"
-        @valueProperty="action_name"
-        @content={{@bundle.actions}}
         @onChange={{this.perform}}
         @options={{hash
           showCaret=true
@@ -51,24 +77,19 @@ export default class ReviewableBundledAction extends Component {
           placement=this.placement
           translatedNone=@bundle.label
         }}
-        class={{dConcatClass
-          "reviewable-action-dropdown"
-          "btn-icon-text"
-          (dasherize this.first.action_name)
-          this.first.button_class
-        }}
+        @valueProperty="action_name"
       />
     {{else}}
       <DButton
-        @action={{this.perform}}
-        @translatedLabel={{this.first.label}}
-        @disabled={{@reviewableUpdating}}
         class={{dConcatClass
           "btn-default"
           "reviewable-action"
           (dasherize this.first.action_name)
           this.first.button_class
         }}
+        @action={{this.perform}}
+        @disabled={{@reviewableUpdating}}
+        @translatedLabel={{this.first.label}}
       />
     {{/if}}
   </template>

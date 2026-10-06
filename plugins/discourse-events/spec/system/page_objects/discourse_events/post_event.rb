@@ -25,6 +25,26 @@ module PageObjects
           self
         end
 
+        def has_calendar_prompt?
+          has_css?(
+            ".event-calendar-prompt",
+            text: I18n.t("js.discourse_events.calendar_prompt.title"),
+          ) &&
+            has_css?(
+              ".event-calendar-prompt__actions button",
+              text: I18n.t("js.discourse_post_event.add_to_calendar"),
+            )
+        end
+
+        def has_no_calendar_prompt?
+          has_no_css?(".event-calendar-prompt")
+        end
+
+        def dismiss_calendar_prompt
+          find(".event-calendar-prompt__dismiss").click
+          self
+        end
+
         def not_going
           locator(".not-going-button").click
           self
@@ -64,6 +84,33 @@ module PageObjects
 
         def has_invitee_avatar?(username)
           has_css?(".event-invitees-avatars [data-user-card='#{username}']")
+        end
+
+        def has_hosts?(hosts, cohosted: false)
+          host_label = cohosted ? "co_hosted_by" : "hosted_by"
+
+          has_css?(".event-hosts", text: I18n.t("js.discourse_post_event.#{host_label}")) &&
+            hosts.all? { |host| has_host?(host) }
+        end
+
+        # Hosts collapse into a menu once their row would wrap, so a host may
+        # only be visible after opening it. Only positive waits are used here,
+        # since CI fails a spec that lets a negative check run out its wait.
+        def has_host?(host)
+          name = host.name.presence || host.username
+          inline = ".event-host [data-user-card='#{host.username}']"
+
+          return false unless has_css?("#{inline}, .event-hosts__toggle")
+          return true if has_css?(inline, text: name, wait: 0)
+
+          find(".event-hosts__toggle").click unless has_css?(".event-hosts-menu", wait: 0)
+          has_css?(".event-hosts-menu__host[data-user-card='#{host.username}']", text: name)
+        end
+
+        def has_creator_host?(user)
+          has_css?(".created-by", text: I18n.t("js.discourse_post_event.created_and_hosted_by")) &&
+            has_css?(".event-creator [data-user-card='#{user.username}']") &&
+            has_no_css?(".event-hosts")
         end
 
         def has_no_invitee_avatar?(username)

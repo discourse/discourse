@@ -5,6 +5,35 @@
 # https://translate.discourse.org/
 
 ro:
+  markdown_endpoints:
+    latest: "Ultimele"
+    categories: "Categorii"
+    tags: "Etichete"
+    previous_page: "Pagina precedentă"
+    next_page: "Pagina următoare"
+    replies: "Răspunsuri"
+    last_updated: "Ultima actualizare"
+    event:
+      location: "Locație"
+      link: "Legătură"
+  mcp:
+    errors:
+      topic_not_found: "Subiectul nu a fost găsit"
+    oauth:
+      deny: "Respinge"
+      approve: "Autorizează"
+  llms_txt:
+    sections:
+      optional: "Opțional"
+    links:
+      search:
+        label: "Caută"
+      categories:
+        label: "Categorii"
+      about:
+        label: "Despre"
+      guidelines:
+        label: "Reguli generale"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D-MMM-YYYY"
@@ -558,6 +587,7 @@ ro:
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
   admin_site_traffic_explorer:
+    unknown: "Necunoscută"
     traffic_types:
       anonymous: "Anonimi"
   change_email:
@@ -642,7 +672,7 @@ ro:
   unsubscribed:
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
-    title: "Dezabonare"
+    unsubscribe: "Dezabonare"
     stop_watching_topic: "Încetează să urmărești activ acest subiect, %{link}"
     mute_topic: "Setează pe silențios toate notificările cu privire la acest subiect, %{link}"
     unwatch_category: "Încetează să urmărești activ toate subiectele din categoria %{category}"
@@ -723,6 +753,11 @@ ro:
         share: "Partajează"
       types:
         staff: "Echipa"
+    posters_by_member_type_members:
+      labels:
+        user: "Utilizator"
+        count: "Articole"
+        share: "Partajează"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1380,8 +1415,6 @@ ro:
       tags_any: "Arată subiectele cu oricare dintre etichetele specificate (separate prin virgulă)"
       tags_all: "Arată subiectele cu toate etichetele specificate (separate prin virgulă)"
       exclude_tag: "Exclude subiectele cu o anumită etichetă"
-      exclude_tags_any: "Exclude subiectele cu oricare dintre etichetele specificate (separate prin virgulă)"
-      exclude_tags_all: "Exclude subiectele cu toate etichetele specificate (separate prin virgulă)"
       tag_group: "Arată subiectele cu etichete dintr-un anumit grup de etichete"
       exclude_tag_group: "Exclude subiectele cu etichete dintr-un anumit grup de etichete"
       activity_before: "Arată subiectele cu ultima activitate înainte de o dată (AAAA-LL-ZZ sau acum câteva zile)"
@@ -1520,6 +1553,7 @@ ro:
     password_too_long: "Parole sunt limitate la 200 caractere."
     email_too_long: "Adresa de email pe care ai introdus-o este prea lungă. Numele de căsuțe poștale nu trebuie să depășească 254 de caractere, și numele de domenii nu trebuie să depășească 253 de caractere."
     reserved_username: "Acest nume utilizator nu este permis."
+    missing_username: "Te rugăm să introduci un nume de utilizator"
     second_factor_title: "Autentificare în doi pași (2FA)"
     second_factor_description: "Introdu codul de autentificare din aplicația 2FA"
     invalid_second_factor_code: "Cod de autentificare invalid. Fiecare cod poate fi utilizat o singură dată."
@@ -2402,12 +2436,6 @@ ro:
       approve_and_unhide:
         title: "Da"
         complete: "Postare aprobată și afișată"
-      delete_post:
-        complete: "Postarea a fost ștearsă"
-      restore_post:
-        complete: "Postarea a fost restaurată"
-      user_actions:
-        bundle_title: "Ce vrei să faci cu utilizatorul?"
       silence_user:
         title: "Redu la tăcere utilizatorul"
         complete: "Utilizatorul a fost redus la tăcere"

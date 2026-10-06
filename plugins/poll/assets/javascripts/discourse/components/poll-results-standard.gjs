@@ -108,15 +108,15 @@ export default class PollResultsStandardComponent extends Component {
             {{/unless}}
             {{#if @isPublic}}
               <PollVoters
-                @postId={{@postId}}
-                @pollType={{@pollType}}
+                @fetchVoters={{@fetchVoters}}
+                @isRankedChoice={{@isRankedChoice}}
+                @loading={{option.loading}}
                 @optionId={{option.id}}
                 @pollName={{@pollName}}
-                @isRankedChoice={{@isRankedChoice}}
+                @pollType={{@pollType}}
+                @postId={{@postId}}
                 @totalVotes={{option.votes}}
                 @voters={{option.voters}}
-                @fetchVoters={{@fetchVoters}}
-                @loading={{option.loading}}
               />
             {{/if}}
           </div>

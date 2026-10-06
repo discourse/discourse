@@ -10,10 +10,10 @@ export default class LivestreamRsvpCard extends LivestreamRsvp {
     {{#if this.showRsvpButton}}
       <DButton
         class="btn-primary btn-small chat-channel-card__join-btn livestream-rsvp__going-button"
+        @action={{this.markAsGoing}}
+        @disabled={{this.isSaving}}
         @icon="check"
         @label="discourse_post_event.models.invitee.status.going"
-        @disabled={{this.isSaving}}
-        @action={{this.markAsGoing}}
       />
     {{else}}
       {{yield}}

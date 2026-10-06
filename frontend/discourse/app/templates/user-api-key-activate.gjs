@@ -42,11 +42,11 @@ export default <template>
             {{i18n "user_api_key.logged_in_as"}}
           </span>
           <img
+            alt=""
             class="avatar"
+            height="24"
             src={{@controller.avatarUrl}}
             width="24"
-            height="24"
-            alt=""
           />
           <span class="authorize-api-key__username">
             {{@controller.page.current_user.username}}
@@ -108,37 +108,37 @@ export default <template>
         {{#unless @controller.page.expired_code}}
           {{#if @controller.page.request_token}}
             <Form
-              @data={{@controller.codeFormData}}
-              @onSubmit={{@controller.approve}}
-              @onRegisterApi={{@controller.registerCodeFormApi}}
               class="authorize-api-key__code-form"
+              @data={{@controller.codeFormData}}
+              @onRegisterApi={{@controller.registerCodeFormApi}}
+              @onSubmit={{@controller.approve}}
               as |form|
             >
               <form.Field
-                @name="code"
-                @title={{i18n "user_api_key.device.code"}}
                 @description={{i18n "user_api_key.device.enter_code"}}
-                @showOptional={{false}}
                 @format="full"
+                @name="code"
+                @showOptional={{false}}
+                @title={{i18n "user_api_key.device.code"}}
                 @type="custom"
                 @validate={{@controller.validateCode}}
                 as |field|
               >
                 <field.Control>
                   <UserApiKeyDeviceCodeInput
+                    aria-describedby={{field.describedBy}}
+                    aria-invalid={{if field.error "true" "false"}}
                     id={{field.id}}
                     @onChange={{field.set}}
                     @onFill={{field.set}}
-                    aria-describedby={{field.describedBy}}
-                    aria-invalid={{if field.error "true" "false"}}
                   />
                 </field.Control>
               </form.Field>
 
               <form.Actions>
                 <form.Submit
-                  @label="user_api_key.authorize"
                   @disabled={{@controller.isLoading}}
+                  @label="user_api_key.authorize"
                 />
               </form.Actions>
             </Form>
@@ -151,16 +151,16 @@ export default <template>
               >
                 <form.Actions>
                   <form.Submit
-                    @label="user_api_key.authorize"
                     @disabled={{@controller.isLoading}}
+                    @label="user_api_key.authorize"
                   />
                 </form.Actions>
               </Form>
               <DButton
-                @disabled={{@controller.isLoading}}
-                @action={{@controller.deny}}
-                @label="user_api_key.deny"
                 class="btn-default"
+                @action={{@controller.deny}}
+                @disabled={{@controller.isLoading}}
+                @label="user_api_key.deny"
               />
             </div>
           {{/if}}
@@ -179,37 +179,37 @@ export default <template>
 
       {{#unless @controller.page.expired_code}}
         <Form
-          @data={{@controller.codeFormData}}
-          @onSubmit={{@controller.submitCode}}
-          @onRegisterApi={{@controller.registerCodeFormApi}}
           class="authorize-api-key__code-form"
+          @data={{@controller.codeFormData}}
+          @onRegisterApi={{@controller.registerCodeFormApi}}
+          @onSubmit={{@controller.submitCode}}
           as |form|
         >
           <form.Field
-            @name="code"
-            @title={{i18n "user_api_key.device.code"}}
             @description={{i18n "user_api_key.device.enter_code"}}
-            @showOptional={{false}}
             @format="full"
+            @name="code"
+            @showOptional={{false}}
+            @title={{i18n "user_api_key.device.code"}}
             @type="custom"
             @validate={{@controller.validateCode}}
             as |field|
           >
             <field.Control>
               <UserApiKeyDeviceCodeInput
+                aria-describedby={{field.describedBy}}
+                aria-invalid={{if field.error "true" "false"}}
                 id={{field.id}}
                 @onChange={{field.set}}
                 @onFill={{field.set}}
-                aria-describedby={{field.describedBy}}
-                aria-invalid={{if field.error "true" "false"}}
               />
             </field.Control>
           </form.Field>
 
           <form.Actions>
             <form.Submit
-              @label="user_api_key.device.continue"
               @disabled={{@controller.isLoading}}
+              @label="user_api_key.device.continue"
             />
           </form.Actions>
         </Form>

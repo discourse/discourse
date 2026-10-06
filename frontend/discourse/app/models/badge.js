@@ -1,131 +1,42 @@
-import EmberObject, { computed, set } from "@ember/object";
-import { Promise } from "rsvp";
-import { ajax } from "discourse/lib/ajax";
+import {
+  deleteBadge,
+  findBadge,
+  findBadges,
+  saveBadge,
+} from "discourse/data/builders/badges";
+import { normalizeBadgesPayload } from "discourse/data/normalize";
+import RestCompatModel from "discourse/data/rest-compat";
+import { BadgeSchema } from "discourse/data/schemas/badge";
+import { defineFieldForwarders } from "discourse/data/warp-rest-model";
 import getURL from "discourse/lib/get-url";
-import BadgeGrouping from "discourse/models/badge-grouping";
-import RestModel from "discourse/models/rest";
 
-export default class Badge extends RestModel {
-  static createFromJson(json) {
-    // Create BadgeType objects.
-    const badgeTypes = {};
-    if ("badge_types" in json) {
-      json.badge_types.forEach(
-        (badgeTypeJson) =>
-          (badgeTypes[badgeTypeJson.id] = EmberObject.create(badgeTypeJson))
-      );
-    }
+export default class Badge extends RestCompatModel {
+  static type = "badge";
+  static normalize = normalizeBadgesPayload;
+  static builders = {
+    list: findBadges,
+    one: findBadge,
+    save: saveBadge,
+    delete: deleteBadge,
+  };
 
-    const badgeGroupings = {};
-    if ("badge_groupings" in json) {
-      json.badge_groupings.forEach(
-        (badgeGroupingJson) =>
-          (badgeGroupings[badgeGroupingJson.id] =
-            BadgeGrouping.create(badgeGroupingJson))
-      );
-    }
-
-    // Create Badge objects.
-    let badges = [];
-    if ("badge" in json) {
-      badges = [json.badge];
-    } else if (json.badges) {
-      badges = json.badges;
-    }
-    badges = badges.map((badgeJson) => {
-      const badge = Badge.create(badgeJson);
-      badge.setProperties({
-        badge_type: badgeTypes[badge.badge_type_id],
-        badge_grouping: badgeGroupings[badge.badge_grouping_id],
-      });
-      return badge;
-    });
-
-    if ("badge" in json) {
-      return badges[0];
-    } else {
-      return badges;
-    }
-  }
-
-  static findAll(opts) {
-    let listable = "";
-    if (opts && opts.onlyListable) {
-      listable = "?only_listable=true";
-    }
-
-    return ajax(`/badges.json${listable}`, { data: opts }).then((badgesJson) =>
-      Badge.createFromJson(badgesJson)
-    );
-  }
-
-  static findById(id) {
-    return ajax(`/badges/${id}`).then((badgeJson) =>
-      Badge.createFromJson(badgeJson)
-    );
-  }
-
-  @computed("id")
-  get newBadge() {
-    return this.id == null;
-  }
-
-  @computed("image_url")
+  // The `icon-or-image` helper reads `badge.image`.
   get image() {
     return this.image_url;
   }
 
-  set image(value) {
-    set(this, "image_url", value);
-  }
-
-  @computed
   get url() {
     return getURL(`/badges/${this.id}/${this.slug}`);
   }
 
-  updateFromJson(json) {
-    if (json.badge) {
-      Object.keys(json.badge).forEach((key) => this.set(key, json.badge[key]));
-    }
-    if (json.badge_types) {
-      json.badge_types.forEach((badgeType) => {
-        if (badgeType.id === this.badge_type_id) {
-          this.set("badge_type", Object.create(badgeType));
-        }
-      });
-    }
+  get newBadge() {
+    return this.id == null;
   }
 
-  @computed("badge_type.name")
   get badgeTypeClassName() {
     const type = this.badge_type?.name || "";
     return `badge-type-${type.toLowerCase()}`;
   }
-
-  save(data) {
-    let url = "/admin/badges",
-      type = "POST";
-
-    if (this.id) {
-      // We are updating an existing badge.
-      url += `/${this.id}`;
-      type = "PUT";
-    }
-
-    return ajax(url, { type, data }).then((json) => {
-      this.updateFromJson(json);
-      return this;
-    });
-  }
-
-  destroy() {
-    if (this.newBadge) {
-      return Promise.resolve();
-    }
-
-    return ajax(`/admin/badges/${this.id}`, {
-      type: "DELETE",
-    });
-  }
 }
+
+defineFieldForwarders(Badge, BadgeSchema);

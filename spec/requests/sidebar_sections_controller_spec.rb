@@ -1146,6 +1146,74 @@ RSpec.describe SidebarSectionsController do
     end
   end
 
+  describe "anonymous site JSON cache" do
+    fab!(:admin_api_key, refind: false) { Fabricate(:api_key, user: admin) }
+    fab!(:public_section_to_make_private) do
+      Fabricate(:sidebar_section, title: "Private after update", public: true)
+    end
+    fab!(:public_section_to_delete) do
+      Fabricate(:sidebar_section, title: "Deleted after update", public: true)
+    end
+
+    it "removes sections that an admin makes private or deletes from anonymous site JSON" do
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(public_section_to_make_private.title)
+      expect(response.body).to include(public_section_to_delete.title)
+
+      put "/sidebar_sections/#{public_section_to_make_private.id}.json",
+          params: {
+            public: false,
+          },
+          headers: {
+            HTTP_API_KEY: admin_api_key.key,
+          }
+
+      expect(response.status).to eq(200)
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(public_section_to_make_private.title)
+      expect(response.body).to include(public_section_to_delete.title)
+
+      delete "/sidebar_sections/#{public_section_to_delete.id}.json",
+             headers: {
+               HTTP_API_KEY: admin_api_key.key,
+             }
+
+      expect(response.status).to eq(200)
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(public_section_to_delete.title)
+    end
+
+    it "removes reset Community section links from anonymous site JSON" do
+      community_section =
+        SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+      sidebar_url = Fabricate(:sidebar_url, name: "Removed Community link", value: "/removed")
+      Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: sidebar_url)
+      Site.clear_anon_cache!
+
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(sidebar_url.name)
+
+      put "/sidebar_sections/reset/#{community_section.id}.json",
+          headers: {
+            HTTP_API_KEY: admin_api_key.key,
+          }
+
+      expect(response.status).to eq(200)
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(sidebar_url.name)
+    end
+  end
+
   describe "#destroy" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
 

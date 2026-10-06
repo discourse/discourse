@@ -1,5 +1,5 @@
 import { array } from "@ember/helper";
-import { render } from "@ember/test-helpers";
+import { findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -70,7 +70,7 @@ module("Integration | ui-kit | Helper | dCategoryBadge", function (hooks) {
     assert.dom(".read-only").hasText(i18n("category_row.read_only"));
   });
 
-  test("options.ancestors renders the chain outermost first", async function (assert) {
+  test("options.ancestors renders the chain outermost first with a count", async function (assert) {
     const category = Category.findById(1);
     const parent = Category.findById(2);
 
@@ -89,5 +89,26 @@ module("Integration | ui-kit | Helper | dCategoryBadge", function (hooks) {
     assert
       .dom(".topic-count")
       .exists({ count: 1 }, "only the leaf carries the count");
+  });
+
+  test("options.ancestors", async function (assert) {
+    const parent = Category.findById(1001);
+    const subcategory = Category.findById(1002);
+    const ancestors = subcategory.predecessors;
+
+    await render(
+      <template>
+        {{dCategoryBadge subcategory ancestors=ancestors hideParent=true}}
+      </template>
+    );
+
+    assert
+      .dom(".badge-category__wrapper")
+      .exists({ count: 2 }, "renders one badge per category in the chain");
+    assert.deepEqual(
+      findAll(".badge-category__name").map((el) => el.textContent.trim()),
+      [parent.displayName, subcategory.displayName],
+      "the parent badge precedes the sub-category badge"
+    );
   });
 });

@@ -3,7 +3,7 @@ import NavigationExample from "../../examples/organisms/navigation";
 import navigationSource from "../../examples/organisms/navigation?source=file";
 
 export default <template>
-  <StyleguideExample @title="navigation" @code={{navigationSource}}>
+  <StyleguideExample @code={{navigationSource}} @title="navigation">
     <NavigationExample
       @categories={{@dummy.categories}}
       @navItems={{@dummy.navItems}}

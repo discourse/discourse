@@ -55,12 +55,8 @@ module DiscourseDataExplorer
         ## Data Explorer SQL rules
         - NEVER end SQL with a semicolon (;)
         - Format SQL with line breaks, indentation, and spaces around operators
-        - Params are substituted as TEXT strings. You MUST wrap every param in CAST() when using it in date/time expressions or comparisons:
-          WRONG: WHERE created_at >= :start_date
-          WRONG: WHERE created_at < :end_date + INTERVAL '1 day'
-          RIGHT: WHERE created_at >= CAST(:start_date AS date)
-          RIGHT: WHERE created_at < CAST(:end_date AS date) + INTERVAL '1 day'
-        - NEVER use :: to cast params (:: conflicts with :param syntax)
+        - Params are PostgreSQL bind values, not SQL text substitutions. Declare their types in the `-- [params]` block. Date and datetime params support direct comparisons and date arithmetic. Use CAST() when an expression needs an explicit type; PostgreSQL's :: syntax is also supported.
+        - Keep params outside quoted strings, quoted identifiers, and dollar-quoted literals. They represent values, not table names, column names, or SQL fragments. Use `title ILIKE '%' || :search || '%'`, not `title ILIKE '%:search%'`. Use `:months_ago * INTERVAL '1 month'`, not `INTERVAL ':months_ago months'`. Apply these rules even when an existing query example uses the old syntax.
 
         ## Column rendering
         Columns named user_id, group_id, topic_id, post_id, badge_id, category_id render as clickable links.
@@ -94,7 +90,7 @@ module DiscourseDataExplorer
         - Optional params: prefix the type with "null" and OMIT the default. The "null" prefix is the optional marker; do NOT use `= #null` as a default value (e.g. write `-- null category_id :category`, NOT `-- category_id :category = #null`).
         - Date param defaults MUST be real ISO dates in YYYY-MM-DD form (today is #{Date.today.strftime("%Y-%m-%d")}). NEVER use natural-language defaults like "today", "yesterday", "3 months ago", or "14 jul 2015". For a date range, name params `:start_date` and `:end_date`.
         - Plural nouns → list-style param TYPES. Apply this rule independently to EACH plural noun in the prompt; don't skip one. Only `int_list`, `string_list`, `user_list`, `group_list` accept multiple values — single-value types like `category_id`, `user_id`, `topic_id` do NOT. Plural "categories" MUST use `int_list :category_ids`, not `category_id :category`. Example: "Get topics for selected categories and tags." → `-- null int_list :category_ids` AND `-- null string_list :tag_names` (BOTH list types).
-        - For list-style params, use `column IN (:param)`. Do NOT use `ANY(:param)`; Data Explorer substitutes list params as comma-separated values, so `ANY(:param)` becomes invalid SQL. With single-value types (`category_id`, `user_id`, etc.), use `column = :param` instead.
+        - For list-style params, use `column IN (:param)`. Data Explorer expands each list into separate bind values, not a PostgreSQL array. Do NOT use `ANY(:param)` or cast the list param to an array such as `text[]`. With single-value types (`category_id`, `user_id`, etc.), use `column = :param` instead.
         - For optional list-style params, wrap only the param in parentheses for the null check: `((:param) IS NULL OR column IN (:param))`. The first `)` must come immediately after the param name. Examples: `((:category_ids) IS NULL OR t.category_id IN (:category_ids))` and `((:tag_names) IS NULL OR tags.name IN (:tag_names))`. Do NOT write `(:param IS NULL OR column IN (:param))` because the list expands to multiple SQL values.
         - First-person prompts ("my posts", "queries about me", "topics I've replied to") MUST use `current_user_id` — this auto-injects the requester's user id at run time. Do NOT use `user_id :user = system` for "my" queries.
 

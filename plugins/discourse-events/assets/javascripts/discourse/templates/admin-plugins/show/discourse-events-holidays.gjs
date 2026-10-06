@@ -7,19 +7,19 @@ import RegionInput from "discourse/plugins/discourse-events/discourse/components
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/plugins/discourse-events/holidays"
     @label={{i18n "discourse_events.holidays.header_title"}}
+    @path="/admin/plugins/discourse-events/holidays"
   />
 
   <div class="calendar-admin-holidays admin-detail">
     <DPageSubheader
-      @titleLabel={{i18n "discourse_events.holidays.header_title"}}
       @descriptionLabel={{i18n "discourse_events.holidays.header_description"}}
+      @titleLabel={{i18n "discourse_events.holidays.header_title"}}
     />
 
     <RegionInput
-      @value={{@controller.selectedRegion}}
       @onChange={{@controller.getHolidays}}
+      @value={{@controller.selectedRegion}}
     />
 
     <DConditionalLoadingSpinner @condition={{@controller.loading}} />

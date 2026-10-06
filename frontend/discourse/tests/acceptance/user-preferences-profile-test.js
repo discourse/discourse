@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance(
   "User - Preferences - Profile - Hide Profile Allowed",
@@ -129,6 +130,16 @@ acceptance(
       assert
         .dom("#user-default-calendar")
         .exists("option to change default calendar");
+
+      const calendarSelector = selectKit("#user-default-calendar");
+      await calendarSelector.expand();
+
+      for (const calendar of ["google", "outlook", "apple", "ics"]) {
+        assert.true(
+          calendarSelector.rowByValue(calendar).exists(),
+          `${calendar} is available as a default calendar`
+        );
+      }
     });
   }
 );

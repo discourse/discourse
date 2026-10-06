@@ -181,6 +181,7 @@ id:
     emails_are_disabled_non_staff: "Surel keluar telah dimatikan untuk pengguna yang bukan staf."
     software_update_prompt:
       dismiss: "Bubar"
+    confirm_button: "Konfirmasi"
     welcome_banner:
       header:
         anonymous_members: "Selamat datang ke %{site_name}!"
@@ -280,6 +281,7 @@ id:
       back: "Kembali"
       sections:
         theme: "Tema"
+        search: "Cari"
       theme:
         selected: "Dipilih"
       homepage:
@@ -609,6 +611,9 @@ id:
       user_label: "Pengguna"
       timeline:
         target_deleted: "Pos dihapus"
+      author_penalty:
+        toast:
+          undo: "Batalkan perintah"
       notes:
         delete: "Hapus"
       topic_label: "Topik"
@@ -1086,7 +1091,6 @@ id:
       admin: "%{user} adalah admin"
       moderator_tooltip: "Pengguna ini adalah moderator"
       admin_tooltip: "Pengguna ini adalah admin"
-      silenced_tooltip: "Pengguna ini dibungkam"
       suspended_notice: "Pengguna ini ditangguhkan sampai %{date}"
       suspended_permanently: "Pengguna ini dicekal"
       suspended_reason: "Alasan:"
@@ -1128,6 +1132,12 @@ id:
       ignored_users: "Diabaikan"
       tracked_topics_link: "Tunjukkan"
       apps: "Aplikasi"
+      mcp_authorizations:
+        details: "Detil"
+        never: "Tidak pernah"
+        status: "Status"
+        statuses:
+          active: "Aktif"
       revoke_access: "Cabut Akses"
       undo_revoke_access: "Batalkan Cabut Akses"
       api_approved: "Disetujui:"
@@ -1633,6 +1643,8 @@ id:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      delete: "Hapus"
+      home: "Beranda"
     category_row:
       subcategory_count:
         other: "+%{count} subkategori"
@@ -1787,6 +1799,7 @@ id:
       categories: "Kategori"
       tags: "Label"
       type:
+        default: "Pos"
         users: "Pengguna"
         categories: "Kategori"
       advanced:
@@ -2037,6 +2050,7 @@ id:
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
+      latest_topics: "Topik Terbaru"
       description_expand: "Tampilkan lebih banyak"
       description_collapse: "Tampilkan lebih sedikit"
       permissions:
@@ -2133,6 +2147,7 @@ id:
       with_topics: "%{filter} topik"
       with_category: "%{filter} %{category} topik"
       filter:
+        reset: "reset"
         button:
           label: "Filter"
       latest:
@@ -2428,6 +2443,11 @@ id:
       reports:
         group_members: "Anggota"
         group_other: "Lainnya"
+        related_items:
+          users:
+            title: "Pengguna"
+          labels:
+            user: "Pengguna"
       config_sections:
         account:
           title: "Akun"
@@ -2451,6 +2471,52 @@ id:
           impact_role_moderators: "Moderator"
           impact_role_staff: "Staf"
       config:
+        mcp:
+          tabs:
+            access: "Mengakses"
+            activity: "Activity"
+          overview:
+            status: "Status"
+          access:
+            title: "Mengakses"
+            groups: "Grup"
+            actions: "Aksi"
+            edit: "Ubah"
+            delete: "Hapus"
+          primitives:
+            group_by_options:
+              kind: "Tipe"
+            kind: "Tipe"
+          clients:
+            actions: "Aksi"
+          authorizations:
+            user: "Pengguna"
+            status: "Status"
+            actions: "Aksi"
+          activity:
+            time: "Waktu"
+            user: "Pengguna"
+            duration: "Durasi"
+          values:
+            server_status:
+              disabled: "Dinonaktifkan"
+            client_trust:
+              approved: "Disetujui"
+            authorization_status:
+              active: "Aktif"
+            activity_outcome:
+              success: "Sukses"
+              error: "Gangguan"
+            primitive_state:
+              enabled: "Diaktifkan"
+              disabled: "Dinonaktifkan"
+            primitive_kind:
+              all: "Semua tipe"
+            filter:
+              all: "Semua"
+          never: "Tidak pernah"
+          actions:
+            revoke: "Cabut"
         login:
           sub_pages:
             common_settings:
@@ -2551,6 +2617,8 @@ id:
               posts: "Pos"
             whos_posting:
               staff: "Staf"
+              modal:
+                apply: "Simpan"
             trust_level_pipeline:
               trust_levels:
                 "0": "Baru"
@@ -2560,6 +2628,9 @@ id:
             title: "Cari"
             table:
               status: "Status"
+          system:
+            title: "Sistem"
+            status: "Status"
         reports_section:
           header_action: "Mengelola"
           modal:
@@ -2580,6 +2651,11 @@ id:
           30_days_ago: "30 Hari Lalu"
           all: "Semua"
           refresh_report: "Segarkan"
+          posters_by_member_type_members:
+            users_count:
+              other: "%{count} pengguna"
+            posts_count:
+              other: "%{count} post"
           trending_search:
             disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
           sort_button: "Urutkan berdasarkan %{column}"
@@ -3028,6 +3104,8 @@ id:
         field_types:
           date: "Tanggal"
       site_text:
+        search_label: "Cari"
+        theme_disabled: "Dinonaktifkan"
         edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"
         show_untranslated: "Hanya tampilkan yang belum diterjemahkan"

@@ -274,6 +274,19 @@ export class ReteEditorBridge {
     this.nodeDragOrigin = null;
   }
 
+  get areaContentElement() {
+    return this.area.area.content.holder;
+  }
+
+  get transform() {
+    const { x, y, k } = this.area.area.transform;
+    return { x, y, k };
+  }
+
+  get nodeCount() {
+    return this.editor.getNodes().length;
+  }
+
   setupPipes() {
     this.area.addPipe(async (context) => {
       if (this.isSyncing || this.isAutoArranging) {
@@ -1192,19 +1205,6 @@ export class ReteEditorBridge {
     }
 
     return constraints;
-  }
-
-  get areaContentElement() {
-    return this.area.area.content.holder;
-  }
-
-  get transform() {
-    const { x, y, k } = this.area.area.transform;
-    return { x, y, k };
-  }
-
-  get nodeCount() {
-    return this.editor.getNodes().length;
   }
 
   containerToCanvas(localX, localY) {

@@ -32,6 +32,22 @@ export function resolveVariableId(variable, itemPrefix = "$json") {
     : `${itemPrefix}.${variable.id}`;
 }
 
+// Null whenever the point does not resolve inside the control, including on
+// engines without caretPositionFromPoint, where callers append instead.
+export function caretOffsetFromPoint(control, x, y) {
+  const position = document.caretPositionFromPoint?.(x, y);
+  if (
+    position?.offsetNode !== control ||
+    !Number.isInteger(position.offset) ||
+    position.offset < 0 ||
+    position.offset > control.value.length
+  ) {
+    return null;
+  }
+
+  return position.offset;
+}
+
 // Matches paths like $('Node Name').rest or $("Node Name").rest
 export const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
 const METHOD_CALL_RE = /^([A-Za-z_$][\w$]*)\((.*)\)$/;

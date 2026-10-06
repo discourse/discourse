@@ -32,6 +32,12 @@ export default class ShareModal extends Component {
     return trustHTML(context.join("\n"));
   }
 
+  get primaryLabel() {
+    return this.shareKey
+      ? "discourse_ai.ai_bot.share_full_topic_modal.update"
+      : "discourse_ai.ai_bot.share_full_topic_modal.share";
+  }
+
   async generateShareURL() {
     try {
       const response = await ajax(
@@ -54,12 +60,6 @@ export default class ShareModal extends Component {
       popupAjaxError(e);
       return;
     }
-  }
-
-  get primaryLabel() {
-    return this.shareKey
-      ? "discourse_ai.ai_bot.share_full_topic_modal.update"
-      : "discourse_ai.ai_bot.share_full_topic_modal.share";
   }
 
   @action
@@ -119,8 +119,8 @@ export default class ShareModal extends Component {
   <template>
     <DModal
       class="ai-share-full-topic-modal"
-      @title={{i18n "discourse_ai.ai_bot.share_full_topic_modal.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.ai_bot.share_full_topic_modal.title"}}
     >
       <:body>
         {{! eslint-disable ember/template-no-invalid-interactive }}
@@ -136,15 +136,15 @@ export default class ShareModal extends Component {
       <:footer>
         <DButton
           class="btn-primary confirm"
-          @icon="copy"
           @action={{this.share}}
+          @icon="copy"
           @label={{this.primaryLabel}}
         />
         {{#if this.shareKey}}
           <DButton
             class="btn-danger"
-            @icon="far-trash-can"
             @action={{this.deleteLink}}
+            @icon="far-trash-can"
             @label="discourse_ai.ai_bot.share_full_topic_modal.delete"
           />
         {{/if}}

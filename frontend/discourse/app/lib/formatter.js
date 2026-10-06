@@ -210,7 +210,24 @@ export function durationTiny(distance, ageOpts) {
   return duration(distance, { format: "tiny", ...ageOpts });
 }
 
-export function formatMinutesSeconds(seconds) {
+export function formatMinutesSeconds(seconds, { subsecondPrecision = 0 } = {}) {
+  if (seconds > 0 && seconds < 1 && subsecondPrecision > 0) {
+    const minimumSeconds = 10 ** -subsecondPrecision;
+    const lessThanMinimum = seconds < minimumSeconds;
+    const displayedSeconds = lessThanMinimum ? minimumSeconds : seconds;
+    const formattedSeconds = I18n.toNumber(displayedSeconds, {
+      precision: subsecondPrecision,
+      strip_insignificant_zeros: true,
+    });
+    const translationKey = lessThanMinimum
+      ? "dates.tiny.less_than_x_seconds.other"
+      : "dates.tiny.x_seconds.other";
+
+    return i18n(translationKey, {
+      count: formattedSeconds,
+    });
+  }
+
   const totalSeconds = Math.floor(seconds);
 
   if (totalSeconds < 60) {

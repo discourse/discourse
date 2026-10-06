@@ -131,71 +131,71 @@ export default class TopicFooterButtons extends Component {
 
   <template>
     <div
-      role="region"
       aria-label={{i18n "topic.footer_buttons.region_label"}}
       id="topic-footer-buttons"
+      role="region"
       ...attributes
     >
       <div class="topic-footer-main-buttons">
         <div class="topic-footer-main-buttons__actions">
           <TopicAdminMenu
-            @topic={{this.topic}}
-            @toggleMultiSelect={{this.toggleMultiSelect}}
-            @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}}
+            @buttonClasses="topic-footer-button"
+            @convertToPrivateMessage={{this.convertToPrivateMessage}}
+            @convertToPublicTopic={{this.convertToPublicTopic}}
             @deleteTopic={{this.deleteTopic}}
             @recoverTopic={{this.recoverTopic}}
-            @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}}
-            @toggleClosed={{this.toggleClosed}}
-            @toggleArchived={{this.toggleArchived}}
-            @toggleVisibility={{this.toggleVisibility}}
-            @showTopicTimerModal={{this.showTopicTimerModal}}
-            @showFeatureTopic={{this.showFeatureTopic}}
-            @showChangeTimestamp={{this.showChangeTimestamp}}
             @resetBumpDate={{this.resetBumpDate}}
-            @convertToPublicTopic={{this.convertToPublicTopic}}
-            @convertToPrivateMessage={{this.convertToPrivateMessage}}
-            @buttonClasses="topic-footer-button"
+            @showChangeTimestamp={{this.showChangeTimestamp}}
+            @showFeatureTopic={{this.showFeatureTopic}}
+            @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}}
+            @showTopicTimerModal={{this.showTopicTimerModal}}
+            @toggleArchived={{this.toggleArchived}}
+            @toggleClosed={{this.toggleClosed}}
+            @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}}
+            @toggleMultiSelect={{this.toggleMultiSelect}}
+            @toggleVisibility={{this.toggleVisibility}}
+            @topic={{this.topic}}
           />
 
           {{#each this.inlineActionables key="id" as |actionable|}}
             {{#if (eq actionable.type "inline-button")}}
               {{#if (eq actionable.id "bookmark")}}
                 <TopicBookmarksMenu
-                  @topic={{this.topic}}
-                  @showLabel={{this.showBookmarkLabel}}
                   @buttonClasses="btn-default topic-footer-button"
+                  @showLabel={{this.showBookmarkLabel}}
+                  @topic={{this.topic}}
                 />
               {{else}}
                 <DButton
-                  @action={{actionable.action}}
-                  @icon={{actionable.icon}}
-                  @translatedLabel={{actionable.label}}
-                  @translatedTitle={{actionable.title}}
-                  @translatedAriaLabel={{actionable.ariaLabel}}
-                  @disabled={{actionable.disabled}}
-                  id={{concat "topic-footer-button-" actionable.id}}
                   class={{dConcatClass
                     "btn-default"
                     "topic-footer-button"
                     actionable.classNames
                   }}
+                  id={{concat "topic-footer-button-" actionable.id}}
+                  @action={{actionable.action}}
+                  @disabled={{actionable.disabled}}
+                  @icon={{actionable.icon}}
+                  @translatedAriaLabel={{actionable.ariaLabel}}
+                  @translatedLabel={{actionable.label}}
+                  @translatedTitle={{actionable.title}}
                 />
               {{/if}}
             {{else}}
               <DropdownSelectBox
-                @id={{concat "topic-footer-dropdown-" actionable.id}}
-                @value={{actionable.value}}
+                class={{dConcatClass
+                  "topic-footer-dropdown"
+                  actionable.classNames
+                }}
                 @content={{actionable.content}}
+                @id={{concat "topic-footer-dropdown-" actionable.id}}
                 @onChange={{bind actionable.action this}}
                 @options={{hash
                   icon=actionable.icon
                   none=actionable.noneItem
                   disabled=actionable.disabled
                 }}
-                class={{dConcatClass
-                  "topic-footer-dropdown"
-                  actionable.classNames
-                }}
+                @value={{actionable.value}}
               />
             {{/if}}
           {{/each}}
@@ -203,24 +203,24 @@ export default class TopicFooterButtons extends Component {
           {{#if this.site.mobileView}}
             {{#if this.loneDropdownButton}}
               <DButton
-                @action={{this.loneDropdownButton.action}}
-                @icon={{this.loneDropdownButton.icon}}
-                @translatedLabel={{this.loneDropdownButton.label}}
-                @translatedTitle={{this.loneDropdownButton.title}}
-                @translatedAriaLabel={{this.loneDropdownButton.ariaLabel}}
-                @disabled={{this.loneDropdownButton.disabled}}
-                id={{concat "topic-footer-button-" this.loneDropdownButton.id}}
                 class={{dConcatClass
                   "btn-default"
                   "topic-footer-button"
                   this.loneDropdownButton.classNames
                 }}
+                id={{concat "topic-footer-button-" this.loneDropdownButton.id}}
+                @action={{this.loneDropdownButton.action}}
+                @disabled={{this.loneDropdownButton.disabled}}
+                @icon={{this.loneDropdownButton.icon}}
+                @translatedAriaLabel={{this.loneDropdownButton.ariaLabel}}
+                @translatedLabel={{this.loneDropdownButton.label}}
+                @translatedTitle={{this.loneDropdownButton.title}}
               />
             {{else if (gt this.dropdownButtons.length 1)}}
               <DMenu
-                @modalForMobile={{true}}
-                @identifier="topic-footer-mobile-dropdown"
                 class="topic-footer-button btn-default"
+                @identifier="topic-footer-mobile-dropdown"
+                @modalForMobile={{true}}
               >
                 <:trigger>
                   {{dIcon "ellipsis-vertical"}}
@@ -230,17 +230,17 @@ export default class TopicFooterButtons extends Component {
                     {{#each this.dropdownButtons key="id" as |button|}}
                       <dropdown.item>
                         <DButton
-                          @action={{button.action}}
-                          @icon={{button.icon}}
-                          @translatedLabel={{button.label}}
-                          @translatedTitle={{button.title}}
-                          @translatedAriaLabel={{button.ariaLabel}}
-                          @disabled={{button.disabled}}
-                          id={{concat "topic-footer-button-" button.id}}
                           class={{dConcatClass
                             "topic-footer-button"
                             button.classNames
                           }}
+                          id={{concat "topic-footer-button-" button.id}}
+                          @action={{button.action}}
+                          @disabled={{button.disabled}}
+                          @icon={{button.icon}}
+                          @translatedAriaLabel={{button.ariaLabel}}
+                          @translatedLabel={{button.label}}
+                          @translatedTitle={{button.title}}
                         />
                       </dropdown.item>
                     {{/each}}
@@ -250,75 +250,75 @@ export default class TopicFooterButtons extends Component {
             {{/if}}
 
             <PinnedButton
+              @appendReason={{false}}
               @pinned={{this.topic.pinned}}
               @topic={{this.topic}}
-              @appendReason={{false}}
             />
 
             {{#if this.showNotificationsButton}}
               <TopicNotificationsButton
-                @topic={{this.topic}}
                 @appendReason={{false}}
+                @topic={{this.topic}}
               />
             {{/if}}
           {{/if}}
         </div>
 
         <PluginOutlet
+          @connectorTagName="span"
           @name="topic-footer-main-buttons-before-create"
           @outletArgs={{lazyHash topic=this.topic}}
-          @connectorTagName="span"
         />
 
         {{#if this.showCreateButton}}
           <DButton
-            @icon="reply"
+            class="btn-primary create topic-footer-button"
             @action={{this.replyToPost}}
+            @icon="reply"
             @label="topic.reply.title"
             @title="topic.reply.help"
-            class="btn-primary create topic-footer-button"
           />
         {{/if}}
 
         <PluginOutlet
+          @connectorTagName="span"
           @name="after-topic-footer-main-buttons"
           @outletArgs={{lazyHash topic=this.topic}}
-          @connectorTagName="span"
         />
       </div>
 
       {{#if this.site.desktopView}}
         <PinnedButton
+          @appendReason={{true}}
           @pinned={{this.topic.pinned}}
           @topic={{this.topic}}
-          @appendReason={{true}}
         />
 
         {{#if this.showNotificationsButton}}
           <TopicNotificationsButton
-            @topic={{this.topic}}
-            @expanded={{true}}
             class="notifications-button-footer"
+            @expanded={{true}}
+            @topic={{this.topic}}
           />
 
           {{#if this.showNotificationUserTip}}
             <UserTip
-              @id="topic_notification_levels"
-              @triggerSelector=".notifications-button-footer [data-identifier='notifications-tracking']"
-              @titleText={{i18n "user_tips.topic_notification_levels.title"}}
               @contentText={{i18n
                 "user_tips.topic_notification_levels.content"
               }}
+              @id="topic_notification_levels"
               @priority={{800}}
+              @titleText={{i18n "user_tips.topic_notification_levels.title"}}
+              @triggerSelector=".notifications-button-footer [data-identifier='notifications-tracking']"
             />
           {{/if}}
         {{/if}}
       {{/if}}
 
       <PluginOutlet
+        @connectorTagName="span"
         @name="after-topic-footer-buttons"
         @outletArgs={{lazyHash topic=this.topic}}
-        @connectorTagName="span"
       />
     </div>
   </template>

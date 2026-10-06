@@ -22,8 +22,8 @@ export default <template>
 
           <ul class="nav-pills">
             <li class="nav-item-about"><LinkTo
-                @route="about"
                 class="active"
+                @route="about"
               >{{i18n "about.simple_title"}}</LinkTo></li>
             {{#if @controller.faqOverridden}}
               <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n

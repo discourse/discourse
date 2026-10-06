@@ -29,10 +29,10 @@ export default class DeleteTopicConfirm extends Component {
 
   <template>
     <DModal
-      @title={{i18n "topic.actions.delete"}}
-      @closeModal={{@closeModal}}
       class="delete-topic-confirm-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "topic.actions.delete"}}
     >
       <:body>
         <p>
@@ -44,6 +44,7 @@ export default class DeleteTopicConfirm extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-danger"
           @action={{this.deleteTopic}}
           @disabled={{this.deletingTopic}}
           @label={{if
@@ -51,12 +52,11 @@ export default class DeleteTopicConfirm extends Component {
             "deleting"
             "post.controls.delete_topic_confirm_modal_yes"
           }}
-          class="btn-danger"
         />
         <DButton
+          class="btn-primary"
           @action={{@closeModal}}
           @label="post.controls.delete_topic_confirm_modal_no"
-          class="btn-primary"
         />
       </:footer>
     </DModal>

@@ -6,35 +6,451 @@
 
 zh_TW:
   site_settings:
-    discourse_narrative_bot_enabled: "啟用 Discourse 機器人"
+    discourse_narrative_bot_enabled: "啟用 Discourse Narrative Bot（discobot）"
+    disable_discourse_narrative_bot_welcome_post: "停用 Discourse Narrative Bot 的歡迎貼文"
+    discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot 應忽略的使用者名稱"
+    discourse_narrative_bot_disable_public_replies: "停用 Discourse Narrative Bot 的公開回覆"
+    discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot 要傳送的歡迎貼文類型"
+    discourse_narrative_bot_welcome_post_delay: "傳送 Discourse Narrative Bot 歡迎貼文前等待 (n) 秒。"
+    discourse_narrative_bot_skip_tutorials: "要略過的 Discourse Narrative Bot 教學"
   badges:
     certified:
-      name: 已認證
+      name: 此徽章會在成功完成互動式新使用者教學後授予。你已主動學習基本的討論工具，現在已通過認證！
+      description: "已完成我們的新使用者教學"
+      long_description: |
+        此徽章會在成功完成互動式新使用者教學後授予。你已主動學習基本的討論工具，現在已通過認證！
+    licensed:
+      name: 已取得資格
+      description: "已完成我們的進階使用者教學"
+      long_description: |
+        此徽章會在成功完成互動式進階使用者教學後授予。你已熟練掌握進階討論工具，現在已取得完整資格！
   discourse_narrative_bot:
+    bio: "嗨，我不是真人。我是一個能教你使用這個網站的機器人。若要與我互動，請傳訊息給我或提及我的名稱。"
+    tl2_promotion_message:
+      subject_template: "你已晉升，現在該來認識一些進階功能了！"
+      text_body_template: |
+        回覆此訊息並輸入 `@%{discobot_username} %{reset_trigger}`，即可進一步了解你能做些什麼。
+    timeout:
+      message: |-
+        嗨 @%{username}，因為有一陣子沒收到你的回覆，所以來關心一下。
+
+        - 若要繼續，隨時回覆我即可。
+
+        - 若想略過此步驟，請輸入 `%{skip_trigger}`。
+
+        - 若要重新開始，請輸入 `%{reset_trigger}`。
+
+        如果你不想繼續也沒關係。我是機器人，你不會傷到我的感情。:sob:
     dice:
       trigger: "擲骰"
+      invalid: |-
+        很抱歉，從數學上來說，不可能擲出這種骰子組合。:confounded:
+      not_enough_dice:
+        other: "我只有 %{count} 顆骰子。真丟臉，我知道！"
+      out_of_range: |-
+        你知道嗎？一顆數學上公平的骰子，其[最大面數](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)是 120 面。
+      results: |-
+        > :game_die: %{results}
     quote:
-      trigger: "引用"
+      trigger: "名言"
+      "1":
+        quote: "困難之中，蘊藏著機會"
+        author: "阿爾伯特·愛因斯坦"
+      "2":
+        quote: "若自由不包含犯錯的自由，就不值得擁有。"
+        author: "聖雄甘地"
       "3":
+        quote: "不要因為結束而哭泣，要為曾經發生而微笑。"
         author: "蘇斯博士"
+      "4":
+        quote: "如果你想把事情做好，就親自動手。"
+        author: "Charles-Guillaume Étienne"
+      "5":
+        quote: "相信自己能做到，你就已經成功了一半。"
+        author: "西奧多·羅斯福"
+      "6":
+        quote: "人生就像一盒巧克力，你永遠不知道會得到什麼。"
+        author: "阿甘的媽媽"
+      "7":
+        quote: "這是個人的一小步，卻是人類的一大步。"
+        author: "尼爾·阿姆斯壯"
+      "8":
+        quote: "每天做一件令你害怕的事。"
+        author: "艾蓮娜·羅斯福"
       "9":
+        quote: "只要有勇氣承認錯誤，錯誤總是可以獲得原諒。"
         author: "李小龍"
+      "10":
+        quote: "心靈所能想像並相信的，便能實現。"
+        author: "拿破崙·希爾"
+      "11":
+        quote: "家中和平，世界和平。"
+        author: "穆斯塔法·凱末爾·阿塔圖克"
+      "12":
+        quote: "教育不是逃離貧窮的方法，而是對抗貧窮的方法。"
+        author: "朱利葉斯·尼雷爾"
       "13":
+        quote: "千里之行，始於足下。"
         author: "老子"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: "占卜"
       answers:
+        "1": "千真萬確"
+        "2": "確實如此"
+        "3": "毫無疑問"
+        "4": "肯定是"
+        "5": "你可以信賴它"
+        "6": "依我看，是的"
+        "7": "很可能"
+        "8": "前景看好"
         "9": "是"
+        "10": "跡象顯示是的"
+        "11": "答案模糊，請再試一次"
+        "12": "稍後再問"
+        "13": "現在最好別告訴你"
+        "14": "現在無法預測"
+        "15": "集中精神後再問一次"
+        "16": "別指望了"
+        "17": "我的回答是否定的"
+        "18": "我的消息來源說不是"
+        "19": "前景不太樂觀"
+        "20": "非常值得懷疑"
+      result: |-
+        > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "開始"
-      skip_trigger: "跳過"
+      skip_trigger: "略過"
+      help_trigger: "顯示說明"
+      random_mention:
+        reply: |-
+          嗨！若想了解我能做什麼，請輸入 `@%{discobot_username} %{help_trigger}`。
+        tracks: |-
+          我目前會做以下事情：
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > 在私人訊息中為你啟動專屬的互動式教學。`{name-of-tutorial}` 可以是下列其中一項：`%{tracks}`。
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: 你可以信賴它
+        discobot_disabled: 你已在偏好設定中停用我。必須允許新使用者入門提示才能與我互動。
+      do_not_understand:
+        first_response: |-
+          嗨，感謝你的回覆！
+
+          可惜我這個程式沒寫好的機器人，還是不太明白你的意思。:frowning:
+        track_response: 你可以再試一次；若想略過此步驟，請輸入 `%{skip_trigger}`。否則若要重新開始，請輸入 `%{reset_trigger}`。
+        second_response: |-
+          哎呀，抱歉。我還是沒弄懂。:anguished:
+
+          我只是一個機器人；若想聯絡真人，請參閱[我們的聯絡頁面](%{base_path}/about)。
+
+          在此之前，我不會再打擾你。
     new_user_narrative:
       reset_trigger: "教學"
+      title: "新使用者教學完成證書"
+      cert_title: "茲證明已成功完成新使用者教學"
       hello:
+        title: "你好！"
         message: |-
-          感謝您加入 %{title}，歡迎！
+          感謝你加入 %{title}，歡迎！
 
-          - 我只是一個機器人，但是如果您需要聯繫真人的話， [我們友善工作成員們](%{base_uri}/about)也在這裡為您提供協助。
+          - 我只是一個機器人；若需要聯絡真人，[友善的工作人員](%{base_uri}/about)也隨時提供協助。
 
-          - 出於安全原因，我們暫時限制新用戶可以執行的操作。當我們了解您時，您將獲得 [新能力](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)(和 [badges](%{base_uri}/badges))。
+          - 基於安全考量，我們會暫時限制新使用者能執行的操作。隨著我們逐漸了解你，你將獲得[新功能](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)（以及[徽章](%{base_uri}/badges)）。
 
-          - 我們始終相信 [文明社群行為](%{base_uri}/guidelines)。
+          - 我們始終相信要遵守[文明的社群行為](%{base_uri}/guidelines)。
+      onebox:
+        instructions: |-
+          接下來，可以和我分享下列其中一個連結嗎？請回覆時將**連結單獨放在一行**，它會自動展開並顯示精美摘要。
+
+          若要複製任何連結，請在行動裝置上長按，或使用指標裝置按右鍵：
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
+        reply: |-
+          真酷！這適用於大多數 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 連結。請記得，連結必須_完全單獨放在一行_，前後不能有其他內容。
+        not_found: |-
+          抱歉，我在你的回覆中找不到連結！:cry:
+
+          可以在下一則回覆中，將下列連結單獨放在一行嗎？
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
+      images:
+        instructions: |-
+          這是一張獨角獸圖片：
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          如果你喜歡它（誰會不喜歡呢！），請按下方的讚 :heart: 按鈕告訴我。
+
+          你能**回覆一張圖片嗎？**任何圖片都可以！拖放、按上傳按鈕，甚至複製貼上都行。
+        reply: |-
+          好棒的圖片——我按了讚 :heart:，讓你知道我有多喜歡它 :heart_eyes:
+        like_not_found: |-
+          你是不是忘了對我的[貼文按讚？](%{url}) :heart: :crying_cat_face:
+        not_found: |-
+          看來你沒有上傳圖片，所以我挑了一張我_確定_你會喜歡的圖片。
+
+          <%{image_url}>
+
+          接下來試著上傳這張圖片，或將連結單獨貼在一行！
+      likes:
+        instructions: |-
+          這是一張獨角獸圖片：
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          如果你喜歡它（誰會不喜歡呢！），請按下方的讚 :heart: 按鈕告訴我。
+        reply: |-
+          謝謝你幫我的貼文按讚！
+        not_found: |-
+          你是不是忘了對我的[貼文按讚？](%{url}) :heart: :crying_cat_face:
+      formatting:
+        instructions: |-
+          你能在回覆中將一些文字設為**粗體**或_斜體_嗎？
+
+          - 輸入 `**粗體**` 或 `_斜體_`
+
+          - 或按編輯器中的 <kbd><b>B</b></kbd> 或 <kbd><i>I</i></kbd> 按鈕
+        reply: |-
+          做得好！HTML 與 BBCode 也能用來設定格式——若要深入了解，請[試試這個教學](https://commonmark.org/help) :nerd:
+        not_found: |-
+          哎呀，我在你的回覆中找不到任何格式。:pencil2:
+
+          可以再試一次嗎？若遇到困難，請使用編輯器中的 <kbd><b>B</b></kbd> 粗體或 <kbd><i>I</i></kbd> 斜體按鈕。
+      quoting:
+        instructions: |-
+          回覆時可以試著引用我的內容嗎？這樣我就能確切知道你在回覆哪一部分。
+
+          > 如果這是咖啡，請給我一些茶；但如果這是茶，請給我一些咖啡。
+          >
+          > 自言自語的一個好處是，你至少知道有人在聽。
+          >
+          > 有些人很會遣詞用字，其他人……喔，呃，不會用字。
+
+          選取你偏好的 &uarr; 引言文字，然後按出現在選取範圍上方的**引用**按鈕，或按此貼文下方的**回覆**按鈕。
+
+          在引言下方輸入一兩個字，說說你為何選擇它，因為我很好奇 :thinking:
+        reply: |-
+          做得好，你選了我最喜歡的引言！:left_speech_bubble:
+        not_found: |-
+          嗯，看來你的回覆中沒有引用我的內容？
+
+          選取我貼文中的任何文字，就會顯示 <kbd>**引用**</kbd> 按鈕。選取文字後按**回覆**也可以！可以再試一次嗎？
+      bookmark:
+        instructions: |-
+          若想深入了解，請選取下方的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">，然後選取 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> 來**將這則私人訊息加入書籤**。這麼做的話，未來可能會收到一份 :gift:！
+        reply: |-
+          太棒了！現在你隨時都能從[個人檔案中的書籤分頁](%{bookmark_url})輕鬆回到我們的對話。只要選取右上角的個人圖片 &#8599;
+        not_found: |-
+          糟糕，我在此主題中看不到任何書籤。你找到每篇貼文下方的書籤了嗎？如果需要，請使用顯示更多 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 來顯示其他動作。
+      emoji:
+        instructions: |-
+          你可能看過我在回覆中使用小圖片 :blue_car::dash:，這些稱為[表情符號](https://en.wikipedia.org/wiki/Emoji)。你能在回覆中**加入表情符號**嗎？下列任何方式都可以：
+
+          - 輸入 `:) ;) :D :P :O`
+
+          - 輸入冒號 <kbd>:</kbd>，再完成表情符號名稱 `:tada:`
+
+          - 按編輯器中的表情符號按鈕 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">，或使用行動裝置鍵盤
+        reply: |-
+          這真是 :sparkles: _表情符號超讚！_ :sparkles:
+        not_found: |-
+          糟糕，我在你的回覆中沒看到任何表情符號？不會吧！:sob:
+
+          試著輸入冒號 <kbd>:</kbd> 叫出表情符號選擇器，再輸入想要項目的前幾個字母，例如 `:bird:`
+
+          或者按編輯器中的表情符號按鈕 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">。
+
+          （如果你使用行動裝置，也可以直接用鍵盤輸入表情符號。）
+      mention:
+        instructions: |-
+          有時候即使不是直接回覆某人，你仍可能想引起對方注意。輸入 `@`，再補完使用者名稱即可提及對方。
+
+          你能在回覆中提及 **`@%{discobot_username}`** 嗎？
+        reply: |-
+          _有人叫我的名字嗎！？_ :raised_hand: 我想就是你！:wave: 我來了！謝謝你提及我。:ok_hand:
+        not_found: |-
+          我在裡面完全沒看到自己的名字 :frowning: 可以再用 `@%{discobot_username}` 提及我一次嗎？
+
+          （沒錯，我的使用者名稱拼作 _disco_，就是 1970 年代風靡一時的舞蹈。我真的[熱愛夜生活！](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:）
+      flag:
+        instructions: |-
+          我們希望討論保持友善，也需要你的協助來[維持文明交流](%{guidelines_url})。若發現問題，請提出檢舉，讓作者或[熱心的工作人員](%{about_url})知道。你可能基於許多原因檢舉貼文，從單純建議拆分主題，到明確違反社群規範。若選取**其他**，你會開始與版主進行私人訊息討論，以便進一步詢問。
+
+          > :imp: 我在這裡寫了些惡劣的內容
+
+          請**檢舉這篇貼文** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">，並選取**不當內容**作為理由！
+        reply: |-
+          [工作人員](%{group_url})會私下收到你的檢舉通知。如果有足夠多的社群成員檢舉同一篇貼文，系統也會基於預防措施自動隱藏該貼文。（因為我其實沒有寫惡劣的貼文 :angel:，所以暫時已替你移除檢舉。）
+        not_found: |-
+          糟糕，我那篇惡劣的貼文還沒有被檢舉為不當內容。:worried: 你能使用**檢舉** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 將它檢舉為不當內容嗎？別忘了使用顯示更多按鈕 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">，來顯示每篇貼文的其他動作。
+      search:
+        instructions: |-
+          _噓_……我在這個主題裡藏了一個驚喜。如果你願意接受挑戰，請**選取搜尋圖示** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">（右上方 &#8599;），選擇「在此主題中」，然後搜尋它。
+
+          試著在此主題中搜尋「capy&#8203;bara」
+        hidden_message: |-
+          你怎麼會漏掉這隻水豚？:wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          有注意到你現在又回到開頭了嗎？請**回覆 `%{search_answer}` 表情符號**餵餵這隻飢餓的可憐水豚，系統就會自動帶你到結尾。
+        reply: |-
+          太好了，你找到了 :tada:
+
+          - 若要進行更詳細的搜尋，請前往[完整搜尋頁面](%{search_url})。
+
+          - 若要在長篇討論中快速跳轉，請使用右側的主題時間軸控制項（在行動裝置上位於底部）。
+
+          - 如果你有實體 :keyboard:，按 <kbd>?</kbd> 即可查看方便的鍵盤快速鍵。
+        not_found: |-
+          嗯……看來你可能遇到困難了。很抱歉。你有用 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 搜尋 **capy&#8203;bara** 這個詞嗎？
+      end:
+        message: |-
+          謝謝你一路陪著我，@%{username}！這是我為你做的，我想你值得擁有：
+
+          %{certificate}
+
+          目前就到這裡！不妨看看[**最新討論主題**](%{base_uri}/latest)或[**討論分類**](%{base_uri}/categories)。:sunglasses:
+
+          （若想再次和我交談並了解更多，隨時傳訊息或提及 `@%{discobot_username}` 即可！）
+      certificate:
+        alt: "成就證書"
+    advanced_user_narrative:
+      reset_trigger: "進階教學"
+      cert_title: "茲證明已成功完成進階使用者教學"
+      title: ":arrow_up: 進階使用者功能"
+      start_message: |-
+        身為_進階_使用者，@%{username}，你造訪過[偏好設定頁面](%{base_uri}/my/preferences)了嗎？你可以用許多方式自訂使用體驗，例如選擇深色或淺色佈景主題。
+
+        不過我離題了，我們開始吧！
+      edit:
+        bot_created_post_raw: "@%{discobot_username} 是我認識最酷的機器人，沒有之一 :wink:"
+        instructions: |-
+          每個人都會犯錯。但別擔心，你隨時可以編輯貼文來修正！
+
+          可以先**編輯**我剛才代你建立的貼文嗎？
+        not_found: |-
+          看來你還沒編輯我替你建立的[貼文](%{url})。可以再試一次嗎？
+
+          使用 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> 圖示開啟編輯器。
+        reply: |-
+          做得好！
+
+          請注意，5 分鐘後進行的編輯會公開顯示為修訂版本，右上角也會出現一個小鉛筆圖示與修訂次數。
+      delete:
+        instructions: |-
+          若想撤回自己發布的貼文，可以將它刪除。
+
+          請使用 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **刪除**動作，**刪除**上方任一篇自己的貼文。但別刪除第一篇貼文！
+        not_found: |-
+          我還沒看到任何已刪除的貼文？請記得，<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 顯示更多會顯示 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> 刪除動作。
+        reply: |-
+          哇！:boom:
+
+          為了維持討論的連貫性，刪除不會立即生效，因此貼文會在一段時間後移除。
+      recover:
+        deleted_post_raw: "@%{discobot_username} 為什麼刪除我的貼文？:anguished:"
+        instructions: |-
+          糟糕！看來我不小心刪除了剛替你建立的新貼文。
+
+          可以幫個忙，使用 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> 將它**取消刪除**嗎？
+        not_found: |-
+          遇到困難了嗎？請記得，<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 顯示更多會顯示 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> 取消刪除。
+        reply: |-
+          呼，真是好險！謝謝你修正問題 :wink:
+
+          請注意，你只有 %{deletion_after} 小時可以取消刪除貼文。
+      category_hashtag:
+        instructions: |-
+          你知道貼文中可以引用分類與標籤嗎？例如，你看過 %{category} 分類嗎？
+
+          在句子中的任何位置輸入 `#`，再選取任一分類或標籤。
+        not_found: |-
+          嗯，我完全沒看到分類。可以把下面內容複製到下一則回覆嗎？
+
+          ```text
+          我可以透過 # 建立分類連結
+          ```
+        reply: |-
+          太棒了！請記得，如果已啟用標籤，此功能對分類_和_標籤都適用。
+      change_topic_notification_level:
+        instructions: |-
+          每個主題都有通知層級。起始為「一般」，表示通常只有在有人直接對你說話時才會通知你。
+
+          私人訊息的通知層級預設為最高的「監看」，表示每一則新回覆都會通知你。不過，你可以將_任何_主題的通知層級改為「監看」、「追蹤」或「靜音」。
+
+          讓我們試著變更此主題的通知層級。在主題底部，你會看到一個表示你正在**監看**此主題的按鈕。可以將通知層級改為**追蹤**嗎？
+        not_found: |-
+          看來你仍在監看 :eyes: 此主題！如果找不到，通知層級按鈕位於主題底部。
+        reply: |-
+          做得太棒了！希望你沒有將此主題設為靜音，因為我有時有點健談 :grin:。
+
+          請注意，當你回覆主題，或閱讀主題超過幾分鐘後，系統會自動將通知層級設為「追蹤」。你可以在[使用者偏好設定](%{base_uri}/my/preferences)中變更此設定。
+      poll:
+        instructions: |-
+          你知道可以在任何貼文中加入投票嗎？試著使用編輯器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 圖示來**建立投票**。
+        not_found: |-
+          糟糕！你的回覆中沒有投票。
+
+          使用編輯器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 圖示，或將此投票複製貼到下一則回覆中：
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+        reply: |-
+          嘿，投票很不錯！你覺得我教得如何？
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          有時你可能想在回覆中**隱藏詳細資料**：
+
+          - 討論電影或電視節目的劇情，而內容可能被視為暴雷時。
+
+          - 貼文需要包含大量選填詳細資料，一次全部讀完可能資訊過多時。
+
+          [details=選取這裡查看運作方式！]
+          1. 選取編輯器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 圖示。
+          2. 選取「隱藏詳細資料」。
+          3. 編輯詳細資料摘要並加入內容。
+          [/details]
+
+          你能使用編輯器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 圖示，在下一則回覆中加入詳細資料區段嗎？
+        not_found: |-
+          建立詳細資料小工具時遇到困難嗎？試著在下一則回覆中加入以下內容：
+
+          ```text
+          [details=選取我查看詳細資料]
+          以下是詳細資料
+          [/details]
+          ```
+        reply: |-
+          做得好——你對_細節_的重視令人佩服！
+      end:
+        message: |-
+          你確實像一位_進階使用者_般一路過關斬將 :bow:
+
+          %{certificate}
+
+          我要教你的就這些了。
+
+          暫時再見！若想再次和我交談，隨時傳訊息給我 :sunglasses:
+      certificate:
+        alt: "進階使用者教學成就證書"

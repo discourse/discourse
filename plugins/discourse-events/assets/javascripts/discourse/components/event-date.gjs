@@ -12,18 +12,18 @@ export default class EventDate extends Component {
         {{~#if this.siteSettings.use_local_event_date~}}
           <span
             class="event-date event-local-date past"
-            title={{this.dateRange}}
-            data-starts-at={{this.eventStartedAt}}
             data-ends-at={{this.eventEndedAt}}
+            data-starts-at={{this.eventStartedAt}}
+            title={{this.dateRange}}
           >
             {{this.localDateContent}}
           </span>
         {{else}}
           <span
             class="event-date event-relative-date {{this.relativeDateType}}"
-            title={{this.dateRange}}
-            data-starts-at={{this.eventStartedAt}}
             data-ends-at={{this.eventEndedAt}}
+            data-starts-at={{this.eventStartedAt}}
+            title={{this.dateRange}}
           >
             {{~#if this.isWithinDateRange~}}
               <span class="indicator"></span>

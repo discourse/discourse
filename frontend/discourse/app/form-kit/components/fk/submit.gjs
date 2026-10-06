@@ -8,14 +8,14 @@ export default class FKSubmit extends Component {
 
   <template>
     <DButton
-      @label={{this.label}}
-      @action={{@onSubmit}}
-      @forwardEvent="true"
       class="btn-primary form-kit__button"
       type="submit"
-      @isLoading={{@isLoading}}
-      @disabled={{@disabled}}
       ...attributes
+      @action={{@onSubmit}}
+      @disabled={{@disabled}}
+      @forwardEvent="true"
+      @isLoading={{@isLoading}}
+      @label={{this.label}}
     />
   </template>
 }

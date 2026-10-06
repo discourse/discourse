@@ -190,8 +190,8 @@ export default class PostersByMemberTypeReport extends Component {
       {{#if this.selectedRow}}
         <div class="posters-by-member-type-report__members">
           <div
-            class="posters-by-member-type-report__members-header"
             aria-label={{this.membersAriaLabel}}
+            class="posters-by-member-type-report__members-header"
           >
             <div class="posters-by-member-type-report__members-heading">
               <h3 class="posters-by-member-type-report__members-name">
@@ -205,17 +205,14 @@ export default class PostersByMemberTypeReport extends Component {
             </div>
             <DButton
               class="btn-flat posters-by-member-type-report__members-close"
+              @action={{this.deselectGroup}}
               @icon="xmark"
               @translatedAriaLabel={{this.deselectAriaLabel}}
-              @action={{this.deselectGroup}}
             />
           </div>
           {{#each (array this.selectedGroupKey) key="@identity" as |groupKey|}}
             <AdminReport
               @dataSourceName="posters_by_member_type_members"
-              @showHeader={{false}}
-              @showFilteringUI={{false}}
-              @onDataLoaded={{this.onMembersLoaded}}
               @filters={{hash
                 startDate=this.startDate
                 endDate=this.endDate
@@ -223,6 +220,9 @@ export default class PostersByMemberTypeReport extends Component {
                   group=groupKey category_ids=this.categoryIdsParam
                 )
               }}
+              @onDataLoaded={{this.onMembersLoaded}}
+              @showFilteringUI={{false}}
+              @showHeader={{false}}
             />
           {{/each}}
         </div>

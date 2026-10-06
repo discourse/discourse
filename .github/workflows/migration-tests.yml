@@ -21,51 +21,16 @@ permissions:
   contents: read
 
 jobs:
-  gems:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Gems
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
-    container: discourse/discourse_test:release
-    timeout-minutes: 15
-
-    steps:
-      - name: Set working directory owner
-        run: chown root:root .
-
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-
-      - name: RSpec (isolated, no Rails)
-        # Each gem uses its own Gemfile (not the app's), so Rails is not on the
-        # load path. This proves the gems work standalone.
-        run: |
-          for gem in core tooling converters importer; do
-            echo "== migrations-$gem =="
-            (cd "migrations/$gem" && bundle install --jobs $(($(nproc) - 1)) && bundle exec rspec --tag ~rails)
-          done
-
-      - name: Converter coverage (no Rails)
-        run: |
-          # Reuse the image's prebuilt bundle so a Gemfile.lock change installs
-          # only the delta, not the whole root bundle.
-          ln -s /var/www/discourse/vendor/bundle vendor/bundle
-          bundle config set --local path vendor/bundle
-          bundle config set --local deployment true
-          bundle config set --local without development
-          bundle config set --local with migrations
-          bundle install --jobs $(($(nproc) - 1))
-          # Fails if the reference (Discourse) converter leaves an IntermediateDB
-          # column unwritten, or writes columns or models that don't exist in the
-          # schema. Runs without Rails or a source database.
-          migrations/bin/disco check coverage
-
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests
     runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: 20
+    timeout-minutes: 25
+
+    defaults:
+      run:
+        shell: bash
 
     env:
       RAILS_ENV: test
@@ -99,21 +64,38 @@ jobs:
         run: |
           ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
-      - name: Setup gems
-        run: |
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle config --local with migrations
-          bundle install --jobs $(($(nproc) - 1))
+      - parallel:
+          - name: Setup gems
+            run: |
+              bundle config set --local path vendor/bundle
+              bundle config set --local deployment true
+              bundle config set --local without development
+              bundle config set --local with migrations
+              bundle install --jobs $(($(nproc) - 1))
+              bundle clean
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
+          # The markdown engine specs build the parser bundle, which needs the
+          # checkout's frontend dependencies (vendored libraries, the
+          # pretty-text-processor build) - node, not Rails.
+          - name: pnpm install
+            run: pnpm install --frozen-lockfile
 
-      - name: Create and migrate database
-        run: |
-          bin/rake db:create
-          script/silence_successful_output bin/rake db:migrate
+      - parallel:
+          - name: RSpec (no Rails)
+            # The wrapper resolves the suites through the app's Gemfile, so the
+            # root lockfile governs the versions here, locally, and at runtime.
+            # Nothing boots Rails here; specs that need it are tagged `:rails`
+            # and run after the database is up.
+            run: |
+              for gem in core tooling converters importer; do
+                echo "== migrations-$gem =="
+                (cd "migrations/$gem" && ../bin/rspec --tag ~rails)
+              done
+
+          - name: Create and migrate database
+            run: |
+              bin/rake db:create
+              script/silence_successful_output bin/rake db:migrate
 
       - name: Run all schema and converter checks (disco check)
         run: |
@@ -129,5 +111,5 @@ jobs:
         run: |
           for gem in core tooling converters importer; do
             echo "== migrations-$gem (Rails integration) =="
-            (cd "migrations/$gem" && LD_PRELOAD="$RUBY_ALLOCATOR" BUNDLE_GEMFILE="$GITHUB_WORKSPACE/Gemfile" bundle exec rspec --tag rails)
+            (cd "migrations/$gem" && LD_PRELOAD="$RUBY_ALLOCATOR" ../bin/rspec --tag rails)
           done

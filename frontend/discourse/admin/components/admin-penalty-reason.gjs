@@ -66,17 +66,17 @@ export default class AdminPenaltyReason extends Component {
             "admin.user.suspend_reason_title"
           }}</label>
         <ComboBox
-          @content={{this.reasons}}
-          @value={{this.selectedReason}}
-          @onChange={{this.setSelectedReason}}
           class="suspend-reason"
+          @content={{this.reasons}}
+          @onChange={{this.setSelectedReason}}
+          @value={{this.selectedReason}}
         />
 
         {{#if this.isCustomReason}}
           <DTextField
-            @value={{this.customReason}}
-            @onChange={{this.setCustomReason}}
             class="suspend-reason"
+            @onChange={{this.setCustomReason}}
+            @value={{this.customReason}}
           />
         {{/if}}
       {{else if (eq @penaltyType "silence")}}
@@ -84,18 +84,18 @@ export default class AdminPenaltyReason extends Component {
           {{trustHTML (i18n "admin.user.silence_reason_label")}}</label>
 
         <ComboBox
-          @content={{this.reasons}}
-          @value={{this.selectedReason}}
-          @onChange={{this.setSelectedReason}}
           class="silence-reason"
+          @content={{this.reasons}}
+          @onChange={{this.setSelectedReason}}
+          @value={{this.selectedReason}}
         />
 
         {{#if this.isCustomReason}}
           <DTextField
-            @value={{this.customReason}}
+            class="silence-reason"
             @onChange={{this.setCustomReason}}
             @placeholderKey="admin.user.silence_reason_placeholder"
-            class="silence-reason"
+            @value={{this.customReason}}
           />
         {{/if}}
       {{/if}}
@@ -104,9 +104,9 @@ export default class AdminPenaltyReason extends Component {
     <div class="penalty-message-controls">
       <label>{{i18n "admin.user.suspend_message"}}</label>
       <Textarea
-        @value={{this.message}}
         class="suspend-message"
         placeholder={{i18n "admin.user.suspend_message_placeholder"}}
+        @value={{this.message}}
       />
     </div>
   </template>

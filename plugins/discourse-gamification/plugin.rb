@@ -73,10 +73,7 @@ after_initialize do
   end
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/gamification_score/v1"
-      DiscourseWorkflows::Nodes::GamificationScore::V1
-    end
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::GamificationScore::V1 }
   end
 
   add_directory_column(

@@ -34,6 +34,15 @@ RSpec.describe "SiteSetting.styleguide_allowed_groups" do
         expect(response.status).to eq(404)
       end
 
+      context "when styleguide_allowed_groups includes anonymous_users" do
+        before { SiteSetting.styleguide_allowed_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}" }
+
+        it "shows the styleguide" do
+          get "/styleguide"
+          expect(response.status).to eq(200)
+        end
+      end
+
       context "when granular_anonymous_and_logged_in_groups_permissions is not enabled" do
         before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false }
 

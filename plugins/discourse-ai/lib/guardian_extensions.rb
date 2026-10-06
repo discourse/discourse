@@ -28,11 +28,8 @@ module DiscourseAi
       if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summary_gists_agent)).blank?
         return false
       end
-      agent_groups = ai_agent.allowed_group_ids.to_a
-      return true if agent_groups.include?(Group::AUTO_GROUPS[:everyone])
-      return false if anonymous?
 
-      agent_groups.any? { |group_id| user.group_ids.include?(group_id) }
+      in_any_groups?(ai_agent.allowed_group_ids.to_a)
     end
 
     def can_request_gists?

@@ -12,7 +12,6 @@ uk:
           discourse_rewind: "Перемотка"
   js:
     discourse_rewind:
-      placeholder: Перемотка
       title: Перемотай назад.
       loading: "Збирання сплайнів..."
       viewing_other_user: "Ви переглядаєте <strong>%{username}</strong> звіт \"Перемотування дискурсу\"."
@@ -112,18 +111,14 @@ uk:
             many: "Найкращі %{count} дописів %{username}"
             other: "Найкращі %{count} дописів %{username}"
         ai_usage:
-          title: Використання ШІ
           total_requests: Всього запитів
           total_tokens: Всього токенів
           success_rate: Коефіцієнт успіху
-          favorite_features: Найчастіше використовувані функції
-          favorite_models: Найбільш використовувані моделі штучного інтелекту
           wake_up: "Прокинься, %{username}..."
           system_title: "ВИЯВЛЕНО ВИКОРИСТАННЯ ШІ"
           section_features: "ГОЛОВНІ ОСОБЛИВОСТІ"
           section_models: "ТОП-МОДЕЛІ"
         assignments:
-          title: Призначення
           total_assigned: Призначено мені
           total_assigned_others: "Призначено %{username}"
           completed: Призначення виконані
@@ -132,13 +127,6 @@ uk:
           completion_rate: Показник завершених
         chat_usage:
           title: Активність в чаті
-          total_messages: Всього повідомлень
-          dm_messages: Прямі повідомлення
-          unique_dm_channels: Розмови в прямих повідомленнях
-          reactions_received: Отримані реакції
-          avg_message_length: Середня довжина повідомлення
-          favorite_channels: Улюблені канали
-          messages: повідомлення
           bot_name: XxRewindBotxX
           author: Ви
           author_others: "%{username}"
@@ -172,34 +160,7 @@ uk:
           message_4: "Середня довжина вашого повідомлення становила <strong>%{length}</strong> символів"
           message_5: "Ваші улюблені канали:"
           dancing_baby_alt: "Танцююча дитина"
-        favorite_gifs:
-          title:
-            one: Ваш улюблений GIF
-            few: Ваші %{count} улюблені GIF
-            many: Ваші %{count} улюблені GIF
-            other: Ваші %{count} улюблені GIF
-          title_others:
-            one: "Улюблений GIF від %{username}"
-            few: "Улюблені %{count} GIF від %{username}"
-            many: "Улюблені %{count} GIF від %{username}"
-            other: "Улюблені %{count} GIF від %{username}"
-          total_usage:
-            one: Використано %{count} раз
-            few: Використано %{count} разів
-            many: Використано %{count} разів
-            other: Використано %{count} разів
         invites:
-          title: Запрошення
-          total_invites: Всього надіслано запрошень
-          redeemed: Прийняті запрошення
-          redemption_rate: Коефіцієнт прийняття
-          avg_trust_level: Середній рівень довіри
-          invitee_impact: Вплив ваших запрошених
-          invitee_impact_others: "Вплив запрошених на %{username}"
-          invitee_posts: Дописів створено
-          invitee_topics: Розпочаті теми
-          invitee_likes: Вподобані
-          most_active_invitee: Найактивніші запрошення
           guest_book_title: Гостьова книга
           guest_book_subtitle: Ваші запрошення до спільноти
           guest_book_subtitle_others: "Запрошення до спільноти %{username}"
@@ -212,28 +173,11 @@ uk:
           label_likes_given: "Вподобайки:"
           section_most_active: Найактивніший гість
         new_user_interactions:
-          title: Наставництво для нових користувачів
-          subtitle:
-            one: Ви допомогли %{count} новому користувачеві цього року
-            few: Ви допомогли %{count} новим користувачам цього року
-            many: Ви допомогли %{count} новим користувачам цього року
-            other: Ви допомогли %{count} новим користувачам цього року
-          subtitle_others:
-            one: "%{username} допоміг %{count} новому користувачеві цього року"
-            few: "%{username} допоміг %{count} новим користувачам цього року"
-            many: "%{username} допоміг %{count} новим користувачам цього року"
-            other: "%{username} допоміг %{count} новим користувачам цього року"
           new_member:
             one: "%{count} новий учасник"
             few: "%{count} нові учасники"
             many: "%{count} нові учасники"
             other: "%{count} нові учасники"
-          total_interactions: Загальна кількість взаємодій
-          unique_new_users: Унікальні нові користувачі
-          likes_given: Вподобані
-          replies: Відповіді на дописи
-          mentions: Згадки
-          topics_with_new_users: Теми з новими користувачами
           contributions_helped: ваші внески допомогли
           contributions_helped_others: "Внесок користувача %{username} допоміг"
         time_of_day_activity:

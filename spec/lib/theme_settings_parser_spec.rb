@@ -72,7 +72,7 @@ RSpec.describe ThemeSettingsParser do
   end
 
   describe "enum setting" do
-    it "should never have less than 1 choices" do
+    it "retains at least one choice" do
       choices = loader.find_by_name(:enum_setting)[:opts][:choices]
       expect(choices.class).to eq(Array)
       expect(choices.length).to eq(3)

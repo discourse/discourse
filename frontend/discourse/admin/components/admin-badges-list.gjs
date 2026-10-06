@@ -26,16 +26,16 @@ export default class AdminBadgesList extends Component {
     <div class="content-list">
       <DFilterControls
         @array={{@badges}}
-        @searchableProps={{this.searchableProps}}
-        @textFilterQueryParam="filter"
         @inputPlaceholder={{i18n "admin.badges.filter_placeholder"}}
         @noResultsMessage={{i18n "admin.badges.no_badges_found"}}
+        @searchableProps={{this.searchableProps}}
+        @textFilterQueryParam="filter"
       >
         <:content as |filteredBadges|>
           <ul class="admin-badge-list">
             {{#each filteredBadges as |badge|}}
               <li class="admin-badge-list-item">
-                <LinkTo @route={{this.selectedRoute}} @model={{badge.id}}>
+                <LinkTo @model={{badge.id}} @route={{this.selectedRoute}}>
                   <DBadgeButton @badge={{badge}} />
                   {{#if badge.newBadge}}
                     <span class="list-badge">{{i18n

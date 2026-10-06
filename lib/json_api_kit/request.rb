@@ -2,15 +2,19 @@
 
 module JsonApiKit
   class Request
-    attr_reader :guardian
+    LIST = ","
+    SORT_DIRECTIONS = { "-" => :desc, "" => :asc }.freeze
 
-    def initialize(params = {}, guardian:)
+    attr_reader :guardian, :edition
+
+    def initialize(params = {}, guardian:, edition:)
       @params = ActiveSupport::HashWithIndifferentAccess.new(params)
       @page_params = @params[:page].to_h.symbolize_keys
       @guardian = guardian
+      @edition = edition
     end
 
-    def ordering = @ordering ||= params[:sort].to_h
+    def ordering = params.fetch(:sort)
 
     def filtering = @filtering ||= params[:filter].to_h
 

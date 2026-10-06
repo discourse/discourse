@@ -11,11 +11,13 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
   it "combines Discourse knowledge, general administration, and site-setting tools" do
     expect(assistant.tools).to eq(
       [
+        DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage,
         DiscourseAi::Agents::Tools::DiscourseMetaSearch,
         DiscourseAi::Agents::Tools::ListCategories,
         DiscourseAi::Agents::Tools::ListTags,
         DiscourseAi::Agents::Tools::SettingContext,
         DiscourseAi::Agents::Tools::SearchSettings,
+        DiscourseAi::Agents::Tools::SearchDiscourseNavigation,
         DiscourseAi::Agents::Tools::ReadSiteSetting,
         DiscourseAi::Agents::Tools::ChangeSiteSetting,
         DiscourseAi::Agents::Tools::ListReviewables,
@@ -58,27 +60,21 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
     expect(assistant.stop_chain_on_pending_approval?).to eq(true)
   end
 
-  it "reconciles its code-managed RAG document sources" do
-    agent = AiAgent.find(-39)
-    stale_managed_source =
-      RagDocumentSource.create!(
-        target: agent,
-        url: "https://example.com/old-admin-guide",
-        managed: true,
-      )
-    unmanaged_source =
-      RagDocumentSource.create!(target: agent, url: "https://example.com/custom-admin-guide")
+  it "instructs the model to route requests to the appropriate source tool" do
+    prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new)
 
-    load Rails.root.join("plugins/discourse-ai/db/fixtures/agents/603_ai_agents.rb") # rubocop:disable Discourse/Plugins/UseRequireRelative
-
-    expect(
-      agent.reload.rag_document_sources.pluck(:url, :refresh_interval_hours, :managed),
-    ).to contain_exactly(
-      ["https://www.discourse.org/pricing", 24, true],
-      ["https://example.com/custom-admin-guide", 24, false],
+    expect(prompt.system_message_text).to include(
+      "For questions about public Discourse hosting plans and pricing, call `load_discourse_website_page` with `page_name` set to `pricing`",
+      "For managing this site's hosting account, subscription, invoices, or billing, use `search_discourse_navigation`",
+      "Never invent a path",
+      "For general questions about Discourse, call `search_meta_discourse` twice before answering",
+      "For questions about this site's configuration or content, use the relevant site and administration tools",
     )
-    expect(RagDocumentSource.exists?(stale_managed_source.id)).to eq(false)
-    expect(RagDocumentSource.exists?(unmanaged_source.id)).to eq(true)
+    expect(prompt.tools.map(&:name)).to include(
+      "load_discourse_website_page",
+      "search_meta_discourse",
+      "search_discourse_navigation",
+    )
   end
 
   it "is only available to administrators" do

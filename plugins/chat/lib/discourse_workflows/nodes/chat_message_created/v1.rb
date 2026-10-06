@@ -15,6 +15,7 @@ if defined?(DiscourseWorkflows)
               color: "teal",
             },
             group: "discourse_triggers",
+            event: :chat_message_created,
             available: -> { SiteSetting.chat_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_chat",
             output_contracts: [
@@ -91,7 +92,7 @@ if defined?(DiscourseWorkflows)
             },
           )
 
-          def initialize(message, channel, user)
+          def initialize(message, channel, user, *)
             super(parameters: {})
             @message = message
             @channel = channel

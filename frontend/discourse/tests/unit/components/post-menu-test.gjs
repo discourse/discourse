@@ -35,8 +35,8 @@ module("Unit | Component | PostMenu", function (hooks) {
       <template>
         <PostMenu
           @post={{post}}
-          @toggleReplies={{noop}}
           @repliesShown={{false}}
+          @toggleReplies={{noop}}
         />
       </template>
     );
@@ -48,10 +48,10 @@ module("Unit | Component | PostMenu", function (hooks) {
     await render(
       <template>
         <PostMenu
-          @post={{post}}
           @nestedReplyView={{true}}
-          @toggleReplies={{noop}}
+          @post={{post}}
           @repliesShown={{false}}
+          @toggleReplies={{noop}}
         />
       </template>
     );

@@ -42,11 +42,11 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
       <template>
         <ComboBox
           @content={{this.content}}
-          @value={{this.value}}
-          @valueProperty="value"
           @nameProperty="name"
           @onChange={{this.onChange}}
           @options={{hash castInteger=true}}
+          @value={{this.value}}
+          @valueProperty="value"
         />
       </template>
     );
@@ -73,10 +73,10 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
           @options={{hash clearable=this.clearable}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -103,12 +103,12 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @options={{hash
             caretUpIcon=this.caretUpIcon
             caretDownIcon=this.caretDownIcon
           }}
+          @value={{this.value}}
         />
       </template>
     );

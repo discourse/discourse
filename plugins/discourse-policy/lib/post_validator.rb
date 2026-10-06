@@ -7,13 +7,15 @@ module DiscoursePolicy
     end
 
     def validate_post
-      old_raw = @post.changes[:raw]&.first
       new_raw = @post.raw
-
-      return true if !old_raw&.include?("[/policy]") && !new_raw.include?("[/policy]")
 
       old_policies = extract_policies(@post.cooked)
       new_policies = extract_policies(PrettyText.cook(new_raw, {}))
+
+      if @post.wiki? && new_policies.present?
+        @post.errors.add(:base, I18n.t("discourse_policy.errors.policy_cannot_be_wiki"))
+        return false
+      end
 
       return true if old_policies == new_policies
 

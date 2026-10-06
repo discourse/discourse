@@ -82,11 +82,7 @@ class DashboardRollupRebuilder
   end
 
   def earliest_event_date
-    @earliest_event_date ||=
-      BrowserPageviewEvent
-        .where(BrowserPageviewEvent.rollup_source_condition)
-        .minimum(:created_at)
-        &.to_date
+    @earliest_event_date ||= BrowserPageviewEvent.minimum(:created_at)&.to_date
   end
 
   def log(message)

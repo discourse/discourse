@@ -17,6 +17,38 @@ export default class SiteSettingChangeTracker extends Service {
 
   @tracked dirtySiteSettings = trackedSet();
 
+  get count() {
+    return this.dirtySiteSettings.size;
+  }
+
+  get hasUnsavedChanges() {
+    return this.count > 0;
+  }
+
+  get saveLabel() {
+    const count = this.hasUnsavedChanges ? "other" : "one";
+
+    return `admin.site_settings.save.${count}`;
+  }
+
+  get discardLabel() {
+    const count = this.hasUnsavedChanges ? "other" : "one";
+
+    return `admin.site_settings.discard.${count}`;
+  }
+
+  get #requiresConfirmation() {
+    return [...this.dirtySiteSettings].filter(
+      (setting) => setting.requiresConfirmation
+    );
+  }
+
+  get #affectsExistingUsers() {
+    return [...this.dirtySiteSettings].filter(
+      (setting) => setting.affectsExistingUsers
+    );
+  }
+
   add(setting) {
     this.dirtySiteSettings.add(setting);
   }
@@ -172,18 +204,6 @@ export default class SiteSettingChangeTracker extends Service {
     }
   }
 
-  #startSaving() {
-    this.dirtySiteSettings.forEach((setting) => {
-      setting.isSaving = true;
-    });
-  }
-
-  #stopSaving() {
-    this.dirtySiteSettings.forEach((setting) => {
-      setting.isSaving = false;
-    });
-  }
-
   refreshPage(params) {
     if (params.base_font) {
       document.documentElement.style.setProperty(
@@ -238,35 +258,15 @@ export default class SiteSettingChangeTracker extends Service {
     }
   }
 
-  get count() {
-    return this.dirtySiteSettings.size;
+  #startSaving() {
+    this.dirtySiteSettings.forEach((setting) => {
+      setting.isSaving = true;
+    });
   }
 
-  get hasUnsavedChanges() {
-    return this.count > 0;
-  }
-
-  get saveLabel() {
-    const count = this.hasUnsavedChanges ? "other" : "one";
-
-    return `admin.site_settings.save.${count}`;
-  }
-
-  get discardLabel() {
-    const count = this.hasUnsavedChanges ? "other" : "one";
-
-    return `admin.site_settings.discard.${count}`;
-  }
-
-  get #requiresConfirmation() {
-    return [...this.dirtySiteSettings].filter(
-      (setting) => setting.requiresConfirmation
-    );
-  }
-
-  get #affectsExistingUsers() {
-    return [...this.dirtySiteSettings].filter(
-      (setting) => setting.affectsExistingUsers
-    );
+  #stopSaving() {
+    this.dirtySiteSettings.forEach((setting) => {
+      setting.isSaving = false;
+    });
   }
 }

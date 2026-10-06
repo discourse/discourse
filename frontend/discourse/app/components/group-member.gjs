@@ -21,7 +21,7 @@ export default class GroupMember extends Component {
       </a>
       <span>{{this.member.username}}</span>
       {{#unless this.automatic}}
-        <a href {{on "click" this.remove}} class="remove">
+        <a class="remove" href {{on "click" this.remove}}>
           {{dIcon "xmark"}}
         </a>
       {{/unless}}

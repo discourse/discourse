@@ -92,19 +92,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  _collectTitleTokens(tokens) {
-    tokens.push(this.siteTitle);
-    if (
-      (window.location.pathname === getURL("/") ||
-        window.location.pathname === getURL("/login")) &&
-      this.shortSiteDescription !== ""
-    ) {
-      tokens.push(this.shortSiteDescription);
-    }
-    this.documentTitle.setTitle(tokens.join(" - "));
-  }
-
-  @action
   composePrivateMessage(user, post) {
     const recipients = user ? user.get("username") : "";
     const reply = post
@@ -263,5 +250,18 @@ export default class ApplicationRoute extends DiscourseRoute {
       body: topicBody,
       hasGroups,
     });
+  }
+
+  @action
+  _collectTitleTokens(tokens) {
+    tokens.push(this.siteTitle);
+    if (
+      (window.location.pathname === getURL("/") ||
+        window.location.pathname === getURL("/login")) &&
+      this.shortSiteDescription !== ""
+    ) {
+      tokens.push(this.shortSiteDescription);
+    }
+    this.documentTitle.setTitle(tokens.join(" - "));
   }
 }

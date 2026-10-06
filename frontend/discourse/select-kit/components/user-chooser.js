@@ -33,10 +33,6 @@ export const CUSTOM_USER_SEARCH_OPTIONS = [];
 export default class UserChooser extends MultiSelectComponent {
   valueProperty = "username";
 
-  modifyComponentForRow() {
-    return UserRow;
-  }
-
   @computed("value.[]")
   get content() {
     return makeArray(this.value).map((x) => this.defaultItem(x, x));
@@ -56,6 +52,10 @@ export default class UserChooser extends MultiSelectComponent {
     }
 
     return usernames.concat(options.excludedUsernames || []);
+  }
+
+  modifyComponentForRow() {
+    return UserRow;
   }
 
   search(filter = "") {

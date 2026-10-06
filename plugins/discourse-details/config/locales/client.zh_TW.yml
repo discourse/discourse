@@ -5,7 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Discourse 詳細內容"
   js:
+    details:
+      title: 隱藏詳細內容
     composer:
       details_title: 摘要
       details_text: "此文字將被隱藏"

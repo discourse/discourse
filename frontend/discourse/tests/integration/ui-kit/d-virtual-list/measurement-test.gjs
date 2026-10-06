@@ -67,9 +67,9 @@ module("Integration | ui-kit | DVirtualList | measurement", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           as |item|
         >
           <div class="row {{item.sizeClass}}">{{item.text}}</div>
@@ -113,9 +113,9 @@ module("Integration | ui-kit | DVirtualList | measurement", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           as |item|
         >
           <div class="row {{item.sizeClass}}">{{item.text}}</div>
@@ -187,9 +187,9 @@ module("Integration | ui-kit | DVirtualList | measurement", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{recordingEstimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{recordingEstimate}}
           as |item|
         >
           <div class="row {{item.sizeClass}}">{{item.text}}</div>

@@ -5,6 +5,51 @@ module DiscourseWorkflows
     include NodeErrorHandling
     extend NodeTypeDescriptor
 
+    TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
+
+    TOPIC_TYPE_FILTER_PROPERTIES = {
+      topic_type: {
+        type: :options,
+        required: true,
+        default: "topics",
+        options: TOPIC_TYPE_OPTIONS,
+      },
+    }.freeze
+
+    CATEGORY_FILTER_PROPERTIES = {
+      category_ids: {
+        type: :array,
+        required: false,
+        ui: {
+          control: :category,
+          multiple: true,
+        },
+      },
+      include_subcategories: {
+        type: :boolean,
+        required: false,
+        default: true,
+        ui: {
+          control: :checkbox,
+        },
+        display_options: {
+          show: {
+            category_ids: [{ condition: { exists: true } }],
+          },
+        },
+      },
+    }.freeze
+
+    TAG_FILTER_PROPERTIES = {
+      tag_names: {
+        type: :string,
+        required: false,
+        ui: {
+          control: :tags,
+        },
+      },
+    }.freeze
+
     DESCRIPTION_DEFAULTS = {
       version: "1.0",
       defaults: {
@@ -16,7 +61,7 @@ module DiscourseWorkflows
       },
       credentials: [],
       webhooks: [],
-      events: [],
+      event: nil,
       max_nodes: nil,
       capabilities: {
       },
@@ -201,8 +246,12 @@ module DiscourseWorkflows
     end
     private_class_method :unknown_contract?
 
-    def self.event_name
-      Array(description[:events]).first
+    def self.event_names
+      Array.wrap(description[:event]).map(&:to_sym)
+    end
+
+    def self.from_event(_event_name, *args)
+      new(*args)
     end
 
     def self.manually_triggerable?
@@ -284,30 +333,6 @@ module DiscourseWorkflows
       category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
     end
 
-    def self.matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
-      return true if category_ids.empty?
-
-      category_ids = expand_subcategory_ids(category_ids) if include_subcategories != false
-      category_ids.include?(topic_category_id)
-    end
-
-    def self.matches_user_groups?(user, group_ids)
-      raw_group_ids = Array.wrap(group_ids).reject(&:blank?)
-      return true if raw_group_ids.empty?
-
-      group_ids =
-        raw_group_ids.filter_map do |group_id|
-          value = group_id.to_s
-          value.to_i if value.match?(/\A\d+\z/)
-        end
-      group_ids.present? && !!user&.in_any_groups?(group_ids)
-    end
-
-    def self.matches_reviewable_types?(reviewable, reviewable_types)
-      reviewable_types = Array.wrap(reviewable_types).compact_blank
-      reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
-    end
-
     def self.reviewable_type_options
       Reviewable
         .types
@@ -370,8 +395,49 @@ module DiscourseWorkflows
       self.class.category_ids_parameter(trigger_ctx)
     end
 
+    def matches_topic_filters?(topic, trigger_ctx)
+      matches_category_ids?(
+        topic.category_id,
+        category_ids_parameter(trigger_ctx),
+        include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
+      ) && matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+    end
+
     def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
-      self.class.matches_category_ids?(topic_category_id, category_ids, include_subcategories:)
+      return true if category_ids.empty?
+
+      category_ids = self.class.expand_subcategory_ids(category_ids) if include_subcategories !=
+        false
+      category_ids.include?(topic_category_id)
+    end
+
+    def matches_topic_type?(topic, topic_type)
+      case topic_type.presence || "topics"
+      when "all"
+        true
+      when "topics"
+        !topic.private_message?
+      when "personal_messages"
+        topic.private_message?
+      else
+        false
+      end
+    end
+
+    def matches_group_inbox?(topic, group_id)
+      return true if group_id.blank?
+      return false if !topic.private_message?
+
+      topic.allowed_groups.exists?(id: group_id.to_i)
+    end
+
+    def matches_tags?(topic, tag_names)
+      tag_names.empty? || (topic_tag_names(topic) & tag_names).any?
+    end
+
+    def topic_tag_names(topic)
+      @topic_tag_names ||= {}
+      @topic_tag_names[topic.id] ||= topic.tags.pluck(:name)
     end
 
     def resolve_timezone(exec_ctx, item_index)
@@ -389,11 +455,20 @@ module DiscourseWorkflows
     end
 
     def matches_user_groups?(user, group_ids)
-      self.class.matches_user_groups?(user, group_ids)
+      raw_group_ids = Array.wrap(group_ids).reject(&:blank?)
+      return true if raw_group_ids.empty?
+
+      group_ids =
+        raw_group_ids.filter_map do |group_id|
+          value = group_id.to_s
+          value.to_i if value.match?(/\A\d+\z/)
+        end
+      group_ids.present? && !!user&.in_any_groups?(group_ids)
     end
 
     def matches_reviewable_types?(reviewable, reviewable_types)
-      self.class.matches_reviewable_types?(reviewable, reviewable_types)
+      reviewable_types = Array.wrap(reviewable_types).compact_blank
+      reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
     end
 
     def reviewable_data(reviewable)

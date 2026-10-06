@@ -110,7 +110,7 @@ describe DiscourseTemplates::TopicExtension do
       end
     end
 
-    it "won't leak state into the Category.subcategory_ids cache" do
+    it "does not leak state into the Category.subcategory_ids cache" do
       category = Fabricate(:category_with_definition)
       subcategory = Fabricate(:category_with_definition, parent_category: category)
       topic = Fabricate(:template_item, category: subcategory)

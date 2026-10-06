@@ -3,13 +3,13 @@ import { threadNotificationButtonLevels } from "discourse/plugins/chat/discourse
 
 const ThreadNotificationsTracking = <template>
   <NotificationsTracking
-    @onChange={{@onChange}}
-    @levels={{threadNotificationButtonLevels}}
+    class="thread-notifications-tracking"
     @levelId={{@levelId}}
+    @levels={{threadNotificationButtonLevels}}
+    @onChange={{@onChange}}
+    @prefix="chat.thread.notifications"
     @showCaret={{false}}
     @showFullTitle={{false}}
-    @prefix="chat.thread.notifications"
-    class="thread-notifications-tracking"
     @triggerClass="btn-transparent"
   />
 </template>;

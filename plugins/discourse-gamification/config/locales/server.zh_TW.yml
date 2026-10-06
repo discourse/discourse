@@ -5,3 +5,34 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    discourse_gamification_enabled: "啟用 Discourse 遊戲化外掛"
+    like_received_score_value: "使用者收到讚時獲得的喝采值"
+    like_given_score_value: "使用者每送出一個讚時獲得的喝采值"
+    solution_score_value: "使用者的貼文被標記為解決方案時獲得的喝采值"
+    user_invited_score_value: "使用者的邀請被兌換時獲得的喝采值"
+    time_read_score_value: "使用者每閱讀一小時所獲得的喝采值"
+    post_read_score_value: "使用者每閱讀一百篇貼文所獲得的喝采值"
+    topic_created_score_value: "使用者建立主題時獲得的喝采值"
+    post_created_score_value: "使用者建立貼文時獲得的喝采值"
+    flag_created_score_value: "使用者檢舉貼文且該檢舉獲工作人員接受時獲得的喝采值"
+    day_visited_score_value: "使用者每天造訪網站時獲得的喝采值"
+    scorable_categories: "動作會產生喝采的分類清單。留空則在所有分類啟用喝采"
+    reaction_received_score_value: "使用者收到回應時獲得的喝采值"
+    reaction_given_score_value: "使用者每送出一個回應時獲得的喝采值"
+    chat_reaction_received_score_value: "使用者的聊天訊息收到回應時獲得的喝采值"
+    chat_reaction_given_score_value: "使用者每對聊天訊息送出一個回應時獲得的喝采值"
+    chat_message_created_score_value: "使用者每在聊天室傳送一則訊息時獲得的喝采值"
+    score_ranking_strategy: "排行榜名次排序策略"
+  score: "喝采"
+  default_leaderboard_name: "全站排行榜"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "你已達到重新計算分數的次數上限。請等待 %{time_left} 後再試。"
+  errors:
+    leaderboard_positions_not_ready: "我們正在產生你的排行榜。請幾分鐘後再試。"
+  discourse_gamification:
+    discourse_workflows:
+      gamification_score:
+        invalid_points: "積分必須是非零整數，收到的值：%{points}"
+        invalid_date: "日期無效：%{date}"

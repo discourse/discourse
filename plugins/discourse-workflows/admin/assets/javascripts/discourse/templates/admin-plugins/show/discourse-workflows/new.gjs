@@ -8,6 +8,6 @@ export default <template>
   <DBreadcrumbsItem @label={{i18n "discourse_workflows.new_workflow"}} />
 
   <div class="admin-config-page__main-area">
-    <WorkflowsEditor @workflow={{@controller.model}} @isNew={{true}} />
+    <WorkflowsEditor @isNew={{true}} @workflow={{@controller.model}} />
   </div>
 </template>

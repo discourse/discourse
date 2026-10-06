@@ -69,10 +69,10 @@ module(
             }
           </style>
           <DVirtualList
+            @edgeThreshold={{THRESHOLD}}
+            @estimateSize={{estimate}}
             @items={{items}}
             @key="id"
-            @estimateSize={{estimate}}
-            @edgeThreshold={{THRESHOLD}}
             @onReachEnd={{onReachEnd}}
             as |item|
           >

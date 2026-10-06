@@ -353,6 +353,7 @@ tr_TR:
     notifications_tracking:
       tooltip: "Bildirim seviyesi: %{level}"
     back_button: "Geri"
+    confirm_button: "Onayla"
     welcome_banner:
       header:
         new_members: "Hoş geldiniz, %{preferred_display_name}!"
@@ -505,18 +506,9 @@ tr_TR:
         use_predefined: "Şablonlara göz atın"
         back: "Geri"
         icebreakers:
-          fun_facts:
-            title: "Hakkında ilginç bilgiler nelerdir?"
-            body: "Herkese merhaba! Bu yeni topluluğu başlatmaktan dolayı çok heyecanlıyım. Başlangıç olarak, kendimizle ilgili eğlenceli bir bilgi paylaşalım. Ben başlayayım: Yürüyüş yapmayı ve yeni parkurları keşfetmeyi seviyorum! Sizinle ilgili ilginç bir şey nedir?"
-          coolest_thing_you_have_seen_today:
-            title: "Bugün gördüğün en havalı şey neydi?"
-            body: "Bugün gördüğün veya yaşadığın en havalı şey neydi? Güzel bir gün batımı ya da rastgele bir iyilik hareketi gibi herhangi bir şey olabilir. Ben başlayayım: Bir köpeğin yaşlı bir insana karşıdan karşıya geçmesine yardım ettiğini gördüm!"
           introduce_yourself:
             title: "Kendinizi tanıtın"
             body: "Topluluğa hoş geldiniz! Birbirimizi tanıyalım. Lütfen kendinizi tanıtın ve ilgi alanlarınız hakkında biraz bilgi paylaşın. Ben başlayayım: Teknolojiye tutkuyla bağlıyım ve başkalarına öğretmeyi çok seviyorum!"
-          what_is_your_favorite_food:
-            title: "En sevdiğin yemek nedir?"
-            body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
     design_wizard:
       back: "Geri"
       next: "Sonraki"
@@ -524,6 +516,8 @@ tr_TR:
         theme: "Tema"
         fonts: "Yazı Tipleri"
         homepage: "Ana Sayfa"
+        welcome_banner: "Hoş geldiniz afişi"
+        search: "Ara"
       theme:
         selected: "Seçili"
       colors:
@@ -1040,6 +1034,9 @@ tr_TR:
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
         no_events: "Gösterilecek zaman çizelgesi etkinliği yok"
+      author_penalty:
+        toast:
+          undo: "Geri Al"
       notes:
         add_note_description: "Diğer moderatörlere bağlam sağlamak için bir not ekleyin."
         add_note_button: "Not ekle"
@@ -1686,7 +1683,6 @@ tr_TR:
       admin: "%{user} bir yönetici"
       moderator_tooltip: "Bu kullanıcı bir moderatör"
       admin_tooltip: "Bu kullanıcı bir yönetici"
-      silenced_tooltip: "Bu kullanıcı susturuldu"
       suspended_notice: "Bu kullanıcı %{date} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı uzaklaştırıldı."
       suspended_reason: "Sebep: "
@@ -1745,6 +1741,16 @@ tr_TR:
       tracked_topics_link: "Göster"
       automatically_unpin_topics: "En alta geldiğimde tüm konuların sabitlemesini kaldır"
       apps: "Uygulamalar"
+      mcp_authorizations:
+        endpoint: "Kaynak"
+        scopes: "Kapsamlar"
+        details: "Detaylar"
+        last_used: "Son kullanılan"
+        never: "Asla"
+        status: "Durum"
+        statuses:
+          active: "Aktif"
+          revoked: "İptal edildi"
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylandı:"
@@ -2223,7 +2229,6 @@ tr_TR:
         watch_topic: "Konuyu izle"
         track_topic: "Konuyu takip et"
         do_nothing: "Hiçbir şey yapma"
-      topics_unread_when_closed: "Konular kapatıldığında okunmamış olarak kabul edin"
       invited:
         title: "Davetler"
         pending_tab: "Bekleyen"
@@ -2877,6 +2882,11 @@ tr_TR:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Seçenek"
+      period: "Dönem"
+      tab: "Sekme"
+      delete: "Sil"
+      home: "Ana Sayfa"
     conditional_loading_section:
       loading: Yükleniyor…
     category_row:
@@ -3069,7 +3079,6 @@ tr_TR:
       create_whisper: "Fısıltı"
       create_shared_draft: "Paylaşılmış Taslak oluştur"
       edit_shared_draft: "Paylaşılmış Taslağı Düzenle"
-      title: "Veya %{modifier}Enter tuşuna basın"
       save_and_close: "Kaydet ve kapat"
       discard: "Kapat"
       cancel_edit: "Düzenlemeyi iptal et"
@@ -3432,10 +3441,10 @@ tr_TR:
         search_field: "Site başlığındaki arama alanı"
         search_icon: "Profil avatarının yakınındaki Ara simgesi"
       type:
-        default: "Konular/gönderiler"
+        default: "Gönderi"
         users: "Kullanıcılar"
         categories: "Kategoriler"
-        categories_and_tags: "Kategoriler/etiketler"
+        categories_and_tags: "Kategoriler ve etiketler"
       context:
         user: "@%{username} adlı kullanıcının gönderilerinde ara"
         category: "#%{category} kategorisinde ara"
@@ -3448,7 +3457,6 @@ tr_TR:
         in: "meta verilere göre filtreler (ör. in:title, in:personal, in:pinned)"
         status: "konu durumuna göre filtreler"
         full_search: "tam sayfa aramayı başlatır"
-        full_search_key: "%{modifier} + Enter"
         me: "sadece sizin gönderilerinizi gösterir"
       advanced:
         title: Gelişmiş filtreler
@@ -4274,7 +4282,6 @@ tr_TR:
       reply_as_new_private_message: "Aynı alıcılara yeni mesaj olarak yanıt ver"
       continue_discussion: "%{postLink} gönderisinden tartışılmaya devam ediliyor:"
       follow_quote: "alıntılanan gönderiye git"
-      show_full: "Gönderinin Tamamını Göster"
       show_hidden: "Yok sayılan içeriği görüntüleyin."
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
@@ -4678,6 +4685,7 @@ tr_TR:
       list: "Kategorileri listele"
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
+      latest_topics: "En son konular"
       description_updated: "Açıklama güncellendi"
       description_expand: "Daha fazla göster"
       description_collapse: "Daha az göster"
@@ -4973,6 +4981,7 @@ tr_TR:
       with_category: "%{filter} %{category} konular"
       filter:
         title: "%{filter} için filtrelenmiş sonuçlar"
+        reset: "sıfırla"
         button:
           label: "Filtrele"
       latest:
@@ -5085,12 +5094,8 @@ tr_TR:
     invalid_video_url: URL geçersiz veya kullanılamadığı için bu video oynatılamıyor.
     keyboard_shortcuts_help:
       search_placeholder: "Açıklamaya veya tuş kombinasyonuna göre kısayol arayın"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} veya %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Klavye Kısayolları"
       short_title: "Kısayollar"
       search_ctrl_f_tip: "Bu forumun tamamında arama yapmak için <kbd>/</kbd>tuşlarına basın"
@@ -5189,16 +5194,18 @@ tr_TR:
       favorite_max_not_reached: "Bu rozeti favori olarak işaretle"
       favorite_count: "%{count}/%{max} rozet favori olarak işaretlendi"
     download_calendar:
-      title: "Takvimi indir"
+      title: "Takvime ekle"
+      calendar: "Takvim"
       save_ics: ".ics dosyasını indir"
       save_google: "Google takvime ekle"
       remember: "Bir daha sorma"
-      remember_explanation: "(bu tercihi kullanıcı tercihlerinizden değiştirebilirsiniz)"
       download: "İndir"
       default_calendar: "Varsayılan takvim"
       default_calendar_instruction: "Tarihler kaydedildiğinde hangi takvimin kullanılması gerektiğini belirleyin"
       add_to_calendar: "Takvime ekle"
       google: "Google Takvim"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Takvimi"
       ics: "ICS"
       default_title: "Planlanmış Etkinlik"
     tagging:
@@ -5804,6 +5811,11 @@ tr_TR:
         group_moderation_and_security: "Moderasyon ve Güvenlik"
         group_other: "Diğer"
         legacy_warning: "Bu eski bir rapordur. Yakında kullanımdan kaldırılacaktır. Yenisini bulmak için yardıma ihtiyacınız varsa destek ekibiyle iletişime geçin."
+        related_items:
+          users:
+            title: "Kullanıcılar"
+          labels:
+            user: "Kullanıcı"
       config_sections:
         account:
           title: "Hesap"
@@ -5909,6 +5921,75 @@ tr_TR:
         developer:
           title: "Geliştirici"
           header_description: "Güvenli modu ve diğer gelişmiş özellikleri yönetmek için geliştirici ayarları"
+        mcp:
+          title: "MCP sunucusu"
+          tabs:
+            access: "Erişim"
+            activity: "Aktivite"
+          overview:
+            status: "Durum"
+            tools: "Araçlar"
+          access:
+            title: "Erişim"
+            group: "Grup"
+            groups: "Gruplar"
+            actions: "Eylemler"
+            edit: "Düzenle"
+            delete: "Sil"
+          primitives:
+            group_by: "Gruplama ölçütü"
+            group_by_options:
+              scope: "Kapsam"
+              provider: "Sağlayıcı"
+              kind: "Tür"
+            provider: "Sağlayıcı"
+            kind: "Tür"
+            scope: "Kapsam"
+            state: "Eyalet"
+            scopes: "Kapsamlar"
+          clients:
+            actions: "Eylemler"
+            block: "Engelle"
+            use_preset: "Kur"
+            presets:
+              custom: "Özel"
+          authorizations:
+            user: "Kullanıcı"
+            scopes: "Verilen kapsamlar"
+            last_used: "Son kullanılan"
+            status: "Durum"
+            actions: "Eylemler"
+          activity:
+            outcome: "Sonuç"
+            time: "Saat"
+            user: "Kullanıcı"
+            duration: "Süre"
+          values:
+            server_status:
+              disabled: "Devre Dışı"
+            client_trust:
+              approved: "Onaylandı"
+            authorization_status:
+              active: "Aktif"
+              revoked: "İptal edildi"
+            activity_outcome:
+              success: "Başarılı"
+              error: "Hata"
+            primitive_state:
+              enabled: "Etkin mi"
+              disabled: "Devre Dışı"
+            primitive_kind:
+              all: "Bütün türler"
+              tool: "Araç"
+              resource: "Kaynak"
+            primitive_risk:
+              read: "Salt okunur"
+              moderation: "Moderasyon"
+            filter:
+              all: "Tümü"
+          never: "Asla"
+          actions:
+            revoke: "İptal Et"
         experimental:
           title: "Deneysel"
           header_description: "Siteniz için deneysel özellikleri açın veya kapatın, bunların çoğu grup bazında kontrol edilebilir"
@@ -6119,7 +6200,6 @@ tr_TR:
           header_description: "Çince ve Japonca dilleri için günlük kaydı ve tokenizasyon dâhil arama ayarlarını yapılandırma"
         search_everything:
           title: "Ara"
-          header_description: "Yönetici arayüzünde her şeyi burada bulabilirsiniz. Aşağıdaki sonuçları filtreleyebilirsiniz ve tercihleriniz hatırlanır. Bu aramayı yönetici arayüzünde herhangi bir yerde açmak için %{shortcutHTML} seçeneğine basın."
         security:
           title: "Güvenlik"
           header_description: "İki adımlı kimlik doğrulama, moderatör ayrıcalıkları ve içerik güvenliği ilkeleri dâhil olmak üzere güvenlik ayarlarını yapılandırma"
@@ -6364,6 +6444,7 @@ tr_TR:
         filters:
           country: "Ülke"
           browser: "Tarayıcı"
+          language: "Dil"
           ip: "IP adresi"
         series:
           anonymous_human: "Anonim"
@@ -6442,6 +6523,8 @@ tr_TR:
               share: "Paylaş"
             whos_posting:
               staff: "Personel"
+              modal:
+                apply: "Kaydet"
             trust_level_pipeline:
               trust_levels:
                 "0": "Yeni"
@@ -6454,6 +6537,11 @@ tr_TR:
             table:
               searches: "Aramalar"
               status: "Durum"
+          system:
+            title: "Sistem"
+            status: "Durum"
+            discourse_updated: "Discourse güncellendi"
+            dashboard_updated: "Pano güncellendi"
         reports_section:
           header_action: "Yönet"
           no_data: "Gösterilecek veri yok"
@@ -6467,6 +6555,7 @@ tr_TR:
           series:
             anonymous: "Anonim"
             crawlers: "Gezginler"
+          crawler_learn_more: "Daha fazla bilgi edin"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"
@@ -6508,6 +6597,14 @@ tr_TR:
           average_for_sample: "Örnek için ortalama"
           total: "Tüm zamanlar toplamı"
           no_data: "Gösterilecek veri yok."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} kullanıcı"
+              other: "%{count} kullanıcı"
+            posts_count:
+              one: "%{count} gönderi"
+              other: "%{count} gönderi"
+            deselect: "%{name} seçimini kaldır"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama günlükleri</a>'
             disabled: 'Trend olan arama raporu devre dışı bırakıldı. Veri toplamak için <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">günlük arama sorgularını</a> etkinleştirin.'
@@ -8506,13 +8603,14 @@ tr_TR:
           multiselect: "Çoklu seçim"
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
-        search: "Düzenlemek istediğiniz metni arayın"
+        search_label: "Ara"
+        theme_disabled: "Devre Dışı"
+        filters: "Filtreler"
+        status:
+          invalid: "Geçersiz"
         title: "Site metinleri"
         edit: "Düzenle"
-        revert: "Değişiklikleri Geri Al"
         revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
-        go_back: "Aramaya geri dön"
-        recommended: "Aşağıdaki metni ihtiyaçlarınıza göre özelleştirmenizi öneririz:"
         show_overriden: "Yalnızca geçersiz kılınanları göster"
         show_outdated: "Yalnızca eski/geçersiz olanları göster"
         show_untranslated: "Yalnızca çevrilmemişleri göster"

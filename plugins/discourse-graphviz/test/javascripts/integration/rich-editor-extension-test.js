@@ -1,3 +1,4 @@
+import { find } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import {
   registerRichEditorExtension,
@@ -11,6 +12,10 @@ import {
 import richEditorExtension from "discourse/plugins/discourse-graphviz/discourse/lib/rich-editor-extension";
 
 const GRAPH = "[graphviz]\ndigraph G {\n  a -> b;\n}\n[/graphviz]";
+const TALL_GRAPH = `[graphviz]\ndigraph G {\n${Array.from(
+  { length: 50 },
+  (_, index) => `  // node ${index}`
+).join("\n")}\n  a -> b;\n}\n[/graphviz]`;
 
 module(
   "Integration | Component | prosemirror-editor - graphviz extension",
@@ -45,6 +50,30 @@ module(
         editorClass.value.trim(),
         "[graphviz engine=neato]\ndigraph G {\n  a -> b;\n  b -> c;\n}\n[/graphviz]",
         "the source survives the round trip through cooked HTML"
+      );
+    });
+
+    test("constrains a diagram with tall source", async function (assert) {
+      await setupRichEditor(assert, TALL_GRAPH);
+
+      const block = find(".composer-graphviz-node");
+      const source = find(".composer-preview-node__source");
+      const pre = source.querySelector("pre");
+      const { height, width } = block.getBoundingClientRect();
+
+      assert.true(
+        Math.abs(height / width - 9 / 16) < 0.01,
+        "the diagram uses the same aspect ratio as its cooked preview"
+      );
+
+      assert.true(
+        Math.abs(source.clientHeight - block.clientHeight) <= 1,
+        "the source face fills the frame, neither overflowing nor falling short"
+      );
+
+      assert.true(
+        pre.scrollHeight > pre.clientHeight,
+        "the source scrolls within the frame"
       );
     });
 

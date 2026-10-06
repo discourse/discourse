@@ -5,3 +5,38 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  login:
+    authenticator_error_fetch_user_details: "無法取得你的使用者詳細資料。你有啟用中的帳號嗎？"
+  site_settings:
+    oauth2_enabled: "已啟用自訂 OAuth2"
+    oauth2_client_id: "自訂 OAuth2 的用戶端 ID"
+    oauth2_client_secret: "自訂 OAuth2 的用戶端密鑰"
+    oauth2_authorize_url: "OAuth2 的授權網址"
+    oauth2_authorize_signup_url: '（選填）使用「註冊」按鈕時採用的替代授權網址'
+    oauth2_token_url: "OAuth2 的權杖網址"
+    oauth2_token_url_method: "取得權杖網址時使用的方法"
+    oauth2_callback_user_id_path: "權杖回應中使用者 ID 的路徑，例如：params.info.uuid"
+    oauth2_callback_user_info_paths: "權杖回應中其他使用者屬性的路徑。支援的屬性為 name、username、email、email_verified 和 avatar。格式為 property:path，例如：name:params.info.name"
+    oauth2_fetch_user_details: "取得 OAuth2 的使用者 JSON"
+    oauth2_user_json_url: "取得 OAuth2 使用者 JSON 的網址（請注意，我們會將 :id 替換為 OAuth 呼叫傳回的 ID，並將 :token 替換為權杖 ID）"
+    oauth2_user_json_url_method: "取得使用者 JSON 網址時使用的方法"
+    oauth2_json_user_id_path: "OAuth2 使用者 JSON 中使用者 ID 的路徑，例如：user.id"
+    oauth2_json_username_path: "OAuth2 使用者 JSON 中使用者名稱的路徑，例如：user.username"
+    oauth2_json_name_path: "OAuth2 使用者 JSON 中使用者全名的路徑，例如：user.name.full"
+    oauth2_json_email_path: "OAuth2 使用者 JSON 中使用者電子郵件的路徑，例如：user.email"
+    oauth2_json_email_verified_path: "OAuth2 使用者 JSON 中使用者電子郵件驗證狀態的路徑，例如：user.email.verified。必須停用 oauth2_email_verified，此設定才會生效"
+    oauth2_json_avatar_path: "OAuth2 使用者 JSON 中使用者頭像的路徑，例如：user.avatar_url"
+    oauth2_json_groups_path: "OAuth2 使用者 JSON 中使用者所屬群組名稱陣列的路徑。留空以停用群組同步。"
+    oauth2_user_field_mappings: "將 OAuth2 使用者 JSON 中的路徑對應至 Discourse 使用者欄位。每個項目會將一個 JSON 路徑與一個 Discourse 使用者欄位的數字 ID 配對。"
+    oauth2_email_verified: "若 OAuth2 網站已驗證電子郵件，請勾選此項"
+    oauth2_overrides_email: "每次登入時，以遠端電子郵件覆寫 Discourse 電子郵件。其運作方式與 {{setting:auth_overrides_email}} 設定相同，但僅適用於 OAuth2 登入。"
+    oauth2_send_auth_header: "在 HTTP Authorization 標頭中傳送用戶端認證"
+    oauth2_send_auth_body: "在要求本文中傳送用戶端認證"
+    oauth2_debug_auth: "在記錄中包含詳細的偵錯資訊"
+    oauth2_authorize_options: "授權時要求這些選項"
+    oauth2_scope: "授權時要求此範圍"
+    oauth2_button_title: "OAuth2 按鈕的文字"
+    oauth2_allow_association_change: 允許使用者中斷並重新連結其 Discourse 帳號與 OAuth2 提供者
+    oauth2_disable_csrf: "停用 CSRF 檢查"
+    errors:
+      oauth2_fetch_user_details: "若要停用 oauth2_fetch_user_details，必須提供 oauth2_callback_user_id_path"

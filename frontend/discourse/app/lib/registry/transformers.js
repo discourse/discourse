@@ -19,6 +19,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "create-account",
+  "create-topic-button-click",
   "custom-homepage-model",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
@@ -61,6 +62,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-subcategories",
   "category-text-color",
   "category-visibility-private-locked",
+  "code-login-auto-create-account",
+  "code-login-user-field-values",
   "composer-actions-content",
   "composer-editing-post",
   "composer-editor-quoted-post-avatar-template",
@@ -172,4 +175,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "user-notes-modal-subtitle",
   "user-path",
   "welcome-banner-display-for-route",
+  "welcome-banner-location",
 ]);

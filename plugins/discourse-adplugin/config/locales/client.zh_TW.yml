@@ -13,37 +13,70 @@ zh_TW:
       site_settings:
         categories:
           ad_plugin: "廣告插件"
+          dfp_plugin: "DFP/Ad Manager"
           adsense_plugin: "AdSense"
           amazon_plugin: "Amazon"
-          carbonads_plugin: "Carbon 廣告"
+          carbonads_plugin: "Carbon Ads"
+          adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "廣告類型"
+            house_ad_name:
+              label: "自家廣告名稱"
+            ad_placement:
+              label: "廣告展示位置"
+            user_type:
+              label: "使用者類型"
       adplugin:
         house_ads:
-          new: "新使用者"
-          settings: "設定"
-          save: "儲存"
+          title: "自家廣告"
+          new: "新"
+          settings: "設置"
+          new_name: "新建自家廣告"
+          save: "保存"
           delete: "刪除"
+          confirm_delete: "確定要刪除此廣告嗎？"
           html: "HTML"
           categories: "分類"
+          routes: "路由"
           groups: "群組"
-          filter_placeholder: "選擇廣告..."
+          description: "創建并管理您自己的廣告，使其在您網站的各個位置展示。"
+          get_started: "尚未創建自家廣告。"
+          filter_placeholder: "選擇廣告…"
           more_settings: "更多設置"
+          show_to_anons: "向匿名使用者顯示"
+          show_to_logged_in_users: "向登錄使用者顯示"
+          category_chooser_description: "選擇應顯示此廣告的分類，或留空以在任何地方顯示廣告。`no_ads_for_categories` 網站設置優先于此設置。"
+          category_chooser_description_with_routes: "選擇應顯示此廣告的分類。將此設置和路由選擇留空會在任何地方顯示廣告。`no_ads_for_categories` 網站設置優先于此設置。"
+          route_chooser_description: "選擇應顯示此廣告的頁面/路由。將此設置和分類選擇留空會在任何地方顯示廣告。"
+          group_chooser_description: "選擇可以查看此廣告的群組或留空以向所有登錄使用者顯示廣告。"
           preview: "預覽"
+          back: "自家廣告"
           name: "名稱"
           edit: "編輯"
           tabs:
-            settings: "設定"
+            ads: "廣告"
+            settings: "設置"
+          above_site_header:
+            title: "網站頁首上方"
+            description: "廣告將顯示在頁面頂部，位於網站頁首上方。"
           topic_list_top:
             title: "主題列表頂部廣告"
-            description: "顯示在主題列表頁面頂部的廣告。"
+            description: "在主題列表頁面頂部顯示的廣告。"
           topic_above_post_stream:
-            title: "帖子流上方的主題"
-            description: "顯示在主題頁面上主題標題上方的廣告。"
+            title: "貼文流上方主題"
+            description: "在主題頁面的主題標題上方顯示的廣告。"
           topic_above_suggested:
-            title: "上面建議的話題"
-            description: "在主題的最後一篇文章之後、建議主題上方顯示的廣告。"
+            title: "推薦主題上方"
+            description: "在主題的最后一條貼文后、推薦主題上方顯示的廣告。"
           post_bottom:
-            title: "帖子之間"
-            description: "在每 N 個帖子之後顯示在帖子之間的廣告。"
+            title: "貼文之間"
+            description: "在每 N 條貼文之間顯示的廣告。"
           topic_list_between:
-            title: "話題之間"
-            description: "在主題之間、每 N 個主題之後展示的廣告。"
+            title: "主題之間"
+            description: "在每 N 個主題之間顯示的廣告。"
+          nested_roots_between:
+            title: "在嵌套的根之間"
+            description: "在嵌套回復視圖中，每隔 N 個根在根回復之間顯示的廣告。"

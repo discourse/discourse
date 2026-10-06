@@ -191,7 +191,7 @@ RSpec.describe CategoryList do
       let(:topic) { Fabricate(:topic, category: topic_category) }
       let(:category) { category_list.categories.find { |c| c.id == topic_category.id } }
 
-      it "should return the category" do
+      it "returns the topic's category" do
         expect(category).to be_present
         expect(category.id).to eq(topic_category.id)
         expect(category.featured_topics.include?(topic)).to eq(true)

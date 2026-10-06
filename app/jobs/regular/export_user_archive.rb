@@ -166,6 +166,7 @@ module Jobs
           case component[:filetype]
           when :csv
             CSV.open("#{dirname}/#{component[:filename]}.csv", "w") do |csv|
+              csv.to_io.write(Encodings::BOM)
               csv << get_header(component[:name])
               public_send(component[:method]) { |d| csv << d }
             end
@@ -187,7 +188,7 @@ module Jobs
     end
 
     def provide_results(user_export, zip_filename, export_title, args)
-      create_upload_for_user(user_export, zip_filename)
+      user_export.attach_upload(zip_filename, @requesting_user.id)
     ensure
       post = notify_user(user_export, export_title)
 
@@ -493,53 +494,9 @@ module Jobs
         .each { |uv| yield [uv.visited_at, uv.posts_read, uv.mobile, uv.time_read] }
     end
 
-    def get_header(entity)
-      if entity == "user_list"
-        header_array =
-          HEADER_ATTRS_FOR["user_list"] + HEADER_ATTRS_FOR["user_stats"] +
-            HEADER_ATTRS_FOR["user_profile"]
-        header_array.concat(HEADER_ATTRS_FOR["user_sso"]) if SiteSetting.enable_discourse_connect
-        user_custom_fields = UserField.all
-        if user_custom_fields.present?
-          user_custom_fields.each do |custom_field|
-            header_array.push("#{custom_field.name} (custom user field)")
-          end
-        end
-        header_array.push("group_names")
-      else
-        header_array = HEADER_ATTRS_FOR[entity]
-      end
-
-      header_array
-    end
+    def get_header(entity) = HEADER_ATTRS_FOR[entity]
 
     private
-
-    def create_upload_for_user(user_export, zip_filename)
-      upload = nil
-      if File.exist?(zip_filename)
-        File.open(zip_filename) do |file|
-          upload =
-            UploadCreator.new(
-              file,
-              File.basename(zip_filename),
-              type: "csv_export",
-              for_export: "true",
-            ).create_for(@requesting_user.id)
-
-          if upload.persisted?
-            user_export.update_columns(upload_id: upload.id)
-          else
-            Rails.logger.warn(
-              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
-            )
-          end
-        end
-
-        File.delete(zip_filename)
-      end
-      upload
-    end
 
     def guardian
       @guardian ||= Guardian.new(@archive_for_user)

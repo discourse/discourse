@@ -81,20 +81,11 @@ module Migrations
         # In a batch the parent-side hooks already ran around the whole batch.
         execute_parent = !Thread.current[BATCHED_FORKS_KEY]
 
-        # Snapshot the child hooks under the lock for a consistent list, but fork
-        # outside it so the child can't inherit the mutex held.
-        child_hooks =
-          if execute_parent
-            @mutex.synchronize do
-              run_before_fork_hooks
-              @after_fork_child_hooks.dup
-            end
-          else
-            @mutex.synchronize { @after_fork_child_hooks.dup }
-          end
+        @mutex.synchronize { run_before_fork_hooks } if execute_parent
 
         pid =
           Process.fork do
+            child_hooks = @mutex.synchronize { @after_fork_child_hooks.dup }
             child_hooks.each(&:call)
             yield
           end

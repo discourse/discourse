@@ -6,6 +6,10 @@
 
 zh_CN:
   js:
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "仅限管理员注册"
+      approved_domains: "来自已批准域的 CIMD"
+      any_domain: "来自任何域的 CIMD"
     ace_editor:
       resize: "调整代码编辑器大小"
     user_api_key:
@@ -351,6 +355,7 @@ zh_CN:
     notifications_tracking:
       tooltip: "通知级别：%{level}"
     back_button: "返回"
+    confirm_button: "确认"
     welcome_banner:
       header:
         new_members: "欢迎，%{preferred_display_name}！"
@@ -401,6 +406,7 @@ zh_CN:
         since: "（自 %{version} 起）"
       toggle_safe_mode: "切换安全模式"
       toggle_verbose_localization: "切换详细本地化"
+      open_styleguide: "打开样式指南"
       disable_dev_tools: "禁用开发者工具"
       toggle_upcoming_changes_debug: "切换即将推出的更改调试"
     s3:
@@ -441,6 +447,8 @@ zh_CN:
     generic_error: "抱歉，出错了。"
     generic_error_with_reason: "出错了：%{error}"
     multiple_errors: "发生多个错误：%{errors}"
+    too_many_requests:
+      other: "您执行此操作的次数过多。请稍等 %{count} 秒后再试。"
     sign_up: "注册"
     log_in: "登录"
     age: "年龄"
@@ -490,14 +498,14 @@ zh_CN:
       pm_title: "建议的消息"
     admin_onboarding_banner:
       launch_in_easy_steps: "设置您的社区"
-      launch_in_easy_steps_subtitle: "已完成 %{completed_steps} 步（共 %{step_count} 步）"
+      launch_in_easy_steps_subtitle: "已完成 %{step_count} 中的 %{completed_steps} 步"
       congrats_onboarding_complete: "恭喜您完成入门流程！"
       expand: "展开设置步骤"
       collapse: "收起设置步骤"
       dismiss: "取消设置"
       select_theme:
         title: "自定义您的网站"
-        description: "选择颜色、字体和首页。"
+        description: "选择颜色、字体以及网站的布局。"
         action: "查看选项"
         completed: "更改选项"
         show_light_screenshot: "显示浅色截图"
@@ -518,33 +526,49 @@ zh_CN:
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
         back: "返回"
+        category_unavailable: "该分类不支持发布内容。"
         icebreakers:
-          fun_facts:
-            title: "关于你，有哪些有趣的小事？"
-            body: "大家好！很高兴能加入这个新社区。首先，让我们分享一下自己的趣事。我先来：我喜欢徒步旅行和探索新的路径！你有什么有趣的事情？"
-          coolest_thing_you_have_seen_today:
-            title: "你今天看到的最酷的东西是什么？"
-            body: "你今天看到或经历的最酷的事情是什么？可以是美丽的日落，也可以是偶然的善举。我先说：我看到一只狗在帮助一位老人过马路！"
+          plan_categories:
+            title: "我们应该从哪些类别开始？"
+            body: "让我们在正式上线前先理清思路！大家最想讨论什么？我们可以先从几个类别开始，以后再添加更多。"
+          plan_invites:
+            title: "在正式上线之前，我们应该邀请哪些成员？"
+            body: "加入一个已经有成员的社区总是令人愉快的。我们应该先邀请谁呢？想想那些喜欢聊天、乐于助人，并且会很兴奋能尽早参与进来的人吧。"
           introduce_yourself:
             title: "自我介绍"
             body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
-          what_is_your_favorite_food:
-            title: "你最喜欢吃什么？"
-            body: "与社区分享你最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
+          write_your_own:
+            title: "写你自己的"
+            body: "选择一个适合您社区的话题，开启一场讨论。"
     design_wizard:
       title: "自定义您的网站"
-      subtitle: "选择颜色、字体和首页。"
+      subtitle: "选择颜色、字体以及网站的布局。"
       step_label: "转到步骤 %{index}"
       save: "保存并完成"
       back: "返回"
       next: "下一步"
+      launch: "设计向导"
+      launch_description: "再仔细检查一下网站的主题、颜色、字体和布局。"
+      intro:
+        description: "该向导将引导您完成网站的主题、颜色、字体、首页布局、欢迎横幅和搜索样式设置。"
+        autosave: "每一步操作都会实时保存，因此会员可以立即看到更改。关闭时，您可以恢复所有设置。"
+        start: "开始使用"
+      close:
+        message: "您已保存了对网站设计的一些更改。是否要保留这些更改？"
+        message_without_revert: "您已保存了对网站设计的一些更改，这些更改无法从此处撤销。"
+        keep: "保留更改"
+        revert: "撤销更改"
+        continue_editing: "继续编辑"
       sections:
         theme: "主题"
         colors: "默认颜色"
         fonts: "字体"
         homepage: "首页"
+        welcome_banner: "欢迎横幅"
+        search: "搜索"
       theme:
         selected: "所选"
+        applying: "应用…"
         custom_theme_notice: "您的网站当前使用 %{name} 作为其默认主题。请选择以下主题进行预览。保存后将替换您当前的主题。"
       colors:
         light: "亮"
@@ -569,6 +593,21 @@ zh_CN:
           boxes: "框"
           with_topics: "类别与话题"
           only: "仅类别"
+      welcome_banner:
+        enable: "显示欢迎横幅"
+        enable_description: "向访客显示您的网站名称和搜索框"
+        location: "横幅位置"
+        locations:
+          below_site_header: "网站标题下方"
+          above_topic_content: "主题列表上方"
+      search:
+        experiences:
+          search_icon:
+            title: "搜索图标"
+            description: "标题栏中的放大镜图标可打开搜索功能。"
+          search_field:
+            title: "搜索字段"
+            description: "页面顶部有一个完整的搜索框，始终可见。"
     about:
       edit: "编辑此页面"
       simple_title: "关于"
@@ -879,6 +918,7 @@ zh_CN:
       deleted_post: "（帖子已删除）"
       deleted_user: "（用户已删除）"
       user:
+        avatar: "被举报时的头像"
         bio: "个人简介"
         website: "网站"
         username: "用户名"
@@ -1050,7 +1090,21 @@ zh_CN:
         view_conversation: "查看私信"
         note_added: "版主注释"
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
+        author_silenced_by: "作者已被 %{username} · %{relativeDate} 禁言"
+        author_silenced_automatically: "作者已自动禁言 · %{relativeDate}"
+        author_suspended_by: "作者已被 %{username} · %{relativeDate} 停用"
+        author_suspended_automatically: "作者已被自动停用 · %{relativeDate}"
         no_events: "没有可显示的时间线事件"
+      author_penalty:
+        effect:
+          retains_silence: "作者保持禁言。"
+          retains_suspension: "作者仍处于停用状态。"
+          retains_silence_and_suspension: "作者保持禁言和暂停。"
+          lifts_silence: "作者已取消禁言。"
+        toast:
+          still_silenced: "%{username} 仍然处于禁言状态。"
+          undo: "撤消"
+          undone: "%{username} 不再处于禁言状态。"
       notes:
         add_note_description: "添加注释以向其他版主提供背景信息。"
         add_note_button: "添加注释"
@@ -1695,7 +1749,6 @@ zh_CN:
       admin: "%{user} 是管理员"
       moderator_tooltip: "此用户是版主"
       admin_tooltip: "此用户是管理员"
-      silenced_tooltip: "此用户已被禁言"
       suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
@@ -1754,6 +1807,36 @@ zh_CN:
       tracked_topics_link: "显示"
       automatically_unpin_topics: "当我到达底部时自动取消置顶话题"
       apps: "应用"
+      mcp_authorizations:
+        title: "MCP 应用"
+        description: "审核已通过模型上下文协议获得此帐户访问权限的应用程序。所有操作仍受您 Discourse 常规权限的约束。"
+        application: "应用名称"
+        endpoint: "资源"
+        scopes: "范围"
+        permissions: "已授予权限 (%{count})"
+        authorized: "授权"
+        details: "详细信息"
+        last_used: "最后使用："
+        tokens: "活跃令牌"
+        active_tokens:
+          other: "%{count} 活跃 token"
+        never: "永不"
+        status: "状态"
+        revoke: "撤销访问权限"
+        reauthorize: "重新授权"
+        reauthorize_in_client: "请从MCP客户端重新连接此应用程序。客户端必须发起新的安全授权请求。"
+        revoke_confirm: "撤销对“%{name}”的访问权限？现有的访问令牌和刷新令牌将停止工作。"
+        revoked: "MCP应用程序访问权限已撤销。"
+        empty: "您的帐户未连接任何 MCP 应用程序。"
+        statuses:
+          active: "有效"
+          server_disabled: "服务器已禁用"
+          client_blocked: "客户端已阻止"
+          client_not_approved: "客户端未批准"
+          access_removed: "访问权限已移除"
+          user_unavailable: "用户不可用"
+          consent_required: "需要重新授权"
+          revoked: "已撤销"
       revoke_access: "撤消访问权限"
       undo_revoke_access: "撤消访问权限撤消操作"
       api_approved: "已批准："
@@ -2212,7 +2295,6 @@ zh_CN:
         watch_topic: "关注话题"
         track_topic: "跟踪话题"
         do_nothing: "不进行操作"
-      topics_unread_when_closed: "话题关闭时视为未读"
       invited:
         title: "邀请"
         pending_tab: "待处理"
@@ -2565,6 +2647,10 @@ zh_CN:
       login_disabled: "网站处于只读模式时登录被禁用。"
       logout_disabled: "网站处于只读模式时退出登录被禁用。"
       signup_disabled: "网站处于只读模式时，注册功能被禁用。"
+    site_archived:
+      enabled: "本网站已进入存档模式。请继续浏览，但回复、点赞及其他操作功能已被禁用。"
+      enabled_anonymous: "本网站已进入存档模式。您可以继续浏览或登录，但回复、点赞和其他操作功能已被禁用。"
+      signup_disabled: "网站处于存档模式时，注册功能将被禁用。"
     staff_writes_only_mode:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
       enabled_anonymous: "本网站目前仅供管理人员访问。请继续浏览，但注册功能暂不可用，且只有管理人员才能登录。"
@@ -2665,6 +2751,7 @@ zh_CN:
         approve: "批准"
         login: "登录"
     forgot_password:
+      code_instructions: "如果存在匹配的帐户，我们会向该帐户的电子邮件地址发送验证码。请输入验证码以重置密码。"
       title: "密码重置"
       action: "我忘记密码了"
       invite: "输入您的用户名或电子邮件地址，我们将向您发送密码重置电子邮件。"
@@ -2709,11 +2796,16 @@ zh_CN:
       signup_instructions: "输入您的电子邮件地址即可加入此社区。我们将向您发送验证码，验证通过后您就可以加入了！"
       user_fields_title: "即将完成"
       user_fields_instructions: "只需再填写一些详细信息，即可完成帐户创建。"
-      account_ready_title: "您的帐户已就绪！🎉"
-      account_ready_edit: "选择您的用户名和头像"
       account_ready_continue: "继续"
+      account_details_title: "完成账户创建"
+      account_details_instructions: "在提交帐户以供审核之前，请选择您在社区中的显示方式。"
+      create_password_optional: "创建密码（可选）"
+      submit_for_approval: "提交审批"
+      pending_approval_title: "您的账户正在等待审核。"
+      pending_approval_instructions: "您的账户必须经工作人员审核通过后才能登录。审核通过后，我们会通过电子邮件通知您。"
       username_label: "用户名"
       username_placeholder: "选择一个用户名"
+      regenerate_username: "建议一个随机用户名"
       change_avatar: "更改头像"
       username_taken: "该用户名已被占用，请尝试其他用户名。"
       username_unavailable: "该用户名不可用。试试 %{suggestion}。"
@@ -2823,6 +2915,8 @@ zh_CN:
       social_login_available: "您还可以通过使用该电子邮件的任何社交登录信息登录。"
       your_email: "您的帐户电子邮件地址为 <b>%{email}</b>。"
       accept_invite: "接受邀请"
+      send_code: "发送验证码"
+      code_instructions: "我们将向 %{email} 发送一次性验证码以确认您的电子邮件地址。"
       success: "您的帐户已创建，您现在已登录。"
       name_label: "姓名"
       password_label: "密码"
@@ -2881,6 +2975,36 @@ zh_CN:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      command: "命令"
+      option: "选项"
+      control: "控制"
+      arrow_up: "向上箭头"
+      arrow_down: "向下箭头"
+      arrow_left: "向左箭头"
+      arrow_right: "向右箭头"
+      period: "时间段"
+      comma: "逗号"
+      slash: "斜杠"
+      backslash: "反斜杠"
+      question_mark: "问号"
+      exclamation_mark: "感叹号"
+      hash: "哈希"
+      equals: "等于"
+      minus: "减"
+      plus: "加"
+      semicolon: "分号"
+      apostrophe: "撇号"
+      backquote: "反引号"
+      left_bracket: "左括号"
+      right_bracket: "右括号"
+      space: "空间"
+      tab: "Tab"
+      backspace: "退格键"
+      delete: "删除"
+      home: "首页"
+      end: "结束"
+      page_up: "向上翻页"
+      page_down: "向下翻页"
     conditional_loading_section:
       loading: 正在加载…
     category_row:
@@ -3140,7 +3264,7 @@ zh_CN:
       create_whisper: "密语"
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
-      title: "或按 %{modifier}Enter"
+      submit_shortcut_title: "或者按 %{shortcut}"
       save_and_close: "保存并关闭"
       discard: "舍弃"
       cancel_edit: "取消编辑"
@@ -3167,6 +3291,8 @@ zh_CN:
       resize: "调整编辑器大小"
       switch_to_markdown: "切换到标准 Markdown 编辑器 (%{keyboardShortcut})"
       switch_to_rich_text: "切换到新的富文本编辑器 (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "切换到标准 Markdown 编辑器"
+      switch_to_rich_text_no_shortcut: "切换到新的富文本编辑器"
       quote_post_title: "引用整个帖子"
       bold_label: "B"
       bold_title: "粗体"
@@ -3322,6 +3448,57 @@ zh_CN:
         visit: "打开链接"
         remove_preview: "移除预览"
         link_copied: "链接已复制！"
+      preview_node:
+        show_source: "显示来源"
+        show_preview: "显示预览"
+      table:
+        add_row: "添加行"
+        add_column: "添加列"
+        insert_row_above: "在上面插入"
+        insert_header_above: "在上方插入标题"
+        insert_row_below: "在下面插入"
+        insert_column_left: "向左插入"
+        insert_column_right: "向右插入"
+        duplicate_row: "复制行"
+        duplicate_column: "复制列"
+        move_row_up: "向上移动行"
+        move_row_down: "向下移动行"
+        move_column_left: "向左移动列"
+        move_column_right: "向右移动列"
+        clear_contents: "清除内容"
+        delete_row: "删除行"
+        delete_column: "删除列"
+        delete_table: "删除表"
+        align_left: "左对齐"
+        align_center: "居中对齐"
+        align_right: "右对齐"
+        row_actions: "第 %{number} 行操作"
+        column_actions: "第 %{number} 列操作"
+        row_inserted: "插入行"
+        header_inserted: "插入标题行"
+        column_inserted: "插入列"
+        row_duplicated: "复制行"
+        column_duplicated: "复制列"
+        row_moved_up: "向上移动行"
+        row_moved_down: "向下移动行"
+        column_moved_left: "向左移动列"
+        column_moved_right: "向右移动列"
+        contents_cleared: "单元格内容已清除"
+        row_deleted: "行已删除"
+        column_deleted: "列已删除"
+        table_deleted: "表格已删除"
+        alignment_left: "左"
+        alignment_center: "居中"
+        alignment_right: "右"
+        alignment_changed: "列对齐方式已更改为 %{alignment}"
+        rows_added:
+          other: "已添加 %{count} 行"
+        columns_added:
+          other: "已添加 %{count} 列"
+        rows_removed:
+          other: "%{count} 行已移除"
+        columns_removed:
+          other: "%{count} 列已移除"
       unsupported_token: "富文本编辑器不支持此帖子中使用的所有功能；会将您切换到 Markdown 编辑器。"
     notifications:
       tooltip:
@@ -3479,6 +3656,8 @@ zh_CN:
       full_page_title: "搜索"
       results: "结果"
       no_results: "找不到结果。"
+      results_announcement:
+        other: "“”有 %{count} 个结果"
       no_more_results: "没有找到更多结果。"
       post_format: "#%{post_number}，来自 %{username}"
       results_page: "'%{term}' 的搜索结果"
@@ -3507,10 +3686,11 @@ zh_CN:
         search_field: "站点标题中的“搜索”字段"
         search_icon: "个人资料头像附近的“搜索”图标"
       type:
-        default: "话题/帖子"
+        label: "搜索类型"
+        default: "帖子"
         users: "用户"
         categories: "类别"
-        categories_and_tags: "类别/标签"
+        categories_and_tags: "类别与标签"
       context:
         user: "搜索 @%{username} 的帖子"
         category: "搜索 #%{category} 类别"
@@ -3523,7 +3703,6 @@ zh_CN:
         in: "按元数据（例如：in:title、in:personal、in:pinned）筛选"
         status: "按话题状态筛选"
         full_search: "启动完整页面搜索"
-        full_search_key: "%{modifier} + Enter"
         me: "仅显示您的帖子"
       advanced:
         title: 高级筛选器
@@ -3810,6 +3989,7 @@ zh_CN:
           missing_to: "替换标签为必选项"
       delete_topics:
         name: "删除"
+        description: "删除所选主题。已删除的主题可以恢复。"
       update_category:
         name: "更新类别"
         description: "将所有所选话题移至以下类别："
@@ -4365,7 +4545,7 @@ zh_CN:
       reply_as_new_private_message: "作为新消息回复给相同的收件人"
       continue_discussion: "从%{postLink}继续讨论："
       follow_quote: "转到引用的帖子"
-      show_full: "显示完整帖子"
+      show_more: "显示更多…"
       show_hidden: "查看已忽略的内容。"
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
@@ -4779,6 +4959,8 @@ zh_CN:
       list: "列出类别"
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
+      latest_topics: "最新话题"
+      view_all_topics: "查看所有话题 (%{number})"
       description_updated: "描述已更新"
       description_expand: "展开"
       description_collapse: "收起"
@@ -5066,6 +5248,8 @@ zh_CN:
       with_category: "%{filter}%{category}话题"
       filter:
         title: "%{filter} 的筛选结果"
+        results_for: "搜索结果： %{query}"
+        reset: "重置"
         button:
           label: "筛选"
       latest:
@@ -5170,15 +5354,12 @@ zh_CN:
       image_load_error: '<a href="%url%">图片</a>无法加载。'
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
     invalid_video_url: 此视频无法播放，因为 URL 无效或不可用。
+    play_video: 播放视频
     keyboard_shortcuts_help:
       search_label: "搜索快捷方式"
       search_placeholder: "通过描述或按键组合搜索快捷方式"
-      shortcut_key_delimiter_comma: "，"
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} 或 %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "键盘快捷键"
       short_title: "快捷键"
       search_ctrl_f_tip: "要搜索整个论坛，请按 <kbd>/</kbd>"
@@ -5328,16 +5509,21 @@ zh_CN:
       favorite_max_not_reached: "将此徽章标记为收藏"
       favorite_count: "%{count}/%{max} 个徽章已被标记为收藏"
     download_calendar:
-      title: "下载日历"
+      title: "添加到日历"
+      calendar: "日历"
       save_ics: "下载 .ics 文件"
       save_google: "添加到 Google 日历"
+      save_outlook: "添加到 Microsoft Outlook"
+      save_apple: "添加到 Apple 日历"
       remember: "不再询问"
-      remember_explanation: "（您可以在用户偏好设置中更改此偏好设置）"
+      remember_explanation: "您稍后可以在个人资料设置中更改此偏好设置。"
       download: "下载"
       default_calendar: "默认日历"
       default_calendar_instruction: "决定保存日期时应使用哪个日历"
       add_to_calendar: "添加到日历"
       google: "Google 日历"
+      outlook: "Microsoft Outlook"
+      apple: "Apple 日历"
       ics: "ICS"
       default_title: "定时活动"
     tagging:
@@ -5408,6 +5594,8 @@ zh_CN:
         synonyms_hint: "使用上述标签时，它们将被替换为 %{baseTagName}。"
         add_synonyms_confirm: "当前使用 %{synonymNames} 的地方都将更改为使用 %{tagName}。确定要进行此更改吗？"
       localization:
+        language: "标签语言"
+        language_description: "此标签名称和描述的主要语言。"
         hint: "添加本地化，为不同语言的用户显示不同的标签名称。"
         locale: "语言区域"
         name: "名称"
@@ -5594,6 +5782,7 @@ zh_CN:
         custom:
           add: "添加自定义版块"
           edit: "编辑自定义版块"
+          drop_to_add: "将内容拖放到此处以添加新章节"
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此版块吗？"
@@ -5641,6 +5830,7 @@ zh_CN:
                   other: "名称必须短于 %{count} 个字符"
             value:
               label: "链接"
+              duplicate: "本节中的另一个链接已经指向这里。"
               validation:
                 blank: "链接不能为空"
                 maximum:
@@ -5735,6 +5925,7 @@ zh_CN:
         forum:
           label: 论坛
       back_to_forum: "返回论坛"
+      back_to_admin: "返回管理员页面"
       filter_links: "筛选链接…"
       clear_filter: "清除筛选器"
       no_results:
@@ -5951,6 +6142,24 @@ zh_CN:
         legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系支持团队。"
         chart:
           total: "总计：%{count}"
+        related_items:
+          showing: "显示 %{total} 中最新的 %{shown}."
+          users:
+            title: "用户"
+            signups:
+              description: "在 %{startDate} 和 %{endDate} 之间创建的新帐户，最新优先。"
+            new_contributors:
+              description: "在 %{startDate} 和 %{endDate} 之间发表第一篇帖子的用户，最新优先。"
+          labels:
+            user: "用户"
+            created_at: "创建时间"
+            first_post: "第一个帖子创建于"
+          table_summary:
+            trigger: "%{count}，显示 %{date} 的摘要"
+            users_title: "用户在 %{date}"
+            loading: "正在加载摘要…"
+            empty: "没有可用的细节。"
+            error: "无法加载摘要。"
       config_sections:
         account:
           title: "帐户"
@@ -6056,6 +6265,235 @@ zh_CN:
         developer:
           title: "开发者"
           header_description: "开发者设置用于控制安全模式和其他高级功能"
+        mcp:
+          title: "MCP 服务器"
+          header_description: "配置 MCP 访问、原语、OAuth 客户端、授权和活动。"
+          settings:
+            description: "控制 MCP 服务器和 OAuth 安全性的站点设置。"
+          tabs:
+            overview: "概述"
+            access: "访问权限"
+            capabilities: "能力"
+            clients: "OAuth 客户端"
+            authorizations: "授权"
+            activity: "活动"
+          overview:
+            title: "MCP 服务器概述"
+            description: "检查服务器状态、端点、公开的基本功能和设置清单。"
+            endpoint_title: "服务器端点"
+            protocol: "协议版本"
+            server_version: "服务器版本"
+            status: "状态"
+            catalog_title: "暴露的原语"
+            tools: "工具"
+            resources: "资源"
+            prompts: "提示"
+            schema_size: "估计模式大小"
+            schema_size_value: "%{bytes} 字节"
+            activity_title: "当前使用情况"
+            approved_oauth_clients: "已批准的 OAuth 客户端"
+            authorizations: "授权"
+            tokens: "活跃 token"
+            errors: "近期错误"
+            setup_title: "设置清单"
+            warnings_title: "安全警告"
+          access:
+            title: "访问权限"
+            description: "控制谁可以连接到此服务器以及适用哪些范围。"
+            group: "群组"
+            groups: "群组"
+            scopes: "适用范围"
+            scopes_description: "选择此组成员可授权的最大 OAuth 范围。用户的所有组中可用的范围是合并的。连接所需的初始范围始终包含在内。"
+            scopes_placeholder: "选择范围"
+            actions: "操作"
+            admins_description: "预先注册"
+            add: "添加组访问权限"
+            back: "返回访问"
+            new_title: "添加组访问权限"
+            edit_title: "编辑组访问权限"
+            edit: "编辑"
+            delete: "删除"
+            save: "保存访问权限"
+            saved: "组访问权限已保存。"
+            confirm_delete: "移除组 %{group} 的 MCP 访问权限？"
+            scope_primitives:
+              other: "%{count} 原语"
+            rate_limit: "全球请求速率限制"
+          capabilities:
+            title: "能力"
+            description: "选择此服务器公开的基本功能（工具、资源和提示）。MCP 客户端使用匹配的功能来列出和使用这些功能。"
+          primitives:
+            picker_description: "新创建的基元默认处于禁用状态，直到被显式启用为止。"
+            search_placeholder: "搜索原语"
+            group_by: "分组依据"
+            group_by_options:
+              scope: "作用域"
+              provider: "提供商"
+              kind: "类型"
+            groups_label: "原语群组"
+            all_primitives: "所有原语"
+            group_count: "%{enabled} 中的 %{total} 已启用"
+            provider: "提供商"
+            kind: "类型"
+            scope: "作用域"
+            any_scope: "任何范围"
+            risk: "影响"
+            state: "州"
+            scopes: "范围"
+            results_count: "显示 %{total} 原语中的 %{visible}"
+            enable_visible: "启用可见性"
+            disable_visible: "禁用可见性"
+            emergency_blocked: "立即阻止。无论服务器配置如何，此基本功能都无法使用。"
+            no_results: "没有原始对象符合这些过滤器。"
+          clients:
+            title: "OAuth 客户端"
+            description: "在不泄露客户端密钥的情况下，审查 OAuth 客户端注册信息和元数据。"
+            search_placeholder: "搜索客户端"
+            client: "客户端"
+            trust: "信任"
+            last_seen: "最后一次出现"
+            authorizations: "授权"
+            actions: "操作"
+            block: "禁止"
+            unblock: "解除封锁"
+            add: "添加 OAuth 客户端"
+            back: "返回 OAuth 客户端"
+            back_to_presets: "返回应用程序"
+            new_title: "添加 OAuth 客户端"
+            preset_title: "选择应用程序"
+            preset_description: "首先使用常见的 MCP 应用程序的值，或者手动配置 OAuth 客户端。"
+            use_preset: "设置"
+            presets:
+              codex: "Codex"
+              chatgpt: "ChatGPT"
+              claude_code: "Claude Code"
+              mcp_inspector: "MCP 检查器"
+              visual_studio_code: "Visual Studio Code"
+              custom: "自定义"
+            preset_descriptions:
+              codex: "使用 Codex 的标准本地回调函数。"
+              chatgpt: "CIMD 禁用时，预先注册 ChatGPT。"
+              claude_code: "使用带有固定本地回调端口的 Claude Code。"
+              mcp_inspector: "允许检查器的浏览器和命令行回调。"
+              visual_studio_code: "使用 Visual Studio Code 的托管回调。"
+              custom: "请自行输入客户端 ID 和重定向 URI。"
+            preset_help:
+              codex: "在 Codex 中，使用下面的客户端 ID 并确认其回调 URI 是否匹配。"
+              chatgpt: "仅当 CIMD 客户端被禁用时才需要。否则，ChatGPT 会自动识别自身。"
+              claude_code: "将此服务器添加到 Claude Code 时，请使用下面的客户端 ID 和 --callback-port 8080。"
+              mcp_inspector: "请在 MCP Inspector 的 OAuth 设置中使用以下客户端 ID。此设置同时包含 Web 和命令行回调。"
+              visual_studio_code: "当 Visual Studio Code 要求输入客户端注册详细信息时，请在下方输入客户端 ID。"
+              custom: "输入应用程序提供的 OAuth 详细信息。"
+            name: "客户端名称"
+            name_description: "当用户批准此申请时，将向用户显示。"
+            client_id_description: "此应用程序的标识符。配置客户端时请输入相同的值。"
+            redirect_uris: "重定向 URI"
+            redirect_uris_description: "用户批准访问后浏览器返回的页面。每行输入一个完整的 URI。"
+            create: "添加客户端"
+            created: "已添加 OAuth 客户端。"
+            empty: "未注册 OAuth 客户端。"
+            no_results: "没有 OAuth 客户端符合此搜索条件。"
+            detail_title: "客户端详细信息"
+            detail_description: "查看客户端元数据、重定向 URI 和注册历史记录。"
+            client_id: "客户端 ID"
+            domain: "客户端域"
+            registration_type: "注册类型"
+            first_seen: "首次出现"
+          authorizations:
+            title: "授权"
+            description: "审核用户授权信息，并在必要时撤销访问权限。令牌值永远不会显示。"
+            search_placeholder: "搜索权限"
+            client: "客户端"
+            user: "用户"
+            scopes: "授予的作用域"
+            last_used: "最后使用："
+            status: "状态"
+            actions: "操作"
+            empty: "没有 MCP 授权符合此筛选条件。"
+          activity:
+            title: "活动和诊断"
+            description: "查看 MCP 活动。"
+            tool_calls: "工具调用"
+            failed_tool_calls: "工具调用失败"
+            rate_limits: "限速请求"
+            p95_latency: "第 95 百分位延迟"
+            no_latency: "—"
+            search_placeholder: "按用户、客户端、工具或确切请求 ID 搜索"
+            outcome: "成果"
+            time: "时间"
+            method: "方法"
+            user: "用户"
+            duration: "持续时间"
+            duration_value: "%{milliseconds} 毫秒"
+            request_id: "请求 ID"
+            empty: "没有活动符合此筛选条件。"
+          values:
+            server_status:
+              available: "可用"
+              disabled: "已禁用"
+            client_trust:
+              approved: "已批准"
+              pending: "待批准"
+              blocked: "已屏蔽"
+            registration_type:
+              pre_registered: "预先注册"
+              cimd: "客户端 ID 元数据"
+            authorization_status:
+              active: "有效"
+              server_disabled: "服务器已禁用"
+              client_blocked: "已屏蔽客户端"
+              client_not_approved: "客户未批准"
+              access_removed: "访问权限已移除"
+              user_unavailable: "用户不可用"
+              consent_required: "需要重新授权"
+              revoked: "已撤销"
+            activity_outcome:
+              all: "所有结果"
+              success: "成功"
+              error: "错误"
+              rate_limited: "频率限制"
+            primitive_state:
+              all: "所有状态"
+              enabled: "已启用"
+              disabled: "已禁用"
+              unavailable: "不可用"
+              blocked: "已屏蔽"
+            primitive_kind:
+              all: "所有类型"
+              tool: "工具"
+              resource: "资源"
+              resource_template: "资源模板"
+              prompt: "提示"
+            primitive_risk:
+              all: "所有影响级别"
+              read: "只读"
+              write: "写入"
+              destructive: "破坏性的"
+              moderation: "审核"
+              administration: "管理"
+              external_side_effect: "外部副作用"
+            filter:
+              all: "所有"
+          never: "永不"
+          actions:
+            block_client: "屏蔽客户端"
+            unblock_client: "取消屏蔽客户端"
+            refresh_metadata: "刷新元数据"
+            block_primitive: "立即屏蔽"
+            unblock_primitive: "取消屏蔽"
+            revoke: "撤销"
+          save_configuration: "保存配置"
+          save_primitives: "保存原语"
+          confirm_enable: "启用 MCP 服务器后，符合条件的用户即可授权外部客户端。是否继续？"
+          confirm_block_client: "阻止 %{name}？来自该客户端的新请求将被拒绝。"
+          confirm_emergency_block: "立即屏蔽 %{name} ？无论服务器配置如何，该原语都将被拒绝。"
+          primitive_blocked: "%{name} 被立即屏蔽。"
+          primitive_unblocked: "%{name} 上的屏蔽已被取消。"
+          confirm_revoke_authorization: "撤销对 %{name}的授权？现有的访问令牌和刷新令牌将停止工作。"
+          saved: "MCP服务器配置已保存。"
+          primitives_saved: "MCP原语已保存。"
+          copy_endpoint: "复制服务器端点"
+          endpoint_copied: "MCP服务器端点已复制到剪贴板。"
         experimental:
           title: "实验性"
           header_description: "切换网站的实验性功能，其中大部分功能可按组进行控制"
@@ -6282,7 +6720,8 @@ zh_CN:
           header_description: "配置中文和日语搜索设置，包括日志记录和词例化"
         search_everything:
           title: "搜索"
-          header_description: "在管理界面中查找任何内容。您可以筛选下面的结果，您的偏好设置将被记住。要在管理界面的任何地方打开此搜索，请按 %{shortcutHTML}。"
+          header_description: "在管理界面中查找任何内容。您可以过滤下面的结果，您的偏好将被记住。"
+          header_shortcut: "要在管理界面的任何位置打开此搜索，请按 %{shortcutHTML}。"
         security:
           title: "安全性"
           header_description: "配置安全设置，包括双重身份验证、版主权限和内容安全策略"
@@ -6533,9 +6972,29 @@ zh_CN:
         empty: "没有匹配的页面浏览量"
         metric_information: "关于%{metric}"
         active_filters: "活跃的流量过滤器"
+        filtering_to:
+          traffic_type:
+            other: "筛选 %{count} 流量类型"
+          top_url:
+            other: "筛选出 %{count} 个热门网址"
+          entry_url:
+            other: "筛选出 %{count} 条目 URL"
+          referrer:
+            other: "筛选出 %{count} 引荐来源"
+          country:
+            other: "筛选出 %{count} 个国家/地区"
+          network:
+            other: "筛选出 %{count} 网络"
+          browser:
+            other: "筛选出 %{count} 浏览器"
+          language:
+            other: "筛选出 %{count} 种语言"
+          ip:
+            other: "筛选出 %{count} IP 地址"
         remove_filter_value: "移除 %{value}"
         clear_all: "全部清除"
         apply: "应用"
+        apply_filters: "应用筛选条件"
         filter_by:
           other: "按 %{label}, %{count} 网页浏览量筛选"
         remove_filter: "移除 %{filter} 过滤器"
@@ -6553,6 +7012,7 @@ zh_CN:
           top_urls: "热门网址"
           entry_urls: "入口网址"
           browsers: "浏览器"
+          languages: "语言"
           ip_addresses: "IP 地址"
         filters:
           traffic_type: "流量类型"
@@ -6562,7 +7022,10 @@ zh_CN:
           country: "国家/地区"
           network: "网络"
           browser: "浏览器"
+          language: "语言"
           ip: "IP 地址"
+        headline:
+          other: "%{formatted_count} 页面浏览量"
         metrics:
           distinct_sessions:
             label: "不同的会话"
@@ -6576,6 +7039,10 @@ zh_CN:
           logged_in_human: "登录成员"
           anonymous_human: "匿名"
           likely_crawler: "疑似爬虫"
+        partial:
+          retention: "%{date} 之前的页面浏览量数据已不再可用，因此这些结果仅涵盖所选日期范围的一部分。"
+          pageview_limit: "结果包含最近 %{limit} 次页面浏览量，从 %{date} 到 %{time}。所选日期范围内更早的页面浏览量不包含在内。"
+          combined: "结果包含最近 %{limit} 次页面浏览量，从 %{pageviewLimitDate} 到 %{pageviewLimitTime}。所选日期范围内的早期页面浏览量不包含在内； %{date} 之前的页面浏览量数据不再可用。"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："
@@ -6677,6 +7144,21 @@ zh_CN:
               staff: "管理人员"
               empty: "所选时间段内没有帖子。"
               save_error: "无法保存您的选择以供下次使用。"
+              add_group: "添加群组"
+              modal:
+                title: "比较组"
+                search_placeholder: "搜索组..."
+                counter: "已选择 %{count} 个组，共 %{max} 个组。"
+                apply: "保存"
+                enable: "启用 %{title}"
+                disable: "禁用 %{title}"
+                move_up: "上移 %{title}"
+                move_down: "下移 %{title}"
+                footer_note: "这些更改将适用于所有用户。"
+                descriptions:
+                  new_members: "在选定期间注册"
+                  returning: "在选定期限之前注册"
+                  staff: "管理员和版主"
             trust_level_pipeline:
               title: "信任级别管道"
               trust_levels:
@@ -6729,7 +7211,52 @@ zh_CN:
                 stickiness_up: "用户粘性增强了。"
                 daily_engagement_and_new_signups_up_stickiness_down: "每日参与度和新注册用户数有所上升，但用户粘性下降了。"
                 daily_engagement_up_stickiness_and_new_signups_down: "每日参与度上升，但用户粘性和新注册用户数下降。"
+                daily_engagement_up_stickiness_down: "每日互动量上升，但用户粘性下降。"
+                new_signups_up_stickiness_and_daily_engagement_down: "新用户注册量上升，但用户粘性和每日活跃度下降。"
+                all_metrics_down: "用户粘性、每日互动量和新注册用户数均下降。"
+                stickiness_and_daily_engagement_down_new_signups_steady: "用户粘性和每日活跃度有所下降，但新注册用户数量保持稳定。"
+                stickiness_and_daily_engagement_down: "用户粘性和每日活跃度均有所下降。"
+                new_signups_up_stickiness_down: "新用户注册量上升了，但用户粘性下降了。"
+                stickiness_and_new_signups_down_daily_engagement_steady: "用户粘性和新注册用户数量有所下降，但每日活跃用户数量保持稳定。"
+                stickiness_down_daily_engagement_and_new_signups_steady: "用户粘性有所下降，但每日互动量和新注册用户数保持稳定。"
+                stickiness_down_daily_engagement_steady: "用户粘性有所下降，但每日活跃度保持稳定。"
+                stickiness_and_new_signups_down: "用户粘性和新注册用户数量均下降。"
+                stickiness_down_new_signups_steady: "用户粘性有所下降，但新注册用户数量保持稳定。"
+                stickiness_down: "粘性降低了。"
+                daily_engagement_and_new_signups_up_stickiness_flat: "每日互动量和新注册用户数都在上升，但用户粘性却停滞不前。"
+                daily_engagement_up_new_signups_down: "每日用户互动量上升，但新注册用户数下降。"
+                daily_engagement_up_stickiness_and_new_signups_flat: "每日用户参与度有所上升，但用户粘性和新注册用户数量持平。"
+                daily_engagement_up_stickiness_flat: "日活跃用户数上升，但用户粘性保持平稳。"
+                new_signups_up_daily_engagement_down: "新用户注册量上升，但每日活跃用户量下降。"
+                daily_engagement_and_new_signups_down_stickiness_steady: "每日互动量和新注册用户数有所下降，但用户粘性保持稳定。"
+                daily_engagement_down_stickiness_and_new_signups_steady: "每日用户活跃度有所下降，但用户粘性和新注册用户数量保持稳定。"
+                daily_engagement_down_stickiness_steady: "日活跃用户数下降，但用户粘性保持稳定。"
+                new_signups_up_stickiness_and_daily_engagement_flat: "新用户注册量有所上升，但用户粘性和每日活跃度却保持平稳。"
+                new_signups_down_stickiness_and_daily_engagement_steady: "新用户注册量有所下降，但用户粘性和每日活跃度保持稳定。"
+                all_metrics_steady: "用户粘性、每日活跃度或新注册用户数均未发生实质性变化。"
+                stickiness_and_daily_engagement_steady: "用户粘性和日常参与度没有显著变化。"
+                new_signups_up_stickiness_flat: "新用户注册量上升，但用户粘性保持平稳。"
+                new_signups_down_stickiness_steady: "新用户注册量下降，但用户粘性保持稳定。"
+                stickiness_and_new_signups_steady: "用户粘性和新注册用户数量没有显著变化。"
+                stickiness_steady: "粘性没有明显变化。"
+                daily_engagement_and_new_signups_up: "每日互动量和新注册用户数均有所上升。"
+                daily_engagement_up_new_signups_flat: "每日用户互动量上升，但新注册用户数持平。"
+                daily_engagement_up: "每日互动量上升。"
+                daily_engagement_and_new_signups_down: "每日互动量和新用户注册量均有所下降。"
+                daily_engagement_down_new_signups_steady: "每日用户活跃度有所下降，但新注册用户数量保持稳定。"
+                daily_engagement_down: "每日互动量下降。"
+                new_signups_up_daily_engagement_flat: "新用户注册量有所上升，但每日活跃用户量持平。"
+                new_signups_down_daily_engagement_steady: "新用户注册量下降，但每日活跃用户数保持稳定。"
+                daily_engagement_and_new_signups_steady: "每日用户参与度和新用户注册量没有显著变化。"
+                daily_engagement_steady: "日常参与度没有实质性变化。"
+                new_signups_up: "新注册用户数量有所增长。"
+                new_signups_down: "新用户注册量下降了。"
+                new_signups_steady: "新注册用户数量没有显著变化。"
                 insufficient_activity: "请选择更长的日期范围，或者等您的社区有更多活动后再回来。"
+              cta:
+                dau_mau: "按类别查看活动，看看您所在社区的哪些领域可能需要您的关注。"
+                daily_engaged_users: "调查下降原因，找出哪些成员脱离了组织。"
+                new_signups: "查看您的网站流量数据，了解流量模式在本时期可能如何影响您的注册量。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "DAU / MAU 粘性"
@@ -6742,11 +7269,36 @@ zh_CN:
             headline:
               titles:
                 insufficient_activity: "搜索活动量不足，暂时无法总结。"
+                searches_increased_no_result_rate_declined: "在选定的时间段内，搜索次数有所增加，无结果率有所下降。"
+                searches_increased: "在选定的时间段内，搜索总次数有所增加。"
+                no_result_rate_decreased: "在选定的时间段内，无结果率有所下降。"
+                searches_decreased_no_result_rate_increased: "在选定的时间段内，搜索次数减少，无结果率上升。"
+                searches_decreased: "在选定的时间段内，搜索总次数有所下降。"
+                no_result_rate_increased: "在选定的时间段内，无结果率有所上升。"
+                search_steady: "在选定的时间段内，搜索稳定进行。"
               summaries:
                 insufficient_activity: "请选择更长的日期范围，或者等成员搜索更多内容后再回来。"
+                searches_up_results_improved: "社区成员的搜索量增加，他们也更频繁地找到了自己想要的内容。"
+                searches_up_no_result_rate_up: "社区成员的搜索量有所增加，但无结果率却有所上升。"
+                searches_up_no_result_rate_flat: "社区成员的搜索量有所增加，但无结果率保持不变。"
+                results_improved_searches_down: "会员们都能找到他们想要的东西，搜索总量有所下降。"
+                results_improved_searches_steady: "会员们都能找到他们想要的内容，总搜索量保持稳定。"
+                searches_down_results_worsened: "用户在您所在的社区进行搜索的次数减少了，他们找到所需内容的频率也降低了。"
+                searches_down_no_result_rate_flat: "社区成员的搜索次数减少了，但无结果率保持不变。"
+                results_worsened_searches_steady: "会员们发现他们找到所需内容的频率不如以前，而总搜索量则保持稳定。"
+                searches_and_no_result_rate_steady: "总搜索量或无结果率均无显著变化。"
+                searches_up: "会员们正在您所在的社区进行更多搜索。"
+                searches_down: "您所在社区的搜索次数正在减少。"
+                searches_steady: "总搜索量没有显著变化。"
+                results_worsened: "会员们越来越难找到他们需要的东西。"
+                results_improved: "会员们越来越容易找到他们想要的东西。"
+                no_result_rate_steady: "无结果率没有显著变化。"
+              cta:
+                content_gaps: "检查内容缺口，看看缺少哪些内容。"
             kpi:
               total_searches:
                 label: "总搜索次数"
+                tooltip: "您所在社区的搜索次数。"
               no_result_rate:
                 label: "无结果率"
                 tooltip: "成员未点击任何结果的搜索百分比 (0% CTR)。这表示成员可能正在搜索您的社区中没有的内容。"
@@ -6756,6 +7308,7 @@ zh_CN:
               status: "状态"
             trending:
               title: "热门搜索"
+              tooltip: "您所在社区最热门的搜索词。"
               empty: "此期间没有任何搜索。"
             content_gaps:
               title: "内容差距"
@@ -6765,6 +7318,24 @@ zh_CN:
                 no_match_tooltip: "点击率 (CTR) 为 0% 的搜索词。"
                 poor_match: "匹配不佳"
                 poor_match_tooltip: "点击率 (CTR) 在 1-20% 之间的搜索词。"
+          system:
+            title: "系统"
+            storage: "存储"
+            status: "状态"
+            fetch_error: "无法加载系统信息。请尝试刷新页面。"
+            commits:
+              other: "+%{count} 提交"
+            view_on_github: "在 GitHub 上查看"
+            update_check_failed: "更新检查失败——请确保 Sidekiq 正在运行。"
+            update_available: "有更新可用： %{version}"
+            space_free: "%{size} 免费"
+            backups_size:
+              other: "%{size} 备份 (%{count})"
+            uploads_size: "%{size} 上传"
+            latest_backup: "最新备份 %{date}"
+            manage_backups: "管理备份"
+            discourse_updated: "Discourse 已更新"
+            dashboard_updated: "仪表盘已更新"
         reports_section:
           header_action: "管理"
           description: "固定标准报告或数据浏览器查询，以跟踪对您的社区至关重要的内容。"
@@ -6857,12 +7428,17 @@ zh_CN:
             title: "热门推荐人"
             empty: "此期间没有推荐人数据。"
             error: "无法加载热门推荐人。请尝试刷新页面。"
+          top_entry_urls:
+            title: "热门条目网址"
+            empty: "本期间无条目 URL 数据。"
+            error: "无法加载热门条目网址。请尝试刷新页面。"
           series:
             logged_in: "登录成员"
             anonymous: "匿名"
             embedded: "嵌入式页面浏览量"
             crawlers: "抓取工具"
           see_details: "查看详细信息"
+          crawler_learn_more: "了解详情"
         period:
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"
@@ -6902,6 +7478,14 @@ zh_CN:
           average_for_sample: "样本平均值"
           total: "所有时间总计"
           no_data: "没有要显示的数据。"
+          posters_by_member_type_members:
+            title: "%{name} — %{users} · %{posts}"
+            users_count:
+              other: "%{count} 位用户"
+            posts_count:
+              other: "%{count} 个帖子"
+            deselect: "取消选择 %{name}"
+            fetch_error: "无法加载此组的用户。"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
             disabled: '趋势搜索报告已禁用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
@@ -7582,6 +8166,14 @@ zh_CN:
           disable:
             title: "禁用只读模式"
             label: "禁用只读模式"
+        site_archived:
+          enable:
+            title: "启用存档模式"
+            label: "启用存档模式"
+            confirm: "您确定要启用归档模式吗？用户仍然可以登录和浏览，但所有写入操作都将被禁用。出于运行只读原因（故障转移、维护）而启用归档模式时，其优先级仍然很高。"
+          disable:
+            title: "禁用存档模式"
+            label: "禁用存档模式"
         logs:
           none: "暂无日志…"
         columns:
@@ -8216,6 +8808,7 @@ zh_CN:
             deleted_tag: "删除的标签"
             update_directory_columns: "更新目录列"
             deleted_unused_tags: "已被删除的未使用的标签"
+            created_tag: "创建标签"
             renamed_tag: "重命名的标签"
             revoke_email: "撤消电子邮件"
             lock_trust_level: "锁定信任级别"
@@ -8243,6 +8836,7 @@ zh_CN:
             change_name: "更改名称"
             topic_timestamps_changed: "已更改话题时间戳"
             approve_user: "批准的用户"
+            removed_avatar: "已移除头像"
             web_hook_create: "创建网络钩子"
             web_hook_update: "更新网络钩子"
             web_hook_destroy: "销毁网络钩子"
@@ -8307,6 +8901,7 @@ zh_CN:
             admin_onboarding_step_completed: "完成管理员入门步骤"
             admin_onboarding_completed: "完成管理员入门"
             admin_onboarding_dismissed: "忽略管理员入门"
+            create_group: "创建群组"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -8345,6 +8940,7 @@ zh_CN:
             full_page: "完整页面"
             click_through_only: "全部（仅点击后到达）"
             non_staff_only: "非工作人员用户"
+            human_only: "不包括工作人员和爬行者"
           header_search_results: "标头搜索结果"
         logster:
           title: "错误日志"
@@ -8564,6 +9160,10 @@ zh_CN:
           all: "所有用户"
           activated: "已激活"
           not_activated: "未激活"
+        account_type_filter:
+          human: "人类账户"
+          bot: "机器人帐户"
+          all: "所有账户"
         approved: "已批准？"
         titles:
           active: "活跃用户"
@@ -8919,13 +9519,29 @@ zh_CN:
           multiselect: "多选"
       site_text:
         description: "您可以自定义论坛上的任何文本。"
-        search: "搜索您要编辑的文本"
+        search: "搜索文本或翻译键"
+        search_label: "搜索"
+        theme: "主题或组件"
+        all_themes: "所有站点文本"
+        theme_disabled: "已禁用"
+        filters: "筛选器"
+        filters_active:
+          other: "筛选（%{count}）"
+        edit_title: "编辑站点文本"
+        default_text: "默认文本"
+        value_label: "您的文本 · %{language}"
+        invalid_title: "无效的插值占位符"
+        invalid_description: "此文本使用无法识别的占位符。使用下面可用的插值键。"
+        status:
+          customized: "定制"
+          outdated: "过期"
+          invalid: "无效"
         title: "网站文本"
         edit: "编辑"
-        revert: "还原变更"
+        revert: "恢复默认"
         revert_confirm: "确定要还原您的变更吗？"
-        go_back: "返回搜索"
-        recommended: "我们建议自定义以下文本以符合您的需求："
+        go_back: "返回结果"
+        recommended: "建议的自定义文本"
         show_overriden: "只显示被替换"
         show_outdated: "仅显示过期/无效"
         show_untranslated: "只显示未翻译的内容"
@@ -9008,6 +9624,7 @@ zh_CN:
           spam: "垃圾信息"
           rate_limits: "频率限制"
           developer: "开发者"
+          mcp: "MCP"
           embedding: "嵌入"
           legal: "法律信息"
           api: "API"
@@ -9070,6 +9687,9 @@ zh_CN:
           content_security_policy:
             prompt: "禁用内容安全策略会失去一道重要的安全屏障，使您遭受跨站脚本攻击 (XSS) 和其他内容注入攻击。这将导致您的网站面临安全风险，因此此操作只能用于调试/测试目的。禁用 CSP 并不能解决 CORS 问题。确定要继续吗？"
             confirm: "是，禁用内容安全策略"
+          mcp_server_enabled:
+            prompt: "启用 MCP 服务器后，符合条件的用户即可连接外部应用程序。连接的应用程序将作为授权用户，并受限于已授予的权限范围和 Discourse 的常规权限。"
+            confirm: "启用 MCP 服务器"
         job_status:
           completed: "更新完成"
           enqueued: "正在更新"

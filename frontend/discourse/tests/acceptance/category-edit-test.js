@@ -9,7 +9,7 @@ import pretender, {
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 import { i18n } from "discourse-i18n";
 
 function latestCategorySavePayload() {
@@ -615,7 +615,7 @@ acceptance(
       await visit("/c/bug/edit/images");
 
       assert
-        .dselect("[data-name='sort_order'] .d-select")
+        .dnativeselect("[data-name='sort_order'] .d-native-select")
         .hasSelectedOption(
           { value: "votes", label: "votes" },
           "renders and selects a stored value the core list doesn't provide"

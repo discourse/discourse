@@ -21,6 +21,26 @@ TEXT
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe "#register_navigation_destination" do
+    it "namespaces destinations and filters disabled plugins at lookup time" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugin_instance.register_navigation_destination(
+        "example",
+        path: "/admin/example",
+        title: "example.title",
+        description: "example.description",
+      ) { |guardian| guardian.is_admin? }
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.navigation_destinations.map(&:id)).to eq(
+        ["discourse-sample-plugin:example"],
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.navigation_destinations).to eq([])
+    end
+  end
+
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
 
   describe ".humanized_name" do
@@ -113,6 +133,9 @@ TEXT
         :participating_users_last_day,
         :participating_users_7_days,
         :participating_users_30_days,
+        # onboarding stats are grouped under their stat type rather than being
+        # flat top-level keys
+        :onboarding,
       )
     end
 
@@ -391,11 +414,12 @@ TEXT
   describe "#add_report" do
     after { Report.remove_report("readers") }
 
-    it "adds a report" do
+    it "adds a report with admin-only related items" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.add_report("readers") {}
+      plugin.add_report("readers", admin_only_related_items: true) {}
 
       expect(Report.respond_to?(:report_readers)).to eq(true)
+      expect(Report.admin_only_related_items_report_types).to include("readers")
     end
   end
 
@@ -482,7 +506,7 @@ TEXT
   end
 
   describe ".register_seedfu_fixtures" do
-    it "should add the new path to SeedFu's fixtures path" do
+    it "adds the new path to SeedFu's fixture paths" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_seedfu_fixtures(["some_path"])
       plugin.register_seedfu_fixtures("some_path2")
@@ -505,7 +529,7 @@ TEXT
       plugin
     end
 
-    it "should add the right callback" do
+    it "adds the expected callback" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_create) { called += 1 }
@@ -519,7 +543,7 @@ TEXT
       expect(called).to eq(1)
     end
 
-    it "should add the right callback with options" do
+    it "adds the expected callback with options" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_commit, on: :create) { called += 1 }
@@ -821,6 +845,21 @@ TEXT
         *actions,
       )
     end
+
+    it "retains path parameters and replaces conflicting mapping arrays" do
+      plugin_instance.add_api_key_scope(
+        :topics,
+        read: {
+          actions: %w[topics#show],
+          path_params: %i[topic_id],
+        },
+      )
+
+      mapping = ApiKeyScope.scope_mappings.dig(:topics, :read)
+
+      expect(mapping[:actions]).to eq(%w[topics#show])
+      expect(mapping[:path_params]).to eq(%i[topic_id])
+    end
   end
 
   describe "#add_directory_column" do
@@ -943,6 +982,7 @@ TEXT
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
+
     fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
@@ -1178,6 +1218,122 @@ TEXT
     end
   end
 
+  describe "#register_homepage" do
+    before { plugin_instance.stubs(:enabled?).returns(true) }
+
+    it "registers a homepage while the plugin is enabled" do
+      plugin_instance.register_homepage(
+        :sample_homepage,
+        name: "sample_plugin.homepage.title",
+        path: "/sample-homepage",
+        route: "sample_plugin/homepage#index",
+        anonymous: true,
+      )
+
+      expect(DiscoursePluginRegistry.homepage_options).to contain_exactly(
+        {
+          id: "sample_homepage",
+          name: "sample_plugin.homepage.title",
+          path: "/sample-homepage",
+          route: "sample_plugin/homepage#index",
+          anonymous: true,
+          server_side: false,
+          enabled: nil,
+          available: nil,
+        },
+      )
+
+      plugin_instance.stubs(:enabled?).returns(false)
+      expect(DiscoursePluginRegistry.homepage_options).to be_empty
+    end
+
+    it "rejects invalid and duplicate registrations" do
+      expect do
+        plugin_instance.register_homepage(
+          "not valid",
+          name: "plugin.homepage",
+          path: "/plugin",
+          route: "plugin#index",
+        )
+      end.to raise_error(ArgumentError, /homepage id/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "latest",
+          name: "plugin.latest",
+          path: "/plugin-latest",
+          route: "plugin#latest",
+        )
+      end.to raise_error(ArgumentError, /already registered/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          server_side: nil,
+        )
+      end.to raise_error(ArgumentError, /server_side/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          available: true,
+        )
+      end.to raise_error(ArgumentError, /available/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          enabled: true,
+        )
+      end.to raise_error(ArgumentError, /enabled/)
+
+      plugin_instance.register_homepage(
+        "sample_homepage",
+        name: "plugin.homepage",
+        path: "/sample-homepage",
+        route: "plugin#index",
+      )
+
+      expect do
+        plugin_instance.register_homepage(
+          "sample_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+        )
+      end.to raise_error(ArgumentError, /already registered/)
+    end
+
+    it "allows distinct IDs that normalize to the same Rails helper name" do
+      plugin_instance.register_homepage(
+        "sample-homepage",
+        name: "plugin.hyphenated",
+        path: "/hyphenated",
+        route: "plugin#hyphenated",
+      )
+      plugin_instance.register_homepage(
+        "sample_homepage",
+        name: "plugin.underscored",
+        path: "/underscored",
+        route: "plugin#underscored",
+      )
+
+      expect(DiscoursePluginRegistry.homepage_options.pluck(:id)).to include(
+        "sample-homepage",
+        "sample_homepage",
+      )
+    end
+  end
+
   describe "#register_admin_dashboard_section" do
     let(:plugin) { Plugin::Instance.new }
 
@@ -1270,7 +1426,7 @@ TEXT
   describe "#add_request_rate_limiter" do
     after { Middleware::RequestTracker.reset_rate_limiters_stack }
 
-    it "should raise an error if `after` and `before` kwarg are provided" do
+    it "raises an error when both `after` and `before` are provided" do
       plugin = Plugin::Instance.new
 
       expect do
@@ -1284,7 +1440,7 @@ TEXT
       end.to raise_error(ArgumentError, "only one of `after` or `before` can be provided")
     end
 
-    it "should raise an error if value of `after` kwarg is invalid" do
+    it "raises an error when `after` is invalid" do
       plugin = Plugin::Instance.new
 
       expect {
@@ -1300,7 +1456,7 @@ TEXT
       )
     end
 
-    it "should raise an error if value of `before` kwarg is invalid" do
+    it "raises an error when `before` is invalid" do
       plugin = Plugin::Instance.new
 
       expect {

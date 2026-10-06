@@ -36,6 +36,29 @@ describe "Post event" do
     end
   end
 
+  it "shows the event hosts" do
+    first_host = Fabricate(:user, username: "event_host_maya")
+    second_host = Fabricate(:user, username: "event_host_noah")
+    raw = <<~EVENT
+      [event start='2222-02-22 14:22' hosts='#{admin.username},#{first_host.username},#{second_host.username}']
+      [/event]
+    EVENT
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_hosts([first_host, second_host], cohosted: true)
+  end
+
+  it "joins the creator and host roles for the same user" do
+    raw = "[event start='2222-02-22 14:22' hosts='#{admin.username}']\n[/event]"
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_creator_host(admin)
+  end
+
   context "with description" do
     it "can save a description" do
       title = "My descriptive meetup event"
@@ -355,20 +378,27 @@ describe "Post event" do
     end
   end
 
-  it "shows '-' for expired recurring events instead of dates" do
-    title = "An expired recurring event"
+  it "keeps showing the last occurrence of an expired recurring event" do
+    freeze_time Time.utc(2026, 8, 31)
     raw = <<~MD
-      [event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']
+      [event start='2026-09-01 10:00' end='2026-09-01 11:00' recurrence='every_week' recurrenceUntil='2026-09-22 23:59']
       [/event]
     MD
-    post = PostCreator.create!(admin, title:, raw:)
+    post = PostCreator.create!(admin, title: "An expired recurring event", raw:)
+    PostCreator.create!(admin, topic_id: post.topic_id, raw: "Minutes of the last meeting")
 
+    [1, 8, 15, 22].each do |day|
+      freeze_time Time.utc(2026, 9, day, 11, 1)
+      Jobs::DiscourseCalendar::MonitorEventDates.new.execute({})
+    end
+
+    freeze_time Time.utc(2026, 9, 24)
     visit(post.topic.url)
 
-    expect(page).to have_css(".discourse-post-event")
-    expect(page).to have_css(".event-date .month", text: "-")
-    expect(page).to have_css(".event-date .day", text: "-")
-    expect(page).to have_css(".event-dates", text: "-")
+    expect(page).to have_css(".event-date .month", text: "SEP")
+    expect(page).to have_css(".event-date .day", text: "22")
+    expect(page).to have_css(".event-dates .discourse-local-date")
+    expect(page).to have_css("#post_2", text: "Minutes of the last meeting")
   end
 
   context "with DST handling for recurring events" do
@@ -394,7 +424,7 @@ describe "Post event" do
         post = PostCreator.create!(admin, title:, raw:)
 
         event = DiscourseEvents::Events::Event.find_by(post:)
-        event.set_next_date
+        event.set_next_recurrent_event_date
 
         sign_in(viewer)
 
@@ -478,7 +508,7 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     form.field("eventType").select("private")
-    find(".group-selector").click
+    form.field("rawInvitees").component.find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     form.field("customFields.custom").fill_in("custom value")
@@ -494,7 +524,12 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
-    expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
+    expect(
+      form
+        .field("rawInvitees")
+        .component
+        .find(".group-selector .d-multi-select-trigger__selection"),
+    ).to have_text(group.name)
     expect(form.field("customFields.custom")).to have_value("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"

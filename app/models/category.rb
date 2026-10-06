@@ -123,6 +123,7 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
   validate :ensure_slug
   validate :permissions_compatibility_validator
+  validate :special_category_permissions_validator, on: :update
   validate :posting_review_groups_validator
 
   validates :default_slow_mode_seconds,
@@ -183,6 +184,7 @@ class Category < ActiveRecord::Base
     end
   end
 
+  after_commit :enqueue_upload_security_updates, on: :update, if: :saved_change_to_read_restricted?
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
@@ -646,7 +648,11 @@ class Category < ActiveRecord::Base
   end
 
   def trash_category_definition
-    topic&.trash!
+    return if topic.blank?
+
+    topic.first_post&.trash!
+    topic.trash!
+    Topic.reset_highest(topic.id)
   end
 
   def clear_related_site_settings
@@ -828,6 +834,11 @@ class Category < ActiveRecord::Base
 
   def parent_category_validator
     if parent_category_id
+      if parent_category.blank?
+        errors.add(:base, I18n.t("category.errors.not_found"))
+        return
+      end
+
       errors.add(:base, I18n.t("category.errors.uncategorized_parent")) if uncategorized?
 
       errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
@@ -1093,6 +1104,15 @@ class Category < ActiveRecord::Base
     ].include? id
   end
 
+  # Seeding resets these categories' permissions on every migration, so edits would be lost.
+  def special?
+    [
+      SiteSetting.meta_category_id,
+      SiteSetting.staff_category_id,
+      SiteSetting.uncategorized_category_id,
+    ].include? id
+  end
+
   def full_slug(separator = "-")
     start_idx = "#{Discourse.base_path}/c/".size
     url[start_idx..-1].gsub("/", separator)
@@ -1209,18 +1229,16 @@ class Category < ActiveRecord::Base
 
   def permissions_compatibility_validator
     # when saving subcategories
-    if @permissions && parent_category_id.present?
-      return if parent_category.category_groups.empty?
+    if (@permissions || parent_category_id_changed?) && parent_category_id.present?
+      return if parent_category.blank? || parent_category.category_groups.empty?
 
       parent_permissions = parent_category.category_groups.pluck(:group_id, :permission_type)
       child_permissions =
-        (
-          if @permissions.empty?
-            [[Group[:everyone].id, CategoryGroup.permission_types[:full]]]
-          else
-            @permissions
-          end
-        )
+        @permissions ||
+          category_groups.map { |permission| [permission.group_id, permission.permission_type] }
+      if child_permissions.empty?
+        child_permissions = [[Group[:everyone].id, CategoryGroup.permission_types[:full]]]
+      end
       check_permissions_compatibility(parent_permissions, child_permissions)
 
       # when saving parent category
@@ -1232,6 +1250,15 @@ class Category < ActiveRecord::Base
 
       check_permissions_compatibility(parent_permissions, child_permissions)
     end
+  end
+
+  def special_category_permissions_validator
+    return if !@permissions || !special?
+
+    current_permissions = category_groups.pluck(:group_id, :permission_type)
+    return if !read_restricted_changed? && @permissions.sort == current_permissions.sort
+
+    errors.add(:base, I18n.t("category.errors.special_category_permissions"))
   end
 
   def self.ensure_consistency!
@@ -1298,6 +1325,10 @@ class Category < ActiveRecord::Base
     saved_change_to_slug? || saved_change_to_parent_category_id?
   end
 
+  def enqueue_upload_security_updates
+    Jobs.enqueue(:update_category_upload_security, category_id: id)
+  end
+
   def enqueue_category_hashtag_remap
     old_slug = saved_change_to_slug? ? slug_before_last_save : slug
     old_parent_category_id =
@@ -1307,28 +1338,26 @@ class Category < ActiveRecord::Base
         parent_category_id
       end
 
-    enqueue_category_hashtag_remap_job(
-      category_id: id,
-      old_ref:
-        Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
-      new_ref: slug_ref,
-    )
+    type = CategoryHashtagDataSource.type
+    remaps = [
+      {
+        type:,
+        id:,
+        old_ref:
+          Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
+      },
+    ]
 
     if saved_change_to_slug?
-      subcategories.find_each do |subcategory|
-        enqueue_category_hashtag_remap_job(
-          category_id: subcategory.id,
-          old_ref: [old_slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
-          new_ref: [slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
-        )
-      end
+      remaps +=
+        subcategories
+          .pluck(:id, :slug)
+          .map do |sub_id, sub_slug|
+            { type:, id: sub_id, old_ref: [old_slug, sub_slug].join(Category::SLUG_REF_SEPARATOR) }
+          end
     end
-  end
 
-  def enqueue_category_hashtag_remap_job(category_id:, old_ref:, new_ref:)
-    return if old_ref.blank? || new_ref.blank? || old_ref == new_ref
-
-    DB.after_commit { Jobs.enqueue(:remap_category_hashtag, category_id:, old_ref:, new_ref:) }
+    HashtagRemapper.enqueue(remaps)
   end
 
   def cannot_delete_reason

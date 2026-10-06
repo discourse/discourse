@@ -56,13 +56,13 @@ module("Integration | ui-kit | DVirtualList | inert", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimateSize}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimateSize}}
+          @onReachEnd={{onReachEnd}}
+          @onReachStart={{onReachStart}}
           @onRegisterApi={{onRegisterApi}}
           @onVisibleRangeChange={{onVisibleRangeChange}}
-          @onReachStart={{onReachStart}}
-          @onReachEnd={{onReachEnd}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>

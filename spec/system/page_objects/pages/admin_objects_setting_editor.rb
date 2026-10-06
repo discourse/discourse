@@ -43,6 +43,11 @@ module PageObjects
         self
       end
 
+      def type_in_field(field_name, value)
+        input_field(field_name).send_keys(value)
+        self
+      end
+
       def add_object_in_root
         find(".schema-setting-editor__tree-add-button.--root").click
         self

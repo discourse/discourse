@@ -282,6 +282,7 @@ lv:
       next: "Nākamais"
       sections:
         theme: "Tēma"
+        search: "Meklēt"
       homepage:
         topics: "Tēmas"
         categories: "Sadaļas"
@@ -520,6 +521,9 @@ lv:
       user_label: "Lietotājs"
       timeline:
         target_deleted: "Ieraksts dzēsts"
+      author_penalty:
+        toast:
+          undo: "Atsaukt"
       notes:
         delete: "Dzēst"
       topic_label: "Tēmas"
@@ -992,7 +996,6 @@ lv:
       admin: "%{user} ir administrators"
       moderator_tooltip: "Šis lietotājs ir moderators"
       admin_tooltip: "Šis lietotājs ir administrators"
-      silenced_tooltip: "Šis lietotājs ir izslēgts"
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_permanently: "Šī lietotāja darbība ir apturēta."
       suspended_reason: "Iemesls:"
@@ -1049,6 +1052,12 @@ lv:
       tracked_topics_link: "Parādīt"
       automatically_unpin_topics: "Automātiski atspraust tēmas, kad sasniedzu beigas"
       apps: "Lietotnes"
+      mcp_authorizations:
+        details: "Detaļas"
+        never: "Nekad"
+        status: "Statuss"
+        statuses:
+          active: "Aktīvs"
       revoke_access: "Liegt piekļuvi"
       undo_revoke_access: "Atcelt piekļuves liegšanu"
       api_approved: "Apstiprināts:"
@@ -1685,6 +1694,8 @@ lv:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Ievadīt"
+      delete: "Dzēst"
+      home: "Mājas"
     category_row:
       subcategories: "+ Apakšsadaļas"
     select_kit:
@@ -1853,6 +1864,7 @@ lv:
       categories: "Sadaļas"
       tags: "Tagi"
       type:
+        default: "Ieraksti"
         users: "Lietotāji"
         categories: "Sadaļas"
       context:
@@ -2278,7 +2290,6 @@ lv:
       reply_as_new_private_message: "Atbildēt jaunā vēstulē tiem pašiem adresātiem"
       continue_discussion: "Turpinot diskusiju no %{postLink}:"
       follow_quote: "doties uz citēto ierakstu"
-      show_full: "Parādīt visu ierakstu"
       collapse: "sakļaut"
       expand_collapse: "paplašināt/minimizēt"
       gap:
@@ -2426,6 +2437,7 @@ lv:
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
       no_description: "Lūdzu, pievieno aprakstu šai sadaļai."
+      latest_topics: "Jaunākās tēmas"
       already_used: "Šī krāsa ir izmantota citai sadaļai"
       security: "Drošība"
       permissions:
@@ -2587,6 +2599,7 @@ lv:
       with_topics: "%{filter} tēmas"
       with_category: "%{filter} Sadaļas %{category} tēmas"
       filter:
+        reset: "atiestatīt"
         button:
           label: "Filtrs"
       latest:
@@ -2924,6 +2937,11 @@ lv:
         group_traffic: "Datu plūsma"
         group_members: "Dalībnieki"
         group_other: "Citi"
+        related_items:
+          users:
+            title: "Lietotāji"
+          labels:
+            user: "Lietotājs"
       config_sections:
         account:
           title: "Konts"
@@ -2958,6 +2976,54 @@ lv:
       config:
         developer:
           title: "Izstrādātājs"
+        mcp:
+          tabs:
+            access: "Piekļuve"
+            activity: "Aktivitāte"
+          overview:
+            status: "Statuss"
+          access:
+            title: "Piekļuve"
+            group: "Grupa"
+            groups: "Grupas"
+            actions: "Darbības"
+            edit: "Labot"
+            delete: "Dzēst"
+          primitives:
+            group_by_options:
+              kind: "Tips"
+            kind: "Tips"
+          clients:
+            actions: "Darbības"
+            block: "Bloķēt"
+          authorizations:
+            user: "Lietotājs"
+            status: "Statuss"
+            actions: "Darbības"
+          activity:
+            time: "Laiks"
+            user: "Lietotājs"
+            duration: "Ilgums"
+          values:
+            server_status:
+              disabled: "Atslēgt"
+            client_trust:
+              approved: "Apstiprināt"
+            authorization_status:
+              active: "Aktīvs"
+            activity_outcome:
+              success: "Veiksmīgi"
+              error: "Kļūda..."
+            primitive_state:
+              enabled: "Ieslēgts"
+              disabled: "Atslēgt"
+            primitive_kind:
+              all: "Visi veidi"
+            filter:
+              all: "Visi"
+          never: "Nekad"
+          actions:
+            revoke: "Atsaukt"
         emojis:
           title: "Smaidiņi"
         files:
@@ -3119,6 +3185,8 @@ lv:
               share: "Dalīties"
             whos_posting:
               staff: "Personāls"
+              modal:
+                apply: "Saglabāt"
             trust_level_pipeline:
               trust_levels:
                 "0": "Jauns"
@@ -3128,6 +3196,9 @@ lv:
             title: "Meklēt"
             table:
               status: "Statuss"
+          system:
+            title: "Sistēma"
+            status: "Statuss"
         reports_section:
           header_action: "Pārvaldīt"
           modal:
@@ -3136,6 +3207,7 @@ lv:
         site_traffic:
           series:
             anonymous: "Anonīmi"
+          crawler_learn_more: "Uzzināt vairāk"
         period:
           last_7_days: "Pēdējās 7 dienas"
           last_30_days: "Pēdējās 30 dienas"
@@ -3153,6 +3225,15 @@ lv:
           monthly: Mēneša
           weekly: Nedēļas
           groups: "Visas grupas"
+          posters_by_member_type_members:
+            users_count:
+              zero: "%{count} lietotāji"
+              one: "%{count} lietotājs"
+              other: "%{count} lietotāji"
+            posts_count:
+              zero: "%{count} raksti"
+              one: "%{count} raksts"
+              other: "%{count} raksti"
           sort_ascending: "augoši"
           sort_descending: "dilstoši"
           filters:
@@ -3891,12 +3972,10 @@ lv:
           confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
-        search: "Meklēt tekstu, kuru vēlies rediģēt"
+        search_label: "Meklēt"
+        theme_disabled: "Atslēgt"
         edit: "Rediģēt"
-        revert: "Atsaukt Izmaiņas"
         revert_confirm: "Vai tiešām vēlies atsaukt izmaiņas?"
-        go_back: "Atpakaļ pie meklētāja"
-        recommended: "Iesakām pielāgot šo tekstu jūsu vajadzībām:"
         show_overriden: "Rādīt tikai aizstātos"
         outdated:
           dismiss: "Nerādīt"

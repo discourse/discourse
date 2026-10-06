@@ -298,8 +298,8 @@ describe PostRevisor do
     end
 
     describe "when `create_post_for_category_and_tag_changes` site setting is enabled" do
-      fab!(:tag1) { Fabricate(:tag, name: "First tag") }
-      fab!(:tag2) { Fabricate(:tag, name: "Second tag") }
+      fab!(:tag1) { Fabricate(:tag, name: "first-tag") }
+      fab!(:tag2) { Fabricate(:tag, name: "second-tag") }
 
       before do
         SiteSetting.create_post_for_category_and_tag_changes = true
@@ -343,6 +343,17 @@ describe PostRevisor do
 
         expect(post.topic.ordered_posts.last.raw).to eq(
           I18n.t("topic_tag_changed.removed", removed: "##{tag1.name}, ##{tag2.name}"),
+        )
+      end
+
+      it "suffixes a tag hashtag that collides with a category slug" do
+        Fabricate(:category, slug: tag1.name)
+        post.topic.update!(tags: [])
+
+        post_revisor.revise!(admin, tags: [tag1.name])
+
+        expect(post.topic.ordered_posts.last.raw).to eq(
+          I18n.t("topic_tag_changed.added", added: "##{tag1.name}::tag"),
         )
       end
 
@@ -394,6 +405,7 @@ describe PostRevisor do
       describe "with PMs" do
         fab!(:pm, :private_message_topic)
         let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }
+
         fab!(:category) { Fabricate(:category, topic_count: 1) }
         it "Does not create a category change small_action post when converting to a topic" do
           expect do
@@ -855,12 +867,12 @@ describe PostRevisor do
             post.reload
           end
 
-          it "does create a new version after the edit window" do
+          it "increments the version after the edit window" do
             expect(post.version).to eq(3)
             expect(post.public_version).to eq(3)
           end
 
-          it "does create a new version after the edit window" do
+          it "records the revision time after the edit window" do
             expect(post.last_version_at.to_i).to eq(new_revised_at.to_i)
           end
         end
@@ -876,7 +888,7 @@ describe PostRevisor do
 
       let(:new_description) { "this is my new description." }
 
-      it "should have no description by default" do
+      it "has no description by default" do
         expect(category.description).to be_blank
       end
 
@@ -1265,7 +1277,7 @@ describe PostRevisor do
     describe "#publish_changes" do
       let!(:post) { Fabricate(:post, topic: topic) }
 
-      it "should publish topic changes to clients" do
+      it "publishes topic changes to clients" do
         revisor = PostRevisor.new(topic.ordered_posts.first, topic)
 
         message =
@@ -1779,6 +1791,7 @@ describe PostRevisor do
 
       context "with secure uploads uploads" do
         let!(:image5) { Fabricate(:secure_upload) }
+
         before do
           Jobs.run_immediately!
           setup_s3

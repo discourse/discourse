@@ -60,10 +60,10 @@ module("Integration | ui-kit | DVirtualList | container", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @key="id"
           @as={{blank}}
           @estimateSize={{estimate}}
+          @items={{items}}
+          @key="id"
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -97,10 +97,10 @@ module("Integration | ui-kit | DVirtualList | container", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @key="id"
           @as={{state.as}}
           @estimateSize={{estimate}}
+          @items={{items}}
+          @key="id"
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -134,10 +134,10 @@ module("Integration | ui-kit | DVirtualList | container", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{emptyItems}}
           @as="ul"
-          @role="list"
           @estimateSize={{estimate}}
+          @items={{emptyItems}}
+          @role="list"
         >
           <:default as |item|><div class="row">{{item.text}}</div></:default>
           <:empty><p class="empty-message">Nothing here yet</p></:empty>
@@ -163,9 +163,9 @@ module("Integration | ui-kit | DVirtualList | container", function (hooks) {
     await render(
       <template>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>

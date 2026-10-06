@@ -5,6 +5,34 @@
 # https://translate.discourse.org/
 
 sl:
+  markdown_endpoints:
+    latest: "Najnovejše"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Prejšnja stran"
+    next_page: "Naslednja stran"
+    replies: "Odgovori"
+    last_updated: "Zadnjič posodobljeno"
+    event:
+      location: "Lokacija"
+      link: "Povezava"
+  mcp:
+    errors:
+      topic_not_found: "Ne najdemo temo."
+    oauth:
+      deny: "Zavrni"
+  llms_txt:
+    sections:
+      optional: "Neobvezno"
+    links:
+      search:
+        label: "Išči"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nas"
+      guidelines:
+        label: "Navodila"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -480,6 +508,7 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   admin_site_traffic_explorer:
+    unknown: "Neznano"
     traffic_types:
       anonymous: "Anonimni"
   change_email:
@@ -556,7 +585,7 @@ sl:
   unsubscribed:
     title: "Nastavitve e-pošte spremenjene!"
   unsubscribe:
-    title: "Odjavi"
+    unsubscribe: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
     log_out: "Odjava"
     submit: "Shrani nastavitve"
@@ -627,6 +656,11 @@ sl:
         share: "Deli"
       types:
         staff: "Osebje"
+    posters_by_member_type_members:
+      labels:
+        user: "Uporabnik"
+        count: "Prispevki"
+        share: "Deli"
     trust_level_pipeline:
       labels:
         count: "Člani"
@@ -902,6 +936,7 @@ sl:
     password_too_long: "Geslo je omejeno na 200 znakov."
     email_too_long: "Vaš e-naslov je predolg. E-naslov je lahko dolg največ 254 znakov, od tega domena največ 253 znakov."
     reserved_username: "Uporabniško ime ni dovoljeno."
+    missing_username: "Vnesite uporabniško ime"
     auth_complete: "Avtentikacija je končana."
     click_to_continue: "Kliknite tukaj za nadaljevanje."
     second_factor_title: "Preverjanje v dveh korakih"
@@ -1650,7 +1685,7 @@ sl:
         Član osebja foruma je potrdil vaš račun pri %{site_name}.
 
         Do vašega računa lahko dostopate s prijavo na:
-        %{base_url}
+        %{login_url}
 
         Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
 
@@ -2076,8 +2111,6 @@ sl:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

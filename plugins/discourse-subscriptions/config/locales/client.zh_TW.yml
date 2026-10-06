@@ -5,55 +5,480 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse 訂閱"
+  site_settings:
+    discourse_subscriptions_enabled: 啟用 Discourse 訂閱外掛。
+    discourse_subscriptions_extra_nav_subscribe: 在主要導覽中顯示訂閱按鈕
+    discourse_subscriptions_pricing_table_id: 在此加入定價表嵌入程式碼中的 pricing-table-id。
+    discourse_subscriptions_pricing_table_enabled: 訂閱按鈕會顯示嵌入的定價表，並使用 Stripe Checkout。
+    discourse_subscriptions_public_key: Stripe 可公開金鑰
+    discourse_subscriptions_secret_key: Stripe 私密金鑰
+    discourse_subscriptions_webhook_secret: Stripe Webhook 密鑰
+    discourse_subscriptions_currency: 預設貨幣代碼。建立訂閱方案時可以覆寫。
+    discourse_subscriptions_campaign_enabled: 啟用宣傳橫幅，鼓勵以財務方式支持此社群。
+    discourse_subscriptions_campaign_goal: 支持活動的數值目標（訂閱者人數或募集金額）。
+    discourse_subscriptions_campaign_type: 選擇要執行的活動類型（訂閱者或每月募集金額）。
+    discourse_subscriptions_campaign_banner_location: 選擇活動橫幅的位置（頂端或側邊欄）。
+    discourse_subscriptions_campaign_banner_shadow_color: 選擇活動橫幅陰影的顏色。
+    discourse_subscriptions_campaign_banner_bg_image: 上傳自訂圖片，作為活動橫幅的背景。
+    discourse_subscriptions_campaign_show_contributors: 顯示最近購買訂閱產品者的頭像。
+    discourse_subscriptions_campaign_product: 支持者點選活動按鈕時要前往的 Stripe 產品 ID。若此設定留白，支持者將前往主要產品頁面。
+    discourse_subscriptions_enable_automatic_tax: 啟用自動稅額計算，會自動計算訂閱所產生的所有發票稅率。
+    discourse_subscriptions_enable_verbose_logging: 啟用更詳細的記錄以協助除錯。請勿在正式環境中永久啟用。
+    errors:
+      discourse_patrons_amount_must_be_currency: "貨幣金額必須是不含貨幣符號的數字（例如 1.50）"
   js:
+    filters:
+      subscribe:
+        help: 訂閱以支持此網站
     discourse_subscriptions:
+      title: Discourse 訂閱
+      admin_navigation: 訂閱
       optional: 可選
+      navigation:
+        billing: 帳務
+        payments: 付款
+        subscriptions: 訂閱
+        subscribe: 訂閱
+        user_activity:
+          payments: 付款
       campaign:
-        success_title: 成功!
+        title: 支持我們
+        body: 我們需要您的協助，才能讓這個社群持續運作！
+        success_title: 成功！
+        success_body: 感謝您協助讓這個社群持續運作！
+        subscribers: 訂閱者
+        goal_comparison: "<strong>%{current}</strong>／<strong>%{goal}</strong>"
+        raised: 已募集
+        button: 支持
+        recent_contributors: 近期貢獻者
+        goal: 我們已達成目標
+        one_click_campaign: 自動建立支持活動
+        refresh_campaign: 重新整理活動資料
+        refresh_page: 活動資料目前正在背景從 Stripe 同步。請稍後重新整理頁面以載入更新資訊。
+        supporter: 支持者
+        supporters: 支持者
+        confirm_creation_title: 您要自動為社群建立活動嗎？
+        confirm_creation: |-
+          <p>繼續將建立：</p>
+
+          <ul>
+          <li>一個群組，用自訂頭銜和頭像徽章獎勵您的支持者</li>
+          <li>一項具備預設價格（月繳與年繳）的 Stripe 產品，讓使用者可購買以支持您的網站。</li>
+          </ul>
+
+          <p>您要繼續嗎？</p>
+        created: 您的一鍵式活動已建立完成，可立即使用！正在重新導向至活動設定。
+      one_time_payment: 一次性付款
       plans:
+        purchase: 購買訂閱
+        select: 選擇訂閱方案
         interval:
           adverb:
-            day: 日
-            week: 周
-            month: 月
-            year: 年
+            day: 每日
+            week: 每週
+            month: 每月
+            year: 每年
+        payment_button: 訂閱
+        success: 謝謝您！您的訂閱已建立。
+        incomplete: 付款尚未完成。付款完成後將更新您的訂閱。
+        validate:
+          payment_options:
+            required: 請選擇訂閱方案。
       user:
         payments:
+          id: 付款 ID
+          amount: 金額
           created_at: 建立時間
+        payments_help: 目前沒有付款紀錄
         plans:
+          rate: 費率
           product: 名稱
+        subscriptions_help: 您沒有有效的訂閱。
         subscriptions:
+          id: 訂閱 ID
           status: 狀態
+          discounted: 已折扣
+          renews: 續訂
           update_card:
+            heading: "更新訂閱的卡片：%{sub_id}"
             single: "更新"
           created_at: 建立時間
           cancel: 取消
+          cancelled: 已取消
+          operations:
+            destroy:
+              confirm: 您確定要取消此訂閱嗎？
       subscribe:
+        title: 訂閱
+        view_past: 查看過往購買紀錄
+        no_products: 目前沒有可用的產品。
+        unauthenticated: 登入或建立帳號以訂閱。
+        invalid_coupon: 您輸入的優惠券代碼無效，請再試一次。
+        invalid_cardholder_name: 必須填寫持卡人姓名。
+        invalid_cardholder_country: 必須填寫國家／地區。
+        invalid_cardholder_state: 必須填寫州。
+        invalid_cardholder_province: 必須填寫省。
+        transaction_error: 處理付款時發生錯誤，請再試一次。
+        card:
+          title: 付款
+        customer:
+          title: 客戶詳細資料
+        promo_code: 優惠券
+        buttons:
+          subscribe: 訂閱
+        purchased: 已購買
+        go_to_billing: 前往帳務
+        already_purchased: 非常感謝您先前購買此產品！
+        cardholder_name: 持卡人姓名
         cardholder_address:
+          line1: 街道地址
           city: 城市
+          state: 州
+          province: 省
+          country: 國家／地區
+          postal_code: 郵遞區號
+        countries:
+          AF: "阿富汗"
+          AX: "奧蘭群島"
+          AL: "阿爾巴尼亞"
+          DZ: "阿爾及利亞"
+          AS: "美屬薩摩亞"
+          AD: "安道爾"
+          AO: "安哥拉"
+          AI: "安圭拉"
+          AQ: "南極洲"
+          AG: "安地卡及巴布達"
+          AR: "阿根廷"
+          AM: "亞美尼亞"
+          AW: "阿魯巴"
+          AU: "澳洲"
+          AT: "奧地利"
+          AZ: "亞塞拜然"
+          BS: "巴哈馬"
+          BH: "巴林"
+          BD: "孟加拉"
+          BB: "巴貝多"
+          BY: "白俄羅斯"
+          BE: "比利時"
+          BZ: "貝里斯"
+          BJ: "貝南"
+          BM: "百慕達"
+          BT: "不丹"
+          BO: "玻利維亞多民族國"
+          BQ: "荷蘭加勒比區"
+          BA: "波士尼亞與赫塞哥維納"
+          BW: "波札那"
+          BV: "布韋島"
+          BR: "巴西"
+          IO: "英屬印度洋領地"
+          BN: "汶萊"
+          BG: "保加利亞"
+          BF: "布吉納法索"
+          BI: "蒲隆地"
+          KH: "柬埔寨"
+          CM: "喀麥隆"
+          CA: "加拿大"
+          CV: "維德角"
+          KY: "開曼群島"
+          CF: "中非共和國"
+          TD: "查德"
+          CL: "智利"
+          CN: "中國"
+          CX: "聖誕島"
+          CC: "科科斯（基林）群島"
+          CO: "哥倫比亞"
+          KM: "葛摩"
+          CG: "剛果"
+          CD: "剛果民主共和國"
+          CK: "庫克群島"
+          CR: "哥斯大黎加"
+          CI: "象牙海岸"
+          HR: "克羅埃西亞"
+          CU: "古巴"
+          CW: "庫拉索"
+          CY: "賽普勒斯"
+          CZ: "捷克"
+          DK: "丹麥"
+          DJ: "吉布地"
+          DM: "多米尼克"
+          DO: "多明尼加共和國"
+          EC: "厄瓜多"
+          EG: "埃及"
+          SV: "薩爾瓦多"
+          GQ: "赤道幾內亞"
+          ER: "厄利垂亞"
+          EE: "愛沙尼亞"
+          ET: "衣索比亞"
+          FK: "福克蘭群島（馬爾維納斯）"
+          FO: "法羅群島"
+          FJ: "斐濟"
+          FI: "芬蘭"
+          FR: "法國"
+          GF: "法屬圭亞那"
+          PF: "法屬玻里尼西亞"
+          TF: "法屬南部屬地"
+          GA: "加彭"
+          GM: "甘比亞"
+          GE: "喬治亞"
+          DE: "德國"
+          GH: "迦納"
+          GI: "直布羅陀"
+          GR: "希臘"
+          GL: "格陵蘭"
+          GD: "格瑞那達"
+          GP: "瓜地洛普"
+          GU: "關島"
+          GT: "瓜地馬拉"
+          GG: "根西"
+          GN: "幾內亞"
+          GW: "幾內亞比索"
+          GY: "蓋亞那"
+          HT: "海地"
+          HM: "赫德島與麥當勞群島"
+          VA: "教廷（梵蒂岡城國）"
+          HN: "宏都拉斯"
+          HK: "香港"
+          HU: "匈牙利"
+          IS: "冰島"
+          IN: "印度"
+          ID: "印尼"
+          IR: "伊朗伊斯蘭共和國"
+          IQ: "伊拉克"
+          IE: "愛爾蘭"
+          IM: "曼島"
+          IL: "以色列"
+          IT: "義大利"
+          JM: "牙買加"
+          JP: "日本"
+          JE: "澤西"
+          JO: "約旦"
+          KZ: "哈薩克"
+          KE: "肯亞"
+          KI: "吉里巴斯"
+          KP: "北韓"
+          KR: "南韓"
+          KW: "科威特"
+          KG: "吉爾吉斯"
+          LA: "寮國"
+          LV: "拉脫維亞"
+          LB: "黎巴嫩"
+          LS: "賴索托"
+          LR: "賴比瑞亞"
+          LY: "利比亞"
+          LI: "列支敦斯登"
+          LT: "立陶宛"
+          LU: "盧森堡"
+          MO: "澳門"
+          MK: "北馬其頓"
+          MG: "馬達加斯加"
+          MW: "馬拉威"
+          MY: "馬來西亞"
+          MV: "馬爾地夫"
+          ML: "馬利"
+          MT: "馬爾他"
+          MH: "馬紹爾群島"
+          MQ: "馬丁尼克"
+          MR: "茅利塔尼亞"
+          MU: "模里西斯"
+          YT: "馬約特"
+          MX: "墨西哥"
+          FM: "密克羅尼西亞聯邦"
+          MD: "摩爾多瓦"
+          MC: "摩納哥"
+          MN: "蒙古"
+          ME: "蒙特內哥羅"
+          MS: "蒙哲臘"
+          MA: "摩洛哥"
+          MZ: "莫三比克"
+          MM: "緬甸"
+          NA: "納米比亞"
+          NR: "諾魯"
+          NP: "尼泊爾"
+          NL: "荷蘭"
+          NC: "新喀里多尼亞"
+          NZ: "紐西蘭"
+          NI: "尼加拉瓜"
+          NE: "尼日"
+          NG: "奈及利亞"
+          NU: "紐埃"
+          NF: "諾福克島"
+          MP: "北馬利安納群島"
+          "NO": "挪威"
+          OM: "阿曼"
+          PK: "巴基斯坦"
+          PW: "帛琉"
+          PS: "巴勒斯坦被占領區"
+          PA: "巴拿馬"
+          PG: "巴布亞紐幾內亞"
+          PY: "巴拉圭"
+          PE: "秘魯"
+          PH: "菲律賓"
+          PN: "皮特肯群島"
+          PL: "波蘭"
+          PT: "葡萄牙"
+          PR: "波多黎各"
+          QA: "卡達"
+          RE: "留尼旺"
+          RO: "羅馬尼亞"
+          RU: "俄羅斯聯邦"
+          RW: "盧安達"
+          BL: "聖巴泰勒米"
+          SH: "聖赫勒拿、阿森松與特里斯坦達庫尼亞"
+          KN: "聖克里斯多福及尼維斯"
+          LC: "聖露西亞"
+          MF: "法屬聖馬丁"
+          PM: "聖皮耶與密克隆群島"
+          VC: "聖文森及格瑞那丁"
+          WS: "薩摩亞"
+          SM: "聖馬利諾"
+          ST: "聖多美普林西比"
+          SA: "沙烏地阿拉伯"
+          SN: "塞內加爾"
+          RS: "塞爾維亞"
+          SC: "塞席爾"
+          SL: "獅子山"
+          SG: "新加坡"
+          SX: "荷屬聖馬丁"
+          SK: "斯洛伐克"
+          SI: "斯洛維尼亞"
+          SB: "索羅門群島"
+          SO: "索馬利亞"
+          ZA: "南非"
+          GS: "南喬治亞與南三明治群島"
+          SS: "南蘇丹"
+          ES: "西班牙"
+          LK: "斯里蘭卡"
+          SD: "蘇丹"
+          SR: "蘇利南"
+          SJ: "斯瓦巴與尖棉"
+          SZ: "史瓦帝尼"
+          SE: "瑞典"
+          CH: "瑞士"
+          SY: "阿拉伯敘利亞共和國"
+          TW: "台灣"
+          TJ: "塔吉克"
+          TZ: "坦尚尼亞"
+          TH: "泰國"
+          TL: "東帝汶"
+          TG: "多哥"
+          TK: "托克勞"
+          TO: "東加"
+          TT: "千里達及托巴哥"
+          TN: "突尼西亞"
+          TR: "土耳其"
+          TM: "土庫曼"
+          TC: "土克斯與開科斯群島"
+          TV: "吐瓦魯"
+          UG: "烏干達"
+          UA: "烏克蘭"
+          AE: "阿拉伯聯合大公國"
+          GB: "英國"
+          US: "美國"
+          UM: "美屬離島"
+          UY: "烏拉圭"
+          UZ: "烏茲別克"
+          VU: "萬那杜"
+          VE: "委內瑞拉玻利瓦共和國"
+          VN: "越南"
+          VG: "英屬維京群島"
+          VI: "美屬維京群島"
+          WF: "瓦利斯與富圖納"
+          EH: "西撒哈拉"
+          YE: "葉門"
+          ZM: "尚比亞"
+          ZW: "辛巴威"
       billing:
+        name: 全名
         email: 電子信箱
+        phone: 電話號碼
+      confirmation:
+        amount: 金額
+        last4: 卡號
+      buttons:
+        make_payment: 付款
+        confirm_payment: 確認付款
+        success: 返回
       admin:
+        unconfigured: "Stripe 設定不正確。詳情請參閱 <a href='%{url}' target='_blank'>Discourse Meta 上的說明文件</a>。"
+        configure_stripe: 前往設定
         dashboard:
           title: 控制面板
           table:
             head:
               user: 使用者
+              payment_intent: 付款 ID
+              receipt_email: 收據電子郵件
+              amount: 金額
         products:
+          title: 產品
+          operations:
+            create: 建立新產品
+            update: 更新產品
+            new: 新產品
+            destroy:
+              confirm: 您確定要刪除此產品嗎？
           product:
+            product_id: 產品 ID
+            name: 產品名稱
+            statement_descriptor: 帳單描述
+            statement_descriptor_help: 顯示於客戶信用卡帳單上的產品補充資訊。
+            plan_help: 建立定價方案，讓客戶訂閱此產品。
             description: 描述
+            description_help: 這會說明您的訂閱產品。
+            repurchaseable: 可重複購買？
+            repurchase_help: 允許多次購買產品及其關聯方案
             active: 啟用
+            active_help: 產品尚未準備好提供給消費者前，請關閉此選項。
             created_at: 建立時間
             updated_at: 更新時間
+          product_help: 客戶能訂閱您的網站前，您至少必須建立一項產品及其關聯方案。
         plans:
+          title: 定價方案
+          operations:
+            add: 新增方案
+            create: 建立方案
+            update: 更新方案
+            create_help: 定價方案建立後，僅能更新其暱稱、試用期及使用者群組。
+            new: 新方案
+            destroy:
+              confirm: 您確定要刪除此方案嗎？
           plan:
+            nickname: 方案暱稱
+            nickname_help: 客戶不會看見此項目，但可協助您日後找到這個方案
+            plan_id: 方案 ID
+            product: 產品
+            interval: 計費週期
+            amount: 金額
+            trial: 試用期天數
+            trial_help: 此方案的訂閱會自動以此長度的免費試用期開始
+            group: 使用者群組
+            group_help: 訂閱建立時會將客戶加入的 Discourse 使用者群組。
             active: 啟用
             created_at: 建立時間
+            recurring: 定期方案？
         coupons:
+          title: 優惠券
+          code: 促銷代碼
+          discount: 折扣
+          times_redeemed: 兌換次數
           active: 啟用?
           actions: 動作
+          create: 建立優惠券
+          promo_code: 促銷代碼（不分大小寫）
         subscriptions:
+          title: 訂閱
           subscription:
             user: 使用者
+            subscription_id: 訂閱 ID
+            customer: 客戶
+            product: 產品
+            plan: 方案
             status: 狀態
             created_at: 建立時間
+        ask_refund: 要退還客戶最近一次付款嗎？
+        canceled: "訂閱已取消。"

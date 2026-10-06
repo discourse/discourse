@@ -5,6 +5,9 @@ inherit_mode:
   merge:
     - Exclude
 
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+
 # Still work to do in ensuring we don't link old files
 Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
   Enabled: false
@@ -47,6 +50,10 @@ RSpec/InstanceVariable:
   Enabled: true
   Include:
     - spec/models/**/*
+
+Style/AccessModifierDeclarations:
+  Enabled: true
+  AllowModifiersOnSymbols: false
 
 Style/RedundantFreeze:
   Enabled: true

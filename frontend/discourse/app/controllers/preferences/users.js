@@ -55,6 +55,11 @@ export default class UsersController extends Controller {
     return uniqueItemsFromArray(makeArray(usernames));
   }
 
+  @computed("model.user_option.allow_private_messages")
+  get disableAllowPmUsersSetting() {
+    return !this.model?.user_option?.allow_private_messages;
+  }
+
   @action
   onChangeMutedUsernames(usernames) {
     this.model.set(
@@ -69,11 +74,6 @@ export default class UsersController extends Controller {
       "allowed_pm_usernames",
       uniqueItemsFromArray(usernames).join(",")
     );
-  }
-
-  @computed("model.user_option.allow_private_messages")
-  get disableAllowPmUsersSetting() {
-    return !this.model?.user_option?.allow_private_messages;
   }
 
   @action

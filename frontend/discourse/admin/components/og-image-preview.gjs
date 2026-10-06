@@ -47,18 +47,18 @@ export default class OgImagePreview extends Component {
           "admin.config.logo.form.og_image_preview.description"
         }}</p>
       <Form
-        @onSubmit={{this.generate}}
-        @data={{this.formData}}
         class="og-image-preview__form"
+        @data={{this.formData}}
+        @onSubmit={{this.generate}}
         as |form|
       >
         <div class="og-image-preview__controls">
           <form.Field
+            @format="small"
             @name="topic_id"
             @title={{i18n
               "admin.config.logo.form.og_image_preview.topic_id_label"
             }}
-            @format="small"
             @type="input"
             as |field|
           >
@@ -69,10 +69,10 @@ export default class OgImagePreview extends Component {
             />
           </form.Field>
           <form.Submit
+            class="btn-small og-image-preview__generate"
+            @disabled={{this.loading}}
             @icon="arrows-rotate"
             @label="admin.config.logo.form.og_image_preview.generate"
-            @disabled={{this.loading}}
-            class="btn-small og-image-preview__generate"
           />
         </div>
       </Form>
@@ -83,9 +83,9 @@ export default class OgImagePreview extends Component {
           <div class="og-image-preview__error">{{this.errorMessage}}</div>
         {{else if this.imageUrl}}
           <img
-            src={{this.imageUrl}}
-            class="og-image-preview__image"
             alt={{i18n "admin.config.logo.form.og_image_preview.title"}}
+            class="og-image-preview__image"
+            src={{this.imageUrl}}
           />
         {{else}}
           <div class="og-image-preview__placeholder">{{i18n

@@ -8,13 +8,13 @@ export default <template>
     {{hideApplicationFooter}}
   {{/if}}
   <PostList
-    @posts={{@model}}
-    @fetchMorePosts={{@controller.loadMore}}
-    @emptyText={{i18n "notifications.empty"}}
-    @additionalItemClasses="user-stream-item"
-    @titlePath="titleHtml"
-    @showUserInfo={{false}}
     class="user-stream"
+    @additionalItemClasses="user-stream-item"
+    @emptyText={{i18n "notifications.empty"}}
+    @fetchMorePosts={{@controller.loadMore}}
+    @posts={{@model}}
+    @showUserInfo={{false}}
+    @titlePath="titleHtml"
   >
     <:abovePostItemExcerpt as |reaction|>
       <DiscourseReactionsReactionEmoji @reaction={{reaction}} />

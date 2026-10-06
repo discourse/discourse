@@ -75,8 +75,8 @@ export default class HashtagAutocompleteResults extends Component {
         {{#each @results as |result index|}}
           <li {{dScrollIntoView (this.shouldScroll index)}}>
             <a
-              href
               class={{if (eq index @selectedIndex) "selected"}}
+              href
               {{on "click" (fn this.handleResultClick result index)}}
             >
               {{#unless result.model}}

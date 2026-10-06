@@ -13,7 +13,7 @@ RSpec.describe Users::AssociateAccountsController do
 
   context "when attempting reconnect" do
     before do
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
         provider: "google_oauth2",
         uid: "12345",
@@ -30,7 +30,7 @@ RSpec.describe Users::AssociateAccountsController do
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
     end
 
-    it "should work correctly" do
+    it "associates the external account" do
       sign_in(user)
 
       # Reconnect flow:
@@ -70,7 +70,7 @@ RSpec.describe Users::AssociateAccountsController do
       expect(response.status).to eq(404)
     end
 
-    it "should only work within the current session" do
+    it "restricts association to the current session" do
       sign_in(user)
 
       post "/auth/google_oauth2?reconnect=true"

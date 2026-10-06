@@ -16,6 +16,16 @@ lt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Paklauskite AI"
+        ask_ai:
+          title: "Paklauskite AI"
+          reports:
+            retry_questions: "Bandykite dar kartą"
+          date: "Data"
+          outcomes:
+            failed: "Nepavyko"
         emotion:
           title: "Emocija"
         reports:
@@ -177,8 +187,10 @@ lt:
             backfill: "Užpildymas"
         search:
           name: "Paieška"
+          ask_ai: "Paklauskite AI"
           setting_groups:
             settings: "Pagrindiniai nustatymai"
+            access_control: "Prieigos kontrolė"
         embeddings:
           setting_groups:
             model_settings: "Modelio nustatymai"
@@ -319,8 +331,6 @@ lt:
         successful: "Sėkmingas"
         failed: "Nepavyko"
         unknown: "Nežinoma"
-        topic_id: "Temos ID"
-        post_id: "Įrašo ID"
         time: "Laikas"
         when: "Kada"
         model: "Modelis"
@@ -332,8 +342,7 @@ lt:
         post_short: "Įrašas %{id}"
         duration: "Trukmė"
         actions: "Veiksmai"
-        filters:
-          title: "Filtrai"
+        view_details: "Detalės"
         periods:
           day: "Paskutinės 24 valandos"
           week: "Paskutinės 7 dienos"
@@ -500,11 +509,17 @@ lt:
         chat:
           summarize: "Apibendrinti"
       discobot_discoveries:
-        regular_results: "Temos"
-        collapse: "Suskleisti"
-        tooltip:
-          actions:
-            disable: "Išjungti"
+        main_title: "Paklauskite AI"
+        legacy:
+          regular_results: "Temos"
+          collapse: "Suskleisti"
+          tooltip:
+            actions:
+              disable: "Išjungti"
+        search_type: "AI"
+        search_all_topics: "Visos temos"
+        search_messages: "Žinutės"
+        ask_ai: "AI"
     review:
       types:
         reviewable_ai_tool_action:

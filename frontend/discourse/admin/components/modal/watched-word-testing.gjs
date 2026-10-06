@@ -20,11 +20,6 @@ export default class WatchedWordTesting extends Component {
     return this.args.model.watchedWord.nameKey === "link";
   }
 
-  cleanErrorMessage(message) {
-    const parts = message.split(": ");
-    return parts[parts.length - 1];
-  }
-
   @cached
   get matchesAndErrors() {
     const errors = {};
@@ -145,21 +140,26 @@ export default class WatchedWordTesting extends Component {
     return this.matchesAndErrors.errors;
   }
 
+  cleanErrorMessage(message) {
+    const parts = message.split(": ");
+    return parts[parts.length - 1];
+  }
+
   <template>
     <DModal
+      class="watched-words-test-modal"
+      @closeModal={{@closeModal}}
       @title={{i18n
         "admin.watched_words.test.modal_title"
         action=@model.watchedWord.name
       }}
-      @closeModal={{@closeModal}}
-      class="watched-words-test-modal"
     >
       <:body>
         <p>{{i18n "admin.watched_words.test.description"}}</p>
         <Textarea
-          @value={{this.value}}
-          name="test_value"
           autofocus="autofocus"
+          name="test_value"
+          @value={{this.value}}
         />
 
         {{#if this.matches}}

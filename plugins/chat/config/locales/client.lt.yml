@@ -223,6 +223,14 @@ lt:
         sort:
           relevance: "Tinkamumas"
           latest: "Naujausia"
+      direct_messages:
+        leave: "Išeiti iš kanalo"
+        close: "Uždaryti kanalą"
+      channel_list:
+        options:
+          filter: "Filtruoti"
+        filter:
+          mentions: "Paminėjimai"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"

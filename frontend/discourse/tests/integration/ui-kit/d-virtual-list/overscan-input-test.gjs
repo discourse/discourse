@@ -54,9 +54,9 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{estimate}}
             @items={{items}}
             @key="id"
-            @estimateSize={{estimate}}
             @overscan={{0.5}}
             as |item|
           >
@@ -85,9 +85,9 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{estimate}}
             @items={{items}}
             @key="id"
-            @estimateSize={{estimate}}
             @overscan={{notANumber}}
             as |item|
           >
@@ -118,9 +118,9 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{estimate}}
             @items={{items}}
             @key="id"
-            @estimateSize={{estimate}}
             @overscan={{-1}}
             as |item|
           >

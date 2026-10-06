@@ -83,11 +83,11 @@ export default class ReviseAndRejectPostReviewable extends Component {
               "review.revise_and_reject_post.reason"
             }}</label>
           <ComboBox
-            @name="reason"
-            @content={{this.configuredReasons}}
-            @value={{this.reason}}
-            @onChange={{fn (mut this.reason)}}
             class="revise-and-reject-reviewable__reason"
+            @content={{this.configuredReasons}}
+            @name="reason"
+            @onChange={{fn (mut this.reason)}}
+            @value={{this.reason}}
           />
         </div>
 
@@ -97,8 +97,8 @@ export default class ReviseAndRejectPostReviewable extends Component {
                 "review.revise_and_reject_post.custom_reason"
               }}</label>
             <Input
-              name="custom_reason"
               class="revise-and-reject-reviewable__custom-reason"
+              name="custom_reason"
               @type="text"
               @value={{this.customReason}}
             />
@@ -114,10 +114,10 @@ export default class ReviseAndRejectPostReviewable extends Component {
               }})</span>
           </label>
           <DTextarea
-            @name="feedback"
-            @value={{this.feedback}}
-            @onChange={{fn (mut this.feedback)}}
             class="revise-and-reject-reviewable__feedback"
+            @name="feedback"
+            @onChange={{fn (mut this.feedback)}}
+            @value={{this.feedback}}
           />
         </div>
       </:body>

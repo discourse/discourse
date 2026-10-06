@@ -89,8 +89,8 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             }}
               {{#each this.selectedContent as |item|}}
                 <SelectedChoiceComponent
-                  @selectKit={{this.selectKit}}
                   @item={{item}}
+                  @selectKit={{this.selectKit}}
                 />
               {{/each}}
             {{/let}}
@@ -101,9 +101,9 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             as |FilterComponent|
           }}
             <FilterComponent
-              @selectKit={{this.selectKit}}
-              @id={{concat this.selectKit.uniqueID "-filter"}}
               @hidePlaceholderWithSelection={{true}}
+              @id={{concat this.selectKit.uniqueID "-filter"}}
+              @selectKit={{this.selectKit}}
             />
           {{/let}}
         </div>

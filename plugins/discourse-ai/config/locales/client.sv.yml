@@ -8,6 +8,10 @@ sv:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Misslyckad"
         reports:
           filters:
             sort_by:
@@ -129,8 +133,6 @@ sv:
         successful: "Lyckad"
         failed: "Misslyckad"
         unknown: "Okänd"
-        topic_id: "Ämnes-ID"
-        post_id: "Inläggs-ID"
         time: "Tid"
         when: "När"
         request: "Förfrågning"
@@ -142,8 +144,7 @@ sv:
         post_short: "Inlägg %{id}"
         duration: "Varaktighet"
         actions: "Åtgärder"
-        filters:
-          title: "Filter"
+        view_details: "Detaljer"
         periods:
           hour: "Senaste timmen"
           day: "Senaste 24 timmarna"
@@ -314,8 +315,11 @@ sv:
         topic:
           title: "Sammanfattning av ämne"
       discobot_discoveries:
-        regular_results: "Ämnen"
-        collapse: "Förminska"
-        tooltip:
-          actions:
-            disable: "Inaktivera"
+        legacy:
+          regular_results: "Ämnen"
+          collapse: "Förminska"
+          tooltip:
+            actions:
+              disable: "Inaktivera"
+        search_all_topics: "Alla ämnen"
+        search_messages: "Meddelanden"

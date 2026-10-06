@@ -172,13 +172,7 @@ class Admin::UsersController < Admin::StaffController
   def unsuspend
     guardian.ensure_can_unsuspend!(@user)
 
-    @user.suspended_till = nil
-    @user.suspended_at = nil
-    @user.save!
-
-    StaffActionLogger.new(current_user).log_user_unsuspend(@user)
-
-    DiscourseEvent.trigger(:user_unsuspended, user: @user)
+    UserSuspender.unsuspend(@user, by_user: current_user)
 
     render_json_dump(suspension: { suspended_till: nil, suspended_at: nil })
   end
@@ -311,12 +305,18 @@ class Admin::UsersController < Admin::StaffController
       ReviewableUser.find_by(target: @user) ||
         Jobs::CreateUserReviewable.new.execute(user_id: @user.id).reviewable
 
-    reviewable.perform(current_user, :approve_user)
+    reviewable.perform(current_user, :approve_user, allow_reviewed: true)
     render body: nil
   end
 
   def approve_bulk
-    Reviewable.bulk_perform_targets(current_user, :approve_user, "ReviewableUser", params[:users])
+    Reviewable.bulk_perform_targets(
+      current_user,
+      :approve_user,
+      "ReviewableUser",
+      params[:users],
+      allow_reviewed: true,
+    )
     render body: nil
   end
 
@@ -607,7 +607,7 @@ class Admin::UsersController < Admin::StaffController
       previous_value:,
       context: params[:context],
     )
-    @user.user_associated_accounts.delete_all
+    @user.user_associated_accounts.destroy_all
     render json: success_json
   end
 

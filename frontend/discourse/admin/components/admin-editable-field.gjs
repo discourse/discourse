@@ -30,12 +30,12 @@ export default class AdminEditableField extends Component {
     <div class="value">
       {{#if this.editing}}
         <DTextField
-          @value={{this.buffer}}
-          @autofocus="autofocus"
           @autocomplete="off"
+          @autofocus="autofocus"
+          @value={{this.buffer}}
         />
       {{else}}
-        <a href {{on "click" this.edit}} class="inline-editable-field">
+        <a class="inline-editable-field" href {{on "click" this.edit}}>
           <span>{{this.value}}</span>
         </a>
       {{/if}}

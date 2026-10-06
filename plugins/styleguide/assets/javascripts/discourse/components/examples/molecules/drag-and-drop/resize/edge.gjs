@@ -29,14 +29,14 @@ export default class EdgeExample extends Component {
       {{! Everything the separator component would have supplied is spelled out
       here, because the modifier owns the interaction and nothing else. }}
       <div
+        aria-label={{i18n "styleguide.sections.drag_and_drop.edge_label"}}
+        aria-orientation="vertical"
+        aria-valuemax={{MAX}}
+        aria-valuemin={{MIN}}
+        aria-valuenow={{this.width}}
         class="styleguide-drag-and-drop__divider"
         role="separator"
         tabindex="0"
-        aria-orientation="vertical"
-        aria-label={{i18n "styleguide.sections.drag_and_drop.edge_label"}}
-        aria-valuenow={{this.width}}
-        aria-valuemin={{MIN}}
-        aria-valuemax={{MAX}}
         {{dResizeEdge
           value=this.width
           min=MIN

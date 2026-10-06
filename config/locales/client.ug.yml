@@ -6,6 +6,10 @@
 
 ug:
   js:
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "باشقۇرغۇچى تىزىملىتىشى ئۈچۈنلا"
+      approved_domains: "دەلىللەنگەن تور دائىرىسىدىن كەلگەن CIMD"
+      any_domain: "خالىغان تور دائىرىسىدىن كەلگەن CIMD"
     ace_editor:
       resize: "كود تەھرىرلىگۈچنىڭ چوڭلۇقىنى ئۆزگەرتىدۇ"
     user_api_key:
@@ -350,6 +354,7 @@ ug:
     notifications_tracking:
       tooltip: "ئۇقتۇرۇش دەرىجىسى: %{level}"
     back_button: "كەينى"
+    confirm_button: "جەزملە"
     welcome_banner:
       header:
         new_members: "%{preferred_display_name} غا خۇش كەلدىڭىز!"
@@ -394,6 +399,7 @@ ug:
         no_outlet_args: "بۇ چىقىش ئېغىزىدىن ھېچقانداق ئۆزگەرگۈچى ئۆتمىدى"
         aliases: "تەخەللۇس"
         deprecated: "ئىشلىتىشتىن توختىتىلغان"
+      open_styleguide: "ئۇسلۇب قوللانمىسىنى ئاچ"
     s3:
       regions:
         ap_northeast_1: "ئاسىيا تىنچ ئوكيان (توكيو)"
@@ -490,7 +496,7 @@ ug:
       collapse: "تەڭشەش قەدىمىنى يىغ"
       dismiss: "تەڭشەشكە پەرۋا قىلما"
       select_theme:
-        description: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
+        description: "رەڭ، خەت نۇسخا ۋە تور بېكىتىڭىزنىڭ جايلاشتۇرۇلۇشى تاللىنىدۇ."
         action: "تاللانما كۆرسەت"
         completed: "تاللانما ئۆزگەرت"
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
@@ -507,18 +513,33 @@ ug:
         back: "كەينى"
     design_wizard:
       title: "تور بېكىتىڭىزنى خاسلاشتۇرىدۇ"
-      subtitle: "رەڭ، خەت نۇسخا ۋە باش بەت تاللىنىدۇ."
+      subtitle: "رەڭ، خەت نۇسخا ۋە تور بېكىتىڭىزنىڭ جايلاشتۇرۇلۇشى تاللىنىدۇ."
       step_label: "%{index}-قەدەمگە يۆتكەل"
       save: "ساقلا ۋە تاماملا"
       back: "كەينى"
       next: "كېيىنكى"
+      launch: "لايىھە يېتەكچىسى"
+      launch_description: "تور بېكىتىڭىزنىڭ ئۆرنەك، رەڭ، خەت نۇسخا ۋە جايلاشتۇرۇلۇشىنى قايتا كۆرۈڭ."
+      intro:
+        description: "بۇ يېتەكچى تور بېكىتىڭىزنىڭ ئۆرنەك، رەڭ، خەت نۇسخا، باش بەت جايلاشتۇرۇلۇشى، قارشى ئېلىش لەۋھەسى ۋە ئىزدەش ئۇسلۇبىنى قايتا كۆرسىتىدۇ."
+        autosave: "ھەر بىر قەدەم شۇ پەيتتە ساقلىنىدۇ، شۇڭا ئەزالار ئۆزگىرىشنى دەرھال كۆرەلەيدۇ. ياپقاندا ھەممە تەڭشەكنى ئەسلىگە كەلتۈرەلەيسىز."
+        start: "باشلاش"
+      close:
+        message: "تور بېكەت لايىھەسىنىڭ بەزى ئۆزگىرىشى ساقلاندى. ئۇلارنى ساقلاپ قالامسىز؟"
+        message_without_revert: "تور بېكەت لايىھەسىنىڭ بەزى ئۆزگىرىشى ساقلاندى. ئۇ مەشغۇلاتتىن بۇ جايدا يېنىۋالغىلى بولمايدۇ."
+        keep: "ئۆزگىرىشنى ساقلاپ قال"
+        revert: "ئۆزگىرىشنى ئەسلىگە ياندۇر"
+        continue_editing: "تەھرىرلەشنى داۋاملاشتۇر"
       sections:
         theme: "ئۆرنەك"
         colors: "كۆڭۈلدىكى رەڭ"
         fonts: "خەت نۇسخا"
         homepage: "باش بەت"
+        welcome_banner: "قارشى ئېلىش لەۋھەسى"
+        search: "ئىزدە"
       theme:
         selected: "تاللاندى"
+        applying: "قوللىنىۋاتىدۇ…"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
       colors:
         light: "يورۇق"
@@ -543,6 +564,21 @@ ug:
           boxes: "قۇتا"
           with_topics: "تېمىلىق سەھىپە"
           only: "سەھىپىلا"
+      welcome_banner:
+        enable: "قارشى ئېلىش لەۋھەسىنى كۆرسەت"
+        enable_description: "مېھمانغا تور بېكىتىڭىزنىڭ ئىسمى ۋە ئىزدەش رامكىسىنى نامايان قىلىدۇ"
+        location: "لەۋھە ئورنى"
+        locations:
+          below_site_header: "بېكەت بەت قاشنىڭ ئاستىدا"
+          above_topic_content: "تېما تىزىمىنىڭ ئۈستىدە"
+      search:
+        experiences:
+          search_icon:
+            title: "ئىزدەش سىنبەلگىسى"
+            description: "ئىزدەشنى ئاچىدىغان بەت قاشتىكى چوڭايتقۇچ ئەينەك."
+          search_field:
+            title: "ئىزدەش بۆلىكى"
+            description: "بەت قاشتىكى تولۇق ئىزدەش بۆلىكى، ھەمىشە كۆرۈنىدۇ."
     about:
       edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
@@ -851,6 +887,7 @@ ug:
       deleted_post: "(يازما ئۆچۈرۈلدى)"
       deleted_user: "(ئىشلەتكۈچى ئۆچۈرۈلدى)"
       user:
+        avatar: "پاش قىلىنغاندىكى سىما"
         bio: "تەرجىمىھال"
         website: "تور بېكەت"
         username: "ئىشلەتكۈچى ئاتى"
@@ -1028,7 +1065,11 @@ ug:
         view_conversation: "شەخسىي ئۇچۇرنى كۆرسىتىدۇ"
         note_added: "رىياسەتچى ئىزاھاتى"
         note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
+        author_silenced_by: "يازغۇچىنى %{username} · %{relativeDate} ئۈنسىزلىدى"
         no_events: "كۆرسىتىدىغان ۋاقىت سىزىقى پائالىيىتى يوق"
+      author_penalty:
+        toast:
+          undo: "يېنىۋال"
       notes:
         add_note_description: "باشقا رىياسەتچىگە مەزمۇن تەمىنلەش ئۈچۈن خاتىرە قوشىدۇ."
         add_note_button: "ئىزاھات قوش"
@@ -1671,7 +1712,6 @@ ug:
       admin: "%{user} باشقۇرغۇچى"
       moderator_tooltip: "بۇ ئىشلەتكۈچى رىياسەتچى"
       admin_tooltip: "بۇ ئىشلەتكۈچى باشقۇرغۇچى"
-      silenced_tooltip: "بۇ ئىشلەتكۈچىنىڭ ئۈنى ئۆچۈرۈلگەن"
       suspended_notice: "بۇ ئىشلەتكۈچى %{date} غىچە ۋاقىتلىق چەكلەنگەن."
       suspended_permanently: "بۇ ئىشلەتكۈچى ۋاقىتلىق چەكلەنگەن."
       suspended_reason: "سەۋەبى: "
@@ -1730,6 +1770,16 @@ ug:
       tracked_topics_link: "كۆرسەت"
       automatically_unpin_topics: "ئاستىغا يەتكەندە تېمىنى ئۆزلۈكىدىن چوققىلاشتىن قالدۇرىدۇ"
       apps: "ئەپلەر"
+      mcp_authorizations:
+        endpoint: "مەنبە"
+        scopes: "دائىرىسى"
+        details: "تەپسىلاتى"
+        last_used: "ئاخىرقى ئىشلەتكەن ۋاقتى"
+        never: "ھەرگىز"
+        status: "ھالەت"
+        statuses:
+          active: "ئاكتىپ"
+          revoked: "بىكار قىلىندى"
       revoke_access: "زىيارەتنى بىكار قىل"
       undo_revoke_access: "زىيارەت بىكار قىلىشتىن يېنىۋال"
       api_approved: "تەستىقلاندى:"
@@ -2190,7 +2240,6 @@ ug:
         watch_topic: "كۆزەتتىكى تېما"
         track_topic: "تېما ئىزلا"
         do_nothing: "ھېچ ئىش قىلما"
-      topics_unread_when_closed: "تېما تاقالغاندا ئوقۇلمىغان دەپ قارايدۇ"
       invited:
         title: "تەكلىپ"
         pending_tab: "كۈتۈۋاتىدۇ"
@@ -2853,6 +2902,9 @@ ug:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      tab: "Tab"
+      delete: "ئۆچۈر"
+      home: "باش بەت"
     conditional_loading_section:
       loading: يۈكلەۋاتىدۇ…
     category_row:
@@ -3028,7 +3080,6 @@ ug:
       create_whisper: "پىچىر"
       create_shared_draft: "ھەمبەھىر دەسلەپكى نۇسخا قۇر"
       edit_shared_draft: "ھەمبەھىر دەسلەپكى نۇسخا تەھرىر"
-      title: "ياكى %{modifier}Enter بېسىلىدۇ"
       save_and_close: "ساقلا ۋە ياپ"
       discard: "تاشلىۋەت"
       draft_saved: "دەسلەپكى نۇسخا ساقلاندى"
@@ -3053,6 +3104,8 @@ ug:
       hide_preview: "ئالدىن كۆزىتىشنى يوشۇر"
       switch_to_markdown: "ئۆلچەملىك Markdown تەھرىرلىگۈچكە ئالماشتۇرىدۇ (%{keyboardShortcut})"
       switch_to_rich_text: "يېڭى مول تېكىست تەھرىرلىگۈچكە ئالماشتۇرىدۇ (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "ئۆلچەملىك Markdown تەھرىرلىگۈچكە ئالماشتۇرىدۇ"
+      switch_to_rich_text_no_shortcut: "يېڭى مول تېكىست تەھرىرلىگۈچكە ئالماشتۇرىدۇ"
       quote_post_title: "پۈتكۈل يازمىنى نەقىل ئال"
       bold_label: "B"
       bold_title: "توم"
@@ -3380,10 +3433,10 @@ ug:
         search_field: "بېكەت بەت قاشتىكى ئىزدەش بۆلىكى"
         search_icon: "تەرجىمىھال سىماسىغا يېقىن ئىزدەش سىنبەلگىسى"
       type:
-        default: "تېما / يازما"
+        default: "يازما"
         users: "ئىشلەتكۈچى"
         categories: "سەھىپە"
-        categories_and_tags: "سەھىپە / بەلگە"
+        categories_and_tags: "سەھىپە ۋە بەلگە"
       context:
         user: "@%{username} نىڭ يازمىسىنى ئىزدە"
         category: "#%{category} سەھىپىنى ئىزدە"
@@ -3396,7 +3449,6 @@ ug:
         in: "مېتا سانلىق مەلۇماتى بويىچە سۈزىدۇ (مەسىلەن، in:title، in:personal,، in:pinned)"
         status: "تېما ھالىتى بويىچە سۈزىدۇ"
         full_search: "تولۇق بەت ئىزدەشنى قوزغىتىدۇ"
-        full_search_key: "%{modifier} + Enter"
         me: "يازمىڭىزنىلا كۆرسىتىدۇ"
       advanced:
         title: ئالىي سۈزگۈچ
@@ -4100,7 +4152,6 @@ ug:
       reply_as_new_private_message: "ئوخشاش تاپشۇرۇۋالغۇچىغا يېڭى ئۇچۇر سۈپىتىدە جاۋاب قايتۇرىدۇ"
       continue_discussion: "%{postLink} دىن سۆھبەتنى داۋاملاشتۇرىدۇ:"
       follow_quote: "نەقىل يازمىغا يۆتكەل"
-      show_full: "ھەممە يازمىنى كۆرسەت"
       show_hidden: "پەرۋا قىلمىغان مەزمۇننى كۆرسىتىدۇ."
       deleted_by_author_simple: "(يازمىنى يازغۇچى ئۆچۈردى)"
       collapse: "يىغ"
@@ -4474,6 +4525,7 @@ ug:
       list: "سەھىپە تىزىمىنى كۆرسەت"
       no_description: "بۇ سەھىپىنىڭ چۈشەندۈرۈشىنى قوشۇڭ."
       change_in_category_topic: "چۈشەندۈرۈش تەھرىر"
+      latest_topics: "ئاخىرقى تېما"
       description_expand: "تېخىمۇ كۆپ كۆرسەت"
       description_collapse: "ئازراق كۆرسەت"
       already_used: "بۇ رەڭ باشقا بىر سەھىپىگە ئىشلىتىلگەن"
@@ -4751,6 +4803,7 @@ ug:
       with_category: "%{filter} %{category} تېما"
       filter:
         title: "%{filter} نىڭ سۈزۈلگەن نەتىجىسى"
+        reset: "ئەسلىگە قايتۇر"
         button:
           label: "سۈزگۈچ"
       latest:
@@ -4864,12 +4917,8 @@ ug:
     keyboard_shortcuts_help:
       search_label: "ئىزدەش تېزلەتمىسى"
       search_placeholder: "چۈشەندۈرۈش ياكى كۇنۇپكا بىرىكمىسى ئارقىلىق تېزلەتمە ئىزدەيدۇ"
-      shortcut_key_delimiter_comma: "، "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ياكى %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "ھەرپتاختا تېزلەتمىسى"
       short_title: "تېزلەتمە"
       search_ctrl_f_tip: "پۈتكۈل مۇنبەردىن ئىزدەشتە، <kbd>/</kbd> بېسىلىدۇ"
@@ -4966,11 +5015,11 @@ ug:
       favorite_max_not_reached: "بۇ تارتۇققا ياقتۇرغان بەلگىسى سال"
       favorite_count: "%{count}/%{max} تارتۇققا ياقتۇرغان بەلگىسى سېلىندى"
     download_calendar:
-      title: "يىلنامە چۈشۈر"
+      title: "يىلنامەگە قوش"
+      calendar: "يىلنامە"
       save_ics: ".Ics ھۆججىتىنى چۈشۈر"
       save_google: "Google يىلنامىگە قوش"
       remember: "مەندىن قايتا سورىما"
-      remember_explanation: "(ئىشلەتكۈچى مايىللىق تەڭشىكىدە بۇ مايىللىقنى ئۆزگەرتەلەيسىز)"
       download: "چۈشۈر"
       default_calendar: "كۆڭۈلدىكى يىلنامە"
       default_calendar_instruction: "چېسلا ساقلاشتا قايسى يىلنامىنى ئىشلىتىشنى قارار قىلىدۇ"
@@ -5561,6 +5610,11 @@ ug:
         group_traffic: "ئېقىم"
         group_members: "ئەزا"
         group_other: "باشقا"
+        related_items:
+          users:
+            title: "ئىشلەتكۈچى"
+          labels:
+            user: "ئىشلەتكۈچى"
       config_sections:
         account:
           title: "ھېسابات"
@@ -5642,6 +5696,66 @@ ug:
           header_description: "بۇ يەردە مەزكۇر تور بېكەت ۋە قوشۇنىڭىز ھەققىدىكى ئۇچۇرلار تەمىنلىنىدۇ، شۇنداق بولغاندا كىشىلەر جامائىتىڭىز ۋە ئۇلارنىڭ ئارقىسىدىكىلەر ھەققىدىكى ئۇچۇرلارنى ھەمدە مەسىلە چىقسا سىز بىلەن قانداق ئالاقىلىشالايدىغانلىقىنى بىلەلەيدۇ. تور بېكىتىڭىزنىڭ <a href='%{basePath}/about'>ھەققىدە بېتى</a>دە كۆرۈنىدۇ."
         developer:
           title: "ئىجادكار"
+        mcp:
+          tabs:
+            access: "زىيارەت"
+            activity: "پائالىيەت"
+          overview:
+            status: "ھالەت"
+          access:
+            title: "زىيارەت"
+            group: "گۇرۇپپا"
+            groups: "گۇرۇپپا"
+            actions: "مەشغۇلات"
+            edit: "تەھرىر"
+            delete: "ئۆچۈر"
+          primitives:
+            group_by_options:
+              scope: "دائىرىسى"
+              kind: "تىپى"
+            kind: "تىپى"
+            scope: "دائىرىسى"
+            scopes: "دائىرىسى"
+          clients:
+            actions: "مەشغۇلات"
+            block: "توس"
+            presets:
+              custom: "ئىختىيارى"
+          authorizations:
+            user: "ئىشلەتكۈچى"
+            last_used: "ئاخىرقى ئىشلەتكەن ۋاقتى"
+            status: "ھالەت"
+            actions: "مەشغۇلات"
+          activity:
+            outcome: "نەتىجە"
+            time: "ۋاقىت"
+            user: "ئىشلەتكۈچى"
+            duration: "داۋاملىشىش ۋاقتى"
+          values:
+            server_status:
+              disabled: "چەكلەندى"
+            client_trust:
+              approved: "تەستىقلاندى"
+            authorization_status:
+              active: "ئاكتىپ"
+              revoked: "بىكار قىلىندى"
+            activity_outcome:
+              success: "مۇۋەپپەقىيەتلىك"
+              error: "خاتالىق"
+            primitive_state:
+              enabled: "قوزغىتىلدى"
+              disabled: "چەكلەندى"
+            primitive_kind:
+              all: "ھەممە تىپ"
+              resource: "مەنبە"
+            primitive_risk:
+              read: "پەقەت ئوقۇلىدۇ"
+              moderation: "رىياسەتچىلىك"
+            filter:
+              all: "ھەممىسى"
+          never: "ھەرگىز"
+          actions:
+            revoke: "بىكار قىل"
         experimental:
           title: "تەجرىبە"
           header_description: "تور بېكىتىڭىزنىڭ تەجرىبە خاراكتېرلىك ئىقتىدارىنى ئېچىپ ياكى تاقايدۇ، بۇلارنىڭ كۆپىچىسىنى گۇرۇپپا ئاساسىدا تىزگىنلىگىلى بولىدۇ."
@@ -5821,7 +5935,7 @@ ug:
           header_description: "خەنزۇچە ۋە ياپونچە تىزىمغا كىرىش ۋە سۆزلۈكلەشتۈرۈشكە ئوخشاش ئىزدەش تەڭشىكىنى سەپلەيدۇ"
         search_everything:
           title: "ئىزدە"
-          header_description: "باشقۇرۇش ئارايۈزىدە ھەر قانداق نەرسىنى تاپالايسىز. تۆۋەندىكى نەتىجىنى سۈزەلەيسىز، مايىللىقىڭىزنى ئەستە تۇتىدۇ. بۇ ئىزدەشنى باشقۇرۇش ئارا يۈزىنىڭ خالىغان جايىدىن ئاچالايسىز، %{shortcutHTML} نى بېسىڭ."
+          header_description: "بۇ جايدىكى باشقۇرۇش ئارايۈزىدە ھەر قانداق نەرسىنى ئىزدىگىلى بولىدۇ. تۆۋەندە ئىزدەش نەتىجىسىنى سۈزەلەيسىز ۋە مايىللىق تەڭشىكىڭىز ئەستە تۇتىدۇ."
         security:
           title: "بىخەتەرلىك"
           header_description: "ئىككى ئامىللىق دەلىلەش، رىياسەتچى ئىمتىيازى ۋە مەزمۇن بىخەتەرلىك تۈزۈمىنى ئۆز ئىچىگە ئالغان بىخەتەرلىك تەڭشەكلىرىنى سەپلەيدۇ"
@@ -6046,6 +6160,7 @@ ug:
           visitors: "زىيارەتچى"
         filters:
           browser: "توركۆرگۈ"
+          language: "تىل"
           ip: "IP ئادرېس"
         series:
           anonymous_human: "نامسىز"
@@ -6121,6 +6236,8 @@ ug:
               share: "ھەمبەھىر"
             whos_posting:
               staff: "باشقۇرغۇچى خادىم"
+              modal:
+                apply: "ساقلا"
             trust_level_pipeline:
               trust_levels:
                 "0": "يېڭى"
@@ -6133,6 +6250,11 @@ ug:
             table:
               searches: "ئىزدەش نەتىجىسى"
               status: "ھالەت"
+          system:
+            title: "سىستېما"
+            status: "ھالەت"
+            discourse_updated: "Discourse يېڭىلاندى"
+            dashboard_updated: "باشقۇرۇش تاختا يېڭىلاندى"
         reports_section:
           header_action: "باشقۇرۇش"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
@@ -6146,6 +6268,7 @@ ug:
           series:
             anonymous: "نامسىز"
             crawlers: "ئۆمىلىگۈچ"
+          crawler_learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
         period:
           last_3_months: "ئۆتكەن 3 ئاي"
           custom: "ئىختىيارى"
@@ -6183,6 +6306,14 @@ ug:
           average_for_sample: "ئەۋرىشكە ئوتتۇرىچە قىممىتى"
           total: "جەمئىي ۋاقىت"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} ئىشلەتكۈچى"
+              other: "%{count} ئىشلەتكۈچى"
+            posts_count:
+              one: "%{count} يازما"
+              other: "%{count} يازما"
+            deselect: "%{name} نى تاللىما"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">ئىزدەش خاتىرىسى</a>'
             disabled: 'ۋەزىيەت ئىزدەش دوكلاتى چەكلەنگەن. سانلىق مەلۇمات توپلاشتا <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">خاتىرە ئىزدەش سۈرۈشتۈرۈشى</a> قوزغىتىلىدۇ.'
@@ -8129,13 +8260,11 @@ ug:
           multiselect: "كۆپ تاللاش"
       site_text:
         description: "مۇنبىرىڭىزدىكى خالىغان تېكىستنى خاسلاشتۇرالايسىز."
-        search: "تەھرىرلىمەكچى بولغان تېكىستنى ئىزدەيدۇ"
+        search_label: "ئىزدە"
+        theme_disabled: "چەكلەندى"
         title: "بېكەت تېكىستى"
         edit: "تەھرىر"
-        revert: "ئۆزگەرتىشنى ئەسلىگە قايتۇر"
         revert_confirm: "ئۆزگەرتىشىڭىزنى راستتىنلا ئەسلىگە قايتۇرامسىز؟"
-        go_back: "ئىزدەشكە قايت"
-        recommended: "ئېھتىياجىڭىزغا ماسلاشتۇرۇش ئۈچۈن تېكىستنى خاسلاشتۇرۇشنى تەۋسىيە قىلىمىز:"
         show_overriden: "قاپلىۋەتكەننىلا كۆرسىتىدۇ"
         show_outdated: "پەقەت ۋاقتى ئۆتكەن/ئىناۋەتسىزنىلا كۆرسىتىدۇ"
         show_untranslated: "پەقەت تەرجىمە قىلىنمىغاننىلا كۆرسىتىدۇ"

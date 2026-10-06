@@ -56,6 +56,19 @@ export default class ComposerMessages extends Component {
     return !this.composer?.viewOpenOrFullscreen;
   }
 
+  get shareModalData() {
+    const { topic } = this.composer;
+    return {
+      topic,
+      category: topic.category,
+      allowInvites:
+        topic.details.can_invite_to &&
+        !topic.archived &&
+        !topic.closed &&
+        !topic.deleted,
+    };
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 
@@ -83,8 +96,54 @@ export default class ComposerMessages extends Component {
     );
   }
 
+  // Resets all active messages.
+  // For example if composing a new post.
+  reset() {
+    this.setProperties({
+      messages: [],
+      messagesByTemplate: {},
+      queuedForTyping: [],
+      checkedMessages: false,
+      similarTopics: [],
+    });
+  }
+
+  @action
+  closeMessage(message, event) {
+    event?.preventDefault();
+    this._removeMessage(message);
+  }
+
+  @action
+  hideMessage(message) {
+    this._removeMessage(message);
+
+    // kind of hacky but the visibility depends on this
+    this.messagesByTemplate[message.templateName] = undefined;
+  }
+
+  @action
+  popup(message) {
+    if (this.messages.length) {
+      return;
+    }
+
+    if (!this.messagesByTemplate[message.templateName]) {
+      this.messages.push(message);
+      this.set("messageCount", this.messages.length);
+      this.messagesByTemplate[message.templateName] = message;
+    }
+  }
+
+  @action
+  switchPM(message) {
+    this.composer.set("action", "privateMessage");
+    this.composer.set("targetRecipients", message.reply_username);
+    this._removeMessage(message);
+  }
+
   _closeTop() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -98,7 +157,7 @@ export default class ComposerMessages extends Component {
   }
 
   _create(info) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -112,23 +171,11 @@ export default class ComposerMessages extends Component {
     _educationMessageShown = false;
   }
 
-  // Resets all active messages.
-  // For example if composing a new post.
-  reset() {
-    this.setProperties({
-      messages: [],
-      messagesByTemplate: {},
-      queuedForTyping: [],
-      checkedMessages: false,
-      similarTopics: [],
-    });
-  }
-
   // Called after the user has typed a reply.
   // Some messages only get shown after being typed.
   @debounce(INPUT_DELAY)
   async _typedReply() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -185,7 +232,7 @@ export default class ComposerMessages extends Component {
           }
         );
 
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -225,7 +272,7 @@ export default class ComposerMessages extends Component {
   }
 
   async _findSimilar() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -269,7 +316,7 @@ export default class ComposerMessages extends Component {
       raw,
     });
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -285,7 +332,7 @@ export default class ComposerMessages extends Component {
 
   // Figure out if there are any messages that should be displayed above the composer.
   async _findMessages() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -312,7 +359,7 @@ export default class ComposerMessages extends Component {
       messages = _messagesCache.messages;
     } else {
       messages = await this.composer.store.find("composer-message", args);
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -339,53 +386,6 @@ export default class ComposerMessages extends Component {
     });
   }
 
-  @action
-  closeMessage(message, event) {
-    event?.preventDefault();
-    this._removeMessage(message);
-  }
-
-  @action
-  hideMessage(message) {
-    this._removeMessage(message);
-
-    // kind of hacky but the visibility depends on this
-    this.messagesByTemplate[message.templateName] = undefined;
-  }
-
-  @action
-  popup(message) {
-    if (this.messages.length) {
-      return;
-    }
-
-    if (!this.messagesByTemplate[message.templateName]) {
-      this.messages.push(message);
-      this.set("messageCount", this.messages.length);
-      this.messagesByTemplate[message.templateName] = message;
-    }
-  }
-
-  get shareModalData() {
-    const { topic } = this.composer;
-    return {
-      topic,
-      category: topic.category,
-      allowInvites:
-        topic.details.can_invite_to &&
-        !topic.archived &&
-        !topic.closed &&
-        !topic.deleted,
-    };
-  }
-
-  @action
-  switchPM(message) {
-    this.composer.set("action", "privateMessage");
-    this.composer.set("targetRecipients", message.reply_username);
-    this._removeMessage(message);
-  }
-
   <template>
     <div
       class={{dConcatClass
@@ -396,8 +396,8 @@ export default class ComposerMessages extends Component {
     >
       {{#each this.messages as |message|}}
         <ComposerMessage
-          @message={{message}}
           @closeMessage={{this.closeMessage}}
+          @message={{message}}
           @shareModal={{fn (mut this.showShareModal) true}}
           @switchPM={{this.switchPM}}
         />

@@ -19,9 +19,11 @@ hr:
         countdown:
           passed: datum je prošao
       title: Umetni datum / vrijeme
+      edit_date: Uredi %{date}
       create:
         form:
           insert: Umetni
+          save: Spremi
           format_description: "Format koji se koristi za prikaz datuma korisniku. Pomoću Z možete prikazati pomak i zz za naziv vremenske zone."
           timezones_title: Vremenske zone za prikazati
           timezones_description: Vremenske zone će se koristiti za prikaz datuma u predprikazu i rezervnom prikazu.

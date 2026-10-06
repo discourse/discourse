@@ -1,5 +1,6 @@
 import { click, currentURL, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { LOAD_MORE_ROOT_MARGIN } from "discourse/components/discovery/topics";
 import { cloneJSON } from "discourse/lib/object";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topFixtures from "discourse/tests/fixtures/top-fixtures";
@@ -207,6 +208,27 @@ acceptance("Topic Discovery | Footer", function (needs) {
         .trigger();
 
       assert.dom(".custom-footer-content").exists();
+    } finally {
+      disableLoadMoreObserver();
+    }
+  });
+
+  test("starts loading before the reader reaches the end of the list", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
+
+    try {
+      await visit("/c/dev");
+
+      const sentinel = observations.find(({ element }) =>
+        element.classList.contains("load-more-sentinel")
+      );
+
+      assert.strictEqual(
+        sentinel.options.rootMargin,
+        LOAD_MORE_ROOT_MARGIN,
+        "reaches past the bottom of the viewport, so the fetch starts before the last topic is on screen"
+      );
     } finally {
       disableLoadMoreObserver();
     }

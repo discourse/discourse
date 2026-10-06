@@ -33,6 +33,7 @@ RSpec.describe PrettyText do
     MD
 
     expect(cooked.scan("<li").length).to eq(20)
+    expect(cooked).to include('<li data-poll-option-id="4d8a15e3cc35750f016ce15a43937620">1</li>')
   end
 
   it "can properly bake 2 polls" do

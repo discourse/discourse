@@ -7,6 +7,11 @@
 uk:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            assign:
+              assign: "Призначити/скасувати призначення тем або дописів."
       site_settings:
         categories:
           discourse_assign: "Discourse Відповідальні"
@@ -222,6 +227,7 @@ uk:
         "action:assign_topic": "Призначити або скасувати призначення теми чи публікації"
         "action:check_assignment": "Перевірте, чи призначено користувача або групу до теми чи допису"
         "trigger:assigned": "Спрацьовує, коли призначено тему або публікацію"
+        "trigger:unassigned": "Спрацьовує, коли тема або публікація не призначені"
       assign_topic:
         resource: "Ресурс"
         resources:

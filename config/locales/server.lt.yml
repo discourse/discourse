@@ -5,6 +5,36 @@
 # https://translate.discourse.org/
 
 lt:
+  markdown_endpoints:
+    latest: "Naujausia"
+    categories: "Kategorijos"
+    tags: "Žymos"
+    previous_page: "Praeitas puslapis"
+    next_page: "Kitas puslapis"
+    replies: "Atsakymai"
+    last_updated: "Paskutinį kartą atnaujinta"
+    event:
+      name: "Įvykis"
+      location: "Vieta"
+      link: "nuoroda"
+  mcp:
+    errors:
+      topic_not_found: "Tema nerasta"
+    oauth:
+      deny: "Atsisakyti"
+      approve: "Leisti"
+  llms_txt:
+    sections:
+      optional: "Pasirinktinai"
+    links:
+      search:
+        label: "Paieška"
+      categories:
+        label: "Kategorijos"
+      about:
+        label: "Apie"
+      guidelines:
+        label: "Instrukcijos"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -687,6 +717,7 @@ lt:
       windows: "Microsoft Windows"
       unknown: "nežinoma operacinė sistema"
   admin_site_traffic_explorer:
+    unknown: "Nežinoma"
     traffic_types:
       anonymous: "Anonimas"
   change_email:
@@ -807,7 +838,7 @@ lt:
   uploads:
     marked_insecure_from_theme_component_reason: "įkėlimas naudojamas temos komponente"
   unsubscribe:
-    title: "Nebeprenumeruoti"
+    unsubscribe: "Nebeprenumeruoti"
     stop_watching_topic: "Nebestebėti šios temos, %{link}"
     mute_topic: "Nutildyti visus šios temos pranešimus, %{link}"
     unwatch_category: "Nustokite žiūrėti visas temas %{category}"
@@ -926,6 +957,11 @@ lt:
         share: "Dalintis"
       types:
         staff: "Personalas"
+    posters_by_member_type_members:
+      labels:
+        user: "Narys"
+        count: "Pranešimai"
+        share: "Dalintis"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1430,7 +1466,6 @@ lt:
       invalid_email: "Neteisingas el. pašto adresas."
       invalid_username: "Nėra vartotojo su tokiu vartotojo vardu."
       valid_username: "Yra vartotojas su tokiu vartotojo vardu."
-      invalid_group: "Nėra grupės tokiu pavadinimu."
       invalid_integer_min_max: "Vertė turi būti nuo %{min} iki %{max}."
       invalid_integer_min: "Vertė turi būti %{min} arba didesnė."
       invalid_integer_max: "Vertė negali būti didesnė nei %{max}."
@@ -1511,6 +1546,7 @@ lt:
     email_too_long: "Jūsų pateiktas el. pašto adresas per ilgas. Pašto dėžutės pavadinimai turi būti ne ilgesni kaip 254 simboliai, o domenų vardai – ne ilgesni kaip 253 simboliai."
     wrong_invite_code: "Įvestas pakvieto kodas buvo neteisingas."
     reserved_username: "Šis vartotojo vardas neleidžiamas."
+    missing_username: "Prašome įvesti vartotojo vardą"
     auth_complete: "Autentifikavimas baigtas."
     click_to_continue: "Jei norite tęsti, paspauskite čia."
     already_logged_in: "Atsiprašau! Šis kvietimas skirtas naujiems vartotojams, kurie dar neturi esamos paskyros."
@@ -2172,7 +2208,7 @@ lt:
         Administracija patvirtino jūsų paskyrą %{site_name}.
 
         Dabar galite pasiekti savo naują paskyrą prisijungę adresu:
-        %{base_url}
+        %{login_url}
 
         Jei aukščiau pateiktos nuorodos negalima spustelėti, pabandykite ją nukopijuoti ir įklijuoti į žiniatinklio naršyklės adreso juostą.
 
@@ -2648,6 +2684,8 @@ lt:
         complete: "Įrašas ištrintas."
       delete_and_agree_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
+      disagree_and_keep_deleted:
+        title: "Palikti įrašą ištrintą"
       disagree_bundle:
         title: "Ne"
       ignore:
@@ -2695,8 +2733,6 @@ lt:
         title: "Taip"
       approve_and_unhide:
         title: "Taip"
-      delete_post:
-        complete: "Įrašas ištrintas"
       delete_user:
         complete: "Naudotojas ištrintas"
   create_linked_topic:

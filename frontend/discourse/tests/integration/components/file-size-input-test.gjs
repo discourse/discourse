@@ -16,11 +16,11 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
+          @max="4096"
           @onChangeSize={{this.onChangeSize}}
           @setValidationMessage={{this.setValidationMessage}}
-          @max="4096"
+          @sizeValueKB={{readonly this.value}}
         />
       </template>
     );
@@ -41,11 +41,11 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
+          @max="4096"
           @onChangeSize={{this.onChangeSize}}
           @setValidationMessage={{this.setValidationMessage}}
-          @max="4096"
+          @sizeValueKB={{readonly this.value}}
         />
       </template>
     );
@@ -66,11 +66,11 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
+          @max="4096"
           @onChangeSize={{this.onChangeSize}}
           @setValidationMessage={{this.setValidationMessage}}
-          @max="4096"
+          @sizeValueKB={{readonly this.value}}
         />
       </template>
     );
@@ -92,11 +92,11 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
+          @max="4096"
           @onChangeSize={{this.onChangeSize}}
           @setValidationMessage={{this.setValidationMessage}}
-          @max="4096"
+          @sizeValueKB={{readonly this.value}}
         />
       </template>
     );
@@ -159,12 +159,12 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
-          @onChangeSize={{this.onChangeSize}}
-          @setValidationMessage={{this.setValidationMessage}}
           @max={{this.max}}
           @min={{this.min}}
+          @onChangeSize={{this.onChangeSize}}
+          @setValidationMessage={{this.setValidationMessage}}
+          @sizeValueKB={{readonly this.value}}
         />
       </template>
     );

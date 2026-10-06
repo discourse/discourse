@@ -5,6 +5,33 @@
 # https://translate.discourse.org/
 
 bg:
+  markdown_endpoints:
+    latest: "Последни"
+    categories: "Категории"
+    tags: "Етикети"
+    previous_page: "Предишна страница"
+    next_page: "Следваща страница"
+    replies: "Отговори"
+    last_updated: "Последна актуализация"
+    event:
+      location: "Локация"
+  mcp:
+    errors:
+      topic_not_found: "Темата не е намерена"
+    oauth:
+      deny: "Отказ"
+  llms_txt:
+    sections:
+      optional: "По избор"
+    links:
+      search:
+        label: "Търсене"
+      categories:
+        label: "Категории"
+      about:
+        label: "Относно"
+      guidelines:
+        label: "Насоки"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -417,6 +444,7 @@ bg:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Неизвестно"
     traffic_types:
       anonymous: "Анонимен"
   change_email:
@@ -483,7 +511,7 @@ bg:
         make: "Тази тема сега е банер. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя."
         remove: "Тази тема вече не е банер. Тя няма да се появява повече най-отгоре на всяка страница."
   unsubscribe:
-    title: "Отписвам"
+    unsubscribe: "Отписвам"
     log_out: "Изход "
     digest_frequency:
       never: "никога"
@@ -546,6 +574,11 @@ bg:
         share: "Споделяне"
       types:
         staff: "Персонал"
+    posters_by_member_type_members:
+      labels:
+        user: "Потребител"
+        count: "Публикации"
+        share: "Споделяне"
     trust_level_pipeline:
       labels:
         count: "Членове"
@@ -1031,6 +1064,7 @@ bg:
     new_registrations_disabled: "В момента новите регистации са забранени."
     password_too_long: "Паролата е ограничена до 200 символа."
     reserved_username: "Това потребителско име не е разрешено."
+    missing_username: "Моля, въведете потребителско име"
     auth_complete: "Удостоверяването е завършено."
     click_to_continue: "Кликнете тук, за да продължите."
     second_factor_title: "Двуфакторна автентификация"
@@ -1494,13 +1528,6 @@ bg:
         title: "Да"
       approve_and_unhide:
         title: "Да"
-      delete_post:
-        title: "Изтрий публикацията"
-        complete: "Публикацията е изтрита"
-      hide_post:
-        title: "Скриване на публикацията"
-      restore_post:
-        title: "Възстановяване на публикацията"
       silence_user:
         title: "Заглушаване на потребителя"
       suspend_user:

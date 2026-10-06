@@ -142,6 +142,14 @@ discourse_events:
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/401309"
       requires_plugin_enabled: false
+  enable_improved_event_reminders:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412427"
   livestream_allowed_hosts:
     type: host_list
     default: "youtube.com|youtu.be|twitch.tv|zoom.us|kick.com|tiktok.com|instagram.com|facebook.com"

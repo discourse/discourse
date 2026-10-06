@@ -11,25 +11,25 @@ const TopicMap = <template>
     >
       <section class="topic-map__contents">
         <TopicMapSummary
+          @postStream={{@postStream}}
           @topic={{@model}}
           @topicDetails={{@topicDetails}}
-          @postStream={{@postStream}}
         />
       </section>
 
       <PluginOutlet
-        @name="topic-map-expanded-after"
         @defaultGlimmer={{true}}
+        @name="topic-map-expanded-after"
         @outletArgs={{lazyHash topic=@model postStream=@postStream}}
       />
 
       {{#if @showPMMap}}
         <section class="topic-map__private-message-map">
           <PrivateMessageMap
-            @topicDetails={{@topicDetails}}
-            @showInvite={{@showInvite}}
             @removeAllowedGroup={{@removeAllowedGroup}}
             @removeAllowedUser={{@removeAllowedUser}}
+            @showInvite={{@showInvite}}
+            @topicDetails={{@topicDetails}}
           />
         </section>
       {{/if}}

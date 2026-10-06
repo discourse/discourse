@@ -69,6 +69,24 @@ export default class PostTextSelection extends Component {
     };
   });
 
+  get usePostIOS26Heuristic() {
+    return this.capabilities.isIOS && "URLPattern" in globalThis;
+  }
+
+  get post() {
+    return this.args.topic.postStream.findLoadedPost(
+      this.args.quoteState.postId
+    );
+  }
+
+  get canEditPost() {
+    return this.siteSettings.enable_fast_edit && this.post?.can_edit;
+  }
+
+  get canCopyQuote() {
+    return this.currentUser?.get("user_option.enable_quoting");
+  }
+
   @bind
   async toggleHeadlessFastEdit() {
     const cooked = this.computeCurrentCooked();
@@ -93,7 +111,7 @@ export default class PostTextSelection extends Component {
 
     const { markdown } = await quoteState.markdown();
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -107,7 +125,7 @@ export default class PostTextSelection extends Component {
     } else {
       const result = await ajax(`/posts/${post.id}`);
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -132,7 +150,7 @@ export default class PostTextSelection extends Component {
         .querySelector("#reply-control")
         ?.addEventListener("transitionend", () => {
           const textarea = document.querySelector(".d-editor-input");
-          if (!textarea || this.isDestroyed || this.isDestroying) {
+          if (!textarea || this.isDestroying) {
             return;
           }
 
@@ -269,24 +287,6 @@ export default class PostTextSelection extends Component {
     }
 
     return cooked;
-  }
-
-  get usePostIOS26Heuristic() {
-    return this.capabilities.isIOS && "URLPattern" in globalThis;
-  }
-
-  get post() {
-    return this.args.topic.postStream.findLoadedPost(
-      this.args.quoteState.postId
-    );
-  }
-
-  get canEditPost() {
-    return this.siteSettings.enable_fast_edit && this.post?.can_edit;
-  }
-
-  get canCopyQuote() {
-    return this.currentUser?.get("user_option.enable_quoting");
   }
 
   // on Desktop, shows the bar at the beginning of the selection

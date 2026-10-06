@@ -15,15 +15,7 @@ sl:
         reading_time:
           title: Čas branja
         chat_usage:
-          messages: zasebna sporočila
           author: Vi
           author_others: "%{username}"
-        invites:
-          title: Povabila
-          invitee_posts: Ustvarjenih prispevkov
-          invitee_likes: Všečkov danih
-        new_user_interactions:
-          likes_given: Všečkov danih
-          mentions: Omembe
         writing_analysis:
           menu_other: Drugo

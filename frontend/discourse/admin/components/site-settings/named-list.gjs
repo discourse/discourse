@@ -39,13 +39,13 @@ export default class NamedList extends Component {
   <template>
     <div ...attributes>
       <ListSetting
-        @value={{this.settingValue}}
-        @settingName={{this.setting.setting}}
         @choices={{this.settingChoices}}
         @nameProperty="name"
-        @valueProperty="value"
         @onChange={{this.onChangeListSetting}}
         @options={{hash allowAny=this.allowAny}}
+        @settingName={{this.setting.setting}}
+        @value={{this.settingValue}}
+        @valueProperty="value"
       />
     </div>
   </template>

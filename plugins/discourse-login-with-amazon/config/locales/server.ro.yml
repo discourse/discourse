@@ -10,6 +10,3 @@ ro:
     login_with_amazon_client_secret: "Secret client autentificare cu Amazon"
     login_with_amazon_scope: "Scopuri OAuth2 autentificare cu Amazon (separate prin spații)"
     login_with_amazon_overrides_email: "Suprascrie adresa de email din contul de utilizator Discourse."
-    errors:
-      login_with_amazon_client_id_is_blank: "Trebuie să setezi „ID client autentificare cu Amazon” înainte de a activa această setare."
-      login_with_amazon_client_secret_is_blank: "Trebuie să setezi „Secret client autentificare cu Amazon” înainte de a activa această setare."

@@ -18,7 +18,6 @@ it:
       admin_dashboard_card:
         no_results: "Nessun risultato"
     explorer:
-      default_query: "Predefinito"
       or: "o"
       admins_only: "Data explorer è disponibile solo per gli amministratori."
       allow_groups: "Consenti ai gruppi di accedere a questa query"
@@ -64,6 +63,7 @@ it:
         other: "Visualizzazione dei primi %{count} risultati."
       query_name: "Query"
       query_groups: "Gruppi"
+      query_tags: "Etichette"
       link: "Collegamento per"
       report_name: "Rapporto"
       query_description: "Descrizione"

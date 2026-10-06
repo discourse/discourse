@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    discourse_workflows:
+      create_board_column:
+        title: "Загаловак"
+        icon: "Значок"
+        color: "Колер"
+      create_board:
+        name: "Імя"
+        tag_names: "Цэтлікі"
+        category_ids: "катэгорыі"
+    boards:
+      status:
+        all: "Усе"
+      board:
+        remove_card: "Выдаліць"
+        title: "Загаловак"
+        tags: "Цэтлікі"
+      manage:
+        name: "Імя"
+        constraint_categories: "катэгорыі"
+        constraint_tags: "Цэтлікі"
+        columns:
+          remove: "Выдаліць"
+          column_title: "Загаловак"
+          icon: "Значок"
+          color: "Колер"
+          move_to_status_closed: "Закрыта"

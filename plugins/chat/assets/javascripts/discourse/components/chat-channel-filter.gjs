@@ -150,13 +150,13 @@ export default class ChatChannelFilter extends Component {
       >
         <div>
           <DFilterInput
-            {{dAutoFocus}}
-            {{closeOnEscape @onToggleFilter}}
-            @value={{this.currentChannelFilter}}
+            class="no-blur"
             placeholder={{i18n "chat.search.title"}}
             @filterAction={{this.loadSearchResults}}
-            class="no-blur"
             @onClearInput={{this.clearInput}}
+            @value={{this.currentChannelFilter}}
+            {{dAutoFocus}}
+            {{closeOnEscape @onToggleFilter}}
           />
 
           {{#if this.channelFilterResults.length}}
@@ -172,21 +172,21 @@ export default class ChatChannelFilter extends Component {
 
             {{#if (gt this.channelFilterResults.length 1)}}
               <DButton
+                class="btn-small btn-flat chat-channel__prev-result"
                 @action={{this.navigateToPreviousResult}}
                 @icon="chevron-up"
-                class="btn-small btn-flat chat-channel__prev-result"
               />
               <DButton
+                class="btn-small btn-flat chat-channel__next-result"
                 @action={{this.navigateToNextResult}}
                 @icon="chevron-down"
-                class="btn-small btn-flat chat-channel__next-result"
               />
             {{/if}}
           {{/if}}
 
           <DButton
-            @action={{@onToggleFilter}}
             class="btn-small btn-flat"
+            @action={{@onToggleFilter}}
             @label="done"
           />
         </div>

@@ -106,6 +106,7 @@ module DiscourseAi
             Tools::ListUsers,
             Tools::Time,
             Tools::Search,
+            Tools::SearchUploadedDocuments,
             Tools::Read,
             Tools::ReadPost,
             Tools::FlagPost,
@@ -128,10 +129,12 @@ module DiscourseAi
             Tools::AddReviewableNote,
             Tools::DbSchema,
             Tools::SearchSettings,
+            Tools::SearchDiscourseNavigation,
             Tools::SettingContext,
             Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
             Tools::RandomPicker,
+            Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
             Tools::GithubDiff,
@@ -283,6 +286,7 @@ module DiscourseAi
             DiscourseAdminAssistant => -39,
             AskAiQueryRewriter => -40,
             AskAiSynthesis => -41,
+            AskAiReporter => -42,
           }.freeze
         end
       end

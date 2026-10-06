@@ -50,10 +50,24 @@ For each run, record:
 | `category-changed-chat` | `when a topic is moved into Support, message General chat with a link to the topic` | `trigger:topic_category_changed -> action:send_chat_message` | Should query catalog for old/new category fields before drafting. |
 | `badge-grant` | `when a TL1 user posts in General with the word helpful, grant them the Basic badge` | `trigger:post_created -> condition:filter -> action:badge` | Uses declarative filter; resolves badge; no Code node. |
 | `group-add` | `when a TL1 user creates a topic in Support, add them to the helpers group` | `trigger:topic_created -> condition:filter -> action:group` | Uses `$json.post.username`; resolves group; no Code node. |
+| `site-setting-yearly` | `every year on 1 January, update the site description to mention the current year` | `trigger:schedule -> action:site_setting` | Uses `$json.year` from the schedule payload; uses the exact setting name; no Code or HTTP node. |
+| `tag-group-add` | `every week, add the current-campaign tag to the Marketing tag group` | `trigger:schedule -> action:tag_group` | Resolves the tag group; creates the tag if needed; no Code node. |
+| `deleted-post-chat` | `when a post in Support is deleted, message General chat with the post title` | `trigger:post_destroyed -> action:send_chat_message` | Uses `trigger:post_destroyed`; remembers `$json.user` is whoever deleted the post, not the author. |
+| `mirror-post-delete` | `when a post in Support is deleted, delete post 123` | `trigger:post_destroyed -> action:post (delete)` | Uses `action:post` with `operation: delete`, not `action:flag_post` with a review-delete flag type. |
+| `restore-mirror-post` | `when a deleted post in Support is restored, restore post 123` | `trigger:post_recovered -> action:post (recover)` | Uses `action:post` with `operation: recover`. |
 | `http-request-warning` | `when a new topic is created in Support, send the topic title to https://example.com/webhook` | `trigger:topic_created -> action:http_request` | Includes external HTTP risk; validates URL/method/body; no Code unless necessary. |
 
 ## Known edge cases to keep testing
 
+- `action:topic_tags` version `2.0` defaults to `mode: modify`: `add_tag_names` and `remove_tag_names` apply together, preserving unrelated tags and allowing implicit parent tags. `mode: replace` sets the complete tag set from `replace_tag_names`; an empty value clears all tags. Replacement uses the current topic state under a lock and rejects category or parent-tag rules that change the requested final set. Only the selected mode's fields are evaluated; invalid names and expression errors stop the action before any tag changes. Both modes enforce the actor’s permission to edit the topic’s tags and return the final `tag_names`; rejected changes neither persist nor emit tag-change events. Existing tag names remain usable after the maximum tag length is reduced. Version `1.0` retains `operation` and `tag_names`.
+- `trigger:topic_timer_changed` exposes `change` (`created`, `updated`, `cancelled`, `completed`), `timer`, and `previous_timer`. Its timer-type filter matches either the previous or current type; inspect `timer.status_type` when handling replacement of a publication timer with another timer type.
+- `trigger:topic_published` and completed publication timers expose the topic in its destination category. Use `trigger:topic_timer_changed` for scheduling and cancellation, and `trigger:topic_published` for publication cleanup.
+- Topic status triggers are separate nodes: `topic_closed`, `topic_reopened`, `topic_archived`, `topic_unarchived`, `topic_listed`, `topic_unlisted`, `topic_pinned`, `topic_unpinned`, `topic_pinned_globally`, and `topic_unpinned_globally` (all prefixed with `trigger:`). They share category and tag filters. Closing includes automatic closes; unpin events use the previous pin scope. Workflow and AI actions use the same status updater.
+- Review outcome triggers are `trigger:reviewable_approved`, `trigger:reviewable_rejected`, `trigger:reviewable_ignored`, `trigger:reviewable_deleted`, and `trigger:reviewable_pending`. They share the reviewable-type filter. Pending handles an existing item returning to review; use `trigger:reviewable_created` for new items.
+- Connect multiple event triggers to the same downstream node to handle several events. Existing `trigger:topic_status_changed` and `trigger:reviewable_status_changed` nodes remain editable and executable, but are hidden from the picker and AI discovery. Fixed-event nodes have no status selector and ignore any supplied `statuses` configuration.
+- `trigger:user_trust_level_changed` exposes old and new levels, including demotions. `trigger:user_first_logged_in` follows the first-login event, whose first-visit check uses `last_seen_at`.
+- `trigger:user_moderation_changed` exposes `change`, the affected `user`, optional `actor` and `reason`, and `expires_at`. Automatic suspension expiry is announced for suspensions scheduled after this functionality is deployed; existing suspensions are not backfilled.
+- `trigger:solution_changed` is available with Solved and reports acceptance or removal of an individual answer. Removing one answer can leave other accepted solutions; replacing an answer emits acceptance for its replacement.
 - Topic-only triggers that need author/post fields should use `action:topic` get before filtering or messaging.
 - Generic prompts like "when someone posts" should use `trigger:post_created` for all regular posts; do not ask whether to include replies unless the prompt explicitly narrows the scope.
 - Actions that replace item JSON require downstream nodes to use the action output schema, not the original trigger schema.
@@ -63,5 +77,15 @@ For each run, record:
 - Condition builder entries must use `leftValue` and `rightValue`; `left`/`right` will not execute correctly.
 - Connections leaving `condition:filter` or `condition:if` use `connection_type: "main"`; select the passing branch with `output_index: 0` and the rejected branch with `output_index: 1`.
 - Group membership checks should use `action:group` with `operation: check_membership` and the resolved `group_id` instead of Code nodes. Branch with `condition:if` on `$json.group_membership.in_group` when different member and non-member paths are needed.
+- Deleting a post is `action:post` with `operation: delete`; `action:flag_post` with `review_delete` is for moderation flows that also need a reviewable. Restoring one is `operation: recover`.
+- `trigger:post_destroyed` and `trigger:post_recovered` expose `$json.user` as the acting moderator, not the post author; use `$json.post.username` for the author.
 - DM/personal-message notifications should use `action:send_personal_message` instead of chat or topic reply nodes.
 - Forum `search`/`read` should not be used for node/schema discovery; use `workflow_node_catalog` and `workflow_validate_patch`.
+
+## Moderation entrypoints
+
+Live suspensions from admin actions (single and bulk), AI tools, and automation use `UserSuspender`. Manual unsuspension and scheduled expiry use the same class. Expiry preserves historical suspension dates and deduplicates its event through staff history; clearing those dates would change badge eligibility.
+
+`UserSilencer` already handles admin, review queue, spam, chat, AI, and workflow silence actions, manual unsilencing, and scheduled unsilencing. No additional silence service is needed.
+
+Direct field writes intentionally remain in historical imports, anonymous shadow-account synchronization, and AI bot self-repair. These restore or copy state rather than perform independent human moderation actions, so they must not send moderation messages or create duplicate workflow events.

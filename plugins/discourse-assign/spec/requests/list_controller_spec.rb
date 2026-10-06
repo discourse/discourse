@@ -293,7 +293,7 @@ describe ListController do
 
     after { SearchIndexer.disable }
 
-    it "returns topics as per filter for #group_topics_assigned" do
+    it "filters group-assigned topics by title" do
       topic1.title = "QUnit testing is love"
       topic2.title = "RSpec testing is too fun"
       topic3.title = "Testing is main part of programming"
@@ -327,7 +327,7 @@ describe ListController do
       )
     end
 
-    it "returns topics as per filter for #group_topics_assigned" do
+    it "filters the user's assigned messages by title" do
       topic1.title = "QUnit testing is love"
       topic2.title = "RSpec testing is too fun"
       topic3.title = "Testing is main part of programming"
@@ -415,7 +415,7 @@ describe ListController do
     fab!(:post_2) { Fabricate(:post, topic: topic_2) }
     fab!(:post_3) { Fabricate(:post, topic: topic_3) }
 
-    describe "when user cannot assign" do
+    describe "when user cannot assign and filters by username" do
       it "ignores the assign filter" do
         assign_allowed_group.add(user)
 
@@ -566,7 +566,7 @@ describe ListController do
       end
     end
 
-    describe "when user cannot assign" do
+    describe "when user cannot assign and filters by assignment status" do
       it "ignores the assigned:* filter" do
         assign_allowed_group.add(admin)
 

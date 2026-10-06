@@ -181,7 +181,7 @@ const VersionChecks = <template>
       </div>
     {{/if}}
 
-    <DCustomHtml @name="update-header" class="update-header" />
+    <DCustomHtml class="update-header" @name="update-header" />
 
     <PluginOutlet
       @name="admin-upgrade-header"

@@ -1,6 +1,6 @@
 ---
 name: discourse-frontend-conventions
-description: Conventions for Discourse frontend code, JavaScript and TypeScript alike (.js/.gjs/.ts/.gts), in core, plugins, and themes that the linter does not enforce. Use when writing, reviewing, or preparing to commit class-based code or templates. Covers the private-symbols pattern (#, unprefixed, _), class member ordering beyond the lint buckets, blank lines before documented fields, no banner comments, safe in-template comments, attribute/argument/modifier ordering on invocations, and the comment necessity gate.
+description: Conventions for Discourse frontend code, JavaScript and TypeScript alike (.js/.gjs/.ts/.gts), in core, plugins, and themes, and how they split between what bin/lint enforces and what needs judgment. Use when writing, reviewing, or preparing to commit class-based code or templates. Covers the private-symbols pattern (#, unprefixed, _), the within-bucket member ordering the linter leaves open, the lint-enforced member order, blank lines and banner rules, attribute/argument/modifier ordering on invocations, and the comment necessity gate.
 ---
 
 # Frontend code conventions
@@ -8,7 +8,9 @@ description: Conventions for Discourse frontend code, JavaScript and TypeScript 
 This skill keeps Discourse frontend code (JavaScript, TypeScript, and Glimmer templates in
 `.js`, `.gjs`, `.ts`, and `.gts` files) consistent on the things `bin/lint`
 alone does not guarantee: which members are private and how they are named, the order of
-class members, and whether a comment deserves to exist. Work through the steps in order.
+members within a lint bucket, and whether a comment deserves to exist. Where a step says a
+rule is lint-enforced, `bin/lint --fix` applies it; the step then only explains what the
+fix does so you can predict it. Work through the steps in order.
 For TypeScript-specific rules (`Signature`s, typed services, type tests) see the
 `discourse-writing-typescript` skill.
 
@@ -91,32 +93,33 @@ not permission to make the member private.
 
 ## Step 2: member ordering
 
-The `sort-class-members` ESLint rule (from `@discourse/lint-configs`) enforces the
-**top-level bucket order** for fields and lifecycle hooks, but drops every method into one
-unordered `[everything-else]` bucket. This step adds the method sub-order the rule leaves
-open, plus a within-bucket tie-break that applies to every bucket.
+The `discourse/sort-class-members` ESLint rule (from `@discourse/lint-configs`) enforces the
+**bucket order** below, including the method sub-order, and its autofix moves each member
+together with its leading comments, decorators, and same-line trailing comment. This step
+adds only the within-bucket tie-break the rule leaves open.
 
-### Top-level buckets (fixed order)
+### Top-level buckets (fixed order, lint-enforced)
 
 ```
-[static-properties]                      lint-enforced
-[static-methods]                         lint-enforced (bucket only)
-@service / @optionalService              lint-enforced
-@controller                              lint-enforced
-@tracked properties                      lint-enforced
-plain (unprefixed) instance properties   lint-enforced
-#private / _private properties           lint-enforced
-constructor                              lint-enforced
-init                                     lint-enforced
-willDestroy / other lifecycle hooks      lint-enforced
-[everything-else]: methods, in this sub-order (enforce here):
-    1. getters          (plain and @cached together)
-    2. methods          (public, whether or not @action)
-    3. private #methods (then _-prefixed private methods)
-<template>                               lint-enforced (last, .gjs/.gts only)
+[static-properties]
+[static-methods]
+@service / @optionalService
+@controller
+@tracked properties
+plain (unprefixed) instance properties
+#private / _private properties
+constructor
+init
+willDestroy
+getters and setters      (get/set pairs together, then lone getters, then lone setters;
+                          plain and @cached alike)
+methods                  (public, whether or not @action)
+#private methods
+_-prefixed private methods
+<template>               (last, .gjs/.gts only)
 ```
 
-The three method buckets key off *stable, syntactic* properties (`get`, plain vs `#`), so a
+The method buckets key off *stable, syntactic* properties (`get`, plain vs `#`), so a
 member only moves when its kind genuinely changes, not when an unrelated diff touches it.
 They are deliberately NOT split finer: `@cached` and `@action` are togglable decorators
 (added or removed for memoisation or template binding), so ordering on them would force
@@ -143,22 +146,11 @@ chain in order:
 
 ## Step 3: comments and blank lines
 
-### Blank line before a documented field
+### Blank line before a documented member (lint-enforced)
 
-The `lines-between-class-members` rule forces blank lines around methods and getters and
-after services, but does NOT separate plain fields, so a field carrying a doc block ends up
-with its doc pressed against the previous declaration:
-
-```js
-  @tracked activeThemeId = null;
-  /**            // cramped: this doc reads as attached to the line above
-   * Snapshot of the selected item.
-   */
-  @tracked selectedItem = null;
-```
-
-Insert a blank line before any class member whose leading line is a block comment (`/**`
-or `/*`), so each doc-plus-field is one visual unit:
+`discourse/lines-between-class-members` requires a blank line before any class member whose
+leading line is a block comment (`/**` or `/*`), so each doc-plus-field is one visual unit,
+and autofixes it:
 
 ```js
   @tracked activeThemeId = null;
@@ -169,64 +161,43 @@ or `/*`), so each doc-plus-field is one visual unit:
   @tracked selectedItem = null;
 ```
 
-Do NOT add the blank line when the member is already preceded by one or sits immediately
-after the class's opening brace. Bare, undocumented fields may still pack together.
+A member that is first after the class's opening brace needs no blank line, bare
+undocumented fields may still pack together, and a `//` line comment does not require one.
 
 ### No section or banner comments
 
-Do NOT add `/* Section */` headers or `// ====` dividers to delineate buckets. The ordering
-convention is self-documenting, and banner comments rot the moment a member moves. Remove
-any within the touched scope.
+`discourse/no-banner-comments` rejects divider comments made of repeated punctuation
+(`// -----`, `// ==== Foo ====`, `/* ***** */`), without autofix. Beyond that, do NOT add
+`/* Section */` headers to delineate buckets either. The ordering convention is
+self-documenting, and section comments rot the moment a member moves. Remove any within the
+touched scope.
 
-### Safe in-template comments (`.gjs`/`.gts`)
+## Step 4: invocation ordering (`.gjs`/`.gts`, lint-enforced)
 
-A `{{! ... }}` comment **inside a `<template>`** must NOT contain backticks, angle-bracket
-tokens (`<form.Field>`, `<@form.Field>`), attribute-like `="..."` snippets, or `|`. These
-silently break `ember-eslint-parser` scope analysis: the entire template scope is dropped,
-so eslint reports **every template-only import** as `no-unused-vars`. The component renders
-fine and prettier and `ember-tsc` pass, so it looks mysterious.
+`discourse/template-attribute-grouping` orders the pieces of every component invocation and
+element tag, and autofixes them:
 
-**Tell:** a `.gjs` fails lint with a *cluster* of "X is defined but never used" errors for
-symbols obviously used in the `<template>`.
+1. **Attributes** (`class=`, `data-*`, `aria-*`, `title=`, ...), alphabetical, with
+   `...attributes` kept exactly where it was: attributes before the splat are sorted among
+   themselves, attributes after it among themselves, and none crosses it.
+2. **`@arguments`** (component invocations only), alphabetical.
+3. **Modifiers** (`{{on ...}}`, custom modifiers), in their original source order.
 
-**Fix:** reword the comment in plain prose. JS-body `/* */` and `//` comments may use those
-characters freely; only in-template `{{! }}` comments choke.
+A `{{! }}` comment inside the tag travels with the piece that follows it; a comment that is
+the last thing before `>` stays in place.
 
-## Step 4: invocation ordering (`.gjs`/`.gts`)
+Two things the fix will never do for you, so decide them yourself when writing:
 
-On every component invocation and element tag touched by the diff, the pieces are grouped
-by KIND, never interleaved, in this order:
+- **`...attributes` placement is load-bearing.** Its position sets override precedence: an
+  attribute written AFTER the splat beats the caller's value, one written BEFORE it yields to
+  the caller (`class` merges regardless). Put each attribute on the side of the splat that
+  gives the precedence you want; the sort keeps it there.
+- **Modifier order is install order**, and some pairs depend on it. The splat also carries
+  caller-supplied modifiers, so an element's own modifiers now always run after the caller's
+  unless you deliberately place the splat after them.
 
-1. **Attributes** (`class=`, `data-*`, `aria-*`, `title=`, ...), with `...attributes`, when
-   present, kept somewhere inside this group.
-2. **`@arguments`** (component invocations only).
-3. **Modifiers** (`{{on ...}}`, custom modifiers), always last.
-
-This matches core precedent (`docked-composer.gjs`, `topic-navigation.gjs`). An `@argument`
-or a modifier sitting between two plain attributes is the violation this step catches.
-
-**`...attributes` placement is load-bearing; never move it relative to plain attributes.**
-Its position sets override precedence: an attribute written AFTER the splat beats the
-caller's value, one written BEFORE it yields to the caller (`class` merges regardless). The
-splat belongs to the attributes group, but WHERE it sits inside that group is the author's
-semantic choice. When rearranging, other attributes keep their side of the splat. If
-satisfying the grouping would force an attribute across the splat, leave that invocation
-alone and flag it instead of silently changing who wins.
-
-The splat also carries caller-supplied modifiers, so moving it across the element's own
-modifiers changes install order. Moving element modifiers after the splat (the normal
-outcome of "modifiers last") is fine unless a modifier visibly depends on running before
-the caller's.
-
-Within the `@arguments` group, sort alphabetically unless a small purpose cluster clearly
-reads better. Plain attributes need no strict sort, but keep them together.
-
-Two more cautions when rearranging:
-
-- **Preserve the relative order of the modifiers themselves.** Modifiers install in source
-  order, and some pairs depend on it. Move the block; do not reshuffle inside it.
-- A `{{! }}` comment that explains one modifier moves WITH that modifier, staying
-  immediately above it.
+If alphabetical order splits a purpose cluster in `@arguments`, accept it: predictability
+across the codebase wins over local grouping.
 
 ## Step 5: documentation review
 
@@ -270,9 +241,9 @@ rewritten; write the replacement rather than describing it.
 
 ## Step 6: lint
 
-Run `bin/lint --fix` on every touched file. This confirms the manual reordering agrees with
-`sort-class-members` and prettier, and catches anything the steps above missed. Re-read the
-file afterwards: the autofix can move a member away from a comment that was attached to it.
+Run `bin/lint --fix` on every touched file. This applies the lint-enforced parts of Steps 2
+to 4 (member buckets, blank lines before doc blocks, invocation ordering), confirms the manual
+within-bucket ordering agrees with prettier, and catches anything the steps above missed.
 The lint must pass clean before the work is done.
 
 **Staging note:** `bin/lint <file>` (and `--recent`/`--unstaged`/`--wip`) lints the

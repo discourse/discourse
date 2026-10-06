@@ -27,6 +27,11 @@ it:
                 lt_1h: "< 1 ora"
                 gt_24h: "> 24 ore"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Modifiche"
+        changes_removed: "Rimosso"
+        tag_names: "Etichette"
     notifications:
       alt:
         solved:
@@ -77,6 +82,11 @@ it:
           solved: "sono risolti"
           unsolved: "non sono risolti"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Argomento"
+            category: "Categoria"
       web_hooks:
         solved_event:
           group_name: "Evento risolto"

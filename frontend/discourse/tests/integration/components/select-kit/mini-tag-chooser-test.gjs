@@ -221,8 +221,8 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
             @options={{hash categoryId=1}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -326,8 +326,8 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -369,8 +369,8 @@ module(
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{this.value}}
           />
         </template>
       );

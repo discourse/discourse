@@ -8,10 +8,10 @@ export default class List extends Component {
   <template>
     <div ...attributes>
       <ValueList
-        @values={{this.value}}
-        @inputDelimiter="|"
         @choices={{this.setting.choices}}
         @disabled={{@disabled}}
+        @inputDelimiter="|"
+        @values={{this.value}}
       />
     </div>
   </template>

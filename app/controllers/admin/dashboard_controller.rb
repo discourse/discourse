@@ -6,7 +6,9 @@ class Admin::DashboardController < Admin::StaffController
   before_action :ensure_admin,
                 only: %i[
                   available_reports
+                  mount_report
                   traffic
+                  unmount_report
                   update_reports_section
                   update_configuration
                   update_section_settings
@@ -130,6 +132,29 @@ class Admin::DashboardController < Admin::StaffController
     head :no_content
   end
 
+  def mount_report
+    report =
+      AdminDashboard::Reports::Mounter.mount(
+        source: params.require(:source),
+        identifier: params.require(:identifier),
+        guardian: guardian,
+      )
+    render json: report.slice(:source, :identifier, :position, :rows, :cols), status: :created
+  rescue AdminDashboard::Reports::Mounter::CapReached
+    render_json_error(
+      I18n.t("dashboard.reports.cap_reached", max: AdminDashboardReport::VISIBLE_CAP),
+      status: 422,
+    )
+  end
+
+  def unmount_report
+    AdminDashboard::Reports::Mounter.unmount(
+      source: params.require(:source),
+      identifier: params.require(:identifier),
+    )
+    head :no_content
+  end
+
   def available_reports
     search = params[:search]
     cursor = params.permit(cursor: %i[title key])[:cursor]&.to_h&.symbolize_keys
@@ -225,13 +250,27 @@ class Admin::DashboardController < Admin::StaffController
     end
 
     params
-      .permit(items: %i[source identifier])
+      .permit(items: %i[source identifier rows cols])
       .fetch(:items, [])
       .map do |entry|
         source = entry[:source]
         identifier = entry[:identifier]
         raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
-        { source: source.to_s, identifier: identifier.to_s }
+
+        rows = Integer(entry[:rows].presence || 1, exception: false)
+        if rows.nil? || rows < 1 || rows > AdminDashboardReport::MAX_ROWS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+
+        cols = Integer(entry[:cols].presence || 1, exception: false)
+        if cols.nil? || cols < 1 || cols > AdminDashboardReport::MAX_COLS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+        if rows > 1 && cols != AdminDashboardReport::MAX_COLS
+          raise Discourse::InvalidParameters.new(:items)
+        end
+
+        { source: source.to_s, identifier: identifier.to_s, rows: rows, cols: cols }
       end
   end
 end

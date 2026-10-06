@@ -28,7 +28,7 @@ module("Unit | Lib | ai-usage-time-series", function () {
     });
 
     assert.strictEqual(
-      moment(normalized[0].period).format("HH:00"),
+      moment.utc(normalized[0].period).format("HH:00"),
       "10:00",
       "starts at the earliest server row, even when it is before the selected range"
     );
@@ -38,7 +38,7 @@ module("Unit | Lib | ai-usage-time-series", function () {
       "keeps the server row that would otherwise be clamped"
     );
     assert.strictEqual(
-      moment(normalized[normalized.length - 1].period).format("HH:00"),
+      moment.utc(normalized[normalized.length - 1].period).format("HH:00"),
       "14:00",
       "extends through the server-provided date range"
     );
@@ -64,7 +64,7 @@ module("Unit | Lib | ai-usage-time-series", function () {
     );
 
     assert.deepEqual(
-      normalized.map((row) => moment(row.period).format("HH:00")),
+      normalized.map((row) => moment.utc(row.period).format("HH:00")),
       ["12:00", "13:00", "14:00"],
       "uses the server date range to avoid a one-point chart"
     );
@@ -95,7 +95,7 @@ module("Unit | Lib | ai-usage-time-series", function () {
     );
 
     assert.deepEqual(
-      normalized.map((row) => moment(row.period).format("HH:00")),
+      normalized.map((row) => moment.utc(row.period).format("HH:00")),
       ["12:00", "13:00", "14:00"],
       "extends around a single returned bucket"
     );

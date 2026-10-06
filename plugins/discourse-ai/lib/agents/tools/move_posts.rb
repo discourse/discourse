@@ -89,7 +89,8 @@ module DiscourseAi
             opts[:category_id] = parameters[:category_id] if parameters[:category_id].present?
           end
 
-          destination_topic = topic.move_posts(acting_user, post_ids, opts)
+          destination_topic =
+            topic.move_posts(acting_user, post_ids, opts.merge(guardian: guardian))
 
           if destination_topic.present?
             {

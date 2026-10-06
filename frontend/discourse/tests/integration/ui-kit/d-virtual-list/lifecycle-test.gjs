@@ -70,11 +70,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @overscan={{0}}
           @onReachEnd={{onReachEnd}}
+          @overscan={{0}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -186,11 +186,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
+          @itemRole="option"
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @role="listbox"
-          @itemRole="option"
           @setSize={{total}}
           as |item|
         >
@@ -222,9 +222,9 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @setSize={{total}}
           as |item|
         >
@@ -267,11 +267,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
+          @itemRole="option"
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @role="listbox"
-          @itemRole="option"
           @setSize={{unbounded}}
           as |item|
         >
@@ -302,11 +302,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
+          @itemRole="option"
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @role="listbox"
-          @itemRole="option"
           @setSize={{staleTotal}}
           as |item|
         >

@@ -13,7 +13,7 @@ if defined?(DiscourseWorkflows)
               color: "cyan",
             },
             group: "discourse_triggers",
-            events: [:assigned],
+            event: :assigned,
             available: -> { SiteSetting.assign_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_assign",
             output_contracts: [

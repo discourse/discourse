@@ -22,15 +22,6 @@ export default class ChatChannelEmptyState extends Component {
     return this.chatApi.listChannelMemberships(this.args.channel.id);
   }
 
-  @action
-  loadMemberships() {
-    if (!this.currentUser || !this.memberCount) {
-      return;
-    }
-
-    this.memberships.load({ limit: MAX_AVATARS }).catch(() => {});
-  }
-
   get otherMemberships() {
     return this.memberships.items.filter(
       (membership) => membership.user.id !== this.currentUser?.id
@@ -92,13 +83,22 @@ export default class ChatChannelEmptyState extends Component {
     return i18n("chat.channel.empty_state.guest_tip");
   }
 
+  @action
+  loadMemberships() {
+    if (!this.currentUser || !this.memberCount) {
+      return;
+    }
+
+    this.memberships.load({ limit: MAX_AVATARS }).catch(() => {});
+  }
+
   <template>
     {{#if this.currentUser}}
       <DEmptyState
+        @body={{@channel.description}}
         @identifier="chat-channel"
         @svgContent={{this.channelIcon}}
         @title={{this.title}}
-        @body={{@channel.description}}
       >
         <:tip>
           {{#if this.tip}}
@@ -139,10 +139,10 @@ export default class ChatChannelEmptyState extends Component {
     {{/if}}
     {{#unless this.currentUser}}
       <DEmptyState
+        @body={{@channel.description}}
         @identifier="chat-channel"
         @svgContent={{this.channelIcon}}
         @title={{this.title}}
-        @body={{@channel.description}}
       >
         <:tip>
           {{#if this.tip}}

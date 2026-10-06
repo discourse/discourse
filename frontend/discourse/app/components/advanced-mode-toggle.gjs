@@ -14,11 +14,11 @@ export default class AdvancedModeToggle extends Component {
   <template>
     <DButton
       class="btn-default advanced-mode-btn"
+      ...attributes
+      @action={{@onToggle}}
+      @ariaLabel={{this.label}}
       @icon="gear"
       @label={{if this.capabilities.viewport.sm this.label}}
-      @ariaLabel={{this.label}}
-      @action={{@onToggle}}
-      ...attributes
     />
   </template>
 }

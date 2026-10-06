@@ -252,12 +252,12 @@ export default class AmazonProductLinks extends AdComponent {
             style={{this.adTitleStyleMobile}}
           ><h2>{{i18n "adplugin.advertisement_label"}}</h2></div>
           <iframe
-            style={{this.adWrapperStyleMobile}}
-            marginwidth="0"
-            marginheight="0"
-            scrolling="no"
             frameborder="0"
+            marginheight="0"
+            marginwidth="0"
+            scrolling="no"
             src={{this.userInputMobile}}
+            style={{this.adWrapperStyleMobile}}
             title={{i18n "adplugin.advertisement_label"}}
           >
           </iframe>
@@ -265,14 +265,14 @@ export default class AmazonProductLinks extends AdComponent {
           <div class="amazon-product-links-label"><h2>{{i18n
                 "adplugin.advertisement_label"
               }}</h2></div>
-          <div class="container" align="center">
+          <div align="center" class="container">
             <iframe
-              style={{this.adWrapperStyle}}
-              marginwidth="0"
-              marginheight="0"
-              scrolling="no"
               frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+              scrolling="no"
               src={{this.userInput}}
+              style={{this.adWrapperStyle}}
               title={{i18n "adplugin.advertisement_label"}}
             >
             </iframe>

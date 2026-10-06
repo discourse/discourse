@@ -29,8 +29,8 @@ zh_CN:
         description: "编写自定义 SQL 查询，以查找与您的社区相关的特定内容。"
     explorer:
       resize_editor: "调整查询编辑器大小"
-      default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
+      view_query: "查看"
       queries: "查询"
       query_created: "查询已创建！"
       mode:
@@ -39,6 +39,7 @@ zh_CN:
         ai: "使用 AI 生成"
       or: "或者"
       admins_only: "数据资源管理器仅供管理员使用。"
+      hidden_relation: "您无权访问此内容。"
       allow_groups: "允许群组访问此查询"
       title: "数据资源管理器"
       create: "创建"
@@ -50,7 +51,9 @@ zh_CN:
         description_placeholder: "例如，显示不同时间段的注册情况"
         regenerate_placeholder: "例如，更新查询以将结果数限制为 50 条。"
         prompt_label: "提示"
+        workflow_title: "AI查询助手"
         generate: "生成"
+        regenerate: "生成查询"
         generating: "正在使用 AI 生成查询…"
         generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
         generation_error: "生成查询时出错。"
@@ -123,6 +126,8 @@ zh_CN:
         other: "显示前 %{count} 个结果。"
       query_name: "查询"
       query_groups: "群组"
+      query_tags: "标签"
+      default_tag_mandatory: "无法从捆绑查询中移除默认标签。"
       link: "链接"
       report_name: "报告"
       query_description: "描述"
@@ -132,6 +137,8 @@ zh_CN:
       save_params: "设置默认值"
       reset_params: "重置"
       search_placeholder: "搜索…"
+      filter_by_tag: "按标签筛选"
+      filter_by_this_tag: "按此标签筛选列表"
       no_search_results: "抱歉，我们找不到任何与您的文本匹配的结果。"
       form:
         errors:
@@ -158,6 +165,8 @@ zh_CN:
       sql:
         operation: "操作"
         operation_description: "如何运行查询"
+        operation_queries: "预定义查询"
+        operation_raw: "原始 SQL 查询"
         query_id: "查询"
         query_id_description: "选择一个已保存的查询以运行"
         query_params: "查询参数"

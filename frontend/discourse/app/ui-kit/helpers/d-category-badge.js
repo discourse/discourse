@@ -26,13 +26,13 @@ import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 export default function dCategoryBadge(cat, options = {}) {
   return categoryLinkHTML(cat, {
     hideParent: options.hideParent,
+    ancestors: options.ancestors,
     allowUncategorized: options.allowUncategorized,
     categoryStyle: options.categoryStyle,
     styleType: options.styleType,
     icon: options.icon,
     emoji: options.emoji,
     previewColor: options.previewColor,
-    ancestors: options.ancestors,
     topicCount: options.topicCount,
     subcategoryCount: options.subcategoryCount,
     readOnly: options.readOnly,

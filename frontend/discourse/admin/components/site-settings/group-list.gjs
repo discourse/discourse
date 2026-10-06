@@ -40,7 +40,9 @@ export default class GroupList extends Component {
     return choiceIds
       .map((id) => {
         const group = groupsById[id];
-        return group ? { name: group.name, id } : null;
+        const name =
+          group.name === "everyone" ? "everyone (legacy)" : group.name;
+        return group ? { name, id } : null;
       })
       .filter(Boolean);
   }
@@ -77,13 +79,13 @@ export default class GroupList extends Component {
   <template>
     <div ...attributes>
       <ListSetting
-        @value={{this.settingValue}}
         @choices={{this.groupChoices}}
-        @settingName="name"
         @mandatoryValues={{this.setting.mandatory_values}}
         @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
         @onChange={{this.onChangeGroupListSetting}}
+        @settingName="name"
+        @value={{this.settingValue}}
+        @valueProperty={{this.valueProperty}}
       />
     </div>
   </template>

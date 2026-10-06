@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  js:
+    login:
+      lti:
+        name: "LTI"
+        title: "使用 LTI 登入"

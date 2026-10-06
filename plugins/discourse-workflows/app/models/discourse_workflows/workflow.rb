@@ -84,6 +84,14 @@ module DiscourseWorkflows
           ->(name) do
             where("discourse_workflows_workflows.name ILIKE ?", "%#{sanitize_sql_like(name)}%")
           end
+    scope :filter_by_name_or_username,
+          ->(filter) do
+            matching_users =
+              User.where("username_lower LIKE ?", "%#{sanitize_sql_like(filter.downcase)}%")
+            filter_by_name(filter).or(where(created_by_id: matching_users.select(:id))).or(
+              where(updated_by_id: matching_users.select(:id)),
+            )
+          end
     scope :filter_by_trigger_type,
           ->(type) do
             where(
@@ -104,9 +112,9 @@ module DiscourseWorkflows
               SQL
           end
 
-    def self.filtered(name: nil, trigger_type: nil, exclude_id: nil, tags: nil)
+    def self.filtered(filter: nil, trigger_type: nil, exclude_id: nil, tags: nil)
       scope = all
-      scope = scope.filter_by_name(name) if name.present?
+      scope = scope.filter_by_name_or_username(filter) if filter.present?
       scope = scope.filter_by_trigger_type(trigger_type) if trigger_type.present?
       scope = scope.filter_by_tags(tags) if tags.present?
       scope = scope.where.not(id: exclude_id) if exclude_id

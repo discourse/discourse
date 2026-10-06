@@ -42,9 +42,9 @@ export default class RovingFocusRadioGroupExample extends Component {
 
   <template>
     <div
+      aria-label={{i18n "styleguide.sections.roving_focus.radio.label"}}
       class="roving-demo__radios"
       role="radiogroup"
-      aria-label={{i18n "styleguide.sections.roving_focus.radio.label"}}
       {{dRovingFocus
         itemSelector=".roving-demo__radio"
         entryFocus="selected-or-first"
@@ -54,10 +54,10 @@ export default class RovingFocusRadioGroupExample extends Component {
     >
       {{#each this.choices key="id" as |choice|}}
         <span
-          class="roving-demo__radio"
-          role="radio"
-          data-choice-id={{choice.id}}
           aria-checked={{choice.checked}}
+          class="roving-demo__radio"
+          data-choice-id={{choice.id}}
+          role="radio"
         >
           {{choice.label}}
         </span>

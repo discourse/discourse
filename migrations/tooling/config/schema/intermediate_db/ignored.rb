@@ -3,6 +3,7 @@
 Migrations::Tooling::Schema.ignored do
   # Plugins — all their tables and columns on core tables are auto-ignored via manifest
   plugin :automation, "Not migrated yet"
+  plugin :boards, "Not migrated yet"
   plugin :chat, "Not migrated yet"
   plugin :discourse_adplugin, "Not migrated yet"
   plugin :discourse_ai, "Not migrated yet"
@@ -74,7 +75,6 @@ Migrations::Tooling::Schema.ignored do
          :post_search_data,
          :post_stats,
          :post_timings,
-         :posts,
          :quoted_posts,
          :shared_drafts
 
@@ -82,6 +82,7 @@ Migrations::Tooling::Schema.ignored do
          :linked_topics,
          :top_topics,
          :topic_custom_fields,
+         :topic_embed_aliases,
          :topic_embeds,
          :topic_groups,
          :topic_hot_scores,
@@ -171,10 +172,11 @@ Migrations::Tooling::Schema.ignored do
          :bookmarks,
          :browser_pageview_crawler_daily_rollups,
          :browser_pageview_event_scores,
+         :browser_pageview_event_scores_backup,
          :browser_pageview_events,
+         :browser_pageview_events_backup,
          :browser_pageview_session_engagement_daily_rollups,
          :browser_pageview_session_engagements,
-         :custom_emojis,
          :developers,
          :directory_columns,
          :directory_items,
@@ -192,6 +194,15 @@ Migrations::Tooling::Schema.ignored do
          :invited_users,
          :invites,
          :javascript_caches,
+         :mcp_audit_logs,
+         :mcp_group_scopes,
+         :mcp_oauth_access_tokens,
+         :mcp_oauth_authorization_codes,
+         :mcp_oauth_authorization_scopes,
+         :mcp_oauth_authorizations,
+         :mcp_oauth_clients,
+         :mcp_oauth_refresh_tokens,
+         :mcp_primitives,
          :message_bus,
          :nested_hot_post_scores,
          :nested_hot_score_snapshots,
@@ -229,6 +240,12 @@ Migrations::Tooling::Schema.ignored do
          :translation_overrides,
          :unsubscribe_keys,
          :upcoming_change_events,
+         :voice_co_presences,
+         :voice_invites,
+         :voice_recordings,
+         :voice_room_memberships,
+         :voice_rooms,
+         :voice_sessions,
          :watched_word_groups,
          :watched_words,
          :web_crawler_requests

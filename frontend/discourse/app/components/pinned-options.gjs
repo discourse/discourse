@@ -68,6 +68,25 @@ class PinnedOptionsTrigger extends Component {
 }
 
 export default class PinnedOptions extends Component {
+  get options() {
+    const globally = this.args.topic?.pinned_globally ? GLOBALLY : "";
+
+    return [
+      {
+        id: PINNED,
+        title: i18n(`topic_statuses.pinned${globally}.title`),
+        description: i18n(`topic_statuses.pinned${globally}.help`),
+        icon: "thumbtack",
+      },
+      {
+        id: UNPINNED,
+        title: i18n("topic_statuses.unpinned.title"),
+        description: i18n("topic_statuses.unpinned.help"),
+        icon: "thumbtack unpinned",
+      },
+    ];
+  }
+
   @action
   registerDmenuApi(api) {
     this.dmenuApi = api;
@@ -91,37 +110,19 @@ export default class PinnedOptions extends Component {
     return currentValue === optionId ? "-selected" : "";
   }
 
-  get options() {
-    const globally = this.args.topic?.pinned_globally ? GLOBALLY : "";
-
-    return [
-      {
-        id: PINNED,
-        title: i18n(`topic_statuses.pinned${globally}.title`),
-        description: i18n(`topic_statuses.pinned${globally}.help`),
-        icon: "thumbtack",
-      },
-      {
-        id: UNPINNED,
-        title: i18n("topic_statuses.unpinned.title"),
-        description: i18n("topic_statuses.unpinned.help"),
-        icon: "thumbtack unpinned",
-      },
-    ];
-  }
-
   <template>
     <DMenu
+      ...attributes
+      @autofocus={{false}}
+      @contentClass={{@contentClass}}
       @identifier="pinned-options"
       @modalForMobile={{true}}
+      @onRegisterApi={{this.registerDmenuApi}}
       @triggerClass={{dConcatClass
         "btn-default"
         "pinned-options-trigger-btn"
         @triggerClass
       }}
-      @contentClass={{@contentClass}}
-      @onRegisterApi={{this.registerDmenuApi}}
-      @autofocus={{false}}
       @triggerComponent={{component
         PinnedOptionsTrigger
         showFullTitle=@showFullTitle
@@ -129,7 +130,6 @@ export default class PinnedOptions extends Component {
         value=@value
         topic=@topic
       }}
-      ...attributes
     >
       <:content>
         <DDropdownMenu as |dropdown|>
@@ -140,8 +140,8 @@ export default class PinnedOptions extends Component {
                   "pinned-options-btn"
                   (this.isSelectedClass option.id)
                 }}
-                @action={{fn this.setPinnedState option.id}}
                 data-pinned-state={{option.id}}
+                @action={{fn this.setPinnedState option.id}}
               >
                 <div class="pinned-options-btn__icons">
                   {{dIcon option.icon}}

@@ -7,7 +7,6 @@
 id:
   js:
     explorer:
-      default_query: "Asal"
       or: "atau"
       create: "Buat"
       ai:
@@ -25,6 +24,7 @@ id:
         form:
           bar: "Batang"
       query_groups: "Grup"
+      query_tags: "Label"
       query_description: "Deskripsi"
       reset_params: "Reset"
       search_placeholder: "Cari..."

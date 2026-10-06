@@ -1,6 +1,7 @@
 discourse_openid_connect:
   openid_connect_enabled:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "oidc"
   openid_connect_discovery_document:
     default: ""
@@ -19,6 +20,9 @@ discourse_openid_connect:
     default: ""
     area: "oidc"
   openid_connect_rp_initiated_logout_include_client_id:
+    default: false
+    area: "oidc"
+  openid_connect_rp_initiated_logout_include_state:
     default: false
     area: "oidc"
   openid_connect_allow_association_change:
@@ -52,6 +56,11 @@ discourse_openid_connect:
     area: "oidc"
   openid_connect_match_by_email:
     default: true
+    area: "oidc"
+  openid_connect_email_claim:
+    default: "email"
+    validator: "RegexPresenceValidator"
+    regex_error: "errors.messages.blank"
     area: "oidc"
   openid_connect_groups_claim:
     default: ""

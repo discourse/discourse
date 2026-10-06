@@ -46,10 +46,10 @@ export default class ToggleAllSections extends Component {
 
   <template>
     <DButton
+      class="btn-transparent sidebar-toggle-all-sections"
       @action={{this.toggleAllSections}}
       @icon={{this.icon}}
       @title={{this.title}}
-      class="btn-transparent sidebar-toggle-all-sections"
     />
   </template>
 }

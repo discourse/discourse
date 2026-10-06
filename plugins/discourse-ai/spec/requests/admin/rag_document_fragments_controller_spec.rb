@@ -34,7 +34,7 @@ RSpec.describe DiscourseAi::Admin::RagDocumentFragmentsController do
       tempfile
     end
 
-    it "works" do
+    it "uploads the document fragment file" do
       post "/admin/plugins/discourse-ai/rag-document-fragments/files/upload.json",
            params: {
              file: Rack::Test::UploadedFile.new(file_from_fixtures("spec.txt", "md")),

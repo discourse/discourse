@@ -128,6 +128,10 @@ module CachedCounting
             # could be a race condition in test
             if val > 0
               klass_name, db, date, local_key = key.split(",", 4)
+
+              # the site may have been deleted since the count was recorded
+              next if !RailsMultisite::ConnectionManagement.has_db?(db)
+
               date = Date.strptime(date, "%Y%m%d")
               klass = Module.const_get(klass_name)
 

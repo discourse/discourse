@@ -109,9 +109,9 @@ export default class Chat extends Component {
       as |form data|
     >
       <form.Field
-        @title={{i18n "chat.enable"}}
-        @name="chat_enabled"
         @format="large"
+        @name="chat_enabled"
+        @title={{i18n "chat.enable"}}
         @type="checkbox"
         as |field|
       >
@@ -120,9 +120,9 @@ export default class Chat extends Component {
 
       <form.Section @title={{i18n "chat.personalization_title"}}>
         <form.Field
-          @title={{i18n "chat.quick_reaction_type.title"}}
-          @name="chat_quick_reaction_type"
           @format="large"
+          @name="chat_quick_reaction_type"
+          @title={{i18n "chat.quick_reaction_type.title"}}
           @type="radio-group"
           as |field|
         >
@@ -137,28 +137,28 @@ export default class Chat extends Component {
 
         {{#if (eq data.chat_quick_reaction_type "custom")}}
           <form.Field
-            @title={{i18n "chat.quick_reaction_type.options.custom"}}
-            @name="chat_quick_reactions_custom"
             @format="large"
+            @name="chat_quick_reactions_custom"
+            @title={{i18n "chat.quick_reaction_type.options.custom"}}
             @type="custom"
             as |field|
           >
             <field.Control>
               {{#each data.chat_quick_reactions_custom as |emoji index|}}
                 <EmojiPicker
-                  @emoji={{emoji}}
                   @btnClass="btn-default"
                   @context="chat_preferences"
                   @didSelectEmoji={{fn this.handleEmojiSet index field}}
+                  @emoji={{emoji}}
                 />
               {{/each}}
             </field.Control>
           </form.Field>
         {{/if}}
         <form.Field
-          @title={{i18n "chat.separate_sidebar_mode.title"}}
-          @name="chat_separate_sidebar_mode"
           @format="large"
+          @name="chat_separate_sidebar_mode"
+          @title={{i18n "chat.separate_sidebar_mode.title"}}
           @type="select"
           as |field|
         >
@@ -173,18 +173,18 @@ export default class Chat extends Component {
       </form.Section>
       <form.Section @title={{i18n "chat.accessibility_title"}}>
         <form.Field
-          @title={{i18n "chat.announce_new_messages.title"}}
-          @name="chat_announce_new_messages"
           @format="large"
+          @name="chat_announce_new_messages"
+          @title={{i18n "chat.announce_new_messages.title"}}
           @type="checkbox"
           as |field|
         >
           <field.Control @value={{field.value}} />
         </form.Field>
         <form.Field
-          @title={{i18n "chat.new_message_sound.title"}}
-          @name="chat_new_message_sound"
           @format="large"
+          @name="chat_new_message_sound"
+          @title={{i18n "chat.new_message_sound.title"}}
           @type="checkbox"
           as |field|
         >

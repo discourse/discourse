@@ -349,6 +349,7 @@ es:
     notifications_tracking:
       tooltip: "Nivel de notificación: %{level}"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "¡Hola, %{preferred_display_name}!"
@@ -492,18 +493,9 @@ es:
         use_predefined: "Explorar plantillas"
         back: "Atrás"
         icebreakers:
-          fun_facts:
-            title: "¿Cuáles son algunos datos curiosos sobre ti?"
-            body: "¡Hola a todos! Me entusiasma empezar esta nueva comunidad. Para empezar, compartamos algo curioso sobre nosotros. Empiezo yo: ¡me encanta el senderismo y explorar nuevos senderos! ¿Qué hay de interesante sobre vosotros?"
-          coolest_thing_you_have_seen_today:
-            title: "¿Qué es lo más guay que habéis visto hoy?"
-            body: "¿Qué es lo más guay que habéis visto o que os ha pasado hoy? Puede ser cualquier cosa, desde una preciosa puesta de sol hasta un acto de bondad aleatorio. Empiezo yo: ¡he visto a un perro ayudando a una persona mayor a cruzar la calle!"
           introduce_yourself:
             title: "Preséntate"
             body: "¡Os doy la bienvenida a la comunidad! Vamos a conocernos. Presentaos y hablad un poco de vuestros intereses. Empiezo yo: ¡me apasiona la tecnología y me encanta enseñar a los demás!"
-          what_is_your_favorite_food:
-            title: "¿Cuál es vuestra comida favorita?"
-            body: "¡Compartid vuestra comida favorita con la comunidad! Empiezo yo: me encanta la pizza, sobre todo con extra de queso y pepperoni."
     design_wizard:
       back: "Atrás"
       next: "Siguiente"
@@ -511,6 +503,8 @@ es:
         theme: "Tema"
         fonts: "Tipos de letra"
         homepage: "Página de inicio"
+        welcome_banner: "Banner de bienvenida"
+        search: "Buscar"
       theme:
         selected: "Seleccionado"
       colors:
@@ -1025,6 +1019,9 @@ es:
         note_added: "Nota del moderador"
         note_added_by: "Nota del moderador creada por %{username} · %{relativeDate}"
         no_events: "No hay eventos que mostrar en la línea de tiempo"
+      author_penalty:
+        toast:
+          undo: "Deshacer"
       notes:
         add_note_description: "Añade una nota para proporcionar contexto a otros moderadores."
         add_note_button: "Añadir nota"
@@ -1671,7 +1668,6 @@ es:
       admin: "%{user} es un administrador"
       moderator_tooltip: "Este usuario es un moderador"
       admin_tooltip: "Este usuario es un administrador"
-      silenced_tooltip: "Este usuario está silenciado"
       suspended_notice: "Este usuario ha sido suspendido hasta %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Motivo: "
@@ -1730,6 +1726,16 @@ es:
       tracked_topics_link: "Mostrar"
       automatically_unpin_topics: "Desanclar temas automáticamente cuando los leo por completo"
       apps: "Aplicaciones"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Ámbitos"
+        details: "Detalles"
+        last_used: "Usada por última vez"
+        never: "Nunca"
+        status: "Estado"
+        statuses:
+          active: "Activo"
+          revoked: "Revocada"
       revoke_access: "Revocar acceso"
       undo_revoke_access: "Deshacer revocación de acceso"
       api_approved: "Fecha de aprobación:"
@@ -2208,7 +2214,6 @@ es:
         watch_topic: "Ver tema"
         track_topic: "Seguir tema"
         do_nothing: "No hacer nada"
-      topics_unread_when_closed: "Considerar temas no leídos cuando se cierran"
       invited:
         title: "Invitaciones"
         pending_tab: "Pendiente"
@@ -2861,6 +2866,11 @@ es:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Intro"
+      option: "Opción"
+      period: "Período"
+      tab: "Tabulador"
+      delete: "Eliminar"
+      home: "Inicio"
     conditional_loading_section:
       loading: Cargando…
     category_row:
@@ -3044,7 +3054,6 @@ es:
       create_whisper: "Susurrar"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar borrador compartido"
-      title: "O pulsa %{modifier}Intro"
       save_and_close: "Guardar y cerrar"
       discard: "Descartar"
       draft_saved: "¡Borrador guardado!"
@@ -3401,10 +3410,10 @@ es:
         search_field: "Campo de búsqueda en el encabezado del sitio"
         search_icon: "Icono de búsqueda cerca del avatar del perfil"
       type:
-        default: "Temas/respuestas"
+        default: "Publicaciones"
         users: "Usuarios"
         categories: "Categorías"
-        categories_and_tags: "Categorías/etiquetas"
+        categories_and_tags: "Categorías y etiquetas"
       context:
         user: "Buscar publicaciones de @%{username}"
         category: "Buscar la categoría #%{category}"
@@ -3417,7 +3426,6 @@ es:
         in: "filtra según los metadatos (por ejemplo, in:title, in:personal, in:pinned)"
         status: "filtra por el estado del tema"
         full_search: "lanza la página de búsqueda"
-        full_search_key: "%{modifier} + Intro"
         me: "muestra solo tus publicaciones"
       advanced:
         title: Filtros avanzados
@@ -4204,7 +4212,6 @@ es:
       reply_as_new_private_message: "Responder como mensaje nuevo a los mismos destinatarios"
       continue_discussion: "Continuando la discusión desde %{postLink}:"
       follow_quote: "ir a la publicación citada"
-      show_full: "Mostrar la publicación completa"
       show_hidden: "Ver contenido ignorado."
       deleted_by_author_simple: "(publicación eliminada por su autor/a)"
       collapse: "contraer"
@@ -4596,6 +4603,7 @@ es:
       list: "Lista de categorías"
       no_description: "Añade una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
+      latest_topics: "Temas recientes"
       description_updated: "Descripción actualizada"
       description_expand: "Mostrar más"
       description_collapse: "Mostrar menos"
@@ -4887,6 +4895,7 @@ es:
       with_category: "%{filter} Foro de %{category}"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "restablecer"
         button:
           label: "Filtrar"
       latest:
@@ -4999,12 +5008,8 @@ es:
     invalid_video_url: Este vídeo no se puede reproducir porque la URL no es válida o no está disponible.
     keyboard_shortcuts_help:
       search_placeholder: "Buscar un acceso directo por descripción o combinación de teclas"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Atajos de teclado"
       short_title: "Atajos"
       search_ctrl_f_tip: "Para buscar en todo este foro, pulsa <kbd>/</kbd>"
@@ -5103,16 +5108,18 @@ es:
       favorite_max_not_reached: "Marcar esta medalla como favorita"
       favorite_count: "%{count}/%{max} medallas marcadas como favoritas"
     download_calendar:
-      title: "Descargar calendario"
+      title: "Añadir al calendario"
+      calendar: "Calendario"
       save_ics: "Descargar archivo.ics"
       save_google: "Añadir a calendario de Google"
       remember: "No volver a preguntar"
-      remember_explanation: "(puedes cambiar esto en tus preferencias)"
       download: "Descargar"
       default_calendar: "Calendario por defecto"
       default_calendar_instruction: "Elige qué calendarios usar al guardar las fechas"
       add_to_calendar: "Añadir al calendario"
       google: "Calendario de Google"
+      outlook: "Microsoft Outlook"
+      apple: "Calendario de Apple"
       ics: "ICS"
       default_title: "Evento programado"
     tagging:
@@ -5718,6 +5725,11 @@ es:
         group_moderation_and_security: "Moderación y seguridad"
         group_other: "Otros"
         legacy_warning: "Este es un informe heredado. Se retirará pronto. Si necesitas ayuda para encontrar un sustituto, ponte en contacto con el servicio de asistencia."
+        related_items:
+          users:
+            title: "Usuarios"
+          labels:
+            user: "Usuario"
       config_sections:
         account:
           title: "Cuenta"
@@ -5822,6 +5834,75 @@ es:
           header_description: "Proporciona aquí información sobre este sitio y tu equipo para que la gente pueda saber de qué trata tu comunidad, quién está detrás de ella y cómo ponerse en contacto contigo en caso de que haya algún problema. Se muestra en la página <a href='%{basePath}/about'>Acerca de</a> de tu sitio."
         developer:
           title: "Desarrollador"
+        mcp:
+          title: "Servidor MCP"
+          tabs:
+            access: "Acceso"
+            activity: "Actividad"
+          overview:
+            status: "Estado"
+            tools: "Herramientas"
+          access:
+            title: "Acceso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Acciones"
+            edit: "Editar"
+            delete: "Eliminar"
+          primitives:
+            group_by: "Agrupar por"
+            group_by_options:
+              scope: "Ámbito"
+              provider: "Proveedor"
+              kind: "Tipo"
+            provider: "Proveedor"
+            kind: "Tipo"
+            scope: "Ámbito"
+            state: "Estado"
+            scopes: "Ámbitos"
+          clients:
+            actions: "Acciones"
+            block: "Bloquear"
+            use_preset: "Configurar"
+            presets:
+              custom: "Personalizado"
+          authorizations:
+            user: "Usuario"
+            scopes: "Ámbitos concedidos"
+            last_used: "Usada por última vez"
+            status: "Estado"
+            actions: "Acciones"
+          activity:
+            outcome: "Resultado"
+            time: "Hora"
+            user: "Usuario"
+            duration: "Duración"
+          values:
+            server_status:
+              disabled: "Desactivado"
+            client_trust:
+              approved: "Aprobado"
+            authorization_status:
+              active: "Activo"
+              revoked: "Revocada"
+            activity_outcome:
+              success: "Éxito"
+              error: "Error"
+            primitive_state:
+              enabled: "Activado"
+              disabled: "Desactivado"
+            primitive_kind:
+              all: "Todos los tipos"
+              tool: "Herramienta"
+              resource: "Recurso"
+            primitive_risk:
+              read: "Solo lectura"
+              moderation: "Moderación"
+            filter:
+              all: "Todo"
+          never: "Nunca"
+          actions:
+            revoke: "Revocar"
         experimental:
           title: "Experimental"
           header_description: "Activa o desactiva las características experimentales de tu sitio; la mayoría de ellas se pueden controlar en grupo"
@@ -6032,7 +6113,6 @@ es:
           header_description: "Configura los ajustes de búsqueda, incluidos el registro y la tokenización para los idiomas chino y japonés"
         search_everything:
           title: "Buscar"
-          header_description: "Encuentra cualquier cosa de la interfaz de administración aquí. Puedes filtrar los resultados a continuación. Tus preferencias se recordarán. Para abrir esta búsqueda en cualquier lugar de la interfaz de administración, pulsa %{shortcutHTML}."
         security:
           title: "Seguridad"
           header_description: "Configura los ajustes de seguridad, incluida la autenticación de dos factores, los privilegios de moderador y las políticas de seguridad de contenidos."
@@ -6270,6 +6350,7 @@ es:
         filters:
           country: "País"
           browser: "Navegador"
+          language: "Idioma"
           ip: "Dirección IP"
         series:
           anonymous_human: "Anónimas"
@@ -6346,6 +6427,8 @@ es:
               share: "Compartir"
             whos_posting:
               staff: "Personal"
+              modal:
+                apply: "Guardar"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nuevo"
@@ -6358,6 +6441,11 @@ es:
             table:
               searches: "Búsquedas"
               status: "Estado"
+          system:
+            title: "Sistema"
+            status: "Estado"
+            discourse_updated: "Última actualización de Discourse"
+            dashboard_updated: "Última actualización del panel de control"
         reports_section:
           header_action: "Gestionar"
           no_data: "No hay datos que mostrar"
@@ -6371,6 +6459,7 @@ es:
           series:
             anonymous: "Anónimas"
             crawlers: "Rastreadores"
+          crawler_learn_more: "Más información"
         period:
           last_7_days: "Últimos 7 días"
           last_30_days: "Últimos 30 días"
@@ -6412,6 +6501,14 @@ es:
           average_for_sample: "Promedio por muestra"
           total: "Total en todo el tiempo"
           no_data: "No hay datos que mostrar."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuario"
+              other: "%{count} usuarios"
+            posts_count:
+              one: "%{count} publicación"
+              other: "%{count} publicaciones"
+            deselect: "Deseleccionar %{name}"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de búsqueda</a>'
             disabled: 'El informe de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recopilar datos.'
@@ -8407,13 +8504,14 @@ es:
           multiselect: "Selección múltiple"
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro."
-        search: "Busca el texto que te gustaría editar"
+        search_label: "Buscar"
+        theme_disabled: "Desactivado"
+        filters: "Filtros"
+        status:
+          invalid: "No válido"
         title: "Textos del sitio"
         edit: "Editar"
-        revert: "Revertir los cambios"
         revert_confirm: "¿Seguro que quieres revertir los cambios?"
-        go_back: "Volver a la búsqueda"
-        recommended: "Te recomendamos que ajustes los siguientes textos a tu comunidad:"
         show_overriden: "Mostrar solo los sobrescritos"
         show_outdated: "Mostrar solo obsoletos/no válidos"
         show_untranslated: "Mostrar solo sin traducir"
