@@ -29,6 +29,17 @@ export default class UpcomingEventsCalendar extends Component {
     );
   }
 
+  get composerCategory() {
+    if (this.args.categoryId) {
+      return Category.findById(this.args.categoryId) ?? null;
+    }
+
+    const category = Category.findById(
+      this.siteSettings.calendar_upcoming_events_default_category
+    );
+    return category?.canCreateTopic ? category : null;
+  }
+
   get customButtons() {
     return {
       mineEvents: {
@@ -107,9 +118,7 @@ export default class UpcomingEventsCalendar extends Component {
       currentUser: this.currentUser,
       siteSettings: this.siteSettings,
       info,
-      category: this.args.categoryId
-        ? (Category.findById(this.args.categoryId) ?? null)
-        : null,
+      category: this.composerCategory,
     });
   }
 
