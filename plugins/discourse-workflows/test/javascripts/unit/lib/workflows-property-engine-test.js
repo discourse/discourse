@@ -296,6 +296,7 @@ module("Unit | Utility | workflows property engine", function () {
       "textarea"
     );
     assert.strictEqual(fieldControl({ type: "icon" }), "icon");
+    assert.strictEqual(fieldControl({ type: "emoji" }), "emoji");
     assert.strictEqual(
       fieldControl({ type: "multi_options" }),
       "multi_combo_box"
@@ -317,6 +318,7 @@ module("Unit | Utility | workflows property engine", function () {
     );
     assert.true(fieldSupportsExpression({ type: "integer" }));
     assert.true(fieldSupportsExpression({ type: "icon" }));
+    assert.true(fieldSupportsExpression({ type: "emoji" }));
     assert.false(fieldSupportsExpression({ type: "multi_options" }));
     assert.false(
       fieldSupportsExpression({ type: "string", no_data_expression: true })

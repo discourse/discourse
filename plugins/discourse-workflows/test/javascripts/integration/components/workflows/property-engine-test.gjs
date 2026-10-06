@@ -10,8 +10,10 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
+import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 import I18n, { i18n } from "discourse-i18n";
@@ -90,6 +92,35 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.dom("input").hasValue("Hello");
     assert.dom("input").isFocused();
+  });
+
+  test("picks emojis for emoji fields", async function (assert) {
+    pretender.get("/emojis.json", () =>
+      response(emojisFixtures["/emojis.json"])
+    );
+    pretender.get("/emojis/search-aliases.json", () => response([]));
+
+    this.setProperties({
+      configuration: { reaction: null },
+      formApi: null,
+      nodeType: "action:topic",
+      schema: {
+        reaction: {
+          type: "emoji",
+          no_data_expression: true,
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await renderEngine(this);
+
+    await click(".btn-emoji");
+    await emojiPicker(".emoji-picker").select("grinning");
+
+    assert.strictEqual(this.formApi.get("reaction"), "grinning");
   });
 
   test("validates optional integer fields that do not support expressions", async function (assert) {
