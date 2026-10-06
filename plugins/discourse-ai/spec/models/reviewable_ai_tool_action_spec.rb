@@ -128,17 +128,15 @@ RSpec.describe ReviewableAiToolAction do
             "extension_close_topic"
           end
         end
-      allow(DiscoursePluginRegistry).to receive(:apply_modifier).and_call_original
-      allow(DiscoursePluginRegistry).to receive(:apply_modifier).with(
-        :ai_agent_available_tools,
-        anything,
-      ) do |_name, tools|
-        tools + [tool_class]
-      end
+      plugin = Plugin::Instance.new
+      modifier = ->(tools) { tools + [tool_class] }
+      DiscoursePluginRegistry.register_modifier(plugin, :ai_agent_available_tools, &modifier)
       reviewable = create_reviewable(create_tool_action(tool_name: "extension_close_topic"))
 
       expect(reviewable.perform(admin, :approve).success?).to eq(true)
       expect(topic.reload.closed).to eq(true)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :ai_agent_available_tools, &modifier)
     end
 
     it "executes the tool and transitions to approved" do
