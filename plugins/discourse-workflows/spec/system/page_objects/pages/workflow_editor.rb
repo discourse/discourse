@@ -82,6 +82,16 @@ module PageObjects
           self
         end
 
+        def has_name?(name)
+          page.has_css?(".workflows-editable-title__text", exact_text: name)
+        end
+
+        def publish
+          click_button(I18n.t("js.discourse_workflows.publish"))
+          page.has_no_button?(I18n.t("js.discourse_workflows.publish"))
+          self
+        end
+
         def has_node_count?(count)
           page.has_css?(".workflow-rete-node", count: count)
         end
