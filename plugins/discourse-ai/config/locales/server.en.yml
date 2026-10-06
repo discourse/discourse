@@ -147,6 +147,7 @@ en:
     ai_admin_dashboard_highlights_category_scope: "Choose which categories AI highlights can use. Include and exclude options use {{setting:ai_admin_dashboard_highlights_categories}}. Personal messages are always excluded."
     ai_admin_dashboard_highlights_categories: "Categories used when the AI highlights category scope is set to <strong>include</strong> or <strong>exclude</strong>."
     ai_summarization_enabled: "Enable the summarize feature"
+    ai_summaries_for_crawlers: "Include AI topic summaries in public HTML topic pages served to search engines and other crawlers. Requires {{setting:ai_summarization_enabled}}."
     ai_summarization_agent: "Agent to use for summarize feature"
     ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
     ai_summary_gists_enabled: "Generate brief summaries of latest replies in topics automatically"
@@ -1229,6 +1230,7 @@ en:
         execution_error_unknown: "an unexpected error occurred"
 
     summarization:
+      published_summary_heading: "AI-generated summary"
       configuration_hint:
         one: "Configure the `%{setting}` setting first."
         other: "Configure these settings first: %{settings}"

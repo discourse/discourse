@@ -347,6 +347,9 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/summarization"
+  ai_summaries_for_crawlers:
+    default: false
+    area: "ai-features/summarization"
   ai_pm_summarization_allowed_groups:
     type: group_list
     list_type: compact

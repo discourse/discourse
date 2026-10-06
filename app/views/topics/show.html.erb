@@ -54,6 +54,8 @@
         </div>
       <% end %>
 
+      <%= build_plugin_html 'server:topic-show-before-posts', topic_view: @topic_view %>
+
       <% if main_entity_schema %>
         <div <%= main_entity_schema %>>
           <%= build_plugin_html 'server:topic-main-entity-meta-crawler' %>
