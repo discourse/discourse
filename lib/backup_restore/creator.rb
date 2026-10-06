@@ -436,7 +436,8 @@ module BackupRestore
 
     def download_upload_to_file(upload_data, filename)
       FileUtils.mkdir_p(File.dirname(filename))
-      @s3_store.download_file(upload_data, filename)
+      # Avoid a HEAD request for every file; backup workers already parallelize downloads.
+      @s3_store.download_file(upload_data, filename, mode: "single_request")
       increment_and_log_progress(:downloaded)
       true
     rescue StandardError => ex

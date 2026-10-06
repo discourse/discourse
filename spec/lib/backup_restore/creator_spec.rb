@@ -87,6 +87,25 @@ describe BackupRestore::Creator do
       extracted
     end
 
+    it "downloads uploads with a single GET and no HEAD request" do
+      GlobalSetting.stubs(:backup_s3_download_concurrency).returns(1)
+      Fabricate(:upload, url: "//bucket.s3.amazonaws.com/original/1X/file.png")
+      client = Aws::S3::Client.new(stub_responses: true)
+      client.stub_responses(:get_object, body: "file contents", content_length: 13)
+      S3Helper.any_instance.stubs(:s3_client).returns(client)
+
+      extracted = archive_remote_uploads
+
+      path = File.join(extracted, Discourse.store.upload_path, "original/1X/file.png")
+      expect(File.read(path)).to eq("file contents")
+      expect(client.api_requests.count { |request| request[:operation_name] == :get_object }).to eq(
+        1,
+      )
+      expect(
+        client.api_requests.none? { |request| request[:operation_name] == :head_object },
+      ).to eq(true)
+    end
+
     [1, 4].each do |concurrency|
       context "with #{concurrency} download workers" do
         before do
@@ -259,7 +278,7 @@ describe BackupRestore::Creator do
           upload = Fabricate(:upload)
           store = FileStore::S3Store.new
           FileStore::S3Store.stubs(:new).returns(store)
-          store.define_singleton_method(:download_file) do |_upload, filename|
+          store.define_singleton_method(:download_file) do |_upload, filename, **_options|
             File.write(filename, "partial download")
             raise "Download failed"
           end
