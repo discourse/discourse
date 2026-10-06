@@ -50,6 +50,12 @@ module DiscourseWorkflows
       },
     }.freeze
 
+    def self.actor_property(allow_anonymous: true, **options)
+      property = { type: :string, required: false, default: "system", ui: { control: :actor } }
+      property[:control_options] = { allow_anonymous: false } if !allow_anonymous
+      { actor_username: property.merge(options) }
+    end
+
     DESCRIPTION_DEFAULTS = {
       version: "1.0",
       defaults: {

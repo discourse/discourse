@@ -318,19 +318,7 @@ module DiscourseWorkflows
                 },
               },
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-              display_options: {
-                show: {
-                  operation: %w[get list delete recover],
-                },
-              },
-            },
+            **actor_property(display_options: { show: { operation: %w[get list delete recover] } }),
           },
         )
 
