@@ -51,6 +51,163 @@ describe "MCP user administration tools" do
     expect(User.find_by_username(arguments[:username])).to be_nil
   end
 
+  it "creates accounts with required user fields, including fields hidden from signup" do
+    signup_field = Fabricate(:user_field)
+    hidden_field = Fabricate(:user_field, requirement: :for_all_users, show_on_signup: false)
+    authorize("mcp:users:write")
+
+    call_tool(
+      "discourse_create_user",
+      {
+        username: "required_fields",
+        email: "required-fields@example.com",
+        name: "Required 猫",
+        password: "correct horse battery staple",
+        user_fields: {
+          signup_field.id.to_s => "Member 猫",
+          hidden_field.id.to_s => "12345",
+        },
+      },
+    )
+
+    expect(response.status).to eq(200)
+    expect(structured_content["created"]).to eq(true)
+    expect(User.find_by_username("required_fields").user_fields).to include(
+      signup_field.id.to_s => "Member 猫",
+      hidden_field.id.to_s => "12345",
+    )
+  end
+
+  it "identifies missing required user fields without unstaging the account" do
+    field = Fabricate(:user_field, name: "Membership 猫")
+    staged = Fabricate(:staged)
+    authorize("mcp:users:write")
+
+    call_tool(
+      "discourse_create_user",
+      {
+        username: "missing_fields",
+        email: staged.email,
+        name: "Missing fields",
+        password: "correct horse battery staple",
+      },
+    )
+
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    expect(response.parsed_body.dig("result", "content", 0, "text")).to include(
+      field.name,
+      field.id.to_s,
+    )
+    expect(staged.reload).to be_staged
+    expect(User.find_by_username("missing_fields")).to be_nil
+  end
+
+  it "cleans field options and preserves unrelated fields when converting a staged user" do
+    dropdown = Fabricate(:user_field_dropdown, requirement: :optional)
+    multiselect = Fabricate(:user_field, field_type: :multiselect)
+    option = Fabricate(:user_field_option, user_field: multiselect, value: "猫")
+    staged = Fabricate(:staged)
+    staged.custom_fields["unrelated_field"] = "preserved"
+    staged.save_custom_fields
+    authorize("mcp:users:write")
+
+    call_tool(
+      "discourse_create_user",
+      {
+        username: "converted_fields",
+        email: staged.email,
+        name: "Converted fields",
+        password: "correct horse battery staple",
+        user_fields: {
+          dropdown.id.to_s => "invalid option",
+          multiselect.id.to_s => [option.value, "invalid option"],
+        },
+      },
+    )
+
+    expect(response.status).to eq(200)
+    expect(structured_content).to include("created" => true, "user_id" => staged.id)
+    expect(staged.reload).not_to be_staged
+    expect(staged.user_fields[multiselect.id.to_s]).to eq(option.value)
+    expect(staged.user_fields[dropdown.id.to_s]).to be_blank
+    expect(staged.custom_fields["unrelated_field"]).to eq("preserved")
+  end
+
+  it "rejects invalid required dropdown values without creating an account" do
+    field = Fabricate(:user_field_dropdown)
+    authorize("mcp:users:write")
+
+    expect do
+      call_tool(
+        "discourse_create_user",
+        {
+          username: "invalid_fields",
+          email: "invalid-fields@example.com",
+          name: "Invalid fields",
+          password: "correct horse battery staple",
+          user_fields: {
+            field.id.to_s => "invalid option",
+          },
+        },
+      )
+    end.not_to change(User, :count)
+
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    expect(response.parsed_body.dig("result", "content", 0, "text")).to include(
+      field.name,
+      field.id.to_s,
+    )
+  end
+
+  it "enforces watched words in submitted public user fields" do
+    field = Fabricate(:user_field, show_on_profile: true)
+    word = Fabricate(:watched_word, word: "blockedphrase")
+    authorize("mcp:users:write")
+
+    expect do
+      call_tool(
+        "discourse_create_user",
+        {
+          username: "blocked_fields",
+          email: "blocked-fields@example.com",
+          name: "Blocked fields",
+          password: "correct horse battery staple",
+          user_fields: {
+            field.id.to_s => word.word,
+          },
+        },
+      )
+    end.not_to change(User, :count)
+
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+  end
+
+  it "accepts the site's invite code without bypassing closed registrations" do
+    SiteSetting.invite_code = "Invite-Cats"
+    authorize("mcp:users:write")
+    arguments = {
+      username: "invited_fields",
+      email: "invited-fields@example.com",
+      name: "Invited fields",
+      password: "correct horse battery staple",
+      invite_code: " invite-cats ",
+    }
+
+    call_tool("discourse_create_user", arguments.merge(invite_code: "wrong"))
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    expect(User.find_by_username(arguments[:username])).to be_nil
+
+    SiteSetting.allow_new_registrations = false
+    call_tool("discourse_create_user", arguments)
+    expect(response.parsed_body.dig("result", "isError")).to eq(true)
+    expect(User.find_by_username(arguments[:username])).to be_nil
+
+    SiteSetting.allow_new_registrations = true
+    call_tool("discourse_create_user", arguments)
+    expect(response.status).to eq(200)
+    expect(structured_content["created"]).to eq(true)
+  end
+
   it "preserves explicit unapproved state despite domain auto approval" do
     SiteSetting.must_approve_users = true
     SiteSetting.auto_approve_email_domains = "example.com"

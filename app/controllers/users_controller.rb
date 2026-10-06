@@ -2173,19 +2173,7 @@ class UsersController < ApplicationController
   end
 
   def clean_custom_field_values(field)
-    field_values = params.dig(:user_fields, field.id.to_s)
-
-    return field_values if field_values.nil? || field_values.empty?
-
-    if field.field_type == "dropdown"
-      field.user_field_options.find_by_value(field_values)&.value
-    elsif field.field_type == "multiselect"
-      field_values = Array.wrap(field_values)
-      bad_values = field_values - field.user_field_options.map(&:value)
-      field_values - bad_values
-    else
-      field_values
-    end
+    UserCreator.clean_custom_field_values(field, params.dig(:user_fields, field.id.to_s))
   end
 
   def password_reset_find_user(token, committing_change:)

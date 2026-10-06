@@ -98,6 +98,32 @@ describe UserCreator do
       end.to raise_error(Discourse::InvalidAccess).and not_change(User, :count)
     end
 
+    it "rolls back staged-user fields when avatar authorization fails" do
+      SiteSetting.auth_overrides_avatar = true
+      field = Fabricate(:user_field)
+      staged = Fabricate(:staged)
+      staged.custom_fields["#{User::USER_FIELD_PREFIX}#{field.id}"] = "original"
+      staged.save_custom_fields
+      upload = Fabricate(:upload, user: admin)
+
+      expect do
+        described_class.create(
+          admin.guardian,
+          username: "staged_fields",
+          email: staged.email,
+          name: "Staged fields",
+          password: "correct horse battery staple",
+          user_fields: {
+            field.id.to_s => "changed",
+          },
+          upload_id: upload.id,
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(staged.reload).to be_staged
+      expect(staged.user_fields[field.id.to_s]).to eq("original")
+    end
+
     it "requires an administrator even when the caller is staff" do
       expect do
         described_class.create(

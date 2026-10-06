@@ -1993,7 +1993,7 @@ module DiscourseMcp
         "discourse_create_user",
         title: "Create user",
         description:
-          "Creates a user as an administrator using Discourse's existing user validation.",
+          "Creates a user as an administrator. Registrations must be open. Supply the site's invite code if required and required user fields keyed by field ID. Missing-field errors identify the field name and ID.",
         implementation: Tools::CreateUser,
         input_schema:
           object_schema(
@@ -2017,6 +2017,22 @@ module DiscourseMcp
                 type: "string",
                 minLength: 1,
                 maxLength: 200,
+              },
+              invite_code: {
+                type: "string",
+                maxLength: 1000,
+              },
+              user_fields: {
+                type: "object",
+                additionalProperties: false,
+                patternProperties: {
+                  "^[1-9][0-9]*$" => {
+                    oneOf: [
+                      { type: "string", maxLength: 2048 },
+                      { type: "array", maxItems: 2048, items: { type: "string", maxLength: 2048 } },
+                    ],
+                  },
+                },
               },
               active: {
                 type: "boolean",

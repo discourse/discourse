@@ -22,13 +22,33 @@ class UserCreator
       value = yield(field)
       value = nil if value == "false"
       if value.blank?
-        return "login.missing_user_field" if field.required?
+        if field.required?
+          user.errors.add(
+            :base,
+            I18n.t("login.missing_user_field_details", name: field.name, id: field.id),
+          )
+          return "login.missing_user_field"
+        end
       else
         fields["#{User::USER_FIELD_PREFIX}#{field.id}"] = value[0...UserField.max_length]
       end
     end
     user.custom_fields = fields
     nil
+  end
+
+  def self.clean_custom_field_values(field, field_values)
+    return field_values if field_values.nil? || field_values.empty?
+
+    if field.field_type == "dropdown"
+      field.user_field_options.find_by_value(field_values)&.value
+    elsif field.field_type == "multiselect"
+      field_values = Array.wrap(field_values)
+      bad_values = field_values - field.user_field_options.map(&:value)
+      field_values - bad_values
+    else
+      field_values
+    end
   end
 
   def initialize(guardian, attributes)
@@ -40,11 +60,19 @@ class UserCreator
     raise Discourse::InvalidAccess if !guardian.is_admin?
 
     user = User.new
-    error = self.class.registration_error || self.class.assign_signup_fields(user) { nil }
-    if error
+    if error = self.class.registration_error(invite_code: attributes[:invite_code])
       user.errors.add(:base, I18n.t(error))
       return user
     end
+
+    error =
+      self
+        .class
+        .assign_signup_fields(user) do |field|
+          self.class.clean_custom_field_values(field, attributes.dig(:user_fields, field.id.to_s))
+        end
+    return user if error
+    custom_fields = user.custom_fields
 
     if attributes[:password].blank?
       user.errors.add(:password, :blank)
@@ -62,6 +90,9 @@ class UserCreator
           password: attributes[:password],
         )
       raise ActiveRecord::Rollback if !user.persisted? || user.errors.present?
+
+      user.custom_fields.merge!(custom_fields)
+      user.save!
 
       if attributes.fetch(:approved, true)
         approve(user)
