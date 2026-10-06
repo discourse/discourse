@@ -62,11 +62,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def matches?(trigger_ctx)
-            changes =
-              Array.wrap(trigger_ctx.get_node_parameter("changes", [])).compact_blank.map(&:to_s)
-            return false if changes.present? && changes.exclude?(@change)
-
-            matches_topic_filters?(topic, trigger_ctx)
+            matches_changes?(trigger_ctx, @change) && matches_topic_filters?(topic, trigger_ctx)
           end
 
           private

@@ -53,6 +53,10 @@ module NodeExecutionHelpers
     result = execute_node_output(configuration: configuration, item: item, workflow: workflow)
     result.first.first["json"]
   end
+
+  def trigger_context(parameters)
+    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters.deep_stringify_keys })
+  end
 end
 
 RSpec.configure { |config| config.include NodeExecutionHelpers }

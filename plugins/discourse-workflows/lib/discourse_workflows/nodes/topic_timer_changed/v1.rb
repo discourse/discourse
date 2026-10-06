@@ -101,8 +101,7 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          changes = Array.wrap(trigger_ctx.get_node_parameter("changes", []))
-          return false if changes.present? && !changes.include?(@change)
+          return false if !matches_changes?(trigger_ctx, @change)
 
           types = Array.wrap(trigger_ctx.get_node_parameter("timer_types", []))
           timer_types =
