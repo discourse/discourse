@@ -274,6 +274,37 @@ describe BackupRestore::Creator do
   end
 
   describe "#create_archive" do
+    it "streams remote backups without creating a local archive" do
+      Dir.mktmpdir do |directory|
+        dump = File.join(directory, "db")
+        FileUtils.mkdir_p(dump)
+        File.write(File.join(dump, "toc.dat"), "database")
+        creator = described_class.new(nil, with_uploads: false)
+        creator.instance_variable_set(:@dump_filename, dump)
+        creator.instance_variable_set(:@archive_basename, File.join(directory, "backup"))
+        creator.instance_variable_set(:@tmp_directory, File.join(directory, "tmp"))
+        store = stub(remote?: true)
+        creator.instance_variable_set(:@store, store)
+        io = StringIO.new
+        store
+          .expects(:upload_stream)
+          .with(creator.instance_variable_get(:@backup_filename), "application/x-tar")
+          .yields(io)
+        store.expects(:upload_file).never
+
+        creator.send(:create_archive)
+
+        expect(Dir.glob(File.join(directory, "backup*"))).to be_empty
+        io.rewind
+        entries = {}
+        Gem::Package::TarReader.new(io) do |tar|
+          tar.each { |entry| entries[entry.full_name] = entry.read if entry.file? }
+        end
+        expect(entries).to eq("db/toc.dat" => "database")
+        expect(io.string.end_with?("\0" * 1024)).to eq(true)
+      end
+    end
+
     it "keeps completed tar backups during cleanup" do
       Dir.mktmpdir do |directory|
         completed = File.join(directory, "backup.tar")

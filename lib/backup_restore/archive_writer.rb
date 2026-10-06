@@ -6,11 +6,12 @@ module BackupRestore
   # Streams tar entries directly to the final archive.
   class ArchiveWriter
     def self.open(path)
-      File.open(path, "wb") do |file|
-        writer = new(file)
-        yield writer
-        file.write("\0" * 1024)
-      end
+      File.open(path, "wb") { |file| write(file) { |writer| yield writer } }
+    end
+
+    def self.write(io)
+      yield new(io)
+      io.write("\0" * 1024)
     end
 
     def initialize(io)

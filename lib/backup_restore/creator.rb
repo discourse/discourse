@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "mini_mime"
 require "file_store/s3_store"
 
 module BackupRestore
@@ -38,7 +37,6 @@ module BackupRestore
       log "Finalizing backup..."
 
       create_archive
-      upload_archive
 
       after_create_hook
     rescue SystemExit
@@ -206,28 +204,35 @@ module BackupRestore
     end
 
     def create_archive
-      archive_path = "#{@archive_basename}.tar"
-      partial_path = "#{archive_path}.partial"
-      log "Streaming archive to #{archive_path}..."
-      @archive_mutex = Mutex.new
-
-      ArchiveWriter.open(partial_path) do |archive|
-        @archive = archive
-        log "Archiving data dump..."
-        add_path_to_archive(@dump_filename, File.basename(@dump_filename))
-        FileUtils.rm_rf(@dump_filename)
-
-        if @with_uploads
-          add_local_uploads_to_archive
-          add_remote_uploads_to_archive if SiteSetting.Upload.enable_s3_uploads
+      if store.remote?
+        log "Streaming archive to S3: #{@backup_filename}..."
+        store.upload_stream(@backup_filename, "application/x-tar") do |io|
+          ArchiveWriter.write(io) { |archive| populate_archive(archive) }
         end
+      else
+        archive_path = "#{@archive_basename}.tar"
+        partial_path = "#{archive_path}.partial"
+        log "Streaming archive to #{archive_path}..."
+        ArchiveWriter.open(partial_path) { |archive| populate_archive(archive) }
+        File.rename(partial_path, archive_path)
       end
-
-      File.rename(partial_path, archive_path)
       remove_tmp_directory
     ensure
       @archive = nil
       FileUtils.rm_f(partial_path) if partial_path
+    end
+
+    def populate_archive(archive)
+      @archive = archive
+      @archive_mutex = Mutex.new
+      log "Archiving data dump..."
+      add_path_to_archive(@dump_filename, File.basename(@dump_filename))
+      FileUtils.rm_rf(@dump_filename)
+
+      if @with_uploads
+        add_local_uploads_to_archive
+        add_remote_uploads_to_archive if SiteSetting.Upload.enable_s3_uploads
+      end
     end
 
     def add_path_to_archive(source, path, exclude: nil)
@@ -426,16 +431,6 @@ module BackupRestore
       end
     end
 
-    def upload_archive
-      return unless store.remote?
-
-      log "Uploading archive..."
-      content_type =
-        MiniMime.lookup_by_filename(@backup_filename)&.content_type || "application/x-tar"
-      archive_path = File.join(@archive_directory, @backup_filename)
-      store.upload_file(@backup_filename, archive_path, content_type)
-    end
-
     def after_create_hook
       log "Executing the after_create_hook for the backup..."
       DiscourseEvent.trigger(:backup_created)
@@ -466,23 +461,9 @@ module BackupRestore
 
     def clean_up
       log "Cleaning stuff up..."
-      delete_uploaded_archive
       remove_partial_archives
       mark_backup_as_not_running
       refresh_disk_space if success
-    end
-
-    def delete_uploaded_archive
-      return unless store.remote?
-
-      archive_path = File.join(@archive_directory, @backup_filename)
-
-      if File.exist?(archive_path)
-        log "Removing archive from local storage..."
-        File.delete(archive_path)
-      end
-    rescue => ex
-      log "Something went wrong while deleting uploaded archive from local storage.", ex
     end
 
     def refresh_disk_space
