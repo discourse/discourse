@@ -49,26 +49,24 @@ module BackupRestore
       reset_cache
     end
 
-    def upload_stream(filename, content_type)
+    def upload_stream(filename, content_type, logger: nil)
       obj = s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
-      Tempfile.create("backup-multipart-") do |buffer|
-        buffer.binmode
-        upload = obj.initiate_multipart_upload(content_type: content_type)
-        completed = false
-        begin
-          writer = MultipartWriter.new(upload, buffer)
+      upload = obj.initiate_multipart_upload(content_type: content_type)
+      completed = false
+      begin
+        MultipartWriter.open(upload, logger: logger) do |writer|
           yield writer
           writer.finish
-          completed = true
-        ensure
-          unless completed
-            begin
-              upload.abort
-            rescue StandardError => error
-              Rails.logger.warn("Failed to abort backup multipart upload: #{error.message}")
-            end
+        end
+        completed = true
+      ensure
+        unless completed
+          begin
+            upload.abort
+          rescue StandardError => error
+            Rails.logger.warn("Failed to abort backup multipart upload: #{error.message}")
           end
         end
       end

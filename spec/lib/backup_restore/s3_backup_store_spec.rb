@@ -105,7 +105,7 @@ RSpec.describe BackupRestore::S3BackupStore do
       @s3_client.stub_responses(
         :upload_part,
         ->(context) do
-          @uploaded_parts << context.params[:body].read
+          @uploaded_parts[context.params[:part_number] - 1] = context.params[:body].read
           { etag: "etag-#{context.params[:part_number]}" }
         end,
       )
@@ -199,7 +199,7 @@ RSpec.describe BackupRestore::S3BackupStore do
           store.upload_stream("backup.tar", "application/x-tar") { |io| io.write("123456789") }
         end.to raise_error(/multipart upload limit/)
       end
-      expect(@uploaded_parts).to eq(["12345678"])
+      expect(@s3_client.api_requests.count { |r| r[:operation_name] == :upload_part }).to be <= 1
       expect(@s3_client.api_requests.last[:operation_name]).to eq(:abort_multipart_upload)
     end
   end

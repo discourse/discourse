@@ -202,7 +202,7 @@ module BackupRestore
     def create_archive
       if store.remote?
         log "Streaming archive to S3: #{@backup_filename}..."
-        store.upload_stream(@backup_filename, "application/x-tar") do |io|
+        store.upload_stream(@backup_filename, "application/x-tar", logger: method(:log)) do |io|
           ArchiveWriter.write(io) { |archive| populate_archive(archive) }
         end
       else

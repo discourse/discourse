@@ -290,7 +290,11 @@ describe BackupRestore::Creator do
         io = StringIO.new
         store
           .expects(:upload_stream)
-          .with(creator.instance_variable_get(:@backup_filename), "application/x-tar")
+          .with(
+            creator.instance_variable_get(:@backup_filename),
+            "application/x-tar",
+            logger: anything,
+          )
           .yields(io)
         store.expects(:upload_file).never
 
