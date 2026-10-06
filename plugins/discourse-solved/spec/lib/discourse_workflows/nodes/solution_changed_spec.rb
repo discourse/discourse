@@ -76,8 +76,4 @@ RSpec.describe DiscourseWorkflows::Nodes::SolutionChanged::V1, discourse_workflo
       expect(DiscourseWorkflows::Registry.find_node_type(described_class.identifier)).to be_nil
     end
   end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters.deep_stringify_keys })
-  end
 end
