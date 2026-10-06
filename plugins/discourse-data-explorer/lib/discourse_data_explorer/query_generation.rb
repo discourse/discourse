@@ -15,12 +15,11 @@ module DiscourseDataExplorer
       agent_id = DiscourseAi::Agents::Agent.external_agent_id(AiQueryGenerator)
       agent_record = AiAgent.find_by(id: agent_id)
       if agent_record.nil?
-        raise Error.new(
-                I18n.t("discourse_data_explorer.ai.error_agent_not_configured"),
-              )
+        raise Error.new(I18n.t("discourse_data_explorer.ai.error_agent_not_configured"))
       end
 
-      bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent_record.class_instance.new)
+      bot =
+        DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent_record.class_instance.new)
       user_message = ai_description
       if existing_sql.present?
         user_message =
@@ -35,9 +34,7 @@ module DiscourseDataExplorer
       bot.reply(context)
       parsed = context.feature_context[Tools::SubmitQuery::CONTEXT_KEY] || {}
       if parsed[:sql].blank?
-        raise Error.new(
-                I18n.t("discourse_data_explorer.ai.error_no_sql_returned"),
-              )
+        raise Error.new(I18n.t("discourse_data_explorer.ai.error_no_sql_returned"))
       end
       {
         sql: parsed[:sql].chomp(";").strip,

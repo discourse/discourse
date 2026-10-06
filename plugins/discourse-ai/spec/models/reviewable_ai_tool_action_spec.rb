@@ -122,13 +122,17 @@ RSpec.describe ReviewableAiToolAction do
 
   describe "#perform_approve" do
     it "rebuilds a tool supplied by a plugin for approval" do
-      tool_class = Class.new(DiscourseAi::Agents::Tools::CloseTopic) do
-        def self.name
-          "extension_close_topic"
+      tool_class =
+        Class.new(DiscourseAi::Agents::Tools::CloseTopic) do
+          def self.name
+            "extension_close_topic"
+          end
         end
-      end
       allow(DiscoursePluginRegistry).to receive(:apply_modifier).and_call_original
-      allow(DiscoursePluginRegistry).to receive(:apply_modifier).with(:ai_agent_available_tools, anything) do |_name, tools|
+      allow(DiscoursePluginRegistry).to receive(:apply_modifier).with(
+        :ai_agent_available_tools,
+        anything,
+      ) do |_name, tools|
         tools + [tool_class]
       end
       reviewable = create_reviewable(create_tool_action(tool_name: "extension_close_topic"))
