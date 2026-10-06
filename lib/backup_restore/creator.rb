@@ -317,8 +317,8 @@ module BackupRestore
       @download_stats = { downloaded: 0, hardlinked: 0, copied: 0 }
 
       uploads_by_sha1 = group_remote_uploads_by_sha1
-      total_uploads = uploads_by_sha1.values.sum(&:size)
-      log "Found #{uploads_by_sha1.size} unique files from #{total_uploads} total uploads"
+      @total_uploads = uploads_by_sha1.values.sum(&:size)
+      log "Found #{uploads_by_sha1.size} unique files from #{@total_uploads} total uploads"
 
       uploads_by_sha1.each_value { |upload_group| process_upload_group(upload_group) }
 
@@ -421,10 +421,11 @@ module BackupRestore
 
     def increment_and_log_progress(type)
       @download_stats[type] += 1
-      total = @download_stats[:downloaded] + @download_stats[:hardlinked] + @download_stats[:copied]
-      return if total % 1000 != 0
+      processed = @download_stats.values.sum
+      return if processed % 1000 != 0
 
-      log "#{total} files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied). Still processing..."
+      percentage = processed * 100 / @total_uploads
+      log "#{processed}/#{@total_uploads} (#{percentage}%) files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied). Still processing..."
     end
 
     def upload_archive
