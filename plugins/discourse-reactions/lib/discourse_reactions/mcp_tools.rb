@@ -11,20 +11,26 @@ module DiscourseReactions
         )
 
       def self.call(arguments:, request_context:)
-        post = Post.find_by(id: arguments.fetch("post_id"))
-        if post.blank? || !request_context.guardian.can_see?(post)
-          raise DiscourseMcp::ToolError, "Post not found"
-        end
         reaction = arguments.fetch("reaction")
-        if !DiscourseReactions::Reaction.valid?(reaction)
-          raise DiscourseMcp::ToolError, I18n.t("discourse_reactions.errors.reaction_unavailable")
+
+        DiscourseReactions::PostReaction::Toggle.call(
+          params: {
+            post_id: arguments.fetch("post_id"),
+            reaction:,
+          },
+          guardian: request_context.guardian,
+        ) do |result|
+          on_success do |post:|
+            DiscourseMcp::ToolHelpers.text_and_structured(post_id: post.id, reaction:)
+          end
+          on_model_not_found(:post) { raise DiscourseMcp::ToolError, "Post not found" }
+          on_failed_policy(:can_see_post) { raise DiscourseMcp::ToolError, "Post not found" }
+          on_failed_policy(:reaction_is_valid) do
+            raise DiscourseMcp::ToolError, I18n.t("discourse_reactions.errors.reaction_unavailable")
+          end
+          on_exceptions(Discourse::InvalidAccess) { |exception| raise exception }
+          on_failure { raise DiscourseMcp::ToolError, result.inspect_steps }
         end
-        DiscourseReactions::ReactionManager.new(
-          reaction_value: reaction,
-          user: request_context.user,
-          post: post,
-        ).toggle!
-        DiscourseMcp::ToolHelpers.text_and_structured(post_id: post.id, reaction: reaction)
       end
     end
   end
