@@ -709,13 +709,13 @@ pre.onebox code ol.lines li.selected {
     color: var(--token-color-text-subtle);
     font-size: var(--font-down-1);
 
-    > span {
+    &__item {
       display: inline-flex;
       align-items: center;
       gap: 0.35em;
     }
 
-    svg {
+    &__icon {
       fill: currentcolor;
       flex-shrink: 0;
     }

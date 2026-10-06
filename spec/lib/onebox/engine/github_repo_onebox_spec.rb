@@ -15,46 +15,54 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
   describe "#to_html" do
     describe "repository metadata" do
       let(:repository) { MultiJson.load(onebox_response(described_class.onebox_name)) }
-      let(:metadata) do
-        stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(repository))
-        Nokogiri::HTML5.fragment(html).at_css(".github-repo-metadata")
+      let(:metadata) { Nokogiri::HTML5.fragment(html).at_css(".github-repo-metadata") }
+
+      before do
+        stub_request(:get, api_uri).to_return { { status: 200, body: MultiJson.dump(repository) } }
       end
 
       it "includes the primary language, stars and forks at the bottom" do
-        expect(metadata.at_css(".github-repo-language").text).to eq("Ruby")
-        expect(metadata.at_css(".github-repo-stars").text.strip).to eq("41,215 stars")
-        expect(metadata.at_css(".github-repo-forks").text.strip).to eq("8,210 forks")
+        expect(metadata.at_css(".github-repo-metadata__language").text).to eq("Ruby")
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("41,215 stars")
+        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("8,210 forks")
         expect(metadata.parent.element_children.last).to eq(metadata)
       end
 
       it "omits zero stars while retaining forks" do
         repository["stargazers_count"] = 0
 
-        expect(metadata.at_css(".github-repo-stars")).to be_nil
-        expect(metadata.at_css(".github-repo-forks")).to be_present
+        expect(metadata.at_css(".github-repo-metadata__stars")).to be_nil
+        expect(metadata.at_css(".github-repo-metadata__forks")).to be_present
       end
 
       it "omits zero forks while retaining stars" do
         repository["forks_count"] = 0
 
-        expect(metadata.at_css(".github-repo-forks")).to be_nil
-        expect(metadata.at_css(".github-repo-stars")).to be_present
+        expect(metadata.at_css(".github-repo-metadata__forks")).to be_nil
+        expect(metadata.at_css(".github-repo-metadata__stars")).to be_present
       end
 
       it "omits an unknown language while retaining counts" do
         repository["language"] = nil
 
-        expect(metadata.at_css(".github-repo-language")).to be_nil
-        expect(metadata.at_css(".github-repo-stars")).to be_present
-        expect(metadata.at_css(".github-repo-forks")).to be_present
+        expect(metadata.at_css(".github-repo-metadata__language")).to be_nil
+        expect(metadata.at_css(".github-repo-metadata__stars")).to be_present
+        expect(metadata.at_css(".github-repo-metadata__forks")).to be_present
       end
 
       it "uses singular labels for one star and one fork" do
         repository["stargazers_count"] = 1
         repository["forks_count"] = 1
 
-        expect(metadata.at_css(".github-repo-stars").text.strip).to eq("1 star")
-        expect(metadata.at_css(".github-repo-forks").text.strip).to eq("1 fork")
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("1 star")
+        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("1 fork")
+      end
+
+      it "omits a blank language while retaining counts" do
+        repository["language"] = ""
+
+        expect(metadata.at_css(".github-repo-metadata__language")).to be_nil
+        expect(metadata.at_css(".github-repo-metadata__stars")).to be_present
       end
 
       it "omits the footer when there is no metadata" do
@@ -74,8 +82,37 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
       it "escapes the language" do
         repository["language"] = "<script>alert(1)</script>"
 
-        expect(metadata.at_css(".github-repo-language").text).to eq(repository["language"])
+        expect(metadata.at_css(".github-repo-metadata__language").text).to eq(
+          repository["language"],
+        )
         expect(metadata.css("script")).to be_empty
+      end
+
+      it "preserves the metadata and decorative icons through onebox sanitization" do
+        preview = Onebox.preview(gh_link, sanitize_config: Onebox::SanitizeConfig::DISCOURSE_ONEBOX)
+        sanitized_metadata = Nokogiri::HTML5.fragment(preview.to_s).at_css(".github-repo-metadata")
+
+        expect(sanitized_metadata.at_css(".github-repo-metadata__language").text).to eq("Ruby")
+        expect(sanitized_metadata.at_css(".github-repo-metadata__stars").text.strip).to eq(
+          "41,215 stars",
+        )
+        expect(sanitized_metadata.at_css(".github-repo-metadata__forks").text.strip).to eq(
+          "8,210 forks",
+        )
+        expect(
+          sanitized_metadata.css(".github-repo-metadata__icon[aria-hidden='true'] path").size,
+        ).to eq(2)
+        expect(WebMock).to have_requested(:get, api_uri).once
+      end
+
+      it "uses translated count labels and number delimiters in the active locale" do
+        TranslationOverride.upsert!(:de, "onebox.github.stars.other", "%{number} Sterne")
+        TranslationOverride.upsert!(:de, "onebox.github.forks.other", "%{number} Forks")
+
+        I18n.with_locale(:de) do
+          expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("41.215 Sterne")
+          expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("8.210 Forks")
+        end
       end
     end
 
