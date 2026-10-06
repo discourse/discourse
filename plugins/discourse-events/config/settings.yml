@@ -133,6 +133,10 @@ discourse_events:
     enum: "DiscourseEvents::Configuration::UpcomingEventsDefaultView"
     default: month
     client: true
+  calendar_upcoming_events_default_category:
+    type: category
+    default: ""
+    client: true
   enable_events_category_type_setup:
     default: false
     hidden: true
