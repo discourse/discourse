@@ -210,6 +210,10 @@ def spec(plugin, files, parallel: false, argv: nil)
   if files.length > 0
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
 
+    # TEMP (validation only): size of the single `sh -c` string the old code passed to execve.
+    old_cmd = "LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}"
+    puts "[arg-max-check] old sh -c string: #{old_cmd.bytesize} bytes (+1 NUL), #{files.length} files, limit 131072"
+
     Rake::FileUtilsExt.verbose(!parallel) do
       # Avoid `sh -c`: Linux rejects any single exec argument over MAX_ARG_STRLEN (128KB on 4KB-page systems).
       sh(

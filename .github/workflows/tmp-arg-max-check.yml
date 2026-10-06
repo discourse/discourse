@@ -1,0 +1,24 @@
+# TEMP (validation only): confirm Linux MAX_ARG_STRLEN behaviour for Ruby `system`.
+name: tmp-arg-max-check
+on: pull_request
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+      - run: |
+          uname -a
+          echo "PAGESIZE=$(getconf PAGESIZE) ARG_MAX=$(getconf ARG_MAX)"
+          ruby -e '
+            [131_070, 131_071, 131_072, 131_200].each do |n|
+              s = "LOAD_PLUGINS=1 true "
+              s += "x" * (n - s.bytesize)
+              r = system(s)
+              puts "single sh -c string of #{s.bytesize} bytes: system=#{r.inspect} exitstatus=#{$?.exitstatus}"
+            end
+            args = Array.new(3_000) { |i| "plugins/some-plugin/spec/requests/file_number_#{i}_spec.rb" }
+            r = system({ "LOAD_PLUGINS" => "1" }, "true", *args)
+            puts "multi-arg form, #{args.join(" ").bytesize} bytes total: system=#{r.inspect} exitstatus=#{$?.exitstatus}"
+          '
