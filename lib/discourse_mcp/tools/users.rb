@@ -33,6 +33,164 @@ module DiscourseMcp
       end
     end
 
+    class ListUsers
+      REQUIRED_SCOPES = [Scopes::USERS_READ].freeze
+      QUERIES = %w[active new staff suspended silenced pending staged].freeze
+      ORDERS = %w[created last_emailed seen username trust_level days_visited posts].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(users: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        raise Discourse::InvalidAccess if !guardian.is_staff?
+
+        page = arguments.fetch("page", 0)
+        limit = arguments.fetch("limit", 100)
+        include_emails = arguments.fetch("include_emails", false)
+        query =
+          AdminUserIndexQuery.new(
+            {
+              query: arguments.fetch("query", "active"),
+              filter: arguments["filter"],
+              order: arguments["order"],
+              asc: arguments.fetch("ascending", false),
+              show_emails: include_emails ? "true" : nil,
+            },
+            guardian:,
+          )
+        users_query = query.find_users_query
+        users_query = users_query.preload(:primary_email) if include_emails
+        users = users_query.offset(page * limit).limit(limit + 1).to_a
+        has_more = users.length > limit
+        users = users.first(limit)
+
+        if include_emails
+          StaffActionLogger.new(guardian.user).log_show_emails(users, context: "MCP user listing")
+        end
+
+        rows = users.map { |user| user_json(user, guardian, include_emails:) }
+        ToolHelpers.text_and_structured(
+          users: rows,
+          meta: {
+            page:,
+            limit:,
+            returned: rows.length,
+            has_more:,
+            next_page: has_more ? page + 1 : nil,
+          },
+        )
+      end
+
+      def self.user_json(user, guardian, include_emails:)
+        {
+          id: user.id,
+          username: user.username,
+          name: user.name,
+          email: include_emails && guardian.can_check_emails?(user) ? user.email : nil,
+          avatar_template: user.avatar_template,
+          trust_level: user.trust_level,
+          created_at: user.created_at.iso8601,
+          last_seen_at: user.last_seen_at&.iso8601,
+          active: user.active?,
+          approved: user.approved?,
+          admin: user.admin?,
+          moderator: user.moderator?,
+          suspended: user.suspended?,
+          silenced: user.silenced?,
+          staged: user.staged?,
+        }
+      end
+      private_class_method :user_json
+    end
+
+    class CreateUser
+      REQUIRED_SCOPES = [Scopes::USERS_WRITE].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          created: OutputSchema::BOOLEAN,
+          user_id: OutputSchema::INTEGER,
+          username: OutputSchema::STRING,
+          name: OutputSchema::STRING_OR_NULL,
+          email: OutputSchema::STRING,
+          active: OutputSchema::BOOLEAN,
+          approved: OutputSchema::BOOLEAN,
+          avatar_updated: OutputSchema::BOOLEAN,
+        )
+
+      def self.call(arguments:, request_context:)
+        user = UserCreator.create(request_context.guardian, arguments)
+        if !user.persisted? || user.errors.present?
+          message =
+            user.errors.full_messages.to_sentence.presence ||
+              I18n.t("mcp.errors.user_create_failed")
+          raise ToolError, message
+        end
+
+        ToolHelpers.text_and_structured(
+          created: true,
+          user_id: user.id,
+          username: user.username,
+          name: user.name,
+          email: user.email,
+          active: user.active?,
+          approved: user.approved?,
+          avatar_updated: arguments["upload_id"].present?,
+        )
+      rescue UserCreator::UploadNotFound
+        raise ToolError, I18n.t("mcp.errors.upload_not_found")
+      end
+    end
+
+    class ManageUserActivation
+      REQUIRED_SCOPES = [Scopes::USERS_WRITE].freeze
+      ACTIONS = %w[activate approve activate_and_approve deactivate].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          success: OutputSchema::BOOLEAN,
+          username: OutputSchema::STRING,
+          requested_action: OutputSchema::STRING,
+          completed_actions: OutputSchema::STRING_ARRAY,
+          active: OutputSchema::BOOLEAN,
+          approved: OutputSchema::BOOLEAN,
+        )
+
+      def self.call(arguments:, request_context:)
+        user = User.find_by_username(arguments.fetch("username"))
+        raise ToolError, I18n.t("mcp.errors.user_not_found") if user.blank?
+
+        action = arguments.fetch("action")
+        completed_actions = action == "activate_and_approve" ? %w[activate approve] : [action]
+        User.transaction do
+          completed_actions.each do |completed_action|
+            perform_action(completed_action, request_context.guardian, user)
+          end
+        end
+        user.reload
+        ToolHelpers.text_and_structured(
+          success: true,
+          username: user.username,
+          requested_action: action,
+          completed_actions:,
+          active: user.active?,
+          approved: user.approved?,
+        )
+      rescue UserDeactivator::PendingReview
+        raise ToolError, I18n.t("mcp.errors.user_deactivation_pending_review")
+      end
+
+      def self.perform_action(action, guardian, user)
+        case action
+        when "activate"
+          UserActivator.activate(guardian, user)
+        when "approve"
+          UserApprover.approve(guardian, user)
+        when "deactivate"
+          UserDeactivator.deactivate(guardian, user, context: { context: "MCP user activation" })
+        end
+      end
+      private_class_method :perform_action
+    end
+
     class ListDirectoryItems
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       PAGE_SIZE = ::DirectoryItemsQuery::PAGE_SIZE
@@ -380,7 +538,7 @@ module DiscourseMcp
         User.transaction do
           updated = UserUpdater.new(request_context.user, user).update(attributes)
           raise ToolError, user.errors.full_messages.join(", ") if !updated
-          user.pick_avatar!(upload.id, type: :custom) if upload
+          UserAvatarUpdater.update(request_context.guardian, user, upload) if upload
         end
 
         user.reload
@@ -405,15 +563,10 @@ module DiscourseMcp
 
       def self.avatar_upload(upload_id, user, guardian)
         return if upload_id.blank?
-        if SiteSetting.discourse_connect_overrides_avatar || SiteSetting.auth_overrides_avatar ||
-             !user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
-          raise Discourse::InvalidAccess
-        end
-
+        guardian.ensure_can_pick_avatar_source!(user, "custom")
         upload = Upload.find_by(id: upload_id, user_id: user.id)
         raise ToolError, I18n.t("mcp.errors.upload_not_found") if upload.blank?
 
-        guardian.ensure_can_pick_avatar!(user.user_avatar || user.build_user_avatar, upload)
         upload
       end
       private_class_method :avatar_upload

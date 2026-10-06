@@ -19,6 +19,8 @@ module DiscourseMcp
     THEMES_READ = "mcp:themes:read"
     THEMES_WRITE = "mcp:themes:write"
     GROUPS_READ = "mcp:groups:read"
+    USERS_READ = "mcp:users:read"
+    USERS_WRITE = "mcp:users:write"
   end
 
   PROTOCOL_VERSION = "2026-07-28"

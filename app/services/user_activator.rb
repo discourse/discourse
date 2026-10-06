@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 class UserActivator
+  def self.activate(guardian, user)
+    guardian.ensure_can_activate!(user)
+    if !user.email_tokens.active.exists?
+      user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
+    end
+    user.activate
+    StaffActionLogger.new(guardian.user).log_user_activate(user, I18n.t("user.activated_by_staff"))
+  end
+
   attr_reader :user, :request, :session, :cookies, :message
 
   def initialize(user, request, session, cookies)

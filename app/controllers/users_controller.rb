@@ -734,7 +734,9 @@ class UsersController < ApplicationController
     if SiteSetting.enable_discourse_connect && !is_api?
       return fail_with("login.new_registrations_disabled_discourse_connect")
     end
-    return fail_with("login.new_registrations_disabled") unless SiteSetting.allow_new_registrations
+    if error = UserCreator.registration_error(invite_code: params[:invite_code])
+      return fail_with(error)
+    end
 
     if params[:password] && params[:password].length > User.max_password_length
       return fail_with("login.password_too_long")
@@ -750,11 +752,6 @@ class UsersController < ApplicationController
     end
 
     return fail_with("login.email_too_long") if params[:email].length > 254 + 1 + 253
-
-    if SiteSetting.require_invite_code &&
-         SiteSetting.invite_code.strip.downcase != params[:invite_code].strip.downcase
-      return fail_with("login.wrong_invite_code")
-    end
 
     if clashing_with_existing_route?(params[:username]) ||
          User.reserved_username?(params[:username])
@@ -786,22 +783,8 @@ class UsersController < ApplicationController
       ReviewableUser.set_approved_fields!(user, current_user)
     end
 
-    # Handle custom fields
-    user_fields = UserField.all
-    if user_fields.present?
-      fields = user.custom_fields
-
-      user_fields.each do |f|
-        field_val = clean_custom_field_values(f)
-        field_val = nil if field_val == "false"
-        if field_val.blank?
-          return fail_with("login.missing_user_field") if f.required?
-        else
-          fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[0...UserField.max_length]
-        end
-      end
-
-      user.custom_fields = fields
+    if error = UserCreator.assign_signup_fields(user) { |field| clean_custom_field_values(field) }
+      return fail_with(error)
     end
 
     # Handle associated accounts

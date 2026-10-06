@@ -1,8 +1,28 @@
 # frozen_string_literal: true
 
-RSpec.describe UserActivator do
+describe UserActivator do
   fab!(:user)
   let!(:email_token) { Fabricate(:email_token, user: user) }
+
+  describe ".activate" do
+    fab!(:moderator)
+
+    it "activates a user and records the staff action" do
+      inactive_user = Fabricate(:inactive_user)
+      inactive_user.email_tokens.update_all(confirmed: false, expired: true)
+
+      expect do described_class.activate(moderator.guardian, inactive_user) end.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:activate_user],
+          acting_user_id: moderator.id,
+          target_user_id: inactive_user.id,
+        ).count
+      }.by(1)
+
+      expect(inactive_user.reload).to be_active
+      expect(inactive_user).to be_email_confirmed
+    end
+  end
 
   describe "email_activator" do
     let(:activator) { EmailActivator.new(user, nil, nil, nil) }

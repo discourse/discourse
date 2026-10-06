@@ -80,8 +80,6 @@ module DiscourseMcp
            annotations.except("title").values.any? { |value| value != true && value != false }
         raise ArgumentError, "invalid MCP primitive annotations"
       end
-    rescue JSONSchemer::InvalidSchema
-      raise ArgumentError, "invalid MCP primitive schema"
     end
   end
 end
