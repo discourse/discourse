@@ -19,6 +19,27 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
   end
 
+  describe "#details" do
+    it "renders the edited fields and a category badge in chat for a subcategory" do
+      subcategory = Fabricate(:category, parent_category: category)
+      details =
+        tool(
+          category_id: subcategory.id,
+          name: "New name",
+          color: "FF0000",
+          reason: "Rebranding",
+        ).details
+
+      cooked = Nokogiri::HTML5.fragment(Chat::Message.cook(details, user_id: admin.id))
+
+      expect(cooked.css("code").map(&:text)).to eq(%w[name color])
+      badge = cooked.at_css("a.hashtag-cooked[data-type='category']")
+      expect(badge["data-id"]).to eq(subcategory.id.to_s)
+      expect(badge["href"]).to eq(subcategory.url)
+      expect(badge.text).to include(subcategory.name)
+    end
+  end
+
   it "updates the category's name and colors" do
     result =
       tool(
