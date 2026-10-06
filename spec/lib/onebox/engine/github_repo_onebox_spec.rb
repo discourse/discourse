@@ -23,8 +23,8 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
 
       it "includes the primary language, stars and forks at the bottom" do
         expect(metadata.at_css(".github-repo-metadata__language").text).to eq("Ruby")
-        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("41,215 stars")
-        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("8,210 forks")
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("41.2k stars")
+        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("8.2k forks")
         expect(metadata.parent.element_children.last).to eq(metadata)
       end
 
@@ -56,6 +56,44 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
 
         expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("1 star")
         expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("1 fork")
+      end
+
+      it "keeps counts below a thousand exact" do
+        repository["stargazers_count"] = 961
+        repository["forks_count"] = 999
+
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("961 stars")
+        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("999 forks")
+      end
+
+      it "abbreviates thousands with one decimal place" do
+        repository["stargazers_count"] = 195_900
+        repository["forks_count"] = 17_000
+
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("195.9k stars")
+        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("17.0k forks")
+      end
+
+      it "abbreviates counts starting at a thousand" do
+        repository["stargazers_count"] = 1000
+
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("1.0k stars")
+      end
+
+      it "abbreviates millions with one decimal place" do
+        repository["stargazers_count"] = 1_234_567
+        repository["forks_count"] = 1_000_000
+
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("1.2M stars")
+        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("1.0M forks")
+      end
+
+      it "promotes counts that round up to a million" do
+        repository["stargazers_count"] = 999_950
+        repository["forks_count"] = 999_949
+
+        expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("1.0M stars")
+        expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("999.9k forks")
       end
 
       it "omits a blank language while retaining counts" do
@@ -94,10 +132,10 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
 
         expect(sanitized_metadata.at_css(".github-repo-metadata__language").text).to eq("Ruby")
         expect(sanitized_metadata.at_css(".github-repo-metadata__stars").text.strip).to eq(
-          "41,215 stars",
+          "41.2k stars",
         )
         expect(sanitized_metadata.at_css(".github-repo-metadata__forks").text.strip).to eq(
-          "8,210 forks",
+          "8.2k forks",
         )
         expect(
           sanitized_metadata.css(".github-repo-metadata__icon[aria-hidden='true'] path").size,
@@ -105,13 +143,13 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
         expect(WebMock).to have_requested(:get, api_uri).once
       end
 
-      it "uses translated count labels and number delimiters in the active locale" do
+      it "uses translated count labels and compact numbers in the active locale" do
         TranslationOverride.upsert!(:de, "onebox.github.stars.other", "%{number} Sterne")
         TranslationOverride.upsert!(:de, "onebox.github.forks.other", "%{number} Forks")
 
         I18n.with_locale(:de) do
-          expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("41.215 Sterne")
-          expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("8.210 Forks")
+          expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("41,2 T. Sterne")
+          expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("8,2 T. Forks")
         end
       end
     end

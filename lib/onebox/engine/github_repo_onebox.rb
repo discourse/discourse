@@ -77,15 +77,25 @@ module Onebox
       def repository_count(key, count)
         return unless count.to_i.positive?
 
-        I18n.t(
-          "onebox.github.#{key}",
-          count: count,
-          number:
-            ActiveSupport::NumberHelper.number_to_delimited(
-              count,
-              delimiter: I18n.t("js.number.format.delimiter"),
-            ),
-        )
+        I18n.t("onebox.github.#{key}", count: count, number: compact_repository_count(count))
+      end
+
+      def compact_repository_count(count)
+        return count.to_s if count < 1000
+
+        # Promote counts that would round to 1000.0k to the next unit.
+        divisor, unit = count.round(-2) >= 1_000_000 ? [1_000_000, "millions"] : [1000, "thousands"]
+        number =
+          ActiveSupport::NumberHelper.number_to_rounded(
+            count.to_f / divisor,
+            precision: 1,
+            significant: false,
+            strip_insignificant_zeros: false,
+            separator: I18n.t("js.number.format.separator"),
+            delimiter: "",
+          )
+
+        I18n.t("js.number.short.#{unit}", number: number)
       end
     end
   end
