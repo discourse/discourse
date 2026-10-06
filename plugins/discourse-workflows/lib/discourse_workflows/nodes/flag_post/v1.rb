@@ -218,6 +218,7 @@ module DiscourseWorkflows
           if reviewable.reviewable_scores.pending.exists?(
                user_id: actor.id,
                reviewable_score_type: score_type,
+               context: context,
              )
             return
           end

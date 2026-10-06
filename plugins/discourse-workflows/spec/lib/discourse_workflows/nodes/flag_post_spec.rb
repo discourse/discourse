@@ -112,6 +112,26 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
       end.not_to change { ReviewableScore.count }
     end
 
+    it "records both workflows when they flag the same post" do
+      other_workflow = Fabricate(:discourse_workflows_workflow)
+
+      [workflow, other_workflow].each do |flagging_workflow|
+        execute_node(
+          configuration: {
+            "post_id" => post.id.to_s,
+            "flag_type" => "review",
+          },
+          workflow: flagging_workflow,
+        )
+      end
+
+      reviewable = ReviewablePost.pending.find_by(target: post)
+      expect(reviewable.reviewable_scores.pluck(:context)).to contain_exactly(
+        "discourse_workflows:workflow:#{workflow.id}",
+        "discourse_workflows:workflow:#{other_workflow.id}",
+      )
+    end
+
     it "hides the post with review_hide", :aggregate_failures do
       result =
         execute_node(configuration: { "post_id" => post.id.to_s, "flag_type" => "review_hide" })

@@ -77,6 +77,112 @@ RSpec.describe ReviewablesController do
       )
     end
 
+    it "filters AI workflow flags after moving from AI Automation", :aggregate_failures do
+      SiteSetting.discourse_ai_enabled = true
+      llm = Fabricate(:llm_model)
+      agent =
+        Fabricate(
+          :ai_agent,
+          default_llm: llm,
+          response_format: [{ "key" => "verdict", "type" => "string" }],
+        )
+      automation = Fabricate(:automation, script: "llm_triage")
+      graph =
+        build_workflow_graph do |graph_builder|
+          graph_builder.node "trigger", "trigger:post_created"
+          graph_builder.node "classify",
+                             "action:ai_agent",
+                             configuration: {
+                               "agent_id" => agent.id,
+                               "prompt" => "={{ $trigger.post.raw }}",
+                             }
+          graph_builder.node "condition",
+                             "condition:if",
+                             configuration: {
+                               "conditions" => [
+                                 {
+                                   "leftValue" => "={{ $json.verdict }}",
+                                   "rightValue" => "reject",
+                                   "operator" => {
+                                     "type" => "string",
+                                     "operation" => "equals",
+                                   },
+                                 },
+                               ],
+                             }
+          graph_builder.node "flag",
+                             "action:flag_post",
+                             configuration: {
+                               "post_id" => "={{ $trigger.post.id }}",
+                               "flag_type" => "review",
+                             }
+          graph_builder.chain "trigger", "classify", "condition", "flag"
+        end
+      ai_workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+      topic_post = create_post
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+      fresh_post = create_post(topic_id: topic_post.topic_id)
+      previous_post = create_post(topic_id: topic_post.topic_id)
+      job_args =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+          job["args"].first.symbolize_keys
+        end
+
+      agent.update!(response_format: [])
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+        DiscourseAi::Automation::LlmTriage.handle(
+          post: previous_post,
+          triage_agent_id: agent.id,
+          search_for_text: "bad",
+          flag_post: true,
+          automation: automation,
+        )
+      end
+      previous_reviewable = ReviewablePost.pending.find_by!(target: previous_post)
+      agent.update!(response_format: [{ "key" => "verdict", "type" => "string" }])
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ verdict: "reject" }.to_json, { verdict: "reject" }.to_json],
+      ) { job_args.each { |args| Jobs::DiscourseWorkflows::ExecuteWorkflow.new.execute(args) } }
+      expect(ai_workflow.executions.pluck(:status)).to contain_exactly("success", "success")
+      fresh_reviewable = ReviewablePost.pending.find_by!(target: fresh_post)
+
+      get "/review.json",
+          params: {
+            type: "discourse_workflows:workflow",
+            score_type: "discourse_workflows:workflow:#{ai_workflow.id}",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["reviewables"].map { |item| item["id"] }).to contain_exactly(
+        fresh_reviewable.id,
+        previous_reviewable.id,
+      )
+
+      get "/review.json",
+          params: {
+            type: "discourse_ai:triage",
+            score_type: "ai_triage_automation:#{automation.id}",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["reviewables"].map { |item| item["id"] }).to eq(
+        [previous_reviewable.id],
+      )
+
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses([{ verdict: "reject" }.to_json]) do
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.new.execute(job_args.last)
+        end
+      end.not_to change { ReviewableScore.count }
+      expect(ai_workflow.executions.pluck(:status)).to contain_exactly(
+        "success",
+        "success",
+        "success",
+      )
+    end
+
     it "hides workflow filters when the plugin is disabled" do
       SiteSetting.enable_discourse_workflows = false
 

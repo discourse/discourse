@@ -167,6 +167,7 @@ module DiscourseWorkflows
                user_id: actor.id,
                reviewable_score_type: score_type,
                reason: SCORE_REASON,
+               context: context,
              )
             return false
           end
