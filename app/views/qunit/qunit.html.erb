@@ -54,7 +54,7 @@
       <link rel="canonical" href="/">
 
       <style>
-        <%= File.read(Rails.root.join("frontend/discourse/node_modules/qunit/qunit/qunit.css")).html_safe %>
+        <%= File.read(VendoredAssets.path("qunit/qunit.css")).html_safe %>
 
         #ember-testing * {
           -webkit-transition: none !important;

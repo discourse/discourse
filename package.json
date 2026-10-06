@@ -18,7 +18,6 @@
     "licensee": "^12.0.2",
     "lint-to-the-future": "^3.2.0",
     "lint-to-the-future-eslint": "^4.0.0",
-    "playwright": "1.62.1",
     "postcss-selector-parser": "^7.1.6",
     "postcss-value-parser": "^4.2.0",
     "prettier": "3.8.1",
@@ -42,6 +41,7 @@
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
     "playwright-install": "playwright install --no-shell chromium",
+    "postinstall": "node script/copy_vendored_assets.mjs",
     "build": "pnpm --silent --dir=frontend/discourse build",
     "start": "pnpm --silent --dir=frontend/discourse start"
   },

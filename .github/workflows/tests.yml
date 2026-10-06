@@ -271,6 +271,28 @@ jobs:
             exit 1
           fi
 
+      - name: Install playwright
+        if: matrix.build_type == 'system'
+        run: pnpm playwright-install
+
+      - name: Precompile the JS bundles
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        run: bin/rake assets:precompile:asset_processor assets:precompile:pretty_text
+
+      # TODO: drop hard-coded pnpm 12 once package.json is updated
+      - name: Deploy Playwright outside node_modules
+        if: matrix.build_type == 'system'
+        env:
+          npm_config_manage_package_manager_versions: "false"
+        run: |
+          npx -y pnpm@12.9.1 deploy --filter @discourse/playwright-runner --prod tmp/playwright
+          echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
+
+      # Drop node_modules to match production
+      - name: Remove node_modules
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        run: find . -name node_modules -type d -prune -not -path './tmp/*' -print0 | xargs -0 rm -rf
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
@@ -310,10 +332,6 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
-
-      - name: Install playwright
-        if: matrix.build_type == 'system'
-        run: pnpm playwright-install
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'

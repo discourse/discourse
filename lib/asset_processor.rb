@@ -8,7 +8,7 @@ class AssetProcessor
       dir: "tmp/asset-processor",
       filename_prefix: "asset-processor",
       dependency_globs: %w[
-        node_modules/.pnpm/lock.yaml
+        pnpm-lock.yaml
         frontend/asset-processor/**/*.{js,mjs}
         app/assets/stylesheets/variable-renames.json
         frontend/discourse/lib/babel-transform-module-renames.js

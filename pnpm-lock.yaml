@@ -76,9 +76,6 @@ importers:
       lint-to-the-future-eslint:
         specifier: ^4.0.0
         version: 4.0.0(eslint@10.6.0(jiti@2.7.0))
-      playwright:
-        specifier: 1.62.1
-        version: 1.62.1
       postcss-selector-parser:
         specifier: ^7.1.6
         version: 7.1.6
@@ -698,6 +695,12 @@ importers:
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
+
+  frontend/playwright-runner:
+    dependencies:
+      playwright:
+        specifier: 1.62.1
+        version: 1.62.1
 
   frontend/pretty-text:
     dependencies:
