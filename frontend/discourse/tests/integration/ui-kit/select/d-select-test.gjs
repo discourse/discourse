@@ -559,6 +559,38 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .hasText("Cherry pie", "the highlight re-seeds to the new first match");
   });
 
+  test("turning @multiple off keeps a single held value as the label", async function (assert) {
+    class FlipHost extends Component {
+      @tracked multiple = true;
+
+      @action
+      flip() {
+        this.multiple = false;
+      }
+
+      <template>
+        <button
+          class="flip"
+          type="button"
+          {{on "click" this.flip}}
+        >flip</button>
+        <DSelect
+          @identifier="test-select"
+          @items={{ITEMS}}
+          @multiple={{this.multiple}}
+          @value={{array 2}}
+        />
+      </template>
+    }
+
+    await render(<template><FlipHost /></template>);
+    await click(".flip");
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the input shows the held value's label");
+  });
+
   test("auto-highlight skips a disabled first match", async function (assert) {
     const items = [
       { id: 1, name: "Apple", disabled: true },

@@ -48,7 +48,7 @@ export default class SelectionActions {
       ? Object.freeze(
           this.#options.dedupeValues(makeArray(raw) as SelectItemId[])
         )
-      : (raw ?? null);
+      : this.#options.singleValue(raw);
   }
 
   /** Whether anything is selected. */

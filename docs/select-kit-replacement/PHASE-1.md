@@ -101,8 +101,11 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     autotrack the source itself. `#localItems` normalizes through `makeArray`; supplying both
     `@items` and `@load` warns once, with `@load` winning. `isTypeahead` is now purely
     variant-derived (no arity coupling), so a runtime arity flip is mechanically supported.
-  - ☐ **Arity-flip semantics** remain undefined: what becomes of a held array when `@multiple`
-    goes true → false. Settle before any consumer relies on flipping.
+  - ☑ **Arity-flip semantics** (2026-10-06). Turning `@multiple` off reads a held array without
+    rewriting the parent's value: `[]` is no value, `[id]` carries over, and two or more is a
+    consumer mistake that asserts in development (production keeps the first). One rule,
+    `SelectOptionsView#singleValue`, serves the engine value, the trigger's resolve and the
+    typeahead label. `@onChange` never fires for it, so the component stays a pure reader.
 - ◐ **`@multiple` + chips** (shadcn `ComboboxChips` model):
   - ☑ **The flip (desktop)** — `@multiple` now routes through the typeahead machinery:
     `isTypeahead` drops its `!multiple` guard; the trigger renders chips inline with the query

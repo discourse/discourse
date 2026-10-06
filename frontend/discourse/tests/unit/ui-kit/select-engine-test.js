@@ -146,6 +146,65 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
     assert.strictEqual(changes.length, 0, "an action item never emits a value");
   });
 
+  // A consumer that turns `@multiple` off can leave an array in `@value`. Single mode reads it
+  // without rewriting the parent's value: empty is no value, one id carries over, and more
+  // than one is a consumer mistake that asserts in development.
+  module("arity flip (multiple → single)", function () {
+    const items = [
+      { id: 1, name: "One" },
+      { id: 2, name: "Two" },
+    ];
+
+    function flipped(value) {
+      let multiple = true;
+      const { engine } = controlled({
+        items,
+        value,
+        getMultiple: () => multiple,
+      });
+      multiple = false;
+      return engine;
+    }
+
+    test("an empty held array reads as no value", function (assert) {
+      const engine = flipped([]);
+
+      assert.strictEqual(engine.value, null, "the value is null");
+      assert.false(engine.hasValue, "nothing counts as selected");
+      assert.strictEqual(
+        engine.resolveSelection([]),
+        undefined,
+        "the trigger resolves to its empty state"
+      );
+    });
+
+    test("a single held value carries over", function (assert) {
+      const engine = flipped([2]);
+
+      assert.strictEqual(engine.value, 2, "the value is the held id");
+      assert.strictEqual(
+        engine.resolveSelection([2])?.name,
+        "Two",
+        "the trigger resolves the held id, not the array"
+      );
+    });
+
+    test("several held values assert", function (assert) {
+      const engine = flipped([1, 2]);
+
+      assert.throws(
+        () => engine.value,
+        /single-select/,
+        "reading the value asserts"
+      );
+      assert.throws(
+        () => engine.resolveSelection([1, 2]),
+        /single-select/,
+        "resolving the trigger asserts"
+      );
+    });
+  });
+
   module("buildItems", function () {
     test("keeps already-selected items in multi-select, flagged selected", function (assert) {
       const { engine } = controlled({ multiple: true, value: [1] });

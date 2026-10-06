@@ -258,6 +258,26 @@ export default class SelectOptionsView {
     });
   }
 
+  /**
+   * Reads a value in single mode. Turning `@multiple` off can leave the parent holding an array,
+   * which is read without rewriting the parent's value: empty is no value and one id carries
+   * over. More than one is a consumer mistake, so it asserts; production keeps the first.
+   *
+   * @param raw - The bound value.
+   * @returns The single held id, or `null`.
+   */
+  singleValue(raw: SelectValue | undefined): SelectItemId | null {
+    if (!Array.isArray(raw)) {
+      return raw ?? null;
+    }
+    assert(
+      `DSelect: a single-select is holding ${raw.length} values. Pass a single value (or ` +
+        `none) to \`@value\` when turning \`@multiple\` off.`,
+      raw.length <= 1
+    );
+    return raw[0] ?? null;
+  }
+
   itemValue(item: SelectItem | null | undefined): SelectItemId {
     return item?.[this.#valueField];
   }

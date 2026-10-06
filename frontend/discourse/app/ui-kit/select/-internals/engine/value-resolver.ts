@@ -57,10 +57,11 @@ export default class ValueResolver {
     | Promise<SelectItem[]>
     | undefined {
     if (!this.#options.multiple) {
-      if (value == null) {
+      const single = this.#options.singleValue(value);
+      if (single == null) {
         return undefined;
       }
-      const resolved = this.#resolveMany([value], opts);
+      const resolved = this.#resolveMany([single], opts);
       return this.#isPromise<SelectItem[]>(resolved)
         ? this.#firstOf(resolved)
         : resolved[0]!;

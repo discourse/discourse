@@ -401,17 +401,17 @@ export default class VariantPresenter {
   }
 
   get fallbackSelectionLabel(): string {
-    const args = this.#getArgs();
-    const resolved = this.#engine.resolveSingleSync(args.value);
+    const value = this.#engine.value;
+    const resolved = this.#engine.resolveSingleSync(value);
     if (resolved?.__unresolved) {
       // The plain input can't render the icon/muted treatment chips get, so the label has to
       // carry the state itself. A consumer-named fallback ("Topic #123") already reads as
       // one; only the bare-id default needs the suffix to not look like a real label.
       return this.#engine.isCustomUnresolvedItem(resolved)
         ? this.#engine.getItemLabel(resolved)
-        : i18n("d_select.unresolved_value", { value: args.value });
+        : i18n("d_select.unresolved_value", { value });
     }
-    return this.#engine.getSingleSelectionLabel(args.value);
+    return this.#engine.getSingleSelectionLabel(value);
   }
 
   get labelField(): string {
