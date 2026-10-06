@@ -32,6 +32,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagUser::V1 do
       expect(score.reviewable_score_type).to eq(ReviewableScore.types[:needs_approval])
       expect(score.user).to eq(Discourse.system_user)
       expect(score.reason).to eq("workflow_flagged_user")
+      expect(score.context).to eq("discourse_workflows:workflow:#{workflow.id}")
       expect(result).to include(
         "user_id" => target.id,
         "username" => target.username,
