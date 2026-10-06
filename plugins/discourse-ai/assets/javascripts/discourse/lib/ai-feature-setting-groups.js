@@ -143,6 +143,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
       settings: [
         "ai_summarization_enabled",
         "ai_summarization_agent",
+        "ai_summaries_for_crawlers",
         "ai_pm_summarization_allowed_groups",
       ],
     },

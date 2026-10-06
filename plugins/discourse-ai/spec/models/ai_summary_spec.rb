@@ -8,6 +8,73 @@ RSpec.describe AiSummary do
 
   before { enable_current_plugin }
 
+  it "stores sanitized cooked content and replaces it when regenerating a summary" do
+    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale: "en")
+    summary =
+      described_class.store!(
+        strategy,
+        llm_model,
+        "**Overview** <script>alert(1)</script>",
+        strategy.targets_data,
+        human: true,
+      )
+
+    expect(summary.summarized_cooked).to include("<strong>Overview</strong>")
+    expect(summary.summarized_cooked).not_to include("<script>")
+
+    regenerated =
+      described_class.store!(
+        strategy,
+        llm_model,
+        "A revised **summary**",
+        strategy.targets_data,
+        human: true,
+      )
+
+    expect(regenerated.id).to eq(summary.id)
+    expect(regenerated.summarized_cooked).to include("A revised <strong>summary</strong>")
+    expect(regenerated.summarized_cooked).not_to include("Overview")
+  end
+
+  it "recooks changed text on ordinary saves" do
+    summary = Fabricate(:ai_summary, target: topic)
+    summary.update!(summarized_text: "Updated **text**")
+
+    expect(summary.reload.summarized_cooked).to include("Updated <strong>text</strong>")
+  end
+
+  it "cooks missing HTML without changing the summary freshness timestamp" do
+    summary = Fabricate(:ai_summary, target: topic, summarized_text: "**Original**")
+    summary.update_columns(summarized_cooked: nil)
+    updated_at = summary.updated_at
+
+    summary.cook_missing!
+
+    expect(summary.reload.summarized_cooked).to include("<strong>Original</strong>")
+    expect(summary.updated_at).to eq_time(updated_at)
+  end
+
+  it "does not overwrite a regenerated summary when cooking an older snapshot" do
+    summary = Fabricate(:ai_summary, target: topic, summarized_text: "Old summary")
+    summary.update_columns(summarized_cooked: nil)
+    snapshot = described_class.find(summary.id)
+    summary.update!(summarized_text: "New **summary**")
+
+    snapshot.cook_missing!
+
+    expect(summary.reload.summarized_cooked).to include("New <strong>summary</strong>")
+    expect(summary.summarized_text).to eq("New **summary**")
+  end
+
+  it "leaves existing cooked HTML alone" do
+    summary = Fabricate(:ai_summary, target: topic)
+    summary.update_columns(summarized_cooked: "<p>Previously cooked</p>")
+
+    summary.cook_missing!
+
+    expect(summary.reload.summarized_cooked).to eq("<p>Previously cooked</p>")
+  end
+
   it "stores and independently upserts topic gists by locale" do
     english_strategy =
       DiscourseAi::Summarization::Strategies::HotTopicGists.new(topic, locale: "en")

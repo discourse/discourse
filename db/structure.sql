@@ -1008,7 +1008,8 @@ CREATE TABLE public.ai_summaries (
     summary_type integer DEFAULT 0 NOT NULL,
     origin integer,
     highest_target_number integer DEFAULT 1 NOT NULL,
-    locale character varying(20)
+    locale character varying(20),
+    summarized_cooked text
 );
 
 
@@ -20607,6 +20608,13 @@ CREATE INDEX index_ai_spam_logs_on_post_id ON public.ai_spam_logs USING btree (p
 
 
 --
+-- Name: index_ai_summaries_missing_cooked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ai_summaries_missing_cooked ON public.ai_summaries USING btree (id) WHERE (summarized_cooked IS NULL);
+
+
+--
 -- Name: index_ai_summaries_on_target_type_and_target_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25544,6 +25552,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261005091527'),
+('20261005091447'),
 ('20261001073226'),
 ('20260930114733'),
 ('20260928103925'),

@@ -66,6 +66,10 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     const groups = getSettingGroupsForFeature("summarization");
 
     assert.strictEqual(groups.length, 3, "summarization should have 3 groups");
+    assert.true(
+      groups[0].settings.includes("ai_summaries_for_crawlers"),
+      "basic settings should include summary publication"
+    );
   });
 
   test("returns correct groups for search", function (assert) {
