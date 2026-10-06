@@ -121,8 +121,8 @@ export function categoryLinkHTML(category, options) {
     if (options.topicCount) {
       categoryOptions.topicCount = options.topicCount;
     }
-    if (options.subcategoryCount) {
-      categoryOptions.subcategoryCount = options.subcategoryCount;
+    if (options.hasSubcategories) {
+      categoryOptions.hasSubcategories = true;
     }
     if (options.readOnly) {
       categoryOptions.readOnly = options.readOnly;

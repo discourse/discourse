@@ -4,7 +4,7 @@ import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 /**
  * Renders a category badge.
  *
- * `topicCount`, `subcategoryCount`, `readOnly` and `ancestors` are what a picker row needs to
+ * `topicCount`, `hasSubcategories`, `readOnly` and `ancestors` are what a picker row needs to
  * match the badge core renders in its own category list; the count carries its own `aria-label`
  * so it does not read as a bare number beside the name.
  *
@@ -20,7 +20,7 @@ import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
  * @param {Array} [options.ancestors] - ancestor categories, rendered outermost first. Only the
  *   category itself keeps `topicCount` and `readOnly`.
  * @param {number} [options.topicCount] - topics in the category.
- * @param {number} [options.subcategoryCount] - subcategories to note alongside the badge.
+ * @param {boolean} [options.hasSubcategories] - append the "+ Subcategories" note.
  * @param {boolean} [options.readOnly] - mark the category as one that cannot be posted in.
  */
 export default function dCategoryBadge(cat, options = {}) {
@@ -34,7 +34,7 @@ export default function dCategoryBadge(cat, options = {}) {
     emoji: options.emoji,
     previewColor: options.previewColor,
     topicCount: options.topicCount,
-    subcategoryCount: options.subcategoryCount,
+    hasSubcategories: options.hasSubcategories,
     readOnly: options.readOnly,
     link: isPresent(options.link) ? options.link : false,
   });

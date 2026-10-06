@@ -48,16 +48,16 @@ module("Integration | ui-kit | Helper | dCategoryBadge", function (hooks) {
       );
   });
 
-  test("options.subcategoryCount", async function (assert) {
+  test("options.hasSubcategories", async function (assert) {
     const category = Category.findById(1);
 
     await render(
-      <template>{{dCategoryBadge category subcategoryCount=3}}</template>
+      <template>{{dCategoryBadge category hasSubcategories=true}}</template>
     );
 
     assert
       .dom(".plus-subcategories")
-      .hasText(i18n("category_row.subcategory_count", { count: 3 }));
+      .hasText(i18n("category_row.subcategories"));
   });
 
   test("options.readOnly", async function (assert) {

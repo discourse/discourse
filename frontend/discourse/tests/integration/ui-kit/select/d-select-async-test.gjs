@@ -230,6 +230,80 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       .hasValue("Topic #2", "the resolver still supplies the label");
   });
 
+  test("asserts when a multi-select mounts holding values it cannot resolve", async function (assert) {
+    let fired = false;
+    setupOnerror((error) => {
+      fired = true;
+      assert.true(
+        error.message.includes("@resolveValue"),
+        "the assertion names the missing argument"
+      );
+    });
+
+    const load = () => Promise.resolve([{ id: 1, name: "One" }]);
+
+    await render(
+      <template>
+        <DSelect @load={{load}} @multiple={{true}} @value={{array 2}} />
+      </template>
+    );
+
+    assert.true(fired, "the misconfiguration asserts during render");
+  });
+
+  // The broken configuration is only broken once a value is held at mount. Mounting empty and
+  // picking from the list is the session where everything looks right, so it must stay quiet.
+  test("does not assert when an async-only select mounts empty and a value is picked", async function (assert) {
+    let error;
+    setupOnerror((e) => (error = e));
+
+    const load = () => Promise.resolve([{ id: 1, name: "One" }]);
+
+    class PickHost extends Component {
+      @tracked value = null;
+
+      @action
+      onChange(value) {
+        this.value = value;
+      }
+
+      <template>
+        <DSelect
+          class="pick"
+          @load={{load}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
+        <DSelect
+          class="empty-multi"
+          @load={{load}}
+          @multiple={{true}}
+          @value={{(array)}}
+        />
+      </template>
+    }
+
+    await render(<template><PickHost /></template>);
+
+    assert.strictEqual(
+      error?.message,
+      undefined,
+      "an empty mount does not assert"
+    );
+
+    await fillIn(".pick [role='combobox']", "One");
+    await click("[role='option']");
+
+    assert.strictEqual(
+      error?.message,
+      undefined,
+      "a picked value does not assert"
+    );
+    assert
+      .dom(".pick [role='combobox']")
+      .hasValue("One", "the picked value resolves from the loaded rows");
+  });
+
   test("multi renders resolved chips plus an unavailable chip for an id that cannot resolve", async function (assert) {
     const resolveValues = (values) =>
       Promise.resolve(

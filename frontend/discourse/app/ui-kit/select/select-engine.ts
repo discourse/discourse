@@ -1,3 +1,4 @@
+import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
@@ -485,6 +486,11 @@ export default class SelectEngine {
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
     // check also runs per load for a live `items` source that turns non-empty later.
     this.#assertSingleSource();
+    // Checked here, during render, because the resolver's own check runs inside an async
+    // data source that turns a throw into a rejection instead of failing the render.
+    if (DEBUG && this.hasValue) {
+      this.#valueResolver.assertCanResolve(this.value);
+    }
   }
 
   /** The current filter term. */

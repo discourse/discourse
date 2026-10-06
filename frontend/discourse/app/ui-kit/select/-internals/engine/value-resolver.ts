@@ -1,3 +1,4 @@
+import { DEBUG } from "@glimmer/env";
 import { assert } from "@ember/debug";
 import { trackedMap } from "@ember/reactive/collections";
 import { makeArray } from "discourse/lib/helpers";
@@ -103,6 +104,27 @@ export default class ValueResolver {
         this.#synchronousOutcomes.delete(key);
       }
     }
+  }
+
+  /**
+   * Asserts that a held value can be resolved at all. A server source that was never given a
+   * way to answer "what is this id" can only ever fabricate the `__unresolved` fallback, so
+   * the trigger shows the value as unavailable for the life of the page. It looks correct in the
+   * session that picked the value, because the cache still holds it, and breaks on the next
+   * load. That is why it fails loudly rather than degrading. Stripped from production builds.
+   *
+   * @param value - The held value, named in the message.
+   */
+  assertCanResolve(value: SelectValue): void {
+    assert(
+      `DSelect: no way to resolve the held value \`${String(value)}\`. \`@load\` answers ` +
+        `queries and is never asked what a given id is, so a select that can mount holding a ` +
+        `value needs \`@resolveValue\`, \`@resolveValues\`, or \`@valueItems\`.`,
+      !this.#options.load ||
+        !!this.#options.resolveValue ||
+        !!this.#options.resolveValues ||
+        this.#options.valueItemsDeclared
+    );
   }
 
   cacheResolved(item: SelectItem | null | undefined): void {
@@ -320,20 +342,12 @@ export default class ValueResolver {
   // ("Topic #123"); the default shows the bare id. Either way the engine owns the
   // `__unresolved` marker, so a builder cannot hand back something that reads as resolved.
   #unresolvedItem(value: SelectItemId): SelectItem {
-    // A server source that was never given a way to answer "what is this id" can only ever
-    // fabricate this fallback, so the trigger reads "(unavailable)" for the life of the page.
-    // It looks correct in the session that picked the value — the cache still holds it — and
-    // breaks on the next load, which is why it is worth failing loudly rather than degrading.
-    // Stripped from production builds.
-    assert(
-      `DSelect: no way to resolve the held value \`${String(value)}\`. \`@load\` answers ` +
-        `queries and is never asked what a given id is, so a select that can mount holding a ` +
-        `value needs \`@resolveValue\`, \`@resolveValues\`, or \`@valueItems\`.`,
-      !this.#options.load ||
-        !!this.#options.resolveValue ||
-        !!this.#options.resolveValues ||
-        this.#options.valueItemsDeclared
-    );
+    // Catches a value set after mount that misses the cache. Here it runs inside the
+    // trigger's async data source, which turns the throw into a rejection, so the common
+    // case is also checked when the engine is built.
+    if (DEBUG) {
+      this.assertCanResolve(value);
+    }
     const built = this.#options.createUnresolvedItem
       ? this.#attempt(() => this.#options.createUnresolvedItem!(value))
       : undefined;
