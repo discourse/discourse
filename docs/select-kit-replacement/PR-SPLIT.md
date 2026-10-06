@@ -16,19 +16,41 @@ Do not re-derive either decision without new information.
 Tick a row when its PR merges, and merge `main` into `select-kit-rework` in the same pass. A layer
 marked merged means its files are **upstream** and no longer this branch's to change directly.
 
-State is ☑ merged · ◐ ready for review · ○ draft, plus the review decision where there is one. Read
+State is ☑ merged · ◐ ready for review · ○ draft · ✕ closed, plus the review decision where there is one. Read
 it from GitHub rather than from memory (`gh pr view <n> --json state,isDraft,reviewDecision`); these
 flip outside this branch and the table goes stale silently.
 
 | # | Layer | PR | State | Paths it owns |
 |---|---|---|---|---|
 | 1 | float-kit | [#42376](https://github.com/discourse/discourse/pull/42376) | ☑ merged · approved | `frontend/discourse/float-kit/**`, `tests/integration/components/float-kit/{d-menu,d-tooltip,apply-floating-ui}-test.gjs` |
-| 2 | a11y announcement composition | [#42377](https://github.com/discourse/discourse/pull/42377) | ○ draft · approved | `app/services/a11y.js`, `tests/integration/components/a11y/live-regions-test.gjs`, `app/ui-kit/d-icon-grid-picker/content.gjs`, `tests/integration/components/d-icon-grid-picker-test.gjs` |
+| 2 | a11y announcement composition | [#42377](https://github.com/discourse/discourse/pull/42377) | ✕ closed (2026-10-06) · held here, see below | `app/services/a11y.js`, `tests/integration/components/a11y/live-regions-test.gjs`, `app/ui-kit/d-icon-grid-picker/content.gjs`, `tests/integration/components/d-icon-grid-picker-test.gjs` |
 | 3 | ui-kit primitive fixes | [#42378](https://github.com/discourse/discourse/pull/42378) | ☑ merged · approved | `app/ui-kit/d-async-content.gts`, `app/ui-kit/modifiers/d-observe-intersection.js`, `app/ui-kit/d-load-more.gjs` |
 | 4 | DSkeleton | [#42380](https://github.com/discourse/discourse/pull/42380) | ☑ merged · approved | `app/ui-kit/d-skeleton.gts`, `common/components/d-skeleton.scss`, `tests/integration/ui-kit/d-skeleton-test.gjs` |
-| 5 | dRovingFocus | [#42381](https://github.com/discourse/discourse/pull/42381) | ◐ ready · approved | `app/ui-kit/modifiers/d-roving-focus.ts`, `tests/integration/ui-kit/modifiers/d-roving-focus{,-windowed}-test.gjs` |
-| 6 | DVirtualList | [#42382](https://github.com/discourse/discourse/pull/42382) | ○ draft | `app/ui-kit/{d-virtual-list.gts,modifiers/d-virtualizer.ts,lib/virtualizer.js,helpers/d-element.gts}`, `common/components/d-virtual-list.scss`, `tests/integration/ui-kit/d-virtual-list-*.gjs`, `tests/unit/ui-kit/virtualizer-test.js`, `tests/setup-tests.js`, `package.json` + `pnpm-lock.yaml`, styleguide `sections/molecules/virtual-list.gjs` |
+| 5 | dRovingFocus | [#42381](https://github.com/discourse/discourse/pull/42381) | ☑ merged · approved | `app/ui-kit/modifiers/d-roving-focus.ts`, `tests/integration/ui-kit/modifiers/d-roving-focus{,-windowed}-test.gjs` |
+| 6 | DVirtualList | [#42382](https://github.com/discourse/discourse/pull/42382) | ☑ merged · approved | `app/ui-kit/{d-virtual-list.gts,modifiers/d-virtualizer.ts,lib/virtualizer.js,helpers/d-element.gts}`, `common/components/d-virtual-list.scss`, `tests/integration/ui-kit/d-virtual-list-*.gjs`, `tests/unit/ui-kit/virtualizer-test.js`, `tests/setup-tests.js`, `package.json` + `pnpm-lock.yaml`, styleguide `sections/molecules/virtual-list.gjs` |
 | 7 | styleguide infrastructure | [#42385](https://github.com/discourse/discourse/pull/42385) | ☑ merged · approved | styleguide `components/styleguide-{group,groups,subnav}.gjs`, `styleguide-example.gjs`, `lib/inline-code.js`, `controllers/styleguide/show.js`, `routes/styleguide/show.js`, `templates/styleguide/show.gjs`, `README.md`, **`config/locales/client.en.yml`** (the three `example.*` keys, per the shared-file table below), `plugin.rb` (its asset filter dropped the plugin whenever assets were resolved without a request, which made its own JS tests unloadable), `spec/system/{smoke_test_spec.rb,styleguide_example_spec.rb,page_objects/pages/styleguide.rb}`, `test/javascripts/**`, plus the `class="half-size"` removal from `sections/{molecules/navigation-stacked,organisms/basic-topic-list}.gjs` |
+
+### Layer 2 is held on this branch
+
+#42377 was closed because it had gone stale and conflicted with `main` in all three source files.
+Its changes stay here until the open questions below are settled. Then they either go out again as a
+standalone PR or ship with #41534.
+
+Select depends on it. "adding the item that reaches the cap announces both the addition and the
+cap" (`d-select-limits-test.gjs`) fails against `main`'s `a11y.js`: the two same-tick announcements
+collapse to the cap message alone. That is the only test that exercises composition through the live
+region; the spy-based select tests cannot see it.
+
+Open before it can leave:
+
+- The restatement filter (drop a message equal to the region's current text when the same tick
+  carries another) partly reverses the repeat delivery of #42120/#42184 and has no test. Keep it with
+  a test, or drop it and leave deduping to callers.
+- Messages are joined with a hard-coded `". "`, which is not translatable.
+- Only composing, deduping and polite/assertive separation are tested. Discarding the queue on an
+  empty message and taking the longest `clearDelay` are not.
+- #42377's description overstated the change: only an empty message supersedes a pending buffer, an
+  empty message still waits a tick, and two of the tests it listed predate it.
 
 Everything not listed above stays on this branch: the select family, the `modifySelectKit` bridge, the
 styleguide select sandbox and its system specs, and these trackers.
@@ -41,7 +63,7 @@ the two versions diverge silently.
 
 | Layer | Follow-up | State | What it carries |
 |---|---|---|---|
-| 1 — float-kit | [#42565](https://github.com/discourse/discourse/pull/42565) | ○ draft | `inlineTabOrder`, `FloatKitTabOrderInline`, `lib/tab-order.ts`, and the `DFloatBody` assert that it and `trapTab` are exclusive. Its only consumer is the select panel, which stays on this branch, so the PR ships the option unused. |
+| 1 — float-kit | [#42565](https://github.com/discourse/discourse/pull/42565) | ☑ merged | `inlineTabOrder`, `FloatKitTabOrderInline`, `lib/tab-order.ts`, and the `DFloatBody` assert that it and `trapTab` are exclusive. Its only consumer is the select panel, which stays on this branch, so the PR ships the option unused. |
 
 ## Rules
 
