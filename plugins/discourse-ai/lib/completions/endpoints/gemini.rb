@@ -383,6 +383,7 @@ module DiscourseAi
             decoded =
               lines
                 .map do |line|
+                  line = line.sub(/\A[\r\n]+/, "")
                   if line.start_with?("data: {")
                     begin
                       JSON.parse(line[6..-1], symbolize_names: true)
