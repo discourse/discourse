@@ -41,16 +41,22 @@ cap" (`d-select-limits-test.gjs`) fails against `main`'s `a11y.js`: the two same
 collapse to the cap message alone. That is the only test that exercises composition through the live
 region; the spy-based select tests cannot see it.
 
-Open before it can leave:
+Settled since (2026-10-06):
 
 - The restatement filter (drop a message equal to the region's current text when the same tick
-  carries another) partly reverses the repeat delivery of #42120/#42184 and has no test. Keep it with
-  a test, or drop it and leave deduping to callers.
-- Messages are joined with a hard-coded `". "`, which is not translatable.
-- Only composing, deduping and polite/assertive separation are tested. Discarding the queue on an
-  empty message and taking the longest `clearDelay` are not.
+  carries another) stays, and is tested. It is not optional once same-tick messages compose: without
+  it, #42120's "a repeat does not overwrite an announcement made while it was pending" fails.
+- Composed messages are joined with the translatable `a11y_announcement_separator` (English `". "`).
+  Chinese and Japanese end a sentence with `。` and no space, Urdu with `۔`, and Thai with a space.
+- An empty message discarding the queue is tested.
+
+Still open:
+
+- Taking the longest `clearDelay` is untested. `discourseLater` shortens every delay to 10 ms under
+  test, and the value only reaches private state, so no QUnit test can observe it.
 - #42377's description overstated the change: only an empty message supersedes a pending buffer, an
-  empty message still waits a tick, and two of the tests it listed predate it.
+  empty message still waits a tick, and two of the tests it listed predate it. Don't carry that text
+  into a new PR.
 
 Everything not listed above stays on this branch: the select family, the `modifySelectKit` bridge, the
 styleguide select sandbox and its system specs, and these trackers.
