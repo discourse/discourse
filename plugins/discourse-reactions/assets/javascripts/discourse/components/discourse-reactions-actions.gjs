@@ -211,7 +211,7 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   get showReactionsPicker() {
-    if (!this.reactionsPickerExpanded) {
+    if (!this.reactionsPickerExpanded || !this.siteSettings.enable_emoji) {
       return false;
     }
 
