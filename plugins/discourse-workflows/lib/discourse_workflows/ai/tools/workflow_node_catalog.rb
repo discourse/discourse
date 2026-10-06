@@ -267,6 +267,8 @@ module DiscourseWorkflows
             "site setting settings configuration config admin toggle enable disable change update value",
           "action:flag_user" =>
             "flag user report spammer spam suspect review queue moderation approve reject account signup",
+          "action:post_like" => "like unlike heart favorite upvote",
+          "trigger:post_like_changed" => "liked unliked like heart favorite upvote",
           "trigger:user_added_to_group" => "joined added to group membership member",
           "trigger:user_removed_from_group" => "left removed from group membership member",
           "trigger:user_created" => "signup sign up register registration new account joined site",
