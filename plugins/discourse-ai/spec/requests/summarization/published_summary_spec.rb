@@ -31,6 +31,41 @@ describe TopicsController do
   end
 
   describe "#show" do
+    it "keeps forced crawler translations consistent on misses and shared cache hits" do
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "fr"
+      SiteSetting.default_locale = "fr"
+      topic.update!(locale: "en")
+      first_post.update!(locale: "en")
+      Fabricate(:post_localization, post: first_post, locale: "fr", cooked: "<p>Bonjour</p>")
+      create_summary
+      french = create_summary(locale: "fr", text: "Un résumé de cette discussion.")
+      forced_headers = browser_headers.merge("Discourse-Render" => "crawler")
+      bot_headers = { "User-Agent" => "#{browser_headers["User-Agent"]} Googlebot" }
+
+      %w[true false].each do |translate|
+        cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = translate
+        [[forced_headers, bot_headers], [bot_headers, forced_headers]].each do |headers|
+          Middleware::AnonymousCache.clear_all_cache!
+          headers.each_with_index do |request_headers, index|
+            get topic.relative_url, headers: request_headers
+
+            expect(response.status).to eq(200)
+            expect(response.headers["X-Discourse-Cached"]).to eq(index.zero? ? "store" : "true")
+            document = Nokogiri.HTML5(response.body)
+            expect(document.at_css('[itemprop="abstract"]').text).to include(
+              translate == "true" ? french.summarized_text : summary_phrase,
+            )
+            expect(document.at_css("#post_1 .post").text).to include(
+              translate == "true" ? "Bonjour" : first_post.raw,
+            )
+          end
+        end
+      end
+    end
+
     it "publishes a cached summary as the discussion abstract in crawler HTML" do
       create_summary
 

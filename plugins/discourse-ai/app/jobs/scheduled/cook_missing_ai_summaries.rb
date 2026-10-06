@@ -11,7 +11,7 @@ module Jobs
       return if !SiteSetting.discourse_ai_enabled
 
       cursor_key = "cook_missing_ai_summaries:last_id"
-      missing = AiSummary.where(summarized_cooked: nil).order(:id)
+      missing = AiSummary.complete.where(target_type: "Topic", summarized_cooked: nil).order(:id)
       summaries =
         missing.where("id > ?", Discourse.redis.get(cursor_key).to_i).limit(BATCH_SIZE).to_a
       summaries = missing.limit(BATCH_SIZE).to_a if summaries.empty?

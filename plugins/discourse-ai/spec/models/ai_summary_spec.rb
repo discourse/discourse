@@ -8,6 +8,53 @@ RSpec.describe AiSummary do
 
   before { enable_current_plugin }
 
+  it "persists unsupported content languages using a supported cooking locale" do
+    SiteSetting.ai_summaries_for_crawlers = false
+    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale: "hi")
+    summary =
+      described_class.store!(strategy, llm_model, "**सारांश**", strategy.targets_data, human: true)
+
+    expect(summary.locale).to eq("hi")
+    expect(summary.summarized_cooked).to include("<strong>सारांश</strong>")
+
+    summary.update!(summarized_text: "Updated **सारांश**")
+    expect(summary.reload.summarized_cooked).to include("Updated <strong>सारांश</strong>")
+
+    summary.update_columns(summarized_cooked: nil)
+    timestamp = summary.updated_at
+    summary.cook_missing!
+    expect(summary.reload.summarized_cooked).to include("Updated <strong>सारांश</strong>")
+    expect(summary.locale).to eq("hi")
+    expect(summary.updated_at).to eq_time(timestamp)
+  end
+
+  it "stores and updates gist text without cooking HTML" do
+    strategy = DiscourseAi::Summarization::Strategies::HotTopicGists.new(topic, locale: "en")
+    summary =
+      described_class.store!(strategy, llm_model, "**Gist**", strategy.targets_data, human: true)
+    expect(summary.summarized_cooked).to be_nil
+
+    summary =
+      described_class.store!(
+        strategy,
+        llm_model,
+        "**Revised gist**",
+        strategy.targets_data,
+        human: true,
+      )
+    expect(summary.summarized_text).to eq("**Revised gist**")
+    expect(summary.summarized_cooked).to be_nil
+
+    summary.update!(summarized_text: "**Edited gist**")
+    summary.cook_missing!
+    expect(summary.reload.summarized_cooked).to be_nil
+
+    summary.update!(summary_type: :complete)
+    expect(summary.reload.summarized_cooked).to include("<strong>Edited gist</strong>")
+    summary.update!(summary_type: :gist)
+    expect(summary.reload.summarized_cooked).to be_nil
+  end
+
   it "stores sanitized cooked content and replaces it when regenerating a summary" do
     strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale: "en")
     summary =

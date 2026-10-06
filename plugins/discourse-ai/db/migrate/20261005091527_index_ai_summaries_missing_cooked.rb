@@ -10,7 +10,7 @@ class IndexAiSummariesMissingCooked < ActiveRecord::Migration[8.1]
     add_index :ai_summaries,
               :id,
               name: "index_ai_summaries_missing_cooked",
-              where: "summarized_cooked IS NULL",
+              where: "summarized_cooked IS NULL AND summary_type = 0 AND target_type = 'Topic'",
               algorithm: :concurrently
   end
 

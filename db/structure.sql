@@ -20611,7 +20611,7 @@ CREATE INDEX index_ai_spam_logs_on_post_id ON public.ai_spam_logs USING btree (p
 -- Name: index_ai_summaries_missing_cooked; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_ai_summaries_missing_cooked ON public.ai_summaries USING btree (id) WHERE (summarized_cooked IS NULL);
+CREATE INDEX index_ai_summaries_missing_cooked ON public.ai_summaries USING btree (id) WHERE ((summarized_cooked IS NULL) AND (summary_type = 0) AND ((target_type)::text = 'Topic'::text));
 
 
 --

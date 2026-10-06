@@ -3,6 +3,17 @@
 describe Jobs::CookMissingAiSummaries do
   before { enable_current_plugin }
 
+  it "reserves batch capacity for complete topic summaries rather than gists" do
+    gists = Fabricate.times(2, :topic_ai_gist)
+    summary = Fabricate(:ai_summary, summarized_text: "**Complete summary**")
+    AiSummary.where(id: gists.map(&:id) + [summary.id]).update_all(summarized_cooked: nil)
+
+    stub_const(described_class, :BATCH_SIZE, 2) { described_class.new.execute({}) }
+
+    expect(summary.reload.summarized_cooked).to include("<strong>Complete summary</strong>")
+    expect(gists.map { |gist| gist.reload.summarized_cooked }).to eq([nil, nil])
+  end
+
   it "cooks a bounded batch of missing HTML without LLM calls or timestamp changes" do
     summaries = Fabricate.times(3, :ai_summary, summarized_text: "**Stored summary**")
     AiSummary.where(id: summaries.map(&:id)).update_all(summarized_cooked: nil)

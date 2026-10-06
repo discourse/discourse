@@ -7943,6 +7943,29 @@ RSpec.describe TopicsController do
             expect(response.body).to include(subcategory.name)
             expect(response.body).to include(topic.first_post.cooked)
           end
+
+          it "localizes forced crawler HTML while respecting translation opt-out" do
+            SiteSetting.default_locale = "pt"
+            headers = {
+              "User-Agent" => "Mozilla/5.0 Chrome/130.0.0.0 Safari/537.36",
+              "Discourse-Render" => "crawler",
+            }
+
+            get topic.relative_url, headers: headers
+
+            document = Nokogiri.HTML5(response.body)
+            expect(document.at_css("#post_1 .post").text).to include(
+              Nokogiri::HTML5.fragment(pt_first_post.cooked).text,
+            )
+
+            cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false"
+            get topic.relative_url, headers: headers
+
+            document = Nokogiri.HTML5(response.body)
+            expect(document.at_css("#post_1 .post").text).to include(
+              Nokogiri::HTML5.fragment(topic.first_post.cooked).text,
+            )
+          end
         end
 
         describe "when tl param is present ?tl=ja" do
