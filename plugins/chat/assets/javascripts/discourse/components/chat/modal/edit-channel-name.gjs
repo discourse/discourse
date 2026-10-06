@@ -161,29 +161,31 @@ export default class ChatModalEditChannelName extends Component {
             {{on "input" this.onChangeChatChannelSlug}}
           />
         </div>
-        <div class="edit-channel-control">
-          <label class="edit-channel-label" for="channel-emoji">
-            {{i18n "chat.channel_edit_name_slug_modal.emoji"}}
-          </label>
+        {{#if this.siteSettings.enable_emoji}}
+          <div class="edit-channel-control">
+            <label class="edit-channel-label" for="channel-emoji">
+              {{i18n "chat.channel_edit_name_slug_modal.emoji"}}
+            </label>
 
-          <EmojiPicker
-            @btnClass="btn-default btn-emoji"
-            @context="channel-emoji"
-            @didSelectEmoji={{this.emojiSelected}}
-            @emoji={{this.editedEmoji}}
-            @inline={{true}}
-            @modalForMobile={{false}}
-            @showCaret={{true}}
-          />
+            <EmojiPicker
+              @btnClass="btn-default btn-emoji"
+              @context="channel-emoji"
+              @didSelectEmoji={{this.emojiSelected}}
+              @emoji={{this.editedEmoji}}
+              @inline={{true}}
+              @modalForMobile={{false}}
+              @showCaret={{true}}
+            />
 
-          <DButton
-            class="btn-flat edit-channel-clear-emoji"
-            @action={{this.resetEmoji}}
-            @disabled={{not this.editedEmoji}}
-            @label="chat.channel_edit_name_slug_modal.reset_emoji"
-          />
+            <DButton
+              class="btn-flat edit-channel-clear-emoji"
+              @action={{this.resetEmoji}}
+              @disabled={{not this.editedEmoji}}
+              @label="chat.channel_edit_name_slug_modal.reset_emoji"
+            />
 
-        </div>
+          </div>
+        {{/if}}
       </:body>
       <:footer>
         <DButton

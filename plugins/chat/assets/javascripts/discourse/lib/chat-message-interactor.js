@@ -123,7 +123,8 @@ export default class ChatMessageInteractor {
   }
 
   get canReact() {
-    return this.canInteractWithMessage;
+    // Reactions are emoji, so there's nothing to react with while they're disabled.
+    return this.canInteractWithMessage && this.siteSettings.enable_emoji;
   }
 
   get canFlagMessage() {

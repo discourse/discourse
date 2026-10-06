@@ -17,6 +17,18 @@ module PageObjects
         context_component.find(post_reactions_actions_selector(post_id, position: "right")).hover
       end
 
+      def click_like_button(post_id)
+        context_component.find(
+          "#{post_reactions_actions_selector(post_id, position: "right")} .discourse-reactions-reaction-button",
+        ).click
+      end
+
+      def has_no_expanded_reactions_picker?(post_id)
+        context_component.has_no_css?(
+          "#{post_reactions_actions_selector(post_id, position: "right")} .discourse-reactions-picker.is-expanded",
+        )
+      end
+
       def has_expanded_reactions_picker?(post_id)
         context_component.find(post_reactions_actions_selector(post_id, position: "right")).find(
           ".discourse-reactions-picker.is-expanded",

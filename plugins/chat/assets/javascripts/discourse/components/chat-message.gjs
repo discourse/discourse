@@ -51,6 +51,7 @@ export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
+  @service siteSettings;
   @service currentUser;
   @service chat;
   @service chatApi;
@@ -139,6 +140,10 @@ export default class ChatMessage extends Component {
       !this.args.message.deletedAt ||
       (this.args.message.deletedAt && !this.args.message.nextMessage?.deletedAt)
     );
+  }
+
+  get shouldRenderReactions() {
+    return this.siteSettings.enable_emoji && this.args.message.reactions.length;
   }
 
   get shouldRenderOpenEmojiPickerButton() {
@@ -757,7 +762,7 @@ export default class ChatMessage extends Component {
                   @edited={{@message.edited}}
                   @uploads={{@message.uploads}}
                 >
-                  {{#if @message.reactions.length}}
+                  {{#if this.shouldRenderReactions}}
                     <div class="chat-message-reaction-list">
                       {{#each @message.reactions as |reaction|}}
                         <ChatMessageReaction

@@ -114,7 +114,11 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   get shouldRenderFavoriteReactions() {
-    return this.size === FULL && this.message.channel?.isFollowing;
+    return (
+      this.size === FULL &&
+      this.message.channel?.isFollowing &&
+      this.messageInteractor.canReact
+    );
   }
 
   // A bookmark's reminder makes a useful name once one is set, but the button needs one
@@ -182,7 +186,7 @@ export default class ChatMessageActionsDesktop extends Component {
             {{/each}}
           {{/if}}
 
-          {{#if this.messageInteractor.canInteractWithMessage}}
+          {{#if this.messageInteractor.canReact}}
             <DButton
               class="btn-flat react-btn"
               @action={{this.openEmojiPicker}}

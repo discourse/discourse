@@ -69,20 +69,13 @@ module("Integration | Helper | discourse-reactions-emoji", function (hooks) {
       .hasAttribute("title", "heart", "the emoji keeps its tooltip");
   });
 
-  test("keeps other reactions as text when emojis are disabled", async function (assert) {
+  test("renders other reactions as the like icon when emojis are disabled", async function (assert) {
     this.siteSettings.discourse_reactions_reaction_for_like = "+1";
+    this.siteSettings.discourse_reactions_like_icon = "star";
 
-    await render(
-      <template>
-        <span>{{discourseReactionsEmoji "heart"}}</span>
-      </template>
-    );
+    await render(<template>{{discourseReactionsEmoji "laughing"}}</template>);
 
-    assert
-      .dom("span")
-      .hasText(
-        ":heart:",
-        "the fallback only applies to the configured like reaction"
-      );
+    assert.dom("svg use").hasAttribute("href", "#star");
+    assert.dom("svg").hasAria("label", "laughing");
   });
 });

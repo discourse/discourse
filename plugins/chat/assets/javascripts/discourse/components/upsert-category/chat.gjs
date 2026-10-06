@@ -14,8 +14,8 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 function channelColorStyle(channel) {
@@ -23,7 +23,7 @@ function channelColorStyle(channel) {
 }
 
 function channelIcon(channel) {
-  return channel.emoji ? dReplaceEmoji(`:${channel.emoji}:`) : dIcon("d-chat");
+  return (channel.emoji && dEmoji(channel.emoji)) || dIcon("d-chat");
 }
 
 function isSubcategoryChannel(channel, categoryId) {
