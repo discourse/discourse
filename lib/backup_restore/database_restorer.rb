@@ -17,9 +17,10 @@ module BackupRestore
     end
 
     def restore(db_dump_path, interactive = false)
-      BackupRestore.move_tables_between_schemas(MAIN_SCHEMA, BACKUP_SCHEMA)
-
       @db_dump_path = db_dump_path
+      validate_directory_dump if File.directory?(@db_dump_path)
+
+      BackupRestore.move_tables_between_schemas(MAIN_SCHEMA, BACKUP_SCHEMA)
       @db_was_changed = true
 
       create_missing_discourse_functions
@@ -62,20 +63,91 @@ module BackupRestore
     def restore_dump
       log "Restoring dump file... (this may take a while)"
 
+      if File.directory?(@db_dump_path)
+        restore_directory_dump
+      else
+        run_restore_command(restore_dump_command, "psql")
+      end
+    end
+
+    def pg_restore_path
+      @pg_restore_path ||=
+        PostgresTools.find("pg_restore", server_version: BackupRestore.postgresql_major_version)
+    end
+
+    def validate_directory_dump
+      log "Checking database dump with #{pg_restore_path}..."
+      Discourse::Utils.execute_command(
+        pg_restore_path,
+        "--list",
+        "--file=#{File::NULL}",
+        @db_dump_path,
+        failure_message:
+          "This database dump cannot be read by a pg_restore client compatible with " \
+            "PostgreSQL #{BackupRestore.postgresql_major_version}. " \
+            "The backup may require a newer PostgreSQL server and client, or may be damaged.",
+      )
+    end
+
+    def restore_directory_dump
+      # Keep the SQL compatibility filtering for schema creation. Data, indexes,
+      # and constraints can then be restored directly by parallel pg_restore workers.
+      sql_path = File.join(@db_dump_path, "restore.sql")
+      Discourse::Utils.execute_command(
+        pg_restore_path,
+        "--section=pre-data",
+        "--no-owner",
+        "--no-privileges",
+        "--file=#{sql_path}",
+        @db_dump_path,
+        failure_message: "Failed to extract SQL from database dump.",
+      )
+      run_restore_command(restore_dump_command(sql_path), "psql")
+
+      concurrency = [GlobalSetting.backup_database_concurrency.to_i, 1].max
+      log "Restoring data and indexes with #{concurrency} workers..."
+      run_restore_command(pg_restore_command(concurrency), "pg_restore")
+    end
+
+    def pg_restore_command(concurrency)
+      db_conf = BackupRestore.database_configuration
+      env = {}
+      env["PGPASSWORD"] = db_conf.password if db_conf.password.present?
+      arguments = [
+        env,
+        pg_restore_path,
+        "--dbname=#{db_conf.database}",
+        "--jobs=#{concurrency}",
+        "--section=data",
+        "--section=post-data",
+        "--no-owner",
+        "--no-privileges",
+        "--exit-on-error",
+        "--verbose",
+      ]
+      arguments << "--host=#{db_conf.host}" if db_conf.host.present?
+      arguments << "--port=#{db_conf.port}" if db_conf.port.present?
+      arguments << "--username=#{db_conf.username}" if db_conf.username.present?
+      arguments << @db_dump_path
+
+      arguments
+    end
+
+    def run_restore_command(command, program)
       logs = Queue.new
       last_line = nil
-      psql_running = true
+      restore_running = true
 
       log_thread =
         Thread.new do
           RailsMultisite::ConnectionManagement.establish_connection(db: @current_db)
-          while psql_running || !logs.empty?
+          while restore_running || !logs.empty?
             message = logs.pop.strip
             log(message) if message.present?
           end
         end
 
-      IO.popen(restore_dump_command) do |pipe|
+      IO.popen(command, err: %i[child out]) do |pipe|
         while line = pipe.readline
           logs << line
           last_line = line
@@ -83,20 +155,20 @@ module BackupRestore
       rescue EOFError
         # finished reading...
       ensure
-        psql_running = false
+        restore_running = false
       end
 
       logs << ""
       log_thread.join
 
       if Process.last_status&.exitstatus != 0
-        raise DatabaseRestoreError.new("psql failed: #{last_line}")
+        raise DatabaseRestoreError.new("#{program} failed: #{last_line}")
       end
     end
 
     # Removes unwanted SQL added by certain versions of pg_dump and modifies
     # the dump so that it works on the current version of PostgreSQL.
-    def sed_command
+    def sed_script
       unwanted_sql = [
         "DROP SCHEMA", # Discourse <= v1.5
         "CREATE SCHEMA", # PostgreSQL 11+
@@ -119,43 +191,45 @@ module BackupRestore
         commands << "s/^(CREATE TRIGGER.+EXECUTE) FUNCTION/\\1 PROCEDURE/"
       end
 
-      <<~COMMAND
-        sed -E '
-          #{commands.join(";\n")}
-        ' #{@db_dump_path}
-      COMMAND
+      commands.join(";\n")
     end
 
-    def restore_dump_command
-      nonce = SecureRandom.hex
-
-      <<~CMD
+    def restore_dump_command(dump_path = @db_dump_path)
+      env, *psql = self.class.psql_command
+      script = <<~'SH'
+        nonce=$1
+        sed_script=$2
+        dump_path=$3
+        shift 3
         (
-          printf '%s\\n' "\\\\restrict #{nonce}"
-          #{sed_command}
-          printf '%s\\n' "\\\\unrestrict #{nonce}"
-        ) | #{self.class.psql_command} 2>&1
-      CMD
+          printf '%s\n' "\\restrict $nonce"
+          sed -E "$sed_script" "$dump_path"
+          printf '%s\n' "\\unrestrict $nonce"
+        ) | "$@"
+      SH
+
+      [env, "sh", "-c", script, "restore", SecureRandom.hex, sed_script, dump_path, *psql]
     end
 
     def self.psql_command
       db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
+      env = {}
+      env["PGPASSWORD"] = db_conf.password if db_conf.password.present?
       host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
       port_argument = "--port=#{db_conf.port}" if db_conf.port.present?
       username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
 
       [
-        password_argument, # pass the password to psql (if any)
+        env,
         "psql", # the psql command
-        "--dbname='#{db_conf.database}'", # connect to database *dbname*
+        "--dbname=#{db_conf.database}", # connect to database *dbname*
         "--single-transaction", # all or nothing (also runs COPY commands faster)
         "--variable=ON_ERROR_STOP=1", # stop on first error
         host_argument, # the hostname to connect to (if any)
         port_argument, # the port to connect to (if any)
         username_argument, # the username to connect as (if any)
-      ].compact.join(" ")
+      ].compact
     end
 
     def pause_before_migration

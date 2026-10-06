@@ -11,10 +11,9 @@ describe BackupRestore::Creator do
 
         [true, false].each do |with_uploads|
           creator = described_class.new(nil, with_uploads: with_uploads)
-          extension = with_uploads ? "tar.gz" : "sql.gz"
 
           expect(creator.instance_variable_get(:@backup_filename)).to eq(
-            "my-forum-2026-09-25-120000-v2026-9-0-latest-20260923080644.#{extension}",
+            "my-forum-2026-09-25-120000-v2026-9-0-latest-20260923080644.tar.gz",
           )
         end
       end
@@ -22,6 +21,28 @@ describe BackupRestore::Creator do
   end
 
   describe "#pg_dump_command" do
+    it "passes credentials literally through the environment and arguments" do
+      config = BackupRestore.database_configuration.dup
+      config.password = "password ' $HOME ;"
+      config.username = "user with spaces"
+      config.database = "database ' $HOME ;"
+      BackupRestore.stubs(:database_configuration).returns(config)
+
+      command = described_class.new(nil).send(:pg_dump_command)
+
+      expect(command.first).to eq("PGPASSWORD" => config.password)
+      expect(command).to include("--username=#{config.username}", config.database)
+    end
+
+    [0, 1, 4].each do |concurrency|
+      it "uses directory format with at least one worker when configured with #{concurrency}" do
+        GlobalSetting.stubs(:backup_database_concurrency).returns(concurrency)
+        command = described_class.new(nil).send(:pg_dump_command)
+
+        expect(command).to include("--format=directory", "--jobs=#{[concurrency, 1].max}")
+      end
+    end
+
     it "excludes disposable nested hot score data" do
       command = described_class.new(Discourse.system_user.id).send(:pg_dump_command)
 

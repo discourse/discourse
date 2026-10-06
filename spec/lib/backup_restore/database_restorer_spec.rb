@@ -9,6 +9,22 @@ RSpec.describe BackupRestore::DatabaseRestorer do
 
   let(:current_db) { RailsMultisite::ConnectionManagement.current_db }
 
+  describe "command arguments" do
+    it "passes credentials literally to both restore clients" do
+      config = BackupRestore.database_configuration.dup
+      config.password = "password ' $HOME ;"
+      config.username = "user with spaces"
+      config.database = "database ' $HOME ;"
+      BackupRestore.stubs(:database_configuration).returns(config)
+      restorer.instance_variable_set(:@db_dump_path, "dump with spaces")
+
+      [described_class.psql_command, restorer.send(:pg_restore_command, 4)].each do |command|
+        expect(command.first).to eq("PGPASSWORD" => config.password)
+        expect(command).to include("--username=#{config.username}", "--dbname=#{config.database}")
+      end
+    end
+  end
+
   describe "#restore" do
     it "executes everything in the correct order" do
       restore = sequence("restore")
@@ -32,7 +48,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
     context "with real psql" do
       after do
         psql = BackupRestore::DatabaseRestorer.psql_command
-        system("#{psql} -c 'DROP TABLE IF EXISTS foo'", %i[out err] => File::NULL)
+        system(*psql, "-c", "DROP TABLE IF EXISTS foo", %i[out err] => File::NULL)
       end
 
       def restore(filename, stub_migrate: true)
@@ -107,7 +123,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
 
       def restore_and_log_output(filename)
         path = File.join(Rails.root, "spec/fixtures/db/restore", filename)
-        BackupRestore::DatabaseRestorer.stubs(:psql_command).returns("cat")
+        BackupRestore::DatabaseRestorer.stubs(:psql_command).returns([{}, "cat"])
         execute_stubbed_restore(stub_psql: false, dump_file_path: path)
         logger.log_messages.join("\n")
       end
