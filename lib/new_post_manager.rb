@@ -178,6 +178,12 @@ class NewPostManager
       end
     end
 
+    if manager.args[:topic_id].blank? && !skip_topic_validations
+      result = NewPostResult.new(:enqueued)
+      DiscourseEvent.trigger(:validate_queued_topic, manager.user, manager.args, result.errors)
+      return result if result.errors.any?
+    end
+
     creator_opts = skip_topic_validations ? { skip_validations: true } : {}
     result = manager.enqueue(reason, creator_opts: creator_opts)
 

@@ -16,6 +16,13 @@ module DiscourseWorkflows
                  status: :created
         end
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
+        on_failed_policy(:not_submission_check) do
+          render json:
+                   failed_json.merge(
+                     errors: [I18n.t("discourse_workflows.errors.submission_check.cannot_run")],
+                   ),
+                 status: :unprocessable_entity
+        end
         on_failed_policy(:step_node_executable) { render_step_execution_error("not_executable") }
         on_failed_policy(:step_node_not_waiting) do
           render_step_execution_error("waiting_not_supported")

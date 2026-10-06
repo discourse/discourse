@@ -60,6 +60,34 @@ RSpec.describe DiscourseWorkflows::Workflow::ExecuteStep do
       it { is_expected.to fail_a_policy(:step_node_executable) }
     end
 
+    context "when workflow contains a submission check" do
+      fab!(:workflow) do
+        graph =
+          build_workflow_graph do |builder|
+            builder.node "trigger-1", "trigger:before_post_submission"
+            builder.node "reject-1",
+                         "action:reject_submission",
+                         configuration: {
+                           "message" => "Wait.",
+                         }
+            builder.chain "trigger-1", "reject-1"
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+      end
+
+      let(:params) { super().merge(node_id: "reject-1") }
+
+      it "refuses execution before creating a row or enqueuing a job" do
+        expect { result }.not_to change {
+          [
+            DiscourseWorkflows::Execution.count,
+            Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.size,
+          ]
+        }
+        expect(result).to fail_a_policy(:not_submission_check)
+      end
+    end
+
     context "when node waits for a resume" do
       fab!(:workflow) do
         graph =

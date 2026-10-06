@@ -1,5 +1,11 @@
 # Workflow AI authoring use cases
 
+## Before-submission checks
+
+Use the `Open topics, TL1 replies` template to set up a category where everyone can start topics, while trust-level-0 members may only reply to their own topics. Give everyone normal category permissions. **Choose the category on the trigger before publishing**; an unscoped template cannot be published. The fixed rejection message explains when replies become available. Test by submitting a topic, a reply to one's own topic, and a reply to another member's topic as a TL0 member; then test as staff and TL1. No unpublished draft, simulation, or manual Run button executes the check.
+
+`trigger:before_post_submission` supplies an unsaved `submission` (`kind`, `is_reply`, `raw`, `title`, `category_id`), the submitting `user` (`id`, `trust_level`, `staff`), and an existing `topic` (`id`, `user_id`, `category_id`) only for replies. New topics have no topic ID or post ID. The trigger requires at least one category. Connect it to `condition:if` nodes, then to terminal `action:reject_submission` nodes with fixed plain-text messages; notes are permitted. A branch that ends without a rejection lets ordinary posting validations decide. Checks run synchronously for normal public topic/reply creation, including the approval queue, and cannot grant permissions. Private messages, edits, nonregular posts, and trusted `skip_validations` are excluded. Approval of an already queued post uses the core staff-approval path with `skip_validations`; the check runs when the author submits to the queue, not again when a reviewer approves it, even if the check or queued content has since changed. Published versions only; failures of an applicable check block submission with a generic localized message and log the workflow ID, never the draft content. No jobs, execution records, state writes, network calls, or ordinary executor runs occur in this path.
+
 Purpose: maintain a durable set of prompts for evaluating the Workflow AI authoring loop as schemas, tools, and prompting change.
 
 ## How to run a dev eval

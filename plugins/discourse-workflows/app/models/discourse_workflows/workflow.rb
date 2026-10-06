@@ -76,6 +76,7 @@ module DiscourseWorkflows
     validates :version_id, presence: true, length: { maximum: 36 }
     validate :error_workflow_must_exist
     validate :error_workflow_cannot_be_self
+    validate :error_workflow_not_allowed_for_submission_check
 
     before_destroy :nullify_error_workflow_back_references
 
@@ -173,7 +174,16 @@ module DiscourseWorkflows
     end
 
     def publish!(user: nil)
-      published_node_ids = active_version_target&.nodes&.map { |n| n["id"].to_s } || []
+      version = active_version_target
+      if SubmissionCheck::Graph.restricted?(version&.nodes)
+        SubmissionCheck::Graph.new(
+          nodes: version.nodes,
+          connections: version.connections,
+          settings: version.settings,
+          error_workflow_id: error_workflow_id,
+        ).validate!
+      end
+      published_node_ids = version&.nodes&.map { |n| n["id"].to_s } || []
 
       transaction do
         update!(
@@ -376,6 +386,19 @@ module DiscourseWorkflows
     def error_workflow_cannot_be_self
       return if error_workflow_id.nil? || id.nil?
       errors.add(:error_workflow_id, :cannot_be_self) if error_workflow_id == id
+    end
+
+    def error_workflow_not_allowed_for_submission_check
+      return if error_workflow_id.nil?
+      unless SubmissionCheck::Graph.restricted?(nodes) ||
+               SubmissionCheck::Graph.restricted?(published_nodes)
+        return
+      end
+
+      errors.add(
+        :error_workflow_id,
+        I18n.t("discourse_workflows.errors.submission_check.error_workflow_not_allowed"),
+      )
     end
 
     def nullify_error_workflow_back_references

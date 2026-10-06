@@ -17,6 +17,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { isSubmissionWorkflow } from "../../../lib/workflows/submission-check";
 import BuildWithAiModal from "../build-with-ai-modal";
 import {
   buildCanvasClipboardPayload,
@@ -156,6 +157,10 @@ export default class WorkflowCanvas extends Component {
 
   get showEmptyState() {
     return !this.isLoading && (this.args.nodes || []).length === 0;
+  }
+
+  get submissionWorkflow() {
+    return isSubmissionWorkflow(this.args.nodes);
   }
 
   @action
@@ -1034,6 +1039,7 @@ export default class WorkflowCanvas extends Component {
           {{#in-element entry.element insertBefore=null}}
             <WorkflowNode
               @consumeInsertHighlight={{this.consumeInsertHighlight}}
+              @isSubmissionWorkflow={{this.submissionWorkflow}}
               @node={{entry.node}}
               @onDelete={{this.rete.renderer.onNodeDelete}}
               @onEditNode={{@onEditNode}}

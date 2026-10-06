@@ -27,6 +27,13 @@ en:
           description: "AI-assisted workflow authoring"
           workflow_authoring: "Workflow authoring"
     discourse_workflows:
+      submission_check:
+        run_hint: "Submit a topic or reply to test this check."
+        settings_hint: "Submission checks run during posting. They do not use timezones or error workflows."
+        message: "Message to show when this submission is blocked"
+        category_ids: "Categories"
+        category_ids_description: "Choose at least one category before publishing this check."
+        include_subcategories: "Include subcategories"
       actor:
         system: "System user"
         anonymous: "Anonymous user"
@@ -214,6 +221,8 @@ en:
           one: "%{count} item"
           other: "%{count} items"
       nodes:
+        "trigger:before_post_submission": "Before post submission"
+        "action:reject_submission": "Reject submission"
         "trigger:topic_published": "Topic published"
         "trigger:topic_timer_changed": "Topic timer changed"
         "trigger:topic_status_changed": "Topic status changed"
@@ -298,6 +307,8 @@ en:
         "action:topic_moderation": "Topic moderation"
         "action:flag_user": "Flag user"
       node_descriptions:
+        "trigger:before_post_submission": "Checks a new topic or reply before it is saved or queued for approval"
+        "action:reject_submission": "Stops the submission and shows a fixed message to the author"
         "trigger:topic_published": "Fires when a topic is published"
         "trigger:topic_timer_changed": "Fires when a topic timer is created, updated, cancelled, or completed"
         "trigger:topic_status_changed": "Fires when a topic is closed, reopened, archived, listed, or pinned, or those changes are reversed"
