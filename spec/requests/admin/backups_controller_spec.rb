@@ -537,34 +537,36 @@ RSpec.describe Admin::BackupsController do
       end
 
       describe "when filename is valid" do
-        it "uploads the file" do
-          freeze_time
-          described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
+        %w[tar tar.gz].each do |extension|
+          it "uploads a #{extension} file" do
+            freeze_time
+            described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
-          filename = "test_Site-0123456789.tar.gz"
+            filename = "test_Site-0123456789.#{extension}"
 
-          post "/admin/backups/upload.json",
-               params: {
-                 resumableFilename: filename,
-                 resumableTotalSize: 1,
-                 resumableIdentifier: "test",
-                 resumableChunkNumber: "1",
-                 resumableChunkSize: "1",
-                 resumableCurrentChunkSize: "1",
-                 file: fixture_file_upload(Tempfile.new),
-               }
-          expect_job_enqueued(
-            job: :backup_chunks_merger,
-            args: {
-              filename: filename,
-              identifier: "test",
-              chunks: 1,
-            },
-            at: 5.seconds.from_now,
-          )
+            post "/admin/backups/upload.json",
+                 params: {
+                   resumableFilename: filename,
+                   resumableTotalSize: 1,
+                   resumableIdentifier: "test",
+                   resumableChunkNumber: "1",
+                   resumableChunkSize: "1",
+                   resumableCurrentChunkSize: "1",
+                   file: fixture_file_upload(Tempfile.new),
+                 }
+            expect_job_enqueued(
+              job: :backup_chunks_merger,
+              args: {
+                filename: filename,
+                identifier: "test",
+                chunks: 1,
+              },
+              at: 5.seconds.from_now,
+            )
 
-          expect(response.status).to eq(200)
-          expect(response.body).to eq("")
+            expect(response.status).to eq(200)
+            expect(response.body).to eq("")
+          end
         end
 
         context "when readonly mode is enabled" do

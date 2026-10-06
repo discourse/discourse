@@ -10,6 +10,7 @@ import {
   displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
+  isBackup,
   isImage,
   rateLimitRetryOptions,
   validateUploadedFiles,
@@ -49,6 +50,22 @@ function controllerRateLimit(waitSeconds = RETRY_AFTER_SECONDS) {
 }
 
 module("Unit | Utility | uploads", function (hooks) {
+  test("recognizes plain and compressed backup filenames", function (assert) {
+    for (const extension of ["tar", "tar.gz"]) {
+      for (const version of [
+        "20261005091527",
+        "2026-10-0-latest-20261005091527",
+        "2026-10-0-latest-1-20261005091527",
+      ]) {
+        assert.true(
+          isBackup(`site-2026-10-06-111616-v${version}.${extension}`)
+        );
+      }
+    }
+    assert.false(isBackup("site-v20261005091527.tar.partial"));
+    assert.false(isBackup("unrelated.tar"));
+  });
+
   setupTest(hooks);
 
   hooks.beforeEach(function () {

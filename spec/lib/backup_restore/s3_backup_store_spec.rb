@@ -96,6 +96,18 @@ RSpec.describe BackupRestore::S3BackupStore do
   it_behaves_like "backup store"
   it_behaves_like "remote backup store"
 
+  it "lists plain tar backups but hides partial archives" do
+    %w[backup.tar backup.tar.partial].each do |filename|
+      @objects << {
+        key: "default/#{filename}",
+        size: 17,
+        last_modified: Time.parse("2018-09-13T15:10:00Z"),
+      }
+    end
+
+    expect(store.files.map(&:filename)).to eq(["backup.tar"])
+  end
+
   describe "S3 specific behavior" do
     before { create_backups }
     after { remove_backups }

@@ -19,6 +19,22 @@ RSpec.describe BackupRestore::LocalBackupStore do
     expect(store.remote?).to eq(false)
   end
 
+  it "lists plain tar backups but hides partial archives" do
+    %w[backup.tar backup.tar.partial].each do |filename|
+      create_local_backup_file(
+        root_directory: @root_directory,
+        db_name: "default",
+        filename: filename,
+        last_modified: "2018-09-13T15:10:00Z",
+        size_in_bytes: 17,
+      )
+    end
+
+    expect(store.files.map(&:filename)).to eq(["backup.tar"])
+  ensure
+    remove_backups
+  end
+
   describe "path traversal protection" do
     let(:filename) { "a.tgz" }
 

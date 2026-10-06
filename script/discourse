@@ -98,7 +98,8 @@ class DiscourseCLI < Thor
         exit(1)
       end
 
-      filename_without_extension = File.basename(filename).sub(/\.(sql\.)?(tar\.gz|t?gz)$/i, "")
+      filename_without_extension =
+        File.basename(filename).sub(/\.(sql\.)?(tar(?:\.gz)?|t?gz)$/i, "")
     end
 
     old_include_s3_uploads_in_backups = SiteSetting.include_s3_uploads_in_backups

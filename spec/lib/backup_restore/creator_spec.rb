@@ -13,7 +13,7 @@ describe BackupRestore::Creator do
           creator = described_class.new(nil, with_uploads: with_uploads)
 
           expect(creator.instance_variable_get(:@backup_filename)).to eq(
-            "my-forum-2026-09-25-120000-v2026-9-0-latest-20260923080644.tar.gz",
+            "my-forum-2026-09-25-120000-v2026-9-0-latest-20260923080644.tar",
           )
         end
       end
@@ -57,7 +57,6 @@ describe BackupRestore::Creator do
     fab!(:user)
 
     let(:creator) { described_class.new(user.id) }
-    let(:tar_filename) { "/tmp/test_backup.tar" }
 
     before do
       SiteSetting.enable_s3_uploads = true
@@ -72,6 +71,21 @@ describe BackupRestore::Creator do
     end
 
     after { FileUtils.rm_rf(creator.instance_variable_get(:@tmp_directory)) }
+
+    def archive_remote_uploads
+      directory = creator.instance_variable_get(:@tmp_directory)
+      filename = File.join(directory, "backup.tar")
+      creator.instance_variable_set(:@archive_mutex, Mutex.new)
+      BackupRestore::ArchiveWriter.open(filename) do |archive|
+        creator.instance_variable_set(:@archive, archive)
+        silence_stdout { creator.send(:add_remote_uploads_to_archive) }
+      end
+      expect(Dir.glob(File.join(directory, "backup-upload-*"))).to be_empty
+      extracted = File.join(directory, "extracted")
+      FileUtils.mkdir_p(extracted)
+      Discourse::Utils.execute_command("tar", "-xf", filename, "-C", extracted)
+      extracted
+    end
 
     [1, 4].each do |concurrency|
       context "with #{concurrency} download workers" do
@@ -148,15 +162,12 @@ describe BackupRestore::Creator do
 
           FileStore::S3Store.stubs(:new).returns(store)
 
-          Discourse::Utils.stubs(:execute_command)
-
-          silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
+          tmp_dir = archive_remote_uploads
 
           # Should only download 2 files: 1 for the duplicates group + 1 for the unique upload
           expect(download_count).to eq(2)
 
           # All 4 file paths should exist in the tmp directory
-          tmp_dir = creator.instance_variable_get(:@tmp_directory)
           upload_dir = Discourse.store.upload_path
           expect(File.exist?(File.join(tmp_dir, upload_dir, "original/1X/file1.png"))).to eq(true)
           expect(File.exist?(File.join(tmp_dir, upload_dir, "original/2X/file2.png"))).to eq(true)
@@ -199,16 +210,100 @@ describe BackupRestore::Creator do
             .returns(nil)
 
           FileStore::S3Store.stubs(:new).returns(store)
-          Discourse::Utils.stubs(:execute_command)
+          tmp_dir = archive_remote_uploads
 
-          silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
-
-          tmp_dir = creator.instance_variable_get(:@tmp_directory)
           upload_path =
             File.join(tmp_dir, Discourse.store.upload_path, "original/2X/3/#{shared_sha1}.png")
 
           expect(download_count).to eq(1)
           expect(File.read(upload_path)).to eq("file content")
+        end
+
+        it "bounds temporary downloads to the worker count and removes them after archiving" do
+          uploads =
+            12.times.map do |id|
+              described_class::UploadData.new(
+                id: id,
+                url: "//bucket.s3.amazonaws.com/#{id}",
+                sha1: id.to_s,
+                extension: "txt",
+                original_filename: "#{id}.txt",
+              )
+            end
+          creator.stubs(:group_remote_uploads_by_sha1).returns(uploads.index_with { |u| [u] })
+          store = FileStore::S3Store.new
+          FileStore::S3Store.stubs(:new).returns(store)
+          store.define_singleton_method(:get_path_for_upload) do |upload|
+            "original/#{upload.id}.txt"
+          end
+          staged_counts = Queue.new
+          store
+            .stubs(:download_file)
+            .with do |_upload, filename|
+              File.write(filename, "download")
+              staged_counts << Dir.glob(File.join(File.dirname(filename), "backup-upload-*")).size
+              true
+            end
+
+          extracted = archive_remote_uploads
+
+          expect(12.times.map { staged_counts.pop }.max).to be <= concurrency
+          uploads.each do |upload|
+            path = File.join(extracted, Discourse.store.upload_path, "original/#{upload.id}.txt")
+            expect(File.read(path)).to eq("download")
+            expect(File.stat(path).mode & 0o777).to eq(0o644)
+          end
+        end
+
+        it "discards failed downloads without adding partial files to the archive" do
+          upload = Fabricate(:upload)
+          store = FileStore::S3Store.new
+          FileStore::S3Store.stubs(:new).returns(store)
+          store.define_singleton_method(:download_file) do |_upload, filename|
+            File.write(filename, "partial download")
+            raise "Download failed"
+          end
+
+          extracted = archive_remote_uploads
+
+          expect(Dir.empty?(extracted)).to eq(true)
+          expect(creator.instance_variable_get(:@logs).join).to include("#{upload.id}")
+        end
+      end
+    end
+  end
+
+  describe "#create_archive" do
+    it "keeps completed tar backups during cleanup" do
+      Dir.mktmpdir do |directory|
+        completed = File.join(directory, "backup.tar")
+        partial = File.join(directory, "backup.tar.partial")
+        File.write(completed, "completed")
+        File.write(partial, "partial")
+        creator = described_class.new(nil)
+        creator.instance_variable_set(:@archive_directory, directory)
+
+        creator.send(:remove_partial_archives)
+
+        expect(File.read(completed)).to eq("completed")
+        expect(File.exist?(partial)).to eq(false)
+      end
+    end
+
+    [RuntimeError, SystemExit].each do |error|
+      it "removes the partial archive when interrupted by #{error}" do
+        Dir.mktmpdir do |directory|
+          dump = File.join(directory, "db")
+          FileUtils.mkdir_p(dump)
+          File.write(File.join(dump, "toc.dat"), "database")
+          creator = described_class.new(nil, with_uploads: false)
+          creator.instance_variable_set(:@dump_filename, dump)
+          creator.instance_variable_set(:@archive_basename, File.join(directory, "backup"))
+          BackupRestore::ArchiveWriter.any_instance.expects(:add_file).raises(error)
+
+          expect { creator.send(:create_archive) }.to raise_error(error)
+
+          expect(Dir.glob(File.join(directory, "backup*"))).to be_empty
         end
       end
     end

@@ -108,7 +108,7 @@ RSpec.describe BackupRestore do
         handler =
           BackupRestore::BackupFileHandler.new(
             logger,
-            "backup.tar.gz",
+            "backup.tar",
             current_db,
             root_tmp_directory: archive_directory,
           )

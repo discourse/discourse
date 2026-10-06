@@ -254,7 +254,9 @@ export function isAudio(path) {
 }
 
 export function isBackup(path) {
-  return /^\w[\w\.-]*-v\d+\.(tar\.gz)$/i.test(path);
+  return /^\w[\w\.-]*-v(?:\d{4}-\d{1,2}-\d+(?:-latest(?:-\d+)?)?-)?\d+\.tar(?:\.gz)?$/i.test(
+    path
+  );
 }
 
 function uploadTypeFromFileName(fileName) {

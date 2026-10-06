@@ -51,7 +51,7 @@ module BackupRestore
     private
 
     def unsorted_files
-      files = Dir.glob(File.join(@base_directory, "*.{gz,tgz}"))
+      files = Dir.glob(File.join(@base_directory, "*.{tar,gz,tgz}"))
       files.map! { |filename| create_file_from_path(filename) }
       files
     end
