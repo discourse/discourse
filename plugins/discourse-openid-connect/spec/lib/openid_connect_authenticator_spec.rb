@@ -15,6 +15,7 @@ describe OpenIDConnectAuthenticator do
       },
       extra: {
         raw_info: {
+          email_verified: true,
           email: user.email,
           name: "John Doe",
         },
@@ -23,12 +24,41 @@ describe OpenIDConnectAuthenticator do
   end
 
   context "when email_verified is not supplied" do
-    # Some IDPs do not supply this information
-    # In this case we trust that they have verified the address
-    it "matches the user" do
+    before { hash[:extra][:raw_info].delete(:email_verified) }
+
+    it "uses a true fallback to verify the email and match the user" do
+      SiteSetting.openid_connect_email_verified_claim_fallback = true
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(user)
+      expect(result.email_valid).to eq(true)
+    end
+
+    it "uses the default false fallback and does not match the user" do
+      result = authenticator.after_authenticate(hash)
+
+      expect(result.user).to be_nil
+      expect(result.email_valid).to eq(false)
+    end
+  end
+
+  context "when the fallback is true and email_verified is supplied" do
+    before { SiteSetting.openid_connect_email_verified_claim_fallback = true }
+
+    {
+      true => true,
+      "true" => true,
+      "True" => true,
+      false => false,
+      "false" => false,
+    }.each do |claim, verified|
+      it "uses the supplied #{claim.inspect} value instead of the fallback" do
+        hash[:extra][:raw_info][:email_verified] = claim
+        result = authenticator.after_authenticate(hash)
+
+        expect(result.email_valid).to eq(verified)
+        expect(result.user).to eq(verified ? user : nil)
+      end
     end
   end
 
