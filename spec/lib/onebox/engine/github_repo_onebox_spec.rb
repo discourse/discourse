@@ -66,6 +66,34 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
         expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("999 forks")
       end
 
+      it "discloses the snapshot time using Discourse local-date markup" do
+        freeze_time Time.utc(2026, 10, 6, 13, 45, 30)
+
+        snapshot = metadata.at_css(".github-repo-metadata__snapshot")
+        date = snapshot.at_css(".discourse-local-date")
+
+        expect(snapshot.text).to eq("(Snapshot: 01:45PM - 06 Oct 26 UTC)")
+        expect(date["data-date"]).to eq("2026-10-06")
+        expect(date["data-time"]).to eq("13:45:30")
+        expect(date["data-timezone"]).to eq("UTC")
+        expect(date["data-format"]).to eq("lll")
+        expect(metadata.element_children.last).to eq(snapshot)
+      end
+
+      it "keeps the original snapshot time when a cached onebox is reused" do
+        freeze_time Time.utc(2026, 10, 6, 13, 45, 30)
+        Oneboxer.invalidate(gh_link)
+        Oneboxer.expects(:compute_external_onebox).once.returns(onebox: html, preview: html)
+        original = Oneboxer.external_onebox(gh_link)
+
+        freeze_time Time.utc(2026, 10, 6, 15, 0, 0)
+
+        expect(Oneboxer.external_onebox(gh_link)).to eq(original)
+        expect(original[:onebox]).to include('data-time="13:45:30"')
+      ensure
+        Oneboxer.invalidate(gh_link)
+      end
+
       it "abbreviates thousands with one decimal place" do
         repository["stargazers_count"] = 195_900
         repository["forks_count"] = 17_000
@@ -140,16 +168,26 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
         expect(
           sanitized_metadata.css(".github-repo-metadata__icon[aria-hidden='true'] path").size,
         ).to eq(2)
+        snapshot_date =
+          sanitized_metadata.at_css(".github-repo-metadata__snapshot .discourse-local-date")
+        expect(snapshot_date["data-date"]).to be_present
+        expect(snapshot_date["data-time"]).to be_present
+        expect(snapshot_date["data-format"]).to eq("lll")
+        expect(snapshot_date["data-timezone"]).to eq("UTC")
         expect(WebMock).to have_requested(:get, api_uri).once
       end
 
       it "uses translated count labels and compact numbers in the active locale" do
         TranslationOverride.upsert!(:de, "onebox.github.stars.other", "%{number} Sterne")
         TranslationOverride.upsert!(:de, "onebox.github.forks.other", "%{number} Forks")
+        TranslationOverride.upsert!(:de, "onebox.github.snapshot", "Momentaufnahme")
 
         I18n.with_locale(:de) do
           expect(metadata.at_css(".github-repo-metadata__stars").text.strip).to eq("41,2 T. Sterne")
           expect(metadata.at_css(".github-repo-metadata__forks").text.strip).to eq("8,2 T. Forks")
+          expect(metadata.at_css(".github-repo-metadata__snapshot").text).to start_with(
+            "(Momentaufnahme:",
+          )
         end
       end
     end

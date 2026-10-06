@@ -62,6 +62,11 @@ module Onebox
         result["forks"] = repository_count("forks", result["forks_count"])
         result["has_metadata"] = result["language"].present? || result["stars"].present? ||
           result["forks"].present?
+        snapshot_at = Time.now.utc
+        result["snapshot_at"] = snapshot_at.strftime("%I:%M%p - %d %b %y %Z")
+        result["snapshot_at_date"] = snapshot_at.strftime("%F")
+        result["snapshot_at_time"] = snapshot_at.strftime("%T")
+        result["i18n"] = { snapshot: I18n.t("onebox.github.snapshot") }
 
         # The SecureRandom part of this doesn't matter, it's just used for caching the
         # repo thumbnail which is generated on the fly by GitHub. There isn't detail

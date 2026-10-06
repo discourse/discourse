@@ -706,7 +706,7 @@ pre.onebox code ol.lines li.selected {
     gap: 0.5em 1em;
     clear: both;
     padding-top: 0.5em;
-    color: var(--token-color-text-subtle);
+    color: var(--token-color-text-default);
     font-size: var(--font-down-1);
 
     &__item {
@@ -718,6 +718,17 @@ pre.onebox code ol.lines li.selected {
     &__icon {
       fill: currentcolor;
       flex-shrink: 0;
+    }
+
+    &__snapshot {
+      margin-inline-start: auto;
+      color: var(--token-color-text-subtle);
+      font-size: var(--font-down-1);
+
+      .discourse-local-date,
+      .discourse-local-date .d-icon {
+        color: inherit;
+      }
     }
   }
 }

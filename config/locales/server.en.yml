@@ -6305,6 +6305,7 @@ en:
       forks:
         one: "%{number} fork"
         other: "%{number} forks"
+      snapshot: "Snapshot"
       pr_title:
         default: "Pull Request"
         draft: "Draft Pull Request"
