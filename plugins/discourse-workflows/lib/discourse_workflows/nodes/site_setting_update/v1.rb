@@ -59,14 +59,7 @@ module DiscourseWorkflows
               required: false,
               default: "",
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-            },
+            **actor_property,
           },
         )
 

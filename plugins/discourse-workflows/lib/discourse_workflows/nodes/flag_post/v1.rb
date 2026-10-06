@@ -74,14 +74,7 @@ module DiscourseWorkflows
                 control: :textarea,
               },
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-            },
+            **actor_property,
           },
         )
 
