@@ -14,9 +14,10 @@ import SelectEngine, {
 } from "discourse/ui-kit/select/select-engine";
 
 /**
- * Compatibility bridge that lets legacy `api.modifySelectKit(id).{prependContent,
- * appendContent,replaceContent,onChange}` extensions of a component keep firing after
- * that component is re-implemented on the ui-kit select engine.
+ * Compatibility bridge that lets legacy
+ * `api.modifySelectKit(id).{prependContent,appendContent,replaceContent,onChange}`
+ * extensions of a component keep firing after that component is re-implemented on the
+ * ui-kit select engine.
  *
  * It reuses select-kit's own `applyContentPluginApiCallbacks` /
  * `applyOnChangePluginApiCallbacks`, which already implement the exact legacy

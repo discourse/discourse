@@ -34,14 +34,14 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
         <DSelect
           class="sync-resolve-value"
           @items={{array}}
-          @value={{123}}
           @resolveValue={{resolveValue}}
+          @value={{123}}
         />
         <DSelect
           class="sync-resolve-values"
           @items={{array}}
-          @value={{456}}
           @resolveValues={{resolveValues}}
+          @value={{456}}
         />
       </template>
     );
@@ -84,12 +84,12 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
         {{#if this.mounted}}
           <DSelect
             @load={{this.load}}
-            @value={{this.value}}
-            @resolveValue={{this.resolveValue}}
             @minChars={{3}}
+            @resolveValue={{this.resolveValue}}
+            @value={{this.value}}
           />
         {{/if}}
-        <button type="button" class="toggle" {{on "click" this.toggle}}>
+        <button class="toggle" type="button" {{on "click" this.toggle}}>
           Toggle
         </button>
       </template>
@@ -123,12 +123,12 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       <template>
         <DSelect
           @items={{array}}
-          @value={{this.value}}
           @resolveValue={{resolveValue}}
+          @value={{this.value}}
         />
         <button
-          type="button"
           class="bump"
+          type="button"
           {{on "click" this.bump}}
         >bump</button>
       </template>
@@ -153,7 +153,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{array}} @value={{7}} @resolveValue={{resolveValue}} />
+        <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{7}} />
       </template>
     );
 
@@ -210,8 +210,8 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
         <DSelect
           class="with-resolver"
           @load={{load}}
-          @value={{2}}
           @resolveValue={{resolveValue}}
+          @value={{2}}
         />
         <DSelect
           class="with-pending-value-items"
@@ -241,8 +241,8 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
         <DSelect
           @items={{array}}
           @multiple={{true}}
-          @value={{array 1 2}}
           @resolveValues={{resolveValues}}
+          @value={{array 1 2}}
         />
       </template>
     );
@@ -279,9 +279,9 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
         <DSelect
           @items={{array}}
           @multiple={{true}}
+          @resolveValues={{resolveValues}}
           @value={{array 1 2}}
           @valueItems={{valueItems}}
-          @resolveValues={{resolveValues}}
         />
       </template>
     );
@@ -303,10 +303,10 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{array}}
-          @value={{123}}
-          @resolveValue={{resolveValue}}
           @createUnresolvedItem={{createUnresolvedItem}}
+          @items={{array}}
+          @resolveValue={{resolveValue}}
+          @value={{123}}
         />
       </template>
     );
@@ -328,10 +328,10 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{array}}
-          @value={{123}}
-          @resolveValue={{resolveValue}}
           @createUnresolvedItem={{createUnresolvedItem}}
+          @items={{array}}
+          @resolveValue={{resolveValue}}
+          @value={{123}}
         />
       </template>
     );
@@ -353,7 +353,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
 
     const renderPromise = render(
       <template>
-        <DSelect @items={{array}} @value={{2}} @resolveValue={{resolveValue}} />
+        <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}} />
       </template>
     );
     await waitFor("[role='combobox']");
@@ -485,8 +485,8 @@ module(
             <:error as |error retry|>
               <div class="custom-error">{{error.message}}</div>
               <button
-                type="button"
                 class="custom-retry"
+                type="button"
                 {{on "click" retry}}
               >go</button>
             </:error>

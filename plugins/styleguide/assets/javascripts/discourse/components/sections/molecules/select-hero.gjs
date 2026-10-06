@@ -79,17 +79,17 @@ export default class SelectHero extends Component {
       accessible name comes from the label argument instead, matching the visible text. }}
       <div class="select-hero__row">
         <div class="select-hero__field">
-          <span class="select-hero__label" aria-hidden="true">
+          <span aria-hidden="true" class="select-hero__label">
             {{i18n "styleguide.sections.select.hero.category"}}
           </span>
           <DSelect
             @identifier="sg-hero-category"
             @items={{this.categories}}
-            @value={{this.categoryValue}}
-            @onChange={{this.updateCategory}}
-            @valueField="slug"
             @label={{i18n "styleguide.sections.select.hero.category"}}
+            @onChange={{this.updateCategory}}
             @placeholder={{i18n "styleguide.sections.select.hero.category"}}
+            @value={{this.categoryValue}}
+            @valueField="slug"
           >
             {{! A category is a badge, not a string — no argument can express it. }}
             <:selection as |item|>{{dCategoryBadge item}}</:selection>
@@ -98,19 +98,19 @@ export default class SelectHero extends Component {
         </div>
 
         <div class="select-hero__field select-hero__field--wide">
-          <span class="select-hero__label" aria-hidden="true">
+          <span aria-hidden="true" class="select-hero__label">
             {{i18n "styleguide.sections.select.hero.tags"}}
           </span>
           <DSelect
-            @label={{i18n "styleguide.sections.select.hero.tags"}}
             @identifier="sg-hero-tags"
             @items={{this.tagItems}}
-            @multiple={{true}}
-            @value={{this.tagValue}}
-            @onChange={{this.updateTags}}
-            @valueField="slug"
+            @label={{i18n "styleguide.sections.select.hero.tags"}}
             @labelField="label"
+            @multiple={{true}}
+            @onChange={{this.updateTags}}
             @placeholder={{i18n "styleguide.sections.select.hero.tags"}}
+            @value={{this.tagValue}}
+            @valueField="slug"
           >
             {{! No selection block: the chip is a tag name, which is exactly the default. }}
             <:item as |item|>
@@ -124,17 +124,17 @@ export default class SelectHero extends Component {
         </div>
 
         <div class="select-hero__field">
-          <span class="select-hero__label" aria-hidden="true">
+          <span aria-hidden="true" class="select-hero__label">
             {{i18n "styleguide.sections.select.hero.notifications"}}
           </span>
           <DSelect
-            @label={{i18n "styleguide.sections.select.hero.notifications"}}
             @identifier="sg-hero-notifications"
             @items={{this.notificationLevels}}
-            @value={{this.notificationValue}}
-            @onChange={{this.updateNotification}}
-            @valueField="level"
+            @label={{i18n "styleguide.sections.select.hero.notifications"}}
             @labelField="title"
+            @onChange={{this.updateNotification}}
+            @value={{this.notificationValue}}
+            @valueField="level"
             @variant="static"
           >
             {{! The icon is how a level is recognised at a glance; it is the same in both

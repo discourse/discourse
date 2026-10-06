@@ -28,13 +28,13 @@ export default class EventsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-events"
-      @placement="top-start"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @onShow={{this.onShow}}
       @onClose={{this.onClose}}
+      @onShow={{this.onShow}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placement="top-start"
+      @value={{this.value}}
     />
     <output class="styleguide-example__result">
       {{i18n

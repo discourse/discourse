@@ -41,16 +41,16 @@ export default class DebounceSelectExample extends Component {
 
   <template>
     <DSelect
+      @debounce={{300}}
       @identifier="sg-debounce"
-      @placement="top-start"
       @load={{this.load}}
-      @resolveValue={{localeApi.find}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @onShow={{this.resetLog}}
-      @variant="button"
-      @debounce={{300}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placement="top-start"
+      @resolveValue={{localeApi.find}}
+      @value={{this.value}}
+      @variant="button"
       {{on "input" this.countKeystroke}}
     />
     <output class="styleguide-example__result">

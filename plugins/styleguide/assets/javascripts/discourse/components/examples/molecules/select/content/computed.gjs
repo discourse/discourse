@@ -61,13 +61,13 @@ export default class ComputedSelectExample extends Component {
     <DSelect
       @identifier="sg-content-computed"
       @items={{TIMEZONES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @onShow={{this.onShow}}
       @onClose={{this.onClose}}
+      @onShow={{this.onShow}}
       @placeholder={{i18n
         "styleguide.sections.select.content.computed_placeholder"
       }}
+      @value={{this.value}}
     >
       <:item as |zone|>
         <span class="select-examples__row select-examples__row--glyph">

@@ -592,7 +592,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
 
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 

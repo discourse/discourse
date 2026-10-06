@@ -32,16 +32,16 @@ export default class KeyboardTranscriptSelectExample extends Component {
     <DSelect
       @identifier="sg-keyboard-transcript"
       @items={{LOCALES}}
-      @placement="top-start"
       @multiple={{true}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+      @placement="top-start"
+      @value={{this.value}}
     />
 
     <div
-      class="select-keyboard__transcript"
       aria-hidden="true"
+      class="select-keyboard__transcript"
       data-test-announcement-log
       {{didUpdate this.captureAnnouncement this.a11y.politeMessage}}
     >

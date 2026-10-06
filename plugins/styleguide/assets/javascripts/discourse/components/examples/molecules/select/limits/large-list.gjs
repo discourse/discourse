@@ -19,9 +19,9 @@ export default class LargeListSelectExample extends Component {
     <DSelect
       @identifier="sg-large-list"
       @items={{this.items}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
     />
   </template>
 }

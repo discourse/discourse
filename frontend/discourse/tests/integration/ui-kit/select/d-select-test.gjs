@@ -44,8 +44,8 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
         <DSelect
           class="frame-multi"
           @items={{ITEMS}}
-          @value={{array 1 2}}
           @multiple={{true}}
+          @value={{array 1 2}}
         />
         <DSelect
           class="frame-button"
@@ -319,9 +319,9 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       <template>
         <DSelect
           @items={{items}}
-          @value={{1}}
           @labelField="title"
           @placeholder="Pick one"
+          @value={{1}}
         >
           <:selection as |item|><strong>{{item.title}}</strong></:selection>
         </DSelect>
@@ -343,7 +343,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(
       <template>
         <Host @value={{1}} />
-        <button type="button" class="outside">outside</button>
+        <button class="outside" type="button">outside</button>
       </template>
     );
 
@@ -371,7 +371,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(
       <template>
         <Host @value={{1}} />
-        <button type="button" class="outside">outside</button>
+        <button class="outside" type="button">outside</button>
       </template>
     );
 
@@ -419,7 +419,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(
       <template>
         <Host @value={{1}} />
-        <button type="button" class="outside">outside</button>
+        <button class="outside" type="button">outside</button>
       </template>
     );
 
@@ -456,7 +456,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(
       <template>
         <Host />
-        <button type="button" class="outside">outside</button>
+        <button class="outside" type="button">outside</button>
       </template>
     );
 
@@ -599,7 +599,7 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await render(
       <template>
         <Host />
-        <button type="button" class="outside">outside</button>
+        <button class="outside" type="button">outside</button>
       </template>
     );
     await click("[role='combobox']");
@@ -1132,7 +1132,7 @@ module(
 
     test("uses default labels when presentation blocks are omitted", async function (assert) {
       await render(
-        <template><DefaultHost @variant="button" @value={{2}} /></template>
+        <template><DefaultHost @value={{2}} @variant="button" /></template>
       );
 
       assert
@@ -1374,7 +1374,7 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
 
   test("uses default labels when presentation blocks are omitted", async function (assert) {
     await render(
-      <template><DefaultHost @variant="static" @value={{2}} /></template>
+      <template><DefaultHost @value={{2}} @variant="static" /></template>
     );
 
     assert
@@ -1460,11 +1460,11 @@ module("Integration | ui-kit | select | menu modal decision", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="Menu content"
           @identifier="modal-decision"
           @inline={{true}}
-          @modalForMobile={{true}}
           @label="Open menu"
-          @content="Menu content"
+          @modalForMobile={{true}}
         />
       </template>
     );
@@ -1496,9 +1496,9 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @load={{load}}
             @minChars={{3}}
-            @identifier="test-select"
             @placeholder="Search"
           />
         </template>
@@ -1538,9 +1538,9 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @load={{load}}
             @minChars={{3}}
-            @identifier="test-select"
             @placeholder="Search"
           />
         </template>
@@ -1567,9 +1567,9 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @load={{load}}
             @minChars={{3}}
-            @identifier="test-select"
             @placeholder="Search"
           />
         </template>
@@ -1594,8 +1594,8 @@ module(
       await render(
         <template>
           <DSelect
-            @load={{load}}
             @identifier="test-select"
+            @load={{load}}
             @placeholder="Search"
           />
         </template>
@@ -1616,9 +1616,9 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
             @variant="button"
-            @identifier="test-select"
           />
         </template>
       );
@@ -1642,7 +1642,7 @@ module(
 
       await render(
         <template>
-          <DSelect @load={{load}} @minChars={{3}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @load={{load}} @minChars={{3}} />
         </template>
       );
 
@@ -1671,10 +1671,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
-            @value={{1}}
-            @placeholder="Choose an option"
             @identifier="test-select"
+            @items={{ITEMS}}
+            @placeholder="Choose an option"
+            @value={{1}}
           >
             <:selection as |item|>{{item.name}}</:selection>
             <:item as |item|>{{item.name}}</:item>
@@ -1704,10 +1704,10 @@ module(
       await render(
         <template>
           <DSelect
-            @load={{load}}
             @debounce={{false}}
-            @variant="button"
             @identifier="test-select"
+            @load={{load}}
+            @variant="button"
           />
         </template>
       );
@@ -1739,11 +1739,11 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
-            @minChars={{3}}
             @allowCreate={{true}}
             @createItem={{createItem}}
             @identifier="test-select"
+            @items={{ITEMS}}
+            @minChars={{3}}
           />
         </template>
       );
@@ -1771,10 +1771,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @allowCreate={{true}}
             @createItem={{createItem}}
             @identifier="test-select"
+            @items={{ITEMS}}
           />
         </template>
       );
@@ -1795,7 +1795,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @minChars={{3}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
         </template>
       );
 
@@ -1821,7 +1821,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @minChars={{3}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
         </template>
       );
 
@@ -1838,7 +1838,7 @@ module(
     test("below @minChars the combobox advertises no listbox reference", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @minChars={{3}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
         </template>
       );
 
@@ -1863,10 +1863,10 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
             @minChars={{3}}
             @variant="button"
-            @identifier="test-select"
           />
         </template>
       );
@@ -1886,10 +1886,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
             @debounce={{true}}
-            @variant="button"
             @identifier="test-select"
+            @items={{ITEMS}}
+            @variant="button"
           />
         </template>
       );
@@ -1915,7 +1915,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @minChars={{3}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} @minChars={{3}} />
         </template>
       );
 
@@ -1946,10 +1946,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
-            @onShow={{onShow}}
-            @onClose={{onClose}}
             @identifier="test-select"
+            @items={{ITEMS}}
+            @onClose={{onClose}}
+            @onShow={{onShow}}
           />
         </template>
       );
@@ -1975,7 +1975,7 @@ module(
     test("a consumer :empty block replaces the default text but keeps the status live-region", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @identifier="test-select">
+          <DSelect @identifier="test-select" @items={{ITEMS}}>
             <:empty><span class="custom-empty">No luck</span></:empty>
           </DSelect>
         </template>
@@ -2004,9 +2004,9 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
             @onShow={{onShow}}
-            @identifier="test-select"
           />
         </template>
       );
@@ -2024,7 +2024,7 @@ module(
     test("without an :empty block the default no-results still shows", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} />
         </template>
       );
 
@@ -2039,9 +2039,9 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
             @placement="bottom-end"
-            @identifier="test-select"
           />
         </template>
       );
@@ -2064,7 +2064,7 @@ module(
       // gap (offset 10) is only a few pixels.
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @offset={{200}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} @offset={{200}} />
         </template>
       );
 
@@ -2102,11 +2102,11 @@ module(
 
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
-            @value={{this.value}}
             @onChange={{this.onChange}}
             @onShow={{this.onShow}}
-            @identifier="test-select"
+            @value={{this.value}}
           />
           <p class="repro-count">{{this.count}}</p>
         </template>
@@ -2139,16 +2139,16 @@ module(
           <DSelect
             class="callback-button"
             @items={{ITEMS}}
-            @variant="button"
-            @onShow={{buttonOnShow}}
             @onClose={{buttonOnClose}}
+            @onShow={{buttonOnShow}}
+            @variant="button"
           />
           <DSelect
             class="callback-static"
             @items={{ITEMS}}
-            @variant="static"
-            @onShow={{staticOnShow}}
             @onClose={{staticOnClose}}
+            @onShow={{staticOnShow}}
+            @variant="static"
           />
         </template>
       );
@@ -2170,10 +2170,10 @@ module(
       await render(
         <template>
           <DSelect
-            @load={{load}}
             @debounce={{false}}
-            @variant="button"
             @identifier="test-select"
+            @load={{load}}
+            @variant="button"
           >
             <:empty><span class="async-empty">No remote matches</span></:empty>
           </DSelect>
@@ -2217,8 +2217,8 @@ module(
         <template>
           <DSelect
             @items={{ITEMS}}
-            @placement="top-end"
             @offset={{200}}
+            @placement="top-end"
             @variant="button"
           />
         </template>
@@ -2253,7 +2253,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} />
         </template>
       );
       spy.resetHistory();
@@ -2278,7 +2278,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{many}} @value={{30}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{many}} @value={{30}} />
         </template>
       );
       spy.resetHistory();
@@ -2309,7 +2309,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{many}} @value={{30}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{many}} @value={{30}} />
         </template>
       );
 
@@ -2332,7 +2332,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{many}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{many}} />
         </template>
       );
 
@@ -2367,7 +2367,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{many}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{many}} />
         </template>
       );
 
@@ -2430,9 +2430,9 @@ module(
           <DSelect
             class="lbl-static"
             @items={{ITEMS}}
+            @label="Category"
             @value={{1}}
             @variant="static"
-            @label="Category"
           >
             <:selection as |item|>{{item.name}}</:selection>
             <:item as |item|>{{item.name}}</:item>
@@ -2440,9 +2440,9 @@ module(
           <DSelect
             class="lbl-button"
             @items={{ITEMS}}
+            @label="Category"
             @value={{1}}
             @variant="button"
-            @label="Category"
           >
             <:selection as |item|>{{item.name}}</:selection>
             <:item as |item|>{{item.name}}</:item>
@@ -2475,9 +2475,9 @@ module(
           <DSelect
             class="ro-btn"
             @items={{ITEMS}}
+            @readonly={{true}}
             @value={{1}}
             @variant="button"
-            @readonly={{true}}
           >
             <:selection as |item|>{{item.name}}</:selection>
             <:item as |item|>{{item.name}}</:item>
@@ -2508,15 +2508,15 @@ module(
         }
 
         <template>
-          <button type="button" class="do-lock" {{on "click" this.lock}}>
+          <button class="do-lock" type="button" {{on "click" this.lock}}>
             lock
           </button>
           <DSelect
+            @disabled={{this.locked}}
+            @identifier="test-select"
             @items={{ITEMS}}
             @value={{1}}
             @variant="static"
-            @disabled={{this.locked}}
-            @identifier="test-select"
           >
             <:selection as |item|>{{item.name}}</:selection>
             <:item as |item|>{{item.name}}</:item>
@@ -2557,13 +2557,13 @@ module(
         }
 
         <template>
-          <button type="button" class="do-unlock" {{on "click" this.unlock}}>
+          <button class="do-unlock" type="button" {{on "click" this.unlock}}>
             unlock
           </button>
           <ul role="listbox">
             <SelectItem
-              @engine={{engine}}
               @descriptor={{descriptor}}
+              @engine={{engine}}
               @locked={{this.locked}}
             >
               {{descriptor.item.name}}
@@ -2601,11 +2601,11 @@ module(
 
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
             @multiple={{true}}
-            @value={{this.value}}
             @onChange={{this.onChange}}
-            @identifier="test-select"
+            @value={{this.value}}
           >
             <:selection as |item|>{{item.name}}</:selection>
             <:item as |item|>{{item.name}}</:item>
@@ -2655,7 +2655,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{2}} @onChange={{onChange}} />
+          <DSelect @items={{ITEMS}} @onChange={{onChange}} @value={{2}} />
         </template>
       );
 
@@ -2675,7 +2675,7 @@ module(
 
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{2}} @onChange={{onChange}} />
+          <DSelect @items={{ITEMS}} @onChange={{onChange}} @value={{2}} />
         </template>
       );
 
@@ -2702,7 +2702,7 @@ module(
       await render(
         <template>
           <input class="elsewhere" />
-          <DSelect @items={{ITEMS}} @value={{2}} @identifier="test-select" />
+          <DSelect @identifier="test-select" @items={{ITEMS}} @value={{2}} />
         </template>
       );
 

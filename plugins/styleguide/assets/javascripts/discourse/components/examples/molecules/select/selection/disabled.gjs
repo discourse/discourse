@@ -15,13 +15,13 @@ export default class DisabledSelectExample extends Component {
 
   <template>
     <DSelect
+      @disabled={{true}}
       @identifier="sg-disabled"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @disabled={{true}}
-      @variant="static"
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
+      @variant="static"
     />
   </template>
 }

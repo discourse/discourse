@@ -17,11 +17,11 @@ export default class EmptySelectExample extends Component {
     <DSelect
       @identifier="sg-empty"
       @load={{emptyApi.search}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @variant="button"
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
       @noResultsLabel={{i18n "styleguide.sections.select.empty_label"}}
+      @onChange={{this.onChange}}
+      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
+      @variant="button"
     />
   </template>
 }

@@ -31,12 +31,12 @@ export default class TabOrderSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-tab-order"
-      @variant="button"
       @items={{LOCALES}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @label={{i18n "styleguide.sections.select.tab_order_label"}}
+      @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
+      @variant="button"
     >
       {{! A way OUT of the picker, not a way to confirm it: a select commits on selection, so a
         footer that looks like it needs pressing teaches the wrong shape.

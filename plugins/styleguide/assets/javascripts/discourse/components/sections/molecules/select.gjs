@@ -86,34 +86,34 @@ export default class Select extends Component {
     <SelectHero />
 
     <StyleguideGroups
-      @groups={{this.groups}}
-      @section={{@section}}
       @active={{@group}}
       @ariaLabel={{i18n "styleguide.sections.select.groups.aria_label"}}
+      @groups={{this.groups}}
+      @section={{@section}}
       as |Group|
     >
       <Group @id="start">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.default_example"}}
-          @description={{i18n "styleguide.sections.select.default_description"}}
-          @tryThis={{i18n "styleguide.sections.select.default_try_this"}}
           @code={{defaultSelectSource}}
+          @description={{i18n "styleguide.sections.select.default_description"}}
+          @title={{i18n "styleguide.sections.select.default_example"}}
+          @tryThis={{i18n "styleguide.sections.select.default_try_this"}}
         >
           <div class="select-examples__control"><DefaultSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.static_example"}}
-          @description={{i18n "styleguide.sections.select.static_description"}}
-          @tryThis={{i18n "styleguide.sections.select.static_try_this"}}
           @code={{staticSelectSource}}
+          @description={{i18n "styleguide.sections.select.static_description"}}
+          @title={{i18n "styleguide.sections.select.static_example"}}
+          @tryThis={{i18n "styleguide.sections.select.static_try_this"}}
         >
           <div class="select-examples__control"><StaticSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.multi_example"}}
-          @description={{i18n "styleguide.sections.select.multi_description"}}
-          @tryThis={{i18n "styleguide.sections.select.multi_try_this"}}
           @code={{multipleSelectSource}}
+          @description={{i18n "styleguide.sections.select.multi_description"}}
+          @title={{i18n "styleguide.sections.select.multi_example"}}
+          @tryThis={{i18n "styleguide.sections.select.multi_try_this"}}
         >
           <div class="select-examples__control"><MultipleSelectExample /></div>
         </StyleguideExample>
@@ -121,34 +121,34 @@ export default class Select extends Component {
 
       <Group @id="data">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.min_chars_example"}}
+          @code={{minimumCharactersSelectSource}}
           @description={{i18n
             "styleguide.sections.select.min_chars_description"
           }}
+          @title={{i18n "styleguide.sections.select.min_chars_example"}}
           @tryThis={{i18n "styleguide.sections.select.min_chars_try_this"}}
-          @code={{minimumCharactersSelectSource}}
         >
           <div class="select-examples__control">
             <MinimumCharactersSelectExample />
           </div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.debounce_example"}}
+          @code={{debounceSelectSource}}
           @description={{i18n
             "styleguide.sections.select.debounce_description"
           }}
+          @title={{i18n "styleguide.sections.select.debounce_example"}}
           @tryThis={{i18n "styleguide.sections.select.debounce_try_this"}}
-          @code={{debounceSelectSource}}
         >
           <div class="select-examples__control">
             <DebounceSelectExample />
           </div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.paged_example"}}
-          @description={{i18n "styleguide.sections.select.paged_description"}}
-          @tryThis={{i18n "styleguide.sections.select.paged_try_this"}}
           @code={{pagedSelectSource}}
+          @description={{i18n "styleguide.sections.select.paged_description"}}
+          @title={{i18n "styleguide.sections.select.paged_example"}}
+          @tryThis={{i18n "styleguide.sections.select.paged_try_this"}}
         >
           <:default>
             <div class="select-examples__control"><PagedSelectExample /></div>
@@ -156,12 +156,12 @@ export default class Select extends Component {
           <:note>{{i18n "styleguide.sections.select.paged_note"}}</:note>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.paged_cursor_example"}}
+          @code={{cursorPagedSelectSource}}
           @description={{i18n
             "styleguide.sections.select.paged_cursor_description"
           }}
+          @title={{i18n "styleguide.sections.select.paged_cursor_example"}}
           @tryThis={{i18n "styleguide.sections.select.paged_cursor_try_this"}}
-          @code={{cursorPagedSelectSource}}
         >
           <:default>
             <div class="select-examples__control">
@@ -175,10 +175,10 @@ export default class Select extends Component {
       <Group @id="states">
         <StyleguideExample
           class="--wide"
-          @title={{i18n "styleguide.sections.select.reload_example"}}
-          @description={{i18n "styleguide.sections.select.reload_description"}}
-          @tryThis={{i18n "styleguide.sections.select.reload_try_this"}}
           @code={{reloadSelectSource}}
+          @description={{i18n "styleguide.sections.select.reload_description"}}
+          @title={{i18n "styleguide.sections.select.reload_example"}}
+          @tryThis={{i18n "styleguide.sections.select.reload_try_this"}}
         >
           <div class="select-examples__pair">
             <div class="select-examples__pair-item">
@@ -196,30 +196,30 @@ export default class Select extends Component {
           </div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.async_button_example"}}
+          @code={{asyncButtonSelectSource}}
           @description={{i18n
             "styleguide.sections.select.async_button_description"
           }}
+          @title={{i18n "styleguide.sections.select.async_button_example"}}
           @tryThis={{i18n "styleguide.sections.select.async_button_try_this"}}
-          @code={{asyncButtonSelectSource}}
         >
           <div class="select-examples__control">
             <AsyncButtonSelectExample />
           </div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.empty_example"}}
-          @description={{i18n "styleguide.sections.select.empty_description"}}
-          @tryThis={{i18n "styleguide.sections.select.empty_try_this"}}
           @code={{emptySelectSource}}
+          @description={{i18n "styleguide.sections.select.empty_description"}}
+          @title={{i18n "styleguide.sections.select.empty_example"}}
+          @tryThis={{i18n "styleguide.sections.select.empty_try_this"}}
         >
           <div class="select-examples__control"><EmptySelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.error_example"}}
-          @description={{i18n "styleguide.sections.select.error_description"}}
-          @tryThis={{i18n "styleguide.sections.select.error_try_this"}}
           @code={{errorSelectSource}}
+          @description={{i18n "styleguide.sections.select.error_description"}}
+          @title={{i18n "styleguide.sections.select.error_example"}}
+          @tryThis={{i18n "styleguide.sections.select.error_try_this"}}
         >
           <div class="select-examples__control"><ErrorSelectExample /></div>
         </StyleguideExample>
@@ -227,56 +227,56 @@ export default class Select extends Component {
 
       <Group @id="appearance">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.icon_example"}}
-          @description={{i18n "styleguide.sections.select.icon_description"}}
-          @tryThis={{i18n "styleguide.sections.select.icon_try_this"}}
           @code={{fixedIconSelectSource}}
+          @description={{i18n "styleguide.sections.select.icon_description"}}
+          @title={{i18n "styleguide.sections.select.icon_example"}}
+          @tryThis={{i18n "styleguide.sections.select.icon_try_this"}}
         >
           <div class="select-examples__control"><FixedIconSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.icon_follows_example"}}
+          @code={{valueIconSelectSource}}
           @description={{i18n
             "styleguide.sections.select.icon_follows_description"
           }}
+          @title={{i18n "styleguide.sections.select.icon_follows_example"}}
           @tryThis={{i18n "styleguide.sections.select.icon_follows_try_this"}}
-          @code={{valueIconSelectSource}}
         >
           <div class="select-examples__control"><ValueIconSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.icon_only_example"}}
+          @code={{iconOnlySelectSource}}
           @description={{i18n
             "styleguide.sections.select.icon_only_description"
           }}
+          @title={{i18n "styleguide.sections.select.icon_only_example"}}
           @tryThis={{i18n "styleguide.sections.select.icon_only_try_this"}}
-          @code={{iconOnlySelectSource}}
         >
           <div class="select-examples__control"><IconOnlySelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.caret_example"}}
-          @description={{i18n "styleguide.sections.select.caret_description"}}
-          @tryThis={{i18n "styleguide.sections.select.caret_try_this"}}
           @code={{caretSelectSource}}
+          @description={{i18n "styleguide.sections.select.caret_description"}}
+          @title={{i18n "styleguide.sections.select.caret_example"}}
+          @tryThis={{i18n "styleguide.sections.select.caret_try_this"}}
         >
           <div class="select-examples__control"><CaretSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.placement_example"}}
+          @code={{placementSelectSource}}
           @description={{i18n
             "styleguide.sections.select.placement_description"
           }}
+          @title={{i18n "styleguide.sections.select.placement_example"}}
           @tryThis={{i18n "styleguide.sections.select.placement_try_this"}}
-          @code={{placementSelectSource}}
         >
           <div class="select-examples__control"><PlacementSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.events_example"}}
-          @description={{i18n "styleguide.sections.select.events_description"}}
-          @tryThis={{i18n "styleguide.sections.select.events_try_this"}}
           @code={{eventsSelectSource}}
+          @description={{i18n "styleguide.sections.select.events_description"}}
+          @title={{i18n "styleguide.sections.select.events_example"}}
+          @tryThis={{i18n "styleguide.sections.select.events_try_this"}}
         >
           <div class="select-examples__control">
             <EventsSelectExample />
@@ -288,18 +288,18 @@ export default class Select extends Component {
 
       <Group @id="selection">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.maximum_example"}}
-          @description={{i18n "styleguide.sections.select.maximum_description"}}
-          @tryThis={{i18n "styleguide.sections.select.maximum_try_this"}}
           @code={{maximumSelectSource}}
+          @description={{i18n "styleguide.sections.select.maximum_description"}}
+          @title={{i18n "styleguide.sections.select.maximum_example"}}
+          @tryThis={{i18n "styleguide.sections.select.maximum_try_this"}}
         >
           <div class="select-examples__control"><MaximumSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.toggle_example"}}
-          @description={{i18n "styleguide.sections.select.toggle_description"}}
-          @tryThis={{i18n "styleguide.sections.select.toggle_try_this"}}
           @code={{toggleListSelectSource}}
+          @description={{i18n "styleguide.sections.select.toggle_description"}}
+          @title={{i18n "styleguide.sections.select.toggle_example"}}
+          @tryThis={{i18n "styleguide.sections.select.toggle_try_this"}}
         >
           <:default>
             <div class="select-examples__control">
@@ -309,53 +309,53 @@ export default class Select extends Component {
           <:note>{{i18n "styleguide.sections.select.toggle_note"}}</:note>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.none_example"}}
-          @description={{i18n "styleguide.sections.select.none_description"}}
-          @tryThis={{i18n "styleguide.sections.select.none_try_this"}}
           @code={{noneSelectSource}}
+          @description={{i18n "styleguide.sections.select.none_description"}}
+          @title={{i18n "styleguide.sections.select.none_example"}}
+          @tryThis={{i18n "styleguide.sections.select.none_try_this"}}
         >
           <div class="select-examples__control"><NoneSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.clearable_example"}}
+          @code={{clearableSelectSource}}
           @description={{i18n
             "styleguide.sections.select.clearable_description"
           }}
+          @title={{i18n "styleguide.sections.select.clearable_example"}}
           @tryThis={{i18n "styleguide.sections.select.clearable_try_this"}}
-          @code={{clearableSelectSource}}
         >
           <div class="select-examples__control"><ClearableSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.clearable_multi_example"}}
+          @code={{clearableMultipleSelectSource}}
           @description={{i18n
             "styleguide.sections.select.clearable_multi_description"
           }}
+          @title={{i18n "styleguide.sections.select.clearable_multi_example"}}
           @tryThis={{i18n
             "styleguide.sections.select.clearable_multi_try_this"
           }}
-          @code={{clearableMultipleSelectSource}}
         >
           <div class="select-examples__control">
             <ClearableMultipleSelectExample />
           </div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.disabled_example"}}
+          @code={{disabledSelectSource}}
           @description={{i18n
             "styleguide.sections.select.disabled_description"
           }}
-          @code={{disabledSelectSource}}
+          @title={{i18n "styleguide.sections.select.disabled_example"}}
         >
           <div class="select-examples__control"><DisabledSelectExample /></div>
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.readonly_example"}}
+          @code={{readonlySelectSource}}
           @description={{i18n
             "styleguide.sections.select.readonly_description"
           }}
+          @title={{i18n "styleguide.sections.select.readonly_example"}}
           @tryThis={{i18n "styleguide.sections.select.readonly_try_this"}}
-          @code={{readonlySelectSource}}
         >
           <div class="select-examples__control"><ReadonlySelectExample /></div>
         </StyleguideExample>
@@ -365,12 +365,12 @@ export default class Select extends Component {
 
       <Group @id="limits">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.select.large_list_example"}}
+          @code={{largeListSelectSource}}
           @description={{i18n
             "styleguide.sections.select.large_list_description"
           }}
+          @title={{i18n "styleguide.sections.select.large_list_example"}}
           @tryThis={{i18n "styleguide.sections.select.large_list_try_this"}}
-          @code={{largeListSelectSource}}
         >
           <:default>
             <div class="select-examples__control">

@@ -19,10 +19,10 @@ export default class RowIconsSelectExample extends Component {
     <DSelect
       @identifier="sg-row-icons"
       @items={{this.items}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @valueField="level"
       @labelField="title"
+      @onChange={{this.onChange}}
+      @value={{this.value}}
+      @valueField="level"
     >
       <:item as |level|>
         <span class="select-examples__row">

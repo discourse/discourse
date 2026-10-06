@@ -187,7 +187,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       await click(findAll("ul[role='listbox'] > [role='option']")[0]);
@@ -492,9 +492,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -529,9 +529,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -571,9 +571,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -628,9 +628,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       await render(
         <template>
           <DSelect
-            @items={{GROUPED_ITEMS}}
             @groupBy="group"
             @groupLabel={{identityLabel}}
+            @items={{GROUPED_ITEMS}}
           />
         </template>
       );
@@ -651,9 +651,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -693,9 +693,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -738,9 +738,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
           }
         </style>
         <DSelect
-          @items={{items}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{items}}
           @variant="static"
         />
       </template>
@@ -790,10 +790,10 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
           }
         </style>
         <DSelect
-          @items={{items}}
-          @value={{heldId}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{items}}
+          @value={{heldId}}
           @variant="static"
         />
       </template>
@@ -822,9 +822,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{GROUPED_ITEMS}}
         >
           <:groupHeader as |item|>
             <strong class="fancy-header">▸ {{item.label}} ◂</strong>
@@ -874,9 +874,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
           }
         </style>
         <DSelect
-          @items={{items}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{items}}
           @variant="static"
         />
       </template>
@@ -897,7 +897,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
 
   test("groupBy without groupLabel renders splitters between groups", async function (assert) {
     await render(
-      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+      <template><DSelect @groupBy="group" @items={{GROUPED_ITEMS}} /></template>
     );
     await openSelect();
 
@@ -933,9 +933,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
           @groupBy="group"
           @groupLabel={{onlyVegetables}}
+          @items={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -968,11 +968,11 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{GROUPED_ITEMS}}
-          @groupBy="group"
-          @groupLabel={{identityLabel}}
           @allowCreate={{true}}
           @createItem={{createItem}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+          @items={{GROUPED_ITEMS}}
         />
       </template>
     );
@@ -1005,9 +1005,9 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
           }
         </style>
         <DSelect
-          @items={{items}}
           @groupBy="group"
           @groupLabel={{identityLabel}}
+          @items={{items}}
           @variant="static"
         />
       </template>

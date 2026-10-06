@@ -23,13 +23,13 @@ export default class ValueIconSelectExample extends Component {
 
   <template>
     <DSelect
+      @icon={{this.icon}}
       @identifier="sg-icon-follows"
       @items={{this.items}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @valueField="level"
       @labelField="title"
-      @icon={{this.icon}}
+      @onChange={{this.onChange}}
+      @value={{this.value}}
+      @valueField="level"
       @variant="static"
     >
       <:item as |level|>

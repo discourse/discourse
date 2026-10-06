@@ -17,10 +17,10 @@ export default class PagedSelectExample extends Component {
     <DSelect
       @identifier="sg-paged"
       @load={{pagedTopicApi.search}}
-      @resolveValue={{pagedTopicApi.find}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @resolveValue={{pagedTopicApi.find}}
+      @value={{this.value}}
     />
   </template>
 }

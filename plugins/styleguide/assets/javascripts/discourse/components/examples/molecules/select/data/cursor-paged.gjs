@@ -17,10 +17,10 @@ export default class CursorPagedSelectExample extends Component {
     <DSelect
       @identifier="sg-paged-cursor"
       @load={{cursorTopicApi.search}}
-      @resolveValue={{cursorTopicApi.find}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @resolveValue={{cursorTopicApi.find}}
+      @value={{this.value}}
     />
   </template>
 }

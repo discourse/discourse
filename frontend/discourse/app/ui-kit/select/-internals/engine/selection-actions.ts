@@ -91,6 +91,31 @@ export default class SelectionActions {
   }
 
   /**
+   * The count the limits are measured against: every held id, deduped. A nullish entry counts
+   * like any other — it still resolves to a displayed, removable chip, so excluding it would
+   * let the visible selection exceed the cap, and the user can always reclaim its slot by
+   * removing that chip.
+   */
+  get #selectedCount(): number {
+    return this.#valueArray.length;
+  }
+
+  get #atMaximum(): boolean {
+    const maximum = this.#options.maximum;
+    return maximum != null && this.#selectedCount >= maximum;
+  }
+
+  /**
+   * The current value coerced to its multi-select array form. Only meaningful when
+   * `#options.multiple` (the single-select value is never read through here); it centralizes
+   * the one place the union `value` is treated as an array so the multi-only call sites
+   * stay narrowing-free.
+   */
+  get #valueArray(): readonly SelectItemId[] {
+    return this.value as readonly SelectItemId[];
+  }
+
+  /**
    * Finds the first value added and removed between two selections. Comparison deliberately
    * uses `String(value)`, including for nullish values, rather than the option identity key.
    */
@@ -216,31 +241,6 @@ export default class SelectionActions {
    */
   clear(): void {
     this.#emitChange(this.#options.multiple ? [] : null);
-  }
-
-  /**
-   * The count the limits are measured against: every held id, deduped. A nullish entry counts
-   * like any other — it still resolves to a displayed, removable chip, so excluding it would
-   * let the visible selection exceed the cap, and the user can always reclaim its slot by
-   * removing that chip.
-   */
-  get #selectedCount(): number {
-    return this.#valueArray.length;
-  }
-
-  get #atMaximum(): boolean {
-    const maximum = this.#options.maximum;
-    return maximum != null && this.#selectedCount >= maximum;
-  }
-
-  /**
-   * The current value coerced to its multi-select array form. Only meaningful when
-   * `#options.multiple` (the single-select value is never read through here); it centralizes
-   * the one place the union `value` is treated as an array so the multi-only call sites
-   * stay narrowing-free.
-   */
-  get #valueArray(): readonly SelectItemId[] {
-    return this.value as readonly SelectItemId[];
   }
 
   // Emits the next value plus the best-effort resolved item(s) for it. Controlled: the

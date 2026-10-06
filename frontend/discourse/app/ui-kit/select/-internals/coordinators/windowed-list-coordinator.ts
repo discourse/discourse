@@ -79,8 +79,10 @@ export default class WindowedListCoordinator {
     }
     return items;
   };
+
   /** Estimated row height for the windowing engine before a row is measured. */
   estimateRowSize = (): number => ROW_HEIGHT_ESTIMATE;
+
   /**
    * The count of navigable options — structural headers/dividers, frontier skeletons, and
    * disabled options are excluded, so this equals the number of rows the roving modifier can
@@ -101,6 +103,7 @@ export default class WindowedListCoordinator {
   };
   optionRow = (row: ListRow): OptionRow | undefined =>
     row.isSkeleton === true ? undefined : row;
+
   /**
    * The raw row index the list should open on, so a windowed list reveals what is already
    * chosen instead of opening at row one. The roving cursor cannot do this alone: it seeds
@@ -117,6 +120,7 @@ export default class WindowedListCoordinator {
     const index = rows.findIndex((row) => this.optionRow(row)?.flags.selected);
     return index === -1 ? undefined : index;
   };
+
   /**
    * Extends the virtualizer's window with the roving cursor's row once one exists (or the held
    * selection before that), plus the group header for every mounted option.

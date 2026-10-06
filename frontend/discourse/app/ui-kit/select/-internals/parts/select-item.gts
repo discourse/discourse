@@ -59,7 +59,8 @@ export default class SelectItem extends Component<SelectItemSignature> {
 
   <template>
     <li
-      role="option"
+      aria-disabled={{booleanString @descriptor.flags.disabled}}
+      aria-selected={{booleanString @descriptor.flags.selected omitFalse=false}}
       class={{dConcatClass
         "d-combobox__option"
         (if @active "--active")
@@ -67,10 +68,9 @@ export default class SelectItem extends Component<SelectItemSignature> {
         (if @descriptor.flags.__create "--create")
         (if @descriptor.flags.__none "--none")
       }}
-      aria-selected={{booleanString @descriptor.flags.selected omitFalse=false}}
-      aria-disabled={{booleanString @descriptor.flags.disabled}}
-      {{on "click" this.handleClick}}
+      role="option"
       ...attributes
+      {{on "click" this.handleClick}}
     >
       {{! Both glyphs stay hidden from assistive tech deliberately: an option row takes its
       accessible name from its contents, so a screen-reader-only selected label here would land

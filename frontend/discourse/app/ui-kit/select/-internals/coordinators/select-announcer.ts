@@ -1,8 +1,4 @@
-import {
-  isDestroyed,
-  isDestroying,
-  registerDestructor,
-} from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel, next as nextRunloop } from "@ember/runloop";
 import { makeArray } from "discourse/lib/helpers";
@@ -192,7 +188,7 @@ export default class SelectAnnouncer {
    * whole combobox, and that speech preempts anything said underneath it. Reported immediately,
    * this was begun and abandoned — heard as "no results" arriving only sometimes.
    *
-   * Both row branches in {@link #resolvePendingCount} are inert here by construction: with no rows
+   * Both row branches in `#resolvePendingCount` are inert here by construction: with no rows
    * the cursor cannot have moved to one, and the roving API is released along with the listbox, so
    * there is nothing to ask for a re-read.
    */
@@ -403,7 +399,7 @@ export default class SelectAnnouncer {
   #resolvePendingCount(): void {
     const pending = this.#pendingCount;
     this.#pendingCount = undefined;
-    if (!pending || isDestroying(this) || isDestroyed(this)) {
+    if (!pending || isDestroying(this)) {
       return;
     }
 
@@ -429,7 +425,7 @@ export default class SelectAnnouncer {
 
   /**
    * Holds a report until the reader has stopped typing and the cursor has settled, capturing what
-   * the decision in {@link #resolvePendingCount} will be made against.
+   * the decision in `#resolvePendingCount` will be made against.
    */
   #scheduleReport(
     query: string,

@@ -205,6 +205,15 @@ export class PagedSource implements SelectSource {
     this.#keyOf = opts.keyOf;
   }
 
+  /**
+   * Identifies the load the accumulator is (or should be) holding. Any change to it means
+   * the accumulated pages no longer answer the current question.
+   */
+  get #loadKey(): string {
+    const { filter, nonce, reveal } = this.#state;
+    return JSON.stringify([filter, nonce, reveal]);
+  }
+
   rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]> {
     return this.#loadServerItems(this.#state.filter, opts);
   }
@@ -295,15 +304,6 @@ export class PagedSource implements SelectSource {
 
   reactiveItems(): readonly SelectItem[] {
     return [];
-  }
-
-  /**
-   * Identifies the load the accumulator is (or should be) holding. Any change to it means
-   * the accumulated pages no longer answer the current question.
-   */
-  get #loadKey(): string {
-    const { filter, nonce, reveal } = this.#state;
-    return JSON.stringify([filter, nonce, reveal]);
   }
 
   #loadServerItems(

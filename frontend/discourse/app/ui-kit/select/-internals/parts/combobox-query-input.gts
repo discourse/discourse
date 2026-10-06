@@ -108,6 +108,11 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       : undefined;
   }
 
+  /** No typing, no open when disabled or readonly. */
+  get #locked(): boolean {
+    return !!(this.args.disabled || this.args.readonly);
+  }
+
   @action
   handleInput(event: Event): void {
     // Wait for `compositionend` before searching so a half-composed CJK string
@@ -200,11 +205,6 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     }
   }
 
-  /** No typing, no open when disabled or readonly. */
-  get #locked(): boolean {
-    return !!(this.args.disabled || this.args.readonly);
-  }
-
   #selectDisplayValue(element: HTMLInputElement): void {
     if (
       !this.args.editing &&
@@ -228,20 +228,21 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
 
   <template>
     <input
-      type="text"
-      class="d-combobox__input"
-      role="combobox"
       aria-autocomplete="list"
-      aria-haspopup="listbox"
-      autocomplete="off"
-      aria-label={{@label}}
-      aria-expanded={{booleanString @expanded omitFalse=false}}
       aria-controls={{this.controlsId}}
+      aria-expanded={{booleanString @expanded omitFalse=false}}
+      aria-haspopup="listbox"
+      aria-label={{@label}}
       aria-owns={{this.ownsId}}
-      placeholder={{@placeholder}}
-      value={{this.value}}
+      autocomplete="off"
+      class="d-combobox__input"
       disabled={{@disabled}}
+      placeholder={{@placeholder}}
       readonly={{@readonly}}
+      role="combobox"
+      type="text"
+      value={{this.value}}
+      ...attributes
       {{on "input" this.handleInput}}
       {{on "compositionend" this.handleCompositionEnd}}
       {{on "keydown" this.handleKeydown}}
@@ -253,7 +254,6 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       {{on "focusout" this.handleFocusout}}
       {{didInsert @registerInput}}
       {{didUpdate this.selectOnDisplayValue @displayValue}}
-      ...attributes
     />
   </template>
 }

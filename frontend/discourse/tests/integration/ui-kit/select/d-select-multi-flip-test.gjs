@@ -41,12 +41,12 @@ class MultiHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
+      @identifier="multi-flip"
       @items={{ITEMS}}
-      @value={{this.value}}
+      @multiple={{true}}
       @onChange={{this.onChange}}
       @placeholder="Add some"
-      @identifier="multi-flip"
+      @value={{this.value}}
     >
       <:selection as |item|>{{item.name}}</:selection>
       <:item as |item|>{{item.name}}</:item>

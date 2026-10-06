@@ -21,12 +21,12 @@ export default class OpenBehaviourSelectExample extends Component {
   <template>
     <DSelect
       @identifier={{@identifier}}
-      @variant={{@variant}}
       @items={{LOCALES}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @label={{@label}}
+      @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
+      @variant={{@variant}}
     />
   </template>
 }

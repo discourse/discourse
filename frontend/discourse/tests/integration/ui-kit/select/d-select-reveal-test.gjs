@@ -104,7 +104,7 @@ module(
       });
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       await click(findAll(OPTION_SELECTOR)[0]);
@@ -151,7 +151,7 @@ module(
       });
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       await click(findAll(OPTION_SELECTOR)[0]);
@@ -213,7 +213,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       await click(findAll(OPTION_SELECTOR)[0]);
@@ -280,7 +280,7 @@ module(
       const load = () => buildItems(3);
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
 
@@ -303,10 +303,10 @@ module(
       await render(
         <template>
           <DSelect
-            @load={{load}}
-            @debounce={{false}}
             @allowCreate={{true}}
             @createItem={{createItem}}
+            @debounce={{false}}
+            @load={{load}}
           />
         </template>
       );
@@ -335,7 +335,7 @@ module(
       });
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
 
@@ -367,7 +367,7 @@ module(
           : { items: allItems.slice(3, 5), hasMore: false };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       await click(findAll(OPTION_SELECTOR)[0]);
@@ -410,7 +410,7 @@ module(
           : { items: allItems.slice(3, 5), hasMore: false };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
 
@@ -467,7 +467,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       await click(findAll(OPTION_SELECTOR)[0]);
@@ -532,10 +532,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{items}}
-            @specialItems={{specialItems}}
             @allowCreate={{true}}
             @createItem={{createItem}}
+            @items={{items}}
+            @specialItems={{specialItems}}
           />
         </template>
       );
@@ -634,7 +634,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       await click(findAll(OPTION_SELECTOR)[0]);
@@ -750,7 +750,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
 
@@ -803,7 +803,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       assert.dom(OPTION_SELECTOR).exists({ count: 4 }, "four rows are showing");
@@ -836,7 +836,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
       assert.dom(OPTION_SELECTOR).doesNotExist("the first query found nothing");
@@ -872,7 +872,7 @@ module(
       };
 
       await render(
-        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+        <template><DSelect @debounce={{false}} @load={{load}} /></template>
       );
       await openSelect();
 

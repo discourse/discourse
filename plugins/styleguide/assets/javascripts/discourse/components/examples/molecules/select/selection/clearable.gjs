@@ -15,12 +15,12 @@ export default class ClearableSelectExample extends Component {
 
   <template>
     <DSelect
+      @clearable={{true}}
       @identifier="sg-clearable"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @clearable={{true}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
     />
   </template>
 }

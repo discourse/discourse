@@ -23,16 +23,16 @@ export default class IconOnlySelectExample extends Component {
 
   <template>
     <DSelect
-      @identifier="sg-icon-only"
-      @items={{this.items}}
-      @variant="static"
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @valueField="level"
-      @labelField="title"
       @icon={{this.icon}}
       @iconOnly={{true}}
+      @identifier="sg-icon-only"
+      @items={{this.items}}
       @label={{i18n "styleguide.sections.select.icon_only_label"}}
+      @labelField="title"
+      @onChange={{this.onChange}}
+      @value={{this.value}}
+      @valueField="level"
+      @variant="static"
     />
   </template>
 }

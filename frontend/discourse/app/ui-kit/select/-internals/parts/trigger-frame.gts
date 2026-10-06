@@ -60,10 +60,10 @@ const TriggerFrame: TemplateOnlyComponent<TriggerFrameSignature> = <template>
     order and on no theme overriding it. }}
 
   <input
-    type="text"
     class="d-combobox__label-sink"
-    style="display: none"
     hidden
+    style="display: none"
+    type="text"
     {{on "click" @onLabelActivate}}
   />
   {{#if @icon}}
@@ -72,12 +72,12 @@ const TriggerFrame: TemplateOnlyComponent<TriggerFrameSignature> = <template>
   {{yield}}
   {{#if @showClear}}
     <button
-      type="button"
+      aria-label={{@clearLabel}}
       class="d-combobox__clear"
       {{! Not a tab stop: a pointer affordance only. Keyboard users clear via Backspace/Delete,
         handled by the parent on the input / control trigger. }}
       tabindex="-1"
-      aria-label={{@clearLabel}}
+      type="button"
       {{on "click" @onClear}}
     >
       {{dIcon "xmark"}}

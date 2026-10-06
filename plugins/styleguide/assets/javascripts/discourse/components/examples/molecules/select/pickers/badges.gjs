@@ -81,8 +81,8 @@ export default class BadgesSelectExample extends Component {
     <DSelect
       @identifier="sg-badges"
       @items={{this.items}}
-      @value={{this.value}}
       @onChange={{this.update}}
+      @value={{this.value}}
       @variant="button"
     >
       <:selection as |badge|>

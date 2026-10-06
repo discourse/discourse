@@ -20,14 +20,14 @@ export default class CustomErrorSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-content-error"
+      @labelField="name"
       @load={{this.api.search}}
+      @onChange={{this.onChange}}
       @onClose={{this.api.reset}}
+      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
       @resolveValue={{this.api.find}}
       @value={{this.value}}
-      @onChange={{this.onChange}}
       @variant="button"
-      @labelField="name"
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
     >
       <:error as |error retry|>
         <span class="select-examples__error-message">

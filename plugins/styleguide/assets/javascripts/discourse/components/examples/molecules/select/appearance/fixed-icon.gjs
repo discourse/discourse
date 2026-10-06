@@ -15,13 +15,13 @@ export default class FixedIconSelectExample extends Component {
 
   <template>
     <DSelect
+      @icon="globe"
       @identifier="sg-icon"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @icon="globe"
-      @variant="static"
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
+      @variant="static"
     />
   </template>
 }

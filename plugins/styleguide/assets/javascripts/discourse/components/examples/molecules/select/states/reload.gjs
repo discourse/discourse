@@ -22,10 +22,10 @@ export default class ReloadSelectExample extends Component {
     <DSelect
       @identifier={{@identifier}}
       @load={{this.api.search}}
-      @resolveValue={{this.api.find}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @resolveValue={{this.api.find}}
+      @value={{this.value}}
     />
   </template>
 }

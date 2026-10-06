@@ -16,14 +16,14 @@ export default class DividerSelectExample extends Component {
   // Splitter placement relies on TIMEZONES being sorted by offset; groups follow first appearance.
   <template>
     <DSelect
+      @groupBy="offsetMinutes"
       @identifier="sg-divided"
       @items={{TIMEZONES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @groupBy="offsetMinutes"
       @placeholder={{i18n
         "styleguide.sections.select.content.divided_placeholder"
       }}
+      @value={{this.value}}
     />
   </template>
 }

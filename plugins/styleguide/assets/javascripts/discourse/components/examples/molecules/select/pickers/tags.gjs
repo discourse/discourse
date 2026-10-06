@@ -58,23 +58,23 @@ export default class TagsSelectExample extends Component {
 
   <template>
     <DSelect
+      @allowCreate={{this.allowCreate}}
+      @clearable={{true}}
+      @createItem={{this.createItem}}
       @identifier="sg-tags"
       @items={{this.source}}
-      @value={{this.value}}
-      @onChange={{this.update}}
-      @multiple={{true}}
-      @variant="button"
-      @valueField="slug"
       @labelField="label"
-      @allowCreate={{this.allowCreate}}
-      @createItem={{this.createItem}}
-      @clearable={{true}}
+      @multiple={{true}}
+      @onChange={{this.update}}
       @placeholder={{i18n
         "styleguide.sections.select.pickers.tags.placeholder"
       }}
       @searchPlaceholder={{i18n
         "styleguide.sections.select.pickers.tags.search_placeholder"
       }}
+      @value={{this.value}}
+      @valueField="slug"
+      @variant="button"
     >
       <:item as |tag|>
         <span class="select-examples__row select-examples__row--glyph">

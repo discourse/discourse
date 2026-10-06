@@ -33,17 +33,17 @@ class FrameHost extends Component {
 
   <template>
     <DSelect
-      @items={{ITEMS}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @multiple={{@multiple}}
-      @variant={{@variant}}
-      @clearable={{@clearable}}
-      @icon={{@icon}}
       @caretIcon={{@caretIcon}}
+      @clearable={{@clearable}}
       @disabled={{@disabled}}
-      @readonly={{@readonly}}
+      @icon={{@icon}}
       @identifier="test-select"
+      @items={{ITEMS}}
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @readonly={{@readonly}}
+      @value={{this.value}}
+      @variant={{@variant}}
     >
       <:selection as |item|>{{item.name}}</:selection>
       <:item as |item|>{{item.name}}</:item>
@@ -59,7 +59,7 @@ module(
     test("a single-select renders @selectedIcon on the selected option", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{ITEMS}} @value={{1}} @selectedIcon="star" />
+          <DSelect @items={{ITEMS}} @selectedIcon="star" @value={{1}} />
         </template>
       );
       await click("[role='combobox']");
@@ -125,7 +125,7 @@ module(
         <template>
           <label class="field-label">
             <span class="field-text">Choice</span>
-            <FrameHost @clearable={{true}} @variant="button" @value={{1}} />
+            <FrameHost @clearable={{true}} @value={{1}} @variant="button" />
           </label>
         </template>
       );
@@ -153,11 +153,11 @@ module(
         <template>
           <label class="field-label">
             <span class="field-text">Choice</span>
-            <DSelect @items={{ITEMS}} @value={{1}} @identifier="test-footer">
+            <DSelect @identifier="test-footer" @items={{ITEMS}} @value={{1}}>
               <:footer>
                 <button
-                  type="button"
                   class="footer-action"
+                  type="button"
                   {{on "click" onFooter}}
                 >
                   Act
@@ -210,7 +210,7 @@ module(
         <template>
           <label class="field-label">
             <span class="field-text">Choice</span>
-            <DSelect @items={{ITEMS}} @value={{1}} @identifier="test-caret" />
+            <DSelect @identifier="test-caret" @items={{ITEMS}} @value={{1}} />
           </label>
         </template>
       );
@@ -239,7 +239,7 @@ module(
         <template>
           <label class="field-label">
             <span class="field-text">Choice</span>
-            <FrameHost @variant="button" @value={{1}} />
+            <FrameHost @value={{1}} @variant="button" />
           </label>
         </template>
       );
@@ -304,7 +304,7 @@ module(
     test("@clearable stays out of the tab order and restores trigger focus after pointer clearing", async function (assert) {
       await render(
         <template>
-          <FrameHost @variant="static" @clearable={{true}} @value={{1}} />
+          <FrameHost @clearable={{true}} @value={{1}} @variant="static" />
         </template>
       );
 
@@ -327,8 +327,8 @@ module(
       await render(
         <template>
           <FrameHost
-            @multiple={{true}}
             @clearable={{true}}
+            @multiple={{true}}
             @value={{array 1 2}}
           />
         </template>
@@ -351,7 +351,7 @@ module(
     test("@clearable clears a static control from the keyboard (Delete)", async function (assert) {
       await render(
         <template>
-          <FrameHost @variant="static" @clearable={{true}} @value={{1}} />
+          <FrameHost @clearable={{true}} @value={{1}} @variant="static" />
         </template>
       );
 
@@ -387,7 +387,7 @@ module(
     test("@icon renders a leading decorative icon", async function (assert) {
       await render(
         <template>
-          <FrameHost @variant="static" @icon="tag" @value={{1}} />
+          <FrameHost @icon="tag" @value={{1}} @variant="static" />
         </template>
       );
 
@@ -401,9 +401,9 @@ module(
       await render(
         <template>
           <FrameHost
-            @variant="static"
             @caretIcon={{hash open="chevron-up" closed="chevron-down"}}
             @value={{1}}
+            @variant="static"
           />
         </template>
       );
@@ -422,7 +422,7 @@ module(
     test("@caretIcon string uses one glyph in both states", async function (assert) {
       await render(
         <template>
-          <FrameHost @variant="static" @caretIcon="caret-down" @value={{1}} />
+          <FrameHost @caretIcon="caret-down" @value={{1}} @variant="static" />
         </template>
       );
 
@@ -439,9 +439,9 @@ module(
       await render(
         <template>
           <FrameHost
-            @variant="static"
             @caretIcon={{hash open="chevron-up"}}
             @value={{1}}
+            @variant="static"
           />
         </template>
       );
@@ -464,9 +464,9 @@ module(
       await render(
         <template>
           <FrameHost
-            @variant="static"
             @caretIcon={{hash closed="chevron-down"}}
             @value={{1}}
+            @variant="static"
           />
         </template>
       );
@@ -489,11 +489,11 @@ module(
       await render(
         <template>
           <FrameHost @clearable={{true}} @value={{1}} />
-          <FrameHost @variant="button" @clearable={{true}} @value={{1}} />
-          <FrameHost @variant="static" @clearable={{true}} @value={{1}} />
+          <FrameHost @clearable={{true}} @value={{1}} @variant="button" />
+          <FrameHost @clearable={{true}} @value={{1}} @variant="static" />
           <FrameHost
-            @multiple={{true}}
             @clearable={{true}}
+            @multiple={{true}}
             @value={{array 1 2}}
           />
         </template>
@@ -517,10 +517,10 @@ module(
       await render(
         <template>
           <FrameHost
-            @variant="static"
-            @disabled={{true}}
             @clearable={{true}}
+            @disabled={{true}}
             @value={{1}}
+            @variant="static"
           />
         </template>
       );
@@ -553,8 +553,8 @@ module(
       await render(
         <template>
           <FrameHost
-            @multiple={{true}}
             @disabled={{true}}
+            @multiple={{true}}
             @value={{array 1 2}}
           />
         </template>
@@ -578,7 +578,7 @@ module(
     test("@readonly stays focusable but cannot open or edit", async function (assert) {
       await render(
         <template>
-          <FrameHost @variant="static" @readonly={{true}} @value={{1}} />
+          <FrameHost @readonly={{true}} @value={{1}} @variant="static" />
         </template>
       );
 
@@ -665,15 +665,15 @@ module(
         }
 
         <template>
-          <button type="button" class="unlock" {{on "click" this.unlock}}>
+          <button class="unlock" type="button" {{on "click" this.unlock}}>
             unlock
           </button>
           <DSelect
+            @disabled={{this.locked}}
+            @identifier="test-select"
             @items={{ITEMS}}
             @value={{1}}
             @variant="static"
-            @disabled={{this.locked}}
-            @identifier="test-select"
           >
             <:selection as |item|>{{item.name}}</:selection>
             <:item as |item|>{{item.name}}</:item>
@@ -715,19 +715,19 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
         <div id="hint">Pick your language</div>
         <DSelect
           class="typeahead"
-          @items={{ITEMS}}
-          @id="lang"
           @describedBy="hint"
+          @id="lang"
           @invalid={{true}}
+          @items={{ITEMS}}
         />
         <DSelect
           class="static"
-          @items={{ITEMS}}
-          @variant="static"
-          @label="Language"
-          @id="lang-static"
           @describedBy="hint"
+          @id="lang-static"
           @invalid={{true}}
+          @items={{ITEMS}}
+          @label="Language"
+          @variant="static"
         />
       </template>
     );
@@ -762,10 +762,10 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
       <template>
         <div id="hint">Required</div>
         <DSelect
+          @describedBy="hint"
           @items={{ITEMS}}
           @multiple={{true}}
           @value={{array 1}}
-          @describedBy="hint"
         />
       </template>
     );
@@ -796,7 +796,7 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     });
 
     await render(
-      <template><DSelect @items={{ITEMS}} disabled={{true}} /></template>
+      <template><DSelect disabled={{true}} @items={{ITEMS}} /></template>
     );
 
     assert.true(fired, "the debug assertion fired");
@@ -806,12 +806,12 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @variant="static"
-          @value={{2}}
           @icon="gear"
           @iconOnly={{true}}
+          @items={{ITEMS}}
           @label="Settings"
+          @value={{2}}
+          @variant="static"
         />
       </template>
     );
@@ -837,11 +837,11 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @variant="button"
           @icon="gear"
           @iconOnly={{true}}
+          @items={{ITEMS}}
           @label="Settings"
+          @variant="button"
         />
       </template>
     );
@@ -856,11 +856,11 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @variant="static"
           @icon="gear"
           @iconOnly={{true}}
+          @items={{ITEMS}}
           @label="Settings"
+          @variant="static"
         />
       </template>
     );
@@ -878,12 +878,12 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @variant="typeahead"
-          @value={{2}}
           @icon="gear"
           @iconOnly={{true}}
+          @items={{ITEMS}}
           @label="Fruit"
+          @value={{2}}
+          @variant="typeahead"
         />
       </template>
     );
@@ -900,12 +900,12 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @multiple={{true}}
-          @value={{array 2}}
           @icon="gear"
           @iconOnly={{true}}
+          @items={{ITEMS}}
           @label="Fruits"
+          @multiple={{true}}
+          @value={{array 2}}
         />
       </template>
     );
@@ -922,11 +922,11 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @variant="static"
-          @value={{2}}
           @icon="gear"
+          @items={{ITEMS}}
           @label="Fruit"
+          @value={{2}}
+          @variant="static"
         />
       </template>
     );
@@ -951,7 +951,7 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{ITEMS}} @variant="static" @iconOnly={{true}} />
+        <DSelect @iconOnly={{true}} @items={{ITEMS}} @variant="static" />
       </template>
     );
 
@@ -962,11 +962,11 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @variant="static"
           @icon="gear"
           @iconOnly={{true}}
+          @items={{ITEMS}}
           @label="Pick"
+          @variant="static"
         />
       </template>
     );
@@ -997,10 +997,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
-            @variant="button"
-            @label="Category"
             @identifier="test-select"
+            @items={{ITEMS}}
+            @label="Category"
+            @variant="button"
           />
         </template>
       );
@@ -1029,11 +1029,11 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
-            @variant="static"
             @label="Category"
             @value={{2}}
-            @identifier="test-select"
+            @variant="static"
           />
         </template>
       );
@@ -1051,10 +1051,10 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
-            @variant="static"
-            @label="Category"
             @identifier="test-select"
+            @items={{ITEMS}}
+            @label="Category"
+            @variant="static"
           />
         </template>
       );
@@ -1143,7 +1143,7 @@ module(
     // not even the two-step gesture the typeahead offers.
     test("Backspace on a closed static trigger clears the value without @clearable", async function (assert) {
       await render(
-        <template><Host @variant="static" @value={{2}} /></template>
+        <template><Host @value={{2}} @variant="static" /></template>
       );
 
       await focus(".d-combobox__trigger");
@@ -1156,7 +1156,7 @@ module(
 
     test("Delete on a closed button trigger clears the value without @clearable", async function (assert) {
       await render(
-        <template><Host @variant="button" @value={{2}} /></template>
+        <template><Host @value={{2}} @variant="button" /></template>
       );
 
       await focus(".d-combobox__trigger");
@@ -1176,7 +1176,7 @@ module(
       );
 
       await render(
-        <template><Host @variant="static" @value={{2}} /></template>
+        <template><Host @value={{2}} @variant="static" /></template>
       );
 
       await focus(".d-combobox__trigger");

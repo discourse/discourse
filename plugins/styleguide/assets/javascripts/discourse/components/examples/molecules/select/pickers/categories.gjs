@@ -21,17 +21,17 @@ export default class CategoriesSelectExample extends Component {
 
   <template>
     <DSelect
+      @filterBy={{this.filter}}
       @identifier="sg-categories"
       @items={{@items}}
-      @value={{this.value}}
       @onChange={{this.update}}
-      @variant="button"
-      @valueField="slug"
-      @filterBy={{this.filter}}
-      @specialItems={{@specialItems}}
       @placeholder={{i18n
         "styleguide.sections.select.pickers.categories.placeholder"
       }}
+      @specialItems={{@specialItems}}
+      @value={{this.value}}
+      @valueField="slug"
+      @variant="button"
     >
       <:selection as |category|>
         {{dCategoryBadge category}}
@@ -47,7 +47,7 @@ export default class CategoriesSelectExample extends Component {
             }}
           </span>
           {{#if category.description_excerpt}}
-            <span class="select-showcases__category-desc" aria-hidden="true">
+            <span aria-hidden="true" class="select-showcases__category-desc">
               {{category.description_excerpt}}
             </span>
           {{/if}}

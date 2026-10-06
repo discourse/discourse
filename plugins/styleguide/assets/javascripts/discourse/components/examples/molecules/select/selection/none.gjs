@@ -17,10 +17,10 @@ export default class NoneSelectExample extends Component {
     <DSelect
       @identifier="sg-none"
       @items={{LOCALES}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @noneLabel={{i18n "styleguide.sections.select.none_label"}}
+      @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
     />
   </template>
 }

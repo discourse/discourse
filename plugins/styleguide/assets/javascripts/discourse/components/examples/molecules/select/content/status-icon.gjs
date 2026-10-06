@@ -18,10 +18,10 @@ export default class StatusIconSelectExample extends Component {
     <DSelect
       @identifier="sg-status-icons"
       @items={{USER_GROUPS}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @labelField="fullName"
+      @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
     >
       <:item as |group|>
         <span class="select-examples__row">

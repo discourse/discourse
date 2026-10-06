@@ -25,13 +25,13 @@ export default class GroupsSelectExample extends Component {
     <DSelect
       @identifier="sg-groups"
       @items={{this.items}}
-      @value={{this.value}}
-      @onChange={{this.update}}
-      @multiple={{true}}
       @labelField="fullName"
+      @multiple={{true}}
+      @onChange={{this.update}}
       @placeholder={{i18n
         "styleguide.sections.select.pickers.groups.placeholder"
       }}
+      @value={{this.value}}
     >
       <:item as |group|>
         <span class="select-examples__row select-examples__row--glyph">

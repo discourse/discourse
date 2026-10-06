@@ -38,13 +38,13 @@ export default class NotificationsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-notifications"
-      @placement="top-start"
       @items={{this.items}}
-      @value={{this.value}}
-      @onChange={{this.update}}
-      @variant="static"
-      @valueField="level"
       @labelField="title"
+      @onChange={{this.update}}
+      @placement="top-start"
+      @value={{this.value}}
+      @valueField="level"
+      @variant="static"
     >
       <:selection as |level|>
         <span class="select-examples__row select-examples__row--glyph">

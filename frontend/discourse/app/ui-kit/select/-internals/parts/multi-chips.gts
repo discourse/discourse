@@ -218,8 +218,8 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       {{! Removal restores focus here, not through the modifier: once the last chip goes this
         list falls back to the query input, which is outside the group. }}
       <ul
-        class="d-combobox__chip-list"
         aria-label={{i18n "d_select.selected_items"}}
+        class="d-combobox__chip-list"
         {{(if
           @presenter.isDesktopTypeahead
           (modifier
@@ -248,9 +248,9 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                   already carries this label (via aria-labelledby), so exposing the
                   text again would double every chip during item-by-item navigation. }}
                 <span
+                  aria-hidden="true"
                   class="d-combobox__chip-label"
                   id="{{this.chipIdPrefix}}-{{index}}-label"
-                  aria-hidden="true"
                 >
                   {{#if @hasSelectionBlock}}
                     {{yield chip.item to="selection"}}
@@ -262,17 +262,17 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                   {{/if}}
                 </span>
                 <button
-                  type="button"
+                  {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
+                    Backspace or Delete to remove") so it reads as a selected item rather
+                    than a bare action. }}
+                  aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
                   class="d-combobox__chip-remove"
                   disabled={{@presenter.isLocked}}
                   {{! Desktop: never a tab stop — reached by arrow-roving from the input.
                     A static -1 keeps every newly-rendered chip out of the tab order with
                     no dependence on the modifier re-seeding. Mobile keeps native tab stops. }}
                   tabindex={{if @presenter.isDesktopTypeahead "-1"}}
-                  {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
-                    Backspace or Delete to remove") so it reads as a selected item rather
-                    than a bare action. }}
-                  aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
+                  type="button"
                   {{on "click" (fn this.removeItem chip.item)}}
                   {{on "keydown" (fn this.handleChipKeydown chip.item index)}}
                 >
@@ -291,33 +291,33 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       </ul>
       {{#if @presenter.isDesktopTypeahead}}
         <ComboboxQueryInput
-          @engine={{@engine}}
-          @listboxId={{@listboxId}}
-          @expanded={{@expanded}}
-          @label={{@presenter.ariaLabelText}}
-          @displayValue=""
-          @placeholder={{@presenter.queryPlaceholder}}
-          @editing={{@editing}}
-          @ariaOwns={{true}}
-          @shouldSelectOnFocus={{@shouldSelectOnFocus}}
-          @onOpen={{@showMenu}}
-          @onRequestClose={{@closeMenu}}
-          @onBlur={{@onBlur}}
-          @onEdit={{@onEdit}}
-          @registerInput={{@registerInput}}
-          @disabled={{@presenter.isDisabled}}
-          @readonly={{@presenter.isReadonly}}
-          id={{@id}}
-          aria-invalid={{booleanString @invalid}}
           aria-describedby={{@composeDescribedBy
             (if @engine.hasValue this.chipHintId)
             @describedBy
           }}
+          aria-invalid={{booleanString @invalid}}
+          id={{@id}}
+          @ariaOwns={{true}}
+          @disabled={{@presenter.isDisabled}}
+          @displayValue=""
+          @editing={{@editing}}
+          @engine={{@engine}}
+          @expanded={{@expanded}}
+          @label={{@presenter.ariaLabelText}}
+          @listboxId={{@listboxId}}
+          @onBlur={{@onBlur}}
+          @onEdit={{@onEdit}}
+          @onOpen={{@showMenu}}
+          @onRequestClose={{@closeMenu}}
+          @placeholder={{@presenter.queryPlaceholder}}
+          @readonly={{@presenter.isReadonly}}
+          @registerInput={{@registerInput}}
+          @shouldSelectOnFocus={{@shouldSelectOnFocus}}
           {{keepAboveKeyboard @shouldCorrectKeyboardOcclusion}}
           {{on "keydown" @onInputKeydown}}
         />
         {{#if @engine.hasValue}}
-          <span id={{this.chipHintId}} class="sr-only">
+          <span class="sr-only" id={{this.chipHintId}}>
             {{i18n "d_select.chips_hint"}}
           </span>
         {{/if}}

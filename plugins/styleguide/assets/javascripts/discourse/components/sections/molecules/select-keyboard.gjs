@@ -10,10 +10,10 @@ import StyleguideExample from "../../styleguide-example";
 export default <template>
   <StyleguideExample
     class="--wide"
-    @title={{i18n "styleguide.sections.select.keyboard_walkthrough_example"}}
     @description={{i18n
       "styleguide.sections.select.keyboard_walkthrough_description"
     }}
+    @title={{i18n "styleguide.sections.select.keyboard_walkthrough_example"}}
     @tryThis={{i18n "styleguide.sections.select.keyboard_walkthrough_try_this"}}
   >
     <:default>
@@ -36,8 +36,8 @@ export default <template>
 
   <StyleguideExample
     class="--wide"
-    @title={{i18n "styleguide.sections.select.tab_order_example"}}
     @description={{i18n "styleguide.sections.select.tab_order_description"}}
+    @title={{i18n "styleguide.sections.select.tab_order_example"}}
     @tryThis={{i18n "styleguide.sections.select.tab_order_try_this"}}
   >
     <:default>
@@ -54,10 +54,10 @@ export default <template>
 
   <StyleguideExample
     class="--wide"
-    @title={{i18n "styleguide.sections.select.open_behaviour_example"}}
     @description={{i18n
       "styleguide.sections.select.open_behaviour_description"
     }}
+    @title={{i18n "styleguide.sections.select.open_behaviour_example"}}
     @tryThis={{i18n "styleguide.sections.select.open_behaviour_try_this"}}
   >
     <:default>
@@ -71,10 +71,10 @@ export default <template>
           </p>
           <OpenBehaviourSelectExample
             @identifier="sg-open-empty-typeahead"
-            @variant="typeahead"
             @label={{i18n
               "styleguide.sections.select.open_behaviour_typeahead"
             }}
+            @variant="typeahead"
           />
         </div>
         <div class="select-examples__pair-item">
@@ -83,8 +83,8 @@ export default <template>
           </p>
           <OpenBehaviourSelectExample
             @identifier="sg-open-empty-button"
-            @variant="button"
             @label={{i18n "styleguide.sections.select.open_behaviour_button"}}
+            @variant="button"
           />
         </div>
         <div class="select-examples__pair-item">
@@ -93,8 +93,8 @@ export default <template>
           </p>
           <OpenBehaviourSelectExample
             @identifier="sg-open-empty-static"
-            @variant="static"
             @label={{i18n "styleguide.sections.select.open_behaviour_static"}}
+            @variant="static"
           />
         </div>
       </div>
@@ -109,11 +109,11 @@ export default <template>
           </p>
           <OpenBehaviourSelectExample
             @identifier="sg-open-filled-typeahead"
-            @variant="typeahead"
             @initialValue="fr"
             @label={{i18n
               "styleguide.sections.select.open_behaviour_typeahead"
             }}
+            @variant="typeahead"
           />
         </div>
         <div class="select-examples__pair-item">
@@ -122,9 +122,9 @@ export default <template>
           </p>
           <OpenBehaviourSelectExample
             @identifier="sg-open-filled-button"
-            @variant="button"
             @initialValue="fr"
             @label={{i18n "styleguide.sections.select.open_behaviour_button"}}
+            @variant="button"
           />
         </div>
         <div class="select-examples__pair-item">
@@ -133,9 +133,9 @@ export default <template>
           </p>
           <OpenBehaviourSelectExample
             @identifier="sg-open-filled-static"
-            @variant="static"
             @initialValue="fr"
             @label={{i18n "styleguide.sections.select.open_behaviour_static"}}
+            @variant="static"
           />
         </div>
       </div>
@@ -153,10 +153,10 @@ export default <template>
 
   <StyleguideExample
     class="--wide"
-    @title={{i18n "styleguide.sections.select.keyboard_transcript_example"}}
     @description={{i18n
       "styleguide.sections.select.keyboard_transcript_description"
     }}
+    @title={{i18n "styleguide.sections.select.keyboard_transcript_example"}}
     @tryThis={{i18n "styleguide.sections.select.keyboard_transcript_try_this"}}
   >
     <div class="select-examples__control">
@@ -165,10 +165,10 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.keyboard_clearing_example"}}
     @description={{i18n
       "styleguide.sections.select.keyboard_clearing_description"
     }}
+    @title={{i18n "styleguide.sections.select.keyboard_clearing_example"}}
     @tryThis={{i18n "styleguide.sections.select.keyboard_clearing_try_this"}}
   >
     <div class="select-examples__control">
@@ -177,10 +177,10 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.keyboard_mobile_example"}}
     @description={{i18n
       "styleguide.sections.select.keyboard_mobile_description"
     }}
+    @title={{i18n "styleguide.sections.select.keyboard_mobile_example"}}
     @tryThis={{i18n "styleguide.sections.select.keyboard_mobile_try_this"}}
   >
     <:default>

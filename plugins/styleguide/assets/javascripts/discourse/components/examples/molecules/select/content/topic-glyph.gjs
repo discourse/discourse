@@ -28,18 +28,18 @@ export default class TopicGlyphSelectExample extends Component {
     <DSelect
       @identifier="sg-content-glyph"
       @items={{this.items}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n
         "styleguide.sections.select.content.glyph_placeholder"
       }}
+      @value={{this.value}}
     >
       <:item as |topic|>
         <span class="select-examples__row select-examples__row--glyph">
           <span
+            aria-hidden="true"
             class="select-examples__bullet"
             style={{topic.categoryColor}}
-            aria-hidden="true"
           ></span>
           <span class="select-examples__primary">{{topic.name}}</span>
           <span class="select-examples__meta">{{topic.repliesLabel}}</span>

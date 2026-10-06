@@ -15,13 +15,13 @@ export default class ClearableMultipleSelectExample extends Component {
 
   <template>
     <DSelect
+      @clearable={{true}}
       @identifier="sg-clearable-multi"
       @items={{LOCALES}}
       @multiple={{true}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @clearable={{true}}
       @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+      @value={{this.value}}
     />
   </template>
 }

@@ -325,7 +325,7 @@ export default class DSelect extends Component<DSelectSignature> {
       // e.g. `.closest("#reply-control")`). `triggerElement` is the instance's trigger
       // narrowed to `HTMLElement` (null for a virtual trigger — never our case).
       getElement: () => this.interaction.triggerElement,
-      isDestroyed: () => this.isDestroying || this.isDestroyed,
+      isDestroyed: () => this.isDestroying,
     },
   });
 
@@ -523,23 +523,34 @@ export default class DSelect extends Component<DSelectSignature> {
 
   <template>
     <DMenu
-      @identifier={{@identifier}}
-      @modalForMobile={{true}}
-      @contentRole={{this.presenter.panelContentRole}}
-      @matchTriggerWidth={{true}}
-      {{! The menu's default 400px cap is applied inline, exactly like the matched width, so it
-        wins over it: a field wider than the cap gets a visibly narrower dropdown. A combobox
-        overlay belongs to its field, so the field's width is the only bound. The CSS floor on
-        the combobox content class still stops a compact icon-only trigger from being matched
-        down to nothing. }}
-      @maxWidth="none"
-      @placement={{@placement}}
-      @offset={{@offset}}
+      aria-controls={{this.presenter.triggerRootControls}}
+      aria-describedby={{unless this.presenter.isTypeahead @describedBy}}
+      aria-disabled={{this.presenter.triggerRootDisabled}}
+      aria-haspopup={{this.presenter.triggerRootHasPopup}}
+      aria-invalid={{unless
+        this.presenter.isTypeahead
+        (booleanString @invalid)
+      }}
+      aria-label={{this.presenter.triggerRootLabel}}
+      aria-readonly={{this.presenter.triggerRootReadonly}}
+      class="d-combobox"
+      data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}
+      {{! Identity and description follow the combobox role, which lives here only on the
+        variants without a query input; the typeahead carries them on its input instead. Applied
+        unconditionally would give a typeahead two elements with the same id. }}
+      id={{unless this.presenter.isTypeahead @id}}
+      role={{this.presenter.triggerRootRole}}
+      tabindex={{this.presenter.triggerRootTabIndex}}
+      ...attributes
       {{! The d-combobox__content class floors the overlay min-width in CSS: matchTriggerWidth pins
         it to the trigger, which is unusably narrow for a compact icon-only trigger, and the
         min-width floor overrides that (it also gives the windowed option list a real width). }}
       @contentClass="d-combobox__content"
-      @trapTab={{false}}
+      @contentRole={{this.presenter.panelContentRole}}
+      {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
+        mutate paths are gated separately in this component (they are not DMenu listeners). }}
+      @disabled={{this.presenter.isLocked}}
+      @identifier={{@identifier}}
       {{! The panel is portaled away from the trigger, so Tab follows the portal's place in the
         document instead of the field's. Both directions need it, for different variants: the
         panel-searchable trigger keeps its controller INSIDE the panel, so Tab out of it must
@@ -552,6 +563,27 @@ export default class DSelect extends Component<DSelectSignature> {
         plain list still lets Tab pass over the widget and is still read with the arrow keys.
         Inert on mobile, where the overlay is a DModal that owns its own containment. }}
       @inlineTabOrder={{true}}
+      @matchTriggerWidth={{true}}
+      {{! The menu's default 400px cap is applied inline, exactly like the matched width, so it
+        wins over it: a field wider than the cap gets a visibly narrower dropdown. A combobox
+        overlay belongs to its field, so the field's width is the only bound. The CSS floor on
+        the combobox content class still stops a compact icon-only trigger from being matched
+        down to nothing. }}
+      @maxWidth="none"
+      @modalForMobile={{true}}
+      @offset={{@offset}}
+      @onClose={{this.interaction.handleClose}}
+      {{! The overlay is sized by its positioning, which lands after the windowed list has
+        already measured itself against an unsized overlay. }}
+      @onPositioned={{this.listbox.remeasureListbox}}
+      @onRegisterApi={{this.interaction.registerMenu}}
+      @onShow={{this.interaction.handleShow}}
+      @placement={{@placement}}
+      @trapTab={{false}}
+      @triggerClass={{this.presenter.triggerClass}}
+      {{! Control variants put ARIA and keyboard behavior on the root; input variants put
+        them on their inner input. }}
+      @triggerComponent={{dElement "div"}}
       {{! Typeahead: keep DMenu's default click-to-open (the whole trigger root opens the
         overlay) but disable close-on-click so clicking the already-open trigger/input does
         not toggle it shut, and focus the input on open. Resetting the query is not scoped
@@ -561,111 +593,79 @@ export default class DSelect extends Component<DSelectSignature> {
         this.presenter.isTypeahead
         this.interaction.emptyTriggers
       }}
-      {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
-        mutate paths are gated separately in this component (they are not DMenu listeners). }}
-      @disabled={{this.presenter.isLocked}}
-      @onClose={{this.interaction.handleClose}}
-      @onShow={{this.interaction.handleShow}}
-      {{! The overlay is sized by its positioning, which lands after the windowed list has
-        already measured itself against an unsized overlay. }}
-      @onPositioned={{this.listbox.remeasureListbox}}
-      @onRegisterApi={{this.interaction.registerMenu}}
-      @triggerClass={{this.presenter.triggerClass}}
-      {{! Control variants put ARIA and keyboard behavior on the root; input variants put
-        them on their inner input. }}
-      @triggerComponent={{dElement "div"}}
-      data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}
-      {{! Identity and description follow the combobox role, which lives here only on the
-        variants without a query input; the typeahead carries them on its input instead. Applied
-        unconditionally would give a typeahead two elements with the same id. }}
-      id={{unless this.presenter.isTypeahead @id}}
-      aria-invalid={{unless
-        this.presenter.isTypeahead
-        (booleanString @invalid)
-      }}
-      aria-describedby={{unless this.presenter.isTypeahead @describedBy}}
-      role={{this.presenter.triggerRootRole}}
-      tabindex={{this.presenter.triggerRootTabIndex}}
-      aria-label={{this.presenter.triggerRootLabel}}
-      aria-haspopup={{this.presenter.triggerRootHasPopup}}
-      aria-controls={{this.presenter.triggerRootControls}}
-      aria-disabled={{this.presenter.triggerRootDisabled}}
-      aria-readonly={{this.presenter.triggerRootReadonly}}
       {{on "keydown" this.interaction.handleTriggerRootKeydown}}
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
       {{on "mousedown" this.interaction.preventTriggerBlur}}
       {{didInsert this.interaction.registerStaticController}}
       {{didInsert this.assertDisabledIsAnArg}}
-      class="d-combobox"
-      ...attributes
     >
       <:trigger as |menuArgs|>
         {{! Resolve the raw @value (stable identity) rather than engine.value, so this
           async context does not churn each render; a content-only skeleton shows while
           it resolves, so a bare id never flashes. }}
         <TriggerFrame
-          @icon={{@icon}}
           @caret={{this.presenter.caretIcon}}
-          @showCaret={{this.presenter.showCaret}}
-          @showClear={{this.presenter.showClear}}
           @clearLabel={{this.presenter.clearLabel}}
+          @icon={{@icon}}
           @onClear={{this.interaction.handleClear}}
           @onLabelActivate={{this.interaction.focusFromLabel}}
+          @showCaret={{this.presenter.showCaret}}
+          @showClear={{this.presenter.showClear}}
         >
           {{#if @multiple}}
             <MultiChips
-              @value={{@value}}
-              @engine={{this.engine}}
-              @presenter={{this.presenter}}
-              @listboxId={{this.activeListboxId}}
-              @expanded={{menuArgs.expanded}}
+              @closeMenu={{menuArgs.close}}
+              @composeDescribedBy={{this.describedBy}}
+              @describedBy={{@describedBy}}
               @editing={{this.interaction.queryActive}}
+              @engine={{this.engine}}
+              @expanded={{menuArgs.expanded}}
+              @focusChip={{this.interaction.focusChip}}
+              @focusInput={{this.interaction.focusInput}}
+              @hasSelectionBlock={{has-block "selection"}}
               @id={{@id}}
               @invalid={{@invalid}}
-              @describedBy={{@describedBy}}
-              @hasSelectionBlock={{has-block "selection"}}
-              @resolveSelection={{this.resolveMulti}}
-              @composeDescribedBy={{this.describedBy}}
-              @showMenu={{menuArgs.show}}
-              @closeMenu={{menuArgs.close}}
-              @focusInput={{this.interaction.focusInput}}
-              @focusChip={{this.interaction.focusChip}}
-              @onRegisterChipRoving={{this.interaction.registerChipRoving}}
-              @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
-              @onEdit={{this.interaction.beginQuery}}
-              @registerInput={{this.interaction.registerTriggerInput}}
+              @listboxId={{this.activeListboxId}}
               @onBlur={{this.interaction.handleTriggerBlur}}
+              @onEdit={{this.interaction.beginQuery}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @onRegisterChipRoving={{this.interaction.registerChipRoving}}
+              @presenter={{this.presenter}}
+              @registerInput={{this.interaction.registerTriggerInput}}
+              @resolveSelection={{this.resolveMulti}}
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
+              @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
+              @showMenu={{menuArgs.show}}
+              @value={{@value}}
             >
               <:selection as |item|>{{yield item to="selection"}}</:selection>
             </MultiChips>
           {{else}}
             <SingleTriggerDisplay
-              @value={{@value}}
-              @engine={{this.engine}}
-              @presenter={{this.presenter}}
-              @listboxId={{this.activeListboxId}}
-              @expanded={{menuArgs.expanded}}
-              @placeholder={{@placeholder}}
+              @closeMenu={{menuArgs.close}}
+              @composeDescribedBy={{this.describedBy}}
+              @describedBy={{@describedBy}}
               @editing={{this.interaction.queryActive}}
-              @triggerFocused={{this.interaction.triggerFocused}}
+              @engine={{this.engine}}
+              @expanded={{menuArgs.expanded}}
+              @hasSelectionBlock={{has-block "selection"}}
               @id={{@id}}
               @invalid={{@invalid}}
-              @describedBy={{@describedBy}}
-              @selectionId={{this.selectionId}}
-              @hasSelectionBlock={{has-block "selection"}}
-              @resolveSelection={{this.resolveSingle}}
-              @composeDescribedBy={{this.describedBy}}
-              @showMenu={{menuArgs.show}}
-              @closeMenu={{menuArgs.close}}
-              @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
+              @listboxId={{this.activeListboxId}}
               @onBlur={{this.interaction.handleTriggerBlur}}
               @onEdit={{this.interaction.beginQuery}}
-              @registerInput={{this.interaction.registerTriggerInput}}
-              @onInputKeydown={{this.interaction.handleInputKeydown}}
               @onFocus={{this.interaction.handleTriggerFocus}}
+              @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @placeholder={{@placeholder}}
+              @presenter={{this.presenter}}
+              @registerInput={{this.interaction.registerTriggerInput}}
+              @resolveSelection={{this.resolveSingle}}
+              @selectionId={{this.selectionId}}
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
+              @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
+              @showMenu={{menuArgs.show}}
+              @triggerFocused={{this.interaction.triggerFocused}}
+              @value={{@value}}
             >
               <:selection as |item|>{{yield item to="selection"}}</:selection>
             </SingleTriggerDisplay>
@@ -688,20 +688,20 @@ export default class DSelect extends Component<DSelectSignature> {
         >
           {{#if this.presenter.isPanelSearchable}}
             <DFilterInput
-              class="d-combobox__filter"
-              role="combobox"
-              aria-expanded="true"
-              aria-controls={{this.activeListboxId}}
               aria-autocomplete="list"
-              autocomplete="off"
+              aria-controls={{this.activeListboxId}}
+              aria-expanded="true"
               {{! The disclosure trigger hands focus straight here on open, so this is the first
                 thing a reader meets. A placeholder is a last-resort name source that screen
                 readers treat inconsistently — name it after the field it narrows. }}
               aria-label={{this.presenter.ariaLabelText}}
+              autocomplete="off"
+              class="d-combobox__filter"
               placeholder={{this.presenter.searchPlaceholderText}}
-              @value={{this.engine.filter}}
+              role="combobox"
               @filterAction={{this.onFilterInput}}
               @icons={{hash left="magnifying-glass"}}
+              @value={{this.engine.filter}}
               {{didInsert this.interaction.captureFilter}}
             />
           {{else if this.presenter.isMobileTypeahead}}
@@ -710,18 +710,18 @@ export default class DSelect extends Component<DSelectSignature> {
               subtree); no blur-close (the modal owns dismissal). }}
             <ComboboxQueryInput
               class="d-combobox__filter"
+              @disabled={{this.presenter.isDisabled}}
+              @editing={{this.interaction.queryActive}}
               @engine={{this.engine}}
-              @listboxId={{this.activeListboxId}}
               @expanded={{menuArgs.expanded}}
               @label={{this.presenter.ariaLabelText}}
-              @placeholder={{this.presenter.searchPlaceholderText}}
+              @listboxId={{this.activeListboxId}}
+              @onEdit={{this.interaction.beginQuery}}
               @onOpen={{menuArgs.show}}
               @onRequestClose={{menuArgs.close}}
-              @editing={{this.interaction.queryActive}}
-              @onEdit={{this.interaction.beginQuery}}
-              @registerInput={{this.interaction.captureFilter}}
-              @disabled={{this.presenter.isDisabled}}
+              @placeholder={{this.presenter.searchPlaceholderText}}
               @readonly={{this.presenter.isReadonly}}
+              @registerInput={{this.interaction.captureFilter}}
               {{keepAboveKeyboard
                 this.interaction.shouldCorrectKeyboardOcclusion
               }}
@@ -773,23 +773,23 @@ export default class DSelect extends Component<DSelectSignature> {
             </div>
           {{else}}
             <SelectListbox
-              @engine={{this.engine}}
-              @presenter={{this.presenter}}
-              @feedback={{this.feedback}}
-              @listbox={{this.listbox}}
               @announcer={{this.announcer}}
-              @loadListContent={{this.loadListContent}}
+              @engine={{this.engine}}
+              @feedback={{this.feedback}}
               @filterInput={{this.interaction.filterInput}}
-              @listboxId={{this.listboxId}}
-              @selectedIcon={{@selectedIcon}}
-              @multiple={{@multiple}}
-              @label={{@label}}
-              @noResultsLabel={{@noResultsLabel}}
-              @hasItemBlock={{has-block "item"}}
-              @hasGroupHeaderBlock={{has-block "groupHeader"}}
               @hasEmptyBlock={{has-block "empty"}}
               @hasErrorBlock={{has-block "error"}}
+              @hasGroupHeaderBlock={{has-block "groupHeader"}}
+              @hasItemBlock={{has-block "item"}}
+              @label={{@label}}
+              @listbox={{this.listbox}}
+              @listboxId={{this.listboxId}}
+              @loadListContent={{this.loadListContent}}
+              @multiple={{@multiple}}
+              @noResultsLabel={{@noResultsLabel}}
               @onOptionMousedown={{this.interaction.preventPointerBlur}}
+              @presenter={{this.presenter}}
+              @selectedIcon={{@selectedIcon}}
             >
               <:item as |item|>{{yield item to="item"}}</:item>
               <:groupHeader as |item|>
@@ -803,9 +803,9 @@ export default class DSelect extends Component<DSelectSignature> {
             {{! A labeled region pinned below the list (a sibling of the listbox, never inside it).
               Keyboard-reachable via float-kit's Tab-forward; a desktop focus-out closes the menu. }}
             <div
+              aria-label={{i18n "d_select.footer_label"}}
               class="d-combobox__footer"
               role="group"
-              aria-label={{i18n "d_select.footer_label"}}
               {{on "focusout" this.interaction.handleFooterFocusOut}}
             >
               {{yield

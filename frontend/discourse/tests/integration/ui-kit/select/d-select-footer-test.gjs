@@ -21,7 +21,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
       <template>
         <DSelect @items={{ITEMS}}>
           <:footer>
-            <button type="button" class="test-footer-btn">Act</button>
+            <button class="test-footer-btn" type="button">Act</button>
           </:footer>
         </DSelect>
       </template>
@@ -47,7 +47,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
       <template>
         <DSelect @items={{ITEMS}}>
           <:footer>
-            <button type="button" class="test-footer-btn">Act</button>
+            <button class="test-footer-btn" type="button">Act</button>
           </:footer>
         </DSelect>
       </template>
@@ -72,7 +72,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
       <template>
         <DSelect @items={{ITEMS}}>
           <:footer>
-            <button type="button" class="test-footer-btn">Act</button>
+            <button class="test-footer-btn" type="button">Act</button>
           </:footer>
         </DSelect>
       </template>
@@ -88,10 +88,10 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
   test("desktop: focus leaving the footer to outside the widget closes the menu", async function (assert) {
     await render(
       <template>
-        <button type="button" class="outside-btn">outside</button>
+        <button class="outside-btn" type="button">outside</button>
         <DSelect @items={{ITEMS}}>
           <:footer>
-            <button type="button" class="test-footer-btn">Act</button>
+            <button class="test-footer-btn" type="button">Act</button>
           </:footer>
         </DSelect>
       </template>
@@ -115,8 +115,8 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
       <template>
         <DSelect @items={{ITEMS}}>
           <:footer>
-            <button type="button" class="test-footer-btn">Act</button>
-            <button type="button" class="test-footer-btn2">Act2</button>
+            <button class="test-footer-btn" type="button">Act</button>
+            <button class="test-footer-btn2" type="button">Act2</button>
           </:footer>
         </DSelect>
       </template>
@@ -143,7 +143,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
       <template>
         <DSelect @items={{ITEMS}}>
           <:footer>
-            <button type="button" class="test-footer-btn">Act</button>
+            <button class="test-footer-btn" type="button">Act</button>
           </:footer>
         </DSelect>
       </template>
@@ -162,7 +162,7 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
       <template>
         <DSelect @items={{ITEMS}}>
           <:footer>
-            <button type="button" class="test-footer-btn">Act</button>
+            <button class="test-footer-btn" type="button">Act</button>
           </:footer>
         </DSelect>
       </template>
@@ -187,8 +187,8 @@ module("Integration | ui-kit | select | DSelect (:footer)", function (hooks) {
             <span class="test-total">{{state.total}}</span>
             <span class="test-hasvalue">{{if state.hasValue "yes" "no"}}</span>
             <button
-              type="button"
               class="test-close"
+              type="button"
               {{on "click" state.close}}
             >close</button>
           </:footer>
@@ -246,8 +246,8 @@ module(
         <template>
           <DSelect @items={{ITEMS}}>
             <:footer>
-              <button type="button" class="test-footer-btn">Act</button>
-              <button type="button" class="test-footer-btn2">Act2</button>
+              <button class="test-footer-btn" type="button">Act</button>
+              <button class="test-footer-btn2" type="button">Act2</button>
             </:footer>
           </DSelect>
         </template>

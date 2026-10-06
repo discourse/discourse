@@ -15,12 +15,12 @@ export default class KeyboardClearingSelectExample extends Component {
 
   <template>
     <DSelect
+      @clearable={{true}}
       @identifier="sg-keyboard-clearing"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @clearable={{true}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
     />
   </template>
 }

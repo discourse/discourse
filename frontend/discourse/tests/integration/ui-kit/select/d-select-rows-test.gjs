@@ -31,12 +31,12 @@ class NoneRowHost extends Component {
 
   <template>
     <DSelect
-      @variant={{@variant}}
       @items={{ITEMS}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @noneLabel="None"
+      @onChange={{this.onChange}}
       @placeholder="Pick one"
+      @value={{this.value}}
+      @variant={{@variant}}
     />
   </template>
 }
@@ -52,12 +52,12 @@ class NoneRowMultiHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
       @items={{ITEMS}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
+      @multiple={{true}}
       @noneLabel="None"
+      @onChange={{this.onChange}}
       @placeholder="Pick some"
+      @value={{this.value}}
     />
   </template>
 }
@@ -83,7 +83,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
   test("pointer selection emits null, closes, and restores the placeholder", async function (assert) {
     const onChange = sinon.spy();
     await render(
-      <template><NoneRowHost @value={{2}} @onChange={{onChange}} /></template>
+      <template><NoneRowHost @onChange={{onChange}} @value={{2}} /></template>
     );
     await click("[role='combobox']");
 
@@ -112,7 +112,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
   test("keyboard Enter on the none row emits null and closes", async function (assert) {
     const onChange = sinon.spy();
     await render(
-      <template><NoneRowHost @value={{1}} @onChange={{onChange}} /></template>
+      <template><NoneRowHost @onChange={{onChange}} @value={{1}} /></template>
     );
     await click("[role='combobox']");
     await triggerKeyEvent("[role='combobox']", "keydown", "ArrowUp");
@@ -202,7 +202,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     // stay with the text caret rather than navigating the list (d-roving-focus keeps them for an
     // editable controller). The none row is still the first logical option in either variant.
     await render(
-      <template><NoneRowHost @variant="static" @value={{3}} /></template>
+      <template><NoneRowHost @value={{3}} @variant="static" /></template>
     );
     await click("[role='combobox']");
 
@@ -229,7 +229,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
   test("a non-empty unmatched query excludes none and cannot clear the value", async function (assert) {
     const onChange = sinon.spy();
     await render(
-      <template><NoneRowHost @value={{2}} @onChange={{onChange}} /></template>
+      <template><NoneRowHost @onChange={{onChange}} @value={{2}} /></template>
     );
     await click("[role='combobox']");
 
@@ -358,7 +358,7 @@ module(
       const onChange = sinon.spy();
       await render(
         <template>
-          <MultiLimitsHost @value={{array 1 2}} @onChange={{onChange}} />
+          <MultiLimitsHost @onChange={{onChange}} @value={{array 1 2}} />
         </template>
       );
 
@@ -404,7 +404,7 @@ module(
       const onChange = sinon.spy();
       await render(
         <template>
-          <MultiLimitsHost @value={{array 1 2 3}} @onChange={{onChange}} />
+          <MultiLimitsHost @onChange={{onChange}} @value={{array 1 2 3}} />
         </template>
       );
 
@@ -461,8 +461,8 @@ module(
         <template>
           <MultiLimitsHost
             @items={{items}}
-            @value={{array 1}}
             @onChange={{onChange}}
+            @value={{array 1}}
           />
         </template>
       );
@@ -513,9 +513,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{SECTIONED}}
             @groupBy="section"
             @identifier="test-select"
+            @items={{SECTIONED}}
           />
         </template>
       );
@@ -547,9 +547,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{SECTIONED}}
             @groupBy="section"
             @identifier="test-select"
+            @items={{SECTIONED}}
           />
         </template>
       );
@@ -570,9 +570,9 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{SECTIONED}}
             @groupBy="section"
             @identifier="test-select"
+            @items={{SECTIONED}}
           />
         </template>
       );

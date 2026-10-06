@@ -63,7 +63,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{state.items}} @debounce={{true}} @variant="button" />
+        <DSelect @debounce={{true}} @items={{state.items}} @variant="button" />
       </template>
     );
     await click(".d-combobox__trigger");
@@ -92,7 +92,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
 
     await render(
       <template>
-        <DSelect @items={{state.items}} @debounce={{true}} @variant="button" />
+        <DSelect @debounce={{true}} @items={{state.items}} @variant="button" />
       </template>
     );
     await click(".d-combobox__trigger");
@@ -150,9 +150,9 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
         <DSelect
           class="late-multi"
           @items={{EMPTY_ITEMS}}
+          @multiple={{true}}
           @value={{state.value}}
           @valueItems={{state.valueItemsMulti}}
-          @multiple={{true}}
         />
       </template>
     );
@@ -225,9 +225,9 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       <template>
         <DSelect
           @items={{state.items}}
-          @value={{state.value}}
           @multiple={{state.multiple}}
           @onChange={{onChange}}
+          @value={{state.value}}
         />
       </template>
     );
@@ -300,9 +300,9 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     await render(
       <template>
         <DSelect
-          @items={{state.items}}
           @allowCreate={{state.allowCreate}}
           @createItem={{createItem}}
+          @items={{state.items}}
         />
       </template>
     );
@@ -340,9 +340,9 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       await render(
         <template>
           <DSelect
+            @debounce={{false}}
             @items={{items}}
             @load={{load}}
-            @debounce={{false}}
             @variant="button"
           />
         </template>

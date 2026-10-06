@@ -18,10 +18,9 @@ export default class SelectionBlockSelectExample extends Component {
     <DSelect
       @identifier={{@identifier}}
       @items={{PEOPLE}}
-      @multiple={{@multiple}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @labelField="name"
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
       @placeholder={{i18n
         (if
           @multiple
@@ -29,14 +28,15 @@ export default class SelectionBlockSelectExample extends Component {
           "styleguide.sections.select.placeholder"
         )
       }}
+      @value={{this.value}}
     >
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">
           <svg
+            aria-hidden="true"
             class="select-examples__avatar"
             style={{person.avatarStyle}}
             viewBox="0 0 48 48"
-            aria-hidden="true"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"
@@ -53,10 +53,10 @@ export default class SelectionBlockSelectExample extends Component {
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
           <svg
+            aria-hidden="true"
             class="select-examples__avatar --small"
             style={{person.avatarStyle}}
             viewBox="0 0 48 48"
-            aria-hidden="true"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"

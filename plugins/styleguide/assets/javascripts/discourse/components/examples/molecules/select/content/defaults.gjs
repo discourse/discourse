@@ -16,10 +16,10 @@ export default class DefaultsSelectExample extends Component {
     <DSelect
       @identifier="sg-content-defaults"
       @items={{PEOPLE}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @labelField="name"
+      @onChange={{this.onChange}}
       @selectedIcon="check"
+      @value={{this.value}}
     />
   </template>
 }

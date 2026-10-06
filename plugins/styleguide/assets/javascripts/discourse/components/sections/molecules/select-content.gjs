@@ -29,94 +29,94 @@ import StyleguideExample from "../../styleguide-example";
 
 export default <template>
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.defaults_example"}}
+    @code={{defaultsSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.defaults_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.defaults_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.defaults_try_this"}}
-    @code={{defaultsSelectSource}}
   >
     <div class="select-examples__control"><DefaultsSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.glyph_example"}}
-    @description={{i18n "styleguide.sections.select.content.glyph_description"}}
-    @tryThis={{i18n "styleguide.sections.select.content.glyph_try_this"}}
     @code={{topicGlyphSelectSource}}
+    @description={{i18n "styleguide.sections.select.content.glyph_description"}}
+    @title={{i18n "styleguide.sections.select.content.glyph_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.glyph_try_this"}}
   >
     <div class="select-examples__control"><TopicGlyphSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.row_icon_example"}}
+    @code={{rowIconsSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.row_icon_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.row_icon_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.row_icon_try_this"}}
-    @code={{rowIconsSelectSource}}
   >
     <div class="select-examples__control"><RowIconsSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.chip_icon_example"}}
+    @code={{chipIconsSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.chip_icon_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.chip_icon_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.chip_icon_try_this"}}
-    @code={{chipIconsSelectSource}}
   >
     <div class="select-examples__control"><ChipIconsSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.status_icon_example"}}
+    @code={{statusIconSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.status_icon_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.status_icon_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.status_icon_try_this"}}
-    @code={{statusIconSelectSource}}
   >
     <div class="select-examples__control"><StatusIconSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.computed_example"}}
+    @code={{computedSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.computed_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.computed_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.computed_try_this"}}
-    @code={{computedSelectSource}}
   >
     <div class="select-examples__control"><ComputedSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.empty_example"}}
-    @description={{i18n "styleguide.sections.select.content.empty_description"}}
-    @tryThis={{i18n "styleguide.sections.select.content.empty_try_this"}}
     @code={{customEmptySelectSource}}
+    @description={{i18n "styleguide.sections.select.content.empty_description"}}
+    @title={{i18n "styleguide.sections.select.content.empty_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.empty_try_this"}}
   >
     <div class="select-examples__control"><CustomEmptySelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.error_example"}}
-    @description={{i18n "styleguide.sections.select.content.error_description"}}
-    @tryThis={{i18n "styleguide.sections.select.content.error_try_this"}}
     @code={{customErrorSelectSource}}
+    @description={{i18n "styleguide.sections.select.content.error_description"}}
+    @title={{i18n "styleguide.sections.select.content.error_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.error_try_this"}}
   >
     <div class="select-examples__control"><CustomErrorSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.divided_example"}}
+    @code={{dividerSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.divided_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.divided_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.divided_try_this"}}
-    @code={{dividerSelectSource}}
   >
     <:default>
       <div class="select-examples__control"><DividerSelectExample /></div>
@@ -125,24 +125,24 @@ export default <template>
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.select.content.grouped_example"}}
+    @code={{groupedSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.grouped_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.grouped_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.grouped_try_this"}}
-    @code={{groupedSelectSource}}
   >
     <div class="select-examples__control"><GroupedSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
     class="--wide"
-    @title={{i18n "styleguide.sections.select.content.selection_example"}}
+    @code={{selectionBlockSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.selection_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.selection_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.selection_try_this"}}
-    @code={{selectionBlockSelectSource}}
   >
     <div class="select-examples__pair">
       <div class="select-examples__pair-item">
@@ -165,12 +165,12 @@ export default <template>
 
   <StyleguideExample
     class="--wide"
-    @title={{i18n "styleguide.sections.select.content.footer_example"}}
+    @code={{footerSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.footer_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.footer_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.footer_try_this"}}
-    @code={{footerSelectSource}}
   >
     <div class="select-examples__triple">
       <div class="select-examples__pair-item">
@@ -196,12 +196,12 @@ export default <template>
 
   <StyleguideExample
     class="--wide"
-    @title={{i18n "styleguide.sections.select.content.picker_example"}}
+    @code={{wholePickerSelectSource}}
     @description={{i18n
       "styleguide.sections.select.content.picker_description"
     }}
+    @title={{i18n "styleguide.sections.select.content.picker_example"}}
     @tryThis={{i18n "styleguide.sections.select.content.picker_try_this"}}
-    @code={{wholePickerSelectSource}}
   >
     <div class="select-examples__control"><WholePickerSelectExample /></div>
   </StyleguideExample>

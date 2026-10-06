@@ -177,7 +177,7 @@ export default class SelectAriaProbe extends Component {
     // After render: a key press moves the cursor during the render that follows it, so reading
     // synchronously reports the state before the move.
     next(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -191,7 +191,7 @@ export default class SelectAriaProbe extends Component {
 
   @action
   captureAnnouncements(mutations) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -304,7 +304,7 @@ export default class SelectAriaProbe extends Component {
   }
 
   #attachRegions() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

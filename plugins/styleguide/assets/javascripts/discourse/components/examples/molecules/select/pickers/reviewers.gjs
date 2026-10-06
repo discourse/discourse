@@ -29,26 +29,26 @@ export default class ReviewersSelectExample extends Component {
 
   <template>
     <DSelect
-      @identifier="sg-reviewers"
-      @load={{reviewerApi.search}}
-      @value={{this.value}}
-      @onChange={{this.update}}
-      @multiple={{true}}
-      @resolveValues={{reviewerApi.findMany}}
       @createUnresolvedItem={{this.createUnresolvedItem}}
+      @identifier="sg-reviewers"
       @labelField="username"
+      @load={{reviewerApi.search}}
+      @multiple={{true}}
+      @onChange={{this.update}}
       @placeholder={{i18n
         "styleguide.sections.select.pickers.reviewers.placeholder"
       }}
+      @resolveValues={{reviewerApi.findMany}}
+      @value={{this.value}}
     >
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
           {{#unless person.__unresolved}}
             <svg
+              aria-hidden="true"
               class="select-examples__avatar --small"
               style={{person.avatarStyle}}
               viewBox="0 0 48 48"
-              aria-hidden="true"
             >
               <use
                 href="/plugins/styleguide/images/avatar.svg#select-avatar"
@@ -62,10 +62,10 @@ export default class ReviewersSelectExample extends Component {
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">
           <svg
+            aria-hidden="true"
             class="select-examples__avatar"
             style={{person.avatarStyle}}
             viewBox="0 0 48 48"
-            aria-hidden="true"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"

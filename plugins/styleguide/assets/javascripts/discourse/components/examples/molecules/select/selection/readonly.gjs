@@ -17,11 +17,11 @@ export default class ReadonlySelectExample extends Component {
     <DSelect
       @identifier="sg-readonly"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @readonly={{true}}
-      @variant="static"
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @readonly={{true}}
+      @value={{this.value}}
+      @variant="static"
     />
   </template>
 }

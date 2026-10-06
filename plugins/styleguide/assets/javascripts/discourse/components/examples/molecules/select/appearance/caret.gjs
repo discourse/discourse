@@ -16,13 +16,13 @@ export default class CaretSelectExample extends Component {
 
   <template>
     <DSelect
+      @caretIcon={{hash open="caret-up" closed="caret-down"}}
       @identifier="sg-caret"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @caretIcon={{hash open="caret-up" closed="caret-down"}}
-      @variant="static"
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
+      @variant="static"
     />
   </template>
 }

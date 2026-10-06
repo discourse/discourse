@@ -21,17 +21,17 @@ export default class WholePickerSelectExample extends Component {
 
   <template>
     <DSelect
-      @identifier="sg-content-picker"
-      @items={{TEAM_MEMBERS}}
-      @multiple={{true}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @groupBy="team"
       @groupLabel={{this.groupLabel}}
+      @identifier="sg-content-picker"
+      @items={{TEAM_MEMBERS}}
       @labelField="name"
+      @multiple={{true}}
+      @onChange={{this.onChange}}
       @placeholder={{i18n
         "styleguide.sections.select.content.picker_placeholder"
       }}
+      @value={{this.value}}
     >
       <:groupHeader as |group|>
         <span class="select-examples__group-header">
@@ -42,10 +42,10 @@ export default class WholePickerSelectExample extends Component {
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">
           <svg
+            aria-hidden="true"
             class="select-examples__avatar"
             style={{person.avatarStyle}}
             viewBox="0 0 48 48"
-            aria-hidden="true"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"
@@ -62,10 +62,10 @@ export default class WholePickerSelectExample extends Component {
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
           <svg
+            aria-hidden="true"
             class="select-examples__avatar --small"
             style={{person.avatarStyle}}
             viewBox="0 0 48 48"
-            aria-hidden="true"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"

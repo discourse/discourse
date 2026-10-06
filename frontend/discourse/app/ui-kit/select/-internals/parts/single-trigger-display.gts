@@ -143,39 +143,6 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
       {{/unless}}
       {{#if @presenter.isDesktopTypeahead}}
         <ComboboxQueryInput
-          @engine={{@engine}}
-          @listboxId={{@listboxId}}
-          @expanded={{@expanded}}
-          @label={{@presenter.ariaLabelText}}
-          {{! No placeholder once a value is chosen: the value is shown either in this input
-            (default) or in the sibling selection presentation (with a :selection block),
-            so a placeholder would otherwise sit next to it. }}
-          @placeholder={{unless
-            @engine.hasValue
-            (or @placeholder (i18n "d_select.placeholder"))
-          }}
-          @displayValue={{if
-            (and @hasSelectionBlock (not @triggerFocused))
-            ""
-            @presenter.fallbackSelectionLabel
-          }}
-          @selectLabelOnAppear={{@hasSelectionBlock}}
-          @editing={{@editing}}
-          @ariaOwns={{true}}
-          @shouldSelectOnFocus={{@shouldSelectOnFocus}}
-          @onOpen={{@showMenu}}
-          @onRequestClose={{@closeMenu}}
-          @onBlur={{@onBlur}}
-          @onEdit={{@onEdit}}
-          @registerInput={{@registerInput}}
-          @disabled={{@presenter.isDisabled}}
-          @readonly={{@presenter.isReadonly}}
-          {{! Points at the sibling selection markup for exactly as long as that markup is
-            what carries the value. Once focused the label moves into the input itself, so
-            keeping the description would announce the selection twice. Mirrors the
-            condition that renders the presentation span. }}
-          id={{@id}}
-          aria-invalid={{booleanString @invalid}}
           aria-describedby={{@composeDescribedBy
             (if
               (and @hasSelectionBlock @engine.hasValue (not @triggerFocused))
@@ -183,6 +150,39 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
             )
             @describedBy
           }}
+          aria-invalid={{booleanString @invalid}}
+          {{! Points at the sibling selection markup for exactly as long as that markup is
+            what carries the value. Once focused the label moves into the input itself, so
+            keeping the description would announce the selection twice. Mirrors the
+            condition that renders the presentation span. }}
+          id={{@id}}
+          @ariaOwns={{true}}
+          @disabled={{@presenter.isDisabled}}
+          @displayValue={{if
+            (and @hasSelectionBlock (not @triggerFocused))
+            ""
+            @presenter.fallbackSelectionLabel
+          }}
+          @editing={{@editing}}
+          @engine={{@engine}}
+          @expanded={{@expanded}}
+          @label={{@presenter.ariaLabelText}}
+          @listboxId={{@listboxId}}
+          @onBlur={{@onBlur}}
+          @onEdit={{@onEdit}}
+          @onOpen={{@showMenu}}
+          @onRequestClose={{@closeMenu}}
+          {{! No placeholder once a value is chosen: the value is shown either in this input
+            (default) or in the sibling selection presentation (with a :selection block),
+            so a placeholder would otherwise sit next to it. }}
+          @placeholder={{unless
+            @engine.hasValue
+            (or @placeholder (i18n "d_select.placeholder"))
+          }}
+          @readonly={{@presenter.isReadonly}}
+          @registerInput={{@registerInput}}
+          @selectLabelOnAppear={{@hasSelectionBlock}}
+          @shouldSelectOnFocus={{@shouldSelectOnFocus}}
           {{keepAboveKeyboard @shouldCorrectKeyboardOcclusion}}
           {{on "keydown" @onInputKeydown}}
           {{on "focus" @onFocus}}

@@ -19,12 +19,12 @@ export default class ErrorSelectExample extends Component {
     <DSelect
       @identifier="sg-error"
       @load={{this.api.search}}
+      @onChange={{this.onChange}}
       @onClose={{this.api.reset}}
+      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
       @resolveValue={{this.api.find}}
       @value={{this.value}}
-      @onChange={{this.onChange}}
       @variant="button"
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
     />
   </template>
 }

@@ -83,11 +83,11 @@ module(
       await render(
         <template>
           <DSelect
-            @items={{ITEMS}}
-            @value={{state.value}}
-            @multiple={{state.multiple}}
-            @maximum={{state.maximum}}
             @identifier="test-select"
+            @items={{ITEMS}}
+            @maximum={{state.maximum}}
+            @multiple={{state.multiple}}
+            @value={{state.value}}
             @variant="button"
           />
         </template>

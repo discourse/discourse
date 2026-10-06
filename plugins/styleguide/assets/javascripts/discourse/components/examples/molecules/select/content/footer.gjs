@@ -52,12 +52,12 @@ export default class FooterSelectExample extends Component {
   <template>
     <DSelect
       @identifier={{@identifier}}
+      @labelField="name"
       @load={{this.api.search}}
+      @onChange={{this.onChange}}
+      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
       @resolveValue={{this.api.find}}
       @value={{this.value}}
-      @onChange={{this.onChange}}
-      @labelField="name"
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
     >
       <:footer as |state|><FooterContents @state={{state}} /></:footer>
     </DSelect>

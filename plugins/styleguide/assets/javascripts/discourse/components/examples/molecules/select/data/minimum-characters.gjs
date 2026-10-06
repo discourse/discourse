@@ -15,14 +15,14 @@ export default class MinimumCharactersSelectExample extends Component {
 
   <template>
     <DSelect
+      @clearable={{true}}
       @identifier="sg-min-chars"
       @load={{localeApi.search}}
+      @minChars={{3}}
+      @onChange={{this.onChange}}
+      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
       @resolveValue={{localeApi.find}}
       @value={{this.value}}
-      @onChange={{this.onChange}}
-      @minChars={{3}}
-      @clearable={{true}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
     />
   </template>
 }

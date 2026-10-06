@@ -21,16 +21,16 @@ export default class GroupedSelectExample extends Component {
 
   <template>
     <DSelect
-      @identifier="sg-grouped"
-      @items={{TEAM_MEMBERS}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @groupBy="team"
       @groupLabel={{this.groupLabel}}
+      @identifier="sg-grouped"
+      @items={{TEAM_MEMBERS}}
       @labelField="name"
+      @onChange={{this.onChange}}
       @placeholder={{i18n
         "styleguide.sections.select.content.grouped_placeholder"
       }}
+      @value={{this.value}}
     >
       <:groupHeader as |group|>
         <span class="select-examples__group-header">
@@ -41,10 +41,10 @@ export default class GroupedSelectExample extends Component {
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">
           <svg
+            aria-hidden="true"
             class="select-examples__avatar"
             style={{person.avatarStyle}}
             viewBox="0 0 48 48"
-            aria-hidden="true"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"

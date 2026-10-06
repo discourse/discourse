@@ -24,9 +24,9 @@ export default class MultipleSelectExample extends Component {
       @identifier="sg-multi"
       @items={{this.items}}
       @multiple={{true}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+      @value={{this.value}}
     />
   </template>
 }

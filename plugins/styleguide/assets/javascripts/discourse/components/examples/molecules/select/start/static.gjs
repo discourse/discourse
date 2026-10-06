@@ -17,10 +17,10 @@ export default class StaticSelectExample extends Component {
     <DSelect
       @identifier="sg-static"
       @items={{LOCALES}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
-      @variant="static"
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @value={{this.value}}
+      @variant="static"
     />
   </template>
 }

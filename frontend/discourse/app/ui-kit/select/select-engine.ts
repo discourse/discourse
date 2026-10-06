@@ -341,9 +341,10 @@ export interface SelectEngineOptions {
   ) => SelectItem | Promise<SelectItem | undefined> | undefined;
 
   /**
-   * Batch counterpart to `resolveValue` for multi-select: `(values, { signal }) => items |
-   * Promise<items>`. The engine calls it once for the uncached ids (cached / seeded ids are
-   * skipped) so N chips never mean N requests. Omitted or errored ids become fallbacks.
+   * Batch counterpart to `resolveValue` for multi-select:
+   * `(values, { signal }) => items | Promise<items>`. The engine calls it once for the uncached
+   * ids (cached / seeded ids are skipped) so N chips never mean N requests. Omitted or errored
+   * ids become fallbacks.
    */
   resolveValues?: (
     values: SelectItemId[],

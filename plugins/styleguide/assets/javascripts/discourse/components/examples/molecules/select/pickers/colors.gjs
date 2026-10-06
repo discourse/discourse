@@ -64,13 +64,13 @@ export default class ColorsSelectExample extends Component {
     <DSelect
       @identifier="sg-colors"
       @items={{this.items}}
-      @value={{this.value}}
       @onChange={{this.update}}
+      @value={{this.value}}
       @variant="button"
     >
       <:selection as |scheme|>
         <span class="select-examples__row select-examples__row--glyph">
-          <span class="select-showcases__swatches" aria-hidden="true">
+          <span aria-hidden="true" class="select-showcases__swatches">
             {{#each scheme.swatches key="@index" as |swatch|}}
               <span class="select-showcases__swatch" style={{swatch}}></span>
             {{/each}}
@@ -81,7 +81,7 @@ export default class ColorsSelectExample extends Component {
 
       <:item as |scheme|>
         <span class="select-examples__row select-examples__row--glyph">
-          <span class="select-showcases__swatches" aria-hidden="true">
+          <span aria-hidden="true" class="select-showcases__swatches">
             {{#each scheme.swatches key="@index" as |swatch|}}
               <span class="select-showcases__swatch" style={{swatch}}></span>
             {{/each}}

@@ -17,12 +17,12 @@ export default class PlacementSelectExample extends Component {
     <DSelect
       @identifier="sg-placement"
       @items={{LOCALES}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @variant="button"
-      @placement="top"
       @offset={{16}}
+      @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placement="top"
+      @value={{this.value}}
+      @variant="button"
     />
   </template>
 }

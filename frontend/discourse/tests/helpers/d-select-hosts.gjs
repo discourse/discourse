@@ -22,12 +22,12 @@ export class Host extends Component {
 
   <template>
     <DSelect
-      @items={{ITEMS}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @variant={{@variant}}
-      @placeholder="Pick one"
       @identifier="test-select"
+      @items={{ITEMS}}
+      @onChange={{this.onChange}}
+      @placeholder="Pick one"
+      @value={{this.value}}
+      @variant={{@variant}}
     >
       <:selection as |item|>{{item.name}}</:selection>
       <:item as |item|>{{item.name}}</:item>
@@ -50,12 +50,12 @@ export class DefaultHost extends Component {
   <template>
     <DSelect
       @items={{this.items}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @variant={{@variant}}
-      @multiple={{@multiple}}
       @labelField={{@labelField}}
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
       @placeholder="Pick one"
+      @value={{this.value}}
+      @variant={{@variant}}
     />
   </template>
 }
@@ -75,17 +75,17 @@ export class MultiLimitsHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
+      @allowCreate={{@allowCreate}}
+      @clearable={{@clearable}}
+      @createItem={{@createItem}}
+      @identifier="test-multi-limits"
       @items={{this.items}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @maximum={{@maximum}}
       @minimum={{@minimum}}
-      @allowCreate={{@allowCreate}}
-      @createItem={{@createItem}}
-      @clearable={{@clearable}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
       @placeholder="Pick some"
-      @identifier="test-multi-limits"
+      @value={{this.value}}
     >
       <:selection as |item|>{{item.name}}</:selection>
       <:item as |item|>{{item.name}}</:item>

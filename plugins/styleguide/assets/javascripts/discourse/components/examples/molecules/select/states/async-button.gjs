@@ -17,11 +17,11 @@ export default class AsyncButtonSelectExample extends Component {
     <DSelect
       @identifier="sg-async-button"
       @load={{activityFilterApi.search}}
+      @onChange={{this.onChange}}
+      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
       @resolveValue={{activityFilterApi.find}}
       @value={{this.value}}
-      @onChange={{this.onChange}}
       @variant="button"
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
     />
   </template>
 }

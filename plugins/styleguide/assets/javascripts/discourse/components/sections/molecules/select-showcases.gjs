@@ -50,12 +50,12 @@ export default class SelectShowcases extends Component {
 
   <template>
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.reviewers.title"}}
+      @code={{reviewersSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.reviewers.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.reviewers.title"}}
       @tryThis={{i18n "styleguide.sections.select.pickers.reviewers.try_this"}}
-      @code={{reviewersSource}}
     >
       <div
         class="select-showcases__control"
@@ -66,12 +66,12 @@ export default class SelectShowcases extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.categories.title"}}
+      @code={{categoriesSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.categories.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.categories.title"}}
       @tryThis={{i18n "styleguide.sections.select.pickers.categories.try_this"}}
-      @code={{categoriesSource}}
     >
       <div
         class="select-showcases__control"
@@ -85,12 +85,12 @@ export default class SelectShowcases extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.tags.title"}}
+      @code={{tagsSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.tags.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.tags.title"}}
       @tryThis={{i18n "styleguide.sections.select.pickers.tags.try_this"}}
-      @code={{tagsSource}}
     >
       <div class="select-showcases__control" data-test-select-showcase="tags">
         <TagsSelectExample />
@@ -98,15 +98,15 @@ export default class SelectShowcases extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.notifications.title"}}
+      data-test-select-showcase="notifications"
+      @code={{notificationsSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.notifications.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.notifications.title"}}
       @tryThis={{i18n
         "styleguide.sections.select.pickers.notifications.try_this"
       }}
-      @code={{notificationsSource}}
-      data-test-select-showcase="notifications"
     >
       <div class="select-showcases__control">
         <NotificationsSelectExample />
@@ -114,12 +114,12 @@ export default class SelectShowcases extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.colors.title"}}
+      @code={{colorsSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.colors.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.colors.title"}}
       @tryThis={{i18n "styleguide.sections.select.pickers.colors.try_this"}}
-      @code={{colorsSource}}
     >
       <div class="select-showcases__control">
         <ColorsSelectExample />
@@ -127,12 +127,12 @@ export default class SelectShowcases extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.emoji.title"}}
+      @code={{emojiSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.emoji.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.emoji.title"}}
       @tryThis={{i18n "styleguide.sections.select.pickers.emoji.try_this"}}
-      @code={{emojiSource}}
     >
       <div class="select-showcases__control">
         <EmojiSelectExample />
@@ -140,12 +140,12 @@ export default class SelectShowcases extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.groups.title"}}
+      @code={{groupsSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.groups.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.groups.title"}}
       @tryThis={{i18n "styleguide.sections.select.pickers.groups.try_this"}}
-      @code={{groupsSource}}
     >
       <div class="select-showcases__control">
         <GroupsSelectExample />
@@ -153,12 +153,12 @@ export default class SelectShowcases extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.pickers.badges.title"}}
+      @code={{badgesSource}}
       @description={{i18n
         "styleguide.sections.select.pickers.badges.description"
       }}
+      @title={{i18n "styleguide.sections.select.pickers.badges.title"}}
       @tryThis={{i18n "styleguide.sections.select.pickers.badges.try_this"}}
-      @code={{badgesSource}}
     >
       <div class="select-showcases__control">
         <BadgesSelectExample />

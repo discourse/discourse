@@ -17,10 +17,10 @@ export default class KeyboardWalkthroughSelectExample extends Component {
     <DSelect
       @identifier="sg-keyboard-walkthrough"
       @items={{LOCALES}}
-      @placement="top-start"
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placement="top-start"
+      @value={{this.value}}
     />
   </template>
 }

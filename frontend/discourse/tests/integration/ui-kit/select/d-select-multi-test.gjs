@@ -34,12 +34,12 @@ class MultiHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
+      @identifier="test-multi"
       @items={{ITEMS}}
-      @value={{this.value}}
+      @multiple={{true}}
       @onChange={{this.onChange}}
       @placeholder="Pick some"
-      @identifier="test-multi"
+      @value={{this.value}}
     >
       <:selection as |item|>{{item.name}}</:selection>
       <:item as |item|>{{item.name}}</:item>
@@ -58,12 +58,12 @@ class MultiValueCoercionHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
+      @identifier="test-multi-value-coercion"
       @items={{ITEMS}}
-      @value={{this.value}}
+      @multiple={{true}}
       @onChange={{this.onChange}}
       @placeholder="Pick some"
-      @identifier="test-multi-value-coercion"
+      @value={{this.value}}
     />
   </template>
 }
@@ -217,8 +217,8 @@ module(
       await render(
         <template>
           <DefaultHost
-            @multiple={{true}}
             @items={{spacedItems}}
+            @multiple={{true}}
             @value={{array "bug fix"}}
           />
         </template>
@@ -271,8 +271,8 @@ module(
           <DSelect
             @items={{ITEMS}}
             @multiple={{true}}
-            @value={{array 1}}
             @selectedIcon="star"
+            @value={{array 1}}
           />
         </template>
       );
@@ -301,7 +301,7 @@ module(
       const onChange = sinon.spy();
       await render(
         <template>
-          <MultiValueCoercionHost @value={{array "1"}} @onChange={{onChange}} />
+          <MultiValueCoercionHost @onChange={{onChange}} @value={{array "1"}} />
         </template>
       );
 
@@ -331,8 +331,8 @@ module(
       await render(
         <template>
           <MultiValueCoercionHost
-            @value={{array "1" "2"}}
             @onChange={{onChange}}
+            @value={{array "1" "2"}}
           />
         </template>
       );
@@ -362,8 +362,8 @@ module(
       await render(
         <template>
           <MultiValueCoercionHost
-            @value={{array "999" "1"}}
             @onChange={{onChange}}
+            @value={{array "999" "1"}}
           />
         </template>
       );
@@ -393,7 +393,7 @@ module(
       const onChange = sinon.spy();
       await render(
         <template>
-          <MultiValueCoercionHost @value={{array "1"}} @onChange={{onChange}} />
+          <MultiValueCoercionHost @onChange={{onChange}} @value={{array "1"}} />
         </template>
       );
 
@@ -430,13 +430,13 @@ module(
         <template>
           <DSelect
             @items={{ITEMS}}
-            @value="1"
             @onChange={{singleOnChange}}
             @placeholder="Pick one"
+            @value="1"
           />
           <MultiValueCoercionHost
-            @value={{array "1"}}
             @onChange={{multiOnChange}}
+            @value={{array "1"}}
           />
         </template>
       );
@@ -493,8 +493,8 @@ module(
       await render(
         <template>
           <MultiValueCoercionHost
-            @value={{boundValue}}
             @onChange={{onChange}}
+            @value={{boundValue}}
           />
         </template>
       );
@@ -545,7 +545,7 @@ module(
 
       await render(
         <template>
-          <MultiValueCoercionHost @value={{array "1"}} @onChange={{onChange}} />
+          <MultiValueCoercionHost @onChange={{onChange}} @value={{array "1"}} />
         </template>
       );
       await click(".d-combobox__input");
@@ -598,13 +598,13 @@ module(
 
       <template>
         <DSelect
-          @items={{ITEMS}}
-          @value={{this.value}}
-          @onChange={{this.onChange}}
-          @variant="static"
-          @multiple={{true}}
           @clearable={{true}}
           @identifier="test-select"
+          @items={{ITEMS}}
+          @multiple={{true}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+          @variant="static"
         />
       </template>
     }
@@ -679,11 +679,11 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="test-select"
             @items={{ITEMS}}
             @multiple={{true}}
-            @value={{array 1}}
             @selectedIcon="star"
-            @identifier="test-select"
+            @value={{array 1}}
           />
         </template>
       );

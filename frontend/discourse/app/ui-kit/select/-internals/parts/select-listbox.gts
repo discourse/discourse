@@ -109,8 +109,8 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
       adopted as a tab stop by a browser with keyboard-focusable scrollers — a stop onto
       nothing, in a panel the reader is still waiting on. }}
       <ul
-        class="d-combobox__listbox d-combobox__listbox--loading"
         aria-busy="true"
+        class="d-combobox__listbox d-combobox__listbox--loading"
         tabindex="-1"
       >
         {{#each @feedback.skeletonRows key="key" as |row|}}
@@ -125,15 +125,28 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
       {{#let (@listbox.buildListItems content.rawItems) as |items|}}
         {{#if items.length}}
           <DVirtualList
+            {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
+          fetch itself; the frontier skeleton is the sighted counterpart. }}
+            aria-busy={{booleanString @engine.serverPending omitFalse=false}}
+            aria-label={{or @label (i18n "d_select.label")}}
+            aria-multiselectable={{booleanString @multiple}}
+            class="d-combobox__listbox"
+            id={{@listboxId}}
             @as="ul"
-            @role="listbox"
-            @ownedRow={{true}}
-            @key="key"
-            @items={{items}}
             @estimateSize={{@listbox.estimateRowSize}}
+            @initialAlign="center"
+            {{! First render only, so it reveals the held value on open and never
+            fights a reader who has scrolled. Centred rather than aligned to the top:
+            a selection pinned to the first row hides the options around it, which are
+            the reason the list was opened. }}
+            @initialIndex={{@listbox.revealRowIndex items}}
+            @items={{items}}
+            @key="key"
             @onReachEnd={{@engine.revealMore}}
             @onRegisterApi={{@listbox.registerListboxApi}}
+            @ownedRow={{true}}
             @pinnedIndices={{@listbox.windowPins items}}
+            @role="listbox"
             {{! The options are reached with the arrow keys from the combobox controller, so the
             scroll viewport must not also be a tab stop: in active roving mode the rows carry no
             tabindex, which is exactly the shape a browser adopts the scroller for, and it would
@@ -142,19 +155,6 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             a tabIndex of -1 and matches no focusable selector, so it is invisible to any such
             enumeration while still consuming a Tab press. }}
             @viewportTabbable={{false}}
-            {{! First render only, so it reveals the held value on open and never
-            fights a reader who has scrolled. Centred rather than aligned to the top:
-            a selection pinned to the first row hides the options around it, which are
-            the reason the list was opened. }}
-            @initialIndex={{@listbox.revealRowIndex items}}
-            @initialAlign="center"
-            class="d-combobox__listbox"
-            id={{@listboxId}}
-            aria-label={{or @label (i18n "d_select.label")}}
-            aria-multiselectable={{booleanString @multiple}}
-            {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
-          fetch itself; the frontier skeleton is the sighted counterpart. }}
-            aria-busy={{booleanString @engine.serverPending omitFalse=false}}
             {{! Keyed on the engine's filter, NOT the resolved payload's. This
           modifier does no value comparison; it re-runs whenever a tag it consumed
           is dirtied, and reading the payload entangles the async resolution itself,
@@ -223,8 +223,8 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                   navigation and carries no option position. }}
                   <li
                     class="d-combobox__group-header"
-                    role="presentation"
                     data-option-key={{option.key}}
+                    role="presentation"
                     {{row.place row.start row.index}}
                     {{row.measure}}
                   >
@@ -232,33 +232,33 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                       {{yield option.item to="groupHeader"}}
                     {{/if}}
                     <span
-                      id={{option.headerId}}
                       hidden={{@hasGroupHeaderBlock}}
+                      id={{option.headerId}}
                     >
                       {{selectItemLabel option.item "label"}}
                     </span>
                   </li>
                 {{else if option.flags.divider}}
                   <li
+                    aria-hidden="true"
                     class="d-combobox__divider"
                     role="presentation"
-                    aria-hidden="true"
                     {{row.place row.start row.index}}
                     {{row.measure}}
                   ></li>
                 {{else if option}}
                   <SelectItem
-                    @descriptor={{option}}
-                    @engine={{@engine}}
-                    @multiple={{@multiple}}
-                    @selectedIcon={{@selectedIcon}}
-                    @locked={{@presenter.isLocked}}
-                    @active={{eq option.key @listbox.activeOptionKey}}
+                    aria-describedby={{option.groupHeaderId}}
                     aria-posinset={{option.posInSet}}
                     aria-setsize={{option.setSize}}
-                    aria-describedby={{option.groupHeaderId}}
-                    data-option-key={{option.key}}
                     data-logical-index={{option.logicalIndex}}
+                    data-option-key={{option.key}}
+                    @active={{eq option.key @listbox.activeOptionKey}}
+                    @descriptor={{option}}
+                    @engine={{@engine}}
+                    @locked={{@presenter.isLocked}}
+                    @multiple={{@multiple}}
+                    @selectedIcon={{@selectedIcon}}
                     {{row.place row.start row.index}}
                     {{row.measure}}
                     {{! Keep focus in the trigger input on pointer-select so the input
@@ -278,9 +278,9 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                   {{! Frontier placeholder for an in-flight reveal: presentation, no
               posinset, so pending rows never enter the option set. }}
                   <li
+                    aria-hidden="true"
                     class="d-combobox__skeleton"
                     role="presentation"
-                    aria-hidden="true"
                     {{row.place row.start row.index}}
                     {{row.measure}}
                   >

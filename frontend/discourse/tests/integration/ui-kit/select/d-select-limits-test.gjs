@@ -40,14 +40,14 @@ class MultiLimitsStaticHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
-      @items={{@items}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @maximum={{@maximum}}
-      @variant="static"
-      @placeholder="Pick some"
       @identifier="test-multi-limits-static"
+      @items={{@items}}
+      @maximum={{@maximum}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @placeholder="Pick some"
+      @value={{this.value}}
+      @variant="static"
     >
       <:selection as |item|>{{item.name}}</:selection>
       <:item as |item|>{{item.name}}</:item>
@@ -76,25 +76,25 @@ class ReactiveMaximumHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
-      @items={{@items}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
-      @maximum={{this.maximum}}
-      @variant="static"
       @identifier="test-reactive-maximum"
+      @items={{@items}}
+      @maximum={{this.maximum}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @value={{this.value}}
+      @variant="static"
     >
       <:selection as |item|>{{item.name}}</:selection>
       <:item as |item|>{{item.name}}</:item>
       <:footer>
         <button
-          type="button"
           class="raise-maximum"
+          type="button"
           {{on "click" this.raiseMaximum}}
         >Raise maximum</button>
         <button
-          type="button"
           class="lower-maximum"
+          type="button"
           {{on "click" this.lowerMaximum}}
         >Lower maximum</button>
       </:footer>
@@ -112,13 +112,13 @@ class FooterLimitsHost extends Component {
 
   <template>
     <DSelect
-      @multiple={{true}}
+      @identifier="test-footer-limits"
       @items={{ITEMS}}
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @maximum={{3}}
       @minimum={{2}}
-      @identifier="test-footer-limits"
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @value={{this.value}}
     >
       <:footer as |state|>
         <span class="footer-maximum">{{state.maximum}}</span>
@@ -145,9 +145,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -171,11 +171,11 @@ module(
       await render(
         <template>
           <DSelect
-            @multiple={{true}}
             @items={{ITEMS}}
-            @value={{this.value}}
-            @onChange={{onChange}}
             @maximum={{2}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -208,11 +208,11 @@ module(
       await render(
         <template>
           <DSelect
-            @multiple={{true}}
             @items={{ITEMS}}
-            @value={{this.value}}
-            @onChange={{onChange}}
             @maximum={{2}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{this.value}}
             @variant="static"
           />
         </template>
@@ -248,11 +248,11 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1}}
-            @maximum={{1}}
-            @onChange={{onChange}}
             @allowCreate={{true}}
             @createItem={{createItem}}
+            @maximum={{1}}
+            @onChange={{onChange}}
+            @value={{array 1}}
           />
         </template>
       );
@@ -284,8 +284,8 @@ module(
         <template>
           <MultiLimitsHost
             @items={{items}}
-            @value={{array 1 2}}
             @maximum={{2}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -326,9 +326,9 @@ module(
         <template>
           <MultiLimitsHost
             @items={{items}}
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -357,9 +357,9 @@ module(
         <template>
           <MultiLimitsHost
             @items={{items}}
-            @value={{array 1 2 3 4 5}}
             @maximum={{3}}
             @onChange={{onChange}}
+            @value={{array 1 2 3 4 5}}
           />
         </template>
       );
@@ -389,9 +389,9 @@ module(
         <template>
           <MultiLimitsHost
             @items={{items}}
-            @value={{array 1 2 3 4 5}}
             @maximum={{3}}
             @onChange={{onChange}}
+            @value={{array 1 2 3 4 5}}
           />
         </template>
       );
@@ -423,9 +423,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -449,9 +449,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -473,9 +473,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -497,9 +497,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -517,10 +517,10 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
-            @maximum={{2}}
             @clearable={{true}}
+            @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -541,9 +541,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array null 1}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array null 1}}
           />
         </template>
       );
@@ -585,16 +585,16 @@ module(
         <template>
           <div class="zero-maximum">
             <MultiLimitsHost
-              @value={{array 1}}
               @maximum={{0}}
               @onChange={{zeroChange}}
+              @value={{array 1}}
             />
           </div>
           <div class="negative-maximum">
             <MultiLimitsHost
-              @value={{array 1}}
               @maximum={{-1}}
               @onChange={{negativeChange}}
+              @value={{array 1}}
             />
           </div>
         </template>
@@ -620,9 +620,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1}}
             @minimum={{3}}
             @onChange={{onChange}}
+            @value={{array 1}}
           />
         </template>
       );
@@ -644,10 +644,10 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
-            @minimum={{3}}
             @clearable={{true}}
+            @minimum={{3}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -676,10 +676,10 @@ module(
         <template>
           <DSelect
             @items={{ITEMS}}
-            @value={{this.value}}
-            @onChange={{this.onChange}}
             @maximum={{1}}
             @minimum={{3}}
+            @onChange={{this.onChange}}
+            @value={{this.value}}
           />
         </template>
       }
@@ -814,9 +814,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -853,9 +853,9 @@ module(
       await render(
         <template>
           <MultiLimitsHost
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -911,9 +911,9 @@ module(
         <template>
           <MultiLimitsStaticHost
             @items={{ITEMS}}
-            @value={{array 1 2}}
             @maximum={{2}}
             @onChange={{onChange}}
+            @value={{array 1 2}}
           />
         </template>
       );
@@ -973,8 +973,8 @@ module(
         <template>
           <MultiLimitsStaticHost
             @items={{items}}
-            @value={{array 1 3 5}}
             @maximum={{3}}
+            @value={{array 1 3 5}}
           />
         </template>
       );
@@ -1017,8 +1017,8 @@ module(
         <template>
           <MultiLimitsStaticHost
             @items={{items}}
-            @value={{array 2 7}}
             @maximum={{2}}
+            @value={{array 2 7}}
           />
         </template>
       );
@@ -1140,7 +1140,7 @@ module(
       await render(
         <template>
           <A11yLiveRegions />
-          <MultiLimitsHost @value={{array 1}} @maximum={{2}} />
+          <MultiLimitsHost @maximum={{2}} @value={{array 1}} />
         </template>
       );
       await click(".d-combobox__input");
@@ -1160,7 +1160,7 @@ module(
     test("the maximum limit message renders as a status above the listbox", async function (assert) {
       await render(
         <template>
-          <MultiLimitsHost @value={{array 1 2}} @maximum={{2}} />
+          <MultiLimitsHost @maximum={{2}} @value={{array 1 2}} />
         </template>
       );
       await click(".d-combobox__input");
@@ -1191,7 +1191,7 @@ module(
     test("the minimum limit message renders below @minimum", async function (assert) {
       await render(
         <template>
-          <MultiLimitsHost @value={{array 1}} @minimum={{2}} />
+          <MultiLimitsHost @minimum={{2}} @value={{array 1}} />
         </template>
       );
       await click(".d-combobox__input");
@@ -1214,9 +1214,9 @@ module(
         <template>
           <DSelect
             @items={{ITEMS}}
-            @value={{1}}
             @maximum={{1}}
             @minimum={{3}}
+            @value={{1}}
           />
         </template>
       );
@@ -1233,11 +1233,11 @@ module(
       await render(
         <template>
           <DSelect
-            @multiple={{true}}
             @items={{ITEMS}}
-            @value={{array 1 2}}
             @maximum={{2}}
             @minChars={{3}}
+            @multiple={{true}}
+            @value={{array 1 2}}
           />
         </template>
       );
