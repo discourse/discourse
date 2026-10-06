@@ -281,6 +281,7 @@ after_initialize do
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/tools/submit_query"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
+    require_relative "lib/discourse_data_explorer/query_generation"
 
     DiscourseAi.register_feature(
       module_name: :data_explorer,
