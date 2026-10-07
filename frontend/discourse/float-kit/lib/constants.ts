@@ -333,20 +333,34 @@ export interface ToastData {
   [key: string]: unknown;
 }
 
+/**
+ * The progress-bar arguments a toast component receives. The registration
+ * callback is guaranteed whenever a progress bar is shown.
+ */
+type ToastProgressBarArgs =
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar?: false;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar?: (element: HTMLElement) => void;
+    }
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar: true;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar: (element: HTMLElement) => void;
+    };
+
 /** The arguments a toast component receives (the default is `DDefaultToast`). */
-export interface ToastComponentArgs {
+export type ToastComponentArgs = ToastProgressBarArgs & {
   /** The data to render in the toast. */
   data?: ToastData;
 
   /** Closes the toast. */
   close?: FloatCallback;
-
-  /** Whether to show a progress bar counting down to auto-close. */
-  showProgressBar?: boolean;
-
-  /** Registers the progress-bar element so the auto-close modifier can animate it. */
-  onRegisterProgressBar?: (element: HTMLElement) => void;
-}
+};
 
 /** The signature of a toast component (the default is `DDefaultToast`). */
 export type ToastComponent = ComponentLike<{
