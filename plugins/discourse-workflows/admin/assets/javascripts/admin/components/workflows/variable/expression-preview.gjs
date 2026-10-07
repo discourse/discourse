@@ -64,7 +64,6 @@ export default class ExpressionPreview extends Component {
       closeOnClickOutside: false,
       closeOnScroll: false,
       matchTriggerWidth: true,
-      maxWidth: 9999,
       offset: 4,
       portalOutletElement,
     });

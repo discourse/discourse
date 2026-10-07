@@ -1247,6 +1247,43 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     });
   });
 
+  // Matching the trigger's width already decides the width, so the menu's default max width
+  // must not cap it: a trigger wider than the cap would otherwise get a narrower menu.
+  test("@matchTriggerWidth is not capped by the default max width", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          style="width: 500px;"
+          @inline={{true}}
+          @label="a long label"
+          @matchTriggerWidth={{true}}
+        >1</DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.dom(".fk-d-menu.-content").hasStyle({ width: "500px" });
+  });
+
+  test("@matchTriggerWidth is not capped by an explicit @maxWidth", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          style="width: 500px;"
+          @inline={{true}}
+          @label="a long label"
+          @matchTriggerWidth={{true}}
+          @maxWidth={{300}}
+        >1</DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.dom(".fk-d-menu.-content").hasStyle({ width: "500px" });
+  });
+
   test("delayed-hover opens menu after delay", async function (assert) {
     await render(
       <template>
