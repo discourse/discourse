@@ -115,7 +115,7 @@
     "@babel/plugin-transform-runtime": "^7.29.7",
     "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/standalone": "^8.0.4",
-    "@colors/colors": "^1.6.0",
+    "@colors/colors": "^1.6.1",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-decorators/component": "^7.0.0",
     "@ember-decorators/object": "^7.0.0",
