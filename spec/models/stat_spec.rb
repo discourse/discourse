@@ -19,6 +19,11 @@ RSpec.describe Stat do
       expect(Stat.api_stats.keys).not_to include(:onboarding)
     end
 
+    it "counts the categories of each type" do
+      expect(Stat.all_stats[:category_types]).to include(categories_discussion: 0)
+      expect(Stat.api_stats.keys).not_to include(:category_types)
+    end
+
     context "when display_eu_visitor_stats is enabled" do
       before { SiteSetting.display_eu_visitor_stats = true }
 
