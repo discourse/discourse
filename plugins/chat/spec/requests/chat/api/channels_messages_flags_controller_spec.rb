@@ -66,6 +66,39 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
       end
     end
 
+    context "when flag type is disabled or unavailable for chat messages" do
+      fab!(:disabled_chat_flag) { Fabricate(:flag, enabled: false, applies_to: ["Chat::Message"]) }
+      fab!(:non_chat_flag) { Fabricate(:flag, applies_to: ["Post"]) }
+
+      before do
+        current_user.change_trust_level!(TrustLevel[4])
+        SiteSetting.chat_auto_silence_from_flags_duration = 1
+      end
+
+      it "rejects disabled, internal, and non-chat flags without creating moderation records" do
+        [
+          disabled_chat_flag.id,
+          ReviewableScore.types[:needs_approval],
+          non_chat_flag.id,
+        ].each do |flag_type_id|
+          reviewable_count = Reviewable.count
+          reviewable_score_count = ReviewableScore.count
+          silenced_till = message_1.user.reload.silenced_till
+
+          post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+               params: {
+                 flag_type_id: flag_type_id,
+               }
+
+          expect(Reviewable.count).to eq(reviewable_count)
+          expect(ReviewableScore.count).to eq(reviewable_score_count)
+          expect(message_1.user.reload.silenced_till).to eq(silenced_till)
+          expect(response.status).to eq(400)
+          expect(response.parsed_body).to include("failed" => "FAILED")
+        end
+      end
+    end
+
     context "when user can't flag message" do
       before { UserSilencer.new(current_user).silence }
 

@@ -6,7 +6,9 @@ RSpec.describe Chat::FlagMessage do
     it { is_expected.to validate_presence_of(:message_id) }
 
     it do
-      is_expected.to validate_inclusion_of(:flag_type_id).in_array(ReviewableScore.types.values)
+      eligible_flag_type_ids = Flag.enabled.where("'Chat::Message' = ANY(applies_to)").ids
+
+      is_expected.to validate_inclusion_of(:flag_type_id).in_array(eligible_flag_type_ids)
     end
   end
 
