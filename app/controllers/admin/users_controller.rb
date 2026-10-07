@@ -299,13 +299,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def approve
-    guardian.ensure_can_approve!(@user)
-
-    reviewable =
-      ReviewableUser.find_by(target: @user) ||
-        Jobs::CreateUserReviewable.new.execute(user_id: @user.id).reviewable
-
-    reviewable.perform(current_user, :approve_user, allow_reviewed: true)
+    UserApprover.approve(guardian, @user)
     render body: nil
   end
 
@@ -321,23 +315,16 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def activate
-    guardian.ensure_can_activate!(@user)
-    # ensure there is an active email token
-    if !@user.email_tokens.active.exists?
-      @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
-    end
-    @user.activate
-    StaffActionLogger.new(current_user).log_user_activate(@user, I18n.t("user.activated_by_staff"))
+    UserActivator.activate(guardian, @user)
     render json: success_json
   end
 
   def deactivate
-    guardian.ensure_can_deactivate!(@user)
-    @user.deactivate(current_user)
-    StaffActionLogger.new(current_user).log_user_deactivate(
+    UserDeactivator.deactivate(
+      guardian,
       @user,
-      I18n.t("user.deactivated_by_staff"),
-      params.slice(:context),
+      context: params.slice(:context),
+      allow_deletion: true,
     )
     refresh_browser @user
     render json: success_json

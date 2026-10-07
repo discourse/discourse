@@ -382,6 +382,25 @@ RSpec.describe Admin::UsersController do
     before { SiteSetting.must_approve_users = true }
 
     shared_examples "user approval possible" do
+      it "approves without a reviewable when signup approval is disabled" do
+        SiteSetting.must_approve_users = false
+        SiteSetting.invite_only = false
+        evil_trout.update!(active: true, approved: false)
+        expect(ReviewableUser.find_by(target: evil_trout)).to be_nil
+
+        put "/admin/users/#{evil_trout.id}/approve.json"
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(ReviewableUser.find_by(target: evil_trout)).to be_approved
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:approve_user],
+            target_user_id: evil_trout.id,
+          ).count,
+        ).to eq(1)
+      end
+
       it "creates a reviewable if one does not exist" do
         evil_trout.update!(active: true)
         expect(ReviewableUser.find_by(target: evil_trout)).to be_blank

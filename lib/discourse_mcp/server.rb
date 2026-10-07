@@ -48,10 +48,6 @@ module DiscourseMcp
       Response.new(http_status: 403, body: failure(payload&.dig("id"), error), headers: {})
     rescue RateLimiter::LimitExceeded
       raise
-    rescue JSONSchemer::InvalidSchema => error
-      protocol_error = Error.new("Invalid schema", code: -32_000, http_status: 500)
-      Discourse.warn_exception(error, message: "MCP schema validation failed")
-      Response.new(http_status: 500, body: failure(payload&.dig("id"), protocol_error), headers: {})
     rescue StandardError => error
       protocol_error = Error.new("Internal error", code: -32_603, http_status: 500)
       Discourse.warn_exception(error, message: "MCP request failed")
@@ -268,10 +264,8 @@ module DiscourseMcp
       tool = authorized_primitive(:tool, params["name"], "Unknown tool")
 
       arguments = params["arguments"].is_a?(Hash) ? params["arguments"] : {}
-      errors = JSONSchemer.schema(tool.input_schema).validate(arguments).to_a
-      if errors.present?
-        raise Error.new("Invalid tool arguments", code: -32_602, data: { errors: errors.first(20) })
-      end
+      errors = argument_validation_errors(tool.input_schema, arguments)
+      raise Error.new("Invalid tool arguments", code: -32_602, data: { errors: }) if errors.present?
 
       result = tool.implementation.call(arguments: arguments, request_context: request_context)
       complete_result(**result.symbolize_keys)
@@ -346,15 +340,9 @@ module DiscourseMcp
     def get_prompt(params)
       prompt = authorized_primitive(:prompt, params["name"], "Prompt not found")
       arguments = params["arguments"].is_a?(Hash) ? params["arguments"] : {}
-      errors = JSONSchemer.schema(prompt.input_schema).validate(arguments).to_a
+      errors = argument_validation_errors(prompt.input_schema, arguments)
       if errors.present?
-        raise Error.new(
-                "Invalid prompt arguments",
-                code: -32_602,
-                data: {
-                  errors: errors.first(20),
-                },
-              )
+        raise Error.new("Invalid prompt arguments", code: -32_602, data: { errors: })
       end
       complete_result(
         **prompt
@@ -362,6 +350,14 @@ module DiscourseMcp
           .call(arguments: arguments, request_context: request_context)
           .symbolize_keys,
       )
+    end
+
+    def argument_validation_errors(schema, arguments)
+      JSONSchemer
+        .schema(schema)
+        .validate(arguments)
+        .first(20)
+        .map { |error| error.slice("type", "data_pointer", "schema_pointer") }
     end
 
     def complete_result(**values)

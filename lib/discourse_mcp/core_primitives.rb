@@ -70,6 +70,7 @@ module DiscourseMcp
       register_theme_tools(registry)
       register_group_tools(registry)
       register_category_tools(registry)
+      register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
     end
@@ -1936,6 +1937,153 @@ module DiscourseMcp
             required: %w[name],
           ),
         annotations: READ_ONLY,
+      )
+    end
+
+    def register_user_administration_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_users",
+        title: "List users",
+        description: "Lists and filters users visible through Discourse's staff user directory.",
+        implementation: Tools::ListUsers,
+        input_schema:
+          object_schema(
+            {
+              query: {
+                type: "string",
+                enum: Tools::ListUsers::QUERIES,
+                default: "active",
+              },
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 500,
+              },
+              order: {
+                type: "string",
+                enum: Tools::ListUsers::ORDERS,
+              },
+              ascending: {
+                type: "boolean",
+                default: false,
+              },
+              include_emails: {
+                type: "boolean",
+                default: false,
+              },
+              page: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+                default: 100,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_user",
+        title: "Create user",
+        description:
+          "Creates a user as an administrator. Registrations must be open. Supply the site's invite code if required and required user fields keyed by field ID. Missing-field errors identify the field name and ID.",
+        implementation: Tools::CreateUser,
+        input_schema:
+          object_schema(
+            {
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              email: {
+                type: "string",
+                format: "email",
+                maxLength: 508,
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+              password: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              invite_code: {
+                type: "string",
+                maxLength: 1000,
+              },
+              user_fields: {
+                type: "object",
+                additionalProperties: false,
+                patternProperties: {
+                  "^[1-9][0-9]*$" => {
+                    oneOf: [
+                      { type: "string", maxLength: 2048 },
+                      { type: "array", maxItems: 2048, items: { type: "string", maxLength: 2048 } },
+                    ],
+                  },
+                },
+              },
+              active: {
+                type: "boolean",
+                default: true,
+              },
+              approved: {
+                type: "boolean",
+                default: true,
+              },
+              upload_id: {
+                type: "integer",
+                minimum: 1,
+              },
+            },
+            required: %w[username email name password],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_user_activation",
+        title: "Manage user activation",
+        description:
+          "Activates, approves, activates and approves, or deactivates an eligible user.",
+        implementation: Tools::ManageUserActivation,
+        input_schema:
+          object_schema(
+            {
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              action: {
+                type: "string",
+                enum: Tools::ManageUserActivation::ACTIONS,
+              },
+              confirm: {
+                const: true,
+              },
+            },
+            required: %w[username action confirm],
+          ),
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: true,
+          openWorldHint: true,
+        },
+        risk: :administration,
       )
     end
 
