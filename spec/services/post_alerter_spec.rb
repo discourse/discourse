@@ -916,6 +916,15 @@ RSpec.describe PostAlerter do
       }.not_to change(evil_trout.notifications, :count)
     end
 
+    it "retains the existing notification when a mention is removed" do
+      post = mention_post
+      notification = evil_trout.notifications.last
+
+      expect(post.revise(post.user, raw: "Hello everyone")).to eq(true)
+
+      expect(evil_trout.notifications.reload).to contain_exactly(notification)
+    end
+
     it "notifies only a newly mentioned user when the previous notification is gone" do
       post = create_post_with_alerts(user: user, raw: "Hello @eviltrout")
       evil_trout.notifications.destroy_all
