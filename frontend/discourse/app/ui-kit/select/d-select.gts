@@ -200,6 +200,11 @@ interface DSelectSignature {
      * so the block is not a live-while-editing surface.
      */
     selection?: [SelectItemModel];
+    /**
+     * Shown in place of a held selection while it resolves: in each chip, or in the single
+     * trigger. Without it a plain text bar stands in.
+     */
+    selectionLoading?: [];
     /** Consumer override for a group header's content; yields the header item (with its `label`). */
     groupHeader?: [SelectItemModel];
     /**
@@ -628,6 +633,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @focusChip={{this.interaction.focusChip}}
               @focusInput={{this.interaction.focusInput}}
               @hasSelectionBlock={{has-block "selection"}}
+              @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
               @id={{@id}}
               @invalid={{@invalid}}
               @listboxId={{this.activeListboxId}}
@@ -644,6 +650,9 @@ export default class DSelect extends Component<DSelectSignature> {
               @value={{@value}}
             >
               <:selection as |item|>{{yield item to="selection"}}</:selection>
+              <:selectionLoading>{{yield
+                  to="selectionLoading"
+                }}</:selectionLoading>
             </MultiChips>
           {{else}}
             <SingleTriggerDisplay
@@ -654,6 +663,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @engine={{this.engine}}
               @expanded={{menuArgs.expanded}}
               @hasSelectionBlock={{has-block "selection"}}
+              @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
               @id={{@id}}
               @invalid={{@invalid}}
               @listboxId={{this.activeListboxId}}
@@ -673,6 +683,9 @@ export default class DSelect extends Component<DSelectSignature> {
               @value={{@value}}
             >
               <:selection as |item|>{{yield item to="selection"}}</:selection>
+              <:selectionLoading>{{yield
+                  to="selectionLoading"
+                }}</:selectionLoading>
             </SingleTriggerDisplay>
           {{/if}}
         </TriggerFrame>

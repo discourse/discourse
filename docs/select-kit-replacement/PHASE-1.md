@@ -93,7 +93,11 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   - ◐ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` blocks; skeleton taxonomy;
     input-holds-only-query composite trigger. `:loadingItem` is done (2026-10-06): one
     placeholder row, repeated for the first load and for rows arriving at the end of the list,
-    with the styleguide reviewers picker showing an avatar-row skeleton. (Group flag UI landed with `@groupBy` — see
+    with the styleguide reviewers picker showing an avatar-row skeleton. `:selectionLoading`
+    is done too: it replaces the placeholder in every chip and in all four single-trigger
+    branches (mobile typeahead, desktop typeahead with and without `:selection`, button and
+    static), and the reviewers picker shows an avatar-chip skeleton. Neither block yields
+    anything yet; adding a parameter later is backward compatible. (Group flag UI landed with `@groupBy` — see
     the Decision 2 item below.)
   - ☑ **Runtime input reactivity** (`f6ed1eb9649`). The engine captured every input but
     `@value` in its constructor, so `@items`, `@selected`, `@multiple`, `@minChars` and

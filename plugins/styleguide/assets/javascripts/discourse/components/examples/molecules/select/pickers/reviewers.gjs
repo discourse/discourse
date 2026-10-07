@@ -84,6 +84,13 @@ export default class ReviewersSelectExample extends Component {
         </span>
       </:item>
 
+      <:selectionLoading>
+        <div class="select-examples__row select-examples__row--glyph">
+          <DSkeleton @size="1.25rem" @variant="circle" />
+          <DSkeleton @width="5rem" />
+        </div>
+      </:selectionLoading>
+
       <:loadingItem>
         <div class="select-examples__row select-examples__row--identity">
           <DSkeleton @size="2rem" @variant="circle" />

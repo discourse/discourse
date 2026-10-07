@@ -47,6 +47,8 @@ interface MultiChipsSignature {
     describedBy?: string;
     /** Whether the consumer supplied custom selection markup. */
     hasSelectionBlock: boolean;
+    /** Whether the consumer supplied custom markup for a selection that is still resolving. */
+    hasSelectionLoadingBlock: boolean;
     /** Resolves the bound selection into chip descriptors. */
     resolveSelection: (
       value: unknown,
@@ -88,6 +90,8 @@ interface MultiChipsSignature {
       /** The resolved selected item. */
       item: SelectItem,
     ];
+    /** Custom markup shown in place of a selection while it resolves. */
+    selectionLoading?: [];
   };
 }
 
@@ -237,7 +241,11 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           <:loading>
             {{#each this.chipSkeletons key="key" as |row|}}
               <li class="d-combobox__chip" data-key={{row.key}}>
-                <DSkeleton @variant="text" @width="6ch" />
+                {{#if @hasSelectionLoadingBlock}}
+                  {{yield to="selectionLoading"}}
+                {{else}}
+                  <DSkeleton @variant="text" @width="6ch" />
+                {{/if}}
               </li>
             {{/each}}
           </:loading>

@@ -43,6 +43,8 @@ interface SingleTriggerDisplaySignature {
     selectionId: string;
     /** Whether the consumer supplied custom selection markup. */
     hasSelectionBlock: boolean;
+    /** Whether the consumer supplied custom markup for a selection that is still resolving. */
+    hasSelectionLoadingBlock: boolean;
     /** Resolves the bound selection into its display item. */
     resolveSelection: (
       value: unknown,
@@ -77,6 +79,8 @@ interface SingleTriggerDisplaySignature {
       /** The resolved selected item. */
       item: SelectItem,
     ];
+    /** Custom markup shown in place of a selection while it resolves. */
+    selectionLoading?: [];
   };
 }
 
@@ -97,7 +101,12 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 @asyncData={{@resolveSelection}}
                 @context={{@value}}
               >
-                <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
+                <:loading>{{#if @hasSelectionLoadingBlock}}{{yield
+                      to="selectionLoading"
+                    }}{{else}}<DSkeleton
+                      @variant="text"
+                      @width="8ch"
+                    />{{/if}}</:loading>
                 <:content as |selected|>
                   {{#if @hasSelectionBlock}}
                     {{yield selected to="selection"}}
@@ -119,7 +128,12 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 @asyncData={{@resolveSelection}}
                 @context={{@value}}
               >
-                <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
+                <:loading>{{#if @hasSelectionLoadingBlock}}{{yield
+                      to="selectionLoading"
+                    }}{{else}}<DSkeleton
+                      @variant="text"
+                      @width="8ch"
+                    />{{/if}}</:loading>
                 <:content as |selected|>{{yield
                     selected
                     to="selection"
@@ -131,7 +145,11 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
             <:loading>
               <span class="d-combobox__presentation">
-                <DSkeleton @variant="text" @width="8ch" />
+                {{#if @hasSelectionLoadingBlock}}
+                  {{yield to="selectionLoading"}}
+                {{else}}
+                  <DSkeleton @variant="text" @width="8ch" />
+                {{/if}}
               </span>
             </:loading>
             <:content></:content>
@@ -190,7 +208,12 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         control; the selected value and placeholder text are intentionally suppressed. }}
     {{else}}
       <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
-        <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
+        <:loading>{{#if @hasSelectionLoadingBlock}}{{yield
+              to="selectionLoading"
+            }}{{else}}<DSkeleton
+              @variant="text"
+              @width="8ch"
+            />{{/if}}</:loading>
         <:content as |selected|>
           <span class="d-combobox__value">
             {{#if @hasSelectionBlock}}

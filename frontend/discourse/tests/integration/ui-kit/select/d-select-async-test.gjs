@@ -15,6 +15,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
+import { forceMobile } from "discourse/lib/mobile";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { ITEMS } from "discourse/tests/helpers/d-select-hosts";
@@ -730,5 +731,125 @@ module(
         .dom(".d-combobox__error .d-combobox__error-message")
         .doesNotExist("the default message gives way to the block");
     });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (:selectionLoading)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    let release;
+    const resolveValue = (value) =>
+      new Promise(
+        (resolve) => (release = () => resolve({ id: value, name: "Banana" }))
+      );
+    const resolveValues = (values) =>
+      new Promise(
+        (resolve) =>
+          (release = () =>
+            resolve(values.map((id) => ({ id, name: "Banana" }))))
+      );
+
+    const releasePending = () => release?.();
+
+    hooks.beforeEach(function () {
+      release = undefined;
+    });
+
+    // One case per surface that shows a placeholder while a held value resolves.
+    const cases = [
+      {
+        name: "the desktop typeahead",
+        Host: <template>
+          <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}}>
+            <:selectionLoading><span
+                class="custom-selection-loading"
+              ></span></:selectionLoading>
+          </DSelect>
+        </template>,
+      },
+      {
+        name: "the desktop typeahead with a :selection block",
+        Host: <template>
+          <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}}>
+            <:selection as |item|>{{item.name}}</:selection>
+            <:selectionLoading><span
+                class="custom-selection-loading"
+              ></span></:selectionLoading>
+          </DSelect>
+        </template>,
+      },
+      {
+        name: "the mobile typeahead",
+        mobile: true,
+        Host: <template>
+          <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}}>
+            <:selectionLoading><span
+                class="custom-selection-loading"
+              ></span></:selectionLoading>
+          </DSelect>
+        </template>,
+      },
+      {
+        name: "the button trigger",
+        Host: <template>
+          <DSelect
+            @items={{array}}
+            @resolveValue={{resolveValue}}
+            @value={{2}}
+            @variant="button"
+          >
+            <:selectionLoading><span
+                class="custom-selection-loading"
+              ></span></:selectionLoading>
+          </DSelect>
+        </template>,
+      },
+      {
+        name: "a chip",
+        Host: <template>
+          <DSelect
+            @items={{array}}
+            @multiple={{true}}
+            @resolveValues={{resolveValues}}
+            @value={{array 2}}
+          >
+            <:selectionLoading><span
+                class="custom-selection-loading"
+              ></span></:selectionLoading>
+          </DSelect>
+        </template>,
+      },
+    ];
+
+    for (const { name, Host, mobile } of cases) {
+      test(`a :selectionLoading block replaces the placeholder in ${name}`, async function (assert) {
+        if (mobile) {
+          forceMobile();
+        }
+
+        const rendering = render(<template><Host /></template>);
+        try {
+          await waitFor(".custom-selection-loading");
+
+          assert
+            .dom(".custom-selection-loading")
+            .exists("the block renders while the value resolves");
+          assert
+            .dom(".d-combobox__trigger .d-skeleton")
+            .doesNotExist("the default bar is replaced");
+        } finally {
+          // Settle the render even when an assertion above throws, so a failure stays in
+          // this test instead of leaving a pending render to break the ones after it.
+          releasePending();
+          await rendering;
+        }
+
+        assert
+          .dom(".custom-selection-loading")
+          .doesNotExist("the block goes once the value resolves");
+      });
+    }
   }
 );
