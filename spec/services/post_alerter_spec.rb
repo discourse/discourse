@@ -854,6 +854,17 @@ RSpec.describe PostAlerter do
       expect(evil_trout.notifications.last.notification_type).to eq(Notification.types[:mentioned])
     end
 
+    it "retains group mention records on unrelated revisions" do
+      Jobs.run_immediately!
+      post = create_post_with_alerts(raw: "Hello @group")
+
+      expect { post.revise(post.user, raw: "Hello again @group") }.not_to change(
+        evil_trout.notifications,
+        :count,
+      )
+      expect(GroupMention.where(post_id: post.id).pluck(:group_id)).to contain_exactly(group.id)
+    end
+
     it "notifies only members of a newly added group on revision" do
       Jobs.run_immediately!
       post = create_post_with_alerts(raw: "Hello @group")
@@ -869,6 +880,10 @@ RSpec.describe PostAlerter do
       ).and change(coding_horror.notifications, :count).by(1)
       expect(coding_horror.notifications.last.notification_type).to eq(
         Notification.types[:group_mentioned],
+      )
+      expect(GroupMention.where(post_id: post.id).pluck(:group_id)).to contain_exactly(
+        group.id,
+        another_group.id,
       )
     end
 

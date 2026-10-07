@@ -144,7 +144,7 @@ class PostAlerter
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
 
     # mentions (users/groups)
-    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post, added_mentions)
+    mentioned_groups, mentioned_users, mentioned_here = extract_mentions(post)
 
     if mentioned_groups || mentioned_users || mentioned_here
       mentioned_opts = {}
@@ -160,12 +160,18 @@ class PostAlerter
       end
 
       if mentioned_users
+        if added_mentions
+          mentioned_users =
+            mentioned_users.select { |user| added_mentions.include?(user.username_lower) }
+        end
         mentioned_users = only_allowed_users(mentioned_users, post)
         mentioned_users = mentioned_users - pm_watching_users(post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
+        next if added_mentions && !added_mentions.include?(group.name.downcase)
+
         users = only_allowed_users(users, post)
         to_notify =
           DiscoursePluginRegistry.apply_modifier(
@@ -178,7 +184,7 @@ class PostAlerter
           notify_users(to_notify, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
-      if mentioned_here
+      if mentioned_here && (!added_mentions || added_mentions.include?(SiteSetting.here_mention))
         users = expand_here_mention(post, exclude_ids: notified.map(&:id))
         users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
@@ -765,9 +771,8 @@ class PostAlerter
   end
 
   # TODO: Move to post-analyzer?
-  def extract_mentions(post, added_mentions = nil)
+  def extract_mentions(post)
     mentions = post.raw_mentions
-    mentions = mentions & added_mentions if added_mentions
     return if mentions.blank?
 
     groups = Group.where("LOWER(name) IN (?)", mentions)
