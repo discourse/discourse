@@ -7,13 +7,18 @@ module DiscourseAi
       class MissingToolOutput < StandardError
       end
 
-      def initialize(bot, strategy, persist_summaries: true)
-        @bot = bot
+      # the bot is built on first use, so reading a stored summary doesn't load the agent or llm
+      def initialize(strategy, persist_summaries: true, &build_bot)
         @strategy = strategy
         @persist_summaries = persist_summaries
+        @build_bot = build_bot
       end
 
-      attr_reader :bot, :strategy
+      attr_reader :strategy
+
+      def bot
+        @bot ||= @build_bot.call
+      end
 
       # @param user { User } - User object used for auditing usage.
       # @param &on_partial_blk { Block - Optional } - The passed block will get called with the LLM partial response.
