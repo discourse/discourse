@@ -138,7 +138,7 @@ class PostAlerter
       (post.post_type == Post.types[:whisper] && post.action_code.nil?)
   end
 
-  def after_save_post(post, new_record = false)
+  def after_save_post(post, new_record = false, added_mentions: nil)
     notified = [post.user, post.last_editor].uniq
 
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
@@ -160,12 +160,18 @@ class PostAlerter
       end
 
       if mentioned_users
+        if added_mentions
+          mentioned_users =
+            mentioned_users.select { |user| added_mentions.include?(user.username_lower) }
+        end
         mentioned_users = only_allowed_users(mentioned_users, post)
         mentioned_users = mentioned_users - pm_watching_users(post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
+        next if added_mentions && !added_mentions.include?(group.name.downcase)
+
         users = only_allowed_users(users, post)
         to_notify =
           DiscoursePluginRegistry.apply_modifier(
@@ -178,7 +184,7 @@ class PostAlerter
           notify_users(to_notify, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
-      if mentioned_here
+      if mentioned_here && (!added_mentions || added_mentions.include?(SiteSetting.here_mention))
         users = expand_here_mention(post, exclude_ids: notified.map(&:id))
         users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
