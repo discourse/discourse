@@ -20,9 +20,7 @@ describe "Ember route-scroll-manager service" do
     expect(page).to have_css("body.navigation-topics")
     expect(discovery.topic_list).to have_topics
 
-    page.execute_script <<~JS
-      document.querySelectorAll('.topic-list-item')[10].scrollIntoView(true);
-    JS
+    discovery.topic_list.scroll_to_topic_at_index(10)
 
     topic_list_scroll_y = current_scroll_y
     expect(topic_list_scroll_y).to be > 0
@@ -47,7 +45,7 @@ describe "Ember route-scroll-manager service" do
     visit("/t/#{topic.slug}/#{topic.id}")
     expect(page).to have_css("#post_20")
 
-    page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    page.scroll_to(:bottom)
     expect(current_scroll_y).to be > 0
 
     click_logo

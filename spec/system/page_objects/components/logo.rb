@@ -6,7 +6,7 @@ module PageObjects
       SELECTOR = "#site-logo"
 
       def click
-        find(SELECTOR).click
+        find(".d-header .title a").click
       end
 
       def hover
