@@ -9,6 +9,7 @@ import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 import { ajax } from "discourse/lib/ajax";
 import BufferedProxy from "discourse/lib/buffered-proxy";
 import { bind } from "discourse/lib/decorators";
+import { deepEqual } from "discourse/lib/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
@@ -197,6 +198,16 @@ export default class SiteSetting extends EmberObject {
 
   get pendingValue() {
     return this.buffered.get("value");
+  }
+
+  get hasPendingChanges() {
+    const pending = this.pendingValue ?? "";
+    const saved = this.value ?? "";
+
+    if (this.json_schema || this.schema || this.objects_schema) {
+      return !deepEqual(pending, saved);
+    }
+    return pending.toString() !== saved.toString();
   }
 
   get requiresConfirmation() {

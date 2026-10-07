@@ -182,9 +182,9 @@ class Theme extends RestModel {
     }
   }
 
-  @computed("recentlyInstalled", "component", "hasParents")
+  @computed("component", "enabled", "hasParents")
   get warnUnassignedComponent() {
-    return this.recentlyInstalled && this.component && !this.hasParents;
+    return this.component && this.enabled && !this.hasParents;
   }
 
   getKey(field) {

@@ -11,7 +11,7 @@ import { LinkTo } from "@ember/routing";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { isEmpty, isNone } from "@ember/utils";
+import { isEmpty } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import SettingBool from "discourse/admin/components/site-settings/bool";
 import SettingCategory from "discourse/admin/components/site-settings/category";
@@ -476,22 +476,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   settingIsDirty(setting) {
-    let bufferVal = this.buffered.get("value");
-    let settingVal = setting?.value;
-
-    if (setting !== this.setting) {
-      bufferVal = setting.buffered.get("value");
-    }
-
-    if (isNone(bufferVal)) {
-      bufferVal = "";
-    }
-
-    if (isNone(settingVal)) {
-      settingVal = "";
-    }
-
-    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
+    const dirty = setting.hasPendingChanges;
 
     if (this.trackChanges) {
       if (dirty) {
