@@ -126,7 +126,8 @@ module DiscourseWorkflows
               potential_spam: false,
               payload: reviewable_payload(user),
             )
-          score_added = add_review_score(reviewable, actor)
+          context = DiscourseWorkflows.reviewable_score_context(exec_ctx.get_workflow.id)
+          score_added = add_review_score(reviewable, actor, context)
           add_provenance_note(exec_ctx, reviewable, actor, config["reason"])
 
           output(
@@ -159,18 +160,25 @@ module DiscourseWorkflows
           ::ReviewableUser.payload_for(user)
         end
 
-        def add_review_score(reviewable, actor)
+        def add_review_score(reviewable, actor, context)
           score_type = ::ReviewableScore.types[:needs_approval]
 
           if reviewable.reviewable_scores.pending.exists?(
                user_id: actor.id,
                reviewable_score_type: score_type,
                reason: SCORE_REASON,
+               context: context,
              )
             return false
           end
 
-          reviewable.add_score(actor, score_type, reason: SCORE_REASON, force_review: true)
+          reviewable.add_score(
+            actor,
+            score_type,
+            reason: SCORE_REASON,
+            context: context,
+            force_review: true,
+          )
           true
         end
 

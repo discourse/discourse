@@ -122,12 +122,20 @@ module DiscourseWorkflows
           raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
 
           reason = score_reason_for(exec_ctx, config["reason"])
+          context = DiscourseWorkflows.reviewable_score_context(exec_ctx.get_workflow.id)
 
           reviewable =
             if SPAM_FLAG_TYPES.include?(flag_type)
-              flag_as_spam(post, actor, flag_type, reason)
+              flag_as_spam(post, actor, flag_type, reason, context)
             else
-              add_to_review_queue(post, actor, flag_type, reason, attribution_for(exec_ctx))
+              add_to_review_queue(
+                post,
+                actor,
+                flag_type,
+                reason,
+                attribution_for(exec_ctx),
+                context,
+              )
             end
 
           output(post, flag_type, reviewable)
@@ -146,7 +154,7 @@ module DiscourseWorkflows
           parts.join("<br>")
         end
 
-        def flag_as_spam(post, actor, flag_type, reason)
+        def flag_as_spam(post, actor, flag_type, reason, context)
           if !actor.guardian.post_can_act?(post, :spam)
             raise_node_error!(I18n.t("discourse_workflows.errors.flag_post.cannot_flag"))
           end
@@ -159,6 +167,7 @@ module DiscourseWorkflows
               post,
               PostActionType.types[:spam],
               reason: reason,
+              context: context,
               queue_for_review: true,
             ).perform
 
@@ -178,7 +187,7 @@ module DiscourseWorkflows
           result.reviewable
         end
 
-        def add_to_review_queue(post, actor, flag_type, reason, attribution)
+        def add_to_review_queue(post, actor, flag_type, reason, attribution, context)
           destroying = %w[review_delete review_delete_silence].include?(flag_type)
 
           if destroying
@@ -197,23 +206,30 @@ module DiscourseWorkflows
                 reviewable_by_moderator: true,
               )
 
-          add_review_score(reviewable, actor, reason)
+          add_review_score(reviewable, actor, reason, context)
 
           post.hide!(PostActionType.types[:notify_moderators]) if flag_type == "review_hide"
 
           reviewable
         end
 
-        def add_review_score(reviewable, actor, reason)
+        def add_review_score(reviewable, actor, reason, context)
           score_type = ReviewableScore.types[:needs_approval]
           if reviewable.reviewable_scores.pending.exists?(
                user_id: actor.id,
                reviewable_score_type: score_type,
+               context: context,
              )
             return
           end
 
-          reviewable.add_score(actor, score_type, reason: reason, force_review: true)
+          reviewable.add_score(
+            actor,
+            score_type,
+            reason: reason,
+            context: context,
+            force_review: true,
+          )
         end
 
         def promote_pending_reviewable_to_flagged!(post)
