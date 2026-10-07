@@ -20022,6 +20022,13 @@ CREATE INDEX idx_posts_deleted_posts ON public.posts USING btree (topic_id, post
 
 
 --
+-- Name: idx_posts_search_covering; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_posts_search_covering ON public.posts USING btree (id) INCLUDE (topic_id, post_number, post_type) WHERE ((deleted_at IS NULL) AND (NOT hidden));
+
+
+--
 -- Name: idx_posts_user_id_deleted_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25568,6 +25575,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261007082151'),
 ('20261006113418'),
 ('20261005091527'),
 ('20261005091447'),
