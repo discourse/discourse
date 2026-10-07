@@ -592,13 +592,13 @@ importers:
         version: 7.0.1(@babel/core@7.29.7)(ember-source@7.2.0(patch_hash=0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102)(@glimmer/component@2.1.1))
       ember-exam:
         specifier: ^10.1.3
-        version: 10.1.3(@glint/template@1.9.0)(ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.2.0(patch_hash=0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102)(@glimmer/component@2.1.1))(qunit@2.26.0)
+        version: 10.1.3(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.2.0(patch_hash=0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102)(@glimmer/component@2.1.1))(qunit@2.26.0)
       ember-modifier:
         specifier: ^4.3.0
         version: 4.3.0(@babel/core@7.29.7)
       ember-qunit:
-        specifier: ^9.1.0
-        version: 9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0)
+        specifier: ^9.2.0
+        version: 9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0)
       ember-template-imports:
         specifier: ^4.4.0
         version: 4.4.0
@@ -4297,11 +4297,11 @@ packages:
   ember-modifier@4.3.0:
     resolution: {integrity: sha512-O0rirSLQbGg0VJ/NqoQ4uN1bh2iAekZC/Ykma+FkjCM2ofrO38u+d8n3+AK6uVWeMJmogGX2KL+Is5fofoInJg==}
 
-  ember-qunit@9.1.0:
-    resolution: {integrity: sha512-dE32lSODyv4em0ACBS8PDzrAIPKR75hhSpn/au0qFBlzbdmNA/VVsgv2aoFAVRdlQ0zYJ8EiNPFqsBFciIeXVA==}
+  ember-qunit@9.2.0:
+    resolution: {integrity: sha512-y/v9D7/wfH9fWh6p6NPNZ4KMJ97ZdowoASNmLvLrrzDYSVHJDbbbOfFMKLfdvHF942PHMlf6NulKVezO4yNfmw==}
     peerDependencies:
       '@ember/test-helpers': '>=3.0.3'
-      qunit: ^2.13.0
+      qunit: ^2.13.0 || ^3.0.0
 
   ember-resolver@13.2.0:
     resolution: {integrity: sha512-A+BffoSKC0ngiczbgaz/IOY66ovZVRRHHIDDi+d7so5i0By8xuB4nXgZZ6Dv3u/3WwoUyixgUvb0xTUO+MtupA==}
@@ -12220,7 +12220,7 @@ snapshots:
       content-tag: 4.2.0
       oxc-parser: 0.130.0
 
-  ember-exam@10.1.3(@glint/template@1.9.0)(ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.2.0(patch_hash=0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102)(@glimmer/component@2.1.1))(qunit@2.26.0):
+  ember-exam@10.1.3(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0))(ember-source@7.2.0(patch_hash=0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102)(@glimmer/component@2.1.1))(qunit@2.26.0):
     dependencies:
       '@babel/core': 7.29.7
       chalk: 5.6.2
@@ -12228,7 +12228,7 @@ snapshots:
       debug: 4.4.3
       ember-auto-import: 2.13.1(@glint/template@1.9.0)
       ember-cli-babel: 8.3.2(@babel/core@7.29.7)
-      ember-qunit: 9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0)
+      ember-qunit: 9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0)
       ember-source: 7.2.0(patch_hash=0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102)(@glimmer/component@2.1.1)
       execa: 8.0.1
       fs-extra: 11.4.0
@@ -12251,7 +12251,7 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  ember-qunit@9.1.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0):
+  ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7))(qunit@2.26.0):
     dependencies:
       '@ember/test-helpers': 5.4.3(@babel/core@7.29.7)
       '@embroider/addon-shim': 1.10.3
