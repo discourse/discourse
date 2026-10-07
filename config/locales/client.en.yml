@@ -3509,8 +3509,7 @@ en:
       expand: "Show options"
       load_error: "Couldn't load results."
       retry: "Retry"
-      unresolved: "Unavailable"
-      unresolved_value: "%{value} (unavailable)"
+      unresolved_value: "Unknown item (%{value})"
       results_count:
         one: "%{count} result"
         other: "%{count} results"

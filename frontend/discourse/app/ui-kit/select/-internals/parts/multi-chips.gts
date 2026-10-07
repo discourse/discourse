@@ -255,10 +255,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                   {{#if @hasSelectionBlock}}
                     {{yield chip.item to="selection"}}
                   {{else}}
-                    <SelectionLabel
-                      @item={{chip.item}}
-                      @labelField={{@presenter.labelField}}
-                    />
+                    <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
                   {{/if}}
                 </span>
                 <button

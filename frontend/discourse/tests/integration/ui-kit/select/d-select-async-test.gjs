@@ -14,9 +14,13 @@ import {
   waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
+import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { ITEMS } from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
+
+const resolveNone = () => Promise.resolve([]);
 
 module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
   setupRenderingTest(hooks);
@@ -161,8 +165,8 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     assert
       .dom("[role='combobox']")
       .hasValue(
-        "7 (unavailable)",
-        "the held value is shown as unavailable rather than blanking"
+        "Unknown item (7)",
+        "the held value is shown as unknown rather than blanking"
       );
     assert
       .dom(".d-combobox__trigger [role='alert']")
@@ -363,9 +367,95 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     assert
       .dom(".d-combobox__unresolved")
       .hasText(
-        "2 Unavailable",
-        "the unavailable chip shows the failed id, keeping ids distinct, and carries the state in text for screen readers"
+        "Unknown item (2)",
+        "the chip says what it is in visible text, keeping ids distinct"
       );
+    assert
+      .dom(".d-combobox__unresolved .d-icon")
+      .doesNotExist("no icon stands in for the text");
+    assert
+      .dom(".d-combobox__unresolved")
+      .doesNotHaveAttribute("title", "no tooltip repeats it");
+    assert
+      .dom(".d-combobox__unresolved .sr-only")
+      .doesNotExist("no hidden text differs from what is shown");
+  });
+
+  test("an unresolved chip with a named fallback shows that name as-is", async function (assert) {
+    const createUnresolvedItem = (value) => ({
+      id: value,
+      name: "Deleted user",
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @createUnresolvedItem={{createUnresolvedItem}}
+          @items={{array}}
+          @multiple={{true}}
+          @resolveValues={{resolveNone}}
+          @value={{array 2}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__unresolved")
+      .hasText("Deleted user", "a named fallback already explains itself");
+  });
+
+  test("removing an unresolved chip announces it by its label", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    class RemoveHost extends Component {
+      @tracked value = [2];
+
+      @action
+      onChange(value) {
+        this.value = value;
+      }
+
+      <template>
+        <A11yLiveRegions />
+        <DSelect
+          @items={{array}}
+          @multiple={{true}}
+          @onChange={{this.onChange}}
+          @resolveValues={{resolveNone}}
+          @value={{this.value}}
+        />
+      </template>
+    }
+
+    await render(<template><RemoveHost /></template>);
+    await click(".d-combobox__chip-remove");
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText("Removed Unknown item (2)", "the announcement names it");
+  });
+
+  test("a single button trigger shows and names an unresolved value the same way", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{array}}
+          @resolveValues={{resolveNone}}
+          @value={{7}}
+          @variant="button"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__trigger .d-combobox__unresolved")
+      .hasText("Unknown item (7)", "the visible text");
+    assert.true(
+      find(".d-combobox__trigger")
+        .getAttribute("aria-label")
+        .endsWith("Unknown item (7)"),
+      "the accessible name ends with the same text"
+    );
   });
 
   test("@valueItems seeds part of an async multi selection", async function (assert) {
@@ -443,8 +533,8 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     assert
       .dom("[role='combobox']")
       .hasValue(
-        "123 (unavailable)",
-        "the default fallback keeps the unavailable suffix when the builder throws"
+        "Unknown item (123)",
+        "the default fallback is used when the builder throws"
       );
   });
 

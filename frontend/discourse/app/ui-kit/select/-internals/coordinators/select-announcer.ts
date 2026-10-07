@@ -341,7 +341,7 @@ export default class SelectAnnouncer {
         const item = this.#engine.resolveSingleSync(added);
         this.#a11y.announce(
           i18n("d_select.item_added", {
-            item: item ? this.#engine.getItemLabel(item) : String(added),
+            item: item ? this.#engine.getSelectionLabel(item) : String(added),
           }),
           "polite"
         );
@@ -354,7 +354,7 @@ export default class SelectAnnouncer {
         const item = this.#engine.resolveSingleSync(removed);
         this.#a11y.announce(
           i18n("d_select.item_removed", {
-            item: item ? this.#engine.getItemLabel(item) : String(removed),
+            item: item ? this.#engine.getSelectionLabel(item) : String(removed),
           }),
           "polite"
         );

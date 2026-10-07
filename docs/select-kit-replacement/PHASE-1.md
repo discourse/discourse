@@ -72,11 +72,14 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     `@resolveValue` stays as single-select sugar.
   - ☑ `__unresolved` fallback — resolution never rejects/blanks a held value, whether the
     resolver rejects **or throws synchronously**; each unresolvable id becomes
-    `{ [valueField]: id, __unresolved: true }`, rendered as the value plus a warning icon +
-    "unavailable" tooltip (muted) + `.sr-only` state text (the icon is `aria-hidden` and the
-    tooltip sits on an unfocusable child, so the state has to be carried in text), or
-    "%{value} (unavailable)" in the plain typeahead input. `:selection`-block consumers
-    branch on `item.__unresolved`.
+    `{ [valueField]: id, __unresolved: true }`. Since 2026-10-06 every surface uses one rule,
+    `SelectEngine#getSelectionLabel`: a fallback named by `@createUnresolvedItem` shows its
+    own label, and the default reads "Unknown item (id)". Chips, triggers, the typeahead
+    input, the trigger's accessible name and add/remove announcements all say those words.
+    No icon, tooltip or screen-reader-only text adds to them, so sighted and screen-reader
+    users get the same message (the old version read three different phrasings and announced
+    "Removed 2"). `:selection`-block consumers still branch on `item.__unresolved`; the
+    `:unresolved` block will default to this rule rather than to `:selection`.
   - ☑ `@createUnresolvedItem` — `(value) => item` names the fallback (e.g. `Topic #123`)
     on every surface, the plain input included, where a block can't reach. The engine owns
     the `__unresolved` marker regardless of what the builder returns.

@@ -102,10 +102,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                   {{#if @hasSelectionBlock}}
                     {{yield selected to="selection"}}
                   {{else}}
-                    <SelectionLabel
-                      @item={{selected}}
-                      @labelField={{@presenter.labelField}}
-                    />
+                    <SelectionLabel @engine={{@engine}} @item={{selected}} />
                   {{/if}}
                 </:content>
               </DAsyncContent>
@@ -199,10 +196,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
             {{#if @hasSelectionBlock}}
               {{yield selected to="selection"}}
             {{else}}
-              <SelectionLabel
-                @item={{selected}}
-                @labelField={{@presenter.labelField}}
-              />
+              <SelectionLabel @engine={{@engine}} @item={{selected}} />
             {{/if}}
           </span>
         </:content>

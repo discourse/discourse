@@ -19,6 +19,7 @@ import {
   applyLegacySelectKitContent,
   applyLegacySelectKitOnChange,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import { i18n } from "discourse-i18n";
 
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
@@ -811,6 +812,25 @@ export default class SelectEngine {
 
   getItemLabel(item: SelectItem | null | undefined): string {
     return selectItemLabel(item, this.#options.labelField);
+  }
+
+  /**
+   * The text that stands for a held item on every surface: the trigger, chips, the typeahead
+   * input, the accessible names built from them, and announcements. An unresolved item named by
+   * `createUnresolvedItem` keeps that name, which already explains itself; the default fallback
+   * reads as an unknown item with its id, since nothing more is known about it.
+   *
+   * @param item - The held item, resolved or not.
+   * @returns The label to show and announce.
+   */
+  @bind
+  getSelectionLabel(item: SelectItem | null | undefined): string {
+    if (item?.__unresolved && !this.isCustomUnresolvedItem(item)) {
+      return i18n("d_select.unresolved_value", {
+        value: String(item[this.#options.valueField] ?? ""),
+      });
+    }
+    return this.getItemLabel(item);
   }
 
   getSingleSelectionLabel(value: SelectValue): string {

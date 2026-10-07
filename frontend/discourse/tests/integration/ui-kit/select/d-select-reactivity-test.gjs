@@ -159,16 +159,16 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
 
     assert
       .dom(".late-default [role='combobox']")
-      .hasValue("2 (unavailable)", "the default trigger starts unresolved");
+      .hasValue("Unknown item (2)", "the default trigger starts unresolved");
     assert
       .dom(".late-custom .d-combobox__presentation")
       .hasText("2", "the yielded selection starts unresolved");
     assert
       .dom(".late-button .d-combobox__value")
-      .hasText("2 Unavailable", "the control selection starts unresolved");
+      .hasText("Unknown item (2)", "the control selection starts unresolved");
     assert
       .dom(".late-multi .d-combobox__chip-label")
-      .hasText("2 Unavailable", "the chip starts unresolved");
+      .hasText("Unknown item (2)", "the chip starts unresolved");
 
     state.valueItems = { id: 2, name: "Banana" };
     state.valueItemsMulti = [{ id: 2, name: "Banana" }];
@@ -205,7 +205,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
 
     assert
       .dom(".d-combobox__presentation")
-      .hasText("2 Unavailable", "the mobile trigger starts unresolved");
+      .hasText("Unknown item (2)", "the mobile trigger starts unresolved");
 
     state.valueItems = { id: 2, name: "Banana" };
     await settled();
