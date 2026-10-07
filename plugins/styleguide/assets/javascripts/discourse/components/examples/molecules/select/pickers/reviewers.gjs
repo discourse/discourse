@@ -44,21 +44,25 @@ export default class ReviewersSelectExample extends Component {
     >
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{#unless person.__unresolved}}
-            <svg
-              aria-hidden="true"
-              class="select-examples__avatar --small"
-              style={{person.avatarStyle}}
-              viewBox="0 0 48 48"
-            >
-              <use
-                href="/plugins/styleguide/images/avatar.svg#select-avatar"
-              ></use>
-            </svg>
-          {{/unless}}
+          <svg
+            aria-hidden="true"
+            class="select-examples__avatar --small"
+            style={{person.avatarStyle}}
+            viewBox="0 0 48 48"
+          >
+            <use
+              href="/plugins/styleguide/images/avatar.svg#select-avatar"
+            ></use>
+          </svg>
           {{person.username}}
         </span>
       </:selection>
+
+      <:unresolved as |person|>
+        <span class="select-examples__row select-examples__row--glyph">
+          {{person.name}}
+        </span>
+      </:unresolved>
 
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">

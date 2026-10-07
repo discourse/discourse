@@ -45,6 +45,8 @@ interface SingleTriggerDisplaySignature {
     hasSelectionBlock: boolean;
     /** Whether the consumer supplied custom markup for a selection that is still resolving. */
     hasSelectionLoadingBlock: boolean;
+    /** Whether the consumer supplied custom markup for a held value that cannot be resolved. */
+    hasUnresolvedBlock: boolean;
     /** Resolves the bound selection into its display item. */
     resolveSelection: (
       value: unknown,
@@ -81,6 +83,11 @@ interface SingleTriggerDisplaySignature {
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
+    /** Custom markup for a held value that cannot be resolved. */
+    unresolved?: [
+      /** The unresolved fallback item. */
+      item: SelectItem,
+    ];
   };
 }
 
@@ -108,7 +115,13 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                       @width="8ch"
                     />{{/if}}</:loading>
                 <:content as |selected|>
-                  {{#if @hasSelectionBlock}}
+                  {{#if selected.__unresolved}}
+                    {{#if @hasUnresolvedBlock}}
+                      {{yield selected to="unresolved"}}
+                    {{else}}
+                      <SelectionLabel @engine={{@engine}} @item={{selected}} />
+                    {{/if}}
+                  {{else if @hasSelectionBlock}}
                     {{yield selected to="selection"}}
                   {{else}}
                     <SelectionLabel @engine={{@engine}} @item={{selected}} />
@@ -134,10 +147,17 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                       @variant="text"
                       @width="8ch"
                     />{{/if}}</:loading>
-                <:content as |selected|>{{yield
-                    selected
-                    to="selection"
-                  }}</:content>
+                <:content as |selected|>
+                  {{#if selected.__unresolved}}
+                    {{#if @hasUnresolvedBlock}}
+                      {{yield selected to="unresolved"}}
+                    {{else}}
+                      <SelectionLabel @engine={{@engine}} @item={{selected}} />
+                    {{/if}}
+                  {{else}}
+                    {{yield selected to="selection"}}
+                  {{/if}}
+                </:content>
               </DAsyncContent>
             </span>
           {{/if}}
@@ -216,7 +236,13 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
             />{{/if}}</:loading>
         <:content as |selected|>
           <span class="d-combobox__value">
-            {{#if @hasSelectionBlock}}
+            {{#if selected.__unresolved}}
+              {{#if @hasUnresolvedBlock}}
+                {{yield selected to="unresolved"}}
+              {{else}}
+                <SelectionLabel @engine={{@engine}} @item={{selected}} />
+              {{/if}}
+            {{else if @hasSelectionBlock}}
               {{yield selected to="selection"}}
             {{else}}
               <SelectionLabel @engine={{@engine}} @item={{selected}} />

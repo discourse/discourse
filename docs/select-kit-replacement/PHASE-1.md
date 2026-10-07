@@ -97,7 +97,10 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     is done too: it replaces the placeholder in every chip and in all four single-trigger
     branches (mobile typeahead, desktop typeahead with and without `:selection`, button and
     static), and the reviewers picker shows an avatar-chip skeleton. Neither block yields
-    anything yet; adding a parameter later is backward compatible. (Group flag UI landed with `@groupBy` — see
+    anything yet; adding a parameter later is backward compatible. `:unresolved` is done too:
+    it yields the fallback item, and without it every surface uses the built-in label (not
+    `:selection`, which now only ever receives resolved items). Still open: the
+    "input-holds-only-query composite trigger", which the RFC never defines. (Group flag UI landed with `@groupBy` — see
     the Decision 2 item below.)
   - ☑ **Runtime input reactivity** (`f6ed1eb9649`). The engine captured every input but
     `@value` in its constructor, so `@items`, `@selected`, `@multiple`, `@minChars` and

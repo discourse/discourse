@@ -853,3 +853,144 @@ module(
     }
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect (:unresolved)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    // Every surface that renders a held item, each with a `:selection` block, so the tests show
+    // that an unresolved item never reaches `:selection`.
+    const surfaces = [
+      {
+        name: "a chip",
+        Plain: <template>
+          <DSelect
+            @items={{array}}
+            @multiple={{true}}
+            @resolveValues={{resolveNone}}
+            @value={{array 2}}
+          >
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+          </DSelect>
+        </template>,
+        Custom: <template>
+          <DSelect
+            @items={{array}}
+            @multiple={{true}}
+            @resolveValues={{resolveNone}}
+            @value={{array 2}}
+          >
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+            <:unresolved as |item|><span class="custom-unresolved">Missing
+                {{item.id}}</span></:unresolved>
+          </DSelect>
+        </template>,
+      },
+      {
+        name: "the button trigger",
+        Plain: <template>
+          <DSelect
+            @items={{array}}
+            @resolveValues={{resolveNone}}
+            @value={{2}}
+            @variant="button"
+          >
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+          </DSelect>
+        </template>,
+        Custom: <template>
+          <DSelect
+            @items={{array}}
+            @resolveValues={{resolveNone}}
+            @value={{2}}
+            @variant="button"
+          >
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+            <:unresolved as |item|><span class="custom-unresolved">Missing
+                {{item.id}}</span></:unresolved>
+          </DSelect>
+        </template>,
+      },
+      {
+        name: "the desktop typeahead",
+        Plain: <template>
+          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+          </DSelect>
+        </template>,
+        Custom: <template>
+          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+            <:unresolved as |item|><span class="custom-unresolved">Missing
+                {{item.id}}</span></:unresolved>
+          </DSelect>
+        </template>,
+      },
+      {
+        name: "the mobile typeahead",
+        mobile: true,
+        Plain: <template>
+          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+          </DSelect>
+        </template>,
+        Custom: <template>
+          <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
+            <:selection as |item|><span
+                class="custom-selection"
+              >{{item.name}}</span></:selection>
+            <:unresolved as |item|><span class="custom-unresolved">Missing
+                {{item.id}}</span></:unresolved>
+          </DSelect>
+        </template>,
+      },
+    ];
+
+    for (const { name, Plain, Custom, mobile } of surfaces) {
+      test(`without :unresolved, ${name} shows the built-in label, not :selection`, async function (assert) {
+        if (mobile) {
+          forceMobile();
+        }
+
+        await render(<template><Plain /></template>);
+
+        assert
+          .dom(".custom-selection")
+          .doesNotExist(":selection never receives an unresolved item");
+        assert
+          .dom(".d-combobox__unresolved")
+          .hasText("Unknown item (2)", "the built-in label is used");
+      });
+
+      test(`with :unresolved, ${name} renders that block`, async function (assert) {
+        if (mobile) {
+          forceMobile();
+        }
+
+        await render(<template><Custom /></template>);
+
+        assert
+          .dom(".custom-unresolved")
+          .hasText("Missing 2", "the block receives the unresolved item");
+        assert
+          .dom(".custom-selection")
+          .doesNotExist(":selection never receives an unresolved item");
+      });
+    }
+  }
+);

@@ -162,7 +162,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
       .hasValue("Unknown item (2)", "the default trigger starts unresolved");
     assert
       .dom(".late-custom .d-combobox__presentation")
-      .hasText("2", "the yielded selection starts unresolved");
+      .hasText("Unknown item (2)", "an unresolved value bypasses :selection");
     assert
       .dom(".late-button .d-combobox__value")
       .hasText("Unknown item (2)", "the control selection starts unresolved");

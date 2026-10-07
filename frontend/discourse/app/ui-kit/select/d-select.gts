@@ -205,6 +205,13 @@ interface DSelectSignature {
      * trigger. Without it a plain text bar stands in.
      */
     selectionLoading?: [];
+    /**
+     * Custom markup for a held value that cannot be resolved (deleted, restricted or never
+     * existed); yields the fallback item. Without it the built-in label is used ("Unknown item
+     * (id)", or the name `@createUnresolvedItem` gives), even when `:selection` is supplied, so
+     * the state is never lost in custom markup by accident.
+     */
+    unresolved?: [SelectItemModel];
     /** Consumer override for a group header's content; yields the header item (with its `label`). */
     groupHeader?: [SelectItemModel];
     /**
@@ -634,6 +641,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @focusInput={{this.interaction.focusInput}}
               @hasSelectionBlock={{has-block "selection"}}
               @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
+              @hasUnresolvedBlock={{has-block "unresolved"}}
               @id={{@id}}
               @invalid={{@invalid}}
               @listboxId={{this.activeListboxId}}
@@ -653,6 +661,10 @@ export default class DSelect extends Component<DSelectSignature> {
               <:selectionLoading>{{yield
                   to="selectionLoading"
                 }}</:selectionLoading>
+              <:unresolved as |item|>{{yield
+                  item
+                  to="unresolved"
+                }}</:unresolved>
             </MultiChips>
           {{else}}
             <SingleTriggerDisplay
@@ -664,6 +676,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @expanded={{menuArgs.expanded}}
               @hasSelectionBlock={{has-block "selection"}}
               @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
+              @hasUnresolvedBlock={{has-block "unresolved"}}
               @id={{@id}}
               @invalid={{@invalid}}
               @listboxId={{this.activeListboxId}}
@@ -686,6 +699,10 @@ export default class DSelect extends Component<DSelectSignature> {
               <:selectionLoading>{{yield
                   to="selectionLoading"
                 }}</:selectionLoading>
+              <:unresolved as |item|>{{yield
+                  item
+                  to="unresolved"
+                }}</:unresolved>
             </SingleTriggerDisplay>
           {{/if}}
         </TriggerFrame>

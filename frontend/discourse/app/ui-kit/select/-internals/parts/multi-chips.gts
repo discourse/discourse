@@ -49,6 +49,8 @@ interface MultiChipsSignature {
     hasSelectionBlock: boolean;
     /** Whether the consumer supplied custom markup for a selection that is still resolving. */
     hasSelectionLoadingBlock: boolean;
+    /** Whether the consumer supplied custom markup for a held value that cannot be resolved. */
+    hasUnresolvedBlock: boolean;
     /** Resolves the bound selection into chip descriptors. */
     resolveSelection: (
       value: unknown,
@@ -92,6 +94,11 @@ interface MultiChipsSignature {
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
+    /** Custom markup for a held value that cannot be resolved. */
+    unresolved?: [
+      /** The unresolved fallback item. */
+      item: SelectItem,
+    ];
   };
 }
 
@@ -260,7 +267,13 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                   class="d-combobox__chip-label"
                   id="{{this.chipIdPrefix}}-{{index}}-label"
                 >
-                  {{#if @hasSelectionBlock}}
+                  {{#if chip.item.__unresolved}}
+                    {{#if @hasUnresolvedBlock}}
+                      {{yield chip.item to="unresolved"}}
+                    {{else}}
+                      <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
+                    {{/if}}
+                  {{else if @hasSelectionBlock}}
                     {{yield chip.item to="selection"}}
                   {{else}}
                     <SelectionLabel @engine={{@engine}} @item={{chip.item}} />

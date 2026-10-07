@@ -20,7 +20,7 @@ module PageObjects
       def has_resolved_reviewers?(count:)
         has_css?("#{REVIEWERS} .d-combobox__chip", count: count) &&
           has_css?("#{REVIEWERS} .d-combobox__chip-label", text: "maya") &&
-          has_css?("#{REVIEWERS} .d-combobox__chip-label", text: "deleted-user")
+          has_css?("#{REVIEWERS} .d-combobox__chip-label", text: "Deleted account")
       end
 
       # The chips wrap only because the control is width-constrained; this asserts the wrap by
