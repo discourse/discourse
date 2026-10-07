@@ -211,9 +211,13 @@ def spec(plugin, files, parallel: false, argv: nil)
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
 
     Rake::FileUtilsExt.verbose(!parallel) do
-      sh("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}") do |ok, status|
-        fail "Spec command failed with status (#{status.exitstatus})" if !ok
-      end
+      # Avoid `sh -c`: Linux rejects any single exec argument over MAX_ARG_STRLEN (128KB on 4KB-page systems).
+      sh(
+        { "LOAD_PLUGINS" => "1" },
+        cmd,
+        *files,
+        *Shellwords.split(params.join(" ")),
+      ) { |ok, status| fail "Spec command failed with status (#{status.exitstatus})" if !ok }
     end
   else
     abort "No specs found."

@@ -32,8 +32,8 @@ interface DDragHandleSignature {
  */
 const DDragHandle: TemplateOnlyComponent<DDragHandleSignature> = <template>
   <span
-    class="d-drag-handle"
     aria-hidden="true"
+    class="d-drag-handle"
     tabindex="-1"
     title={{@label}}
     ...attributes

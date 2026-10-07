@@ -5,7 +5,10 @@ describe DiscourseAi::Admin::AiThemeTranslationsController do
   fab!(:user)
   fab!(:theme)
 
-  before { enable_current_plugin }
+  before do
+    enable_current_plugin
+    SiteSetting.content_localization_supported_locales = "en|fr|es"
+  end
 
   describe "#create" do
     context "when logged in as admin" do
@@ -17,6 +20,8 @@ describe DiscourseAi::Admin::AiThemeTranslationsController do
           args: {
             theme_id: theme.id,
             source_locale: "en",
+            target_locales: %w[fr es],
+            override_existing: false,
           },
         ) do
           post "/admin/plugins/discourse-ai/ai-theme-translations.json",
@@ -34,6 +39,8 @@ describe DiscourseAi::Admin::AiThemeTranslationsController do
           args: {
             theme_id: theme.id,
             source_locale: "fr",
+            target_locales: %w[en es],
+            override_existing: false,
           },
         ) do
           post "/admin/plugins/discourse-ai/ai-theme-translations.json",
@@ -50,12 +57,53 @@ describe DiscourseAi::Admin::AiThemeTranslationsController do
           args: {
             theme_id: theme.id,
             source_locale: "en",
+            target_locales: %w[fr es],
+            override_existing: false,
           },
         ) do
           post "/admin/plugins/discourse-ai/ai-theme-translations.json",
                params: {
                  theme_id: theme.id,
                  locale: "not-a-locale",
+               }
+        end
+      end
+
+      it "queues only confirmed supported targets and explicitly requested replacement" do
+        expect_enqueued_with(
+          job: :localize_theme_translations,
+          args: {
+            theme_id: theme.id,
+            source_locale: "en",
+            target_locales: ["fr"],
+            override_existing: true,
+          },
+        ) do
+          post "/admin/plugins/discourse-ai/ai-theme-translations.json",
+               params: {
+                 theme_id: theme.id,
+                 locale: "en",
+                 target_locales: %w[en fr ja],
+                 override_existing: "true",
+               }
+        end
+        expect(response.status).to eq(204)
+      end
+
+      it "does not treat the string false as permission to replace translations" do
+        expect_enqueued_with(
+          job: :localize_theme_translations,
+          args: {
+            theme_id: theme.id,
+            source_locale: "en",
+            target_locales: %w[fr es],
+            override_existing: false,
+          },
+        ) do
+          post "/admin/plugins/discourse-ai/ai-theme-translations.json",
+               params: {
+                 theme_id: theme.id,
+                 override_existing: "false",
                }
         end
       end

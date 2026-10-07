@@ -27,8 +27,8 @@ export default class SubCategoryItem extends CategoryListItem {
             {{#unless this.hideUnread}}
               <CategoryUnread
                 @category={{this.category}}
-                @unreadTopicsCount={{this.unreadTopicsCount}}
                 @newTopicsCount={{this.newTopicsCount}}
+                @unreadTopicsCount={{this.unreadTopicsCount}}
               />
             {{/unless}}
           </span>

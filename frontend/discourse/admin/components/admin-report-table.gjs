@@ -210,10 +210,10 @@ export default class AdminReportTable extends Component {
           <tr>
             {{#each this.model.computedLabels as |label|}}
               <AdminReportTableHeader
-                @showSortingUI={{this.showSortingUI}}
                 @currentSortDirection={{this.sortDirection}}
                 @currentSortLabel={{this.sortLabel}}
                 @label={{label}}
+                @showSortingUI={{this.showSortingUI}}
                 @sortByLabel={{fn this.sortByLabel label}}
               />
             {{else}}
@@ -227,8 +227,11 @@ export default class AdminReportTable extends Component {
           {{#each this.paginatedData as |data|}}
             <AdminReportTableRow
               @data={{data}}
+              @hasRelatedItems={{@hasRelatedItems}}
               @labels={{this.model.computedLabels}}
               @options={{this.options}}
+              @reportFilters={{@reportFilters}}
+              @reportType={{@reportType}}
             />
           {{/each}}
 
@@ -284,9 +287,9 @@ export default class AdminReportTable extends Component {
       <div class="pagination">
         {{#each this.pages as |pageState|}}
           <DButton
-            @translatedLabel={{pageState.page}}
-            @action={{fn this.changePage pageState.index}}
             class={{pageState.class}}
+            @action={{fn this.changePage pageState.index}}
+            @translatedLabel={{pageState.page}}
           />
         {{/each}}
       </div>

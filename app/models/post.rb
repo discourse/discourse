@@ -323,11 +323,7 @@ class Post < ActiveRecord::Base
     !add_nofollow?
   end
 
-  def cook(raw, opts = {})
-    # For some posts, for example those imported via RSS, we support raw HTML. In that
-    # case we can skip the rendering pipeline.
-    return raw if cook_method == Post.cook_methods[:raw_html]
-
+  def markdown_options(opts = {})
     options = opts.dup
     options[:cook_method] = cook_method
 
@@ -340,6 +336,15 @@ class Post < ActiveRecord::Base
     options[:user_id] = last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
+    options
+  end
+
+  def cook(raw, opts = {})
+    # For some posts, for example those imported via RSS, we support raw HTML. In that
+    # case we can skip the rendering pipeline.
+    return raw if cook_method == Post.cook_methods[:raw_html]
+
+    options = markdown_options(opts)
 
     if should_secure_uploads?
       each_upload_url do |url|
@@ -1259,7 +1264,7 @@ class Post < ActiveRecord::Base
   def add_to_quoted_post_numbers(num)
     return if num.blank?
     self.quoted_post_numbers ||= []
-    self.quoted_post_numbers << num
+    quoted_post_numbers << num
   end
 
   def create_reply_relationship_with(post)
@@ -1336,7 +1341,7 @@ end
 #  idx_posts_created_at_topic_id                          (created_at,topic_id) WHERE (deleted_at IS NULL)
 #  idx_posts_deleted_posts                                (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
 #  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
-#  index_for_rebake_old                                   (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
+#  index_for_rebake_old                                   (id DESC) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_deleted_by_id                           (deleted_by_id) WHERE (deleted_by_id IS NOT NULL)
 #  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
@@ -1350,8 +1355,8 @@ end
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_reply_to_post_number       (topic_id,reply_to_post_number)
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)
-#  index_posts_on_updated_at_for_locale_detection         (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
-#  index_posts_on_updated_at_for_localization             (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
+#  index_posts_on_updated_at_for_locale_detection         (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_posts_on_updated_at_for_localization             (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_posts_on_user_id_and_created_at                  (user_id,created_at)
 #  index_posts_user_and_likes                             (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
 #

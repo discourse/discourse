@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 const PrivateMessageGlyph = <template>
   {{#if @shouldShow}}
     {{#if @href}}
-      <a href={{@href}} title={{i18n @title}} aria-label={{i18n @ariaLabel}}>
+      <a aria-label={{i18n @ariaLabel}} href={{@href}} title={{i18n @title}}>
         <span class="private-message-glyph-wrapper">
           {{dIcon "envelope" class="private-message-glyph"}}
         </span>

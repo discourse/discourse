@@ -8,11 +8,13 @@
 # paths for the Site Traffic Explorer.
 class BrowserPageviewEventUrlNormalizer
   # Bump when referrer normalization changes significantly to re-backfill rows
-  # stamped with an older version.
+  # stamped with an older version. Also recreate idx_bpe_referrer_backfill,
+  # whose predicate hardcodes this value.
   REFERRER_VERSION = 1
 
   # Bump when site-path normalization changes significantly to re-backfill rows
-  # stamped with an older version.
+  # stamped with an older version. Also recreate idx_bpe_url_backfill, whose
+  # predicate hardcodes this value.
   SITE_PATH_VERSION = 1
 
   # TODO: consider vendoring DuckDuckGo's Tracker Radar tracking-parameter list

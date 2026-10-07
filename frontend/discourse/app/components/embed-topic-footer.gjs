@@ -99,9 +99,9 @@ export default class EmbedTopicFooter extends Component {
             {{dIcon "comment"}}
             <span>{{i18n "embed_mode.be_first_to_reply"}}</span>
             <DButton
+              class="btn-primary"
               @action={{this.handleReply}}
               @label={{this.replyButtonLabel}}
-              class="btn-primary"
             />
           </div>
         {{/if}}
@@ -114,10 +114,10 @@ export default class EmbedTopicFooter extends Component {
       {{#if this.showFloatingTimelineButton}}
         <div class="embed-floating-buttons">
           <DButton
+            class="btn-default embed-floating-timeline-button"
             @action={{this.handleTimelineToggle}}
             @icon="bars-staggered"
             @title="topic.progress.title"
-            class="btn-default embed-floating-timeline-button"
           />
         </div>
       {{/if}}

@@ -123,6 +123,15 @@ RSpec.describe(DiscourseEvents::Events::DestroyInvitee) do
 
         expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:regular])
       end
+
+      it "publishes the attendance change so subscribers see the withdrawal" do
+        event =
+          DiscourseEvent
+            .track_events(:discourse_calendar_post_event_invitee_status_changed) { result }
+            .first
+
+        expect(event[:params].first).to have_attributes(id: invitee.id, destroyed?: true)
+      end
     end
 
     context "when staff destroys another user's invitee" do

@@ -9,7 +9,9 @@ nb_NO:
     currently_away:
       labels:
         username: Brukernavn
-  discourse_calendar:
+  discourse_events:
+    reminder:
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "Dag"

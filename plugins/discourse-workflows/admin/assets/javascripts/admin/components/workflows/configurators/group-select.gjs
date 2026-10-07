@@ -90,12 +90,12 @@ export default class GroupSelect extends ComboBoxField {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <div class="workflows-property-engine__select-with-action">
         {{#if this.multiple}}
@@ -103,18 +103,16 @@ export default class GroupSelect extends ComboBoxField {
             @content={{this.contentOptions}}
             @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
             @nameProperty="name"
-            @value={{this.value}}
-            @valueProperty="id"
             @onChange={{this.handleMultiChange}}
             @options={{hash filterable=this.filterable none=this.none}}
+            @value={{this.value}}
+            @valueProperty="id"
           />
         {{else}}
           <DynamicOptionsComboBox
             @content={{this.options}}
             @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
             @nameProperty="name"
-            @value={{@field.value}}
-            @valueProperty="id"
             @onChange={{this.handleChange}}
             @options={{hash
               filterable=this.filterable
@@ -122,14 +120,16 @@ export default class GroupSelect extends ComboBoxField {
               castInteger=this.castInteger
               clearable=this.clearable
             }}
+            @value={{@field.value}}
+            @valueProperty="id"
           />
         {{/if}}
         {{#unless this.hasValue}}
           <DButton
-            @action={{this.manageGroups}}
-            @label="discourse_workflows.group.manage_groups"
-            @icon="plus"
             class="btn-default"
+            @action={{this.manageGroups}}
+            @icon="plus"
+            @label="discourse_workflows.group.manage_groups"
           />
         {{/unless}}
       </div>

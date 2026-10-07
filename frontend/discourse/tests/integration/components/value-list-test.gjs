@@ -67,7 +67,7 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(
       <template>
-        <ValueList @values={{this.values}} @choices={{this.choices}} />
+        <ValueList @choices={{this.choices}} @values={{this.values}} />
       </template>
     );
 
@@ -90,7 +90,7 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(
       <template>
-        <ValueList @values={{this.values}} @inputType="array" />
+        <ValueList @inputType="array" @values={{this.values}} />
       </template>
     );
 
@@ -116,7 +116,7 @@ module("Integration | Component | ValueList", function (hooks) {
 
     await render(
       <template>
-        <ValueList @values={{this.values}} @inputDelimiter="|" />
+        <ValueList @inputDelimiter="|" @values={{this.values}} />
       </template>
     );
 

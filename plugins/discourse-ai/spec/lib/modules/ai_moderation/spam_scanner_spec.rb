@@ -135,6 +135,18 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       end.to change { AiSpamLog.count }.by(1)
     end
 
+    it "uses the configured agent's updated default model for spam scans" do
+      updated_model = Fabricate(:fake_model)
+      spam_setting.ai_agent.update!(default_llm_id: updated_model.id)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: false }],
+        llm: updated_model,
+      ) { described_class.perform_scan!(post) }
+
+      expect(AiSpamLog.find_by!(post: post).llm_model_id).to eq(updated_model.id)
+    end
+
     it "does nothing when disabled" do
       SiteSetting.ai_spam_detection_enabled = false
       expect { described_class.perform_scan!(post) }.not_to change { AiSpamLog.count }
@@ -332,9 +344,24 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   describe "integration test" do
     fab!(:llm_model)
     let(:api_audit_log) { Fabricate(:api_audit_log) }
+
     fab!(:post_with_uploaded_image)
 
     before { Jobs.run_immediately! }
+
+    it "notifies moderators when the site asks to be notified about auto silences" do
+      SiteSetting.notify_mods_when_user_silenced = true
+
+      allow(GroupMessage).to receive(:create)
+
+      described_class.new_post(post)
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) { post.rebake! }
+
+      expect(GroupMessage).to have_received(:create).at_least(:once)
+      expect(post.user.reload).to be_silenced
+    end
 
     it "can correctly run tests" do
       prompts = nil
@@ -411,6 +438,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
       expect(log.reviewable).to be_present
       expect(log.reviewable.created_by_id).to eq(described_class.flagging_user.id)
+
+      expect(history.post_id).to eq(post.id)
+      expect(history.reviewable_id).to eq(log.reviewable.id)
 
       log.reviewable.perform(moderator, :disagree_and_restore)
 

@@ -14,7 +14,7 @@ RSpec.describe Chat::Api::ChannelsThreadsDraftsController do
 
   describe "#create" do
     describe "success" do
-      it "works" do
+      it "saves the thread draft" do
         post "/chat/api/channels/#{channel_1.id}/threads/#{thread_1.id}/drafts",
              params: {
                data: {

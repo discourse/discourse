@@ -39,13 +39,13 @@ RSpec.describe TopicsController do
   context "with solved enabled on every topic" do
     before { SiteSetting.allow_solved_on_all_topics = true }
 
-    it "should not include schema information for single-post topics without answers" do
+    it "omits schema information for single-post topics without answers" do
       get "/t/#{topic.slug}/#{topic.id}"
 
       expect(response.body).not_to include("QAPage")
     end
 
-    it "should include correct schema information when topic has an accepted answer" do
+    it "includes schema information for the accepted answer" do
       Fabricate(:solved_topic, topic:, answer_post: p2)
 
       get "/t/#{topic.slug}/#{topic.id}"
@@ -74,7 +74,7 @@ RSpec.describe TopicsController do
       expect(schema_json).not_to include(hidden_text)
     end
 
-    it "should include quoted content in schema information" do
+    it "includes quoted content in schema information" do
       Fabricate(:solved_topic, topic:, answer_post: p2)
 
       post = topic.first_post
@@ -87,7 +87,7 @@ RSpec.describe TopicsController do
       expect(response.body).to include('"text":"This is a quoted text."')
     end
 
-    it "should include user name in output with the corresponding site setting" do
+    it "includes the user name when enabled in site settings" do
       SiteSetting.display_name_on_posts = true
       SiteSetting.show_who_marked_solved = true
       accepter = Fabricate(:user)
@@ -114,7 +114,7 @@ RSpec.describe TopicsController do
       expect(response.parsed_body["accepted_answers"][0]["accepter_name"]).to eq(nil)
     end
 
-    it "should not include user name when site setting is disabled" do
+    it "omits the user name when disabled in site settings" do
       SiteSetting.display_name_on_posts = false
       Fabricate(:solved_topic, topic:, answer_post: p2)
 
@@ -166,7 +166,7 @@ RSpec.describe TopicsController do
         let!(:second_topic_answer) { Fabricate(:topic_answer, solved_topic:, post: p3) }
         let!(:unaccepted_post) { p4 }
 
-        it "should include correct schema information " do
+        it "includes the expected schema information" do
           get "/t/#{topic.slug}/#{topic.id}"
 
           two_accepted_answers_json =
@@ -302,7 +302,7 @@ RSpec.describe TopicsController do
 
       before { SiteSetting.solved_allow_multiple_solutions = true }
 
-      it "should include two acceptedAnswers and a suggestedAnswer in qaschema" do
+      it "includes two acceptedAnswers and a suggestedAnswer in qaschema" do
         get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
         doc = parsed_crawler_body
 

@@ -80,9 +80,9 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
           @initialIndex={{500}}
+          @items={{items}}
           @overscan={{0}}
           as |item|
         >
@@ -117,10 +117,10 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
             }
           </style>
           <DVirtualList
-            @items={{items}}
             @estimateSize={{estimate}}
-            @initialIndex={{500}}
             @initialAlign={{align}}
+            @initialIndex={{500}}
+            @items={{items}}
             @overscan={{0}}
             as |item|
           >
@@ -150,10 +150,10 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{state.items}}
-          @key="id"
           @estimateSize={{estimate}}
           @initialIndex={{500}}
+          @items={{state.items}}
+          @key="id"
           @overscan={{0}}
           as |item|
         >
@@ -196,12 +196,12 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @key="id"
           @estimateSize={{estimate}}
           @itemRole="option"
-          @pinnedIndices={{pinFirst}}
+          @items={{items}}
+          @key="id"
           @overscan={{0}}
+          @pinnedIndices={{pinFirst}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -246,11 +246,11 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @pinnedIndices={{pinFifth}}
           @overscan={{0}}
+          @pinnedIndices={{pinFifth}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -279,11 +279,11 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @pinnedIndices={{null}}
           @overscan={{0}}
+          @pinnedIndices={{null}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>

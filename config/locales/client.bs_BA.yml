@@ -290,6 +290,7 @@ bs_BA:
       next: "Iduće"
       sections:
         theme: "Izgled"
+        search: "Pretraži"
       homepage:
         topics: "Topics"
         categories: "Kategorije"
@@ -570,6 +571,9 @@ bs_BA:
       user_label: "User"
       timeline:
         target_deleted: "Post izbrisan"
+      author_penalty:
+        toast:
+          undo: "Vrati nazad"
       notes:
         delete: "Delete"
       topic_label: "Topic"
@@ -1000,7 +1004,6 @@ bs_BA:
       admin: "%{user} je admin"
       moderator_tooltip: "Ovaj korisnik je moderator"
       admin_tooltip: "Ovaj korisnik je admin"
-      silenced_tooltip: "Ovaj korisnik je ušutkan"
       suspended_notice: "Ovaj korisnike je suspendovan sve do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendovan."
       suspended_reason: "Razlog: "
@@ -1055,6 +1058,12 @@ bs_BA:
       ignored_users_instructions: "Suzbijte sve objave, obavijesti i PM-ove od tih korisnika."
       tracked_topics_link: "Show"
       apps: "Aplikacije"
+      mcp_authorizations:
+        details: "Details"
+        never: "Nikad"
+        status: "Status"
+        statuses:
+          active: "Active"
       revoke_access: "Oduzmi pristup"
       undo_revoke_access: "Poništi oduzeti pristup"
       api_approved: "Odobreno:"
@@ -1676,6 +1685,8 @@ bs_BA:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Naprijed"
+      delete: "Delete"
+      home: "Naslovnica"
     category_row:
       subcategories: "+ Podkategorije"
     select_kit:
@@ -1940,6 +1951,7 @@ bs_BA:
       categories: "Kategorije"
       tags: "Tagovi"
       type:
+        default: "Objave"
         users: "Korisnici"
         categories: "Kategorije"
       context:
@@ -2398,7 +2410,6 @@ bs_BA:
       reply_as_new_private_message: "Odgovori kao nova poruka istim primaocima"
       continue_discussion: "Nastavak diskusije od teme %{postLink}:"
       follow_quote: "idi na citiran post"
-      show_full: "Prikaži cijelu objavu"
       show_hidden: "Prikaz zanemarenog sadržaja."
       collapse: "spusti"
       expand_collapse: "digni/spusti"
@@ -2605,6 +2616,7 @@ bs_BA:
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       no_description: "Please add a description for this category."
+      latest_topics: "Latest topics"
       already_used: "This color has been used by another category"
       security: "Security"
       permissions:
@@ -2786,6 +2798,7 @@ bs_BA:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "reset"
         button:
           label: "Filter"
       latest:
@@ -2873,8 +2886,6 @@ bs_BA:
       content_load_error: '<a href="%url%">Sadržaj</a> nije moguće učitati.'
       image_load_error: '<a href="%url%">Slika</a> se ne može učitati.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", \\ T"
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ili %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1} / %{shortcut2}"
       title: "Kratice tipkovnice"
@@ -3191,6 +3202,11 @@ bs_BA:
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Other"
+        related_items:
+          users:
+            title: "Korisnici"
+          labels:
+            user: "User"
       config_sections:
         account:
           title: "Račun"
@@ -3229,6 +3245,58 @@ bs_BA:
       config:
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Pristup"
+            activity: "Activity"
+          overview:
+            status: "Status"
+          access:
+            title: "Pristup"
+            group: "Grupa"
+            groups: "Grupa"
+            actions: "Akcije"
+            edit: "Izmijeni"
+            delete: "Delete"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Block"
+            presets:
+              custom: "Custom"
+          authorizations:
+            user: "User"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Vrijeme"
+            user: "User"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Neomogućen"
+            client_trust:
+              approved: "Dozvojeno"
+            authorization_status:
+              active: "Active"
+            activity_outcome:
+              success: "Uspjeh"
+              error: "Greška"
+            primitive_state:
+              enabled: "Omogućen"
+              disabled: "Neomogućen"
+            primitive_kind:
+              all: "Sve vrste"
+            primitive_risk:
+              moderation: "Moderacija"
+            filter:
+              all: "Sve"
+          never: "Nikad"
+          actions:
+            revoke: "Revoke"
         emojis:
           title: "Emoji"
         flags:
@@ -3425,6 +3493,8 @@ bs_BA:
               share: "Dijeli"
             whos_posting:
               staff: "Staff"
+              modal:
+                apply: "Sačuvaj"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novo"
@@ -3437,6 +3507,11 @@ bs_BA:
             table:
               searches: "Pretraživanja"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Diskurs ažuriran"
+            dashboard_updated: "Nadzorna ploča je ažurirana"
         reports_section:
           header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
@@ -3447,6 +3522,7 @@ bs_BA:
         site_traffic:
           series:
             anonymous: "Anoniman"
+          crawler_learn_more: "Saznaj više"
         period:
           custom: "Custom"
         reports:
@@ -3472,6 +3548,15 @@ bs_BA:
           average_for_sample: "Prosjek za uzorak"
           total: "Ukupno vrijeme"
           no_data: "Nema podataka za prikaz."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} korisnik"
+              few: "%{count} korisnika"
+              other: "%{count} korisnika"
+            posts_count:
+              one: "%{count} objava"
+              few: "%{count} objave"
+              other: "%{count} objava"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pretraživanje dnevnika</a>'
             disabled: 'Izvješće o pretraživanju trendova je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upite pretraživanja dnevnika</a> za prikupljanje podataka.'
@@ -4474,12 +4559,10 @@ bs_BA:
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
-        search: "Potražite tekst koji želite urediti"
+        search_label: "Pretraži"
+        theme_disabled: "Neomogućen"
         edit: "Edit"
-        revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
-        go_back: "Nazad na pretragu"
-        recommended: "Preporučujemo da prilagodite sledeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Only show overridden"
         more_than_50_results: "Postoji više od 50 rezultata. Pročistite pretraživanje."
         outdated:

@@ -77,36 +77,36 @@ export default class ChangePostNoticeModal extends Component {
 
   <template>
     <DModal
+      class="change-post-notice-modal"
+      @closeModal={{@closeModal}}
       @title={{if
         @model.post.notice
         (i18n "post.controls.change_post_notice")
         (i18n "post.controls.add_post_notice")
       }}
-      @closeModal={{@closeModal}}
-      class="change-post-notice-modal"
     >
       <:body>
         <form>
           <textarea
-            {{preventScrollOnFocus}}
             value={{this.notice}}
+            {{preventScrollOnFocus}}
             {{on "input" (withEventValue (fn (mut this.notice)))}}
           />
         </form>
       </:body>
       <:footer>
         <DButton
-          @label={{if this.saving "saving" "save"}}
+          class="btn-primary"
           @action={{fn this.setNotice this.notice}}
           @disabled={{this.disabled}}
-          class="btn-primary"
+          @label={{if this.saving "saving" "save"}}
         />
         {{#if @model.post.notice}}
           <DButton
-            @label="post.controls.delete_post_notice"
+            class="btn-danger"
             @action={{this.setNotice}}
             @disabled={{this.saving}}
-            class="btn-danger"
+            @label="post.controls.delete_post_notice"
           />
         {{/if}}
         <DModalCancel @close={{@closeModal}} />

@@ -16,6 +16,8 @@ module JsonApiKit
       @value = value
     end
 
-    def computed? = value.nil?
+    def single_value? = !without_value? && !value.is_a?(Enumerable)
+
+    def without_value? = value.nil?
   end
 end

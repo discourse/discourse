@@ -1,38 +1,4 @@
-import { i18n } from "discourse-i18n";
-
 const SCALES = ["100", "75", "50"];
-
-let apiExtraButton = [];
-let apiExtraButtonAllowList = [];
-
-export function addImageWrapperButton(
-  label,
-  btnClass,
-  icon = null,
-  includeCondition = null
-) {
-  const markup = [];
-  markup.push(`<span class="${btnClass}">`);
-  if (icon) {
-    markup.push(`
-      <svg class="fa d-icon d-icon-${icon} svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
-        <use href="#${icon}"></use>
-      </svg>
-    `);
-  }
-  markup.push(label);
-  markup.push("</span>");
-
-  apiExtraButton.push({
-    markup: markup.join(""),
-    condition: includeCondition,
-  });
-  apiExtraButtonAllowList.push(`span.${btnClass}`);
-  apiExtraButtonAllowList.push(
-    `svg[class=fa d-icon d-icon-${icon} svg-icon svg-string]`
-  );
-  apiExtraButtonAllowList.push(`use[href=#${icon}]`);
-}
 
 function isUpload(token) {
   return token.content.includes("upload://");
@@ -56,8 +22,20 @@ function appendMetaData(index, token) {
     selectedScale = "100";
   }
 
-  token.attrs.push(["index-image", index]);
-  token.attrs.push(["scale", selectedScale]);
+  token.attrs.push(["data-image-index", index]);
+  token.attrs.push(["data-scale", selectedScale]);
+}
+
+// Count here, as the preview can drop images and can't show which were grouped.
+function appendRunLength(tokens) {
+  const first = tokens[0];
+
+  if (first?.tag === "img" && first.attrIndex("data-image-index") !== -1) {
+    first.attrs.push([
+      "data-image-run",
+      tokens.filter((token) => token.type === "image").length,
+    ]);
+  }
 }
 
 function rule(state) {
@@ -85,180 +63,26 @@ function rule(state) {
         currentIndex++;
       }
     }
+
+    appendRunLength(blockToken.children);
   }
-}
 
-function buildScaleButton(selectedScale, scale) {
-  const activeScaleClass = selectedScale === scale ? " active" : "";
-  return `<span title="
-            ${i18n("composer.image_scale_button", { percent: scale })}" 
-            class='scale-btn${activeScaleClass}' data-scale='${scale}'
-          >
-            ${scale}%
-          </span>`;
-}
-
-function buildImageShowAltTextControls(altText) {
-  return `
-  <span class="alt-text-readonly-container">
-    <span class="alt-text-edit-btn" 
-      title="${i18n("composer.image_alt_text.title")}" 
-    >
-      <svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil"></use></svg>
-    </span>
-    <span class="alt-text" 
-      aria-label="${i18n("composer.image_alt_text.aria_label")}"
-    >${altText}</span>
-  </span>
-  `;
-}
-
-function buildImageEditAltTextControls(altText) {
-  return `
-  <span class="alt-text-edit-container" hidden="true">
-    <input class="alt-text-input" type="text" value="${altText}" />
-    <button class="alt-text-edit-ok btn btn-primary">
-        <svg class="fa d-icon d-icon-check svg-icon svg-string"><use href="#check"></use></svg>
-    </button>
-    <button class="alt-text-edit-cancel btn btn-default">
-        <svg class="fa d-icon d-icon-xmark svg-icon svg-string"><use href="#xmark"></use></svg>
-    </button>
-  </span>
-  `;
-}
-
-function buildImageDeleteButton() {
-  return `
-  <span class="delete-image-button" 
-    title="${i18n("composer.delete_image_button")}" 
-    aria-label="${i18n("composer.delete_image_button")}"
-  >
-    <svg class="fa d-icon d-icon-trash-can svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
-      <use href="#trash-can"></use>
-    </svg>
-  </span>
-  `;
-}
-
-function buildImageGalleryControl(imageCount) {
-  return `
-  <span class="wrap-image-grid-button" title="${i18n(
-    "composer.toggle_image_grid"
-  )}" data-image-count="${imageCount}">
-    <svg class="fa d-icon d-icon-table-cells svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
-    <use href="#table-cells"></use>
-    </svg>
-  </span>
-  `;
+  appendRunLength(state.tokens);
 }
 
 // We need this to load after `upload-protocol` which is priority 0
 export const priority = 1;
 
-function ruleWithImageControls(oldRule) {
-  return function (tokens, idx, options, env, slf) {
-    const token = tokens[idx];
-    const scaleIndex = token.attrIndex("scale");
-    const imageIndex = token.attrIndex("index-image");
-
-    if (scaleIndex !== -1) {
-      let selectedScale = token.attrs[scaleIndex][1];
-      let index = token.attrs[imageIndex][1];
-
-      let result = `<span class="image-wrapper">`;
-
-      result += oldRule(tokens, idx, options, env, slf);
-
-      result += `<span class="button-wrapper" data-image-index="${index}">`;
-      if (idx === 0) {
-        const imageCount = tokens.filter((x) => x.type === "image").length;
-        if (imageCount > 1) {
-          result += buildImageGalleryControl(imageCount);
-        }
-      }
-      result += buildImageShowAltTextControls(
-        token.attrs[token.attrIndex("alt")][1]
-      );
-      result += buildImageEditAltTextControls(
-        token.attrs[token.attrIndex("alt")][1]
-      );
-
-      result += `<span class="scale-btn-container">`;
-      result += SCALES.map((scale) =>
-        buildScaleButton(selectedScale, scale)
-      ).join("");
-      result += `</span>`;
-      result += buildImageDeleteButton();
-
-      // Get upload URL from token for conditional button rendering
-      const origSrcIndex = token.attrIndex("data-orig-src");
-      const uploadUrl =
-        origSrcIndex !== -1 ? token.attrs[origSrcIndex][1] : null;
-
-      // Add API extra buttons with optional conditions
-      apiExtraButton.forEach((button) => {
-        if (!button.condition || button.condition(uploadUrl)) {
-          result += button.markup;
-        }
-      });
-
-      result += "</span></span>";
-
-      return result;
-    } else {
-      return oldRule(tokens, idx, options, env, slf);
-    }
-  };
-}
-
 export function setup(helper) {
   const opts = helper.getOptions();
   if (opts.previewing) {
     helper.allowList([
-      "span.image-wrapper",
-      "span.button-wrapper",
-      "span[class=scale-btn-container]",
-      "span[class=scale-btn]",
-      "span[class=scale-btn active]",
-      "span.separator",
-      "span.scale-btn[data-scale]",
-      "span.button-wrapper[data-image-index]",
-      "span[aria-label]",
-      "span[class=delete-image-button]",
-      "span.alt-text-container",
-      "span.alt-text-readonly-container",
-      "span.alt-text-readonly-container.alt-text",
-      "span.alt-text-readonly-container.alt-text-edit-btn",
-      "svg[class=fa d-icon d-icon-pencil svg-icon svg-string]",
-      "use[href=#pencil]",
-      "use[href=#trash-can]",
-
-      "span.alt-text-edit-container",
-      "span.delete-image-button",
-      "span[hidden=true]",
-      "input[type=text]",
-      "input[class=alt-text-input]",
-      "button[class=alt-text-edit-ok btn btn-primary]",
-      "svg[class=fa d-icon d-icon-check svg-icon svg-string]",
-      "use[href=#check]",
-      "button[class=alt-text-edit-cancel btn btn-default]",
-      "svg[class=fa d-icon d-icon-xmark svg-icon svg-string]",
-      "svg[class=fa d-icon d-icon-trash-can svg-icon svg-string]",
-      "use[href=#xmark]",
-
-      "span.wrap-image-grid-button",
-      "span.wrap-image-grid-button[data-image-count]",
-      "svg[class=fa d-icon d-icon-table-cells svg-icon svg-string]",
-      "use[href=#table-cells]",
-
-      ...apiExtraButtonAllowList,
+      "img[data-image-index]",
+      "img[data-image-run]",
+      "img[data-scale]",
     ]);
 
     helper.registerPlugin((md) => {
-      const oldRule = md.renderer.rules.image;
-
-      md.renderer.rules.image = ruleWithImageControls(oldRule);
-
       md.core.ruler.after("upload-protocol", "resize-controls", rule);
     });
   }

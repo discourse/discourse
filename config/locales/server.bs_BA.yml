@@ -5,6 +5,33 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  markdown_endpoints:
+    latest: "Zadnje"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Previous page"
+    next_page: "Next page"
+    replies: "Odgovori"
+    event:
+      location: "Lokacija"
+      link: "Link"
+  mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
+    oauth:
+      deny: "odbiti"
+  llms_txt:
+    sections:
+      optional: "Opcionalno"
+    links:
+      search:
+        label: "Pretraži"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nama"
+      guidelines:
+        label: "Smjernice"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -322,6 +349,7 @@ bs_BA:
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
   admin_site_traffic_explorer:
+    unknown: "Unknown"
     traffic_types:
       anonymous: "Anoniman"
   change_email:
@@ -384,7 +412,7 @@ bs_BA:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
   unsubscribe:
-    title: "Odjavi se"
+    unsubscribe: "Odjavi se"
     log_out: "Izloguj se"
     digest_frequency:
       never: "nikad"
@@ -448,6 +476,11 @@ bs_BA:
         share: "Dijeli"
       types:
         staff: "Staff"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Objave"
+        share: "Dijeli"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -848,6 +881,7 @@ bs_BA:
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
+    missing_username: "Unesite korisničko ime"
     click_to_continue: "Klikni ovdje da nastavite dalje"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
     second_factor_toggle:
@@ -1150,8 +1184,6 @@ bs_BA:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "user"

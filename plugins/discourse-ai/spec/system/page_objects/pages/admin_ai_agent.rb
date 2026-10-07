@@ -74,6 +74,21 @@ module PageObjects
         @form ||= PageObjects::Components::FormKit.new("form")
       end
 
+      def select_tool(tool_id, forced: false)
+        selector =
+          PageObjects::Components::SelectKit.new(
+            "#control-#{forced ? "forcedTools" : "tools"} .select-kit",
+          )
+        selector.expand
+        selector.select_row_by_value(tool_id)
+        selector.collapse
+        self
+      end
+
+      def has_forced_tool?(name)
+        page.has_css?("#control-forcedTools .formatted-selection", text: name)
+      end
+
       def has_no_subagent_option?(agent)
         subagent_selector.expand
         result = subagent_selector.has_no_option_value?(agent.id)

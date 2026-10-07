@@ -307,6 +307,7 @@ bg:
       sections:
         theme: "Тема"
         homepage: "Начална страница"
+        search: "Търсене"
       homepage:
         topics: "Теми"
         categories: "Категории"
@@ -630,6 +631,9 @@ bg:
       user_label: "Потребител"
       timeline:
         target_deleted: "Публикацията е изтрита"
+      author_penalty:
+        toast:
+          undo: "Отмени"
       notes:
         delete: "Изтрий"
       topic_label: "Тема"
@@ -1173,7 +1177,6 @@ bg:
       admin: "%{user} е админ"
       moderator_tooltip: "Този потребител е модератор"
       admin_tooltip: "Този потребител е админ"
-      silenced_tooltip: "Този потребител е заглушен"
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_permanently: "Този потребител е спрян."
       suspended_reason: "Причина:"
@@ -1231,6 +1234,12 @@ bg:
       tracked_topics_link: "Покажи "
       automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума"
       apps: "Приложения"
+      mcp_authorizations:
+        details: "Детайли"
+        never: "Никога"
+        status: "Статус"
+        statuses:
+          active: "Активни"
       revoke_access: "Прекратяване на достъпа"
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
@@ -2033,6 +2042,9 @@ bg:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Въведете"
+      option: "Опция"
+      delete: "Изтрий"
+      home: "Начало"
     conditional_loading_section:
       loading: Зареждане…
     category_row:
@@ -2141,7 +2153,6 @@ bg:
       create_whisper: "Шепот"
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
-      title: "Или натиснете %{modifier}Enter"
       discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_placeholder_redesign: "Заглавие"
@@ -2344,10 +2355,9 @@ bg:
       enter_hint: "или натиснете Enter"
       in_posts_by: "в публикации от %{username}"
       type:
-        default: "Теми/публикации"
+        default: "Публикации"
         users: "Потребители"
         categories: "Категории"
-        categories_and_tags: "Категории/тагове"
       context:
         user: "Търсете публикация от @%{username}"
         category: "Търсене за категория #%{category}"
@@ -2360,7 +2370,6 @@ bg:
         in: "филтри по метаданни (напр. in:title, in:personal, in:pinned)"
         status: "филтри по статус на темата"
         full_search: "стартира търсене в цялата страница"
-        full_search_key: "%{modifier} + Enter"
       advanced:
         title: Разширени филтри
         posted_by:
@@ -2804,7 +2813,6 @@ bg:
       reply_as_new_private_message: "Отговорете като ново съобщение до същите получатели"
       continue_discussion: "Продължаване на дискусията от %{postLink}: "
       follow_quote: "отиди на цитираната публикация "
-      show_full: "Покажи цялата публикация"
       show_hidden: "Преглед на игнорираното съдържание."
       deleted_by_author_simple: "(публикацията е изтрита от автора)"
       collapse: "намали"
@@ -3000,6 +3008,7 @@ bg:
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
       no_description: "Моля, добавете описание за тази категория. "
+      latest_topics: "Последни теми"
       description_expand: "Покажи повече"
       description_collapse: "Покажи по-малко"
       already_used: "Този цвят вече е използван за друга категория. "
@@ -3155,6 +3164,7 @@ bg:
       with_topics: "%{filter} теми"
       with_category: "%{filter} %{category} теми"
       filter:
+        reset: "изчисти"
         button:
           label: "Филтър"
       latest:
@@ -3501,6 +3511,11 @@ bg:
         group_traffic: "Трафик"
         group_members: "Членове"
         group_other: "Други"
+        related_items:
+          users:
+            title: "Потребители"
+          labels:
+            user: "Потребител"
       config_sections:
         account:
           title: "Профил"
@@ -3535,6 +3550,55 @@ bg:
       config:
         developer:
           title: "Разработчик"
+        mcp:
+          tabs:
+            access: "Достъп"
+            activity: "Активност"
+          overview:
+            status: "Статус"
+          access:
+            title: "Достъп"
+            group: "Група"
+            groups: "Групи"
+            actions: "Действия"
+            edit: "Редактирай"
+            delete: "Изтрий"
+          primitives:
+            group_by_options:
+              kind: "Тип"
+            kind: "Тип"
+          clients:
+            actions: "Действия"
+            block: "Блокирай "
+            presets:
+              custom: "По избор"
+          authorizations:
+            user: "Потребител"
+            status: "Статус"
+            actions: "Действия"
+          activity:
+            time: "Време "
+            user: "Потребител"
+            duration: "Продължителност"
+          values:
+            server_status:
+              disabled: "Деактивирани"
+            client_trust:
+              approved: "Одобрена"
+            authorization_status:
+              active: "Активни"
+            activity_outcome:
+              error: "Грешка"
+            primitive_state:
+              enabled: "Да е включен"
+              disabled: "Деактивирани"
+            primitive_kind:
+              all: "Всички видове"
+            filter:
+              all: "Всички"
+          never: "Никога"
+          actions:
+            revoke: "Анулирай"
         emojis:
           title: "Емотикони"
         files:
@@ -3689,6 +3753,8 @@ bg:
               share: "Споделяне"
             whos_posting:
               staff: "Персонал"
+              modal:
+                apply: "Запази"
             trust_level_pipeline:
               trust_levels:
                 "0": "Нов"
@@ -3701,6 +3767,9 @@ bg:
             table:
               searches: "Търсения"
               status: "Статус"
+          system:
+            title: "Система"
+            status: "Статус"
         reports_section:
           header_action: "Управление"
           modal:
@@ -3709,6 +3778,7 @@ bg:
         site_traffic:
           series:
             anonymous: "Анонимен"
+          crawler_learn_more: "Научете повече"
         period:
           last_7_days: "Последните 7 дни"
           last_30_days: "Последните 30 дни"
@@ -3728,6 +3798,13 @@ bg:
           monthly: Месечно
           weekly: Седмично
           groups: "Всички групи"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} потребител"
+              other: "%{count} потребители"
+            posts_count:
+              one: "%{count} публикация"
+              other: "%{count} публикации"
           sort_button: "Сортиране по %{column}"
           sort_ascending: "в възходящ ред"
           sort_descending: "в низходящ ред"
@@ -4484,12 +4561,10 @@ bg:
           confirm: "Потвърждение"
           dropdown: "Падащо"
       site_text:
-        search: "Търсене на текст които искате да редактирате"
+        search_label: "Търсене"
+        theme_disabled: "Деактивирани"
         edit: "Редактирай"
-        revert: "Върни промените"
         revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
-        go_back: "Към търсачката"
-        recommended: "За вашите нужди, Ви препоръчваме да редактирате следният текст:"
         show_overriden: "Избери само презаписаните"
         outdated:
           dismiss: "Отмени"

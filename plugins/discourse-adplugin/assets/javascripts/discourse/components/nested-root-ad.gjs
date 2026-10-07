@@ -17,9 +17,9 @@ export default class NestedRootAd extends Component {
   <template>
     <div class="ad-connector ad-connector--nested-root">
       <AdSlot
-        @placement="nested-roots-between"
         @category={{@topic.category.slug}}
         @indexNumber={{@index}}
+        @placement="nested-roots-between"
       />
     </div>
   </template>

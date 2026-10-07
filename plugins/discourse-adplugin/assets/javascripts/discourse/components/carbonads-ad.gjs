@@ -58,7 +58,7 @@ export default class CarbonadsAd extends AdComponent {
   <template>
     {{#if this.showAd}}
       {{! eslint-disable ember/template-no-forbidden-elements }}
-      <script src={{this.url}} id="_carbonads_js" async type="text/javascript">
+      <script async id="_carbonads_js" src={{this.url}} type="text/javascript">
       </script>
     {{/if}}
   </template>

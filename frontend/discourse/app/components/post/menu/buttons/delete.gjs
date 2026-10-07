@@ -125,10 +125,10 @@ export default class PostMenuDeleteButton extends Component {
       ...attributes
       disabled={{this.disabled}}
       @action={{this.activeAction}}
+      @ariaLabel={{this.title}}
       @icon={{this.icon}}
       @label={{if @showLabel this.label}}
       @title={{this.title}}
-      @ariaLabel={{this.title}}
     />
   </template>
 }

@@ -5,6 +5,7 @@ require "rotp"
 RSpec.describe UsersEmailController do
   fab!(:user)
   let!(:email_token) { Fabricate(:email_token, user: user) }
+
   fab!(:moderator)
 
   describe "#confirm-new-email" do

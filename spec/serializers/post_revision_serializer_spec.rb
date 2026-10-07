@@ -51,6 +51,24 @@ RSpec.describe PostRevisionSerializer do
     expect(json[:tags_changes][:current]).to eq([])
   end
 
+  it "preserves the revision tag order when filtering visible tags" do
+    SiteSetting.tagging_enabled = true
+    tags = %w[alpha bravo charlie].map { |name| Fabricate(:tag, name: name) }
+    post.topic.tags = tags
+    revision =
+      Fabricate(
+        :post_revision,
+        post: post,
+        modifications: {
+          "tags" => [%w[charlie alpha], %w[alpha bravo charlie]],
+        },
+      )
+
+    json = described_class.new(revision, scope: Guardian.new, root: false).as_json
+
+    expect(json[:tags_changes]).to eq(previous: %w[charlie alpha], current: %w[alpha bravo charlie])
+  end
+
   context "with hidden tags" do
     fab!(:public_tag) { Fabricate(:tag, name: "public") }
     fab!(:public_tag2) { Fabricate(:tag, name: "visible") }

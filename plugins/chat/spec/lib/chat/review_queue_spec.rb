@@ -405,6 +405,33 @@ describe Chat::ReviewQueue do
         expect(message_poster.reload.silenced?).to eq(true)
       end
 
+      it "attributes the silence to the reviewable it came from" do
+        SiteSetting.chat_auto_silence_from_flags_duration = 1
+        flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
+
+        queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+        history =
+          UserHistory.find_by(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: message_poster.id,
+          )
+
+        expect(history.reviewable_id).to eq(Chat::ReviewableMessage.find_by(target: message).id)
+      end
+
+      it "lifts the silence when a moderator disagrees with the flag" do
+        SiteSetting.chat_auto_silence_from_flags_duration = 1
+        flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
+
+        queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+        expect(message_poster.reload.silenced?).to eq(true)
+
+        Chat::ReviewableMessage.find_by(target: message).perform(admin, :disagree)
+
+        expect(message_poster.reload.silenced?).to eq(false)
+      end
+
       it "does nothing if the new score is less than the auto-silence threshold" do
         SiteSetting.chat_auto_silence_from_flags_duration = 50
 

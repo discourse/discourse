@@ -83,8 +83,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @handleClass="my-block__handle"
           @directions={{directions}}
+          @handleClass="my-block__handle"
         />
       </template>
     );
@@ -105,8 +105,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @handleClass="my-block__handle"
           @draggingClass="--dragging"
+          @handleClass="my-block__handle"
         />
       </template>
     );
@@ -547,9 +547,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template>
         <DResizeHandles
           @handles={{handles}}
-          @onResizeStart={{onResizeStart}}
           @onResize={{onResize}}
           @onResizeEnd={{onResizeEnd}}
+          @onResizeStart={{onResizeStart}}
         />
       </template>
     );
@@ -603,8 +603,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template>
         <DResizeHandles
           @handleClass="my-block__handle"
-          @onResizeEnd={{onResizeEnd}}
           @onResizeCancel={{onResizeCancel}}
+          @onResizeEnd={{onResizeEnd}}
         />
       </template>
     );
@@ -671,9 +671,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template>
         <DResizeHandles
           @handles={{handles}}
-          @onResizeStart={{onResizeStart}}
           @onResize={{onResize}}
           @onResizeEnd={{onResizeEnd}}
+          @onResizeStart={{onResizeStart}}
         />
       </template>
     );
@@ -716,9 +716,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template>
         <DResizeHandles
           @handles={{handles}}
-          @onResizeStart={{onResizeStart}}
           @onResize={{onResize}}
           @onResizeEnd={{onResizeEnd}}
+          @onResizeStart={{onResizeStart}}
         />
       </template>
     );
@@ -910,8 +910,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @handleClass="my-block__handle"
           @directions={{state.directions}}
+          @handleClass="my-block__handle"
           @onResize={{onResize}}
           @onResizeCancel={{onResizeCancel}}
         />
@@ -958,10 +958,10 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @handles={{state.handles}}
           @cancelCommits={{true}}
-          @onResizeEnd={{onResizeEnd}}
+          @handles={{state.handles}}
           @onResizeCancel={{onResizeCancel}}
+          @onResizeEnd={{onResizeEnd}}
         />
       </template>
     );
@@ -1271,9 +1271,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template>
         <DResizeHandles
           @handles={{handles}}
-          @threshold={{10}}
           @onResize={{onResize}}
           @onResizeEnd={{onResizeEnd}}
+          @threshold={{10}}
         />
       </template>
     );
@@ -1404,8 +1404,8 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @handles={{handles}}
           @cancelCommits={{true}}
+          @handles={{handles}}
           @onResizeCancel={{onResizeCancel}}
           @onResizeEnd={{onResizeEnd}}
         />

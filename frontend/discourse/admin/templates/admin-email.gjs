@@ -5,34 +5,34 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.email.title"}}
     @descriptionLabel={{i18n "admin.config.email.header_description"}}
     @shouldDisplay={{true}}
+    @titleLabel={{i18n "admin.config.email.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/email"
         @label={{i18n "admin.config.email.title"}}
+        @path="/admin/email"
       />
     </:breadcrumbs>
     <:tabs>
-      <DNavItem @route="adminEmail.settings" @label="settings" />
+      <DNavItem @label="settings" @route="adminEmail.settings" />
       <DNavItem
-        @route="adminEmail.serverSettings"
         @label="admin.config.email.sub_pages.server_settings.title"
+        @route="adminEmail.serverSettings"
       />
       <DNavItem
-        @route="adminEmail.previewDigest"
         @label="admin.config.email.sub_pages.preview_summary.title"
+        @route="adminEmail.previewDigest"
       />
       <DNavItem
-        @route="adminEmail.advancedTest"
         @label="admin.config.email.sub_pages.advanced_test.title"
+        @route="adminEmail.advancedTest"
       />
       <DNavItem
-        @route="adminEmailTemplates"
         @label="admin.config.email.sub_pages.templates.title"
+        @route="adminEmailTemplates"
       />
     </:tabs>
   </DPageHeader>

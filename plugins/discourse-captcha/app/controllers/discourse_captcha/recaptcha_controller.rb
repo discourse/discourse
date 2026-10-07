@@ -7,7 +7,7 @@ module DiscourseCaptcha
     private
 
     def ensure_config
-      if SiteSetting.discourse_captcha_provider != CaptchaProvider::RECAPTCHA
+      if SiteSetting.discourse_captcha_provider != CaptchaProvider::RECAPTCHA_V2
         raise Discourse::NotFound
       end
       raise Discourse::InvalidParameters.new(:token) if params[:token].blank?

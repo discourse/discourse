@@ -10,6 +10,17 @@
   .category-list {
     border-collapse: separate;
 
+    .category-list {
+      // when category nesting is set to 3
+      grid-column: 1/-1;
+      border: none;
+      margin: 0;
+
+      tbody {
+        padding: 0;
+      }
+    }
+
     th.topics,
     .category-logo {
       display: none;
@@ -30,11 +41,9 @@
 
     tbody tr {
       display: grid;
-      grid-template-areas:
-        "title topics"
-        "category category"
-        "subcategory subcategory";
-      row-gap: 1em;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-6);
       border: 1px solid var(--primary-300);
       border-radius: var(--d-border-radius-large);
       box-shadow: 0 0 12px 1px var(--topic-card-shadow);
@@ -49,8 +58,9 @@
     }
 
     tbody h3 {
-      grid-area: title;
-      padding: 1em 0 0 1.5rem;
+      grid-column: 1;
+      grid-row: 1;
+      padding: 0;
       font-size: var(--font-up-1-rem);
 
       .category-name {
@@ -82,24 +92,26 @@
     }
 
     .topics {
+      grid-column: 2;
+      grid-row: 1;
       width: auto;
-      padding: 1em 1.5rem 0 0;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: end;
     }
 
     .category-description {
-      grid-area: category;
-      padding: 0 1.5rem;
+      grid-column: 1 / -1;
+      padding: 0;
       margin: 0;
       font-size: var(--font-down-1-rem);
     }
 
     .subcategories {
-      grid-area: subcategory;
+      grid-column: 1 / -1;
       gap: 0.25em 0.5em;
-      padding: 0 1.5rem 1em;
+      padding: 0;
       margin: 0;
 
       .badge-category__wrapper {

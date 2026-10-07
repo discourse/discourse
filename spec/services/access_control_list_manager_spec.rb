@@ -9,6 +9,15 @@ RSpec.describe AccessControlListManager do
     def self.name
       "AclTargetSpecTarget"
     end
+
+    ACL_PERMISSIONS = Acl::Permissions.new(:view, :edit, :manage)
+  end
+
+  class InheritedAclTargetSpecTarget < AclTargetSpecTarget
+  end
+
+  class UndeclaredAclTargetSpecTarget < Category
+    include AclTarget
   end
 
   describe described_class::Contract, type: :model do
@@ -52,6 +61,82 @@ RSpec.describe AccessControlListManager do
       let(:flattened_acl) { [] }
 
       it { is_expected.to fail_a_policy(:has_at_least_one_acl) }
+    end
+
+    context "when the target has no permission declaration" do
+      fab!(:target) { Fabricate(:category).becomes(UndeclaredAclTargetSpecTarget) }
+
+      it "raises a configuration error without creating ACLs" do
+        expect { result }.to raise_error(NameError, /ACL_PERMISSIONS/)
+        expect(AccessControlList.where(target:)).to be_empty
+      end
+    end
+
+    context "when the target inherits its permission declaration" do
+      fab!(:target) { Fabricate(:category).becomes(InheritedAclTargetSpecTarget) }
+
+      it "accepts and persists inherited permissions" do
+        expect(result).to run_successfully
+        expect(AccessControlList.where(target:).pluck(:permission)).to contain_exactly(
+          "view",
+          "edit",
+        )
+      end
+    end
+
+    context "when an unknown permission is provided" do
+      let(:flattened_acl) { [{ type: "group", id: group.id, permission: "Jester" }] }
+
+      it "rejects the ACL without creating permissions or logging a change" do
+        expect { result }.not_to change { AccessControlList.where(target:).count }
+        expect(result).to fail_a_policy(:has_valid_permissions)
+        expect(
+          UserHistory.where(action: UserHistory.actions[:change_access_control_list_permissions]),
+        ).to be_empty
+      end
+    end
+
+    context "when valid and invalid permissions are mixed" do
+      fab!(:existing_acl) do
+        Fabricate(:access_control_list_with_groups, target:, permission: "manage", groups: [group])
+      end
+
+      let(:flattened_acl) do
+        [
+          { type: "group", id: group.id, permission: "view" },
+          { type: "group", id: other_group.id, permission: "Jester" },
+        ]
+      end
+
+      it "preserves all existing ACL data" do
+        expect { result }.not_to change { AccessControlList.where(target:).map(&:attributes) }
+        expect(result).to fail_a_policy(:has_valid_permissions)
+      end
+    end
+
+    context "when a permission is blank" do
+      let(:flattened_acl) { [{ type: "group", id: group.id, permission: "" }] }
+
+      it { is_expected.to fail_a_policy(:has_valid_permissions) }
+    end
+
+    context "when a permission is missing" do
+      let(:flattened_acl) { [{ type: "group", id: group.id }] }
+
+      it { is_expected.to fail_a_policy(:has_valid_permissions) }
+    end
+
+    context "when a mandatory permission is invalid" do
+      before do
+        AclTargetSpecTarget.stubs(:mandatory_acl).returns(
+          [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "Jester" }],
+        )
+      end
+
+      it "rejects the injected permission without creating ACLs" do
+        expect { result }.not_to change { AccessControlList.where(target:).count }
+        expect(result).to fail_a_policy(:has_valid_permissions)
+      end
     end
 
     context "when everything is ok" do

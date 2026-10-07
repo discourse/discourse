@@ -5,7 +5,7 @@ class CSRFTokenVerifier
   class InvalidCSRFToken < StandardError
   end
 
-  include ActiveSupport::Configurable
+  class_attribute :config, instance_predicate: false, default: ActiveSupport::OrderedOptions.new
   include ActionController::RequestForgeryProtection
 
   # Use config from ActionController::Base
@@ -22,7 +22,7 @@ class CSRFTokenVerifier
     raise InvalidCSRFToken unless verified_request?
   end
 
-  public :form_authenticity_token
+  public :form_authenticity_token # rubocop:disable Style/AccessModifierDeclarations
 
   private
 

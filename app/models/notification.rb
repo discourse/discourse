@@ -175,7 +175,7 @@ class Notification < ActiveRecord::Base
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
         circles_activity: 900, # Used by https://github.com/discourse/discourse-circles
-        resenha_invitation: 1000, # Used by https://github.com/discourse/resenha
+        voice_invitation: 1000, # Used by the voice plugin
       )
   end
 

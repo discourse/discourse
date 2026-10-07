@@ -83,12 +83,12 @@ export default class GroupsFormInteractionFields extends Component {
         <label for="alias">{{i18n "groups.alias_levels.mentionable"}}</label>
 
         <ComboBox
-          @name="alias"
-          @valueProperty="value"
-          @value={{this.mentionableLevel}}
-          @content={{this.aliasLevelOptions}}
-          @onChange={{fn (mut this.model.mentionable_level)}}
           class="groups-form-mentionable-level"
+          @content={{this.aliasLevelOptions}}
+          @name="alias"
+          @onChange={{fn (mut this.model.mentionable_level)}}
+          @value={{this.mentionableLevel}}
+          @valueProperty="value"
         />
       </div>
 
@@ -96,12 +96,12 @@ export default class GroupsFormInteractionFields extends Component {
         <label for="alias">{{i18n "groups.alias_levels.messageable"}}</label>
 
         <ComboBox
-          @name="alias"
-          @valueProperty="value"
-          @value={{this.messageableLevel}}
-          @content={{this.aliasLevelOptions}}
-          @onChange={{fn (mut this.model.messageable_level)}}
           class="groups-form-messageable-level"
+          @content={{this.aliasLevelOptions}}
+          @name="alias"
+          @onChange={{fn (mut this.model.messageable_level)}}
+          @value={{this.messageableLevel}}
+          @valueProperty="value"
         />
       </div>
 
@@ -109,9 +109,9 @@ export default class GroupsFormInteractionFields extends Component {
         <div class="control-group">
           <label>
             <Input
-              @type="checkbox"
-              @checked={{this.model.publish_read_state}}
               class="groups-form-publish-read-state"
+              @checked={{this.model.publish_read_state}}
+              @type="checkbox"
             />
 
             {{i18n "admin.groups.manage.interaction.publish_read_state"}}
@@ -129,23 +129,23 @@ export default class GroupsFormInteractionFields extends Component {
           </label>
 
           <DTextField
-            @name="incoming_email"
-            @value={{this.model.incoming_email}}
-            @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"
             class="input-xxlarge groups-form-incoming-email"
+            @name="incoming_email"
+            @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"
+            @value={{this.model.incoming_email}}
           />
 
           <DTooltip
-            @icon="circle-info"
             @content={{i18n
               "admin.groups.manage.interaction.incoming_email_tooltip"
             }}
+            @icon="circle-info"
           />
 
           <span>
             <PluginOutlet
-              @name="group-email-in"
               @connectorTagName="div"
+              @name="group-email-in"
               @outletArgs={{lazyHash model=this.model}}
             />
           </span>
@@ -160,17 +160,17 @@ export default class GroupsFormInteractionFields extends Component {
         <label>{{i18n "groups.notification_level"}}</label>
 
         <NotificationsButton
-          @value={{this.defaultNotificationLevel}}
-          @options={{hash i18nPrefix="groups.notifications"}}
-          @onChange={{fn (mut this.model.default_notification_level)}}
           class="groups-form-default-notification-level"
+          @onChange={{fn (mut this.model.default_notification_level)}}
+          @options={{hash i18nPrefix="groups.notifications"}}
+          @value={{this.defaultNotificationLevel}}
         />
       </div>
 
       <span>
         <PluginOutlet
-          @name="groups-interaction-custom-options"
           @connectorTagName="div"
+          @name="groups-interaction-custom-options"
           @outletArgs={{lazyHash model=this.model}}
         />
       </span>

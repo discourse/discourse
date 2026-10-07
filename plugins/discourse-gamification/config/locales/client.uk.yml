@@ -113,7 +113,15 @@ uk:
     discourse_workflows:
       node_unavailable:
         requires_gamification: "Потрібно ввімкнути плагін Gamification"
+      nodes:
+        "action:gamification_score": "Оцінка нагороди"
+      node_descriptions:
+        "action:gamification_score": "Додавання або віднімання балів гейміфікації для користувача"
       gamification_score:
         username: "Користувач"
+        points: "Бали"
+        points_description: "Кількість балів для нарахування. Використовуйте від’ємне значення для віднімання балів."
         date: "Дата"
+        date_description: "Дата, до якої застосовуються ці бали (РРРР-ММ-ДД). За замовчуванням — сьогодні."
         description: "Опис"
+        description_description: "Додаткова примітка, що відображається поруч із подією оцінки."

@@ -30,11 +30,11 @@ export default class PaymentPlan extends Component {
 
   <template>
     <DButton
-      @action={{this.planClick}}
       class={{dConcatClass
         "btn-discourse-subscriptions-subscribe"
         this.selectedClass
       }}
+      @action={{this.planClick}}
     >
       <span class="interval">
         {{#if this.recurringPlan}}

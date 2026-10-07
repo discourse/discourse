@@ -1,0 +1,68 @@
+import { click, render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import ModalContainer from "discourse/components/modal-container";
+import DMenus from "discourse/float-kit/components/d-menus";
+import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
+import ChatNavbarChannelListOptionsButton from "discourse/plugins/chat/discourse/components/chat/navbar/channel-list-options-button";
+
+module(
+  "Integration | Component | ChatNavbarChannelListOptionsButton",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      resetMobile();
+    });
+
+    test("is hidden on desktop because the in-list divider shows the menu", async function (assert) {
+      await render(
+        <template>
+          <ChatNavbarChannelListOptionsButton @section="channels" />
+          <DMenus />
+        </template>
+      );
+
+      assert
+        .dom(".chat-channel-list-options-button")
+        .doesNotExist("the navbar options button is desktop-hidden");
+    });
+
+    test("opens the section's shared options menu on mobile", async function (assert) {
+      forceMobile();
+      this.owner.lookup(
+        "service:chat-channel-list-preferences"
+      ).channelsFilter = "unread";
+
+      await render(
+        <template>
+          <ChatNavbarChannelListOptionsButton @section="channels" />
+          <DMenus />
+          <ModalContainer />
+        </template>
+      );
+
+      assert
+        .dom(".chat-channel-list-filter-toggle .d-icon-filter-circle-xmark")
+        .exists("mobile offers the temporary override");
+      await click(".chat-channel-list-filter-toggle");
+      assert
+        .dom(".chat-channel-list-filter-toggle .d-icon-filter")
+        .exists("mobile can reapply filters");
+      await click(".chat-channel-list-options-button");
+
+      assert
+        .dom(
+          '.fk-d-menu-modal[data-identifier="chat-channel-list-options-menu"]'
+        )
+        .exists("the shared options menu opens from the mobile navbar");
+      assert
+        .dom(".chat-channel-list-options-menu")
+        .includesText(
+          i18n("chat.channels_list_popup.browse"),
+          "the channels options are shown for the channels section"
+        );
+    });
+  }
+);

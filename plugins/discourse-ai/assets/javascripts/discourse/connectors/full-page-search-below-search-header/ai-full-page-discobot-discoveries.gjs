@@ -39,10 +39,10 @@ export default class AiFullPageDiscobotDiscoveries extends Component {
       >
         <div class="full-page-discoveries">
           <AiSearchDiscoveries
+            @fullPage={{true}}
             @searchTerm={{@outletArgs.search}}
             @showHeading={{true}}
             @showSources={{true}}
-            @fullPage={{true}}
             {{! the search type runs the discovery when the search is submitted,
                 so mounting must not run a second one }}
             @triggerOnInsert={{false}}

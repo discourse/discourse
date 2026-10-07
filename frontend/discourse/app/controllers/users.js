@@ -126,14 +126,6 @@ export default class UsersController extends Controller {
     discourseDebounce(this, this._setUsernameFilter, filter, 500);
   }
 
-  _setUsernameFilter(username) {
-    this.setProperties({
-      name: username,
-      "params.name": username,
-    });
-    this.loadUsers();
-  }
-
   @action
   updateOrderAndAsc(order, asc) {
     this.setProperties({ order, asc });
@@ -142,5 +134,13 @@ export default class UsersController extends Controller {
   @action
   loadMore() {
     this.model.loadMore();
+  }
+
+  _setUsernameFilter(username) {
+    this.setProperties({
+      name: username,
+      "params.name": username,
+    });
+    this.loadUsers();
   }
 }

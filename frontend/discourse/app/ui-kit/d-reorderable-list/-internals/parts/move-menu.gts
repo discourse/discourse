@@ -57,15 +57,15 @@ const MoveItem: TOC<MoveItemSignature> = <template>
         than the output. }}
     {{! eslint-disable ember/template-require-context-role }}
     <DButton
-      role="menuitem"
+      aria-keyshortcuts={{shortcut.aria}}
       class={{dConcatClass
         "btn-transparent d-reorderable-list__move-item"
         (concat "--" @target)
       }}
-      aria-keyshortcuts={{shortcut.aria}}
+      role="menuitem"
+      @action={{@move}}
       @icon={{@icon}}
       @translatedLabel={{@label}}
-      @action={{@move}}
     >
       {{! The drawn keys stay out of the accessible name, which the
           keyshortcuts attribute already carries in its own spelling. }}
@@ -183,8 +183,8 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
 
   <template>
     <DDropdownMenu
-      role="menu"
       aria-label={{this.row.handleLabel}}
+      role="menu"
       {{on "keydown" this.onKeydown}}
       {{dRovingFocus
         orientation="vertical"
@@ -201,40 +201,40 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
       {{#if this.row.canMoveUp}}
         <dropdown.item role="none">
           <MoveItem
-            @target="top"
             @icon="angles-up"
             @label={{i18n "reorder.move_to_top"}}
             @move={{fn this.move "top"}}
+            @target="top"
           />
         </dropdown.item>
       {{/if}}
       {{#if this.canMoveUp}}
         <dropdown.item role="none">
           <MoveItem
-            @target="up"
             @icon="arrow-up"
             @label={{i18n "reorder.move_up"}}
             @move={{fn this.move "up"}}
+            @target="up"
           />
         </dropdown.item>
       {{/if}}
       {{#if this.canMoveDown}}
         <dropdown.item role="none">
           <MoveItem
-            @target="down"
             @icon="arrow-down"
             @label={{i18n "reorder.move_down"}}
             @move={{fn this.move "down"}}
+            @target="down"
           />
         </dropdown.item>
       {{/if}}
       {{#if this.row.canMoveDown}}
         <dropdown.item role="none">
           <MoveItem
-            @target="bottom"
             @icon="angles-down"
             @label={{i18n "reorder.move_to_bottom"}}
             @move={{fn this.move "bottom"}}
+            @target="bottom"
           />
         </dropdown.item>
       {{/if}}
@@ -248,13 +248,13 @@ export default class MoveMenu extends Component<MoveMenuSignature> {
         {{#each this.siblings key="listId" as |sibling|}}
           <dropdown.item role="none">
             <MoveItem
-              @target="list"
               {{! Deliberately not a directional arrow: the list has no idea
                 where a sibling sits on the page, so an arrow would point the
                 wrong way as often as not. }}
               @icon="right-left"
               @label={{i18n "reorder.move_to_list" list=sibling.listLabel}}
               @move={{fn this.moveToList sibling.listId}}
+              @target="list"
             />
           </dropdown.item>
         {{/each}}

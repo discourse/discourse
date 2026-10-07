@@ -16,6 +16,12 @@ el:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Επανάληψη"
+          date: "Ημερομηνία"
+          outcomes:
+            failed: "Απέτυχε"
         reports:
           filters:
             group_by:
@@ -213,8 +219,6 @@ el:
         successful: "Επιτυχής"
         failed: "Απέτυχε"
         unknown: "Άγνωστο"
-        topic_id: "ID Θέματος"
-        post_id: "Post ID"
         time: "Ώρα"
         when: "Πότε"
         outcome: "Αποτέλεσμα"
@@ -229,9 +233,7 @@ el:
         post_short: "Ανάρτηση %{id}"
         duration: "Διάρκεια"
         actions: "Ενέργειες"
-        filters:
-          title: "Φίλτρα"
-          period: "Χρονική περίοδος"
+        view_details: "Λεπτομέρειες"
         periods:
           day: "Τελευταίες 24 ώρες"
           week: "Τελευταίες 7 ημέρες"
@@ -461,11 +463,15 @@ el:
         chat:
           summarize: "Συνοψίστε"
       discobot_discoveries:
-        regular_results: "Θέματα"
-        collapse: "Σύμπτυξη"
-        tooltip:
-          actions:
-            disable: "Απενεργοποίηση"
+        create_topic: "Δημιουργία θέματος"
+        legacy:
+          regular_results: "Θέματα"
+          collapse: "Σύμπτυξη"
+          tooltip:
+            actions:
+              disable: "Απενεργοποίηση"
+        search_all_topics: "Όλα τα θέματα"
+        search_messages: "Μηνύματα"
     review:
       statuses:
         approved_tool_action:

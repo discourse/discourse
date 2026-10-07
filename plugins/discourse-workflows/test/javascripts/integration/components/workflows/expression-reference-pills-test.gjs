@@ -1,8 +1,9 @@
-import { render, waitFor, waitUntil } from "@ember/test-helpers";
+import { render, triggerEvent, waitFor, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import VariableInput from "discourse/plugins/discourse-workflows/admin/components/workflows/variable/input";
+import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 import { buildFocusEmptyArea } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-extensions/focus-empty-area";
 import { buildReferencePills } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-extensions/reference-pills";
 
@@ -39,7 +40,7 @@ module(
 
       await render(
         <template>
-          <VariableInput @value={{value}} @extensions={{pillExtensions}} />
+          <VariableInput @extensions={{pillExtensions}} @value={{value}} />
         </template>
       );
       await waitFor(".cm-wf-reference-pill");
@@ -56,6 +57,24 @@ module(
           .textContent.includes("$json.title"),
         "the raw expression syntax is hidden"
       );
+
+      const dragged = {};
+      await triggerEvent(pill, "dragstart", {
+        dataTransfer: {
+          setData(type, draggedValue) {
+            dragged[type] = draggedValue;
+          },
+        },
+      });
+      assert.strictEqual(
+        JSON.parse(dragged[WORKFLOW_VARIABLE_MIME]).id,
+        "$json.title",
+        "the expression remains available to workflow drop targets"
+      );
+      assert.false(
+        "text/plain" in dragged,
+        "the pill does not become a native plain-text drag source"
+      );
     });
 
     test("leaves a complex expression as raw code (no pill)", async function (assert) {
@@ -63,7 +82,7 @@ module(
 
       await render(
         <template>
-          <VariableInput @value={{value}} @extensions={{pillExtensions}} />
+          <VariableInput @extensions={{pillExtensions}} @value={{value}} />
         </template>
       );
       await waitFor(".cm-editor");
@@ -87,9 +106,9 @@ module(
       await render(
         <template>
           <VariableInput
-            @value={{value}}
             @extensions={{pillExtensions}}
             @onSetup={{onSetup}}
+            @value={{value}}
           />
         </template>
       );
@@ -115,9 +134,9 @@ module(
       await render(
         <template>
           <VariableInput
-            @value={{value}}
             @extensions={{focusExtensions}}
             @onSetup={{onSetup}}
+            @value={{value}}
           />
         </template>
       );

@@ -147,28 +147,28 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{applyMove}} as |group|>
             <DReorderableList
+              class="supp-first"
               @group={{group}}
-              @listId="first"
-              @listLabel="First"
-              @spill={{true}}
               @items={{first}}
               @key="id"
               @label={{label}}
-              class="supp-first"
+              @listId="first"
+              @listLabel="First"
+              @spill={{true}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              class="supp-second"
               @group={{group}}
-              @listId="second"
-              @listLabel="Second"
-              @spill={{true}}
               @items={{second}}
               @key="id"
               @label={{label}}
-              class="supp-second"
+              @listId="second"
+              @listLabel="Second"
+              @spill={{true}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -356,28 +356,28 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{applyMove}} as |group|>
             <DReorderableList
+              class="fz-source"
               @group={{group}}
-              @listId="first"
-              @listLabel="Source"
               @items={{first}}
               @key="id"
               @label={{label}}
+              @listId="first"
+              @listLabel="Source"
               @movable={{movable}}
-              class="fz-source"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              class="fz-destination"
               @group={{group}}
-              @listId="second"
-              @listLabel="Destination"
               @items={{second}}
               @key="id"
               @label={{label}}
+              @listId="second"
+              @listLabel="Destination"
               @movable={{movable}}
-              class="fz-destination"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -464,33 +464,33 @@ module(
         <template>
           <DMenus />
           <DReorderableList
+            id="agree-drag"
             @items={{dragItems}}
             @key="id"
             @label={{label}}
             @onMove={{dragMove}}
-            id="agree-drag"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="agree-menu"
             @items={{menuItems}}
             @key="id"
             @label={{label}}
             @onMove={{menuMove}}
-            id="agree-menu"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
           <DReorderableList
+            id="agree-chord"
             @items={{chordItems}}
             @key="id"
             @label={{label}}
             @onMove={{chordMove}}
-            id="agree-chord"
           >
             <:row as |item|>
               <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -625,28 +625,28 @@ module(
           <DMenus />
           <DReorderableListGroup @onMove={{storeApply}} as |group|>
             <DReorderableList
+              class="an-source"
               @group={{group}}
-              @listId="first"
-              @listLabel="Announce source"
               @items={{storeFirst}}
               @key="id"
               @label={{label}}
+              @listId="first"
+              @listLabel="Announce source"
               @movable={{movable}}
-              class="an-source"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
               </:row>
             </DReorderableList>
             <DReorderableList
+              class="an-target"
               @group={{group}}
-              @listId="second"
-              @listLabel="Announce target"
               @items={{storeSecond}}
               @key="id"
               @label={{label}}
+              @listId="second"
+              @listLabel="Announce target"
               @movable={{movable}}
-              class="an-target"
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -807,29 +807,29 @@ module(
             <DMenus />
             <DReorderableListGroup @onMove={{onMove}} as |group|>
               <DReorderableList
+                class="dis-first"
                 @group={{group}}
-                @listId="first"
-                @listLabel="Enabled"
-                @spill={{true}}
                 @items={{first}}
                 @key="id"
                 @label={{label}}
-                class="dis-first"
+                @listId="first"
+                @listLabel="Enabled"
+                @spill={{true}}
               >
                 <:row as |item|>
                   <span data-test-item={{item.id}}>{{item.name}}</span>
                 </:row>
               </DReorderableList>
               <DReorderableList
-                @group={{group}}
-                @listId="second"
-                @listLabel="Disabled"
-                @spill={{true}}
+                class="dis-second"
                 @disabled={{true}}
+                @group={{group}}
                 @items={{second}}
                 @key="id"
                 @label={{label}}
-                class="dis-second"
+                @listId="second"
+                @listLabel="Disabled"
+                @spill={{true}}
               >
                 <:row as |item|>
                   <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -898,13 +898,13 @@ module(
             <DMenus />
             <DReorderableListGroup @onMove={{onMove}} as |group|>
               <DReorderableList
+                class="stale-first"
                 @group={{group}}
-                @listId="first"
-                @listLabel="Stale source"
                 @items={{firstItems}}
                 @key="id"
                 @label={{label}}
-                class="stale-first"
+                @listId="first"
+                @listLabel="Stale source"
               >
                 <:row as |item|>
                   <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -912,13 +912,13 @@ module(
               </DReorderableList>
               {{#if state.showSecond}}
                 <DReorderableList
+                  class="stale-second"
                   @group={{group}}
-                  @listId="second"
-                  @listLabel="Stale target"
                   @items={{secondItems}}
                   @key="id"
                   @label={{label}}
-                  class="stale-second"
+                  @listId="second"
+                  @listLabel="Stale target"
                 >
                   <:row as |item|>
                     <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -999,28 +999,28 @@ module(
           <div id="move-focus-arena">
             <DReorderableListGroup @onMove={{storeApply}} as |group|>
               <DReorderableList
+                class="mf-first"
                 @group={{group}}
-                @listId="first"
-                @listLabel="Focus first"
                 @items={{storeFirst}}
                 @key="id"
                 @label={{label}}
+                @listId="first"
+                @listLabel="Focus first"
                 @movable={{movable}}
-                class="mf-first"
               >
                 <:row as |item|>
                   <span data-test-item={{item.id}}>{{item.name}}</span>
                 </:row>
               </DReorderableList>
               <DReorderableList
+                class="mf-second"
                 @group={{group}}
-                @listId="second"
-                @listLabel="Focus second"
                 @items={{storeSecond}}
                 @key="id"
                 @label={{label}}
+                @listId="second"
+                @listLabel="Focus second"
                 @movable={{movable}}
-                class="mf-second"
               >
                 <:row as |item|>
                   <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1092,10 +1092,10 @@ module(
               @items={{state.items}}
               @key="id"
               @label={{label}}
-              @onMove={{noop}}
               @movable={{movable}}
-              @removable={{removable}}
+              @onMove={{noop}}
               @onRemove={{onRemove}}
+              @removable={{removable}}
             >
               <:row as |item|>
                 <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -1160,26 +1160,26 @@ module(
             <DMenus />
             <DReorderableListGroup @onMove={{storeApply}} as |group|>
               <DReorderableList
+                class="eq-first"
                 @group={{group}}
-                @listId="first"
-                @listLabel="Eq first"
                 @items={{storeFirst}}
                 @key={{INDEX_KEY}}
                 @label={{label}}
-                class="eq-first"
+                @listId="first"
+                @listLabel="Eq first"
               >
                 <:row as |item|>
                   <span data-test-item={{item}}>{{item}}</span>
                 </:row>
               </DReorderableList>
               <DReorderableList
+                class="eq-second"
                 @group={{group}}
-                @listId="second"
-                @listLabel="Eq second"
                 @items={{storeSecond}}
                 @key={{INDEX_KEY}}
                 @label={{label}}
-                class="eq-second"
+                @listId="second"
+                @listLabel="Eq second"
               >
                 <:row as |item|>
                   <span data-test-item={{item}}>{{item}}</span>

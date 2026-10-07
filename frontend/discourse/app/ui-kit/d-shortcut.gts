@@ -31,9 +31,9 @@ interface KbdSignature {
 const Kbd: TOC<KbdSignature> = <template>
   {{#if @keys.length}}
     <kbd
+      aria-hidden={{if @hidden "true"}}
       class="d-shortcut"
       dir="ltr"
-      aria-hidden={{if @hidden "true"}}
       ...attributes
     >
       {{#each @keys key="key" as |key|}}
@@ -156,7 +156,7 @@ export default class DShortcut extends Component<DShortcutSignature> {
     {{#if (has-block)}}
       {{yield this.parts}}
     {{else}}
-      <Kbd @keys={{this.formatted.keys}} ...attributes />
+      <Kbd ...attributes @keys={{this.formatted.keys}} />
     {{/if}}
   </template>
 }

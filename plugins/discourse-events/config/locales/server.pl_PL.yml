@@ -24,8 +24,8 @@ pl_PL:
       event_started:
         title: Wydarzenie rozpoczęte
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Podany przez Ciebie region świąt nie istnieje."
-    discourse_calendar_enable_holiday_failed: "Nie można włączyć tego święta, jest ono już włączone lub nie jest wyłączone."
+    discourse_events_holiday_region_invalid: "Podany przez Ciebie region świąt nie istnieje."
+    discourse_events_enable_holiday_failed: "Nie można włączyć tego święta, jest ono już włączone lub nie jest wyłączone."
     discourse_post_event_bulk_invite_succeeded:
       title: "Zdarzenie — zaproszenie zbiorcze powiodło się"
       subject_template: "Zaproszenie zbiorcze zostało pomyślnie przetworzone"
@@ -41,6 +41,25 @@ pl_PL:
         ```tekst
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Przypomnienie o wydarzeniu"
+      subject_template: ":date: %{subject}"
+      text_body_template: |
+        **%{date_range} (%{timezone})**
+
+        %{description}
+
+        %{location_section}
+
+        #### Goście
+
+        %{guests}
+
+        %{additional_guests}
+
+        %{join_event}
+
+        [Przejdź do tematu wydarzenia](%{event_url})
   site_settings:
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
@@ -75,6 +94,7 @@ pl_PL:
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
     enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
+    enable_improved_event_reminders: "Umożliwia członkom wybór, czy przypomnienia o wydarzeniach będą wysyłane jako wiadomości osobiste, powiadomienia, czy w ogóle."
     livestream_allowed_hosts: "Organizatorzy, których można używać do transmisji wydarzeń na żywo."
     livestream_allowed_hosts_invalid: "Te wpisy nie są hostami: %{hosts}. Podaj sam host (na przykład zoom.us), który zezwala na wszystkie adresy URL na nim i jego subdomeny."
     livestream_zoom_enabled: "Włącz osadzanie wideo Zoom w przypadku tematów transmitowanych na żywo."
@@ -82,7 +102,27 @@ pl_PL:
     livestream_zoom_sdk_secret: "Tajny klucz klienta Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
     livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
-  discourse_calendar:
+  discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} wkrótce się rozpocznie"
+        ongoing: "%{title} trwa"
+        after: "%{title} dobiegło końca"
+      location: |-
+        #### Lokalizacja
+
+        %{location}
+      guest: "- %{name}"
+      guest_with_role: "- %{name} (*%{role}*)"
+      roles:
+        organizer: "Organizator"
+        host: "Gospodarz"
+      additional_guests:
+        one: "  i %{count} inny"
+        few: "  i %{count} inne"
+        many: "  i %{count} innych"
+        other: "  i %{count} innych"
+      join_event: "[Dołącz do wydarzenia](%{url})"
     category_type:
       default_calendar_view:
         label: "Domyślny widok kalendarza"
@@ -145,20 +185,35 @@ pl_PL:
           raw_invitees_length: "Wydarzenie jest ograniczone do %{count} użytkowników/grup."
           raw_invitees:
             only_group: "Wydarzenie akceptuje tylko nazwy grup."
-          ends_at_before_starts_at: "Wydarzenie nie może zakończyć się zanim się zacznie."
+          ends_at_before_starts_at: "Wydarzenie musi się zakończyć po rozpoczęciu."
           max_attendees_reached: "To wydarzenie jest pełne."
           start_must_be_present_and_a_valid_date: "Wydarzenie wymaga prawidłowej daty rozpoczęcia."
           end_must_be_a_valid_date: "Data zakończenia musi być prawidłową datą."
-          invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          recurrence_until_must_be_a_valid_date: "Data zakończenia powtarzania musi być prawidłową datą."
+          invalid_max_attendees: "Maksymalna liczba uczestników musi być liczbą z przedziału od 1 do %{maximum}."
+          invalid_reminders: "Nieprawidłowe przypomnienia: %{reminders}."
+          invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: %{recurrences}."
           invalid_timezone: "Strefa czasowa nie została rozpoznana."
           invalid_url: "Adres URL musi być prawidłowym adresem internetowym."
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
           acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
           invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."
+          invalid_hosts: "Do tego wydarzenia nie można dodać jednego lub więcej hostów."
+          too_many_hosts:
+            one: "Wydarzenie jest ograniczone do %{count} hosta."
+            few: "Wydarzenie jest ograniczone do %{count} hostów."
+            many: "Wydarzenie jest ograniczone do %{count} hostów."
+            other: "Wydarzenie jest ograniczone do %{count} hostów."
           acting_user_not_allowed_to_invite_these_groups: "Bieżący użytkownik nie może zapraszać tych grup."
           custom_field_is_invalid: "Pole niestandardowe `%{field}` jest niedozwolone."
           name:
             length: "Długość nazwy wydarzenia musi zawierać się w przedziale od %{minimum} do %{maximum} znaków."
+          description:
+            length: "Opis wydarzenia jest ograniczony do %{maximum} znaków."
+          url:
+            length: "Długość adresu URL wydarzenia jest ograniczona do %{maximum} znaków."
+          location:
+            length: "Lokalizacja zdarzenia jest ograniczona do %{maximum} znaków."
   discourse_push_notifications:
     popup:
       event_reminder: "Przypomnienie o wydarzeniu"

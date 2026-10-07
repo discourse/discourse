@@ -196,6 +196,10 @@
     border-bottom: 1px solid var(--content-border-color);
   }
 
+  .reviewable-penalty-icon {
+    color: var(--danger);
+  }
+
   &__meta-content {
     display: grid;
     gap: var(--space-4);
@@ -325,9 +329,14 @@
   &__insights {
     padding-inline: var(--review-item-padding);
 
+    // The border goes on the nav, not the ul: the ul is the strip's scroller
+    // and its edge fade would mask a border painted there.
+    .horizontal-overflow-nav {
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
     .nav-pills.action-list {
       margin-bottom: 0;
-      border-bottom: 1px solid var(--content-border-color);
     }
   }
 
@@ -489,6 +498,14 @@
     justify-content: left;
     text-align: left;
   }
+}
+
+.review-item__secondary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--content-border-color);
 }
 
 .review-resources {

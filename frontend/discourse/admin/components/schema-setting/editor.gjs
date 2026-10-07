@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { isArray } from "@ember/array";
-import { fn } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import Tree from "discourse/admin/components/schema-setting/editor/tree";
 import FieldInput from "discourse/admin/components/schema-setting/field";
@@ -11,7 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
-import { gt, not } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -26,49 +25,12 @@ export default class SchemaSettingNewEditor extends Component {
   @autoTrackedArray activeSchemaPaths = [];
   @autoTrackedArray history = [];
 
-  inputFieldObserver = new Map();
-  data = this.#trackNestedArrays(cloneJSON(this.args.setting.value));
   schema = this.args.schema;
-
-  @action
-  onChildClick(index, propertyName, parentNodeIndex) {
-    this.history.push({
-      dataPaths: [...this.activeDataPaths],
-      schemaPaths: [...this.activeSchemaPaths],
-      index: this.activeIndex,
-    });
-
-    this.activeIndex = index;
-    this.activeDataPaths.push(parentNodeIndex, propertyName);
-    this.activeSchemaPaths.push(propertyName);
-    this.inputFieldObserver.clear();
-  }
-
-  @action
-  updateIndex(index) {
-    this.activeIndex = index;
-  }
-
-  @action
-  generateSchemaTitle(object, schema, index) {
-    let title;
-
-    if (schema.properties[schema.identifier]?.type === "categories") {
-      title = this.activeData[index][schema.identifier]
-        ?.map((categoryId) => {
-          return (
-            this.args.setting.metadata?.categories?.[categoryId]?.name ||
-            Category.findById(categoryId)?.name
-          );
-        })
-        .filter(Boolean)
-        .join(", ");
-    } else {
-      title = object[schema.identifier];
-    }
-
-    return title || `${schema.name} ${index + 1}`;
-  }
+  data = trackedArray(
+    cloneJSON(this.args.setting.value).map((object) =>
+      this.#prepareObject(object, this.schema)
+    )
+  );
 
   get backButtonText() {
     if (this.history.length === 0) {
@@ -90,189 +52,28 @@ export default class SchemaSettingNewEditor extends Component {
     return this.#resolveDataFromPaths(this.activeDataPaths);
   }
 
-  #resolveDataFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.data;
-    }
-
-    let data = this.data;
-
-    paths.forEach((path) => {
-      data = data[path];
-    });
-
-    return data;
+  get activeObject() {
+    return this.activeData[this.activeIndex];
   }
 
   get activeSchema() {
     return this.#resolveSchemaFromPaths(this.activeSchemaPaths);
   }
 
-  #resolveSchemaFromPaths(paths) {
-    if (paths.length === 0) {
-      return this.schema;
-    }
-
-    let schema = this.schema;
-
-    paths.forEach((path) => {
-      schema = schema.properties[path].schema;
-    });
-
-    return schema;
-  }
-
-  @action
-  registerInputFieldObserver(index, callback) {
-    this.inputFieldObserver[index] = callback;
-  }
-
-  descriptions(fieldName, key) {
-    // The `property_descriptions` metadata is an object with keys in the following format as an example:
-    //
-    // {
-    //   some_property.description: <some description>,
-    //   some_property.label: <some label>,
-    //   some_objects_property.some_other_property.description: <some description>,
-    //   some_objects_property.some_other_property.label: <some label>,
-    // }
-    const descriptions = this.args.setting.metadata?.property_descriptions;
-
-    if (!descriptions) {
-      return;
-    }
-
-    if (this.activeSchemaPaths.length > 0) {
-      key = `${this.activeSchemaPaths.join(".")}.${fieldName}.${key}`;
-    } else {
-      key = `${fieldName}.${key}`;
-    }
-
-    return descriptions[key];
-  }
-
-  fieldLabel(fieldName, spec) {
-    return this.descriptions(fieldName, "label") || spec?.label || fieldName;
-  }
-
-  fieldDescription(fieldName, spec) {
-    return this.descriptions(fieldName, "description") || spec?.description;
-  }
-
   get fields() {
-    const list = [];
-    const activeObject = this.activeData[this.activeIndex];
-
-    if (activeObject) {
-      for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
-        if (spec.type === "objects") {
-          continue;
-        }
-
-        list.push({
-          name,
-          spec,
-          value: activeObject[name],
-          description: this.fieldDescription(name, spec),
-          label: this.fieldLabel(name, spec),
-        });
-      }
+    if (!this.activeObject) {
+      return [];
     }
 
-    return list;
-  }
-
-  @action
-  clickBack() {
-    const {
-      dataPaths: lastDataPaths,
-      schemaPaths: lastSchemaPaths,
-      index: lastIndex,
-    } = this.history.pop();
-
-    this.activeDataPaths = lastDataPaths;
-    this.activeSchemaPaths = lastSchemaPaths;
-    this.activeIndex = lastIndex;
-    this.inputFieldObserver.clear();
-  }
-
-  @action
-  addChildItem(propertyName, parentNodeIndex) {
-    this.activeData[parentNodeIndex][propertyName].push({});
-
-    this.onChildClick(
-      this.activeData[parentNodeIndex][propertyName].length - 1,
-      propertyName,
-      parentNodeIndex
-    );
-  }
-
-  @action
-  addItem() {
-    this.activeData.push({});
-    this.activeIndex = this.activeData.length - 1;
-  }
-
-  @action
-  async removeItem() {
-    let confirm = true;
-
-    if (this.args.schema.deleteWarning) {
-      confirm = await this._confirmRemove(this.args.schema.deleteWarning);
-    }
-
-    if (!confirm) {
-      return;
-    }
-
-    this.activeData.splice(this.activeIndex, 1);
-
-    if (this.activeData.length > 0) {
-      this.activeIndex = Math.max(this.activeIndex - 1, 0);
-    } else if (this.history.length > 0) {
-      this.clickBack();
-    } else {
-      this.activeIndex = 0;
-    }
-  }
-
-  @action
-  inputFieldChanged(field, newVal) {
-    this.activeData[this.activeIndex][field.name] = newVal;
-
-    if (field.name === this.activeSchema.identifier) {
-      this.inputFieldObserver[this.activeIndex]();
-    }
-  }
-
-  @action
-  moveUp() {
-    if (this.canMoveUp) {
-      this.#swapAdjacentItems(this.activeIndex, this.activeIndex - 1);
-      this.activeIndex = this.activeIndex - 1;
-    }
-  }
-
-  @action
-  moveDown() {
-    if (this.canMoveDown) {
-      this.#swapAdjacentItems(this.activeIndex, this.activeIndex + 1);
-      this.activeIndex = this.activeIndex + 1;
-    }
-  }
-
-  #swapAdjacentItems(fromIndex, toIndex) {
-    const item = this.activeData[fromIndex];
-    const fromCallback = this.inputFieldObserver[fromIndex];
-    const toCallback = this.inputFieldObserver[toIndex];
-
-    // Move the data
-    this.activeData.splice(fromIndex, 1);
-    this.activeData.splice(toIndex, 0, item);
-
-    // Swap the observer callbacks to match new positions
-    this.inputFieldObserver[toIndex] = fromCallback;
-    this.inputFieldObserver[fromIndex] = toCallback;
+    return Object.entries(this.activeSchema.properties)
+      .filter(([, spec]) => spec.type !== "objects")
+      .map(([name, spec]) => ({
+        name,
+        spec,
+        description:
+          this.#propertyMetadata(name, "description") || spec.description,
+        label: this.#propertyMetadata(name, "label") || spec.label || name,
+      }));
   }
 
   get canMoveUp() {
@@ -281,6 +82,111 @@ export default class SchemaSettingNewEditor extends Component {
 
   get canMoveDown() {
     return this.activeIndex < this.activeData.length - 1;
+  }
+
+  @action
+  onChildClick(index, propertyName, parentNodeIndex) {
+    this.history.push({
+      dataPaths: [...this.activeDataPaths],
+      schemaPaths: [...this.activeSchemaPaths],
+      index: this.activeIndex,
+    });
+
+    this.activeIndex = index;
+    this.activeDataPaths.push(parentNodeIndex, propertyName);
+    this.activeSchemaPaths.push(propertyName);
+  }
+
+  @action
+  updateIndex(index) {
+    this.activeIndex = index;
+  }
+
+  @action
+  generateSchemaTitle(object, schema, index) {
+    let title = object[schema.identifier];
+
+    if (schema.properties[schema.identifier]?.type === "categories") {
+      title = title
+        ?.map(
+          (categoryId) =>
+            this.args.setting.metadata?.categories?.[categoryId]?.name ||
+            Category.findById(categoryId)?.name
+        )
+        .filter(Boolean)
+        .join(", ");
+    }
+
+    return title || `${schema.name} ${index + 1}`;
+  }
+
+  @action
+  clickBack() {
+    const { dataPaths, schemaPaths, index } = this.history.pop();
+
+    this.activeDataPaths = dataPaths;
+    this.activeSchemaPaths = schemaPaths;
+    this.activeIndex = index;
+  }
+
+  @action
+  addChildItem(propertyName, parentNodeIndex) {
+    const children = this.activeData[parentNodeIndex][propertyName];
+
+    children.push(
+      this.#prepareObject({}, this.activeSchema.properties[propertyName].schema)
+    );
+
+    this.onChildClick(children.length - 1, propertyName, parentNodeIndex);
+  }
+
+  @action
+  addItem() {
+    this.activeData.push(this.#prepareObject({}, this.activeSchema));
+    this.activeIndex = this.activeData.length - 1;
+  }
+
+  @action
+  async removeItem() {
+    const warning = this.args.schema.deleteWarning;
+    const confirmed =
+      !warning ||
+      (await this.dialog.deleteConfirm({
+        title: warning.title,
+        message: warning.message,
+      }));
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.activeData.splice(this.activeIndex, 1);
+
+    if (this.activeData.length === 0 && this.history.length > 0) {
+      this.clickBack();
+      return;
+    }
+
+    this.activeIndex = Math.max(this.activeIndex - 1, 0);
+  }
+
+  @action
+  inputFieldChanged(field, newVal) {
+    this.activeObject[field.name] = newVal;
+  }
+
+  @action
+  moveUp() {
+    if (this.canMoveUp) {
+      this.#moveActiveItem(-1);
+    }
+  }
+
+  @action
+  moveDown() {
+    if (this.canMoveDown) {
+      this.#moveActiveItem(1);
+    }
   }
 
   @action
@@ -295,8 +201,10 @@ export default class SchemaSettingNewEditor extends Component {
         this.router.transitionTo(this.args.routeToRedirect, this.args.id);
       })
       .catch((e) => {
-        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-          this.validationErrorMessage = e.jqXHR.responseJSON.errors[0];
+        const errors = e.jqXHR?.responseJSON?.errors;
+
+        if (errors) {
+          this.validationErrorMessage = errors[0];
         } else {
           popupAjaxError(e);
         }
@@ -304,45 +212,47 @@ export default class SchemaSettingNewEditor extends Component {
       .finally(() => (this.saveButtonDisabled = false));
   }
 
-  async _confirmRemove(warning) {
-    return new Promise((resolve) => {
-      this.dialog.deleteConfirm({
-        title: warning?.title,
-        message: warning?.message,
-        didCancel: () => resolve(false),
-        didConfirm: () => resolve(true),
-      });
-    });
+  #resolveDataFromPaths(paths) {
+    return paths.reduce((data, path) => data[path], this.data);
   }
 
-  /**
-   * Recursively converts nested arrays to TrackedArrays for reactivity
-   *
-   * @param {*} input - The input value to convert
-   * @returns {TrackedArray|*} The converted value with TrackedArrays
-   *
-   * @private
-   */
-  #trackNestedArrays(input) {
-    // Return early if input is null/undefined/empty
-    if (!input) {
-      return input;
+  #resolveSchemaFromPaths(paths) {
+    return paths.reduce(
+      (schema, path) => schema.properties[path].schema,
+      this.schema
+    );
+  }
+
+  #moveActiveItem(offset) {
+    const [item] = this.activeData.splice(this.activeIndex, 1);
+    this.activeData.splice(this.activeIndex + offset, 0, item);
+    this.activeIndex += offset;
+  }
+
+  #prepareObject(object, schema) {
+    for (const [name, spec] of Object.entries(schema.properties)) {
+      if (spec.type === "objects") {
+        object[name] = trackedArray(
+          (object[name] || []).map((child) =>
+            this.#prepareObject(child, spec.schema)
+          )
+        );
+      } else if (spec.required && spec.type === "boolean") {
+        object[name] ??= false;
+      } else if (spec.required && spec.type === "enum") {
+        object[name] ??= spec.default;
+      } else if (Array.isArray(object[name])) {
+        object[name] = trackedArray(object[name]);
+      }
     }
 
-    // If input is an array, convert it to a TrackedArray and recursively convert its items
-    if (isArray(input)) {
-      return trackedArray(input.map((item) => this.#trackNestedArrays(item)));
-    }
+    return trackedObject(object);
+  }
 
-    // If input is an object, recursively convert its values
-    if (typeof input === "object") {
-      Object.keys(input).forEach((key) => {
-        input[key] = this.#trackNestedArrays(input[key]);
-      });
-    }
-
-    // Return the input after converting any arrays to TrackedArrays
-    return input;
+  #propertyMetadata(fieldName, key) {
+    return this.args.setting.metadata?.property_descriptions?.[
+      [...this.activeSchemaPaths, fieldName, key].join(".")
+    ];
   }
 
   <template>
@@ -358,25 +268,24 @@ export default class SchemaSettingNewEditor extends Component {
       <div class="schema-setting-editor__wrapper">
         <div class="schema-setting-editor__navigation">
           <Tree
-            @data={{this.activeData}}
-            @schema={{this.activeSchema}}
-            @onChildClick={{this.onChildClick}}
-            @clickBack={{this.clickBack}}
-            @backButtonText={{this.backButtonText}}
             @activeIndex={{this.activeIndex}}
-            @updateIndex={{this.updateIndex}}
-            @addItem={{this.addItem}}
             @addChildItem={{this.addChildItem}}
+            @addItem={{this.addItem}}
+            @backButtonText={{this.backButtonText}}
+            @clickBack={{this.clickBack}}
+            @data={{this.activeData}}
             @generateSchemaTitle={{this.generateSchemaTitle}}
-            @registerInputFieldObserver={{this.registerInputFieldObserver}}
+            @onChildClick={{this.onChildClick}}
+            @schema={{this.activeSchema}}
+            @updateIndex={{this.updateIndex}}
           />
 
           <div class="schema-setting-editor__footer">
             <DButton
-              @disabled={{this.saveButtonDisabled}}
-              @action={{this.saveChanges}}
-              @label="save"
               class="btn-primary"
+              @action={{this.saveChanges}}
+              @disabled={{this.saveButtonDisabled}}
+              @label="save"
             />
           </div>
         </div>
@@ -384,37 +293,37 @@ export default class SchemaSettingNewEditor extends Component {
         <div class="schema-setting-editor__fields">
           {{#each this.fields as |field|}}
             <FieldInput
-              @name={{field.name}}
-              @value={{field.value}}
-              @spec={{field.spec}}
-              @onValueChange={{fn this.inputFieldChanged field}}
               @description={{field.description}}
               @label={{field.label}}
+              @name={{field.name}}
+              @onValueChange={{fn this.inputFieldChanged field}}
               @setting={{@setting}}
+              @spec={{field.spec}}
+              @value={{get this.activeObject field.name}}
             />
           {{/each}}
 
           <div class="schema-setting-editor__field-actions">
             <DButton
-              @action={{this.moveUp}}
-              @icon="chevron-up"
-              @disabled={{not this.canMoveUp}}
-              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
               class="btn-default schema-setting-editor__move-up-btn"
+              @action={{this.moveUp}}
+              @ariaLabel={{i18n "admin.customize.schema.move_up"}}
+              @disabled={{not this.canMoveUp}}
+              @icon="chevron-up"
             />
             <DButton
-              @action={{this.moveDown}}
-              @icon="chevron-down"
-              @disabled={{not this.canMoveDown}}
-              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
               class="btn-default schema-setting-editor__move-down-btn"
+              @action={{this.moveDown}}
+              @ariaLabel={{i18n "admin.customize.schema.move_down"}}
+              @disabled={{not this.canMoveDown}}
+              @icon="chevron-down"
             />
 
-            {{#if (gt this.fields.length 0)}}
+            {{#if this.fields.length}}
               <DButton
+                class="btn-danger schema-setting-editor__remove-btn"
                 @action={{this.removeItem}}
                 @icon="trash-can"
-                class="btn-danger schema-setting-editor__remove-btn"
               />
             {{/if}}
           </div>

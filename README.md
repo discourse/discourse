@@ -2,7 +2,7 @@
   <img src="images/discourse-readme-logo.png" width="300px">
 </a>
 
-The online home for your community. 
+The online home for your community.
 
 <img width="1920" height="1135" alt="github-readme" src="https://github.com/user-attachments/assets/abaaf30f-0cfb-4505-a530-6f8e5a43d24b" />
 
@@ -12,14 +12,14 @@ The online home for your community.
 
 Discourse is a 100% open-source community platform for those who want complete control over how and where their site is run.
 
-Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. 
+Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform.
 
 **With Discourse, you can:**
 
 * 💬 **Create discussion topics** to foster meaningful conversations.
 
 * ⚡️ **Connect in real-time** with built-in chat.
-  
+
 * 🎨 **Customize your experience** with an ever-growing selection of official and community themes.
 
 * 🤖 **Enhance your community** with plugins, from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to advanced tools like SQL analysis with the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
@@ -27,7 +27,7 @@ Our platform has been battle-tested for over a decade and continues to evolve to
 To learn more, visit [discourse.org](https://www.discourse.org/) and join our support community at [meta.discourse.org](https://meta.discourse.org/).
 
 
-Here are just a few of the incredible communities using Discourse: 
+Here are just a few of the incredible communities using Discourse:
 
 ![discourse-communities](https://github.com/user-attachments/assets/a79b5d56-7748-4f6d-8a2d-daa950366fcc)
 
@@ -51,9 +51,15 @@ For more information, check out [the Developer Documentation](https://meta.disco
 
 ## Setting up Discourse
 
-If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
+See [discourse.org/pricing](https://www.discourse.org/pricing/) for official Discourse hosting plans, including the Free plan.
 
-If you're looking for official hosting, see [discourse.org/pricing](https://www.discourse.org/pricing/).
+For self-hosted installations, run this single command:
+
+```
+wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/main/install-discourse | sudo bash
+```
+
+Read the [**Discourse Install Guide**](docs/INSTALL.md) for more details on how to set up Discourse in production for both beginner and advanced setups.
 
 ## Requirements
 

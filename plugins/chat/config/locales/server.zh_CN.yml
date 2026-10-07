@@ -156,6 +156,10 @@ zh_CN:
         ignore:
           title: "忽略举报"
           description: "将其从队列中移除，不采取任何措施。"
+        unsilence_user:
+          title: "取消禁言作者"
+          description: "解除对作者的禁言。此标志保留在队列中。"
+          complete: "作者不再禁言。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
@@ -244,6 +248,15 @@ zh_CN:
         invalid_params: "聊天消息发送失败： %{errors}"
         failed: "聊天消息发送失败： %{steps}"
         timeout_must_be_positive: "超时时长必须大于 0 分钟。"
+        invalid_timeout_action: "无效的超时操作： %{action}。"
+        buttons_required: "至少需要一个聊天批准按钮。"
+        too_many_buttons: "聊天批准最多支持 %{max} 按钮。"
+        button_label_required: "聊天批准按钮 %{position} 需要标签。"
+        button_label_too_long: "聊天批准按钮 %{position} 标签必须小于等于 %{max} 个字符。"
+        button_value_required: "聊天批准按钮 %{position} 需要一个值。"
+        button_value_too_long: "聊天批准按钮 %{position} 的值必须小于等于 %{max} 个字符。"
+        button_style_invalid: "聊天批准按钮 %{position} 样式必须是以下之一： %{styles}。"
+        button_icon_too_long: "聊天批准按钮 %{position} 图标必须小于等于 %{max} 个字符。"
   reviewable_score_types:
     needs_review:
       title: "需要审核"

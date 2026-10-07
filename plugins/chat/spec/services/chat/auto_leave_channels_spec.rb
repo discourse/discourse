@@ -111,6 +111,7 @@ RSpec.describe Chat::AutoLeaveChannels do
 
           context "with another category/channel/user" do
             let(:params) { { event: :generic_event } }
+
             fab!(:user_2) { Fabricate(:user, trust_level: 1) }
             fab!(:category_2) { Fabricate(:private_category, group:) }
             fab!(:chat_channel_2) { Fabricate(:chat_channel, chatable: category_2) }

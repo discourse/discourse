@@ -8,6 +8,9 @@ bg:
   js:
     styleguide:
       sections:
+        context_menu:
+          actions:
+            delete: "Изтрий"
         colors:
           title: "Цветове"
         icons:
@@ -22,6 +25,18 @@ bg:
           title: "Публикация"
         more_topics:
           title: "Още теми"
+        roving_focus:
+          toolbar:
+            copy: "Копирай"
+          adjacent:
+            field: "Търсене"
+            open: "Отвори"
+            recent: "Скорошни"
+          combobox:
+            daily: "Дневно"
+            weekly: "Седмично"
+            monthly: "Месечно"
+            never: "Никога"
         tooltips:
           description: "Описание"
           header: "Хедър"

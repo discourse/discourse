@@ -15,6 +15,10 @@ export default class DiscoursePostEventApi extends Service {
 
   #eventsByTopicId = new Map();
 
+  get #basePath() {
+    return "/discourse-post-event";
+  }
+
   // cached per topic id so the live composer preview (which re-cooks on every
   // keystroke) only hits the endpoint once per linked topic; failed requests
   // are evicted so a transient error doesn't hide the card until a full reload
@@ -159,10 +163,6 @@ export default class DiscoursePostEventApi extends Service {
     }
 
     return invitee;
-  }
-
-  get #basePath() {
-    return "/discourse-post-event";
   }
 
   #getRequest(endpoint, data = {}) {

@@ -35,11 +35,34 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
     end
 
     describe "success" do
-      it "works" do
+      it "flags the message" do
         post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
              params: params
 
         expect(response.status).to eq(200)
+      end
+    end
+
+    context "when the message was already flagged by the user" do
+      before do
+        Chat::FlagMessage.call(
+          guardian: current_user.guardian,
+          params: {
+            channel_id: message_1.chat_channel_id,
+            message_id: message_1.id,
+            **params,
+          },
+        )
+      end
+
+      it "returns a 422 with the error" do
+        post "/chat/api/channels/#{message_1.chat_channel.id}/messages/#{message_1.id}/flags",
+             params: params
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("chat.reviewables.message_already_handled")],
+        )
       end
     end
 
@@ -53,6 +76,7 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
         expect(response.status).to eq(404)
       end
     end
+
     context "when channel is not found" do
       it "returns a 404" do
         post "/chat/api/channels/-999/messages/#{message_1.id}/flags", params: params

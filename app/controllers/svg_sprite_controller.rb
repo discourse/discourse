@@ -18,7 +18,10 @@ class SvgSpriteController < ApplicationController
   def show
     no_cookies
 
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
+    RailsMultisite::ConnectionManagement.with_hostname(
+      params[:hostname],
+      raise_on_missing: false,
+    ) do
       theme_id = params[:theme_id].to_i if params[:theme_id].present?
 
       if SvgSprite.version(theme_id) != params[:version]
@@ -70,7 +73,10 @@ class SvgSpriteController < ApplicationController
   def svg_icon
     no_cookies
 
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
+    RailsMultisite::ConnectionManagement.with_hostname(
+      params[:hostname],
+      raise_on_missing: false,
+    ) do
       params.permit(:color)
       name = params.require(:name)
       icon = SvgSprite.search(name)

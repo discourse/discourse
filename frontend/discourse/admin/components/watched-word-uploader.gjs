@@ -34,10 +34,10 @@ export default class WatchedWordUploader extends Component {
         {{dIcon "upload"}}
         {{i18n "admin.watched_words.form.upload"}}
         <input
-          {{didInsert this.uppyUpload.setup}}
           class="hidden-upload-field"
           disabled={{this.addDisabled}}
           type="file"
+          {{didInsert this.uppyUpload.setup}}
         />
       </label>
     </div>

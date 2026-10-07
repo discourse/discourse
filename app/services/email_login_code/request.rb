@@ -5,6 +5,7 @@ class EmailLoginCode::Request
 
   params do
     attribute :email, :string
+    attribute :signup, :boolean, default: false
 
     before_validation { self.email = email.to_s.strip.downcase }
 
@@ -18,6 +19,7 @@ class EmailLoginCode::Request
               }
   end
 
+  only_if(:signup?) { policy :can_register_from_ip }
   model :user, optional: true
   only_if(:existing_account?) { step :trigger_before_email_login }
 
@@ -27,6 +29,14 @@ class EmailLoginCode::Request
   end
 
   private
+
+  def signup?(params:)
+    params.signup
+  end
+
+  def can_register_from_ip(ip_address:)
+    !SpamHandler.should_prevent_registration_from_ip?(ip_address)
+  end
 
   def fetch_user(params:)
     User.real.where(staged: false).with_email(params.email).first

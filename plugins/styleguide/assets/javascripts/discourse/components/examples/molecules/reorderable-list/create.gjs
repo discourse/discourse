@@ -22,13 +22,13 @@ export default class ReorderableListCreateExample extends Component {
 
   <template>
     <DReorderableList
+      class="styleguide-reorderable-list"
+      @allowCreate={{true}}
       @items={{this.values}}
       @key={{this.indexKey}}
       @label={{this.valueLabel}}
-      @allowCreate={{true}}
       @onCreate={{this.addValue}}
       @onMove={{this.applyMove}}
-      class="styleguide-reorderable-list"
     >
       <:row as |value|>
         <span>{{value}}</span>

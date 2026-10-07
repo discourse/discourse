@@ -5,6 +5,34 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  markdown_endpoints:
+    latest: "Siste"
+    categories: "Kategorier"
+    tags: "Stikkord"
+    previous_page: "Forrige side"
+    next_page: "Neste side"
+    replies: "Svar"
+    last_updated: "Sist oppdatert"
+    event:
+      location: "Sted"
+  mcp:
+    errors:
+      topic_not_found: "Fant ikke emnet"
+    oauth:
+      deny: "Avslå"
+      approve: "Autoriser"
+  llms_txt:
+    sections:
+      optional: "Valgfritt"
+    links:
+      search:
+        label: "Søk"
+      categories:
+        label: "Kategorier"
+      about:
+        label: "Om"
+      guidelines:
+        label: "Retningslinjer"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"
@@ -509,6 +537,7 @@ nb_NO:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Ukjent"
     traffic_types:
       anonymous: "Anonym"
   change_email:
@@ -600,7 +629,7 @@ nb_NO:
     topic_description: "For å melde deg på %{link} igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
     private_topic_description: "For å melde deg på igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
   unsubscribe:
-    title: "Avmeld"
+    unsubscribe: "Avmeld"
     stop_watching_topic: "Slutt å følge dette emnet, %{link}"
     mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"
@@ -701,6 +730,11 @@ nb_NO:
         share: "Del"
       types:
         staff: "Stab"
+    posters_by_member_type_members:
+      labels:
+        user: "Bruker"
+        count: "Innlegg"
+        share: "Del"
     trust_level_pipeline:
       labels:
         count: "Medlemmer"
@@ -1115,6 +1149,7 @@ nb_NO:
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
+    missing_username: "Skriv inn et brukernavn"
     second_factor_title: "To-faktor autentisering"
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
     second_factor_toggle:
@@ -1437,8 +1472,6 @@ nb_NO:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      delete_post:
-        complete: "Post slettet"
       delete_user:
         complete: "Bruker slettet"
   fallback_username: "bruker"

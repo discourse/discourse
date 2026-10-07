@@ -11,7 +11,7 @@ RSpec.describe "spammers on same IP" do
     let!(:first_post) { create_post(user: spammer1) }
     let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
 
-    it "should not increase spam count" do
+    it "does not increase the spam count" do
       expect(first_post.reload.spam_count).to eq(0)
       expect(second_post.reload.spam_count).to eq(0)
     end
@@ -28,7 +28,7 @@ RSpec.describe "spammers on same IP" do
       context "when second spammer replies" do
         let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
 
-        it "should increase spam count" do
+        it "increases the spam count" do
           expect(first_post.reload.spam_count).to eq(1)
           expect(second_post.reload.spam_count).to eq(1)
         end
@@ -36,7 +36,7 @@ RSpec.describe "spammers on same IP" do
         context "with third spam post" do
           let!(:third_post) { create_post(user: spammer3, topic: first_post.topic) }
 
-          it "should increase spam count" do
+          it "increases the spam count" do
             expect(first_post.reload.spam_count).to eq(1)
             expect(second_post.reload.spam_count).to eq(1)
             expect(third_post.reload.spam_count).to eq(1)
@@ -56,7 +56,7 @@ RSpec.describe "spammers on same IP" do
         context "with a reply by a new user at the same IP address" do
           let!(:second_post) { create_post(user: spammer2, topic: first_post.topic) }
 
-          it "should increase the spam count correctly" do
+          it "increases the spam count correctly" do
             expect(first_post.reload.spam_count).to eq(0)
             expect(second_post.reload.spam_count).to eq(1)
           end

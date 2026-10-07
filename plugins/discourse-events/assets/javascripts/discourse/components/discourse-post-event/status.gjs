@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import DButton from "discourse/ui-kit/d-button";
@@ -12,6 +14,7 @@ import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import CalendarPrompt from "./calendar-prompt";
 
 const statusButtonClass = (selected) =>
   selected ? "btn-primary" : "btn-default";
@@ -26,9 +29,9 @@ const GoingDropdown = <template>
     >
       <DButton
         class="btn-transparent"
+        @action={{@status.goingThisEvent}}
         @icon="check"
         @label="discourse_post_event.models.invitee.this_event"
-        @action={{@status.goingThisEvent}}
       />
     </dropdown.item>
     <dropdown.item
@@ -39,9 +42,9 @@ const GoingDropdown = <template>
     >
       <DButton
         class="btn-transparent"
+        @action={{@status.goingAllFollowing}}
         @icon="arrows-rotate"
         @label="discourse_post_event.models.invitee.this_and_following"
-        @action={{@status.goingAllFollowing}}
       />
     </dropdown.item>
     {{#if @status.isGoing}}
@@ -49,9 +52,9 @@ const GoingDropdown = <template>
       <dropdown.item class="going-leave">
         <DButton
           class="btn-transparent --danger"
+          @action={{@status.leaveFromGoingMenu}}
           @icon="xmark"
           @label="discourse_post_event.models.invitee.leave_event"
-          @action={{@status.leaveFromGoingMenu}}
         />
       </dropdown.item>
     {{/if}}
@@ -64,6 +67,8 @@ export default class DiscoursePostEventStatus extends Component {
   @service discoursePostEventApi;
   @service site;
   @service siteSettings;
+
+  @tracked calendarPrompt = null;
 
   goingMenu = null;
 
@@ -136,6 +141,7 @@ export default class DiscoursePostEventStatus extends Component {
   async leaveEvent() {
     try {
       const invitee = this.args.event.watchingInvitee;
+      this.calendarPrompt = null;
 
       await this.discoursePostEventApi.leaveEvent(this.args.event, invitee);
 
@@ -151,13 +157,13 @@ export default class DiscoursePostEventStatus extends Component {
   @action
   async goingThisEvent() {
     this.goingMenu?.close();
-    await this._setAttendance({ status: "going", recurring: false });
+    await this.#setAttendance({ status: "going", recurring: false });
   }
 
   @action
   async goingAllFollowing() {
     this.goingMenu?.close();
-    await this._setAttendance({ status: "going", recurring: true });
+    await this.#setAttendance({ status: "going", recurring: true });
   }
 
   @action
@@ -171,21 +177,38 @@ export default class DiscoursePostEventStatus extends Component {
     const watching = this.args.event.watchingInvitee;
 
     if (!watching) {
-      await this._setAttendance({ status });
+      await this.#setAttendance({ status });
       return;
     }
 
     if (status === watching.status) {
       await (this.canLeave
         ? this.leaveEvent()
-        : this._setAttendance({ status: null }));
+        : this.#setAttendance({ status: null }));
       return;
     }
 
-    await this._setAttendance({ status });
+    await this.#setAttendance({ status });
   }
 
-  async _setAttendance(payload) {
+  #changingToPositiveRSVP(previousStatus) {
+    return (
+      ["going", "interested"].includes(
+        this.args.event.watchingInvitee?.status
+      ) && !["going", "interested"].includes(previousStatus)
+    );
+  }
+
+  async #hasCalendarSubscription() {
+    const result = await ajax("/calendar-subscriptions.json");
+    return (
+      result.generated_feeds?.includes("my_events") ||
+      result.generated_feeds?.includes("all_events") ||
+      false
+    );
+  }
+
+  async #setAttendance(payload) {
     if (!this.currentUser) {
       if (!payload.status) {
         return;
@@ -197,9 +220,12 @@ export default class DiscoursePostEventStatus extends Component {
       });
     }
 
+    const event = this.args.event;
+    const previousStatus = event.watchingInvitee?.status;
+    let rsvpSuccess = false;
     try {
-      const event = this.args.event;
       const data = { status: payload.status, postId: event.id };
+      this.calendarPrompt = null;
 
       if (event.watchingInvitee) {
         await this.discoursePostEventApi.updateEventAttendance(event, payload);
@@ -208,8 +234,26 @@ export default class DiscoursePostEventStatus extends Component {
         await this.discoursePostEventApi.joinEvent(event, payload);
         this.appEvents.trigger("calendar:create-invitee-status", data);
       }
-    } catch (e) {
-      popupAjaxError(e);
+
+      rsvpSuccess = true;
+    } catch (err) {
+      popupAjaxError(err);
+    }
+
+    if (rsvpSuccess) {
+      if (this.#changingToPositiveRSVP(previousStatus)) {
+        try {
+          const hasSubscription = await this.#hasCalendarSubscription();
+          if (
+            !this.isDestroying &&
+            this.args.event.watchingInvitee?.status === payload.status
+          ) {
+            this.calendarPrompt = { hasSubscription };
+          }
+        } catch {
+          // Don't worry about showing the prompt if the subscription check fails, it's nonessential.
+        }
+      }
     }
   }
 
@@ -243,12 +287,12 @@ export default class DiscoursePostEventStatus extends Component {
                       "going-button"
                       (statusButtonClass this.isGoing)
                     }}
-                    @identifier="discourse-post-event-going-menu"
-                    @icon={{this.goingTriggerIcon}}
-                    @label={{this.goingTriggerLabel}}
                     @disabled={{this.goingButtonDisabled}}
-                    @onRegisterApi={{this.registerGoingMenu}}
+                    @icon={{this.goingTriggerIcon}}
+                    @identifier="discourse-post-event-going-menu"
+                    @label={{this.goingTriggerLabel}}
                     @modalForMobile={{true}}
+                    @onRegisterApi={{this.registerGoingMenu}}
                   >
                     <:content>
                       <GoingDropdown @status={{this}} />
@@ -256,12 +300,13 @@ export default class DiscoursePostEventStatus extends Component {
                   </DMenu>
                 {{else}}
                   <DComboButton
-                    @hasMenu={{true}}
-                    @btnTypeClass={{statusButtonClass this.isGoing}}
                     class="going-button"
+                    @btnTypeClass={{statusButtonClass this.isGoing}}
+                    @hasMenu={{true}}
                     as |combo|
                   >
                     <combo.Button
+                      @action={{fn this.changeWatchingInviteeStatus "going"}}
                       @ariaPressed={{this.isGoing}}
                       @disabled={{this.goingButtonDisabled}}
                       @icon={{this.goingTriggerIcon}}
@@ -270,11 +315,10 @@ export default class DiscoursePostEventStatus extends Component {
                         "discourse_post_event.models.event.full"
                         "discourse_post_event.models.invitee.status.going"
                       }}
-                      @action={{fn this.changeWatchingInviteeStatus "going"}}
                     />
                     <combo.Menu
-                      @identifier="discourse-post-event-going-menu"
                       @disabled={{this.goingButtonDisabled}}
+                      @identifier="discourse-post-event-going-menu"
                       @onRegisterApi={{this.registerGoingMenu}}
                     >
                       <GoingDropdown @status={{this}} />
@@ -287,6 +331,7 @@ export default class DiscoursePostEventStatus extends Component {
                     "going-button"
                     (statusButtonClass this.isGoing)
                   }}
+                  @action={{fn this.changeWatchingInviteeStatus "going"}}
                   @ariaPressed={{this.isGoing}}
                   @disabled={{this.goingButtonDisabled}}
                   @icon="check"
@@ -295,7 +340,6 @@ export default class DiscoursePostEventStatus extends Component {
                     "discourse_post_event.models.event.full"
                     "discourse_post_event.models.invitee.status.going"
                   }}
-                  @action={{fn this.changeWatchingInviteeStatus "going"}}
                 />
               {{/if}}
             </PluginOutlet>
@@ -317,10 +361,10 @@ export default class DiscoursePostEventStatus extends Component {
                 "interested-button"
                 (statusButtonClass this.isInterested)
               }}
+              @action={{fn this.changeWatchingInviteeStatus "interested"}}
               @ariaPressed={{this.isInterested}}
               @icon="star"
               @label="discourse_post_event.models.invitee.status.interested"
-              @action={{fn this.changeWatchingInviteeStatus "interested"}}
             />
           </PluginOutlet>
         {{/if}}
@@ -339,15 +383,21 @@ export default class DiscoursePostEventStatus extends Component {
                   "not-going-button"
                   (statusButtonClass this.isNotGoing)
                 }}
+                @action={{fn this.changeWatchingInviteeStatus "not_going"}}
                 @ariaPressed={{this.isNotGoing}}
                 @icon="xmark"
                 @label="discourse_post_event.models.invitee.status.not_going"
-                @action={{fn this.changeWatchingInviteeStatus "not_going"}}
               />
             </PluginOutlet>
           {{/unless}}
         {{/if}}
       </PluginOutlet>
     </section>
+    {{#if this.calendarPrompt}}
+      <CalendarPrompt
+        @event={{@event}}
+        @hasSubscription={{this.calendarPrompt.hasSubscription}}
+      />
+    {{/if}}
   </template>
 }

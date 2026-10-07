@@ -5,6 +5,34 @@
 # https://translate.discourse.org/
 
 ca:
+  markdown_endpoints:
+    latest: "Més recents"
+    categories: "Categories"
+    tags: "Etiquetes"
+    previous_page: "Pàgina anterior"
+    next_page: "Pàgina següent"
+    replies: "Respostes"
+    last_updated: "Darrera actualització"
+    event:
+      location: "Ubicació"
+  mcp:
+    errors:
+      topic_not_found: "Tema no trobat"
+    oauth:
+      deny: "Denega"
+      approve: "Autoritza"
+  llms_txt:
+    sections:
+      optional: "Opcional"
+    links:
+      search:
+        label: "Cerca"
+      categories:
+        label: "Categories"
+      about:
+        label: "Quant a"
+      guidelines:
+        label: "Directrius"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -587,6 +615,7 @@ ca:
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
   admin_site_traffic_explorer:
+    unknown: "Desconegut"
     traffic_types:
       anonymous: "Anònim"
   change_email:
@@ -707,7 +736,7 @@ ca:
     topic_description: "Per a tornar a subscriure-us a %{link}, feu servir el control de notificacions a baix o a la dreta del tema."
     private_topic_description: "Per a tornar a subscriure-us, utilitzeu el control de notificació a baix o la dreta del tema."
   unsubscribe:
-    title: "Cancel·la la subscripció!"
+    unsubscribe: "Cancel·la la subscripció!"
     stop_watching_topic: "Deixa de vigilar el tema, %{link}"
     mute_topic: "Silencia totes les notificacions per a aquest tema, %{link}"
     unwatch_category: "Deixa de vigilar tots els temes en %{category}"
@@ -833,6 +862,11 @@ ca:
         share: "Comparteix"
       types:
         staff: "Equip responsable"
+    posters_by_member_type_members:
+      labels:
+        user: "Usuari"
+        count: "Publicacions"
+        share: "Comparteix"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1147,8 +1181,6 @@ ca:
       host_names: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
       queue_size: "El nombre de tasques en cua és de %{queue_size}, que és elevat. Això podria indicar un problema amb un o més processos, o potser us cal afegir més treballadors de <i>Sidekiq</i>."
       ram: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
-      s3_upload_config: 'El servidor és configurat per a carregar fitxers a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
-      s3_backup_config: 'El servidor és configurat per a carregar còpies de seguretat a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu-la. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
       image_magick: 'El servidor és configurat per a crear miniatures d''imatges grans, però ImageMagick no és instal·lat. Instal·leu ImageMagick amb el vostre gestor de paquets preferit o <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixeu la versió més recent</a>.'
       failing_emails: 'Hi ha %{num_failed_jobs} tasques de correu electrònic que han fallat. Comproveu app.yml i assegureu-vos que la configuració del servidor de correu és correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Consulteu les tasques fallides en Sidekiq</a>.'
       subfolder_ends_in_slash: "La vostra configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
@@ -1550,7 +1582,6 @@ ca:
     errors:
       invalid_email: "Adreça de correu no vàlida."
       invalid_username: "No hi ha cap usuari amb aquest nom."
-      invalid_group: "No hi ha cap grup amb aquest nom."
       invalid_integer_min_max: "El valor ha de ser entre %{min} i %{max}."
       invalid_integer_min: "El valor ha de ser %{min} o més gran."
       invalid_integer_max: "El valor no pot ser més gran de %{max}."
@@ -2392,7 +2423,7 @@ ca:
     signup_after_approval:
       title: "Registre després d'aprovació"
       subject_template: "El vostre compte ha estat aprovat en %{site_name}!"
-      text_body_template: "Benvingut a %{site_name}!\n\nUn membre de l'equip responsable ha aprovat el vostre compte en %{site_name}. \n\nAra podeu accedir al compte nou iniciant sessió en: \n%{base_url} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del navegador web. \n\n%{new_user_tips} \n\nCreiem en el [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n"
+      text_body_template: "Benvingut a %{site_name}!\n\nUn membre de l'equip responsable ha aprovat el vostre compte en %{site_name}. \n\nAra podeu accedir al compte nou iniciant sessió en: \n%{login_url} \n\nSi no es pot fer clic en l'enllaç anterior, proveu de copiar-lo i enganxar-lo en la barra d'adreça del navegador web. \n\n%{new_user_tips} \n\nCreiem en el [comportament civilitzat de la comunitat](%{base_url}/guidelines) en tot moment. Gaudiu de l'estada!\n"
     signup:
       title: "Registre"
       subject_template: "[%{email_prefix}] Confirmeu el vostre compte nou"
@@ -2877,8 +2908,6 @@ ca:
         title: "Sí"
       approve_and_unhide:
         title: "Sí"
-      delete_post:
-        complete: "Publicació suprimida"
       delete_user:
         complete: "Usuari suprimit"
         reason: "Suprimit mitjançant cua de revisió"

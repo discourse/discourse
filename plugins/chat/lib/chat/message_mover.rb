@@ -37,8 +37,8 @@ module Chat
     def initialize(acting_user:, source_channel:, message_ids:)
       @source_channel = source_channel
       @acting_user = acting_user
-      @source_message_ids = message_ids
-      @source_messages = find_messages(@source_message_ids, source_channel)
+      @source_messages = find_messages(message_ids, source_channel)
+      @source_message_ids = message_ids & @source_messages.map(&:id)
       @ordered_source_message_ids = @source_messages.map(&:id)
       @source_thread_ids = @source_messages.pluck(:thread_id).uniq.compact
     end
@@ -213,6 +213,14 @@ module Chat
       SET chat_message_id = mm.new_chat_message_id
       FROM moved_chat_messages mm
       WHERE cweb.chat_message_id = mm.old_chat_message_id
+    SQL
+
+      # The destination inherits cooked, so keep its localization metadata with it.
+      DB.exec(<<~SQL)
+      UPDATE chat_message_hotlinked_media chm
+      SET chat_message_id = mm.new_chat_message_id
+      FROM moved_chat_messages mm
+      WHERE chm.chat_message_id = mm.old_chat_message_id
     SQL
     end
 

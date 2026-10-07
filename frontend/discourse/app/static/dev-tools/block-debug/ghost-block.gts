@@ -118,16 +118,6 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
   }
 
   /**
-   * Checks if an args object has any entries.
-   *
-   * @param args - The arguments object to check.
-   * @returns True if args is non-null and has at least one key.
-   */
-  hasArgs(args: Record<string, unknown> | undefined): boolean {
-    return args != null && Object.keys(args).length > 0;
-  }
-
-  /**
    * Returns the display name for the block, including ID if set.
    * Format: "blockName" or "blockName(#id)".
    *
@@ -140,18 +130,29 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
     return this.args.blockName;
   }
 
+  /**
+   * Checks if an args object has any entries.
+   *
+   * @param args - The arguments object to check.
+   * @returns True if args is non-null and has at least one key.
+   */
+  hasArgs(args: Record<string, unknown> | undefined): boolean {
+    return args != null && Object.keys(args).length > 0;
+  }
+
   <template>
     <div class="block-debug-ghost" data-block-name={{@blockName}}>
       <DTooltip
+        @hoverGracePeriod={{150}}
         @identifier="block-debug-ghost"
         @interactive={{true}}
-        @placement="bottom-start"
         @maxWidth={{500}}
+        @placement="bottom-start"
         @triggers={{hash
           mobile=(array "click")
           desktop=(array "hover" "click")
         }}
-        @untriggers={{hash mobile=(array "click") desktop=(array "mouseleave")}}
+        @untriggers={{hash mobile=(array "click") desktop=(array "hover")}}
       >
         <:trigger>
           <span class="block-debug-ghost__badge">

@@ -31,13 +31,13 @@ export default class ReorderableListTableExample extends Component {
         </tr>
       </thead>
       <DReorderableList
+        @controls="manual"
         @items={{this.fields}}
+        @itemTag="tr"
         @key="id"
         @label={{this.fieldLabel}}
         @onMove={{this.applyMove}}
-        @controls="manual"
         @tag="tbody"
-        @itemTag="tr"
       >
         <:row as |item controls|>
           <td class="styleguide-reorderable-table__reorder">

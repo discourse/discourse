@@ -120,6 +120,7 @@ RSpec.describe Promotion do
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
         stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
       end
+
       it "sends promotion message by default" do
         SiteSetting.send_tl1_welcome_message = true
         @result = promotion.review

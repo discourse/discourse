@@ -27,6 +27,22 @@ RSpec.describe Migrations::ForkManager do
       read_io.close
     end
 
+    # A source connection registers its hook, then opens its socket. If another
+    # thread forks in between, the child has to run that hook, or the socket it
+    # inherits stays open until its exit ends the parent's session too.
+    it "runs a hook registered after the fork began but before the process split" do
+      read_io, write_io = IO.pipe
+      allow(Process).to receive(:_fork).and_wrap_original do |original, *args|
+        described_class.after_fork_child { write_io.write("late hook") }
+        original.call(*args)
+      end
+
+      Process.waitpid(described_class.fork {})
+      write_io.close
+
+      expect(read_io.read).to eq("late hook")
+    end
+
     it "returns the hook so it can be removed again" do
       hook = described_class.after_fork_child { raise "this hook should not run" }
       expect(described_class.hook_count).to eq(1)

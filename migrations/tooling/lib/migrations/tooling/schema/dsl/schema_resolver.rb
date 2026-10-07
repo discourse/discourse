@@ -127,7 +127,7 @@ module Migrations
 
             # Columns with defaults are treated as nullable because converters
             # don't need to supply a value — the DB default will apply.
-            nullable = required.nil? ? db_col.null || db_col.default.present? : !required
+            nullable = required.nil? ? db_col.null || db_col.default.to_s.present? : !required
 
             max_length = (max_length_override || db_col.limit if datatype == :text)
 

@@ -119,6 +119,11 @@ ca:
         sort:
           relevance: "Importància"
           latest: "Més recents"
+      channel_list:
+        options:
+          filter: "Filtre"
+        filter:
+          mentions: "Mencions"
       incoming_webhooks:
         back: "Enrere"
         description: "Descripció"

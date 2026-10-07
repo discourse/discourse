@@ -23,28 +23,33 @@ RSpec.describe Jobs::CleanUpUnusedStagedUsers do
 
       context "with staged admin" do
         before { staged_user.update!(admin: true) }
+
         include_examples "does not delete"
       end
 
       context "with staged moderator" do
         before { staged_user.update!(moderator: true) }
+
         include_examples "does not delete"
       end
 
       context "when job is disabled" do
         before { SiteSetting.clean_up_unused_staged_users_after_days = 0 }
+
         include_examples "does not delete"
       end
     end
 
     context "when staged user is not old enough" do
       before { staged_user.update!(created_at: 5.months.ago) }
+
       include_examples "does not delete"
     end
   end
 
   context "when staged user has posts" do
     before { Fabricate(:post, user: staged_user) }
+
     include_examples "does not delete"
   end
 

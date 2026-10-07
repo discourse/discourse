@@ -139,6 +139,22 @@ module DiscourseWorkflows
                 author_username: "system",
               },
             },
+            {
+              name: "Delete the trigger post",
+              parameters: {
+                operation: "delete",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Restore a deleted post",
+              parameters: {
+                operation: "recover",
+                post_id: "={{ $json.post.id }}",
+                actor_username: "system",
+              },
+            },
           ],
           "action:send_personal_message" => [
             {
@@ -184,6 +200,27 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:tag_group" => [
+            {
+              name: "Add tags to a tag group",
+              parameters: {
+                operation: "add",
+                tag_group_id: 123,
+                tag_names: "needs-review, escalated",
+                actor_username: "system",
+              },
+            },
+          ],
+          "action:site_setting" => [
+            {
+              name: "Set a site setting to a templated value",
+              parameters: {
+                name: "site_description",
+                value: "=The friendliest community of {{ $json.year }}",
+                actor_username: "system",
+              },
+            },
+          ],
           "action:topic_category" => [
             {
               name: "Move the trigger topic to another category",
@@ -225,8 +262,17 @@ module DiscourseWorkflows
           "action:ai_agent" =>
             "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
+          "action:tag_group" => "tag group tags taxonomy add remove organize",
+          "action:site_setting" =>
+            "site setting settings configuration config admin toggle enable disable change update value",
           "action:flag_user" =>
             "flag user report spammer spam suspect review queue moderation approve reject account signup",
+          "action:post_like" => "like unlike heart favorite upvote",
+          "action:post_reaction" => "react reaction emoji like heart",
+          "action:boost" => "boost micro reaction short note emoji",
+          "trigger:post_like_changed" => "liked unliked like heart favorite upvote",
+          "trigger:post_reaction_changed" => "reacted reaction emoji",
+          "trigger:post_boost_changed" => "boosted boost micro reaction",
           "trigger:user_added_to_group" => "joined added to group membership member",
           "trigger:user_removed_from_group" => "left removed from group membership member",
           "trigger:user_created" => "signup sign up register registration new account joined site",
@@ -234,6 +280,9 @@ module DiscourseWorkflows
           "trigger:reviewable_created" =>
             "review queue flag flagged spam moderation pending needs approval queued post akismet",
           "trigger:badge_granted" => "badge award achievement medal granted earned",
+          "trigger:tag_created" => "taxonomy label keyword created new",
+          "trigger:post_destroyed" => "post deleted removed destroyed trashed",
+          "trigger:post_recovered" => "post recovered restored undeleted untrashed",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",
           "action:flag_post" =>

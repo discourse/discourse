@@ -112,8 +112,10 @@ module DiscourseAi
         def text_from_response(response)
           if response.is_a?(Array)
             response.select { |content| content.is_a?(String) }.join
+          elsif response.respond_to?(:to_str)
+            response.to_str
           else
-            response
+            ""
           end
         end
 

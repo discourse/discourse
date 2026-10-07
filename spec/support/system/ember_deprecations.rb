@@ -61,4 +61,27 @@ module EmberDeprecations
       deprecations[deprecation_id] += 1
     end
   end
+
+  # Collect the JS call stack captured for each distinct deprecation, so the CI
+  # report can point at the code which needs fixing rather than just a count.
+  def self.record_details(logs, metadata)
+    expected = metadata[:expected_js_deprecations] || []
+
+    logs&.each do |log|
+      payload = log[:message][/^deprecation_detail:(\{.*\})$/m, 1]
+      next if payload.nil?
+
+      detail =
+        begin
+          JSON.parse(payload)
+        rescue JSON::ParserError
+          next
+        end
+
+      next if expected.include?(detail["id"])
+
+      details = metadata[:js_deprecation_details] ||= []
+      details << detail
+    end
+  end
 end

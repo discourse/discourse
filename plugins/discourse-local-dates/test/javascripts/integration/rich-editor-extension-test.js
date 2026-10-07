@@ -1,6 +1,10 @@
+import { click, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import {
+  setupRichEditor,
+  testMarkdown,
+} from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - local-dates plugin extension",
@@ -13,6 +17,21 @@ module(
 
     function findRange() {
       return document.querySelector(".ProseMirror .discourse-local-date-range");
+    }
+
+    async function editDate(context, assert, markdown, markup) {
+      const [editor] = await setupRichEditor(assert, markdown);
+
+      await click(".composer-local-date__edit-button");
+
+      const { model } = context.owner.lookup("service:modal").activeModal.opts;
+
+      if (markup) {
+        model.insertDate(markup);
+        await settled();
+      }
+
+      return { editor, model };
     }
 
     test("local date", async function (assert) {
@@ -279,6 +298,87 @@ module(
         },
         markdown
       );
+    });
+
+    test("edit seeds the modal from the node attributes", async function (assert) {
+      const { model } = await editDate(
+        this,
+        assert,
+        '[date=2021-01-01 time=12:00:00 timezone=America/New_York format="YYYY-MM-DD" recurring=1.weeks timezones=Europe/Paris|Asia/Tokyo countdown=true displayedTimezone=Europe/London]'
+      );
+
+      assert.deepEqual(model.initialValues, {
+        date: "2021-01-01",
+        time: "12:00:00",
+        toDate: null,
+        toTime: null,
+        timezone: "America/New_York",
+        format: "YYYY-MM-DD",
+        timezones: ["Europe/Paris", "Asia/Tokyo"],
+        recurring: "1.weeks",
+        countdown: "true",
+        displayedTimezone: "Europe/London",
+      });
+    });
+
+    test("edit seeds the modal from a range's node attributes", async function (assert) {
+      const { model } = await editDate(
+        this,
+        assert,
+        "[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00 timezone=America/New_York]"
+      );
+
+      assert.deepEqual(model.initialValues, {
+        date: "2021-01-01",
+        time: "12:00:00",
+        toDate: "2021-01-02",
+        toTime: "13:00:00",
+        timezone: "America/New_York",
+        format: null,
+        timezones: [],
+        recurring: null,
+        countdown: null,
+        displayedTimezone: null,
+      });
+    });
+
+    test("applying an edit replaces the date node", async function (assert) {
+      const { editor } = await editDate(
+        this,
+        assert,
+        "before [date=2021-01-01 time=12:00:00] after",
+        "[date=2022-02-02 time=13:00:00]"
+      );
+
+      assert.strictEqual(
+        editor.value,
+        "before [date=2022-02-02 time=13:00:00] after"
+      );
+    });
+
+    test("applying an edit can turn a date into a range", async function (assert) {
+      const { editor } = await editDate(
+        this,
+        assert,
+        "[date=2021-01-01 time=12:00:00]",
+        "[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00]"
+      );
+
+      assert.strictEqual(
+        editor.value,
+        "[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00]"
+      );
+    });
+
+    test("applying an edit can turn a range into a date", async function (assert) {
+      const { editor } = await editDate(
+        this,
+        assert,
+        "[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00]",
+        "[date=2021-01-01 time=12:00:00]"
+      );
+
+      assert.strictEqual(editor.value, "[date=2021-01-01 time=12:00:00]");
     });
   }
 );

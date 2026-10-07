@@ -3,6 +3,8 @@
 module JsonApiKit
   module Declarations
     class Relationships
+      delegate :fetch, to: :relationships
+
       def initialize(relationships)
         @relationships = relationships.index_by(&:name)
       end

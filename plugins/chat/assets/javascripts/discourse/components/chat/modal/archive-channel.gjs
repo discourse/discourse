@@ -122,35 +122,35 @@ export default class ChatModalArchiveChannel extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-archive-channel"
-      @inline={{@inline}}
-      @title={{i18n "chat.channel_archive.title"}}
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
+      @inline={{@inline}}
+      @title={{i18n "chat.channel_archive.title"}}
     >
       <:body>
         <p class="chat-modal-archive-channel__instructions">
           {{this.instructionsText}}
         </p>
         <ChatToTopicSelector
-          @selection={{this.selection}}
-          @topicTitle={{this.topicTitle}}
+          @allowNewMessage={{false}}
           @categoryId={{this.categoryId}}
+          @instructionLabels={{this.instructionLabels}}
+          @selectedTopicId={{this.selectedTopicId}}
+          @selection={{this.selection}}
           @tags={{this.tags}}
           @topicChangedCallback={{this.newTopicSelected}}
-          @selectedTopicId={{this.selectedTopicId}}
-          @instructionLabels={{this.instructionLabels}}
-          @allowNewMessage={{false}}
+          @topicTitle={{this.topicTitle}}
         />
       </:body>
       <:footer>
         <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.archiveChannel}}
-          @label="chat.channel_archive.title"
-          id="chat-confirm-archive-channel"
           class="btn-primary"
+          id="chat-confirm-archive-channel"
+          @action={{this.archiveChannel}}
+          @disabled={{this.buttonDisabled}}
+          @label="chat.channel_archive.title"
         />
       </:footer>
     </DModal>

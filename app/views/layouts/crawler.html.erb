@@ -10,6 +10,7 @@
     <%= theme_lookup("head_tag") %>
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
+    <%= markdown_alternate_link_tag %>
     <%= build_plugin_html 'server:before-head-close-crawler' %>
   </head>
   <body class="crawler <% if show_browser_update? %>browser-update<% end %>">

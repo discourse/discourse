@@ -44,10 +44,10 @@ export default class SolvedAcceptedAnswers extends Component {
 
   <template>
     <DPostAccordion
-      @posts={{this.acceptedAnswers}}
+      class="accepted-answers"
       @decoratorState={{@decoratorState}}
       @linesDisplayed={{this.linesDisplayed}}
-      class="accepted-answers"
+      @posts={{this.acceptedAnswers}}
     >
       <:header>
         <h3 class="accepted-answers__title">

@@ -10,10 +10,10 @@ export default <template>
       @titleLabel={{i18n "admin.config.fonts.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/config/fonts"
           @label={{i18n "admin.config.fonts.title"}}
+          @path="/admin/config/fonts"
         />
       </:breadcrumbs>
     </DPageHeader>

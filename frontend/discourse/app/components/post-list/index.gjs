@@ -93,8 +93,8 @@ export default class PostList extends Component {
       {{#if @bulkSelectEnabled}}
         {{#if @bulkSelectHelper.hasSelection}}
           <PostListBulkControls
-            @bulkSelectHelper={{@bulkSelectHelper}}
             @bulkActions={{@bulkActions}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
           />
         {{/if}}
       {{/if}}
@@ -108,18 +108,18 @@ export default class PostList extends Component {
       >
         {{#each @posts as |post|}}
           <PostListItem
-            @post={{post}}
-            @idPath={{@idPath}}
-            @urlPath={{@urlPath}}
-            @titlePath={{@titlePath}}
-            @usernamePath={{@usernamePath}}
             @additionalItemClasses={{@additionalItemClasses}}
-            @titleAriaLabel={{@titleAriaLabel}}
-            @showUserInfo={{@showUserInfo}}
-            @resumeDraft={{@resumeDraft}}
-            @removeDraft={{@removeDraft}}
             @bulkSelectEnabled={{@bulkSelectEnabled}}
             @bulkSelectHelper={{@bulkSelectHelper}}
+            @idPath={{@idPath}}
+            @post={{post}}
+            @removeDraft={{@removeDraft}}
+            @resumeDraft={{@resumeDraft}}
+            @showUserInfo={{@showUserInfo}}
+            @titleAriaLabel={{@titleAriaLabel}}
+            @titlePath={{@titlePath}}
+            @urlPath={{@urlPath}}
+            @usernamePath={{@usernamePath}}
           >
             <:abovePostItemHeader>
               {{yield post to="abovePostItemHeader"}}

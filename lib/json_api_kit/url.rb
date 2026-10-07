@@ -4,8 +4,11 @@ module JsonApiKit
   class Url
     PAGE = "page"
 
-    ENDS = %w[after before].freeze
-    WINDOW = %w[anchor before_size after_size include_anchor].freeze
+    KIT = Glossary.kit
+    REPLACED_MEMBERS =
+      %w[after before anchor before_size after_size include_anchor]
+        .map { KIT.member_name(Name::Member.new(value: it)).value }
+        .freeze
 
     def initialize(address, parameters = {})
       @address = address
@@ -16,7 +19,7 @@ module JsonApiKit
       self.class.new(
         address,
         parameters.merge(
-          PAGE => page_parameters.except(*ENDS, *WINDOW).merge(page.transform_keys(&:to_s)),
+          PAGE => page_parameters.except(*REPLACED_MEMBERS).merge(member_names(page)),
         ),
       )
     end
@@ -29,6 +32,10 @@ module JsonApiKit
 
     def page_parameters = parameters.fetch(PAGE, {})
 
-    def query_string = parameters.to_query.presence&.then { "?#{it}" }
+    def member_names(page)
+      page.transform_keys { KIT.member_name(Name::Member.new(value: it.to_s)).value }
+    end
+
+    def query_string = Rack::Utils.build_nested_query(parameters).presence.try { "?#{it}" }
   end
 end

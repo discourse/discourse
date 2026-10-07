@@ -10,6 +10,7 @@ RSpec.describe Jobs::StreamComposerHelper do
 
   describe "#execute" do
     let!(:input) { "I liek to eet pie fur brakefast becuz it is delishus." }
+
     fab!(:user, :leader)
 
     before do

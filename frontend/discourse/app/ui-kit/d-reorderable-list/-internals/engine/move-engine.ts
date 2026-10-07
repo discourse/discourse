@@ -143,31 +143,6 @@ export default class MoveEngine<T> {
   }
 
   /**
-   * Hands a row refused at this list's end to the adjacent member.
-   *
-   * @param key - The row that ran out of room.
-   * @param target - The direction it was pushed.
-   * @param method - Which input method asked, carried across so the consumer
-   *   is told what the reader actually did.
-   * @returns Whether it went, which is what decides whether the refusal is
-   *   spoken instead.
-   */
-  #spill(
-    key: string,
-    target: MoveTarget,
-    method: "menu" | "keyboard"
-  ): boolean {
-    const member = this.spillTarget(target);
-    if (!member) {
-      return false;
-    }
-    // Entering from above lands first and entering from below lands last, so a
-    // row keeps travelling the way it was pushed once it has crossed.
-    const toIndex = target === "down" ? 0 : member.getItems().length;
-    return !!member.acceptMove(this.#listId(), key, toIndex, method);
-  }
-
-  /**
    * The single commit both input methods funnel into: splices the move within
    * the movable subsequence, re-interleaves it with the frozen rows (which
    * keep their exact visible indices), suppresses no-ops, calls `@onMove`
@@ -192,56 +167,6 @@ export default class MoveEngine<T> {
       this.#finalize(move);
     }
     return move;
-  }
-
-  /**
-   * Builds the normalized move for one step within the movable subsequence,
-   * or `null` for a no-op.
-   *
-   * @param method - Which input method asked for the move.
-   * @param rows - The current row projection.
-   * @param seq - The movable rows, in visible order.
-   * @param from - The item's index within `seq`.
-   * @param to - The destination index within `seq`.
-   */
-  #buildSeqMove(
-    method: ReorderableMove<T>["method"],
-    rows: Row<T>[],
-    seq: Row<T>[],
-    from: number,
-    to: number
-  ): ReorderableMove<T> | null {
-    if (to === from) {
-      return null;
-    }
-
-    const moved = seq[from]!;
-    const nextSeq = [...seq];
-    nextSeq.splice(from, 1);
-    nextSeq.splice(to, 0, moved);
-
-    // Frozen rows keep their visible slots; the movable slots are refilled in
-    // the new subsequence order.
-    let cursor = 0;
-    const proposed = rows.map((row) =>
-      row.movable ? nextSeq[cursor++]!.item : row.item
-    );
-    const toIndex = seq[to]!.index;
-
-    const { items } = this.#args();
-    const listId = this.#listId();
-    return {
-      method,
-      item: moved.item,
-      fromList: listId,
-      toList: listId,
-      fromIndex: moved.index,
-      toIndex,
-      fromItems: items,
-      toItems: items,
-      proposedFromItems: proposed,
-      proposedToItems: proposed,
-    };
   }
 
   /**
@@ -317,35 +242,6 @@ export default class MoveEngine<T> {
     return move;
   }
 
-  /**
-   * The single exit for every committed move: routes the callback to the
-   * group when the list is a member (its own `@onMove` otherwise), honors the
-   * veto and the `@announceMove` override, and speaks exactly one
-   * announcement — the cross-list variant when an item landed here from
-   * another member and this list carries a `@listLabel`.
-   *
-   * @param move - The normalized move to report.
-   */
-  #finalize(move: ReorderableMove<T>) {
-    if (!this.#dispatch(move)) {
-      this.#announcer.cancelRun();
-      return;
-    }
-    this.#announcer.announceMove(move);
-  }
-
-  /**
-   * Reports a move to its callback owner — the group when the list is a
-   * member, its own `@onMove` otherwise.
-   *
-   * @param move - The normalized move.
-   * @returns Whether the move may be announced (`false` when vetoed).
-   */
-  #dispatch(move: ReorderableMove<T>): boolean {
-    const handler = this.#args().group?.onMove ?? this.#args().onMove;
-    return !!handler && handler(move) !== false;
-  }
-
   /** Speaks when an explicit cross-list destination can no longer accept. */
   announceRefusal(key: string) {
     const row = this.#rows().find((candidate) => candidate.key === key);
@@ -399,5 +295,109 @@ export default class MoveEngine<T> {
       fromIndex: moved.index,
       proposedFromItems: proposed as readonly T[],
     };
+  }
+
+  /**
+   * Hands a row refused at this list's end to the adjacent member.
+   *
+   * @param key - The row that ran out of room.
+   * @param target - The direction it was pushed.
+   * @param method - Which input method asked, carried across so the consumer
+   *   is told what the reader actually did.
+   * @returns Whether it went, which is what decides whether the refusal is
+   *   spoken instead.
+   */
+  #spill(
+    key: string,
+    target: MoveTarget,
+    method: "menu" | "keyboard"
+  ): boolean {
+    const member = this.spillTarget(target);
+    if (!member) {
+      return false;
+    }
+    // Entering from above lands first and entering from below lands last, so a
+    // row keeps travelling the way it was pushed once it has crossed.
+    const toIndex = target === "down" ? 0 : member.getItems().length;
+    return !!member.acceptMove(this.#listId(), key, toIndex, method);
+  }
+
+  /**
+   * Builds the normalized move for one step within the movable subsequence,
+   * or `null` for a no-op.
+   *
+   * @param method - Which input method asked for the move.
+   * @param rows - The current row projection.
+   * @param seq - The movable rows, in visible order.
+   * @param from - The item's index within `seq`.
+   * @param to - The destination index within `seq`.
+   */
+  #buildSeqMove(
+    method: ReorderableMove<T>["method"],
+    rows: Row<T>[],
+    seq: Row<T>[],
+    from: number,
+    to: number
+  ): ReorderableMove<T> | null {
+    if (to === from) {
+      return null;
+    }
+
+    const moved = seq[from]!;
+    const nextSeq = [...seq];
+    nextSeq.splice(from, 1);
+    nextSeq.splice(to, 0, moved);
+
+    // Frozen rows keep their visible slots; the movable slots are refilled in
+    // the new subsequence order.
+    let cursor = 0;
+    const proposed = rows.map((row) =>
+      row.movable ? nextSeq[cursor++]!.item : row.item
+    );
+    const toIndex = seq[to]!.index;
+
+    const { items } = this.#args();
+    const listId = this.#listId();
+    return {
+      method,
+      item: moved.item,
+      fromList: listId,
+      toList: listId,
+      fromIndex: moved.index,
+      toIndex,
+      fromItems: items,
+      toItems: items,
+      proposedFromItems: proposed,
+      proposedToItems: proposed,
+    };
+  }
+
+  /**
+   * The single exit for every committed move: routes the callback to the
+   * group when the list is a member (its own `@onMove` otherwise), honors the
+   * veto and the `@announceMove` override, and speaks exactly one
+   * announcement — the cross-list variant when an item landed here from
+   * another member and this list carries a `@listLabel`.
+   *
+   * @param move - The normalized move to report.
+   */
+  #finalize(move: ReorderableMove<T>) {
+    if (!this.#dispatch(move)) {
+      this.#announcer.cancelRun();
+      return;
+    }
+    this.#announcer.announceMove(move);
+  }
+
+  /**
+   * Reports a move to its callback owner — the group when the list is a
+   * member, its own `@onMove` otherwise.
+   *
+   * @param move - The normalized move.
+   * @returns Whether the move may be announced (`false` when vetoed).
+   */
+  #dispatch(move: ReorderableMove<T>): boolean {
+    const handler = this.#args().group?.onMove ?? this.#args().onMove;
+    return !!handler && handler(move) !== false;
   }
 }

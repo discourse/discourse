@@ -23,6 +23,11 @@ fa_IR:
                 lt_1h: "< ۱ ساعت"
                 gt_24h: "> ۲۴ ساعت"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "تغییرات"
+        changes_removed: "پاک شد"
+        tag_names: "برچسب‌ها"
     notifications:
       alt:
         solved:
@@ -62,6 +67,11 @@ fa_IR:
         statuses:
           solved: "حل شده‌اند"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "موضوع"
+            category: "دسته‌بندی"
       web_hooks:
         solved_event:
           group_name: "رویداد حل شده"

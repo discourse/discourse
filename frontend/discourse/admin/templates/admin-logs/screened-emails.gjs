@@ -15,11 +15,11 @@ export default <template>
   {{#if @controller.currentUser.can_see_emails}}
     {{#if @controller.currentUser.can_see_ip}}
       <DButton
+        class="btn-default screened-email-export"
         @action={{@controller.exportScreenedEmailList}}
-        @title="admin.export_csv.button_title.screened_email"
         @icon="download"
         @label="admin.export_csv.button_text"
-        class="btn-default screened-email-export"
+        @title="admin.export_csv.button_title.screened_email"
       />
     {{/if}}
   {{/if}}

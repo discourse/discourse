@@ -40,6 +40,10 @@ en:
         tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
     errors:
+      access_control:
+        invalid_groups: "Groups from input must resolve to an array of valid group IDs."
+        missing_groups: "Groups from input contains groups that no longer exist."
+        required_permission: "Access must include at least one %{permissions} permission."
       too_many_tags: "A workflow can have at most %{max} tags."
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."
@@ -85,10 +89,11 @@ en:
       topic:
         create_failed: "Failed to create topic."
         bump_failed: "Failed to bump topic."
+        invalid_filter: "Invalid topic filter: %{fragments}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
         edit_failed: "Failed to edit post."
-        invalid_filter: "Invalid post filter fragment: %{fragments}."
+        invalid_filter: "Invalid post filter: %{fragments}."
       flag_post:
         unknown_flag_type: "Unknown flag type: %{flag_type}."
         actor_not_staff: "The acting user must be a staff member to flag posts."
@@ -122,9 +127,23 @@ en:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
       topic_tags:
+        unknown_mode: "Unknown tag mode: %{mode}."
         no_tag_names: "No tag names provided."
+        overlapping_tag_names: "The same tags cannot be added and removed: %{tag_names}."
+        unapplied_tag_names: "Tag changes could not be applied: %{tag_names}."
         operation_failed: "Tag operation failed: %{errors}"
         personal_message_not_allowed: "'%{username}' cannot tag personal messages. Add one of their groups to the 'pm_tags_allowed_for_groups' site setting."
+      tag_group:
+        no_tag_names: "No tag names provided."
+        no_valid_tag_names: "No valid tag names provided."
+        operation_failed: "Tag group operation failed: %{errors}"
+      site_setting:
+        name_required: "No site setting name provided."
+        unknown_setting: "Unknown site setting '%{name}'."
+        secret_setting: "Site setting '%{name}' holds a secret and cannot be changed by a workflow."
+        actor_not_admin: "'%{username}' must be an admin to change site settings."
+        update_failed: "Site setting '%{name}' could not be updated: %{errors}"
+        unknown_error: "unknown error"
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
@@ -179,6 +198,8 @@ en:
         execution_failed: "Called workflow finished with status '%{status}'."
         execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+    post:
+      destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
     user:

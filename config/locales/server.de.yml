@@ -5,6 +5,41 @@
 # https://translate.discourse.org/
 
 de:
+  markdown_endpoints:
+    latest: "Aktuelle"
+    categories: "Kategorien"
+    tags: "Schlagwörter"
+    previous_page: "Vorherige Seite"
+    next_page: "Nächste Seite"
+    replies: "Antworten"
+    last_updated: "Zuletzt aktualisiert"
+    event:
+      name: "Ereignis"
+      location: "Ort"
+      link: "Link"
+      date_with_timezone: "%{date} (%{timezone})"
+  mcp:
+    errors:
+      draft_too_long: "Der Entwurf ist zu lang"
+      post_not_found: "Beitrag nicht gefunden"
+      topic_not_found: "Thema nicht gefunden"
+      user_not_found: "Benutzer nicht gefunden"
+    oauth:
+      resource: "MCP-Server"
+      deny: "ablehnen"
+      approve: "Autorisieren"
+  llms_txt:
+    sections:
+      optional: "Optional"
+    links:
+      search:
+        label: "Suche"
+      categories:
+        label: "Kategorien"
+      about:
+        label: "Details"
+      guidelines:
+        label: "Richtlinien"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM YYYY"
@@ -847,6 +882,7 @@ de:
       description_too_long:
         one: "Die Beschreibung ist zu lang (maximal %{count} Zeichen)."
         other: "Die Beschreibung ist zu lang (maximal %{count} Zeichen)."
+      special_category_permissions: "Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen, anstatt sie für andere Zwecke zu verwenden."
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
@@ -1027,6 +1063,7 @@ de:
       windows: "Microsoft Windows"
       unknown: "unbekanntes Betriebssystem"
   admin_site_traffic_explorer:
+    unknown: "Unbekannt"
     traffic_types:
       logged_in: "Angemeldet"
       anonymous: "Anonym"
@@ -1180,7 +1217,8 @@ de:
   uploads:
     marked_insecure_from_theme_component_reason: "in Theme-Komponente verwendeter Upload"
   unsubscribe:
-    title: "Abbestellen"
+    title: "%{email} abmelden"
+    unsubscribe: "Abbestellen"
     stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
     mute_topic: "Alle Benachrichtigungen für dieses Thema stummschalten, %{link}"
     unwatch_category: "Themen in %{category} nicht mehr beobachten"
@@ -1349,6 +1387,11 @@ de:
         new_members: "Neue Mitglieder"
         returning: "Zurückkehrende"
         staff: "Team"
+    posters_by_member_type_members:
+      labels:
+        user: "Nutzer"
+        count: "Beiträge"
+        share: "Teilen"
     trust_level_pipeline:
       title: "Verlauf der Vertrauensstufen"
       description: "Mitgliederbewegungen zwischen den Vertrauensstufen im ausgewählten Zeitraum. Zeigt die Anzahl der Mitglieder an, die sich derzeit auf jeder Vertrauensstufe befinden, ihren Anteil an der Gesamtmitgliederzahl, die Anzahl der Mitglieder, die im Laufe des Zeitraums in die jeweilige Vertrauensstufe auf- oder abgestuft wurden, sowie die Neuanmeldungen."
@@ -1744,13 +1787,7 @@ de:
       sidekiq_check: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
       queue_size: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq-Worker starten."
       ram: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
-      google_oauth2_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Google OAuth2 erlaubt (enable_google_oauth2_logins), aber die Client-ID und die Client-Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-      facebook_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die Geheimnis-Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-      twitter_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-      github_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit GitHub erlaubt (enable_github_logins), aber die Client-ID und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
       github_onebox_backoff: "GitHub begrenzt die Serverauslastung, daher werden GitHub-Links möglicherweise erst angezeigt, wenn das Limit zurückgesetzt wurde. Wenn du {{setting:github_onebox_access_tokens}} konfigurierst, wird das Limit deutlich erhöht."
-      s3_upload_config: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
-      s3_backup_config: 'Der Server ist so konfiguriert, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
       s3_cdn: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber es ist kein S3-CDN konfiguriert. Dies kann zu hohen S3-Kosten und einer langsameren Performance der Website führen. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Unter „Objektspeicher für Uploads verwenden“ erfährst du mehr</a>.'
       image_magick: 'Der Server ist so konfiguriert, dass er Vorschaubilder von großen Bildern erstellt, aber ImageMagick ist nicht installiert. Installiere ImageMagick mit deinem bevorzugten Paketmanager oder <a href="https://www.imagemagick.org/script/download.php" target="_blank">lade die aktuelle Version herunter</a>.'
       failing_emails: '%{num_failed_jobs} E-Mail-Jobs sind fehlgeschlagen. Überprüfe deine app.yml und stelle sicher, dass die Mailservereinstellungen korrekt sind. <a href="%{base_path}/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq anzeigen</a>.'
@@ -1964,7 +2001,6 @@ de:
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
     slow_down_crawler_user_agents: "Browserkennungen von Webcrawlern, die wie in der Einstellung {{setting:slow_down_crawler_rate}} konfiguriert, einer Durchsatzratenbegrenzung unterworfen werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein."
     slow_down_crawler_rate: "Wenn {{setting:slow_down_crawler_user_agents}} ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
-    llms_txt: "Lade eine Textdatei hoch, die unter /llms.txt für LLM-Crawler bereitgestellt wird. Siehe <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> für weitere Informationen."
     content_security_policy: "Aktiviere die Content-Security-Policy (CSP). CSP ist eine zusätzliche Sicherheitsebene, die hilft, bestimmte Arten von Angriffen zu verhindern, z. B. Cross Site Scripting (XSS) und Data Injection. Sollte nur vorübergehend zu Debugging- oder Testzwecken deaktiviert werden."
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) aktivieren"
     content_security_policy_report_uri: "Melde CSP-Verstöße über die CSP-Direktive <code>report-uri</code> an diese URL. Lass das Feld leer, um die Meldefunktion zu deaktivieren."
@@ -1983,7 +2019,7 @@ de:
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     allow_username_in_share_links: "Benutzernamen in Freigabelinks erlauben. Dies ist nützlich, um Abzeichen für einzelne Besucher zu vergeben."
     site_contact_username: "Gültiger Benutzername eines Team-Mitglieds, in dessen Namen alle automatisch erzeugten Nachrichten versendet werden sollen. Falls leer, wird das Standard-System-Konto verwendet."
-    site_contact_group_name: "Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten persönlichen Nachrichten eingeladen wird."
+    site_contact_group_name: "Die Gruppe, die zu allen automatisch versendeten, persönlichen Nachrichten eingeladen wird."
     send_welcome_message: "Sende allen neuen Benutzern eine Begrüßungsnachricht mit einer Kurzanleitung."
     send_tl1_welcome_message: "Sende neuen Benutzern der Vertrauensstufe 1 eine Begrüßungsnachricht."
     send_tl2_promotion_message: "Sende neuen Benutzern der Vertrauensstufe 2 eine Nachricht über die Beförderung."
@@ -2054,7 +2090,6 @@ de:
     discourse_connect_allowed_redirect_domains: "Beschränke die von DiscourseConnect zur Verfügung gestellten return_paths auf diese Domains (standardmäßig muss der Rückgabepfad auf der aktuellen Website liegen). Verwende *, um jede beliebige Domain als Rückgabepfad zuzulassen. Wildcards für Subdomains (`*.foobar.com`) sind nicht erlaubt."
     enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Anmeldemethode konfiguriert hast."
     enable_local_logins_via_email: "Erlaube Benutzern, einen Ein-Klick-Anmelde-Link anzufordern, der ihnen per E-Mail zugeschickt wird."
-    enable_local_logins_via_code: "Erlaube Mitgliedern, sich mithilfe von Einmalcodes per E-Mail (Einmalpasswörter) schneller zu registrieren und anzumelden."
     allow_passkeys_for_2fa: "Erlaube Benutzern, bei der Bestätigung einer sensiblen Aktion einen Passkey zur Zwei-Faktor-Authentifizierung zu verwenden."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige einen Hinweis für wiederkehrende anonyme Benutzer an, der sie auffordert, sich für ein Konto zu registrieren."
@@ -2708,7 +2743,6 @@ de:
       invalid_email: "Ungültige E-Mail-Adresse."
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
       valid_username: "Es gibt einen Benutzer mit diesem Benutzernamen."
-      invalid_group: "Es gibt keine Gruppe mit diesem Namen."
       invalid_svg: "Das SVG-Bild ist ungültig. Es muss ein SVG-Element enthalten und darf keine Skripte oder Event-Handler enthalten."
       invalid_upload: "Der Upload ist ungültig oder existiert nicht."
       invalid_topic: "Es gibt kein Thema mit dieser ID."
@@ -2777,7 +2811,6 @@ de:
       markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung müssen zuerst alle „google oauth2 hd“-Einstellungen festgelegt werden."
       discourse_id_registration: "Die automatische Registrierung bei Discourse ID ist fehlgeschlagen. Das kann an Problemen mit der Netzwerkverbindung, an Firewall-Einschränkungen oder daran liegen, dass der Discourse ID-Dienst nicht erreichbar ist. Bitte überprüfe die Server-Logs für weitere Details oder kontaktiere den Support."
-      linkedin_oidc_credentials: "Du musst die LinkedIn-OIDC-Anmeldedaten („linkedin_oidc_client_id“ und „linkedin_oidc_client_secret“) konfigurieren, bevor du diese Einstellung aktivierst."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
@@ -2869,8 +2902,6 @@ de:
       tags_any: "Themen mit einem der angegebenen Schlagwörter anzeigen (durch Kommas getrennt)"
       tags_all: "Themen mit allen angegebenen Schlagwörtern anzeigen (durch Pluszeichen getrennt)"
       exclude_tag: "Themen mit einem bestimmten Schlagwort ausschließen"
-      exclude_tags_any: "Themen mit einem der angegebenen Schlagwörter ausschließen (durch Kommas getrennt)"
-      exclude_tags_all: "Themen mit allen angegebenen Schlagwörtern ausschließen (durch Kommas getrennt)"
       tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe anzeigen"
       exclude_tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe ausschließen"
       activity_before: "Themen mit letzter Aktivität vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
@@ -2880,7 +2911,6 @@ de:
       created_before: "Themen anzeigen, die vor einem bestimmten Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
       created_after: "Themen anzeigen, die nach einem Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
       created_by: "Themen anzeigen, die von einem bestimmten Benutzer oder Mitgliedern einer Gruppe erstellt wurden"
-      created_by_user: "Themen anzeigen, die von 'Benutzername' oder einem Mitglied aus 'Gruppe' erstellt wurden (ohne @)"
       created_by_multiple: "Themen anzeigen, die von einem der angegebenen Benutzer oder Gruppen erstellt wurden (durch Kommas getrennt)"
       latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
       latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
@@ -3093,6 +3123,7 @@ de:
     wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
     reserved_username: "Der Benutzername ist nicht erlaubt."
     missing_user_field: "Du hast nicht alle erforderlichen Benutzerfelder ausgefüllt"
+    missing_username: "Bitte einen Benutzernamen eingeben"
     missing_full_name: "Bitte gib deinen vollständigen Namen ein"
     auth_complete: "Authentifizierung ist abgeschlossen."
     click_to_continue: "Klicke hier, um fortzufahren."
@@ -4588,7 +4619,7 @@ de:
         Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} genehmigt.
 
         Du kannst dein neues Konto nun verwenden, indem du dich hier anmeldest:
-        %{base_url}
+        %{login_url}
 
         Wenn sich der oben stehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Browsers einzufügen.
 
@@ -5390,6 +5421,10 @@ de:
   performance_report:
     initial_post_raw: Dieses Thema enthält tägliche Leistungsberichte für deine Website.
     initial_topic_title: Berichte zur Website-Leistung
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Eintrag bereit."
+      other: "Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Einträgen bereit."
   tags:
     title: "Schlagwörter"
     groups:
@@ -5683,8 +5718,6 @@ de:
         complete: "Beitrag ausgeblendet, Benutzer wurde benachrichtigt."
       agree_and_edit:
         title: "Beitrag bearbeiten"
-        description: "Stimme der Meldung zu und öffne ein Editorfenster, um den Beitrag zu bearbeiten."
-        complete: "Meldung bestätigt, du kannst den Beitrag jetzt bearbeiten."
       delete:
         title: "Löschen"
         complete: "Beitrag gelöscht."
@@ -5710,6 +5743,9 @@ de:
         title: "Beitrag wiederherstellen"
         description: "Der Meldung widersprechen und den Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt."
+      disagree_and_keep_deleted:
+        title: "Beitrag gelöscht lassen"
+        complete: "Beitrag gelöscht gelassen."
       disagree_bundle:
         title: "Nein"
       disagree:
@@ -5793,30 +5829,6 @@ de:
       approve_and_unhide:
         title: "Ja"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
-      post_actions:
-        bundle_title: "Was willst du mit dem Beitrag machen?"
-      delete_post:
-        title: "Beitrag löschen"
-        description: "Diesen Beitrag löschen"
-        complete: "Beitrag gelöscht"
-      hide_post:
-        title: "Beitrag ausblenden"
-        description: "Diesen Beitrag vor der Öffentlichkeit verbergen"
-        complete: "Beitrag ausgeblendet"
-      unhide_post:
-        title: "Beitrag sichtbar machen"
-        description: "Diesen Beitrag für alle Benutzer sichtbar machen"
-        complete: "Beitrag sichtbar gemacht"
-      restore_post:
-        title: "Beitrag wiederherstellen"
-        description: "Diesen gelöschten Beitrag wiederherstellen"
-        complete: "Beitrag wiederhergestellt"
-      edit_post:
-        title: "Beitrag bearbeiten"
-        description: "Den Inhalt dieses Beitrags bearbeiten"
-        complete: "Beitrag bearbeitet"
-      user_actions:
-        bundle_title: "Was willst du mit dem Benutzer machen?"
       silence_user:
         title: "Benutzer stummschalten"
         complete: "Benutzer stummgeschaltet"

@@ -3,5 +3,5 @@
 Fabricator(:published_page) do
   topic
   slug "published-page-test-#{SecureRandom.hex}"
-  public false
+  public false # rubocop:disable Style/AccessModifierDeclarations
 end

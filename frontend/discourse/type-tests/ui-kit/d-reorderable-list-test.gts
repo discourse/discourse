@@ -59,10 +59,10 @@ const Test = <template>
 
   {{! Manual placement yields the pre-wired controls on the same block param }}
   <DReorderableList
+    @controls="manual"
     @items={{sections}}
     @key="id"
     @label={{label}}
-    @controls="manual"
     @onMove={{applyMove}}
     @onRemove={{removeSection}}
   >
@@ -78,14 +78,14 @@ const Test = <template>
 
   {{! The optional blocks, and the shell arguments that retag the elements }}
   <DReorderableList
+    class="styled"
+    @allowCreate={{true}}
     @items={{sections}}
+    @itemTag="tr"
     @key="id"
     @label={{label}}
     @onMove={{applyMove}}
     @tag="tbody"
-    @itemTag="tr"
-    @allowCreate={{true}}
-    class="styled"
   >
     <:hint>Drag to reorder</:hint>
     <:header>Sections</:header>
@@ -99,11 +99,11 @@ const Test = <template>
   <DReorderableListGroup @onMove={{applyMove}} as |groupApi|>
     <DReorderableList
       @group={{groupApi}}
-      @listId="primary"
-      @listLabel="Primary"
       @items={{sections}}
       @key="id"
       @label={{label}}
+      @listId="primary"
+      @listLabel="Primary"
     >
       <:row as |section|>
         <span>{{section.name}}</span>
@@ -114,10 +114,10 @@ const Test = <template>
   {{! A group API obtained elsewhere satisfies the same argument }}
   <DReorderableList
     @group={{group}}
-    @listId="secondary"
     @items={{sections}}
     @key="id"
     @label={{label}}
+    @listId="secondary"
   >
     <:row as |section|>
       <span>{{section.name}}</span>

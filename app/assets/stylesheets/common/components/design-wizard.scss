@@ -806,6 +806,7 @@ $dw-button-default-border: #d3d3d3;
   &__actions {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--space-2);
     padding-block-start: var(--space-4);
     border-block-start: 1px solid var(--content-border-color);

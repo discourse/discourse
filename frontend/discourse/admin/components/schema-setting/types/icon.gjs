@@ -12,13 +12,6 @@ export default class SchemaSettingTypeIcon extends Component {
   @tracked value = this.args.value;
   required = this.args.spec.required;
 
-  @action
-  onChange(newValue) {
-    this.touched = true;
-    this.value = newValue;
-    this.args.onChange(newValue);
-  }
-
   get validationErrorMessage() {
     if (!this.touched) {
       return;
@@ -29,13 +22,20 @@ export default class SchemaSettingTypeIcon extends Component {
     }
   }
 
+  @action
+  onChange(newValue) {
+    this.touched = true;
+    this.value = newValue;
+    this.args.onChange(newValue);
+  }
+
   <template>
     <DIconGridPicker
-      @value={{this.value}}
-      @onChange={{this.onChange}}
       @allowClear={{not this.required}}
+      @onChange={{this.onChange}}
       @showCaret={{true}}
       @showSelectedName={{true}}
+      @value={{this.value}}
     />
 
     <div class="schema-field__input-supporting-text">

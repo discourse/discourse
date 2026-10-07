@@ -6,6 +6,19 @@ RSpec.describe Stat do
       expect(Stat.all_stats.keys).to include(:topics_30_days, :likes_30_days)
     end
 
+    it "groups the onboarding stats under their stat type" do
+      expect(Stat.all_stats[:onboarding].keys).to include(
+        :steps_completed,
+        :panel_completed,
+        :panel_dismissed,
+        :minutes_to_select_theme,
+      )
+    end
+
+    it "keeps the onboarding stats out of the public API stats" do
+      expect(Stat.api_stats.keys).not_to include(:onboarding)
+    end
+
     context "when display_eu_visitor_stats is enabled" do
       before { SiteSetting.display_eu_visitor_stats = true }
 

@@ -18,6 +18,7 @@ class Tag < ActiveRecord::Base
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
   validates :description, length: { maximum: 1000 }
+  validates :locale, length: { maximum: 20 }
 
   before_validation :ensure_slug
 
@@ -71,6 +72,7 @@ class Tag < ActiveRecord::Base
 
   before_save :cook_description
 
+  after_update :enqueue_tag_hashtag_remap, if: :saved_change_to_name?
   after_save :index_search
   after_save :update_synonym_associations
 
@@ -185,7 +187,12 @@ class Tag < ActiveRecord::Base
       tag = tags_by_id[row.tag_id]
       next unless tag
 
-      name = tag.get_localization&.name || tag.name
+      name =
+        if ContentLocalization.show_translated_tag?(tag, guardian)
+          tag.get_localization&.name || tag.name
+        else
+          tag.name
+        end
       slug = row.tag_slug.presence || "#{row.tag_id}-tag"
       { id: tag.id, name:, slug: }
     end
@@ -321,11 +328,11 @@ class Tag < ActiveRecord::Base
     self.slug ||= ""
     return if name.blank?
 
-    if self.slug.present? && will_save_change_to_slug? && slug != slugified_custom_slug
+    if slug.present? && will_save_change_to_slug? && slug != slugified_custom_slug
       errors.add(:slug, :invalid)
-    elsif self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
+    elsif slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
       self.slug = Slug.for(name, "")
-      self.slug = "" if self.slug.blank? || duplicate_slug?
+      self.slug = "" if slug.blank? || duplicate_slug?
     end
   end
 
@@ -342,6 +349,13 @@ class Tag < ActiveRecord::Base
 
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(name.strip.downcase)
+  end
+
+  def enqueue_tag_hashtag_remap
+    old_ref = name_before_last_save
+    return if old_ref.blank? || old_ref.casecmp?(name)
+
+    HashtagRemapper.enqueue([{ type: TagHashtagDataSource.type, id:, old_ref: }])
   end
 end
 

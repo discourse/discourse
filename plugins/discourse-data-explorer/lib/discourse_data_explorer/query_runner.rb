@@ -16,17 +16,17 @@ module DiscourseDataExplorer
         ResultFormatConverter.convert(:json, result, query_params:, explain:, current_user:)
 
       if query.id.present? && cacheable?(query, explain:) && default_limit?(limit)
-        cache_key_params = resolve_params(query, raw_params)
-        QueryResultCache.write(query.id, cache_key_params, result_json)
+        cache_key_params = resolve_params(query, query_params)
+        QueryResultCache.write(query.id, current_user, cache_key_params, result_json)
       end
 
       result_json
     end
 
-    def self.cached_result(query, raw_params, max_age: nil)
+    def self.cached_result(query, raw_params, current_user:, max_age: nil)
       return nil unless cacheable?(query)
-      params_hash = resolve_params(query, raw_params)
-      QueryResultCache.read(query.id, params_hash, max_age:)&.deep_symbolize_keys
+      params_hash = resolve_params(query, parse_params(raw_params))
+      QueryResultCache.read(query.id, current_user, params_hash, max_age:)&.deep_symbolize_keys
     rescue MultiJson::ParseError
       nil
     end
@@ -43,8 +43,7 @@ module DiscourseDataExplorer
       limit.nil? || limit == SiteSetting.data_explorer_query_result_limit
     end
 
-    def self.resolve_params(query, raw_params)
-      parsed = parse_params(raw_params)
+    def self.resolve_params(query, parsed)
       if parsed.present?
         user_param_ids = query.params.reject(&:internal?).map(&:identifier)
         parsed.slice(*user_param_ids)

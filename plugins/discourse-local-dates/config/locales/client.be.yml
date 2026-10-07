@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 be:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          save: Захаваць

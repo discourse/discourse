@@ -48,6 +48,29 @@ RSpec.describe "React to message" do
     end
   end
 
+  context "when emojis are disabled" do
+    before do
+      SiteSetting.enable_emoji = false
+      Chat::MessageReactor.new(other_user, category_channel_1).react!(
+        message_id: message_1.id,
+        react_action: :add,
+        emoji: "woman_detective",
+      )
+    end
+
+    it "hides existing reactions and the ways to add one" do
+      sign_in(current_user)
+      chat.visit_channel(category_channel_1)
+
+      expect(channel).to have_no_reactions(message_1)
+
+      message = channel.hover_message(message_1)
+      expect(message).to have_css(".chat-message-actions")
+      expect(message).to have_no_css(".chat-message-actions .react-btn")
+      expect(message).to have_no_css(".chat-message-actions .chat-message-reaction")
+    end
+  end
+
   context "when current user reacts" do
     let!(:reaction_1) do
       Chat::MessageReactor.new(other_user, category_channel_1).react!(

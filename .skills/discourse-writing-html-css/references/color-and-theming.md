@@ -101,3 +101,10 @@ these to restyle every button of a variant without touching `.btn` selectors.
 `--d-sidebar-animation-time`/`-ease`, etc. The admin layout's sidebar adds `--d-sidebar-admin-*`
 (e.g. `--d-sidebar-admin-background`) in `admin/sidebar.scss`. Override these to retheme the
 sidebar in either context without overriding its internal selectors.
+
+## Renaming variables
+
+From time-to-time, variables may need to be renamed in core. To avoid breaking existing themes and plugins,
+Discourse will automatically rewrite old variable names to new ones. A list of renames is maintained in
+`stylesheets/variable-renames.json`, and is applied when CSS is compiled. This list also powers
+a stylelint rule which will automatically rewrite old names to new names in source code.

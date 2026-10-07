@@ -12,27 +12,29 @@ module Migrations
           INSERT INTO embed_hashtags (
             hashtag_type,
             name,
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,
             target_id
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_hashtags` record in the IntermediateDB.
         #
-        # @param hashtag_type   [Integer, nil]
+        # @param hashtag_type        [Integer, nil]
         #   Any constant from HashtagType (e.g. HashtagType::CATEGORY)
-        # @param name           [String]
-        # @param owner_id       [Integer, String]
-        # @param owner_type     [Integer]
+        # @param name                [String]
+        # @param original_markdown   [String, nil]
+        # @param owner_id            [Integer, String]
+        # @param owner_type          [Integer]
         #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder    [String]
-        # @param target_id      [Integer, String, nil]
+        # @param placeholder         [String]
+        # @param target_id           [Integer, String, nil]
         #
         # @return [void]
         #
@@ -41,6 +43,7 @@ module Migrations
         def self.create(
           hashtag_type: nil,
           name:,
+          original_markdown: nil,
           owner_id:,
           owner_type:,
           placeholder:,
@@ -50,6 +53,7 @@ module Migrations
             SQL,
             hashtag_type,
             name,
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,

@@ -25,9 +25,6 @@ export default class ChatNavbarThreadsListButton extends Component {
   <template>
     {{#if this.showThreadsListButton}}
       <LinkTo
-        @route="chat.channel.threads"
-        @models={{@channel.routeModels}}
-        title={{this.threadsListLabel}}
         class={{dConcatClass
           "c-navbar__threads-list-button"
           "btn"
@@ -35,6 +32,9 @@ export default class ChatNavbarThreadsListButton extends Component {
           "btn-transparent"
           (if @channel.threadsManager.unreadThreadCount "has-unreads")
         }}
+        title={{this.threadsListLabel}}
+        @models={{@channel.routeModels}}
+        @route="chat.channel.threads"
       >
         {{dIcon "discourse-threads"}}
         <ThreadHeaderUnreadIndicator @channel={{@channel}} />

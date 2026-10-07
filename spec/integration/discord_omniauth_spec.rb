@@ -36,15 +36,16 @@ describe "Discord OAuth2" do
   end
 
   before do
-    SiteSetting.enable_discord_logins = true
     SiteSetting.discord_client_id = client_id
     SiteSetting.discord_secret = client_secret
+    SiteSetting.enable_discord_logins = true
 
     stub_request(:post, "https://discord.com/api/oauth2/token").with(
+      headers: {
+        "Authorization" => "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}",
+      },
       body:
         hash_including(
-          "client_id" => client_id,
-          "client_secret" => client_secret,
           "code" => temp_code,
           "grant_type" => "authorization_code",
           "redirect_uri" => "http://test.localhost/auth/discord/callback",

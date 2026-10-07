@@ -91,9 +91,9 @@ export default class ChatMessageActionsMobile extends Component {
   <template>
     {{#if (and this.site.mobileView this.chat.activeMessage.model.persisted)}}
       <DModal
+        class="chat-message-actions"
         @closeModal={{@closeModal}}
         @headerClass="hidden"
-        class="chat-message-actions"
         {{didInsert this.vibrate}}
       >
         <:body>
@@ -101,12 +101,12 @@ export default class ChatMessageActionsMobile extends Component {
             <div class="selected-message">
               <ChatUserAvatar @user={{this.message.user}} />
               <span
-                {{on "touchstart" this.expandReply passive=true}}
-                role="button"
                 class={{dConcatClass
                   "selected-message-reply"
                   (if this.hasExpandedReply "is-expanded")
                 }}
+                role="button"
+                {{on "touchstart" this.expandReply passive=true}}
               >
                 {{this.message.message}}
               </span>
@@ -117,10 +117,10 @@ export default class ChatMessageActionsMobile extends Component {
             {{#each this.messageInteractor.secondaryActions as |button|}}
               <li class="chat-message-action-item" data-id={{button.id}}>
                 <DButton
-                  @translatedLabel={{button.name}}
-                  @icon={{button.icon}}
-                  @action={{fn this.actAndCloseMenu button.id}}
                   class="chat-message-action"
+                  @action={{fn this.actAndCloseMenu button.id}}
+                  @icon={{button.icon}}
+                  @translatedLabel={{button.name}}
                 />
               </li>
             {{/each}}
@@ -136,26 +136,26 @@ export default class ChatMessageActionsMobile extends Component {
                   as |reaction|
                 }}
                   <ChatMessageReaction
-                    @reaction={{reaction}}
-                    @onReaction={{this.react}}
                     @message={{this.message}}
+                    @onReaction={{this.react}}
+                    @reaction={{reaction}}
                     @showCount={{false}}
                   />
                 {{/each}}
 
                 <DButton
-                  @icon="discourse-emojis"
                   class="btn-flat react-btn"
                   @action={{this.openEmojiPicker}}
                   @forwardEvent={{true}}
+                  @icon="discourse-emojis"
                 />
               {{/if}}
 
               {{#if this.messageInteractor.canBookmark}}
                 <DButton
-                  @action={{fn this.actAndCloseMenu "toggleBookmark"}}
-                  data-id="bookmark"
                   class="btn-flat bookmark-btn"
+                  data-id="bookmark"
+                  @action={{fn this.actAndCloseMenu "toggleBookmark"}}
                 >
                   <BookmarkIcon @bookmark={{this.message.bookmark}} />
                 </DButton>
@@ -163,11 +163,11 @@ export default class ChatMessageActionsMobile extends Component {
 
               {{#if this.messageInteractor.canReply}}
                 <DButton
+                  class="chat-message-action reply-btn btn-flat"
+                  data-id="reply"
                   @action={{fn this.actAndCloseMenu "reply"}}
                   @icon="reply"
                   @title="chat.reply"
-                  data-id="reply"
-                  class="chat-message-action reply-btn btn-flat"
                 />
               {{/if}}
             </div>

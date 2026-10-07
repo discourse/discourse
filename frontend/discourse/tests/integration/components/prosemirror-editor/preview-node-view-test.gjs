@@ -193,6 +193,24 @@ module(
       );
     });
 
+    test("keeps a long source line inside the block", async function (assert) {
+      const [editorClass] = await setupRichEditor(assert, "");
+      await insertBlock(editorClass.view, "x".repeat(400));
+      await toggleSource(editorClass.view);
+
+      const block = document.querySelector(".composer-preview-node");
+      const source = document.querySelector(".composer-preview-node__source");
+
+      assert.true(
+        source.clientWidth <= block.clientWidth,
+        "the source face stays within the block rather than widening it"
+      );
+      assert.true(
+        block.clientWidth <= block.parentElement.clientWidth,
+        "so the block stays within the editor"
+      );
+    });
+
     test("renders again when the source changes under a shown preview", async function (assert) {
       const [editorClass] = await setupRichEditor(assert, "");
       await insertBlock(editorClass.view, "before");

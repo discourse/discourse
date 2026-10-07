@@ -38,12 +38,12 @@ export default class ReorderableListTogglesExample extends Component {
 
   <template>
     <DReorderableList
+      class="styleguide-reorderable-list"
       @items={{this.items}}
       @key="id"
       @label={{this.itemLabel}}
       @movable={{this.isEnabled}}
       @onMove={{this.applyMove}}
-      class="styleguide-reorderable-list"
     >
       <:row as |item|>
         <span

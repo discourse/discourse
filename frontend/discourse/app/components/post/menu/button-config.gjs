@@ -39,6 +39,14 @@ export default class PostMenuButtonConfig {
     return this.#apiAdded;
   }
 
+  get key() {
+    return this.#key;
+  }
+
+  get position() {
+    return this.#position;
+  }
+
   @bind
   hidden(args) {
     return (
@@ -67,14 +75,6 @@ export default class PostMenuButtonConfig {
       args,
       defaultValue: false,
     });
-  }
-
-  get key() {
-    return this.#key;
-  }
-
-  get position() {
-    return this.#position;
   }
 
   @bind

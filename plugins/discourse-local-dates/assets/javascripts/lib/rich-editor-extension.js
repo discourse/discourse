@@ -1,5 +1,8 @@
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import formatLocalDate from "./format-local-date";
+import createLocalDateNodeView, {
+  focusEditButtonPlugin,
+} from "./local-date-node-view";
 
 function wrapDateRangeSpans(element) {
   const dateSpans = element.querySelectorAll(
@@ -98,6 +101,11 @@ function buildFormatOptions(nodeAttrs, includeRecurring = false) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: {
+    local_date: createLocalDateNodeView,
+    local_date_range: createLocalDateNodeView,
+  },
+
   nodeSpec: {
     local_date: {
       attrs: {
@@ -234,6 +242,9 @@ const extension = {
       },
     },
   },
+
+  plugins: focusEditButtonPlugin,
+
   parse: {
     span_open(state, token, tokens, i) {
       if (token.attrGet("class") !== "discourse-local-date") {

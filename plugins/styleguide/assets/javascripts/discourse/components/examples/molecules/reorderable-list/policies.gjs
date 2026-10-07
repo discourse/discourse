@@ -30,6 +30,7 @@ export default class ReorderableListPoliciesExample extends Component {
 
   <template>
     <DReorderableList
+      class="styleguide-reorderable-list"
       @items={{this.items}}
       @key="id"
       @label={{this.itemLabel}}
@@ -37,7 +38,6 @@ export default class ReorderableListPoliciesExample extends Component {
       @onMove={{this.applyMove}}
       @onRemove={{this.remove}}
       @removable={{this.removable}}
-      class="styleguide-reorderable-list"
     >
       <:row as |item|>
         <span class="styleguide-reorderable-list__label">{{item.name}}</span>

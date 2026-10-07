@@ -7,22 +7,27 @@ RSpec.describe Groups::Create do
     let(:attributes) { {} }
 
     it { is_expected.to validate_presence_of :name }
+
     it do
       is_expected.to validate_inclusion_of(:mentionable_level).in_array(Group::ALIAS_LEVELS.values)
     end
+
     it do
       is_expected.to validate_inclusion_of(:messageable_level).in_array(Group::ALIAS_LEVELS.values)
     end
+
     it do
       is_expected.to validate_inclusion_of(:visibility_level).in_array(
         Group.visibility_levels.values,
       )
     end
+
     it do
       is_expected.to validate_inclusion_of(:members_visibility_level).in_array(
         Group.visibility_levels.values,
       )
     end
+
     it do
       is_expected.to validate_inclusion_of(:default_notification_level).in_array(
         GroupUser.notification_levels.values,
@@ -126,6 +131,7 @@ RSpec.describe Groups::Create do
       {
         name: "builders",
         title: "Builders",
+        full_name: "Builders",
         usernames: [member_1.username, member_2.username].join(","),
         owner_usernames: [admin.username].join(","),
       }
@@ -171,6 +177,20 @@ RSpec.describe Groups::Create do
 
       it "logs group history" do
         expect { result }.to change { GroupHistory.count }.by(4)
+      end
+
+      it "logs group creation in staff action log" do
+        result
+        expect(
+          UserHistory.where(action: UserHistory.actions[:create_group]).find_by(
+            acting_user_id: admin.id,
+          ),
+        ).to have_attributes(
+          acting_user_id: admin.id,
+          details: ["name: #{group.name}", "full_name: #{group.full_name}", "id: #{group.id}"].join(
+            ", ",
+          ),
+        )
       end
 
       context "when guardian can associate groups" do

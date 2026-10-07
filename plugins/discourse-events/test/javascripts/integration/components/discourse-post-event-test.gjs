@@ -53,6 +53,42 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
+  test("lists additional event hosts in a menu", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        hosts: [
+          { id: 6, username: "alex" },
+          { id: 7, username: "blake" },
+          { id: 8, username: "casey" },
+          { id: 9, username: "drew" },
+        ],
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-hosts");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 2 }, "shows the first two hosts initially");
+    assert.dom(".event-hosts__toggle").hasText("and 2 others");
+
+    await click(".event-hosts__toggle");
+
+    assert
+      .dom(".event-host")
+      .exists({ count: 2 }, "keeps the row compact while the menu is open");
+    assert.dom(".event-hosts-menu__title").hasText("4 hosts");
+    assert
+      .dom(".event-hosts-menu__host")
+      .exists({ count: 4 }, "lists every host in the menu");
+    assert
+      .dom(".event-hosts-menu__host[data-user-card='drew']")
+      .hasText("drew");
+  });
+
   test("interpolates the ordinal and weekday into the monthly recurrence label", async function (assert) {
     stubApi.call(this, buildEvent({ recurrence: "every_month" }));
 
@@ -183,6 +219,29 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
         "https://ti.to/discourse/meetup",
         "a venue plus a registration page is a legitimate pairing"
       );
+  });
+
+  test("shows a chat icon for events with a channel", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        channel: {
+          id: 2,
+          title: "Product team chat",
+          slug: "product-team-chat",
+          chatable_type: "Category",
+          chatable: { color: "0088cc", read_restricted: false },
+        },
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-chat-channel");
+
+    assert
+      .dom(".event-chat-channel > .d-icon-comment")
+      .exists("shows the chat icon beside the channel link");
   });
 
   test("hides the url row when it carries the zoom livestream", async function (assert) {

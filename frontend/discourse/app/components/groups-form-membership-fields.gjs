@@ -18,11 +18,11 @@ import { i18n } from "discourse-i18n";
 const JoinMethodOption = <template>
   <label class="radio">
     <DRadioButton
-      @name="join_method"
-      @value={{@value}}
-      @selection={{@selection}}
-      @onChange={{@onChange}}
       class={{@class}}
+      @name="join_method"
+      @onChange={{@onChange}}
+      @selection={{@selection}}
+      @value={{@value}}
     />
 
     {{@label}}
@@ -205,28 +205,28 @@ export default class GroupsFormMembershipFields extends Component {
 
           {{#unless this.restrictToInviteOnly}}
             <JoinMethodOption
-              @value="free"
-              @label={{i18n "groups.manage.membership.join_method.free"}}
               @class="group-form-public-admission"
-              @selection={{this.joinMethod}}
+              @label={{i18n "groups.manage.membership.join_method.free"}}
               @onChange={{fn this.setJoinMethod "free"}}
+              @selection={{this.joinMethod}}
+              @value="free"
             />
 
             <JoinMethodOption
-              @value="request"
-              @label={{i18n "groups.manage.membership.join_method.request"}}
               @class="group-form-allow-membership-requests"
-              @selection={{this.joinMethod}}
+              @label={{i18n "groups.manage.membership.join_method.request"}}
               @onChange={{fn this.setJoinMethod "request"}}
+              @selection={{this.joinMethod}}
+              @value="request"
             />
           {{/unless}}
 
           <JoinMethodOption
-            @value="invite"
-            @label={{i18n "groups.manage.membership.join_method.invite"}}
             @class="group-form-invite-only"
-            @selection={{this.joinMethod}}
+            @label={{i18n "groups.manage.membership.join_method.invite"}}
             @onChange={{fn this.setJoinMethod "invite"}}
+            @selection={{this.joinMethod}}
+            @value="invite"
           />
 
           {{#if this.model.allow_membership_requests}}
@@ -236,15 +236,15 @@ export default class GroupsFormMembershipFields extends Component {
               </label>
 
               <DExpandingTextArea
+                class="group-form-membership-request-template input-xxlarge"
+                name="membership-request-template"
+                value={{this.model.membership_request_template}}
                 {{on
                   "input"
                   (withEventValue
                     (fn (mut this.model.membership_request_template))
                   )
                 }}
-                value={{this.model.membership_request_template}}
-                name="membership-request-template"
-                class="group-form-membership-request-template input-xxlarge"
               />
             </div>
           {{/if}}
@@ -252,9 +252,9 @@ export default class GroupsFormMembershipFields extends Component {
 
         <label class="group-form-public-exit-label">
           <Input
-            @type="checkbox"
             class="group-form-public-exit"
             @checked={{this.model.public_exit}}
+            @type="checkbox"
           />
 
           {{i18n "groups.public_exit"}}
@@ -266,13 +266,13 @@ export default class GroupsFormMembershipFields extends Component {
           </label>
 
           <ComboBox
-            @name="alias"
-            @valueProperty="value"
-            @value={{this.model.visibility_level}}
+            class="groups-form-visibility-level"
             @content={{this.groupVisibilityLevelOptions}}
+            @name="alias"
             @onChange={{fn (mut this.model.visibility_level)}}
             @options={{hash castInteger=true}}
-            class="groups-form-visibility-level"
+            @value={{this.model.visibility_level}}
+            @valueProperty="value"
           />
 
           <div class="control-instructions">
@@ -288,12 +288,12 @@ export default class GroupsFormMembershipFields extends Component {
           </label>
 
           <ComboBox
-            @name="alias"
-            @valueProperty="value"
-            @value={{this.membersVisibilityLevel}}
-            @content={{this.visibilityLevelOptions}}
-            @onChange={{fn (mut this.model.members_visibility_level)}}
             class="groups-form-members-visibility-level"
+            @content={{this.visibilityLevelOptions}}
+            @name="alias"
+            @onChange={{fn (mut this.model.members_visibility_level)}}
+            @value={{this.membersVisibilityLevel}}
+            @valueProperty="value"
           />
 
           {{#if this.membersVisibilityPrivate}}
@@ -319,15 +319,15 @@ export default class GroupsFormMembershipFields extends Component {
           </label>
 
           <ListSetting
-            @name="automatic_membership"
-            @value={{this.emailDomains}}
+            class="group-form-automatic-membership-automatic"
             @choices={{this.emailDomains}}
-            @settingName="name"
+            @name="automatic_membership"
             @nameProperty={{null}}
-            @valueProperty={{null}}
             @onChange={{this.onChangeEmailDomainsSetting}}
             @options={{hash allowAny=true}}
-            class="group-form-automatic-membership-automatic"
+            @settingName="name"
+            @value={{this.emailDomains}}
+            @valueProperty={{null}}
           />
 
           <div class="control-instructions">
@@ -344,22 +344,22 @@ export default class GroupsFormMembershipFields extends Component {
             </label>
 
             <ListSetting
-              @name="automatic_membership_associated_groups"
-              @value={{this.model.associatedGroupIds}}
-              @choices={{this.associatedGroups}}
-              @settingName="name"
-              @nameProperty="label"
-              @valueProperty="id"
-              @onChange={{fn (mut this.model.associated_group_ids)}}
               class="group-form-automatic-membership-associated-groups"
+              @choices={{this.associatedGroups}}
+              @name="automatic_membership_associated_groups"
+              @nameProperty="label"
+              @onChange={{fn (mut this.model.associated_group_ids)}}
+              @settingName="name"
+              @value={{this.model.associatedGroupIds}}
+              @valueProperty="id"
             />
           {{/if}}
         </div>
 
         <span>
           <PluginOutlet
-            @name="groups-form-membership-below-automatic"
             @connectorTagName="div"
+            @name="groups-form-membership-below-automatic"
             @outletArgs={{lazyHash model=this.model}}
           />
         </span>
@@ -373,18 +373,18 @@ export default class GroupsFormMembershipFields extends Component {
             }}</label>
 
           <ComboBox
-            @name="grant_trust_level"
-            @valueProperty="value"
-            @value={{this.groupTrustLevel}}
-            @content={{this.trustLevelOptions}}
-            @onChange={{fn (mut this.model.grant_trust_level)}}
             class="groups-form-grant-trust-level"
+            @content={{this.trustLevelOptions}}
+            @name="grant_trust_level"
+            @onChange={{fn (mut this.model.grant_trust_level)}}
+            @value={{this.groupTrustLevel}}
+            @valueProperty="value"
           />
           <label>
             <Input
-              @type="checkbox"
-              @checked={{this.model.primary_group}}
               class="groups-form-primary-group"
+              @checked={{this.model.primary_group}}
+              @type="checkbox"
             />
 
             {{i18n "admin.groups.manage.membership.primary_group"}}
@@ -397,9 +397,9 @@ export default class GroupsFormMembershipFields extends Component {
           </label>
 
           <Input
-            @value={{this.model.title}}
-            name="title"
             class="input-xxlarge"
+            name="title"
+            @value={{this.model.title}}
           />
 
           <div class="control-instructions">

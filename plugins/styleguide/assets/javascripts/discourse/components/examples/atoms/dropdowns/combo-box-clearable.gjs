@@ -21,11 +21,11 @@ export default class ComboBoxClearableExample extends Component {
 
   <template>
     <ComboBox
-      @content={{OPTIONS}}
       @clearable={{true}}
-      @value={{this.value}}
-      @options={{hash none="category.none"}}
+      @content={{OPTIONS}}
       @onChange={{this.onChange}}
+      @options={{hash none="category.none"}}
+      @value={{this.value}}
     />
   </template>
 }

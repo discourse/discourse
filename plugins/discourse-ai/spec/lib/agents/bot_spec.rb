@@ -1171,6 +1171,52 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(result[:error]).not_to include(secret_value)
     end
 
+    it "queues mandatory approval tools when require_approval is false" do
+      toggle_enabled_bots(bots: [fake])
+      Group.refresh_automatic_groups!
+      target_user = Fabricate(:user)
+      mandatory_approval_agent =
+        AiAgent.create!(
+          name: "MandatoryApprovalAgent",
+          system_prompt: "test",
+          description: "test",
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          require_approval: false,
+          tools: %w[SuspendUser SilenceUser ChangeSiteSetting],
+        )
+      agent_class = mandatory_approval_agent.class_instance
+      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
+      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      context = DiscourseAi::Agents::BotContext.new(user: admin)
+      tools = [
+        DiscourseAi::Agents::Tools::SuspendUser.new(
+          { username: target_user.username, duration_days: 3, reason: "Testing" },
+          bot_user: admin,
+          llm: bot.llm,
+          context: context,
+        ),
+        DiscourseAi::Agents::Tools::SilenceUser.new(
+          { username: target_user.username, duration_days: 3, reason: "Testing" },
+          bot_user: admin,
+          llm: bot.llm,
+          context: context,
+        ),
+        DiscourseAi::Agents::Tools::ChangeSiteSetting.new(
+          { setting_name: "min_post_length", value: "42", reason: "Testing" },
+          bot_user: admin,
+          llm: bot.llm,
+          context: context,
+        ),
+      ]
+
+      results = tools.map { |tool| bot.send(:invoke_tool, tool, context) { |*args| } }
+
+      expect(results).to all(include(status: "pending_approval"))
+      expect(target_user.reload).not_to be_suspended
+      expect(SiteSetting.min_post_length).not_to eq(42)
+      expect(ReviewableAiToolAction.count).to eq(3)
+    end
+
     it "executes immediately when require_approval is false" do
       toggle_enabled_bots(bots: [fake])
       Group.refresh_automatic_groups!

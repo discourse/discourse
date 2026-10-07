@@ -4,6 +4,10 @@ module DiscourseReactions
   class ReactionManager
     attr_reader :reaction_value, :previous_reaction_value
 
+    def self.reaction_value_for(user:, post:)
+      new(reaction_value: nil, user:, post:).previous_reaction_value
+    end
+
     def initialize(reaction_value:, user:, post:)
       @reaction_value = reaction_value
       @user = user
@@ -29,15 +33,19 @@ module DiscourseReactions
         raise Discourse::InvalidAccess
       end
 
-      ActiveRecord::Base.transaction do
-        @reaction = reaction_scope&.first_or_create
-        @reaction_user = reaction_user_scope
-        if @reaction_value == DiscourseReactions::Reaction.main_reaction_id
-          toggle_like
-        else
-          toggle_reaction
+      ActiveRecord::Base
+        .transaction do
+          @reaction = reaction_scope&.first_or_create
+          @reaction_user = reaction_user_scope
+          if @reaction_value == DiscourseReactions::Reaction.main_reaction_id
+            toggle_like
+          else
+            toggle_reaction
+          end
         end
-      end
+        .tap do
+          DiscourseEvent.trigger(:post_reaction_toggled, @post, @user, @previous_reaction_value)
+        end
     end
 
     private

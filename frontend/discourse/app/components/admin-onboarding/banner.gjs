@@ -50,37 +50,11 @@ const STEPS = [
       this.designWizard.start({ onComplete: this.#onComplete });
     }
   },
-  class InviteCollaborators extends OnboardingStep {
-    static name = "invite_collaborators";
-
-    @service appEvents;
-
-    icon = "paper-plane";
-
-    constructor() {
-      super(...arguments);
-      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    willDestroy() {
-      super.willDestroy(...arguments);
-      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    @action
-    performAction() {
-      showCreateInviteModal(this, {
-        model: { invites: trackedArray(), defaultRole: "admin" },
-      });
-    }
-  },
   class StartPosting extends OnboardingStep {
     static name = "start_posting";
 
-    @service composer;
     @service appEvents;
     @service modal;
-    @service siteSettings;
 
     icon = "comments";
 
@@ -106,8 +80,10 @@ const STEPS = [
       );
     }
 
-    completeStep() {
-      return this.markAsCompleted();
+    completeStep(_post, composer) {
+      return this.markAsCompleted({
+        topicOption: composer?.adminOnboardingTopicOption,
+      });
     }
 
     showStartPostingOptions() {
@@ -129,20 +105,33 @@ const STEPS = [
       });
     }
 
-    openTopic(topicKey) {
-      this.composer.openNewTopic({
-        title: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.title`
-        ),
-        body: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.body`
-        ),
-      });
-    }
-
     @action
     async performAction() {
       this.showStartPostingOptions();
+    }
+  },
+  class InviteCollaborators extends OnboardingStep {
+    static name = "invite_collaborators";
+
+    @service appEvents;
+
+    icon = "paper-plane";
+
+    constructor() {
+      super(...arguments);
+      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    willDestroy() {
+      super.willDestroy(...arguments);
+      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    @action
+    performAction() {
+      showCreateInviteModal(this, {
+        model: { invites: trackedArray(), defaultRole: "admin" },
+      });
     }
   },
 ];
@@ -181,11 +170,6 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
-  @action
-  markStepCompleted(name) {
-    this.completedStepNames.add(name);
-  }
-
   get shouldDisplay() {
     if (this.dismissed) {
       return false;
@@ -201,6 +185,11 @@ export default class AdminOnboardingBanner extends Component {
 
   get completedSteps() {
     return this.completedStepNames.size;
+  }
+
+  @action
+  markStepCompleted(name) {
+    this.completedStepNames.add(name);
   }
 
   @action
@@ -262,20 +251,20 @@ export default class AdminOnboardingBanner extends Component {
             </div>
             <div class="admin-onboarding-banner__header-actions">
               <DButton
+                class="btn no-text btn-transparent btn-minimize"
                 @action={{this.minimize}}
-                @icon={{if this.minimized "angle-down" "angle-up"}}
                 @ariaLabel={{if
                   this.minimized
                   "admin_onboarding_banner.expand"
                   "admin_onboarding_banner.collapse"
                 }}
-                class="btn no-text btn-transparent btn-minimize"
+                @icon={{if this.minimized "angle-down" "angle-up"}}
               />
               <DButton
-                @action={{this.endOnboarding}}
-                @icon="xmark"
-                @ariaLabel="admin_onboarding_banner.dismiss"
                 class="btn no-text btn-transparent btn-close"
+                @action={{this.endOnboarding}}
+                @ariaLabel="admin_onboarding_banner.dismiss"
+                @icon="xmark"
               />
             </div>
           </div>

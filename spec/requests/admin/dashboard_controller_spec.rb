@@ -36,7 +36,7 @@ RSpec.describe Admin::DashboardController do
       },
     ]
 
-    Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+    DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
   end
 
   describe "#index" do
@@ -187,8 +187,6 @@ RSpec.describe Admin::DashboardController do
       end
 
       context "with traffic_data" do
-        before { SiteSetting.persist_browser_pageview_events = false }
-
         let(:traffic_data) { section_payloads["traffic"]&.dig("data") }
 
         it "returns the site traffic payload for the selected dates" do
@@ -219,6 +217,12 @@ RSpec.describe Admin::DashboardController do
               },
               "logged_in_share" => {
                 "value" => 33,
+              },
+              "bounce_rate" => {
+                "value" => nil,
+              },
+              "average_session_duration_seconds" => {
+                "value" => nil,
               },
             },
             "pageview_series" => [
@@ -263,12 +267,23 @@ RSpec.describe Admin::DashboardController do
                 ],
               },
             ],
+            "top_countries" => {
+              "rows" => [],
+              "error" => nil,
+            },
+            "top_referrers" => {
+              "rows" => [],
+              "error" => nil,
+            },
+            "top_entry_urls" => {
+              "rows" => [],
+              "error" => nil,
+            },
           )
         end
 
         it "does not expose admin-only browser pageview cards to moderators" do
           SiteSetting.use_legacy_pageviews = false
-          SiteSetting.persist_browser_pageview_events = true
           configure_dashboard_sections(%w[traffic])
 
           country_code = "US"
@@ -287,7 +302,6 @@ RSpec.describe Admin::DashboardController do
               country_code: country_code,
               normalized_referrer: normalized_referrer,
               created_at: event_date,
-              source: "beacon",
             )
           end
 
@@ -981,6 +995,7 @@ RSpec.describe Admin::DashboardController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
       context "when there are no problems" do
         it "returns an empty array" do
           post "/admin/dashboard/problems.json"
@@ -1255,6 +1270,7 @@ RSpec.describe Admin::DashboardController do
     let(:fake_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "fake_source"
+
         def self.fetch_many(identifiers, guardian:, filters: {})
           identifiers.each_with_object({}) do |id, h|
             h[id.to_s] = { id: id.to_s, filters: filters }
@@ -1266,6 +1282,7 @@ RSpec.describe Admin::DashboardController do
     let(:raising_provider) do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "raising_source"
+
         def self.fetch_many(identifiers, guardian:, filters: {})
           identifiers.each_with_object({}) do |id, h|
             raise "boom" if id == "broken"
@@ -1419,9 +1436,7 @@ RSpec.describe Admin::DashboardController do
       freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
       SiteSetting.dashboard_improvements = true
       SiteSetting.improved_crawler_detection = true
-      SiteSetting.persist_browser_pageview_events = true
       SiteSetting.use_legacy_pageviews = false
-      BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
       Discourse.stubs(:current_hostname).returns("test.localhost")
       DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
       DiscourseIpInfo
@@ -1457,7 +1472,6 @@ RSpec.describe Admin::DashboardController do
           session_id: "admin-session",
           normalized_referrer: "search.example/results?q=discourse",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:00:00",
         )
       end
@@ -1474,7 +1488,6 @@ RSpec.describe Admin::DashboardController do
           session_id: "admin-session",
           normalized_referrer: "test.localhost/landing",
           normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:01:00",
         )
       end
@@ -1488,7 +1501,6 @@ RSpec.describe Admin::DashboardController do
           ip_address: "198.51.100.2",
           user_agent: "Mozilla/5.0 Firefox/126.0",
           session_id: "anonymous-session",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-11 10:00:00",
         )
       end
@@ -1571,6 +1583,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 3 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
                 { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
@@ -1665,7 +1678,6 @@ RSpec.describe Admin::DashboardController do
             url: "https://test.localhost/same-site-full-load",
             normalized_referrer: "test.localhost/previous-page",
             session_id: "same-site-full-load",
-            source: BrowserPageviewEvent::SOURCE_BEACON,
             created_at: "2026-05-11 11:00:00",
           )
 
@@ -1705,7 +1717,6 @@ RSpec.describe Admin::DashboardController do
           ip_address: "192.0.2.1",
           user_agent: chrome,
           session_id: "first-retained",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-02-15 09:00:00",
         )
         Fabricate(
@@ -1716,7 +1727,6 @@ RSpec.describe Admin::DashboardController do
           ip_address: "198.51.100.2",
           user_agent: firefox,
           session_id: "latest-retained",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:00:00",
         )
 
@@ -1775,6 +1785,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
                 { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
@@ -1794,7 +1805,6 @@ RSpec.describe Admin::DashboardController do
           asn: 64_496,
           ip_address: "192.0.2.1",
           user_agent: chrome,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: created_at,
         }
       end
@@ -1871,6 +1881,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "AS64496", "label" => "Example Network (AS64496)", "pageviews" => 2 },
               ],
               "browsers" => [{ "value" => "chrome", "label" => "Google Chrome", "pageviews" => 2 }],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
               ],
@@ -1881,7 +1892,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     context "when the selected date range exceeds retention and traffic reaches the cap" do
-      let(:event_attributes) { { asn: 64_496, source: BrowserPageviewEvent::SOURCE_BEACON } }
+      let(:event_attributes) { { asn: 64_496 } }
       let!(:first_retained) do
         Fabricate(
           :browser_pageview_event,
@@ -1996,6 +2007,7 @@ RSpec.describe Admin::DashboardController do
                 { "value" => "chrome", "label" => "Google Chrome", "pageviews" => 1 },
                 { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
               ],
+              "languages" => [{ "value" => "", "label" => "Unknown", "pageviews" => 2 }],
               "ip_addresses" => [
                 { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
                 { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
@@ -2325,6 +2337,7 @@ RSpec.describe Admin::DashboardController do
       Class.new(AdminDashboard::Reports::SourceProvider) do
         def self.source_name = "fake_source"
         def self.label = "Fake"
+
         def self.accessible_ids(identifiers, guardian:)
           identifiers.map(&:to_s).reject { |id| id == "forbidden" }.to_set
         end
@@ -2375,6 +2388,81 @@ RSpec.describe Admin::DashboardController do
         expect(rows).to eq([["new_a", 0], ["new_b", 1]])
       end
 
+      it "persists the row count and column span supplied per item, defaulting to 1 when omitted" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                { source: "fake_source", identifier: "a", rows: 3, cols: 2 },
+                { source: "fake_source", identifier: "b" },
+              ],
+            }
+
+        expect(response.status).to eq(204)
+        rows = AdminDashboardReport.order(:position).pluck(:identifier, :rows, :cols)
+        expect(rows).to eq([["a", 3, 2], ["b", 1, 1]])
+      end
+
+      it "persists a single-row card that spans the full width" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "a", rows: 1, cols: 2 }],
+            }
+
+        expect(response.status).to eq(204)
+        record = AdminDashboardReport.find_by(identifier: "a")
+        expect(record.rows).to eq(1)
+        expect(record.cols).to eq(2)
+      end
+
+      it "rejects an item with an out-of-range row count" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                {
+                  source: "fake_source",
+                  identifier: "a",
+                  rows: AdminDashboardReport::MAX_ROWS + 1,
+                },
+              ],
+            }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects an item with an out-of-range column count" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [
+                {
+                  source: "fake_source",
+                  identifier: "a",
+                  cols: AdminDashboardReport::MAX_COLS + 1,
+                },
+              ],
+            }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects a multi-row item that does not span the full width" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
+
+        put "/admin/dashboard/reports/layout.json",
+            params: {
+              items: [{ source: "fake_source", identifier: "a", rows: 2, cols: 1 }],
+            }
+
+        expect(response.status).to eq(400)
+      end
+
       it "accepts an empty layout (removes everything)" do
         DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin)
         AdminDashboardReport.create!(source: "fake_source", identifier: "y", position: 0)
@@ -2422,6 +2510,169 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.status).to eq(403)
         expect(AdminDashboardReport.count).to eq(0)
+      end
+    end
+  end
+
+  describe "#mount_report and #unmount_report" do
+    before { AdminDashboardReport.delete_all }
+
+    let(:fake_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "fake_source"
+        def self.label = "Fake"
+
+        def self.accessible_ids(identifiers, guardian:)
+          identifiers.map(&:to_s).reject { |id| id == "forbidden" }.to_set
+        end
+      end
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    before { DiscoursePluginRegistry.register_admin_dashboard_report_source(fake_provider, plugin) }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == fake_provider
+      end
+    end
+
+    context "when not signed in" do
+      it "denies access" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "a",
+             }
+        expect(response.status).to eq(404)
+
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "a",
+               }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "denies access" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "a",
+             }
+        expect(response.status).to eq(404)
+
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "a",
+               }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "appends the report after the existing layout" do
+        AdminDashboardReport.create!(source: "fake_source", identifier: "old", position: 4)
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "new",
+             }
+
+        expect(response.status).to eq(201)
+        expect(response.parsed_body).to include("source" => "fake_source", "identifier" => "new")
+        expect(AdminDashboardReport.order(:position).pluck(:identifier)).to eq(%w[old new])
+      end
+
+      it "is a no-op when the report is already mounted" do
+        AdminDashboardReport.create!(source: "fake_source", identifier: "a", position: 0)
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "a",
+             }
+
+        expect(response.status).to eq(201)
+        expect(AdminDashboardReport.count).to eq(1)
+      end
+
+      it "rejects a report the guardian cannot access" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "forbidden",
+             }
+
+        expect(response.status).to eq(403)
+        expect(AdminDashboardReport.count).to eq(0)
+      end
+
+      it "rejects a source with no registered provider" do
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "totally_unregistered",
+               identifier: "a",
+             }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects a missing identifier" do
+        post "/admin/dashboard/reports/mount.json", params: { source: "fake_source" }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "refuses to exceed VISIBLE_CAP" do
+        AdminDashboardReport::VISIBLE_CAP.times do |i|
+          AdminDashboardReport.create!(source: "fake_source", identifier: "id#{i}", position: i)
+        end
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "fake_source",
+               identifier: "one_too_many",
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("dashboard.reports.cap_reached", max: AdminDashboardReport::VISIBLE_CAP),
+        )
+        expect(AdminDashboardReport.count).to eq(AdminDashboardReport::VISIBLE_CAP)
+      end
+
+      it "removes only the named report" do
+        AdminDashboardReport.create!(source: "fake_source", identifier: "a", position: 0)
+        AdminDashboardReport.create!(source: "fake_source", identifier: "b", position: 1)
+
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "a",
+               }
+
+        expect(response.status).to eq(204)
+        expect(AdminDashboardReport.pluck(:identifier)).to eq(["b"])
+      end
+
+      it "succeeds when the report is not mounted" do
+        delete "/admin/dashboard/reports/mount.json",
+               params: {
+                 source: "fake_source",
+                 identifier: "missing",
+               }
+
+        expect(response.status).to eq(204)
       end
     end
   end

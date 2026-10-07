@@ -26,6 +26,22 @@ export default class LegacyDiscobotDiscoveries extends Service {
 
   discoveryTimeout = null;
 
+  get showDiscoveryTitle() {
+    return (
+      this.discovery.length > 0 ||
+      this.loadingDiscoveries ||
+      this.discoveryTimedOut
+    );
+  }
+
+  get isStreaming() {
+    return this.smoothStreamer.isStreaming;
+  }
+
+  get streamedText() {
+    return this.smoothStreamer?.renderedText;
+  }
+
   async onDiscoveryUpdate(update) {
     if (this.discoveryTimeout) {
       cancel(this.discoveryTimeout);
@@ -46,22 +62,6 @@ export default class LegacyDiscobotDiscoveries extends Service {
     this.discoveryTimedOut = false;
     this.modelUsed = "";
     this.smoothStreamer.resetStreaming();
-  }
-
-  get showDiscoveryTitle() {
-    return (
-      this.discovery.length > 0 ||
-      this.loadingDiscoveries ||
-      this.discoveryTimedOut
-    );
-  }
-
-  get isStreaming() {
-    return this.smoothStreamer.isStreaming;
-  }
-
-  get streamedText() {
-    return this.smoothStreamer?.renderedText;
   }
 
   @action

@@ -10,7 +10,7 @@ RSpec.describe Topic do
     context "when uncategorized" do
       let(:category) { nil }
 
-      it "should not schedule the topic to auto-close" do
+      it "does not schedule the topic to auto-close" do
         expect(topic.public_topic_timer).to eq(nil)
         expect(job_klass.jobs).to eq([])
       end
@@ -19,7 +19,7 @@ RSpec.describe Topic do
     context "with category without default auto-close" do
       let(:category) { Fabricate(:category, auto_close_hours: nil) }
 
-      it "should not schedule the topic to auto-close" do
+      it "does not schedule the topic to auto-close" do
         expect(topic.public_topic_timer).to eq(nil)
         expect(job_klass.jobs).to eq([])
       end
@@ -31,7 +31,7 @@ RSpec.describe Topic do
       context "when category has a default auto-close" do
         let(:category) { Fabricate(:category, auto_close_hours: 2.0) }
 
-        it "should schedule the topic to auto-close" do
+        it "schedules the topic to auto-close" do
           topic
 
           topic_status_update = TopicTimer.last
@@ -44,7 +44,7 @@ RSpec.describe Topic do
           let(:admin) { Fabricate(:admin) }
           let(:staff_topic) { Fabricate(:topic, user: admin, category: category) }
 
-          it "should schedule the topic to auto-close" do
+          it "schedules the topic to auto-close" do
             staff_topic
 
             topic_status_update = TopicTimer.last
@@ -55,7 +55,7 @@ RSpec.describe Topic do
           end
 
           context "when topic is closed manually" do
-            it "should remove the schedule to auto-close the topic" do
+            it "removes the topic's auto-close schedule" do
               topic_timer_id = staff_topic.public_topic_timer.id
 
               staff_topic.update_status("closed", true, admin)
@@ -71,7 +71,7 @@ RSpec.describe Topic do
           let(:regular_user) { Fabricate(:user) }
           let(:regular_user_topic) { Fabricate(:topic, user: regular_user, category: category) }
 
-          it "should schedule the topic to auto-close" do
+          it "schedules the topic to auto-close" do
             regular_user_topic
 
             topic_status_update = TopicTimer.last

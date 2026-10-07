@@ -41,18 +41,18 @@ export default class HandlePart extends Component<HandlePartSignature> {
 
   <template>
     <DButton
-      {{@register @row.key}}
-      @icon="grip-vertical"
-      @action={{this.open}}
-      @translatedAriaLabel={{@row.handleLabel}}
-      @translatedTitle={{@row.handleLabel}}
-      @ariaExpanded={{if @row.hasDestinations @isOpen}}
-      aria-haspopup={{if @row.hasDestinations "menu"}}
       aria-describedby={{@row.descriptionId}}
+      aria-haspopup={{if @row.hasDestinations "menu"}}
       class="btn-flat d-reorderable-list__handle"
       ...attributes
+      @action={{this.open}}
+      @ariaExpanded={{if @row.hasDestinations @isOpen}}
+      @icon="grip-vertical"
+      @translatedAriaLabel={{@row.handleLabel}}
+      @translatedTitle={{@row.handleLabel}}
+      {{@register @row.key}}
     >
-      <span id={{@row.descriptionId}} class="sr-only">
+      <span class="sr-only" id={{@row.descriptionId}}>
         {{if
           @row.hasDestinations
           (i18n "reorder.handle_description")

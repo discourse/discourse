@@ -5,3 +5,20 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "hCaptcha 的 `site_key` 或 `secret_key` 設定有問題"
+      recaptcha_configuration: "reCAPTCHA 的 `site_key` 或 `secret_key` 設定有問題"
+  admin:
+    site_settings:
+      categories:
+        discourse_captcha: "CAPTCHA 外掛程式"
+  site_settings:
+    discourse_captcha_enabled: "為新使用者註冊啟用 CAPTCHA 驗證。需要在下方設定 hCaptcha 或 reCAPTCHA。"
+    discourse_captcha_provider: "選擇 CAPTCHA 服務供應商。你必須擁有所選服務供應商的帳戶。"
+    hcaptcha_site_key: "來自你的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帳戶的 hCaptcha 網站金鑰"
+    hcaptcha_secret_key: "來自你的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帳戶的 hCaptcha 密鑰"
+    recaptcha_site_key: "來自你的 <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帳戶的 reCAPTCHA 網站金鑰"
+    recaptcha_secret_key: "來自你的 <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帳戶的 reCAPTCHA 密鑰"
+  captcha_verification_failed: "CAPTCHA 驗證失敗"
+  captcha_not_configured: "CAPTCHA 已啟用，但未正確設定。請聯絡網站管理員。"

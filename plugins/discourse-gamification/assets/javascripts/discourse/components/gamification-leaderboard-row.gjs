@@ -18,8 +18,8 @@ export default class GamificationLeaderboardRow extends Component {
       <div class="user__rank">{{this.rank.position}}</div>
       <div
         class="user__avatar clickable"
-        role="button"
         data-user-card={{this.rank.username}}
+        role="button"
       >
         {{dAvatar this.rank imageSize="large"}}
         <span class="user__name">

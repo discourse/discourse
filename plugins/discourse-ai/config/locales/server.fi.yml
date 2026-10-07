@@ -62,7 +62,6 @@ fi:
     ai_helper_automatic_chat_thread_title: "Aseta chat-ketjujen otsikot automaattisesti ketjun sisällön perusteella."
     post_ai_helper_allowed_groups: "Käyttäjäryhmät, joilla on oikeus käyttää tekoälyavustajan ominaisuuksia viesteissä"
     ai_embeddings_selected_model: "Käytä valittua mallia upotusten luomiseen."
-    ai_embeddings_generate_for_pms: "Luo upotuksia yksityisviesteille."
     ai_embeddings_semantic_related_topics_enabled: "Käytä semanttista hakua aiheeseen liittyviä ketjuja varten."
     ai_embeddings_semantic_related_topics: "Aiheeseen liittyvien ketjujen osiossa näytettävien ketjujen enimmäismäärä."
     ai_embeddings_backfill_batch_size: "15 minuutin välein täydennettävien upotusten määrä."
@@ -75,7 +74,6 @@ fi:
     ai_pm_summarization_allowed_groups: "Ryhmät voivat luoda ja tarkastella yhteenvetoja yksityisviesteissä."
     ai_summary_gists_enabled: "Luo lyhyitä yhteenvetoja ketjujen uusimmista vastauksista automaattisesti"
     ai_bot_enabled: "Ota tekoälybottimoduuli käyttöön."
-    ai_bot_allowed_groups: "Kun GPT-botilla on yksityisviestin käyttöoikeus, se vastaa näiden ryhmien jäsenille."
     ai_bot_debugging_allowed_groups: "Salli näiden ryhmien nähdä viesteissä virheenkorjauspainike, joka näyttää raa'an tekoälypyynnön ja vastauksen"
     ai_bot_public_sharing_allowed_groups: "Salli näiden ryhmien jakaa tekoälyn yksityisviestejä yleisölle ainutlaatuisen julkisesti käytettävissä olevan linkin kautta. Huomaa: jos sivustosi edellyttää kirjautumista, myös jaot edellyttävät kirjautumista."
     ai_bot_github_access_token: "GitHubin käyttötunnus käytettäväksi GitHubin tekoälytyökalujen kanssa (vaaditaan haun tukea varten)"
@@ -242,12 +240,30 @@ fi:
       configuration_missing: "Tekoälyroskapostihavaitsemisen määritys puuttuu. Lisää määritys kohdassa Ylläpito > Lisäosat > Discourse AI > Roskaposti ennen käyttöönottoa."
       logging_subject: "Roskapostin havaitseminen"
     ai_bot:
+      navigation:
+        settings:
+          title: "Sivustoasetukset"
+        users:
+          title: "Käyttäjiä"
+        groups:
+          title: "Ryhmät"
+        review:
+          title: "Tarkastusjono"
+        categories:
+          title: "Kategoriat"
+        tags:
+          title: "Tunnisteet"
+        themes:
+          title: "Teemat"
+        authentication:
+          title: "Kirjautuminen ja todennus"
+        backups:
+          title: "Varmuuskopiot"
       reply_error: "Näyttää siltä, että järjestelmässä tapahtui odottamaton ongelma, kun se yritti vastata.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
       read_post:
         unknown_post: "viesti"
       agents:
-        default_llm_required: "Oletus-LLM-malli vaaditaan ennen chatin käyttöönottoa"
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:
           name: "GitHub-apulainen"
@@ -426,6 +442,7 @@ fi:
         random_picker: "Valitse satunnainen luku tai satunnainen luettelon elementti"
         categories: "Listaa kaikki foorumin julkisesti näkyvät alueet"
         delete_topic: "Poista ketju"
+        create_category: "Luo uusi alue"
         search: "Hae kaikista foorumin julkisista ketjuista"
         tags: "Listaa kaikki foorumin tunnisteet"
         time: "Etsi aika eri aikavyöhykkeillä"
@@ -485,10 +502,6 @@ fi:
         search_settings:
           one: "Ehdolla \"%{query}\" löytyi %{count} tulos"
           other: "Ehdolla \"%{query}\" löytyi %{count} tulosta"
-      discoveries:
-        continue_conversation:
-          title: "Löytökeskustelu: hae hakuehdolla %{query}"
-          raw: "Haussani hakuehdolla %{query} näytit minulle seuraavat tiedot:\n\n%{context}\n\nJatketaan keskustelua."
       close_topic:
         errors:
           not_found: "Ketjua ei löytynyt."
@@ -498,10 +511,13 @@ fi:
       delete_topic:
         errors:
           not_found: "Ketjua ei löytynyt."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Ketjua ei löytynyt."
       edit_category:
+        errors:
+          not_found: "Aluetta ei löytynyt."
+      change_topic_category:
         errors:
           not_found: "Ketjua ei löytynyt."
           category_not_found: "Aluetta ei löytynyt."

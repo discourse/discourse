@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class TopicViewStatsController < ApplicationController
-  MAX_STATS_PER_API_REQUEST = 300
-
   def index
-    topic = Topic.find(params[:topic_id].to_i)
-    guardian.ensure_can_see!(topic)
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless topic
 
     from = 30.days.ago.to_date
     to = Date.today
@@ -19,10 +17,13 @@ class TopicViewStatsController < ApplicationController
     end
 
     stats =
-      TopicViewStat
-        .where(topic_id: topic.id, viewed_at: from..to)
-        .order(viewed_at: :desc)
-        .limit(MAX_STATS_PER_API_REQUEST)
+      begin
+        TopicViewStatsQuery.call(topic:, guardian:, from:, to:)
+      rescue Discourse::InvalidAccess
+        raise if SiteSetting.detailed_404
+
+        raise Discourse::NotFound
+      end
 
     rows = []
 
@@ -30,6 +31,6 @@ class TopicViewStatsController < ApplicationController
       rows << { viewed_at: stat.viewed_at, views: stat.anonymous_views + stat.logged_in_views }
     end
 
-    render json: { topic_id: topic.id, stats: rows.reverse }
+    render json: { topic_id: topic.id, stats: rows }
   end
 end

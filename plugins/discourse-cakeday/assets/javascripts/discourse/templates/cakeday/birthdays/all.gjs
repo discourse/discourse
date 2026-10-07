@@ -5,19 +5,19 @@ import { i18n } from "discourse-i18n";
 import UserInfoList from "../../../components/user-info-list";
 
 export default <template>
-  <DLoadMore @selector=".user-info" @action={{@controller.loadMore}}>
+  <DLoadMore @action={{@controller.loadMore}} @selector=".user-info">
     <div class="cakeday-months">
       <h2 class="cakeday-header">{{i18n "birthdays.month.title"}}</h2>
       <ComboBox
         @content={{@controller.months}}
+        @none="cakeday.none"
         @value={{@controller.month}}
         @valueAttribute="value"
-        @none="cakeday.none"
       />
     </div>
 
     <DConditionalLoadingSpinner @condition={{@controller.model.loading}}>
-      <UserInfoList @users={{@controller.model}} @isBirthday={{true}}>
+      <UserInfoList @isBirthday={{true}} @users={{@controller.model}}>
         {{i18n "birthdays.month.empty"}}
       </UserInfoList>
     </DConditionalLoadingSpinner>

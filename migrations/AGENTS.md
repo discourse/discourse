@@ -9,6 +9,11 @@ README (conventions, gotchas, do/don't notes for automated contributors).
 
 ## Gotchas
 
+- **Preserve source user IDs when possible.** Keep creator/owner user IDs as optional
+  IntermediateDB attributes when the destination table supports them. The importer
+  should map a supplied ID and fall back to the system user when it is absent or
+  cannot be mapped.
+
 - **Samovar reserves `name` on commands.** `Nested#parse` instantiates a
   sub-command with `name:` (its invocation name), which Samovar stores and exposes
   as `name`. So don't declare a positional `one :name` on a `disco` command — when

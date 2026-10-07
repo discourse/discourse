@@ -78,6 +78,16 @@ class AccessControlList < ActiveRecord::Base
           else
             auto_group_ids = [Group::AUTO_GROUPS[:logged_in_users]]
 
+            if user.is_system_user?
+              auto_group_ids.concat(
+                [
+                  Group::AUTO_GROUPS[:admins],
+                  Group::AUTO_GROUPS[:staff],
+                  Group::AUTO_GROUPS[:moderators],
+                ],
+              )
+            end
+
             # TODO (martin) Remove when granular_anonymous_and_logged_in_groups_permissions becomes permanent,
             # it's similar logic to User.in_any_groups?
             if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions

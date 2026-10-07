@@ -28,17 +28,22 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
     expect(category.name).to eq("What we do")
     expect(category.user_id).to eq(admin.id)
     expect(category.description).to include("All about our mission")
-    expect(result[:url]).to eq(category.url)
+    expect(result[:url]).to eq("#{Discourse.base_url}/c/what-we-do/#{category.id}")
   end
 
-  it "creates a subcategory under the given parent" do
-    parent = Fabricate(:category)
+  it "creates a subcategory with a full URL on a subfolder installation" do
+    set_subfolder "/forum"
+    parent = Fabricate(:category, name: "Support")
 
     result =
       tool(name: "How to use the forum", parent_category_id: parent.id, reason: "Setup").invoke
 
     expect(result[:status]).to eq("success")
-    expect(Category.find(result[:category_id]).parent_category_id).to eq(parent.id)
+    category = Category.find(result[:category_id])
+    expect(category.parent_category_id).to eq(parent.id)
+    expect(result[:url]).to eq(
+      "#{Discourse.base_url_no_prefix}/forum/c/support/how-to-use-the-forum/#{category.id}",
+    )
   end
 
   it "applies custom colors, stripping a leading # from hex codes" do

@@ -15,9 +15,40 @@ replaceIcon("notification.reaction", "bell");
 function initializeDiscourseReactions(api) {
   customizePostMenu(api);
 
-  api.addKeyboardShortcut("l", null, {
-    click: ".topic-post.selected .discourse-reactions-reaction-button",
-  });
+  for (const [section, link] of [
+    [
+      "activity",
+      { name: "activity-reactions", route: "userActivity.reactions" },
+    ],
+    [
+      "notifications",
+      {
+        name: "notifications-reactions",
+        route: "userNotifications.reactionsReceived",
+      },
+    ],
+  ]) {
+    api.addUserNavSidebarLink(section, {
+      ...link,
+      label: "discourse_reactions.reactions_title",
+      icon: "far-face-smile",
+      displayed: ({ siteSettings }) => siteSettings.discourse_reactions_enabled,
+    });
+  }
+
+  api.addKeyboardShortcut(
+    "l",
+    () => {
+      document
+        .querySelector(
+          ".topic-post.selected .discourse-reactions-reaction-button"
+        )
+        ?.click();
+    },
+    {
+      context: ".topic-post.selected .discourse-reactions-reaction-button",
+    }
+  );
 
   api.addTrackedPostProperties(
     "current_user_used_main_reaction",

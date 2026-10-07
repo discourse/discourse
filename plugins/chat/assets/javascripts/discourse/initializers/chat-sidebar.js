@@ -7,13 +7,15 @@ import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import noop from "discourse/helpers/noop";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { bind } from "discourse/lib/decorators";
+import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
+import { CHANNEL_LIST_SECTION_OPTIONS } from "discourse/plugins/chat/discourse/lib/chat-channel-list-options";
 import {
   CHAT_PANEL,
   initSidebarState,
@@ -133,7 +135,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
 
     get prefixType() {
       if (this.isDM) {
-        if (this.channel.emoji) {
+        if (displayedEmoji(this.channel)) {
           return "emoji";
         } else if (this.channel.chatable.group) {
           if (this.channel.chatable.users.length === 1) {
@@ -145,14 +147,14 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
           return "image";
         }
       } else {
-        return this.channel.emoji ? "emoji" : "icon";
+        return displayedEmoji(this.channel) ? "emoji" : "icon";
       }
     }
 
     get prefixValue() {
       if (this.isDM) {
-        if (this.channel.emoji) {
-          return this.channel.emoji;
+        if (displayedEmoji(this.channel)) {
+          return displayedEmoji(this.channel);
         } else if (this.channel.chatable.group) {
           if (this.channel.chatable.users.length === 1) {
             return avatarUrl(
@@ -169,7 +171,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
           );
         }
       } else {
-        return this.channel.emoji ?? "d-chat";
+        return displayedEmoji(this.channel) ?? "d-chat";
       }
     }
 
@@ -240,6 +242,49 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
   };
 }
 
+function channelListActions(section, menuService, preferences, links) {
+  const actions = [];
+  const bypassed = preferences.isFilterBypassedFor(section);
+  if (bypassed || (!preferences.isDefaultFilterFor(section) && !links.length)) {
+    actions.push({
+      id: "toggleChannelFilter",
+      icon: bypassed ? "filter" : "filter-circle-xmark",
+      title: i18n(
+        bypassed
+          ? "chat.channel_list.apply_filters"
+          : "chat.channel_list.empty.show_all"
+      ),
+      disabled: preferences.isSavingFilterFor(section),
+      action: () => preferences.toggleFilter(section),
+    });
+  }
+  actions.push(channelListOptionsAction(section, menuService));
+  return actions;
+}
+
+function channelListOptionsAction(section, menuService) {
+  return {
+    id: "channelListOptions",
+    title: i18n("chat.channel_list.options.title"),
+    action: (event) => {
+      menuService.show(event.currentTarget, {
+        component: ChatChannelListSidebarMenu,
+        contentRole: "menu",
+        identifier: "chat-channel-list-options-menu",
+        modalForMobile: true,
+        placement: "right-start",
+        data: { section, ...CHANNEL_LIST_SECTION_OPTIONS[section] },
+      });
+    },
+  };
+}
+
+// Emoji are skipped while disabled so the prefix falls back to the channel's
+// icon, avatar, or member count instead of rendering the raw `:code:`.
+function displayedEmoji(channel) {
+  return helperContext().siteSettings.enable_emoji ? channel.emoji : null;
+}
+
 export default {
   name: "chat-sidebar",
   initialize(container) {
@@ -253,8 +298,6 @@ export default {
     if (!this.chatService.userCanChat && !canViewPublicChatAnonymously) {
       return;
     }
-
-    this.capabilities = container.lookup("service:capabilities");
 
     withPluginApi((api) => {
       const chatStateManager = container.lookup("service:chat-state-manager");
@@ -396,17 +439,12 @@ export default {
           );
 
           const SidebarChatStarredChannelLink = class extends BaseStarredChannelLink {
-            constructor({ menuService, capabilities }) {
+            constructor({ menuService }) {
               super(...arguments);
               this.menuService = menuService;
-              this.capabilities = capabilities;
             }
 
             get hoverValue() {
-              if (this.capabilities.isIpadOS) {
-                return;
-              }
-
               return "ellipsis-vertical";
             }
 
@@ -415,10 +453,6 @@ export default {
             }
 
             get hoverAction() {
-              if (this.capabilities.isIpadOS) {
-                return noop;
-              }
-
               return (event, onMenuClose) => {
                 event.stopPropagation();
                 event.preventDefault();
@@ -451,12 +485,14 @@ export default {
               this.chatChannelsManager = container.lookup(
                 "service:chat-channels-manager"
               );
+              this.chatChannelListPreferences = container.lookup(
+                "service:chat-channel-list-preferences"
+              );
               this.menuService = container.lookup("service:menu");
-              this.capabilities = container.lookup("service:capabilities");
             }
 
             get sectionLinks() {
-              return this.chatChannelsManager.starredChannels.map(
+              return this.chatChannelsManager.starredChannelsByPreference.map(
                 (channel) =>
                   new SidebarChatStarredChannelLink({
                     channel,
@@ -465,7 +501,6 @@ export default {
                     siteSettings: this.siteSettings,
                     chatStateManager: this.chatStateManager,
                     menuService: this.menuService,
-                    capabilities: this.capabilities,
                   })
               );
             }
@@ -489,8 +524,34 @@ export default {
             get displaySection() {
               return (
                 this.chatStateManager.hasPreloadedChannels &&
-                this.chatChannelsManager.hasStarredChannels
+                (this.chatChannelsManager.starredChannelsByPreference.length >
+                  0 ||
+                  (this.chatChannelsManager.hasStarredChannels &&
+                    !this.chatChannelListPreferences.isDefaultFilterFor(
+                      "starred"
+                    )))
               );
+            }
+
+            get actions() {
+              return channelListActions(
+                "starred",
+                this.menuService,
+                this.chatChannelListPreferences,
+                this.sectionLinks
+              );
+            }
+
+            get actionsInline() {
+              return true;
+            }
+
+            get persistentActions() {
+              return this.actions.length > 1;
+            }
+
+            get actionsIcon() {
+              return "ellipsis-vertical";
             }
           };
 
@@ -512,7 +573,6 @@ export default {
                 currentUser,
                 siteSettings,
                 menuService,
-                capabilities,
               }) {
                 super(...arguments);
                 this.channel = channel;
@@ -521,7 +581,6 @@ export default {
                 this.menuService = menuService;
                 this.chatStateManager = chatStateManager;
                 this.siteSettings = siteSettings;
-                this.capabilities = capabilities;
               }
 
               get hoverValue() {
@@ -529,7 +588,7 @@ export default {
                   return;
                 }
 
-                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
+                return "ellipsis-vertical";
               }
 
               get name() {
@@ -569,11 +628,11 @@ export default {
               }
 
               get prefixType() {
-                return this.channel.emoji ? "emoji" : "icon";
+                return displayedEmoji(this.channel) ? "emoji" : "icon";
               }
 
               get prefixValue() {
-                return this.channel.emoji ?? "d-chat";
+                return displayedEmoji(this.channel) ?? "d-chat";
               }
 
               get prefixColor() {
@@ -611,7 +670,7 @@ export default {
               }
 
               get hoverAction() {
-                if (!this.currentUser || this.capabilities.isIpadOS) {
+                if (!this.currentUser) {
                   return noop;
                 }
 
@@ -651,13 +710,14 @@ export default {
                 this.chatChannelsManager = container.lookup(
                   "service:chat-channels-manager"
                 );
-                this.router = container.lookup("service:router");
+                this.chatChannelListPreferences = container.lookup(
+                  "service:chat-channel-list-preferences"
+                );
                 this.menuService = container.lookup("service:menu");
-                this.capabilities = container.lookup("service:capabilities");
               }
 
               get sectionLinks() {
-                return this.chatChannelsManager.unstarredPublicMessageChannels.map(
+                return this.chatChannelsManager.sidebarPublicMessageChannels.map(
                   (channel) =>
                     new SidebarChatChannelsSectionLink({
                       channel,
@@ -665,7 +725,6 @@ export default {
                       menuService: this.menuService,
                       currentUser: this.currentUser,
                       siteSettings: this.siteSettings,
-                      capabilities: this.capabilities,
                     })
                 );
               }
@@ -687,17 +746,24 @@ export default {
                   return [];
                 }
 
-                return [
-                  {
-                    id: "browseChannels",
-                    title: i18n("chat.channels_list_popup.browse"),
-                    action: () => this.router.transitionTo("chat.browse.open"),
-                  },
-                ];
+                return channelListActions(
+                  "channels",
+                  this.menuService,
+                  this.chatChannelListPreferences,
+                  this.sectionLinks
+                );
+              }
+
+              get actionsInline() {
+                return true;
+              }
+
+              get persistentActions() {
+                return this.actions.length > 1;
               }
 
               get actionsIcon() {
-                return "pencil";
+                return "ellipsis-vertical";
               }
 
               get links() {
@@ -707,8 +773,12 @@ export default {
               get displaySection() {
                 return (
                   this.chatStateManager.hasPreloadedChannels &&
-                  (this.sectionLinks.length > 0 ||
-                    this.currentUserCanJoinPublicChannels)
+                  (this.chatChannelsManager.unstarredPublicMessageChannels
+                    .length > 0 ||
+                    this.currentUserCanJoinPublicChannels ||
+                    !this.chatChannelListPreferences.isDefaultFilterFor(
+                      "channels"
+                    ))
                 );
               }
             };
@@ -743,7 +813,6 @@ export default {
                 currentUser,
                 menuService,
                 siteSettings,
-                capabilities,
               }) {
                 super(...arguments);
                 this.channel = channel;
@@ -752,7 +821,6 @@ export default {
                 this.currentUser = currentUser;
                 this.chatStateManager = chatStateManager;
                 this.menuService = menuService;
-                this.capabilities = capabilities;
 
                 if (this.oneOnOneMessage) {
                   const user = this.channel.chatable.users[0];
@@ -770,7 +838,7 @@ export default {
               }
 
               get hoverValue() {
-                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
+                return "ellipsis-vertical";
               }
 
               get oneOnOneMessage() {
@@ -853,7 +921,7 @@ export default {
               }
 
               get prefixType() {
-                if (this.channel.emoji) {
+                if (displayedEmoji(this.channel)) {
                   return "emoji";
                 } else if (this.channel.chatable.group) {
                   if (this.channel.chatable.users.length === 1) {
@@ -867,8 +935,8 @@ export default {
               }
 
               get prefixValue() {
-                if (this.channel.emoji) {
-                  return this.channel.emoji;
+                if (displayedEmoji(this.channel)) {
+                  return displayedEmoji(this.channel);
                 } else if (this.channel.chatable.group) {
                   if (this.channel.chatable.users.length === 1) {
                     return avatarUrl(
@@ -902,10 +970,6 @@ export default {
               }
 
               get hoverAction() {
-                if (this.capabilities.isIpadOS) {
-                  return noop;
-                }
-
                 return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
@@ -923,7 +987,6 @@ export default {
 
             const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
               @service site;
-              @service modal;
               @service router;
               @service currentUser;
               @service chatStateManager;
@@ -940,21 +1003,22 @@ export default {
                 this.chatChannelsManager = container.lookup(
                   "service:chat-channels-manager"
                 );
+                this.chatChannelListPreferences = container.lookup(
+                  "service:chat-channel-list-preferences"
+                );
                 this.menuService = container.lookup("service:menu");
-                this.capabilities = container.lookup("service:capabilities");
               }
 
               get hideSectionHeader() {
                 return (
-                  this.chatChannelsManager
-                    .truncatedUnstarredDirectMessageChannels.length === 0
+                  this.chatChannelsManager.unstarredDirectMessageChannels
+                    .length === 0
                 );
               }
 
               get sectionLinks() {
                 const channels =
-                  this.chatChannelsManager
-                    .truncatedUnstarredDirectMessageChannels;
+                  this.chatChannelsManager.sidebarDirectMessageChannels;
 
                 if (channels.length > 0) {
                   return channels.map(
@@ -965,12 +1029,16 @@ export default {
                         currentUser: this.currentUser,
                         menuService: this.menuService,
                         siteSettings: this.siteSettings,
-                        capabilities: this.capabilities,
                       })
                   );
-                } else {
+                } else if (
+                  this.chatChannelsManager.unstarredDirectMessageChannels
+                    .length === 0
+                ) {
                   return [new SidebarChatNewDirectMessagesSectionLink()];
                 }
+
+                return [];
               }
 
               get name() {
@@ -986,19 +1054,24 @@ export default {
               }
 
               get actions() {
-                return [
-                  {
-                    id: "startDm",
-                    title: i18n("chat.direct_messages.new"),
-                    action: () => {
-                      this.modal.show(ChatModalNewMessage);
-                    },
-                  },
-                ];
+                return channelListActions(
+                  "dms",
+                  this.menuService,
+                  this.chatChannelListPreferences,
+                  this.sectionLinks
+                );
+              }
+
+              get actionsInline() {
+                return true;
+              }
+
+              get persistentActions() {
+                return this.actions.length > 1;
               }
 
               get actionsIcon() {
-                return "plus";
+                return "ellipsis-vertical";
               }
 
               get links() {
@@ -1008,7 +1081,11 @@ export default {
               get displaySection() {
                 return (
                   this.chatStateManager.hasPreloadedChannels &&
-                  this.sectionLinks?.length > 0
+                  (this.chatChannelsManager.sidebarDirectMessageChannels
+                    .length > 0 ||
+                    this.chatChannelsManager.unstarredDirectMessageChannels
+                      .length === 0 ||
+                    !this.chatChannelListPreferences.isDefaultFilterFor("dms"))
                 );
               }
             };

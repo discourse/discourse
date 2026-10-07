@@ -84,6 +84,23 @@ module PageObjects
         )
       end
 
+      def has_dashboard_toggle?(label)
+        page.has_css?(".query-action-bar__dashboard-toggle", text: label)
+      end
+
+      def has_no_dashboard_toggle?
+        page.has_no_css?(".query-action-bar__dashboard-toggle")
+      end
+
+      def has_disabled_dashboard_toggle?
+        page.has_css?(".query-action-bar__dashboard-toggle:disabled")
+      end
+
+      def click_dashboard_toggle
+        page.find(".query-action-bar__dashboard-toggle:not(:disabled)").click
+        self
+      end
+
       def visit_new_query
         page.visit("/admin/plugins/discourse-data-explorer/queries/new")
         self
@@ -105,6 +122,19 @@ module PageObjects
           text,
         )
         self
+      end
+
+      def select_new_query_groups(*group_names)
+        select_kit = PageObjects::Components::SelectKit.new(".query-new .query-group-select")
+        select_kit.expand
+        group_names.each { |name| select_kit.select_row_by_name(name) }
+        self
+      end
+
+      def has_query_groups?(*group_names)
+        PageObjects::Components::SelectKit.new(".query-edit .group-chooser").has_selected_names?(
+          *group_names,
+        )
       end
 
       def submit_new_query

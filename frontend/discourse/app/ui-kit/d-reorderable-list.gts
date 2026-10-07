@@ -155,6 +155,7 @@ export default class DReorderableList<T> extends Component<
     }
     return rowClass;
   };
+
   /**
    * Applied by the handle wherever it renders, so the component knows the row
    * kept its one control regardless of where a manual placement put it.
@@ -167,6 +168,7 @@ export default class DReorderableList<T> extends Component<
       }
     };
   });
+
   /**
    * Guards the manual-placement contract: a movable row under
    * `@controls="manual"` must place the yielded handle. It is the drag source,
@@ -198,6 +200,7 @@ export default class DReorderableList<T> extends Component<
       );
     });
   });
+
   /**
    * Registers the list's root element as a drop target while the list is an
    * empty group member — the one state with no rows to land on. Applied
@@ -427,10 +430,13 @@ export default class DReorderableList<T> extends Component<
    * @param key - The row key.
    */
   handleFor = (key: string): HTMLElement | undefined => this.#handles.get(key);
+
   /** The list's one move menu. Public: the template reads its state. */
   menuCoordinator: MoveMenuCoordinator;
+
   /** The list's root element, held for post-move focus restoration. */
   #listElement: Element | null = null;
+
   /** The private drag discriminator used when the list stands alone. */
   #ownDragType = `d-reorderable-list:${guidFor(this)}`;
 
@@ -634,21 +640,6 @@ export default class DReorderableList<T> extends Component<
     return this.args.controls === "manual";
   }
 
-  /**
-   * The cross-list destinations this list's move menus offer: the group's
-   * other named members. Empty for a standalone list, which is what makes the
-   * menu collapse to its four in-list destinations without a conditional at
-   * the call site.
-   *
-   * Handed to the handle as a function rather than an array, so the group is
-   * consulted when a menu opens rather than while the row renders — members
-   * are still registering at that point.
-   */
-  @action
-  siblings(): { listId: string; listLabel: string }[] {
-    return this.args.group?.siblings(this.listIdOrDefault) ?? [];
-  }
-
   /** This list's move-payload identity: its group listId, or `"default"`. */
   get listIdOrDefault(): string {
     return this.args.listId ?? "default";
@@ -735,6 +726,21 @@ export default class DReorderableList<T> extends Component<
     }
 
     return rows;
+  }
+
+  /**
+   * The cross-list destinations this list's move menus offer: the group's
+   * other named members. Empty for a standalone list, which is what makes the
+   * menu collapse to its four in-list destinations without a conditional at
+   * the call site.
+   *
+   * Handed to the handle as a function rather than an array, so the group is
+   * consulted when a menu opens rather than while the row renders — members
+   * are still registering at that point.
+   */
+  @action
+  siblings(): { listId: string; listLabel: string }[] {
+    return this.args.group?.siblings(this.listIdOrDefault) ?? [];
   }
 
   /**
@@ -1020,10 +1026,10 @@ export default class DReorderableList<T> extends Component<
           (if this.acceptsRootDrops "--empty-drop-target")
         }}
         role={{@role}}
+        ...attributes
         {{this.rootDropTarget}}
         {{this.moveKeys}}
         {{this.reconcileMenu this.rows this.menuCoordinator.openKey}}
-        ...attributes
       >
         {{yield to="hint"}}
         {{yield to="header"}}
@@ -1040,9 +1046,9 @@ export default class DReorderableList<T> extends Component<
                     "d-reorderable-list__row"
                     (this.rowClassFor row)
                   }}
-                  role={{@itemRole}}
-                  data-reorderable-key={{row.key}}
                   data-reorderable-cursor={{unless row.rendersHandle "true"}}
+                  data-reorderable-key={{row.key}}
+                  role={{@itemRole}}
                   tabindex={{unless row.rendersHandle "-1"}}
                   {{dDragAndDropSource
                     type=this.dragType
@@ -1060,10 +1066,10 @@ export default class DReorderableList<T> extends Component<
                 >
                   {{#if (and (not this.isManual) row.rendersHandle)}}
                     <HandlePart
-                      @row={{row}}
-                      @onOpen={{this.menuCoordinator.openMenu}}
                       @isOpen={{eq this.menuCoordinator.openKey row.key}}
+                      @onOpen={{this.menuCoordinator.openMenu}}
                       @register={{this.registerHandle}}
+                      @row={{row}}
                     />
                   {{/if}}
                   {{yield
@@ -1098,10 +1104,10 @@ export default class DReorderableList<T> extends Component<
                   }}
                   {{#if (and this.rendersRemove row.removable)}}
                     <RemovePart
-                      @row={{row}}
-                      @icon={{this.removeIcon}}
                       @buttonClass={{this.removeButtonClass}}
+                      @icon={{this.removeIcon}}
                       @onRemove={{this.onRemove}}
+                      @row={{row}}
                     />
                   {{/if}}
                 </Item>
@@ -1114,9 +1120,9 @@ export default class DReorderableList<T> extends Component<
                     "d-reorderable-list__row"
                     (this.rowClassFor row)
                   }}
-                  role={{@itemRole}}
-                  data-reorderable-key={{row.key}}
                   data-reorderable-cursor="true"
+                  data-reorderable-key={{row.key}}
+                  role={{@itemRole}}
                   tabindex="-1"
                 >
                   {{yield

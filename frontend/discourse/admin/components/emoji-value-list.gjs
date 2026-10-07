@@ -36,6 +36,11 @@ export default class EmojiValueList extends Component {
       });
   }
 
+  // TODO (ui-kit-reorderable-list-cleanup) delete with the legacy arm below.
+  get showUpDownButtons() {
+    return this.collection.length > 1;
+  }
+
   @action
   emojiSelected(code) {
     if (!this.#validateInput(code)) {
@@ -63,11 +68,6 @@ export default class EmojiValueList extends Component {
     }
 
     this.#saveValues(newCollection);
-  }
-
-  // TODO (ui-kit-reorderable-list-cleanup) delete with the legacy arm below.
-  get showUpDownButtons() {
-    return this.collection.length > 1;
   }
 
   @action
@@ -188,10 +188,10 @@ export default class EmojiValueList extends Component {
                 {{on "click" (fn this.editValue controls.index)}}
               >
                 <img
-                  height="15px"
-                  width="15px"
-                  src={{data.emojiUrl}}
                   class="emoji-list-emoji"
+                  height="15px"
+                  src={{data.emojiUrl}}
+                  width="15px"
                 />
                 <span class="emoji-name">{{data.value}}</span>
               </div>
@@ -244,11 +244,11 @@ export default class EmojiValueList extends Component {
 
       <div class="value">
         <EmojiPicker
+          @btnClass="btn-default"
+          @didSelectEmoji={{this.emojiSelected}}
           @label={{i18n
             "admin.site_settings.emoji_list.add_emoji_button.label"
           }}
-          @didSelectEmoji={{this.emojiSelected}}
-          @btnClass="btn-default"
         />
       </div>
     </div>

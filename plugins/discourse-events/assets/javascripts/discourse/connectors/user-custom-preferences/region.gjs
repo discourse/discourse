@@ -31,17 +31,17 @@ export default class Region extends Component {
 
       <div class="controls">
         <RegionInput
-          @value={{@outletArgs.model.custom_fields.holidays-region}}
           @allowNoneRegion={{true}}
           @onChange={{this.onChange}}
+          @value={{@outletArgs.model.custom_fields.holidays-region}}
         />
       </div>
 
       <DButton
+        class="btn-default"
+        @action={{this.useCurrentRegion}}
         @icon="globe"
         @label="discourse_events.region.use_current_region"
-        @action={{this.useCurrentRegion}}
-        class="btn-default"
       />
     </div>
   </template>

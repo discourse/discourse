@@ -10,19 +10,19 @@ declare function label(section: Section): string;
 
 const Test = <template>
   <DReorderableList
-    @items={{sections}}
-    @label={{label}}
     {{! @glint-expect-error - @controls is a closed union; "split" is not a member }}
     @controls="split"
+    @items={{sections}}
+    @label={{label}}
   >
     <:row as |section|>{{section.name}}</:row>
   </DReorderableList>
 
   <DReorderableList
-    @items={{sections}}
-    @label={{label}}
     {{! @glint-expect-error - @allowCreate is a flag, not a string }}
     @allowCreate="yes"
+    @items={{sections}}
+    @label={{label}}
   >
     <:row as |section|>{{section.name}}</:row>
   </DReorderableList>

@@ -9,6 +9,10 @@ shared_examples "signup scenarios" do
   let(:invite) { Fabricate(:invite) }
   let(:topic) { Fabricate(:topic, title: "Super cool topic") }
 
+  # These cover the password signup form. The code-based form replaces it when
+  # enable_local_logins_via_code is on, and has its own spec.
+  before { SiteSetting.enable_local_logins_via_code = false }
+
   context "when anyone can create an account" do
     before { Jobs.run_immediately! }
 

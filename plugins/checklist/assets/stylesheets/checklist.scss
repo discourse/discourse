@@ -17,6 +17,7 @@ span.chcklst-stroked {
 }
 
 span.chcklst-box {
+  border-radius: 0.16em;
   display: inline-flex;
   position: relative;
   vertical-align: -0.125em;
@@ -25,24 +26,9 @@ span.chcklst-box {
     cursor: pointer;
     touch-action: manipulation;
 
-    .checklist-spinner {
-      animation: rotate-forever 2s infinite linear;
-      color: var(--primary);
-      display: none;
-      height: 1em;
-      inset: 0;
-      position: absolute;
-      width: 1em;
-    }
-
-    &.is-saving {
-      &::before {
-        visibility: hidden;
-      }
-
-      .checklist-spinner {
-        display: inline-block;
-      }
+    &.is-pending {
+      background-color: var(--primary-low);
+      box-shadow: 0 0 0 0.09em var(--primary-low);
     }
 
     &:focus-visible {
@@ -82,9 +68,10 @@ span.chcklst-box {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  span.chcklst-box.is-interactive .checklist-spinner {
-    animation: none;
+@media (forced-colors: active) {
+  span.chcklst-box.is-interactive.is-pending {
+    outline: 0.09em solid CanvasText;
+    outline-offset: 0;
   }
 }
 

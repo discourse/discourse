@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
   js:
+    topic:
+      create_zendesk_issue: "建立 Zendesk 服務單"
+      view_zendesk_issue: "在 Zendesk 中查看"
     zendesk:
+      credentials_not_setup: 您尚未設定 Zendesk 認證資訊。
+      url_not_set: 尚未設定您的 Zendesk URL。
       general_error: 發生錯誤。
+  site_settings:
+    zendesk_url: 您的 Zendesk URL，例如：https://YOUR_SUBDOMAIN.zendesk.com/api/v2
+    zendesk_enabled: 啟用 Zendesk 外掛
+    zendesk_autogenerate_all_categories: 自動為所有分類建立服務單。啟用時會忽略 `zendesk_autogenerate_categories`。
+    zendesk_autogenerate_categories: 會自動建立 Zendesk 服務單的分類清單。
+    zendesk_jobs_api_token: 用於 Zendesk 驗證的 API 權杖
+    zendesk_jobs_email: 用於 Zendesk 驗證的電子郵件
+    zendesk_job_push_all_posts: 將主題中的所有貼文推送為 Zendesk 留言？停用時，只有第一篇貼文會推送至 Zendesk。
+    zendesk_job_push_only_author_posts: 只將原始主題作者的貼文推送至 Zendesk。僅在啟用 `zendesk_job_push_all_posts` 時適用。
+    sync_comments_from_zendesk: 將 Zendesk 的留言自動發布到 Discourse。僅適用於 `zendesk_autogenerate_categories` 中的主題。
+    zendesk_incoming_webhook_token: Zendesk 傳出 Webhook 在承載資料中傳送的權杖。僅在啟用 `sync_comments_from_zendesk` 時需要。
+    zendesk_tags: 要新增至每張服務單的標籤清單
