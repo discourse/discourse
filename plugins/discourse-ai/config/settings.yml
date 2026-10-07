@@ -349,6 +349,7 @@ discourse_ai:
     area: "ai-features/summarization"
   ai_summaries_for_crawlers:
     default: false
+    validator: "DiscourseAi::Configuration::SummariesForCrawlersValidator"
     area: "ai-features/summarization"
   ai_pm_summarization_allowed_groups:
     type: group_list

@@ -15,6 +15,7 @@ describe TopicsController do
     assign_agent_to(:ai_summarization_agent, [Group::AUTO_GROUPS[:admins]])
     SiteSetting.ai_summarization_enabled = true
     SiteSetting.enable_markdown_endpoints = true
+    SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 10
     SiteSetting.ai_summaries_for_crawlers = true
   end
 
