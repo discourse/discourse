@@ -5,10 +5,10 @@ const GeneratedInviteLink = <template>
     <p>{{i18n "user.invited.link_generated"}}</p>
     <p>
       <input
-        value={{@link}}
+        autofocus="autofocus"
         class="invite-link-input"
         type="text"
-        autofocus="autofocus"
+        value={{@link}}
       />
     </p>
     {{#if @email}}

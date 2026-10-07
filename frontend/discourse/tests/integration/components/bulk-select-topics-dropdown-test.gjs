@@ -276,8 +276,8 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       <template>
         <BulkSelectTopicsDropdown
           @bulkSelectHelper={{this.bulkSelectHelper}}
-          @extraButtons={{this.extraButtons}}
           @excludedButtonIds={{this.excludedButtonIds}}
+          @extraButtons={{this.extraButtons}}
           @onAction={{this.onAction}}
         />
       </template>
@@ -310,8 +310,8 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       <template>
         <BulkSelectTopicsDropdown
           @bulkSelectHelper={{this.bulkSelectHelper}}
-          @extraButtons={{this.extraButtons}}
           @excludedButtonIds={{this.excludedButtonIds}}
+          @extraButtons={{this.extraButtons}}
         />
       </template>
     );

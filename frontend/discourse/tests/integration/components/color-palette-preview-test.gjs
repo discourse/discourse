@@ -279,8 +279,8 @@ module("Integration | Component | ColorPalettePreview", function (hooks) {
     await render(
       <template>
         <ColorPalettePreview
-          @scheme={{example_scheme}}
           class="color-palette-preview"
+          @scheme={{example_scheme}}
         />
       </template>
     );

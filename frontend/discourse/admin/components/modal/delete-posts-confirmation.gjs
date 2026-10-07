@@ -22,13 +22,13 @@ export default class DeletePostsConfirmation extends Component {
 
   <template>
     <DModal
+      @closeModal={{@closeModal}}
       @title={{trustHTML
         (i18n
           "admin.user.delete_posts.confirmation.title"
           username=@model.user.username
         )
       }}
-      @closeModal={{@closeModal}}
     >
       <:body>
         <p>{{trustHTML
@@ -45,8 +45,8 @@ export default class DeletePostsConfirmation extends Component {
         <DButton
           class="btn-danger"
           @action={{@model.deleteAllPosts}}
-          @icon="trash-can"
           @disabled={{this.deleteDisabled}}
+          @icon="trash-can"
           @translatedLabel={{i18n
             "admin.user.delete_posts.confirmation.delete"
             username=@model.user.username

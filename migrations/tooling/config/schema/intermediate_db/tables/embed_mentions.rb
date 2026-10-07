@@ -20,6 +20,9 @@ Migrations::Tooling::Schema.table :embed_mentions do
   add_column :mention_type, :integer, enum: :mention_type
   add_column :target_id, :numeric
   add_column :name, :text
+  # The verbatim source snippet, restored unchanged when the importer cannot
+  # map the embed to a destination record (the round-trip fallback).
+  add_column :original_markdown, :text
 
   index :owner_type, :owner_id
 end

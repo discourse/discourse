@@ -65,6 +65,8 @@ module JsonApiKit
           "#{inspect} is not named after what it exposes: declare `model SomeModel` and `type :things`"
         end
       end
+
+      delegate :model, :schema, :type, :namespace, to: :class
     end
   end
 end

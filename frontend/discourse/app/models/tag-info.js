@@ -1,18 +1,9 @@
-import { tracked } from "@glimmer/tracking";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import RestModel from "discourse/models/rest";
+import RestCompatModel from "discourse/data/rest-compat";
+import { TagInfoSchema } from "discourse/data/schemas/tag-info";
+import { defineFieldForwarders } from "discourse/data/warp-rest-model";
 
-export default class TagInfo extends RestModel {
-  @tracked category_restricted;
-  @tracked description;
-  @tracked id;
-  @tracked name;
-  @tracked slug;
-  @tracked staff;
-  @tracked topic_count;
-
-  @autoTrackedArray categories;
-  @autoTrackedArray localizations;
-  @autoTrackedArray synonyms;
-  @autoTrackedArray tag_group_names;
+export default class TagInfo extends RestCompatModel {
+  static type = "tag-info";
 }
+
+defineFieldForwarders(TagInfo, TagInfoSchema);

@@ -39,9 +39,9 @@ async function renderList(items, onRegisterApi) {
         }
       </style>
       <DVirtualList
+        @estimateSize={{estimate}}
         @items={{items}}
         @key="id"
-        @estimateSize={{estimate}}
         @onRegisterApi={{onRegisterApi}}
         @overscan={{0}}
         as |item|

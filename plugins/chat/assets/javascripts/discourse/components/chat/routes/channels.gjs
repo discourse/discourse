@@ -1,6 +1,7 @@
 import { i18n } from "discourse-i18n";
 import ChannelsListPublic from "../../channels-list-public";
 import Navbar from "../navbar";
+import ChannelListOptionsButton from "../navbar/channel-list-options-button";
 
 const ChatRoutesChannels = <template>
   <div class="c-routes --channels">
@@ -8,7 +9,7 @@ const ChatRoutesChannels = <template>
       <navbar.Title @title={{i18n "chat.chat_channels"}} />
       <navbar.Actions as |action|>
         <action.OpenDrawerButton />
-        <action.BrowseChannelsButton />
+        <ChannelListOptionsButton @section="channels" />
       </navbar.Actions>
     </Navbar>
 

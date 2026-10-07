@@ -42,6 +42,7 @@ module Chat
     def fetch_threads(guardian:, params:)
       ::Chat::Thread
         .viewable_by_user(guardian.user)
+        .where(channel_id: ::Chat::ChannelFetcher.all_secured_channel_ids(guardian))
         .includes(
           :channel,
           :user_chat_thread_memberships,

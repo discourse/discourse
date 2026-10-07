@@ -134,6 +134,15 @@ export default class DiscoveryListController extends Controller {
     return this.order ?? this.model.list.get("params.order") ?? "activity";
   }
 
+  get dismissNewSubset() {
+    return this.model.list?.listParams?.subset ?? this.subset;
+  }
+
+  get canShowTagInfo() {
+    const { tag, category, additionalTags } = this.model;
+    return tag && tag.name !== "none" && !additionalTags && !category;
+  }
+
   async callResetNew(
     dismissPosts = false,
     dismissTopics = false,
@@ -163,10 +172,6 @@ export default class DiscoveryListController extends Controller {
     this.bulkSelectHelper.bulkSelectEnabled = false;
     this.bulkSelectHelper.clear();
     this.router.refresh();
-  }
-
-  get dismissNewSubset() {
-    return this.model.list?.listParams?.subset ?? this.subset;
   }
 
   buildResetNewOptions(overrides = {}) {
@@ -229,42 +234,6 @@ export default class DiscoveryListController extends Controller {
     this.model.list.updateNewListSubsetParam(subset);
   }
 
-  #resetTagInfo() {
-    this.tagInfo = null;
-    this.#loadedTagId = null;
-    this.#tagInfoFetchToken++;
-    this.loadingTagInfo = false;
-  }
-
-  async #fetchTagInfo(tagKey) {
-    const token = ++this.#tagInfoFetchToken;
-    this.loadingTagInfo = true;
-    try {
-      const result = await this.store.find("tag-info", tagKey);
-
-      // discard if a newer fetch superseded this one
-      if (token !== this.#tagInfoFetchToken) {
-        return;
-      }
-
-      result.synonyms = result.synonyms.map((s) =>
-        this.store.createRecord("tag", s)
-      );
-      this.tagInfo = result;
-      this.#loadedTagId = tagKey;
-    } catch (e) {
-      if (token !== this.#tagInfoFetchToken) {
-        return;
-      }
-      popupAjaxError(e);
-      throw e;
-    } finally {
-      if (token === this.#tagInfoFetchToken) {
-        this.loadingTagInfo = false;
-      }
-    }
-  }
-
   @action
   async toggleTagInfo() {
     if (this.showTagInfo) {
@@ -304,11 +273,6 @@ export default class DiscoveryListController extends Controller {
     }
   }
 
-  get canShowTagInfo() {
-    const { tag, category, additionalTags } = this.model;
-    return tag && tag.name !== "none" && !additionalTags && !category;
-  }
-
   @action
   syncTagInfo() {
     if (!this.canShowTagInfo) {
@@ -342,5 +306,41 @@ export default class DiscoveryListController extends Controller {
       tagName: this.model.tag?.id,
       includeSubcategories: !this.model.noSubcategories,
     });
+  }
+
+  #resetTagInfo() {
+    this.tagInfo = null;
+    this.#loadedTagId = null;
+    this.#tagInfoFetchToken++;
+    this.loadingTagInfo = false;
+  }
+
+  async #fetchTagInfo(tagKey) {
+    const token = ++this.#tagInfoFetchToken;
+    this.loadingTagInfo = true;
+    try {
+      const result = await this.store.find("tag-info", tagKey);
+
+      // discard if a newer fetch superseded this one
+      if (token !== this.#tagInfoFetchToken) {
+        return;
+      }
+
+      result.synonyms = result.synonyms.map((s) =>
+        this.store.createRecord("tag", s)
+      );
+      this.tagInfo = result;
+      this.#loadedTagId = tagKey;
+    } catch (e) {
+      if (token !== this.#tagInfoFetchToken) {
+        return;
+      }
+      popupAjaxError(e);
+      throw e;
+    } finally {
+      if (token === this.#tagInfoFetchToken) {
+        this.loadingTagInfo = false;
+      }
+    }
   }
 }

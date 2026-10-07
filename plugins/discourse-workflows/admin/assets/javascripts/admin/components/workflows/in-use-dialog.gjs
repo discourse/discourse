@@ -8,8 +8,8 @@ export default <template>
     {{#each @model.workflows as |workflow|}}
       <li>
         <LinkTo
-          @route="adminPlugins.show.discourse-workflows.show"
           @model={{workflow.id}}
+          @route="adminPlugins.show.discourse-workflows.show"
           {{on "click" @model.close}}
         >{{workflow.name}}</LinkTo>
       </li>

@@ -1,0 +1,14 @@
+{
+  "extends": "discourse/tsconfig-plugin",
+  "include": [
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "discourse/plugins/boards/*": ["./assets/javascripts/*"],
+      "discourse/plugins/boards/admin/*": ["./admin/assets/javascripts/admin/*"]
+    }
+  }
+}

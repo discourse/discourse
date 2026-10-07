@@ -31,7 +31,7 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @type="input" @name="foo" @title="Foo" @size={{8}}>
+          <form.Field @name="foo" @size={{8}} @title="Foo" @type="input">
             Test
           </form.Field>
         </Form>
@@ -46,10 +46,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form @data={{hash disabled=true}} as |form data|>
           <form.Field
-            @type="input"
+            @disabled={{data.disabled}}
             @name="foo"
             @title="Foo"
-            @disabled={{data.disabled}}
+            @type="input"
             as |field|
           >
             <field.Control />
@@ -76,10 +76,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
+            @description="foo foo"
             @name="foo"
             @title="Foo"
-            @description="foo foo"
+            @type="input"
             as |field|
           >
             <field.Control />
@@ -96,11 +96,11 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
-            @name="foo"
-            @title="Foo"
             @description="A description"
             @helpText="A help text"
+            @name="foo"
+            @title="Foo"
+            @type="input"
             @validation="required"
             as |field|
           >
@@ -143,10 +143,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo.bar"
-            @title="Foo"
             @size={{8}}
+            @title="Foo"
+            @type="input"
             as |field|
           >
             <field.Control />
@@ -169,7 +169,7 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @type="input" @name="foo" @size={{8}} as |field|>
+          <form.Field @name="foo" @size={{8}} @type="input" as |field|>
             <field.Control />
           </form.Field>
         </Form>
@@ -187,8 +187,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
         <Form as |form|>
           <form.Field
             @name="foo"
-            @type="checkbox"
             @title={{htmlTitle}}
+            @type="checkbox"
             as |field|
           >
             <field.Control />
@@ -208,18 +208,18 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
+            @type="input"
             @validation="required"
             as |field|
           >
             <field.Control />
           </form.Field>
           <form.Field
-            @type="input"
             @name="bar"
             @title="Bar"
+            @type="input"
             @validation="required"
             as |field|
           >
@@ -253,9 +253,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form @data={{hash foo="bar"}} as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
+            @type="input"
             @validate={{validate}}
             as |field|
           >
@@ -283,9 +283,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form @data={{hash foo="bar"}} @onSubmit={{onSubmit}} as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
+            @type="input"
             @validate={{validate}}
             as |field|
           >
@@ -308,10 +308,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo"
-            @title="Foo"
             @showTitle={{false}}
+            @title="Foo"
+            @type="input"
             as |field|
           ><field.Control /></form.Field>
         </Form>
@@ -326,9 +326,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
+            @type="input"
             as |field|
           ><field.Control /></form.Field>
         </Form>
@@ -341,10 +341,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo"
-            @title="Foo"
             @showOptional={{false}}
+            @title="Foo"
+            @type="input"
             as |field|
           ><field.Control /></form.Field>
         </Form>
@@ -359,11 +359,11 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
-            @name="foo"
-            @title="Foo"
             @description="foo description"
             @format="full"
+            @name="foo"
+            @title="Foo"
+            @type="input"
             as |field|
           ><field.Control /></form.Field>
         </Form>
@@ -386,12 +386,12 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
-            @name="foo"
-            @title="Foo"
             @description="foo description"
             @format="large"
             @labelFormat="full"
+            @name="foo"
+            @title="Foo"
+            @type="input"
             as |field|
           ><field.Control /></form.Field>
         </Form>
@@ -430,10 +430,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
         <Form @data={{hash something=(hash foo=1)}} as |form|>
           <form.Object @name="something" as |object|>
             <object.Field
-              @type="input"
               @name="foo"
-              @title="Foo"
               @onSet={{onSet}}
+              @title="Foo"
+              @type="input"
               as |field|
             >
               <field.Control />
@@ -451,10 +451,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
             @tooltip="text"
+            @type="input"
             as |field|
           >
             <field.Control />
@@ -471,10 +471,10 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="input"
             @name="foo"
             @title="Foo"
             @tooltip={{component DTooltip content="component"}}
+            @type="input"
             as |field|
           >
             <field.Control />
@@ -545,10 +545,10 @@ module(
           <template>
             <Form as |form|>
               <form.Field
-                @type={{type}}
+                @description="A description"
                 @name="foo"
                 @title="Foo"
-                @description="A description"
+                @type={{type}}
                 as |field|
               >
                 <field.Control />
@@ -573,10 +573,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="select"
+              @description="A description"
               @name="foo"
               @title="Foo"
-              @description="A description"
+              @type="select"
               as |field|
             >
               <field.Control as |select|>
@@ -598,10 +598,10 @@ module(
         <template>
           <Form as |form|>
             <form.Field
-              @type="radio-group"
+              @description="A description"
               @name="foo"
               @title="Foo"
-              @description="A description"
+              @type="radio-group"
               as |field|
             >
               <field.Control as |RadioGroup|>

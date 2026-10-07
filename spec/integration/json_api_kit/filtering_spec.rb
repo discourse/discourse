@@ -20,7 +20,7 @@ RSpec.describe "a filtered listing" do
   end
 
   context "when the filter value is a list" do
-    let(:params) { { sort: { created_at: :asc }, filter: { title: [oldest.title, newest.title] } } }
+    let(:params) { { sort: { createdAt: :asc }, filter: { title: [oldest.title, newest.title] } } }
 
     it "keeps a row for each value of the list" do
       expect(document).to eq(

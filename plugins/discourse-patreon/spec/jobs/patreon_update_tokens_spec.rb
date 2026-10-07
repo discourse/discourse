@@ -6,7 +6,7 @@ RSpec.describe Jobs::PatreonUpdateTokens do
   before { SiteSetting.patreon_enabled = true }
 
   shared_examples "token refresh" do
-    it "should update both access and refresh tokens from Patreon" do
+    it "updates both access and refresh tokens from Patreon" do
       described_class.new.execute({})
 
       expect(SiteSetting.patreon_creator_access_token).to eq("ACCESS TOKEN")

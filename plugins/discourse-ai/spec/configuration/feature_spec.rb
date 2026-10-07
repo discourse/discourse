@@ -245,6 +245,7 @@ RSpec.describe DiscourseAi::Configuration::Feature do
       expect(ask_ai.agent_ids).to contain_exactly(
         ai_agent.id,
         query_rewrite_agent.id,
+        SiteSetting.ai_ask_ai_report_agent.to_i,
         follow_up_agent.id,
       )
 

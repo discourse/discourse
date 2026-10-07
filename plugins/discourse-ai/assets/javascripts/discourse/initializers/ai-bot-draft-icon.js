@@ -10,7 +10,7 @@ export default apiInitializer((api) => {
 
   api.registerValueTransformer("draft-icon", ({ value, context }) => {
     return isAiBotRecipient(context.draft?.data?.recipients, currentUser)
-      ? "robot"
+      ? "discobot"
       : value;
   });
 });

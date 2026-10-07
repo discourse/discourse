@@ -78,32 +78,32 @@ export default class DataTablesManager extends PaginatedListManager {
 
   <template>
     <AdminTable
-      @items={{this.items}}
-      @isLoading={{this.isLoading}}
       @canLoadMore={{this.canLoadMore}}
-      @loadMore={{this.loadMore}}
+      @isLoading={{this.isLoading}}
+      @items={{this.items}}
       @loadingMore={{this.loadingMore}}
+      @loadMore={{this.loadMore}}
     >
       <:empty>
         <EmptyState
+          @buttonLabel="discourse_workflows.data_tables.add_first"
+          @description={{i18n
+            "discourse_workflows.data_tables.empty_description"
+          }}
           @emoji="wave"
+          @onAction={{this.addDataTable}}
           @title={{i18n
             "discourse_workflows.data_tables.empty_title"
             username=this.currentUser.displayName
           }}
-          @description={{i18n
-            "discourse_workflows.data_tables.empty_description"
-          }}
-          @buttonLabel="discourse_workflows.data_tables.add_first"
-          @onAction={{this.addDataTable}}
         />
       </:empty>
       <:toolbar>
         <DButton
-          @action={{this.addDataTable}}
-          @label="discourse_workflows.data_tables.add"
-          @icon="plus"
           class="btn-primary btn-small"
+          @action={{this.addDataTable}}
+          @icon="plus"
+          @label="discourse_workflows.data_tables.add"
         />
       </:toolbar>
       <:head>
@@ -114,6 +114,9 @@ export default class DataTablesManager extends PaginatedListManager {
             "discourse_workflows.data_tables.columns"
           }}</th>
         <th class="d-table__header-cell">{{i18n
+            "discourse_workflows.data_tables.rows"
+          }}</th>
+        <th class="d-table__header-cell">{{i18n
             "discourse_workflows.data_tables.size"
           }}</th>
         <th class="d-table__header-cell"></th>
@@ -121,9 +124,9 @@ export default class DataTablesManager extends PaginatedListManager {
       <:row as |dataTable|>
         <td class="d-table__cell --overview">
           <LinkTo
-            @route="adminPlugins.show.discourse-workflows-data-tables.show"
-            @model={{dataTable.id}}
             class="d-table__overview-link"
+            @model={{dataTable.id}}
+            @route="adminPlugins.show.discourse-workflows-data-tables.show"
           >
             <strong class="d-table__overview-name">{{dataTable.name}}</strong>
           </LinkTo>
@@ -132,7 +135,13 @@ export default class DataTablesManager extends PaginatedListManager {
           <div class="d-table__mobile-label">
             {{i18n "discourse_workflows.data_tables.columns"}}
           </div>
-          {{dataTable.columns.length}}
+          {{dataTable.column_count}}
+        </td>
+        <td class="d-table__cell --detail">
+          <div class="d-table__mobile-label">
+            {{i18n "discourse_workflows.data_tables.rows"}}
+          </div>
+          {{dataTable.row_count}}
         </td>
         <td class="d-table__cell --detail">
           <div class="d-table__mobile-label">
@@ -143,9 +152,9 @@ export default class DataTablesManager extends PaginatedListManager {
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
             <DButton
+              class="btn-default btn-small"
               @action={{fn this.deleteDataTable dataTable}}
               @label="discourse_workflows.delete"
-              class="btn-default btn-small"
             />
           </div>
         </td>

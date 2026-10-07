@@ -44,31 +44,6 @@ export default class EmbeddableChat extends Service {
     });
   }
 
-  canRenderChatChannel(mobileViewAllowed = false) {
-    if (
-      this.isMobileViewport === mobileViewAllowed &&
-      this.siteSettings.chat_enabled &&
-      this.currentUser &&
-      this.userCanChat
-    ) {
-      if (this.isPathAllowed && this.chatChannelId) {
-        return !this.isChannelOpenInDrawer;
-      }
-    }
-
-    return false;
-  }
-
-  @action
-  toggleChatVisibility() {
-    this.isMobileChatVisible = !this.isMobileChatVisible;
-  }
-
-  @action
-  closeChatVisibility() {
-    this.isMobileChatVisible = false;
-  }
-
   get isMobileModal() {
     return (
       this.siteSettings.livestream_enable_modal_chat_on_mobile &&
@@ -133,5 +108,30 @@ export default class EmbeddableChat extends Service {
       this.useLivestreamLayout &&
       (this.canRenderChatChannel(false) || this.canRenderChatChannel(true))
     );
+  }
+
+  canRenderChatChannel(mobileViewAllowed = false) {
+    if (
+      this.isMobileViewport === mobileViewAllowed &&
+      this.siteSettings.chat_enabled &&
+      this.currentUser &&
+      this.userCanChat
+    ) {
+      if (this.isPathAllowed && this.chatChannelId) {
+        return !this.isChannelOpenInDrawer;
+      }
+    }
+
+    return false;
+  }
+
+  @action
+  toggleChatVisibility() {
+    this.isMobileChatVisible = !this.isMobileChatVisible;
+  }
+
+  @action
+  closeChatVisibility() {
+    this.isMobileChatVisible = false;
   }
 }

@@ -327,6 +327,20 @@ export default class CreateInviteWithRoles extends Component {
     return rows;
   }
 
+  get submitDisabled() {
+    return this.saving || this.submitForcedDisabled;
+  }
+
+  get isLinkCreation() {
+    return !this.inviteCreated && !this.isEmailDelivery;
+  }
+
+  get emailFieldLabel() {
+    return this.isAdminInvite
+      ? i18n("user.invited.invite_roles.admin_email_label")
+      : i18n("user.invited.invite_roles.member_email_label");
+  }
+
   expiresAtFrom(data) {
     if (data.expiresAt) {
       return data.expiresAt;
@@ -360,14 +374,6 @@ export default class CreateInviteWithRoles extends Component {
     }
   }
 
-  get submitDisabled() {
-    return this.saving || this.submitForcedDisabled;
-  }
-
-  get isLinkCreation() {
-    return !this.inviteCreated && !this.isEmailDelivery;
-  }
-
   @action
   onRoleChange(value) {
     if (this.inviteCreated) {
@@ -388,12 +394,6 @@ export default class CreateInviteWithRoles extends Component {
   @action
   setDelivery(value) {
     this.delivery = value;
-  }
-
-  get emailFieldLabel() {
-    return this.isAdminInvite
-      ? i18n("user.invited.invite_roles.admin_email_label")
-      : i18n("user.invited.invite_roles.member_email_label");
   }
 
   @action
@@ -539,13 +539,13 @@ export default class CreateInviteWithRoles extends Component {
   <template>
     <DModal
       class="create-invite-with-roles-modal"
-      @title={{this.title}}
       @closeModal={{@closeModal}}
       @inline={{@inline}}
+      @title={{this.title}}
     >
       <:belowHeader>
         {{#if this.flashText}}
-          <div id="modal-alert" role="alert" class="alert alert-error">
+          <div class="alert alert-error" id="modal-alert" role="alert">
             {{trustHTML this.flashText}}
           </div>
         {{/if}}
@@ -557,18 +557,18 @@ export default class CreateInviteWithRoles extends Component {
               <DSegmentedControl
                 class="--full-width"
                 @items={{this.roleItems}}
-                @value={{this.role}}
+                @label="user.invited.invite_roles.role_label"
                 @name="invite-role"
                 @onSelect={{this.onRoleChange}}
-                @label="user.invited.invite_roles.role_label"
+                @value={{this.role}}
               />
             </div>
           {{/if}}
 
           {{#if this.isAdminInvite}}
             <PluginOutlet
-              @name="create-invite-admin-mode"
               @connectorTagName="div"
+              @name="create-invite-admin-mode"
               @outletArgs={{lazyHash
                 invite=this.invite
                 setSubmitDisabled=this.setSubmitDisabled
@@ -576,29 +576,29 @@ export default class CreateInviteWithRoles extends Component {
             />
 
             <Form
-              @data={{this.adminFormData}}
-              @onSubmit={{this.onAdminFormSubmit}}
-              @onRegisterApi={{this.registerApi}}
               class={{dConcatClass
                 "create-invite-with-roles-modal__admin-form"
                 (if this.submitDisabled "--disabled" "")
               }}
+              @data={{this.adminFormData}}
+              @onRegisterApi={{this.registerApi}}
+              @onSubmit={{this.onAdminFormSubmit}}
               as |form|
             >
               {{#unless this.inviteCreated}}
                 <form.Field
-                  @name="staffRole"
-                  @type="radio-group"
-                  @title={{this.staffRoleLabel}}
-                  @showTitle={{false}}
                   @format="full"
+                  @name="staffRole"
                   @onSet={{this.onStaffRoleChange}}
+                  @showTitle={{false}}
+                  @title={{this.staffRoleLabel}}
+                  @type="radio-group"
                   as |field|
                 >
                   <field.Control
-                    @title={{this.staffRoleLabel}}
                     class="--inline"
                     disabled={{this.submitDisabled}}
+                    @title={{this.staffRoleLabel}}
                     as |radioGroup|
                   >
                     {{#each this.staffRoleItems as |item|}}
@@ -643,19 +643,19 @@ export default class CreateInviteWithRoles extends Component {
                   <Content @name="link">
                     {{#if this.showAdvanced}}
                       <form.Field
-                        @name="domain"
-                        @type="input"
-                        @title={{i18n
-                          "user.invited.invite_roles.restrict_domain"
-                        }}
                         @description={{i18n
                           "user.invited.invite_roles.restrict_domain_help"
                         }}
+                        @format="full"
+                        @name="domain"
+                        @title={{i18n
+                          "user.invited.invite_roles.restrict_domain"
+                        }}
+                        @type="input"
                         @validate={{if
                           (eq this.delivery "link")
                           this.validateDomain
                         }}
-                        @format="full"
                         as |field|
                       >
                         <field.Control
@@ -670,19 +670,19 @@ export default class CreateInviteWithRoles extends Component {
 
                   <Content @name="email">
                     <form.Field
-                      @name="email"
-                      @type="input-email"
-                      @title={{this.emailFieldLabel}}
                       @description={{i18n
                         "user.invited.invite_roles.member_email_help"
                       }}
-                      @validation={{if (eq this.delivery "email") "required"}}
+                      @disabled={{this.inviteCreated}}
+                      @format="full"
+                      @name="email"
+                      @title={{this.emailFieldLabel}}
+                      @type="input-email"
                       @validate={{if
                         (eq this.delivery "email")
                         this.validateEmail
                       }}
-                      @format="full"
-                      @disabled={{this.inviteCreated}}
+                      @validation={{if (eq this.delivery "email") "required"}}
                       as |field|
                     >
                       <field.Control
@@ -700,11 +700,11 @@ export default class CreateInviteWithRoles extends Component {
 
               {{#if this.showAdvanced}}
                 <form.Field
-                  @name="description"
-                  @type="input"
-                  @title={{i18n "user.invited.invite.description"}}
                   @description={{i18n "user.invited.invite.description_help"}}
                   @format="full"
+                  @name="description"
+                  @title={{i18n "user.invited.invite.description"}}
+                  @type="input"
                   @validation={{this.descriptionValidation}}
                   as |field|
                 >
@@ -712,13 +712,13 @@ export default class CreateInviteWithRoles extends Component {
                 </form.Field>
 
                 <form.Field
-                  @name="customMessage"
-                  @type="textarea"
-                  @title={{i18n "user.invited.invite.custom_message"}}
                   @description={{i18n
                     "user.invited.invite.custom_message_help"
                   }}
                   @format="full"
+                  @name="customMessage"
+                  @title={{i18n "user.invited.invite.custom_message"}}
+                  @type="textarea"
                   as |field|
                 >
                   <field.Control
@@ -730,18 +730,18 @@ export default class CreateInviteWithRoles extends Component {
                 </form.Field>
 
                 <ExpiryField
-                  @form={{form}}
                   @created={{this.inviteCreated}}
+                  @form={{form}}
                   @options={{this.expireAfterOptions}}
                 />
               {{/if}}
             </Form>
           {{else}}
             <Form
-              @data={{this.memberFormData}}
-              @onSubmit={{this.onMemberFormSubmit}}
-              @onRegisterApi={{this.registerApi}}
               class="create-invite-with-roles-modal__member-form"
+              @data={{this.memberFormData}}
+              @onRegisterApi={{this.registerApi}}
+              @onSubmit={{this.onMemberFormSubmit}}
               as |form|
             >
               <form.ConditionalContent
@@ -771,19 +771,19 @@ export default class CreateInviteWithRoles extends Component {
                   <Content @name="link">
                     {{#if this.showAdvanced}}
                       <form.Field
-                        @name="domain"
-                        @type="input"
-                        @title={{i18n
-                          "user.invited.invite_roles.restrict_domain"
-                        }}
                         @description={{i18n
                           "user.invited.invite_roles.restrict_domain_help"
                         }}
+                        @format="full"
+                        @name="domain"
+                        @title={{i18n
+                          "user.invited.invite_roles.restrict_domain"
+                        }}
+                        @type="input"
                         @validate={{if
                           (eq this.delivery "link")
                           this.validateDomain
                         }}
-                        @format="full"
                         as |field|
                       >
                         <field.Control
@@ -798,19 +798,19 @@ export default class CreateInviteWithRoles extends Component {
 
                   <Content @name="email">
                     <form.Field
-                      @name="email"
-                      @type="input-email"
-                      @title={{this.emailFieldLabel}}
                       @description={{i18n
                         "user.invited.invite_roles.member_email_help"
                       }}
-                      @validation={{if (eq this.delivery "email") "required"}}
+                      @disabled={{this.inviteCreated}}
+                      @format="full"
+                      @name="email"
+                      @title={{this.emailFieldLabel}}
+                      @type="input-email"
                       @validate={{if
                         (eq this.delivery "email")
                         this.validateEmail
                       }}
-                      @format="full"
-                      @disabled={{this.inviteCreated}}
+                      @validation={{if (eq this.delivery "email") "required"}}
                       as |field|
                     >
                       <field.Control
@@ -829,13 +829,13 @@ export default class CreateInviteWithRoles extends Component {
               {{#if this.showAdvanced}}
                 {{#if (eq this.delivery "email")}}
                   <form.Field
-                    @name="customMessage"
-                    @type="textarea"
-                    @title={{i18n "user.invited.invite.custom_message"}}
                     @description={{i18n
                       "user.invited.invite.custom_message_help"
                     }}
                     @format="full"
+                    @name="customMessage"
+                    @title={{i18n "user.invited.invite.custom_message"}}
+                    @type="textarea"
                     as |field|
                   >
                     <field.Control
@@ -847,28 +847,28 @@ export default class CreateInviteWithRoles extends Component {
                   </form.Field>
                 {{else}}
                   <form.Field
+                    @format="small"
                     @name="maxRedemptions"
                     @title={{i18n
                       "user.invited.invite.max_redemptions_allowed"
                     }}
                     @type="input-number"
-                    @format="small"
                     @validation="required"
                     as |field|
                   >
                     <field.Control
-                      min="1"
                       max={{this.maxRedemptionsAllowedLimit}}
+                      min="1"
                     />
                   </form.Field>
                 {{/if}}
 
                 <form.Field
-                  @name="description"
-                  @type="input"
-                  @title={{i18n "user.invited.invite.description"}}
                   @description={{i18n "user.invited.invite.description_help"}}
                   @format="full"
+                  @name="description"
+                  @title={{i18n "user.invited.invite.description"}}
+                  @type="input"
                   @validation={{this.descriptionValidation}}
                   as |field|
                 >
@@ -876,28 +876,28 @@ export default class CreateInviteWithRoles extends Component {
                 </form.Field>
 
                 <ExpiryField
-                  @form={{form}}
                   @created={{this.inviteCreated}}
+                  @form={{form}}
                   @options={{this.expireAfterOptions}}
                 />
 
                 {{#if this.canArriveAtTopic}}
                   <form.Field
-                    @name="inviteToTopic"
-                    @type="custom"
-                    @title={{i18n "user.invited.invite.invite_to_topic"}}
                     @description={{i18n
                       "user.invited.invite_roles.arrive_at_topic_help"
                     }}
                     @format="full"
+                    @name="inviteToTopic"
+                    @title={{i18n "user.invited.invite.invite_to_topic"}}
+                    @type="custom"
                     as |field|
                   >
                     <field.Control>
                       <TopicChooser
-                        @value={{field.value}}
                         @content={{this.topics}}
                         @onChange={{fn this.onChangeTopic field.set}}
                         @options={{hash additionalFilters="status:public"}}
+                        @value={{field.value}}
                       />
                     </field.Control>
                   </form.Field>
@@ -905,18 +905,18 @@ export default class CreateInviteWithRoles extends Component {
 
                 {{#if this.canInviteToGroup}}
                   <form.Field
-                    @name="inviteToGroups"
-                    @type="custom"
-                    @title={{i18n "user.invited.invite.add_to_groups"}}
                     @format="full"
+                    @name="inviteToGroups"
+                    @title={{i18n "user.invited.invite.add_to_groups"}}
+                    @type="custom"
                     as |field|
                   >
                     <field.Control>
                       <GroupChooser
                         @content={{this.allGroups}}
-                        @value={{field.value}}
                         @labelProperty="name"
                         @onChange={{field.set}}
+                        @value={{field.value}}
                       />
                     </field.Control>
                   </form.Field>
@@ -965,6 +965,9 @@ export default class CreateInviteWithRoles extends Component {
       <:footer>
         {{#if (eq this.screen "form")}}
           <DButton
+            class="btn-primary save-invite"
+            @action={{this.submitForm}}
+            @disabled={{this.submitDisabled}}
             @icon={{if
               this.inviteCreated
               "check"
@@ -979,39 +982,36 @@ export default class CreateInviteWithRoles extends Component {
                 (i18n "user.invited.invite_roles.create_and_copy")
               )
             }}
-            @action={{this.submitForm}}
-            @disabled={{this.submitDisabled}}
-            class="btn-primary save-invite"
           />
           <DButton
-            @label="user.invited.invite.cancel"
-            @action={{this.cancel}}
-            disabled={{this.submitDisabled}}
             class="btn-transparent cancel-button"
+            disabled={{this.submitDisabled}}
+            @action={{this.cancel}}
+            @label="user.invited.invite.cancel"
           />
           <AdvancedModeToggle
+            disabled={{this.submitDisabled}}
             @active={{this.showAdvanced}}
             @onToggle={{this.toggleAdvanced}}
-            disabled={{this.submitDisabled}}
           />
         {{else if (eq this.screen "summary")}}
           <DButton
-            @translatedLabel={{i18n "user.invited.invite_roles.summary.edit"}}
-            @action={{this.editInvite}}
             class="btn-default edit-invite"
+            @action={{this.editInvite}}
+            @translatedLabel={{i18n "user.invited.invite_roles.summary.edit"}}
           />
           <LinkTo
-            @route="userInvited.show"
-            @models={{array this.currentUser.username_lower "pending"}}
             class="btn btn-default view-invites"
+            @models={{array this.currentUser.username_lower "pending"}}
+            @route="userInvited.show"
           >
             {{i18n "user.invited.invite_roles.summary.view_invites"}}
           </LinkTo>
         {{else}}
           <LinkTo
-            @route="userInvited.show"
-            @models={{array this.currentUser.username_lower "pending"}}
             class="btn btn-default view-invites"
+            @models={{array this.currentUser.username_lower "pending"}}
+            @route="userInvited.show"
           >
             {{i18n "user.invited.invite_roles.summary.view_invites"}}
           </LinkTo>
@@ -1024,10 +1024,10 @@ export default class CreateInviteWithRoles extends Component {
 const ExpiryField = <template>
   {{#if @created}}
     <@form.Field
-      @name="expiresAt"
-      @type="custom"
-      @title={{i18n "user.invited.invite.expires_at"}}
       @format="full"
+      @name="expiresAt"
+      @title={{i18n "user.invited.invite.expires_at"}}
+      @type="custom"
       @validation="required"
       as |field|
     >
@@ -1042,10 +1042,10 @@ const ExpiryField = <template>
     </@form.Field>
   {{else}}
     <@form.Field
-      @name="expiresAfterDays"
-      @type="select"
-      @title={{i18n "user.invited.invite.expires_after"}}
       @format="full"
+      @name="expiresAfterDays"
+      @title={{i18n "user.invited.invite.expires_after"}}
+      @type="select"
       @validation="required"
       as |field|
     >
@@ -1068,25 +1068,25 @@ class ShareOrCopyInviteLink extends Component {
 
   <template>
     <input
-      name="invite-link"
-      type="text"
       class="invite-link"
-      value={{@invite.link}}
+      name="invite-link"
       readonly={{true}}
+      type="text"
+      value={{@invite.link}}
     />
     {{#if (canNativeShare this.capabilities)}}
       <DButton
         class="btn-primary"
+        @action={{this.nativeShare}}
         @icon="share"
         @translatedLabel={{i18n "user.invited.invite.share_link"}}
-        @action={{this.nativeShare}}
       />
     {{else}}
       <DCopyButton
+        @isCopied={{@isCopied}}
         @selector="input.invite-link"
         @translatedLabel={{i18n "user.invited.invite.copy_link"}}
         @translatedLabelAfterCopy={{i18n "user.invited.invite.link_copied"}}
-        @isCopied={{@isCopied}}
       />
     {{/if}}
   </template>

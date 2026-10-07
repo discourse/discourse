@@ -205,7 +205,7 @@ export default class DAsyncContent<T> extends Component<
     const asyncData = this.args.asyncData;
     const context = this.args.context;
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

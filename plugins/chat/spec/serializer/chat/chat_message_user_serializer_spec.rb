@@ -62,4 +62,18 @@ RSpec.describe Chat::MessageUserSerializer do
       expect(serializer[:primary_group_name]).to eq(group.name)
     end
   end
+
+  context "when user has flair" do
+    fab!(:group) { Fabricate(:group, flair_icon: "robot") }
+
+    before { params[:flair_group_id] = group.id }
+
+    it "includes the flair attributes" do
+      expect(serializer).to include(
+        flair_group_id: group.id,
+        flair_name: group.name,
+        flair_url: "robot",
+      )
+    end
+  end
 end

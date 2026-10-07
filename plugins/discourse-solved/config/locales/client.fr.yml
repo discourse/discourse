@@ -67,6 +67,12 @@ fr:
                 slower: "%{duration} plus lent"
                 tooltip: "Évolution du délai moyen de réponse."
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Modifications"
+        changes_removed: "Supprimé"
+        tag_names: "Étiquettes"
+        tag_names_description: "Déclencher uniquement pour les sujets comportant au moins une de ces étiquettes."
     notifications:
       alt:
         solved:
@@ -143,6 +149,11 @@ fr:
           solved: "sont résolus"
           unsolved: "ne sont pas résolus"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Sujet"
+            category: "Catégorie"
       web_hooks:
         solved_event:
           group_name: "Événement résolu"

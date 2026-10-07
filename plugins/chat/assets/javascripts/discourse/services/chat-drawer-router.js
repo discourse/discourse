@@ -303,10 +303,6 @@ export default class ChatDrawerRouter extends Service {
 
   routeNames = Object.keys(ROUTES);
 
-  canHandleRoute(route) {
-    return !!ROUTES[this.#forceParentRouteForIndex(route).name];
-  }
-
   get activeChannelId() {
     return this.model?.channel?.id;
   }
@@ -321,6 +317,10 @@ export default class ChatDrawerRouter extends Service {
 
   get hasDirectMessages() {
     return this.chat.userCanAccessDirectMessages;
+  }
+
+  canHandleRoute(route) {
+    return !!ROUTES[this.#forceParentRouteForIndex(route).name];
   }
 
   async stateFor(route) {

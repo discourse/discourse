@@ -1,7 +1,7 @@
 discourse_login_with_amazon:
   enable_login_with_amazon:
     default: false
-    validator: "EnableLoginWithAmazonValidator"
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   login_with_amazon_client_id:
     default: ""

@@ -349,6 +349,7 @@ nl:
     notifications_tracking:
       tooltip: "Meldingsniveau: %{level}"
     back_button: "Terug"
+    confirm_button: "Bevestigen"
     welcome_banner:
       header:
         new_members: "Welkom, %{preferred_display_name}!"
@@ -492,18 +493,9 @@ nl:
         use_predefined: "Sjablonen bekijken"
         back: "Terug"
         icebreakers:
-          fun_facts:
-            title: "Wat zijn leuke weetjes over jou?"
-            body: "Hoi allemaal! Ik heb veel zin om deze nieuwe community te starten. Laten we om te beginnen een leuk weetje over onszelf delen. Ik begin: ik ben dol op wandelen en nieuwe paden ontdekken! Wat is iets interessants over jou?"
-          coolest_thing_you_have_seen_today:
-            title: "Wat is het gaafste dat je vandaag hebt gezien?"
-            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een en spontaan gebaar van vriendelijkheid. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
           introduce_yourself:
             title: "Stel jezelf voor"
             body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
-          what_is_your_favorite_food:
-            title: "Wat is je favoriete eten?"
-            body: "Deel je favoriete eten met de community! Ik begin: ik hou van pizza, vooral met extra kaas en pepperoni."
     design_wizard:
       back: "Terug"
       next: "Volgende"
@@ -511,6 +503,8 @@ nl:
         theme: "Thema"
         fonts: "Lettertypen"
         homepage: "Startpagina"
+        welcome_banner: "Welkomstbanner"
+        search: "Zoeken"
       theme:
         selected: "Geselecteerd"
       colors:
@@ -1027,6 +1021,9 @@ nl:
         note_added: "Moderatoropmerking"
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"
         no_events: "Geen tijdlijngebeurtenissen om weer te geven"
+      author_penalty:
+        toast:
+          undo: "Ongedaan maken"
       notes:
         add_note_description: "Voeg een notitie toe voor context aan andere moderators."
         add_note_button: "Opmerking toevoegen"
@@ -1673,7 +1670,6 @@ nl:
       admin: "%{user} is een beheerder"
       moderator_tooltip: "Deze gebruiker is een moderator"
       admin_tooltip: "Deze gebruiker is een beheerder"
-      silenced_tooltip: "Deze gebruiker is gedempt"
       suspended_notice: "Deze gebruiker is geschorst tot %{date}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
@@ -1732,6 +1728,16 @@ nl:
       tracked_topics_link: "Weergeven"
       automatically_unpin_topics: "Topics automatisch losmaken als ik de onderkant bereik"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Bron"
+        scopes: "Scopes"
+        details: "Details"
+        last_used: "Laatst gebruikt"
+        never: "Nooit"
+        status: "Status"
+        statuses:
+          active: "Actief"
+          revoked: "Ingetrokken"
       revoke_access: "Toegang intrekken"
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
@@ -2210,7 +2216,6 @@ nl:
         watch_topic: "Topic observeren"
         track_topic: "Topic volgen"
         do_nothing: "Niets doen"
-      topics_unread_when_closed: "Onderwerp als ongelezen beschouwen als ze gesloten zijn"
       invited:
         title: "Uitnodigingen"
         pending_tab: "wachtend"
@@ -2863,6 +2868,11 @@ nl:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "Optie"
+      period: "Periode"
+      tab: "Tab"
+      delete: "Verwijderen"
+      home: "Start"
     conditional_loading_section:
       loading: Laden…
     category_row:
@@ -3046,7 +3056,6 @@ nl:
       create_whisper: "Fluisteren"
       create_shared_draft: "Gedeeld concept maken"
       edit_shared_draft: "Gedeeld concept bewerken"
-      title: "Of druk op %{modifier}Enter"
       save_and_close: "Opslaan en sluiten"
       discard: "Weggooien"
       cancel_edit: "Bewerken annuleren"
@@ -3409,10 +3418,10 @@ nl:
         search_field: "Zoekveld in sitekop"
         search_icon: "Zoekpictogram in buurt van profielavatar"
       type:
-        default: "Topics/berichten"
+        default: "Berichten"
         users: "Gebruikers"
         categories: "Categorieën"
-        categories_and_tags: "Categorieën/tags"
+        categories_and_tags: "Categorieën en tags"
       context:
         user: "Zoeken in berichten van @%{username}"
         category: "Zoeken in de categorie #%{category}"
@@ -3425,7 +3434,6 @@ nl:
         in: "filtert op metagegevens (bijvoorbeeld in:titel, in:persoonlijk, in:vastgemaakt)"
         status: "filtert op topicstatus"
         full_search: "start zoeken op volledige pagina"
-        full_search_key: "%{modifier} + Enter"
         me: "geeft alleen jouw berichten weer"
       advanced:
         title: Geavanceerde filters
@@ -4248,7 +4256,6 @@ nl:
       reply_as_new_private_message: "Antwoorden als nieuw bericht aan dezelfde ontvangers"
       continue_discussion: "Doorgaan met de discussie van %{postLink}:"
       follow_quote: "naar het geciteerde bericht"
-      show_full: "Volledige bericht weergeven"
       show_hidden: "Genegeerde inhoud weergeven."
       deleted_by_author_simple: "(bericht verwijderd door auteur)"
       collapse: "samenvouwen"
@@ -4652,6 +4659,7 @@ nl:
       list: "Categorieën weergeven"
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
+      latest_topics: "Nieuwste topics"
       description_updated: "Beschrijving bijgewerkt"
       description_expand: "Meer weergeven"
       description_collapse: "Minder weergeven"
@@ -4947,6 +4955,7 @@ nl:
       with_category: "%{filter} topics in %{category}"
       filter:
         title: "Gefilterde resultaten voor %{filter}"
+        reset: "resetten"
         button:
           label: "Filter"
       latest:
@@ -5059,12 +5068,8 @@ nl:
     invalid_video_url: Deze video kan niet worden afgespeeld omdat de URL ongeldig of niet beschikbaar is.
     keyboard_shortcuts_help:
       search_placeholder: "Zoek naar een sneltoets op beschrijving of toetsencombinatie"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} of %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Sneltoetsen"
       short_title: "Sneltoetsen"
       search_ctrl_f_tip: "Druk op <kbd>/</kbd> om het hele forum te doorzoeken"
@@ -5163,16 +5168,18 @@ nl:
       favorite_max_not_reached: "Deze badge markeren als favoriet"
       favorite_count: "%{count}/%{max} badges gemarkeerd als favoriet"
     download_calendar:
-      title: "Agenda downloaden"
+      title: "Toevoegen aan agenda"
+      calendar: "Kalender"
       save_ics: ".ics-bestand downloaden"
       save_google: "Toevoegen aan Google-agenda"
       remember: "Niet meer vragen"
-      remember_explanation: "(je kunt deze voorkeur wijzigen in je gebruikersvoorkeuren)"
       download: "Downloaden"
       default_calendar: "Standaardagenda"
       default_calendar_instruction: "Bepaal welke agenda moet worden gebruikt wanneer datums worden opgeslagen"
       add_to_calendar: "Toevoegen aan agenda"
       google: "Google-agenda"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Agenda"
       ics: "ICS"
       default_title: "Geplande gebeurtenis"
     tagging:
@@ -5778,6 +5785,11 @@ nl:
         group_moderation_and_security: "Moderatie en beveiliging"
         group_other: "Overig"
         legacy_warning: "Dit is een verouderd rapport. Het wordt binnenkort buiten gebruik gesteld. Als je hulp nodig hebt bij het vinden van een vervanger, neem dan contact op met de ondersteuning."
+        related_items:
+          users:
+            title: "Gebruikers"
+          labels:
+            user: "Gebruiker"
       config_sections:
         account:
           title: "Account"
@@ -5883,6 +5895,75 @@ nl:
         developer:
           title: "Ontwikkelaar"
           header_description: "Ontwikkelaarsinstellingen om de veilige modus en andere geavanceerde functies te beheren"
+        mcp:
+          title: "MCP-server"
+          tabs:
+            access: "Toegang"
+            activity: "Activiteit"
+          overview:
+            status: "Status"
+            tools: "Tools"
+          access:
+            title: "Toegang"
+            group: "Groep"
+            groups: "Groepen"
+            actions: "Acties"
+            edit: "Bewerken"
+            delete: "Verwijderen"
+          primitives:
+            group_by: "Groeperen op"
+            group_by_options:
+              scope: "Bereik"
+              provider: "Provider"
+              kind: "Type"
+            provider: "Provider"
+            kind: "Type"
+            scope: "Bereik"
+            state: "Staat"
+            scopes: "Scopes"
+          clients:
+            actions: "Acties"
+            block: "Blokkeren"
+            use_preset: "Instellen"
+            presets:
+              custom: "Aangepast"
+          authorizations:
+            user: "Gebruiker"
+            scopes: "Toegekende bereiken"
+            last_used: "Laatst gebruikt"
+            status: "Status"
+            actions: "Acties"
+          activity:
+            outcome: "Resultaat"
+            time: "Tijd"
+            user: "Gebruiker"
+            duration: "Duur"
+          values:
+            server_status:
+              disabled: "Uitgeschakeld"
+            client_trust:
+              approved: "Goedgekeurd"
+            authorization_status:
+              active: "Actief"
+              revoked: "Ingetrokken"
+            activity_outcome:
+              success: "Succes"
+              error: "Fout"
+            primitive_state:
+              enabled: "Ingeschakeld"
+              disabled: "Uitgeschakeld"
+            primitive_kind:
+              all: "Alle typen"
+              tool: "Tool"
+              resource: "Bron"
+            primitive_risk:
+              read: "Alleen-lezen"
+              moderation: "Moderatie"
+            filter:
+              all: "Alles"
+          never: "Nooit"
+          actions:
+            revoke: "Intrekken"
         experimental:
           title: "Experimenteel"
           header_description: "Schakel experimentele functies voor je site in of uit. De meeste hiervan kunnen op groepsbasis worden beheerd."
@@ -6093,7 +6174,6 @@ nl:
           header_description: "Configureer zoekinstellingen, inclusief logging en tokenisering voor Chinees en Japans"
         search_everything:
           title: "Zoeken"
-          header_description: "Vind hier alles in de beheerdersinterface. Je kunt de onderstaande resultaten filteren en je voorkeuren worden onthouden. Druk op %{shortcutHTML} om deze zoekfunctie te openen in de beheerdersinterface."
         security:
           title: "Beveiliging"
           header_description: "Configureer beveiligingsinstellingen, waaronder tweeledige verificatie, moderatorprivileges en contentbeveiligingsbeleid"
@@ -6338,6 +6418,7 @@ nl:
         filters:
           country: "Land"
           browser: "Browser"
+          language: "Taal"
           ip: "IP-adres"
         series:
           anonymous_human: "Anoniem"
@@ -6416,6 +6497,8 @@ nl:
               share: "Delen"
             whos_posting:
               staff: "Medewerker"
+              modal:
+                apply: "Opslaan"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nieuw"
@@ -6428,6 +6511,11 @@ nl:
             table:
               searches: "Zoekopdrachten"
               status: "Status"
+          system:
+            title: "Systeem"
+            status: "Status"
+            discourse_updated: "Discourse bijgewerkt"
+            dashboard_updated: "Dashboard bijgewerkt"
         reports_section:
           header_action: "Beheren"
           no_data: "Geen gegevens om weer te geven"
@@ -6441,6 +6529,7 @@ nl:
           series:
             anonymous: "Anoniem"
             crawlers: "Crawlers"
+          crawler_learn_more: "Meer info"
         period:
           last_7_days: "Afgelopen 7 dagen"
           last_30_days: "Afgelopen 30 dagen"
@@ -6482,6 +6571,14 @@ nl:
           average_for_sample: "Gemiddelde voor steekproef"
           total: "Totaal sinds begin"
           no_data: "Geen gegevens om weer te geven."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} gebruiker"
+              other: "%{count} gebruikers"
+            posts_count:
+              one: "%{count} bericht"
+              other: "%{count} berichten"
+            deselect: "%{name} deselecteren"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Zoeken in logs</a>'
             disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
@@ -8480,13 +8577,14 @@ nl:
           multiselect: "Meervoudige selectie"
       site_text:
         description: "Je kunt elke tekst op je forum aanpassen."
-        search: "Zoek de tekst die je wilt bewerken"
+        search_label: "Zoeken"
+        theme_disabled: "Uitgeschakeld"
+        filters: "Filters"
+        status:
+          invalid: "Ongeldig"
         title: "Siteteksten"
         edit: "Bewerken"
-        revert: "Wijzigingen ongedaan maken"
         revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
-        go_back: "Terug naar Zoeken"
-        recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste weergeven"
         show_outdated: "Alleen verouderd/ongeldig weergeven"
         show_untranslated: "Alleen onvertaalde weergeven"

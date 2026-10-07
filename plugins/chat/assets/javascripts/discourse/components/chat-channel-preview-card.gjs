@@ -44,9 +44,9 @@ export default class ChatChannelPreviewCard extends Component {
       {{#if this.showJoinButton}}
         <div class="chat-channel-preview-card --logged-in">
           <PluginOutlet
+            @defaultGlimmer={{true}}
             @name="chat-channel-preview-card-content"
             @outletArgs={{lazyHash channel=@channel context=@context}}
-            @defaultGlimmer={{true}}
           >
             <div class="chat-channel-preview-card__icon">
               {{dIcon "lock"}}
@@ -99,14 +99,14 @@ export default class ChatChannelPreviewCard extends Component {
 
         <div class="chat-channel-preview-card__actions">
           <DButton
+            class="btn-transparent --primary"
             @action={{this.showLogin}}
             @label="chat.channel.preview_card.log_in"
-            class="btn-transparent --primary"
           />
           <DButton
+            class="btn-primary"
             @action={{this.showCreateAccount}}
             @label="chat.channel.preview_card.sign_up"
-            class="btn-primary"
           />
         </div>
       </div>

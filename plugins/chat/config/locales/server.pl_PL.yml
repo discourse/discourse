@@ -165,6 +165,10 @@ pl_PL:
         ignore:
           title: "Ignoruj flagę"
           description: "Usuń z kolejki bez podejmowania żadnych działań."
+        unsilence_user:
+          title: "Autor bez wyciszenia"
+          description: "Zakończ wyciszenie autora. Ta flaga pozostaje w kolejce."
+          complete: "Autor już nie jest wyciszony."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"

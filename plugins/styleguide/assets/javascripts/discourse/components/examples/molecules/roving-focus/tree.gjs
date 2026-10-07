@@ -123,10 +123,10 @@ export default class RovingFocusTreeExample extends Component {
 
   <template>
     <ul
+      aria-label={{i18n "styleguide.sections.roving_focus.tree.label"}}
       class="roving-demo__tree"
       dir={{@dir}}
       role="tree"
-      aria-label={{i18n "styleguide.sections.roving_focus.tree.label"}}
       {{on "click" this.handleClick}}
       {{dRovingFocus
         orientation="vertical"
@@ -139,12 +139,12 @@ export default class RovingFocusTreeExample extends Component {
     >
       {{#each this.rows key="id" as |row|}}
         <li
+          aria-expanded={{if row.isParent row.expanded}}
+          aria-level={{row.level}}
           class="roving-demo__row"
-          role="treeitem"
           data-node-id={{row.id}}
           data-parent={{row.parent}}
-          aria-level={{row.level}}
-          aria-expanded={{if row.isParent row.expanded}}
+          role="treeitem"
         >
           {{row.label}}
         </li>

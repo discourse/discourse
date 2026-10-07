@@ -400,9 +400,7 @@ module("Unit | Utility | transformers", function (hooks) {
       });
 
       assert.throws(
-        function () {
-          testObject1.value1;
-        },
+        () => testObject1.value1,
         function (error) {
           return error.message === "sabotaged";
         },
@@ -968,10 +966,6 @@ module("Unit | Utility | transformers", function (hooks) {
           this.#value = null;
         }
 
-        #asyncFetchValue() {
-          return delayedValue("slow foo");
-        }
-
         initializeValue() {
           return applyBehaviorTransformer(
             "test-behavior1-transformer",
@@ -983,6 +977,10 @@ module("Unit | Utility | transformers", function (hooks) {
               setValue: (v) => (this.#value = v),
             }
           );
+        }
+
+        #asyncFetchValue() {
+          return delayedValue("slow foo");
         }
       }
 
@@ -1033,10 +1031,6 @@ module("Unit | Utility | transformers", function (hooks) {
           this.#value = null;
         }
 
-        async #asyncFetchValue() {
-          return await delayedValue("slow foo");
-        }
-
         async initializeValue() {
           await applyBehaviorTransformer(
             "test-behavior1-transformer",
@@ -1048,6 +1042,10 @@ module("Unit | Utility | transformers", function (hooks) {
               setValue: (v) => (this.#value = v),
             }
           );
+        }
+
+        async #asyncFetchValue() {
+          return await delayedValue("slow foo");
         }
       }
 
@@ -1224,6 +1222,10 @@ module("Unit | Utility | transformers", function (hooks) {
       class Testable {
         #value = [];
 
+        get value() {
+          return this.#value.join("");
+        }
+
         resetValue() {
           this.#value = [];
         }
@@ -1234,10 +1236,6 @@ module("Unit | Utility | transformers", function (hooks) {
             () => this.#value.push("!"),
             { pushValue: (v) => this.#value.push(v) }
           );
-        }
-
-        get value() {
-          return this.#value.join("");
         }
       }
 
@@ -1288,6 +1286,10 @@ module("Unit | Utility | transformers", function (hooks) {
       class Testable {
         #value = [];
 
+        get value() {
+          return this.#value.join("");
+        }
+
         resetValue() {
           this.#value = [];
         }
@@ -1298,10 +1300,6 @@ module("Unit | Utility | transformers", function (hooks) {
             () => this.#value.push("!"),
             { pushValue: (v) => this.#value.push(v) }
           );
-        }
-
-        get value() {
-          return this.#value.join("");
         }
       }
 
@@ -1347,6 +1345,10 @@ module("Unit | Utility | transformers", function (hooks) {
       class Testable {
         #value = [];
 
+        get value() {
+          return this.#value.join(" ");
+        }
+
         resetValue() {
           this.#value = [];
         }
@@ -1357,10 +1359,6 @@ module("Unit | Utility | transformers", function (hooks) {
             () => this.#value.push("!"),
             { pushValue: (v) => this.#value.push(v) }
           );
-        }
-
-        get value() {
-          return this.#value.join(" ");
         }
       }
 
@@ -1410,6 +1408,10 @@ module("Unit | Utility | transformers", function (hooks) {
       class Testable {
         #value = [];
 
+        get value() {
+          return this.#value.join(" ");
+        }
+
         resetValue() {
           this.#value = [];
         }
@@ -1420,10 +1422,6 @@ module("Unit | Utility | transformers", function (hooks) {
             "test-behavior1-transformer",
             () => this.#value.push("!")
           );
-        }
-
-        get value() {
-          return this.#value.join(" ");
         }
 
         pushValue(v) {

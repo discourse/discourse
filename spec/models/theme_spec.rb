@@ -119,14 +119,14 @@ RSpec.describe Theme do
     )
   end
 
-  it "should correct bad html in body_tag_baked and head_tag_baked" do
+  it "corrects malformed HTML in body_tag_baked and head_tag_baked" do
     theme.set_field(target: :common, name: "head_tag", value: "<b>I am bold")
     theme.save!
 
     expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
   end
 
-  it "should create body_tag_baked on demand if needed" do
+  it "creates body_tag_baked on demand" do
     theme.set_field(target: :common, name: :body_tag, value: "<b>test")
     theme.save
 
@@ -327,6 +327,24 @@ RSpec.describe Theme do
       theme.save!
 
       expect(theme.reload.cached_settings).to include(name: "bill")
+    end
+
+    it "updates cached group list aliases when granular group permissions change" do
+      theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+        allowed_groups:
+          type: list
+          list_type: group
+          default: "0|1"
+      YAML
+      theme.save!
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(theme.cached_settings[:allowed_groups]).to eq("0|1")
+      expect(theme.cached_default_settings[:allowed_groups]).to eq("0|1")
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      expect(theme.cached_settings[:allowed_groups]).to eq("5|1")
+      expect(theme.cached_default_settings[:allowed_groups]).to eq("5|1")
     end
 
     it "records the plugins a theme statically imports from" do
@@ -774,6 +792,19 @@ RSpec.describe Theme do
           expect(new_common_compiler_version).to eq("SOME_NEW_HASH")
           expect(new_extra_js_compiler_version).to eq("SOME_NEW_HASH")
         end
+    end
+
+    it "rebuilds the javascript cache when saved with a stale compiler version" do
+      theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
+      theme.save!
+      theme.reload.javascript_cache.update_columns(content: "stale")
+
+      theme.save!
+      expect(theme.reload.javascript_cache.content).to eq("stale")
+
+      ThemeField.where(theme_id: theme.id).update_all(compiler_version: "OLD_HASH")
+      theme.save!
+      expect(theme.reload.javascript_cache.content).to include("compatModules")
     end
 
     it "recompiles when the hostname changes" do

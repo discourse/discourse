@@ -13,21 +13,21 @@ export default <template>
       </div>
     {{/if}}
     <Textarea
-      @value={{@controller.buffered.robots_txt}}
       class="robots-txt-input"
+      @value={{@controller.buffered.robots_txt}}
     />
     <DSaveControls
-      @model={{@controller}}
       @action={{@controller.save}}
+      @model={{@controller}}
       @saved={{@controller.saved}}
       @saveDisabled={{@controller.saveDisabled}}
     >
       <DButton
+        class="btn-default"
+        @action={{@controller.reset}}
         @disabled={{@controller.resetDisabled}}
         @icon="arrow-rotate-left"
-        @action={{@controller.reset}}
         @label="admin.settings.reset"
-        class="btn-default"
       />
     </DSaveControls>
   </div>

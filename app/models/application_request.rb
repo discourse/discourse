@@ -28,6 +28,48 @@ class ApplicationRequest < ActiveRecord::Base
 
   include CachedCounting
 
+  BROWSER_PAGEVIEW_TRANSPORTS = {
+    "page_view_anon_browser" => "page_view_anon_browser_beacon",
+    "page_view_logged_in_browser" => "page_view_logged_in_browser_beacon",
+  }.freeze
+
+  # Browser pageviews arrive through two transports: a beacon request and,
+  # historically, a piggybacked header on regular requests. Both can record the
+  # same visit, so counts are read from beacons whenever they recorded traffic
+  # and fall back to the piggyback counters when they did not. Anonymous and
+  # logged in visitors are decided separately, because either cohort can be the
+  # only one a beacon saw on a given day.
+  def self.browser_pageviews
+    conditions =
+      BROWSER_PAGEVIEW_TRANSPORTS.map do |legacy_type, beacon_type|
+        legacy_id, beacon_id = req_types.values_at(legacy_type, beacon_type)
+
+        <<~SQL
+          (
+            application_requests.req_type IN (#{legacy_id}, #{beacon_id})
+            AND (application_requests.req_type = #{beacon_id}) = EXISTS (
+              SELECT 1
+              FROM application_requests beacons
+              WHERE beacons.date = application_requests.date
+                AND beacons.req_type = #{beacon_id}
+                AND beacons.count > 0
+            )
+          )
+        SQL
+      end
+
+    where(req_type: req_types.values_at(*BROWSER_PAGEVIEW_TRANSPORTS.to_a.flatten)).where(
+      conditions.join(" OR "),
+    )
+  end
+
+  def self.browser_pageview_count_for_period(type, since)
+    browser_pageviews
+      .where(req_type: [type, "#{type}_beacon"])
+      .where("date >= ?", since)
+      .sum(:count)
+  end
+
   def self.disable
     @disabled = true
   end

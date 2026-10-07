@@ -12,7 +12,6 @@ cs:
           discourse_rewind: "Discourse Ohlédnutí"
   js:
     discourse_rewind:
-      placeholder: Discourse Ohlédnutí
       title: Ohlédnutí
       loading: "Probíhá výpočet, nepropadejte panice..."
       viewing_other_user: "Prohlížíte si zprávu <strong>%{username}od</strong> Discourse Ohlédnutí."
@@ -83,18 +82,14 @@ cs:
             many: Tvých %{count} nejlepších příspěvků
             other: Tvých %{count} nejlepších příspěvků
         ai_usage:
-          title: Využití AI
           total_requests: Celkem žádostí
           total_tokens: Celkem tokenů
           success_rate: Míra úspěšnosti
-          favorite_features: Nejpoužívanější funkce
-          favorite_models: Nejpoužívanější AI modely
           wake_up: "Probuď se, %{username}..."
           system_title: "ZJIŠTĚNO VYUŽITÍ AI"
           section_features: "HLAVNÍ VLASTNOSTI"
           section_models: "TOP MODELY"
         assignments:
-          title: Úkoly
           total_assigned: Přiděleno mně
           completed: Dokončené úkoly
           pending: Čeká na vyřízení
@@ -102,13 +97,6 @@ cs:
           completion_rate: Míra dokončení
         chat_usage:
           title: Aktivita chatu
-          total_messages: Celkem zpráv
-          dm_messages: Soukromé zprávy
-          unique_dm_channels: Konverzace v soukromých zprávách
-          reactions_received: Přijaté reakce
-          avg_message_length: Průměrná délka zprávy
-          favorite_channels: Oblíbené kanály
-          messages: zprávy
           bot_name: XxRewindBotxX
           author: Vy
           author_others: "%{username}"
@@ -120,28 +108,7 @@ cs:
           message_4: "Průměrná délka tvé zprávy byla <strong>%{length}</strong> znaků"
           message_5: "Tvé oblíbené kanály:"
           dancing_baby_alt: "Dancing baby"
-        favorite_gifs:
-          title:
-            one: Tvůj oblíbený GIF
-            few: Tvoje %{count} oblíbené GIFy
-            many: Tvých %{count} oblíbených GIFů
-            other: Tvých %{count} oblíbených GIFů
-          total_usage:
-            one: Použito jednou
-            few: Celkem použíto %{count}x
-            many: Celkem použíto %{count}x
-            other: Celkem použíto %{count}x
         invites:
-          title: Pozvánky
-          total_invites: Celkový počet odeslaných pozvánek
-          redeemed: Přijaté pozvánky
-          redemption_rate: Míra přijetí
-          avg_trust_level: Průměrná úroveň důvěry
-          invitee_impact: Dopad tvých pozvaných
-          invitee_posts: Vytvořeno příspěvků
-          invitee_topics: Zahájená témata
-          invitee_likes: Rozdaných 'líbí se'
-          most_active_invitee: Nejaktivnější pozvaný
           guest_book_title: Kniha hostů
           guest_book_subtitle: Tvé pozvánky do komunity
           label_invitations_sent: "Pozvánky odeslány:"
@@ -153,23 +120,11 @@ cs:
           label_likes_given: "Rozdaných 'líbí se'"
           section_most_active: Nejaktivnější host
         new_user_interactions:
-          title: Mentorování nových uživatelů
-          subtitle:
-            one: Letos jsi pomohl/a %{count} novému uživateli
-            few: Letos jsi pomohl/a %{count} novým uživatelům
-            many: Letos jsi pomohl/a %{count} novým uživatelům
-            other: Letos jsi pomohl/a %{count} novým uživatelům
           new_member:
             one: "%{count} novému členovi"
             few: "%{count} novým členům"
             many: "%{count} novým členům"
             other: "%{count} novým členům"
-          total_interactions: Celkem interakcí
-          unique_new_users: Unikátní noví uživatelé
-          likes_given: Rozdaných 'líbí se'
-          replies: Odpovědi na příspěvky
-          mentions: Zmínky
-          topics_with_new_users: Témata s novými uživateli
           contributions_helped: tvé příspěvky pomohly
         time_of_day_activity:
           title: Denní rytmus činnosti

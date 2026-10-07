@@ -3,6 +3,7 @@
 RSpec.describe "Middleware order" do
   let(:expected_middlewares) do
     [
+      MarkdownEndpoint::VaryMiddleware,
       BlockRequestsMiddleware,
       TestMultisiteMiddleware,
       Middleware::ProcessingRequest,
@@ -31,7 +32,6 @@ RSpec.describe "Middleware order" do
       Middleware::CspScriptNonceInjector,
       Middleware::AnonymousCache,
       ContentSecurityPolicy::Middleware,
-      ActionDispatch::PermissionsPolicy::Middleware,
       Rack::Head,
       Rack::ConditionalGet,
       Rack::TempfileReaper,

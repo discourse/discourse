@@ -18,6 +18,30 @@ RSpec.describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
+  describe "#stylesheet_details" do
+    it "refreshes hrefs when a font setting changes" do
+      href = manager.stylesheet_details(:embed)[0][:new_href]
+
+      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+
+      expect(manager.stylesheet_details(:embed)[0][:new_href]).not_to eq(href)
+    end
+  end
+
+  describe "Builder#compile" do
+    it "hydrates from StylesheetCache instead of recompiling when the file is missing" do
+      builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
+      Stylesheet::Manager.rm_cache_folder
+      StylesheetCache.where(target: builder.qualified_target, digest: builder.digest).delete_all
+      StylesheetCache.add(builder.qualified_target, builder.digest, "body{}", nil)
+      Stylesheet::Compiler.expects(:compile_asset).never
+
+      builder.compile
+
+      expect(File.read(builder.stylesheet_fullpath)).to eq("body{}")
+    end
+  end
+
   describe "themes with components" do
     let(:child_theme) do
       Fabricate(:theme, component: true, name: "a component").tap do |c|
@@ -317,6 +341,22 @@ RSpec.describe Stylesheet::Manager do
       expect(digest1).not_to eq(digest2)
     end
 
+    it "accounts for the asset cachebuster in theme digests" do
+      theme = Fabricate(:theme)
+
+      builder =
+        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+      digest1 = builder.digest
+
+      Stylesheet::Manager.stubs(:fs_asset_cachebuster).returns("changed")
+
+      builder =
+        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+      digest2 = builder.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
+
     it "can correctly account for settings in theme's components" do
       theme = Fabricate(:theme)
       child = Fabricate(:theme, component: true)
@@ -449,6 +489,33 @@ RSpec.describe Stylesheet::Manager do
 
       builder = Stylesheet::Manager::Builder.new(target: :admin, manager: manager)
       expect(builder.digest).to eq(builder.default_digest)
+    end
+
+    it "accounts for the default theme's color scheme in default and component digests" do
+      scheme = Fabricate(:color_scheme)
+      SiteSetting.default_theme_id = Fabricate(:theme, color_scheme: scheme).id
+      component = Fabricate(:theme, component: true)
+      common = -> { Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest }
+      component_common = -> do
+        Stylesheet::Manager::Builder.new(
+          target: :common_theme,
+          theme: component,
+          manager: manager,
+        ).digest
+      end
+
+      expect {
+        ColorSchemeRevisor.revise(scheme, { colors: [{ name: "primary", hex: "CC0000" }] })
+      }.to change(&common).and change(&component_common)
+    end
+
+    it "accounts for fonts in the default digest of font-bearing targets only" do
+      embed = -> { Stylesheet::Manager::Builder.new(target: :embed, manager: manager).digest }
+      common = -> { Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest }
+
+      expect { SiteSetting.base_font = DiscourseFonts.fonts[2][:key] }.to change(
+        &embed
+      ).and not_change(&common)
     end
 
     it "returns different digest based on hostname" do
@@ -1129,6 +1196,12 @@ RSpec.describe Stylesheet::Manager do
         new_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
         expect(new_cachebuster).not_to eq(initial_cachebuster)
       end
+    end
+
+    it "includes the variable rename map in its inputs" do
+      expect(Stylesheet::Manager.send(:list_files)).to include(
+        Stylesheet::Manager::VARIABLE_RENAMES_PATH.to_s,
+      )
     end
   end
 end

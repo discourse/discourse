@@ -1,4 +1,5 @@
 import { i18n } from "discourse-i18n";
+import { eventDateInTimezone } from "./raw-event-helper";
 
 const ORDINALS = ["first", "second", "third", "fourth"];
 
@@ -6,7 +7,7 @@ export function recurrenceRef(event) {
   if (event.allDay) {
     return moment(event.startsAt, "YYYY-MM-DD");
   }
-  return moment(event.startsAt).tz(event.timezone || "UTC");
+  return eventDateInTimezone(event.startsAt, event.timezone);
 }
 
 export function recurrenceContext(ref) {

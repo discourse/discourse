@@ -57,11 +57,11 @@ export default class DeleteUserPostsProgress extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.user.delete_posts.progress.title"}}
-      @closeModal={{@closeModal}}
       class="admin-delete-user-posts-progress-modal"
-      @flash={{this.flash}}
+      @closeModal={{@closeModal}}
       @dismissable={{false}}
+      @flash={{this.flash}}
+      @title={{i18n "admin.user.delete_posts.progress.title"}}
     >
       <:body>
         <p>{{trustHTML this.deletedDescription}}</p>

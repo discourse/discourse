@@ -4,12 +4,13 @@ module DiscourseDataExplorer
   class QueryResource < JsonApiKit::Resource
     namespace "data-explorer"
 
-    scope { Query.where(hidden: false) }
+    scope { Query.where(hidden: false).includes(:tags) }
 
     attribute :name
     attribute :description
     attribute :created_at
     attribute :last_run_at
+    attribute(:tags) { it.tag_names }
     attribute :sql, readable: ->(guardian) { guardian.is_admin? }
     attribute(:param_info) { it.params.uniq(&:identifier).map(&:to_hash) }
     attribute(:is_default) { it.id.negative? }
@@ -32,6 +33,10 @@ module DiscourseDataExplorer
       pattern = "%#{Query.sanitize_sql_like(value)}%"
       table = Query.arel_table
       scope.where(table[:name].matches(pattern).or(table[:description].matches(pattern)))
+    end
+
+    filter :tag do |scope, value|
+      scope.filter_by_tags(QueryTag.normalize_name(value))
     end
   end
 end

@@ -1,0 +1,26 @@
+diff --git a/dist/dev/packages/shared-chunks/array-CVEnNWng.js b/dist/dev/packages/shared-chunks/array-CVEnNWng.js
+index e3f38b3e945e197f7cb947e9756732f29eceae3d..3d38734aa4eaf82039ace9e4c310c43ea0c3c29e 100644
+--- a/dist/dev/packages/shared-chunks/array-CVEnNWng.js
++++ b/dist/dev/packages/shared-chunks/array-CVEnNWng.js
+@@ -67,7 +67,7 @@ const EMPTY_ARRAY = Object.freeze([]);
+ // Ideally, we'd use MutableArray.detect but for unknown reasons this causes
+ // the node tests to fail strangely.
+ function isMutableArray(obj) {
+-  return obj != null && typeof obj.replace === 'function';
++  return obj != null && typeof obj.replace === 'function' && !Array.isArray(obj);
+ }
+ function replace(array, start, deleteCount, items = EMPTY_ARRAY) {
+   if (isMutableArray(array)) {
+diff --git a/dist/prod/packages/shared-chunks/array-BzReKMeW.js b/dist/prod/packages/shared-chunks/array-BzReKMeW.js
+index 90bbcf0e507f3327a4e7d82bdb8b9bef338bf134..bcea36ab0e35437a02bc9f5e9f20ea1a94ada0dd 100644
+--- a/dist/prod/packages/shared-chunks/array-BzReKMeW.js
++++ b/dist/prod/packages/shared-chunks/array-BzReKMeW.js
+@@ -65,7 +65,7 @@ const EMPTY_ARRAY = Object.freeze([]);
+ // Ideally, we'd use MutableArray.detect but for unknown reasons this causes
+ // the node tests to fail strangely.
+ function isMutableArray(obj) {
+-  return obj != null && typeof obj.replace === 'function';
++  return obj != null && typeof obj.replace === 'function' && !Array.isArray(obj);
+ }
+ function replace(array, start, deleteCount, items = EMPTY_ARRAY) {
+   if (isMutableArray(array)) {

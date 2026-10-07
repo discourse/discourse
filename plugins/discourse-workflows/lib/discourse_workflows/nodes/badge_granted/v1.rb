@@ -12,7 +12,7 @@ module DiscourseWorkflows
             color: "yellow",
           },
           group: "discourse_triggers",
-          events: [:user_badge_granted],
+          event: :user_badge_granted,
           output_contracts: [{ schema: Schema::BADGE_GRANTED_SCHEMA }],
           properties: {
             badge_id: {

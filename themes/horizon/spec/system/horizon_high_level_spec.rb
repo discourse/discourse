@@ -20,6 +20,7 @@ describe "Horizon theme | High level" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:palette_selector) { PageObjects::Components::UserColorPaletteSelector.new }
+
   fab!(:incorrect_scheme) do
     Fabricate(:color_scheme, name: "Incorrect Scheme", user_selectable: true)
   end
@@ -78,7 +79,7 @@ describe "Horizon theme | High level" do
   context "for signed in users" do
     before { sign_in(current_user) }
 
-    it "works" do
+    it "passes the high-level checks for a signed-in user" do
       visit "/"
       run_all_high_level_tests
     end

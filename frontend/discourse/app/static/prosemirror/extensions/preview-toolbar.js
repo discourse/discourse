@@ -105,6 +105,26 @@ class PreviewToolbarPluginView {
     this.#displayToolbar();
   }
 
+  focusToolbar() {
+    const focusable = this.#menuInstance?.content?.querySelector(
+      'button, a, [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (!focusable) {
+      return false;
+    }
+
+    focusable.focus();
+
+    return true;
+  }
+
+  destroy() {
+    this.#resetToolbar();
+    this.#toolbars.clear();
+    this.#toolbar = null;
+  }
+
   #resetToolbar() {
     this.#menuInstance?.destroy();
     this.#menuInstance = null;
@@ -225,26 +245,6 @@ class PreviewToolbarPluginView {
     });
 
     await this.#menuInstance.show();
-  }
-
-  focusToolbar() {
-    const focusable = this.#menuInstance?.content?.querySelector(
-      'button, a, [tabindex]:not([tabindex="-1"])'
-    );
-
-    if (!focusable) {
-      return false;
-    }
-
-    focusable.focus();
-
-    return true;
-  }
-
-  destroy() {
-    this.#resetToolbar();
-    this.#toolbars.clear();
-    this.#toolbar = null;
   }
 }
 

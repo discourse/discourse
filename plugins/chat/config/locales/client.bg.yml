@@ -161,6 +161,10 @@ bg:
           latest: "Последни"
       channel_list:
         title: "Канали"
+        options:
+          filter: "Филтър"
+        filter:
+          mentions: "Споменавания"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"

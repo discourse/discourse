@@ -2,6 +2,8 @@
 
 require "sidekiq/web"
 require "mini_scheduler/web"
+require_relative "../lib/markdown_endpoint/accept_header"
+require_relative "../lib/markdown_endpoint/request_constraint"
 
 # The following constants have been replaced with `RouteFormat` and are deprecated.
 USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined?(USERNAME_ROUTE_FORMAT)
@@ -10,6 +12,50 @@ BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined?(BACKUP_ROUTE_
 Discourse::Application.routes.draw do
   def patch(*)
   end # Disable PATCH requests
+
+  constraints MarkdownEndpoint::RequestConstraint.new do
+    get "/",
+        to: "list#latest",
+        format: false,
+        defaults: {
+          format: :md,
+        },
+        constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+
+    scope format: false,
+          constraints: {
+            topic_id: /\d+/,
+            post_number: /\d+/,
+            tag_id: /\d+/,
+            category_slug_path_with_id: %r{.+/\d+},
+          } do
+      {
+        "latest" => "list#latest",
+        "new" => "list#new",
+        "unread" => "list#unread",
+        "hot" => "list#hot",
+        "top" => "list#top",
+        "categories" => "categories#index",
+        "tags" => "tags#index",
+        "c/*category_slug_path_with_id" => "list#category_default",
+        "tag/:tag_slug/:tag_id" => "tags#show",
+        "tag/:tag_name" => "tags#show",
+        "t/:topic_id/:post_number" => "topics#show",
+        "t/:topic_id" => "topics#show",
+        "t/:slug/:topic_id/:post_number" => "topics#show",
+        "t/:slug/:topic_id" => "topics#show",
+      }.each do |path, action|
+        # Require the format so HTML URL generation cannot select a Markdown route.
+        get "#{path}.:format", to: action, constraints: { format: /md/ }
+        get path,
+            to: action,
+            defaults: {
+              format: :md,
+            },
+            constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+      end
+    end
+  end
 
   scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     relative_url_root =
@@ -343,6 +389,10 @@ Discourse::Application.routes.draw do
           :constraints => AdminConstraint.new
       put "dashboard/reports/layout" => "dashboard#update_reports_section",
           :constraints => AdminConstraint.new
+      post "dashboard/reports/mount" => "dashboard#mount_report",
+           :constraints => AdminConstraint.new
+      delete "dashboard/reports/mount" => "dashboard#unmount_report",
+             :constraints => AdminConstraint.new
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
       post "/toggle-feature" => "dashboard#toggle_feature"
@@ -425,6 +475,8 @@ Discourse::Application.routes.draw do
         get "content/posts-and-topics" => "site_settings#index"
         get "content/stats-and-thresholds" => "site_settings#index"
         get "developer" => "site_settings#index"
+        get "mcp" => "site_settings#index"
+        get "mcp/*path" => "site_settings#index"
         get "files" => "site_settings#index"
         get "interface" => "site_settings#index"
         get "legal" => "site_settings#index"
@@ -601,6 +653,7 @@ Discourse::Application.routes.draw do
     post "session/email-login/:token" => "session#email_login"
     post "session/login-code" => "session#create_login_code"
     post "session/login-code/verify" => "session#verify_login_code"
+    post "session/password-reset-code/verify" => "session#redeem_password_reset_code"
     get "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     post "session/otp/:token" => "session#one_time_password", :constraints => { token: /[0-9a-f]+/ }
     get "session/2fa" => "session#second_factor_auth_show"
@@ -693,7 +746,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/search/users" => "users#search_users"
 
       get(
-        { "#{root_path}/account-created/" => "users#account_created" }.merge(
+        **{ "#{root_path}/account-created/" => "users#account_created" }.merge(
           index == 1 ? { as: :users_account_created } : { as: :old_account_created },
         ),
       )
@@ -701,7 +754,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/account-created/resent" => "users#account_created"
       get "#{root_path}/account-created/edit-email" => "users#account_created"
       get(
-        { "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
+        **{ "#{root_path}/password-reset/:token" => "users#password_reset_show" }.merge(
           index == 1 ? { as: :password_reset_token } : {},
         ),
       )
@@ -715,7 +768,7 @@ Discourse::Application.routes.draw do
             token: /[0-9a-f]+/,
           }
       put(
-        {
+        **{
           "#{root_path}/activate-account/:token" => "users#perform_account_activation",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -730,7 +783,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
-        {
+        **{
           "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
           :constraints => {
             token: /[0-9a-f]+/,
@@ -779,7 +832,7 @@ Discourse::Application.routes.draw do
             format: :json,
           }
       get(
-        {
+        **{
           "#{root_path}/:username" => "users#show",
           :constraints => {
             username: RouteFormat.username,
@@ -1552,6 +1605,7 @@ Discourse::Application.routes.draw do
 
     get "embed/topics" => "embed#topics"
     get "embed/comments" => "embed#comments"
+    get "embed/status" => "embed#status"
     get "embed/count" => "embed#count"
     get "embed/info" => "embed#info"
 
@@ -1890,30 +1944,80 @@ Discourse::Application.routes.draw do
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
     get "/tag_groups/filter/search" => "tag_groups#search", :format => :json
 
-    Discourse.filters.each do |filter|
-      root to: "list##{filter}",
-           constraints: HomePageConstraint.new("#{filter}"),
-           as: "list_#{filter}"
+    # Allow the controller to fall back to HTML when Markdown loses Accept negotiation.
+    scope constraints: { format: %r{(json|html|markdown|\*/\*)} } do
+      Discourse.filters.each do |filter|
+        root to: "list##{filter}",
+             constraints: HomePageConstraint.new("#{filter}"),
+             as: "list_#{filter}"
+      end
+
+      DiscoursePluginRegistry._raw_homepage_options.each do |registration|
+        option = registration[:value]
+        get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+      end
+
+      # special case for categories
+      root to: "categories#index",
+           constraints: HomePageConstraint.new("categories"),
+           as: "categories_index"
+
+      root to: "finish_installation#index",
+           constraints: HomePageConstraint.new("finish_installation"),
+           as: "installation_redirect"
+
+      root to: "home_page#custom",
+           constraints: HomePageConstraint.new("custom"),
+           as: "home_page_custom"
+
+      root to: "home_page#blank",
+           constraints: HomePageConstraint.new("blank"),
+           as: "home_page_blank"
     end
 
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
 
-    # special case for categories
-    root to: "categories#index",
-         constraints: HomePageConstraint.new("categories"),
-         as: "categories_index"
-
-    root to: "finish_installation#index",
-         constraints: HomePageConstraint.new("finish_installation"),
-         as: "installation_redirect"
-
-    root to: "home_page#custom",
-         constraints: HomePageConstraint.new("custom"),
-         as: "home_page_custom"
-
-    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
-
     get "/custom" => "home_page#custom"
+
+    post "/mcp" => "mcp#create"
+    match "/mcp" => "mcp#method_not_allowed", :via => %i[get delete put patch options]
+
+    get "/.well-known/oauth-protected-resource/mcp" => "mcp_oauth_metadata#protected_resource"
+    get "/.well-known/oauth-authorization-server" => "mcp_oauth_metadata#authorization_server"
+    get "/.well-known/openid-configuration" => "mcp_oauth_metadata#authorization_server"
+
+    get "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#show", :as => :oauth2_mcp_authorize
+    post "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#create"
+    post "/oauth2/mcp/token" => "mcp_oauth_tokens#create"
+    post "/oauth2/mcp/revoke" => "mcp_oauth_tokens#revoke"
+
+    scope "/admin/mcp", constraints: AdminConstraint.new do
+      get "/overview" => "admin/mcp#overview"
+      get "/access" => "admin/mcp#access"
+      put "/access/:group_id" => "admin/mcp#update_access"
+      delete "/access/:group_id" => "admin/mcp#destroy_access"
+      get "/capabilities" => "admin/mcp#primitives"
+      put "/capabilities" => "admin/mcp#update_primitives"
+      put "/capabilities/emergency-block" => "admin/mcp#emergency_block"
+      get "/clients" => "admin/mcp_clients#index"
+      post "/clients" => "admin/mcp_clients#create"
+      get "/clients/:id" => "admin/mcp_clients#show"
+      put "/clients/:id" => "admin/mcp_clients#update"
+      put "/clients/:id/block" => "admin/mcp_clients#block"
+      post "/clients/:id/refresh" => "admin/mcp_clients#refresh"
+      get "/authorizations" => "admin/mcp_authorizations#index"
+      delete "/authorizations/:id" => "admin/mcp_authorizations#destroy"
+      get "/activity" => "admin/mcp_activity#index"
+    end
+
+    get "/u/:username/preferences/mcp-authorizations" => "mcp_user_authorizations#index",
+        :constraints => {
+          username: RouteFormat.username,
+        }
+    delete "/u/:username/preferences/mcp-authorizations/:id" => "mcp_user_authorizations#destroy",
+           :constraints => {
+             username: RouteFormat.username,
+           }
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

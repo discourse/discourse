@@ -53,12 +53,12 @@ export default class RenamePasskey extends Component {
       </div>
       <form>
         <div class="rename-passkey__form inline-form">
-          <Input @value={{this.passkeyName}} autofocus={{true}} @type="text" />
+          <Input autofocus={{true}} @type="text" @value={{this.passkeyName}} />
           <DButton
             class="btn-primary"
-            @type="submit"
             @action={{this.saveRename}}
             @label="user.passkeys.save"
+            @type="submit"
           />
         </div>
       </form>

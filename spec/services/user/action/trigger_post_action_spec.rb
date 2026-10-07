@@ -28,6 +28,7 @@ RSpec.describe User::Action::TriggerPostAction do
 
     context "when post_action is 'none'" do
       let(:post_action) { "none" }
+
       it "does nothing" do
         expect { action }.not_to change { Post.count }
       end

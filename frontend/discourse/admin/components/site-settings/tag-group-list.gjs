@@ -20,12 +20,12 @@ export default class TagGroupList extends Component {
   <template>
     <div ...attributes>
       <TagGroupChooser
-        @tagGroups={{this.selectedTagGroups}}
         @onChange={{this.onTagGroupChange}}
         @options={{hash
           filterPlaceholder="category.required_tag_group.placeholder"
           disabled=@disabled
         }}
+        @tagGroups={{this.selectedTagGroups}}
       />
     </div>
   </template>

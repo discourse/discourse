@@ -5,6 +5,37 @@
 # https://translate.discourse.org/
 
 hu:
+  markdown_endpoints:
+    latest: "Legutóbbi"
+    categories: "Kategóriák"
+    tags: "Címkék"
+    previous_page: "Előző oldal"
+    next_page: "Következő oldal"
+    replies: "Válaszok"
+    last_updated: "Legutóbb frissítve"
+    event:
+      name: "Esemény"
+      location: "Hely"
+      link: "Hivatkozás"
+  mcp:
+    errors:
+      draft_too_long: "A vázlat túl hosszú"
+      topic_not_found: "A téma nem található"
+    oauth:
+      deny: "Tiltás"
+      approve: "Engedélyezés"
+  llms_txt:
+    sections:
+      optional: "Nem kötelező"
+    links:
+      search:
+        label: "Keresés"
+      categories:
+        label: "Kategóriák"
+      about:
+        label: "Névjegy"
+      guidelines:
+        label: "Irányelvek"
   dates:
     short_date_no_year: "MMM D."
     short_date: "YYYY. MMM D."
@@ -813,6 +844,7 @@ hu:
       description_too_long:
         one: "A leírás túl hosszú (maximum %{count} karakter)."
         other: "A leírás túl hosszú (maximum %{count} karakter)."
+      special_category_permissions: "Ez egy előre létrehozott kategória, és a biztonsági beállításai nem szerkeszthetők. Ha nem szeretné használni ezt a kategóriát, törölje ahelyett, hogy más célra használná fel."
       permission_conflict: "Minden olyan csoportnak, amely hozzáférhet egy alkategóriához, a szülőkategóriához is hozzá kell férnie. A következő csoportok hozzáférhetnek valamelyik alkategóriához, de nem férnek hozzá a szülőkategóriához: %{group_names}."
       disallowed_topic_tags: "Ebben a témában vannak olyan címkék, amelyeket ez a kategória nem engedélyez: '%{tags}'"
       disallowed_tags_generic: "Ez a téma nem engedélyezett címkéket tartalmaz."
@@ -983,6 +1015,7 @@ hu:
       windows: "Microsoft Windows"
       unknown: "ismeretlen operációs rendszer"
   admin_site_traffic_explorer:
+    unknown: "Ismeretlen"
     traffic_types:
       anonymous: "Névtelen"
   change_email:
@@ -1133,7 +1166,7 @@ hu:
   uploads:
     marked_insecure_from_theme_component_reason: "A feltöltés egy téma összetevőt használ"
   unsubscribe:
-    title: "Leiratkozás"
+    unsubscribe: "Leiratkozás"
     stop_watching_topic: "Ne figyelje tovább ezt a kategóriát: %{link}"
     mute_topic: "A téma összes értesítésének némítása, %{link}"
     unwatch_category: "Ne figyelje tovább ezt a kategóriát: %{category}"
@@ -1274,6 +1307,11 @@ hu:
         share: "Megosztás"
       types:
         staff: "Stáb"
+    posters_by_member_type_members:
+      labels:
+        user: "Felhasználó"
+        count: "Bejegyzések"
+        share: "Megosztás"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1649,12 +1687,6 @@ hu:
       host_names: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
       queue_size: "A sorba állított feladatok száma %{queue_size}, ami magas. Ez a Sidekiq-folyamat(ok) problémáját jelezheti, vagy több Sidekiq-kezelőt kell hozzáadni."
       ram: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
-      google_oauth2_config: 'A szerver úgy van beállítva, hogy engedélyezze a regisztrációt és a bejelentkezést a Google OAuth2 használatával (enable_google_oauth2_logins), de az ügyfélazonosító és az ügyfél titkossága nincs beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      facebook_config: 'A szerver úgy van konfigurálva, hogy engedélyezze a regisztrációt és a bejelentkezést a Facebookon (enable_facebook_logins), de az alkalmazásazonosító és az alkalmazás titkos értékei nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      twitter_config: 'A szerver úgy van konfigurálva, hogy engedélyezze az X-en keresztüli regisztrációt és bejelentkezést (enable_twitter_logins), de a kulcs és a titkos értékek nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      github_config: 'A szerver úgy van konfigurálva, hogy engedélyezze a regisztrációt és a bejelentkezést a Facebookon (enable_facebook_logins), de az alkalmazásazonosító és az alkalmazás titkos értékei nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      s3_upload_config: 'A kiszolgáló úgy van beállítva, hogy fájlokat töltsön fel az S3-ba, de a következő beállítások közül legalább egy nincs beállítva: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile vagy s3_upload_bucket. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lásd "Hogyan állíthatom be a képfeltöltést az S3-ba?" a részletekért</a>.'
-      s3_backup_config: 'A kiszolgáló úgy van beállítva, hogy biztonsági másolatokat töltsön fel az S3-ba, de a következő beállítások közül legalább egy nincs beállítva: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile vagy s3_backup_bucket. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lásd: "Hogyan állíthatom be a képfeltöltést az S3-ba?" a részletekért</a>.'
       s3_cdn: 'A szerver úgy van beállítva, hogy fájlokat töltsön fel az S3-ba, de nincs konfigurálva S3 CDN. Ez drága S3-költségekhez és lassabb webhelyteljesítményhez vezethet. <a href="https://meta.discourse.org/t/-/148916" target="_blank">További információért olvassa el az "Object Storage használata feltöltéshez" részt</a>.'
       image_magick: 'A szerver úgy van beállítva, hogy nagyméretű képek miniatűrjeit hozza létre, de az ImageMagick nincs telepítve. Telepítse az ImageMagick-et kedvenc csomagkezelőjével, vagy <a href="https://www.imagemagick.org/script/download.php" target="_blank">töltse le a legújabb kiadást</a>.'
       failing_emails: 'Van %{num_failed_jobs} e-mail feladat, amelyek meghiúsultak. Ellenőrizze az app.yml fájlt, és győződjön meg arról, hogy a levelezőszerver beállításai helyesek. <a href="%{base_path}/sidekiq/retries" target="_blank">Tekintse meg a sikertelen feladatokat a Sidekiq</a>-ban.'
@@ -1831,7 +1863,6 @@ hu:
     allowed_iframes: "Az iframe src URL előtagok listája, amelyeket a Discourse biztonságosan engedélyez a bejegyzésekben. A * karakter tetszőleges számú, nem-/ karaktert helyettesíthet."
     allowed_crawler_user_agents: "Azon webes keresőrobotok felhasználói ügynökei, amelyek számára engedélyezett a webhely elérése. FIGYELMEZTETÉS! ENNEK BEÁLLÍTÁSA MEGTILTJA AZ ÖSSZES ITT NEM FELSOROLT KERESŐROBOT HOZZÁFÉRÉSÉT!"
     blocked_crawler_user_agents: "A felhasználói ügynök karakterláncban szereplő egyedi, kis- és nagybetűkre nem érzékeny szó, amely azonosítja azokat a webes keresőrobotokat, amelyek számára nem engedélyezett a webhely elérése. Nem alkalmazandó, ha az engedélyezési lista definiálva van."
-    llms_txt: "Töltsön fel egy szöveges fájlt, amely az /llms.txt útvonalon lesz elérhető az LLM-robotok (crawlerek) számára. További információért látogasson el az <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> oldalra."
     content_security_policy_report_only: "Engedélyezze a Tartalombiztonsági Szabályzat Csak Jelentés Módját (CSP)"
     content_security_policy_frame_ancestors: "Korlátozza, ki ágyazhatja be ezt a webhelyet iframe-ekbe a CSP segítségével. Az engedélyezett kiszolgálók szabályozása a <a href='%{base_path}/admin/customize/embedding'>Beágyazás</a> oldalon történik"
     content_security_policy_script_src: "További engedélyezett szkriptforrások. Az aktuális kiszolgáló és CDN alapértelmezetten szerepel. Lásd <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS támadások mérséklése Tartalombiztonsági Szabályzattal.</a> (CSP). Egyéb kiszolgálóforrások figyelmen kívül maradnak, mivel a strict-dynamic engedélyezve van."
@@ -1844,7 +1875,7 @@ hu:
     share_links: "Határozza meg, mely elemek jelenjenek meg a megosztási párbeszédablakban, és milyen sorrendben."
     allow_username_in_share_links: "Engedélyezze, hogy a felhasználónevek szerepeljenek a megosztási linkekben. Ez hasznos a jelvények jutalmazásához egyedi látogatók alapján."
     site_contact_username: "Stábtag felhasználónév, amelyről minden automatikus levél küldésre kerül. Ha üresen hagyja, akkor az alapértelmezett rendszerfiók kerül felhasználásra."
-    site_contact_group_name: "Egy csoport érvényes neve, amely meghívást kap minden automatikusan elküldött személyes üzenetre."
+    site_contact_group_name: "Egy olyan csoport, amely meghívást kap minden automatikusan elküldött személyes üzenetre."
     send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     send_tl1_welcome_message: "Küldjön üdvözlő üzenetet az új 1-es megbízhatósági szintű felhasználóknak."
     send_tl2_promotion_message: "Küldjön üzenetet az új 2-es megbízhatósági szintű felhasználóknak az előléptetésükről."
@@ -2450,7 +2481,6 @@ hu:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
       valid_username: "Van egy ilyen nevű felhasználó."
-      invalid_group: "Nincs ilyen nevű csoport."
       invalid_svg: "Az SVG kép érvénytelen. Tartalmaznia kell egy SVG elemet, továbbá nem tartalmazhat szkripteket vagy eseménykezelőket."
       invalid_upload: "A feltöltés érvénytelen vagy nem létezik."
       invalid_topic: "Nincs ilyen azonosítóval rendelkező téma."
@@ -2511,7 +2541,6 @@ hu:
       markdown_linkify_tlds: "Nem adhat meg „*” értéket."
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt konfigurálnia kell a „google oauth2 hd” összes beállítását."
       discourse_id_registration: "Nem sikerült az automatikus regisztráció a Discourse ID-vel. Ezt hálózati kapcsolódási problémák, tűzfalkorlátozások vagy a Discourse ID szolgáltatás elérhetetlensége okozhatja. További részletekért ellenőrizze a szervernaplókat, vagy lépjen kapcsolatba az ügyfélszolgálattal."
-      linkedin_oidc_credentials: "A beállítás engedélyezése előtt konfigurálnia kell a LinkedIn OIDC hitelesítő adatait (\"linkedin_oidc_client_id\" és \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "A DiscourseConnect nem engedélyezhető, ha a 2FA kényszerítve van."
@@ -2559,8 +2588,6 @@ hu:
       tags_any: "A megadott címkék bármelyikével jelölt témák megjelenítése (vesszővel elválasztva)"
       tags_all: "Az összes megadott címkével ellátott témák megjelenítése (pluszjellel elválasztva)"
       exclude_tag: "Egy adott címkével rendelkező témák kizárása"
-      exclude_tags_any: "Kizárja a megadott címkék bármelyikét tartalmazó témákat (vesszővel elválasztva)."
-      exclude_tags_all: "Kizárja a megadott címkékkel rendelkező témákat (plusz-szeparált)"
       tag_group: "Témák megjelenítése egy adott címkecsoport címkéivel"
       exclude_tag_group: "Címkékkel ellátott témák kizárása egy adott címkecsoportból"
       activity_before: "Mutassa a témákat, amelyek utolsó aktivitása egy adott dátum előtt (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) történt"
@@ -2568,7 +2595,6 @@ hu:
       created_before: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) előtt létrehozott témák megjelenítése"
       created_after: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) után létrehozott témák megjelenítése"
       created_by: "Egy adott felhasználó vagy csoport által létrehozott témák megjelenítése"
-      created_by_user: "Felhasználónév vagy csoport által létrehozott témák megjelenítése (@ jel nélkül)"
       created_by_multiple: "A megadott felhasználók vagy csoportok által létrehozott témák megjelenítése (vesszővel elválasztva)"
       latest_post_before: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum előtt történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
       latest_post_after: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum után történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
@@ -2772,6 +2798,7 @@ hu:
     wrong_invite_code: "A megadott meghívókód helytelen."
     reserved_username: "Ez a felhasználónév nem engedélyezett."
     missing_user_field: "Nem töltötte ki az összes kötelező felhasználói mezőt"
+    missing_username: "Adjon meg egy felhasználónevet"
     auth_complete: "A hitelesítés befejeződött."
     click_to_continue: "Kattintson ide a folytatáshoz."
     already_logged_in: "Sajnálom! Ez a meghívás új felhasználóknak szól, akik még nem rendelkeznek meglévő fiókkal."
@@ -4052,7 +4079,7 @@ hu:
         Üdvözölünk a %{site_name}n!
 
         Egy adminisztrátorunk jóváhagyta a fiókodat a %{site_name}.n, most már beléphetsz, ha bejelentkezel az alábbi oldalon:
-        %{base_url}
+        %{login_url}
 
         Ha a fenti link nem kattintható, próbáld meg másolni és beilleszteni a webböngésző címsorába.
 
@@ -4587,6 +4614,10 @@ hu:
   performance_report:
     initial_post_raw: Ez a téma a webhely napi teljesítményjelentéseit tartalmazza.
     initial_topic_title: Weboldal teljesítményjelentések
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Túl sok bejegyzés a CSV-fájlban. Kérjük, adjon meg egy CSV-fájlt, amely legfeljebb %{count} bejegyzést tartalmaz."
+      other: "Túl sok bejegyzés a CSV-fájlban. Kérjük, adjon meg egy CSV-fájlt, amely legfeljebb %{count} bejegyzést tartalmaz."
   tags:
     title: "Címkék"
     restricted_tag_disallowed: 'Nem alkalmazhatja a "%{tag}" címkét.'
@@ -4854,8 +4885,6 @@ hu:
         complete: "A bejegyzés elrejtve, a felhasználó értesítést kapott."
       agree_and_edit:
         title: "Bejegyzés szerkesztése"
-        description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
-        complete: "Megjelölés tudomásul véve, most már szerkesztheti a bejegyzést."
       delete:
         title: "Törlés"
         complete: "Bejegyzés törölve."
@@ -4881,6 +4910,8 @@ hu:
         title: "Bejegyzés visszaállítása"
         description: "Nem értek egyet a megjelöléssel és visszaállítom a bejegyzést"
         complete: "A bejegyzés visszaállítva."
+      disagree_and_keep_deleted:
+        title: "A bejegyzés maradjon törölve"
       disagree_bundle:
         title: "Nem"
       disagree:
@@ -4959,30 +4990,6 @@ hu:
       approve_and_unhide:
         title: "Igen"
         complete: "Bejegyzés jóváhagyva és felfedve"
-      post_actions:
-        bundle_title: "Mit akarsz csinálni a bejegyzéssel?"
-      delete_post:
-        title: "Bejegyzés törlése"
-        description: "Bejegyzés törlése"
-        complete: "Bejegyzés törölve"
-      hide_post:
-        title: "Bejegyzés elrejtése"
-        description: "Rejtse el ezt a bejegyzést a nyilvánosság elől"
-        complete: "Bejegyzés elrejtve"
-      unhide_post:
-        title: "Bejegyzés elrejtésének felfedése"
-        description: "Tedd ezt a bejegyzést láthatóvá minden felhasználó számára"
-        complete: "Bejegyzés felfedve"
-      restore_post:
-        title: "Bejegyzés visszaállítása"
-        description: "Törölt bejegyzés visszaállítása"
-        complete: "A bejegyzés visszaállítva"
-      edit_post:
-        title: "Bejegyzés szerkesztése"
-        description: "A bejegyzés tartalmának szerkesztése"
-        complete: "Bejegyzés szerkesztve"
-      user_actions:
-        bundle_title: "Mit szeretnél csinálni a felhasználóval?"
       silence_user:
         title: "Felhasználó némítása"
         complete: "Felhasználó elnémítva"

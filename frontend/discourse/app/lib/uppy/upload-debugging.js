@@ -16,51 +16,6 @@ export default class UppyUploadDebugging {
     }
   }
 
-  #consolePerformanceTiming(timing) {
-    // Sometimes performance.measure can fail to return a PerformanceMeasure
-    // object, in this case we can't log anything so return to prevent errors.
-    if (!timing) {
-      return;
-    }
-
-    const minutes = Math.floor(timing.duration / 60000);
-    const seconds = ((timing.duration % 60000) / 1000).toFixed(0);
-    const duration = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-    this.log(`${timing.name}:\n duration: ${duration} (${timing.duration}ms)`);
-  }
-
-  #performanceApiSupport() {
-    this.#performanceMark("testing support 1");
-    this.#performanceMark("testing support 2");
-    const perfMeasure = this.#performanceMeasure(
-      "performance api support",
-      "testing support 1",
-      "testing support 2"
-    );
-    return perfMeasure;
-  }
-
-  #performanceMark(markName) {
-    return performance.mark(markName);
-  }
-
-  #performanceMeasure(measureName, startMark, endMark) {
-    let measureResult;
-    try {
-      measureResult = performance.measure(measureName, startMark, endMark);
-    } catch (error) {
-      if (
-        error.message.includes("Failed to execute 'measure' on 'Performance'")
-      ) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `Uppy performance measure failed: ${measureName}, ${startMark}, ${endMark}`
-        );
-      }
-    }
-    return measureResult;
-  }
-
   instrumentUploadTimings(uppy) {
     if (!this.#performanceApiSupport()) {
       warn(
@@ -132,5 +87,50 @@ export default class UppyUploadDebugging {
         )
       );
     });
+  }
+
+  #consolePerformanceTiming(timing) {
+    // Sometimes performance.measure can fail to return a PerformanceMeasure
+    // object, in this case we can't log anything so return to prevent errors.
+    if (!timing) {
+      return;
+    }
+
+    const minutes = Math.floor(timing.duration / 60000);
+    const seconds = ((timing.duration % 60000) / 1000).toFixed(0);
+    const duration = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    this.log(`${timing.name}:\n duration: ${duration} (${timing.duration}ms)`);
+  }
+
+  #performanceApiSupport() {
+    this.#performanceMark("testing support 1");
+    this.#performanceMark("testing support 2");
+    const perfMeasure = this.#performanceMeasure(
+      "performance api support",
+      "testing support 1",
+      "testing support 2"
+    );
+    return perfMeasure;
+  }
+
+  #performanceMark(markName) {
+    return performance.mark(markName);
+  }
+
+  #performanceMeasure(measureName, startMark, endMark) {
+    let measureResult;
+    try {
+      measureResult = performance.measure(measureName, startMark, endMark);
+    } catch (error) {
+      if (
+        error.message.includes("Failed to execute 'measure' on 'Performance'")
+      ) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Uppy performance measure failed: ${measureName}, ${startMark}, ${endMark}`
+        );
+      }
+    }
+    return measureResult;
   }
 }

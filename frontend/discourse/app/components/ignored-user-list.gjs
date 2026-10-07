@@ -58,10 +58,10 @@ export default class IgnoredUserList extends Component {
       <div class="instructions">{{i18n "user.ignored_users_instructions"}}</div>
       <div>
         <DButton
+          class="btn-default"
           @action={{this.newIgnoredUser}}
           @icon="plus"
           @label="user.user_notifications.add_ignored_user"
-          class="btn-default"
         />
       </div>
     </div>

@@ -25,7 +25,7 @@ RSpec.describe UserApiKeyClientsController do
     context "with a registered client" do
       before { Fabricate(:user_api_key_client, **args) }
 
-      it "succeeds" do
+      it "returns 200 for a registered client" do
         head "/user-api-key-client.json", params: { client_id: args[:client_id] }
         expect(response.status).to eq(200)
       end
@@ -102,7 +102,7 @@ RSpec.describe UserApiKeyClientsController do
         context "with rate limiting" do
           before { RateLimiter.enable }
 
-          it "works" do
+          it "rejects client creation after the daily limit is reached" do
             SiteSetting.user_api_key_clients_create_per_day = 1
             post "/user-api-key-client.json", params: args_with_scopes
             expect(response.status).to eq(200)

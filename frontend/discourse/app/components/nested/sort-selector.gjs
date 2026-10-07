@@ -68,8 +68,8 @@ export default class NestedSortSelector extends Component {
               <dropdown.item>
                 <DButton
                   class={{if (eq @current option.value) "is-selected"}}
-                  @translatedLabel={{i18n option.labelKey}}
                   @action={{fn this.changeSort option.value}}
+                  @translatedLabel={{i18n option.labelKey}}
                 />
               </dropdown.item>
             {{/each}}

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Request do
-  subject(:request) { described_class::Collection.new(params, guardian:) }
+  subject(:request) do
+    described_class::Collection.new(params, guardian:, edition: JsonApiKit::Edition.current)
+  end
 
   let(:params) { {} }
   let(:guardian) { Guardian.new }
@@ -16,7 +18,9 @@ RSpec.describe JsonApiKit::Request do
     end
 
     context "when a caller asks for one record" do
-      subject(:request) { described_class::Individual.new(params, guardian:) }
+      subject(:request) do
+        described_class::Individual.new(params, guardian:, edition: JsonApiKit::Edition.current)
+      end
 
       let(:params) { { id: topic.id } }
 
@@ -60,7 +64,9 @@ RSpec.describe JsonApiKit::Request do
     end
 
     context "when a caller asks for one record" do
-      subject(:request) { described_class::Individual.new(params, guardian:) }
+      subject(:request) do
+        described_class::Individual.new(params, guardian:, edition: JsonApiKit::Edition.current)
+      end
 
       let(:params) { { id: 12, fields: { users: %w[username] } } }
 
@@ -108,7 +114,15 @@ RSpec.describe JsonApiKit::Request do
     context "when there is no sort parameter" do
       let(:params) { {} }
 
-      it "returns no sort" do
+      it "requires a resolved ordering" do
+        expect { ordering }.to raise_error(KeyError, /sort/)
+      end
+    end
+
+    context "when the request has an explicit empty ordering" do
+      let(:params) { { sort: {} } }
+
+      it "preserves the empty ordering" do
         expect(ordering).to be_empty
       end
     end

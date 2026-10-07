@@ -243,10 +243,13 @@ module DiscourseAi
         @mcp_state&.dig(server_id.to_i, :session_id)
       end
 
-      def store_mcp_session(server_id, session_id)
+      def mcp_protocol_version_for(server_id)
+        @mcp_state&.dig(server_id.to_i, :protocol_version)
+      end
+
+      def store_mcp_session(server_id, session_id, protocol_version: nil)
         @mcp_state ||= {}
-        state = (@mcp_state[server_id.to_i] ||= { session_id: nil })
-        state[:session_id] = session_id
+        @mcp_state[server_id.to_i] = { session_id: session_id, protocol_version: protocol_version }
       end
     end
   end

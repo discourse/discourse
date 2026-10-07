@@ -26,9 +26,9 @@ export default class UserSummaryTopicsList extends Component {
       {{#if this.hasMore}}
         <p>
           <LinkTo
-            @route={{concat "userActivity." @type}}
-            @model={{@user}}
             class="more"
+            @model={{@user}}
+            @route={{concat "userActivity." @type}}
           >
             {{i18n (concat "user.summary.more_" @type)}}
           </LinkTo>

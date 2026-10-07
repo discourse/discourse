@@ -77,11 +77,14 @@ module SystemHelpers
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
-    SiteSetting.allowed_internal_hosts =
-      (
-        SiteSetting.allowed_internal_hosts.to_s.split("|") +
-          MinioRunner.config.minio_urls.map { |url| URI.parse(url).host }
-      ).join("|")
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].present?
+      s3_host = URI(ENV.fetch("S3_SYSTEM_TEST_ENDPOINT")).host
+      s3_bucket = ENV.fetch("S3_SYSTEM_TEST_BUCKET")
+      SiteSetting.allowed_internal_hosts =
+        (
+          SiteSetting.allowed_internal_hosts.to_s.split("|") + [s3_host, "#{s3_bucket}.#{s3_host}"]
+        ).join("|")
+    end
   end
 
   def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01, reason: nil)
@@ -224,25 +227,36 @@ module SystemHelpers
 
     SiteSetting.enable_s3_uploads = true
 
-    SiteSetting.s3_upload_bucket = "discoursetest"
+    SiteSetting.s3_upload_bucket = ENV.fetch("S3_SYSTEM_TEST_BUCKET")
     SiteSetting.enable_upload_debug_mode = true
 
-    SiteSetting.s3_access_key_id = MinioRunner.config.minio_root_user
-    SiteSetting.s3_secret_access_key = MinioRunner.config.minio_root_password
-    SiteSetting.s3_endpoint = MinioRunner.config.minio_server_url
+    SiteSetting.s3_access_key_id = ENV.fetch("S3_SYSTEM_TEST_ACCESS_KEY_ID")
+    SiteSetting.s3_secret_access_key = ENV.fetch("S3_SYSTEM_TEST_SECRET_ACCESS_KEY")
+    SiteSetting.s3_endpoint = ENV.fetch("S3_SYSTEM_TEST_ENDPOINT")
 
     SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
     SiteSetting.secure_uploads = enable_secure_uploads
 
-    # On CI, the minio binary is preinstalled in the docker image so there is no need for us to check for a new binary
-    MinioRunner.start(install: ENV["CI"] ? false : true)
+    s3_options = S3Helper.s3_options(SiteSetting)
+    Aws::S3::Client.new(**s3_options, force_path_style: true).put_bucket_policy(
+      bucket: SiteSetting.s3_upload_bucket,
+      policy: {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: "*",
+            Action: "s3:GetObject",
+            Resource: "arn:aws:s3:::#{SiteSetting.s3_upload_bucket}/*",
+          },
+        ],
+      }.to_json,
+    )
   end
 
   def skip_unless_s3_system_specs_enabled!
-    if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
-      skip(
-        "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",
-      )
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].blank?
+      skip("S3 system specs require S3_SYSTEM_TEST_ENDPOINT and its related credentials.")
     end
   end
 

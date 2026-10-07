@@ -35,10 +35,10 @@ export default class FullscreenCode extends Component {
 
   <template>
     <DModal
-      @title={{i18n "copy_codeblock.view_code"}}
-      @closeModal={{this.closeModal}}
-      {{didInsert this.applyCodeblockButtons}}
       class="fullscreen-code-modal --max"
+      @closeModal={{this.closeModal}}
+      @title={{i18n "copy_codeblock.view_code"}}
+      {{didInsert this.applyCodeblockButtons}}
     >
       <:body>
         <PluginOutlet

@@ -43,7 +43,7 @@ class Admin::ApiController < Admin::AdminController
                 scope_id: "#{resource}:#{k}",
                 key: k,
                 name: k.to_s.gsub("_", " "),
-                params: v[:params],
+                params: ApiKeyScope.restrictable_parameters(v),
                 urls: v[:urls],
               }
             end
@@ -130,7 +130,8 @@ class Admin::ApiController < Admin::AdminController
       ApiKeyScope.new(
         resource: resource,
         action: action,
-        allowed_parameters: build_params(scope_params, mapping[:params]),
+        allowed_parameters:
+          build_params(scope_params, ApiKeyScope.restrictable_parameters(mapping)),
       )
     end
   end

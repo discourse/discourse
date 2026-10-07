@@ -77,9 +77,9 @@ export default class RovingFocusAdjacentGroupsExample extends Component {
   <template>
     <div class="roving-demo__adjacent">
       <div
+        aria-label={{i18n "styleguide.sections.roving_focus.adjacent.label"}}
         class="roving-demo__filters"
         role="group"
-        aria-label={{i18n "styleguide.sections.roving_focus.adjacent.label"}}
         {{dRovingFocus
           orientation="horizontal"
           itemSelector=".roving-demo__filter"
@@ -90,21 +90,21 @@ export default class RovingFocusAdjacentGroupsExample extends Component {
       >
         {{#each this.filters key="id" as |filter|}}
           <button
-            type="button"
-            class="roving-demo__filter"
             aria-pressed={{filter.pressed}}
+            class="roving-demo__filter"
+            type="button"
             {{on "click" (fn this.toggle filter.id)}}
           >{{filter.label}}</button>
         {{/each}}
       </div>
 
       <input
-        class="roving-demo__field"
-        type="text"
         aria-label={{i18n "styleguide.sections.roving_focus.adjacent.field"}}
+        class="roving-demo__field"
         placeholder={{i18n
           "styleguide.sections.roving_focus.adjacent.placeholder"
         }}
+        type="text"
         {{didInsert this.captureField}}
         {{on "keydown" this.enterFilters}}
       />

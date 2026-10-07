@@ -69,8 +69,8 @@ export default class AdminUserFieldItem extends Component {
       <td class="d-table__cell --overview">
         <LinkTo
           class="d-table__overview-link"
-          @route="adminUserFields.edit"
           @model={{@userField}}
+          @route="adminUserFields.edit"
         >
           <div class="d-table__overview-name admin-user_field-item__name">
             {{@userField.name}}
@@ -93,10 +93,10 @@ export default class AdminUserFieldItem extends Component {
           />
 
           <DMenu
-            @identifier="user_field-menu"
-            @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
             @icon="ellipsis-vertical"
+            @identifier="user_field-menu"
             @onRegisterApi={{this.onRegisterApi}}
+            @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
             @triggerClass="btn-default"
           >
             <:content>
@@ -104,30 +104,30 @@ export default class AdminUserFieldItem extends Component {
                 {{#unless this.cantMoveUp}}
                   <dropdown.item>
                     <DButton
-                      @label="admin.config_areas.user_fields.more_options.move_up"
-                      @icon="arrow-up"
                       class="btn-transparent admin-user_field-item__move-up"
                       @action={{this.moveUp}}
+                      @icon="arrow-up"
+                      @label="admin.config_areas.user_fields.more_options.move_up"
                     />
                   </dropdown.item>
                 {{/unless}}
                 {{#unless this.cantMoveDown}}
                   <dropdown.item>
                     <DButton
-                      @label="admin.config_areas.user_fields.more_options.move_down"
-                      @icon="arrow-down"
                       class="btn-transparent admin-user_field-item__move-down"
                       @action={{this.moveDown}}
+                      @icon="arrow-down"
+                      @label="admin.config_areas.user_fields.more_options.move_down"
                     />
                   </dropdown.item>
                 {{/unless}}
 
                 <dropdown.item>
                   <DButton
-                    @label="admin.config_areas.user_fields.delete"
-                    @icon="trash-can"
                     class="btn-transparent --danger admin-user_field-item__delete"
                     @action={{this.destroy}}
+                    @icon="trash-can"
+                    @label="admin.config_areas.user_fields.delete"
                   />
                 </dropdown.item>
               </DDropdownMenu>

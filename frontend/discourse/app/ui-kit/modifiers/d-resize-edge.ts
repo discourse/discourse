@@ -323,6 +323,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     this.#endKeyboardGesture();
   };
+
   /**
    * The keyup would land on whatever took focus, so without this the gesture
    * would stay open and never commit. Bound to the window as well as the
@@ -381,6 +382,35 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
+  /**
+   * The multiplier turning pointer movement into a size change.
+   *
+   * An element docked to the start of the axis grows as the pointer moves away
+   * from that edge. On the horizontal axis which physical direction that is
+   * depends on the writing direction, so `side` is interpreted logically and
+   * flipped under RTL — otherwise the edge would move away from the pointer
+   * dragging it. The vertical axis is unaffected: RTL reverses the inline axis
+   * only.
+   *
+   * @returns Either 1 or -1.
+   */
+  get #growthDirection() {
+    const logical = this.#named.side === "end" ? -1 : 1;
+
+    if (this.#named.axis === "vertical") {
+      return logical;
+    }
+
+    // Sampled once per gesture rather than on every read: this runs for each
+    // reported frame, and the consumer is changing sizes in that same frame, so
+    // every read forces a style recalculation. `side` and `axis` above stay live
+    // reads — only the writing direction is held, and it is not something that
+    // changes while a pointer is down.
+    this.#rtl ??= getComputedStyle(this.#element).direction === "rtl";
+
+    return logical * (this.#rtl ? -1 : 1);
+  }
+
   modify(
     element: HTMLElement,
     _positional: [],
@@ -432,35 +462,6 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#element?.removeEventListener("blur", this.#onBlur);
     window.removeEventListener("blur", this.#onBlur);
     window.removeEventListener("pagehide", this.#onBlur);
-  }
-
-  /**
-   * The multiplier turning pointer movement into a size change.
-   *
-   * An element docked to the start of the axis grows as the pointer moves away
-   * from that edge. On the horizontal axis which physical direction that is
-   * depends on the writing direction, so `side` is interpreted logically and
-   * flipped under RTL — otherwise the edge would move away from the pointer
-   * dragging it. The vertical axis is unaffected: RTL reverses the inline axis
-   * only.
-   *
-   * @returns Either 1 or -1.
-   */
-  get #growthDirection() {
-    const logical = this.#named.side === "end" ? -1 : 1;
-
-    if (this.#named.axis === "vertical") {
-      return logical;
-    }
-
-    // Sampled once per gesture rather than on every read: this runs for each
-    // reported frame, and the consumer is changing sizes in that same frame, so
-    // every read forces a style recalculation. `side` and `axis` above stay live
-    // reads — only the writing direction is held, and it is not something that
-    // changes while a pointer is down.
-    this.#rtl ??= getComputedStyle(this.#element).direction === "rtl";
-
-    return logical * (this.#rtl ? -1 : 1);
   }
 
   /**

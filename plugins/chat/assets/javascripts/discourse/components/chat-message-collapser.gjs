@@ -183,9 +183,9 @@ export default class ChatMessageCollapser extends Component {
     <div class="chat-message-collapser">
       {{#if this.hasUploads}}
         <DDecoratedHtml
-          @html={{trustHTML @cooked}}
-          @decorate={{@decorate}}
           @className="chat-cooked"
+          @decorate={{@decorate}}
+          @html={{trustHTML @cooked}}
         />
 
         <Collapser
@@ -213,17 +213,17 @@ export default class ChatMessageCollapser extends Component {
                 </div>
               {{else}}
                 <DDecoratedHtml
-                  @html={{trustHTML cooked.body}}
-                  @decorate={{@decorate}}
                   @className="chat-cooked"
+                  @decorate={{@decorate}}
+                  @html={{trustHTML cooked.body}}
                 />
               {{/if}}
             </Collapser>
           {{else}}
             <DDecoratedHtml
-              @html={{trustHTML cooked.body}}
-              @decorate={{@decorate}}
               @className="chat-cooked"
+              @decorate={{@decorate}}
+              @html={{trustHTML cooked.body}}
             />
           {{/if}}
         {{/each}}

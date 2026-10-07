@@ -328,6 +328,7 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
 const TYPE_TO_CONTROL = {
   boolean: "boolean",
   icon: "icon",
+  emoji: "emoji",
   options: "select",
   multi_options: "multi_combo_box",
   collection: "collection",
@@ -354,7 +355,7 @@ export function fieldSupportsExpression(schema = {}) {
     return Boolean(ui.expression);
   }
 
-  return ["string", "integer", "number", "float", "icon"].includes(
+  return ["string", "integer", "number", "float", "icon", "emoji"].includes(
     fieldType(schema)
   );
 }

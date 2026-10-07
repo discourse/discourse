@@ -27,10 +27,10 @@ function initializeDiscourseCalendar(api) {
         calendar,
         <template>
           <PostCalendar
-            @post={{@data.post}}
-            @options={{@data.options}}
-            @staticEvents={{@data.staticEvents}}
             @height="650px"
+            @options={{@data.options}}
+            @post={{@data.post}}
+            @staticEvents={{@data.staticEvents}}
           />
         </template>,
         {

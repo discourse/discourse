@@ -37,7 +37,9 @@ export default class SettingFieldGroupList extends Component {
     )
       .map((id) => {
         const group = groupsById[id];
-        return group ? { name: group.name, id } : null;
+        const name =
+          group.name === "everyone" ? "everyone (legacy)" : group.name;
+        return group ? { name, id } : null;
       })
       .filter(Boolean);
   }
@@ -76,13 +78,13 @@ export default class SettingFieldGroupList extends Component {
   <template>
     <@field.Control>
       <ListSetting
-        @value={{this.selectedIds}}
         @choices={{this.groupChoices}}
-        @settingName={{@definition.key}}
         @mandatoryValues={{@definition.mandatory_values}}
         @nameProperty="name"
-        @valueProperty="id"
         @onChange={{this.onChange}}
+        @settingName={{@definition.key}}
+        @value={{this.selectedIds}}
+        @valueProperty="id"
       />
     </@field.Control>
   </template>

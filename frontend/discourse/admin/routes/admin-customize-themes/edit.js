@@ -67,6 +67,7 @@ export default class AdminCustomizeThemesEditRoute extends Route {
 
       this.dialog.confirm({
         message: i18n("admin.customize.theme.unsaved_changes_alert"),
+        confirmButtonClass: "btn-danger",
         confirmButtonLabel: "admin.customize.theme.discard",
         cancelButtonLabel: "admin.customize.theme.stay",
         didConfirm: () => {

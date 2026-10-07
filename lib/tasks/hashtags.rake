@@ -13,3 +13,16 @@ task "hashtags:mark_old_format_for_rebake" => :environment do
   posts_to_rebake.update_all(baked_version: 0)
   puts "Done, rebakes will happen when periodical updates job runs."
 end
+
+desc "Rewrite #old_ref to a record's current hashtag reference everywhere it was cooked"
+task "hashtags:remap", %i[type id old_ref] => :environment do |_task, args|
+  type, id, old_ref = args[:type], args[:id], args[:old_ref]
+
+  abort "Usage: rake 'hashtags:remap[tag,123,old-name]'" if [type, id, old_ref].any?(&:blank?)
+
+  counts = HashtagRemapper.remap!(type:, id:, old_ref:)
+
+  abort "Nothing to remap for #{type} #{id}" if counts.blank?
+
+  counts.each { |store, count| puts "  #{store}: #{count.inspect}" }
+end

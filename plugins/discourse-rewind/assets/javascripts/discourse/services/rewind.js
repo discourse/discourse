@@ -10,14 +10,6 @@ export default class Rewind extends Service {
 
   @tracked _isEnabled = this.currentUser?.user_option?.discourse_rewind_enabled;
 
-  get active() {
-    return this.currentUser?.is_rewind_active;
-  }
-
-  get dismissed() {
-    return this._isDismissed ?? false;
-  }
-
   get enabled() {
     return this._isEnabled ?? true;
   }
@@ -26,33 +18,22 @@ export default class Rewind extends Service {
     this._isEnabled = value;
   }
 
+  get active() {
+    return this.currentUser?.is_rewind_active;
+  }
+
+  get dismissed() {
+    return this._isDismissed ?? false;
+  }
+
   /**
    * We want to show the previous year's rewind in January
    * but the current year's rewind in any other month (in
    * reality, only December).
    */
   get fetchRewindYear() {
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-
-    if (currentMonth === 0) {
-      return currentYear - 1;
-    } else {
-      return currentYear;
-    }
-  }
-
-  get fetchRewindNextYear() {
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-
-    if (currentMonth === 0) {
-      return currentYear;
-    } else {
-      return currentYear + 1;
-    }
+    const now = new Date();
+    return now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
   }
 
   dismiss() {

@@ -25,6 +25,28 @@ RSpec.describe HotlinkedMediaDownloader do
     }.to raise_error(described_class::ImageBrokenError)
   end
 
+  it "raises RateLimitedError honouring Retry-After when the host rate limits" do
+    stub_request(:get, image_url).to_return(status: 429, headers: { "Retry-After" => "120" })
+
+    expect do
+      described_class.download(image_url, user.id, tmp_file_name: "test-hotlinked")
+    rescue => error
+      expect(error.retry_after).to eq(120)
+      raise
+    end.to raise_error(described_class::RateLimitedError)
+  end
+
+  it "raises RateLimitedError with the minimum delay when there is no Retry-After" do
+    stub_request(:get, image_url).to_return(status: 429)
+
+    expect do
+      described_class.download(image_url, user.id, tmp_file_name: "test-hotlinked")
+    rescue => error
+      expect(error.retry_after).to eq(described_class::MIN_RETRY_AFTER_SECONDS)
+      raise
+    end.to raise_error(described_class::RateLimitedError)
+  end
+
   it "raises ImageTooLargeError when the file exceeds the limit" do
     huge = "a" * (SiteSetting.max_image_size_kb * 1024 * 2)
     stub_request(:get, image_url).to_return(body: huge, headers: { "Content-Type" => "image/png" })

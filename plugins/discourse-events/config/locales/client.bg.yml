@@ -12,7 +12,12 @@ bg:
           fields:
             topic_id:
               label: Тема ID
-    discourse_calendar:
+    discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Известие"
+            none: "Без"
       disable_holiday: "Деактивиране"
       enable_holiday: "Позволи"
       date: "Дата"
@@ -26,6 +31,9 @@ bg:
         year: "Година"
     group_timezones:
       search: "Търсене ... "
+    discourse_workflows:
+      post_event:
+        topic_id: "Тема ID "
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

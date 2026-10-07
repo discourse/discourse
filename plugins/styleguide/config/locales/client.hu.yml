@@ -32,6 +32,10 @@ hu:
           title: "Dátum/idő bemenetek"
         menus:
           title: "Menük"
+        context_menu:
+          actions:
+            duplicate: "Megkettőz"
+            delete: "Törlés"
         multi_select:
           title: "Több kijelölése"
         toasts:
@@ -99,6 +103,27 @@ hu:
           title: "További témák"
         post_menu:
           title: "Bejegyzés menü"
+        roving_focus:
+          toolbar:
+            copy: "Másolás"
+          tags:
+            remove: "%{tag} eltávolítás"
+            design: "Dizájn"
+            support: "Támogatás"
+          adjacent:
+            label: "Szűrők"
+            field: "Keresés"
+            placeholder: "Témák keresése"
+            open: "Megnyitás"
+            recent: "Friss"
+          combobox:
+            daily: "Naponta"
+            weekly: "Hetente"
+            monthly: "Havonta"
+            never: "Soha"
+          tree:
+            components: "Összetevők"
+            select: "Kiválasztás"
         modal:
           title: "Párbeszédablak"
           header: "Párbeszédablak címe"

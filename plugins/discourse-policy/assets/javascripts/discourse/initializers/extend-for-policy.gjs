@@ -30,7 +30,7 @@ const SETTINGS = [
 ];
 
 const PolicyWrapper = <template>
-  <PostPolicy @post={{@data.post}} @policy={{@data.policy}} />
+  <PostPolicy @policy={{@data.policy}} @post={{@data.post}} />
 </template>;
 
 function _buildPolicyAttributes(policy) {

@@ -25,6 +25,518 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#initialize" do
+      it "refuses a missing intermediate database instead of creating one" do
+        expect { described_class.new("/nonexistent/intermediate.db") }.to raise_error(
+          RuntimeError,
+          /Intermediate database not found/,
+        )
+      end
+
+      it "refuses a missing uploads database instead of creating one" do
+        Tempfile.create(%w[intermediate .db]) do |intermediate|
+          expect {
+            described_class.new(intermediate.path, "/nonexistent/uploads.db")
+          }.to raise_error(RuntimeError, /Uploads database not found/)
+        end
+      end
+    end
+
+    describe "permalink topic URL placeholders" do
+      fab!(:topic)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@topics, { 291_850_680 => topic.id })
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before do
+        source_db.execute(<<~SQL)
+          CREATE TABLE permalinks (
+            url TEXT, topic_id INTEGER, post_id INTEGER, category_id INTEGER,
+            tag_id INTEGER, user_id INTEGER, external_url TEXT, external_url_placeholders TEXT
+          )
+        SQL
+        source_db.execute(
+          "INSERT INTO permalinks (url, external_url, external_url_placeholders) VALUES (?, ?, ?)",
+          [
+            "old-feed",
+            "/[notice-topic].rss",
+            [{ type: "topic_url", id: 291_850_680, placeholder: "[notice-topic]" }].to_json,
+          ],
+        )
+      end
+
+      after { source_db.close }
+
+      describe "#calculate_external_url" do
+        it "resolves a topic URL to the destination ID and final slug" do
+          topic.update!(title: "Final notice slug")
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+
+          expect(importer.calculate_external_url(row)).to eq("/t/final-notice-slug/#{topic.id}.rss")
+          expect(topic.id).not_to eq(291_850_680)
+        end
+
+        it "skips the URL when a later topic placeholder has no mapping" do
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+          row["external_url"] += "?next=[missing-topic]"
+          placeholders = JSON.parse(row["external_url_placeholders"])
+          placeholders << { type: "topic_url", id: 999, placeholder: "[missing-topic]" }
+          row["external_url_placeholders"] = placeholders.to_json
+          result = nil
+
+          expect { result = importer.calculate_external_url(row) }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target for 999/,
+          ).to_stdout
+
+          expect(result).to eq(nil)
+        end
+
+        it "warns and returns no URL when the mapped topic no longer exists" do
+          importer.instance_variable_set(:@topics, { 291_850_680 => -999 })
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+          result = nil
+
+          expect { result = importer.calculate_external_url(row) }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target/,
+          ).to_stdout
+
+          expect(result).to eq(nil)
+        end
+      end
+
+      describe "#import_permalinks" do
+        it "warns and skips a permalink whose topic mapping is missing" do
+          importer.instance_variable_set(:@topics, {})
+
+          expect { importer.import_permalinks }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target for 291850680/,
+          ).to_stdout
+
+          expect(Permalink.exists?(url: "old-feed")).to eq(false)
+        end
+
+        it "preserves an existing destination permalink" do
+          Permalink.create!(url: "old-feed", external_url: "/reviewed-feed.rss")
+
+          importer.import_permalinks
+
+          expect(Permalink.find_by!(url: "old-feed").external_url).to eq("/reviewed-feed.rss")
+        end
+      end
+    end
+
+    describe "importing notification choices" do
+      fab!(:subscriber, :user)
+      fab!(:category)
+      fab!(:topic) { Fabricate(:topic, user: subscriber, category: category) }
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@users, { 10 => subscriber.id, 11 => subscriber.id })
+          instance.instance_variable_set(:@topics, { 20 => topic.id })
+          instance.instance_variable_set(:@categories, { 30 => category.id, 31 => category.id })
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before do
+        source_db.execute(
+          "CREATE TABLE topic_users (user_id INTEGER, topic_id INTEGER, notification_level INTEGER)",
+        )
+        source_db.execute(
+          "CREATE TABLE category_users (user_id INTEGER, category_id INTEGER, notification_level INTEGER)",
+        )
+      end
+
+      after { source_db.close }
+
+      it "keeps an explicitly Tracking author Tracking while updating posting history" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        TopicUser.where(topic: topic).delete_all
+        source_db.execute("INSERT INTO topic_users VALUES (10, 20, 2)")
+
+        importer.import_topic_users
+        importer.update_topic_users
+
+        choice = TopicUser.find_by!(user: subscriber, topic: topic)
+        expect(choice.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
+        expect(choice.notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
+        expect(choice.posted).to eq(true)
+        expect(choice.last_read_post_number).to eq(1)
+      end
+
+      it "uses normal posting defaults when there is no explicit choice" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        replier = Fabricate(:user)
+        Fabricate(:post, topic: topic, user: replier, post_number: 2)
+        TopicUser.where(topic: topic).delete_all
+
+        importer.import_topic_users
+        importer.update_topic_users
+
+        expect(TopicUser.find_by!(user: subscriber, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:watching],
+        )
+        expect(TopicUser.find_by!(user: replier, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:tracking],
+        )
+      end
+
+      it "collapses categories and user aliases after destination IDs resolve using notification precedence" do
+        CategoryUser.where(category: category).delete_all
+        TopicUser.where(topic: topic).delete_all
+        source_db.execute(
+          "INSERT INTO category_users VALUES (10, 30, 4), (11, 31, 3), (10, 31, 0), (999, 30, 3), (10, 999, 3)",
+        )
+        source_db.execute("INSERT INTO topic_users VALUES (10, 20, 2), (11, 20, 3), (10, 20, 0)")
+
+        importer.import_category_users
+        importer.import_topic_users
+
+        expect(CategoryUser.where(category: category).pluck(:user_id, :notification_level)).to eq(
+          [[subscriber.id, NotificationLevels.all[:watching]]],
+        )
+        expect(TopicUser.where(topic: topic).pluck(:user_id, :notification_level)).to eq(
+          [[subscriber.id, NotificationLevels.topic_levels[:watching]]],
+        )
+      end
+
+      it "still applies posting defaults to rows created without a notification reason" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        TopicUser.where(topic: topic).delete_all
+        TopicUser.create!(
+          user: subscriber,
+          topic: topic,
+          notification_level: NotificationLevels.topic_levels[:regular],
+          bookmarked: true,
+        )
+
+        importer.update_topic_users
+
+        choice = TopicUser.find_by!(user: subscriber, topic: topic)
+        expect(choice.notification_level).to eq(NotificationLevels.topic_levels[:watching])
+        expect(choice.notifications_reason_id).to eq(TopicUser.notification_reasons[:created_topic])
+        expect(choice.bookmarked).to eq(true)
+      end
+
+      it "preserves destination choices through repeat imports and an API delta with no subscription rows" do
+        Fabricate(:post, topic: topic, user: subscriber, post_number: 1)
+        TopicUser.where(topic: topic).delete_all
+        CategoryUser.where(category: category).delete_all
+        source_db.execute("INSERT INTO topic_users VALUES (10, 20, 2)")
+        source_db.execute("INSERT INTO category_users VALUES (10, 30, 4)")
+        importer.import_topic_users
+        importer.import_category_users
+        TopicUser.find_by!(user: subscriber, topic: topic).update!(notification_level: 0)
+        CategoryUser.find_by!(user: subscriber, category: category).update!(notification_level: 1)
+
+        importer.import_topic_users
+        importer.import_category_users
+        importer.update_topic_users
+        source_db.execute("DELETE FROM topic_users")
+        source_db.execute("DELETE FROM category_users")
+        allow(importer).to receive(:delta_import?).and_return(true)
+        importer.import_topic_users
+        importer.import_category_users
+        importer.update_topic_users
+
+        expect(TopicUser.find_by!(user: subscriber, topic: topic).notification_level).to eq(0)
+        expect(
+          CategoryUser.find_by!(user: subscriber, category: category).notification_level,
+        ).to eq(1)
+      end
+    end
+
+    describe "#import_user_notes" do
+      fab!(:note_owner, :user)
+      fab!(:note_author, :user)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@users, { 10 => note_owner.id, 20 => note_author.id })
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before do
+        allow(importer).to receive(:delta_import?).and_return(true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, anonymized INTEGER)")
+        source_db.execute("INSERT INTO users (id) VALUES (10), (20)")
+        source_db.execute(<<~SQL)
+          CREATE TABLE user_notes (
+            id INTEGER PRIMARY KEY, user_id INTEGER, raw TEXT,
+            created_by_user_id INTEGER, created_at TEXT
+          )
+        SQL
+      end
+
+      around do |example|
+        plugin_defined = Object.const_defined?(:DiscourseUserNotes)
+        Object.const_set(:DiscourseUserNotes, Module.new) unless plugin_defined
+        example.run
+      ensure
+        Object.send(:remove_const, :DiscourseUserNotes) unless plugin_defined
+      end
+
+      after { source_db.close }
+
+      def add_source_note(id, raw, owner: 10, author: 20, timestamp: "2024-01-02T00:00:00Z")
+        source_db.execute(
+          "INSERT INTO user_notes VALUES (?, ?, ?, ?, ?)",
+          [id, owner, raw, author, timestamp],
+        )
+      end
+
+      def stored_note(raw, **extra)
+        {
+          "id" => SecureRandom.hex(16),
+          "user_id" => note_owner.id,
+          "raw" => raw,
+          "created_by" => note_author.id,
+          "created_at" => "2024-01-02T00:00:00Z",
+        }.merge(extra.stringify_keys)
+      end
+
+      it "adds missing notes while preserving existing IDs, content, metadata, and ordering" do
+        existing = [stored_note("Imported note"), stored_note("Staff note", post_id: 123)]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "2")
+        add_source_note(1, "Imported note")
+        add_source_note(2, "New note")
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.first(2)).to eq(existing)
+        expect(notes.last).to include("raw" => "New note", "created_by" => note_author.id)
+        expect(notes.last["id"]).to match(/\A[0-9a-f]{32}\z/)
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("3")
+
+        stored_value =
+          PluginStoreRow.find_by(plugin_name: "user_notes", key: "notes:#{note_owner.id}").value
+        importer.import_user_notes
+        expect(
+          PluginStoreRow.find_by(plugin_name: "user_notes", key: "notes:#{note_owner.id}").value,
+        ).to eq(stored_value)
+      end
+
+      it "counts identical occurrences across aliases and ignores reordered source IDs on reruns" do
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", [stored_note("Repeated")])
+        source_db.execute("INSERT INTO users (id) VALUES (11)")
+        importer.instance_variable_get(:@users)[11] = note_owner.id
+        add_source_note(3, "Repeated")
+        add_source_note(1, "Repeated", owner: 11)
+        add_source_note(2, "Other")
+
+        importer.import_user_notes
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.map { |note| note["raw"] }).to eq(%w[Repeated Other Repeated])
+        expect(notes.map { |note| note["id"] }.uniq.size).to eq(3)
+        source_db.execute("UPDATE user_notes SET id = 100 - id")
+
+        importer.import_user_notes
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(notes)
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("3")
+      end
+
+      it "matches equivalent timestamps and resolved author aliases without rewriting existing JSON" do
+        existing = stored_note("Same", created_at: "2024-01-01T19:00:00.123-05:00")
+        row =
+          PluginStoreRow.create!(
+            plugin_name: "user_notes",
+            key: "notes:#{note_owner.id}",
+            type_name: "JSON",
+            value: JSON.pretty_generate([existing]),
+          )
+        importer.instance_variable_get(:@users)[21] = note_author.id
+        add_source_note(1, "Same", author: 21, timestamp: "2024-01-02T00:00:00.123Z")
+        UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "99")
+
+        expect { importer.import_user_notes }.not_to change { row.reload.value }
+
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("1")
+      end
+
+      it "retains changed source text as another note and leaves absent notes in place" do
+        existing = [stored_note("Original"), stored_note("Absent from delta")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        add_source_note(1, "Edited")
+
+        importer.import_user_notes
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.first(2)).to eq(existing)
+        expect(notes.last["raw"]).to eq("Edited")
+      end
+
+      it "creates notes for newly mapped users and uses the system user for unresolved authors" do
+        add_source_note(1, "Missing author", author: 99, timestamp: nil)
+        add_source_note(2, "No author", author: nil, timestamp: nil)
+
+        importer.import_user_notes
+        importer.import_user_notes
+
+        notes = PluginStore.get("user_notes", "notes:#{note_owner.id}")
+        expect(notes.map { |note| note.values_at("raw", "created_by", "created_at") }).to eq(
+          [
+            ["Missing author", Discourse::SYSTEM_USER_ID, nil],
+            ["No author", Discourse::SYSTEM_USER_ID, nil],
+          ],
+        )
+        expect(
+          UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+        ).to eq("2")
+      end
+
+      it "matches legacy unset authors to the system fallback without modifying existing metadata" do
+        existing = stored_note("Legacy", created_by: nil, created_at: nil)
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", [existing])
+        add_source_note(1, "Legacy", author: nil, timestamp: nil)
+
+        importer.import_user_notes
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq([existing])
+      end
+
+      it "skips anonymized, unmapped, missing-destination, and unverified owners" do
+        source_db.execute(
+          "INSERT INTO users (id, anonymized) VALUES (30, 1), (40, 0), (50, 0), (60, 0)",
+        )
+        importer.instance_variable_get(:@users).merge!(
+          30 => note_owner.id,
+          50 => note_owner.id,
+          60 => User.maximum(:id) + 1000,
+        )
+        importer.instance_variable_set(:@delta_unverified_user_source_ids, Set[50])
+        [30, 40, 50, 60].each { |owner| add_source_note(owner, "Excluded", owner: owner) }
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        expect(PluginStoreRow.where(plugin_name: "user_notes")).to be_empty
+        expect(UserCustomField.where(name: "user_notes_count")).to be_empty
+      end
+
+      it "leaves notes and counts untouched when the source has no notes" do
+        existing = [stored_note("Existing")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        count_field =
+          UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+        expect(count_field.reload.value).to eq("1")
+      end
+
+      it "rolls back appended notes if saving their count fails" do
+        existing = [stored_note("Existing")]
+        PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+        count_field =
+          UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+        add_source_note(1, "New")
+        DB.exec(
+          "ALTER TABLE user_custom_fields ADD CONSTRAINT delta_note_count_test CHECK (name <> 'user_notes_count' OR value <> '2')",
+        )
+
+        expect { importer.import_user_notes }.to raise_error(ActiveRecord::StatementInvalid)
+
+        expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+        expect(count_field.reload.value).to eq("1")
+      end
+
+      it "rejects malformed stored notes without leaking private content or replacing the row" do
+        private_text = "Private staff note"
+        row =
+          PluginStoreRow.create!(
+            plugin_name: "user_notes",
+            key: "notes:#{note_owner.id}",
+            type_name: "JSON",
+            value: private_text,
+          )
+        add_source_note(1, "New")
+        [
+          private_text,
+          { raw: private_text }.to_json,
+          [{ id: "old", raw: private_text, created_at: private_text }].to_json,
+        ].each do |value|
+          row.update!(value: value)
+
+          expect { importer.import_user_notes }.to raise_error(RuntimeError) do |error|
+            expect(error.message).to include("user #{note_owner.id}")
+            expect(error.full_message).not_to include(private_text)
+            expect(error.cause).to be_nil
+          end
+
+          expect(row.reload.value).to eq(value)
+        end
+        expect(UserCustomField.where(name: "user_notes_count")).to be_empty
+      end
+
+      it "skips notes and counts when the plugin is missing" do
+        hide_const("DiscourseUserNotes")
+        add_source_note(1, "New")
+
+        importer.import_user_notes
+        importer.import_user_note_counts
+
+        expect(PluginStoreRow.where(plugin_name: "user_notes")).to be_empty
+        expect(UserCustomField.where(name: "user_notes_count")).to be_empty
+      end
+
+      [false, true].each do |merge_import|
+        it "preserves existing notes and counts in #{merge_import ? "merge" : "ordinary"} imports" do
+          allow(importer).to receive(:delta_import?).and_return(false)
+          existing = [stored_note("Existing")]
+          PluginStore.set("user_notes", "notes:#{note_owner.id}", existing)
+          UserCustomField.create!(user_id: note_owner.id, name: "user_notes_count", value: "1")
+          add_source_note(1, "New")
+
+          stub_const(described_class, :MERGE_IMPORT, merge_import) do
+            importer.import_user_notes
+            importer.import_user_note_counts
+          end
+
+          expect(PluginStore.get("user_notes", "notes:#{note_owner.id}")).to eq(existing)
+          expect(
+            UserCustomField.find_by(user_id: note_owner.id, name: "user_notes_count").value,
+          ).to eq("1")
+        end
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)
@@ -42,7 +554,7 @@ if generic_import_dependencies_available
         expect(mappings).to eq(9_223_372_036_854_775_000 => canonical_user.id)
       end
 
-      it "keeps the oldest source mapping canonical for a deduplicated user" do
+      it "keeps the oldest source mapping canonical unless the delta only exports a newer one" do
         UserCustomField.create!(
           user: canonical_user,
           name: "import_id",
@@ -55,10 +567,18 @@ if generic_import_dependencies_available
           value: "20",
           created_at: 1.day.ago,
         )
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
 
-        mappings = described_class.allocate.canonical_user_import_mappings
+        expect(importer.canonical_user_import_mappings).to eq(10 => canonical_user.id)
 
-        expect(mappings).to eq(10 => canonical_user.id)
+        source_db.execute("INSERT INTO users (id) VALUES (20)")
+
+        expect(importer.canonical_user_import_mappings).to eq(20 => canonical_user.id)
+      ensure
+        source_db&.close
       end
     end
 
@@ -159,13 +679,25 @@ if generic_import_dependencies_available
     end
 
     describe "#update_delta_topics" do
-      it "treats closed as close-only while retaining other delta updates" do
+      it "replaces non-NULL views, including zero, while treating closed as close-only" do
         source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
-        source_db.execute("CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER)")
-        source_db.execute("INSERT INTO topics (id, closed) VALUES (10, 0), (20, 1)")
+        source_db.execute(
+          "CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER, views INTEGER)",
+        )
+        source_db.execute(
+          "INSERT INTO topics (id, closed, views) VALUES " \
+            "(10, 0, 1223), (20, 1, 0), (30, NULL, NULL)",
+        )
         importer = described_class.allocate
         importer.instance_variable_set(:@source_db, source_db)
-        importer.instance_variable_set(:@delta_update_mappings, topics: { 10 => 100, 20 => 200 })
+        importer.instance_variable_set(
+          :@delta_update_mappings,
+          topics: {
+            10 => 100,
+            20 => 200,
+            30 => 300,
+          },
+        )
 
         allow(importer).to receive(:update_records).and_return(updated_keys: [])
 
@@ -174,8 +706,88 @@ if generic_import_dependencies_available
         expect(importer).to have_received(:update_records) do |updates, name, columns|
           expect(name).to eq("topic")
           expect(columns).to include(:closed)
-          expect(updates).to contain_exactly({ id: 100 }, { id: 200, closed: true })
+          expect(columns).to include(:views)
+          expect(updates).to contain_exactly(
+            { id: 100, views: 1_223 },
+            { id: 200, closed: true, views: 0 },
+            { id: 300 },
+          )
         end
+      ensure
+        source_db&.close
+      end
+
+      it "skips views when the intermediate database predates the column" do
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE topics (id INTEGER PRIMARY KEY, closed INTEGER)")
+        source_db.execute("INSERT INTO topics (id, closed) VALUES (10, 1)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(:@delta_update_mappings, topics: { 10 => 100 })
+
+        allow(importer).to receive(:update_records).and_return(updated_keys: [])
+
+        importer.update_delta_topics
+
+        expect(importer).to have_received(:update_records) do |updates, name, columns|
+          expect(name).to eq("topic")
+          expect(columns).to include(:views)
+          expect(updates).to contain_exactly({ id: 100, closed: true })
+        end
+      ensure
+        source_db&.close
+      end
+
+      it "reindexes only topics whose title or category changed" do
+        title_changed = Fabricate(:topic, title: "Original topic title", views: 10)
+        category_changed = Fabricate(:topic, category: Fabricate(:category), views: 20)
+        views_changed = Fabricate(:topic, title: "Views only topic", views: 30)
+        replacement_category = Fabricate(:category)
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(
+          "CREATE TABLE topics (id INTEGER PRIMARY KEY, title TEXT, category_id INTEGER, views INTEGER)",
+        )
+        source_db.execute(
+          "INSERT INTO topics (id, title, category_id, views) VALUES " \
+            "(10, 'Replacement title', NULL, NULL), " \
+            "(20, NULL, 2000, NULL), " \
+            "(30, NULL, NULL, 31)",
+        )
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@delta_update_mappings,
+          topics: {
+            10 => title_changed.id,
+            20 => category_changed.id,
+            30 => views_changed.id,
+          },
+        )
+        importer.instance_variable_set(:@categories, { 2000 => replacement_category.id })
+        allow(importer).to receive(:update_records) do |updates, _name, columns|
+          updated_keys =
+            updates.filter_map do |update|
+              topic = Topic.find(update[:id])
+              attributes = update.slice(*columns).compact
+              next if attributes.all? { |column, value| topic.public_send(column) == value }
+
+              topic.update_columns(attributes)
+              topic.id
+            end
+          { updated_keys: updated_keys }
+        end
+        indexed_topic_ids = []
+        allow(SearchIndexer).to receive(:index) do |topic, force:|
+          indexed_topic_ids << topic.id
+          expect(force).to eq(true)
+        end
+
+        importer.update_delta_topics
+
+        expect(indexed_topic_ids).to contain_exactly(title_changed.id, category_changed.id)
+        expect(title_changed.reload.title).to eq("Replacement title")
+        expect(category_changed.reload.category_id).to eq(replacement_category.id)
+        expect(views_changed.reload.views).to eq(31)
       ensure
         source_db&.close
       end
@@ -225,6 +837,45 @@ if generic_import_dependencies_available
         expect(
           importer.instance_variable_get(:@delta_username_conflict_source_ids),
         ).to contain_exactly(1)
+      ensure
+        source_db&.close
+      end
+
+      it "accepts an email owned by the base-imported account of a declared alias" do
+        UserCustomField.create!(user: conflicting_user, name: "import_id", value: "2")
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(<<~SQL)
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY,
+          username TEXT,
+          email TEXT,
+          created_at TEXT
+        )
+      SQL
+        source_db.execute(
+          "CREATE TABLE user_aliases (alias_user_id INTEGER PRIMARY KEY, canonical_user_id INTEGER NOT NULL)",
+        )
+        source_db.execute(
+          "INSERT INTO users (id, username, email, created_at) VALUES (?, ?, ?, ?)",
+          [1, mapped_user.username, conflicting_user.email, mapped_user.created_at.iso8601],
+        )
+        source_db.execute("INSERT INTO user_aliases VALUES (2, 1)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        errors = []
+
+        importer.preflight_users({ 1 => mapped_user.id }, errors)
+
+        expect(errors).to be_empty
+
+        source_db.execute("DELETE FROM user_aliases")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.preflight_users({ 1 => mapped_user.id }, errors)
+
+        expect(errors).to contain_exactly(
+          "user 1 email belongs to Discourse user #{conflicting_user.id}",
+        )
       ensure
         source_db&.close
       end
@@ -530,6 +1181,296 @@ if generic_import_dependencies_available
       ensure
         source_db&.close
       end
+
+      it "accepts a delta-local post number while still checking the reply parent" do
+        parent = topic.first_post
+        reply = Fabricate(:post, topic: topic, reply_to_post_number: nil)
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(<<~SQL)
+        CREATE TABLE posts (
+          id INTEGER PRIMARY KEY,
+          topic_id INTEGER,
+          created_at TEXT,
+          post_number INTEGER,
+          reply_to_post_id INTEGER
+        )
+      SQL
+        source_db.execute(
+          "INSERT INTO posts (id, topic_id, created_at, post_number, reply_to_post_id) " \
+            "VALUES (?, ?, ?, ?, ?)",
+          [4_000_000_000, 3_000_000_000, reply.created_at.iso8601, 2, 4_000_000_001],
+        )
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        errors = []
+        mappings = {
+          posts: {
+            4_000_000_000 => reply.id,
+            4_000_000_001 => parent.id,
+          },
+          topics: {
+            3_000_000_000 => topic.id,
+          },
+        }
+
+        importer.preflight_posts(mappings, errors)
+
+        expect(errors).to be_empty
+
+        mappings[:posts][4_000_000_001] = Fabricate(:post, topic: topic).id
+        importer.preflight_posts(mappings, errors)
+
+        expect(errors).to contain_exactly("post 4000000000 changes immutable reply parent")
+      ensure
+        source_db&.close
+      end
+    end
+
+    describe "delta user aliases" do
+      COUNTERS = %i[
+        badge
+        bookmark
+        category_group
+        category
+        chat_channel
+        chat_direct_message_channel
+        chat_message
+        chat_thread
+        discourse_reaction
+        group
+        poll
+        poll_option
+        post_action
+        post
+        sso_record
+        topic
+        upload
+        user_avatar
+        user
+      ]
+
+      def build_delta_user_importer(source_db, users:)
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@raw_connection,
+          ActiveRecord::Base.connection.raw_connection,
+        )
+        COUNTERS.each { |name| importer.instance_variable_set(:"@last_#{name}_id", 0) }
+        importer.instance_variable_set(:@last_user_email_id, UserEmail.maximum(:id))
+        importer.instance_variable_set(:@users, users)
+        importer.instance_variable_set(:@delta_update_mappings, users: users)
+        importer.instance_variable_set(:@delta_stats, users: { updated_ids: Set.new })
+        importer.instance_variable_set(:@delta_username_conflict_source_ids, Set.new)
+        importer.instance_variable_set(:@mapped_usernames, {})
+        importer.instance_variable_set(:@usernames_lower, Set.new)
+        importer.instance_variable_set(:@user_ids_by_username_lower, {})
+        importer.instance_variable_set(:@usernames_by_id, {})
+        importer.instance_variable_set(:@user_full_names_by_id, {})
+        importer.instance_variable_set(
+          :@import_issue_log_path,
+          File.join(Dir.mktmpdir, "issues.log"),
+        )
+        allow(importer).to receive(:update_records) do |rows, name, columns, keys: [:id]|
+          model = name.classify.constantize
+          rows.each do |row|
+            attributes = row.slice(*columns).compact
+            model.find_by!(row.slice(*keys)).update_columns(attributes) if attributes.any?
+          end
+          { updated_keys: rows.map { |row| row[:id] } }
+        end
+        importer
+      end
+
+      it "merges a base-imported alias into its winner so the winner can take over the email" do
+        winner = Fabricate(:user, username: "winner", email: "old@example.com")
+        alias_user = Fabricate(:user, username: "alias", email: "current@example.com")
+        alias_username = alias_user.username
+        UserCustomField.create!(user: winner, name: "import_id", value: "1")
+        UserCustomField.create!(user: alias_user, name: "import_id", value: "2")
+        moved_post = Fabricate(:post, user: alias_user)
+
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(<<~SQL)
+          CREATE TABLE users (
+            id INTEGER PRIMARY KEY,
+            username TEXT,
+            email TEXT,
+            created_at TEXT,
+            last_seen_at TEXT,
+            anonymized INTEGER
+          )
+        SQL
+        source_db.execute(
+          "INSERT INTO users (id, username, email, created_at) VALUES (?, ?, ?, ?)",
+          [1, winner.username, "current@example.com", winner.created_at.iso8601],
+        )
+        source_db.execute(
+          "CREATE TABLE user_aliases (alias_user_id INTEGER PRIMARY KEY, canonical_user_id INTEGER NOT NULL)",
+        )
+        source_db.execute("INSERT INTO user_aliases VALUES (2, 1)")
+        importer =
+          build_delta_user_importer(source_db, users: { 1 => winner.id, 2 => alias_user.id })
+        # rows COPYed earlier in a run outrun the sequence the merger inserts with
+        UserEmail.connection.execute(
+          "SELECT setval('#{UserEmail.sequence_name}', #{alias_user.primary_email.id - 1})",
+        )
+
+        expect { importer.merge_delta_user_aliases }.to change { User.exists?(alias_user.id) }.to(
+          false,
+        )
+        expect(importer.instance_variable_get(:@last_user_email_id)).to eq(UserEmail.maximum(:id))
+        expect(importer.user_id_from_original_username(alias_username)).to be_nil
+        expect(importer.user_id_from_original_username(winner.username)).to eq(winner.id)
+        expect(importer.instance_variable_get(:@emails)).to include(
+          "current@example.com" => winner.id,
+        )
+        importer.update_delta_users
+
+        expect(moved_post.reload.user_id).to eq(winner.id)
+        expect(importer.user_id_from_imported_id(2)).to eq(winner.id)
+        expect(
+          UserCustomField.where(user: winner, name: "import_id").pluck(:value),
+        ).to contain_exactly("1", "2")
+        expect(winner.reload.email).to eq("current@example.com")
+        expect(UserEmail.where(user: winner).count).to eq(1)
+
+        expect { importer.merge_delta_user_aliases }.not_to change { User.count }
+        importer.update_delta_users
+        expect(importer).to have_received(:update_records).with([], "user_email", [:email])
+      ensure
+        source_db&.close
+      end
+
+      it "clears both rows when two users exchange identities so the create pass rebuilds them" do
+        first = Fabricate(:user)
+        second = Fabricate(:user)
+        Fabricate(:user_associated_account, user: first, provider_name: "khoros", provider_uid: "a")
+        Fabricate(
+          :user_associated_account,
+          user: second,
+          provider_name: "khoros",
+          provider_uid: "b",
+        )
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, anonymized INTEGER)")
+        source_db.execute(
+          "CREATE TABLE user_associated_accounts (user_id INTEGER, provider_name TEXT, provider_uid TEXT)",
+        )
+        source_db.execute("INSERT INTO users (id) VALUES (1), (2)")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (1, 'khoros', 'b')")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (2, 'khoros', 'a')")
+        importer = build_delta_user_importer(source_db, users: { 1 => first.id, 2 => second.id })
+
+        importer.update_delta_user_associated_accounts
+
+        expect(UserAssociatedAccount.where(provider_name: "khoros")).to be_empty
+        expect(File.read(importer.instance_variable_get(:@import_issue_log_path))).to include(
+          "khoros/a moved from user #{first.id} to user #{second.id}",
+          "khoros/b moved from user #{second.id} to user #{first.id}",
+        )
+      ensure
+        source_db&.close
+      end
+
+      it "moves a provider identity to the delta's owner and drops userless rows" do
+        owner = Fabricate(:user)
+        previous_owner = Fabricate(:user)
+        Fabricate(
+          :user_associated_account,
+          user: owner,
+          provider_name: "khoros",
+          provider_uid: "stale",
+        )
+        Fabricate(
+          :user_associated_account,
+          user: previous_owner,
+          provider_name: "khoros",
+          provider_uid: "current",
+        )
+        UserAssociatedAccount.create!(user_id: nil, provider_name: "khoros", provider_uid: "orphan")
+
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, anonymized INTEGER)")
+        source_db.execute(
+          "CREATE TABLE user_associated_accounts (user_id INTEGER, provider_name TEXT, provider_uid TEXT)",
+        )
+        source_db.execute("INSERT INTO users (id) VALUES (1), (3)")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (1, 'khoros', 'current')")
+        source_db.execute("INSERT INTO user_associated_accounts VALUES (3, 'khoros', 'orphan')")
+        newcomer = Fabricate(:user)
+        importer = build_delta_user_importer(source_db, users: { 1 => owner.id, 3 => newcomer.id })
+
+        importer.update_delta_user_associated_accounts
+
+        expect(
+          UserAssociatedAccount.where(provider_name: "khoros").pluck(:user_id, :provider_uid),
+        ).to contain_exactly([owner.id, "current"])
+        expect(File.read(importer.instance_variable_get(:@import_issue_log_path))).to include(
+          "khoros/current moved from user #{previous_owner.id} to user #{owner.id}",
+          "khoros/orphan moved from user nil to user #{newcomer.id}",
+        )
+      ensure
+        source_db&.close
+      end
+    end
+
+    describe "#update_delta_user_avatars" do
+      it "persists an upload reference only for an avatar that changed" do
+        changed_user = Fabricate(:user)
+        unchanged_user = Fabricate(:user)
+        old_upload = Fabricate(:upload)
+        new_upload = Fabricate(:upload)
+        unchanged_upload = Fabricate(:upload)
+        changed_avatar = Fabricate(:user_avatar, user: changed_user)
+        unchanged_avatar = Fabricate(:user_avatar, user: unchanged_user)
+        changed_avatar.update_column(:custom_upload_id, old_upload.id)
+        unchanged_avatar.update_column(:custom_upload_id, unchanged_upload.id)
+        source_db = SQLite3::Database.new(":memory:", results_as_hash: true)
+        source_db.execute(
+          "CREATE TABLE users (id INTEGER PRIMARY KEY, avatar_upload_id INTEGER, anonymized INTEGER)",
+        )
+        source_db.execute("INSERT INTO users VALUES (1, 101, NULL), (2, 102, NULL)")
+        importer = described_class.allocate
+        importer.instance_variable_set(:@source_db, source_db)
+        importer.instance_variable_set(
+          :@delta_update_mappings,
+          users: {
+            1 => changed_user.id,
+            2 => unchanged_user.id,
+          },
+        )
+        importer.instance_variable_set(
+          :@uploads_mapping,
+          { "101" => new_upload.id, "102" => unchanged_upload.id },
+        )
+        importer.instance_variable_set(:@delta_stats, users: { updated_ids: Set.new })
+        allow(importer).to receive(:update_records) do |updates, _name, _columns|
+          updated_keys =
+            updates.filter_map do |update|
+              avatar = UserAvatar.find(update[:id])
+              next if avatar.custom_upload_id == update[:custom_upload_id]
+
+              avatar.update_column(:custom_upload_id, update[:custom_upload_id])
+              avatar.id
+            end
+          { updated_keys: updated_keys }
+        end
+
+        importer.update_delta_user_avatars
+
+        expect(changed_avatar.reload.custom_upload_id).to eq(new_upload.id)
+        expect(
+          UploadReference.where(target_type: "UserAvatar", target_id: changed_avatar.id).pluck(
+            :upload_id,
+          ),
+        ).to contain_exactly(new_upload.id)
+        expect(
+          UploadReference.where(target_type: "UserAvatar", target_id: unchanged_avatar.id),
+        ).to be_empty
+      ensure
+        source_db&.close
+      end
     end
 
     describe "#configure_unicode_usernames!" do
@@ -643,6 +1584,175 @@ if generic_import_dependencies_available
         expect(SiteSetting.unicode_usernames).to eq(false)
       ensure
         source_db&.close
+      end
+    end
+
+    describe "#update_category_read_restricted" do
+      it "reconciles uploads when imported permissions restrict an existing category" do
+        category = Fabricate(:category)
+        CategoryGroup.create!(
+          category: category,
+          group: Group[:admins],
+          permission_type: CategoryGroup.permission_types[:full],
+        )
+
+        expect_enqueued_with(
+          job: :update_category_upload_security,
+          args: {
+            category_id: category.id,
+          },
+        ) { described_class.allocate.update_category_read_restricted }
+
+        expect(category.reload.read_restricted).to eq(true)
+      end
+    end
+
+    describe "#import_user_associated_groups" do
+      fab!(:employee, :user)
+      fab!(:customer, :user)
+      fab!(:claimed_customer, :user)
+      fab!(:manual_customer, :user)
+      fab!(:employee_group, :group)
+      fab!(:customer_group, :group)
+      fab!(:unlinked_group, :group)
+
+      fab!(:internal_claim) do
+        AssociatedGroup.create!(
+          name: "SailPoint Internal",
+          provider_name: "oidc",
+          provider_id: "SailPoint Internal",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:employee_claim) do
+        AssociatedGroup.create!(
+          name: "SailPoint Employee",
+          provider_name: "oidc",
+          provider_id: "SailPoint Employee",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:customer_claim) do
+        AssociatedGroup.create!(
+          name: "Customer",
+          provider_name: "oidc",
+          provider_id: "Customer",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:saml_claim) do
+        AssociatedGroup.create!(
+          name: "Customer",
+          provider_name: "saml",
+          provider_id: "Customer",
+          last_used: 2.weeks.ago,
+        )
+      end
+
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(
+            :@users,
+            { 10 => employee.id, 20 => customer.id, 30 => claimed_customer.id },
+          )
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      def claims_for(user)
+        user.associated_groups.reload.order(:provider_id).pluck(:provider_name, :provider_id)
+      end
+
+      before do
+        GroupAssociatedGroup.create!(group: employee_group, associated_group: internal_claim)
+        GroupAssociatedGroup.create!(group: employee_group, associated_group: employee_claim)
+        GroupAssociatedGroup.create!(group: customer_group, associated_group: customer_claim)
+        GroupAssociatedGroup.create!(group: customer_group, associated_group: saml_claim)
+
+        [employee_group, customer_group, unlinked_group].each do |group|
+          group.group_users.delete_all
+        end
+        GroupUser.create!(group: employee_group, user: employee)
+        GroupUser.create!(group: customer_group, user: customer)
+        GroupUser.create!(group: unlinked_group, user: customer)
+        GroupUser.create!(group: customer_group, user: claimed_customer)
+        GroupUser.create!(group: customer_group, user: manual_customer)
+        UserAssociatedGroup.create!(user: claimed_customer, associated_group: customer_claim)
+
+        allow(Discourse).to receive(:enabled_authenticators).and_return(
+          [instance_double(Auth::Authenticator, name: "oidc", provides_groups?: true)],
+        )
+      end
+
+      it "seeds every claim linked to an imported member's groups, once" do
+        expect { importer.import_user_associated_groups }.to change {
+          UserAssociatedGroup.count
+        }.by(3)
+
+        expect(claims_for(employee)).to eq(
+          [%w[oidc SailPoint\ Employee], %w[oidc SailPoint\ Internal]],
+        )
+        expect(claims_for(customer)).to eq([%w[oidc Customer]])
+        expect(claims_for(claimed_customer)).to eq([%w[oidc Customer]])
+        expect(claims_for(manual_customer)).to be_empty
+        expect(saml_claim.reload.users).to be_empty
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+
+      it "marks the seeded associated groups as used and leaves the others alone" do
+        importer.import_user_associated_groups
+
+        expect(internal_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(employee_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(customer_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(saml_claim.reload.last_used).to be_within(1.minute).of(2.weeks.ago)
+      end
+
+      it "reconciles seeded memberships with the claims returned by subsequent logins" do
+        GroupUser.create!(group: unlinked_group, user: employee)
+        importer.import_user_associated_groups
+
+        result = Auth::Result.new
+        result.user = employee
+        result.authenticator_name = "oidc"
+        result.extra_data = { provider: "oidc" }
+        result.associated_groups = [{ id: employee_claim.provider_id, name: employee_claim.name }]
+        result.apply_associated_attributes!
+
+        expect(employee.associated_groups.reload).to contain_exactly(employee_claim)
+        expect(employee.groups.reload).to include(employee_group, unlinked_group)
+
+        result.associated_groups = []
+        result.apply_associated_attributes!
+
+        expect(employee.associated_groups.reload).to be_empty
+        expect(employee.groups.reload).not_to include(employee_group)
+        expect(employee.groups).to include(unlinked_group)
+      end
+
+      it "does nothing when no enabled authenticator provides group claims" do
+        allow(Discourse).to receive(:enabled_authenticators).and_return(
+          [instance_double(Auth::Authenticator, name: "oidc", provides_groups?: false)],
+        )
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+
+      it "does nothing when the provider's associated groups grant no Discourse group" do
+        GroupAssociatedGroup.where.not(associated_group: saml_claim).delete_all
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
       end
     end
   end
@@ -774,8 +1884,8 @@ if generic_import_dependencies_available
     end
 
     describe "#process_user" do
-      def build_user_importer
-        importer = described_class.allocate
+      def build_user_importer(importer_class = described_class)
+        importer = importer_class.allocate
         importer.instance_variable_set(:@usernames_lower, Set.new)
         importer.instance_variable_set(:@last_user_id, 0)
         importer.instance_variable_set(
@@ -826,6 +1936,214 @@ if generic_import_dependencies_available
         user = importer.process_user(imported_id: 1, username: long_name)
 
         expect(user[:username]).to eq("#{"风" * 58}_1")
+      end
+
+      describe "reserving valid usernames" do
+        def import_usernames(importer, rows)
+          importer.reserve_valid_usernames(rows)
+          rows.map do |row|
+            external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
+            importer.process_user(
+              imported_id: row["id"],
+              username: row["username"],
+              email: row["email"],
+              external_id: external_id,
+            )
+          end
+        end
+
+        it "suffixes a sanitized username instead of a later valid one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "a_a_" }, { "id" => 2, "username" => "A_A" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[a_a_1 A_A])
+        end
+
+        it "skips suffixes that later valid usernames reserve" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Alex_R_" },
+                { "id" => 2, "username" => "Alex_R" },
+                { "id" => 3, "username" => "Alex_R_1" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alex_R_2 Alex_R Alex_R_1])
+        end
+
+        it "reserves unicode usernames that are valid under the unicode setting" do
+          SiteSetting.unicode_usernames = true
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michał_1 Michał])
+        end
+
+        it "does not reserve unicode usernames that the ASCII setting transliterates" do
+          SiteSetting.unicode_usernames = false
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michal Michal_1])
+        end
+
+        it "keeps the lowest source ID for valid usernames that differ only in case" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "manuel" }, { "id" => 2, "username" => "Manuel" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[manuel Manuel_1])
+        end
+
+        it "reserves nothing for rows that map onto an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@emails, { "existing@example.com" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Bob_" },
+                { "id" => 2, "username" => "Bob", "email" => "existing@example.com" },
+                { "id" => 3, "username" => "Carol_", "email" => "shared@example.com" },
+                { "id" => 4, "username" => "Carol", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Bob Bob Carol Carol])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, true])
+        end
+
+        it "keeps an email available when an external ID maps an earlier row to an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@external_ids, { "existing-id" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Existing",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "existing-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Existing Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([true, nil, nil])
+        end
+
+        it "keeps an email available when an external ID duplicates an earlier source row" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "First",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                {
+                  "id" => 2,
+                  "username" => "Duplicate",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                { "id" => 3, "username" => "Bob_" },
+                { "id" => 4, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[First Duplicate Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, nil])
+        end
+
+        it "reserves usernames for users without SSO records after a user with one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Alice",
+                  "sso_record" => { external_id: "alice-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alice Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, nil, nil])
+        end
+
+        it "does not let a reservation displace an existing site user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_get(:@usernames_lower) << "dana"
+
+          users = import_usernames(importer, [{ "id" => 1, "username" => "Dana" }])
+
+          expect(users.first[:username]).to eq("Dana_1")
+        end
+      end
+    end
+
+    describe "#create_posts" do
+      it "does not resolve or persist an import ID for a post skipped due to NUL content" do
+        topic = Fabricate(:topic)
+        importer = described_class.new
+        importer.instance_variable_set(:@last_post_id, Post.maximum(:id) || 0)
+        importer.instance_variable_set(:@posts, {})
+        importer.instance_variable_set(:@highest_post_number_by_topic_id, {})
+        importer.instance_variable_set(:@post_number_by_post_id, {})
+        importer.instance_variable_set(:@topic_id_by_post_id, {})
+        importer.instance_variable_set(
+          :@import_issue_log_path,
+          File.join(Dir.mktmpdir, "issues.log"),
+        )
+        allow(importer).to receive(:pre_cook).and_return("cooked")
+
+        expect {
+          importer.create_posts(
+            [{ imported_id: 123, topic_id: topic.id, raw: "bad\0raw" }],
+          ) { |row| row }
+        }.not_to change { Post.count }
+
+        expect(importer.post_id_from_imported_id(123)).to be_nil
+        expect(PostCustomField.where(name: "import_id", value: "123")).to be_empty
+      ensure
+        importer&.instance_variable_get(:@raw_connection)&.close
       end
     end
 

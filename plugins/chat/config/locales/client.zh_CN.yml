@@ -72,8 +72,11 @@ zh_CN:
       pinned_messages:
         title: "置顶消息"
         close: "关闭置顶消息"
+        dismiss: "请帮我关闭置顶横幅广告"
+        show: "显示置顶横幅"
         pinned_by_you: "由您置顶"
         pinned_by_user: "由 %{username} 置顶"
+        message_unpinned: "消息已取消置顶"
       pinned_bar:
         title: "已置顶"
         jump_to_pinned: "跳转至置顶消息"
@@ -134,7 +137,7 @@ zh_CN:
         process_started: "删除频道的过程已经开始。此模态框将很快关闭，您将无法再查看被删除的频道。"
       channels_list_popup:
         browse: "浏览频道"
-        create: "新建频道"
+        create: "新建频道..."
       close: "关闭"
       remove: "移除"
       collapse: "收起聊天抽屉"
@@ -148,8 +151,8 @@ zh_CN:
       muted: "已设为免打扰"
       joined: "已加入"
       empty_state:
-        direct_message_cta: "开始个人聊天"
-        direct_message: "您还可以与一位或多位用户开始个人聊天。"
+        direct_message_cta: "发起私信或群聊"
+        direct_message: "您还可以与一个或多个用户发起私信或群聊。"
         title: "找不到频道"
         my_threads: "您还没有任何消息串。您参与的消息串将在此处显示。"
       email_frequency:
@@ -290,6 +293,8 @@ zh_CN:
       remove_upload: "移除文件"
       react: "使用表情符号回复"
       reply: "回复"
+      message_actions: "消息操作"
+      more_message_actions: "更多消息操作"
       edit: "编辑"
       copy_link: "复制链接"
       copy_text: "复制文本"
@@ -297,6 +302,8 @@ zh_CN:
       message_too_long: "消息过长，最多只能包含 %{count} 个字符。"
       retry_staged_message:
         title: "网络错误"
+        rate_limited_title: "消息过多"
+        rate_limited_waiting: "消息过多，请稍等片刻。"
         action: "重新发送？"
       bookmark_message: "书签"
       bookmark_message_edit: "编辑书签"
@@ -314,6 +321,7 @@ zh_CN:
         other: "%{count} 条新消息"
       sound:
         title: "桌面聊天通知声音"
+        preview: "播放所选声音的预览"
       sounds:
         none: "无"
         classic: "经典简约"
@@ -332,6 +340,7 @@ zh_CN:
       upload_to_thread: "上传到消息串"
       uploaded_files:
         other: "%{count} 个文件"
+      youtube: "YouTube"
       you_flagged: "您已举报此消息"
       exit: "退出聊天"
       channel_status:
@@ -486,6 +495,10 @@ zh_CN:
         type: "聊天消息"
         message_in_channel: "频道"
       reactions:
+        add: "使用 %{emoji} 回复"
+        remove: "删除此 %{emoji} 回应"
+        counted:
+          other: "%{emoji} 回应， %{count} 人"
         only_you: "<span>您回应了 </span>:%{emoji}:"
         you_and_single_user: "<span>您和 %{username} 回应了 </span>:%{emoji}:"
         you_and_multiple_users: "<span>您、%{commaSeparatedUsernames} 和 %{username} 回应了 </span>:%{emoji}:"
@@ -563,14 +576,38 @@ zh_CN:
       direct_messages:
         title: "直接消息"
         aria_label: "切换到直接消息"
-        new: "创建个人聊天"
+        new: "新私信"
+        new_group: "新建群组聊天"
         create: "开始"
-        leave: "离开此个人聊天"
-        close: "关闭此个人聊天"
+        leave: "离开频道"
+        close: "关闭频道"
         cannot_create: "抱歉，您无法发送直接消息。"
       channel_list:
+        apply_filters: "对频道应用过滤器"
         title: "频道"
         aria_label: "切换到频道列表"
+        options:
+          title: "频道列表选项"
+          filter: "筛选"
+          sort: "排序"
+          current_filter: "筛选： %{filter}"
+          current_sort: "排序： %{sort}"
+        filter:
+          title: "按以下方式筛选频道："
+          all: "所有频道"
+          active: "仅活跃"
+          active_description: "最近 %{days} 天的新活动"
+          unread: "未读"
+          mentions: "提及"
+        sort:
+          title: "频道排序方式："
+          alphabetical: "按字母顺序"
+          recent_activity: "近期活动"
+          priority: "优先级"
+          priority_description: "提及，然后是未读消息，然后是最近活动"
+        empty:
+          filtered: "没有频道符合此筛选条件。"
+          show_all: "显示所有频道"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "选择一个频道"
@@ -717,10 +754,10 @@ zh_CN:
           other_plain: '在“%{channel}”中提及“%{identifier}”'
           other_html: '<span>%{username}</span> <span>在“%{channel}”中提及“%{identifier}”</span>'
         direct_message_chat_mention:
-          direct: "在个人聊天中提及您"
-          direct_html: "<span>%{username}</span> <span>在个人聊天中提及您</span>"
-          other_plain: "在个人聊天中提及“%{identifier}”"
-          other_html: "<span>%{username}</span> <span>在个人聊天中提及“%{identifier}”</span>"
+          direct: "我在私信里提到了你"
+          direct_html: "<span>%{username}</span> <span>在私信中提到了你</span>"
+          other_plain: "在私信中提到了 %{identifier}"
+          other_html: "<span>%{username}</span> <span>在私信中提及了 %{identifier}</span>"
         chat_message: "新的聊天消息"
         chat_quoted: "%{username} 引用了您的聊天消息"
       titles:
@@ -790,8 +827,8 @@ zh_CN:
           title: 聊天
     sidebar:
       start_new_dm:
-        text: 开始新的 DM
-        title: 创建个人聊天
+        text: 发起私信或群聊
+        title: 新的私信或群聊
       panels:
         chat:
           label: "聊天"
@@ -815,12 +852,25 @@ zh_CN:
       chat_approval:
         message: "消息"
         buttons: "按钮"
+        buttons_description: "添加 1 到 10 个回复按钮。"
+        add_button: "添加按钮"
+        label: "标签"
+        label_description: "按钮上显示的文字。"
+        label_placeholder: "按钮标签"
         value: "值"
+        value_description: "单击此按钮时工作流返回的值。"
+        value_placeholder: "返回值"
         style: "样式"
+        style_description: "选择按钮样式，或者留空以保留标准聊天按钮外观。"
+        style_none: "无样式"
         style_default: "默认"
         style_primary: "主要"
+        style_danger: "危险"
         style_success: "成功"
+        style_flat: "平的"
+        style_transparent: "透明的"
         icon: "图标"
+        icon_description: "选择一个图标显示在按钮标签之前。"
         approve_label: "“批准”按钮标签"
         approve_label_description: "如果留空，则默认为“批准”。"
         deny_label: "“拒绝”按钮标签"
@@ -831,5 +881,6 @@ zh_CN:
         timeout_minutes_description: "留空表示无超时。"
         timeout_action: "超时操作"
         timeout_action_description: "审批超时会发生什么？"
+        timeout_action_continue: "继续工作流程"
         timeout_action_deny: "恢复为被拒绝"
         timeout_action_fail: "工作流失败"

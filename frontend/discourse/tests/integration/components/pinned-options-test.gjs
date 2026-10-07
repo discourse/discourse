@@ -23,7 +23,7 @@ module("Integration | Component | PinnedOptions", function (hooks) {
 
     await render(
       <template>
-        <PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />
+        <PinnedOptions @topic={{this.topic}} @value={{this.topic.pinned}} />
       </template>
     );
 
@@ -54,7 +54,7 @@ module("Integration | Component | PinnedOptions", function (hooks) {
 
     await render(
       <template>
-        <PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />
+        <PinnedOptions @topic={{this.topic}} @value={{this.topic.pinned}} />
       </template>
     );
 

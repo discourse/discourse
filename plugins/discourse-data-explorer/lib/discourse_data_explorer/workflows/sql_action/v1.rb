@@ -191,18 +191,13 @@ module DiscourseDataExplorer
           req_params = {}
           exec_ctx
             .get_node_parameter("params.values", 0, default: [])
-            .each do |param|
-              req_params[param["name"].to_sym] = param["value"] if param["name"].present?
-            end
-
-          sql = DiscourseDataExplorer::DataExplorer.strip_comments(sql)
-          sql = DiscourseDataExplorer::DataExplorer.interpolate_params(sql, req_params)
+            .each { |param| req_params[param["name"]] = param["value"] if param["name"].present? }
 
           query = DiscourseDataExplorer::Query.new(name: "workflow", sql: sql)
           result =
-            DiscourseDataExplorer::DataExplorer.run_query(
+            DiscourseDataExplorer::DataExplorer.run_query_with_values(
               query,
-              {},
+              req_params,
               { limit: SiteSetting.data_explorer_query_result_limit },
             )
 

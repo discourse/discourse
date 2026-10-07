@@ -11,9 +11,11 @@ div.graphviz.is-loading,
   }
 }
 
-// floor for a diagram not yet typed; the block supplies the frame
-.composer-graphviz-node .composer-preview-node__preview {
-  min-height: 3em;
+// The block frames the diagram as the cooked wrapper does, so both faces fit
+// that frame and scroll whatever does not fit inside it.
+.composer-graphviz-node {
+  --composer-preview-node-source-max-height: 100%;
+  aspect-ratio: 16 / 9;
 }
 
 // Hide the raw DOT source until the client replaces the placeholder.

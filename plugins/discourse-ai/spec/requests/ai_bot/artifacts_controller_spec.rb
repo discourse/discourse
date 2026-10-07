@@ -134,6 +134,16 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
         cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
       )
 
+      public_key_value =
+        Fabricate(
+          :ai_artifact_key_value,
+          ai_artifact: artifact,
+          user: user,
+          key: "shared_public_key",
+          value: "shared_public_value",
+          public: true,
+        )
+
       shared_conversation = SharedAiConversation.share_conversation(user, topic)
       expect(shared_conversation.publicly_visible?).to eq(true)
       expect(artifact.reload.public?).to eq(true)
@@ -157,12 +167,20 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
         body: response.status == 200 ? parse_srcdoc(response.body) : response.body,
       }
 
+      get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json",
+          params: {
+            all_users: true,
+          }
+      key_values_response = { status: response.status, body: response.body }
+
       aggregate_failures do
         expect(shared_conversation_status).to eq(404)
         expect(artifact_response[:status]).to eq(404)
         expect(artifact_response[:body]).not_to include(artifact.html)
         expect(artifact_version_response[:status]).to eq(404)
         expect(artifact_version_response[:body]).not_to include(artifact_version.html)
+        expect(key_values_response[:status]).to eq(404)
+        expect(key_values_response[:body]).not_to include(public_key_value.value)
       end
     end
 

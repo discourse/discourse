@@ -27,6 +27,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @service toasts;
 
   editRouteName = "adminCustomizeThemes.edit";
+  parentThemesSaved = false;
 
   @computed("model.id")
   get downloadUrl() {
@@ -121,6 +122,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @computed("model.themeable_site_settings")
   get themeSiteSettings() {
     return this.model?.themeable_site_settings;
+  }
+
+  get pendingSettings() {
+    return [
+      ...(this.settings ?? []),
+      ...(this.themeSiteSettings ?? []),
+      ...(this.translations ?? []),
+      this.model.component
+        ? this.relativesSelectorSettingsForComponent
+        : this.relativesSelectorSettingsForTheme,
+    ].filter((setting) => setting.hasPendingChanges);
   }
 
   @computed("model.component", "model.remote_theme")
@@ -299,6 +311,29 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     return this.model?.remoteError && !this.updatingRemote;
   }
 
+  @computed("model.user.id", "model.default")
+  get showConvert() {
+    return this.model?.user?.id > 0 && !this.model?.default;
+  }
+
+  get exportAction() {
+    return attachmentDownloadStrategy() === "native"
+      ? undefined
+      : this.exportTheme;
+  }
+
+  get availableLocales() {
+    return this.siteSettings.available_locales;
+  }
+
+  get locale() {
+    return (
+      this.get("model.locale") ||
+      this.userLocale ||
+      this.siteSettings.default_locale
+    );
+  }
+
   editedFieldsForTarget(target) {
     return this.get("model.editedFields").filter(
       (field) => field.target === target
@@ -353,17 +388,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       "common",
       "scss"
     );
-  }
-
-  @computed("model.user.id", "model.default")
-  get showConvert() {
-    return this.model?.user?.id > 0 && !this.model?.default;
-  }
-
-  get exportAction() {
-    return attachmentDownloadStrategy() === "native"
-      ? undefined
-      : this.exportTheme;
   }
 
   @action
@@ -429,18 +453,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     let model = this.model;
     model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
     model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
-  }
-
-  get availableLocales() {
-    return this.siteSettings.available_locales;
-  }
-
-  get locale() {
-    return (
-      this.get("model.locale") ||
-      this.userLocale ||
-      this.siteSettings.default_locale
-    );
   }
 
   @action
@@ -538,6 +550,11 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
+  markParentThemesSaved() {
+    this.parentThemesSaved = true;
+  }
+
+  @action
   removeChildTheme(theme) {
     this.model.removeChildTheme(theme).then(() => this.store.findAll("theme"));
   }
@@ -550,7 +567,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       }),
       didConfirm: () => {
         const model = this.model;
-        model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           removeValueFromArray(this.allThemes, model);
 

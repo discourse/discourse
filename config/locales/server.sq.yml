@@ -5,6 +5,35 @@
 # https://translate.discourse.org/
 
 sq:
+  markdown_endpoints:
+    latest: "Më të fundit"
+    categories: "Categories"
+    tags: "Etiketat"
+    previous_page: "Faqe mëparshme"
+    next_page: "Faqja tjetër"
+    replies: "Përgjigjet"
+    last_updated: "Përditësimi i fundit"
+    event:
+      location: "Vendndodhja"
+  mcp:
+    errors:
+      draft_too_long: "Mesazhi shembull është shumë i gjatë"
+      topic_not_found: "Tema nuk u gjet"
+    oauth:
+      deny: "Mohoni"
+      approve: "Autorizo"
+  llms_txt:
+    sections:
+      optional: "Fakultative"
+    links:
+      search:
+        label: "Kërko"
+      categories:
+        label: "Categories"
+      about:
+        label: "Rreth"
+      guidelines:
+        label: "Udhëzimet"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -348,6 +377,7 @@ sq:
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
   admin_site_traffic_explorer:
+    unknown: "I panjohur"
     traffic_types:
       anonymous: "Anonim"
   change_email:
@@ -415,7 +445,7 @@ sq:
   unsubscribed:
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
-    title: "Çregjistrohuni"
+    unsubscribe: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
     log_out: "Shkëputu"
@@ -478,6 +508,11 @@ sq:
         share: "Shpërndaje"
       types:
         staff: "Stafi"
+    posters_by_member_type_members:
+      labels:
+        user: "User"
+        count: "Postime"
+        share: "Shpërndaje"
     trust_level_pipeline:
       labels:
         count: "Anëtarë"
@@ -933,6 +968,7 @@ sq:
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "Ky emër nuk lejohet."
+    missing_username: "Ju lutemi shkruani një emër përdoruesi"
   admin:
     email:
       sent_test: "u dërgua!"
@@ -1509,8 +1545,6 @@ sq:
         title: "Po"
       approve_and_unhide:
         title: "Po"
-      delete_post:
-        complete: "Postimi u fshi"
       delete_user:
         complete: "Përdoruesi u fshi"
   fallback_username: "përdorues"

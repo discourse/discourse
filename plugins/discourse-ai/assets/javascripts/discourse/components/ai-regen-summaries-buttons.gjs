@@ -98,19 +98,19 @@ export default class AiRegenSummariesButtons extends Component {
   <template>
     {{#if this.showGistOption}}
       <DButton
-        @label="discourse_ai.summarization.topic.regenerate_gists_option"
-        @icon="arrows-rotate"
+        class="btn-primary ai-regen-gists-btn"
         @action={{this.regenerateGists}}
         @disabled={{@disabled}}
-        class="btn-primary ai-regen-gists-btn"
+        @icon="arrows-rotate"
+        @label="discourse_ai.summarization.topic.regenerate_gists_option"
       />
     {{/if}}
     <DButton
-      @label="discourse_ai.summarization.topic.regenerate_summaries_option"
-      @icon="arrows-rotate"
+      class="btn-primary ai-regen-summaries-btn"
       @action={{this.regenerateSummaries}}
       @disabled={{@disabled}}
-      class="btn-primary ai-regen-summaries-btn"
+      @icon="arrows-rotate"
+      @label="discourse_ai.summarization.topic.regenerate_summaries_option"
     />
   </template>
 }

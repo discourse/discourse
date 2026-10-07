@@ -28,6 +28,15 @@ require_relative "lib/discourse_reactions/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-reactions/db/fixtures").to_s
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::PostReaction::V1,
+        DiscourseWorkflows::Nodes::PostReactionChanged::V1,
+      ]
+    end
+  end
+
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb
     app/models/discourse_reactions/reaction_user.rb
@@ -433,4 +442,38 @@ after_initialize do
       ::Jobs.enqueue_at(5.minutes.from_now, Jobs::DiscourseReactions::LikeSynchronizer)
     end
   end
+end
+
+after_initialize do
+  require_relative "lib/discourse_reactions/mcp_tools"
+  register_mcp_tool(
+    "discourse_reactions_post_reaction_set",
+    title: "Set post reaction",
+    description: "Adds, changes, or removes the authenticated user's reaction to a visible post.",
+    implementation: DiscourseReactions::McpTools::SetReaction,
+    input_schema: {
+      type: "object",
+      properties: {
+        post_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        reaction: {
+          type: "string",
+          minLength: 1,
+          maxLength: 100,
+        },
+      },
+      required: %w[post_id reaction],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseReactions::McpTools::SetReaction::OUTPUT_SCHEMA,
+    required_scopes: DiscourseReactions::McpTools::SetReaction::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.discourse_reactions_enabled },
+  )
 end

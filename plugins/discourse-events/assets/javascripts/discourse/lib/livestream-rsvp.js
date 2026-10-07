@@ -97,7 +97,7 @@ export default class LivestreamRsvp extends Component {
     } catch (e) {
       popupAjaxError(e);
     } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.isSaving = false;
       }
     }

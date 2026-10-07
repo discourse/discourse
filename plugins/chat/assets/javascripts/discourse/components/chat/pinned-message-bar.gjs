@@ -178,13 +178,6 @@ export default class ChatPinnedMessageBar extends Component {
     }
   }
 
-  #updatePinnedMessage(updated) {
-    if (!updated || !this.pins.some((pin) => pin.message?.id === updated.id)) {
-      return;
-    }
-    this.loadPins();
-  }
-
   @action
   async loadPins() {
     if (!this.showBar) {
@@ -201,16 +194,6 @@ export default class ChatPinnedMessageBar extends Component {
       }
     } catch {
       // keep the previously loaded pins on a transient failure
-    }
-  }
-
-  #reconcileDismissal() {
-    const dismissedAbove = pinsDismissedAboveId(this.args.channel);
-    if (
-      dismissedAbove != null &&
-      newestPinId(this.visiblePins) > dismissedAbove
-    ) {
-      resetPinsDismissal(this.args.channel);
     }
   }
 
@@ -233,6 +216,23 @@ export default class ChatPinnedMessageBar extends Component {
     dismissPinsUpTo(this.args.channel, newestPinId(this.visiblePins));
   }
 
+  #updatePinnedMessage(updated) {
+    if (!updated || !this.pins.some((pin) => pin.message?.id === updated.id)) {
+      return;
+    }
+    this.loadPins();
+  }
+
+  #reconcileDismissal() {
+    const dismissedAbove = pinsDismissedAboveId(this.args.channel);
+    if (
+      dismissedAbove != null &&
+      newestPinId(this.visiblePins) > dismissedAbove
+    ) {
+      resetPinsDismissal(this.args.channel);
+    }
+  }
+
   <template>
     {{#if this.showBar}}
       <div
@@ -246,16 +246,16 @@ export default class ChatPinnedMessageBar extends Component {
         {{#if this.currentPin}}
           <div class="chat-pinned-bar__main">
             <button
-              type="button"
-              class="chat-pinned-bar__jump"
               aria-label={{i18n "chat.pinned_bar.jump_to_pinned"}}
+              class="chat-pinned-bar__jump"
+              type="button"
               {{on "click" this.jumpToCurrentPin}}
             ></button>
 
             {{#if this.hasMultiplePins}}
               <span
-                class="chat-pinned-bar__indicator"
                 aria-hidden="true"
+                class="chat-pinned-bar__indicator"
                 style={{this.indicatorStyle}}
               >
                 <span class="chat-pinned-bar__indicator-track">
@@ -285,15 +285,15 @@ export default class ChatPinnedMessageBar extends Component {
         {{! a lone pin has no list to open, and the excerpt wants the width }}
         {{#if this.hasMultiplePins}}
           <LinkTo
-            @route={{this.seeAllRoute}}
-            @models={{@channel.routeModels}}
+            aria-label={{this.seeAllLabel}}
             class={{if
               this.pinsPanelOpen
               "chat-pinned-bar__see-all btn no-text btn-transparent --active"
               "chat-pinned-bar__see-all btn no-text btn-transparent"
             }}
-            aria-label={{this.seeAllLabel}}
             title={{this.seeAllLabel}}
+            @models={{@channel.routeModels}}
+            @route={{this.seeAllRoute}}
           >
             {{dIcon "list"}}
             {{#if @channel.hasUnseenPins}}
@@ -303,11 +303,11 @@ export default class ChatPinnedMessageBar extends Component {
         {{/if}}
 
         <DButton
+          class="chat-pinned-bar__dismiss btn-transparent no-text"
           @action={{this.dismiss}}
+          @ariaLabel="chat.pinned_messages.dismiss"
           @icon="xmark"
           @title="chat.pinned_messages.dismiss"
-          @ariaLabel="chat.pinned_messages.dismiss"
-          class="chat-pinned-bar__dismiss btn-transparent no-text"
         />
       </div>
     {{/if}}

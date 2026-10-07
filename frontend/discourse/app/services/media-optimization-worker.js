@@ -206,27 +206,6 @@ export default class MediaOptimizationWorkerService extends Service {
     this.workerPendingCount = 0;
   }
 
-  _renameForOutputType(fileName, outputType) {
-    const baseName = fileName.replace(/\.[^.]+$/, "");
-    switch (outputType) {
-      case "image/jpeg":
-        return baseName + ".jpg";
-      case "image/webp":
-        return baseName + ".webp";
-      default:
-        return fileName;
-    }
-  }
-
-  _extensionAuthorized(fileName) {
-    const extension = fileName.split(".").pop().toLowerCase();
-    const staff = this.currentUser?.staff;
-    return (
-      authorizesAllExtensions(staff, this.siteSettings) ||
-      authorizedExtensions(staff, this.siteSettings).includes(extension)
-    );
-  }
-
   registerMessageHandler() {
     this.worker.onmessage = (workerMessage) => {
       switch (workerMessage.data.type) {
@@ -298,5 +277,26 @@ export default class MediaOptimizationWorkerService extends Service {
       // eslint-disable-next-line no-console
       console.log("[media-optimization-worker]", ...messages);
     }
+  }
+
+  _renameForOutputType(fileName, outputType) {
+    const baseName = fileName.replace(/\.[^.]+$/, "");
+    switch (outputType) {
+      case "image/jpeg":
+        return baseName + ".jpg";
+      case "image/webp":
+        return baseName + ".webp";
+      default:
+        return fileName;
+    }
+  }
+
+  _extensionAuthorized(fileName) {
+    const extension = fileName.split(".").pop().toLowerCase();
+    const staff = this.currentUser?.staff;
+    return (
+      authorizesAllExtensions(staff, this.siteSettings) ||
+      authorizedExtensions(staff, this.siteSettings).includes(extension)
+    );
   }
 }

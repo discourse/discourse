@@ -39,6 +39,38 @@ RSpec.describe DiscourseAi::Agents::Tools::ViewImage do
     )
   end
 
+  it "excludes non-text completion events from the analysis" do
+    thinking =
+      DiscourseAi::Completions::Thinking.new(
+        message: "Private reasoning",
+        provider_info: {
+          gemini_interactions: {
+            steps: [{ signature: "signed-context" }],
+          },
+        },
+      )
+    result = nil
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([["A small test image", thinking]]) do
+      result = build_tool.invoke
+    end
+
+    expect(result).to include(status: "success")
+    expect(result[:analysis]).to eq("#{described_class::ANALYSIS_PREFIX}A small test image")
+  end
+
+  it "returns an error when delegated vision produces no text" do
+    thinking = DiscourseAi::Completions::Thinking.new(message: "Private reasoning")
+    result = nil
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([thinking]) { result = build_tool.invoke }
+
+    expect(result).to eq(
+      status: "error",
+      error: "The configured vision model could not analyze the image.",
+    )
+  end
+
   it "analyzes an authorized upload with a tool-free native request" do
     result = nil
     prompts = nil

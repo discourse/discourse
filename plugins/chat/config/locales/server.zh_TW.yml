@@ -6,74 +6,314 @@
 
 zh_TW:
   site_settings:
-    chat_enabled: "啟用聊天."
+    chat_separate_sidebar_mode: "為論壇和聊天顯示單獨的邊欄模式。"
+    chat_enabled: "啟用聊天。"
+    chat_pinned_messages: "在聊天頻道中啟用置頂消息。"
+    enable_new_chat_reactions_popup: "在聊天消息上啟用重新設計的回應彈出窗口，通過無限滾動和原生移動體驗顯示誰做出了回應。"
+    enable_public_channels: "基于分類啟用公開頻道。"
+    chat_allowed_groups: "這些群組中的使用者可以聊天，但匿名使用者除外，他們只有在被添加到此設置后才能查看聊天。請注意，管理員和版主可以隨時訪問聊天。"
+    chat_channel_retention_days: "常規頻道中的聊天消息將保留此天數。設置為 0 將永久保留消息。"
+    chat_dm_retention_days: "個人聊天頻道中的聊天消息將保留此天數。設置為 0 將永久保留消息。"
+    chat_auto_silence_duration: "使用者超過聊天消息創建速率限值時將被禁言的分鐘數。設置為 0 將禁用自動禁言。"
+    chat_allowed_messages_for_trust_level_0: "信任級別 0 使用者在 30 秒內可以發送的消息數。設置為 0 將禁用限制。"
+    chat_allowed_messages_for_other_trust_levels: "信任級別 1-4 的使用者在 30 秒內可以發送的消息數。設置為 0 將禁用限制。"
+    chat_silence_user_sensitivity: "聊天中被檢舉的使用者被自動禁言的可能性。"
+    chat_auto_silence_from_flags_duration: "使用者由于被檢舉的聊天消息而被自動禁言時將被禁言的分鐘數。"
+    chat_duplicate_message_sensitivity: "同一發件人的重復郵件在短時間內被屏蔽的可能性。0 到 1.0 之間的十進制數，1.0 是最高設置（在更短的時間內更頻繁地屏蔽消息）。設置為 0 將允許重復消息。"
+    chat_minimum_message_length: "聊天消息的最少字符數。"
+    chat_allow_uploads: "允許在公共聊天頻道和直接消息頻道中上傳文件。"
+    chat_show_copy_button_on_codeblocks: "在聊天消息中的代碼塊上顯示復制按鈕。"
+    chat_archive_destination_topic_status: "頻道歸檔完成后目標主題應處于的狀態。這僅適用于目標主題是新主題而不是現有主題的情況。"
+    direct_message_enabled_groups: "允許這些群組中的使用者創建使用者間的個人聊天。請注意：管理人員始終可以創建個人聊天，使用者將能夠回復有權創建個人聊天的使用者發起的個人聊天。"
+    chat_message_flag_allowed_groups: "這些群組中的使用者可以檢舉聊天消息。請注意，管理員和版主始終可以檢舉聊天消息。"
+    chat_pinning_messages_allowed_groups: "這些群組中的使用者可以將聊天消息置頂在他們能夠訪問的頻道中。請注意，管理員和版主始終可以置頂聊天消息。群聊或私信中的任何成員都可以置頂消息。"
+    max_mentions_per_chat_message: "使用者可以在聊天消息中使用的 @name 通知的最大數量。"
+    chat_max_direct_message_users: "在創建新的直接消息時，使用者無法添加超過此數量的其他使用者。設置為 0 只允許給自己發送消息。管理人員不受此設置的影響。"
+    chat_allow_archiving_channels: "允許管理人員在關閉頻道時將消息歸檔到某個主題。"
+    chat_editing_grace_period: "在發送聊天后 (n) 秒內進行編輯時，不會在聊天消息旁邊顯示（已編輯）標簽。"
+    chat_editing_grace_period_max_diff_low_trust: "聊天編輯寬限期內允許的最大字符更改數，超過此值將在聊天消息旁邊顯示（已編輯）標簽（信任級別 0 和 1）。"
+    chat_editing_grace_period_max_diff_high_trust: "聊天編輯寬限期內允許的最大字符更改數，超過此值將在聊天消息旁邊顯示（已編輯）標簽（信任級別 2 及以上）。"
+    chat_preferred_index: "加載/聊天時的首選項標簽頁。"
+    allow_chat_in_anonymous_mode: "啟用此設置可允許匿名瀏覽您網站的使用者使用聊天功能。此設置需要先啟用 {{setting:allow_anonymous_mode}} 設置。"
+    chat_search_enabled: "啟用此設置以允許使用者搜尋聊天消息。"
+    errors:
+      chat_default_channel: "默認聊天頻道必須是公共頻道。"
+      direct_message_enabled_groups_invalid: "您必須為此設置至少指定一個群組。如果您不希望管理人員以外的任何人發送直接消息，請選擇管理人員群組。"
+      chat_upload_not_allowed_secure_uploads: "當啟用安全上傳網站設置時，不允許在聊天中上傳文件。"
+      allow_chat_in_anonymous_mode_invalid: "此設置需要先啟用 'allow anonymous mode' 設置。"
+  system_messages:
+    private_channel_title: "頻道 %{id}"
+    chat_channel_archive_complete:
+      title: "聊天頻道歸檔完成"
+      subject_template: "聊天頻道歸檔成功完成"
+      text_body_template: |
+        聊天頻道 %{channel_hashtag_or_name} 已成功封存。訊息已複製到主題 [%{topic_title}](%{topic_url})。
+    chat_channel_archive_failed:
+      title: "聊天頻道歸檔失敗"
+      subject_template: "聊天頻道歸檔失敗"
+      text_body_template: |
+        封存聊天頻道 %{channel_hashtag_or_name} 失敗。已封存 %{messages_archived} 則訊息。部分已封存的訊息已複製到主題 [%{topic_title}](%{topic_url})。請前往 %{channel_url} 的頻道重試。
+    chat_channel_archive_failed_no_topic:
+      title: "聊天頻道歸檔失敗"
+      subject_template: "聊天頻道歸檔失敗"
+      text_body_template: |
+        封存聊天頻道 %{channel_hashtag_or_name} 失敗，沒有任何訊息被封存。由於以下原因，無法成功建立主題：
+
+          %{topic_validation_errors}
+
+        請前往 %{channel_url} 的頻道重試。
   chat:
     deleted_chat_username: 已刪除
     errors:
+      users_cant_be_added_to_channel: "無法將使用者添加到此頻道。"
+      user_cant_be_removed_from_channel: "無法將使用者從此頻道中移除"
+      channel_exists_for_category: "此分類和名稱的頻道已經存在"
+      public_channels_disabled: "由于公開頻道已禁用，無法創建頻道。管理員可以啟用 'enable public channels' 網站設置。"
+      channel_new_message_disallowed:
+        archived: "該頻道已被歸檔，無法發送新消息"
+        closed: "該頻道已關閉，無法發送新消息"
+        read_only: "該頻道為只讀頻道，無法發送新消息"
+      channel_modify_message_disallowed:
+        archived: "該頻道已關閉，無法編輯或刪除任何消息"
+        closed: "該頻道已關閉，無法編輯或刪除任何消息"
+        read_only: "該頻道為只讀頻道，無法編輯或刪除任何消息"
+      user_cannot_send_message: "您目前無法發送消息。"
+      user_not_in_channel: "您必須是此頻道的會員。"
+      rate_limit_exceeded: "超過了 30 秒內可發送的聊天消息的上限"
+      auto_silence_from_flags: "聊天消息被檢舉的分數高到足以將使用者禁言。"
+      channel_cannot_be_archived: "目前無法歸檔該頻道，必須將其關閉或打開才能歸檔。"
+      duplicate_message: "您在短時間內發布了一條相同的消息。"
+      delete_channel_failed: "刪除頻道失敗，請重試。"
       minimum_length_not_met:
-        other: "訊息過短，必須至少有 %{count} 個字元。"
+        other: "訊息過短，至少必須有 %{count} 個字元。"
       message_too_long:
-        other: "訊息過長，不得超過 %{count} 個字元。"
-      not_accepting_dms: "對不起，%{username} 目前不接收訊息。"
-      user_cannot_send_direct_messages: "抱歉，您無法傳送私訊。"
+        other: "訊息過長，最多只能有 %{count} 個字元。"
+      draft_too_long: "草稿過長。"
+      max_reactions_limit_reached: "此消息不允許有新的回應。"
+      message_move_invalid_channel: "源頻道和目標頻道必須是公共頻道。"
+      message_move_no_messages_found: "找不到帶有提供的消息 ID 的消息。"
+      cant_update_direct_message_channel: "無法更新名稱和描述等直接消息頻道屬性。"
+      not_accepting_dms: "抱歉，%{username} 目前不接受消息。"
+      actor_ignoring_target_user: "您正在忽略 %{username}，因此您無法向他們發送消息。"
+      actor_muting_target_user: "您正在將 %{username} 設為免打擾，因此您無法向他們發送消息。"
+      actor_disallowed_dms: "您已選擇阻止使用者向您發送個人消息和直接消息，因此您無法創建新的直接消息。"
+      actor_preventing_target_user_from_dm: "您已選擇阻止 %{username} 向您發送個人消息和直接消息，因此您無法創建發給他們的新直接消息。"
+      not_reachable: "抱歉，%{username} 沒有使用聊天功能。"
+      user_cannot_send_direct_messages: "抱歉，您無法發送直接消息。"
+      over_chat_max_direct_message_users_allow_self: "您只能創建一個與自己的直接消息。"
+      over_chat_max_direct_message_users:
+        other: "私人訊息中最多只能加入 %{count} 位其他使用者。"
+      original_message_not_found: "找不到您要回復資訊的上級內容，或相關內容已被刪除。"
+      thread_invalid_for_channel: "該消息串不是所提供頻道的一部分。"
+      thread_does_not_match_parent: "消息串與父消息不匹配。"
+      invalid_direct_message: "您無權創建此直接消息。"
+      pin_limit_reached: "此頻道已達到置頂消息的最大數量 (%{limit})。"
+      message_already_pinned: "此消息已置頂。"
+      message_not_pinned: "此消息未置頂。"
     reviewables:
+      message_already_handled: "謝謝，但我們已經審核此消息，并確定它不需要被再次檢舉。"
       actions:
+        message_actions:
+          bundle_title: "您想如何處理該消息？"
         no_action_message:
-          title: "沒有動作"
+          title: "不採取動作"
+          description: "保持消息原樣。"
+        delete_message:
+          title: "刪除消息"
+          description: "永久刪除該消息。"
+        restore_message:
+          title: "恢復消息"
+          description: "恢復消息，以便使用者可以看到。"
         agree:
-          title: "同意..."
+          title: "同意…"
         agree_and_keep_message:
-          title: "保留訊息"
+          title: "保留消息"
+          description: "同意檢舉并保持消息不變。"
+        agree_and_keep_deleted:
+          title: "保持消息刪除狀態"
+          description: "同意檢舉并保持消息刪除狀態。"
         agree_and_suspend:
-          title: "將使用者停權"
-          description: "同意檢舉並停權使用者"
+          title: "封禁使用者"
+          description: "同意檢舉并封禁使用者。"
         agree_and_silence:
-          title: "將使用者禁言"
-          description: "同意檢舉並禁止使用者發文"
+          title: "禁言使用者"
+          description: "同意檢舉並禁言使用者。"
+        agree_and_restore:
+          title: "恢復消息"
+          description: "恢復消息，以便使用者可以看到。"
         agree_and_delete:
-          title: "刪除訊息"
+          title: "刪除消息"
+          description: "刪除消息，使使用者看不到。"
+        delete_and_agree:
+          title: "忽略檢舉并刪除資訊"
+          description: "將檢舉從隊列中移除并刪除消息以忽略該檢舉。"
+        disagree_and_restore:
+          title: "不同意并恢復消息"
+          description: "恢復消息，以便所有使用者都可以看到。"
+        disagree:
+          title: "保留消息"
+          description: "不同意檢舉，并保持消息內容不變。"
+        ignore:
+          title: "忽略檢舉"
+          description: "將其從隊列中移除，不采取任何措施。"
+      direct_messages:
+        transcript_title: "%{channel_name}中以前消息的副本"
+        transcript_body: "為了向您提供更多背景，我們在此對話中包含了以前消息的副本（最多十條）：\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        other: "%{invited_users} 已由 %{inviting_user} 邀請。"
+      archive:
+        first_post_raw: "此主題是[%{channel_name}](%{channel_url})聊天頻道的歸檔。"
+      messages_moved:
+        other: "@%{acting_username} 已將 %{count} 則訊息移至 [%{channel_name}](%{first_moved_message_url}) 頻道。"
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          other: "%{comma_separated_usernames} 與其他 %{count} 人"
     mention_warning:
       dismiss: "忽略"
+      cannot_see: "%{first_identifier} 無法訪問此頻道且沒有收到通知。"
+      cannot_see_group: "%{group_name} 的某些成員無法訪問此頻道且未收到通知。"
+      cannot_see_multiple:
+        other: "%{first_identifier} 與其他 %{count} 位使用者無法存取此頻道，因此未收到通知。"
+      invitations_sent:
+        other: "邀請已送出"
+      invite: "邀請加入頻道"
+      without_membership: "%{first_identifier} 尚未加入此頻道。"
+      without_membership_multiple:
+        other: "%{first_identifier} 與其他 %{count} 位使用者尚未加入此頻道。"
+      group_mentions_disabled: "%{first_identifier} 不允許提及。"
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} 與其他 %{count} 個群組不允許被提及。"
+      global_mentions_disallowed: "@here 和 @all 提及在此頻道中被禁用。"
+      too_many_members: "%{first_identifier} 的成員過多。任何人都沒有收到通知。"
+      too_many_members_multiple:
+        other: "%{first_identifier} 與其他 %{count} 個群組的成員過多，因此沒有人收到通知。"
     category_channel:
       errors:
-        is_already_in_use: "已被使用"
+        slug_contains_non_ascii_chars: "包含非 ASCII 字符"
+        is_already_in_use: "已在使用中"
     bookmarkable:
-      notification_title_channel: "%{channel_name} 中的訊息"
+      notification_title_channel: "%{channel_name} 中的消息"
+      notification_title_direct_message: "包含 %{channel_name} 的消息"
+    personal_chat: "個人聊天"
     onebox:
+      inline_to_message: "消息 #%{message_id}，來自%{username} – #%{chat_channel}"
+      inline_to_channel: "聊天 #%{chat_channel}"
+      inline_to_topic_channel: "主題%{topic_title}的聊天"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "#%{chat_channel} 中的消息串"
       thread_title_connector: "在"
       x_members:
         other: "%{count} 位成員"
+      and_x_others:
+        other: "與其他 %{count} 人"
     transcript:
-      default_thread_title: "討論串"
+      default_thread_title: "消息串"
+      split_thread_range: "%{start} 到 %{end} 的消息（共 %{total} 條）"
   discourse_push_notifications:
     popup:
       chat_mention:
-        direct: '%{username} 在 "%{channel}" 提及了您'
-        other_type: '%{username} 在 "%{channel}" 提及了 %{identifier}'
-      new_chat_message: '%{username} 在 "%{channel}" 傳送了訊息'
+        direct: '%{username} 在“%{channel}”中提及您'
+        other_type: '%{username} 在“%{channel}”中提及“%{identifier}”'
+      direct_message_chat_mention:
+        direct: "%{username} 在個人聊天中提及您"
+        other_type: "%{username} 在個人聊天中提及“%{identifier}”"
+      new_chat_message: '%{username} 在“%{channel}”中發送了一條消息'
+      new_direct_chat_message: "%{username} 在個人聊天中發送了一條消息"
     actions:
       chat_reply:
-        title: 回覆
+        title: 回復
+        placeholder: 回復…
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: 發送聊天消息
   discourse_workflows:
     chat_approval:
-      default_approve_label: "批准"
+      default_approve_label: "批準"
       default_deny_label: "拒絕"
+    errors:
+      send_chat_message:
+        invalid_params: "無效參數： %{errors}"
+        channel_not_found: "未找到頻道： %{channel_id}"
+        failed: "無法發送聊天消息。"
+      chat_approval:
+        channel_not_found: "聊天消息發送失敗：未找到頻道 %{channel_id}。"
+        invalid_params: "聊天消息發送失敗： %{errors}"
+        failed: "聊天消息發送失敗： %{steps}"
+        timeout_must_be_positive: "超時時長必須大于 0 分鐘。"
+        invalid_timeout_action: "無效的逾時操作：%{action}。"
+        buttons_required: "至少需要一個聊天核准按鈕。"
+        too_many_buttons: "聊天核准最多支援 %{max} 個按鈕。"
+        button_label_required: "聊天核准按鈕 %{position} 必須設定標籤。"
+        button_label_too_long: "聊天核准按鈕 %{position} 的標籤不得超過 %{max} 個字元。"
+        button_value_required: "聊天核准按鈕 %{position} 必須設定值。"
+        button_value_too_long: "聊天核准按鈕 %{position} 的值不得超過 %{max} 個字元。"
+        button_style_invalid: "聊天核准按鈕 %{position} 的樣式必須為以下其中之一：%{styles}。"
+        button_icon_too_long: "聊天核准按鈕 %{position} 的圖示不得超過 %{max} 個字元。"
   reviewable_score_types:
+    needs_review:
+      title: "需要審核"
     notify_user:
+      chat_pm_title: '您在“%{channel_name}”中的聊天消息'
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
+      chat_pm_title: '“%{channel_name}”中的一條聊天消息需要管理人員注意'
       chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "一位管理人員認為此聊天消息需要審核。"
   user_notifications:
     chat_summary:
       deleted_user: "已被刪除的使用者"
       description:
         other: "您有新的聊天訊息"
       from: "%{site_name}"
+      subject:
+        private_email:
+          other: "[%{site_name}] 新訊息"
+        private_email_improved:
+          other: "新訊息"
+        watched_thread:
+          other: "[%{site_name}] %{channel} 中的新討論串訊息"
+        watched_thread_improved:
+          other: "%{channel} 中的新討論串訊息"
+        watched_threads:
+          other: "[%{site_name}] %{channel} 及其他 %{count} 個頻道中的新討論串訊息"
+        watched_threads_improved:
+          other: "%{channel} 及其他 %{count} 個頻道中的新討論串訊息"
+        chat_dm_1:
+          other: "[%{site_name}] 來自 %{name} 的新訊息"
+        chat_dm_1_improved:
+          other: "來自 %{name} 的新訊息"
+        chat_dm_2: "[%{site_name}] 來自 %{name_1} 和 %{name_2} 的新消息"
+        chat_dm_2_improved: "來自 %{name_1} 和 %{name_2} 的新消息"
+        chat_dm_3_or_more: "[%{site_name}] 來自 %{name} 和其他 %{count} 個私信頻道的新消息"
+        chat_dm_3_or_more_improved: "來自 %{name} 和其他 %{count} 人的直接消息頻道的新消息"
+        chat_channel_1:
+          other: "[%{site_name}] %{channel} 中的新訊息"
+        chat_channel_1_improved:
+          other: "%{channel} 中的新訊息"
+        chat_channel_2: "[%{site_name}] %{channel_1} 和 %{channel_2} 中的新消息"
+        chat_channel_2_improved: "%{channel_1} 和 %{channel_2} 中有新消息"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} 和其他 %{count} 個頻道中的新消息"
+        chat_channel_3_or_more_improved: "%{channel} 和其他 %{count} 個頻道中有新消息"
+        chat_channel_and_dm: "[%{site_name}] %{channel} 中和來自 %{name} 的新消息"
+        chat_channel_and_dm_improved: "%{channel} 中來自 %{name} 的新消息"
+      unsubscribe: "此聊天總結在您離開時從%{site_link}發送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退訂。"
+      unsubscribe_no_link: "此聊天總結在您離開時從%{site_link}發送。更改您的%{email_preferences_link}。"
       view_messages:
         other: "查看 %{count} 則訊息"
+      view_more:
+        other: "再查看 %{count} 則訊息"
+      your_chat_settings: "聊天電子郵件偏好設置"
   unsubscribe:
     chat_summary:
+      select_title: "將聊天摘要電子郵件設置為："
       never: 永不
+      when_away: 僅在離開時
+  category:
+    cannot_delete:
+      has_chat_channels: "無法刪除此分類，因為它有關聯的聊天頻道。"

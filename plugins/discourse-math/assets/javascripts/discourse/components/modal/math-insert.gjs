@@ -60,47 +60,47 @@ export default class MathInsertModal extends Component {
 
   <template>
     <DModal
-      @title={{this.modalTitle}}
-      @closeModal={{@closeModal}}
       class="math-insert-modal"
+      @closeModal={{@closeModal}}
+      @title={{this.modalTitle}}
     >
       <:body>
         <div class="math-insert-modal__toggle">
           <DToggleSwitch
-            @state={{this.isBlock}}
             @label="discourse_math.insert_modal.block_mode"
+            @state={{this.isBlock}}
             {{on "click" this.toggleBlockMode}}
           />
         </div>
         <Form
           @data={{this.initialData}}
-          @onSubmit={{this.onSubmit}}
           @onRegisterApi={{this.onRegisterApi}}
+          @onSubmit={{this.onSubmit}}
           as |form|
         >
           <form.Field
+            @format="full"
             @name="text"
             @title={{i18n "discourse_math.insert_modal.label"}}
-            @format="full"
-            @validation="required"
             @type="textarea"
+            @validation="required"
             as |field|
           >
             <field.Control
+              autofocus={{true}}
               class="math-insert-modal__textarea"
               placeholder={{i18n "discourse_math.insert_modal.placeholder"}}
-              autofocus={{true}}
             />
           </form.Field>
         </Form>
       </:body>
       <:footer>
         <DButton
+          class="btn-primary math-insert-modal__insert"
           @action={{this.submitForm}}
           @label="discourse_math.insert_modal.insert"
-          class="btn-primary math-insert-modal__insert"
         />
-        <DButton @action={{this.cancel}} @label="cancel" class="btn-default" />
+        <DButton class="btn-default" @action={{this.cancel}} @label="cancel" />
       </:footer>
     </DModal>
   </template>

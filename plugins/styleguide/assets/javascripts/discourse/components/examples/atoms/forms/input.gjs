@@ -2,25 +2,25 @@ import Form from "discourse/components/form";
 
 export default <template>
   <Form as |form|>
-    <form.Field @title="Username" @name="username" @type="input" as |field|>
+    <form.Field @name="username" @title="Username" @type="input" as |field|>
       <field.Control placeholder="Username" />
     </form.Field>
-    <form.Field @title="Age" @name="age" @type="input-number" as |field|>
+    <form.Field @name="age" @title="Age" @type="input-number" as |field|>
       <field.Control placeholder="Age" @format="small" />
     </form.Field>
-    <form.Field @title="Website" @name="website" @type="input" as |field|>
-      <field.Control @before="https://" @after=".com" @format="large" />
+    <form.Field @name="website" @title="Website" @type="input" as |field|>
+      <field.Control @after=".com" @before="https://" @format="large" />
     </form.Field>
-    <form.Field @title="After" @name="after" @type="input" as |field|>
+    <form.Field @name="after" @title="After" @type="input" as |field|>
       <field.Control @after=".com" />
     </form.Field>
-    <form.Field @title="Before" @name="before" @type="input" as |field|>
+    <form.Field @name="before" @title="Before" @type="input" as |field|>
       <field.Control @before="https://" />
     </form.Field>
     <form.Field
-      @title="Secret"
-      @name="secret"
       @description="An important password"
+      @name="secret"
+      @title="Secret"
       @type="password"
       as |field|
     >

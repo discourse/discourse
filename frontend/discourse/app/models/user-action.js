@@ -223,6 +223,28 @@ export default class UserAction extends RestModel {
     return this.title && emojiUnescape(escapeExpression(this.title));
   }
 
+  @computed(
+    "childGroups",
+    "childGroups.likes.items",
+    "childGroups.likes.items.[]",
+    "childGroups.stars.items",
+    "childGroups.stars.items.[]",
+    "childGroups.edits.items",
+    "childGroups.edits.items.[]",
+    "childGroups.bookmarks.items",
+    "childGroups.bookmarks.items.[]"
+  )
+  get children() {
+    const g = this.childGroups;
+    let rval = [];
+    if (g) {
+      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function (i) {
+        return i.get("items") && i.get("items").length > 0;
+      });
+    }
+    return rval;
+  }
+
   addChild(action) {
     let groups = this.childGroups;
     if (!groups) {
@@ -250,28 +272,6 @@ export default class UserAction extends RestModel {
     if (current) {
       current.push(action);
     }
-  }
-
-  @computed(
-    "childGroups",
-    "childGroups.likes.items",
-    "childGroups.likes.items.[]",
-    "childGroups.stars.items",
-    "childGroups.stars.items.[]",
-    "childGroups.edits.items",
-    "childGroups.edits.items.[]",
-    "childGroups.bookmarks.items",
-    "childGroups.bookmarks.items.[]"
-  )
-  get children() {
-    const g = this.childGroups;
-    let rval = [];
-    if (g) {
-      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function (i) {
-        return i.get("items") && i.get("items").length > 0;
-      });
-    }
-    return rval;
   }
 
   switchToActing() {

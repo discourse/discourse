@@ -19,9 +19,11 @@ ja:
         countdown:
           passed: 終了しました
       title: 日付/時刻を挿入
+      edit_date: '%{date} の編集'
       create:
         form:
           insert: 挿入
+          save: 保存
           format_description: "ユーザーに日付を表示するために使用されるフォーマット。オフセットを表示するには Z、タイムゾーン名を表示するには zz を使用します。"
           timezones_title: 表示するタイムゾーン
           timezones_description: タイムゾーンは、プレビューとフォールバックで日付を表示するために使用されます。

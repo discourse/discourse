@@ -11,6 +11,19 @@ export default class DiscourseRoute extends Route {
     seenUser();
   }
 
+  @action
+  refreshTitle() {
+    once(this, this._refreshTitleOnce);
+  }
+
+  isCurrentUser(user) {
+    if (!this.currentUser) {
+      return false; // the current user is anonymous
+    }
+
+    return user.id === this.currentUser.id;
+  }
+
   _refreshTitleOnce() {
     this.send("_collectTitleTokens", []);
   }
@@ -29,18 +42,5 @@ export default class DiscourseRoute extends Route {
       }
     }
     return true;
-  }
-
-  @action
-  refreshTitle() {
-    once(this, this._refreshTitleOnce);
-  }
-
-  isCurrentUser(user) {
-    if (!this.currentUser) {
-      return false; // the current user is anonymous
-    }
-
-    return user.id === this.currentUser.id;
   }
 }

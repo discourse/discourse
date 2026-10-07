@@ -76,7 +76,7 @@ module PageObjects
       end
 
       def enabled_for_dropdown
-        PageObjects::Components::DSelect.new(
+        PageObjects::Components::DNativeSelect.new(
           "#{change_item_selector(@setting_name)} .upcoming-change__enabled-for",
         )
       end

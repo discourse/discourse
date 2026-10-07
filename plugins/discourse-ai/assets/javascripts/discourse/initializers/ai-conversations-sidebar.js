@@ -8,7 +8,8 @@ export default {
   initialize() {
     withPluginApi((api) => {
       const currentUser = api.container.lookup("service:current-user");
-      if (!currentUser) {
+      const site = api.container.lookup("service:site");
+      if (!currentUser && !site.ai_bot_anonymous_preview) {
         return;
       }
 
@@ -41,6 +42,7 @@ export default {
         // if the topic is not a private message, not created by the current user,
         // or doesn't have a bot response, we don't need to override sidebar
         if (
+          currentUser &&
           topic?.archetype === "private_message" &&
           topic.user_id === currentUser.id &&
           topic.is_bot_pm

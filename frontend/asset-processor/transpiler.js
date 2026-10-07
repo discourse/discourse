@@ -17,14 +17,13 @@ globalThis.transpile = function (source, options = {}) {
 
   const plugins = [];
   if (moduleId && !skipModule) {
-    plugins.push(["transform-modules-amd", { noInterop: true }]);
+    plugins.push(["transform-modules-amd", { noInterop: true, moduleId }]);
   }
   plugins.push([DecoratorTransforms, { runEarly: true }]);
   plugins.push(babelTransformModuleRenames);
 
   try {
     const result = babelTransform(source, {
-      moduleId,
       filename,
       ast: false,
       plugins,

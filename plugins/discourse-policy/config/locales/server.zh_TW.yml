@@ -5,15 +5,38 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    policy_enabled: "啟用政策？"
+    policy_restrict_to_staff_posts: "政策只能出現在工作人員的貼文中"
+    create_policy_allowed_groups: "要在貼文中加入政策所需的群組成員資格"
+    policy_easy_revoke: "同時顯示接受與撤回按鈕"
+  discourse_policy:
+    errors:
+      user_missing: "使用者不在群組中"
+      group_not_found: "找不到政策所屬群組"
+      no_policy: "貼文沒有政策"
+      staff_only: "政策只能套用至工作人員貼文"
+      policy_group_inaccessible: "目前無法接受此政策。請聯絡網站管理員。"
+      no_policy_permission: "您沒有權限修改此貼文中的政策。"
+    error:
+      no_permission: "未獲授權"
   reports:
     unaccepted-policies:
+      title: 尚未接受的政策
       labels:
         topic_id: 話題 ID
         user_id: 使用者 ID
   user_notifications:
     policy_email:
       from: "%{site_name}"
+      subject: "有一項政策需要您審閱：%{topic_title}"
+      visit_topic: "前往主題"
+      visit_link_to_respond: "%{visit_topic_link}以回覆。"
+      unsubscribe: "變更您的%{email_preferences_link}，或%{unsubscribe_link}以取消訂閱。"
+      your_policy_email_settings: "政策電子郵件頻率偏好設定"
   unsubscribe:
     policy_emails:
+      select_title: "將政策提醒電子郵件頻率設為："
       never: 永不
+      when_away: 僅在離開時
       always: 總是

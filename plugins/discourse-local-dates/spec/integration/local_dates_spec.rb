@@ -6,7 +6,7 @@ RSpec.describe "Local Dates" do
     freeze_time DateTime.parse("2018-11-10 12:00")
   end
 
-  it "should work without timezone" do
+  it "renders a local date without a timezone" do
     post = Fabricate(:post, raw: <<~MD)
       [date=2018-05-08 time=22:00 format="L LTS" timezones="Europe/Paris|America/Los_Angeles"]
     MD
@@ -24,7 +24,7 @@ RSpec.describe "Local Dates" do
     expect(cooked).to include("05/08/2018 10:00:00 PM")
   end
 
-  it "should work with timezone" do
+  it "renders a local date with a timezone" do
     post = Fabricate(:post, raw: <<~MD)
       [date=2018-05-08 time=22:00 format="L LTS" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]
     MD
@@ -44,7 +44,7 @@ RSpec.describe "Local Dates" do
     expect(cooked).to include("05/08/2018 4:30:00 PM")
   end
 
-  it "requires the right attributes to convert to a local date" do
+  it "preserves a date tag without attributes as plain text" do
     post = Fabricate(:post, raw: <<~MD)
       [date]
     MD
@@ -55,7 +55,7 @@ RSpec.describe "Local Dates" do
     expect(cooked).to_not include("data-date=")
   end
 
-  it "requires the right attributes to convert to a local date" do
+  it "omits date metadata for a date tag without attributes" do
     post = Fabricate(:post, raw: <<~MD)
       [date]
     MD
@@ -66,7 +66,7 @@ RSpec.describe "Local Dates" do
     expect(cooked).to_not include("data-date=")
   end
 
-  it "it works with only a date and time" do
+  it "renders a local date with only a date and time" do
     raw = "[date=2018-11-01 time=12:00]"
     cooked = Fabricate(:post, raw: raw).cooked
     expect(cooked).to include('data-date="2018-11-01"')

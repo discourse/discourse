@@ -16,6 +16,7 @@ import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
+import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -47,6 +48,7 @@ import { resetAdditionalReportModes } from "discourse/lib/admin-report-additiona
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import { resetDeferredClassModifications } from "discourse/lib/deferred-class-modifications";
 import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
@@ -75,6 +77,7 @@ import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
+import { clearAdditionalUserNavSidebarLinks } from "discourse/lib/sidebar/user-nav-sidebar";
 import {
   resetHighestReadCache,
   setTopicList,
@@ -120,7 +123,7 @@ import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
-import { setupDSelectAssertions } from "./d-select-assertions";
+import { setupDNativeSelectAssertions } from "./d-native-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
@@ -221,7 +224,9 @@ export function testCleanup(container, app) {
   noteKeyboardEvidence();
   resetAdditionalReportModes();
   resetAdminDashboardReportRenderers();
+  resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
+  resetDeferredClassModifications();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -278,6 +283,7 @@ export function testCleanup(container, app) {
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
+  clearAdditionalUserNavSidebarLinks();
   resetAdminPluginConfigNav();
   resetTransformers();
   rollbackAllPrepends();
@@ -506,7 +512,7 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 setupFormKitAssertions();
-setupDSelectAssertions();
+setupDNativeSelectAssertions();
 setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {

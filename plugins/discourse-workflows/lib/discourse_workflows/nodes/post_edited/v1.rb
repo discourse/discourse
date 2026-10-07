@@ -14,7 +14,7 @@ module DiscourseWorkflows
             color: "violet",
           },
           group: "discourse_triggers",
-          events: [:post_edited],
+          event: :post_edited,
           output_contracts: [
             {
               schema:
@@ -22,6 +22,13 @@ module DiscourseWorkflows
                   Schema::POST_SCHEMA,
                   Schema::TOPIC_LIST_ITEM_SCHEMA,
                   Schema::USER_SCHEMA,
+                  Schema.document(
+                    "editor" => {
+                      "type" => %w[object null],
+                      "description" => "User who performed the edit, when available",
+                      "properties" => Schema::USER_PROPERTIES,
+                    },
+                  ),
                 ),
             },
           ],
@@ -32,34 +39,8 @@ module DiscourseWorkflows
               default: "first_post",
               options: POST_SCOPE_OPTIONS,
             },
-            category_ids: {
-              type: :array,
-              required: false,
-              ui: {
-                control: :category,
-                multiple: true,
-              },
-            },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_ids: [{ condition: { exists: true } }],
-                },
-              },
-            },
-            tag_names: {
-              type: :string,
-              required: false,
-              ui: {
-                control: :tags,
-              },
-            },
+            **CATEGORY_FILTER_PROPERTIES,
+            **TAG_FILTER_PROPERTIES,
             trust_levels: {
               type: :multi_options,
               required: false,
@@ -84,7 +65,8 @@ module DiscourseWorkflows
           {
             post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
             topic: topic_data(@post.topic),
-            user: user_data(@post.user),
+            user: serialize_user(@post.user),
+            editor: serialize_user(@revisor&.editor),
           }
         end
 
@@ -94,15 +76,14 @@ module DiscourseWorkflows
               @post.topic.category_id,
               category_ids_parameter(trigger_ctx),
               include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names"))) &&
-            matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
+            ) &&
+            matches_tags?(
+              @post.topic,
+              normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")),
+            ) && matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
         end
 
         private
-
-        def user_data(user)
-          serialize_user(user)
-        end
 
         def matches_post_scope?(post_scope)
           case post_scope
@@ -113,14 +94,6 @@ module DiscourseWorkflows
           else
             @post.post_number == 1
           end
-        end
-
-        def matches_tags?(tag_names)
-          tag_names.empty? || (topic_tag_names & tag_names).any?
-        end
-
-        def topic_tag_names
-          @topic_tag_names ||= @post.topic.tags.pluck(:name)
         end
 
         def matches_trust_level?(trust_levels)

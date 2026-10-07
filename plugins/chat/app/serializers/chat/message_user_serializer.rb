@@ -2,6 +2,8 @@
 
 module Chat
   class MessageUserSerializer < BasicUserSerializer
+    include UserFlairMixin
+
     attributes :moderator?, :admin?, :staff?, :moderator?, :new_user?, :primary_group_name
 
     def moderator?

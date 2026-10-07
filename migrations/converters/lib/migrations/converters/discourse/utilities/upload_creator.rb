@@ -19,7 +19,7 @@ module Migrations
           return if (url_or_path = item[@url_column]).nil?
 
           if external_upload?(url_or_path)
-            Database::IntermediateDB::Upload.create_for_url(
+            Database::IntermediateDB::UploadSource.create_for_url(
               url: url_or_path.start_with?("//") ? "https:#{url_or_path}" : url_or_path,
               filename: item[@filename_column],
               type: @upload_type,
@@ -27,7 +27,7 @@ module Migrations
               user_id: item[@user_id_column],
             )
           else
-            Database::IntermediateDB::Upload.create_for_file(
+            Database::IntermediateDB::UploadSource.create_for_file(
               path: url_or_path,
               filename: item[@filename_column],
               type: @upload_type,

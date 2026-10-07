@@ -11,7 +11,7 @@ const ZOOM_URL = "https://us06web.zoom.us/j/123456789?pwd=secret";
 const ZOOM_ENTRY_SELECTOR = ".discourse-calendar-livestream-zoom-entry";
 
 const FakeLazyVideo = <template>
-  <button type="button" class="fake-lazy-video" {{on "click" @onLoadedVideo}}>
+  <button class="fake-lazy-video" type="button" {{on "click" @onLoadedVideo}}>
     play
   </button>
 </template>;

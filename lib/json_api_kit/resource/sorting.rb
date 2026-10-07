@@ -26,13 +26,14 @@ module JsonApiKit
       end
 
       class_methods do
+        include Ordering
+
         def sort(name, **options)
           self.declared_sorts = declared_sorts + [Declarations::Sort.for(name, **options)]
         end
 
         def default_sort(ordering)
-          verify_sorts(ordering.keys)
-          self.declared_default_sort = ordering
+          self.declared_default_sort = default_ordering(ordering)
         end
 
         def unique_by(*columns)
@@ -41,31 +42,24 @@ module JsonApiKit
 
         def sort_names = declared_sorts.map(&:name)
 
-        def order(ordering = {}) = Pagination::Order.new(sorts.keyset(ordering), type:)
-
-        def sortable_by?(ordering:) = (ordering.keys - sort_names).empty?
+        def sorts
+          Declarations::Sorts.new(declared_sorts, schema:, unique_by: declared_unique_by)
+        end
 
         private
 
-        def sorts
-          Declarations::Sorts.new(
-            declared_sorts,
-            schema:,
-            default: declared_default_sort,
-            unique_by: declared_unique_by,
-          )
-        end
-
-        def verify_sorts(names)
-          missing = names.map(&:to_s) - declared_sorts.map(&:name)
-          raise UndeclaredDefault, no_such_sort(missing) unless missing.empty?
-        end
-
-        def no_such_sort(names)
-          "#{self}: there is no sort named #{names.join(", ")}, " \
-            "declare it with `sort` before naming it as the default"
-        end
+        def current_default_ordering = declared_default_sort
       end
+
+      include Ordering
+
+      delegate :names, to: :sorts, prefix: :sort
+
+      def sorts = @sorts ||= self.class.sorts.with(edition.removed_sorts.for(type))
+
+      private
+
+      def current_default_ordering = self.class.default_ordering
     end
   end
 end

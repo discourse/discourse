@@ -7,20 +7,21 @@ const PostMetaDataSelectPost = <template>
       {{#if @post.hasReplies}}
         <DButton
           class="btn-flat select-replies"
+          @action={{@selectReplies}}
           @label="topic.multi_select.select_replies.label"
           @title="topic.multi_select.select_replies.title"
-          @action={{@selectReplies}}
         />
       {{/if}}
       <DButton
         class="btn-flat select-below"
+        @action={{@selectBelow}}
         @label="topic.multi_select.select_below.label"
         @title="topic.multi_select.select_below.title"
-        @action={{@selectBelow}}
       />
     {{/if}}
     <DButton
       class="btn-flat select-post"
+      @action={{@togglePostSelection}}
       @label={{if
         @selected
         "topic.multi_select.selected_post.label"
@@ -31,7 +32,6 @@ const PostMetaDataSelectPost = <template>
         "topic.multi_select.selected_post.title"
         "topic.multi_select.select_post.title"
       }}
-      @action={{@togglePostSelection}}
     />
   </div>
 </template>;

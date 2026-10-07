@@ -27,6 +27,11 @@ nl:
                 lt_1h: "< 1 uur"
                 gt_24h: "> 24 uur"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Wijzigingen"
+        changes_removed: "Verwijderd"
+        tag_names: "Tags"
     notifications:
       alt:
         solved:
@@ -97,6 +102,11 @@ nl:
           solved: "zijn opgelost"
           unsolved: "zijn onopgelost"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Topic"
+            category: "Categorie"
       web_hooks:
         solved_event:
           group_name: "Oplossingsgebeurtenis"

@@ -17,7 +17,7 @@ export default class ChatNotices extends Component {
       <ChatRetentionReminder @channel={{@channel}} />
 
       {{#each this.noticesForChannel as |notice|}}
-        <ChatNotice @notice={{notice}} @channel={{@channel}} />
+        <ChatNotice @channel={{@channel}} @notice={{notice}} />
       {{/each}}
     </div>
   </template>

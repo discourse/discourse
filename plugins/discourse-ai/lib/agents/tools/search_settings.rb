@@ -87,6 +87,9 @@ module DiscourseAi
                 result[:description] = setting[:description]
                 result[:plugin] = setting[:plugin]
               end
+              result[
+                :url
+              ] = "#{Discourse.base_url}/admin/site_settings/category/all_results?#{Rack::Utils.build_query(filter: setting[:setting])}"
               result
             end
           end

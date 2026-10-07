@@ -27,6 +27,18 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     };
   }
 
+  get #savePath() {
+    if (this.args.isDefaultLocale) {
+      return "/admin/config/about.json";
+    }
+
+    return "/admin/config/about/localizations.json";
+  }
+
+  get nameValidation() {
+    return this.args.isDefaultLocale ? "required" : null;
+  }
+
   @action
   async save(data) {
     try {
@@ -50,16 +62,9 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     }
   }
 
-  get #savePath() {
-    if (this.args.isDefaultLocale) {
-      return "/admin/config/about.json";
-    }
-
-    return "/admin/config/about/localizations.json";
-  }
-
-  get nameValidation() {
-    return this.args.isDefaultLocale ? "required" : null;
+  @action
+  setImage(upload, { set }) {
+    set("aboutBannerImage", upload?.url ?? null);
   }
 
   #saveData(data) {
@@ -88,19 +93,14 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     return this.args.localizations?.[settingName]?.value ?? "";
   }
 
-  @action
-  setImage(upload, { set }) {
-    set("aboutBannerImage", upload?.url ?? null);
-  }
-
   <template>
     <Form @data={{this.data}} @onSubmit={{this.save}} as |form|>
       <form.Field
+        @format="large"
         @name="name"
         @title={{i18n "admin.config_areas.about.community_name"}}
-        @validation={{this.nameValidation}}
-        @format="large"
         @type="input"
+        @validation={{this.nameValidation}}
         as |field|
       >
         <field.Control
@@ -111,9 +111,9 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
       </form.Field>
 
       <form.Field
+        @format="large"
         @name="summary"
         @title={{i18n "admin.config_areas.about.community_summary"}}
-        @format="large"
         @type="input"
         as |field|
       >
@@ -131,10 +131,10 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
 
       {{#if @isDefaultLocale}}
         <form.Field
-          @name="communityTitle"
-          @title={{i18n "admin.config_areas.about.community_title"}}
           @description={{i18n "admin.config_areas.about.community_title_help"}}
           @format="large"
+          @name="communityTitle"
+          @title={{i18n "admin.config_areas.about.community_title"}}
           @type="input"
           as |field|
         >
@@ -144,10 +144,10 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
 
       {{#if @isDefaultLocale}}
         <form.Field
-          @name="aboutBannerImage"
-          @title={{i18n "admin.config_areas.about.banner_image"}}
           @helpText={{i18n "admin.config_areas.about.banner_image_help"}}
+          @name="aboutBannerImage"
           @onSet={{this.setImage}}
+          @title={{i18n "admin.config_areas.about.banner_image"}}
           @type="image"
           as |field|
         >
@@ -156,8 +156,8 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
       {{/if}}
 
       <form.Submit
-        @label="admin.config_areas.about.update"
         @disabled={{@globalSavingStatus}}
+        @label="admin.config_areas.about.update"
       />
     </Form>
   </template>

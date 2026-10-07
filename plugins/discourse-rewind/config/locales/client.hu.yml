@@ -12,7 +12,6 @@ hu:
           discourse_rewind: "Discourse Visszatekintés"
   js:
     discourse_rewind:
-      placeholder: Discourse Visszatekintés
       title: Visszatekintés
       viewing_other_user: "Jelenleg <strong>%{username}</strong> Discourse Visszatekintését nézed."
       cannot_view_rewind: >
@@ -91,18 +90,14 @@ hu:
             one: "%{username} legjobb bejegyzése"
             other: "%{username} %{count} legjobb bejegyzései"
         ai_usage:
-          title: AI használat
           total_requests: Összes kérés
           total_tokens: Összes token
           success_rate: Sikerességi arány
-          favorite_features: Leggyakrabban használt funkciók
-          favorite_models: Leggyakrabban használt AI modellek
           wake_up: "Ébresztő, %{username}..."
           system_title: "AI HASZNÁLAT ÉSZLELVE"
           section_features: "FŐBB JELLEMZŐK"
           section_models: "TOP MODELLEK"
         assignments:
-          title: Feladatok
           total_assigned: Hozzám rendelve
           total_assigned_others: "%{username} felhasználóhoz rendelve"
           completed: Elvégzett feladatok
@@ -111,13 +106,6 @@ hu:
           completion_rate: Befejezési arány
         chat_usage:
           title: Csevegési tevékenység
-          total_messages: Összes üzenet
-          dm_messages: Közvetlen üzenetek
-          unique_dm_channels: Közvetlen üzenetküldő beszélgetések
-          reactions_received: Beérkezett reakciók
-          avg_message_length: Átlagos üzenethossz
-          favorite_channels: Kedvenc csatornák
-          messages: üzenetek
           bot_name: XxRewindBotxX
           author: Ön
           author_others: "%{username}"
@@ -143,28 +131,7 @@ hu:
           message_4: "Az átlagos üzenethossz <strong>%{length}</strong> karakter volt"
           message_5: "Kedvenc csatornáid:"
           dancing_baby_alt: "Táncoló baba"
-        favorite_gifs:
-          title:
-            one: Kedvenc GIF-ed
-            other: A %{count} kedvenc GIF-eid
-          title_others:
-            one: "%{username} kedvenc GIF-je"
-            other: "%{username} %{count} kedvenc GIF-jei"
-          total_usage:
-            one: '%{count} felhasznált idő'
-            other: '%{count} felhasznált idő összesen'
         invites:
-          title: Meghívók
-          total_invites: Összes elküldött meghívó
-          redeemed: Felhasznált meghívók
-          redemption_rate: Elfogadási arány
-          avg_trust_level: Átlagos bizalmi szint
-          invitee_impact: A meghívottaid hatása
-          invitee_impact_others: "%{username} meghívottjainak hatása"
-          invitee_posts: Létrehozott bejegyzések
-          invitee_topics: Elindított témák
-          invitee_likes: Adott tetszésnyilvánítások
-          most_active_invitee: Legaktívabb meghívott
           guest_book_title: Vendégkönyv
           guest_book_subtitle: Közösségi meghívóid
           guest_book_subtitle_others: "%{username} közösségi meghívói"
@@ -177,22 +144,9 @@ hu:
           label_likes_given: "Adott lájkok:"
           section_most_active: Legaktívabb vendég
         new_user_interactions:
-          title: Új felhasználók mentorálása
-          subtitle:
-            one: '%{count} új felhasználónak segítettél idén'
-            other: '%{count} új felhasználónak segítettél idén'
-          subtitle_others:
-            one: "%{username}, %{count} új felhasználónak segített idén"
-            other: "%{username}, %{count} új felhasználónak segített idén"
           new_member:
             one: "%{count} új tag"
             other: "%{count} új tag"
-          total_interactions: Összes interakció
-          unique_new_users: Egyedi új felhasználók
-          likes_given: Adott tetszésnyilvánítások
-          replies: Hozzászólás bejegyzésekhez
-          mentions: Említések
-          topics_with_new_users: Új felhasználók témái
           contributions_helped: a hozzájárulásaid segítettek
           contributions_helped_others: "%{username} hozzájárulásai segítettek"
         time_of_day_activity:

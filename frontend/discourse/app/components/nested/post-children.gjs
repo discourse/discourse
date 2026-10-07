@@ -58,9 +58,135 @@ export default class NestedPostChildren extends Component {
     ].join(":");
   }
 
+  get childDepth() {
+    return this.args.depth + 1;
+  }
+
+  get usesFlatDescendantPagination() {
+    return (
+      this.siteSettings.nested_replies_cap_nesting_depth &&
+      this.childDepth >= this.siteSettings.nested_replies_max_depth
+    );
+  }
+
+  get expectedCount() {
+    return this.usesFlatDescendantPagination
+      ? this.args.totalDescendantCount || this.args.directReplyCount || 0
+      : this.args.directReplyCount || 0;
+  }
+
+  get remainingCount() {
+    return Math.max(this.expectedCount - this.childNodes.length, 0);
+  }
+
+  get loadMoreLabel() {
+    const count = this.remainingCount;
+    if (count > 0) {
+      return i18n("nested_replies.load_more_children", { count });
+    }
+    return i18n("nested_replies.load_more_children_generic");
+  }
+
   @action
   hydrateFromArgs() {
     this._hydrateFromArgs();
+  }
+
+  async loadChildren() {
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
+    this.loading = true;
+    try {
+      const query = new URLSearchParams({
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
+      const data = await ajax(
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
+      );
+      if (this.isDestroying || this.identityKey !== identityKey) {
+        return;
+      }
+      this.childNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
+      );
+      this.page = data.page;
+      this.hasMore = data.has_more || false;
+      this.loaded = true;
+      this._fetchedFromServer = true;
+      this._reportToCache();
+    } catch (e) {
+      if (!this.isDestroying) {
+        popupAjaxError(e);
+      }
+    } finally {
+      if (!this.isDestroying) {
+        this.loading = false;
+      }
+    }
+  }
+
+  @action
+  async loadMore() {
+    if (this.loadingMore || !this.hasMore) {
+      return;
+    }
+
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
+    this.loadingMore = true;
+    try {
+      // First server fetch after preloaded data: get page 0 and merge
+      // to preserve expanded state on already-loaded nodes.
+      // Subsequent fetches: normal pagination.
+      const nextPage = this._fetchedFromServer ? this.page + 1 : 0;
+      const query = new URLSearchParams({
+        page: nextPage,
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
+      const data = await ajax(
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
+      );
+      if (this.isDestroying || this.identityKey !== identityKey) {
+        return;
+      }
+      const newNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
+      );
+
+      if (!this._fetchedFromServer) {
+        // Merge: keep preloaded children (may have expanded subtrees),
+        // append only siblings not already present.
+        const existing = new Set(
+          this.childNodes.map((n) => n.post.post_number)
+        );
+        const additional = newNodes.filter(
+          (n) => !existing.has(n.post.post_number)
+        );
+        this.childNodes = [...this.childNodes, ...additional];
+        this._fetchedFromServer = true;
+      } else {
+        const additional = newNodes.filter(
+          (node) => !this._includesPost(this.childNodes, node.post)
+        );
+        this.childNodes = [...this.childNodes, ...additional];
+      }
+
+      this.page = data.page;
+      this.hasMore = data.has_more || false;
+      this._reportToCache();
+    } catch (e) {
+      if (!this.isDestroying) {
+        popupAjaxError(e);
+      }
+    } finally {
+      if (!this.isDestroying) {
+        this.loadingMore = false;
+      }
+    }
   }
 
   _cacheKeyFor(
@@ -136,140 +262,6 @@ export default class NestedPostChildren extends Component {
     this._reportToCache();
   }
 
-  get childDepth() {
-    return this.args.depth + 1;
-  }
-
-  get usesFlatDescendantPagination() {
-    return (
-      this.siteSettings.nested_replies_cap_nesting_depth &&
-      this.childDepth >= this.siteSettings.nested_replies_max_depth
-    );
-  }
-
-  get expectedCount() {
-    return this.usesFlatDescendantPagination
-      ? this.args.totalDescendantCount || this.args.directReplyCount || 0
-      : this.args.directReplyCount || 0;
-  }
-
-  get remainingCount() {
-    return Math.max(this.expectedCount - this.childNodes.length, 0);
-  }
-
-  get loadMoreLabel() {
-    const count = this.remainingCount;
-    if (count > 0) {
-      return i18n("nested_replies.load_more_children", { count });
-    }
-    return i18n("nested_replies.load_more_children_generic");
-  }
-
-  async loadChildren() {
-    const identityKey = this.identityKey;
-    const topicId = this.args.topic?.id;
-
-    this.loading = true;
-    try {
-      const query = new URLSearchParams({
-        sort: this.args.sort || "top",
-        depth: this.childDepth,
-      });
-      const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
-      );
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        this.identityKey !== identityKey
-      ) {
-        return;
-      }
-      this.childNodes = this._childrenForTopic(data.children, topicId).map(
-        (child) => this._processNode(child)
-      );
-      this.page = data.page;
-      this.hasMore = data.has_more || false;
-      this.loaded = true;
-      this._fetchedFromServer = true;
-      this._reportToCache();
-    } catch (e) {
-      if (!(this.isDestroying || this.isDestroyed)) {
-        popupAjaxError(e);
-      }
-    } finally {
-      if (!(this.isDestroying || this.isDestroyed)) {
-        this.loading = false;
-      }
-    }
-  }
-
-  @action
-  async loadMore() {
-    if (this.loadingMore || !this.hasMore) {
-      return;
-    }
-
-    const identityKey = this.identityKey;
-    const topicId = this.args.topic?.id;
-
-    this.loadingMore = true;
-    try {
-      // First server fetch after preloaded data: get page 0 and merge
-      // to preserve expanded state on already-loaded nodes.
-      // Subsequent fetches: normal pagination.
-      const nextPage = this._fetchedFromServer ? this.page + 1 : 0;
-      const query = new URLSearchParams({
-        page: nextPage,
-        sort: this.args.sort || "top",
-        depth: this.childDepth,
-      });
-      const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
-      );
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        this.identityKey !== identityKey
-      ) {
-        return;
-      }
-      const newNodes = this._childrenForTopic(data.children, topicId).map(
-        (child) => this._processNode(child)
-      );
-
-      if (!this._fetchedFromServer) {
-        // Merge: keep preloaded children (may have expanded subtrees),
-        // append only siblings not already present.
-        const existing = new Set(
-          this.childNodes.map((n) => n.post.post_number)
-        );
-        const additional = newNodes.filter(
-          (n) => !existing.has(n.post.post_number)
-        );
-        this.childNodes = [...this.childNodes, ...additional];
-        this._fetchedFromServer = true;
-      } else {
-        const additional = newNodes.filter(
-          (node) => !this._includesPost(this.childNodes, node.post)
-        );
-        this.childNodes = [...this.childNodes, ...additional];
-      }
-
-      this.page = data.page;
-      this.hasMore = data.has_more || false;
-      this._reportToCache();
-    } catch (e) {
-      if (!(this.isDestroying || this.isDestroyed)) {
-        popupAjaxError(e);
-      }
-    } finally {
-      if (!(this.isDestroying || this.isDestroyed)) {
-        this.loadingMore = false;
-      }
-    }
-  }
-
   _childrenForTopic(children, topicId) {
     return (children || []).filter(
       (child) =>
@@ -296,45 +288,45 @@ export default class NestedPostChildren extends Component {
       <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.childNodes key="post.id" as |node|}}
           <NestedPost
-            @post={{node.post}}
-            @children={{node.children}}
-            @topic={{@topic}}
-            @depth={{this.childDepth}}
-            @path={{@path}}
-            @sort={{@sort}}
-            @replyToPost={{@replyToPost}}
-            @editPost={{@editPost}}
-            @deletePost={{@deletePost}}
-            @recoverPost={{@recoverPost}}
-            @showFlags={{@showFlags}}
-            @showHistory={{@showHistory}}
+            @captureScrollAnchor={{@captureScrollAnchor}}
             @changeNotice={{@changeNotice}}
             @changePostOwner={{@changePostOwner}}
-            @grantBadge={{@grantBadge}}
-            @lockPost={{@lockPost}}
-            @unlockPost={{@unlockPost}}
-            @permanentlyDeletePost={{@permanentlyDeletePost}}
-            @rebakePost={{@rebakePost}}
-            @showPagePublish={{@showPagePublish}}
-            @togglePostType={{@togglePostType}}
-            @toggleWiki={{@toggleWiki}}
-            @unhidePost={{@unhidePost}}
+            @children={{node.children}}
+            @collapseFromDepth={{@collapseFromDepth}}
             @collapseParent={{@collapseParent}}
-            @highlightParentLine={{@highlightParentLine}}
-            @unhighlightParentLine={{@unhighlightParentLine}}
-            @parentLineHighlighted={{@parentLineHighlighted}}
+            @deletePost={{@deletePost}}
+            @depth={{this.childDepth}}
+            @editPost={{@editPost}}
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
-            @scrollAnchor={{@scrollAnchor}}
-            @registerPost={{@registerPost}}
-            @collapseFromDepth={{@collapseFromDepth}}
             @focusPost={{@focusPost}}
-            @captureScrollAnchor={{@captureScrollAnchor}}
+            @grantBadge={{@grantBadge}}
+            @highlightParentLine={{@highlightParentLine}}
+            @lockPost={{@lockPost}}
             @multiSelect={{@multiSelect}}
-            @togglePostSelection={{@togglePostSelection}}
-            @selectReplies={{@selectReplies}}
-            @selectBelow={{@selectBelow}}
+            @parentLineHighlighted={{@parentLineHighlighted}}
+            @path={{@path}}
+            @permanentlyDeletePost={{@permanentlyDeletePost}}
+            @post={{node.post}}
             @postSelected={{@postSelected}}
+            @rebakePost={{@rebakePost}}
+            @recoverPost={{@recoverPost}}
+            @registerPost={{@registerPost}}
+            @replyToPost={{@replyToPost}}
+            @scrollAnchor={{@scrollAnchor}}
+            @selectBelow={{@selectBelow}}
+            @selectReplies={{@selectReplies}}
+            @showFlags={{@showFlags}}
+            @showHistory={{@showHistory}}
+            @showPagePublish={{@showPagePublish}}
+            @sort={{@sort}}
+            @togglePostSelection={{@togglePostSelection}}
+            @togglePostType={{@togglePostType}}
+            @toggleWiki={{@toggleWiki}}
+            @topic={{@topic}}
+            @unhidePost={{@unhidePost}}
+            @unhighlightParentLine={{@unhighlightParentLine}}
+            @unlockPost={{@unlockPost}}
           />
         {{/each}}
 

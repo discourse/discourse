@@ -25,6 +25,8 @@ RSpec.describe AccessControlList::EvaluateModification do
 
       self.table_name = "posts"
 
+      ACL_PERMISSIONS = Acl::Permissions.new(:view, :edit, :manage)
+
       def self.mandatory_acl
         [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
       end

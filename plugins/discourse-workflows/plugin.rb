@@ -12,6 +12,10 @@ enabled_site_setting :enable_discourse_workflows
 module ::DiscourseWorkflows
   PLUGIN_NAME = "discourse-workflows"
   TEMPLATES_PATH = File.expand_path("config/templates", __dir__)
+
+  def self.reviewable_score_context(workflow_id)
+    "discourse_workflows:workflow:#{workflow_id}" if workflow_id.present?
+  end
 end
 
 require_relative "lib/discourse_workflows/engine"
@@ -56,6 +60,7 @@ register_svg_icon "layer-group"
 register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"
+register_svg_icon "sliders"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -65,34 +70,65 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential
 after_initialize do
   Rails.application.config.filter_parameters += %i[signature]
 
+  add_custom_reviewable_filter(
+    [
+      :workflow_id,
+      proc do |results, value|
+        context = "discourse_workflows:workflow:%"
+        if value != :all
+          workflow_id = value.to_s[/\A[1-9]\d*\z/]
+          next results if !workflow_id
+
+          context = DiscourseWorkflows.reviewable_score_context(workflow_id)
+        end
+
+        results.where(<<~SQL, context:)
+          EXISTS (
+            SELECT 1
+            FROM reviewable_scores
+            WHERE reviewable_scores.reviewable_id = reviewables.id
+            AND reviewable_scores.context LIKE :context
+          )
+        SQL
+      end,
+    ],
+    type_filter: {
+      id: "discourse_workflows:workflow",
+      value: :all,
+    },
+    reason_filters: -> do
+      DiscourseWorkflows::Workflow
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "discourse_workflows:workflow:#{id}", name:, value: id } }
+    end,
+  )
+
   add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
 
   nodes_dir = File.join(File.dirname(__FILE__), "lib/discourse_workflows/nodes")
   Dir.glob(File.join(nodes_dir, "**/*.rb")).each { |f| Rails.autoloaders.main.load_file(f) }
 
-  DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
-    DiscoursePluginRegistry.register_discourse_workflows_node(node_class, self)
-
-    next unless node_class.respond_to?(:event_name) && node_class.event_name
-    on(node_class.event_name) do |*args|
-      DiscourseWorkflows::EventListener.handle(node_class, *args)
-    end
-  end
-
+  # Contributing plugins claim their nodes first so that ownership — and the
+  # enabled check that rides on it — lands on them rather than on this plugin.
   DiscourseWorkflows.node_registration_ready = true
   DiscourseWorkflows.flush_plugin_node_registrations!
+
+  DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
+    DiscourseWorkflows.register_node(node_class, self)
+  end
   DiscourseWorkflows::Registry.reset_indexes!
 
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BasicAuth,
+    "DiscourseWorkflows::CredentialTypes::BasicAuth",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BearerToken,
+    "DiscourseWorkflows::CredentialTypes::BearerToken",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::HeaderAuth,
+    "DiscourseWorkflows::CredentialTypes::HeaderAuth",
     self,
   )
 

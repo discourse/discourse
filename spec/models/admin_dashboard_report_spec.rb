@@ -45,6 +45,55 @@ RSpec.describe AdminDashboardReport do
       expect(record).not_to be_valid
       expect(record.errors.attribute_names).to include(:source)
     end
+
+    it "defaults rows to 1 and rejects out-of-range row counts" do
+      record = described_class.create!(source: "core_report", identifier: "signups")
+      expect(record.rows).to eq(1)
+
+      record.rows = 0
+      expect(record).not_to be_valid
+      expect(record.errors.attribute_names).to include(:rows)
+
+      record.rows = described_class::MAX_ROWS + 1
+      expect(record).not_to be_valid
+      expect(record.errors.attribute_names).to include(:rows)
+
+      record.rows = described_class::MAX_ROWS
+      record.cols = described_class::MAX_COLS
+      expect(record).to be_valid
+    end
+
+    it "defaults cols to 1 and rejects out-of-range column counts" do
+      record = described_class.create!(source: "core_report", identifier: "signups")
+      expect(record.cols).to eq(1)
+
+      record.cols = 0
+      expect(record).not_to be_valid
+      expect(record.errors.attribute_names).to include(:cols)
+
+      record.cols = described_class::MAX_COLS + 1
+      expect(record).not_to be_valid
+      expect(record.errors.attribute_names).to include(:cols)
+    end
+
+    it "allows a single-row card to span either column width" do
+      record = described_class.create!(source: "core_report", identifier: "signups")
+
+      record.cols = described_class::MAX_COLS
+      expect(record).to be_valid
+    end
+
+    it "requires a card spanning more than one row to also span the full width" do
+      record = described_class.create!(source: "core_report", identifier: "signups")
+
+      record.rows = 2
+      record.cols = 1
+      expect(record).not_to be_valid
+      expect(record.errors.attribute_names).to include(:cols)
+
+      record.cols = described_class::MAX_COLS
+      expect(record).to be_valid
+    end
   end
 
   describe "default position" do

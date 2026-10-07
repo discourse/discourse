@@ -2,10 +2,12 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
+  allDayTransition,
   attendanceTransition,
   buildEventBlock,
   buildParams,
   defaultReminderFor,
+  eventDateInTimezone,
   isLivestreamUrl,
   parseEventAttrs,
   parseEventBlock,
@@ -42,6 +44,44 @@ const LONG_DEFAULT = {
 
 module("Unit | Lib | raw-event-helper", function (hooks) {
   setupTest(hooks);
+
+  test("eventDateInTimezone preserves floating wall-clock times", function (assert) {
+    const date = eventDateInTimezone("2026-09-30T20:15:00", "Europe/Madrid");
+
+    assert.strictEqual(
+      date.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "an offset-free event date is parsed in the event timezone"
+    );
+  });
+
+  test("eventDateInTimezone preserves the instant of offset dates", function (assert) {
+    const date = eventDateInTimezone(
+      "2026-09-30T11:15:00-07:00",
+      "Europe/Madrid"
+    );
+
+    assert.strictEqual(
+      date.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "an offset-bearing event date is converted to the event timezone"
+    );
+  });
+
+  test("buildParams preserves floating event times", function (assert) {
+    const params = buildParams(
+      "2026-09-30T20:15:00",
+      "2026-09-30T22:15:00",
+      { timezone: "Europe/Madrid", showLocalTime: true },
+      { discourse_post_event_allowed_custom_fields: "" }
+    );
+
+    assert.deepEqual(
+      { start: params.start, end: params.end },
+      { start: "2026-09-30 20:15", end: "2026-09-30 22:15" },
+      "direct BBCode rewrites keep the event's wall-clock range"
+    );
+  });
 
   test("removeEvent", function (assert) {
     assert.strictEqual(
@@ -225,6 +265,30 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
     );
   });
 
+  test("parseReminders defaults the type for legacy reminders without one", function (assert) {
+    assert.deepEqual(parseReminders("15.minutes"), [
+      { type: "notification", value: 15, unit: "minutes", period: "before" },
+    ]);
+  });
+
+  test("parseReminders tolerates spaces after commas", function (assert) {
+    assert.deepEqual(
+      parseReminders("notification.15.minutes, bumpTopic.1.days"),
+      [
+        { type: "notification", value: 15, unit: "minutes", period: "before" },
+        { type: "bumpTopic", value: 1, unit: "days", period: "before" },
+      ]
+    );
+  });
+
+  test("parseReminders drops entries without a numeric value and a unit", function (assert) {
+    assert.deepEqual(parseReminders("notification.15"), []);
+    assert.deepEqual(parseReminders("15"), []);
+    assert.deepEqual(parseReminders("notification.abc.minutes,10.minutes"), [
+      { type: "notification", value: 10, unit: "minutes", period: "before" },
+    ]);
+  });
+
   test("defaultReminderFor", function (assert) {
     assert.deepEqual(
       defaultReminderFor({
@@ -348,6 +412,17 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
       "bumpTopic.-30.minutes",
       "serializes an after reminder with negative value"
     );
+
+    assert.strictEqual(
+      reminderToBBCode({
+        type: "notification",
+        value: null,
+        unit: "minutes",
+        period: "before",
+      }),
+      "notification.NaN.minutes",
+      "keeps a cleared value unparseable rather than serializing it as zero"
+    );
   });
 
   test("attendanceTransition: none captures status + max and flips notifications to bumpTopic", function (assert) {
@@ -426,6 +501,63 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
 
     assert.strictEqual(result.maxAttendees, null);
     assert.strictEqual(result.previousMaxAttendees, 25);
+  });
+
+  test("attendanceTransition: upTo with an explicit value applies and remembers it", function (assert) {
+    const result = attendanceTransition({
+      mode: "upTo",
+      status: "public",
+      maxAttendees: 10,
+      reminders: [],
+      previousRsvpStatus: "public",
+      previousMaxAttendees: 10,
+      value: 25,
+    });
+
+    assert.strictEqual(result.maxAttendees, 25);
+    assert.strictEqual(result.previousMaxAttendees, 25);
+  });
+
+  test("allDayTransition: on snaps to day boundaries and drops a same-day end", function (assert) {
+    const result = allDayTransition({
+      startsAt: moment.tz("2024-06-15 10:00", "UTC"),
+      endsAt: moment.tz("2024-06-15 11:00", "UTC"),
+      timezone: "UTC",
+      allDay: true,
+    });
+
+    assert.strictEqual(
+      result.startsAt.format("YYYY-MM-DD HH:mm"),
+      "2024-06-15 00:00"
+    );
+    assert.strictEqual(result.endsAt, null);
+  });
+
+  test("allDayTransition: on keeps a multi-day end as a day", function (assert) {
+    const result = allDayTransition({
+      startsAt: moment.tz("2024-06-15 10:00", "UTC"),
+      endsAt: moment.tz("2024-06-17 11:00", "UTC"),
+      timezone: "UTC",
+      allDay: true,
+    });
+
+    assert.strictEqual(
+      result.endsAt.format("YYYY-MM-DD HH:mm"),
+      "2024-06-17 00:00"
+    );
+  });
+
+  test("allDayTransition: off restores the current wall clock and a one-hour span", function (assert) {
+    const result = allDayTransition({
+      startsAt: moment.tz("2024-06-15", "UTC"),
+      endsAt: null,
+      timezone: "UTC",
+      allDay: false,
+    });
+
+    assert.strictEqual(result.startsAt.format("YYYY-MM-DD"), "2024-06-15");
+    assert.strictEqual(result.startsAt.seconds(), 0);
+    assert.strictEqual(result.endsAt.diff(result.startsAt, "hours"), 1);
   });
 
   test("attendanceTransition: does not mutate the input reminders array", function (assert) {

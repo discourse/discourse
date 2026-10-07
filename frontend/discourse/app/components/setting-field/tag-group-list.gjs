@@ -19,12 +19,12 @@ export default class SettingFieldTagGroupList extends Component {
   <template>
     <@field.Control>
       <TagGroupChooser
-        @tagGroups={{this.selectedTagGroups}}
         @onChange={{this.onChange}}
         @options={{hash
           filterPlaceholder="category.required_tag_group.placeholder"
           disabled=@field.disabled
         }}
+        @tagGroups={{this.selectedTagGroups}}
       />
     </@field.Control>
   </template>

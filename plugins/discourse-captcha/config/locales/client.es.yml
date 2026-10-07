@@ -7,4 +7,6 @@
 es:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "Probar"
       placeholder: marcador de posición

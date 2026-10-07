@@ -12,18 +12,18 @@ export default class FlagUser extends Component {
     <div ...attributes>
       <div class="flag-user">
         <LinkTo
-          @route="adminUser"
-          @models={{array this.user.id this.user.username}}
           class="flag-user-avatar"
+          @models={{array this.user.id this.user.username}}
+          @route="adminUser"
         >
           {{dAvatar this.user imageSize="small"}}
         </LinkTo>
         <div class="flag-user-details">
           <div class="flag-user-who">
             <LinkTo
-              @route="adminUser"
-              @models={{array this.user.id this.user.username}}
               class="flag-user-username"
+              @models={{array this.user.id this.user.username}}
+              @route="adminUser"
             >
               {{this.user.username}}
             </LinkTo>

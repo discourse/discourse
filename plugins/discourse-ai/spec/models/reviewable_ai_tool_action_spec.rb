@@ -144,11 +144,80 @@ RSpec.describe ReviewableAiToolAction do
           raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
         )
 
-      result = reviewable.perform(admin, :approve, post_id: approval_post.id)
+      result = nil
+      expect { result = reviewable.perform(admin, :approve, post_id: approval_post.id) }.to change {
+        Jobs::ResumeAiToolApproval.jobs.size
+      }.by(1)
 
+      expect(reviewable.reload.payload["continuation"]).to include("post_id" => approval_post.id)
       expect(result.success?).to eq(true)
       expect(result.transition_to).to eq(:approved)
       expect(topic.reload.closed).to eq(true)
+    end
+
+    it "creates a category from an approval card authored by the agent's user" do
+      agent_user = ai_agent.create_user!
+      source_post = Fabricate(:post, topic: topic)
+      tool_action =
+        create_tool_action(
+          tool_name: "create_category",
+          params: {
+            name: "Bug reports",
+            reason: "Collect bug reports",
+          },
+          post_id: source_post.id,
+        )
+      reviewable = create_reviewable(tool_action)
+      approval_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: agent_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      reviewable.perform(admin, :approve, post_id: approval_post.id)
+
+      expect(reviewable.reload).to be_approved
+      expect(Category.find_by!(name: "Bug reports").user_id).to eq(admin.id)
+    end
+
+    it "rejects an approval card copied by an unrelated agent" do
+      ai_agent.create_user!
+      other_agent_user = Fabricate(:ai_agent).create_user!
+      source_post = Fabricate(:post, topic: topic)
+      reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
+      copied_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: other_agent_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      expect { reviewable.perform(admin, :approve, post_id: copied_post.id) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+      expect(reviewable.reload).to be_pending
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "rejects an agent's approval card copied to another topic" do
+      agent_user = ai_agent.create_user!
+      source_post = Fabricate(:post, topic: topic)
+      reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
+      copied_post =
+        Fabricate(
+          :post,
+          user: agent_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      expect { reviewable.perform(admin, :approve, post_id: copied_post.id) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+      expect(reviewable.reload).to be_pending
+      expect(topic.reload.closed).to eq(false)
     end
 
     it "rejects inline approval from a bot post without its approval card", :aggregate_failures do
@@ -201,11 +270,32 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "raises and stays pending when the tool returns an error result (e.g. stale target)" do
-      tool_action = create_tool_action(params: { topic_id: -999, closed: true, reason: "test" })
+      source_post = Fabricate(:post, topic: topic)
+      tool_action =
+        create_tool_action(
+          params: {
+            topic_id: -999,
+            closed: true,
+            reason: "test",
+          },
+          post_id: source_post.id,
+        )
       reviewable = create_reviewable(tool_action)
+      approval_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: bot_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
 
-      expect { reviewable.perform(admin, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect {
+        expect { reviewable.perform(admin, :approve, post_id: approval_post.id) }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      }.not_to change { Jobs::ResumeAiToolApproval.jobs.size }
       expect(reviewable.reload).to be_pending
+      expect(reviewable.payload["continuation"]).to be_nil
     end
 
     it "raises and stays pending when the approver lacks permission at replay time" do
@@ -358,6 +448,26 @@ RSpec.describe ReviewableAiToolAction do
 
       expect(result.success?).to eq(true)
       expect(result.transition_to).to eq(:rejected)
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "accepts inline rejection from the agent's user" do
+      agent_user = ai_agent.create_user!
+      source_post = Fabricate(:post, topic: topic)
+      reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
+      approval_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: agent_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      expect { reviewable.perform(admin, :reject, post_id: approval_post.id) }.to change {
+        Jobs::ResumeAiToolApproval.jobs.size
+      }.by(1)
+
+      expect(reviewable.reload).to be_rejected
       expect(topic.reload.closed).to eq(false)
     end
 

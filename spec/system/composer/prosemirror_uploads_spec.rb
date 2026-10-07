@@ -4,7 +4,7 @@ describe "Composer - ProseMirror - Uploads" do
   include_context "with prosemirror editor"
 
   describe "image uploads" do
-    it "replaces the placeholder with the uploaded image without a transparent.png flash" do
+    it "shows the completed image without flashing or continuing to pulse" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
@@ -13,6 +13,10 @@ describe "Composer - ProseMirror - Uploads" do
       expect(composer).to have_no_in_progress_uploads
       expect(rich).to have_css(".composer-image-node img")
       expect(rich).to have_no_css("img[src*='transparent.png']")
+      expect(composer).to have_no_animated_images
+
+      composer.type_content(" text after the image")
+      expect(composer).to have_no_animated_images
     end
 
     it "produces correct markdown after upload completes" do
@@ -39,6 +43,7 @@ describe "Composer - ProseMirror - Uploads" do
 
       expect(composer).to have_no_in_progress_uploads
       expect(rich).to have_css(".composer-image-node img", count: 2)
+      expect(composer).to have_no_animated_images
     end
   end
 

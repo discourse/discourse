@@ -9,9 +9,9 @@ export default <template>
     <p style="margin-top: 1em">{{i18n "login.preferences"}}</p>
 
     <DButton
+      class="btn-primary"
       @action={{routeAction "showLogin"}}
       @label="log_in"
-      class="btn-primary"
     />
   </div>
 </template>

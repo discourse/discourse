@@ -11,6 +11,7 @@
     <lastBuildDate><%= @topic_view.topic.bumped_at.rfc2822 %></lastBuildDate>
     <category><%= @topic_view.topic.category.name %></category>
     <atom:link href="<%= topic_url %>.rss" rel="self" type="application/rss+xml" />
+    <% if markdown_alternate_url %><atom:link href="<%= markdown_alternate_url %>" rel="alternate" type="text/markdown" /><% end %>
     <% @topic_view.recent_posts.each do |post| %>
       <% next unless post.user %>
       <item>

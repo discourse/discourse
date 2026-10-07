@@ -1,5 +1,7 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function setupAuthData(data) {
@@ -16,6 +18,53 @@ function setupAuthData(data) {
   node.dataset.authenticationData = JSON.stringify(data);
   node.id = "data-authentication";
   document.querySelector("head").appendChild(node);
+}
+
+for (const { active, destination, expected } of [
+  { active: false, destination: "/", expected: "/u/account-created" },
+  { active: false, destination: "/login", expected: "/u/account-created" },
+  { active: true, destination: "/latest", expected: "/latest" },
+  { active: true, destination: "/signup", expected: "/u/account-created" },
+]) {
+  acceptance(
+    `Create Account - external auth redirects (active=${active}, destination=${destination})`,
+    function (needs) {
+      needs.hooks.beforeEach(function () {
+        setupAuthData({ destination_url: destination });
+        this.loginForm = document.createElement("form");
+        this.loginForm.id = "hidden-login-form";
+        for (const name of ["username", "password", "redirect"]) {
+          const input = document.createElement("input");
+          input.name = name;
+          this.loginForm.appendChild(input);
+        }
+        document.body.appendChild(this.loginForm);
+        this.submit = sinon.stub(this.loginForm, "submit");
+      });
+
+      needs.hooks.afterEach(function () {
+        this.loginForm.remove();
+        document.getElementById("data-authentication").remove();
+      });
+
+      test("redirects after signup", async function (assert) {
+        pretender.post("/u", () => response({ success: true, active }));
+
+        await visit("/");
+        await click(".signup-fullpage .btn-primary");
+
+        assert.true(
+          this.submit.calledOnce,
+          "submits the browser redirect form"
+        );
+        assert.strictEqual(
+          this.loginForm.elements.redirect.value,
+          expected,
+          "inactive signups see confirmation while active signups retain their destination"
+        );
+      });
+    }
+  );
 }
 
 acceptance("Create Account - external auth", function (needs) {

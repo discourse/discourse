@@ -182,8 +182,9 @@ describe "Composer - ProseMirror - Event Editor" do
       max_attendees_input.fill_in(with: "25")
       expect(max_attendees_input.value).to eq("25")
 
-      # Negative input gets cleared
-      max_attendees_input.fill_in(with: "-10")
+      # Negative input gets cleared; typed key by key so the last keystroke is what makes it negative
+      max_attendees_input.fill_in(with: "")
+      max_attendees_input.send_keys("-5")
       expect(max_attendees_input.value).to eq("")
 
       # Typing 0 disables attendance

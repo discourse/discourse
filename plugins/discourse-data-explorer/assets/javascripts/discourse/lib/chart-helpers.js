@@ -1,3 +1,4 @@
+import { isEmpty } from "@ember/utils";
 import moment from "moment";
 
 export const SERIES_COLORS = [
@@ -12,41 +13,63 @@ export const SERIES_COLORS = [
 const DATE_LABEL_FORMATS = ["MMM D", "MMM DD", "MMM YY", "MMM YYYY"];
 const MONTH_DAY_LABEL_FORMATS = ["MMM D", "MMM DD"];
 
-export function looksLikeDate(value) {
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}/;
+
+function normalizedLabel(value) {
   if (!value || typeof value !== "string") {
+    return null;
+  }
+
+  return value.trim().replace(/\s+/g, " ");
+}
+
+export function looksLikeDate(value) {
+  const label = normalizedLabel(value);
+  if (!label) {
     return false;
   }
 
-  const normalizedValue = value.trim().replace(/\s+/g, " ");
-  if (/^\d{4}-\d{2}-\d{2}/.test(normalizedValue)) {
-    return true;
-  }
-
-  return moment(normalizedValue, DATE_LABEL_FORMATS, true).isValid();
+  return (
+    ISO_DATE.test(label) || moment(label, DATE_LABEL_FORMATS, true).isValid()
+  );
 }
 
 export function formatChartDateLabel(value) {
-  if (!value || typeof value !== "string") {
+  const label = normalizedLabel(value);
+  if (!label) {
     return value;
   }
 
-  const normalizedValue = value.trim().replace(/\s+/g, " ");
-  if (/^\d{4}-\d{2}-\d{2}/.test(normalizedValue)) {
-    return moment(normalizedValue).format("LL");
+  if (ISO_DATE.test(label)) {
+    return moment(label).format("LL");
   }
 
-  const monthDay = moment(normalizedValue, MONTH_DAY_LABEL_FORMATS, true);
+  const monthDay = moment(label, MONTH_DAY_LABEL_FORMATS, true);
   if (monthDay.isValid()) {
     return monthDay.format("MMM D");
   }
 
-  return normalizedValue;
+  return label;
+}
+
+export function hasDates(rows) {
+  return rows?.length > 0 && looksLikeDate(String(rows[0][0]));
+}
+
+export function chartDatasets(rows, numericIndices, labels) {
+  return numericIndices.map((colIdx) => ({
+    label: labels[colIdx],
+    values: rows.map((row) => {
+      const cell = row[colIdx];
+      return isEmpty(cell) ? null : Number(cell);
+    }),
+  }));
 }
 
 export function isNumericColumn(rows, colIndex) {
   for (const row of rows) {
     const val = row[colIndex];
-    if (val !== null && val !== undefined && val !== "") {
+    if (!isEmpty(val)) {
       return Number.isFinite(Number(val));
     }
   }
@@ -110,11 +133,7 @@ function numericDensity(rows, numericIndices) {
   let presentCells = 0;
   for (const row of rows) {
     for (const index of numericIndices) {
-      if (
-        row[index] !== null &&
-        row[index] !== undefined &&
-        row[index] !== ""
-      ) {
+      if (!isEmpty(row[index])) {
         presentCells++;
       }
     }

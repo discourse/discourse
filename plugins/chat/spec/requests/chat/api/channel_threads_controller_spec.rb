@@ -35,7 +35,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         )
       end
 
-      it "works" do
+      it "returns the requested thread" do
         get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
         expect(response.status).to eq(200)
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
@@ -212,8 +212,10 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     it "returns the threads of the channel" do
       get "/chat/api/channels/#{public_channel.id}/threads"
       expect(response.status).to eq(200)
+      # thread_1 and thread_3 have memberships with last_read IS NULL → unread (sort first)
+      # thread_2 has no membership → sorts by date after unread threads
       expect(response.parsed_body["threads"].map { |thread| thread["id"] }).to eq(
-        [thread_3.id, thread_2.id, thread_1.id],
+        [thread_3.id, thread_1.id, thread_2.id],
       )
     end
 
@@ -316,6 +318,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   describe "update" do
     let(:title) { "New title" }
     let(:params) { { title: title } }
+
     fab!(:thread) do
       Fabricate(:chat_thread, channel: public_channel, original_message_user: current_user)
     end
@@ -479,6 +482,85 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       it "returns 404" do
         post "/chat/api/channels/#{channel_id}/threads", params: params
         expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "silenced users" do
+    fab!(:direct_message_recipient, :user)
+    fab!(:direct_message_channel) do
+      Fabricate(
+        :direct_message_channel,
+        users: [current_user, direct_message_recipient],
+        threading_enabled: true,
+      )
+    end
+    fab!(:category_creation_message) do
+      Fabricate(:chat_message, chat_channel: public_channel, user: current_user)
+    end
+    fab!(:direct_message_creation_message) do
+      Fabricate(:chat_message, chat_channel: direct_message_channel, user: current_user)
+    end
+    fab!(:category_thread) do
+      Fabricate(
+        :chat_thread,
+        channel: public_channel,
+        original_message_user: current_user,
+        title: "Category thread",
+      )
+    end
+    fab!(:direct_message_thread) do
+      Fabricate(
+        :chat_thread,
+        channel: direct_message_channel,
+        original_message_user: current_user,
+        title: "Direct-message thread",
+      )
+    end
+
+    it "cannot create or rename category or direct-message threads" do
+      UserSilencer.new(current_user).silence
+      responses = []
+
+      events =
+        DiscourseEvent.track_events(:chat_thread_created) do
+          post "/chat/api/channels/#{public_channel.id}/threads",
+               params: {
+                 original_message_id: category_creation_message.id,
+                 title: "New category thread",
+               }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+
+          post "/chat/api/channels/#{direct_message_channel.id}/threads",
+               params: {
+                 original_message_id: direct_message_creation_message.id,
+                 title: "New direct-message thread",
+               }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+
+          put "/chat/api/channels/#{public_channel.id}/threads/#{category_thread.id}",
+              params: {
+                title: "Renamed category thread",
+              }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+
+          put "/chat/api/channels/#{direct_message_channel.id}/threads/#{direct_message_thread.id}",
+              params: {
+                title: "Renamed direct-message thread",
+              }
+          responses << { status: response.status, errors: response.parsed_body["errors"] }
+        end
+
+      aggregate_failures do
+        expect(responses.map { |response| response[:status] }).to all(eq(403))
+        expect(responses.map { |response| response[:errors] }).to all(
+          include(I18n.t("invalid_access")),
+        )
+        expect(events).to be_empty
+        expect(category_creation_message.reload.thread).to be_nil
+        expect(direct_message_creation_message.reload.thread).to be_nil
+        expect(category_thread.reload.title).to eq("Category thread")
+        expect(direct_message_thread.reload.title).to eq("Direct-message thread")
       end
     end
   end

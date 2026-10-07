@@ -1282,17 +1282,15 @@ module SiteSettingExtension
   #   }
   def fetch_setting_hash_from_provider
     Hash[
-      *(
-        provider
-          .all
-          .map do |setting|
-            [
-              setting.name.to_sym,
-              type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
-            ]
-          end
-          .flatten
-      )
+      *provider
+        .all
+        .map do |setting|
+          [
+            setting.name.to_sym,
+            type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
+          ]
+        end
+        .flatten
     ]
   end
 

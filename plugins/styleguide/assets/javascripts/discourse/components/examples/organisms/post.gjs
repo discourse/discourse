@@ -1,5 +1,5 @@
 import Post from "discourse/components/post";
 
 export default <template>
-  <Post @post={{@post}} @canCreatePost={{true}} />
+  <Post @canCreatePost={{true}} @post={{@post}} />
 </template>

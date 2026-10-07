@@ -20,14 +20,34 @@ RSpec.describe JsonApiKit::RecordUrl do
   end
 
   describe "#relationship" do
-    subject(:address) { url.relationship("posts").to_s }
+    subject(:address) { url.relationship(name).to_s }
+
+    let(:name) { "posts" }
 
     it { is_expected.to eq("https://example.com/api/topics/5/relationships/posts") }
+
+    context "when the declared name has several words" do
+      let(:name) { "valid_groups" }
+
+      it "uses a kebab-case path segment" do
+        expect(address).to eq("https://example.com/api/topics/5/relationships/valid-groups")
+      end
+    end
   end
 
   describe "#related" do
-    subject(:address) { url.related("posts").to_s }
+    subject(:address) { url.related(name).to_s }
+
+    let(:name) { "posts" }
 
     it { is_expected.to eq("https://example.com/api/topics/5/posts") }
+
+    context "when the declared name has several words" do
+      let(:name) { "valid_groups" }
+
+      it "uses a kebab-case path segment" do
+        expect(address).to eq("https://example.com/api/topics/5/valid-groups")
+      end
+    end
   end
 end

@@ -40,7 +40,9 @@ module DiscourseWorkflows
     end
 
     def post_url
-      object.url
+      return "/404" if topic.blank?
+
+      ::Post.url(topic.slug, topic.id, object.post_number)
     end
 
     def username
@@ -88,7 +90,10 @@ module DiscourseWorkflows
     private
 
     def topic
-      @topic ||= object.topic
+      return @topic if defined?(@topic)
+
+      @topic =
+        object.topic || (::Topic.with_deleted.find_by(id: object.topic_id) if scope.is_staff?)
     end
   end
 end

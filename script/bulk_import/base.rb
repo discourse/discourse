@@ -667,6 +667,8 @@ class BulkImport::Base
     external_card_background_url
   ]
 
+  USER_ASSOCIATED_GROUP_COLUMNS = %i[user_id associated_group_id created_at updated_at]
+
   USER_ASSOCIATED_ACCOUNT_COLUMNS = %i[
     provider_name
     provider_uid
@@ -1137,6 +1139,10 @@ class BulkImport::Base
     create_records(rows, "user_associated_account", USER_ASSOCIATED_ACCOUNT_COLUMNS, &block)
   end
 
+  def create_user_associated_groups(rows, &block)
+    create_records(rows, "user_associated_group", USER_ASSOCIATED_GROUP_COLUMNS, &block)
+  end
+
   def create_user_custom_fields(rows, &block)
     create_records(rows, "user_custom_field", USER_CUSTOM_FIELD_COLUMNS, &block)
   end
@@ -1445,7 +1451,7 @@ class BulkImport::Base
     end
 
     # unique username_lower
-    if user_exist?(user[:username])
+    if username_taken?(user[:username], user[:imported_id])
       i = 0
       candidate = nil
       begin
@@ -1453,7 +1459,7 @@ class BulkImport::Base
         suffix = "_#{i}"
         candidate =
           truncate_name(user[:username], UsernameValidator::MAX_CHARS - suffix.length) + suffix
-      end while user_exist?(candidate)
+      end while username_taken?(candidate, user[:imported_id])
       user[:username] = candidate
     end
 
@@ -1463,7 +1469,6 @@ class BulkImport::Base
     user[:staged] = false if user[:staged].nil?
     user[:admin] ||= false
     user[:moderator] ||= false
-    user[:last_emailed_at] ||= NOW
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
 
@@ -1472,7 +1477,6 @@ class BulkImport::Base
       user[:approved_at] ||= user[:created_at]
       user[:approved_by_id] ||= Discourse::SYSTEM_USER_ID
     end
-    user[:suspended_at] ||= user[:suspended_at]
     user[:suspended_till] ||= user[:suspended_till] ||
       (200.years.from_now if user[:suspended_at].present?)
 
@@ -1492,6 +1496,14 @@ class BulkImport::Base
     @usernames_lower.add?(username_lowercase).nil?
   end
 
+  # Like user_exist?, but also treats a username reserved for another source
+  # user as taken.
+  def username_taken?(username, imported_id)
+    reserved_by = @reserved_usernames&.dig(User.normalize_username(username))
+    return true if reserved_by && reserved_by != imported_id.to_i
+    user_exist?(username)
+  end
+
   def process_user_email(user_email)
     user_email[:id] = @last_user_email_id += 1
     user_email[:primary] = true
@@ -1509,7 +1521,7 @@ class BulkImport::Base
   end
 
   def process_user_stat(user_stat)
-    user_stat[:user_id] = user_id_from_imported_id(user_email[:imported_user_id])
+    user_stat[:user_id] = user_id_from_imported_id(user_stat[:imported_user_id])
     user_stat[:topics_entered] ||= 0
     user_stat[:time_read] ||= 0
     user_stat[:days_visited] ||= 0
@@ -1604,6 +1616,12 @@ class BulkImport::Base
     account[:created_at] = NOW
     account[:updated_at] = NOW
     account
+  end
+
+  def process_user_associated_group(user_associated_group)
+    user_associated_group[:created_at] = NOW
+    user_associated_group[:updated_at] = NOW
+    user_associated_group
   end
 
   def process_group_user(group_user)
@@ -1747,17 +1765,24 @@ class BulkImport::Base
 
     if post[:raw].bytes.include?(0)
       log_import_issue("post skipped (raw contains null bytes)", "post #{post[:imported_id]}")
-      post[:skip] = true
+      skip_post(post)
     end
 
     post[:reply_to_post_number] = nil if post[:reply_to_post_number] == 1
 
     if post[:cooked].bytes.include?(0)
       log_import_issue("post skipped (cooked contains null bytes)", "post #{post[:imported_id]}")
-      post[:skip] = true
+      skip_post(post)
     end
 
     post
+  end
+
+  # A skipped post must not keep its pre-allocated id mapped, or the import_id
+  # custom field would point at a post that never gets inserted.
+  def skip_post(post)
+    post[:skip] = true
+    @posts.delete(post[:imported_id].to_i)
   end
 
   def process_post_action(post_action)
@@ -2317,8 +2342,11 @@ class BulkImport::Base
     id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
+      record_id = send(id_mapping_method_name, imported_id)
+      next if record_id.nil?
+
       value = @import_prefix ? "#{@import_prefix}:#{imported_id}" : imported_id
-      { record_id: send(id_mapping_method_name, imported_id), value: value }
+      { record_id: record_id, value: value }
     end
     true
   rescue => e

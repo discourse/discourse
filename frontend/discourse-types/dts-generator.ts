@@ -104,6 +104,8 @@ function processTree(
     const replacement = replacer(node);
 
     if (replacement != null) {
+      const start = node.getStart(sourceFile);
+      code += sourceFile.text.slice(cursorPosition, start);
       code += replacement;
       skip(node);
     } else {

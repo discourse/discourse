@@ -21,17 +21,53 @@ export default class BaseCaptcha extends Component {
     const renderOptions = {
       sitekey: this.siteKey,
       callback: (response) => {
+        if (this.args.onResponse) {
+          this.args.onResponse(response);
+          return;
+        }
         this.captchaService.token = response;
         this.captchaService.invalid = !response;
       },
       "expired-callback": () => {
+        if (this.args.onResponse) {
+          this.args.onResponse(null);
+          return;
+        }
         this.captchaService.invalid = true;
       },
       ...this.additionalRenderOptions(),
+      ...(this.args.onError && { "error-callback": this.args.onError }),
     };
 
-    this.widgetId = captchaApi.render(element, renderOptions);
-    this.captchaService.registerWidget(captchaApi, this.widgetId);
+    let active = true;
+    ["callback", "expired-callback", "error-callback"].forEach((name) => {
+      const callback = renderOptions[name];
+      if (callback) {
+        renderOptions[name] = (...args) => {
+          if (active) {
+            return callback(...args);
+          }
+        };
+      }
+    });
+
+    const widgetId = captchaApi.render(element, renderOptions);
+    this.widgetId = widgetId;
+    if (!this.args.onResponse) {
+      this.captchaService.registerWidget(captchaApi, this.widgetId);
+    }
+
+    const standalone = Boolean(this.args.onResponse);
+    return () => {
+      active = false;
+      if (standalone) {
+        if (captchaApi.remove) {
+          captchaApi.remove(widgetId);
+        } else {
+          captchaApi.reset?.(widgetId);
+        }
+      }
+    };
   });
 
   get siteKey() {
@@ -73,7 +109,12 @@ export default class BaseCaptcha extends Component {
         resolve(window[this.captchaApiName]);
       };
 
-      loadScript(this.scriptUrl).catch(reject);
+      loadScript(this.scriptUrl).catch((error) => {
+        if (!this.isDestroying) {
+          this.args.onError?.();
+        }
+        reject(error);
+      });
     });
   }
 
@@ -90,21 +131,25 @@ export default class BaseCaptcha extends Component {
       </:loading>
       <:content as |captchaApi|>
         <div
-          id={{this.containerId}}
           class="captcha-container"
           data-sitekey={{@siteKey}}
+          id={{this.containerId}}
           {{this.renderCaptcha captchaApi=captchaApi}}
         ></div>
       </:content>
       <:error>
-        <div class="alert alert-error">
-          {{i18n this.captchaErrorKey}}
-        </div>
+        {{#unless @onError}}
+          <div class="alert alert-error">
+            {{if @errorMessage @errorMessage (i18n this.captchaErrorKey)}}
+          </div>
+        {{/unless}}
       </:error>
     </DAsyncContent>
 
-    {{#if this.captchaService.submitFailed}}
-      <DInputTip @validation={{this.captchaService.inputValidation}} />
-    {{/if}}
+    {{#unless @onResponse}}
+      {{#if this.captchaService.submitFailed}}
+        <DInputTip @validation={{this.captchaService.inputValidation}} />
+      {{/if}}
+    {{/unless}}
   </template>
 }

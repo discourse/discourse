@@ -50,8 +50,8 @@ export default class AiTitleSuggestionsMenu extends Component {
         <div class="ai-suggestions-menu__loading">{{dIcon "spinner"}}</div>
       {{else if this.suggestions.length}}
         <AiTitleSuggestionsList
-          @suggestions={{this.suggestions}}
           @onSelect={{this.applySuggestion}}
+          @suggestions={{this.suggestions}}
         />
       {{else if this.noResults}}
         <div class="ai-suggestions-menu__empty">
@@ -59,10 +59,10 @@ export default class AiTitleSuggestionsMenu extends Component {
             {{i18n "discourse_ai.ai_helper.suggest_errors.no_suggestions"}}
           </span>
           <DButton
+            class="btn-small btn-transparent --primary"
+            @action={{this.loadSuggestions}}
             @icon="rotate"
             @label="discourse_ai.ai_helper.context_menu.regen"
-            @action={{this.loadSuggestions}}
-            class="btn-small btn-transparent --primary"
           />
         </div>
       {{/if}}

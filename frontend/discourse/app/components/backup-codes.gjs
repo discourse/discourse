@@ -64,32 +64,32 @@ export default class BackupCodes extends Component {
     <div class="backup-codes">
       <div class="wrapper">
         <textarea
-          id="backupCodes"
           class="backup-codes-area"
-          rows="10"
+          id="backupCodes"
           readonly
+          rows="10"
           {{didInsert this.registerBackupCodesArea}}
           {{on "click" this._selectAllBackupCodes}}
         >{{this.formattedBackupCodes}}</textarea>
 
         <div class="controls">
           <DButton
-            @action={{this.copyToClipboard}}
-            @icon="copy"
-            @ariaLabel="user.second_factor_backup.copy_to_clipboard"
-            @title="user.second_factor_backup.copy_to_clipboard"
             class="backup-codes-copy-btn"
+            @action={{this.copyToClipboard}}
+            @ariaLabel="user.second_factor_backup.copy_to_clipboard"
+            @icon="copy"
+            @title="user.second_factor_backup.copy_to_clipboard"
           />
 
           <DButton
-            download="{{this.siteTitleSlug}}-backup-codes.txt"
-            class="backup-codes-download-btn"
             aria-label={{i18n
               "user.second_factor_backup.download_backup_codes"
             }}
-            title={{i18n "user.second_factor_backup.download_backup_codes"}}
+            class="backup-codes-download-btn"
+            download="{{this.siteTitleSlug}}-backup-codes.txt"
             rel="noopener noreferrer"
             target="_blank"
+            title={{i18n "user.second_factor_backup.download_backup_codes"}}
             @href="data:application/octet-stream;charset=utf-8;base64,{{this.base64BackupCode}}"
             @icon="download"
           />
