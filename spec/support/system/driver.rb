@@ -50,7 +50,8 @@ module SystemDrivers
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
-      playwright_cli_executable_path: "./node_modules/.bin/playwright",
+      playwright_cli_executable_path:
+        ENV["PLAYWRIGHT_CLI_EXECUTABLE_PATH"].presence || "./node_modules/.bin/playwright",
       logger: Logger.new(IO::NULL),
       # NOTE: timezoneId is NOT set here because the driver is cached and reused,
       # so only the first test's timezone would be applied. Instead, we use CDP

@@ -276,11 +276,10 @@ module JsLocaleHelper
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
-      path =
-        "#{Rails.root.join("node_modules/@discourse/moment-timezone-names-translations/locales")}"
+      path = "#{VendoredAssets.path("moment-timezone-names/locales")}"
       type = :moment_js_timezones
     else
-      path = "#{Rails.root.join("frontend/discourse/node_modules/moment/locale")}"
+      path = "#{VendoredAssets.path("moment/locale")}"
       type = :moment_js
     end
 

@@ -267,15 +267,14 @@ class DiscoursePluginRegistry
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "frontend/discourse/node_modules/moment/moment.js",
-    "moment-timezone.js" =>
-      "frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
+    "moment.js" => "moment/moment.js",
+    "moment-timezone.js" => "moment-timezone/moment-timezone-with-data.js",
   }
 
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
     raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset
-    asset
+    "#{VendoredAssets.path(asset)}"
   end
 
   def self.clear_modifiers!

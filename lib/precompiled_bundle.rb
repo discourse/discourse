@@ -26,6 +26,7 @@ class PrecompiledBundle
 
     with_lock do
       return File.read(cache_path) if File.exist?(cache_path)
+      verify_node_modules!
       source = @build.call
       FileUtils.mkdir_p(File.dirname(cache_path))
       Discourse::Utils.atomic_write_file(cache_path, source)
@@ -35,6 +36,18 @@ class PrecompiledBundle
   end
 
   private
+
+  def verify_node_modules!
+    installed = Rails.root.join("node_modules/.pnpm/lock.yaml")
+    lockfile = Rails.root.join("pnpm-lock.yaml")
+
+    return if File.exist?(installed) && File.read(installed) == File.read(lockfile)
+
+    raise <<~MSG.squish
+      Cannot build #{@filename_prefix}: node_modules is missing or out of date.
+      Run `pnpm install`.
+    MSG
+  end
 
   def digest
     digest = Digest::MD5.new
