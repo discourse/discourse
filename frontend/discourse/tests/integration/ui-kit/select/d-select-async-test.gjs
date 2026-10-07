@@ -7,6 +7,7 @@ import {
   click,
   fillIn,
   find,
+  findAll,
   render,
   resetOnerror,
   setupOnerror,
@@ -302,6 +303,35 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     assert
       .dom(".pick [role='combobox']")
       .hasValue("One", "the picked value resolves from the loaded rows");
+  });
+
+  test("a :loadingItem block replaces each placeholder row of the first load", async function (assert) {
+    let resolveLoad;
+    const load = () => new Promise((resolve) => (resolveLoad = resolve));
+
+    await render(
+      <template>
+        <DSelect @load={{load}}>
+          <:loadingItem><span class="custom-loading-row"></span></:loadingItem>
+        </DSelect>
+      </template>
+    );
+    const typing = fillIn("[role='combobox']", "x");
+    await waitFor(".d-combobox__skeleton");
+
+    const rows = findAll(".d-combobox__skeleton");
+    assert.true(rows.length > 0, "the first load shows placeholder rows");
+    assert.strictEqual(
+      findAll(".d-combobox__skeleton .custom-loading-row").length,
+      rows.length,
+      "every placeholder row renders the block"
+    );
+    assert
+      .dom(".d-combobox__skeleton .d-skeleton")
+      .doesNotExist("the default bar is replaced");
+
+    resolveLoad([]);
+    await typing;
   });
 
   test("multi renders resolved chips plus an unavailable chip for an id that cannot resolve", async function (assert) {

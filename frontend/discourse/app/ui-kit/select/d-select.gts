@@ -202,6 +202,11 @@ interface DSelectSignature {
     selection?: [SelectItemModel];
     /** Consumer override for a group header's content; yields the header item (with its `label`). */
     groupHeader?: [SelectItemModel];
+    /**
+     * One placeholder row, shown while a page of rows loads (the first load, or more rows
+     * arriving at the end of the list). Repeated per row, so it should match the shape of `:item`.
+     */
+    loadingItem?: [];
     /** Consumer override for the no-results state, replacing the default "No results found". */
     empty?: [];
     /**
@@ -781,6 +786,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @hasErrorBlock={{has-block "error"}}
               @hasGroupHeaderBlock={{has-block "groupHeader"}}
               @hasItemBlock={{has-block "item"}}
+              @hasLoadingItemBlock={{has-block "loadingItem"}}
               @label={{@label}}
               @listbox={{this.listbox}}
               @listboxId={{this.listboxId}}
@@ -792,6 +798,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @selectedIcon={{@selectedIcon}}
             >
               <:item as |item|>{{yield item to="item"}}</:item>
+              <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
               <:groupHeader as |item|>
                 {{yield item to="groupHeader"}}
               </:groupHeader>

@@ -65,6 +65,8 @@ interface SelectListboxSignature {
     noResultsLabel?: string;
     /** Whether the consumer supplied custom item markup. */
     hasItemBlock: boolean;
+    /** Whether the consumer supplied custom placeholder-row markup. */
+    hasLoadingItemBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
     /** Whether the consumer supplied custom empty-state markup. */
@@ -85,6 +87,8 @@ interface SelectListboxSignature {
       /** The group-header item being rendered. */
       item: SelectItemModel,
     ];
+    /** Custom markup for one placeholder row while a page of rows is loading. */
+    loadingItem?: [];
     /** Custom markup for the empty state. */
     empty?: [];
     /** Custom markup for the error state. */
@@ -115,7 +119,11 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
       >
         {{#each @feedback.skeletonRows key="key" as |row|}}
           <li class="d-combobox__skeleton" data-key={{row.key}}>
-            <DSkeleton @variant="text" />
+            {{#if @hasLoadingItemBlock}}
+              {{yield to="loadingItem"}}
+            {{else}}
+              <DSkeleton @variant="text" />
+            {{/if}}
           </li>
         {{/each}}
       </ul>
@@ -284,7 +292,11 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                     {{row.place row.start row.index}}
                     {{row.measure}}
                   >
-                    <DSkeleton @variant="text" />
+                    {{#if @hasLoadingItemBlock}}
+                      {{yield to="loadingItem"}}
+                    {{else}}
+                      <DSkeleton @variant="text" />
+                    {{/if}}
                   </li>
                 {{/if}}
               {{/let}}

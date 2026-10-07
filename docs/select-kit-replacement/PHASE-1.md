@@ -87,8 +87,10 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     must stay a cache hit**: the resolve writes this tracked cache, so a read that missed
     would re-resolve, re-write, invalidate the render that read it and never settle. The
     original "no tracked-cache write during resolve" note was preventing exactly that loop.
-  - ☐ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` blocks; skeleton taxonomy;
-    input-holds-only-query composite trigger. (Group flag UI landed with `@groupBy` — see
+  - ◐ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` blocks; skeleton taxonomy;
+    input-holds-only-query composite trigger. `:loadingItem` is done (2026-10-06): one
+    placeholder row, repeated for the first load and for rows arriving at the end of the list,
+    with the styleguide reviewers picker showing an avatar-row skeleton. (Group flag UI landed with `@groupBy` — see
     the Decision 2 item below.)
   - ☑ **Runtime input reactivity** (`f6ed1eb9649`). The engine captured every input but
     `@value` in its constructor, so `@items`, `@selected`, `@multiple`, `@minChars` and

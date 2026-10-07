@@ -234,6 +234,65 @@ module(
       }
     });
 
+    test("a :loadingItem block replaces the placeholder rows of a pending reveal", async function (assert) {
+      let engine;
+      let releaseReveal;
+      let revealRequested = false;
+      const firstPage = CLIENT_ITEMS.map((item, index) => ({
+        ...item,
+        ...(index === 0 ? { onSelect: (value) => (engine = value) } : {}),
+      }));
+      const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
+      const load = (_filter, { offset = 0 }) => {
+        if (offset === 0) {
+          return { items: firstPage, total: 8 };
+        }
+
+        revealRequested = true;
+        return revealPromise;
+      };
+
+      await render(
+        <template>
+          <DSelect @debounce={{false}} @load={{load}}>
+            <:loadingItem><span
+                class="custom-loading-row"
+              ></span></:loadingItem>
+          </DSelect>
+        </template>
+      );
+      await openSelect();
+      await click(findAll("ul[role='listbox'] > [role='option']")[0]);
+
+      try {
+        engine.revealMore();
+        await waitUntil(() => revealRequested);
+        await waitUntil(() => find(".d-combobox__skeleton"));
+
+        const rows = findAll("ul[role='listbox'] > .d-combobox__skeleton");
+        assert.true(rows.length > 0, "the pending page has placeholder rows");
+        assert.strictEqual(
+          findAll(
+            "ul[role='listbox'] > .d-combobox__skeleton .custom-loading-row"
+          ).length,
+          rows.length,
+          "every placeholder row renders the block"
+        );
+        assert
+          .dom("ul[role='listbox'] .d-combobox__skeleton .d-skeleton")
+          .doesNotExist("the default bar is replaced");
+      } finally {
+        releaseReveal({
+          items: Array.from({ length: 4 }, (_, index) => ({
+            id: index + 5,
+            name: `Item ${index + 5}`,
+          })),
+          total: 8,
+        });
+        await settled();
+      }
+    });
+
     test("a resolved client source has no frontier skeletons", async function (assert) {
       await render(<template><DSelect @items={{CLIENT_ITEMS}} /></template>);
       await openSelect();

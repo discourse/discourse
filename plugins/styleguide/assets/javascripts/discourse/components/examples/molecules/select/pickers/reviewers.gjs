@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import DSkeleton from "discourse/ui-kit/d-skeleton";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import { reviewerApi } from "../../../../../lib/select-fixtures";
@@ -82,6 +83,16 @@ export default class ReviewersSelectExample extends Component {
           </span>
         </span>
       </:item>
+
+      <:loadingItem>
+        <div class="select-examples__row select-examples__row--identity">
+          <DSkeleton @size="2rem" @variant="circle" />
+          <div class="select-examples__details">
+            <DSkeleton class="select-examples__primary" @width="8rem" />
+            <DSkeleton class="select-examples__secondary" @width="12rem" />
+          </div>
+        </div>
+      </:loadingItem>
     </DSelect>
   </template>
 }
